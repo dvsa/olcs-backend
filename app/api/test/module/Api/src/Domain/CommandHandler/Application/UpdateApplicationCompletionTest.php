@@ -56,11 +56,7 @@ class UpdateApplicationCompletionTest extends CommandHandlerTestCase
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)
-            ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
-            ->shouldReceive('commit')
-            ->once();
+            ->andReturn($application);
 
         $result1 = new Result();
         $result1->addMessage('Tol updated');
@@ -101,52 +97,6 @@ class UpdateApplicationCompletionTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             UpdateVariationCompletionCommand::class, ['id' => 111, 'section' => 'section1'], new Result()
         );
-
-        $this->sut->handleCommand($command);
-    }
-
-    public function testHandleCommandWithException()
-    {
-        $command = Cmd::create(['id' => 111, 'section' => 'typeOfLicence']);
-
-        /** @var ApplicationCompletion $applicationCompletion */
-        $applicationCompletion = m::mock(ApplicationCompletion::class)->makePartial();
-
-        // Should update these
-        $applicationCompletion->setAddressesStatus(ApplicationCompletion::STATUS_COMPLETE);
-        $applicationCompletion->setBusinessTypeStatus(ApplicationCompletion::STATUS_INCOMPLETE);
-        $applicationCompletion->setTypeOfLicenceStatus(ApplicationCompletion::STATUS_NOT_STARTED);
-        // Shouldn't update these
-        $applicationCompletion->setBusinessDetailsStatus(ApplicationCompletion::STATUS_NOT_STARTED);
-
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setApplicationCompletion($applicationCompletion);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT)
-            ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
-            ->shouldReceive('commit')
-            ->once()
-            ->andThrow('\Exception')
-            ->shouldReceive('rollback')
-            ->once();
-
-        $result1 = new Result();
-        $result1->addMessage('Tol updated');
-        $this->expectedSideEffect(UpdateTypeOfLicenceStatus::class, ['id' => 111], $result1);
-
-        $result2 = new Result();
-        $result2->addMessage('Addresses updated');
-        $this->expectedSideEffect(UpdateAddressesStatus::class, ['id' => 111], $result2);
-
-        $result3 = new Result();
-        $result3->addMessage('Bt updated');
-        $this->expectedSideEffect(UpdateBusinessTypeStatus::class, ['id' => 111], $result3);
-
-        $this->setExpectedException('\Exception');
 
         $this->sut->handleCommand($command);
     }

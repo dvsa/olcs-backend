@@ -67,8 +67,6 @@ class CreatePreviousConvictionTest extends CommandHandlerTestCase
         $previousConviction = null;
 
         $this->repoMap['PreviousConviction']
-            ->shouldReceive('beginTransaction')
-            ->once()
             ->shouldReceive('save')
             ->once()
             ->with(m::type(PrevConvictionEntity::class))
@@ -77,9 +75,7 @@ class CreatePreviousConvictionTest extends CommandHandlerTestCase
                     $conviction->setId(111);
                     $previousConviction = $conviction;
                 }
-            )
-            ->shouldReceive('commit')
-            ->once();
+            );
 
         $this->expectedSideEffect(
             UpdateApplicationCompletionCommand::class, ['id' => 50, 'section' => 'convictionsPenalties'], new Result()

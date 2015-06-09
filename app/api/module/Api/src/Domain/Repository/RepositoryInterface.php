@@ -45,12 +45,6 @@ interface RepositoryInterface
 
     public function delete($entity);
 
-    public function beginTransaction();
-
-    public function commit();
-
-    public function rollback();
-
     /**
      * @param $id
      * @return RefDataEntity
