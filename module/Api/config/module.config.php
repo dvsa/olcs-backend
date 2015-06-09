@@ -106,6 +106,7 @@ return [
             TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
                 QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
             TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
+            TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
