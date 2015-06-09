@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Service;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use CpmsClient\Service\ApiService;
+use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 
 /**
  * Cpms Helper Service
@@ -119,6 +120,155 @@ class CpmsHelperService implements FactoryInterface
         }
 
         return $response;
+    }
+
+    // @TODO make complete/resovle payment command
+    /**
+     * @param array $data response data from the payment gateway
+     * @param string $paymentMethod 'fpm_card_offline'|'fpm_card_online'
+     * @throws Common\Service\Cpms\Exception\PaymentNotFoundException
+     * @throws Common\Service\Cpms\Exception\PaymentInvalidStatusException
+     * @throws Common\Service\Cpms\Exception
+     */
+    public function handleResponse($data, $paymentMethod)
+    {
+        if (!isset($data['receipt_reference'])) {
+            throw new \Exception('No receipt_reference received from CPMS gateway');
+        }
+
+        $reference = $data['receipt_reference'];
+
+        /**
+         * 1) Check what status we think this payment is currently in
+         */
+        $payment = $paymentService->getDetails($reference);
+        // @TODO
+        $query = PaymentByReference::create(['reference' => $reference);
+        $foo->send>$query;
+
+        if ($payment === false) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\NotFoundException('Payment not found');
+        }
+
+        if ($payment->getStatus()->getId() !== PaymentEntity::STATUS_OUTSTANDING) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\RuntimeException(
+                'Invalid payment status: ' . $payment->getStatus()->getId()
+            );
+        }
+
+        /**
+         * 2) Let CPMS know the response from the payment gateway
+         *
+         * We have to bundle up the response data verbatim as it can
+         * vary per gateway implementation
+         */
+        $this->getClient()->put('/api/gateway/' . $reference . '/complete', ApiService::SCOPE_CARD, $data);
+
+        /**
+         * 3) Now actually look up the status of the transaction and
+         * update our payment record & fee(s) accordingly
+         */
+        return $this->resolvePayment($reference, $payment->getId(), $paymentMethod);
+    }
+
+    /**
+     * @param string $reference receipt reference/guid
+     * @param int $paymentId OLCS payment id
+     * @param string $paymentMethod 'fpm_card_offline'|'fpm_card_online'
+     * @return int payment status
+     */
+    public function resolvePayment($reference, $paymentId, $paymentMethod)
+    {
+        throw new \Exception(__METHOD__.' @TODO');
+        $paymentService = $this->getServiceLocator()->get('Entity\Payment');
+        $paymentStatus  = $this->getPaymentStatus($reference);
+
+        $now = $this->getServiceLocator()->get('Helper\Date')->getDate('Y-m-d H:i:s');
+
+        if ($paymentStatus == self::PAYMENT_SUCCESS) {
+            $fees = $this->getServiceLocator()->get('Entity\FeePayment')
+                ->getFeesByPaymentId($paymentId);
+            foreach ($fees as $fee) {
+                $data = [
+                    'feeStatus'      => FeeEntityService::STATUS_PAID,
+                    'receivedDate'   => $now,
+                    'receiptNo'      => $reference,
+                    'paymentMethod'  => $paymentMethod,
+                    'receivedAmount' => $fee['amount']
+                ];
+
+                $this->updateFeeRecordAsPaid($fee['id'], $data);
+            }
+            $status = PaymentEntity::STATUS_PAID;
+            $paymentService->forceUpdate(
+                $paymentId,
+                [
+                    'status' => $status,
+                    'completedDate' => $now,
+                ]
+            );
+            return $status;
+        }
+
+        // handle non-paid statuses
+        switch ($paymentStatus) {
+            case self::PAYMENT_FAILURE:
+                $status = PaymentEntity::STATUS_FAILED;
+                break;
+            case self::PAYMENT_CANCELLATION:
+                $status = PaymentEntity::STATUS_CANCELLED;
+                break;
+            case self::PAYMENT_IN_PROGRESS:
+                // resolve any abandoned payments as 'failed'
+                $status = PaymentEntity::STATUS_FAILED;
+                break;
+            default:
+                $this->log('Unknown CPMS payment_status: ' . $paymentStatus);
+                $status = null;
+                break;
+        }
+
+        if ($status !== null) {
+            $paymentService->setStatus($paymentId, $status);
+            return $status;
+        }
+    }
+
+    /**
+     * Determine the status of a payment
+     *
+     * @param string $receiptReference
+     * @return int status
+     */
+    public function getPaymentStatus($receiptReference)
+    {
+        $endPoint = '/api/payment/'.$receiptReference;
+        $scope = ApiService::SCOPE_QUERY_TXN;
+        $params = [
+            'required_fields' => [
+                'payment' => [
+                    'payment_status'
+                ]
+            ]
+        ];
+
+        $this->debug(
+            'Payment status request',
+            [
+                'method' => [
+                    'location' => __METHOD__,
+                    'data' => func_get_args()
+                ],
+                'endPoint' => $endPoint,
+                'scope'    => $scope,
+            ]
+        );
+
+        $response = $this->getClient()->get($endPoint, $scope, $params);
+
+        $this->debug('Payment status response', ['response' => $response]);
+
+        return $response['payment_status']['code'];
     }
 
     protected function resolveOutstandingPayments($fee)
