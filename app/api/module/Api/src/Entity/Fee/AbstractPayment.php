@@ -57,6 +57,15 @@ abstract class AbstractPayment implements BundleSerializableInterface, JsonSeria
     protected $createdOn;
 
     /**
+     * Gateway url
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="gateway_url", length=255, nullable=true)
+     */
+    protected $gatewayUrl;
+
+    /**
      * Guid
      *
      * @var string
@@ -240,6 +249,29 @@ abstract class AbstractPayment implements BundleSerializableInterface, JsonSeria
     public function getCreatedOn()
     {
         return $this->createdOn;
+    }
+
+    /**
+     * Set the gateway url
+     *
+     * @param string $gatewayUrl
+     * @return Payment
+     */
+    public function setGatewayUrl($gatewayUrl)
+    {
+        $this->gatewayUrl = $gatewayUrl;
+
+        return $this;
+    }
+
+    /**
+     * Get the gateway url
+     *
+     * @return string
+     */
+    public function getGatewayUrl()
+    {
+        return $this->gatewayUrl;
     }
 
     /**

@@ -13,10 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Payment\PayOutstandingFees as Cmd;
-use Dvsa\Olcs\Transfer\Query\Organisation\OutstandingFees as OutstandingFeesQry;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use CpmsClient\Service\ApiService;
 
 /**
  * Pay Outstanding Fees
