@@ -39,10 +39,12 @@ class TransportManagers extends AbstractQueryHandler
         /* @var $licence \Dvsa\Olcs\Api\Entity\Licence\Licence */
         $licence = $this->getRepo()->fetchUsingId($query);
         $tmlResults = $this->tmlRepo->fetchWithContactDetailsByLicence($licence->getId());
+        // set licence to null to prevent JSON recursion issue
+        foreach ($tmlResults as $tml) {
+            $tml->setLicence(null);
+        }
+        $licence->setTmLicences($tmlResults);
 
-        $data = $licence->jsonSerialize();
-        $data['tmLicences'] = $tmlResults;
-
-        return $data;
+        return $licence;
     }
 }

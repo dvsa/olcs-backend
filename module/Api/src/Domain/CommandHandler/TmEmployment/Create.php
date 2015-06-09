@@ -7,9 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TmEmployment;
 
+use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Tm\TmEmployment;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -38,17 +40,18 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         $tma = $this->getRepo('TransportManagerApplication')->fetchById($command->getTmaId());
         $tmEmployment->setTransportManager($tma->getTransportManager());
 
-        $result = $this->createContactDetails($command);
+        $createContactResult = $this->createContactDetails($command);
         $tmEmployment->setContactDetails(
             $this->getRepo()->getReference(
-                \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails::class,
-                $result->getId('contactDetails')
+                ContactDetails::class,
+                $createContactResult->getId('contactDetails')
             )
         );
 
         $this->getRepo()->save($tmEmployment);
 
         $result = new Result();
+        $result->merge($createContactResult);
         $result->addId(lcfirst($this->repoServiceName), $tmEmployment->getId());
         $result->addMessage("Tm Employment ID {$tmEmployment->getId()} created");
 
@@ -65,7 +68,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     protected function createContactDetails(CreateCommand $command)
     {
         $response = $this->getCommandHandler()->handleCommand(
-            \Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress::create(
+            SaveAddress::create(
                 [
                     'addressLine1' => $command->getAddress()['addressLine1'],
                     'addressLine2' => $command->getAddress()['addressLine2'],
@@ -74,7 +77,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
                     'town' => $command->getAddress()['town'],
                     'postcode' => $command->getAddress()['postcode'],
                     'countryCode' => $command->getAddress()['countryCode'],
-                    'contactType' => \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails::CONTACT_TYPE_TRANSPORT_MANAGER,
+                    'contactType' => ContactDetails::CONTACT_TYPE_TRANSPORT_MANAGER,
                 ]
             )
         );

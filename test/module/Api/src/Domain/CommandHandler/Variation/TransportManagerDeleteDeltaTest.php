@@ -10,6 +10,8 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\TransportManagerDeleteDelta as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Variation\TransportManagerDeleteDelta as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportManagerLicenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
 use Mockery as m;
 
 /**
@@ -23,8 +25,8 @@ class TransportManagerDeleteDeltaTest extends CommandHandlerTestCase
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
-        $this->mockRepo('TransportManagerApplication', \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication::class);
-        $this->mockRepo('TransportManagerLicence', \Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence::class);
+        $this->mockRepo('TransportManagerApplication', TransportManagerApplicationRepo::class);
+        $this->mockRepo('TransportManagerLicence', TransportManagerLicenceRepo::class);
 
         parent::setUp();
     }
