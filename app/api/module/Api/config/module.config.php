@@ -89,6 +89,10 @@ return [
                 => QueryHandler\Application\LicenceHistory::class,
             TransferQuery\OtherLicence\OtherLicence::class
                 => QueryHandler\OtherLicence\OtherLicence::class,
+            TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
+                QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
+            TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
+                QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
