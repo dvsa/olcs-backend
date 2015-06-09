@@ -37,6 +37,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
 
     protected $feePaymentRepo;
 
+    protected $logger;
+
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -123,6 +125,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
         $this->cpmsClient = $mainServiceLocator->get('cpms\service\api');
         $this->feeRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('Fee');
         $this->feePaymentRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('FeePayment');
+        $this->logger = $mainServiceLocator->get('Logger');
         return $this;
     }
 
@@ -192,22 +195,22 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             'total_amount' => $this->formatAmount($totalAmount),
         ];
 
-        // $this->debug(
-        //     'Card payment request',
-        //     [
-        //         'method' => [
-        //             'location' => __METHOD__,
-        //             'data' => func_get_args()
-        //         ],
-        //         'endPoint' => $endPoint,
-        //         'scope'    => $scope,
-        //         'params'   => $params,
-        //     ]
-        // );
+        $this->debug(
+            'Card payment request',
+            [
+                'method' => [
+                    'location' => __METHOD__,
+                    'data' => func_get_args()
+                ],
+                'endPoint' => $endPoint,
+                'scope'    => $scope,
+                'params'   => $params,
+            ]
+        );
 
         $response = $this->cpmsClient->post($endPoint, $scope, $params);
 
-        // $this->debug('Card payment response', ['response' => $response]);
+        $this->debug('Card payment response', ['response' => $response]);
         if (!is_array($response)
             || !isset($response['receipt_reference'])
             || empty($response['receipt_reference'])
@@ -251,7 +254,17 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
 
     protected function debug($message, $data)
     {
-        // @TODO
+        return $this->logger->debug(
+            $message,
+            [
+                'data' => array_merge(
+                    [
+                        'domain' => $this->cpmsClient->getOptions()->getDomain(),
+                    ],
+                    $data
+                ),
+            ]
+        );
     }
 
     protected function resolvePaidFees($fees)
