@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\Delete as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Delete as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication;
 
 /**
  * CreateTest
@@ -21,7 +22,7 @@ class DeleteTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new CommandHandler();
-        $this->mockRepo('TransportManagerApplication', \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication::class);
+        $this->mockRepo('TransportManagerApplication', TransportManagerApplication::class);
 
         parent::setUp();
     }

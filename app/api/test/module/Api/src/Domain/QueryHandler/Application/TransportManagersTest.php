@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\TransportManagers as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\Application\TransportManagers as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
 
 /**
  * TransportManagersTest
@@ -22,8 +23,7 @@ class TransportManagersTest extends QueryHandlerTestCase
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
-        $this->mockRepo('TransportManagerApplication',
-            \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication::class);
+        $this->mockRepo('TransportManagerApplication', TransportManagerApplicationRepo::class);
         $this->mockRepo('TransportManagerLicence', \Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence::class);
 
         parent::setUp();

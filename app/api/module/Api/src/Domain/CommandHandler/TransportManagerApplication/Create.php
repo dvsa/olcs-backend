@@ -36,7 +36,6 @@ final class Create extends AbstractCommandHandler implements
      */
     protected $tmRepo;
 
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->userRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')

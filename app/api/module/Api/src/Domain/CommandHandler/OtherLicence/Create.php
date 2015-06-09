@@ -11,7 +11,9 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\OtherLicence\Create as CreateCommand;
 
 /**
  * Create an Other Licence
@@ -24,12 +26,12 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 
     public function handleCommand(CommandInterface $command)
     {
-        /* @var $command \Dvsa\Olcs\Transfer\Command\OtherLicence\Create */
+        /* @var $command CreateCommand */
 
         $otherLicence = new OtherLicence();
         $otherLicence->setRole($this->getRepo()->getRefdataReference($command->getRole()));
         $otherLicence->setTransportManagerApplication(
-            $this->getRepo()->getReference(\Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication::class, $command->getTmaId())
+            $this->getRepo()->getReference(TransportManagerApplication::class, $command->getTmaId())
         );
         $otherLicence->setHoursPerWeek($command->getHoursPerWeek());
         $otherLicence->setLicNo($command->getLicNo());
