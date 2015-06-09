@@ -22,8 +22,9 @@ return [
             Util\SlaCalculatorInterface::class => Util\SlaCalculatorFactory::class,
             Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class,
             'TransactionManager' => \Dvsa\Olcs\Api\Domain\Repository\TransactionManagerFactory::class,
-            'CpmsIdentityProvider' =>  Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
-        ]
+            'CpmsIdentityProvider' => \Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
+            'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperService::class,
+        ],
     ],
     'controller_plugins' => [
         'invokables' => [
