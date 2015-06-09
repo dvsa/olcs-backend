@@ -2,8 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Entity\Vehicle;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
-use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
+use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,9 +29,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractVehicle implements \JsonSerializable
+abstract class AbstractVehicle implements BundleSerializableInterface, JsonSerializable
 {
-    use JsonSerializableTrait;
+    use BundleSerializableTrait;
 
     /**
      * Certificate no
