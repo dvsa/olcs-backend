@@ -65,14 +65,9 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
             ->once()
             ->with($command, Query::HYDRATE_OBJECT, 45)
             ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
             ->shouldReceive('save')
             ->once()
-            ->with($application)
-            ->shouldReceive('commit')
-            ->once()
-            ->with();
+            ->with($application);
 
         $this->expectedSideEffect(
             UpdateApplicationCompletionCommand::class, ['id' => 627, 'section' => 'undertakings'], new Result()
@@ -90,44 +85,6 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
         $this->assertEquals('Y', $application->getDeclarationConfirmation());
         $this->assertEquals('STATUS', $application->getInterimStatus());
         $this->assertEquals('SOME REASON', $application->getInterimReason());
-    }
-
-    public function testHandleCommandException()
-    {
-        // Params
-        $command = UpdateDeclarationCmd::create(
-            [
-                'id' => 627,
-                'version' => 45,
-                'declarationConfirmation' => 'Y',
-                'interimRequested' => 'N',
-                'interimReason' => 'SOME REASON',
-            ]
-        );
-
-        // Mocks
-        $application = $this->getApplication($command);
-
-        // Expectations
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command, Query::HYDRATE_OBJECT, 45)
-            ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
-            ->shouldReceive('save')
-            ->once()
-            ->with($application)
-            ->andThrow(new \Exception('EXCEPTION'))
-            ->shouldReceive('rollback')
-            ->once()
-            ->with();
-
-        $this->setExpectedException('Exception', 'EXCEPTION');
-
-        $result = $this->sut->handleCommand($command);
-
-        $this->assertInstanceOf(Result::class, $result);
     }
 
     public function testHandleCommandInterimNo()
@@ -151,14 +108,9 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
             ->once()
             ->with($command, Query::HYDRATE_OBJECT, 45)
             ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
             ->shouldReceive('save')
             ->once()
-            ->with($application)
-            ->shouldReceive('commit')
-            ->once()
-            ->with();
+            ->with($application);
 
         $this->expectedSideEffect(
             CancelAllInterimFeesCommand::class, ['id' => 627], new Result()
@@ -202,14 +154,9 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
             ->once()
             ->with($command, Query::HYDRATE_OBJECT, 45)
             ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
             ->shouldReceive('save')
             ->once()
-            ->with($application)
-            ->shouldReceive('commit')
-            ->once()
-            ->with();
+            ->with($application);
 
         $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')->with(627, true)->once()
             ->andReturn(['SOMETHING']);
@@ -252,14 +199,9 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
             ->once()
             ->with($command, Query::HYDRATE_OBJECT, 45)
             ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
             ->shouldReceive('save')
             ->once()
-            ->with($application)
-            ->shouldReceive('commit')
-            ->once()
-            ->with();
+            ->with($application);
 
         $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')->with(627, true)->once()
             ->andReturn([]);

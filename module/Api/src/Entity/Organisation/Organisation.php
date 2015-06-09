@@ -49,6 +49,10 @@ class Organisation extends AbstractOrganisation
 
     protected function getCalculatedValues()
     {
-        return ['hasInforceLicences' => $this->hasInforceLicences()];
+        return [
+            'hasInforceLicences' => $this->hasInforceLicences(),
+            // prevent recursion via app -> licence -> organisation -> licence
+            'licences' => null,
+        ];
     }
 }

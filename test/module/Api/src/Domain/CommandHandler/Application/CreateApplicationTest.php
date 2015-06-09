@@ -76,9 +76,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
         /** @var ApplicationEntity $app */
         $app = null;
 
-        $this->repoMap['Application']->shouldReceive('beginTransaction')
-            ->once()
-            ->shouldReceive('save')
+        $this->repoMap['Application']->shouldReceive('save')
             ->with(m::type(ApplicationEntity::class))
             ->andReturnUsing(
                 function (ApplicationEntity $application) use (&$app) {
@@ -86,9 +84,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
                     $application->setId(22);
                     $application->getLicence()->setId(33);
                 }
-            )
-            ->shouldReceive('commit')
-            ->once();
+            );
 
         $result = $this->sut->handleCommand($command);
 
@@ -142,9 +138,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
         /** @var ApplicationEntity $app */
         $app = null;
 
-        $this->repoMap['Application']->shouldReceive('beginTransaction')
-            ->once()
-            ->shouldReceive('save')
+        $this->repoMap['Application']->shouldReceive('save')
             ->with(m::type(ApplicationEntity::class))
             ->andReturnUsing(
                 function (ApplicationEntity $application) use (&$app) {
@@ -152,9 +146,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
                     $application->setId(22);
                     $application->getLicence()->setId(33);
                 }
-            )
-            ->shouldReceive('commit')
-            ->once();
+            );
 
         $result1 = new Result();
         $result1->addId('fee', 44);
@@ -204,27 +196,5 @@ class CreateApplicationTest extends CommandHandlerTestCase
             $this->references[TrafficArea::class][TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE],
             $app->getLicence()->getTrafficArea()
         );
-    }
-
-    public function testHandleCommandMinimalException()
-    {
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(false);
-
-        $command = Cmd::create(['organisation' => 11]);
-
-        $this->repoMap['Application']->shouldReceive('beginTransaction')
-            ->once()
-            ->shouldReceive('save')
-            ->with(m::type(ApplicationEntity::class))
-            ->andThrow('\Exception')
-            ->shouldReceive('rollback')
-            ->once();
-
-        $this->setExpectedException('\Exception');
-
-        $this->sut->handleCommand($command);
     }
 }

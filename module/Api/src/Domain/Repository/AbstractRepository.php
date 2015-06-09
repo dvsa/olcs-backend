@@ -159,21 +159,6 @@ abstract class AbstractRepository implements RepositoryInterface
         $this->getEntityManager()->flush();
     }
 
-    public function beginTransaction()
-    {
-        $this->getEntityManager()->beginTransaction();
-    }
-
-    public function commit()
-    {
-        $this->getEntityManager()->commit();
-    }
-
-    public function rollback()
-    {
-        $this->getEntityManager()->rollback();
-    }
-
     public function getRefdataReference($id)
     {
         return $this->getReference(RefDataEntity::class, $id);
@@ -223,6 +208,7 @@ abstract class AbstractRepository implements RepositoryInterface
      *
      * @param QueryBuilder $qb
      * @param QryCmd $query
+     * @return \Dvsa\Olcs\Api\Domain\QueryBuilder
      */
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {

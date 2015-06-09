@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -20,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateApplicationCompletion extends AbstractCommandHandler
+final class UpdateApplicationCompletion extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
 
@@ -67,18 +68,8 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler
 
         $result = new Result();
 
-        try {
-
-            $this->getRepo()->beginTransaction();
-            foreach ($sectionsToUpdate as $section => $currentStatus) {
-                $result->merge($this->getCommandHandler()->handleCommand($this->getUpdateCommand($section, $command)));
-            }
-            $this->getRepo()->commit();
-
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-
-            throw $ex;
+        foreach ($sectionsToUpdate as $section => $currentStatus) {
+            $result->merge($this->getCommandHandler()->handleCommand($this->getUpdateCommand($section, $command)));
         }
 
         return $result;
