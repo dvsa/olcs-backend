@@ -124,13 +124,9 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             ->once()
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
             ->shouldReceive('save')
             ->once()
-            ->with($application)
-            ->shouldReceive('commit')
-            ->once();
+            ->with($application);
 
         $result1 = new Result();
         $result1->addId('fee', 222);
@@ -198,13 +194,9 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             ->once()
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
             ->shouldReceive('save')
             ->once()
-            ->with($application)
-            ->shouldReceive('commit')
-            ->once();
+            ->with($application);
 
         $result1 = new Result();
         $result1->addMessage('5 fee(s) cancelled');
@@ -239,52 +231,6 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
-    }
-
-    public function testHandleCommandWithException()
-    {
-        // Params
-        $command = $this->getCommand('Y', Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL, Licence::LICENCE_CATEGORY_PSV);
-
-        $application = $this->getApplication(
-            'Y',
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_CATEGORY_PSV
-        );
-
-        // Expectations
-        $application->shouldReceive('updateTypeOfLicence')
-            ->once()
-            ->with(
-                'Y',
-                $this->mapRefData(Licence::LICENCE_CATEGORY_PSV),
-                $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL)
-            )
-            ->shouldReceive('getLicence')
-            ->andReturn(
-                m::mock(Licence::class)
-                    ->shouldReceive('getId')
-                    ->andReturn(222)
-                    ->getMock()
-            );
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($application)
-            ->shouldReceive('beginTransaction')
-            ->once()
-            ->shouldReceive('save')
-            ->once()
-            ->with($application)
-            ->andThrow('\Exception')
-            ->shouldReceive('rollback')
-            ->once();
-
-        $this->setExpectedException('\Exception');
-
-        // Assertions
-        $this->sut->handleCommand($command);
     }
 
     public function requireReset()
