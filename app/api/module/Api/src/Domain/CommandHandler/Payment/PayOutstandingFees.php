@@ -60,6 +60,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
         // record payment
         $payment = new PaymentEntity();
         $payment->setGuid($response['receipt_reference']);
+        $payment->setGatewayUrl($response['gateway_url']);
         $payment->setStatus($this->getRepo()->getRefdataReference(PaymentEntity::STATUS_OUTSTANDING));
         $this->getRepo()->save($payment);
         $result->addId('payment', $payment->getId());

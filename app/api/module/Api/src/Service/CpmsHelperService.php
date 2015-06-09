@@ -110,8 +110,6 @@ class CpmsHelperService implements FactoryInterface
 
         $response = $this->getClient()->post($endPoint, $scope, $params);
 
-        // @TODO record gateway_url somwhere
-
         $this->debug('Card payment response', ['response' => $response]);
         if (!is_array($response)
             || !isset($response['receipt_reference'])
