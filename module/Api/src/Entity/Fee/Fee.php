@@ -35,6 +35,10 @@ class Fee extends AbstractFee
     const STATUS_WAIVED = 'lfs_w';
     const STATUS_CANCELLED = 'lfs_cn';
 
+    const ACCRUAL_RULE_LICENCE_START = 'acr_licence_start';
+    const ACCRUAL_RULE_CONTINUATION  = 'acr_continuation';
+    const ACCRUAL_RULE_IMMEDIATE     = 'acr_immediate';
+
     public function __construct(FeeType $feeType, $amount, RefData $feeStatus)
     {
         parent::__construct();
@@ -55,5 +59,38 @@ class Fee extends AbstractFee
             }
         }
         return false;
+    }
+
+    /**
+     * Determine 'rule start date' for a fee
+     *
+     * @see https://jira.i-env.net/browse/OLCS-6005 for business rules
+     *
+     * @return \DateTime|null
+     */
+    public function getRuleStartDate()
+    {
+        $rule = $this->getFeeType()->getAccrualRule()->getId();
+        switch ($rule) {
+            case self::ACCRUAL_RULE_IMMEDIATE:
+                return new \DateTime(); // now
+            case self::ACCRUAL_RULE_LICENCE_START:
+                $licenceStart = $this->getLicence()->getInForceDate();
+                if (!is_null($licenceStart)) {
+                    return new \DateTime($licenceStart);
+                }
+                break;
+            case self::ACCRUAL_RULE_CONTINUATION:
+                // The licence continuation date + 1 day (according to calendar dates)
+                $licenceExpiry = $this->getLicence()->getExpiryDate();
+                if (!is_null($licenceExpiry)) {
+                    $date = new \DateTime($licenceExpiry);
+                    $date->add(new \DateInterval('P1D'));
+                    return $date;
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

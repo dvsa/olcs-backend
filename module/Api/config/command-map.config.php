@@ -143,6 +143,7 @@ return [
 
     // Domain - Payment
     Command\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
+    \Dvsa\Olcs\Transfer\Command\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
 
     // Domain - ApplicationCompletion
     AppCompCommand\UpdateTypeOfLicenceStatus::class => AppCompCommandHandler\UpdateTypeOfLicenceStatus::class,
