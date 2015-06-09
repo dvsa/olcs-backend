@@ -14,7 +14,22 @@ return [
         => CommandHandler\Application\UpdateFinancialHistory::class,
     TransferCommand\Application\UpdatePreviousConvictions::class
         => CommandHandler\Application\UpdatePreviousConvictions::class,
+    TransferCommand\Application\UpdateFinancialEvidence::class
+        => CommandHandler\Application\UpdateFinancialEvidence::class,
     TransferCommand\Application\UpdateDeclaration::class => CommandHandler\Application\UpdateDeclaration::class,
+    TransferCommand\Application\UpdateBusinessDetails::class
+        => CommandHandler\Application\UpdateBusinessDetails::class,
+    TransferCommand\Application\UpdateCompanySubsidiary::class
+        => CommandHandler\Application\UpdateCompanySubsidiary::class,
+    TransferCommand\Application\CreateCompanySubsidiary::class
+        => CommandHandler\Application\CreateCompanySubsidiary::class,
+    TransferCommand\Application\DeleteCompanySubsidiary::class
+        => CommandHandler\Application\DeleteCompanySubsidiary::class,
+
+    // Transfer - Note
+    TransferCommand\Processing\Note\Create::class => CommandHandler\Processing\Note\Create::class,
+    TransferCommand\Processing\Note\Update::class => CommandHandler\Processing\Note\Update::class,
+    TransferCommand\Processing\Note\Delete::class => CommandHandler\Processing\Note\Delete::class,
 
     // Transfer - Bus
     TransferCommand\Bus\UpdateStops::class => CommandHandler\Bus\UpdateStops::class,
@@ -22,6 +37,10 @@ return [
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
+    TransferCommand\Licence\UpdateBusinessDetails::class => CommandHandler\Licence\UpdateBusinessDetails::class,
+    TransferCommand\Licence\UpdateCompanySubsidiary::class => CommandHandler\Licence\UpdateCompanySubsidiary::class,
+    TransferCommand\Licence\CreateCompanySubsidiary::class => CommandHandler\Licence\CreateCompanySubsidiary::class,
+    TransferCommand\Licence\DeleteCompanySubsidiary::class => CommandHandler\Licence\DeleteCompanySubsidiary::class,
 
     // Transfer - Variation
     TransferCommand\Variation\UpdateTypeOfLicence::class => CommandHandler\Variation\UpdateTypeOfLicence::class,
@@ -61,6 +80,14 @@ return [
     TransferCommand\Cases\Impounding\DeleteImpounding::class =>
         CommandHandler\Cases\Impounding\DeleteImpounding::class,
 
+    // Transfer - Complaint
+    TransferCommand\Cases\Complaint\CreateComplaint::class =>
+        CommandHandler\Cases\Complaint\CreateComplaint::class,
+    TransferCommand\Cases\Complaint\UpdateComplaint::class =>
+        CommandHandler\Cases\Complaint\UpdateComplaint::class,
+    TransferCommand\Cases\Complaint\DeleteComplaint::class =>
+        CommandHandler\Cases\Complaint\DeleteComplaint::class,
+
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
     Command\Application\ResetApplication::class => CommandHandler\Application\ResetApplication::class,
@@ -74,8 +101,14 @@ return [
     // Domain - Licence
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
 
+    // Domain - ContactDetails
+    Command\ContactDetails\SaveAddress::class => CommandHandler\ContactDetails\SaveAddress::class,
+
     // Domain - Task
     Command\Task\CreateTask::class => CommandHandler\Task\CreateTask::class,
+
+    // Domain - Organisation
+    Command\Organisation\UpdateTradingNames::class => CommandHandler\Organisation\UpdateTradingNames::class,
 
     // Domain - Fee
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
@@ -104,5 +137,4 @@ return [
     AppCompCommand\UpdateTaxiPhvStatus::class => AppCompCommandHandler\UpdateTaxiPhvStatus::class,
     AppCompCommand\UpdateCommunityLicencesStatus::class => AppCompCommandHandler\UpdateCommunityLicencesStatus::class,
     AppCompCommand\UpdateBusinessDetailsStatus::class => AppCompCommandHandler\UpdateBusinessDetailsStatus::class,
-
 ];
