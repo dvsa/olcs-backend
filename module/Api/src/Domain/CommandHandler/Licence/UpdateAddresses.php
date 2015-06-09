@@ -59,7 +59,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
 
         $this->maybeSaveEstablishmentAddress($command, $licence);
 
-        $this->addOrRemoveTransportConsultant($command, $licence);
+        $this->maybeAddOrRemoveTransportConsultant($command, $licence);
 
         $this->getRepo()->save($licence);
 
@@ -183,8 +183,12 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
         }
     }
 
-    private function addOrRemoveTransportConsultant(Cmd $command, Licence $licence)
+    private function maybeAddOrRemoveTransportConsultant(Cmd $command, Licence $licence)
     {
+        if (empty($command->getConsultant())) {
+            return;
+        }
+
         $params = $command->getConsultant();
 
         if ($params['add-transport-consultant'] === 'Y') {
