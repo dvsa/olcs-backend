@@ -51,7 +51,10 @@ class Complaint extends AbstractRepository
             ->with('lastModifiedBy')
             ->byId($query->getId());
 
-        $this->applyListFilters($qb, $query);
+        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
+            ->setParameter('byCase', $query->getCase());
+        $qb->andWhere($qb->expr()->eq($this->alias . '.isCompliance', ':isCompliance'))
+            ->setParameter('isCompliance', $query->getIsCompliance());
 
         $result = $qb->getQuery()->getResult($hydrateMode);
 
