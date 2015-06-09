@@ -129,6 +129,7 @@ return [
             'Impounding' => RepositoryFactory::class,
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
+            'PhoneContact' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

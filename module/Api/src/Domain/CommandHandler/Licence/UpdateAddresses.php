@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -33,10 +34,17 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
 
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['ContactDetails'];
+    protected $extraRepos = ['ContactDetails', 'PhoneContact'];
 
     private $isDirty = false;
     private $result;
+
+    private $phoneTypes = array(
+        'business' => 'phone_t_tel',
+        'home' => 'phone_t_home',
+        'mobile' => 'phone_t_mobile',
+        'fax' => 'phone_t_fax'
+    );
 
     public function handleCommand(CommandInterface $command)
     {
@@ -46,6 +54,8 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
         $this->result = new Result();
 
         $this->maybeSaveCorrespondenceAddress($command, $licence);
+
+        $this->updateCorrespondencePhoneContacts($command, $licence);
 
         $this->maybeSaveEstablishmentAddress($command, $licence);
 
@@ -102,6 +112,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
 
         $correspondenceCd = $licence->getCorrespondenceCd();
         $correspondenceCd->setFao($command->getCorrespondence()['fao']);
+        $correspondenceCd->setEmailAddress($command->getContact()['email']);
 
         $version = $correspondenceCd->getVersion();
         $this->getRepo('ContactDetails')->save($correspondenceCd);
@@ -110,6 +121,44 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
             // we can't set this to false in an `else` branch because it might have already
             // been set when saving the address
             $result->setFlag('hasChanged', true);
+        }
+    }
+
+    private function updateCorrespondencePhoneContacts(Cmd $command, Licence $licence)
+    {
+        return $this->updatePhoneContacts(
+            $command->getContact(),
+            $licence->getCorrespondenceCd()
+        );
+    }
+
+    private function updatePhoneContacts($data, ContactDetails $contactDetails)
+    {
+
+        foreach ($this->phoneTypes as $phoneType => $phoneRefName) {
+            if (!empty($data['phone_' . $phoneType . '_id'])) {
+                $contact = $this->getRepo('PhoneContact')->fetchById(
+                    $data['phone_' . $phoneType . '_id'],
+                    Query::HYDRATE_OBJECT,
+                    $data['phone_' . $phoneType . '_version']
+                );
+            } else {
+                $contact = new PhoneContact();
+                $contact->setPhoneContactType(
+                    $this->getRepo()->getRefdataReference($phoneRefName)
+                );
+                $contact->setContactDetails($contactDetails);
+            }
+
+            if (!empty($data['phone_' . $phoneType])) {
+
+                $contact->setPhoneNumber($data['phone_' . $phoneType]);
+
+                $this->getRepo('PhoneContact')->save($contact);
+
+            } elseif ($contact->getId() > 0) {
+                $this->getRepo('PhoneContact')->delete($contact);
+            }
         }
     }
 
@@ -157,6 +206,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
 
             $transportConsultant->setFao($params['transportConsultantName']);
             $transportConsultant->setWrittenPermissionToEngage($params['writtenPermissionToEngage']);
+            $transportConsultant->setEmailAddress($params['contact']['email']);
 
             $version = $transportConsultant->getVersion();
             $this->getRepo('ContactDetails')->save($transportConsultant);
@@ -166,6 +216,8 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
                 // been set when saving the address
                 $result->setFlag('hasChanged', true);
             }
+
+            return $this->updatePhoneContacts($params['contact'], $transportConsultant);
         } else {
             $licence->setTransportConsultantCd(null);
 
