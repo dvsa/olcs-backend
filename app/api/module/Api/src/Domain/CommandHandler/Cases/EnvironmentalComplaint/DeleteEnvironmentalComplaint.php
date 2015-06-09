@@ -37,7 +37,7 @@ final class DeleteEnvironmentalComplaint extends AbstractCommandHandler implemen
 
         $this->getRepo()->delete($complaint);
 
-        $result->addMessage('Complaint deleted');
+        $result->addMessage('Environmental Complaint deleted');
 
         return $result;
     }
