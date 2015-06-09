@@ -75,6 +75,8 @@ final class CreateTask extends AbstractCommandHandler
 
         if ($command->getActionDate() !== null) {
             $task->setActionDate(new \DateTime($command->getActionDate()));
+        } else {
+            $task->setActionDate(new \DateTime());
         }
 
         // Task properties
