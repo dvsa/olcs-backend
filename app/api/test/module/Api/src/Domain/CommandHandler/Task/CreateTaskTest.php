@@ -147,7 +147,11 @@ class CreateTaskTest extends CommandHandlerTestCase
                     $this->assertSame($this->references[Application::class][111], $task->getApplication());
                     $this->assertSame($this->references[Licence::class][222], $task->getLicence());
 
-                    $this->assertEquals(date('Y-m-d'), $task->getActionDate()->format('Y-m-d'));
+                    $this->assertEquals(
+                        date('Y-m-d'),
+                        $task->getActionDate()->format('Y-m-d'),
+                        'May fail if run at exactly midnight'
+                    );
                     $this->assertEquals('Some task', $task->getDescription());
                     $this->assertEquals(false, $task->getIsClosed());
                     $this->assertEquals(false, $task->getUrgent());
