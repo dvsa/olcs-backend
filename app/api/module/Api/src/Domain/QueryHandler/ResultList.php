@@ -1,6 +1,7 @@
 <?php
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler;
+
 use Doctrine\Common\Collections\Collection;
 
 /**
