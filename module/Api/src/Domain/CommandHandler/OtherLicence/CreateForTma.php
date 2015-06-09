@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Create an Other Licence
+ * Create an Other Licence for a TMA
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
@@ -16,11 +16,11 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\OtherLicence\Create as CreateCommand;
 
 /**
- * Create an Other Licence
+ * Create an Other Licence for a TMA
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class Create extends AbstractCommandHandler implements TransactionedInterface
+final class CreateForTma extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'OtherLicence';
 

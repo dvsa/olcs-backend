@@ -29,7 +29,9 @@ class TmEmployment extends AbstractRepository
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
         parent::buildDefaultQuery($qb, $id);
-        return $this->getQueryBuilder()->with('contactDetails', 'cd')->with('cd.address');
+        return $this->getQueryBuilder()->with('contactDetails', 'cd')
+            ->with('cd.address', 'ad')
+            ->with('ad.countryCode', 'cc');
     }
 
     /**

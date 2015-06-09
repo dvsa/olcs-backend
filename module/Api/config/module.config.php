@@ -112,7 +112,6 @@ return [
             'ApplicationOperatingCentre' => RepositoryFactory::class,
             'LicenceOperatingCentre' => RepositoryFactory::class,
             'PreviousConviction' => RepositoryFactory::class,
-            'OtherLicence' => RepositoryFactory::class,
             'TmEmployment' => RepositoryFactory::class,
         ]
     ],

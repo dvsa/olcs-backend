@@ -22,6 +22,24 @@ class TmEmploymentTest extends RepositoryTestCase
         $this->setUpSut(Repo::class);
     }
 
+    public function testBuildDefaultQuery()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('te')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('byId')->with(834)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('contactDetails', 'cd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('cd.address', 'ad')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('ad.countryCode', 'cc')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
+
+        $this->assertSame('RESULT', $this->sut->fetchById(834));
+    }
+
     public function testFetchByTransportManager()
     {
         $mockQb = m::mock('Doctrine\ORM\QueryBuilder');

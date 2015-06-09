@@ -56,12 +56,10 @@ class TransportManagerApplication extends AbstractRepository
             ->with($this->alias .'.otherLicences', 'ol')
             ->with('ol.role')
             ->with('a.goodsOrPsv', 'gop')
-            ->with('a.licence');
+            ->with('a.licence')
+            ->byId($tmaId);
 
         $this->joinTransportManagerPerson($dqb);
-
-        $dqb->where($dqb->expr()->eq($this->alias .'.id', ':tmaId'))
-            ->setParameter('tmaId', $tmaId);
 
         $results = $dqb->getQuery()->getResult();
 

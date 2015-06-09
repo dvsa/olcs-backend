@@ -71,6 +71,10 @@ return [
     TransferCommand\OtherLicence\UpdateOtherLicence::class => CommandHandler\OtherLicence\UpdateOtherLicence::class,
     TransferCommand\OtherLicence\CreateOtherLicence::class => CommandHandler\OtherLicence\CreateOtherLicence::class,
     TransferCommand\OtherLicence\DeleteOtherLicence::class => CommandHandler\OtherLicence\DeleteOtherLicence::class,
+    TransferCommand\OtherLicence\CreateForTma::class => CommandHandler\OtherLicence\CreateForTma::class,
+    TransferCommand\OtherLicence\UpdateForTma::class => CommandHandler\OtherLicence\UpdateForTma::class,
+    TransferCommand\OtherLicence\CreatePreviousLicence::class
+        => CommandHandler\OtherLicence\CreatePreviousLicence::class,
 
     // Transfer - Previous Conviction
     TransferCommand\PreviousConviction\CreatePreviousConviction::class =>
@@ -227,10 +231,5 @@ return [
     // TM Employment
     TransferCommand\TmEmployment\DeleteList::class => CommandHandler\TmEmployment\DeleteList::class,
     TransferCommand\TmEmployment\Create::class => CommandHandler\TmEmployment\Create::class,
-
-    // Other Licence
-    TransferCommand\OtherLicence\DeleteList::class => CommandHandler\OtherLicence\DeleteList::class,
-    TransferCommand\OtherLicence\Create::class => CommandHandler\OtherLicence\Create::class,
-    TransferCommand\OtherLicence\CreatePreviousLicence::class
-        => CommandHandler\OtherLicence\CreatePreviousLicence::class,
+    TransferCommand\TmEmployment\Update::class => CommandHandler\TmEmployment\Update::class,
 ];

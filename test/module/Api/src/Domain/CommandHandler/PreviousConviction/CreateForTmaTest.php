@@ -5,7 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\OtherLicence;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PreviousConviction;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\PreviousConviction\CreateForTma as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\PreviousConviction as PreviousConvictionRepo;
