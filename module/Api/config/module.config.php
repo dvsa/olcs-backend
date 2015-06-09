@@ -40,48 +40,61 @@ return [
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
         'factories' => [
             // Application
-            \Dvsa\Olcs\Transfer\Query\Application\FinancialHistory::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\FinancialHistory::class,
-
-            // Licence
-            \Dvsa\Olcs\Transfer\Query\Licence\BusinessDetails::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Licence\BusinessDetails::class,
-
-            // Organisation
-            \Dvsa\Olcs\Transfer\Query\Organisation\BusinessDetails::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\BusinessDetails::class,
-
             TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
-            TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
-            TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
-            TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
-            TransferQuery\Variation\TypeOfLicence::class => QueryHandler\Variation\TypeOfLicence::class,
-            TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
-            TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
             TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
             TransferQuery\Application\FinancialEvidence::class => QueryHandler\Application\FinancialEvidence::class,
-            TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
             TransferQuery\Application\PreviousConvictions::class => QueryHandler\Application\PreviousConvictions::class,
-            TransferQuery\PreviousConviction\PreviousConviction::class =>
-                QueryHandler\PreviousConviction\PreviousConviction::class,
+            TransferQuery\Application\Safety::class => QueryHandler\Application\Safety::class,
+            TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
+
+            // Licence
+            TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
+            TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
+            TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
+            TransferQuery\Licence\Safety::class => QueryHandler\Licence\Safety::class,
+
+            // Organisation
+            TransferQuery\Organisation\BusinessDetails::class => QueryHandler\Organisation\BusinessDetails::class,
+            TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
+
+            // Variation
+            TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
+            TransferQuery\Variation\TypeOfLicence::class => QueryHandler\Variation\TypeOfLicence::class,
+
+            // Cases
+            TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
             TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
             TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
-            TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
-            TransferQuery\Processing\Note::class => QueryHandler\Processing\Note::class,
-            TransferQuery\Processing\NoteList::class => QueryHandler\Processing\NoteList::class,
-
-            TransferQuery\CompanySubsidiary\CompanySubsidiary::class
-                => QueryHandler\CompanySubsidiary\CompanySubsidiary::class,
-
-            TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
-            TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
-            TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
-            TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
             TransferQuery\Cases\ImpoundingList::class => QueryHandler\Cases\ImpoundingList::class,
             TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
             TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
-            TransferQuery\Cases\Complaint\ComplaintList::class =>
-                QueryHandler\Cases\Complaint\ComplaintList::class,
+            TransferQuery\Cases\Complaint\ComplaintList::class => QueryHandler\Cases\Complaint\ComplaintList::class,
+
+            // Processing
+            TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
+            TransferQuery\Processing\Note::class => QueryHandler\Processing\Note::class,
+            TransferQuery\Processing\NoteList::class => QueryHandler\Processing\NoteList::class,
+
+            // Previous Conviction
+            TransferQuery\PreviousConviction\PreviousConviction::class =>
+                QueryHandler\PreviousConviction\PreviousConviction::class,
+
+            // Company Subsidiary
+            TransferQuery\CompanySubsidiary\CompanySubsidiary::class
+            => QueryHandler\CompanySubsidiary\CompanySubsidiary::class,
+
+            // Bus
+            TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
+
+            // Trailer
+            TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
+
+            // Irfo
+            TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
+            TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
+
+            // Workshop
+            TransferQuery\Workshop\Workshop::class => QueryHandler\Workshop\Workshop::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -126,6 +139,8 @@ return [
             'TradingName' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
+            'ImpoundingList' => RepositoryFactory::class,
+            'Workshop' => RepositoryFactory::class,
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
         ]
