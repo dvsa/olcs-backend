@@ -71,7 +71,8 @@ return [
     TransferCommand\GracePeriod\DeleteGracePeriod::class => CommandHandler\GracePeriod\DeleteGracePeriod::class,
 
     // Transfer - Correspondence
-    TransferCommand\Correspondence\AccessCorrespondence::class => CommandHandler\Correspondence\AccessCorrespondence::class,
+    TransferCommand\Correspondence\AccessCorrespondence::class
+        => CommandHandler\Correspondence\AccessCorrespondence::class,
 
     // Transfer - IRFO
     \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit::class
