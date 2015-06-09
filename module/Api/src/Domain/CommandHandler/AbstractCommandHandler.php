@@ -13,7 +13,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
 /**
  * Abstract Command Handler
@@ -44,11 +43,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     private $commandHandler;
 
-    /**
-     * @var QueryHandlerInterface
-     */
-    private $queryHandler;
-
     private $repoManager;
 
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -69,8 +63,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         $this->extraRepos[] = $this->repoServiceName;
 
         $this->commandHandler = $serviceLocator;
-
-        $this->queryHandler = $mainServiceLocator->get('QueryHandlerManager');
 
         if ($this instanceof TransactionedInterface) {
             return new TransactioningCommandHandler($this, $mainServiceLocator->get('TransactionManager'));
