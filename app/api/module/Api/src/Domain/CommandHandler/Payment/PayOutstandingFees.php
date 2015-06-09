@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
 use Dvsa\Olcs\Transfer\Command\Payment\PayOutstandingFees as Cmd;
 use Dvsa\Olcs\Transfer\Query\Organisation\OutstandingFees as OutstandingFeesQry;
 use Zend\ServiceManager\ServiceLocatorInterface;
-
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 // @todo move /////////////
 use CpmsClient\Service\ApiService;
@@ -27,9 +27,109 @@ use CpmsClient\Service\ApiService;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class PayOutstandingFees extends AbstractCommandHandler
+final class PayOutstandingFees extends AbstractCommandHandler implements TransactionedInterface
 {
-    // @todo move
+    protected $repoServiceName = 'Payment';
+
+    protected $cpmsClient;
+
+    protected $feeRepo;
+
+    protected $feePaymentRepo;
+
+    public function handleCommand(CommandInterface $command)
+    {
+        $result = new Result();
+
+        $organisationId = $command->getOrganisationId();
+        if ($organisationId) {
+
+            // get outstanding fees for organisation
+            $outstandingFees = $this->feeRepo->fetchOutstandingFeesByOrganisationId($organisationId);
+
+            // filter requested fee ids against outstanding fees
+            $fees = $this->filterValid($command, $outstandingFees);
+
+            // filter out fees that may have been paid by resolving outstanding payments
+            $feesToPay = $this->resolvePaidFees($fees);
+
+            if (empty($feesToPay)) {
+                $result->addMessage('No fees to pay');
+                return $result;
+            }
+
+            try {
+                // fire off to CPMS
+                $response = $this->initiateCardRequest(
+                    $organisationId,
+                    $command->getCpmsRedirectUrl(),
+                    $feesToPay,
+                    $command->getPaymentMethod()
+                );
+            } catch (CpmsException\PaymentInvalidResponseException $e) {
+                // @TODO
+                // $this->addErrorMessage('payment-failed');
+                // return $this->redirectToIndex();
+            }
+
+            // record payment
+            $payment = new PaymentEntity();
+            $payment->setGuid($response['receipt_reference']);
+            $payment->setStatus($this->getRepo()->getRefdataReference(PaymentEntity::STATUS_OUTSTANDING));
+            $this->getRepo()->save($payment);
+            $result->addId('payment', $payment->getId());
+
+            // record feePayments and fee payment method
+            foreach ($feesToPay as $fee) {
+                $feePayment = new FeePaymentEntity();
+                $feePayment->setPayment($payment);
+                $feePayment->setFee($fee);
+                $feePayment->setFeeValue($fee->getAmount());
+                $this->feePaymentRepo->save($feePayment);
+
+                // ensure payment method is recorded
+                $fee->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()));
+                $this->feeRepo->save($fee);
+            }
+
+        } else {
+            // not implemented yet! (fees with no organisation id)
+            throw new Dvsa\Olcs\Api\Domain\Exception\RuntimeException('not implemented');
+        }
+
+        $result->addMessage('Done');
+        return $result;
+    }
+
+    protected function filterValid(CommandInterface $command, array $outstandingFees)
+    {
+        $fees = [];
+        if (!empty($outstandingFees)) {
+            $ids = $command->getFeeIds();
+            foreach ($outstandingFees as $fee) {
+                if (in_array($fee->getId(), $ids)) {
+                    $fees[] = $fee;
+                }
+            }
+        }
+        return $fees;
+    }
+
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        parent::createService($serviceLocator);
+
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+        $this->cpmsClient = $mainServiceLocator->get('cpms\service\api');
+        $this->feeRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('Fee');
+        $this->feePaymentRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('FeePayment');
+        return $this;
+    }
+
+
+
+    // @todo move the following to a new Cpms helper service?
+
 /////////////////
     const PAYMENT_SUCCESS      = 801;
     const PAYMENT_FAILURE      = 802;
@@ -48,170 +148,6 @@ final class PayOutstandingFees extends AbstractCommandHandler
     // a required parameter in cpms/payment-service. Awaiting further info on
     // what OLCS should pass for this field.
     const COST_CENTRE = '12345,67890';
-/////////////////
-
-    protected $repoServiceName = 'Payment';
-
-    protected $cpmsClient;
-
-    protected $feeRepo;
-
-    protected $feePaymentRepo;
-
-    public function handleCommand(CommandInterface $command)
-    {
-        $result = new Result();
-
-        $organisationId = $command->getOrganisationId();
-        if ($organisationId) {
-
-            // get outstanding fees for organisation
-            // $query = OutstandingFeesQry::create(['id' => $organisationId]);
-            // $result = $this->getQueryHandler()->handleQuery($query);
-            // $outstandingFees = $result['outstandingFees'];
-            $outstandingFees = $this->feeRepo->fetchOutstandingFeesByOrganisationId($organisationId);
-
-            // filter requested fee ids against outstanding fees
-            $fees = [];
-            if (!empty($outstandingFees)) {
-                $ids = $command->getFeeIds();
-                foreach ($outstandingFees as $fee) {
-                    if (in_array($fee->getId(), $ids)) {
-                        $fees[] = $fee;
-                    }
-                }
-            }
-
-            $service = $this; // until we move to separate service
-
-            // filter out fees that may have been paid by resolving outstanding payments
-            $feesToPay = [];
-            foreach ($fees as $fee) {
-                if ($fee->hasOutstandingPayment()) {
-                    $paid = $service->resolveOutstandingPayments($fee);
-                    if (!$paid) {
-                        $feesToPay[] = $fee;
-                    }
-                } else {
-                    $feesToPay[] = $fee;
-                }
-            }
-
-            if (empty($feesToPay)) {
-                $result->addMessage('No fees to pay');
-                return $result;
-            }
-
-            try {
-                $response = $service->initiateCardRequest(
-                    $organisationId,
-                    $command->getCpmsRedirectUrl(),
-                    $feesToPay,
-                    $command->getPaymentMethod()
-                );
-            } catch (CpmsException\PaymentInvalidResponseException $e) {
-                // @TODO
-                // $this->addErrorMessage('payment-failed');
-                // return $this->redirectToIndex();
-            }
-
-            $payment = new PaymentEntity();
-            $payment->setGuid($response['receipt_reference']);
-            $payment->setStatus($this->getRepo()->getRefdataReference(PaymentEntity::STATUS_OUTSTANDING));
-            $this->getRepo()->save($payment);
-
-            foreach ($feesToPay as $fee) {
-                $feePayment = new FeePaymentEntity();
-                $feePayment->setPayment($payment);
-                $feePayment->setFee($fee);
-                $feePayment->setFeeValue($fee->getAmount());
-                $this->feePaymentRepo->save($feePayment);
-
-                // ensure payment method is recorded
-                $fee->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()));
-                $this->feeRepo->save($fee);
-            }
-        } else {
-            // not implemented yet (fees with no organisation id)
-            // @todo throw Exception
-        }
-        $result->addMessage('Done');
-        return $result;
-        /** @var Application $application */
-        // $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
-
-        // $application->setFinancialEvidenceUploaded($command->getFinancialEvidenceUploaded());
-
-        // $this->getRepo()->save($application);
-
-        // $result->addMessage('Financial evidence section has been updated');
-        // return $result;
-    }
-
-    // old controller method
-    protected function payFeesViaCpms($fees)
-    {
-        // Check for and resolve any outstanding payment requests
-        $service = $this->getServiceLocator()->get('Cpms\FeePayment');
-        $feesToPay = [];
-        foreach ($fees as $fee) {
-            if ($service->hasOutstandingPayment($fee)) {
-                $paid = $service->resolveOutstandingPayments($fee);
-                if (!$paid) {
-                    $feesToPay[] = $fee;
-                }
-            } else {
-                $feesToPay[] = $fee;
-            }
-        }
-        if (empty($feesToPay)) {
-            // fees were all paid
-            return $this->redirectToIndex();
-        }
-
-        $customerReference = $this->getCurrentOrganisationId();
-        $redirectUrl = $this->getServiceLocator()->get('Helper\Url')
-            ->fromRoute('fees/result', [], ['force_canonical' => true], true);
-
-        try {
-            $response = $service->initiateCardRequest($customerReference, $redirectUrl, $feesToPay);
-        } catch (CpmsException\PaymentInvalidResponseException $e) {
-            $this->addErrorMessage('payment-failed');
-            return $this->redirectToIndex();
-        }
-
-        $view = new ViewModel(
-            [
-                'gateway' => $response['gateway_url'],
-                'data' => [
-                    'receipt_reference' => $response['receipt_reference']
-                ]
-            ]
-        );
-        $view->setTemplate('cpms/payment');
-
-        return $this->render($view);
-    }
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        parent::createService($serviceLocator);
-
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->cpmsClient = $mainServiceLocator->get('cpms\service\api');
-        $this->feeRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('Fee');
-        $this->feePaymentRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('FeePayment');
-        return $this;
-    }
-
-    protected function resolveOutstandingPayments($fee)
-    {
-        // @TODO!
-        return false;
-    }
-
-
-    // the following could move to a new Cpms helper service?
 
     /**
      * @param string $customerReference usually organisation id
@@ -282,6 +218,12 @@ final class PayOutstandingFees extends AbstractCommandHandler
         return $response;
     }
 
+    protected function resolveOutstandingPayments($fee)
+    {
+        // @TODO!
+        return false;
+    }
+
     /**
      * @param array $fees
      * return float
@@ -311,4 +253,21 @@ final class PayOutstandingFees extends AbstractCommandHandler
     {
         // @TODO
     }
+
+    protected function resolvePaidFees($fees)
+    {
+        $feesToPay = [];
+        foreach ($fees as $fee) {
+            if ($fee->hasOutstandingPayment()) {
+                $paid = $this->resolveOutstandingPayments($fee);
+                if (!$paid) {
+                    $feesToPay[] = $fee;
+                }
+            } else {
+                $feesToPay[] = $fee;
+            }
+        }
+        return $feesToPay;
+    }
+/////////////////
 }
