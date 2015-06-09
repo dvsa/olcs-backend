@@ -122,4 +122,76 @@ class OrganisationTest extends RepositoryTestCase
 
         $this->assertEquals(['foo' => 'bar'], $result);
     }
+
+    public function testFetchIrfoDetailsById()
+    {
+        $command = m::mock(QueryInterface::class);
+        $command->shouldReceive('getId')
+            ->andReturn(111);
+
+         /** @var Expr $expr */
+        $expr = m::mock(QueryBuilder::class);
+        $expr->shouldReceive('isNull')
+            ->once()
+            ->with('tn.licence')
+            ->andReturnSelf();
+
+       /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('getQuery->getResult')
+            ->with(Query::HYDRATE_OBJECT)
+            ->andReturn(
+                [
+                    [
+                        'foo' => 'bar'
+                    ]
+                ]
+            );
+        $qb->shouldReceive('expr')
+            ->andReturn($expr);
+        $qb->shouldReceive('andWhere')
+            ->with($expr)
+            ->andReturnSelf();
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefData')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->once()
+            ->with('irfoNationality')
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->once()
+            ->with('irfoPartners')
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->once()
+            ->with('tradingNames', 'tn')
+            ->andReturnSelf()
+            ->shouldReceive('withContactDetails')
+            ->once()
+            ->with('irfoContactDetails')
+            ->andReturnSelf()
+            ->shouldReceive('byId')
+            ->once()
+            ->with(111);
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->with('m')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Organisation::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchIrfoDetailsUsingId($command);
+
+        $this->assertEquals(['foo' => 'bar'], $result);
+    }
 }
