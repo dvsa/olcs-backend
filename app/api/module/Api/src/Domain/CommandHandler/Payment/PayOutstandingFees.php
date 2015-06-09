@@ -9,16 +9,13 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Payment;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Payment\PayOutstandingFees as Cmd;
 use Dvsa\Olcs\Transfer\Query\Organisation\OutstandingFees as OutstandingFeesQry;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-
-// @todo move /////////////
 use CpmsClient\Service\ApiService;
 
 /**
@@ -43,63 +40,49 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     {
         $result = new Result();
 
-        $organisationId = $command->getOrganisationId();
-        if ($organisationId) {
+        // get outstanding fees for organisation
+        $outstandingFees = $this->feeRepo->fetchOutstandingFeesByOrganisationId($command->getOrganisationId());
 
-            // get outstanding fees for organisation
-            $outstandingFees = $this->feeRepo->fetchOutstandingFeesByOrganisationId($organisationId);
+        // filter requested fee ids against outstanding fees
+        $fees = $this->filterValid($command, $outstandingFees);
 
-            // filter requested fee ids against outstanding fees
-            $fees = $this->filterValid($command, $outstandingFees);
+        // filter out fees that may have been paid by resolving outstanding payments
+        $feesToPay = $this->resolvePaidFees($fees);
 
-            // filter out fees that may have been paid by resolving outstanding payments
-            $feesToPay = $this->resolvePaidFees($fees);
-
-            if (empty($feesToPay)) {
-                $result->addMessage('No fees to pay');
-                return $result;
-            }
-
-            try {
-                // fire off to CPMS
-                $response = $this->initiateCardRequest(
-                    $organisationId,
-                    $command->getCpmsRedirectUrl(),
-                    $feesToPay,
-                    $command->getPaymentMethod()
-                );
-            } catch (CpmsException\PaymentInvalidResponseException $e) {
-                // @TODO
-                // $this->addErrorMessage('payment-failed');
-                // return $this->redirectToIndex();
-            }
-
-            // record payment
-            $payment = new PaymentEntity();
-            $payment->setGuid($response['receipt_reference']);
-            $payment->setStatus($this->getRepo()->getRefdataReference(PaymentEntity::STATUS_OUTSTANDING));
-            $this->getRepo()->save($payment);
-            $result->addId('payment', $payment->getId());
-
-            // record feePayments and fee payment method
-            foreach ($feesToPay as $fee) {
-                $feePayment = new FeePaymentEntity();
-                $feePayment->setPayment($payment);
-                $feePayment->setFee($fee);
-                $feePayment->setFeeValue($fee->getAmount());
-                $this->feePaymentRepo->save($feePayment);
-
-                // ensure payment method is recorded
-                $fee->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()));
-                $this->feeRepo->save($fee);
-            }
-
-        } else {
-            // not implemented yet! (fees with no organisation id)
-            throw new Dvsa\Olcs\Api\Domain\Exception\RuntimeException('not implemented');
+        if (empty($feesToPay)) {
+            $result->addMessage('No fees to pay');
+            return $result;
         }
 
-        $result->addMessage('Done');
+        // fire off to CPMS
+        $response = $this->initiateCardRequest(
+            $command->getOrganisationId(),
+            $command->getCpmsRedirectUrl(),
+            $feesToPay,
+            $command->getPaymentMethod()
+        );
+
+        // record payment
+        $payment = new PaymentEntity();
+        $payment->setGuid($response['receipt_reference']);
+        $payment->setStatus($this->getRepo()->getRefdataReference(PaymentEntity::STATUS_OUTSTANDING));
+        $this->getRepo()->save($payment);
+        $result->addId('payment', $payment->getId());
+
+        // record feePayments and fee payment method
+        foreach ($feesToPay as $fee) {
+            $feePayment = new FeePaymentEntity();
+            $feePayment->setPayment($payment);
+            $feePayment->setFee($fee);
+            $feePayment->setFeeValue($fee->getAmount());
+            $this->feePaymentRepo->save($feePayment);
+
+            // ensure payment method is recorded
+            $fee->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()));
+            $this->feeRepo->save($fee);
+        }
+
+        $result->addMessage('Payment record created');
         return $result;
     }
 
