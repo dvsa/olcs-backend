@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -68,6 +69,7 @@ class CommandHandlerTestCase extends MockeryTestCase
 
         $sm = m::mock(ServiceManager::class)->makePartial();
         $sm->setService('RepositoryServiceManager', $this->repoManager);
+        $sm->setService('TransactionManager', m::mock(TransactionManagerInterface::class));
 
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->setService($serviceName, $service);
@@ -76,7 +78,7 @@ class CommandHandlerTestCase extends MockeryTestCase
         $this->commandHandler = m::mock(CommandHandlerManager::class)->makePartial();
         $this->commandHandler->setServiceLocator($sm);
 
-        $this->sut = $this->sut->createService($this->commandHandler);
+        $this->sut->createService($this->commandHandler);
 
         $this->sideEffects = [];
         $this->commands = [];

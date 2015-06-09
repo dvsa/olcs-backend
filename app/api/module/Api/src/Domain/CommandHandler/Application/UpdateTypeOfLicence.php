@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -25,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Command\Licence\CancelLicenceFees;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateTypeOfLicence extends AbstractCommandHandler
+final class UpdateTypeOfLicence extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
 
@@ -54,23 +55,14 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler
             $this->getRepo()->getRefdataReference($command->getLicenceType())
         );
 
-        try {
-            $this->getRepo()->beginTransaction();
+        $this->getRepo()->save($application);
 
-            $this->getRepo()->save($application);
-
-            foreach ($sideEffects as $sideEffect) {
-                $result->merge($this->getCommandHandler()->handleCommand($sideEffect));
-            }
-
-            $this->getRepo()->commit();
-
-            $result->addMessage('Application saved successfully');
-            return $result;
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-            throw $ex;
+        foreach ($sideEffects as $sideEffect) {
+            $result->merge($this->getCommandHandler()->handleCommand($sideEffect));
         }
+
+        $result->addMessage('Application saved successfully');
+        return $result;
     }
 
     private function determineSideEffects(Application $application, Cmd $command)
