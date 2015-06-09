@@ -1,28 +1,28 @@
 <?php
 
 /**
- * Payment Test
+ * Payment by reference Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Fee;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Payment\Payment;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Payment\PaymentByReference as QueryHandler;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Payment as PaymentRepo;
-use Dvsa\Olcs\Transfer\Query\Payment\Payment as Qry;
+use Dvsa\Olcs\Transfer\Query\Payment\PaymentByReference as Qry;
 use Mockery as m;
 
 /**
- * Payment Test
+ * Payment by reference Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class PaymentTest extends QueryHandlerTestCase
+class PaymentByReferenceTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new Payment();
+        $this->sut = new QueryHandler();
         $this->mockRepo('Payment', PaymentRepo::class);
 
         parent::setUp();
