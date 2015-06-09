@@ -25,6 +25,8 @@ return [
         => CommandHandler\Application\CreateCompanySubsidiary::class,
     TransferCommand\Application\DeleteCompanySubsidiary::class
         => CommandHandler\Application\DeleteCompanySubsidiary::class,
+    TransferCommand\Application\UpdateAddresses::class
+        => CommandHandler\Application\UpdateAddresses::class,
 
     // Transfer - Note
     TransferCommand\Processing\Note\Create::class => CommandHandler\Processing\Note\Create::class,
@@ -45,6 +47,7 @@ return [
 
     // Transfer - Variation
     TransferCommand\Variation\UpdateTypeOfLicence::class => CommandHandler\Variation\UpdateTypeOfLicence::class,
+    TransferCommand\Variation\UpdateAddresses::class => CommandHandler\Variation\UpdateAddresses::class,
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
