@@ -47,7 +47,7 @@ final class CreateEnvironmentalComplaint extends AbstractCommandHandler implemen
         $complaint = $this->createComplaintObject($command, $contactDetails);
 
         $this->getRepo()->save($complaint);
-        $result->addMessage('EnvironmentalComplaint created');
+        $result->addMessage('Environmental Complaint created');
 
         $result->addId('complaint', $complaint->getId());
         $result->addId('person', $person->getId());

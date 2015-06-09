@@ -46,7 +46,7 @@ final class UpdateEnvironmentalComplaint extends AbstractCommandHandler implemen
         $complaint = $this->updateComplaintObject($command, $complaint);
 
         $this->getRepo()->save($complaint);
-        $result->addMessage('Complaint updated');
+        $result->addMessage('Environmental Complaint updated');
 
         return $result;
     }
