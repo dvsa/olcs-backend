@@ -48,6 +48,10 @@ class Application extends AbstractApplication
     const INTERIM_STATUS_REVOKED = 'int_sts_revoked';
     const INTERIM_STATUS_GRANTED = 'int_sts_granted';
 
+    const VARIATION_STATUS_UNCHANGED = 0;
+    const VARIATION_STATUS_REQUIRES_ATTENTION = 1;
+    const VARIATION_STATUS_UPDATED = 2;
+
     public function __construct(Licence $licence, RefData $status, $isVariation)
     {
         parent::__construct();
