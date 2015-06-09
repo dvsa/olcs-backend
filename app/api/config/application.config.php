@@ -9,6 +9,7 @@ return array(
         'DoctrineORMModule',
         'Olcs\Db',
         'Dvsa\Olcs\Api',
+        'CpmsClient',
     ],
     // These are various options for the listeners attached to the ModuleManager
     'module_listener_options' => array(

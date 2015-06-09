@@ -22,6 +22,7 @@ return [
             Util\SlaCalculatorInterface::class => Util\SlaCalculatorFactory::class,
             Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class,
             'TransactionManager' => \Dvsa\Olcs\Api\Domain\Repository\TransactionManagerFactory::class,
+            'CpmsIdentityProvider' =>  Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
         ]
     ],
     'controller_plugins' => [
@@ -137,6 +138,7 @@ return [
             'Task' => RepositoryFactory::class,
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
+            'FeePayment' => RepositoryFactory::class,
             'Cases' => RepositoryFactory::class,
             'Pi' => \Dvsa\Olcs\Api\Domain\Repository\PiFactory::class,
             'EventHistory' => RepositoryFactory::class,
