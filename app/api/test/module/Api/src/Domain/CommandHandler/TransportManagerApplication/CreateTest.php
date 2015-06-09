@@ -103,7 +103,7 @@ class CreateTest extends CommandHandlerTestCase
             }
         );
         $this->repoMap['User']->shouldReceive('save')->once()->andReturnUsing(
-            function(\Dvsa\Olcs\Api\Entity\User\User $u) use (&$savedTm) {
+            function (\Dvsa\Olcs\Api\Entity\User\User $u) use (&$savedTm) {
                 $this->assertSame($savedTm, $u->getTransportManager());
             }
         );
