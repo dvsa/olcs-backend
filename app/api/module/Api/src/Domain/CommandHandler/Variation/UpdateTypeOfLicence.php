@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
@@ -25,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAwareInterface
+final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -64,22 +65,12 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
 
         $application->setLicenceType($this->getRepo()->getRefdataReference($command->getLicenceType()));
 
-        try {
+        $this->getRepo()->save($application);
+        $result->addMessage('Application saved successfully');
 
-            $this->getRepo()->beginTransaction();
+        $result->merge($this->updateApplicationCompletion($command->getId()));
 
-            $this->getRepo()->save($application);
-            $result->addMessage('Application saved successfully');
-
-            $result->merge($this->updateApplicationCompletion($command->getId()));
-
-            $this->getRepo()->commit();
-
-            return $result;
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-            throw $ex;
-        }
+        return $result;
     }
 
     private function updateApplicationCompletion($id)

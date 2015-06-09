@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -19,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Upda
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-final class UpdatePreviousConvictions extends AbstractCommandHandler
+final class UpdatePreviousConvictions extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
 
@@ -33,29 +34,20 @@ final class UpdatePreviousConvictions extends AbstractCommandHandler
         $application->setPrevConviction($command->getPrevConviction());
         $application->setConvictionsConfirmation($command->getConvictionsConfirmation());
 
-        try {
-            $this->getRepo()->beginTransaction();
+        $this->getRepo()->save($application);
 
-            $this->getRepo()->save($application);
+        $update = $this->getCommandHandler()->handleCommand(
+            UpdateApplicationCompletionCommand::create(
+                [
+                    'id' => $application->getId(),
+                    'section' => 'convictionsPenalties'
+                ]
+            )
+        );
 
-            $update = $this->getCommandHandler()->handleCommand(
-                UpdateApplicationCompletionCommand::create(
-                    [
-                        'id' => $application->getId(),
-                        'section' => 'convictionsPenalties'
-                    ]
-                )
-            );
+        $result->merge($update);
 
-            $result->merge($update);
-
-            $this->getRepo()->commit();
-
-            $result->addMessage('Application saved successfully');
-            return $result;
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-            throw $ex;
-        }
+        $result->addMessage('Application saved successfully');
+        return $result;
     }
 }

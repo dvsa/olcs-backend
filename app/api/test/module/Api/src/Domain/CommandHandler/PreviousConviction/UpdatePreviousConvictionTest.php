@@ -91,11 +91,7 @@ class UpdatePreviousConvictionTest extends CommandHandlerTestCase
                 ->andReturn(123)
                 ->getMock()
             )
-            ->shouldReceive('beginTransaction')
-            ->once()
             ->shouldReceive('save')
-            ->once()
-            ->shouldReceive('commit')
             ->once();
 
         $this->expectedSideEffect(

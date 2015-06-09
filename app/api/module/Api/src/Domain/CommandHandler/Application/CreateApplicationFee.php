@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -30,7 +31,7 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateApplicationFee extends AbstractCommandHandler implements AuthAwareInterface
+final class CreateApplicationFee extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -51,31 +52,21 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
 
     public function handleCommand(CommandInterface $command)
     {
-        try {
-            $result = new Result();
+        $result = new Result();
 
-            $this->getRepo()->beginTransaction();
+        $taskId = null;
 
-            $taskId = null;
+        if ($this->shouldCreateTask()) {
 
-            if ($this->shouldCreateTask()) {
+            $taskResult = $this->getCommandHandler()->handleCommand($this->createCreateTaskCommand($command));
+            $result->merge($taskResult);
 
-                $taskResult = $this->getCommandHandler()->handleCommand($this->createCreateTaskCommand($command));
-                $result->merge($taskResult);
-
-                $taskId = $taskResult->getId('task');
-            }
-
-            $result->merge($this->getCommandHandler()->handleCommand($this->createCreateFeeCommand($command, $taskId)));
-
-            $this->getRepo()->commit();
-
-            return $result;
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-
-            throw $ex;
+            $taskId = $taskResult->getId('task');
         }
+
+        $result->merge($this->getCommandHandler()->handleCommand($this->createCreateFeeCommand($command, $taskId)));
+
+        return $result;
     }
 
     /**
