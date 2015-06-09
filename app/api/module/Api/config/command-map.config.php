@@ -83,6 +83,11 @@ return [
     TransferCommand\Cases\Complaint\DeleteComplaint::class =>
         CommandHandler\Cases\Complaint\DeleteComplaint::class,
 
+    // Conviction
+    TransferCommand\Cases\Conviction\Create::class => CommandHandler\Cases\Conviction\Create::class,
+    TransferCommand\Cases\Conviction\Update::class => CommandHandler\Cases\Conviction\Update::class,
+    TransferCommand\Cases\Conviction\Delete::class => CommandHandler\Cases\Conviction\Delete::class,
+
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
     Command\Application\ResetApplication::class => CommandHandler\Application\ResetApplication::class,
