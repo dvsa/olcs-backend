@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\GracePeriod;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -16,7 +17,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-final class DeleteGracePeriod extends AbstractCommandHandler
+final class DeleteGracePeriod extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'GracePeriod';
 

@@ -32,4 +32,17 @@ class GracePeriodEntityTest extends EntityTester
 
         $this->assertTrue($gracePeriod->isActive('2015-01-02'));
     }
+
+    public function testIsNotActiveWhenNotActive()
+    {
+        $gracePeriod = m::mock(Entity::class)->makePartial();
+        $gracePeriod->shouldReceive('getStartDate')
+            ->andReturn('2015-01-01')
+            ->twice()
+            ->shouldReceive('getEndDate')
+            ->andReturn('2015-01-03')
+            ->twice();
+
+        $this->assertFalse($gracePeriod->isActive('2011-01-02'));
+    }
 }
