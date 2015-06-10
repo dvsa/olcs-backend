@@ -8,11 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\OutstandingFees;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Transfer\Query\Organisation\OutstandingFees as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
+
 
 /**
  * Outstanding Fees Test
@@ -36,16 +38,11 @@ class OutstandingFeesTest extends QueryHandlerTestCase
 
         $query = Qry::create(['id' => $organisationId]);
 
-        $mockOrganisation = m::mock()
+        $mockOrganisation = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface')
             ->shouldReceive('getId')
             ->andReturn($organisationId)
-            ->shouldReceive('jsonSerialize')
-            ->andReturn(
-                [
-                    'id' => $organisationId,
-                    'name' => 'My Org',
-                ]
-            )
+            ->shouldReceive('serialize')
+            // ->with()
             ->getMock();
 
         $fees = [
@@ -65,59 +62,21 @@ class OutstandingFeesTest extends QueryHandlerTestCase
             ->with($organisationId)
             ->andReturn($fees);
 
-        $expected = [
-            'id' => $organisationId,
-            'name' => 'My Org',
-            'outstandingFees' => [
-                [
-                    'id' => 98,
-                    'feePayments' => [
-                        [
-                            'payment' => [
-                                'id' => 198,
-                            ],
-                        ]
-                    ],
-                ],
-                [
-                    'id' => 99,
-                    'feePayments' => [
-                        [
-                            'payment' => [
-                                'id' => 199,
-                            ],
-                        ]
-                    ],
-                ],
-            ],
-        ];
-
         $result = $this->sut->handleQuery($query);
 
-        $this->assertEquals($expected, $result);
+        $this->assertInstanceOf(Result::class, $result);
     }
 
-    private function getMockFee($feeId, $paymentId)
+    private function getMockFee($feeId)
     {
         $mockFee = m::mock();
         $mockFeePayment = m::mock();
         $mockPayment = m::mock();
 
         $mockFee
-            ->shouldReceive('getFeePayments')
-            ->andReturn([$mockFeePayment])
-            ->shouldReceive('jsonSerialize')
-            ->andReturn(['id' => $feeId]);
-
-        $mockFeePayment
-            ->shouldReceive('getPayment')
-            ->andReturn($mockPayment)
-            ->shouldReceive('jsonSerialize')
-            ->andReturn([]);
-
-        $mockPayment
-            ->shouldReceive('jsonSerialize')
-            ->andReturn(['id' => $paymentId]);
+            ->shouldReceive('serialize')
+            ->shouldReceive('getId')
+            ->andReturn($feeId);
 
         return $mockFee;
     }
