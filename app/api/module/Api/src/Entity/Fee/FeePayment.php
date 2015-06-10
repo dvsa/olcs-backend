@@ -23,14 +23,4 @@ use Doctrine\ORM\Mapping as ORM;
 class FeePayment extends AbstractFeePayment
 {
 
-    protected function getCalculatedValues()
-    {
-        // Fee payments are usually returned as a child of fee or payment, so
-        // we need to avoid recursion. Query handlers must explicitly include
-        // the required children.
-        return [
-            'fee' => null,
-            'payment' => null,
-        ];
-    }
 }
