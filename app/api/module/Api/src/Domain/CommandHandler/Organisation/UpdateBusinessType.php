@@ -54,6 +54,7 @@ final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwa
             // B) But we are not changing business type
             if (!$this->businessTypeWillChange($organisation, $command)) {
                 $result->addMessage('Business type unchanged');
+                $this->maybeUpdateApplicationCompletion($command, $result);
                 return $result;
             }
         } else {
@@ -109,7 +110,7 @@ final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwa
 
     private function canChangeBusinessType(Cmd $command, Organisation $organisation)
     {
-        if (!$this->isGranted(Permission::SELFSERVE_USER)) {
+        if ($this->isGranted(Permission::INTERNAL_USER)) {
             return true;
         }
 
