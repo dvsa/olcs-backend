@@ -148,7 +148,6 @@ return [
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
             'OtherLicence' => RepositoryFactory::class,
-            'IrfoGvPermit' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
