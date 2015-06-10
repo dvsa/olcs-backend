@@ -2,8 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Entity\TrafficArea;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
-use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
+use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,9 +30,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractTrafficAreaEnforcementArea implements \JsonSerializable
+abstract class AbstractTrafficAreaEnforcementArea implements BundleSerializableInterface, JsonSerializable
 {
-    use JsonSerializableTrait;
+    use BundleSerializableTrait;
 
     /**
      * Created by

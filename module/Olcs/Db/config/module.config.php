@@ -169,8 +169,6 @@ return [
                 'Olcs\Db\Service\ContactDetails\PhoneContactsManager',
             'Olcs\Db\Service\Organisation\IrfoPartnersManager' =>
                 'Olcs\Db\Service\Organisation\IrfoPartnersManager',
-            'Olcs\Db\Service\IrfoPsvAuth\IrfoPsvAuthNumbersManager' =>
-                'Olcs\Db\Service\IrfoPsvAuth\IrfoPsvAuthNumbersManager',
             'EntityManagerHelper' => 'Olcs\Db\Service\EntityManager\EntityManagerHelperFactory',
         ],
         'invokables' => [
