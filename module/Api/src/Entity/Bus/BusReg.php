@@ -3,7 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Bus;
 
 use Doctrine\ORM\Mapping as ORM;
-use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
+use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
+use Doctrine\ORM\Query;
 
 /**
  * BusReg Entity
@@ -141,11 +142,9 @@ class BusReg extends AbstractBusReg
 
     public function updateServiceDetails(
         $serviceNo,
-        $otherServices,
         $startPoint,
         $finishPoint,
         $via,
-        $busServiceTypes,
         $otherDetails,
         $receivedDate,
         $effectiveDate,
@@ -158,10 +157,27 @@ class BusReg extends AbstractBusReg
         $this->startPoint = $startPoint;
         $this->finishPoint = $finishPoint;
         $this->via = $via;
-        $this->receivedDate = $receivedDate;
-        $this->effectiveDate = $effectiveDate;
-        $this->endDate = $endDate;
         $this->otherDetails = $otherDetails;
+
+        $receivedDateTime = \DateTime::createFromFormat('Y-m-d', $receivedDate);
+        $effectiveDateTime = \DateTime::createFromFormat('Y-m-d', $effectiveDate);
+        $endDateTime = \DateTime::createFromFormat('Y-m-d', $endDate);
+
+        if (!$receivedDateTime instanceof \DateTime) {
+            $receivedDateTime = null;
+        }
+
+        if (!$effectiveDateTime instanceof \DateTime) {
+            $effectiveDateTime = null;
+        }
+
+        if (!$endDateTime instanceof \DateTime) {
+            $endDateTime = null;
+        }
+
+        $this->receivedDate = $receivedDateTime;
+        $this->effectiveDate = $effectiveDateTime;
+        $this->endDate = $endDateTime;
 
         $this->isShortNotice = 'N';
 
@@ -179,12 +195,9 @@ class BusReg extends AbstractBusReg
      * @param BusNoticePeriod $busRules
      * @return bool|null
      */
-    private function isShortNotice($effectiveDate, $receivedDate, $busNoticePeriod, BusNoticePeriod $busRules)
+    private function isShortNotice($effectiveDate, $receivedDate, $busNoticePeriod, BusNoticePeriodEntity $busRules)
     {
-        $effectiveDateTime = \DateTime::createFromFormat('Y-m-d', $effectiveDate);
-        $receivedDateTime = \DateTime::createFromFormat('Y-m-d', $receivedDate);
-
-        if (!($effectiveDateTime instanceof \DateTime) || !($receivedDateTime instanceof \DateTime)) {
+        if (!($effectiveDate instanceof \DateTime) || !($receivedDate instanceof \DateTime)) {
             return false;
         }
 
@@ -197,7 +210,7 @@ class BusReg extends AbstractBusReg
         if ($standardPeriod > 0) {
             $interval = new \DateInterval('P' . $standardPeriod . 'D');
 
-            if ($receivedDateTime->add($interval) >= $effectiveDateTime) {
+            if ($receivedDate->add($interval) >= $effectiveDate) {
                 return true;
             }
         }
@@ -216,7 +229,7 @@ class BusReg extends AbstractBusReg
             $lastDateTime = $parent->getEffectiveDate();
             $interval = new \DateInterval('P' . $cancellationPeriod . 'D');
 
-            if ($lastDateTime->add($interval) >= $effectiveDateTime) {
+            if ($lastDateTime->add($interval) >= $effectiveDate) {
                 return true;
             }
         }
