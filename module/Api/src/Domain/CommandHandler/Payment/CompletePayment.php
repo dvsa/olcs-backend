@@ -57,10 +57,12 @@ final class CompletePayment extends AbstractCommandHandler implements Transactio
     protected function resolvePayment($command, $payment)
     {
         return  $this->getCommandHandler()->handleCommand(
-            ResolvePaymentCommand::create([
-                'id' => $payment->getId(),
-                'paymentMethod' => $command->getPaymentMethod(),
-            ])
+            ResolvePaymentCommand::create(
+                [
+                    'id' => $payment->getId(),
+                    'paymentMethod' => $command->getPaymentMethod(),
+                ]
+            )
         );
     }
 

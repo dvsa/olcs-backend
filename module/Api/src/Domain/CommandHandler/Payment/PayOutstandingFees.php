@@ -54,8 +54,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
         $response = $this->cpmsHelper->initiateCardRequest(
             $command->getOrganisationId(),
             $command->getCpmsRedirectUrl(),
-            $feesToPay,
-            $command->getPaymentMethod()
+            $feesToPay
         );
 
         // record payment
@@ -119,11 +118,13 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
                 $paymentId = $fp->getPayment()->getId();
 
                 // resolve outstanding payment
-                $response = $this->getCommandHandler()->handleCommand(
-                    ResolvePaymentCommand::create([
+                $this->getCommandHandler()->handleCommand(
+                    ResolvePaymentCommand::create(
+                        [
                         'id' => $paymentId,
                         'paymentMethod' => $fee->getPaymentMethod(),
-                    ])
+                        ]
+                    )
                 );
 
                 // check payment status

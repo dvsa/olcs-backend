@@ -55,5 +55,4 @@ class Payment extends AbstractRepository
 
         return $results[0];
     }
-
 }

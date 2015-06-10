@@ -65,8 +65,7 @@ class CpmsHelperService implements FactoryInterface
     public function initiateCardRequest(
         $customerReference,
         $redirectUrl,
-        array $fees,
-        $paymentMethod
+        array $fees
     ) {
         $totalAmount = $this->getTotalAmountFromFees($fees);
 

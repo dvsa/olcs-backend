@@ -32,7 +32,7 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
         /* @var $payment Payment */
         $payment = $this->getRepo()->fetchUsingId($command);
 
-       $cpmsStatus = $this->cpmsHelper->getPaymentStatus($payment->getGuid());
+        $cpmsStatus = $this->cpmsHelper->getPaymentStatus($payment->getGuid());
 
         $now = new \DateTime();
 
