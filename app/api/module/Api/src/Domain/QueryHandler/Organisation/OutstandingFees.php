@@ -35,6 +35,7 @@ class OutstandingFees extends AbstractQueryHandler
                 'outstandingFees' => $this->resultList(
                     $fees,
                     [
+                        'licence',
                         'feePayments' => [
                             'payment'
                         ]
