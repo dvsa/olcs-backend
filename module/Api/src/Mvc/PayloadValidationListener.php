@@ -84,6 +84,7 @@ class PayloadValidationListener implements ListenerAggregateInterface
         } else {
 
             $data = json_decode($request->getContent(), true);
+
             $dto->exchangeArray($data);
 
             $command = $this->annotationBuilder->createCommand($dto);

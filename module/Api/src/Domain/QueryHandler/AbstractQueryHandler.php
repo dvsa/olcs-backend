@@ -94,4 +94,14 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     {
         return $this->queryHandler;
     }
+
+    protected function resultList($objects, array $bundle = [])
+    {
+        return (new ResultList($objects, $bundle))->serialize();
+    }
+
+    protected function result($object, array $bundle = [], $values = [])
+    {
+        return new Result($object, $bundle, $values);
+    }
 }
