@@ -31,4 +31,12 @@ class Payment extends AbstractPayment
     {
         return $this->getStatus()->getId() === self::STATUS_OUTSTANDING;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isPaid()
+    {
+        return $this->getStatus()->getId() === self::STATUS_PAID;
+    }
 }
