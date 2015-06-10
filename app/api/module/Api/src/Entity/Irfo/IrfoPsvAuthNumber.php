@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Irfo;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 
 /**
  * IrfoPsvAuthNumber Entity
@@ -18,5 +19,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IrfoPsvAuthNumber extends AbstractIrfoPsvAuthNumber
 {
+    public function __construct(IrfoPsvAuth $irfoPsvAuth, $name)
+    {
+        $this->irfoPsvAuth = $irfoPsvAuth;
+        $this->name = $name;
+    }
 
+    protected function getCalculatedValues()
+    {
+        return ['irfoPsvAuth' => null];
+    }
 }
