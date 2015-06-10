@@ -8,10 +8,12 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Payment;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -41,7 +43,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
         $fees = $this->filterValid($command, $outstandingFees);
 
         // filter out fees that may have been paid by resolving outstanding payments
-        $feesToPay = $this->cpmsHelper->resolvePaidFees($fees);
+        $feesToPay = $this->resolvePaidFees($fees, $result);
 
         if (empty($feesToPay)) {
             $result->addMessage('No fees to pay');
@@ -100,5 +102,63 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
         parent::createService($serviceLocator);
         $this->cpmsHelper = $serviceLocator->getServiceLocator()->get('CpmsHelperService');
         return $this;
+    }
+
+    /**
+     * @param FeeEntity $fee
+     * @param Result $result
+     * @return boolean whether fee was paid
+     */
+    protected function resolveOutstandingPayments($fee, $result)
+    {
+        $paid = false;
+
+        foreach ($fee->getFeePayments() as $fp) {
+            if ($fp->getPayment()->isOutstanding()) {
+
+                $paymentId = $fp->getPayment()->getId();
+
+                // resolve outstanding payment
+                $response = $this->getCommandHandler()->handleCommand(
+                    ResolvePaymentCommand::create([
+                        'id' => $paymentId,
+                        'paymentMethod' => $fee->getPaymentMethod(),
+                    ])
+                );
+
+                // check payment status
+                $payment = $this->getRepo()->fetchById($paymentId);
+                $result->addMessage(
+                    sprintf('payment %d resolved as %s', $paymentId, $payment->getStatus()->getDescription())
+                );
+
+                if ($payment->isPaid()) {
+                    $paid = true;
+                }
+            }
+        }
+
+        return $paid;
+    }
+
+    /**
+     * @param array $fees
+     * @param Result $result
+     * @return array
+     */
+    public function resolvePaidFees($fees, $result)
+    {
+        $feesToPay = [];
+        foreach ($fees as $fee) {
+            if ($fee->hasOutstandingPayment()) {
+                $paid = $this->resolveOutstandingPayments($fee, $result);
+                if (!$paid) {
+                    $feesToPay[] = $fee;
+                }
+            } else {
+                $feesToPay[] = $fee;
+            }
+        }
+        return $feesToPay;
     }
 }

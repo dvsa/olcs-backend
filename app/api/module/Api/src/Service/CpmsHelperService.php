@@ -214,26 +214,4 @@ class CpmsHelperService implements FactoryInterface
             ]
         );
     }
-
-    ////////
-    protected function resolveOutstandingPayments($fee)
-    {
-        // @TODO!
-        return false;
-    }
-    public function resolvePaidFees($fees)
-    {
-        $feesToPay = [];
-        foreach ($fees as $fee) {
-            if ($fee->hasOutstandingPayment()) {
-                $paid = $this->resolveOutstandingPayments($fee);
-                if (!$paid) {
-                    $feesToPay[] = $fee;
-                }
-            } else {
-                $feesToPay[] = $fee;
-            }
-        }
-        return $feesToPay;
-    }
 }

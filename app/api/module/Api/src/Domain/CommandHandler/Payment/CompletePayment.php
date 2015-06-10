@@ -37,7 +37,7 @@ final class CompletePayment extends AbstractCommandHandler implements Transactio
 
         // check payment status
         $payment = $this->getRepo()->fetchbyReference($reference);
-        if ($payment->getStatus()->getId() !== PaymentEntity::STATUS_OUTSTANDING) {
+        if (!$payment->isOutstanding()) {
             throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
                 ['Invalid payment status: '.$payment->getStatus()->getId()]
             );
