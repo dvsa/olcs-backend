@@ -2,8 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Entity\CompaniesHouse;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
-use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
+use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,9 +18,9 @@ use Doctrine\Common\Collections\Collection;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="companies_house_company")
  */
-abstract class AbstractCompaniesHouseCompany implements \JsonSerializable
+abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterface, JsonSerializable
 {
-    use JsonSerializableTrait;
+    use BundleSerializableTrait;
 
     /**
      * Address line1
