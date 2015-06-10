@@ -8,8 +8,8 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * Fee
@@ -152,16 +152,16 @@ class Fee extends AbstractRepository
             ->setParameter(
                 'appStatus',
                 [
-                    $this->getRefdataReference(Application::APPLICATION_STATUS_UNDER_CONSIDERATION),
-                    $this->getRefdataReference(Application::APPLICATION_STATUS_GRANTED),
+                    $this->getRefdataReference(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION),
+                    $this->getRefdataReference(ApplicationEntity::APPLICATION_STATUS_GRANTED),
                 ]
             )
             ->setParameter(
                 'licStatus',
                 [
-                    $this->getRefdataReference(Licence::LICENCE_STATUS_VALID),
-                    $this->getRefdataReference(Licence::LICENCE_STATUS_CURTAILED),
-                    $this->getRefdataReference(Licence::LICENCE_STATUS_SUSPENDED),
+                    $this->getRefdataReference(LicenceEntity::LICENCE_STATUS_VALID),
+                    $this->getRefdataReference(LicenceEntity::LICENCE_STATUS_CURTAILED),
+                    $this->getRefdataReference(LicenceEntity::LICENCE_STATUS_SUSPENDED),
                 ]
             );
     }
