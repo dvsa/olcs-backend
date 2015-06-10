@@ -34,7 +34,12 @@ return array(
         ),
         'allow_email' => array(
             'type' => 'yesno'
-        )
+        ),
+        'irfo_contact_details_id' => array(
+            'cascade' => array(
+                'persist'
+            )
+        ),
     ),
     'organisation_nature_of_business' => array(
         'organisation_id' => array(

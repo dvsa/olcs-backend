@@ -58,7 +58,7 @@ class Organisation extends AbstractRepository
             ->withContactDetails('irfoContactDetails')
             ->byId($id);
 
-        // get only trading names which are not linked with a licence
+        // get only trading names which are not linked to a licence
         $qb->andWhere($qb->expr()->isNull('tn.licence'));
 
         $results = $qb->getQuery()->getResult($hydrateMode);

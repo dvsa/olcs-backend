@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\ContactDetails;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 
 /**
  * ContactDetails Entity
@@ -27,11 +28,39 @@ class ContactDetails extends AbstractContactDetails
     const CONTACT_TYPE_REGISTERED_ADDRESS = 'ct_reg';
     const CONTACT_TYPE_COMPLAINANT = 'ct_complainant';
     const CONTACT_TYPE_WORKSHOP = 'ct_work';
+    const CONTACT_TYPE_IRFO_OPERATOR = 'ct_irfo_op';
 
     public function __construct(RefData $contactType)
     {
         parent::__construct();
 
         $this->setContactType($contactType);
+    }
+
+    public static function createForIrfoOperator(
+        RefData $contactType,
+        Address $address = null,
+        $phoneContacts = null,
+        $emailAddress = null
+    ) {
+        $contactDetails = new static($contactType);
+        $contactDetails->updateForIrfoOperator($address, $phoneContacts, $emailAddress);
+
+        return $contactDetails;
+    }
+
+    public function updateForIrfoOperator(Address $address = null, $phoneContacts = null, $emailAddress = null)
+    {
+        if ($address !== null) {
+            $this->address = $address;
+        }
+        if ($phoneContacts !== null) {
+            $this->phoneContacts = $phoneContacts;
+        }
+        if ($emailAddress !== null) {
+            $this->emailAddress = $emailAddress;
+        }
+
+        return $this;
     }
 }
