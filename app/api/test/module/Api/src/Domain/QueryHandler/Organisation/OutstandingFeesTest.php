@@ -15,7 +15,6 @@ use Dvsa\Olcs\Transfer\Query\Organisation\OutstandingFees as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
-
 /**
  * Outstanding Fees Test
  *
@@ -69,15 +68,10 @@ class OutstandingFeesTest extends QueryHandlerTestCase
 
     private function getMockFee($feeId)
     {
-        $mockFee = m::mock();
-        $mockFeePayment = m::mock();
-        $mockPayment = m::mock();
-
-        $mockFee
+        return m::mock()
             ->shouldReceive('serialize')
             ->shouldReceive('getId')
-            ->andReturn($feeId);
-
-        return $mockFee;
+            ->andReturn($feeId)
+            ->getMock();
     }
 }

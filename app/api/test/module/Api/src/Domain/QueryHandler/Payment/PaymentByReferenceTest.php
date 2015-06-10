@@ -32,7 +32,6 @@ class PaymentByReferenceTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $paymentRef = 'OLCS-1234-ABCD';
-        $paymentId = 99;
 
         $query = Qry::create(['reference' => $paymentRef]);
 
