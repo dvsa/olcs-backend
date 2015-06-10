@@ -3,6 +3,10 @@
 namespace Dvsa\Olcs\Api\Entity\Opposition;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Opposition\Opposer;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+
 
 /**
  * Opposition Entity
@@ -27,5 +31,27 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Opposition extends AbstractOpposition
 {
+    const OPPOSITION_TYPE_ENV = 'otf_eob';
 
+    public function __construct(
+        Licence $licence,
+        Opposer $opposer,
+        RefData $oppositionType,
+        RefData $isCopied,
+        RefData $isInTime,
+        RefData $isPublicInquiry,
+        RefData $isWillingToAttendPi,
+        RefData $isWithdrawn
+    )
+    {
+        parent::__construct();
+        $this->setLicence($licence);
+        $this->setOpposer($opposer);
+        $this->setOppositionType($oppositionType);
+        $this->setIsCopied($isCopied);
+        $this->setIsInTime($isInTime);
+        $this->setIsPublicInquiry($isPublicInquiry);
+        $this->setIsWillingToAttendPi($isWillingToAttendPi);
+        $this->setIsWithdrawn($isWithdrawn);
+    }
 }
