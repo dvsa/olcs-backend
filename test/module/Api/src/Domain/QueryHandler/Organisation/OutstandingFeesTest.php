@@ -41,7 +41,6 @@ class OutstandingFeesTest extends QueryHandlerTestCase
             ->shouldReceive('getId')
             ->andReturn($organisationId)
             ->shouldReceive('serialize')
-            // ->with()
             ->getMock();
 
         $fees = [
