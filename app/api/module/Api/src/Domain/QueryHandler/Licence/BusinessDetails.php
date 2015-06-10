@@ -33,11 +33,20 @@ class BusinessDetails extends AbstractQueryHandler
         /** @var Organisation $organisation */
         $organisation = $this->getRepo('Organisation')->fetchBusinessDetailsById($organisation->getId());
 
-        $orgData = $organisation->jsonSerialize();
-
-        $orgData['tradingNames'] = $licence->getTradingNames()->toArray();
-        $orgData['companySubsidiaries'] = $licence->getCompanySubsidiaries()->toArray();
-
-        return $orgData;
+        return $this->result(
+            $organisation,
+            [
+                'natureOfBusinesses',
+                'contactDetails' => [
+                    'address' => [
+                        'countryCode'
+                    ]
+                ]
+            ],
+            [
+                'tradingNames' => $this->resultList($licence->getTradingNames()),
+                'companySubsidiaries' => $this->resultList($licence->getCompanySubsidiaries()),
+            ]
+        );
     }
 }
