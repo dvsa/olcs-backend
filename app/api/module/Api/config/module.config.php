@@ -100,6 +100,7 @@ return [
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
+            'BusRegOtherService' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
             'BusNoticePeriod' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,
