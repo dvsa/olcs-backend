@@ -47,12 +47,23 @@ class Organisation extends AbstractOrganisation
         return $this->hasInforceLicences;
     }
 
+    /**
+     * @return array
+     * @deprecated
+     */
     protected function getCalculatedValues()
     {
         return [
             'hasInforceLicences' => $this->hasInforceLicences(),
             // prevent recursion via app -> licence -> organisation -> licence
             'licences' => null,
+        ];
+    }
+
+    protected function getCalculatedBundleValues()
+    {
+        return [
+            'hasInforceLicences' => $this->hasInforceLicences()
         ];
     }
 }
