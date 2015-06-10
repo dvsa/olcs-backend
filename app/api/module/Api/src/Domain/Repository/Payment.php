@@ -53,7 +53,7 @@ class Payment extends AbstractRepository
             $this->lock($results[0], $version);
         }
 
-        // technically a list endpoint as we're not using id
-        return ['result' => $results, 'count' => 1];
+        return $results[0];
     }
+
 }

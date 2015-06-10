@@ -25,11 +25,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
 {
     protected $repoServiceName = 'Payment';
 
+    protected $extraRepos = ['Fee', 'FeePayment'];
+
     protected $cpmsHelper;
-
-    protected $feeRepo;
-
-    protected $feePaymentRepo;
 
     public function handleCommand(CommandInterface $command)
     {
@@ -71,11 +69,11 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $feePayment->setPayment($payment);
             $feePayment->setFee($fee);
             $feePayment->setFeeValue($fee->getAmount());
-            $this->feePaymentRepo->save($feePayment);
+            $this->getRepo('FeePayment')->save($feePayment);
 
             // ensure payment method is recorded
             $fee->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()));
-            $this->feeRepo->save($fee);
+            $this->getRepo('Fee')->save($fee);
         }
 
         $result->addMessage('Payment record created');
@@ -99,11 +97,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         parent::createService($serviceLocator);
-
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->cpmsHelper = $mainServiceLocator->get('CpmsHelperService');
-        $this->feeRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('Fee');
-        $this->feePaymentRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('FeePayment');
+        $this->cpmsHelper = $serviceLocator->getServiceLocator()->get('CpmsHelperService');
         return $this;
     }
 }
