@@ -221,6 +221,10 @@ return [
         => CommandHandler\TransportManagerApplication\Delete::class,
     TransferCommand\TransportManagerApplication\Create::class
         => CommandHandler\TransportManagerApplication\Create::class,
+    TransferCommand\TransportManagerApplication\UpdateStatus::class
+        => CommandHandler\TransportManagerApplication\UpdateStatus::class,
+    TransferCommand\TransportManagerApplication\SubmitDetails::class
+        => CommandHandler\TransportManagerApplication\SubmitDetails::class,
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
