@@ -31,7 +31,7 @@ class TransportManagerApplication extends AbstractRepository
         $dqb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($dqb)->withRefdata();
-        $this->joinTransportManagerPerson($dqb);
+        $this->joinTmContactDetails();
 
         $dqb->andWhere($dqb->expr()->eq($this->alias .'.application', ':applicationId'))
             ->setParameter('applicationId', $applicationId);
@@ -57,9 +57,10 @@ class TransportManagerApplication extends AbstractRepository
             ->with('ol.role')
             ->with('a.goodsOrPsv', 'gop')
             ->with('a.licence')
+            ->with('a.status')
             ->byId($tmaId);
 
-        $this->joinTransportManagerPerson($dqb);
+        $this->joinTmContactDetails();
 
         $results = $dqb->getQuery()->getResult();
 
@@ -72,13 +73,16 @@ class TransportManagerApplication extends AbstractRepository
 
     /**
      * Join Trasport Manager, Contact Details and Person entities to the query
-     *
-     * @param type $dqb
      */
-    protected function joinTransportManagerPerson($dqb)
+    protected function joinTmContactDetails()
     {
-        $dqb->join($this->alias .'.transportManager', 'tm')->addSelect('tm')
-            ->join('tm.homeCd', 'hcd')->addSelect('hcd')
-            ->join('hcd.person', 'p')->addSelect('p');
+        $this->getQueryBuilder()->with($this->alias .'.transportManager', 'tm')
+            ->with('tm.homeCd', 'hcd')
+            ->with('hcd.address' ,'hadd')
+            ->with('hadd.countryCode')
+            ->with('hcd.person', 'hp')
+            ->with('tm.workCd', 'wcd')
+            ->with('wcd.address', 'wadd')
+            ->with('wadd.countryCode');
     }
 }
