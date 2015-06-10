@@ -20,31 +20,28 @@ class OutstandingFees extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Organisation';
 
-    protected $feeRepo;
+    protected $extraRepos = ['Fee'];
 
     public function handleQuery(QueryInterface $query)
     {
         $organisation = $this->getRepo()->fetchUsingId($query);
-        $data = $organisation->jsonSerialize();
 
-        $fees = $this->feeRepo->fetchOutstandingFeesByOrganisationId($organisation->getId());
+        $fees = $this->getRepo('Fee')->fetchOutstandingFeesByOrganisationId($organisation->getId());
 
-        // manually 'serialize' the feePayment and payment children
-        // (we have to do this to avoid fee->feePayment->payment->feePayment->fee recursion)
-        foreach ($fees as &$fee) {
-            $feePayments = $fee->getFeePayments();
-            $fpArray = array();
-            foreach ($feePayments as $key => $fp) {
-                $fpArray[$key] = $fp->jsonSerialize();
-                $fpArray[$key]['payment'] = $fp->getPayment()->jsonSerialize();
-            }
-            $fee = $fee->jsonSerialize();
-            $fee['feePayments'] = $fpArray;
-        }
-
-        $data['outstandingFees'] = $fees;
-
-        return $data;
+        return $this->result(
+            $organisation,
+            [],
+            [
+                'outstandingFees' => $this->resultList(
+                    $fees,
+                    [
+                        'feePayments' => [
+                            'payment'
+                        ]
+                    ]
+                )
+            ]
+        );
     }
 
 

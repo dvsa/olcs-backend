@@ -25,7 +25,7 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
 {
     protected $repoServiceName = 'Payment';
 
-    protected $feeRepo;
+    protected $extraRepos = ['Fee'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -49,7 +49,7 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
                             ->setReceiptNo($payment->getGuid())
                             ->setPaymentMethod($command->getPaymentMethod())
                             ->receivedAmount($fee->getAmount());
-                        $this->feeRepo->save($fee);
+                        $this->getRepo('Fee')->save($fee);
                     }
                 }
 //
@@ -83,12 +83,7 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         parent::createService($serviceLocator);
-
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->cpmsHelper = $mainServiceLocator->get('CpmsHelperService');
-        $this->feeRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('Fee');
-
+        $this->cpmsHelper = $serviceLocator->getServiceLocator()->get('CpmsHelperService');
         return $this;
     }
 }

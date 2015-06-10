@@ -36,8 +36,7 @@ final class CompletePayment extends AbstractCommandHandler implements Transactio
         $reference = $command->getReference();
 
         // check payment status
-        $payments = $this->getRepo()->fetchbyReference($reference);
-        $payment = $payments['result'][0];
+        $payment = $this->getRepo()->fetchbyReference($reference);
         if ($payment->getStatus()->getId() !== PaymentEntity::STATUS_OUTSTANDING) {
             throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
                 ['Invalid payment status: '.$payment->getStatus()->getId()]
@@ -68,7 +67,6 @@ final class CompletePayment extends AbstractCommandHandler implements Transactio
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         parent::createService($serviceLocator);
-
         $this->cpmsHelper = $serviceLocator->getServiceLocator()->get('CpmsHelperService');
         return $this;
     }

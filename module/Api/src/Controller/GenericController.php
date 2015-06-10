@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Controller;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 
 /**
  * Generic Controller
@@ -29,6 +30,10 @@ class GenericController extends AbstractRestfulController
     {
         try {
             $result = $this->handleQuery();
+            if ($result instanceof Result) {
+                // we sometimes still get a single result if we're not retrieving by id
+                return $this->response()->singleResult($result);
+            }
             return $this->response()->multipleResults($result['count'], $result['result']);
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
