@@ -212,9 +212,9 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $ocCollection = new ArrayCollection();
         $application->setOperatingCentres($ocCollection);
 
-        $application->setTotAuthVehicles(1);
+        $application->setTotAuthVehicles(2);
         $application->setTotAuthSmallVehicles(0);
-        $application->setTotAuthMediumVehicles(1);
+        $application->setTotAuthMediumVehicles(2);
         $application->setTotAuthLargeVehicles(0);
 
         return $application;
@@ -260,6 +260,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
         $psvDiscsCollection = new ArrayCollection();
         $psvDiscsCollection->add(['foo' => 'bar']);
+        $psvDiscsCollection->add(['foo' => 'bar']);
+        $psvDiscsCollection->add(['foo' => 'bar']);
         $licence->setPsvDiscs($psvDiscsCollection);
 
         return $licence;
@@ -278,9 +280,9 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $psvDiscsCollection->add(['foo' => 'bar']);
         $licence->setPsvDiscs($psvDiscsCollection);
 
-        $licence->setTotAuthVehicles(2);
+        $licence->setTotAuthVehicles(3);
         $licence->setTotAuthSmallVehicles(0);
-        $licence->setTotAuthMediumVehicles(2);
+        $licence->setTotAuthMediumVehicles(3);
         $licence->setTotAuthLargeVehicles(0);
 
         return $licence;
@@ -579,11 +581,13 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'OperatingCentres' => UpdateVariationCompletion::STATUS_UNCHANGED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED,
                     'VehiclesDeclarations' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                    'Discs' =>  UpdateVariationCompletion::STATUS_UNCHANGED,
                 ],
                 [
                     'OperatingCentres' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'VehiclesDeclarations' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
+                    'Discs' =>  UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                 ],
                 'N'
             ],
