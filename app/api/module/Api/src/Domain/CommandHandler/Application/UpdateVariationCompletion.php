@@ -375,17 +375,6 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
     }
 
     /**
-     * Sorry for the double negative here, for some reason this makes the most sense
-     *
-     * @param string $section
-     * @return boolean
-     */
-    protected function isNotUnchanged($section)
-    {
-        return !$this->isUnchanged($section);
-    }
-
-    /**
      * Shared logic to check a sections status
      *
      * @param string $section
@@ -639,7 +628,7 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
         ];
 
         foreach ($allAuths as $authKey) {
-            if ($this->application->{'get' . $authKey}() > $this->licence{'get' . $authKey}()) {
+            if ($this->application->{'get' . $authKey}() > $this->licence->{'get' . $authKey}()) {
                 return true;
             }
         }
