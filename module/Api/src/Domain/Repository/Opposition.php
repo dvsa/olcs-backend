@@ -39,9 +39,8 @@ class Opposition extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)
             ->withRefData()
             ->with('case')
-            ->with('status')
-            ->withPersonContactDetails('complainantContactDetails')
-            ->with('ocComplaints')
+            ->with('opposer', 'o')
+            ->withPersonContactDetails('o.contactDetails', 'c')
             ->with('createdBy')
             ->with('lastModifiedBy')
             ->byId($query->getId());
@@ -50,6 +49,7 @@ class Opposition extends AbstractRepository
             ->setParameter('byCase', $query->getCase());
 
         $result = $qb->getQuery()->getResult($hydrateMode);
+        //\Doctrine\Common\Util\Debug::dump($result[0]);
         return $result[0];
     }
 
