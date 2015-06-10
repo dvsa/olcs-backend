@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -177,6 +178,17 @@ abstract class AbstractRepository implements RepositoryInterface
     public function getReference($entityClass, $id)
     {
         return $this->getEntityManager()->getReference($entityClass, $id);
+    }
+
+    public function generateRefdataArrayCollection($ids)
+    {
+        $refDataArray = [];
+        if (!empty($ids)) {
+            foreach ($ids as $id) {
+                $refDataArray[] = $this->getRefdataReference(RefDataEntity::class, $id);
+            }
+        }
+        return new ArrayCollection($refDataArray);
     }
 
     /**
