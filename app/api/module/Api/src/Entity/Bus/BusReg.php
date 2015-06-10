@@ -128,12 +128,10 @@ class BusReg extends AbstractBusReg
     }
 
     /**
-     * @param $trafficAreas
-     * @param $localAuthoritys
      * @param $stoppingArrangements
      * @return bool
      */
-    public function updateTaAuthority($trafficAreas, $localAuthoritys, $stoppingArrangements)
+    public function updateTaAuthority($stoppingArrangements)
     {
         $this->stoppingArrangements = $stoppingArrangements;
 
