@@ -420,7 +420,7 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
     }
 
     /**
-     * Apply the generic rules on sections requiring attension
+     * Apply the generic rules on sections requiring attention
      *
      * @param string $currentSection
      */
