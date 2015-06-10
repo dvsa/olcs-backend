@@ -24,8 +24,6 @@ class TaskAllocationRule extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
-
         $qb->andWhere(
             $qb->expr()->eq('m.category', ':category')
         )->andWhere(
