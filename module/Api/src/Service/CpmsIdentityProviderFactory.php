@@ -4,6 +4,7 @@
  * CPMS Identity Provider Service Factory
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
+ * @author Dan Eggleston <dan@stolenegg.com>
  */
 namespace Dvsa\Olcs\Api\Service;
 
@@ -15,6 +16,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * CPMS Identity Provider Service Factory
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
+ * @author Dan Eggleston <dan@stolenegg.com>
  */
 class CpmsIdentityProviderFactory implements FactoryInterface
 {
