@@ -182,16 +182,20 @@ return [
             'IrfoPermitStock' => RepositoryFactory::class,
             'IrfoPsvAuth' => RepositoryFactory::class,
             'IrfoPsvAuthNumber' => RepositoryFactory::class,
-            'IrfoPartner' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
             'ImpoundingList' => RepositoryFactory::class,
             'Workshop' => RepositoryFactory::class,
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
             'OtherLicence' => RepositoryFactory::class,
+<<<<<<< HEAD
             'Correspondence' => RepositoryFactory::class,
+=======
+>>>>>>> OLCS-9431 - Internal - Operator - Irfo - BE
             'SystemParameter' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
+            'IrfoPartner' => RepositoryFactory::class,
+            'PhoneContact' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
