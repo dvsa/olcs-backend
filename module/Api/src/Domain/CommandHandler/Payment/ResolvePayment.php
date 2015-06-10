@@ -32,7 +32,7 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
         /* @var $payment Payment */
         $payment = $this->getRepo()->fetchUsingId($command);
 
-        $cpmsStatus = $this->cpmsHelper->getPaymentStatus($payment->getGuid());
+       $cpmsStatus = $this->cpmsHelper->getPaymentStatus($payment->getGuid());
 
         $now = new \DateTime();
 
@@ -40,7 +40,6 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
             case Cpms::PAYMENT_SUCCESS:
                 $status = Payment::STATUS_PAID;
                 $payment->setCompletedDate($now);
-//
                 foreach ($payment->getFeePayments() as $fp) {
                     $fee = $fp->getFee();
                     $fee
@@ -51,17 +50,16 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
                         ->setReceivedAmount($fee->getAmount());
                     $this->getRepo('Fee')->save($fee);
                 }
-//
                 break;
             case Cpms::PAYMENT_FAILURE:
-                $status = PaymentEntityService::STATUS_FAILED;
+                $status = Payment::STATUS_FAILED;
                 break;
             case Cpms::PAYMENT_CANCELLATION:
-                $status = PaymentEntityService::STATUS_CANCELLED;
+                $status = Payment::STATUS_CANCELLED;
                 break;
             case Cpms::PAYMENT_IN_PROGRESS:
                 // resolve any abandoned payments as 'failed'
-                $status = PaymentEntityService::STATUS_FAILED;
+                $status = Payment::STATUS_FAILED;
                 break;
             default:
                 throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
@@ -69,7 +67,7 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
                 );
         }
 
-        $payment->setStatus($this->getRepo()->getRefdataReference(Payment::STATUS_PAID));
+        $payment->setStatus($this->getRepo()->getRefdataReference($status));
         $this->getRepo()->save($payment);
 
         $result = new Result();
