@@ -72,6 +72,9 @@ return [
         => QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
     TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class
         => QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
+    TransferQuery\Cases\Opposition\Opposition::class => QueryHandler\Cases\Opposition\Opposition::class,
+    TransferQuery\Cases\Opposition\OppositionList::class =>
+        QueryHandler\Cases\Opposition\OppositionList::class,
 
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
