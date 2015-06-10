@@ -9,8 +9,11 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
+use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService;
+use Dvsa\Olcs\Api\Entity\Bus\BusServiceType as BusServiceTypeEntity;
 use Dvsa\Olcs\Transfer\Command\Bus\UpdateServiceDetails as UpdateServiceDetailsCmd;
 use Dvsa\Olcs\Api\Domain\Repository\Fee;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -33,6 +36,8 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
     protected $feeRepo;
 
     protected $repoServiceName = 'Bus';
+
+    protected $extraRepos = ['BusRegOtherService'];
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -70,11 +75,9 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
 
         $busReg->updateServiceDetails(
             $command->getServiceNo(),
-            $command->getOtherServices(),
             $command->getStartPoint(),
             $command->getFinishPoint(),
             $command->getVia(),
-            $command->getBusServiceTypes(),
             $command->getOtherDetails(),
             $command->getReceivedDate(),
             $command->getEffectiveDate(),
@@ -83,13 +86,21 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
             $busRules
         );
 
+        $serviceTypes = $this->processServiceTypes($command->getBusServiceTypes());
+        $busReg->setBusServiceTypes($serviceTypes);
+
         $this->getRepo()->save($busReg);
+
+        $this->processServiceNumbers($busReg, $command->getOtherServices());
 
         if ($this->shouldCreateFee($busRegId)) {
             $result->merge($this->getCommandHandler()->handleCommand($this->createBusFeeCommand($busRegId)));
         }
 
-        $result->addMessage('Saved successfully');
+        $result->addId('BusReg', $busRegId);
+        $result->addMessage('Bus registration saved successfully');
+
+        return $result;
     }
 
     /**
@@ -108,6 +119,67 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
         }
 
         return true;
+    }
+
+    /**
+     * @param array $otherServiceNumbers
+     * @return array
+     */
+    private function processServiceNumbers(BusReg $busReg, array $otherServiceNumbers)
+    {
+        $reduced = [];
+
+        foreach ($otherServiceNumbers as $serviceNumber) {
+            if (empty($serviceNumber['serviceNo'])) {
+                // filter out empty values
+                continue;
+            }
+
+            if (!empty($serviceNumber['id'])) {
+                // update
+                /** @var BusRegOtherService $otherServiceEntity */
+                $otherServiceEntity = $this->getRepo('BusRegOtherService')->fetchById(
+                    $serviceNumber['id'],
+                    Query::HYDRATE_OBJECT,
+                    $serviceNumber['version']
+                );
+                $otherServiceEntity->setServiceNo($serviceNumber['serviceNo']);
+            } else {
+                // create
+                $otherServiceEntity = new BusRegOtherService();
+                $otherServiceEntity->setBusReg($busReg);
+                $otherServiceEntity->setServiceNo($serviceNumber['serviceNo']);
+            }
+
+            $this->getRepo('BusRegOtherService')->save($otherServiceEntity);
+            $reduced[] = $otherServiceEntity->getId();
+        }
+
+        // remove the remaining records
+        foreach ($busReg->getOtherServices() as $otherServiceEntity) {
+            if (!in_array($otherServiceEntity->getId(), $reduced)) {
+                $this->getRepo('BusRegOtherService')->delete($otherServiceEntity);
+            }
+        }
+
+        return $reduced;
+    }
+
+    /**
+     * Returns collection of service types.
+     *
+     * @param null $serviceTypes
+     * @return ArrayCollection
+     */
+    private function processServiceTypes($serviceTypes)
+    {
+        $result = new ArrayCollection();
+        if (!empty($serviceTypes)) {
+            foreach ($serviceTypes as $serviceType) {
+                $result->add($this->getRepo()->getReference(BusServiceTypeEntity::class, $serviceType));
+            }
+        }
+        return $result;
     }
 
     /**
