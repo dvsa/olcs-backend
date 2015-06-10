@@ -32,7 +32,7 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
         /* @var $payment Payment */
         $payment = $this->getRepo()->fetchUsingId($command);
 
-        $cpmsStatus  = $this->cpmsHelper->getPaymentStatus($payment->getGuid());
+        $cpmsStatus = $this->cpmsHelper->getPaymentStatus($payment->getGuid());
 
         $now = new \DateTime();
 
@@ -42,15 +42,14 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
                 $payment->setCompletedDate($now);
 //
                 foreach ($payment->getFeePayments() as $fp) {
-                    foreach ($fp->getFee() as $fee) {
-                        $fee
-                            ->setFeeStatus($this->getRepo()->getRefdataReference(Fee::STATUS_PAID))
-                            ->setReceivedDate($now)
-                            ->setReceiptNo($payment->getGuid())
-                            ->setPaymentMethod($command->getPaymentMethod())
-                            ->receivedAmount($fee->getAmount());
-                        $this->getRepo('Fee')->save($fee);
-                    }
+                    $fee = $fp->getFee();
+                    $fee
+                        ->setFeeStatus($this->getRepo()->getRefdataReference(Fee::STATUS_PAID))
+                        ->setReceivedDate($now)
+                        ->setReceiptNo($payment->getGuid())
+                        ->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()))
+                        ->setReceivedAmount($fee->getAmount());
+                    $this->getRepo('Fee')->save($fee);
                 }
 //
                 break;

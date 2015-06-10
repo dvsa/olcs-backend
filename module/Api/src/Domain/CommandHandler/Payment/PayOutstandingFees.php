@@ -34,7 +34,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
         $result = new Result();
 
         // get outstanding fees for organisation
-        $outstandingFees = $this->feeRepo->fetchOutstandingFeesByOrganisationId($command->getOrganisationId());
+        $outstandingFees = $this->getRepo('Fee')
+            ->fetchOutstandingFeesByOrganisationId($command->getOrganisationId());
 
         // filter requested fee ids against outstanding fees
         $fees = $this->filterValid($command, $outstandingFees);
