@@ -60,20 +60,18 @@ final class CreateBusFee extends AbstractCommandHandler
             );
         }
 
-        $receivedDateTime = new \DateTime($busReg->getReceivedDate());
-
         $feeType = $this->feeTypeRepo->fetchLatest(
             $feeType,
             $busReg->getLicence()->getGoodsOrPsv(),
             $busReg->getLicence()->getLicenceType(),
-            $receivedDateTime,
+            $busReg->getReceivedDate(),
             $feeTrafficArea
         );
 
         $data = [
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),
-            'invoicedDate' => $busReg->getReceivedDate(),
+            'invoicedDate' => $busReg->getReceivedDate()->format('Y-m-d'),
             'description' => $feeType->getDescription() . ' ' . $busReg->getRegNo() . ' ' . $busReg->getId(),
             'feeType' => $feeType->getId(),
             'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
