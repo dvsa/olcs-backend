@@ -35,7 +35,7 @@ final class UpdateAddressesStatus extends AbstractUpdateStatus
 
         // Must have at least 1 phone contact
         $phoneContacts = $corAdd->getPhoneContacts();
-        if ($phoneContacts->count() < 1) {
+        if (count($phoneContacts) < 1) {
             return false;
         }
 
