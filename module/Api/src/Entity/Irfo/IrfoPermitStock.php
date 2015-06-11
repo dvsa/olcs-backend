@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Irfo;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoCountry;
 
 /**
  * IrfoPermitStock Entity
@@ -23,5 +24,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IrfoPermitStock extends AbstractIrfoPermitStock
 {
+    const STATUS_RETURNED = 'irfo_perm_s_s_ret';
+    const STATUS_VOID = 'irfo_perm_s_s_void';
+    const STATUS_ISSUED = 'irfo_perm_s_s_issued';
+    const STATUS_IN_STOCK = 'irfo_perm_s_s_in_stock';
 
+    public function __construct($serialNo, $validForYear, IrfoCountry $irfoCountry)
+    {
+        $this->serialNo = $serialNo;
+        $this->validForYear = $validForYear;
+        $this->irfoCountry = $irfoCountry;
+    }
 }
