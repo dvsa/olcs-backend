@@ -26,6 +26,7 @@ class ContactDetails extends AbstractContactDetails
 {
     const CONTACT_TYPE_REGISTERED_ADDRESS = 'ct_reg';
     const CONTACT_TYPE_COMPLAINANT = 'ct_complainant';
+    const CONTACT_TYPE_WORKSHOP = 'ct_work';
 
     public function __construct(RefData $contactType)
     {
