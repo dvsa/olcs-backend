@@ -143,6 +143,7 @@ return [
             'Document' => RepositoryFactory::class,
             'DocTemplate' => RepositoryFactory::class,
             'LicenceStatusRule' => RepositoryFactory::class,
+            'ConditionUndertaking' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
