@@ -130,6 +130,7 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
                     $this->getRepo()->getRefdataReference($phoneRefName)
                 );
                 $contact->setContactDetails($contactDetails);
+                $contactDetails->getPhoneContacts()->add($contact);
             }
 
             if (!empty($data['phone_' . $phoneType])) {
@@ -147,6 +148,8 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
                 }
 
             } elseif ($contact->getId() > 0) {
+                $contactDetails->getPhoneContacts()->remove($contact);
+
                 $this->getRepo('PhoneContact')->delete($contact);
                 $result->addMessage('Phone contact ' . $phoneType . ' deleted');
                 $result->setFlag('hasChanged', true);
