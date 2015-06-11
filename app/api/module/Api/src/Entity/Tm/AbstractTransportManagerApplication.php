@@ -283,10 +283,10 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 0})
+     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
      * @ORM\Version
      */
-    protected $version = 0;
+    protected $version = 1;
 
     /**
      * Other licence
