@@ -41,14 +41,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockRepo('Fee', FeeRepo::class);
         $this->mockRepo('Payment', PaymentRepo::class);
 
-        // $this->references = [
-        //     FeePaymentEntity::class => [
-        //         11 => m::mock(FeePaymentEntity::class)->makePartial(),
-        //     ],
-        //     FeeEntity::class => [
-        //         22 => m::mock(FeeEntity::class)->makePartial(),
-        //     ],
-        // ];
         $this->refData = [
             PaymentEntity::STATUS_OUTSTANDING,
         ];
@@ -91,7 +83,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->once()
             ->with($organisationId, $cpmsRedirectUrl, $fees);
 
-       /** @var PaymentEntity $savedPayment */
+        /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
         $this->repoMap['Payment']
             ->shouldReceive('save')
@@ -119,6 +111,44 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(PaymentEntity::STATUS_OUTSTANDING, $savedPayment->getStatus()->getId());
+    }
+
+    public function testHandleCommandNoOp()
+    {
+        // set up data
+        $organisationId = 69;
+        $feeIds = [99, 100, 101];
+        $cpmsRedirectUrl = 'https://olcs-selfserve/foo';
+
+        $fees = [];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'organisationId' => $organisationId,
+            'cpmsRedirectUrl' => $cpmsRedirectUrl,
+            'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByOrganisationId')
+            ->once()
+            ->with($organisationId)
+            ->andReturn($fees);
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'No fees to pay',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
     }
 
     /**
