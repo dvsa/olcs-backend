@@ -11,6 +11,7 @@ use Common\Service\Entity\ContactDetailsEntityService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposer;
@@ -45,6 +46,9 @@ final class CreateOpposition  extends AbstractCommandHandler implements Transact
 
         $person = $this->createPersonObject($command);
         $result->addMessage('Person created');
+
+        $phoneContacts = $this->createPhoneContactsObject($command);
+        $result->addMessage('Phone contacts created');
 
         $contactDetails = ContactDetails::opposer($address, $person, $phoneContacts, $command->getEmailAddress());
         $result->addMessage('Contact details created');
@@ -210,5 +214,31 @@ final class CreateOpposition  extends AbstractCommandHandler implements Transact
             return $address;
         }
         return null;
+    }
+
+    /**
+     * Generates an ArrayCollection of PhoneContact entities
+     *
+     * @param Cmd $command
+     * @return ArrayCollection|null
+     */
+    private function createPhoneContactsObjects(Cmd $command)
+    {
+        $phoneContacts = new ArrayCollection();
+        if (!is_null($command->getPhone()))
+        {
+            $phoneContact = new PhoneContact(PhoneContact::PHONE_CONTACT_TYPE_TEL);
+            $phoneContact->setPhoneNumber($command->getPhone());
+
+            $phoneContacts->add($phoneContact);
+        }
+        if (!is_null($command->getF))
+        {
+            $phoneContact = new PhoneContact(PhoneContact::PHONE_CONTACT_TYPE_TEL);
+            $phoneContact->setPhoneNumber($command->getPhone());
+
+            $phoneContacts->add($phoneContact);
+        }
+        return $phoneContacts;
     }
 }
