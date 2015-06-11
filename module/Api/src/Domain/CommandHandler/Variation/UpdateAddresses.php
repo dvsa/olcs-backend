@@ -59,7 +59,6 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
                 'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_ADDRESS_CHANGE_DIGITAL,
                 'description' => 'Address Change',
                 'licence' => $licence->getId(),
-                'application' => $application->getId(),
                 'actionDate' => date('Y-m-d H:i:s')
             ];
 
