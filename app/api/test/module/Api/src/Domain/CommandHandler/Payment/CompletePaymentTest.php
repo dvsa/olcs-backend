@@ -78,7 +78,6 @@ class CompletePaymentTest extends CommandHandlerTestCase
             ->once()
             ->with($guid, $cpmsData);
 
-
         $resolveResult = new Result();
         $resolveResult->addId('payment', 69);
         $this->expectedSideEffect(
