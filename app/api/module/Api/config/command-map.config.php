@@ -65,11 +65,22 @@ return [
     TransferCommand\Trailer\UpdateTrailer::class => CommandHandler\Trailer\UpdateTrailer::class,
     TransferCommand\Trailer\DeleteTrailer::class => CommandHandler\Trailer\DeleteTrailer::class,
 
+    // Transfer - Grace Period
+    TransferCommand\GracePeriod\CreateGracePeriod::class => CommandHandler\GracePeriod\CreateGracePeriod::class,
+    TransferCommand\GracePeriod\UpdateGracePeriod::class => CommandHandler\GracePeriod\UpdateGracePeriod::class,
+    TransferCommand\GracePeriod\DeleteGracePeriod::class => CommandHandler\GracePeriod\DeleteGracePeriod::class,
+
     // Transfer - IRFO
     \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit::class
         => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoGvPermit::class,
     \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoGvPermit::class
         => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoGvPermit::class,
+    \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoPermitStock::class
+        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoPermitStock::class,
+    \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoPsvAuth::class
+        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoPsvAuth::class,
+    \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth::class
+        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
 
     // Transfer - Impounding
     TransferCommand\Cases\Impounding\CreateImpounding::class =>
@@ -87,6 +98,7 @@ return [
     TransferCommand\Cases\Complaint\DeleteComplaint::class =>
         CommandHandler\Cases\Complaint\DeleteComplaint::class,
 
+
     // Transfer - CommunityLic
     TransferCommand\CommunityLic\Application\Create::class => CommandHandler\CommunityLic\Application\Create::class,
     TransferCommand\CommunityLic\Application\CreateOfficeCopy::class =>
@@ -95,6 +107,19 @@ return [
     TransferCommand\CommunityLic\Licence\CreateOfficeCopy::class =>
         CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
     TransferCommand\CommunityLic\GenerateBatch::class => CommandHandler\CommunityLic\GenerateBatch::class,
+
+    // Conviction
+    TransferCommand\Cases\Conviction\Create::class => CommandHandler\Cases\Conviction\Create::class,
+    TransferCommand\Cases\Conviction\Update::class => CommandHandler\Cases\Conviction\Update::class,
+    TransferCommand\Cases\Conviction\Delete::class => CommandHandler\Cases\Conviction\Delete::class,
+
+    // Transfer - Environmental Complaint
+    TransferCommand\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class =>
+        CommandHandler\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class,
+    TransferCommand\Cases\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class =>
+        CommandHandler\Cases\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class,
+    TransferCommand\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class =>
+        CommandHandler\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
 
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,

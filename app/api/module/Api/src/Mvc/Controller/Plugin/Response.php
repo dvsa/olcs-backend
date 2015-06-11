@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Mvc\Controller\Plugin;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result as QueryResult;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\Http\Response as HttpResponse;
 use Zend\View\Model\JsonModel;
@@ -43,6 +44,10 @@ class Response extends AbstractPlugin
     {
         $response = $this->getController()->getResponse();
         $response->setStatusCode(HttpResponse::STATUS_CODE_200);
+
+        if ($result instanceof QueryResult) {
+            $result = $result->serialize();
+        }
 
         if (!is_array($result)) {
             $result = $result->jsonSerialize();

@@ -38,8 +38,7 @@ class Application extends AbstractRepository
             ->withRefdata()
             ->with('licence', 'l');
 
-        $qb
-            ->andWhere($qb->expr()->eq('l.organisation', ':organisationId'))
+        $qb->andWhere($qb->expr()->eq('l.organisation', ':organisationId'))
             ->setParameter('organisationId', $organisationId);
 
         return $qb->getQuery()->execute();
@@ -53,7 +52,7 @@ class Application extends AbstractRepository
      */
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
-        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->with('licence')->byId($id);
+        return $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->with('licence')->byId($id);
     }
 
     public function getInterimStatus($id)
