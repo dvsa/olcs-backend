@@ -54,7 +54,7 @@ class ConditionUndertaking extends AbstractRepository
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
-//echo $qb->getQuery()->getDQL();exit;
+
         $result = $qb->getQuery()->getResult($hydrateMode);
 
         if (empty($result)) {
@@ -65,7 +65,7 @@ class ConditionUndertaking extends AbstractRepository
     }
 
     /**
-     *
+     * Apply List Filters
      * @param QueryBuilder $qb
      * @param QueryInterface $query
      */
@@ -73,5 +73,19 @@ class ConditionUndertaking extends AbstractRepository
     {
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
+    }
+
+
+    /**
+     * Add List Joins
+     * @param QueryBuilder $qb
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('operatingCentre', 'oc')
+            ->with('oc.address')
+            ->with('createdBy')
+            ->with('lastModifiedBy');
     }
 }
