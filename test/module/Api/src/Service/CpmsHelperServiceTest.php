@@ -72,7 +72,6 @@ class CpmsHelperServiceTest extends MockeryTestCase
             ->with('Logger')
             ->andReturn($logger);
 
-
         $sut = new CpmsHelperService();
         return $sut->createService($sm);
     }
@@ -153,7 +152,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
             ->with('/api/payment/card', 'CARD', $params)
             ->andReturn($response);
 
-        $result = $this->sut->initiateCardRequest($customerReference, $redirectUrl, $fees);
+        $this->sut->initiateCardRequest($customerReference, $redirectUrl, $fees);
     }
 
     public function testGetPaymentStatus()
