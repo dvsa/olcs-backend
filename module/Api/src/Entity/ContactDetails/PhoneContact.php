@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Entity\ContactDetails;
 
 use Doctrine\ORM\Mapping as ORM;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * PhoneContact Entity
@@ -33,7 +32,9 @@ class PhoneContact extends AbstractPhoneContact
 
     public function __construct(RefData $phoneContactType)
     {
-        $this->phoneContactType = $phoneContactType;
+        parent::__construct();
+        $this->setContactDetails($contactDetails);
+        $this->setPhoneContactType($phoneContactType);
     }
 
     /**
