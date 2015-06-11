@@ -188,10 +188,7 @@ return [
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
             'OtherLicence' => RepositoryFactory::class,
-<<<<<<< HEAD
             'Correspondence' => RepositoryFactory::class,
-=======
->>>>>>> OLCS-9431 - Internal - Operator - Irfo - BE
             'SystemParameter' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
             'IrfoPartner' => RepositoryFactory::class,
