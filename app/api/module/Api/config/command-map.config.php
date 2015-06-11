@@ -98,6 +98,14 @@ return [
     TransferCommand\Cases\Complaint\DeleteComplaint::class =>
         CommandHandler\Cases\Complaint\DeleteComplaint::class,
 
+    // Transfer - Environmental Complaint
+    TransferCommand\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class =>
+        CommandHandler\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class,
+    TransferCommand\Cases\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class =>
+        CommandHandler\Cases\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class,
+    TransferCommand\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class =>
+        CommandHandler\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
+
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
     Command\Application\ResetApplication::class => CommandHandler\Application\ResetApplication::class,
