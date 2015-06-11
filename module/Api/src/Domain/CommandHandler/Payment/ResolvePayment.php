@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Payment;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Payment;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -62,9 +63,7 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
                 $status = Payment::STATUS_FAILED;
                 break;
             default:
-                throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
-                    ['Unknown CPMS payment_status: ' . $cpmsStatus]
-                );
+                throw new ValidationException(['Unknown CPMS payment_status: '.$cpmsStatus]);
         }
 
         $payment->setStatus($this->getRepo()->getRefdataReference($status));
