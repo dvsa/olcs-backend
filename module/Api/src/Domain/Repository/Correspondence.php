@@ -27,17 +27,11 @@ class Correspondence extends AbstractRepository
 
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $qb->leftJoin(
-            'm.licence',
-            'l',
-            Expr\Join::LEFT_JOIN
-        );
+        $this->getQueryBuilder()->modifyQuery($qb)->with('licence', 'l');
+        $this->getQueryBuilder()->modifyQuery($qb)->with('document');
 
         $qb->where($qb->expr()->eq('l.organisation', ':organisationId'));
         $qb->setParameter(':organisationId', $query->getOrganisation());
-
-        $this->getQueryBuilder()->modifyQuery($qb)->with('document');
-        $this->getQueryBuilder()->modifyQuery($qb)->with('licence');
     }
 
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
