@@ -20,7 +20,7 @@ use Doctrine\ORM\Query;
  */
 final class Delete extends AbstractCommandHandler implements TransactionedInterface
 {
-    protected $repoServiceName = 'Prohibition';
+    protected $repoServiceName = 'ProhibitionDefect';
 
     /**
      * Delete
