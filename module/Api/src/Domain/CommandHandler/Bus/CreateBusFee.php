@@ -39,7 +39,7 @@ final class CreateBusFee extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
-        /** @var BusReg $bus */
+        /** @var BusReg $busReg */
         $busReg = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
         $trafficArea = $busReg->getLicence()->getTrafficArea();
 
