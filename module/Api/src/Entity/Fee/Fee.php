@@ -39,6 +39,9 @@ class Fee extends AbstractFee
     const ACCRUAL_RULE_CONTINUATION  = 'acr_continuation';
     const ACCRUAL_RULE_IMMEDIATE     = 'acr_immediate';
 
+    const METHOD_CARD_ONLINE = 'fpm_card_online';
+    const METHOD_CARD_OFFLINE = 'fpm_card_offline';
+
     public function __construct(FeeType $feeType, $amount, RefData $feeStatus)
     {
         parent::__construct();
