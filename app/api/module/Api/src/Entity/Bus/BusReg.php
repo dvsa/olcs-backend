@@ -204,7 +204,7 @@ class BusReg extends AbstractBusReg
         if ($standardPeriod > 0) {
             $interval = new \DateInterval('P' . $standardPeriod . 'D');
 
-            if ($receivedDate->add($interval) >= $effectiveDate) {
+            if (clone $receivedDate->add($interval) >= $effectiveDate) {
                 return true;
             }
         }
@@ -223,7 +223,7 @@ class BusReg extends AbstractBusReg
             $lastDateTime = $parent->getEffectiveDate();
             $interval = new \DateInterval('P' . $cancellationPeriod . 'D');
 
-            if ($lastDateTime->add($interval) >= $effectiveDate) {
+            if (clone $lastDateTime->add($interval) >= $effectiveDate) {
                 return true;
             }
         }
