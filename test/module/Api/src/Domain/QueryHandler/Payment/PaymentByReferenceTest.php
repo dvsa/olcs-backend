@@ -5,7 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Fee;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Payment;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Payment\PaymentByReference as QueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
