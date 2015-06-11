@@ -183,9 +183,6 @@ class BusRegEntityTest extends EntityTester
         $this->assertEquals($startPoint, $this->entity->getStartPoint());
         $this->assertEquals($finishPoint, $this->entity->getFinishPoint());
         $this->assertEquals($via, $this->entity->getVia());
-        //$this->assertEquals($receivedDate, $this->entity->getReceivedDate());
-        //$this->assertEquals($effectiveDate, $this->entity->getEffectiveDate());
-        //$this->assertEquals($endDate, $this->entity->getEndDate());
         $this->assertEquals($isSn, $this->entity->getIsShortNotice());
     }
 
