@@ -42,7 +42,8 @@ class Impounding extends AbstractRepository
             ->with('lastModifiedBy')
             ->byId($query->getId());
 
-        $this->applyListFilters($qb, $query);
+        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
+            ->setParameter('byCase', $query->getCase());
 
         $result = $qb->getQuery()->getResult($hydrateMode);
         return $result[0];
