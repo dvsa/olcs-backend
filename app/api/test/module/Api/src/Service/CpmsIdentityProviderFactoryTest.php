@@ -18,7 +18,7 @@ use Mockery as m;
  * @author Dan Eggleston <dan@stolenegg.com>
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class IdentityProviderFactoryTest extends MockeryTestCase
+class CpmsIdentityProviderFactoryTest extends MockeryTestCase
 {
     private function createService($config)
     {
