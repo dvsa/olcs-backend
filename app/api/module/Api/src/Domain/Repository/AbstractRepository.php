@@ -207,7 +207,7 @@ abstract class AbstractRepository implements RepositoryInterface
      * @NOTE This method can be overridden to extend the default resource bundle
      *
      * @param QueryBuilder $qb
-     * @param QryCmd $query
+     * @param int $id
      * @return \Dvsa\Olcs\Api\Domain\QueryBuilder
      */
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
