@@ -22,7 +22,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->setUpSut(Repo::class);
     }
 
-    public function testFetchWithContactDetailsByLicence()
+    public function testFetchWithContactDetailsByApplication()
     {
         $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
 
@@ -31,12 +31,14 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
 
-        $mockQb->shouldReceive('join')->with('tma.transportManager', 'tm')->once()->andReturnSelf();
-        $mockQb->shouldReceive('addSelect')->with('tm')->once()->andReturnSelf();
-        $mockQb->shouldReceive('join')->with('tm.homeCd', 'hcd')->once()->andReturnSelf();
-        $mockQb->shouldReceive('addSelect')->with('hcd')->once()->andReturnSelf();
-        $mockQb->shouldReceive('join')->with('hcd.person', 'p')->once()->andReturnSelf();
-        $mockQb->shouldReceive('addSelect')->with('p')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tma.transportManager', 'tm')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tm.homeCd', 'hcd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('hcd.address', 'hadd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('hadd.countryCode')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('hcd.person', 'hp')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tm.workCd', 'wcd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('wcd.address', 'wadd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('wadd.countryCode')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('expr->eq')->with('tma.application', ':applicationId')->once()->andReturn('EXPR');
         $mockQb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
@@ -60,14 +62,17 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('ol.role')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('a.goodsOrPsv', 'gop')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('a.licence')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('a.status')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('byId')->with(834)->once()->andReturnSelf();
 
-        $mockQb->shouldReceive('join')->with('tma.transportManager', 'tm')->once()->andReturnSelf();
-        $mockQb->shouldReceive('addSelect')->with('tm')->once()->andReturnSelf();
-        $mockQb->shouldReceive('join')->with('tm.homeCd', 'hcd')->once()->andReturnSelf();
-        $mockQb->shouldReceive('addSelect')->with('hcd')->once()->andReturnSelf();
-        $mockQb->shouldReceive('join')->with('hcd.person', 'p')->once()->andReturnSelf();
-        $mockQb->shouldReceive('addSelect')->with('p')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tma.transportManager', 'tm')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tm.homeCd', 'hcd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('hcd.address', 'hadd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('hadd.countryCode')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('hcd.person', 'hp')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tm.workCd', 'wcd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('wcd.address', 'wadd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('wadd.countryCode')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
 
@@ -88,14 +93,17 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('ol.role')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('a.goodsOrPsv', 'gop')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('a.licence')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('a.status')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('byId')->with(834)->once()->andReturnSelf();
 
-        $mockQb->shouldReceive('join')->with('tma.transportManager', 'tm')->once()->andReturnSelf();
-        $mockQb->shouldReceive('addSelect')->with('tm')->once()->andReturnSelf();
-        $mockQb->shouldReceive('join')->with('tm.homeCd', 'hcd')->once()->andReturnSelf();
-        $mockQb->shouldReceive('addSelect')->with('hcd')->once()->andReturnSelf();
-        $mockQb->shouldReceive('join')->with('hcd.person', 'p')->once()->andReturnSelf();
-        $mockQb->shouldReceive('addSelect')->with('p')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tma.transportManager', 'tm')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tm.homeCd', 'hcd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('hcd.address', 'hadd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('hadd.countryCode')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('hcd.person', 'hp')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tm.workCd', 'wcd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('wcd.address', 'wadd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('wadd.countryCode')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn([]);
 

@@ -50,6 +50,7 @@ final class TransportManagerDeleteDelta extends AbstractCommandHandler implement
 
         $result = new Result();
 
+        $applicationIds = [];
         foreach ($command->getTransportManagerLicenceIds() as $tmlId) {
             /* @var $tml \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence */
             $tml = $this->tmlRepo->fetchById($tmlId);
@@ -70,6 +71,18 @@ final class TransportManagerDeleteDelta extends AbstractCommandHandler implement
             $this->tmaRepo->save($tma);
 
             $result->addMessage('Transport manager application ID '. $tma->getId() .' delete Delata created');
+
+            $applicationIds[$tma->getApplication()->getId()] = $tma->getApplication()->getId();
+        }
+
+        foreach ($applicationIds as $applicationId) {
+            $result->merge(
+                $this->getCommandHandler()->handleCommand(
+                    \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::create(
+                        ['id' => $applicationId, 'section' => 'transportManagers']
+                    )
+                )
+            );
         }
 
         return $result;

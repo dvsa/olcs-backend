@@ -61,34 +61,23 @@ class GetDetailsTest extends QueryHandlerTestCase
         $tma->setTransportManager($tm);
         $tma->setOtherLicences([$tmaOl]);
 
-        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchDetails')->with(32)->andReturn($tma);
+        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchDetails')->with(32)->once()->andReturn($tma);
 
         // loadApplicationOperatingCentres
-        $aoc = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre();
-        $this->repoMap['ApplicationOperatingCentre']->shouldReceive('fetchByApplication')->with(53)->andReturn([$aoc]);
+        $this->repoMap['ApplicationOperatingCentre']->shouldReceive('fetchByApplication')->with(53)->once();
 
         // loadLicenceOperatingCentres
-        $loc = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre();
-        $this->repoMap['LicenceOperatingCentre']->shouldReceive('fetchByLicence')->with(653)->andReturn([$loc]);
+        $this->repoMap['LicenceOperatingCentre']->shouldReceive('fetchByLicence')->with(653)->once();
 
         // loadTransportManagerPreviousConvictions
-        $pc = new \Dvsa\Olcs\Api\Entity\Application\PreviousConviction();
-        $this->repoMap['PreviousConviction']->shouldReceive('fetchByTransportManager')->with(213)->andReturn([$pc]);
+        $this->repoMap['PreviousConviction']->shouldReceive('fetchByTransportManager')->with(213)->once();
 
         // loadTransportManagerOtherLicences
-        $ol = new \Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence();
-        $this->repoMap['OtherLicence']->shouldReceive('fetchByTransportManager')->with(213)->andReturn([$ol]);
+        $this->repoMap['OtherLicence']->shouldReceive('fetchByTransportManager')->with(213)->once();
 
         // loadTransportManagerEmployements
-        $tme = new \Dvsa\Olcs\Api\Entity\Tm\TmEmployment();
-        $this->repoMap['TmEmployment']->shouldReceive('fetchByTransportManager')->with(213)->andReturn([$tme]);
+        $this->repoMap['TmEmployment']->shouldReceive('fetchByTransportManager')->with(213)->once();
 
         $this->sut->handleQuery($query);
-
-        $this->assertSame([$aoc], $application->getOperatingCentres());
-        $this->assertSame([$loc], $licence->getOperatingCentres());
-        $this->assertSame([$pc], $tm->getPreviousConvictions());
-        $this->assertSame([$ol], $tm->getOtherLicences());
-        $this->assertSame([$tme], $tm->getEmployments());
     }
 }

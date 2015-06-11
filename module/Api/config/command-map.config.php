@@ -223,8 +223,8 @@ return [
         => CommandHandler\TransportManagerApplication\Create::class,
     TransferCommand\TransportManagerApplication\UpdateStatus::class
         => CommandHandler\TransportManagerApplication\UpdateStatus::class,
-    TransferCommand\TransportManagerApplication\SubmitDetails::class
-        => CommandHandler\TransportManagerApplication\SubmitDetails::class,
+    TransferCommand\TransportManagerApplication\UpdateDetails::class
+        => CommandHandler\TransportManagerApplication\UpdateDetails::class,
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,

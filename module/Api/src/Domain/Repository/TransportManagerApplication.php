@@ -78,7 +78,7 @@ class TransportManagerApplication extends AbstractRepository
     {
         $this->getQueryBuilder()->with($this->alias .'.transportManager', 'tm')
             ->with('tm.homeCd', 'hcd')
-            ->with('hcd.address' ,'hadd')
+            ->with('hcd.address', 'hadd')
             ->with('hadd.countryCode')
             ->with('hcd.person', 'hp')
             ->with('tm.workCd', 'wcd')

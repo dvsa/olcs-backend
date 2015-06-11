@@ -84,6 +84,14 @@ final class Create extends AbstractCommandHandler implements
             );
         }
 
+        $result->merge(
+            $this->getCommandHandler()->handleCommand(
+                \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::create(
+                    ['id' => $tma->getApplication()->getId(), 'section' => 'transportManagers']
+                )
+            )
+        );
+
         $result->addId('transportManagerApplication', $tma->getId());
         $result->addMessage('Transport Manager successfully created.');
 
