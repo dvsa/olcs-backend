@@ -114,6 +114,7 @@ return [
 
     // Domain - Licence
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
+    Command\Licence\SaveAddresses::class => CommandHandler\Licence\SaveAddresses::class,
 
     // Domain - ContactDetails
     Command\ContactDetails\SaveAddress::class => CommandHandler\ContactDetails\SaveAddress::class,

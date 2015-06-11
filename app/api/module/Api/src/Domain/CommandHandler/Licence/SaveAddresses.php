@@ -18,20 +18,19 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Transfer\Command\Licence\UpdateAddresses as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses as Cmd;
 
 /**
  * Save LVA Addresses
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-final class UpdateAddresses extends AbstractCommandHandler
+final class SaveAddresses extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Licence';
 
     protected $extraRepos = ['ContactDetails', 'PhoneContact'];
 
-    private $isDirty = false;
     private $result;
 
     private $phoneTypes = array(
@@ -47,6 +46,8 @@ final class UpdateAddresses extends AbstractCommandHandler
         $licence = $this->getRepo()->fetchUsingId($command);
 
         $this->result = new Result();
+
+        $this->result->setFlag('isDirty', false);
 
         $this->maybeSaveCorrespondenceAddress($command, $licence);
 
@@ -66,7 +67,7 @@ final class UpdateAddresses extends AbstractCommandHandler
         $this->result->merge($result);
 
         if ($result->getFlag('hasChanged')) {
-            $this->isDirty = true;
+            $this->result->setFlag('isDirty', true);
         }
     }
 
@@ -82,8 +83,6 @@ final class UpdateAddresses extends AbstractCommandHandler
             SaveAddress::create($address)
         );
 
-        $this->handleSideEffectResult($result);
-
         if ($result->getId('contactDetails') !== null) {
             $licence->setCorrespondenceCd(
                 $this->getRepo()->getReference(ContactDetails::class, $result->getId('contactDetails'))
@@ -98,10 +97,11 @@ final class UpdateAddresses extends AbstractCommandHandler
         $this->getRepo('ContactDetails')->save($correspondenceCd);
 
         if ($correspondenceCd->getVersion() != $version) {
-            // we can't set this to false in an `else` branch because it might have already
-            // been set when saving the address
             $result->setFlag('hasChanged', true);
+            $result->addMessage('Contact details updated');
         }
+
+        $this->handleSideEffectResult($result);
     }
 
     private function updateCorrespondencePhoneContacts(Cmd $command, Licence $licence)
@@ -114,13 +114,19 @@ final class UpdateAddresses extends AbstractCommandHandler
 
     private function updatePhoneContacts($data, ContactDetails $contactDetails)
     {
-
         foreach ($this->phoneTypes as $phoneType => $phoneRefName) {
+
+            $result = new Result();
+            $version = null;
+
+            $result->setFlag('hasChanged', false);
+
             if (!empty($data['phone_' . $phoneType . '_id'])) {
+                $version = $data['phone_' . $phoneType . '_version'];
                 $contact = $this->getRepo('PhoneContact')->fetchById(
                     $data['phone_' . $phoneType . '_id'],
                     Query::HYDRATE_OBJECT,
-                    $data['phone_' . $phoneType . '_version']
+                    $version
                 );
             } else {
                 $contact = new PhoneContact();
@@ -136,9 +142,21 @@ final class UpdateAddresses extends AbstractCommandHandler
 
                 $this->getRepo('PhoneContact')->save($contact);
 
+                if ($version === null) {
+                    $result->addMessage('Phone contact ' . $phoneType . ' created');
+                    $result->setFlag('hasChanged', true);
+                } elseif ($contact->getVersion() != $version) {
+                    $result->addMessage('Phone contact ' . $phoneType . ' updated');
+                    $result->setFlag('hasChanged', true);
+                }
+
             } elseif ($contact->getId() > 0) {
                 $this->getRepo('PhoneContact')->delete($contact);
+                $result->addMessage('Phone contact ' . $phoneType . ' deleted');
+                $result->setFlag('hasChanged', true);
             }
+
+            $this->handleSideEffectResult($result);
         }
     }
 
@@ -154,13 +172,13 @@ final class UpdateAddresses extends AbstractCommandHandler
             SaveAddress::create($address)
         );
 
-        $this->handleSideEffectResult($result);
-
         if ($result->getId('contactDetails') !== null) {
             $licence->setEstablishmentCd(
                 $this->getRepo()->getReference(ContactDetails::class, $result->getId('contactDetails'))
             );
         }
+
+        $this->handleSideEffectResult($result);
     }
 
     private function maybeAddOrRemoveTransportConsultant(Cmd $command, Licence $licence)
@@ -170,6 +188,12 @@ final class UpdateAddresses extends AbstractCommandHandler
         }
 
         $params = $command->getConsultant();
+
+        $transportConsultant = $licence->getTransportConsultantCd();
+
+        $result = new Result();
+
+        $result->setFlag('hasChanged', false);
 
         if ($params['add-transport-consultant'] === 'Y') {
             $address = $params['address'];
@@ -186,28 +210,36 @@ final class UpdateAddresses extends AbstractCommandHandler
                 );
             }
 
-            $transportConsultant = $licence->getTransportConsultantCd();
+            if ($transportConsultant) {
+                $version = $transportConsultant->getVersion();
+            } else {
+                $version = null;
+                $transportConsultant = new ContactDetails();
+            }
 
             $transportConsultant->setFao($params['transportConsultantName']);
             $transportConsultant->setWrittenPermissionToEngage($params['writtenPermissionToEngage']);
             $transportConsultant->setEmailAddress($params['contact']['email']);
 
-            $version = $transportConsultant->getVersion();
             $this->getRepo('ContactDetails')->save($transportConsultant);
 
-            if ($transportConsultant->getVersion() != $version) {
-                // we can't set this to false in an `else` branch because it might have already
-                // been set when saving the address
+            if ($version === null) {
                 $result->setFlag('hasChanged', true);
+                $result->addMessage('Transport consultant created');
+            } elseif ($transportConsultant->getVersion() != $version) {
+                $result->setFlag('hasChanged', true);
+                $result->addMessage('Transport consultant updated');
             }
 
-            return $this->updatePhoneContacts($params['contact'], $transportConsultant);
-        } else {
+            $this->updatePhoneContacts($params['contact'], $transportConsultant);
+        } elseif ($transportConstulant) {
+
             $licence->setTransportConsultantCd(null);
 
-            $result = new Result();
+            $result->setFlag('hasChanged', true);
             $result->addMessage('Transport consultant deleted');
-            $this->result->merge($result);
         }
+
+        $this->handleSideEffectResult($result);
     }
 }

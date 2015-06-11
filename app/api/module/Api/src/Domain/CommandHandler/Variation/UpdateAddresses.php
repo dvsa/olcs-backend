@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Licence Update Addresses
+ * Variation Update Addresses
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Variation;
 
-use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateAddresses as ApplicationUpdateAddresses;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
 /**
- * Licence Update Addresses
+ * Variation Update Addresses
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
@@ -28,13 +28,15 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
 {
     use AuthAwareTrait;
 
+    private $result;
+
     public function handleCommand(CommandInterface $command)
     {
         $result = $this->getCommandHandler()->handleCommand(
-            SaveAddresses::create($command->getArrayCopy())
+            UpdateApplicationAddresses::create($command->getArrayCopy())
         );
 
-        // @NOTE: duped with Variation\UpdateAddresses
+        // @NOTE: duped with Licence\UpdateAddresses
         if ($result->getFlag('isDirty') && $this->isGranted(Permission::SELFSERVE_USER)) {
             $taskParams = [
                 'category' => Category::CATEGORY_APPLICATION,
