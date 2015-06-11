@@ -52,6 +52,6 @@ class Note extends AbstractRepository
             $qb->setParameter('applicationId', $query->getApplication());
         }
 
-        $this->getQueryBuilder()->modifyQuery($qb)->withUser();
+        $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
     }
 }

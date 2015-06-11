@@ -51,9 +51,17 @@ class Complaint extends AbstractRepository
             ->with('lastModifiedBy')
             ->byId($query->getId());
 
-        $this->applyListFilters($qb, $query);
+        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
+            ->setParameter('byCase', $query->getCase());
+        $qb->andWhere($qb->expr()->eq($this->alias . '.isCompliance', ':isCompliance'))
+            ->setParameter('isCompliance', $query->getIsCompliance());
 
         $result = $qb->getQuery()->getResult($hydrateMode);
+
+        if (empty($result)) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+
         return $result[0];
     }
 
@@ -66,5 +74,7 @@ class Complaint extends AbstractRepository
     {
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
+        $qb->andWhere($qb->expr()->eq($this->alias . '.isCompliance', ':isCompliance'))
+            ->setParameter('isCompliance', $query->getIsCompliance());
     }
 }
