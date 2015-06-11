@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -57,28 +58,33 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $feesToPay
         );
 
-        // record payment
+        // create payment
         $payment = new PaymentEntity();
         $payment->setGuid($response['receipt_reference']);
         $payment->setGatewayUrl($response['gateway_url']);
         $payment->setStatus($this->getRepo()->getRefdataReference(PaymentEntity::STATUS_OUTSTANDING));
-        $this->getRepo()->save($payment);
-        $result->addId('payment', $payment->getId());
 
-        // record feePayments and fee payment method
+        // create feePayment records
+        $feePayments = new ArrayCollection();
+        $payment->setFeePayments($feePayments);
         foreach ($feesToPay as $fee) {
             $feePayment = new FeePaymentEntity();
-            $feePayment->setPayment($payment);
-            $feePayment->setFee($fee);
-            $feePayment->setFeeValue($fee->getAmount());
-            $this->getRepo('FeePayment')->save($feePayment);
+            $feePayment
+                ->setFee($fee)
+                ->setFeeValue($fee->getAmount())
+                ->setPayment($payment); // needed for cascade persist to work
+            $feePayments->add($feePayment);
 
-            // ensure payment method is recorded
+            // update payment method on fee records
             $fee->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()));
-            $this->getRepo('Fee')->save($fee);
         }
 
+        // persist
+        $this->getRepo()->save($payment);
+
+        $result->addId('payment', $payment->getId());
         $result->addMessage('Payment record created');
+
         return $result;
     }
 
