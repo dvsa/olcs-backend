@@ -1437,13 +1437,19 @@ return array(
         'fee_id' => array(
             'inversedBy' => array(
                 'entity' => 'Fee',
-                'property' => 'feePayment'
+                'property' => 'feePayment',
+                'cascade' => array(
+                    'persist'
+                ),
             ),
         ),
         'payment_id' => array(
             'inversedBy' => array(
                 'entity' => 'Payment',
-                'property' => 'feePayment'
+                'property' => 'feePayment',
+                'cascade' => array(
+                    'persist'
+                ),
             ),
         ),
     ),
