@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Payment as PaymentRepo;
 use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\CpmsHelperService as CpmsHelper;
@@ -43,6 +44,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
         $this->refData = [
             PaymentEntity::STATUS_OUTSTANDING,
+            PaymentEntity::STATUS_PAID,
+            PaymentEntity::STATUS_FAILED,
         ];
 
         parent::setUp();
@@ -149,6 +152,92 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testResolvePaidFees()
+    {
+        $result = new Result();
+
+        // set up fee with outstanding payment that was paid
+        $paymentId = 222;
+        $payment = new PaymentEntity();
+        $payment
+            ->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING])
+            ->setId($paymentId);
+        $fp = new FeePaymentEntity();
+        $fp->setPayment($payment);
+        $fee1 = $this->getStubFee(99, 150.00);
+        $fee1
+            ->setPaymentMethod(FeeEntity::METHOD_CARD_ONLINE)
+            ->getFeePayments()->add($fp);
+
+        $fees = [$fee1];
+
+        $resolveResult = new Result();
+        $resolveResult->addId('payment', $paymentId);
+        $this->expectedSideEffect(
+            ResolvePaymentCommand::class,
+            [
+                'id' => $paymentId,
+                'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
+            ],
+            $resolveResult
+        );
+
+        $updatedPayment = new PaymentEntity();
+        $updatedPayment
+            ->setId($paymentId)
+            ->setStatus($this->refData[PaymentEntity::STATUS_PAID]);
+        $this->repoMap['Payment']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($paymentId)
+            ->andReturn($updatedPayment);
+
+        $this->sut->resolvePaidFees($fees, $result);
+    }
+
+    public function testResolvePaidFeesOutstandingPaymentUnpaid()
+    {
+        $result = new Result();
+
+        // set up fee with outstanding payment that was paid
+        $paymentId = 222;
+        $payment = new PaymentEntity();
+        $payment
+            ->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING])
+            ->setId($paymentId);
+        $fp = new FeePaymentEntity();
+        $fp->setPayment($payment);
+        $fee1 = $this->getStubFee(99, 150.00);
+        $fee1
+            ->setPaymentMethod(FeeEntity::METHOD_CARD_ONLINE)
+            ->getFeePayments()->add($fp);
+
+        $fees = [$fee1];
+
+        $resolveResult = new Result();
+        $resolveResult->addId('payment', $paymentId);
+        $this->expectedSideEffect(
+            ResolvePaymentCommand::class,
+            [
+                'id' => $paymentId,
+                'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
+            ],
+            $resolveResult
+        );
+
+        $updatedPayment = new PaymentEntity();
+        $updatedPayment
+            ->setId($paymentId)
+            ->setStatus($this->refData[PaymentEntity::STATUS_FAILED]);
+        $this->repoMap['Payment']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($paymentId)
+            ->andReturn($updatedPayment);
+
+        $this->sut->resolvePaidFees($fees, $result);
     }
 
     /**
