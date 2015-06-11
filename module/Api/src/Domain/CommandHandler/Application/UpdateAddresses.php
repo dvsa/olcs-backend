@@ -28,8 +28,13 @@ final class UpdateAddresses extends AbstractCommandHandler
     {
         $application = $this->getRepo()->fetchUsingId($command);
 
+        $licence = $application->getLicence();
+
+        $params = $command->getArrayCopy();
+        $params['id'] = $licence->getId();
+
         $result = $this->getCommandHandler()->handleCommand(
-            SaveAddresses::create($command->getArrayCopy())
+            SaveAddresses::create($params)
         );
 
         $result->merge(
