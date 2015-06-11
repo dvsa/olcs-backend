@@ -140,6 +140,7 @@ return [
             'Complaint' => RepositoryFactory::class,
             'OtherLicence' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
+            'Document' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

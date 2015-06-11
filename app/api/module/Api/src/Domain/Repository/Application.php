@@ -55,4 +55,16 @@ class Application extends AbstractRepository
     {
         $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->with('licence')->byId($id);
     }
+
+    public function getInterimStatus($id)
+    {
+        $interimData = $this->fetchById($id);
+        $interimStatus = $interimData->getInterimStatus();
+
+        $retv = null;
+        if ($interimStatus) {
+            $retv = $interimStatus->getId();
+        }
+        return $retv;
+    }
 }

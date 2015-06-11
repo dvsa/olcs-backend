@@ -49,4 +49,27 @@ class CommunityLic extends AbstractRepository
         }
         return $retv;
     }
+
+    public function fetchValidLicences($licence)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->neq($this->alias . '.issueNo', ':issueNo'))
+            ->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->eq($this->alias . '.status', ':pending'),
+                    $qb->expr()->eq($this->alias . '.status', ':active'),
+                    $qb->expr()->eq($this->alias . '.status', ':withdrawn'),
+                    $qb->expr()->eq($this->alias . '.status', ':suspended')
+                )
+            )
+            ->setParameter('licence', $licence)
+            ->setParameter('issueNo', 0)
+            ->setParameter('pending', CommunityLicEntity::STATUS_PENDING)
+            ->setParameter('active', CommunityLicEntity::STATUS_ACTIVE)
+            ->setParameter('withdrawn', CommunityLicEntity::STATUS_WITHDRAWN)
+            ->setParameter('suspended', CommunityLicEntity::STATUS_SUSPENDED)
+            ->orderBy($this->alias . '.issueNo', 'ASC');
+        return $qb->getQuery()->execute();
+    }
 }

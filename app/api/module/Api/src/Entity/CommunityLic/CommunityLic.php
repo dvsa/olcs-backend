@@ -29,4 +29,18 @@ class CommunityLic extends AbstractCommunityLic
     const STATUS_SUSPENDED = 'cl_sts_suspended';
     const STATUS_VOID = 'cl_sts_annulled';
     const STATUS_RETURNDED = 'cl_sts_returned';
+
+    const PREFIX_GB = 'UKGB';
+    const PREFIX_NI = 'UKNI';
+
+    public function updateCommunityLic($data)
+    {
+        $this->setStatus($data['status']);
+        if (isset($data['specifiedDate'])) {
+            $this->setSpecifiedDate($data['specifiedDate']);
+        }
+        $this->setSerialNoPrefix($data['serialNoPrefix']);
+        $this->setLicence($data['licence']);
+        $this->setIssueNo($data['issueNo']);
+    }
 }

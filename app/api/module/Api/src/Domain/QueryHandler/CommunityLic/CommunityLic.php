@@ -20,15 +20,13 @@ class CommunityLic extends AbstractQueryHandler
 {
     protected $repoServiceName = 'CommunityLic';
 
+    protected $extraRepos = ['Licence'];
+
     public function handleQuery(QueryInterface $query)
     {
         /** @var CommunityLicRepo $repo */
         $repo = $this->getRepo();
-        $licence = $this->getQueryHandler()
-            ->getServiceLocator()
-            ->get('RepositoryServiceManager')
-            ->get('Licence')
-            ->fetchById($query->getLicence());
+        $licence = $this->getRepo('Licence')->fetchById($query->getLicence());
 
         $officeCopy = $repo->fetchOfficeCopy($query->getLicence());
 
