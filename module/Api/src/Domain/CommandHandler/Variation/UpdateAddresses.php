@@ -7,7 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Variation;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateAddresses as ApplicationUpdateAddresses;
+use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -33,7 +34,15 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
     public function handleCommand(CommandInterface $command)
     {
         $result = $this->getCommandHandler()->handleCommand(
-            UpdateApplicationAddresses::create($command->getArrayCopy())
+            SaveAddresses::create($command->getArrayCopy())
+        );
+
+        $result->merge(
+            $this->getCommandHandler()->handleCommand(
+                UpdateApplicationCompletionCommand::create(
+                    ['id' => $command->getId(), 'section' => 'addresses']
+                )
+            )
         );
 
         // @NOTE: duped with Licence\UpdateAddresses
