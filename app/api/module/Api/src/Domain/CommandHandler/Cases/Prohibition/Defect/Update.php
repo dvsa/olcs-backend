@@ -3,12 +3,12 @@
 /**
  * Update Prohibition
  */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Prohibition;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Prohibition\Defect;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Prohibition\Prohibition as Entity;
-use Dvsa\Olcs\Api\Domain\Repository\Prohibition as Repository;
+use Dvsa\Olcs\Api\Entity\Prohibition\ProhibitionDefect as Entity;
+use Dvsa\Olcs\Api\Domain\Repository\ProhibitionDefect as Repository;
 use Dvsa\Olcs\Api\Entity as Entities;
 use Dvsa\Olcs\Transfer\Command\Cases\Prohibition\Update as UpdateCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -39,8 +39,8 @@ final class Update extends CreateUpdateAbstract implements TransactionedInterfac
         $this->setData($entity, $command);
         $repo->save($entity);
 
-        $result->addId('prohibition', $entity->getId());
-        $result->addMessage('Prohibition Updated');
+        $result->addId('defect', $entity->getId());
+        $result->addMessage('Prohibition Defect Updated');
 
         return $result;
     }

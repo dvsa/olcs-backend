@@ -3,14 +3,14 @@
 /**
  * Create Prohibition
  */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Prohibition;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Prohibition\Defect;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Prohibition\Prohibition as Entity;
-use Dvsa\Olcs\Api\Domain\Repository\Prohibition as Repository;
+use Dvsa\Olcs\Api\Entity\Prohibition\ProhibitionDefect as Entity;
+use Dvsa\Olcs\Api\Domain\Repository\ProhibitionDefect as Repository;
 use Dvsa\Olcs\Api\Entity as Entities;
-use Dvsa\Olcs\Transfer\Command\Cases\Prohibition\Create as CreateCommand;
+use Dvsa\Olcs\Transfer\Command\Cases\Prohibition\Defect\Create as CreateCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
@@ -38,8 +38,8 @@ final class Create extends CreateUpdateAbstract implements TransactionedInterfac
         $this->setData($entity, $command);
         $repo->save($entity);
 
-        $result->addId('prohibition', $entity->getId());
-        $result->addMessage('Prohibition Created');
+        $result->addId('defect', $entity->getId());
+        $result->addMessage('Prohibition Defect Created');
 
         return $result;
     }

@@ -10,6 +10,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Defect as DefectRepository;
 
 use Dvsa\Olcs\Transfer\Query\Cases\Prohibition\DefectList as Query;
+use Doctrine\ORM\Query as DoctrineQuery;
 
 /**
  * DefectList
@@ -26,7 +27,7 @@ class DefectList extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         return [
-            'result' => $this->resultList($repo->fetchList($query)),
+            'result' => $this->resultList($repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT)),
             'count' => $repo->fetchCount($query)
         ];
     }

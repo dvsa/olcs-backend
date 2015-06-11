@@ -7,10 +7,10 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Prohibition;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Prohibition\Prohibition as Entity;
+use Dvsa\Olcs\Api\Entity\Prohibition\ProhibitionDefect as Entity;
 use Dvsa\Olcs\Api\Domain\Repository\Prohibition as Repository;
 use Dvsa\Olcs\Api\Entity as Entities;
-use Dvsa\Olcs\Transfer\Command\Cases\Prohibition\Create as CreateCommand;
+use Dvsa\Olcs\Transfer\Command\Cases\Prohibition\Defect\Create as CreateCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
@@ -33,11 +33,9 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
         // Prohibition Type - required - no if needed.
         $entity->setProhibitionType($repo->getRefdataReference($command->getProhibitionType()));
 
-        // Case - required for create, not required for update
-        if ($command->getCase() !== null) {
-            $case = $this->getRepo()->getReference(Entities\Cases\Cases::class, $command->getCase());
-            $entity->setCase($case);
-        }
+        // Case - required - no if needed.
+        $case = $this->getRepo()->getReference(Entities\Cases\Cases::class, $command->getCase());
+        $entity->setCase($case);
 
         // Prohibition Date...
         if ($command->getProhibitionDate() !== null) {

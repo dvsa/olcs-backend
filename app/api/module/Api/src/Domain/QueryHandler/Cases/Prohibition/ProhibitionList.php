@@ -10,6 +10,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Prohibition as ProhibitionRepository;
 
 use Dvsa\Olcs\Transfer\Query\Cases\Prohibition\ProhibitionList as Query;
+use Doctrine\ORM\Query as DoctrineQuery;
 
 /**
  * ProhibitionList
@@ -26,7 +27,7 @@ class ProhibitionList extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         return [
-            'result' => $this->resultList($repo->fetchList($query)),
+            'result' => $this->resultList($repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT)),
             'count' => $repo->fetchCount($query)
         ];
     }
