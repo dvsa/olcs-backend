@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -38,7 +39,7 @@ final class CompletePayment extends AbstractCommandHandler implements Transactio
         // check payment status
         $payment = $this->getRepo()->fetchbyReference($reference);
         if (!$payment->isOutstanding()) {
-            throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
+            throw new ValidationException(
                 ['Invalid payment status: '.$payment->getStatus()->getId()]
             );
         }
