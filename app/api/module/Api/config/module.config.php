@@ -67,6 +67,9 @@ return [
                 QueryHandler\PreviousConviction\PreviousConviction::class,
             TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
             TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
+            TransferQuery\Cases\Conviction\Conviction::class => QueryHandler\Cases\Conviction\Conviction::class,
+            TransferQuery\Cases\Conviction\ConvictionList::class => QueryHandler\Cases\Conviction\ConvictionList::class,
+            TransferQuery\Processing\NoteList::class => QueryHandler\Processing\NoteList::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
             TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
             TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
@@ -91,10 +94,14 @@ return [
             TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
             TransferQuery\Cases\Complaint\ComplaintList::class =>
                 QueryHandler\Cases\Complaint\ComplaintList::class,
-            TransferQuery\Application\LicenceHistory::class
-                => QueryHandler\Application\LicenceHistory::class,
             TransferQuery\OtherLicence\OtherLicence::class
                 => QueryHandler\OtherLicence\OtherLicence::class,
+            TransferQuery\Correspondence\Correspondence::class => QueryHandler\Correspondence\Correspondence::class,
+            TransferQuery\Correspondence\Correspondences::class => QueryHandler\Correspondence\Correspondences::class,
+            TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
+                QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
+            TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
+                QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -118,6 +125,7 @@ return [
             'Address' => RepositoryFactory::class,
             'ContactDetails' => RepositoryFactory::class,
             'CompanySubsidiary' => RepositoryFactory::class,
+            'Conviction' => RepositoryFactory::class,
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
@@ -148,6 +156,9 @@ return [
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
             'OtherLicence' => RepositoryFactory::class,
+            'Correspondence' => RepositoryFactory::class,
+            'SystemParameter' => RepositoryFactory::class,
+            'TaskAllocationRule' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

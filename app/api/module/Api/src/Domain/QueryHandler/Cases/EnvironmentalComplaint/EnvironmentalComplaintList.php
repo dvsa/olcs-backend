@@ -1,23 +1,23 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Complaint;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\EnvironmentalComplaint;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Domain\Repository\Complaint as ComplaintRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Complaint as Repo;
 
 /**
- * Complaint QueryHandler
+ * EnvironmentalComplaint QueryHandler
  */
-final class ComplaintList extends AbstractQueryHandler
+final class EnvironmentalComplaintList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Complaint';
 
     public function handleQuery(QueryInterface $query)
     {
-        /** @var ComplaintRepo $repo */
+        /** @var Repo $repo */
         $repo = $this->getRepo();
 
         return [
