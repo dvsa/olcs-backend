@@ -24,5 +24,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Conviction extends AbstractConviction
 {
-
+    const DEFENDANT_TYPE_DIRECTOR     = 'def_t_dir';
+    const DEFENDANT_TYPE_DRIVER       = 'def_t_driver';
+    const DEFENDANT_TYPE_ORGANISATION = 'def_t_op';
+    const DEFENDANT_TYPE_OTHER        = 'def_t_other';
+    const DEFENDANT_TYPE_OWNER        = 'def_t_owner';
+    const DEFENDANT_TYPE_PARTNER      = 'def_t_part';
+    const DEFENDANT_TYPE_TM           = 'def_t_tm';
 }
