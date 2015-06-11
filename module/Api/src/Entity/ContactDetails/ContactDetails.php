@@ -33,34 +33,108 @@ class ContactDetails extends AbstractContactDetails
     public function __construct(RefData $contactType)
     {
         parent::__construct();
-
         $this->setContactType($contactType);
     }
 
-    public static function createForIrfoOperator(
-        RefData $contactType,
-        Address $address = null,
-        $phoneContacts = null,
-        $emailAddress = null
-    ) {
+    /**
+     * @param RefData $contactType
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     * @return ContactDetails
+     */
+    public static function create(RefData $contactType, array $contactParams) {
         $contactDetails = new static($contactType);
-        $contactDetails->updateForIrfoOperator($address, $phoneContacts, $emailAddress);
+        $contactDetails->update($contactParams);
 
         return $contactDetails;
     }
 
-    public function updateForIrfoOperator(Address $address = null, $phoneContacts = null, $emailAddress = null)
+    /**
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     */
+    public function update(array $contactParams)
     {
-        if ($address !== null) {
-            $this->address = $address;
-        }
-        if ($phoneContacts !== null) {
-            $this->phoneContacts = $phoneContacts;
-        }
-        if ($emailAddress !== null) {
-            $this->emailAddress = $emailAddress;
+        // each type may have different update
+        switch($this->getContactType()->getId()) {
+            case self::CONTACT_TYPE_IRFO_OPERATOR:
+                $this->updateIrfoOperator($contactParams);
+                break;
         }
 
         return $this;
+    }
+
+    /**
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     */
+    private function updateIrfoOperator(array $contactParams)
+    {
+        // set email address
+        $this->setEmailAddress($contactParams['emailAddress']);
+
+        // populate address
+        $this->populateAddress($contactParams['address']);
+
+        // populate phone contacts
+        $this->populatePhoneContacts($contactParams['phoneContacts']);
+    }
+
+    /**
+     * @param array $addressParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\Address
+     */
+    private function populateAddress(array $addressParams)
+    {
+        if (!($this->address instanceof Address)) {
+            $this->address = new Address();
+        }
+
+        $this->address->updateAddress(
+            $addressParams['addressLine1'],
+            $addressParams['addressLine2'],
+            $addressParams['addressLine3'],
+            $addressParams['addressLine4'],
+            $addressParams['town'],
+            $addressParams['postcode'],
+            $addressParams['countryCode']
+        );
+    }
+
+    /**
+     * @param array $phoneContacts List of Dvsa\Olcs\Transfer\Command\Partial\PhoneContact
+     * @return array
+     */
+    private function populatePhoneContacts(array $phoneContacts)
+    {
+        $reduced = $updatedIds = [];
+
+        foreach ($phoneContacts as $phoneContact) {
+            if (empty($phoneContact['phoneNumber'])) {
+                // filter out empty values
+                continue;
+            }
+
+            if (!empty($this->getPhoneContacts()[$phoneContact['id']])) {
+                // update
+                $phoneContactEntity = $this->getPhoneContacts()[$phoneContact['id']];
+                $updatedIds[] = $phoneContactEntity->getId();
+            } else {
+                // create
+                $phoneContactEntity = new PhoneContact($phoneContact['phoneContactType']);
+                $phoneContactEntity->setContactDetails($this);
+            }
+
+            $phoneContactEntity->setPhoneNumber($phoneContact['phoneNumber']);
+
+            $reduced[] = $phoneContactEntity;
+        }
+
+        // remove the rest
+        foreach ($this->getPhoneContacts() as $phoneContactEntity) {
+            if (!in_array($phoneContactEntity->getId(), $updatedIds)) {
+                // unlink
+                $this->removePhoneContacts($phoneContactEntity);
+            }
+        }
+
+        $this->setPhoneContacts($reduced);
     }
 }
