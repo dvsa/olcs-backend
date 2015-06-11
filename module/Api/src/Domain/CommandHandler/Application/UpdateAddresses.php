@@ -22,8 +22,12 @@ use Doctrine\ORM\Query;
  */
 final class UpdateAddresses extends AbstractCommandHandler
 {
+    private $repoServiceName = 'Application';
+
     public function handleCommand(CommandInterface $command)
     {
+        $application = $this->getRepo()->fetchUsingId($command);
+
         $result = $this->getCommandHandler()->handleCommand(
             SaveAddresses::create($command->getArrayCopy())
         );
@@ -31,7 +35,7 @@ final class UpdateAddresses extends AbstractCommandHandler
         $result->merge(
             $this->getCommandHandler()->handleCommand(
                 UpdateApplicationCompletionCommand::create(
-                    ['id' => $command->getId(), 'section' => 'addresses']
+                    ['id' => $application->getId(), 'section' => 'addresses']
                 )
             )
         );
