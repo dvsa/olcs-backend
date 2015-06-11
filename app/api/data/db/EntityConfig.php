@@ -14,6 +14,11 @@ return array(
             'metadata' => [
                 'skipManyToMany' => true
             ]
+        ],
+        'Dvsa\Olcs\Api\Entity\Country' => [
+            'metadata' => [
+                'skipManyToMany' => true
+            ]
         ]
     ),
     'namespaces' => include(__DIR__ . '/../../module/Api/config/namespace.config.php'),

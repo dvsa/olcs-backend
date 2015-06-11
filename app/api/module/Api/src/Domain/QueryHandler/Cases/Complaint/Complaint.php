@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * PI
+ * Complaint
  */
 final class Complaint extends AbstractQueryHandler
 {
