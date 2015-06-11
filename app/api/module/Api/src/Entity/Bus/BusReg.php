@@ -156,6 +156,7 @@ class BusReg extends AbstractBusReg
         $this->finishPoint = $finishPoint;
         $this->via = $via;
         $this->otherDetails = $otherDetails;
+        $this->busNoticePeriod = $busNoticePeriod;
 
         $receivedDateTime = \DateTime::createFromFormat('Y-m-d', $receivedDate);
         $effectiveDateTime = \DateTime::createFromFormat('Y-m-d', $effectiveDate);
@@ -179,7 +180,7 @@ class BusReg extends AbstractBusReg
 
         $this->isShortNotice = 'N';
 
-        if ($this->isShortNotice($effectiveDate, $receivedDate, $busNoticePeriod, $busRules)) {
+        if ($this->isShortNotice($effectiveDateTime, $receivedDateTime, $busRules)) {
             $this->isShortNotice = 'Y';
         }
 
@@ -187,19 +188,14 @@ class BusReg extends AbstractBusReg
     }
 
     /**
-     * @param $effectiveDate
-     * @param $receivedDate
-     * @param $busNoticePeriod
-     * @param BusNoticePeriod $busRules
+     * @param \DateTime $effectiveDate
+     * @param \DateTime $receivedDate
+     * @param BusNoticePeriodEntity $busRules
      * @return bool|null
      */
-    private function isShortNotice($effectiveDate, $receivedDate, $busNoticePeriod, BusNoticePeriodEntity $busRules)
+    private function isShortNotice($effectiveDate, $receivedDate, BusNoticePeriodEntity $busRules)
     {
         if (!($effectiveDate instanceof \DateTime) || !($receivedDate instanceof \DateTime)) {
-            return false;
-        }
-
-        if (!isset($busNoticePeriod) || empty($busNoticePeriod)) {
             return false;
         }
 
