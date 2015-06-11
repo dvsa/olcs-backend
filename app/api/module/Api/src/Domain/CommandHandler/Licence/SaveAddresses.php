@@ -49,7 +49,7 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
 
         $this->result->setFlag('isDirty', false);
 
-        $this->maybeSaveCorrespondenceAddress($command, $licence);
+        $this->saveCorrespondenceAddress($command, $licence);
 
         $this->updateCorrespondencePhoneContacts($command, $licence);
 
@@ -71,12 +71,8 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
         }
     }
 
-    private function maybeSaveCorrespondenceAddress(Cmd $command, Licence $licence)
+    private function saveCorrespondenceAddress(Cmd $command, Licence $licence)
     {
-        if (empty($command->getCorrespondenceAddress())) {
-            return;
-        }
-
         $address = $command->getCorrespondenceAddress();
         $address['contactType'] = ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS;
         $result = $this->getCommandHandler()->handleCommand(
@@ -189,8 +185,6 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
 
         $params = $command->getConsultant();
 
-        $transportConsultant = $licence->getTransportConsultantCd();
-
         $result = new Result();
 
         $result->setFlag('hasChanged', false);
@@ -210,12 +204,9 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
                 );
             }
 
-            if ($transportConsultant) {
-                $version = $transportConsultant->getVersion();
-            } else {
-                $version = null;
-                $transportConsultant = new ContactDetails();
-            }
+            $transportConsultant = $licence->getTransportConsultantCd();
+
+            $version = $transportConsultant->getVersion();
 
             $transportConsultant->setFao($params['transportConsultantName']);
             $transportConsultant->setWrittenPermissionToEngage($params['writtenPermissionToEngage']);
@@ -223,16 +214,13 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
 
             $this->getRepo('ContactDetails')->save($transportConsultant);
 
-            if ($version === null) {
-                $result->setFlag('hasChanged', true);
-                $result->addMessage('Transport consultant created');
-            } elseif ($transportConsultant->getVersion() != $version) {
+            if ($transportConsultant->getVersion() != $version) {
                 $result->setFlag('hasChanged', true);
                 $result->addMessage('Transport consultant updated');
             }
 
             $this->updatePhoneContacts($params['contact'], $transportConsultant);
-        } elseif ($transportConstulant) {
+        } elseif ($licence->getTransportConsultantCd()) {
 
             $licence->setTransportConsultantCd(null);
 
