@@ -70,6 +70,10 @@ return [
     TransferCommand\GracePeriod\UpdateGracePeriod::class => CommandHandler\GracePeriod\UpdateGracePeriod::class,
     TransferCommand\GracePeriod\DeleteGracePeriod::class => CommandHandler\GracePeriod\DeleteGracePeriod::class,
 
+    // Transfer - Correspondence
+    TransferCommand\Correspondence\AccessCorrespondence::class
+        => CommandHandler\Correspondence\AccessCorrespondence::class,
+
     // Transfer - IRFO
     \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit::class
         => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoGvPermit::class,
