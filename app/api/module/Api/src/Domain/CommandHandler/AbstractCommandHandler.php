@@ -99,12 +99,4 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     {
         return $this->commandHandler;
     }
-
-    /**
-     * @return QueryHandlerInterface
-     */
-    protected function getQueryHandler()
-    {
-        return $this->queryHandler;
-    }
 }
