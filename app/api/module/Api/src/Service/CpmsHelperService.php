@@ -193,9 +193,6 @@ class CpmsHelperService implements FactoryInterface
      */
     protected function formatAmount($amount)
     {
-        if (!empty($amount) && !is_numeric($amount)) {
-            throw new \InvalidArgumentException("'".var_export($amount, true)."' is not a valid amount");
-        }
         return sprintf("%1\$.2f", $amount);
     }
 

@@ -76,7 +76,7 @@ class Fee extends AbstractFee
         $rule = $this->getFeeType()->getAccrualRule()->getId();
         switch ($rule) {
             case self::ACCRUAL_RULE_IMMEDIATE:
-                return new \DateTime(); // now
+                return $this->getCurrentDateTime();
             case self::ACCRUAL_RULE_LICENCE_START:
                 $licenceStart = $this->getLicence()->getInForceDate();
                 if (!is_null($licenceStart)) {
@@ -95,5 +95,28 @@ class Fee extends AbstractFee
             default:
                 break;
         }
+    }
+
+    // allow injection of current date/time
+    protected $now;
+
+    /**
+     * @return \DateTime
+     */
+    public function getCurrentDateTime()
+    {
+        if (is_null($this->now)) {
+            $this->now = new \DateTime();
+        }
+        return $this->now;
+    }
+
+    /**
+     * @param \DateTime $datetime
+     * @return $this
+     */
+    public function setCurrentDateTime(\DateTime $datetime)
+    {
+        $this->now = $datetime;
     }
 }
