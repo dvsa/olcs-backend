@@ -101,4 +101,9 @@ class Licence extends AbstractLicence
 
         return $this->getBusRegs()->matching($criteria)->current();
     }
+
+    public function updateTotalCommunityLicences($totalCount)
+    {
+        $this->totCommunityLicences = $totalCount;
+    }
 }
