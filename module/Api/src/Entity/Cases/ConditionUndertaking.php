@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * ConditionUndertaking Entity
@@ -41,4 +42,19 @@ class ConditionUndertaking extends AbstractConditionUndertaking
 
     const TYPE_CONDITION = 'cdt_con';
     const TYPE_UNDERTAKING = 'cdt_und';
+
+    /**
+     * Construct Condition Undertaking entity
+     * @param RefData $conditionType
+     * @param String $isDraft
+     * @param String $isFulfilled
+     */
+    public function __construct(RefData $conditionType, $isDraft, $isFulfilled)
+    {
+        parent::__construct();
+
+        $this->setConditionType($conditionType);
+        $this->setIsDraft($isDraft);
+        $this->setIsFulfilled($isFulfilled);
+    }
 }
