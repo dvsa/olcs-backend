@@ -239,7 +239,6 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         // set up data
         $paymentId = 69;
         $guid = 'OLCS-1234-ABCDE';
-        $amount = '1234.56';
 
         $data = [
             'id' => $paymentId,
@@ -267,6 +266,6 @@ class ResolvePaymentTest extends CommandHandlerTestCase
 
         $this->setExpectedException(ValidationException::class);
 
-        $result = $this->sut->handleCommand($command);
+        $this->sut->handleCommand($command);
     }
 }
