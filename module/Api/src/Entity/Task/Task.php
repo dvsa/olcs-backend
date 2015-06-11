@@ -42,6 +42,13 @@ class Task extends AbstractTask
 
     const SUBCATEGORY_FEE_DUE = 11;
 
+    /**
+     * Ref data constants
+     */
+    const TYPE_SIMPLE  = 'task_at_simple';
+    const TYPE_MEDIUM  = 'task_at_medium';
+    const TYPE_COMPLEX = 'task_at_complex';
+
     public function __construct(Category $category, SubCategory $subCategory)
     {
         $this->category = $category;

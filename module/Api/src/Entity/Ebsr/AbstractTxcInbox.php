@@ -2,8 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Entity\Ebsr;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
-use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
+use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,9 +27,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-abstract class AbstractTxcInbox implements \JsonSerializable
+abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSerializable
 {
-    use JsonSerializableTrait;
+    use BundleSerializableTrait;
 
     /**
      * Bus reg

@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Form\Element\DateTime;
 
 /**
  * GracePeriod Entity
@@ -21,5 +22,31 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GracePeriod extends AbstractGracePeriod
 {
+    protected $isActive = false;
 
+    public function isActive($today = 'now')
+    {
+        if (!is_null($this->getStartDate()) && !is_null($this->getEndDate())) {
+            /*
+             * The dates should really be returned as date time objects from the entity
+             * therefore this will need changing once that change is made.
+             *
+             * We should probably have the date helper in backend.
+             */
+            $today = new \DateTime($today);
+            $startDate = new \DateTime($this->getStartDate());
+            $endDate = new \DateTime($this->getEndDate());
+
+            if ($startDate <= $today && $endDate >= $today) {
+                $this->isActive = true;
+            }
+        }
+
+        return $this->isActive;
+    }
+
+    protected function getCalculatedValues()
+    {
+        return ['isActive' => $this->isActive()];
+    }
 }

@@ -40,16 +40,16 @@ return [
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
         'factories' => [
             // Application
-            \Dvsa\Olcs\Transfer\Query\Application\FinancialHistory::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Application\FinancialHistory::class,
+            TransferQuery\Application\FinancialHistory::class
+                => QueryHandler\Application\FinancialHistory::class,
 
             // Licence
-            \Dvsa\Olcs\Transfer\Query\Licence\BusinessDetails::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Licence\BusinessDetails::class,
+            TransferQuery\Licence\BusinessDetails::class
+                => QueryHandler\Licence\BusinessDetails::class,
 
             // Organisation
-            \Dvsa\Olcs\Transfer\Query\Organisation\BusinessDetails::class
-                => \Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\BusinessDetails::class,
+            TransferQuery\Organisation\BusinessDetails::class
+                => QueryHandler\Organisation\BusinessDetails::class,
 
             TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
             TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
@@ -62,12 +62,15 @@ return [
             TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
             TransferQuery\Application\FinancialEvidence::class => QueryHandler\Application\FinancialEvidence::class,
             TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
-            TransferQuery\Application\PreviousConvictions::class => QueryHandler\Application\PreviousConvictions::class,
+            TransferQuery\Application\PreviousConvictions::class =>
+                QueryHandler\Application\PreviousConvictions::class,
             TransferQuery\PreviousConviction\PreviousConviction::class =>
                 QueryHandler\PreviousConviction\PreviousConviction::class,
             TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
             TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
+            TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
+            TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
             TransferQuery\Processing\Note::class => QueryHandler\Processing\Note::class,
             TransferQuery\Processing\NoteList::class => QueryHandler\Processing\NoteList::class,
 
@@ -75,14 +78,24 @@ return [
                 => QueryHandler\CompanySubsidiary\CompanySubsidiary::class,
 
             TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
+            TransferQuery\Trailer\Trailer::class => QueryHandler\Trailer\Trailer::class,
             TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
+            TransferQuery\GracePeriod\GracePeriod::class => QueryHandler\GracePeriod\GracePeriod::class,
+            TransferQuery\GracePeriod\GracePeriods::class => QueryHandler\GracePeriod\GracePeriods::class,
             TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
             TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
+            TransferQuery\Irfo\IrfoPermitStockList::class => QueryHandler\Irfo\IrfoPermitStockList::class,
+            TransferQuery\Irfo\IrfoPsvAuth::class => QueryHandler\Irfo\IrfoPsvAuth::class,
+            TransferQuery\Irfo\IrfoPsvAuthList::class => QueryHandler\Irfo\IrfoPsvAuthList::class,
             TransferQuery\Cases\ImpoundingList::class => QueryHandler\Cases\ImpoundingList::class,
             TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
             TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
             TransferQuery\Cases\Complaint\ComplaintList::class =>
                 QueryHandler\Cases\Complaint\ComplaintList::class,
+            TransferQuery\Application\LicenceHistory::class
+                => QueryHandler\Application\LicenceHistory::class,
+            TransferQuery\OtherLicence\OtherLicence::class
+                => QueryHandler\OtherLicence\OtherLicence::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -110,6 +123,7 @@ return [
             'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
+            'GracePeriod' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
@@ -126,10 +140,17 @@ return [
             'Note' => RepositoryFactory::class,
             'TradingName' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
+            'IrfoPermitStock' => RepositoryFactory::class,
+            'IrfoPsvAuth' => RepositoryFactory::class,
+            'IrfoPsvAuthNumber' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
             'PhoneContact' => RepositoryFactory::class,
+            'OtherLicence' => RepositoryFactory::class,
+            'IrfoGvPermit' => RepositoryFactory::class,
+            'SystemParameter' => RepositoryFactory::class,
+            'TaskAllocationRule' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

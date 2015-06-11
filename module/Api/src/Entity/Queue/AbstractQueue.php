@@ -2,8 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Entity\Queue;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
-use Dvsa\Olcs\Api\Entity\Traits\JsonSerializableTrait;
+use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -25,9 +26,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    }
  * )
  */
-abstract class AbstractQueue implements \JsonSerializable
+abstract class AbstractQueue implements BundleSerializableInterface, JsonSerializable
 {
-    use JsonSerializableTrait;
+    use BundleSerializableTrait;
 
     /**
      * Attempts
