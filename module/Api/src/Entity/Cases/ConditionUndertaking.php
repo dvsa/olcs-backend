@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 

@@ -71,6 +71,8 @@ abstract class AbstractRepository implements RepositoryInterface
 
         $this->buildDefaultQuery($qb, $id);
 
+        $this->applyFetchJoins($qb);
+
         $results = $qb->getQuery()->getResult($hydrateMode);
 
         if (empty($results)) {
@@ -128,7 +130,20 @@ abstract class AbstractRepository implements RepositoryInterface
 
     }
 
+    /**
+     * Override to add additional data to the default fetchList() method
+     * @param QueryBuilder $qb
+     */
     protected function applyListJoins(QueryBuilder $qb)
+    {
+
+    }
+
+    /**
+     * Override to add additional data to the default fetchById() method
+     * @param QueryBuilder $qb
+     */
+    protected function applyFetchJoins(QueryBuilder $qb)
     {
 
     }
