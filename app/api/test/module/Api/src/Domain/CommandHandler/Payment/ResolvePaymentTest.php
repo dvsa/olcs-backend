@@ -7,7 +7,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Payment;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Payment\ResolvePayment;
 use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Payment as PaymentRepo;
@@ -69,7 +68,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $this->references[FeePaymentEntity::class][11]
             ->setFee($this->references[FeeEntity::class][22]);
 
-        parent::initReferences();
+        return parent::initReferences();
     }
 
     public function testHandleCommandSuccess()
