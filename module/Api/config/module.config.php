@@ -67,6 +67,9 @@ return [
                 QueryHandler\PreviousConviction\PreviousConviction::class,
             TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
             TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
+            TransferQuery\Cases\Conviction\Conviction::class => QueryHandler\Cases\Conviction\Conviction::class,
+            TransferQuery\Cases\Conviction\ConvictionList::class => QueryHandler\Cases\Conviction\ConvictionList::class,
+            TransferQuery\Processing\NoteList::class => QueryHandler\Processing\NoteList::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
             TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
             TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
@@ -77,9 +80,15 @@ return [
                 => QueryHandler\CompanySubsidiary\CompanySubsidiary::class,
 
             TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
+            TransferQuery\Trailer\Trailer::class => QueryHandler\Trailer\Trailer::class,
             TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
+            TransferQuery\GracePeriod\GracePeriod::class => QueryHandler\GracePeriod\GracePeriod::class,
+            TransferQuery\GracePeriod\GracePeriods::class => QueryHandler\GracePeriod\GracePeriods::class,
             TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
             TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
+            TransferQuery\Irfo\IrfoPermitStockList::class => QueryHandler\Irfo\IrfoPermitStockList::class,
+            TransferQuery\Irfo\IrfoPsvAuth::class => QueryHandler\Irfo\IrfoPsvAuth::class,
+            TransferQuery\Irfo\IrfoPsvAuthList::class => QueryHandler\Irfo\IrfoPsvAuthList::class,
             TransferQuery\Cases\ImpoundingList::class => QueryHandler\Cases\ImpoundingList::class,
             TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
             TransferQuery\CommunityLic\CommunityLic::class => QueryHandler\CommunityLic\CommunityLic::class,
@@ -90,6 +99,10 @@ return [
                 => QueryHandler\Application\LicenceHistory::class,
             TransferQuery\OtherLicence\OtherLicence::class
                 => QueryHandler\OtherLicence\OtherLicence::class,
+            TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
+                QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
+            TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
+                QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -98,6 +111,7 @@ return [
             'withCreatedBy'      => QueryPartial\WithCreatedByFactory::class,
             'withRefdata' => QueryPartial\WithRefdataFactory::class,
             'withUser' => QueryPartial\WithUserFactory::class,
+            'withCreatedBy' => QueryPartial\WithCreatedByFactory::class,
             'WithPersonContactDetails' => QueryPartial\WithPersonContactDetailsFactory::class,
         ],
         'invokables' => [
@@ -113,10 +127,12 @@ return [
             'Address' => RepositoryFactory::class,
             'ContactDetails' => RepositoryFactory::class,
             'CompanySubsidiary' => RepositoryFactory::class,
+            'Conviction' => RepositoryFactory::class,
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
+            'GracePeriod' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
@@ -133,6 +149,9 @@ return [
             'Note' => RepositoryFactory::class,
             'TradingName' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
+            'IrfoPermitStock' => RepositoryFactory::class,
+            'IrfoPsvAuth' => RepositoryFactory::class,
+            'IrfoPsvAuthNumber' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
             'ImpoundingList' => RepositoryFactory::class,
             'CommunityLic' => RepositoryFactory::class,
@@ -141,6 +160,8 @@ return [
             'OtherLicence' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
             'Document' => RepositoryFactory::class,
+            'SystemParameter' => RepositoryFactory::class,
+            'TaskAllocationRule' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
