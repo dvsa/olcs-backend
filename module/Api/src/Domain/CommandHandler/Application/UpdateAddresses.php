@@ -8,15 +8,10 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
-use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
-use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
-use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
@@ -29,15 +24,18 @@ final class UpdateAddresses extends AbstractCommandHandler
 {
     public function handleCommand(CommandInterface $command)
     {
-        $this->result = new Result();
-        $this->result->merge(
+        $result = $this->getCommandHandler()->handleCommand(
+            SaveAddresses::create($command->getArrayCopy())
+        );
+
+        $result->merge(
             $this->getCommandHandler()->handleCommand(
-                SaveAddresses::create($command->getArrayCopy())
+                UpdateApplicationCompletionCommand::create(
+                    ['id' => $command->getId(), 'section' => 'addresses']
+                )
             )
         );
 
-        // @TODO application completion
-
-        return $this->result;
+        return $result;
     }
 }
