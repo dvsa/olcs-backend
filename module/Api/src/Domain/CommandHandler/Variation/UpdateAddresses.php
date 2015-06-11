@@ -29,7 +29,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
 {
     use AuthAwareTrait;
 
-    private $repoServiceName = 'Application';
+    protected $repoServiceName = 'Application';
 
     public function handleCommand(CommandInterface $command)
     {
@@ -56,7 +56,8 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
                 'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_ADDRESS_CHANGE_DIGITAL,
                 'description' => 'Address Change',
                 'licence' => $licence->getId(),
-                'application' => $application->getId()
+                'application' => $application->getId(),
+                'actionDate' => date('Y-d-m H:i:s')
             ];
 
             $result->merge($this->getCommandHandler()->handleCommand(CreateTask::create($taskParams)));

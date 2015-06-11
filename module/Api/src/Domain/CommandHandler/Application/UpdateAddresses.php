@@ -22,7 +22,7 @@ use Doctrine\ORM\Query;
  */
 final class UpdateAddresses extends AbstractCommandHandler
 {
-    private $repoServiceName = 'Application';
+    protected $repoServiceName = 'Application';
 
     public function handleCommand(CommandInterface $command)
     {
