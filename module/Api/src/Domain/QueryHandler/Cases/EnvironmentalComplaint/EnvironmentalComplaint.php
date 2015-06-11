@@ -1,15 +1,15 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Complaint;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\EnvironmentalComplaint;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * Complaint
+ * EnvironmentalComplaint
  */
-final class Complaint extends AbstractQueryHandler
+final class EnvironmentalComplaint extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Complaint';
 
