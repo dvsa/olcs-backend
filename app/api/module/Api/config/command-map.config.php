@@ -24,6 +24,15 @@ return [
         => CommandHandler\Application\CreateCompanySubsidiary::class,
     TransferCommand\Application\DeleteCompanySubsidiary::class
         => CommandHandler\Application\DeleteCompanySubsidiary::class,
+    TransferCommand\Application\UpdateSafety::class => CommandHandler\Application\UpdateSafety::class,
+    TransferCommand\Application\DeleteWorkshop::class => CommandHandler\Application\DeleteWorkshop::class,
+    TransferCommand\Application\CreateWorkshop::class => CommandHandler\Application\CreateWorkshop::class,
+    TransferCommand\Application\UpdateWorkshop::class => CommandHandler\Application\UpdateWorkshop::class,
+
+    // Transfer - Workshop
+    TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
+    TransferCommand\Workshop\CreateWorkshop::class => CommandHandler\Workshop\CreateWorkshop::class,
+    TransferCommand\Workshop\UpdateWorkshop::class => CommandHandler\Workshop\UpdateWorkshop::class,
 
     // Transfer - Note
     TransferCommand\Processing\Note\Create::class => CommandHandler\Processing\Note\Create::class,
@@ -40,6 +49,7 @@ return [
     TransferCommand\Licence\UpdateCompanySubsidiary::class => CommandHandler\Licence\UpdateCompanySubsidiary::class,
     TransferCommand\Licence\CreateCompanySubsidiary::class => CommandHandler\Licence\CreateCompanySubsidiary::class,
     TransferCommand\Licence\DeleteCompanySubsidiary::class => CommandHandler\Licence\DeleteCompanySubsidiary::class,
+    TransferCommand\Licence\UpdateSafety::class => CommandHandler\Licence\UpdateSafety::class,
 
     // Transfer - Variation
     TransferCommand\Variation\UpdateTypeOfLicence::class => CommandHandler\Variation\UpdateTypeOfLicence::class,
@@ -69,6 +79,10 @@ return [
     TransferCommand\GracePeriod\CreateGracePeriod::class => CommandHandler\GracePeriod\CreateGracePeriod::class,
     TransferCommand\GracePeriod\UpdateGracePeriod::class => CommandHandler\GracePeriod\UpdateGracePeriod::class,
     TransferCommand\GracePeriod\DeleteGracePeriod::class => CommandHandler\GracePeriod\DeleteGracePeriod::class,
+
+    // Transfer - Correspondence
+    TransferCommand\Correspondence\AccessCorrespondence::class
+        => CommandHandler\Correspondence\AccessCorrespondence::class,
 
     // Transfer - IRFO
     \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit::class

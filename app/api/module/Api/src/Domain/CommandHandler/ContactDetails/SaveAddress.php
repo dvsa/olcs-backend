@@ -32,7 +32,7 @@ final class SaveAddress extends AbstractCommandHandler implements TransactionedI
     public function handleCommand(CommandInterface $command)
     {
         // Update Address
-        if ($command->getId() !== null) {
+        if (!empty($command->getId())) {
             return $this->updateAddress($command);
         }
 
