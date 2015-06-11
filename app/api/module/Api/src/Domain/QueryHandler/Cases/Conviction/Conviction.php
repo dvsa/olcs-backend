@@ -21,6 +21,6 @@ class Conviction extends AbstractQueryHandler
         /** @var ConvictionRepository $repo */
         $repo = $this->getRepo();
 
-        return $repo->fetchUsingId($query);
+        return $this->result($repo->fetchUsingId($query));
     }
 }

@@ -22,7 +22,7 @@ class ConvictionList extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         return [
-            'result' => $repo->fetchList($query),
+            'result' => $this->resultList($repo->fetchList($query)),
             'count' => $repo->fetchCount($query)
         ];
     }
