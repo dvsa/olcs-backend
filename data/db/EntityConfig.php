@@ -101,15 +101,6 @@ return array(
         ),
         'written_permission_to_engage' => array(
             'type' => 'yesno'
-        ),
-        'phone_contacts' => array(
-            'cascade' => array(
-                'persist'
-            ),
-            'inversedBy' => array(
-                'entity' => 'PhoneContact',
-                'property' => 'contactDetails'
-            )
         )
     ),
     'user' => array(
@@ -1412,7 +1403,9 @@ return array(
                 'property' => 'phoneContact',
                 'cascade' => array(
                     'persist'
-                )
+                ),
+                'indexBy' => 'id',
+                'orphanRemoval' => 'true'
             )
         )
     ),
