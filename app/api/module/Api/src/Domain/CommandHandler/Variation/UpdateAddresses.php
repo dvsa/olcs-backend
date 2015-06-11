@@ -37,8 +37,11 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
 
         $licence = $application->getLicence();
 
+        $params = $command->getArrayCopy();
+        $params['id'] = $licence->getId();
+
         $result = $this->getCommandHandler()->handleCommand(
-            SaveAddresses::create($command->getArrayCopy())
+            SaveAddresses::create($params)
         );
 
         $result->merge(
