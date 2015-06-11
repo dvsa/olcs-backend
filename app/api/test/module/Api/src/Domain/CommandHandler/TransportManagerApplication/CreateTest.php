@@ -78,6 +78,15 @@ class CreateTest extends CommandHandlerTestCase
             }
         );
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class,
+            [
+                'id' => 863,
+                'section' => 'transportManagers'
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
         $this->sut->handleCommand($command);
     }
 
@@ -126,6 +135,15 @@ class CreateTest extends CommandHandlerTestCase
             \Dvsa\Olcs\Api\Domain\Command\Email\SendTmApplication::class,
             [
                 'id' => 534,
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class,
+            [
+                'id' => 863,
+                'section' => 'transportManagers'
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
         );

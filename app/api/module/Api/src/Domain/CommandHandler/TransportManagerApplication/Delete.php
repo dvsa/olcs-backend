@@ -26,11 +26,24 @@ final class Delete extends AbstractCommandHandler implements TransactionedInterf
     {
         $result = new Result();
 
+        $applicationIds = [];
         foreach ($command->getIds() as $tmaId) {
             /* @var $tma TransportManagerApplication */
             $tma = $this->getRepo()->fetchById($tmaId);
             $this->getRepo()->delete($tma);
             $result->addMessage("Transport Manager Application ID {$tmaId} deleted");
+
+            $applicationIds[$tma->getApplication()->getId()] = $tma->getApplication()->getId();
+        }
+
+        foreach ($applicationIds as $applicationId) {
+            $result->merge(
+                $this->getCommandHandler()->handleCommand(
+                    \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::create(
+                        ['id' => $applicationId, 'section' => 'transportManagers']
+                    )
+                )
+            );
         }
 
         return $result;

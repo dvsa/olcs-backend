@@ -35,18 +35,14 @@ class TransportManagersTest extends QueryHandlerTestCase
 
         $application = $this->getApplication();
 
-        $tmas = [new \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication()];
-        $tmls = [new \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence()];
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($query)->once()->andReturn($application);
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchWithContactDetailsByApplication')
-            ->with(1066)->once()->andReturn($tmas);
+            ->with(1066)->once();
         $this->repoMap['TransportManagerLicence']->shouldReceive('fetchWithContactDetailsByLicence')
-            ->with(624)->once()->andReturn($tmls);
+            ->with(624)->once();
 
-        $result = $this->sut->handleQuery($query);
-        $this->assertSame(1066, $result->getId());
-        $this->assertSame($tmas, $result->getTransportManagers());
-        $this->assertSame($tmls, $result->getLicence()->getTmLicences());
+        /* @var $result \Dvsa\Olcs\Api\Domain\QueryHandler\Result */
+        $this->sut->handleQuery($query);
     }
 
     /**

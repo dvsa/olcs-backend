@@ -5,7 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\TransportManagerDeleteDelta as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Variation\TransportManagerDeleteDelta as Command;
@@ -79,6 +79,15 @@ class TransportManagerDeleteDeltaTest extends CommandHandlerTestCase
                     $this->assertSame('D', $tma->getAction());
                 }
             );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class,
+            [
+                'id' => 1066,
+                'section' => 'transportManagers'
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
 
         $result = $this->sut->handleCommand($command);
         $this->assertSame(

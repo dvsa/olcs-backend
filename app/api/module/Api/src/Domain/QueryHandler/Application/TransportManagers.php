@@ -45,20 +45,29 @@ class TransportManagers extends AbstractQueryHandler
         /* @var $application \Dvsa\Olcs\Api\Entity\Application\Application */
         $application = $this->getRepo()->fetchUsingId($query);
 
-        $tmaResults = $this->tmaRepo->fetchWithContactDetailsByApplication($application->getId());
-        // prevent JSON recursion issue
-        foreach ($tmaResults as $tma) {
-            $tma->setApplication(null);
-        }
-        $application->setTransportManagers($tmaResults);
+        $this->tmaRepo->fetchWithContactDetailsByApplication($application->getId());
+        $this->tmlRepo->fetchWithContactDetailsByLicence($application->getLicence()->getId());
 
-        $tmlResults = $this->tmlRepo->fetchWithContactDetailsByLicence($application->getLicence()->getId());
-        // prevent JSON recursion issue
-        foreach ($tmlResults as $tml) {
-            $tml->setLicence(null);
-        }
-        $application->getLicence()->setTmLicences($tmlResults);
-
-        return $application;
+        return $this->result(
+            $application,
+            [
+                'transportManagers' => [
+                    'transportManager' => [
+                        'homeCd' => [
+                            'person'
+                        ]
+                    ]
+                ],
+                'licence' => [
+                    'tmLicences' => [
+                        'transportManager' => [
+                            'homeCd' => [
+                                'person'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        );
     }
 }
