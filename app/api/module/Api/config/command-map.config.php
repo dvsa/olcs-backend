@@ -10,12 +10,11 @@ return [
     // Transfer - Application
     TransferCommand\Application\UpdateTypeOfLicence::class => CommandHandler\Application\UpdateTypeOfLicence::class,
     TransferCommand\Application\CreateApplication::class => CommandHandler\Application\CreateApplication::class,
-    TransferCommand\Application\UpdateFinancialHistory::class
-        => CommandHandler\Application\UpdateFinancialHistory::class,
-    TransferCommand\Application\UpdatePreviousConvictions::class
-        => CommandHandler\Application\UpdatePreviousConvictions::class,
-    TransferCommand\Application\UpdateFinancialEvidence::class
-        => CommandHandler\Application\UpdateFinancialEvidence::class,
+    TransferCommand\Application\UpdateFinancialHistory::class =>
+        CommandHandler\Application\UpdateFinancialHistory::class,
+    TransferCommand\Application\UpdateLicenceHistory::class => CommandHandler\Application\UpdateLicenceHistory::class,
+    TransferCommand\Application\UpdatePreviousConvictions::class =>
+        CommandHandler\Application\UpdatePreviousConvictions::class,
     TransferCommand\Application\UpdateDeclaration::class => CommandHandler\Application\UpdateDeclaration::class,
     TransferCommand\Application\UpdateBusinessDetails::class
         => CommandHandler\Application\UpdateBusinessDetails::class,
@@ -58,24 +57,44 @@ return [
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
 
+    // Transfer - OtherLicence
+    TransferCommand\OtherLicence\UpdateOtherLicence::class => CommandHandler\OtherLicence\UpdateOtherLicence::class,
+    TransferCommand\OtherLicence\CreateOtherLicence::class => CommandHandler\OtherLicence\CreateOtherLicence::class,
+    TransferCommand\OtherLicence\DeleteOtherLicence::class => CommandHandler\OtherLicence\DeleteOtherLicence::class,
+
     // Transfer - Previous Conviction
-    TransferCommand\PreviousConviction\CreatePreviousConviction::class
-        => CommandHandler\PreviousConviction\CreatePreviousConviction::class,
-    TransferCommand\PreviousConviction\UpdatePreviousConviction::class
-        => CommandHandler\PreviousConviction\UpdatePreviousConviction::class,
-    TransferCommand\PreviousConviction\DeletePreviousConviction::class
-        => CommandHandler\PreviousConviction\DeletePreviousConviction::class,
+    TransferCommand\PreviousConviction\CreatePreviousConviction::class =>
+        CommandHandler\PreviousConviction\CreatePreviousConviction::class,
+    TransferCommand\PreviousConviction\UpdatePreviousConviction::class =>
+        CommandHandler\PreviousConviction\UpdatePreviousConviction::class,
+    TransferCommand\PreviousConviction\DeletePreviousConviction::class =>
+        CommandHandler\PreviousConviction\DeletePreviousConviction::class,
 
     // Transfer - Trailer
     TransferCommand\Trailer\CreateTrailer::class => CommandHandler\Trailer\CreateTrailer::class,
     TransferCommand\Trailer\UpdateTrailer::class => CommandHandler\Trailer\UpdateTrailer::class,
     TransferCommand\Trailer\DeleteTrailer::class => CommandHandler\Trailer\DeleteTrailer::class,
 
+    // Transfer - Grace Period
+    TransferCommand\GracePeriod\CreateGracePeriod::class => CommandHandler\GracePeriod\CreateGracePeriod::class,
+    TransferCommand\GracePeriod\UpdateGracePeriod::class => CommandHandler\GracePeriod\UpdateGracePeriod::class,
+    TransferCommand\GracePeriod\DeleteGracePeriod::class => CommandHandler\GracePeriod\DeleteGracePeriod::class,
+
+    // Transfer - Correspondence
+    TransferCommand\Correspondence\AccessCorrespondence::class
+        => CommandHandler\Correspondence\AccessCorrespondence::class,
+
     // Transfer - IRFO
     \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit::class
         => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoGvPermit::class,
     \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoGvPermit::class
         => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoGvPermit::class,
+    \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoPermitStock::class
+        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoPermitStock::class,
+    \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoPsvAuth::class
+        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoPsvAuth::class,
+    \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth::class
+        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
 
     // Transfer - Impounding
     TransferCommand\Cases\Impounding\CreateImpounding::class =>
@@ -92,6 +111,19 @@ return [
         CommandHandler\Cases\Complaint\UpdateComplaint::class,
     TransferCommand\Cases\Complaint\DeleteComplaint::class =>
         CommandHandler\Cases\Complaint\DeleteComplaint::class,
+
+    // Conviction
+    TransferCommand\Cases\Conviction\Create::class => CommandHandler\Cases\Conviction\Create::class,
+    TransferCommand\Cases\Conviction\Update::class => CommandHandler\Cases\Conviction\Update::class,
+    TransferCommand\Cases\Conviction\Delete::class => CommandHandler\Cases\Conviction\Delete::class,
+
+    // Transfer - Environmental Complaint
+    TransferCommand\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class =>
+        CommandHandler\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class,
+    TransferCommand\Cases\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class =>
+        CommandHandler\Cases\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class,
+    TransferCommand\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class =>
+        CommandHandler\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
 
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,

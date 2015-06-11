@@ -17,6 +17,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as Cmd;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule;
 
 /**
  * Create Task
@@ -27,9 +28,15 @@ final class CreateTask extends AbstractCommandHandler
 {
     protected $repoServiceName = 'Task';
 
+    protected $extraRepos = ['TaskAllocationRule', 'SystemParameter'];
+
     public function handleCommand(CommandInterface $command)
     {
         $task = $this->createTaskObject($command);
+
+        if ($task->getAssignedToUser() === null) {
+            $this->autoAssignTask($task);
+        }
 
         $this->getRepo()->save($task);
 
@@ -38,6 +45,55 @@ final class CreateTask extends AbstractCommandHandler
         $result->addMessage('Task created successfully');
 
         return $result;
+    }
+
+    private function autoAssignTask(Task $task)
+    {
+        $ruleType = $task->getCategory()->getTaskAllocationType()->getId();
+
+        switch ($ruleType) {
+            case Task::TYPE_SIMPLE:
+                $rules = $this->getRepo('TaskAllocationRule')
+                    ->fetchForSimpleTaskAssignment($task->getCategory());
+                break;
+            // no other allocation type is yet implemented as of OLCS-3406
+            case Task::TYPE_MEDIUM:
+            case Task::TYPE_COMPLEX:
+            default:
+                return;
+        }
+
+        /**
+         * Multiple rules are just as useless as no rules according to AC
+         */
+        if (count($rules) !== 1) {
+            return $this->assignToDefault($task);
+        }
+
+        /** @var TaskAllocationRule $rule */
+        $rule = $rules[0];
+
+        $task->setAssignedToUser($rule->getUser());
+        $task->setAssignedToTeam($rule->getTeam());
+    }
+
+    /**
+     * Fall back on system configuration to populate user and team
+     *
+     * @return array
+     */
+    private function assignToDefault(Task $task)
+    {
+        $teamId = $this->getRepo('SystemParameter')->fetchValue('task.default_team');
+        $userId = $this->getRepo('SystemParameter')->fetchValue('task.default_user');
+
+        if ($teamId !== null) {
+            $task->setAssignedToTeam($this->getRepo()->getReference(Team::class, $teamId));
+        }
+
+        if ($userId !== null) {
+            $task->setAssignedToUser($this->getRepo()->getReference(User::class, $userId));
+        }
     }
 
     /**

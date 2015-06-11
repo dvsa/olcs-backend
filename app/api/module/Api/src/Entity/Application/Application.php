@@ -175,6 +175,15 @@ class Application extends AbstractApplication
         throw new ValidationException($errors);
     }
 
+    public function getOtherLicencesByType($type)
+    {
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+        $criteria->where($expr->eq('previousLicenceType', $type));
+
+        return $this->otherLicences->matching($criteria);
+    }
+
     /**
      * Determine whether the licence has changed within set parameters that would
      * qualify this variation to be an interim.
@@ -348,5 +357,23 @@ class Application extends AbstractApplication
             $this->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_RESTRICTED
             && in_array($this->getLicenceType()->getId(), $restrictedUpgrades)
         );
+    }
+
+    public function updateLicenceHistory(
+        $prevHasLicence,
+        $prevHadLicence,
+        $prevBeenRefused,
+        $prevBeenRevoked,
+        $prevBeenAtPi,
+        $prevBeenDisqualifiedTc,
+        $prevPurchasedAssets
+    ) {
+        $this->prevHasLicence = $prevHasLicence;
+        $this->prevHadLicence = $prevHadLicence;
+        $this->prevBeenRefused = $prevBeenRefused;
+        $this->prevBeenRevoked = $prevBeenRevoked;
+        $this->prevBeenAtPi = $prevBeenAtPi;
+        $this->prevBeenDisqualifiedTc = $prevBeenDisqualifiedTc;
+        $this->prevPurchasedAssets = $prevPurchasedAssets;
     }
 }

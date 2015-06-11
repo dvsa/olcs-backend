@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Licence\BusinessDetails;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -33,21 +34,42 @@ class BusinessDetailsTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
+        $expectedBundle = [
+            'natureOfBusinesses',
+            'contactDetails' => [
+                'address' => [
+                    'countryCode'
+                ]
+            ]
+        ];
+
         /** @var OrganisationEntity $organisation */
         $organisation = m::mock(OrganisationEntity::class)->makePartial();
         $organisation->setId(222);
-        $organisation->shouldReceive('jsonSerialize')
-            ->andReturn(['id' => 222]);
+        $organisation->shouldReceive('serialize')
+            ->with($expectedBundle)
+            ->once()
+            ->andReturn(
+                ['foo' => 'bar']
+            );
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setOrganisation($organisation);
 
-        $licence->shouldReceive('getTradingNames->toArray')
-            ->andReturn(['foo']);
+        $licence->shouldReceive('getTradingNames')
+            ->andReturn(
+                [
+                    m::mock()->shouldReceive('serialize')->andReturn(['foo' => 'bar'])->getMock()
+                ]
+            );
 
-        $licence->shouldReceive('getCompanySubsidiaries->toArray')
-            ->andReturn(['bar']);
+        $licence->shouldReceive('getCompanySubsidiaries')
+            ->andReturn(
+                [
+                    m::mock()->shouldReceive('serialize')->andReturn(['bar' => 'foo'])->getMock()
+                ]
+            );
 
         $query = Qry::create(['id' => 111]);
 
@@ -59,16 +81,20 @@ class BusinessDetailsTest extends QueryHandlerTestCase
             ->with(222)
             ->andReturn($organisation);
 
+        $result = $this->sut->handleQuery($query);
+
+        $this->assertInstanceOf(Result::class, $result);
+
         $expected = [
-            'id' => 222,
+            'foo' => 'bar',
             'tradingNames' => [
-                'foo'
+                ['foo' => 'bar']
             ],
             'companySubsidiaries' => [
-                'bar'
+                ['bar' => 'foo']
             ]
         ];
 
-        $this->assertEquals($expected, $this->sut->handleQuery($query));
+        $this->assertEquals($expected, $result->serialize());
     }
 }

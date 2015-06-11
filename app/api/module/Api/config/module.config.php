@@ -46,13 +46,17 @@ return [
             TransferQuery\Application\PreviousConvictions::class => QueryHandler\Application\PreviousConvictions::class,
             TransferQuery\Application\Safety::class => QueryHandler\Application\Safety::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
-
+            TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
+            
             // Licence
             TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
             TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
             TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
             TransferQuery\Licence\Safety::class => QueryHandler\Licence\Safety::class,
 
+            // Other Licence
+            TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
+            
             // Organisation
             TransferQuery\Organisation\BusinessDetails::class => QueryHandler\Organisation\BusinessDetails::class,
             TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
@@ -69,7 +73,11 @@ return [
             TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
             TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
             TransferQuery\Cases\Complaint\ComplaintList::class => QueryHandler\Cases\Complaint\ComplaintList::class,
-
+            TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
+                QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
+            TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
+                QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
+        
             // Processing
             TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
             TransferQuery\Processing\Note::class => QueryHandler\Processing\Note::class,
@@ -88,13 +96,27 @@ return [
 
             // Trailer
             TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
+            TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
+            
+            // Grace Periods
+            TransferQuery\GracePeriod\GracePeriod::class => QueryHandler\GracePeriod\GracePeriod::class,
+            TransferQuery\GracePeriod\GracePeriods::class => QueryHandler\GracePeriod\GracePeriods::class,
+            
 
             // Irfo
             TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
             TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
-
+            TransferQuery\Irfo\IrfoPermitStockList::class => QueryHandler\Irfo\IrfoPermitStockList::class,
+            TransferQuery\Irfo\IrfoPsvAuth::class => QueryHandler\Irfo\IrfoPsvAuth::class,
+            TransferQuery\Irfo\IrfoPsvAuthList::class => QueryHandler\Irfo\IrfoPsvAuthList::class,
+            
             // Workshop
             TransferQuery\Workshop\Workshop::class => QueryHandler\Workshop\Workshop::class,
+
+            // Correspondence
+            TransferQuery\Correspondence\Correspondence::class => QueryHandler\Correspondence\Correspondence::class,
+            TransferQuery\Correspondence\Correspondences::class => QueryHandler\Correspondence\Correspondences::class,
+
         ]
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
@@ -103,6 +125,7 @@ return [
             'withCreatedBy'      => QueryPartial\WithCreatedByFactory::class,
             'withRefdata' => QueryPartial\WithRefdataFactory::class,
             'withUser' => QueryPartial\WithUserFactory::class,
+            'withCreatedBy' => QueryPartial\WithCreatedByFactory::class,
             'WithPersonContactDetails' => QueryPartial\WithPersonContactDetailsFactory::class,
         ],
         'invokables' => [
@@ -118,10 +141,12 @@ return [
             'Address' => RepositoryFactory::class,
             'ContactDetails' => RepositoryFactory::class,
             'CompanySubsidiary' => RepositoryFactory::class,
+            'Conviction' => RepositoryFactory::class,
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
+            'GracePeriod' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
@@ -138,11 +163,18 @@ return [
             'Note' => RepositoryFactory::class,
             'TradingName' => RepositoryFactory::class,
             'IrfoGvPermit' => RepositoryFactory::class,
+            'IrfoPermitStock' => RepositoryFactory::class,
+            'IrfoPsvAuth' => RepositoryFactory::class,
+            'IrfoPsvAuthNumber' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
             'ImpoundingList' => RepositoryFactory::class,
             'Workshop' => RepositoryFactory::class,
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
+            'OtherLicence' => RepositoryFactory::class,
+            'Correspondence' => RepositoryFactory::class,
+            'SystemParameter' => RepositoryFactory::class,
+            'TaskAllocationRule' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
