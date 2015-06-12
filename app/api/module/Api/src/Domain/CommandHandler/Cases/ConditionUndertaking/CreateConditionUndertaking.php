@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Transfer\Command\Cases\ConditionUndertaking\CreateConditionUndertaking as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
@@ -89,7 +90,8 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
                 )
             );
         } else {
-            $operatingCentre = $this->getRepo('OperatingCentre')->fetchById($command->getOperatingCentre());
+            $operatingCentre = $this->getRepo('OperatingCentre')
+                ->getReference(OperatingCentre::class, $command->getOperatingCentre());
             $conditionUndertaking->setOperatingCentre($operatingCentre);
             $conditionUndertaking->setAttachedTo(
                 $this->getRepo()->getRefdataReference(

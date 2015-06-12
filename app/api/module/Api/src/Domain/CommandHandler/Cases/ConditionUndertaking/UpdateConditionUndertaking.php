@@ -87,8 +87,8 @@ final class UpdateConditionUndertaking extends AbstractCommandHandler implements
             $conditionUndertaking->setOperatingCentre(null);
 
         } else {
-            $operatingCentre = $this->getRepo('OperatingCentre')->fetchById($command->getOperatingCentre());
-
+            $operatingCentre = $this->getRepo('OperatingCentre')
+                ->getReference(OperatingCentre::class, $command->getOperatingCentre());
             $conditionUndertaking->setOperatingCentre($operatingCentre);
             $conditionUndertaking->setAttachedTo(
                 $this->getRepo()->getRefdataReference(
