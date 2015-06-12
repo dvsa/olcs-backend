@@ -175,7 +175,7 @@ class UpdateConditionUndertakingTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with(m::type(ConditionUndertakingEntity::class))
             ->once();
-        
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
