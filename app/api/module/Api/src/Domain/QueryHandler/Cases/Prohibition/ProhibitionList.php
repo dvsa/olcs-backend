@@ -1,25 +1,29 @@
 <?php
 
 /**
- * ConvictionList
+ * ProhibitionList
  */
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Conviction;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Prohibition;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Repository\Conviction as ConvictionRepository;
+use Dvsa\Olcs\Api\Domain\Repository\Prohibition as ProhibitionRepository;
+
+use Dvsa\Olcs\Transfer\Query\Cases\Prohibition\ProhibitionList as Query;
 use Doctrine\ORM\Query as DoctrineQuery;
 
 /**
- * ConvictionList
+ * ProhibitionList
  */
-class ConvictionList extends AbstractQueryHandler
+class ProhibitionList extends AbstractQueryHandler
 {
-    protected $repoServiceName = 'Conviction';
+    protected $repoServiceName = 'Prohibition';
 
     public function handleQuery(QueryInterface $query)
     {
-        /** @var ConvictionRepository $repo */
+        /* @var Query $query */
+
+        /** @var ProhibitionRepository $repo */
         $repo = $this->getRepo();
 
         return [
