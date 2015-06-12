@@ -1,7 +1,20 @@
 <?php
+
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Hearing;
+
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+
 /**
- * Created by PhpStorm.
- * User: slizzio
- * Date: 12/06/15
- * Time: 11:17
- */ 
+ * Stay
+ */
+final class Stay extends AbstractQueryHandler
+{
+    protected $repoServiceName = 'Stay';
+
+    public function handleQuery(QueryInterface $query)
+    {
+        return $this->getRepo()->fetchUsingCaseId($query);
+    }
+}
