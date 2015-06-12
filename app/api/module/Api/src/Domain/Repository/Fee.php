@@ -7,9 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Fee
@@ -181,5 +183,70 @@ class Fee extends AbstractRepository
                     $this->getRefdataReference(LicenceEntity::LICENCE_STATUS_SUSPENDED),
                 ]
             );
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if ($query->getLicence() !== null) {
+            $qb->andWhere($this->alias . '.licence = :licenceId');
+            $qb->setParameter('licenceId', $query->getLicence());
+        }
+
+        if ($query->getApplication() !== null) {
+            $qb->andWhere($this->alias . '.application = :applicationId');
+            $qb->setParameter('applicationId', $query->getApplication());
+        }
+
+        if ($query->getBusReg() !== null) {
+            $qb->andWhere($this->alias . '.busReg = :busRegId');
+            $qb->setParameter('busRegId', $query->getBusReg());
+        }
+
+        if ($query->getTask() !== null) {
+            $qb->andWhere($this->alias . '.task = :taskId');
+            $qb->setParameter('taskId', $query->getTask());
+        }
+
+        if ($query->getIrfoGvPermit() !== null) {
+            $qb->andWhere($this->alias . '.irfoGvPermit = :irfoGvPermitId');
+            $qb->setParameter('irfoGvPermitId', $query->getIrfoGvPermit());
+        }
+
+        if ($query->getIsMiscellaneous() !== null) {
+            $qb->innerJoin($this->alias . '.feeType', 'ft')
+                ->andWhere('ft.isMiscellaneous = :isMiscellaneous')
+                ->setParameter('isMiscellaneous', $query->getIsMiscellaneous());
+        }
+
+        if ($query->getStatus() !== null) {
+            switch ($query->getStatus()) {
+                case 'historical':
+                    $feeStatus = [
+                        Entity::STATUS_PAID,
+                        Entity::STATUS_WAIVED,
+                        Entity::STATUS_CANCELLED,
+                    ];
+                    break;
+                case 'all':
+                    $feeStatus = [];
+                    break;
+                case 'current':
+                default:
+                    $feeStatus = [
+                        Entity::STATUS_OUTSTANDING,
+                        Entity::STATUS_WAIVE_RECOMMENDED,
+                    ];
+                    break;
+            }
+            if (!empty($feeStatus)) {
+                 $qb->andWhere($qb->expr()->in($this->alias . '.feeStatus', $feeStatus));
+            }
+        }
+
+        $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
     }
 }
