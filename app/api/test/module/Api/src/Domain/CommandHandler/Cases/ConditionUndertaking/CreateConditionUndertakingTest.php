@@ -85,7 +85,6 @@ class CreateConditionUndertakingTest extends CommandHandlerTestCase
         $caseEntity = m::mock(CasesEntity::class)->makePartial();
         $caseEntity->setLicence($licenceEntity);
 
-
         $this->repoMap['OperatingCentre']
             ->shouldReceive('fetchById')
             ->with(16)

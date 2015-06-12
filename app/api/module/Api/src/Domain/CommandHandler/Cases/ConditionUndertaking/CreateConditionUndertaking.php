@@ -66,7 +66,6 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
         $conditionUndertaking->setAttachedTo($this->getRepo()->getRefdataReference($command->getAttachedTo()));
         $conditionUndertaking->setLicence($licence);
 
-
         $conditionUndertaking->setAddedVia($this->getRepo()->getRefdataReference(ConditionUndertaking::ADDED_VIA_CASE));
 
         $conditionUndertaking = $this->setAttachedToProperties($conditionUndertaking, $command);
