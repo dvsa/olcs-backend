@@ -24,10 +24,13 @@ class Declaration extends AbstractQueryHandler
         /* @var $application \Dvsa\Olcs\Api\Entity\Application\Application */
         $application = $this->getRepo()->fetchUsingId($query);
 
-        $data = $application->jsonSerialize();
-        $data['canHaveInterimLicence'] = $application->canHaveInterimLicence();
-        $data['isLicenceUpgrade'] = $application->isLicenceUpgrade();
-
-        return $data;
+        return $this->result(
+            $application,
+            [],
+            [
+                'canHaveInterimLicence' => $application->canHaveInterimLicence(),
+                'isLicenceUpgrade' => $application->isLicenceUpgrade(),
+            ]
+        );
     }
 }
