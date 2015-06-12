@@ -36,8 +36,8 @@ class Fee extends AbstractFee
     const STATUS_CANCELLED = 'lfs_cn';
 
     const ACCRUAL_RULE_LICENCE_START = 'acr_licence_start';
-    const ACCRUAL_RULE_CONTINUATION  = 'acr_continuation';
-    const ACCRUAL_RULE_IMMEDIATE     = 'acr_immediate';
+    const ACCRUAL_RULE_CONTINUATION = 'acr_continuation';
+    const ACCRUAL_RULE_IMMEDIATE = 'acr_immediate';
 
     const METHOD_CARD_ONLINE = 'fpm_card_online';
     const METHOD_CARD_OFFLINE = 'fpm_card_offline';
