@@ -97,7 +97,13 @@ class Fee extends AbstractFee
         }
     }
 
-    // allow injection of current date/time
+    /**************************************************************************/
+    /* Allow injection of current date/time */
+
+    /**
+     * @var \DateTime $now
+     * @todo migrate this to use Util\DateTime class when available
+     */
     protected $now;
 
     /**
@@ -119,4 +125,5 @@ class Fee extends AbstractFee
     {
         $this->now = $datetime;
     }
+    /**************************************************************************/
 }

@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\OlcsTest\Api\MockLoggerTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
@@ -22,10 +23,7 @@ use Mockery as m;
  */
 class CpmsHelperServiceTest extends MockeryTestCase
 {
-    /**
-     * @var \Zend\Log\Writer\Mock
-     */
-    protected $logWriter;
+    use MockLoggerTrait;
 
     /**
      * @var \Mockery\MockInterface (CpmsClient\Service\ApiService)
@@ -39,11 +37,6 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        // Mock the logger
-        $this->logWriter = new \Zend\Log\Writer\Mock();
-        $logger = new \Zend\Log\Logger();
-        $logger->addWriter($this->logWriter);
-
         // Mock the CPMS client
         $this->cpmsClient = m::mock()
             ->shouldReceive('getOptions')
@@ -56,7 +49,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
             ->getMock();
 
         // Create service with mocked dependencies
-        $this->sut = $this->createService($this->cpmsClient, $logger);
+        $this->sut = $this->createService($this->cpmsClient, $this->mockLogger());
 
         return parent::setUp();
     }
@@ -232,7 +225,6 @@ class CpmsHelperServiceTest extends MockeryTestCase
             $fee->setLicence($licence);
         }
 
-        // @TODO we need a date helper that we can mock!
         $now = new \DateTime('2015-06-10 12:34:56');
         $fee->setCurrentDateTime($now);
 

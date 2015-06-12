@@ -14,6 +14,7 @@ class GenericController extends AbstractRestfulController
 {
     public function get($id)
     {
+        unset($id); // unused param
         try {
             $result = $this->handleQuery();
             return $this->response()->singleResult($result);
@@ -46,6 +47,8 @@ class GenericController extends AbstractRestfulController
 
     public function update($id, $data)
     {
+        unset($id, $data); // unused params
+
         $dto = $this->params('dto');
 
         try {
@@ -62,6 +65,8 @@ class GenericController extends AbstractRestfulController
 
     public function create($data)
     {
+        unset($data); // unused param
+
         $dto = $this->params('dto');
 
         try {
@@ -76,6 +81,8 @@ class GenericController extends AbstractRestfulController
 
     public function delete($id)
     {
+        unset($id); // unused param
+
         $dto = $this->params('dto');
 
         try {
