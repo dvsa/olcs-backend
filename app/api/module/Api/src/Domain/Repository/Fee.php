@@ -96,7 +96,7 @@ class Fee extends AbstractRepository
     }
 
     /**
-     * Add conditions to the query builder to only select fee that are outstanding
+     * Add conditions to the query builder to only select fees that are outstanding
      *
      * @param Doctrine\ORM\QueryBuilder $doctrineQb
      */
@@ -114,7 +114,7 @@ class Fee extends AbstractRepository
     }
 
     /**
-     * Add conditions to the query builder to only select fee that are associated
+     * Add conditions to the query builder to only select fees that are associated
      * to either:
      *  a) a valid/curtailed/suspended licence
      *  or

@@ -19,7 +19,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Complete Payment
- * (initiates completes a CPMS payment)
+ * (completes a CPMS payment)
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
