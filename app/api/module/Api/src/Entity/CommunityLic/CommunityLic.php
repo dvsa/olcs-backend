@@ -33,6 +33,8 @@ class CommunityLic extends AbstractCommunityLic
     const PREFIX_GB = 'UKGB';
     const PREFIX_NI = 'UKNI';
 
+    const ERROR_OFFICE_COPY_EXISTS = 'CL_OC_EXISTS';
+
     public function updateCommunityLic($data)
     {
         $this->setStatus($data['status']);

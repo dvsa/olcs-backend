@@ -21,7 +21,7 @@ final class EnqueueFile extends AbstractCommand
     public $jobName;
 
     public $options;
-    
+
     public function getFileId()
     {
         return $this->fileId;

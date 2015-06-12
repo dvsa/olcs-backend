@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\PrintSchedulerInterface;
 final class GenerateBatch extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'CommunityLic';
-    
+
     protected $extraRepos = ['Licence'];
 
     public function handleCommand(CommandInterface $command)
@@ -46,7 +46,7 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
             if ($identifier) {
                 $query['application'] = $identifier;
             }
-            
+
             $processDocument = GenerateAndUploadDocumentCommand::create(
                 [
                     'template' => $template,
@@ -55,14 +55,9 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
                     'fileName' => 'Community Licence'
                 ]
             );
-                    
-            try {
-                $processDocResult = $this->getCommandHandler()->handleCommand($processDocument);
-            } catch (\Exception $ex) {
-                throw new \Exception($ex->getMessage());
-            }
-            
-            $fileId = $processDocResult->getIds()['fileId'];            
+
+            $processDocResult = $this->getCommandHandler()->handleCommand($processDocument);
+            $fileId = $processDocResult->getIds()['fileId'];
             $result->merge($processDocResult);
 
             $printQueue = EnqueueFileCommand::create(
@@ -72,13 +67,9 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
                     'jobName' => 'Community Licence'
                 ]
             );
-            try {
-                $printQueueResult = $this->getCommandHandler()->handleCommand($printQueue);
-            } catch (\Exception $ex) {
-                throw new \Exception($ex->getMessage());
-            }
+            $printQueueResult = $this->getCommandHandler()->handleCommand($printQueue);
             $result->merge($printQueueResult);
-            
+
             $result->addMessage("Community Licence {$id} processed");
         }
 

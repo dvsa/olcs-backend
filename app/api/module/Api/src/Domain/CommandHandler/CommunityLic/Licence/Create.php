@@ -1,27 +1,26 @@
 <?php
 
 /**
- * Create Community Licences / Application Version
+ * Create Community Licences / Licence Version
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Application;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Licence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as GenerateBatchCommand;
 use Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences as UpdateTotalCommunityLicencesCommand;
-use Dvsa\Olcs\Api\Domain\Command\CommunityLic\Application\CreateOfficeCopy as CreateOfficeCopyCommand;
+use Dvsa\Olcs\Api\Domain\Command\CommunityLic\Licence\CreateOfficeCopy as CreateOfficeCopyCommand;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
- * Create Community Licences / Application Version
+ * Create Community Licences / Licence Version
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -29,33 +28,24 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 {
     protected $repoServiceName = 'CommunityLic';
 
-    protected $extraRepos = ['Licence', 'Application'];
+    protected $extraRepos = ['Licence'];
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
         $licenceId = $command->getLicence();
         $totalLicences = $command->getTotalLicences();
-        $identifier = $command->getIdentifier();
 
-        $interimStatus = $this->getRepo('Application')->getInterimStatus($identifier);
-
-        if ($interimStatus !== ApplicationEntity::INTERIM_STATUS_INFORCE) {
-            $data = [
-                'status' => $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_PENDING),
-            ];
-        } else {
-            $data = [
-                'status' => $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_ACTIVE),
-                'specifiedDate' => new DateTime('now')
-            ];
-        }
+        $data = [
+            'status' => $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_ACTIVE),
+            'specifiedDate' => new DateTime('now')
+        ];
 
         $validLicences = $this->getRepo()
             ->fetchValidLicences($command->getLicence());
         $validLicencesCount = count($validLicences);
 
-        $this->validateLicencesCount($identifier, $validLicencesCount, $totalLicences);
+        $this->validateLicencesCount($licenceId, $validLicencesCount, $totalLicences);
 
         $startIssueNo = $validLicencesCount ?
             $validLicences[$validLicencesCount - 1]->getIssueNo() + 1 : 1;
@@ -74,7 +64,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
             $ids[] = $communityLic->getId();
         }
 
-        $sideEffects = $this->determineSideEffects($interimStatus, $licenceId, $identifier, $ids);
+        $sideEffects = $this->determineSideEffects($licenceId, $ids);
         foreach ($sideEffects as $sideEffect) {
             $result->merge($this->getCommandHandler()->handleCommand($sideEffect));
         }
@@ -93,28 +83,25 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         return $communityLic;
     }
 
-    private function determineSideEffects($interimStatus, $licenceId, $applicationId, $communityLicenceIds)
+    private function determineSideEffects($licenceId, $communityLicenceIds)
     {
         $sideEffects = [];
 
-        if ($interimStatus === ApplicationEntity::INTERIM_STATUS_INFORCE) {
-            $sideEffects[] = $this->createGenerateBatchCommand($licenceId, $applicationId, $communityLicenceIds);
-        }
+        $sideEffects[] = $this->createGenerateBatchCommand($licenceId, $communityLicenceIds);
 
         $sideEffects[] = $this->createUpdateTotalCommunityLicencesCommand($licenceId);
         if (!$this->getRepo()->fetchOfficeCopy($licenceId)) {
-            $sideEffects[] = $this->createCreateOfficeCopyCommand($licenceId, $applicationId);
+            $sideEffects[] = $this->createCreateOfficeCopyCommand($licenceId);
         }
 
         return $sideEffects;
     }
 
-    private function createGenerateBatchCommand($licenceId, $applicationId, $communityLicenceIds)
+    private function createGenerateBatchCommand($licenceId, $communityLicenceIds)
     {
         return GenerateBatchCommand::create(
             [
                 'licence' => $licenceId,
-                'identifier' => $applicationId,
                 'communityLicenceIds' => $communityLicenceIds
             ]
         );
@@ -129,20 +116,19 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         );
     }
 
-    private function createCreateOfficeCopyCommand($licenceId, $identifier)
+    private function createCreateOfficeCopyCommand($licenceId)
     {
         return CreateOfficeCopyCommand::create(
             [
                 'licence' => $licenceId,
-                'identifier' => $identifier,
             ]
         );
     }
 
-    private function validateLicencesCount($identifier, $validLicences, $totalLicences)
+    private function validateLicencesCount($licenceId, $validLicences, $totalLicences)
     {
-        $application = $this->getRepo('Application')->fetchById($identifier);
-        $totAuthVehicles = (int) $application->getTotAuthVehicles();
+        $licence = $this->getRepo('Licence')->fetchById($licenceId);
+        $totAuthVehicles = (int) $licence->getTotAuthVehicles();
         if (($totalLicences +  $validLicences) > $totAuthVehicles) {
             throw new ValidationException(
                 [

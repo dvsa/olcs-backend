@@ -98,7 +98,6 @@ return [
     TransferCommand\Cases\Complaint\DeleteComplaint::class =>
         CommandHandler\Cases\Complaint\DeleteComplaint::class,
 
-
     // Transfer - CommunityLic
     TransferCommand\CommunityLic\Application\Create::class => CommandHandler\CommunityLic\Application\Create::class,
     TransferCommand\CommunityLic\Application\CreateOfficeCopy::class =>
@@ -176,6 +175,8 @@ return [
     Command\CommunityLic\GenerateBatch::class => CommandHandler\CommunityLic\GenerateBatch::class,
     Command\CommunityLic\Application\CreateOfficeCopy::class =>
         CommandHandler\CommunityLic\Application\CreateOfficeCopy::class,
+    Command\CommunityLic\Licence\CreateOfficeCopy::class =>
+        CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
 
     // Domain - Document
     Command\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,

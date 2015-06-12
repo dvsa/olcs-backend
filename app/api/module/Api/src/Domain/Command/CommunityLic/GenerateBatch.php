@@ -20,7 +20,7 @@ final class GenerateBatch extends AbstractCommand
 
     public $communityLicenceIds;
 
-    public $application;
+    public $identifier;
 
     public function getLicence()
     {
@@ -34,6 +34,6 @@ final class GenerateBatch extends AbstractCommand
 
     public function getIdentifier()
     {
-        return $this->application;
+        return $this->identifier;
     }
 }

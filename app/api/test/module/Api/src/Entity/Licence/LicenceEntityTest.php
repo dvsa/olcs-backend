@@ -62,4 +62,11 @@ class LicenceEntityTest extends EntityTester
             ]
         ];
     }
+
+    public function testUpdateTotalCommunityLicences()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->updateTotalCommunityLicences(10);
+        $this->assertEquals(10, $sut->getTotCommunityLicences());
+    }
 }
