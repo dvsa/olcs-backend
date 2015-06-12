@@ -24,7 +24,7 @@ class PublicationLinkBundle extends AbstractQueryHandler
         $results = $this->getRepo()->fetchByBusRegId($query->getBusReg());
 
         return [
-            'Results' => $this->resultList($results, $query->getBundle())->serialize()
+            'Results' => $this->resultList($results, $query->getBundle())
         ];
     }
 }

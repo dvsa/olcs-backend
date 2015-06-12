@@ -13,7 +13,7 @@ class ApplicantName extends DynamicBookmark
     public function getQuery(array $data)
     {
         if (!isset($data['opposition'])) {
-
+            return null;
         }
 
         $bundle = [

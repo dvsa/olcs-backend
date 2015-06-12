@@ -1,31 +1,18 @@
 <?php
 
 /**
- * LicenceBundle Bookmark
+ * Licence Bundle Bookmark
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-
 /**
- * LicenceBundle Bookmark
+ * Licence Bundle Bookmark
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class LicenceBundle extends AbstractQueryHandler
+class LicenceBundle extends AbstractBundle
 {
     protected $repoServiceName = 'Licence';
-
-    public function handleQuery(QueryInterface $query)
-    {
-        $licence = $this->getRepo()->fetchUsingId($query);
-
-        return $this->result(
-            $licence,
-            $query->getBundle()
-        )->serialize();
-    }
 }
