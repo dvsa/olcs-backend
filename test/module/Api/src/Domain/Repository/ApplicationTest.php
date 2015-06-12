@@ -282,4 +282,28 @@ class ApplicationTest extends RepositoryTestCase
 
         $this->assertEquals('RESULT', $result);
     }
+
+    public function testInterimStatus()
+    {
+        $mockInterimData = m::mock()
+            ->shouldReceive('getInterimStatus')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(1)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $sut = m::mock(ApplicationRepo::class)->makePartial()
+            ->shouldReceive('fetchById')
+            ->with(2)
+            ->andReturn($mockInterimData)
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(1, $sut->getInterimStatus(2));
+    }
 }

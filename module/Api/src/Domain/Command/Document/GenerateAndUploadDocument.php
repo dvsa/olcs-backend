@@ -21,7 +21,7 @@ final class GenerateAndUploadDocument extends AbstractCommand
     public $data;
 
     public $folder;
-    
+
     public $fileName;
 
     public function getTemplate()

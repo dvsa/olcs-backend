@@ -1,16 +1,15 @@
 <?php
 
 /**
- * Create Office Copy / Application Version
+ * Create Office Copy / Licence Version
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Application;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Licence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as GenerateBatchCommand;
@@ -18,35 +17,26 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
- * Create Office Copy / Application Version
+ * Create Office Copy / Licence Version
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 final class CreateOfficeCopy extends AbstractCommandHandler
 {
     protected $repoServiceName = 'CommunityLic';
-    protected $extraRepos = ['Licence', 'Application'];
+    protected $extraRepos = ['Licence'];
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
         $licenceId = $command->getLicence();
-        $identifier = $command->getIdentifier();
 
         $this->validateOfficeCopy($licenceId);
 
-        $interimStatus = $this->getRepo('Application')->getInterimStatus($identifier);
-
-        if ($interimStatus !== ApplicationEntity::INTERIM_STATUS_INFORCE) {
-            $data = [
-                'status' => $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_PENDING),
-            ];
-        } else {
-            $data = [
-                'status' => $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_ACTIVE),
-                'specifiedDate' => new DateTime('now')
-            ];
-        }
+        $data = [
+            'status' => $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_ACTIVE),
+            'specifiedDate' => new DateTime('now')
+        ];
 
         $data['serialNoPrefix'] = $this->getRepo('Licence')->getSerialNoPrefixFromTrafficArea($licenceId);
         $data['licence'] = $this->getRepo()->getReference(LicenceEntity::class, $licenceId);
@@ -57,7 +47,7 @@ final class CreateOfficeCopy extends AbstractCommandHandler
         $result->addId('communityLic' . $communityLic->getId(), $communityLic->getId());
         $result->addMessage('Office copy created successfully');
 
-        $sideEffects = $this->determineSideEffects($interimStatus, $licenceId, $identifier, $communityLic->getId());
+        $sideEffects = $this->determineSideEffects($licenceId, $communityLic->getId());
         foreach ($sideEffects as $sideEffect) {
             $result->merge($this->getCommandHandler()->handleCommand($sideEffect));
         }
@@ -76,23 +66,19 @@ final class CreateOfficeCopy extends AbstractCommandHandler
         return $communityLic;
     }
 
-    private function determineSideEffects($interimStatus, $licenceId, $applicationId, $communityLicenceId)
+    private function determineSideEffects($licenceId, $communityLicenceId)
     {
         $sideEffects = [];
-
-        if ($interimStatus === ApplicationEntity::INTERIM_STATUS_INFORCE) {
-            $sideEffects[] = $this->createGenerateBatchCommand($licenceId, $applicationId, [$communityLicenceId]);
-        }
+        $sideEffects[] = $this->createGenerateBatchCommand($licenceId, [$communityLicenceId]);
 
         return $sideEffects;
     }
 
-    private function createGenerateBatchCommand($licenceId, $applicationId, $communityLicenceIds)
+    private function createGenerateBatchCommand($licenceId, $communityLicenceIds)
     {
         return GenerateBatchCommand::create(
             [
                 'licence' => $licenceId,
-                'identifier' => $applicationId,
                 'communityLicenceIds' => $communityLicenceIds
             ]
         );

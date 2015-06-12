@@ -21,9 +21,9 @@ final class CreateDocument extends AbstractCommand
     public $description;
 
     public $filename;
-    
+
     public $licence;
-    
+
     public $category;
 
     public $subCategory;
