@@ -1,0 +1,100 @@
+<?php
+
+/**
+ * Create Appeal
+ *
+ * @author Shaun Lizzio <shaun@lizzio.co.uk>
+ */
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Hearing;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Entity\Cases\Appeal;
+use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Transfer\Command\Cases\Hearing\CreateAppeal as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+
+/**
+ * Create Appeal
+ *
+ * @author Shaun Lizzio <shaun@lizzio.co.uk>
+ */
+final class CreateAppeal extends AbstractCommandHandler implements TransactionedInterface
+{
+    protected $repoServiceName = 'Appeal';
+
+    /**
+     * Creates Appeal and associated entities
+     *
+     * @param CommandInterface $command
+     * @return Result
+     */
+    public function handleCommand(CommandInterface $command)
+    {
+        $result = new Result();
+
+        $appeal = $this->createAppealObject($command);
+
+        $this->getRepo()->save($appeal);
+        $result->addMessage('Appeal created');
+
+        $result->addId('appeal', $appeal->getId());
+
+        return $result;
+    }
+
+    /**
+     * Create the appeal object
+     *
+     * @param Cmd $command
+     * @return Appeal
+     */
+    private function createAppealObject(Cmd $command)
+    {
+        $appeal = new Appeal($command->getAppealNo());
+        $appeal->setCase($this->getRepo()->getReference(Cases::class, $command->getCase()));
+
+        if ($command->getDeadlineDate() !== null) {
+            $appeal->setDeadlineDate(new \DateTime($command->getDeadlineDate()));
+        }
+
+        $appeal->setAppealDate(new \DateTime($command->getAppealDate()));
+        $appeal->setReason($this->getRepo()->getRefdataReference($command->getReason()));
+
+        if ($command->getOutlineGround() !== null) {
+            $appeal->setOutlineGround($command->getOutlineGround());
+        }
+
+        if ($command->getHearingDate() !== null) {
+            $appeal->setHearingDate(new \DateTime($command->getHearingDate()));
+        }
+
+        if ($command->getDecisionDate() !== null) {
+            $appeal->setDecisionDate(new \DateTime($command->getDecisionDate()));
+        }
+
+        if ($command->getPapersDueDate() !== null) {
+            $appeal->setPapersDueDate(new \DateTime($command->getPapersDueDate()));
+        }
+
+        if ($command->getPapersSentDate() !== null) {
+            $appeal->setPapersSentDate(new \DateTime($command->getPapersSentDate()));
+        }
+
+        if ($command->getOutcome() !== null) {
+            $appeal->setOutcome($this->getRepo()->getRefdataReference($command->getOutcome()));
+        }
+
+        if ($command->getIsWithdrawn() === 'Y') {
+            if ($command->getWithdrawnDate() !== null) {
+                $appeal->setWithdrawnDate(new \DateTime($command->getWithdrawnDate()));
+            }
+        } else {
+            $appeal->setWithdrawnDate(null);
+        }
+
+        return $appeal;
+    }
+}
