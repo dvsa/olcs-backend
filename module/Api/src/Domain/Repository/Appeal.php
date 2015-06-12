@@ -10,14 +10,14 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
-use Dvsa\Olcs\Api\Entity\Cases\Complaint as Entity;
+use Dvsa\Olcs\Api\Entity\Cases\Appeal as Entity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * Complaint
+ * Appeal
  */
-class Complaint extends AbstractRepository
+class Appeal extends AbstractRepository
 {
     protected $entity = Entity::class;
 
@@ -43,18 +43,13 @@ class Complaint extends AbstractRepository
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
 
+        $this->applyListJoins($qb);
+
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
-            ->with('case')
-            ->withPersonContactDetails('complainantContactDetails')
-            ->with('createdBy')
-            ->with('lastModifiedBy')
             ->byId($query->getId());
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
-        $qb->andWhere($qb->expr()->eq($this->alias . '.isCompliance', ':isCompliance'))
-            ->setParameter('isCompliance', $query->getIsCompliance());
 
         $result = $qb->getQuery()->getResult($hydrateMode);
 
@@ -74,7 +69,19 @@ class Complaint extends AbstractRepository
     {
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
-        $qb->andWhere($qb->expr()->eq($this->alias . '.isCompliance', ':isCompliance'))
-            ->setParameter('isCompliance', $query->getIsCompliance());
+    }
+
+    /**
+     *
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefData()
+            ->with('case')
+            ->with('createdBy')
+            ->with('lastModifiedBy');
     }
 }
