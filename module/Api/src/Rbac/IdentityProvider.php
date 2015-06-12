@@ -33,7 +33,10 @@ class IdentityProvider implements IdentityProviderInterface, FactoryInterface
     {
         /** @var Request $request */
         $request = $serviceLocator->get('Request');
-        $auth = $request->getHeader('Authorization');
+        $auth = null;
+        if ($request instanceof Request) {
+            $auth = $request->getHeader('Authorization');
+        }
 
         if ($auth !== null) {
             $userId = $auth->getFieldValue();
