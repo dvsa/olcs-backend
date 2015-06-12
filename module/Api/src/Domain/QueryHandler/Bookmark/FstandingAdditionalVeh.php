@@ -24,6 +24,6 @@ class FstandingAdditionalVeh extends AbstractQueryHandler
         $results = $this->getRepo()
             ->fetchLatestRateForBookmark($query->getGoodsOrPsv(), $query->getLicenceType(), $query->getEffectiveFrom());
 
-        return ['Results' => $this->resultList($results)->serialize()];
+        return ['Results' => $this->resultList($results)];
     }
 }

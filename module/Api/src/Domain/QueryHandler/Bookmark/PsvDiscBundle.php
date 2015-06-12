@@ -1,31 +1,18 @@
 <?php
 
 /**
- * PsvDiscBundle Bookmark
+ * Psv Disc Bundle Bookmark
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-
 /**
- * PsvDiscBundle Bookmark
+ * Psv Disc Bundle Bookmark
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class PsvDiscBundle extends AbstractQueryHandler
+class PsvDiscBundle extends AbstractBundle
 {
     protected $repoServiceName = 'PsvDisc';
-
-    public function handleQuery(QueryInterface $query)
-    {
-        $entity = $this->getRepo()->fetchUsingId($query);
-
-        return $this->result(
-            $entity,
-            $query->getBundle()
-        )->serialize();
-    }
 }

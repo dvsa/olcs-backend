@@ -1,31 +1,18 @@
 <?php
 
 /**
- * TransportManager Bookmark
+ * Transport Manager Bookmark
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-
 /**
- * TransportManager Bookmark
+ * Transport Manager Bookmark
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class TransportManagerBundle extends AbstractQueryHandler
+class TransportManagerBundle extends AbstractBundle
 {
     protected $repoServiceName = 'TransportManager';
-
-    public function handleQuery(QueryInterface $query)
-    {
-        $tm = $this->getRepo()->fetchUsingId($query);
-
-        return $this->result(
-            $tm,
-            $query->getBundle()
-        )->serialize();
-    }
 }
