@@ -24,6 +24,15 @@ return [
         => CommandHandler\Application\CreateCompanySubsidiary::class,
     TransferCommand\Application\DeleteCompanySubsidiary::class
         => CommandHandler\Application\DeleteCompanySubsidiary::class,
+    TransferCommand\Application\UpdateSafety::class => CommandHandler\Application\UpdateSafety::class,
+    TransferCommand\Application\DeleteWorkshop::class => CommandHandler\Application\DeleteWorkshop::class,
+    TransferCommand\Application\CreateWorkshop::class => CommandHandler\Application\CreateWorkshop::class,
+    TransferCommand\Application\UpdateWorkshop::class => CommandHandler\Application\UpdateWorkshop::class,
+
+    // Transfer - Workshop
+    TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
+    TransferCommand\Workshop\CreateWorkshop::class => CommandHandler\Workshop\CreateWorkshop::class,
+    TransferCommand\Workshop\UpdateWorkshop::class => CommandHandler\Workshop\UpdateWorkshop::class,
 
     // Transfer - Note
     TransferCommand\Processing\Note\Create::class => CommandHandler\Processing\Note\Create::class,
@@ -40,6 +49,7 @@ return [
     TransferCommand\Licence\UpdateCompanySubsidiary::class => CommandHandler\Licence\UpdateCompanySubsidiary::class,
     TransferCommand\Licence\CreateCompanySubsidiary::class => CommandHandler\Licence\CreateCompanySubsidiary::class,
     TransferCommand\Licence\DeleteCompanySubsidiary::class => CommandHandler\Licence\DeleteCompanySubsidiary::class,
+    TransferCommand\Licence\UpdateSafety::class => CommandHandler\Licence\UpdateSafety::class,
 
     // Transfer - Variation
     TransferCommand\Variation\UpdateTypeOfLicence::class => CommandHandler\Variation\UpdateTypeOfLicence::class,
@@ -70,6 +80,10 @@ return [
     TransferCommand\GracePeriod\UpdateGracePeriod::class => CommandHandler\GracePeriod\UpdateGracePeriod::class,
     TransferCommand\GracePeriod\DeleteGracePeriod::class => CommandHandler\GracePeriod\DeleteGracePeriod::class,
 
+    // Transfer - Correspondence
+    TransferCommand\Correspondence\AccessCorrespondence::class
+        => CommandHandler\Correspondence\AccessCorrespondence::class,
+
     // Transfer - IRFO
     \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit::class
         => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoGvPermit::class,
@@ -97,6 +111,19 @@ return [
         CommandHandler\Cases\Complaint\UpdateComplaint::class,
     TransferCommand\Cases\Complaint\DeleteComplaint::class =>
         CommandHandler\Cases\Complaint\DeleteComplaint::class,
+
+    // Conviction
+    TransferCommand\Cases\Conviction\Create::class => CommandHandler\Cases\Conviction\Create::class,
+    TransferCommand\Cases\Conviction\Update::class => CommandHandler\Cases\Conviction\Update::class,
+    TransferCommand\Cases\Conviction\Delete::class => CommandHandler\Cases\Conviction\Delete::class,
+
+    // Transfer - Environmental Complaint
+    TransferCommand\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class =>
+        CommandHandler\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class,
+    TransferCommand\Cases\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class =>
+        CommandHandler\Cases\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class,
+    TransferCommand\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class =>
+        CommandHandler\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
 
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,

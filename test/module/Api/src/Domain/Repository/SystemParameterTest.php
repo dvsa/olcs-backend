@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * System Parameter Test
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
+namespace Dvsa\OlcsTest\Api\Domain\Repository;
+
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\EntityRepository;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter as SystemParameterEntity;
+
+/**
+ * System Parameter Test
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
+class SystemParameterTest extends RepositoryTestCase
+{
+    public function setUp()
+    {
+        $this->setUpSut(SystemParameterRepo::class);
+    }
+
+    public function testFetchValueNotFound()
+    {
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('getQuery->getResult')
+            ->with(Query::HYDRATE_OBJECT)
+            ->andReturn(null);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('byId')
+            ->once()
+            ->with('system.foo');
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->with('m')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(SystemParameterEntity::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchValue('system.foo');
+
+        $this->assertNull($result);
+    }
+
+    public function testFetchValue()
+    {
+        $result = m::mock(SystemParameterEntity::class);
+        $results = [$result];
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('getQuery->getResult')
+            ->with(Query::HYDRATE_OBJECT)
+            ->andReturn($results);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('byId')
+            ->once()
+            ->with('system.foo');
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->with('m')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(SystemParameterEntity::class)
+            ->andReturn($repo);
+
+        $this->assertSame($result, $this->sut->fetchValue('system.foo'));
+    }
+}
