@@ -179,5 +179,8 @@ return [
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
 
     // Scan
-    TransferQuery\Scan\GetSingle::class => QueryHandler\Scan\GetSingle::class
+    TransferQuery\Scan\GetSingle::class => QueryHandler\Scan\GetSingle::class,
+
+    // Fee
+    TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
 ];
