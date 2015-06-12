@@ -156,7 +156,6 @@ return [
             'Task' => RepositoryFactory::class,
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
-            'FeePayment' => RepositoryFactory::class,
             'Cases' => RepositoryFactory::class,
             'Pi' => \Dvsa\Olcs\Api\Domain\Repository\PiFactory::class,
             'EventHistory' => RepositoryFactory::class,
