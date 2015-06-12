@@ -117,6 +117,16 @@ return [
     TransferCommand\Cases\Conviction\Update::class => CommandHandler\Cases\Conviction\Update::class,
     TransferCommand\Cases\Conviction\Delete::class => CommandHandler\Cases\Conviction\Delete::class,
 
+    // Prohibition
+    TransferCommand\Cases\Prohibition\Create::class => CommandHandler\Cases\Prohibition\Create::class,
+    TransferCommand\Cases\Prohibition\Update::class => CommandHandler\Cases\Prohibition\Update::class,
+    TransferCommand\Cases\Prohibition\Delete::class => CommandHandler\Cases\Prohibition\Delete::class,
+
+    // Prohibition Defects
+    TransferCommand\Cases\Prohibition\Defect\Create::class => CommandHandler\Cases\Prohibition\Defect\Create::class,
+    TransferCommand\Cases\Prohibition\Defect\Update::class => CommandHandler\Cases\Prohibition\Defect\Update::class,
+    TransferCommand\Cases\Prohibition\Defect\Delete::class => CommandHandler\Cases\Prohibition\Defect\Delete::class,
+
     // Transfer - Environmental Complaint
     TransferCommand\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class =>
         CommandHandler\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class,

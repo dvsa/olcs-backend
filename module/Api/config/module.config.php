@@ -83,6 +83,19 @@ return [
             TransferQuery\Processing\Note::class => QueryHandler\Processing\Note::class,
             TransferQuery\Processing\NoteList::class => QueryHandler\Processing\NoteList::class,
 
+            // Conviction - NOT Previous Conviction
+            TransferQuery\Cases\Conviction\Conviction::class => QueryHandler\Cases\Conviction\Conviction::class,
+            TransferQuery\Cases\Conviction\ConvictionList::class => QueryHandler\Cases\Conviction\ConvictionList::class,
+
+            // Prohibition
+            TransferQuery\Cases\Prohibition\Prohibition::class => QueryHandler\Cases\Prohibition\Prohibition::class,
+            TransferQuery\Cases\Prohibition\ProhibitionList::class =>
+                QueryHandler\Cases\Prohibition\ProhibitionList::class,
+
+            // Prohibition / Defect
+            TransferQuery\Cases\Prohibition\Defect::class => QueryHandler\Cases\Prohibition\Defect::class,
+            TransferQuery\Cases\Prohibition\DefectList::class => QueryHandler\Cases\Prohibition\DefectList::class,
+
             // Previous Conviction
             TransferQuery\PreviousConviction\PreviousConviction::class =>
                 QueryHandler\PreviousConviction\PreviousConviction::class,
@@ -158,6 +171,8 @@ return [
             'LicenceNoGen' => RepositoryFactory::class,
             'User' => RepositoryFactory::class,
             'PreviousConviction' => RepositoryFactory::class,
+            'Prohibition' => RepositoryFactory::class,
+            'ProhibitionDefect' => RepositoryFactory::class,
             'LegacyOffence' => RepositoryFactory::class,
             'LegacyOffenceList' => RepositoryFactory::class,
             'Note' => RepositoryFactory::class,
