@@ -45,13 +45,9 @@ class ConditionUndertaking extends AbstractRepository
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
 
+        $this->applyFetchJoins($qb);
+
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
-            ->with('case')
-            ->with('operatingCentre', 'oc')
-            ->with('oc.address')
-            ->with('createdBy')
-            ->with('lastModifiedBy')
             ->byId($query->getId());
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
@@ -85,9 +81,26 @@ class ConditionUndertaking extends AbstractRepository
     protected function applyListJoins(QueryBuilder $qb)
     {
         $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
             ->with('operatingCentre', 'oc')
             ->with('oc.address')
             ->with('createdBy')
             ->with('lastModifiedBy');
+    }
+
+    /**
+     * Add Fetch Joins
+     * @param QueryBuilder $qb
+     */
+    protected function applyFetchJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('case')
+            ->with('operatingCentre', 'oc')
+            ->with('oc.address')
+            ->with('createdBy')
+            ->with('lastModifiedBy');
+
     }
 }
