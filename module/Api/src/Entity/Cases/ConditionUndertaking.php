@@ -50,8 +50,11 @@ class ConditionUndertaking extends AbstractConditionUndertaking
      * @param String $isDraft
      * @param String $isFulfilled
      */
-    public function __construct(RefData $conditionType, $isDraft, $isFulfilled)
-    {
+    public function __construct(
+        RefData $conditionType,
+        $isFulfilled,
+        $isDraft
+    ) {
         parent::__construct();
 
         $this->setConditionType($conditionType);
