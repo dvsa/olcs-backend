@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 
 /**
  * Workshop Entity
@@ -22,5 +23,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Workshop extends AbstractWorkshop
 {
+    public function __construct(Licence $licence, ContactDetails $contactDetails)
+    {
+        $this->setLicence($licence);
+        $this->setContactDetails($contactDetails);
+    }
 
+    protected function getCalculatedValues()
+    {
+        return ['licence' => null];
+    }
 }
