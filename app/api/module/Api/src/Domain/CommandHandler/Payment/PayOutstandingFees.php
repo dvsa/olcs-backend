@@ -28,7 +28,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
 {
     protected $repoServiceName = 'Payment';
 
-    protected $extraRepos = ['Fee', 'FeePayment'];
+    protected $extraRepos = ['Fee'];
 
     protected $cpmsHelper;
 
