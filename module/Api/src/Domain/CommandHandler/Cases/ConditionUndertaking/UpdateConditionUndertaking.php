@@ -25,6 +25,8 @@ final class UpdateConditionUndertaking extends AbstractCommandHandler implements
 {
     protected $repoServiceName = 'ConditionUndertaking';
 
+    protected $extraRepos = ['Cases', 'Licence', 'OperatingCentre'];
+
     /**
      * Update complaint
      * @param CommandInterface $command
@@ -86,6 +88,7 @@ final class UpdateConditionUndertaking extends AbstractCommandHandler implements
 
         } else {
             $operatingCentre = $this->getRepo('OperatingCentre')->fetchById($command->getOperatingCentre());
+
             $conditionUndertaking->setOperatingCentre($operatingCentre);
             $conditionUndertaking->setAttachedTo(
                 $this->getRepo()->getRefdataReference(
