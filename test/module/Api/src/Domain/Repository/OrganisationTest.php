@@ -136,7 +136,7 @@ class OrganisationTest extends RepositoryTestCase
             ->with('tn.licence')
             ->andReturnSelf();
 
-       /** @var QueryBuilder $qb */
+        /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
         $qb->shouldReceive('getQuery->getResult')
             ->with(Query::HYDRATE_OBJECT)

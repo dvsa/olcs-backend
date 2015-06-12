@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\ContactDetails;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 
@@ -41,7 +42,8 @@ class ContactDetails extends AbstractContactDetails
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
      * @return ContactDetails
      */
-    public static function create(RefData $contactType, array $contactParams) {
+    public static function create(RefData $contactType, array $contactParams)
+    {
         $contactDetails = new static($contactType);
         $contactDetails->update($contactParams);
 
@@ -112,7 +114,7 @@ class ContactDetails extends AbstractContactDetails
                 continue;
             }
 
-            if (!empty($this->getPhoneContacts()[$phoneContact['id']])) {
+            if (isset($phoneContact['id']) && !empty($this->getPhoneContacts()[$phoneContact['id']])) {
                 // update
                 $phoneContactEntity = $this->getPhoneContacts()[$phoneContact['id']];
                 $updatedIds[] = $phoneContactEntity->getId();
@@ -135,6 +137,6 @@ class ContactDetails extends AbstractContactDetails
             }
         }
 
-        $this->setPhoneContacts($reduced);
+        $this->setPhoneContacts(new ArrayCollection($reduced));
     }
 }

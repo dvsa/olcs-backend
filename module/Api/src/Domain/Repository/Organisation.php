@@ -23,7 +23,7 @@ class Organisation extends AbstractRepository
 
     public function fetchBusinessDetailsUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
-        return $this->fetchBusinessDetailsById($query->getId());
+        return $this->fetchBusinessDetailsById($query->getId(), $hydrateMode);
     }
 
     public function fetchBusinessDetailsById($id, $hydrateMode = Query::HYDRATE_OBJECT)
