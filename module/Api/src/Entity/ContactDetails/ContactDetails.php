@@ -70,14 +70,20 @@ class ContactDetails extends AbstractContactDetails
      */
     private function updateIrfoOperator(array $contactParams)
     {
-        // set email address
-        $this->setEmailAddress($contactParams['emailAddress']);
+        if ($contactParams['emailAddress'] !== null) {
+            // set email address
+            $this->setEmailAddress($contactParams['emailAddress']);
+        }
 
-        // populate address
-        $this->populateAddress($contactParams['address']);
+        if ($contactParams['address'] !== null) {
+            // populate address
+            $this->populateAddress($contactParams['address']);
+        }
 
-        // populate phone contacts
-        $this->populatePhoneContacts($contactParams['phoneContacts']);
+        if ($contactParams['phoneContacts'] !== null) {
+            // populate phone contacts
+            $this->populatePhoneContacts($contactParams['phoneContacts']);
+        }
     }
 
     /**
