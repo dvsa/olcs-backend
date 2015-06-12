@@ -28,7 +28,8 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
             'amount' => '5.50',
             'invoicedDate' => '2015-01-01',
             'feeType' => 444,
-            'description' => 'Some fee'
+            'description' => 'Some fee',
+            'busReg' => 555,
         ];
 
         $command = CreateFee::create($data);
@@ -41,6 +42,7 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(444, $command->getFeeType());
         $this->assertEquals('Some fee', $command->getDescription());
         $this->assertEquals(Fee::STATUS_OUTSTANDING, $command->getFeeStatus());
+        $this->assertEquals(555, $command->getBusReg());
 
         $this->assertEquals(
             [
@@ -51,7 +53,8 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
                 'invoicedDate' => '2015-01-01',
                 'feeType' => 444,
                 'description' => 'Some fee',
-                'feeStatus' => Fee::STATUS_OUTSTANDING
+                'feeStatus' => Fee::STATUS_OUTSTANDING,
+                'busReg' => 555
             ],
             $command->getArrayCopy()
         );

@@ -95,6 +95,7 @@ class CreateFeeTest extends CommandHandlerTestCase
                 'feeType' => 223,
                 'description' => 'DESCRIPTION for application 834',
                 'feeStatus' => 'lfs_ot',
+                'busReg' => null
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
@@ -145,6 +146,7 @@ class CreateFeeTest extends CommandHandlerTestCase
                 'feeType' => 223,
                 'description' => 'DESCRIPTION for application 834',
                 'feeStatus' => 'lfs_ot',
+                'busReg' => null
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
@@ -194,6 +196,7 @@ class CreateFeeTest extends CommandHandlerTestCase
                 'feeType' => 223,
                 'description' => 'DESCRIPTION for application 834',
                 'feeStatus' => 'lfs_ot',
+                'busReg' => null
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
