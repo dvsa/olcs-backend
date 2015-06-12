@@ -182,5 +182,6 @@ return [
     TransferQuery\Scan\GetSingle::class => QueryHandler\Scan\GetSingle::class,
 
     // Fee
+    TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
 ];
