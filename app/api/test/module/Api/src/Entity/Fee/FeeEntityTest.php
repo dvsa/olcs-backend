@@ -76,9 +76,7 @@ class FeeEntityTest extends EntityTester
      */
     public function testGetRuleStartDate($accrualRuleId, $licence, $expected)
     {
-        // @TODO we need a date helper that we can mock!
         $now = new \DateTime('2015-06-10 12:34:56');
-
         $this->sut->setCurrentDateTime($now);
 
         $feeType = m::mock()
@@ -96,7 +94,6 @@ class FeeEntityTest extends EntityTester
 
     public function ruleStartDateProvider()
     {
-        // @TODO we need a date helper that we can mock!
         $now = new \DateTime('2015-06-10 12:34:56');
 
         return [
@@ -143,10 +140,5 @@ class FeeEntityTest extends EntityTester
                 null,
             ],
         ];
-    }
-
-    protected function getCurrentDateTime()
-    {
-
     }
 }

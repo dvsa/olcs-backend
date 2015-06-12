@@ -10,8 +10,6 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Payment;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Payment\PayOutstandingFees;
 use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
-use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Payment as PaymentRepo;
 use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
@@ -39,8 +37,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         ];
 
         $this->sut = new PayOutstandingFees();
-        $this->mockRepo('Fee', FeeRepo::class);
-        $this->mockRepo('Payment', PaymentRepo::class);
+        $this->mockRepo('Fee', '\Dvsa\Olcs\Api\Domain\Repository\Fee');
+        $this->mockRepo('Payment', '\Dvsa\Olcs\Api\Domain\Repository\Payment');
 
         $this->refData = [
             PaymentEntity::STATUS_OUTSTANDING,
