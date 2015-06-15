@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Appeal;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Transfer\Command\Cases\Hearing\CreateAppeal as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Create Appeal
@@ -54,11 +55,11 @@ final class CreateAppeal extends AbstractCommandHandler implements Transactioned
     private function createAppealObject(Cmd $command)
     {
         // If an appeal already exists, raise exception
-        if (!($this->getRepo()->getReference(
+        if ($this->getRepo()->getReference(
             Cases::class,
             $command->getCase()
         )->hasAppeal()
-        )) {
+        ) {
             throw new ValidationException(['appeal' => 'An appeal already exists against this case']);
         }
         $appeal = new Appeal($command->getAppealNo());
