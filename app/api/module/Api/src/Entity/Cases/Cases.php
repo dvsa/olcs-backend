@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Cases Entity
@@ -23,4 +25,20 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Cases extends AbstractCases
 {
+    /**
+     * Checks a stay type exists
+     * @param RefData $stayType
+     * @return bool
+     */
+    public function checkStayTypeExists(RefData $stayType)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("stayType", $stayType))
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+
+        $stays = $this->getStays()->matching($criteria);
+
+        return !($stays->isEmpty());
+    }
 }
