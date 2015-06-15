@@ -139,9 +139,9 @@ class ContactDetails extends AbstractContactDetails
         }
 
         // remove the rest
-        foreach (array_diff_key($collection, $seen) as $phoneContactEntity) {
+        foreach (array_diff_key($collection, $seen) as $key => $entity) {
             // unlink
-            $this->phoneContacts->removeElement($phoneContactEntity);
+            $this->phoneContacts->remove($key);
         }
     }
 }
