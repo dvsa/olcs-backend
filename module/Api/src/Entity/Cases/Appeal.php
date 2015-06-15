@@ -27,5 +27,4 @@ class Appeal extends AbstractAppeal
     {
         $this->setAppealNo($appealNo);
     }
-
 }
