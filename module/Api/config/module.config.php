@@ -103,6 +103,7 @@ return [
             'IrfoPartner' => RepositoryFactory::class,
             'Payment' => RepositoryFactory::class,
             'Recipient' => RepositoryFactory::class,
+            'Partner' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

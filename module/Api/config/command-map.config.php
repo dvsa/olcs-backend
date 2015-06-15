@@ -102,6 +102,11 @@ return [
     TransferCommand\Publication\UpdateRecipient::class => CommandHandler\Publication\UpdateRecipient::class,
     TransferCommand\Publication\DeleteRecipient::class => CommandHandler\Publication\DeleteRecipient::class,
 
+    // Transfer - User
+    TransferCommand\User\CreatePartner::class => CommandHandler\User\CreatePartner::class,
+    TransferCommand\User\UpdatePartner::class => CommandHandler\User\UpdatePartner::class,
+    TransferCommand\User\DeletePartner::class => CommandHandler\User\DeletePartner::class,
+
     // Transfer - Impounding
     TransferCommand\Cases\Impounding\CreateImpounding::class =>
         CommandHandler\Cases\Impounding\CreateImpounding::class,
