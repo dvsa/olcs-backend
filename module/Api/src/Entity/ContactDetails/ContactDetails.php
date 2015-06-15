@@ -112,7 +112,9 @@ class ContactDetails extends AbstractContactDetails
      */
     private function populatePhoneContacts(array $phoneContacts)
     {
-        $reduced = $updatedIds = [];
+        $seen = [];
+
+        $collection = $this->getPhoneContacts()->toArray();
 
         foreach ($phoneContacts as $phoneContact) {
             if (empty($phoneContact['phoneNumber'])) {
@@ -120,29 +122,26 @@ class ContactDetails extends AbstractContactDetails
                 continue;
             }
 
-            if (isset($phoneContact['id']) && !empty($this->getPhoneContacts()[$phoneContact['id']])) {
+            if (isset($phoneContact['id']) && !empty($collection[$phoneContact['id']])) {
                 // update
-                $phoneContactEntity = $this->getPhoneContacts()[$phoneContact['id']];
-                $updatedIds[] = $phoneContactEntity->getId();
+                $phoneContactEntity = $collection[$phoneContact['id']];
+                $phoneContactEntity->setPhoneNumber($phoneContact['phoneNumber']);
+
+                $seen[$phoneContact['id']] = $phoneContact['id'];
             } else {
                 // create
                 $phoneContactEntity = new PhoneContact($phoneContact['phoneContactType']);
                 $phoneContactEntity->setContactDetails($this);
+                $phoneContactEntity->setPhoneNumber($phoneContact['phoneNumber']);
+
+                $this->addPhoneContacts($phoneContactEntity);
             }
-
-            $phoneContactEntity->setPhoneNumber($phoneContact['phoneNumber']);
-
-            $reduced[] = $phoneContactEntity;
         }
 
         // remove the rest
-        foreach ($this->getPhoneContacts() as $phoneContactEntity) {
-            if (!in_array($phoneContactEntity->getId(), $updatedIds)) {
-                // unlink
-                $this->removePhoneContacts($phoneContactEntity);
-            }
+        foreach (array_diff_key($collection, $seen) as $phoneContactEntity) {
+            // unlink
+            $this->removePhoneContacts($phoneContactEntity);
         }
-
-        $this->setPhoneContacts(new ArrayCollection($reduced));
     }
 }
