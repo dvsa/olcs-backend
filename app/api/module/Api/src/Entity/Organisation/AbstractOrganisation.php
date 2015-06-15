@@ -25,7 +25,8 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_organisation_name", columns={"name"}),
  *        @ORM\Index(name="ix_organisation_contact_details_id", columns={"contact_details_id"}),
  *        @ORM\Index(name="ix_organisation_irfo_contact_details_id",
-     *     columns={"irfo_contact_details_id"})
+     *     columns={"irfo_contact_details_id"}),
+ *        @ORM\Index(name="ix_organisation_irfo_nationality", columns={"irfo_nationality"})
  *    }
  * )
  */
@@ -105,7 +106,11 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails",
+     *     fetch="LAZY",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="irfo_contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoContactDetails;
@@ -122,9 +127,10 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Irfo nationality
      *
-     * @var string
+     * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Country
      *
-     * @ORM\Column(type="string", name="irfo_nationality", length=45, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", fetch="LAZY")
+     * @ORM\JoinColumn(name="irfo_nationality", referencedColumnName="id", nullable=true)
      */
     protected $irfoNationality;
 
@@ -520,7 +526,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the irfo nationality
      *
-     * @param string $irfoNationality
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $irfoNationality
      * @return Organisation
      */
     public function setIrfoNationality($irfoNationality)
@@ -533,7 +539,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Get the irfo nationality
      *
-     * @return string
+     * @return \Dvsa\Olcs\Api\Entity\ContactDetails\Country
      */
     public function getIrfoNationality()
     {
