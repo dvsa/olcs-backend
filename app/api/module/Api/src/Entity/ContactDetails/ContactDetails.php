@@ -134,14 +134,14 @@ class ContactDetails extends AbstractContactDetails
                 $phoneContactEntity->setContactDetails($this);
                 $phoneContactEntity->setPhoneNumber($phoneContact['phoneNumber']);
 
-                $this->addPhoneContacts($phoneContactEntity);
+                $this->phoneContacts->add($phoneContactEntity);
             }
         }
 
         // remove the rest
         foreach (array_diff_key($collection, $seen) as $phoneContactEntity) {
             // unlink
-            $this->removePhoneContacts($phoneContactEntity);
+            $this->phoneContacts->removeElement($phoneContactEntity);
         }
     }
 }
