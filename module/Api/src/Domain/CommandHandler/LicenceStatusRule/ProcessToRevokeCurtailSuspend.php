@@ -12,11 +12,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Command;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class ProcessToRevokeCurtailSuspend extends AbstractCommandHandler
+final class ProcessToRevokeCurtailSuspend extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'LicenceStatusRule';
 

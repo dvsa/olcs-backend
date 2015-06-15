@@ -58,21 +58,17 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
-     * Handle one or more DTO commands
+     * Handle DTO commands
      *
-     * @param arrar $dto
+     * @param array $dto
      *
      * @return int Response code
      */
-    protected function handleCommand($dto)
+    protected function handleCommand(array $dto)
     {
         $this->writeVerboseMessages((new \DateTime())->format(\DateTime::W3C));
 
         try {
-            // if only one dto then make an array, easier to process
-            if (!is_array($dto)) {
-                $dto = [$dto];
-            }
             $result = new \Dvsa\Olcs\Api\Domain\Command\Result();
             foreach ($dto as $dtoCommand) {
                 $result->merge($this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dtoCommand));
