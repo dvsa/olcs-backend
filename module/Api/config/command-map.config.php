@@ -153,7 +153,7 @@ return [
 
     // Domain - Payment
     Command\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
-    \Dvsa\Olcs\Transfer\Command\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
+    TransferCommand\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
     TransferCommand\Payment\CompletePayment::class => CommandHandler\Payment\CompletePayment::class,
     Command\Payment\ResolvePayment::class => CommandHandler\Payment\ResolvePayment::class,
 
