@@ -53,7 +53,7 @@ final class CreateStay extends AbstractCommandHandler implements TransactionedIn
      *
      * @param Cmd $command
      *
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      * @return Stay
      */
     private function createStayObject(Cmd $command)
@@ -64,8 +64,9 @@ final class CreateStay extends AbstractCommandHandler implements TransactionedIn
             $command->getCase()
         )->hasAppeal()
         )) {
-            throw new ValidationException(['appeal' => 'An appeal must exist against the case before a stay can be
-            added']);
+            throw new ValidationException(
+                ['appeal' => 'An appeal must exist against the case before a stay can be added']
+            );
         }
 
         // see if stay already exists
