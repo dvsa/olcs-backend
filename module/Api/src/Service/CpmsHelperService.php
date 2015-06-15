@@ -175,6 +175,80 @@ class CpmsHelperService implements FactoryInterface
     }
 
     /**
+     * Record a cash payment in CPMS
+     *
+     * @param array $fees
+     * @param string $customerReference
+     * @param float $amount
+     * @param array $receiptDate (from DateSelect)
+     * @param string $payer payer name
+     * @param string $slipNo paying in slip number
+     * @return boolean success
+     */
+    public function recordCashPayment(
+        $fees,
+        $customerReference,
+        $amount,
+        $receiptDate,
+        $payer,
+        $slipNo
+    ) {
+        $paymentData = [];
+        foreach ($fees as $fee) {
+            $paymentData[] = [
+                'amount' => $this->formatAmount($fee->getAmount()),
+                'sales_reference' => (string)$fee->getId(),
+                'product_reference' => self::PRODUCT_REFERENCE,
+                'payer_details' => $payer,
+                'payment_reference' => [
+                    'rule_start_date' => $fee->getRuleStartDate()->format(self::DATE_FORMAT),
+                    'receipt_date' => $this->formatDate($receiptDate),
+                    'slip_number' => (string)$slipNo,
+                ],
+            ];
+        }
+
+        $endPoint = '/api/payment/cash';
+        $scope    = ApiService::SCOPE_CASH;
+
+        $params = [
+            'customer_reference' => (string)$customerReference,
+            'scope' => $scope,
+            'total_amount' => $this->formatAmount($amount),
+            'payment_data' => $paymentData,
+            'cost_centre' => self::COST_CENTRE,
+        ];
+
+        $this->debug(
+            'Cash payment request',
+            [
+                'method' => [
+                    'location' => __METHOD__,
+                    'data' => func_get_args()
+                ],
+                'endPoint' => $endPoint,
+                'scope'    => $scope,
+                'params'   => $params,
+            ]
+        );
+
+        $response = $this->getClient()->post($endPoint, $scope, $params);
+
+        $this->debug('Cash payment response', ['response' => $response]);
+
+        return $this->isSuccessfulPaymentResponse($response);
+    }
+
+    /**
+     * @param mixed $amount
+     * @return string amount formatted to two decimal places with no thousands separator
+     */
+    public function formatAmount($amount)
+    {
+        return sprintf("%1\$.2f", $amount);
+    }
+
+    /**
      * @param array $fees
      * return float
      */
@@ -185,15 +259,6 @@ class CpmsHelperService implements FactoryInterface
             $totalAmount += (float)$fee->getAmount();
         }
         return $totalAmount;
-    }
-
-    /**
-     * @param mixed $amount
-     * @return string amount formatted to two decimal places with no thousands separator
-     */
-    protected function formatAmount($amount)
-    {
-        return sprintf("%1\$.2f", $amount);
     }
 
     protected function debug($message, $data)
@@ -209,5 +274,49 @@ class CpmsHelperService implements FactoryInterface
                 ),
             ]
         );
+    }
+
+    /**
+     * Small helper to check if response was successful
+     * (We require a successful response code AND a receipt reference)
+     *
+     * @param array $response response data
+     * @return boolean
+     */
+    protected function isSuccessfulPaymentResponse($response)
+    {
+        return (
+            is_array($response)
+            && isset($response['code'])
+            && $response['code'] === self::RESPONSE_SUCCESS
+            && isset($response['receipt_reference'])
+            && !empty($response['receipt_reference'])
+        );
+    }
+
+    /**
+     * Format a date as required by CPMS payment reference fields
+     *
+     * @param array|DateTime $date
+     * @return string
+     */
+    public function formatDate($date)
+    {
+        if (is_array($date)) {
+            $date = $this->getDateObjectFromArray($date);
+        }
+        return $date->format(self::DATE_FORMAT);
+    }
+
+    /**
+     * Convert DateSelect style array data to a DateTime object
+     * @param array $date
+     * @return \DateTime
+     */
+    public function getDateObjectFromArray(array $date)
+    {
+        $obj = new \DateTime();
+        $obj->setDate($date['year'], $date['month'], $date['day']);
+        return $obj;
     }
 }

@@ -63,9 +63,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             case FeeEntity::METHOD_CARD_OFFLINE:
                 return $this->cardPayment($customerReference, $command, $feesToPay, $result);
                 break;
-            // case FeeEntity::METHOD_CARD_CASH:
-            //     return $this->cashPayment();
-            //     break;
+            case FeeEntity::METHOD_CASH:
+                return $this->cashPayment($customerReference, $command, $feesToPay, $result);
+                break;
             default:
                 throw new ValidationException(['invalid payment method: ' . $command->getPaymentMethod()]);
                 break;
@@ -116,6 +116,49 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
 
         $result->addId('payment', $payment->getId());
         $result->addMessage('Payment record created');
+
+        return $result;
+    }
+
+    /**
+     * @param string $customerReference
+     * @param CommandInterface $command
+     * @param array $fees
+     * @param Result $result
+     *
+     * @return Result
+     */
+    protected function cashPayment($customerReference, $command, $fees, $result)
+    {
+        $this->checkAmountMatchesTotalDue($command->getReceived(), $fees);
+
+        // fire off to CPMS to record payment
+        $response = $this->cpmsHelper->recordCashPayment(
+            $fees,
+            $customerReference,
+            $command->getReceived(),
+            $command->getReceiptDate(),
+            $command->getPayer(),
+            $command->getSlipNo()
+        );
+
+        // update fee records as paid
+        foreach ($fees as $fee) {
+            $fee
+                ->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID))
+                // @TODO sort out date handling
+                ->setReceivedDate($this->cpmsHelper->getDateObjectFromArray($command->getReceiptDate()))
+                ->setReceiptNo($response['receipt_reference'])
+                ->setPaymentMethod($this->getRepo()->getRefdataReference(FeeEntity::METHOD_CASH))
+                ->setPayerName($command->getPayer())
+                ->setPayingInSlipNumber($command->getSlipNo())
+                ->setReceivedAmount($fee->getAmount());
+
+            $this->getRepo('Fee')->save($fee);
+            // @todo trigger listener
+        }
+
+        $result->addMessage('Fee(s) updated as Paid');
 
         return $result;
     }
@@ -226,5 +269,41 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
         }
 
         return $reference;
+    }
+
+    /**
+     * @param array $fees
+     * return float
+     */
+    protected function getTotalAmountFromFees($fees)
+    {
+        $totalAmount = 0;
+        foreach ($fees as $fee) {
+            $totalAmount += (float)$fee->getAmount();
+        }
+        return $totalAmount;
+    }
+
+    /**
+     * Partial payments are not supported for cash/cheque/PO payments.
+     * The form validation will normally catch any mismatch but it relies on a
+     * hidden field so we have a secondary check here in the service layer.
+     *
+     * @param string $amount
+     * @param array $fees
+     * @return null
+     * @throws ValidationException
+     *
+     * @note We compare the formatted amounts as comparing floats for equality
+     * doesn't work!!
+     * @see http://php.net/manual/en/language.types.float.php
+     */
+    protected function checkAmountMatchesTotalDue($amount, $fees)
+    {
+        $amount    = $this->cpmsHelper->formatAmount($amount);
+        $totalFees = $this->cpmsHelper->formatAmount($this->getTotalAmountFromFees($fees));
+        if ($amount !== $totalFees) {
+            throw new ValidationException(["Amount must match the fee(s) due"]);
+        }
     }
 }
