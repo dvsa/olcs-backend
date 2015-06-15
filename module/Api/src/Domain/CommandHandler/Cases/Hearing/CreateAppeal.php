@@ -53,6 +53,14 @@ final class CreateAppeal extends AbstractCommandHandler implements Transactioned
      */
     private function createAppealObject(Cmd $command)
     {
+        // If an appeal already exists, raise exception
+        if (!($this->getRepo()->getReference(
+            Cases::class,
+            $command->getCase()
+        )->hasAppeal()
+        )) {
+            throw new ValidationException(['appeal' => 'An appeal already exists against this case']);
+        }
         $appeal = new Appeal($command->getAppealNo());
         $appeal->setCase($this->getRepo()->getReference(Cases::class, $command->getCase()));
 
