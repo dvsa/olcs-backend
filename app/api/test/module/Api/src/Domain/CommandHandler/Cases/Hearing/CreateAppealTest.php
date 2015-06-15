@@ -61,7 +61,13 @@ class CreateAppealTest extends CommandHandlerTestCase
                 "outcome" => "appeal_o_dis",
                 "comment" => "booo",
                 "isWithdrawn" => "Y",
-                "withdrawnDate" => "2015-05-05"
+                "withdrawnDate" => "2015-05-05",
+                "deadlineDate" => "2015-05-05",
+                "outlineGround" => "asdfasdf",
+                "hearingDate" => "2015-05-05",
+                "decisionDate" => "2015-05-05",
+                "papersDueDate" => "2015-05-05",
+                "papersSentDate" => "2015-05-05"
             ]
         );
 

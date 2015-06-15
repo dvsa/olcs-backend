@@ -72,9 +72,8 @@ final class CreateStay extends AbstractCommandHandler implements TransactionedIn
 
         // If stay type already exists raise exception
         if ($case->hasStayType(
-                $this->getRepo()->getRefdataReference($command->getStayType())
-            )
-        ) {
+            $this->getRepo()->getRefdataReference($command->getStayType())
+        )) {
             throw new ValidationException(['stayType' => 'Stay of this type already exists against this case']);
         }
 
