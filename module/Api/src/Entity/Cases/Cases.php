@@ -30,7 +30,7 @@ class Cases extends AbstractCases
      * @param RefData $stayType
      * @return bool
      */
-    public function checkStayTypeExists(RefData $stayType)
+    public function hasStayType(RefData $stayType)
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("stayType", $stayType))
@@ -40,5 +40,14 @@ class Cases extends AbstractCases
         $stays = $this->getStays()->matching($criteria);
 
         return !($stays->isEmpty());
+    }
+
+    /**
+     * Checks whether an appeal exists
+     * @return bool
+     */
+    public function hasAppeal()
+    {
+        return !($this->getAppeals()->isEmpty());
     }
 }
