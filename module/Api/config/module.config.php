@@ -65,6 +65,11 @@ return [
             TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
             TransferQuery\Variation\TypeOfLicence::class => QueryHandler\Variation\TypeOfLicence::class,
 
+            TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
+            TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
+            TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
+            TransferQuery\Licence\LicenceDecisions::class => QueryHandler\Licence\LicenceDecisions::class,
+
             // Cases
             TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
             TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
@@ -156,6 +161,7 @@ return [
             'Conviction' => RepositoryFactory::class,
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
+            'LicenceStatusDecision' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
             'BusRegOtherService' => RepositoryFactory::class,
             'BusNoticePeriod' => RepositoryFactory::class,
