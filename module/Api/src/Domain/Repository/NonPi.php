@@ -39,6 +39,9 @@ class NonPi extends AbstractRepository
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
 
+        $queryBuilderHelper = $this->getQueryBuilder()->modifyQuery($qb);
+        $queryBuilderHelper->withRefdata();
+
         $result = $qb->getQuery()->getResult($hydrateMode);
 
         if (empty($result)) {
