@@ -137,6 +137,11 @@ return [
     TransferCommand\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class =>
         CommandHandler\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
 
+    // Transfer - Licence Status Rule
+    TransferCommand\LicenceStatusRule\CreateLicenceStatusRule::class
+        => CommandHandler\LicenceStatusRule\CreateLicenceStatusRule::class,
+
+
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
     Command\Application\ResetApplication::class => CommandHandler\Application\ResetApplication::class,
