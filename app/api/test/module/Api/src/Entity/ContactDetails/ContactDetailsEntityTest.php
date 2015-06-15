@@ -131,22 +131,15 @@ class ContactDetailsEntityTest extends EntityTester
 
         $phoneContact1Entity = new PhoneContact($phoneContactType);
         $phoneContact1Entity->setId(301);
+        $entity->addPhoneContacts($phoneContact1Entity);
 
         $phoneContact2Entity = new PhoneContact($phoneContactType);
         $phoneContact2Entity->setId(302);
+        $entity->addPhoneContacts($phoneContact2Entity);
 
         $phoneContact3Entity = new PhoneContact($phoneContactType);
         $phoneContact3Entity->setId(303);
-
-        $entity->setPhoneContacts(
-            new ArrayCollection(
-                [
-                    $phoneContact1Entity->getId() => $phoneContact1Entity,
-                    $phoneContact2Entity->getId() => $phoneContact2Entity,
-                    $phoneContact3Entity->getId() => $phoneContact3Entity,
-                ]
-            )
-        );
+        $entity->addPhoneContacts($phoneContact3Entity);
 
         // update the entity
         $entity->update($data);
@@ -163,13 +156,17 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
         $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
 
-        $this->assertEquals(2, count($entity->getPhoneContacts()));
+        $phoneContacts = $entity->getPhoneContacts()->toArray();
+        $this->assertEquals(2, count($phoneContacts));
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact', $entity->getPhoneContacts()[0]);
-        $this->assertEquals($data['phoneContacts'][0]['phoneNumber'], $entity->getPhoneContacts()[0]->getPhoneNumber());
+        $this->assertEquals(
+            $data['phoneContacts'][0]['phoneNumber'],
+            $entity->getPhoneContacts()->first()->getPhoneNumber()
+        );
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact', $entity->getPhoneContacts()[1]);
-        $this->assertEquals($data['phoneContacts'][1]['id'], $entity->getPhoneContacts()[1]->getId());
-        $this->assertEquals($data['phoneContacts'][1]['phoneNumber'], $entity->getPhoneContacts()[1]->getPhoneNumber());
+        $this->assertEquals(
+            $data['phoneContacts'][1]['phoneNumber'],
+            $entity->getPhoneContacts()->last()->getPhoneNumber()
+        );
     }
 }
