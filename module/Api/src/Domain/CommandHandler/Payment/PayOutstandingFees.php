@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -36,12 +37,18 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     {
         $result = new Result();
 
-        // get outstanding fees for organisation
-        $outstandingFees = $this->getRepo('Fee')
-            ->fetchOutstandingFeesByOrganisationId($command->getOrganisationId());
-
-        // filter requested fee ids against outstanding fees
-        $fees = $this->filterValid($command, $outstandingFees);
+        if (!empty($command->getOrganisationId())) {
+            // get outstanding fees for organisation
+            $outstandingFees = $this->getRepo('Fee')
+                ->fetchOutstandingFeesByOrganisationId($command->getOrganisationId());
+            $customerReference = $command->getOrganisationId();
+            // filter requested fee ids against outstanding fees
+            $fees = $this->filterValid($command, $outstandingFees);
+        } else {
+            $fees = $this->getRepo('Fee')
+                ->fetchOutstandingFeesByIds($command->getFeeIds());
+            $customerReference = $this->getCustomerReference($fees);
+        }
 
         // filter out fees that may have been paid by resolving outstanding payments
         $feesToPay = $this->resolvePaidFees($fees, $result);
@@ -51,9 +58,34 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             return $result;
         }
 
+        switch ($command->getPaymentMethod()) {
+            case FeeEntity::METHOD_CARD_ONLINE:
+            case FeeEntity::METHOD_CARD_OFFLINE:
+                return $this->cardPayment($customerReference, $command, $feesToPay, $result);
+                break;
+            // case FeeEntity::METHOD_CARD_CASH:
+            //     return $this->cashPayment();
+            //     break;
+            default:
+                throw new ValidationException(['invalid payment method: ' . $command->getPaymentMethod()]);
+                break;
+        }
+
+    }
+
+    /**
+     * @param string $customerReference
+     * @param CommandInterface $command
+     * @param array $feesToPay
+     * @param Result $result
+     *
+     * @return Result
+     */
+    protected function cardPayment($customerReference, $command, $feesToPay, $result)
+    {
         // fire off to CPMS
         $response = $this->cpmsHelper->initiateCardRequest(
-            $command->getOrganisationId(),
+            $customerReference,
             $command->getCpmsRedirectUrl(),
             $feesToPay
         );
@@ -124,14 +156,13 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
                 $paymentId = $fp->getPayment()->getId();
 
                 // resolve outstanding payment
-                $this->getCommandHandler()->handleCommand(
-                    ResolvePaymentCommand::create(
-                        [
-                        'id' => $paymentId,
-                        'paymentMethod' => $fee->getPaymentMethod(),
-                        ]
-                    )
+                $dto = ResolvePaymentCommand::create(
+                    [
+                    'id' => $paymentId,
+                    'paymentMethod' => $fee->getPaymentMethod(),
+                    ]
                 );
+                $this->getCommandHandler()->handleCommand($dto);
 
                 // check payment status
                 $payment = $this->getRepo()->fetchById($paymentId);
@@ -167,5 +198,33 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             }
         }
         return $feesToPay;
+    }
+
+    /**
+     * Gets Customer Reference based on the fees details
+     * The method assumes that all fees link to the same organisationId
+     *
+     * @param array $fees
+     * @return int organisationId
+     */
+    protected function getCustomerReference($fees)
+    {
+        if (empty($fees)) {
+            return null;
+        }
+
+        $reference = 'Miscellaneous'; // default value
+
+        foreach ($fees as $fee) {
+            if (!empty($fee->getLicence())) {
+                $organisation = $fee->getLicence()->getOrganisation();
+                if (!empty($organisation)) {
+                    $reference = $organisation->getId();
+                    break;
+                }
+            }
+        }
+
+        return $reference;
     }
 }
