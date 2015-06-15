@@ -247,6 +247,10 @@ class Fee extends AbstractRepository
             }
         }
 
+        if (!empty($query->getIds())) {
+            $qb->andWhere($qb->expr()->in($this->alias . '.id', $query->getIds()));
+        }
+
         $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
     }
 }
