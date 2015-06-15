@@ -47,7 +47,7 @@ return [
             TransferQuery\Application\Safety::class => QueryHandler\Application\Safety::class,
             TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
             TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
-            
+
             // Licence
             TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
             TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
@@ -56,7 +56,7 @@ return [
 
             // Other Licence
             TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
-            
+
             // Organisation
             TransferQuery\Organisation\BusinessDetails::class => QueryHandler\Organisation\BusinessDetails::class,
             TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
@@ -82,7 +82,7 @@ return [
                 QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
             TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
                 QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
-        
+
             // Processing
             TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
             TransferQuery\Processing\Note::class => QueryHandler\Processing\Note::class,
@@ -115,11 +115,11 @@ return [
             // Trailer
             TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
             TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
-            
+
             // Grace Periods
             TransferQuery\GracePeriod\GracePeriod::class => QueryHandler\GracePeriod\GracePeriod::class,
             TransferQuery\GracePeriod\GracePeriods::class => QueryHandler\GracePeriod\GracePeriods::class,
-            
+
 
             // Irfo
             TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
@@ -127,7 +127,7 @@ return [
             TransferQuery\Irfo\IrfoPermitStockList::class => QueryHandler\Irfo\IrfoPermitStockList::class,
             TransferQuery\Irfo\IrfoPsvAuth::class => QueryHandler\Irfo\IrfoPsvAuth::class,
             TransferQuery\Irfo\IrfoPsvAuthList::class => QueryHandler\Irfo\IrfoPsvAuthList::class,
-            
+
             // Workshop
             TransferQuery\Workshop\Workshop::class => QueryHandler\Workshop\Workshop::class,
 
@@ -197,6 +197,7 @@ return [
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
+            'LicenceStatusRule' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
