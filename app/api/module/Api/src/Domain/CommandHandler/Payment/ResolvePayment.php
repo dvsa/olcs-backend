@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Payment;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Payment;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
@@ -37,6 +38,8 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
 
         $now = new \DateTime();
 
+        $result = new Result();
+
         switch ($cpmsStatus) {
             case Cpms::PAYMENT_SUCCESS:
                 $status = Payment::STATUS_PAID;
@@ -50,6 +53,10 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
                         ->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()))
                         ->setReceivedAmount($fee->getAmount());
                     $this->getRepo('Fee')->save($fee);
+                    // trigger side effects
+                    $result->merge(
+                        $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))
+                    );
                 }
                 break;
             case Cpms::PAYMENT_FAILURE:
@@ -69,7 +76,6 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
         $payment->setStatus($this->getRepo()->getRefdataReference($status));
         $this->getRepo()->save($payment);
 
-        $result = new Result();
         $result->addId('payment', $payment->getId());
         $result->addMessage('Payment resolved as '. $payment->getStatus()->getDescription());
 

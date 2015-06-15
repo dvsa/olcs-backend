@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Payment;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
+use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -155,7 +156,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
                 ->setReceivedAmount($fee->getAmount());
 
             $this->getRepo('Fee')->save($fee);
-            // @todo trigger listener
+            // trigger side effects
+            $result->merge(
+                $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))
+            );
         }
 
         $result->addMessage('Fee(s) updated as Paid');
