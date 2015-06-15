@@ -259,13 +259,13 @@ return [
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
     Command\Fee\PayFee::class => CommandHandler\Fee\PayFee::class,
-    TransferCommand\Fee\PayFee::class => CommandHandler\Fee\UpdateFee::class,
+    TransferCommand\Fee\UpdateFee::class => CommandHandler\Fee\UpdateFee::class,
 
     // Domain - Payment
     Command\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
     TransferCommand\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
     TransferCommand\Payment\CompletePayment::class => CommandHandler\Payment\CompletePayment::class,
-    Command\Payment\ResolvePayment::class => CommandHandler\Payment\ResolvePayment::class,
+    Command\Payment\ResolvePayment::class => CommanfdHandler\Payment\ResolvePayment::class,
 
     // Domain - ApplicationCompletion
     AppCompCommand\UpdateTypeOfLicenceStatus::class => AppCompCommandHandler\UpdateTypeOfLicenceStatus::class,
