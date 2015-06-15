@@ -29,18 +29,22 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class Fee extends AbstractFee
 {
-    const STATUS_OUTSTANDING = 'lfs_ot';
-    const STATUS_PAID = 'lfs_pd';
+    const STATUS_OUTSTANDING       = 'lfs_ot';
+    const STATUS_PAID              = 'lfs_pd';
     const STATUS_WAIVE_RECOMMENDED = 'lfs_wr';
-    const STATUS_WAIVED = 'lfs_w';
-    const STATUS_CANCELLED = 'lfs_cn';
+    const STATUS_WAIVED            = 'lfs_w';
+    const STATUS_CANCELLED         = 'lfs_cn';
 
     const ACCRUAL_RULE_LICENCE_START = 'acr_licence_start';
-    const ACCRUAL_RULE_CONTINUATION = 'acr_continuation';
-    const ACCRUAL_RULE_IMMEDIATE = 'acr_immediate';
+    const ACCRUAL_RULE_CONTINUATION  = 'acr_continuation';
+    const ACCRUAL_RULE_IMMEDIATE     = 'acr_immediate';
 
-    const METHOD_CARD_ONLINE = 'fpm_card_online';
+    const METHOD_CARD_ONLINE  = 'fpm_card_online';
     const METHOD_CARD_OFFLINE = 'fpm_card_offline';
+    const METHOD_CASH         = 'fpm_cash';
+    const METHOD_CHEQUE       = 'fpm_cheque';
+    const METHOD_POSTAL_ORDER = 'fpm_po';
+    const METHOD_WAIVE        = 'fpm_waive';
 
     public function __construct(FeeType $feeType, $amount, RefData $feeStatus)
     {
