@@ -83,6 +83,10 @@ final class CreateAppeal extends AbstractCommandHandler implements Transactioned
             $appeal->setPapersSentDate(new \DateTime($command->getPapersSentDate()));
         }
 
+        if ($command->getComment() !== null) {
+            $appeal->setComment($command->getComment());
+        }
+
         if ($command->getOutcome() !== null) {
             $appeal->setOutcome($this->getRepo()->getRefdataReference($command->getOutcome()));
         }
