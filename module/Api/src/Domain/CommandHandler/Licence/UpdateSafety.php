@@ -42,10 +42,16 @@ final class UpdateSafety extends AbstractCommandHandler implements Transactioned
 
     private function updateSafetyDetails(Licence $licence, Cmd $command)
     {
+        $tachoIns = $command->getTachographIns();
+
+        if (!empty($tachoIns)) {
+            $tachoIns = $this->getRepo()->getRefdataReference($command->getTachographIns());
+        }
+
         $licence->updateSafetyDetails(
             $command->getSafetyInsVehicles(),
             $command->getSafetyInsTrailers(),
-            $this->getRepo()->getRefdataReference($command->getTachographIns()),
+            $tachoIns,
             $command->getTachographInsName(),
             $command->getSafetyInsVaries()
         );

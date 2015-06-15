@@ -142,7 +142,6 @@ return [
             'withCreatedBy'      => QueryPartial\WithCreatedByFactory::class,
             'withRefdata' => QueryPartial\WithRefdataFactory::class,
             'withUser' => QueryPartial\WithUserFactory::class,
-            'withCreatedBy' => QueryPartial\WithCreatedByFactory::class,
             'WithPersonContactDetails' => QueryPartial\WithPersonContactDetailsFactory::class,
         ],
         'invokables' => [
@@ -162,6 +161,8 @@ return [
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
+            'BusRegOtherService' => RepositoryFactory::class,
+            'BusNoticePeriod' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
             'GracePeriod' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,

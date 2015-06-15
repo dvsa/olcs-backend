@@ -21,5 +21,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BusRegOtherService extends AbstractBusRegOtherService
 {
-
+    /**
+     * Gets calculated values
+     *
+     * @return array
+     */
+    public function getCalculatedValues()
+    {
+        return [
+            'busReg' => null
+        ];
+    }
 }
