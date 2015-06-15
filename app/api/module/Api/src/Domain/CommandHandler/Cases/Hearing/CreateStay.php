@@ -58,7 +58,7 @@ final class CreateStay extends AbstractCommandHandler implements TransactionedIn
      */
     private function createStayObject(Cmd $command)
     {
-        // If doesnt have an appeal, raise exception
+        // If case doesn't have an appeal, raise exception
         if (!($this->getRepo()->getReference(
             Cases::class,
             $command->getCase()
@@ -69,7 +69,7 @@ final class CreateStay extends AbstractCommandHandler implements TransactionedIn
             );
         }
 
-        // see if stay already exists
+        // If stay type already exists raise exception
         if ($this->getRepo()->getReference(
             Cases::class,
             $command->getCase()
