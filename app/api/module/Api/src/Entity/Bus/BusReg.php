@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Bus;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
+use Doctrine\ORM\Query;
 
 /**
  * BusReg Entity
@@ -58,6 +60,7 @@ class BusReg extends AbstractBusReg
     {
         return [
             'licence' => null,
+            'parent' => null,
             'isLatestVariation' => $this->isLatestVariation()
         ];
     }
@@ -122,5 +125,109 @@ class BusReg extends AbstractBusReg
         $this->setQualityContractDetails($qualityContractDetails);
 
         return true;
+    }
+
+    /**
+     * @param $stoppingArrangements
+     * @return bool
+     */
+    public function updateTaAuthority($stoppingArrangements)
+    {
+        $this->stoppingArrangements = $stoppingArrangements;
+
+        return true;
+    }
+
+    public function updateServiceDetails(
+        $serviceNo,
+        $startPoint,
+        $finishPoint,
+        $via,
+        $otherDetails,
+        $receivedDate,
+        $effectiveDate,
+        $endDate,
+        $busNoticePeriod,
+        $busRules
+    )
+    {
+        $this->serviceNo = $serviceNo;
+        $this->startPoint = $startPoint;
+        $this->finishPoint = $finishPoint;
+        $this->via = $via;
+        $this->otherDetails = $otherDetails;
+        $this->busNoticePeriod = $busNoticePeriod;
+
+        $receivedDateTime = \DateTime::createFromFormat('Y-m-d', $receivedDate);
+        $effectiveDateTime = \DateTime::createFromFormat('Y-m-d', $effectiveDate);
+        $endDateTime = \DateTime::createFromFormat('Y-m-d', $endDate);
+
+        if (!$receivedDateTime instanceof \DateTime) {
+            $receivedDateTime = null;
+        }
+
+        if (!$effectiveDateTime instanceof \DateTime) {
+            $effectiveDateTime = null;
+        }
+
+        if (!$endDateTime instanceof \DateTime) {
+            $endDateTime = null;
+        }
+
+        $this->receivedDate = $receivedDateTime;
+        $this->effectiveDate = $effectiveDateTime;
+        $this->endDate = $endDateTime;
+
+        $this->isShortNotice = 'N';
+
+        if ($this->isShortNotice($effectiveDateTime, $receivedDateTime, $busRules)) {
+            $this->isShortNotice = 'Y';
+        }
+
+        return true;
+    }
+
+    /**
+     * @param \DateTime $effectiveDate
+     * @param \DateTime $receivedDate
+     * @param BusNoticePeriodEntity $busRules
+     * @return bool|null
+     */
+    private function isShortNotice($effectiveDate, $receivedDate, BusNoticePeriodEntity $busRules)
+    {
+        if (!($effectiveDate instanceof \DateTime) || !($receivedDate instanceof \DateTime)) {
+            return false;
+        }
+
+        $standardPeriod = $busRules->getStandardPeriod();
+
+        if ($standardPeriod > 0) {
+            $interval = new \DateInterval('P' . $standardPeriod . 'D');
+
+            if (clone $receivedDate->add($interval) >= $effectiveDate) {
+                return true;
+            }
+        }
+
+        $cancellationPeriod = $busRules->getCancellationPeriod();
+        $variationNo = $this->getVariationNo();
+
+        if ($cancellationPeriod > 0 && $variationNo > 0) {
+            $parent = $this->getParent();
+
+            if (!$parent) {
+                //if we don't have a parent record, the result is undefined.
+                return null;
+            }
+
+            $lastDateTime = $parent->getEffectiveDate();
+            $interval = new \DateInterval('P' . $cancellationPeriod . 'D');
+
+            if (clone $lastDateTime->add($interval) >= $effectiveDate) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
