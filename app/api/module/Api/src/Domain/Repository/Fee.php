@@ -67,7 +67,7 @@ class Fee extends AbstractRepository
      * Fetch outstanding fees for an organisation
      * (only those associated to a valid licence or in progress application)
      *
-     * @param int $oraganisationId Organisation ID
+     * @param int $organisationId Organisation ID
      *
      * @return array
      */
@@ -92,6 +92,36 @@ class Fee extends AbstractRepository
     }
 
     /**
+     * Fetch outstanding fees by IDs
+     *
+     * @param array $ids
+     *
+     * @return array
+     */
+    public function fetchOutstandingFeesByIds($ids)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($doctrineQb)
+            ->withRefdata()
+            ->with('licence')
+            ->with('application')
+            ->with('feePayments', 'fp')
+            ->with('fp.payment', 'p')
+            ->with('p.status')
+            ->order('invoicedDate', 'ASC');
+
+        $this->whereOutstandingFee($doctrineQb);
+
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->in($this->alias . '.id', ':feeIds'))
+            ->setParameter('feeIds', $ids);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
      * Get a QueryBuilder for listing application fees of a certain feeType.feeType
      *
      * @param int    $applicationId  Application ID
@@ -104,9 +134,9 @@ class Fee extends AbstractRepository
         $doctrineQb = $this->createQueryBuilder();
         $this->getQueryBuilder()->withRefdata()->order('invoicedDate', 'ASC');
 
-        $doctrineQb->join('f.feeType', 'ft')
+        $doctrineQb->join($this->alias . '.feeType', 'ft')
             ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeTypeFeeType'))
-            ->andWhere($doctrineQb->expr()->eq('f.application', ':applicationId'));
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.application', ':applicationId'));
 
         $doctrineQb->setParameter('feeTypeFeeType', $this->getRefdataReference($feeTypeFeeType))
             ->setParameter('applicationId', $applicationId);
@@ -243,12 +273,16 @@ class Fee extends AbstractRepository
                     break;
             }
             if (!empty($feeStatus)) {
-                 $qb->andWhere($qb->expr()->in($this->alias . '.feeStatus', $feeStatus));
+                $qb
+                    ->andWhere($qb->expr()->in($this->alias . '.feeStatus', ':feeStatus'))
+                    ->setParameter('feeStatus', $feeStatus);
             }
         }
 
         if (!empty($query->getIds())) {
-            $qb->andWhere($qb->expr()->in($this->alias . '.id', $query->getIds()));
+            $qb
+                ->andWhere($qb->expr()->in($this->alias . '.id', ':ids'))
+                ->setParameter('ids', $query->getIds());
         }
 
         $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
