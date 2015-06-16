@@ -1,7 +1,5 @@
 <?php
 
-use Dvsa\Olcs\Transfer\Query as TransferQuery;
-use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory;
 use Dvsa\Olcs\Api\Domain\QueryPartial;
 use Dvsa\Olcs\Api\Domain\Util;
@@ -40,90 +38,7 @@ return [
         'factories' => require(__DIR__ . '/command-map.config.php')
     ],
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
-        'factories' => [
-            // Application
-            TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
-            TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
-            TransferQuery\Application\FinancialEvidence::class => QueryHandler\Application\FinancialEvidence::class,
-            TransferQuery\Application\PreviousConvictions::class => QueryHandler\Application\PreviousConvictions::class,
-            TransferQuery\Application\Safety::class => QueryHandler\Application\Safety::class,
-            TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
-            TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
-
-            // Licence
-            TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
-            TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
-            TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
-            TransferQuery\Licence\Safety::class => QueryHandler\Licence\Safety::class,
-
-            // Other Licence
-            TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
-
-            // Organisation
-            TransferQuery\Organisation\BusinessDetails::class => QueryHandler\Organisation\BusinessDetails::class,
-            TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
-            TransferQuery\Organisation\OutstandingFees::class => QueryHandler\Organisation\OutstandingFees::class,
-
-            // Variation
-            TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
-            TransferQuery\Variation\TypeOfLicence::class => QueryHandler\Variation\TypeOfLicence::class,
-
-            // Cases
-            TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
-            TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
-            TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
-            TransferQuery\Cases\ImpoundingList::class => QueryHandler\Cases\ImpoundingList::class,
-            TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
-            TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
-            TransferQuery\Cases\Complaint\ComplaintList::class => QueryHandler\Cases\Complaint\ComplaintList::class,
-            TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
-                QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
-            TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
-                QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
-
-            // Processing
-            TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
-            TransferQuery\Processing\Note::class => QueryHandler\Processing\Note::class,
-            TransferQuery\Processing\NoteList::class => QueryHandler\Processing\NoteList::class,
-
-            // Previous Conviction
-            TransferQuery\PreviousConviction\PreviousConviction::class =>
-                QueryHandler\PreviousConviction\PreviousConviction::class,
-
-            // Company Subsidiary
-            TransferQuery\CompanySubsidiary\CompanySubsidiary::class
-            => QueryHandler\CompanySubsidiary\CompanySubsidiary::class,
-
-            // Bus
-            TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
-
-            // Trailer
-            TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
-            TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
-
-            // Grace Periods
-            TransferQuery\GracePeriod\GracePeriod::class => QueryHandler\GracePeriod\GracePeriod::class,
-            TransferQuery\GracePeriod\GracePeriods::class => QueryHandler\GracePeriod\GracePeriods::class,
-
-
-            // Irfo
-            TransferQuery\Irfo\IrfoGvPermit::class => QueryHandler\Irfo\IrfoGvPermit::class,
-            TransferQuery\Irfo\IrfoGvPermitList::class => QueryHandler\Irfo\IrfoGvPermitList::class,
-            TransferQuery\Irfo\IrfoPermitStockList::class => QueryHandler\Irfo\IrfoPermitStockList::class,
-            TransferQuery\Irfo\IrfoPsvAuth::class => QueryHandler\Irfo\IrfoPsvAuth::class,
-            TransferQuery\Irfo\IrfoPsvAuthList::class => QueryHandler\Irfo\IrfoPsvAuthList::class,
-
-            // Workshop
-            TransferQuery\Workshop\Workshop::class => QueryHandler\Workshop\Workshop::class,
-
-            // Correspondence
-            TransferQuery\Correspondence\Correspondence::class => QueryHandler\Correspondence\Correspondence::class,
-            TransferQuery\Correspondence\Correspondences::class => QueryHandler\Correspondence\Correspondences::class,
-
-            // Payment
-            TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
-            TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
-        ]
+        'factories' => require(__DIR__ . '/query-map.config.php')
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
@@ -131,7 +46,6 @@ return [
             'withCreatedBy'      => QueryPartial\WithCreatedByFactory::class,
             'withRefdata' => QueryPartial\WithRefdataFactory::class,
             'withUser' => QueryPartial\WithUserFactory::class,
-            'withCreatedBy' => QueryPartial\WithCreatedByFactory::class,
             'WithPersonContactDetails' => QueryPartial\WithPersonContactDetailsFactory::class,
         ],
         'invokables' => [
@@ -151,6 +65,8 @@ return [
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
+            'BusRegOtherService' => RepositoryFactory::class,
+            'BusNoticePeriod' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
             'GracePeriod' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,
@@ -164,6 +80,8 @@ return [
             'LicenceNoGen' => RepositoryFactory::class,
             'User' => RepositoryFactory::class,
             'PreviousConviction' => RepositoryFactory::class,
+            'Prohibition' => RepositoryFactory::class,
+            'ProhibitionDefect' => RepositoryFactory::class,
             'LegacyOffence' => RepositoryFactory::class,
             'LegacyOffenceList' => RepositoryFactory::class,
             'Note' => RepositoryFactory::class,
@@ -181,6 +99,7 @@ return [
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
+            'IrfoPartner' => RepositoryFactory::class,
             'Payment' => RepositoryFactory::class,
         ]
     ],

@@ -112,7 +112,7 @@ class Licence extends AbstractLicence
         $tachographInsName,
         $safetyInsVaries
     ) {
-        if ($tachographIns !== self::TACH_NA && empty($tachographInsName)) {
+        if ($tachographIns !== null && $tachographIns !== self::TACH_NA && empty($tachographInsName)) {
             throw new ValidationException(
                 [
                     'tachographInsName' => [
@@ -124,11 +124,17 @@ class Licence extends AbstractLicence
             );
         }
 
+        if (empty($safetyInsVehicles)) {
+            $safetyInsVehicles = null;
+        }
+
         $this->setSafetyInsVehicles($safetyInsVehicles);
 
-        if ($safetyInsTrailers !== null) {
-            $this->setSafetyInsTrailers($safetyInsTrailers);
+        if (empty($safetyInsTrailers)) {
+            $safetyInsTrailers = null;
         }
+
+        $this->setSafetyInsTrailers($safetyInsTrailers);
 
         $this->setTachographIns($tachographIns);
 

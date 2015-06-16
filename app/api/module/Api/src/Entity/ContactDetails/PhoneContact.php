@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\ContactDetails;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * PhoneContact Entity
@@ -22,5 +23,20 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PhoneContact extends AbstractPhoneContact
 {
+    public function __construct(RefData $phoneContactType)
+    {
+        $this->phoneContactType = $phoneContactType;
+    }
 
+    /**
+     * Gets calculated values
+     *
+     * @return array
+     */
+    public function getCalculatedValues()
+    {
+        return [
+            'contactDetails' => null,
+        ];
+    }
 }

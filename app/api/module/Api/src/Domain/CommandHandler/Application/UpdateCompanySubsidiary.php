@@ -34,13 +34,8 @@ final class UpdateCompanySubsidiary extends AbstractCommandHandler implements Tr
         /** @var Application $application */
         $application = $this->getRepo()->fetchById($command->getApplication());
 
-        $updateResult = $this->updateCompanySubsidiary($command, $application->getLicence());
-
-        $result->merge($updateResult);
-
-        if ($updateResult->getFlag('hasChanged')) {
-            $result->merge($this->updateApplicationCompletion($command));
-        }
+        $result->merge($this->updateCompanySubsidiary($command, $application->getLicence()));
+        $result->merge($this->updateApplicationCompletion($command));
 
         return $result;
     }
