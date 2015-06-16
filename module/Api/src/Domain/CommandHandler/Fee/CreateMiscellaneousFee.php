@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Fee\CreateMiscellaneousFee as Cmd;
 
@@ -60,6 +61,10 @@ final class CreateMiscellaneousFee extends AbstractCommandHandler
         }
 
         $fee->setDescription($feeType->getDescription());
+
+
+        $user = $this->getRepo()->getReference(User::class, $command->getUser());
+        $fee->setCreatedBy($user); // @TODO do we need to explicitly do this?
 
         return $fee;
     }
