@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Cases\Opposition\CreateOpposition as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
@@ -106,9 +107,11 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
         $isPublicInquiry = 'N';
 
         $licence = $this->getLicenceObject($command);
+        $case = $this->getRepo()->getReference(Cases::class, $command->getCase());
+        $application = $case->getApplication();
 
         $opposition = new Opposition(
-            $this->getRepo()->getReference(Cases::class, $command->getCase()),
+            $case,
             $licence,
             $opposer,
             $this->getRepo()->getRefdataReference($command->getOppositionType()),
@@ -118,7 +121,11 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
             $isPublicInquiry,
             $command->getIsWillingToAttendPi(),
             $command->getIsWithdrawn()
-    );
+        );
+
+        if (!is_null($application)) {
+            $opposition->setApplication($application);
+        }
 
         if ($command->getRaisedDate() !== null) {
             $opposition->setRaisedDate(new \DateTime($command->getRaisedDate()));
