@@ -95,7 +95,7 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
-     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\User\UpdatePartner
      */
     private function updatePartner(array $contactParams)
     {
