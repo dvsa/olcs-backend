@@ -7,8 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Opposition;
 
-use Common\Service\Entity\ContactDetailsEntityService;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
@@ -27,10 +27,11 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-final class CreateOpposition  extends AbstractCommandHandler implements TransactionedInterface
+final class CreateOpposition extends AbstractCommandHandler implements TransactionedInterface
 {
-    protected $repoServiceName = 'Opposition ';
+    protected $repoServiceName = 'Opposition';
 
+    protected $extraRepos = ['ContactDetails', 'Cases'];
     /**
      * Creates opposition  and associated entities
      *
@@ -41,16 +42,7 @@ final class CreateOpposition  extends AbstractCommandHandler implements Transact
     {
         $result = new Result();
 
-        $address = $this->createAddressObject($command);
-        $result->addMessage('Address created');
-
-        $person = $this->createPersonObject($command);
-        $result->addMessage('Person created');
-
-        $phoneContacts = $this->createPhoneContactsObject($command);
-        $result->addMessage('Phone contacts created');
-
-        $contactDetails = ContactDetails::opposer($address, $person, $phoneContacts, $command->getEmailAddress());
+        $contactDetails = $this->createContactDetailsObject($command);
         $result->addMessage('Contact details created');
 
         $opposer = $this->createOpposerObject($command, $contactDetails);
@@ -59,13 +51,10 @@ final class CreateOpposition  extends AbstractCommandHandler implements Transact
         $opposition = $this->createOppositionObject($command, $opposer);
         $result->addMessage('Opposition created');
 
-
         $this->getRepo()->save($opposition);
-        $result->addMessage('Opposition  created');
 
-        $result->addId('opposition ', $opposition ->getId());
-        $result->addId('opposer ', $opposer ->getId());
-        $result->addId('person', $person->getId());
+        $result->addId('opposition ', $opposition->getId());
+        $result->addId('opposer ', $opposer->getId());
         $result->addId('contactDetails', $contactDetails->getId());
 
         return $result;
@@ -78,8 +67,31 @@ final class CreateOpposition  extends AbstractCommandHandler implements Transact
      */
     private function getLicenceObject(Cmd $command)
     {
-        $case = $this->getRepo('Cases')->fetchUsingId($command->getCase(), Query::HYDRATE_OBJECT);
+        $case = $this->getRepo('Cases')->fetchById($command->getCase(), Query::HYDRATE_OBJECT);
         return $case->getLicence();
+    }
+
+    private function createContactDetailsObject($command)
+    {
+        return ContactDetails::create(
+            $this->getRepo()->getRefdataReference(ContactDetails::CONTACT_TYPE_OBJECTOR),
+            $this->getRepo('ContactDetails')->populateRefDataReference(
+                $this->getObjectorContactDetails($command)
+            )
+        );
+    }
+
+    private function getObjectorContactDetails(Cmd $command)
+    {
+        $objectorContactDetails['emailAddress'] = $command->getEmailAddress();
+
+        $objectorContactDetails['address'] = $this->createAddressArray($command);
+
+        $objectorContactDetails['person'] = $this->createPersonArray($command);
+
+        $objectorContactDetails['phoneContacts'] = $this->createPhoneContactsArray($command);
+
+        return $objectorContactDetails;
     }
 
     /**
@@ -96,14 +108,16 @@ final class CreateOpposition  extends AbstractCommandHandler implements Transact
         $licence = $this->getLicenceObject($command);
 
         $opposition = new Opposition(
+            $this->getRepo()->getReference(Cases::class, $command->getCase()),
             $licence,
             $opposer,
-            $this->getRepo()->getReference(Cases::class, $command->getOppositionType()),
-            $this->getRepo()->getReference($command->getIsCopied()),
-            $this->getRepo()->getReference($command->getIsInTime()),
+            $this->getRepo()->getRefdataReference($command->getOppositionType()),
+            $this->getRepo()->getRefdataReference($command->getIsValid()),
+            $command->getIsCopied(),
+            $command->getIsInTime(),
             $isPublicInquiry,
-            $this->getRepo()->getReference($command->getIsWillingToAttendPi()),
-            $this->getRepo()->getReference($command->getIsWithdrawn())
+            $command->getIsWillingToAttendPi(),
+            $command->getIsWithdrawn()
     );
 
         if ($command->getRaisedDate() !== null) {
@@ -111,7 +125,7 @@ final class CreateOpposition  extends AbstractCommandHandler implements Transact
         }
 
         if ($command->getIsValid() !== null) {
-            $opposition->setIsValid($this->getRepo()->getReference($command->getIsValid()));
+            $opposition->setIsValid($this->getRepo()->getRefdataReference($command->getIsValid()));
         }
 
         if ($command->getValidNotes() !== null) {
@@ -119,7 +133,7 @@ final class CreateOpposition  extends AbstractCommandHandler implements Transact
         }
 
         if ($command->getStatus() !== null) {
-            $opposition->setStatus($this->getRepo()->getReference($command->getStatus()));
+            $opposition->setStatus($this->getRepo()->getRefdataReference($command->getStatus()));
         }
 
         $operatingCentres = $this->generateOperatingCentres($command);
@@ -140,15 +154,15 @@ final class CreateOpposition  extends AbstractCommandHandler implements Transact
      * Create the opposer  object
      *
      * @param Cmd $command
-     * @param Opposer $opposer
+     * @param ContactDetails $contactDetails
      * @return Opposer
      */
     private function createOpposerObject(Cmd $command, ContactDetails $contactDetails)
     {
         $opposer = new Opposer(
             $contactDetails,
-            $this->getRepo()->getReference(Cases::class, $command->getOpposerType()),
-            $this->getRepo()->getReference(Cases::class, $command->getOppositionType())
+            $this->getRepo()->getRefdataReference($command->getOpposerType()),
+            $this->getRepo()->getRefdataReference($command->getOppositionType())
         );
 
         return $opposer;
@@ -172,27 +186,27 @@ final class CreateOpposition  extends AbstractCommandHandler implements Transact
     }
 
     /**
-     * Create person object
+     * Create person array
      * @param Cmd $command
      * @return Person|null
      */
-    private function createPersonObject(Cmd $command)
+    private function createPersonArray(Cmd $command)
     {
         if (!empty($command->getForename()) || !empty($command->getForename())) {
-            $person = new Person();
-            $person->setForename($command->getForename());
-            $person->setFamilyName($command->getFamilyName());
+            $person = [];
+            $person['forename'] = $command->getForename();
+            $person['familyName'] = $command->getFamilyName();
             return $person;
         }
         return null;
     }
 
     /**
-     * Create address object
+     * Create address array
      * @param Cmd $command
      * @return Address|null
      */
-    private function createAddressObject(Cmd $command)
+    private function createAddressArray(Cmd $command)
     {
         if (!empty($command->getOpposerAddress()['addressLine1']) ||
             !empty($command->getOpposerAddress()['addressLine2']) ||
@@ -202,43 +216,30 @@ final class CreateOpposition  extends AbstractCommandHandler implements Transact
             !empty($command->getOpposerAddress()['postcode']) ||
             !empty($command->getOpposerAddress()['countryCode'])
         ) {
-            $address = new Address();
-            $address->setAddressLine1($command->getAddressLine1());
-            $address->setAddressLine2($command->getAddressLine2());
-            $address->setAddressLine3($command->getAddressLine3());
-            $address->setAddressLine4($command->getAddressLine4());
-            $address->setTown($command->getTown());
-            $address->setPostcode($command->getPostcode());
-            $address->setCountryCode($command->getCountryCode());
-
-            return $address;
+            return $command->getOpposerAddress();
         }
         return null;
     }
 
     /**
-     * Generates an ArrayCollection of PhoneContact entities
+     * Generates an array of phone contact details
      *
      * @param Cmd $command
      * @return ArrayCollection|null
      */
-    private function createPhoneContactsObjects(Cmd $command)
+    private function createPhoneContactsArray(Cmd $command)
     {
-        $phoneContacts = new ArrayCollection();
+        $phoneContacts = [];
         if (!is_null($command->getPhone()))
         {
-            $phoneContact = new PhoneContact(PhoneContact::PHONE_CONTACT_TYPE_TEL);
-            $phoneContact->setPhoneNumber($command->getPhone());
+            $phoneContact = [];
+            $phoneContact['phoneContactType'] = PhoneContact::PHONE_CONTACT_TYPE_TEL;
+            $phoneContact['phoneNumber'] = $command->getPhone();
 
-            $phoneContacts->add($phoneContact);
+            $phoneContacts[] = $phoneContact;
+            return $phoneContacts;
         }
-        if (!is_null($command->getF))
-        {
-            $phoneContact = new PhoneContact(PhoneContact::PHONE_CONTACT_TYPE_TEL);
-            $phoneContact->setPhoneNumber($command->getPhone());
 
-            $phoneContacts->add($phoneContact);
-        }
-        return $phoneContacts;
+        return null;
     }
 }
