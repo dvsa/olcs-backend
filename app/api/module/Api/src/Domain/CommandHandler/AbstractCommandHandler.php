@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
@@ -96,5 +97,16 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     protected function getCommandHandler()
     {
         return $this->commandHandler;
+    }
+
+    /**
+     * Wrapper to call another command
+     *
+     * @param CommandInterface $command
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
+    protected function handleSideEffect(CommandInterface $command)
+    {
+        return $this->getCommandHandler()->handleCommand($command);
     }
 }

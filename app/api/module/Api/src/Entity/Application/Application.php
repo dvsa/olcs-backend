@@ -33,6 +33,7 @@ class Application extends AbstractApplication
     const ERROR_VAR_UNCHANGE_OT = 'AP-TOL-4';
     const ERROR_REQUIRES_CONFIRMATION = 'AP-TOL-5';
     const ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED = 'AP-FH-1';
+    const ERROR_SAFE_REQUIRE_CONFIRMATION = 'AP-SAFE-1';
 
     const APPLICATION_STATUS_NOT_SUBMITTED = 'apsts_not_submitted';
     const APPLICATION_STATUS_GRANTED = 'apsts_granted';
@@ -47,6 +48,10 @@ class Application extends AbstractApplication
     const INTERIM_STATUS_REFUSED = 'int_sts_refused';
     const INTERIM_STATUS_REVOKED = 'int_sts_revoked';
     const INTERIM_STATUS_GRANTED = 'int_sts_granted';
+
+    const VARIATION_STATUS_UNCHANGED = 0;
+    const VARIATION_STATUS_REQUIRES_ATTENTION = 1;
+    const VARIATION_STATUS_UPDATED = 2;
 
     public function __construct(Licence $licence, RefData $status, $isVariation)
     {

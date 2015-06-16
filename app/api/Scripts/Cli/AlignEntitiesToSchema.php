@@ -100,6 +100,8 @@ class AlignEntitiesToSchema
             'manyToMany' => 'inversedBy="%ss"',
             'oneToOne' => 'inversedBy="%s"'
         ),
+        'indexBy' => 'indexBy="%s"',
+        'orphanRemoval' => 'orphanRemoval=%s',
         'order-by' => '{"%s"}'
     );
 
@@ -490,6 +492,14 @@ class AlignEntitiesToSchema
 
                 if (isset($fieldDetails['cascade'])) {
                     $item['@attributes']['cascade'] = $fieldDetails['cascade'];
+                }
+
+                if (isset($fieldDetails['indexBy'])) {
+                    $item['@attributes']['indexBy'] = $fieldDetails['indexBy'];
+                }
+
+                if (isset($fieldDetails['orphanRemoval'])) {
+                    $item['@attributes']['orphanRemoval'] = $fieldDetails['orphanRemoval'];
                 }
 
                 if (isset($fieldDetails['fetch'])) {
@@ -1115,6 +1125,12 @@ class AlignEntitiesToSchema
                         'relationship' => $relationship,
                         'cascade' => isset($fieldConfig['inversedBy']['cascade'])
                             ? $fieldConfig['inversedBy']['cascade']
+                            : null,
+                        'indexBy' => isset($fieldConfig['inversedBy']['indexBy'])
+                            ? $fieldConfig['inversedBy']['indexBy']
+                            : null,
+                        'orphanRemoval' => isset($fieldConfig['inversedBy']['orphanRemoval'])
+                            ? $fieldConfig['inversedBy']['orphanRemoval']
                             : null,
                         'orderBy' => isset($fieldConfig['inversedBy']['orderBy'])
                             ? $fieldConfig['inversedBy']['orderBy']

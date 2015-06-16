@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\Criteria;
@@ -38,6 +39,7 @@ class Licence extends AbstractLicence
 {
     const ERROR_CANT_BE_SR = 'LIC-TOL-1';
     const ERROR_REQUIRES_VARIATION = 'LIC-REQ-VAR';
+    const ERROR_SAFETY_REQUIRES_TACHO_NAME = 'LIC-SAFE-TACH-1';
 
     const LICENCE_CATEGORY_GOODS_VEHICLE = 'lcat_gv';
     const LICENCE_CATEGORY_PSV = 'lcat_psv';
@@ -62,6 +64,7 @@ class Licence extends AbstractLicence
     const LICENCE_STATUS_CONTINUATION_NOT_SOUGHT = 'lsts_cns';
 
     const TACH_EXT = 'tach_external';
+    const TACH_NA = 'tach_na';
 
     public function __construct(Organisation $organisation, RefData $status)
     {
@@ -100,5 +103,43 @@ class Licence extends AbstractLicence
             ->setMaxResults(1);
 
         return $this->getBusRegs()->matching($criteria)->current();
+    }
+
+    public function updateSafetyDetails(
+        $safetyInsVehicles,
+        $safetyInsTrailers,
+        $tachographIns,
+        $tachographInsName,
+        $safetyInsVaries
+    ) {
+        if ($tachographIns !== null && $tachographIns !== self::TACH_NA && empty($tachographInsName)) {
+            throw new ValidationException(
+                [
+                    'tachographInsName' => [
+                        [
+                            self::ERROR_SAFETY_REQUIRES_TACHO_NAME => 'You must specify a tachograph inspector name'
+                        ]
+                    ]
+                ]
+            );
+        }
+
+        if (empty($safetyInsVehicles)) {
+            $safetyInsVehicles = null;
+        }
+
+        $this->setSafetyInsVehicles($safetyInsVehicles);
+
+        if (empty($safetyInsTrailers)) {
+            $safetyInsTrailers = null;
+        }
+
+        $this->setSafetyInsTrailers($safetyInsTrailers);
+
+        $this->setTachographIns($tachographIns);
+
+        $this->setTachographInsName($tachographInsName);
+
+        $this->setSafetyInsVaries($safetyInsVaries);
     }
 }

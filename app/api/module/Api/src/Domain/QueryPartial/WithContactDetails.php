@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 
 /**
  * With Contact Details
@@ -70,8 +71,10 @@ final class WithContactDetails implements QueryPartialInterface
         $this->with->modifyQuery($qb, [$property, $alias]);
         $this->with->modifyQuery($qb, [$alias . '.address', $alias . '_a']);
         $this->with->modifyQuery($qb, [$alias . '_a.countryCode', $alias . '_a_cc']);
+        $this->with->modifyQuery($qb, [$alias . '.phoneContacts', $alias . '_pc']);
 
         $this->withRefdata->modifyQuery($qb, [ContactDetails::class, $alias]);
         $this->withRefdata->modifyQuery($qb, [Address::class, $alias . '_a']);
+        $this->withRefdata->modifyQuery($qb, [PhoneContact::class, $alias . '_pc']);
     }
 }

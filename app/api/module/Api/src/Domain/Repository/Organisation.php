@@ -23,7 +23,7 @@ class Organisation extends AbstractRepository
 
     public function fetchBusinessDetailsUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
-        return $this->fetchBusinessDetailsById($query->getId());
+        return $this->fetchBusinessDetailsById($query->getId(), $hydrateMode);
     }
 
     public function fetchBusinessDetailsById($id, $hydrateMode = Query::HYDRATE_OBJECT)
@@ -36,6 +36,35 @@ class Organisation extends AbstractRepository
 
         if (empty($results)) {
             throw new NotFoundException('Organisation not found');
+        }
+
+        return $results[0];
+    }
+
+    public function fetchIrfoDetailsUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
+        return $this->fetchIrfoDetailsById($query->getId(), $hydrateMode);
+    }
+
+    public function fetchIrfoDetailsById($id, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefData()
+            ->with('irfoNationality')
+            ->with('irfoPartners')
+            ->with('tradingNames', 'tn')
+            ->withContactDetails('irfoContactDetails')
+            ->byId($id);
+
+        // get only trading names which are not linked to a licence
+        $qb->andWhere($qb->expr()->isNull('tn.licence'));
+
+        $results = $qb->getQuery()->getResult($hydrateMode);
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('Resource not found');
         }
 
         return $results[0];
