@@ -206,7 +206,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
                 $dto = ResolvePaymentCommand::create(
                     [
                     'id' => $paymentId,
-                    'paymentMethod' => $fee->getPaymentMethod(),
+                    'paymentMethod' => $fee->getPaymentMethod()->getId(),
                     ]
                 );
                 $this->getCommandHandler()->handleCommand($dto);

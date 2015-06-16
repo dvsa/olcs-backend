@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class CreateFee extends AbstractCommandHandler
+final class PayFee extends AbstractCommandHandler
 {
     protected $repoServiceName = 'Fee';
 
