@@ -240,6 +240,145 @@ class CpmsHelperService implements FactoryInterface
     }
 
     /**
+     * Record a cheque payment in CPMS
+     *
+     * @param array $fees
+     * @param string $customerReference
+     * @param float $amount
+     * @param array $receiptDate (from DateSelect)
+     * @param string $payer payer name
+     * @param string $slipNo paying in slip number
+     * @param string $chequeNo cheque number
+     * @param string $chequeDate (from DateSelect)
+     * @return boolean success
+     */
+    public function recordChequePayment(
+        $fees,
+        $customerReference,
+        $amount,
+        $receiptDate,
+        $payer,
+        $slipNo,
+        $chequeNo,
+        $chequeDate
+    ) {
+        $paymentData = [];
+        foreach ($fees as $fee) {
+            $paymentData[] = [
+                'amount' => $this->formatAmount($fee->getAmount()),
+                'sales_reference' => (string)$fee->getId(),
+                'product_reference' => self::PRODUCT_REFERENCE,
+                'payer_details' => $payer,
+                'payment_reference' => [
+                    'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
+                    'receipt_date' => $this->formatDate($receiptDate),
+                    'cheque_number' => (string)$chequeNo,
+                    'cheque_date' => $this->formatDate($chequeDate),
+                    'slip_number' => (string)$slipNo,
+                ],
+            ];
+        }
+
+        $endPoint = '/api/payment/cheque';
+        $scope    = ApiService::SCOPE_CHEQUE;
+
+        $params = [
+            'customer_reference' => (string)$customerReference,
+            'scope' => $scope,
+            'total_amount' => $this->formatAmount($amount),
+            'payment_data' => $paymentData,
+            'cost_centre' => self::COST_CENTRE,
+        ];
+
+        $this->debug(
+            'Cheque payment request',
+            [
+                'method' => [
+                    'location' => __METHOD__,
+                    'data' => func_get_args()
+                ],
+                'endPoint' => $endPoint,
+                'scope'    => $scope,
+                'params'   => $params,
+            ]
+        );
+
+        $response = $this->getClient()->post($endPoint, $scope, $params);
+
+        $this->debug('Cheque payment response', ['response' => $response]);
+
+        return $this->isSuccessfulPaymentResponse($response);
+    }
+
+    /**
+     * Record a Postal Order payment in CPMS
+     *
+     * @param array $fees
+     * @param string $customerReference
+     * @param float $amount
+     * @param array $receiptDate (from DateSelect)
+     * @param string $payer payer name
+     * @param string $slipNo paying in slip number
+     * @param string $poNo Postal Order number
+     * @return boolean success
+     */
+    public function recordPostalOrderPayment(
+        $fees,
+        $customerReference,
+        $amount,
+        $receiptDate,
+        $payer,
+        $slipNo,
+        $poNo
+    ) {
+        $paymentData = [];
+        foreach ($fees as $fee) {
+            $paymentData[] = [
+                'amount' => $this->formatAmount($fee->getAmount()),
+                'sales_reference' => (string)$fee['id'],
+                'product_reference' => self::PRODUCT_REFERENCE,
+                'payer_details' => $payer,
+                'payment_reference' => [
+                    'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
+                    'receipt_date' => $this->formatDate($receiptDate),
+                    'postal_order_number' => [ $poNo ], // array!
+                    'slip_number' => (string)$slipNo,
+                ],
+            ];
+        }
+
+        $endPoint = '/api/payment/postal-order';
+        $scope    = ApiService::SCOPE_POSTAL_ORDER;
+
+        $params = [
+            'customer_reference' => (string)$customerReference,
+            'scope' => $scope,
+            'total_amount' => $this->formatAmount($amount),
+            'payment_data' => $paymentData,
+            'cost_centre' => self::COST_CENTRE,
+        ];
+
+        $this->debug(
+            'Postal order payment request',
+            [
+                'method' => [
+                    'location' => __METHOD__,
+                    'data' => func_get_args()
+                ],
+                'endPoint' => $endPoint,
+                'scope'    => $scope,
+                'params'   => $params,
+            ]
+        );
+
+        $response = $this->getClient()->post($endPoint, $scope, $params);
+
+        $this->debug('Postal order payment response', ['response' => $response]);
+
+        return $this->isSuccessfulPaymentResponse($response);
+    }
+
+    /**
      * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
      */
