@@ -44,13 +44,15 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
             case Cpms::PAYMENT_SUCCESS:
                 $status = Payment::STATUS_PAID;
                 $payment->setCompletedDate($now);
+                $paymentMethodRef = $this->getRepo()->getRefdataReference($command->getPaymentMethod());
+                $feeStatusRef = $this->getRepo()->getRefdataReference(Fee::STATUS_PAID);
                 foreach ($payment->getFeePayments() as $fp) {
                     $fee = $fp->getFee();
                     $fee
-                        ->setFeeStatus($this->getRepo()->getRefdataReference(Fee::STATUS_PAID))
+                        ->setFeeStatus($feeStatusRef)
                         ->setReceivedDate($now)
                         ->setReceiptNo($payment->getGuid())
-                        ->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()))
+                        ->setPaymentMethod($paymentMethodRef)
                         ->setReceivedAmount($fee->getAmount());
                     $this->getRepo('Fee')->save($fee);
                     // trigger side effects
