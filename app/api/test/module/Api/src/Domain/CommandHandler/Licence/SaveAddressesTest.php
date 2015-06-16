@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\SaveAddresses;
 
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
+use Dvsa\Olcs\Api\Domain\Repository\PhoneContact;
 
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
@@ -35,8 +36,21 @@ class SaveAddressesTest extends CommandHandlerTestCase
         $this->sut = new SaveAddresses();
         $this->mockRepo('Licence', Licence::class);
         $this->mockRepo('ContactDetails', ContactDetails::class);
+        $this->mockRepo('PhoneContact', PhoneContact::class);
 
         parent::setUp();
+    }
+
+    protected function initReferences()
+    {
+        $this->refData = [
+            'phone_t_tel',
+            'phone_t_home',
+            'phone_t_mobile',
+            'phone_t_fax'
+        ];
+
+        parent::initReferences();
     }
 
     public function testHandleCommandWithFullyPopulatedNewData()
@@ -94,9 +108,9 @@ class SaveAddressesTest extends CommandHandlerTestCase
                 'address' => [
                     'id' => '',
                     'version' => '',
-                    'addressLine1' => 'Est Address 1',
-                    'town' => 'Est Leeds',
-                    'postcode' => 'LS8 5NF',
+                    'addressLine1' => 'Con Address 1',
+                    'town' => 'Con Leeds',
+                    'postcode' => 'LS7 4NF',
                     'countryCode' => 'GB',
                 ],
                 'contact' => [
@@ -130,6 +144,31 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->with('contact@email.com')
             ->shouldReceive('getVersion')
             ->andReturn(null, 1)
+            ->shouldReceive('getPhoneContacts')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('add')
+                ->times(4)
+                ->getMock()
+            )
+            ->getMock();
+
+        $transportConsultantCd = m::mock(ContactDetailsEntity::class)
+            ->shouldReceive('setFao')
+            ->with('A TC')
+            ->shouldReceive('setEmailAddress')
+            ->with('tc@email.com')
+            ->shouldReceive('setWrittenPermissionToEngage')
+            ->with('Y')
+            ->shouldReceive('getVersion')
+            ->andReturn(null, 1)
+            ->shouldReceive('getPhoneContacts')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('add')
+                ->times(4)
+                ->getMock()
+            )
             ->getMock();
 
         $licence = m::mock(LicenceEntity::class)
@@ -138,10 +177,11 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->with('')
             ->shouldReceive('getCorrespondenceCd')
             ->andReturn($correspondenceCd)
+            ->shouldReceive('getTransportConsultantCd')
+            ->andReturn($transportConsultantCd)
             ->getMock();
 
         $result = new Result();
-        $result->addId('contactDetails', 123);
 
         $this->expectedSideEffect(
             SaveAddress::class,
@@ -149,10 +189,47 @@ class SaveAddressesTest extends CommandHandlerTestCase
                 'id' => '',
                 'version' => '',
                 'addressLine1' => 'Address 1',
+                'addressLine2' => null,
+                'addressLine3' => null,
+                'addressLine4' => null,
                 'town' => 'Leeds',
                 'postcode' => 'LS9 6NF',
                 'countryCode' => 'GB',
                 'contactType' => 'ct_corr'
+            ],
+            $result
+        );
+
+        $this->expectedSideEffect(
+            SaveAddress::class,
+            [
+                'id' => '',
+                'version' => '',
+                'addressLine1' => 'Est Address 1',
+                'addressLine2' => null,
+                'addressLine3' => null,
+                'addressLine4' => null,
+                'town' => 'Est Leeds',
+                'postcode' => 'LS8 5NF',
+                'countryCode' => 'GB',
+                'contactType' => 'ct_est'
+            ],
+            $result
+        );
+
+        $this->expectedSideEffect(
+            SaveAddress::class,
+            [
+                'id' => '',
+                'version' => '',
+                'addressLine1' => 'Con Address 1',
+                'addressLine2' => null,
+                'addressLine3' => null,
+                'addressLine4' => null,
+                'town' => 'Con Leeds',
+                'postcode' => 'LS7 4NF',
+                'countryCode' => 'GB',
+                'contactType' => 'ct_tcon'
             ],
             $result
         );
@@ -167,13 +244,32 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->getMock();
 
         $this->repoMap['ContactDetails']->shouldReceive('save')
-            ->with($correspondenceCd);
+            ->with($correspondenceCd)
+            ->shouldReceive('save')
+            ->with($transportConsultantCd);
+
+        $this->repoMap['PhoneContact']->shouldReceive('save')
+            ->times(8);
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
-            'messages' => ['Application saved successfully']
+            'messages' => [
+                'Contact details updated',
+                'Phone contact business created',
+                'Phone contact home created',
+                'Phone contact mobile created',
+                'Phone contact fax created',
+                'Contact details updated',
+                'Contact details updated',
+                'Phone contact business created',
+                'Phone contact home created',
+                'Phone contact mobile created',
+                'Phone contact fax created',
+                'Contact details updated',
+                'Transport consultant updated',
+            ]
         ];
 
         $this->assertEquals($expected, $result->toArray());

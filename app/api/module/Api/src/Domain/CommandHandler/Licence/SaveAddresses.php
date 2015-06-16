@@ -126,8 +126,7 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
                     $version
                 );
             } else {
-                $contact = new PhoneContact();
-                $contact->setPhoneContactType(
+                $contact = new PhoneContact(
                     $this->getRepo()->getRefdataReference($phoneRefName)
                 );
                 $contact->setContactDetails($contactDetails);
