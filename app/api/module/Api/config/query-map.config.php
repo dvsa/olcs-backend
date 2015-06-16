@@ -18,6 +18,7 @@ return [
     TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
     TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
     TransferQuery\Licence\Safety::class => QueryHandler\Licence\Safety::class,
+    TransferQuery\Licence\Addresses::class => QueryHandler\Licence\Addresses::class,
 
     // Other Licence
     TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,

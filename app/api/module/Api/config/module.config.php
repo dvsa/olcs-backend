@@ -95,6 +95,7 @@ return [
             'Workshop' => RepositoryFactory::class,
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
+            'PhoneContact' => RepositoryFactory::class,
             'OtherLicence' => RepositoryFactory::class,
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
