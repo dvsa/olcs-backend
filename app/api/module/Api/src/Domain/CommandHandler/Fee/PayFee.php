@@ -26,6 +26,7 @@ final class PayFee extends AbstractCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
+        unset($command);
         $result = new Result();
         return $result;
     }
