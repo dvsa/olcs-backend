@@ -12,6 +12,7 @@ return [
     TransferQuery\Application\Safety::class => QueryHandler\Application\Safety::class,
     TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
     TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
+    TransferQuery\Application\TransportManagers::class => QueryHandler\Application\TransportManagers::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -19,6 +20,7 @@ return [
     TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
     TransferQuery\Licence\Safety::class => QueryHandler\Licence\Safety::class,
     TransferQuery\Licence\Addresses::class => QueryHandler\Licence\Addresses::class,
+    TransferQuery\Licence\TransportManagers::class => QueryHandler\Licence\TransportManagers::class,
 
     // Other Licence
     TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
@@ -97,6 +99,8 @@ return [
     // User
     TransferQuery\User\Partner::class => QueryHandler\User\Partner::class,
     TransferQuery\User\PartnerList::class => QueryHandler\User\PartnerList::class,
+    TransferQuery\User\User::class => QueryHandler\User\User::class,
+    TransferQuery\User\UserList::class => QueryHandler\User\UserList::class,
 
     // Workshop
     TransferQuery\Workshop\Workshop::class => QueryHandler\Workshop\Workshop::class,
@@ -108,4 +112,11 @@ return [
     // Payment
     TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
     TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
+
+    // Transport Manager Application
+    TransferQuery\TransportManagerApplication\GetDetails::class
+        => QueryHandler\TransportManagerApplication\GetDetails::class,
+
+    // TmEmployment
+    TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
 ];
