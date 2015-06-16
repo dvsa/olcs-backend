@@ -441,9 +441,11 @@ class CpmsHelperService implements FactoryInterface
      */
     public function formatDate($date)
     {
-        if (is_string($date)) {
-            $date = new \DateTime($date);
+        if (!is_null($date)) {
+            if (is_string($date)) {
+                $date = new \DateTime($date);
+            }
+            return $date->format(self::DATE_FORMAT);
         }
-        return $date->format(self::DATE_FORMAT);
     }
 }
