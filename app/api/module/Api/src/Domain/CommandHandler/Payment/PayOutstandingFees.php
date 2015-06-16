@@ -166,7 +166,62 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             );
         }
 
-        $result->addMessage('Fee(s) updated as Paid');
+        $result->addMessage('Fee(s) updated as Paid by cash');
+
+        return $result;
+    }
+
+    /**
+     * @param string $customerReference
+     * @param CommandInterface $command
+     * @param array $fees
+     * @param Result $result
+     *
+     * @return Result
+     */
+    protected function chequePayment($customerReference, $command, $fees, $result)
+    {
+        $this->checkAmountMatchesTotalDue($command->getReceived(), $fees);
+
+        // fire off to CPMS to record payment
+        $response = $this->cpmsHelper->recordChequePayment(
+            $fees,
+            $customerReference,
+            $command->getReceived(),
+            $command->getReceiptDate(),
+            $command->getPayer(),
+            $command->getSlipNo(),
+            $command->getChequeNo,
+            $command->getChequeDate()
+        );
+
+        $receiptDate = new \DateTime($command->getReceiptDate());
+        $chequeDate = new \DateTime($command->getChequeDate());
+        $feeStatusRef = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID);
+        $paymentMethodRef = $this->getRepo()->getRefdataReference(FeeEntity::METHOD_CHEQUE);
+
+        // update fee records as paid
+        foreach ($fees as $fee) {
+            $fee
+                ->setFeeStatus($feeStatusRef)
+                ->setReceivedDate($receiptDate)
+                ->setReceiptNo($response['receipt_reference'])
+                ->setPaymentMethod($paymentMethodRef)
+                ->setPayerName($command->getPayer())
+                ->setPayingInSlipNumber($command->getSlipNo())
+                ->setReceivedAmount($fee->getAmount())
+                ->setChequePoNumber($command->getChequeNo())
+                ->setChequePoDate($chequeDate);
+
+            $this->getRepo('Fee')->save($fee);
+
+            // trigger side effects
+            $result->merge(
+                $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))
+            );
+        }
+
+        $result->addMessage('Fee(s) updated as Paid by cheque');
 
         return $result;
     }
