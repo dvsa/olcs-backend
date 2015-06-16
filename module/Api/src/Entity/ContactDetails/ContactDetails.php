@@ -28,6 +28,10 @@ class ContactDetails extends AbstractContactDetails
 {
     const CONTACT_TYPE_REGISTERED_ADDRESS = 'ct_reg';
     const CONTACT_TYPE_COMPLAINANT = 'ct_complainant';
+    const CONTACT_TYPE_ESTABLISHMENT_ADDRESS = 'ct_est';
+    const CONTACT_TYPE_CORRESPONDENCE_ADDRESS = 'ct_corr';
+    const CONTACT_TYPE_TRANSPORT_CONSULTANT = 'ct_tcon';
+    const CONTACT_TYPE_TRANSPORT_MANAGER = 'ct_tm';
     const CONTACT_TYPE_WORKSHOP = 'ct_work';
     const CONTACT_TYPE_IRFO_OPERATOR = 'ct_irfo_op';
 

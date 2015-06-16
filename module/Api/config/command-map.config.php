@@ -24,6 +24,8 @@ return [
         => CommandHandler\Application\CreateCompanySubsidiary::class,
     TransferCommand\Application\DeleteCompanySubsidiary::class
         => CommandHandler\Application\DeleteCompanySubsidiary::class,
+    TransferCommand\Application\UpdateAddresses::class
+        => CommandHandler\Application\UpdateAddresses::class,
     TransferCommand\Application\UpdateSafety::class => CommandHandler\Application\UpdateSafety::class,
     TransferCommand\Application\DeleteWorkshop::class => CommandHandler\Application\DeleteWorkshop::class,
     TransferCommand\Application\CreateWorkshop::class => CommandHandler\Application\CreateWorkshop::class,
@@ -47,6 +49,7 @@ return [
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
+    TransferCommand\Licence\UpdateAddresses::class => CommandHandler\Licence\UpdateAddresses::class,
     TransferCommand\Licence\UpdateBusinessDetails::class => CommandHandler\Licence\UpdateBusinessDetails::class,
     TransferCommand\Licence\UpdateCompanySubsidiary::class => CommandHandler\Licence\UpdateCompanySubsidiary::class,
     TransferCommand\Licence\CreateCompanySubsidiary::class => CommandHandler\Licence\CreateCompanySubsidiary::class,
@@ -55,6 +58,7 @@ return [
 
     // Transfer - Variation
     TransferCommand\Variation\UpdateTypeOfLicence::class => CommandHandler\Variation\UpdateTypeOfLicence::class,
+    TransferCommand\Variation\UpdateAddresses::class => CommandHandler\Variation\UpdateAddresses::class,
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
@@ -154,6 +158,7 @@ return [
 
     // Domain - Licence
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
+    Command\Licence\SaveAddresses::class => CommandHandler\Licence\SaveAddresses::class,
 
     // Domain - ContactDetails
     Command\ContactDetails\SaveAddress::class => CommandHandler\ContactDetails\SaveAddress::class,
