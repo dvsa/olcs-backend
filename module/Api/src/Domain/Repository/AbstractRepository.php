@@ -185,7 +185,7 @@ abstract class AbstractRepository implements RepositoryInterface
         $refDataArray = [];
         if (!empty($ids)) {
             foreach ($ids as $id) {
-                $refDataArray[] = $this->getRefdataReference(RefDataEntity::class, $id);
+                $refDataArray[] = $this->getRefdataReference($id);
             }
         }
         return new ArrayCollection($refDataArray);
