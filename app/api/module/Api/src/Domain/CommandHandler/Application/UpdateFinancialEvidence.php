@@ -7,12 +7,13 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateFinancialEvidence as Cmd;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Update Financial Evidence
@@ -34,7 +35,16 @@ final class UpdateFinancialEvidence extends AbstractCommandHandler
 
         $this->getRepo()->save($application);
 
+        $result->merge($this->updateApplicationCompletion($command));
+
         $result->addMessage('Financial evidence section has been updated');
         return $result;
+    }
+
+    private function updateApplicationCompletion(Cmd $command)
+    {
+        return $this->getCommandHandler()->handleCommand(
+            UpdateApplicationCompletionCmd::create(['id' => $command->getId(), 'section' => 'financialEvidence'])
+        );
     }
 }

@@ -12,6 +12,8 @@ return [
     TransferCommand\Application\CreateApplication::class => CommandHandler\Application\CreateApplication::class,
     TransferCommand\Application\UpdateFinancialHistory::class =>
         CommandHandler\Application\UpdateFinancialHistory::class,
+    TransferCommand\Application\UpdateFinancialEvidence::class =>
+        CommandHandler\Application\UpdateFinancialEvidence::class,
     TransferCommand\Application\UpdateLicenceHistory::class => CommandHandler\Application\UpdateLicenceHistory::class,
     TransferCommand\Application\UpdatePreviousConvictions::class =>
         CommandHandler\Application\UpdatePreviousConvictions::class,
