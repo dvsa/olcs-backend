@@ -36,7 +36,7 @@ return [
         'factories' => require(__DIR__ . '/command-map.config.php')
     ],
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
-        'factories' => require(__DIR__ . '/query-map.php')
+        'factories' => require(__DIR__ . '/query-map.config.php')
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
