@@ -260,6 +260,7 @@ return [
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
     Command\Fee\PayFee::class => CommandHandler\Fee\PayFee::class,
     TransferCommand\Fee\UpdateFee::class => CommandHandler\Fee\UpdateFee::class,
+    TransferCommand\Fee\CreateMiscellaneousFee::class => CommandHandler\Fee\CreateMiscellaneousFee::class,
 
     // Domain - Payment
     Command\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
