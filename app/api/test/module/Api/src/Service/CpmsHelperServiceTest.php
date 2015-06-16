@@ -257,6 +257,203 @@ class CpmsHelperServiceTest extends MockeryTestCase
         $this->assertTrue($result);
     }
 
+    public function testRecordCashPaymentFailureReturnsFalse()
+    {
+        $response = [
+            'code' => 'xxx',
+        ];
+
+        $this->cpmsClient
+           ->shouldReceive('post')
+            ->with('/api/payment/cash', 'CASH', m::any())
+            ->andReturn($response);
+
+        $result = $this->sut->recordCashPayment(
+            array(),
+            'cust_ref',
+            '1334.66',
+            '2015-01-07',
+            'Payer',
+            '123456'
+        );
+
+        $this->assertFalse($result);
+    }
+
+    public function testRecordChequePayment()
+    {
+        $fee1 = $this->getStubFee(1, 1234.56);
+        $fee2 = $this->getStubFee(2, 100.10);
+
+        $params = [
+            'customer_reference' => 'cust_ref',
+            'scope' => 'CHEQUE',
+            'total_amount' => '1334.66',
+            'payment_data' => [
+                [
+                    'amount' => '1234.56',
+                    'sales_reference' => '1',
+                    'product_reference' => 'GVR_APPLICATION_FEE',
+                    'payer_details' => 'Payer',
+                    'payment_reference' => [
+                        'rule_start_date' => null,
+                        'receipt_date' => '2015-01-07',
+                        'slip_number' => '123456',
+                        'cheque_number' => '234567',
+                        'cheque_date' => '2015-03-01',
+                    ],
+                ],
+                [
+                    'amount' => '100.10',
+                    'sales_reference' => '2',
+                    'product_reference' => 'GVR_APPLICATION_FEE',
+                    'payer_details' => 'Payer',
+                    'payment_reference' => [
+                        'rule_start_date' => null,
+                        'receipt_date' => '2015-01-07',
+                        'slip_number' => '123456',
+                        'cheque_number' => '234567',
+                        'cheque_date' => '2015-03-01',
+                    ],
+                ]
+            ],
+            'cost_centre' => '12345,67890',
+        ];
+
+        $response = [
+            'code' => CpmsHelperService::RESPONSE_SUCCESS,
+            'receipt_reference' => 'OLCS-1234-CHEQUE',
+        ];
+
+        $this->cpmsClient
+           ->shouldReceive('post')
+            ->with('/api/payment/cheque', 'CHEQUE', $params)
+            ->andReturn($response);
+
+        $result = $this->sut->recordChequePayment(
+            array($fee1, $fee2),
+            'cust_ref',
+            '1334.66',
+            '2015-01-07',
+            'Payer',
+            '123456',
+            '234567',
+            '2015-03-01'
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function testRecordChequePaymentFailureReturnsFalse()
+    {
+        $response = [
+            'code' => 'xxx',
+        ];
+
+        $this->cpmsClient
+           ->shouldReceive('post')
+            ->with('/api/payment/cheque', 'CHEQUE', m::any())
+            ->andReturn($response);
+
+        $result = $this->sut->recordChequePayment(
+            array(),
+            'cust_ref',
+            '1334.66',
+            '2015-01-07',
+            'Payer',
+            '123456',
+            '234567',
+            '2015-03-01'
+        );
+
+        $this->assertFalse($result);
+    }
+
+    public function testRecordPostalOrderPayment()
+    {
+        $fee1 = $this->getStubFee(1, 1234.56);
+        $fee2 = $this->getStubFee(2, 100.10);
+
+        $params = [
+            'customer_reference' => 'cust_ref',
+            'scope' => 'POSTAL_ORDER',
+            'total_amount' => '1334.66',
+            'payment_data' => [
+                [
+                    'amount' => '1234.56',
+                    'sales_reference' => '1',
+                    'product_reference' => 'GVR_APPLICATION_FEE',
+                    'payer_details' => 'Payer',
+                    'payment_reference' => [
+                        'rule_start_date' => null,
+                        'receipt_date' => '2015-01-07',
+                        'slip_number' => '123456',
+                        'postal_order_number' => ['234567'], // array expected according to api docs
+                    ],
+                ],
+                [
+                    'amount' => '100.10',
+                    'sales_reference' => '2',
+                    'product_reference' => 'GVR_APPLICATION_FEE',
+                    'payer_details' => 'Payer',
+                    'payment_reference' => [
+                        'rule_start_date' => null,
+                        'receipt_date' => '2015-01-07',
+                        'slip_number' => '123456',
+                        'postal_order_number' => ['234567'],
+                    ],
+                ]
+            ],
+            'cost_centre' => '12345,67890',
+        ];
+
+        $response = [
+            'code' => CpmsHelperService::RESPONSE_SUCCESS,
+            'receipt_reference' => 'OLCS-1234-PO',
+        ];
+
+        $this->cpmsClient
+           ->shouldReceive('post')
+            ->with('/api/payment/postal-order', 'POSTAL_ORDER', $params)
+            ->andReturn($response);
+
+        $result = $this->sut->recordPostalOrderPayment(
+            array($fee1, $fee2),
+            'cust_ref',
+            '1334.66',
+            '2015-01-07',
+            'Payer',
+            '123456',
+            '234567'
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function testRecordPostalOrderPaymentFailureReturnsFalse()
+    {
+        $response = [
+            'code' => 'xxx',
+        ];
+
+        $this->cpmsClient
+           ->shouldReceive('post')
+            ->with('/api/payment/postal-order', 'POSTAL_ORDER', m::any())
+            ->andReturn($response);
+
+        $result = $this->sut->recordPostalOrderPayment(
+            array(),
+            'cust_ref',
+            '1334.66',
+            '2015-01-07',
+            'Payer',
+            '123456',
+            '234567'
+        );
+
+        $this->assertFalse($result);
+    }
+
     /**
      * Helper function to generate a stub fee entity
      *
