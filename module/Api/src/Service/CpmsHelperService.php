@@ -335,7 +335,7 @@ class CpmsHelperService implements FactoryInterface
         foreach ($fees as $fee) {
             $paymentData[] = [
                 'amount' => $this->formatAmount($fee->getAmount()),
-                'sales_reference' => (string)$fee['id'],
+                'sales_reference' => (string)$fee->getid(),
                 'product_reference' => self::PRODUCT_REFERENCE,
                 'payer_details' => $payer,
                 'payment_reference' => [
