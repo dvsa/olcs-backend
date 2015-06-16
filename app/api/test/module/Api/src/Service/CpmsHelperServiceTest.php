@@ -199,6 +199,64 @@ class CpmsHelperServiceTest extends MockeryTestCase
         $this->assertSame($result, $response);
     }
 
+    public function testRecordCashPayment()
+    {
+        $fee1 = $this->getStubFee(1, 1234.56);
+        $fee2 = $this->getStubFee(2, 100.10);
+
+        $params = [
+            'customer_reference' => 'cust_ref',
+            'scope' => 'CASH',
+            'total_amount' => '1334.66',
+            'payment_data' => [
+                [
+                    'amount' => '1234.56',
+                    'sales_reference' => '1',
+                    'product_reference' => 'GVR_APPLICATION_FEE',
+                    'payer_details' => 'Payer',
+                    'payment_reference' => [
+                        'rule_start_date' => null,
+                        'receipt_date' => '2015-01-07',
+                        'slip_number' => '123456',
+                    ],
+                ],
+                [
+                    'amount' => '100.10',
+                    'sales_reference' => '2',
+                    'product_reference' => 'GVR_APPLICATION_FEE',
+                    'payer_details' => 'Payer',
+                    'payment_reference' => [
+                        'rule_start_date' => null,
+                        'receipt_date' => '2015-01-07',
+                        'slip_number' => '123456',
+                    ],
+                ]
+            ],
+            'cost_centre' => '12345,67890',
+        ];
+
+        $response = [
+            'code' => CpmsHelperService::RESPONSE_SUCCESS,
+            'receipt_reference' => 'OLCS-1234-CASH',
+        ];
+
+        $this->cpmsClient
+           ->shouldReceive('post')
+            ->with('/api/payment/cash', 'CASH', $params)
+            ->andReturn($response);
+
+        $result = $this->sut->recordCashPayment(
+            array($fee1, $fee2),
+            'cust_ref',
+            '1334.66',
+            '2015-01-07',
+            'Payer',
+            '123456'
+        );
+
+        $this->assertTrue($result);
+    }
+
     /**
      * Helper function to generate a stub fee entity
      *
@@ -208,11 +266,17 @@ class CpmsHelperServiceTest extends MockeryTestCase
      * @param string $licenceStartDate
      * @return FeeEntity
      */
-    private function getStubFee($id, $amount, $accrualRule, $licenceStartDate = null)
-    {
+    private function getStubFee(
+        $id,
+        $amount,
+        $accrualRule = null,
+        $licenceStartDate = null
+    ) {
         $status = new RefData();
         $rule = new RefData();
-        $rule->setId($accrualRule);
+        if ($accrualRule) {
+            $rule->setId($accrualRule);
+        }
         $feeType = new FeeTypeEntity();
         $feeType->setAccrualRule($rule);
 
