@@ -23,6 +23,23 @@ class Fee extends AbstractRepository
     protected $alias = 'f';
 
     /**
+     * Gets the latest bus reg fee
+     *
+     * @param $busRegId
+     * @return array
+     */
+    public function getLatestFeeForBusReg($busRegId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->withRefdata()->order('invoicedDate', 'DESC');
+        $doctrineQb->andWhere($doctrineQb->expr()->eq('f.busReg', ':busRegId'));
+        $doctrineQb->setParameter('busRegId', $busRegId);
+        $doctrineQb->setMaxResults(1);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
      * Fetch application interim fees
      *
      * @param int  $applicationId Application ID
