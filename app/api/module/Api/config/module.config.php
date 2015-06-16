@@ -20,7 +20,9 @@ return [
             Util\SlaCalculatorInterface::class => Util\SlaCalculatorFactory::class,
             Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class,
             'TransactionManager' => \Dvsa\Olcs\Api\Domain\Repository\TransactionManagerFactory::class,
-        ]
+            'CpmsIdentityProvider' => \Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
+            'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperService::class,
+        ],
     ],
     'controller_plugins' => [
         'invokables' => [
@@ -98,6 +100,7 @@ return [
             'SystemParameter' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
             'IrfoPartner' => RepositoryFactory::class,
+            'Payment' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
