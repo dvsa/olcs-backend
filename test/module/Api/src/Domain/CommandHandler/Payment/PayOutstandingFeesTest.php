@@ -44,6 +44,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             PaymentEntity::STATUS_OUTSTANDING,
             PaymentEntity::STATUS_PAID,
             PaymentEntity::STATUS_FAILED,
+            FeeEntity::METHOD_CARD_ONLINE,
         ];
 
         parent::setUp();
@@ -166,7 +167,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $fp->setPayment($payment);
         $fee1 = $this->getStubFee(99, 150.00);
         $fee1
-            ->setPaymentMethod(FeeEntity::METHOD_CARD_ONLINE)
+            ->setPaymentMethod($this->refData[FeeEntity::METHOD_CARD_ONLINE])
             ->getFeePayments()->add($fp);
 
         $fees = [$fee1];
@@ -209,7 +210,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $fp->setPayment($payment);
         $fee1 = $this->getStubFee(99, 150.00);
         $fee1
-            ->setPaymentMethod(FeeEntity::METHOD_CARD_ONLINE)
+            ->setPaymentMethod($this->refData[FeeEntity::METHOD_CARD_ONLINE])
             ->getFeePayments()->add($fp);
 
         $fees = [$fee1];
