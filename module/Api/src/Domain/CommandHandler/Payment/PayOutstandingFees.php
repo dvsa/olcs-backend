@@ -143,19 +143,23 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $command->getSlipNo()
         );
 
+        $receiptDate = new \DateTime($command->getReceiptDate());
+        $feeStatusRef = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID);
+        $paymentMethodRef = $this->getRepo()->getRefdataReference(FeeEntity::METHOD_CASH);
+
         // update fee records as paid
         foreach ($fees as $fee) {
             $fee
-                ->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID))
-                // @TODO sort out date handling
-                ->setReceivedDate($this->cpmsHelper->getDateObjectFromArray($command->getReceiptDate()))
+                ->setFeeStatus($feeStatusRef)
+                ->setReceivedDate($receiptDate)
                 ->setReceiptNo($response['receipt_reference'])
-                ->setPaymentMethod($this->getRepo()->getRefdataReference(FeeEntity::METHOD_CASH))
+                ->setPaymentMethod($paymentMethodRef)
                 ->setPayerName($command->getPayer())
                 ->setPayingInSlipNumber($command->getSlipNo())
                 ->setReceivedAmount($fee->getAmount());
 
             $this->getRepo('Fee')->save($fee);
+
             // trigger side effects
             $result->merge(
                 $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))

@@ -76,7 +76,7 @@ class CpmsHelperService implements FactoryInterface
                 'sales_reference' => (string)$fee->getId(),
                 'product_reference' => self::PRODUCT_REFERENCE,
                 'payment_reference' => [
-                    'rule_start_date' => $fee->getRuleStartDate()->format(self::DATE_FORMAT),
+                    'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
                 ],
             ];
         }
@@ -180,7 +180,7 @@ class CpmsHelperService implements FactoryInterface
      * @param array $fees
      * @param string $customerReference
      * @param float $amount
-     * @param array $receiptDate (from DateSelect)
+     * @param string|DateTime $receiptDate
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
      * @return boolean success
@@ -201,7 +201,7 @@ class CpmsHelperService implements FactoryInterface
                 'product_reference' => self::PRODUCT_REFERENCE,
                 'payer_details' => $payer,
                 'payment_reference' => [
-                    'rule_start_date' => $fee->getRuleStartDate()->format(self::DATE_FORMAT),
+                    'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
                     'receipt_date' => $this->formatDate($receiptDate),
                     'slip_number' => (string)$slipNo,
                 ],
@@ -297,26 +297,14 @@ class CpmsHelperService implements FactoryInterface
     /**
      * Format a date as required by CPMS payment reference fields
      *
-     * @param array|DateTime $date
+     * @param string|DateTime $date
      * @return string
      */
     public function formatDate($date)
     {
-        if (is_array($date)) {
-            $date = $this->getDateObjectFromArray($date);
+        if (is_string($date)) {
+            $date = new \DateTime($date);
         }
         return $date->format(self::DATE_FORMAT);
-    }
-
-    /**
-     * Convert DateSelect style array data to a DateTime object
-     * @param array $date
-     * @return \DateTime
-     */
-    public function getDateObjectFromArray(array $date)
-    {
-        $obj = new \DateTime();
-        $obj->setDate($date['year'], $date['month'], $date['day']);
-        return $obj;
     }
 }
