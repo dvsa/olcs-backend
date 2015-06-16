@@ -34,6 +34,7 @@ class ContactDetails extends AbstractContactDetails
     const CONTACT_TYPE_TRANSPORT_MANAGER = 'ct_tm';
     const CONTACT_TYPE_WORKSHOP = 'ct_work';
     const CONTACT_TYPE_IRFO_OPERATOR = 'ct_irfo_op';
+    const CONTACT_TYPE_PARTNER = 'ct_partner';
 
     public function __construct(RefData $contactType)
     {
@@ -64,6 +65,9 @@ class ContactDetails extends AbstractContactDetails
             case self::CONTACT_TYPE_IRFO_OPERATOR:
                 $this->updateIrfoOperator($contactParams);
                 break;
+            case self::CONTACT_TYPE_PARTNER:
+                $this->updatePartner($contactParams);
+                break;
         }
 
         return $this;
@@ -88,6 +92,18 @@ class ContactDetails extends AbstractContactDetails
             // populate phone contacts
             $this->populatePhoneContacts($contactParams['phoneContacts']);
         }
+    }
+
+    /**
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\User\UpdatePartner
+     */
+    private function updatePartner(array $contactParams)
+    {
+        // set description
+        $this->setDescription($contactParams['description']);
+
+        // populate address
+        $this->populateAddress($contactParams['address']);
     }
 
     /**
