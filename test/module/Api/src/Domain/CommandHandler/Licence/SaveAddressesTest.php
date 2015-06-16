@@ -446,4 +446,311 @@ class SaveAddressesTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
+
+    public function testHandleExistingCorrespondenceUpdateWithNoChangeAndDeletedPhoneNumbers()
+    {
+        $data = [
+            'id' => 10,
+            'correspondence' => [
+                'id' => '',
+                'version' => '',
+                'fao' => 'foo bar'
+            ],
+            'correspondenceAddress' => [
+                'id' => '',
+                'version' => '',
+                'addressLine1' => 'Address 1',
+                'town' => 'Leeds',
+                'postcode' => 'LS9 6NF',
+                'countryCode' => 'GB',
+            ],
+            'contact' => [
+                'phone_business' => '',
+                'phone_business_id' => '1',
+                'phone_business_version' => '1',
+
+                'phone_home' => '',
+                'phone_home_id' => '2',
+                'phone_home_version' => '1',
+
+                'phone_mobile' => '',
+                'phone_mobile_id' => '3',
+                'phone_mobile_version' => '1',
+
+                'phone_fax' => '',
+                'phone_fax_id' => '4',
+                'phone_fax_version' => '1',
+
+                'email' => 'contact@email.com'
+            ]
+        ];
+
+        $command = Cmd::create($data);
+
+        $correspondenceCd = m::mock(ContactDetailsEntity::class)
+            ->shouldReceive('setFao')
+            ->with('foo bar')
+            ->shouldReceive('setEmailAddress')
+            ->with('contact@email.com')
+            ->shouldReceive('getVersion')
+            ->andReturn(1)
+            ->shouldReceive('getPhoneContacts')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('remove')
+                ->times(4)
+                ->getMock()
+            )
+            ->getMock();
+
+        $licence = m::mock(LicenceEntity::class)
+            ->makePartial()
+            ->shouldReceive('getCorrespondenceCd')
+            ->andReturn($correspondenceCd)
+            ->getMock();
+
+        $result = new Result();
+
+        $result->setFlag('hasChanged', false);
+
+        $this->expectedSideEffect(
+            SaveAddress::class,
+            [
+                'id' => '',
+                'version' => '',
+                'addressLine1' => 'Address 1',
+                'addressLine2' => null,
+                'addressLine3' => null,
+                'addressLine4' => null,
+                'town' => 'Leeds',
+                'postcode' => 'LS9 6NF',
+                'countryCode' => 'GB',
+                'contactType' => 'ct_corr'
+            ],
+            $result
+        );
+
+        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($licence)
+            ->once()
+            ->shouldReceive('save')
+            ->with($licence)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['ContactDetails']->shouldReceive('save')
+            ->with($correspondenceCd);
+
+        $this->repoMap['PhoneContact']->shouldReceive('delete')
+            ->times(4)
+            ->shouldReceive('fetchById')
+            ->with(1, 1, 1)
+            ->andReturn(
+                m::mock(PhoneContactEntity::class)
+                ->makePartial()
+                ->shouldReceive('setContactDetails')
+                ->with($correspondenceCd)
+                ->shouldReceive('getId')
+                ->andReturn(1)
+                ->getMock()
+            )
+            ->shouldReceive('fetchById')
+            ->with(2, 1, 1)
+            ->andReturn(
+                m::mock(PhoneContactEntity::class)
+                ->makePartial()
+                ->shouldReceive('setContactDetails')
+                ->with($correspondenceCd)
+                ->shouldReceive('getId')
+                ->andReturn(2)
+                ->getMock()
+            )
+            ->shouldReceive('fetchById')
+            ->with(3, 1, 1)
+            ->andReturn(
+                m::mock(PhoneContactEntity::class)
+                ->makePartial()
+                ->shouldReceive('setContactDetails')
+                ->with($correspondenceCd)
+                ->shouldReceive('getId')
+                ->andReturn(3)
+                ->getMock()
+            )
+            ->shouldReceive('fetchById')
+            ->with(4, 1, 1)
+            ->andReturn(
+                m::mock(PhoneContactEntity::class)
+                ->makePartial()
+                ->shouldReceive('setContactDetails')
+                ->with($correspondenceCd)
+                ->shouldReceive('getId')
+                ->andReturn(4)
+                ->getMock()
+            )
+            ->getMock();
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Phone contact business deleted',
+                'Phone contact home deleted',
+                'Phone contact mobile deleted',
+                'Phone contact fax deleted',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleExistingCorrespondenceUpdateWithNoChangeAndDeletedTransportConsultant()
+    {
+        $data = [
+            'id' => 10,
+            'correspondence' => [
+                'id' => '',
+                'version' => '',
+                'fao' => 'foo bar'
+            ],
+            'correspondenceAddress' => [
+                'id' => '',
+                'version' => '',
+                'addressLine1' => 'Address 1',
+                'town' => 'Leeds',
+                'postcode' => 'LS9 6NF',
+                'countryCode' => 'GB',
+            ],
+            'contact' => [
+                'phone_business' => '01131231234',
+                'phone_business_id' => '1',
+                'phone_business_version' => '1',
+
+                'phone_home' => '01131231234',
+                'phone_home_id' => '2',
+                'phone_home_version' => '1',
+
+                'phone_mobile' => '01131231234',
+                'phone_mobile_id' => '3',
+                'phone_mobile_version' => '1',
+
+                'phone_fax' => '01131231234',
+                'phone_fax_id' => '4',
+                'phone_fax_version' => '1',
+
+                'email' => 'contact@email.com'
+            ],
+            'consultant' => [
+                'add-transport-consultant' => 'N'
+            ]
+        ];
+
+        $command = Cmd::create($data);
+
+        $correspondenceCd = m::mock(ContactDetailsEntity::class)
+            ->shouldReceive('setFao')
+            ->with('foo bar')
+            ->shouldReceive('setEmailAddress')
+            ->with('contact@email.com')
+            ->shouldReceive('getVersion')
+            ->andReturn(1)
+            ->getMock();
+
+        $licence = m::mock(LicenceEntity::class)
+            ->makePartial()
+            ->shouldReceive('getCorrespondenceCd')
+            ->andReturn($correspondenceCd)
+            ->shouldReceive('getTransportConsultantCd')
+            ->andReturn(
+                m::mock(ContactDetailsEntity::class)
+            )
+            ->shouldReceive('setTransportConsultantCd')
+            ->with(null)
+            ->getMock();
+
+        $result = new Result();
+
+        $result->setFlag('hasChanged', false);
+
+        $this->expectedSideEffect(
+            SaveAddress::class,
+            [
+                'id' => '',
+                'version' => '',
+                'addressLine1' => 'Address 1',
+                'addressLine2' => null,
+                'addressLine3' => null,
+                'addressLine4' => null,
+                'town' => 'Leeds',
+                'postcode' => 'LS9 6NF',
+                'countryCode' => 'GB',
+                'contactType' => 'ct_corr'
+            ],
+            $result
+        );
+
+        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($licence)
+            ->once()
+            ->shouldReceive('save')
+            ->with($licence)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['ContactDetails']->shouldReceive('save')
+            ->with($correspondenceCd);
+
+        $this->repoMap['PhoneContact']->shouldReceive('save')
+            ->times(4)
+            ->shouldReceive('fetchById')
+            ->with(1, 1, 1)
+            ->andReturn(
+                m::mock(PhoneContactEntity::class)
+                ->makePartial()
+                ->shouldReceive('setContactDetails')
+                ->with($correspondenceCd)
+                ->getMock()
+            )
+            ->shouldReceive('fetchById')
+            ->with(2, 1, 1)
+            ->andReturn(
+                m::mock(PhoneContactEntity::class)
+                ->makePartial()
+                ->shouldReceive('setContactDetails')
+                ->with($correspondenceCd)
+                ->getMock()
+            )
+            ->shouldReceive('fetchById')
+            ->with(3, 1, 1)
+            ->andReturn(
+                m::mock(PhoneContactEntity::class)
+                ->makePartial()
+                ->shouldReceive('setContactDetails')
+                ->with($correspondenceCd)
+                ->getMock()
+            )
+            ->shouldReceive('fetchById')
+            ->with(4, 1, 1)
+            ->andReturn(
+                m::mock(PhoneContactEntity::class)
+                ->makePartial()
+                ->shouldReceive('setContactDetails')
+                ->with($correspondenceCd)
+                ->getMock()
+            )
+            ->getMock();
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Transport consultant deleted'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
 }
