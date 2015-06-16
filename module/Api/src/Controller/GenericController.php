@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Controller;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 
 /**
  * Generic Controller
@@ -13,6 +14,7 @@ class GenericController extends AbstractRestfulController
 {
     public function get($id)
     {
+        unset($id); // unused param
         try {
             $result = $this->handleQuery();
             return $this->response()->singleResult($result);
@@ -29,6 +31,10 @@ class GenericController extends AbstractRestfulController
     {
         try {
             $result = $this->handleQuery();
+            if ($result instanceof Result) {
+                // we sometimes still get a single result if we're not retrieving by id
+                return $this->response()->singleResult($result);
+            }
             return $this->response()->multipleResults($result['count'], $result['result']);
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
@@ -41,6 +47,8 @@ class GenericController extends AbstractRestfulController
 
     public function update($id, $data)
     {
+        unset($id, $data); // unused params
+
         $dto = $this->params('dto');
 
         try {
@@ -57,6 +65,8 @@ class GenericController extends AbstractRestfulController
 
     public function create($data)
     {
+        unset($data); // unused param
+
         $dto = $this->params('dto');
 
         try {
@@ -71,6 +81,8 @@ class GenericController extends AbstractRestfulController
 
     public function delete($id)
     {
+        unset($id); // unused param
+
         $dto = $this->params('dto');
 
         try {

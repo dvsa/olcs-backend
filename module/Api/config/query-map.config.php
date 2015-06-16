@@ -25,6 +25,7 @@ return [
     // Organisation
     TransferQuery\Organisation\BusinessDetails::class => QueryHandler\Organisation\BusinessDetails::class,
     TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
+    TransferQuery\Organisation\OutstandingFees::class => QueryHandler\Organisation\OutstandingFees::class,
 
     // Variation
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
@@ -94,4 +95,8 @@ return [
     // Correspondence
     TransferQuery\Correspondence\Correspondence::class => QueryHandler\Correspondence\Correspondence::class,
     TransferQuery\Correspondence\Correspondences::class => QueryHandler\Correspondence\Correspondences::class,
+
+    // Payment
+    TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
+    TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
 ];
