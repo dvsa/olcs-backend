@@ -177,7 +177,8 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
     }
 
     /**
-     * Generate list of operatingCentres based on type of opposition
+     * Generate list of operatingCentres based on type of opposition. At present it allows both types to specify OCs
+     * This may need to be either one or the other.
      *
      * @param Cmd $command
      * @return ArrayCollection
@@ -189,16 +190,19 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
 
             if (!empty($command->getLicenceOperatingCentres())) {
                 $operatingCentres = $command->getLicenceOperatingCentres();
+                foreach ($operatingCentres as $oc) {
+                    $collection->add($this->getRepo()->getReference(OperatingCentre::class, $oc));
+                }
             }
 
             if (!empty($command->getApplicationOperatingCentres())) {
                 $operatingCentres = $command->getApplicationOperatingCentres();
-            }
-
-            foreach ($operatingCentres as $oc) {
-                $collection->add($this->getRepo()->getReference(OperatingCentre::class, $oc));
+                foreach ($operatingCentres as $oc) {
+                    $collection->add($this->getRepo()->getReference(OperatingCentre::class, $oc));
+                }
             }
         }
+
         return $collection;
     }
 
