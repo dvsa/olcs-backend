@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Create Partner
+ * Update Partner
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
- * Create Partner
+ * Update Partner
  */
-final class CreatePartner extends AbstractCommandHandler implements TransactionedInterface
+final class UpdatePartner extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Partner';
 
@@ -22,8 +22,9 @@ final class CreatePartner extends AbstractCommandHandler implements Transactione
 
     public function handleCommand(CommandInterface $command)
     {
-        $partner = ContactDetails::create(
-            $this->getRepo()->getRefdataReference(ContactDetails::CONTACT_TYPE_PARTNER),
+        $partner = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+
+        $partner->update(
             $this->getRepo('ContactDetails')->populateRefDataReference(
                 $command->getArrayCopy()
             )
@@ -33,7 +34,7 @@ final class CreatePartner extends AbstractCommandHandler implements Transactione
 
         $result = new Result();
         $result->addId('partner', $partner->getId());
-        $result->addMessage('Partner created successfully');
+        $result->addMessage('Partner updated successfully');
 
         return $result;
     }
