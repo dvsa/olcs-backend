@@ -91,18 +91,16 @@ return [
         => CommandHandler\Correspondence\AccessCorrespondence::class,
 
     // Transfer - IRFO
-    \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoDetails::class
-        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoDetails::class,
-    \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit::class
-        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoGvPermit::class,
-    \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoGvPermit::class
-        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoGvPermit::class,
-    \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoPermitStock::class
-        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoPermitStock::class,
-    \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoPsvAuth::class
-        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoPsvAuth::class,
-    \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth::class
-        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
+    TransferCommand\Irfo\CreateIrfoGvPermit::class => CommandHandler\Irfo\CreateIrfoGvPermit::class,
+    TransferCommand\Irfo\UpdateIrfoGvPermit::class => CommandHandler\Irfo\UpdateIrfoGvPermit::class,
+    TransferCommand\Irfo\CreateIrfoPermitStock::class => CommandHandler\Irfo\CreateIrfoPermitStock::class,
+    TransferCommand\Irfo\CreateIrfoPsvAuth::class => CommandHandler\Irfo\CreateIrfoPsvAuth::class,
+    TransferCommand\Irfo\UpdateIrfoPsvAuth::class => CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
+
+    // Transfer - Publication
+    TransferCommand\Publication\CreateRecipient::class => CommandHandler\Publication\CreateRecipient::class,
+    TransferCommand\Publication\UpdateRecipient::class => CommandHandler\Publication\UpdateRecipient::class,
+    TransferCommand\Publication\DeleteRecipient::class => CommandHandler\Publication\DeleteRecipient::class,
 
     // Transfer - Impounding
     TransferCommand\Cases\Impounding\CreateImpounding::class =>
