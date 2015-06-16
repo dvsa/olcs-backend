@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Publication\Recipient;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\Publication\CreateRecipient as Cmd;
@@ -19,22 +18,10 @@ use Dvsa\Olcs\Transfer\Command\Publication\CreateRecipient as Cmd;
  */
 final class CreateRecipient extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERROR_INVALID_SUBSCRIPTION = 'PUB-REC-1';
-
     protected $repoServiceName = 'Recipient';
 
     public function handleCommand(CommandInterface $command)
     {
-        // extra validation
-        if ($command->getSendAppDecision() === 'N' && $command->getSendNoticesProcs() === 'N') {
-            throw new Exception\ValidationException(
-                [
-                    self::ERROR_INVALID_SUBSCRIPTION
-                        => 'Subscription details must be selected'
-                ]
-            );
-        }
-
         // create and save a record
         $recipient = $this->createRecipientObject($command);
         $this->getRepo()->save($recipient);
@@ -52,13 +39,13 @@ final class CreateRecipient extends AbstractCommandHandler implements Transactio
      */
     private function createRecipientObject(Cmd $command)
     {
-        $recipient = new Recipient();
-
-        $recipient->setIsObjector($command->getIsObjector());
-        $recipient->setContactName($command->getContactName());
-        $recipient->setEmailAddress($command->getEmailAddress());
-        $recipient->setSendAppDecision($command->getSendAppDecision());
-        $recipient->setSendNoticesProcs($command->getSendNoticesProcs());
+        $recipient = new Recipient(
+            $command->getIsObjector(),
+            $command->getContactName(),
+            $command->getEmailAddress(),
+            $command->getSendAppDecision(),
+            $command->getSendNoticesProcs()
+        );
 
         $trafficAreas = [];
         foreach ($command->getTrafficAreas() as $trafficAreaId) {

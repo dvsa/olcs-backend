@@ -9,7 +9,6 @@ use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Publication\UpdateRecipient;
 use Dvsa\Olcs\Api\Domain\Repository\Recipient;
-use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Publication\Recipient as RecipientEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\Publication\UpdateRecipient as Cmd;
@@ -97,19 +96,5 @@ class UpdateRecipientTest extends CommandHandlerTestCase
         $this->assertEquals($data['sendAppDecision'], $savedRecipient->getSendAppDecision());
         $this->assertEquals($data['sendNoticesProcs'], $savedRecipient->getSendNoticesProcs());
         $this->assertEquals($data['isPolice'], $savedRecipient->getIsPolice());
-    }
-
-    public function testHandleCommandWithInvalidSubscriptionDetails()
-    {
-        $this->setExpectedException(Exception\ValidationException::class);
-
-        $data = [
-            'sendAppDecision' => 'N',
-            'sendNoticesProcs' => 'N',
-        ];
-
-        $command = Cmd::create($data);
-
-        $this->sut->handleCommand($command);
     }
 }
