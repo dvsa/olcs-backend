@@ -83,16 +83,19 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements Trans
 //        $content = $docService->generateFromTemplate('Scanning_SeparatorSheet', [], $knownValues);
 //        $storedFile = $docService->uploadGeneratedContent($content, 'documents', 'Scanning Separator Sheet');
 
-//        $this->handleCommand(
-//            \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::create(
-//                [
-//                    'fileIdentifier' => $storedFile->getIdentifier(),
-//                    'jobName' => 'Scanning Separator Sheet',
-//                ]
-//            )
-//        );
-
         $result = new Result();
+        $result->merge(
+            $this->handleSideEffect(
+                \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::create(
+                    [
+    //                    'fileIdentifier' => $storedFile->getIdentifier(),
+                        'fileIdentifier' => $scan->getId() .'-'. uniqid(),
+                        'jobName' => 'Scanning Separator Sheet',
+                    ]
+                )
+            )
+        );
+
         $result->addId('scan', $scan->getId());
         $result->addMessage("Scan ID {$scan->getId()} created");
 
@@ -149,11 +152,6 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements Trans
             case Category::CATEGORY_ENVIRONMENTAL:
                 $entity = $this->getRepo('Licence')->fetchByLicNo($entityIdentifier);
                 break;
-            case Category::CATEGORY_BUS_REGISTRATION:
-                /* @var $busRegSearch \Dvsa\Olcs\Api\Entity\View\BusRegSearchView */
-                $busRegSearch = $this->getRepo('BusRegSearchView')->fetchByRegNo($entityIdentifier);
-                $entity = $this->getRepo('Bus')->fetchById($busRegSearch->getId());
-                break;
             case Category::CATEGORY_COMPLIANCE:
                 $entity = $this->getRepo('Cases')->fetchById($entityIdentifier);
                 break;
@@ -162,6 +160,11 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements Trans
                 break;
             case Category::CATEGORY_TRANSPORT_MANAGER:
                 $entity = $this->getRepo('TransportManager')->fetchById($entityIdentifier);
+                break;
+            case Category::CATEGORY_BUS_REGISTRATION:
+                /* @var $busRegSearch \Dvsa\Olcs\Api\Entity\View\BusRegSearchView */
+                $busRegSearch = $this->getRepo('BusRegSearchView')->fetchByRegNo($entityIdentifier);
+                $entity = $this->getRepo('Bus')->fetchById($busRegSearch->getId());
                 break;
             default:
                 throw new RuntimeException("Cannot get an entity for category Id {$categoryId}");
