@@ -63,21 +63,15 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             case FeeEntity::METHOD_CARD_ONLINE:
             case FeeEntity::METHOD_CARD_OFFLINE:
                 return $this->cardPayment($customerReference, $command, $feesToPay, $result);
-                break;
             case FeeEntity::METHOD_CASH:
                 return $this->cashPayment($customerReference, $command, $feesToPay, $result);
-                break;
             case FeeEntity::METHOD_CHEQUE:
                 return $this->chequePayment($customerReference, $command, $feesToPay, $result);
-                break;
             case FeeEntity::METHOD_POSTAL_ORDER:
                 return $this->poPayment($customerReference, $command, $feesToPay, $result);
-                break;
             default:
                 throw new ValidationException(['invalid payment method: ' . $command->getPaymentMethod()]);
-                break;
         }
-
     }
 
     /**

@@ -62,9 +62,8 @@ final class CreateMiscellaneousFee extends AbstractCommandHandler
 
         $fee->setDescription($feeType->getDescription());
 
-
         $user = $this->getRepo()->getReference(User::class, $command->getUser());
-        $fee->setCreatedBy($user); // @TODO do we need to explicitly do this?
+        $fee->setCreatedBy($user);
 
         return $fee;
     }

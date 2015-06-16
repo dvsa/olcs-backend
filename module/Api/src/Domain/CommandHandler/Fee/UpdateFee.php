@@ -22,10 +22,6 @@ final class UpdateFee extends AbstractCommandHandler
 {
     protected $repoServiceName = 'Fee';
 
-    /**
-     * @todo implement fee payment side effects
-     * @see Common\Service\Listener\FeeListenerService
-     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -40,10 +36,9 @@ final class UpdateFee extends AbstractCommandHandler
 
         $this->getRepo()->save($fee);
 
-        // @TODO if fee paid
-        // $result->merge(
-        //     $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))
-        // );
+        $result->merge(
+            $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))
+        );
 
         $result = new Result();
 
