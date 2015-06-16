@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Transfer\Command\Cases\Opposition\CreateOpposition as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
@@ -183,13 +184,22 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
      */
     private function generateOperatingCentres(Cmd $command)
     {
-        if (!empty($command->getLicenceOperatingCentres())) {
-            return $this->getRepo()->generateRefdataArrayCollection($command->getLicenceOperatingCentres());
+        $collection = new ArrayCollection();
+        if (!empty($command->getLicenceOperatingCentres() || !empty($command->getApplicationOperatingCentres()))) {
+
+            if (!empty($command->getLicenceOperatingCentres())) {
+                $operatingCentres = $command->getLicenceOperatingCentres();
+            }
+
+            if (!empty($command->getApplicationOperatingCentres())) {
+                $operatingCentres = $command->getApplicationOperatingCentres();
+            }
+
+            foreach ($operatingCentres as $oc) {
+                $collection->add($this->getRepo()->getReference(OperatingCentre::class, $oc));
+            }
         }
-        if (!empty($command->getApplicationOperatingCentres())) {
-            return $this->getRepo()->generateRefdataArrayCollection($command->getApplicationOperatingCentres());
-        }
-        return null;
+        return $collection;
     }
 
     /**
