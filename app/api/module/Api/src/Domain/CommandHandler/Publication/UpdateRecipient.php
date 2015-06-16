@@ -24,23 +24,15 @@ final class UpdateRecipient extends AbstractCommandHandler implements Transactio
 
     public function handleCommand(CommandInterface $command)
     {
-        // extra validation
-        if ($command->getSendAppDecision() === 'N' && $command->getSendNoticesProcs() === 'N') {
-            throw new Exception\ValidationException(
-                [
-                    self::ERROR_INVALID_SUBSCRIPTION
-                        => 'Subscription details must be selected'
-                ]
-            );
-        }
-
         $recipient = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        $recipient->setIsObjector($command->getIsObjector());
-        $recipient->setContactName($command->getContactName());
-        $recipient->setEmailAddress($command->getEmailAddress());
-        $recipient->setSendAppDecision($command->getSendAppDecision());
-        $recipient->setSendNoticesProcs($command->getSendNoticesProcs());
+        $recipient->update(
+            $command->getIsObjector(),
+            $command->getContactName(),
+            $command->getEmailAddress(),
+            $command->getSendAppDecision(),
+            $command->getSendNoticesProcs()
+        );
 
         $trafficAreas = [];
         foreach ($command->getTrafficAreas() as $trafficAreaId) {
