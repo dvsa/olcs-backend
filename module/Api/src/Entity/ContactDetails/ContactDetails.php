@@ -160,7 +160,7 @@ class ContactDetails extends AbstractContactDetails
             $addressParams['addressLine4'],
             $addressParams['town'],
             $addressParams['postcode'],
-            $addressParams['countryCode']
+            isset($addressParams['countryCode']) ? $addressParams['countryCode'] : null
         );
     }
 
