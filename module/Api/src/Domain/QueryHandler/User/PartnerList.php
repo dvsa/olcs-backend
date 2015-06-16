@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 
+use Doctrine\ORM\Query as DoctrineQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -17,7 +18,10 @@ final class PartnerList extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         return [
-            'result' => $repo->fetchList($query),
+            'result' => $this->resultList(
+                $repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT),
+                ['address']
+            ),
             'count' => $repo->fetchCount($query)
         ];
     }
