@@ -94,6 +94,10 @@ return [
     TransferQuery\Publication\Recipient::class => QueryHandler\Publication\Recipient::class,
     TransferQuery\Publication\RecipientList::class => QueryHandler\Publication\RecipientList::class,
 
+    // User
+    TransferQuery\User\Partner::class => QueryHandler\User\Partner::class,
+    TransferQuery\User\PartnerList::class => QueryHandler\User\PartnerList::class,
+
     // Workshop
     TransferQuery\Workshop\Workshop::class => QueryHandler\Workshop\Workshop::class,
 
