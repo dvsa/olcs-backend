@@ -145,6 +145,11 @@ return [
             'LicenceStatusRule' => RepositoryFactory::class,
             'ConditionUndertaking' => RepositoryFactory::class,
             'OperatingCentre' => RepositoryFactory::class,
+            'Category' => RepositoryFactory::class,
+            'SubCategory' => RepositoryFactory::class,
+            'SubCategoryDescription' => RepositoryFactory::class,
+            'Scan' => RepositoryFactory::class,
+            'BusRegSearchView' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
