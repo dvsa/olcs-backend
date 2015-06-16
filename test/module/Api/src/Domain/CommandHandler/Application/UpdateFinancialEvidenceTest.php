@@ -11,6 +11,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateFinancialEvidence;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateFinancialEvidence as Cmd;
@@ -50,11 +51,19 @@ class UpdateFinancialEvidenceTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
+        $updateData = ['id' => 1, 'section' => 'financialEvidence'];
+        $result2 = new Result();
+        $result2->addMessage('Section updated');
+        $this->expectedSideEffect(UpdateApplicationCompletion::class, $updateData, $result2);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
-            'messages' => ['Financial evidence section has been updated']
+            'messages' => [
+                'Financial evidence section has been updated',
+                'Section updated',
+            ],
         ];
 
         $this->assertInstanceOf(Result::class, $result);
