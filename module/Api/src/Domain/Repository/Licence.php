@@ -88,4 +88,28 @@ class Licence extends AbstractRepository
 
         return $results[0];
     }
+
+    /**
+     * Get a Licence by the LicNo
+     *
+     * @param string $licNo
+     *
+     * @return Entity
+     */
+    public function fetchByLicNo($licNo)
+    {
+        $dqb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($dqb)->withRefdata();
+        $dqb->where($dqb->expr()->eq($this->alias .'.licNo', ':licNo'))
+            ->setParameter('licNo', $licNo);
+
+        $results = $dqb->getQuery()->getResult();
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+
+        return $results[0];
+    }
 }
