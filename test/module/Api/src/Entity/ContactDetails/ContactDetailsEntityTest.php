@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Entity\ContactDetails;
 
 use Mockery as m;
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
@@ -68,7 +67,7 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertSame($contactType, $entity->getContactType());
         $this->assertEquals($data['emailAddress'], $entity->getEmailAddress());
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Entity\ContactDetails\Address', $entity->getAddress());
+        $this->assertInstanceOf(Address::class, $entity->getAddress());
         $this->assertEquals($data['address']['addressLine1'], $entity->getAddress()->getAddressLine1());
         $this->assertEquals($data['address']['addressLine2'], $entity->getAddress()->getAddressLine2());
         $this->assertEquals($data['address']['addressLine3'], $entity->getAddress()->getAddressLine3());
@@ -147,7 +146,7 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertSame($contactType, $entity->getContactType());
         $this->assertEquals($data['emailAddress'], $entity->getEmailAddress());
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Entity\ContactDetails\Address', $entity->getAddress());
+        $this->assertInstanceOf(Address::class, $entity->getAddress());
         $this->assertEquals(200, $entity->getAddress()->getId());
         $this->assertEquals($data['address']['addressLine1'], $entity->getAddress()->getAddressLine1());
         $this->assertEquals($data['address']['addressLine2'], $entity->getAddress()->getAddressLine2());
@@ -168,5 +167,90 @@ class ContactDetailsEntityTest extends EntityTester
             $data['phoneContacts'][1]['phoneNumber'],
             $entity->getPhoneContacts()->last()->getPhoneNumber()
         );
+    }
+
+    public function testCreateForPartner()
+    {
+        $data = [
+            'description' => 'description',
+            'address' => [
+                'addressLine1' => 'a12',
+                'addressLine2' => 'a23',
+                'addressLine3' => 'a34',
+                'addressLine4' => 'a45',
+                'town' => 'town',
+                'postcode' => 'LS1 2AB',
+                'countryCode' => m::mock(Country::class),
+            ],
+        ];
+
+        $contactType = m::mock(RefData::class)->makePartial();
+        $contactType->setId(ContactDetails::CONTACT_TYPE_PARTNER);
+
+        $entity = ContactDetails::create($contactType, $data);
+
+        $this->assertSame($contactType, $entity->getContactType());
+        $this->assertEquals($data['description'], $entity->getDescription());
+
+        $this->assertInstanceOf(Address::class, $entity->getAddress());
+        $this->assertEquals($data['address']['addressLine1'], $entity->getAddress()->getAddressLine1());
+        $this->assertEquals($data['address']['addressLine2'], $entity->getAddress()->getAddressLine2());
+        $this->assertEquals($data['address']['addressLine3'], $entity->getAddress()->getAddressLine3());
+        $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
+        $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
+        $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
+
+        $this->assertEquals(0, $entity->getPhoneContacts()->count());
+    }
+
+    public function testUpdateForPartner()
+    {
+        $data = [
+            'description' => 'updated description',
+            'address' => [
+                'addressLine1' => 'updated a1',
+                'addressLine2' => 'updated a2',
+                'addressLine3' => 'updated a3',
+                'addressLine4' => 'updated a4',
+                'town' => 'updated town',
+                'postcode' => 'LS1 2AB',
+                'countryCode' => m::mock(Country::class),
+            ],
+        ];
+
+        $contactType = m::mock(RefData::class)->makePartial();
+        $contactType->setId(ContactDetails::CONTACT_TYPE_PARTNER);
+
+        $entity = new ContactDetails($contactType);
+
+        // set existing data on the entity before update
+        $entity->setDescription('existing description');
+
+        $addressEntity = new Address();
+        $addressEntity->setId(200);
+        $addressEntity->setAddressLine1('existing a1');
+        $addressEntity->setAddressLine2('existing a2');
+        $addressEntity->setAddressLine3('existing a3');
+        $addressEntity->setAddressLine4('existing a4');
+        $addressEntity->setTown('existing town');
+        $addressEntity->setPostcode('LS2 9AA');
+        $entity->setAddress($addressEntity);
+
+        // update the entity
+        $entity->update($data);
+
+        $this->assertSame($contactType, $entity->getContactType());
+        $this->assertEquals($data['description'], $entity->getDescription());
+
+        $this->assertInstanceOf(Address::class, $entity->getAddress());
+        $this->assertEquals(200, $entity->getAddress()->getId());
+        $this->assertEquals($data['address']['addressLine1'], $entity->getAddress()->getAddressLine1());
+        $this->assertEquals($data['address']['addressLine2'], $entity->getAddress()->getAddressLine2());
+        $this->assertEquals($data['address']['addressLine3'], $entity->getAddress()->getAddressLine3());
+        $this->assertEquals($data['address']['addressLine4'], $entity->getAddress()->getAddressLine4());
+        $this->assertEquals($data['address']['town'], $entity->getAddress()->getTown());
+        $this->assertEquals($data['address']['postcode'], $entity->getAddress()->getPostcode());
+
+        $this->assertEquals(0, $entity->getPhoneContacts()->count());
     }
 }
