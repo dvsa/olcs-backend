@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task;
@@ -57,6 +58,10 @@ final class CreateFee extends AbstractCommandHandler
 
         if ($command->getApplication() !== null) {
             $fee->setApplication($this->getRepo()->getReference(Application::class, $command->getApplication()));
+        }
+
+        if ($command->getBusReg() !== null) {
+            $fee->setBusReg($this->getRepo()->getReference(BusReg::class, $command->getBusReg()));
         }
 
         if ($command->getLicence() !== null) {

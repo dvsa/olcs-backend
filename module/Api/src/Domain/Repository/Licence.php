@@ -44,6 +44,7 @@ class Licence extends AbstractRepository
         return $results[0];
     }
 
+
     public function fetchWithAddressesUsingId($query)
     {
         $qb = $this->createQueryBuilder();
@@ -60,5 +61,31 @@ class Licence extends AbstractRepository
             ->withRefData(PhoneContact::class, 't_p');
 
         return $qb->getQuery()->getSingleResult();
+    }
+
+    public function fetchSafetyDetailsUsingId($command, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
+    {
+        return $this->fetchSafetyDetailsById($command->getId(), $hydrateMode, $version);
+    }
+
+    public function fetchSafetyDetailsById($id, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->buildDefaultQuery($qb, $id)
+            ->with('workshops', 'w')
+            ->withContactDetails('w.contactDetails');
+
+        $results = $qb->getQuery()->getResult($hydrateMode);
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+
+        if ($hydrateMode === Query::HYDRATE_OBJECT && $version !== null) {
+            $this->lock($results[0], $version);
+        }
+
+        return $results[0];
     }
 }

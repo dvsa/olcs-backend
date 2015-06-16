@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -52,6 +53,9 @@ class CreateFeeTest extends CommandHandlerTestCase
             ],
             Licence::class => [
                 33 => m::mock(Licence::class)
+            ],
+            BusReg::class => [
+                44 => m::mock(BusReg::class)
             ]
         ];
 
@@ -67,6 +71,7 @@ class CreateFeeTest extends CommandHandlerTestCase
             'task' => 11,
             'application' => 22,
             'licence' => 33,
+            'busReg' => 44,
             'invoicedDate' => '2015-01-01',
             'description' => 'Some fee'
         ];
@@ -103,6 +108,7 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->assertEquals('2015-01-01', $savedFee->getInvoicedDate()->format('Y-m-d'));
         $this->assertSame($this->references[Licence::class][33], $savedFee->getLicence());
         $this->assertSame($this->references[Application::class][22], $savedFee->getApplication());
+        $this->assertSame($this->references[BusReg::class][44], $savedFee->getBusReg());
         $this->assertSame($this->references[Task::class][11], $savedFee->getTask());
         $this->assertEquals(10.5, $savedFee->getAmount());
         $this->assertSame($this->refData[FeeEntity::STATUS_OUTSTANDING], $savedFee->getFeeStatus());

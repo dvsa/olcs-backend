@@ -146,7 +146,8 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
             'description' => 'DESC for application 111',
             'feeType' => 444,
             'amount' => 10.5,
-            'feeStatus' => FeeEntity::STATUS_OUTSTANDING
+            'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
+            'busReg' => null
         ];
         $this->expectedSideEffect(CreateFee::class, $feeData, $result2);
 
