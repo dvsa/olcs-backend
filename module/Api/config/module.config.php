@@ -102,6 +102,7 @@ return [
             'TaskAllocationRule' => RepositoryFactory::class,
             'IrfoPartner' => RepositoryFactory::class,
             'Payment' => RepositoryFactory::class,
+            'Recipient' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
