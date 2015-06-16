@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
-use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
+use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses as SaveAddressesCmd;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -35,7 +35,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
         $licence = $this->getRepo()->fetchUsingId($command);
 
         $result = $this->getCommandHandler()->handleCommand(
-            SaveAddresses::create($command->getArrayCopy())
+            SaveAddressesCmd::create($command->getArrayCopy())
         );
 
         // @NOTE: duped with Variation\UpdateAddresses
