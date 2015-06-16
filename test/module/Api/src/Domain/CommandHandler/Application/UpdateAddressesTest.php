@@ -20,7 +20,6 @@ use Dvsa\Olcs\Transfer\Command\Application\UpdateAddresses as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
 
-
 /**
  * Update Addresses test
  *
