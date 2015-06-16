@@ -3,7 +3,10 @@
 namespace Dvsa\Olcs\Api\Entity\ContactDetails;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
+use Dvsa\Olcs\Api\Entity\Person\Person;
 
 /**
  * ContactDetails Entity
@@ -41,19 +44,23 @@ class ContactDetails extends AbstractContactDetails
     const CONTACT_TYPE_PARTNER = 'ct_partner';
     const CONTACT_TYPE_OBJECTOR = 'ct_obj';
 
-    public function __construct(RefData $contactType, $contactParams = [])
+    public function __construct(RefData $contactType)
     {
         parent::__construct();
         $this->setContactType($contactType);
-        switch($contactType) {
-            case self::CONTACT_TYPE_OBJECTOR:
-                return ContactDetails::objector(
-                    $contactParams['address'],
-                    $contactParams['person'],
-                    $contactParams['phoneContacts'],
-                    $contactParams['emailAddress']
-                );
-        }
+    }
+
+    /**
+     * @param RefData $contactType
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     * @return ContactDetails
+     */
+    public static function create(RefData $contactType, array $contactParams)
+    {
+        $contactDetails = new static($contactType);
+        $contactDetails->update($contactParams);
+
+        return $contactDetails;
     }
 
     /**
@@ -68,32 +75,64 @@ class ContactDetails extends AbstractContactDetails
                 break;
             case self::CONTACT_TYPE_PARTNER:
                 $this->updatePartner($contactParams);
+            case self::CONTACT_TYPE_OBJECTOR:
+                $this->updateObjector($contactParams);
                 break;
         }
 
         return $this;
     }
 
-
     /**
-     * Create person object
-     * @param Cmd $command
-     * @return Person|null
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
      */
-    private function createPersonObject(Cmd $command)
+    private function updateIrfoOperator(array $contactParams)
     {
-        if (!empty($command->getForename()) || !empty($command->getForename())) {
-            $person = new Person();
-            $person->setForename($command->getForename());
-            $person->setFamilyName($command->getFamilyName());
-            return $person;
+        if ($contactParams['emailAddress'] !== null) {
+            // set email address
+            $this->setEmailAddress($contactParams['emailAddress']);
         }
-        return null;
+
+        if ($contactParams['address'] !== null) {
+            // populate address
+            $this->populateAddress($contactParams['address']);
+        }
+
+        if ($contactParams['phoneContacts'] !== null) {
+            // populate phone contacts
+            $this->populatePhoneContacts($contactParams['phoneContacts']);
+        }
     }
 
     /**
-     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\User\UpdatePartner
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
      */
+    private function updateObjector(array $contactParams)
+    {
+        if ($contactParams['emailAddress'] !== null) {
+            // set email address
+            $this->setEmailAddress($contactParams['emailAddress']);
+        }
+
+        if ($contactParams['address'] !== null) {
+            // populate address
+            $this->populateAddress($contactParams['address']);
+        }
+
+        if ($contactParams['person'] !== null) {
+            // populate person
+            $this->populatePerson($contactParams['person']);
+        }
+
+        if ($contactParams['phoneContacts'] !== null) {
+            // populate phone contacts
+            $this->populatePhoneContacts($contactParams['phoneContacts']);
+        }
+    }
+    
+    /**
+    * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\User\UpdatePartner
+    */
     private function updatePartner(array $contactParams)
     {
         // set description
@@ -108,53 +147,99 @@ class ContactDetails extends AbstractContactDetails
      * @param Cmd $command
      * @return Address|null
      */
-    private function createAddressObject(Cmd $command)
+    private function populateAddress(array $addressParams)
     {
-        if (!empty($command->getOpposerAddress()['addressLine1']) ||
-            !empty($command->getOpposerAddress()['addressLine2']) ||
-            !empty($command->getOpposerAddress()['addressLine3']) ||
-            !empty($command->getOpposerAddress()['addressLine4']) ||
-            !empty($command->getOpposerAddress()['town']) ||
-            !empty($command->getOpposerAddress()['postcode']) ||
-            !empty($command->getOpposerAddress()['countryCode'])
-        ) {
-            $address = new Address();
-            $address->setAddressLine1($command->getAddressLine1());
-            $address->setAddressLine2($command->getAddressLine2());
-            $address->setAddressLine3($command->getAddressLine3());
-            $address->setAddressLine4($command->getAddressLine4());
-            $address->setTown($command->getTown());
-            $address->setPostcode($command->getPostcode());
-            $address->setCountryCode($command->getCountryCode());
-
-            return $address;
+        if (!($this->address instanceof Address)) {
+            $this->address = new Address();
         }
-        return null;
+
+        $this->address->updateAddress(
+            $addressParams['addressLine1'],
+            $addressParams['addressLine2'],
+            $addressParams['addressLine3'],
+            $addressParams['addressLine4'],
+            $addressParams['town'],
+            $addressParams['postcode'],
+            $addressParams['countryCode']
+        );
     }
 
     /**
-     * Generates an ArrayCollection of PhoneContact entities
-     *
-     * @param Cmd $command
-     * @return ArrayCollection|null
+     * @param array $phoneContacts List of Dvsa\Olcs\Transfer\Command\Partial\PhoneContact
+     * @return array
      */
-    private function createPhoneContactsObjects(Cmd $command)
+    private function populatePhoneContacts(array $phoneContacts)
     {
-        $phoneContacts = new ArrayCollection();
-        if (!is_null($command->getPhone()))
-        {
-            $phoneContact = new PhoneContact(PhoneContact::PHONE_CONTACT_TYPE_TEL);
-            $phoneContact->setPhoneNumber($command->getPhone());
+        $seen = [];
 
-            $phoneContacts->add($phoneContact);
-        }
-        if (!is_null($command->getFax()))
-        {
-            $phoneContact = new PhoneContact(PhoneContact::PHONE_CONTACT_TYPE_TEL);
-            $phoneContact->setPhoneNumber($command->getPhone());
+        $collection = $this->getPhoneContacts()->toArray();
 
-            $phoneContacts->add($phoneContact);
+        foreach ($phoneContacts as $phoneContact) {
+            if (empty($phoneContact['phoneNumber'])) {
+                // filter out empty values
+                continue;
+            }
+
+            if (isset($phoneContact['id']) && !empty($collection[$phoneContact['id']])) {
+                // update
+                $phoneContactEntity = $collection[$phoneContact['id']];
+                $phoneContactEntity->setPhoneNumber($phoneContact['phoneNumber']);
+
+                $seen[$phoneContact['id']] = $phoneContact['id'];
+            } else {
+                // create
+                $phoneContactEntity = new PhoneContact($phoneContact['phoneContactType']);
+                $phoneContactEntity->setContactDetails($this);
+                $phoneContactEntity->setPhoneNumber($phoneContact['phoneNumber']);
+
+                $this->phoneContacts->add($phoneContactEntity);
+            }
         }
-        return $phoneContacts;
+
+        // remove the rest
+        foreach (array_diff_key($collection, $seen) as $key => $entity) {
+            // unlink
+            $this->phoneContacts->remove($key);
+        }
+    }
+
+    /**
+     * @param array $personParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\Person
+     */
+    private function populatePerson(array $personParams)
+    {
+        if (!($this->person instanceof Person)) {
+            $this->person = new Person();
+        }
+
+        // ensure we have all variables set
+        $title = $this->getDefaultParameter($personParams, 'title');
+        $forename = $this->getDefaultParameter($personParams, 'forename');
+        $familyName = $this->getDefaultParameter($personParams, 'familyName');
+        $birthDate = $this->getDefaultParameter($personParams, 'birthDate');
+        $birthPlace = $this->getDefaultParameter($personParams, 'birthPlace');
+        $otherName = $this->getDefaultParameter($personParams, 'otherName');
+
+        $this->person->updatePerson(
+            $title,
+            $forename,
+            $familyName,
+            $birthDate,
+            $birthPlace,
+            $otherName
+        );
+    }
+
+    /**
+     * Generates a parameter from either the params array, or returns a default.
+     *
+     * @param $params
+     * @param $var
+     * @param null $default
+     * @return null
+     */
+    private function getDefaultParameter($params, $var, $default = null)
+    {
+        return isset($params[$var]) ? $params[$var] : $default;
     }
 }
