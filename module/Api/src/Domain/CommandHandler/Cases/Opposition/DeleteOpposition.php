@@ -12,7 +12,7 @@ use Doctrine\ORM\Query;
 /**
  * Delete Opposition
  */
-final class Delete extends AbstractDeleteCommandHandler
+final class DeleteOpposition extends AbstractDeleteCommandHandler
 {
     protected $repoServiceName = 'Opposition';
 }
