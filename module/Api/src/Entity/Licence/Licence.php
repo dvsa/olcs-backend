@@ -64,6 +64,7 @@ class Licence extends AbstractLicence
     const LICENCE_STATUS_CONTINUATION_NOT_SOUGHT = 'lsts_cns';
 
     const TACH_EXT = 'tach_external';
+    const TACH_INT = 'tach_internal';
     const TACH_NA = 'tach_na';
 
     public function __construct(Organisation $organisation, RefData $status)
