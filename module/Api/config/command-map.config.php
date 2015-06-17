@@ -125,6 +125,10 @@ return [
     TransferCommand\Cases\Complaint\DeleteComplaint::class =>
         CommandHandler\Cases\Complaint\DeleteComplaint::class,
 
+    // Transfer - Document
+    TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
+    TransferCommand\Document\DeleteDocument::class => CommandHandler\Document\DeleteDocument::class,
+
     // Conviction
     TransferCommand\Cases\Conviction\Create::class => CommandHandler\Cases\Conviction\Create::class,
     TransferCommand\Cases\Conviction\Update::class => CommandHandler\Cases\Conviction\Update::class,
