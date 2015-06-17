@@ -21,7 +21,7 @@ final class ConditionUndertakingList extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         return [
-            'result' => $repo->fetchList($query),
+            'result' => $this->resultList($repo->fetchList($query, Query::HYDRATE_OBJECT)),
             'count' => $repo->fetchCount($query)
         ];
     }

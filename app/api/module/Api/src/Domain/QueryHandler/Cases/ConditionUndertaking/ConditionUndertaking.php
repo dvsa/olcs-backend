@@ -15,6 +15,6 @@ final class ConditionUndertaking extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchUsingCaseId($query);
+        return $this->result($this->getRepo()->fetchUsingCaseId($query));
     }
 }
