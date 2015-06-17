@@ -107,7 +107,11 @@ abstract class AbstractFeePayment implements BundleSerializableInterface, JsonSe
      *
      * @var \Dvsa\Olcs\Api\Entity\Fee\Payment
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Payment", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\Payment",
+     *     fetch="LAZY",
+     *     inversedBy="feePayments"
+     * )
      * @ORM\JoinColumn(name="payment_id", referencedColumnName="id", nullable=false)
      */
     protected $payment;

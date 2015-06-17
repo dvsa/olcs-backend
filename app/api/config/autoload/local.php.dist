@@ -37,5 +37,15 @@ return array(
     // Set the following if you need to go via a proxy to get to Companies House
     // 'companies_house_connection' => array(
     //    'proxy'      => 'proxy.gw.npm:80'
-    // )
+    // ),
+    'jackrabbit' => array(
+        'http' => array(
+            'adapter' => 'Zend\Http\Client\Adapter\Curl'
+        ),
+        'client' => array(
+            'baseuri' => 'http://scdv-ap05.sc.npm:8080/hcs',
+            'uuid' => 'uD12345',
+            'workspace' => 'olcs'
+        ),
+    )
 );
