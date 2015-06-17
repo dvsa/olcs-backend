@@ -44,6 +44,7 @@ return [
     TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
     TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
     TransferQuery\Licence\Safety::class => QueryHandler\Licence\Safety::class,
+    TransferQuery\Licence\Addresses::class => QueryHandler\Licence\Addresses::class,
 
     // Other Licence
     TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
@@ -114,6 +115,14 @@ return [
     TransferQuery\Irfo\IrfoPermitStockList::class => QueryHandler\Irfo\IrfoPermitStockList::class,
     TransferQuery\Irfo\IrfoPsvAuth::class => QueryHandler\Irfo\IrfoPsvAuth::class,
     TransferQuery\Irfo\IrfoPsvAuthList::class => QueryHandler\Irfo\IrfoPsvAuthList::class,
+
+    // Publication
+    TransferQuery\Publication\Recipient::class => QueryHandler\Publication\Recipient::class,
+    TransferQuery\Publication\RecipientList::class => QueryHandler\Publication\RecipientList::class,
+
+    // User
+    TransferQuery\User\Partner::class => QueryHandler\User\Partner::class,
+    TransferQuery\User\PartnerList::class => QueryHandler\User\PartnerList::class,
 
     // Workshop
     TransferQuery\Workshop\Workshop::class => QueryHandler\Workshop\Workshop::class,

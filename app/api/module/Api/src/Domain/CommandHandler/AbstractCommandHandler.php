@@ -55,13 +55,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             $this->setAuthService($mainServiceLocator->get(AuthorizationService::class));
         }
 
-        if ($this->repoServiceName === null) {
-            throw new RuntimeException('The repoServiceName property must be define in a CommandHandler');
-        }
-
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
 
-        $this->extraRepos[] = $this->repoServiceName;
+        if ($this->repoServiceName !== null) {
+            $this->extraRepos[] = $this->repoServiceName;
+        }
 
         $this->commandHandler = $serviceLocator;
 
