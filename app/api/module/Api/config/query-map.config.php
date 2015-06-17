@@ -138,4 +138,7 @@ return [
     // Payment
     TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
     TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
+
+    // Document
+    TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
 ];
