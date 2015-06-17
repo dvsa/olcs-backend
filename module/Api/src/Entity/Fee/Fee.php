@@ -35,6 +35,13 @@ class Fee extends AbstractFee
     const STATUS_WAIVED = 'lfs_w';
     const STATUS_CANCELLED = 'lfs_cn';
 
+    const ACCRUAL_RULE_LICENCE_START = 'acr_licence_start';
+    const ACCRUAL_RULE_CONTINUATION = 'acr_continuation';
+    const ACCRUAL_RULE_IMMEDIATE = 'acr_immediate';
+
+    const METHOD_CARD_ONLINE = 'fpm_card_online';
+    const METHOD_CARD_OFFLINE = 'fpm_card_offline';
+
     public function __construct(FeeType $feeType, $amount, RefData $feeStatus)
     {
         parent::__construct();
@@ -43,4 +50,80 @@ class Fee extends AbstractFee
         $this->amount = $amount;
         $this->feeStatus = $feeStatus;
     }
+
+    /**
+     * Loop through a fee's payment records and check if any are outstanding
+     */
+    public function hasOutstandingPayment()
+    {
+        foreach ($this->getFeePayments() as $fp) {
+            if ($fp->getPayment()->isOutstanding()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Determine 'rule start date' for a fee
+     *
+     * @see https://jira.i-env.net/browse/OLCS-6005 for business rules
+     *
+     * @return \DateTime|null
+     */
+    public function getRuleStartDate()
+    {
+        $rule = $this->getFeeType()->getAccrualRule()->getId();
+        switch ($rule) {
+            case self::ACCRUAL_RULE_IMMEDIATE:
+                return $this->getCurrentDateTime();
+            case self::ACCRUAL_RULE_LICENCE_START:
+                $licenceStart = $this->getLicence()->getInForceDate();
+                if (!is_null($licenceStart)) {
+                    return new \DateTime($licenceStart);
+                }
+                break;
+            case self::ACCRUAL_RULE_CONTINUATION:
+                // The licence continuation date + 1 day (according to calendar dates)
+                $licenceExpiry = $this->getLicence()->getExpiryDate();
+                if (!is_null($licenceExpiry)) {
+                    $date = new \DateTime($licenceExpiry);
+                    $date->add(new \DateInterval('P1D'));
+                    return $date;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**************************************************************************/
+    /* Allow injection of current date/time */
+
+    /**
+     * @var \DateTime $now
+     * @todo migrate this to use Util\DateTime class when available
+     */
+    protected $now;
+
+    /**
+     * @return \DateTime
+     */
+    public function getCurrentDateTime()
+    {
+        if (is_null($this->now)) {
+            $this->now = new \DateTime();
+        }
+        return $this->now;
+    }
+
+    /**
+     * @param \DateTime $datetime
+     * @return $this
+     */
+    public function setCurrentDateTime(\DateTime $datetime)
+    {
+        $this->now = $datetime;
+    }
+    /**************************************************************************/
 }

@@ -113,7 +113,7 @@ trait BundleSerializableTrait
                 && (!($value instanceof Proxy) || $value->__isInitialized())
             ) {
                 // ...include it anyway
-                return $value;
+                return $value->serialize();
             }
 
             // ...otherwise bail
@@ -141,6 +141,11 @@ trait BundleSerializableTrait
         // If we have a collection
         if ($value instanceof Collection) {
             $list = [];
+
+            // Allow criteria mid-bundle
+            if (isset($propertyBundle['criteria'])) {
+                $value = $value->matching($propertyBundle['criteria']);
+            }
 
             // .. serialize each item and add it to the list
             foreach ($value->toArray() as $item) {

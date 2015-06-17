@@ -250,7 +250,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="tm_application_status", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="tm_application_status", referencedColumnName="id", nullable=true)
      */
     protected $tmApplicationStatus;
 
@@ -283,10 +283,10 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 0})
+     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
      * @ORM\Version
      */
-    protected $version = 0;
+    protected $version = 1;
 
     /**
      * Other licence
