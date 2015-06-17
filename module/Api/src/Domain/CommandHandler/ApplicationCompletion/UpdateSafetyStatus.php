@@ -31,7 +31,7 @@ final class UpdateSafetyStatus extends AbstractUpdateStatus
             return false;
         }
 
-        if ((int)$licence->getSafetyInsVaries() < 1) {
+        if (!in_array($licence->getSafetyInsVaries(), ['Y', 'N'])) {
             return false;
         }
 

@@ -18,6 +18,24 @@ class FinancialStandingRate extends AbstractRepository
 
     protected $alias = 'fsr';
 
+    public function fetchLatestRateForBookmark($goodsOrPsv, $licenceType, $date)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq('m.goodsOrPsv', ':goodsOrPsv'));
+        $qb->andWhere($qb->expr()->eq('m.licenceType', ':licenceType'));
+        $qb->andWhere($qb->expr()->lte('m.effectiveFrom', ':date'));
+
+        $qb->setParameter('goodsOrPsv', $goodsOrPsv);
+        $qb->setParameter('licenceType', $licenceType);
+        $qb->setParameter('date', $date);
+
+        $qb->orderBy('m.effectiveFrom', 'DESC');
+        $qb->setMaxResults(1);
+
+        return $qb->getQuery()->getResult();
+    }
+
     /**
      * @param \DateTime $date
      *
