@@ -52,7 +52,6 @@ class RepositoryTestCase extends MockeryTestCase
             $this->sut = new $class($this->em, $this->queryBuilder);
         }
 
-
         $this->query = '';
         $this->qb = null;
     }
