@@ -4,16 +4,12 @@ namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-<<<<<<< Updated upstream
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-=======
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
->>>>>>> Stashed changes
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
-use Dvsa\OlcsTest\Api\Entity\CommunityLic\CommunityLicEntityTest;
 
 /**
  * Licence Entity

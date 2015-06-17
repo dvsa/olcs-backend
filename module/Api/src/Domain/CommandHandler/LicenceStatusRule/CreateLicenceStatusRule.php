@@ -2,9 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule;
 
-use \Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Query\LicenceStatusRule\LicenceStatusRule;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 final class CreateLicenceStatusRule extends AbstractCommandHandler
 {
@@ -13,20 +15,21 @@ final class CreateLicenceStatusRule extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command)
     {
         $licence = $this->getRepo()
-            ->getReference(Licence::class, $command->getId());
+            ->getReference(Licence::class, $command->getLicence());
 
-        $trailer = new LicenceStatusRule();
-        $trailer->setStatus($command->getStatus());
-        $trailer->setStartDate($command->getStartDate());
-        $trailer->setEndDate($command->getEndDate());
-        $trailer->setSpecifiedDate(new \DateTime($command->getSpecifiedDate()));
-        $trailer->setLicence($licence);
+        $status = $this->getRepo()->getRefdataReference($command->getStatus());
 
-        $this->getRepo()->save($trailer);
+        $statusRule = new LicenceStatusRule();
+        $statusRule->setLicenceStatus($status);
+        $statusRule->setStartDate(new \DateTime($command->getStartDate()));
+        $statusRule->setEndDate(new \DateTime($command->getEndDate()));
+        $statusRule->setLicence($licence);
+
+        $this->getRepo()->save($statusRule);
 
         $result = new Result();
-        $result->addId('trailer', $trailer->getId());
-        $result->addMessage('Trailer created successfully');
+        $result->addId('licence-status-rule', $statusRule->getId());
+        $result->addMessage('Licence status rule created successfully');
 
         return $result;
     }
