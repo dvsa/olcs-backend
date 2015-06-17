@@ -126,6 +126,9 @@ abstract class AbstractRepository implements RepositoryInterface
         return $paginator->count();
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
 
