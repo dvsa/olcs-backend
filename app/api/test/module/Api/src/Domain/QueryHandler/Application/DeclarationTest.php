@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Application\Declaration;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Transfer\Query\Application\Declaration as Qry;
+use Mockery as m;
 
 /**
  * DeclarationTest
@@ -31,14 +32,13 @@ class DeclarationTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        $mockApplication = \Mockery::mock();
+        $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($mockApplication);
 
-        $mockApplication->shouldReceive('jsonSerialize')->with()->once()->andReturn(['foo' => 'bar']);
-
+        $mockApplication->shouldReceive('serialize')->once()->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('canHaveInterimLicence')->with()->once()->andReturn('xxx');
         $mockApplication->shouldReceive('isLicenceUpgrade')->with()->once()->andReturn('yyy');
 
@@ -48,6 +48,6 @@ class DeclarationTest extends QueryHandlerTestCase
             'isLicenceUpgrade' => 'yyy',
         ];
 
-        $this->assertEquals($expected, $this->sut->handleQuery($query));
+        $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());
     }
 }
