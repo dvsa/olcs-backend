@@ -121,8 +121,12 @@ return [
             'GoodsDisc' => RepositoryFactory::class,
             'PsvDisc' => RepositoryFactory::class,
             'PiHearing' => RepositoryFactory::class,
+<<<<<<< HEAD
             'Recipient' => RepositoryFactory::class,
             'Partner' => RepositoryFactory::class,
+=======
+            'DocTemplate' => RepositoryFactory::class,
+>>>>>>> 21aa69c... Letter gen
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
