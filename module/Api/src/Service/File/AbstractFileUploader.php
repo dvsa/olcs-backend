@@ -67,7 +67,8 @@ abstract class AbstractFileUploader implements FileUploaderInterface, ServiceLoc
     public function getConfig()
     {
         if ($this->config === null) {
-            $this->config = $this->getServiceLocator()->get('Config');
+            $config = $this->getServiceLocator()->get('Config');
+            $this->config = $config['file_uploader']['config'];
         }
 
         return $this->config;
