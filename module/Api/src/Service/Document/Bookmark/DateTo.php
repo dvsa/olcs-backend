@@ -26,12 +26,21 @@ class DateTo extends DynamicBookmark
 
     public function render()
     {
-        if (isset($this->data[1]['interimStatus']['id']) &&
-            $this->data[1]['interimStatus']['id'] == Application::INTERIM_STATUS_INFORCE) {
-            $dateFrom = date('d/m/Y', strtotime($this->data[1]['interimEnd']));
-        } else {
-            $dateFrom = date("d/m/Y", strtotime($this->data[0]['licence']['expiryDate']));
+        if (isset($this->data[1]['interimStatus']['id'])
+            && $this->data[1]['interimStatus']['id'] == Application::INTERIM_STATUS_INFORCE
+        ) {
+
+            if ($this->data[1]['interimEnd'] === null) {
+                return null;
+            }
+
+            return $this->data[1]['interimEnd']->format('d/m/Y');
         }
-        return $dateFrom;
+
+        if ($this->data[0]['licence']['expiryDate'] === null) {
+            return null;
+        }
+
+        return $this->data[0]['licence']['expiryDate']->format('d/m/Y');
     }
 }
