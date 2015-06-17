@@ -12,7 +12,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndUploadDocument as GenerateAndUploadDocumentCommand;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\EnqueueFile as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\PrintSchedulerInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
@@ -48,10 +47,8 @@ final class GenerateBatch extends AbstractCommandHandler implements
             $query = [
                 'licence' => $licenceId,
                 'communityLic' => $id,
+                'application' => $identifier
             ];
-            if ($identifier) {
-                $query['application'] = $identifier;
-            }
 
             $documentGenerator = $this->getDocumentGenerator();
 
@@ -65,7 +62,7 @@ final class GenerateBatch extends AbstractCommandHandler implements
                     'jobName' => 'Community Licence'
                 ]
             );
-            $printQueueResult = $this->getCommandHandler()->handleCommand($printQueue);
+            $printQueueResult = $this->handleSideEffect($printQueue);
             $result->merge($printQueueResult);
 
             $result->addMessage("Community Licence {$id} processed");
