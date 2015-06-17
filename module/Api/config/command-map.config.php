@@ -43,6 +43,11 @@ return [
     TransferCommand\Processing\Note\Update::class => CommandHandler\Processing\Note\Update::class,
     TransferCommand\Processing\Note\Delete::class => CommandHandler\Processing\Note\Delete::class,
 
+    // Non Pi
+    TransferCommand\Cases\NonPi\Create::class => CommandHandler\Cases\NonPi\Create::class,
+    TransferCommand\Cases\NonPi\Update::class => CommandHandler\Cases\NonPi\Update::class,
+    TransferCommand\Cases\NonPi\Delete::class => CommandHandler\Cases\NonPi\Delete::class,
+
     // Transfer - Bus
     TransferCommand\Bus\UpdateStops::class => CommandHandler\Bus\UpdateStops::class,
     TransferCommand\Bus\UpdateQualitySchemes::class => CommandHandler\Bus\UpdateQualitySchemes::class,
@@ -57,6 +62,9 @@ return [
     TransferCommand\Licence\CreateCompanySubsidiary::class => CommandHandler\Licence\CreateCompanySubsidiary::class,
     TransferCommand\Licence\DeleteCompanySubsidiary::class => CommandHandler\Licence\DeleteCompanySubsidiary::class,
     TransferCommand\Licence\UpdateSafety::class => CommandHandler\Licence\UpdateSafety::class,
+    Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
+    Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
+    Command\Licence\Suspend::class => CommandHandler\Licence\Suspend::class,
 
     // Transfer - Variation
     TransferCommand\Variation\UpdateTypeOfLicence::class => CommandHandler\Variation\UpdateTypeOfLicence::class,
@@ -157,6 +165,11 @@ return [
     TransferCommand\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class =>
         CommandHandler\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
 
+    // Transfer - Document
+    TransferCommand\Document\CreateLetter::class => CommandHandler\Document\CreateLetter::class,
+    TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
+    TransferCommand\Document\DeleteDocument::class => CommandHandler\Document\DeleteDocument::class,
+
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
     Command\Application\ResetApplication::class => CommandHandler\Application\ResetApplication::class,
@@ -231,4 +244,11 @@ return [
 
     // Domain - PrintScheduler
     Command\PrintScheduler\EnqueueFile::class => CommandHandler\PrintScheduler\EnqueueFile::class,
+
+    // Domain - LicenceStatusRule
+    Command\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class
+        => CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class,
+    Command\LicenceStatusRule\ProcessToValid::class
+        => CommandHandler\LicenceStatusRule\ProcessToValid::class,
+
 ];

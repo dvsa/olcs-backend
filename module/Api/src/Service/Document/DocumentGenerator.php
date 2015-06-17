@@ -11,6 +11,7 @@ namespace Dvsa\Olcs\Api\Service\Document;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\Bookmark;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
+use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
@@ -44,6 +45,13 @@ class DocumentGenerator implements ServiceLocatorAwareInterface
      */
     public function generateFromTemplate($template, $queryData = [], $knownValues = [])
     {
+        $template = '/templates/' . $template . '.rtf';
+
+        return $this->generateFromTemplateIdentifier($template, $queryData, $knownValues);
+    }
+
+    public function generateFromTemplateIdentifier($template, $queryData = [], $knownValues = [])
+    {
         /** @var Document $documentService */
         $documentService = $this->getServiceLocator()->get('Document');
 
@@ -70,21 +78,18 @@ class DocumentGenerator implements ServiceLocatorAwareInterface
         return $documentService->populateBookmarks($file, $result);
     }
 
-    public function uploadGeneratedContent($content, $folder, $filename)
+    public function uploadGeneratedContent($content, $folder, $meta = null)
     {
+        /** @var ContentStoreFileUploader $uploader */
         $uploader = $this->getServiceLocator()->get('FileUploader');
-        $uploader->setFile(['content' => $content]);
 
-        /*
-         * @NOTE: setting the filepath of the identifier conflicts
-         * with the need to store files uniquely (which the uploader
-         * will otherwise take care of). As per discussions 13/02/15
-         * we've agreed not to set "friendly" file paths and that
-         * a separate task is needed to identify a solution
-        $filePath = $this->getServiceLocator()
-            ->get('Helper\Date')
-            ->getDate('YmdHi') . '_' . $filename . '.rtf';
-         */
+        $file = ['content' => $content];
+
+        if ($meta !== null) {
+            $file['meta'] = $meta;
+        }
+
+        $uploader->setFile($file);
 
         return $uploader->upload($folder);
     }
@@ -140,7 +145,7 @@ class DocumentGenerator implements ServiceLocatorAwareInterface
 
             $this->templateCache[$template] = $this->getServiceLocator()
                 ->get('ContentStore')
-                ->read('/templates/' . $template . '.rtf');
+                ->read($template);
         }
 
         return $this->templateCache[$template];

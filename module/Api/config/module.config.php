@@ -3,6 +3,8 @@
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory;
 use Dvsa\Olcs\Api\Domain\QueryPartial;
 use Dvsa\Olcs\Api\Domain\Util;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark as BookmarkQuery;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark as BookmarkQueryHandler;
 
 return [
     'router' => [
@@ -31,6 +33,13 @@ return [
             'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperService::class,
         ],
     ],
+    'file_uploader' => array(
+        'default' => 'ContentStore',
+        'config' => array(
+            'location' => 'documents',
+            'defaultPath' => '[locale]/[doc_type_name]/[year]/[month]', // e.g. gb/publications/2015/03
+        )
+    ),
     'controller_plugins' => [
         'invokables' => [
             'response' => \Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response::class,
@@ -81,6 +90,7 @@ return [
             'Fee' => RepositoryFactory::class,
             'Cases' => RepositoryFactory::class,
             'Pi' => \Dvsa\Olcs\Api\Domain\Repository\PiFactory::class,
+            'NonPi' => RepositoryFactory::class,
             'EventHistory' => RepositoryFactory::class,
             'PublicHoliday' => RepositoryFactory::class,
             'Sla' => RepositoryFactory::class,
@@ -124,6 +134,9 @@ return [
             'PiHearing' => RepositoryFactory::class,
             'Recipient' => RepositoryFactory::class,
             'Partner' => RepositoryFactory::class,
+            'Document' => RepositoryFactory::class,
+            'DocTemplate' => RepositoryFactory::class,
+            'LicenceStatusRule' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

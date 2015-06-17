@@ -80,6 +80,10 @@ return [
     TransferQuery\Cases\Conviction\Conviction::class => QueryHandler\Cases\Conviction\Conviction::class,
     TransferQuery\Cases\Conviction\ConvictionList::class => QueryHandler\Cases\Conviction\ConvictionList::class,
 
+    // NonPi
+    TransferQuery\Cases\NonPi\Single::class => QueryHandler\Cases\NonPi\Single::class,
+    TransferQuery\Cases\NonPi\Listing::class => QueryHandler\Cases\NonPi\Listing::class,
+
     // Prohibition
     TransferQuery\Cases\Prohibition\Prohibition::class => QueryHandler\Cases\Prohibition\Prohibition::class,
     TransferQuery\Cases\Prohibition\ProhibitionList::class
