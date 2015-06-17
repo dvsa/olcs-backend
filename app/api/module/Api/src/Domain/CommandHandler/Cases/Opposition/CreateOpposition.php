@@ -69,6 +69,7 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
      */
     private function getLicenceObject(Cmd $command)
     {
+        /** @var $case Cases */
         $case = $this->getRepo('Cases')->fetchById($command->getCase(), Query::HYDRATE_OBJECT);
         return $case->getLicence();
     }
@@ -78,22 +79,9 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
         return ContactDetails::create(
             $this->getRepo()->getRefdataReference(ContactDetails::CONTACT_TYPE_OBJECTOR),
             $this->getRepo('ContactDetails')->populateRefDataReference(
-                $this->getObjectorContactDetails($command)
+                $command->getOpposerContactDetails()
             )
         );
-    }
-
-    private function getObjectorContactDetails(Cmd $command)
-    {
-        $objectorContactDetails['emailAddress'] = $command->getEmailAddress();
-
-        $objectorContactDetails['address'] = $this->createAddressArray($command);
-
-        $objectorContactDetails['person'] = $this->createPersonArray($command);
-
-        $objectorContactDetails['phoneContacts'] = $this->createPhoneContactsArray($command);
-
-        return $objectorContactDetails;
     }
 
     /**
@@ -204,63 +192,5 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
         }
 
         return $collection;
-    }
-
-    /**
-     * Create person array
-     * @param Cmd $command
-     * @return Person|null
-     */
-    private function createPersonArray(Cmd $command)
-    {
-        if (!empty($command->getForename()) || !empty($command->getForename())) {
-            $person = [];
-            $person['forename'] = $command->getForename();
-            $person['familyName'] = $command->getFamilyName();
-            return $person;
-        }
-        return null;
-    }
-
-    /**
-     * Create address array
-     * @param Cmd $command
-     * @return Address|null
-     */
-    private function createAddressArray(Cmd $command)
-    {
-        if (!empty($command->getOpposerAddress()['addressLine1']) ||
-            !empty($command->getOpposerAddress()['addressLine2']) ||
-            !empty($command->getOpposerAddress()['addressLine3']) ||
-            !empty($command->getOpposerAddress()['addressLine4']) ||
-            !empty($command->getOpposerAddress()['town']) ||
-            !empty($command->getOpposerAddress()['postcode']) ||
-            !empty($command->getOpposerAddress()['countryCode'])
-        ) {
-            return $command->getOpposerAddress();
-        }
-        return null;
-    }
-
-    /**
-     * Generates an array of phone contact details
-     *
-     * @param Cmd $command
-     * @return ArrayCollection|null
-     */
-    private function createPhoneContactsArray(Cmd $command)
-    {
-        $phoneContacts = [];
-        if (!is_null($command->getPhone()))
-        {
-            $phoneContact = [];
-            $phoneContact['phoneContactType'] = PhoneContact::PHONE_CONTACT_TYPE_TEL;
-            $phoneContact['phoneNumber'] = $command->getPhone();
-
-            $phoneContacts[] = $phoneContact;
-            return $phoneContacts;
-        }
-
-        return null;
     }
 }

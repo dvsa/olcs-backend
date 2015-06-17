@@ -33,13 +33,29 @@ class Opposer extends AbstractOpposer
     {
         $this->setContactDetails($contactDetails);
 
+        $this->checkObjectionOpposerType($opposerType, $oppositionType);
+
+        $this->setOpposerType($opposerType);
+    }
+
+    private function checkObjectionOpposerType($opposerType, $oppositionType)
+    {
         if ((!is_null($oppositionType) &&
-            ($oppositionType->getId() == Opposition::OPPOSITION_TYPE_ENV)) &&
+                ($oppositionType->getId() == Opposition::OPPOSITION_TYPE_ENV)) &&
             (empty($opposerType->getId()))
         ) {
             throw new InvalidArgumentException('Environmental objections must specify a type of opposer');
         }
-
-        $this->setOpposerType($opposerType);
     }
+
+    /**
+     * @param array $opposerParams Array of data
+     */
+    public function update(array $opposerParams)
+    {
+        $this->checkObjectionOpposerType($opposerParams['opposerType'], $opposerParams['oppositionType']);
+
+        $this->setOpposerType($opposerParams['opposerType']);
+    }
+
 }
