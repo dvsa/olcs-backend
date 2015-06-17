@@ -31,6 +31,13 @@ return [
             'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperService::class,
         ],
     ],
+    'file_uploader' => array(
+        'default' => 'ContentStore',
+        'config' => array(
+            'location' => 'documents',
+            'defaultPath' => '[locale]/[doc_type_name]/[year]/[month]', // e.g. gb/publications/2015/03
+        )
+    ),
     'controller_plugins' => [
         'invokables' => [
             'response' => \Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response::class,
@@ -121,6 +128,7 @@ return [
             'PiHearing' => RepositoryFactory::class,
             'Recipient' => RepositoryFactory::class,
             'Partner' => RepositoryFactory::class,
+            'Document' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
