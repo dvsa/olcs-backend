@@ -284,6 +284,8 @@ return [
 
     // Transfer - Scan
     TransferCommand\Scan\CreateSeparatorSheet::class  => CommandHandler\Scan\CreateSeparatorSheet::class,
+    TransferCommand\Scan\CreateContinuationSeparatorSheet::class  =>
+        CommandHandler\Scan\CreateContinuationSeparatorSheet::class,
 
     // Domain - PrintScheduler
     Command\PrintScheduler\Enqueue::class  => CommandHandler\PrintScheduler\Enqueue::class,

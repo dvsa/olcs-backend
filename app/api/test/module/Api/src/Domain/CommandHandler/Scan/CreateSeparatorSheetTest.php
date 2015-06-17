@@ -29,6 +29,11 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->mockRepo('SubCategory', \Dvsa\Olcs\Api\Domain\Repository\SubCategory::class);
         $this->mockRepo('SubCategoryDescription', \Dvsa\Olcs\Api\Domain\Repository\SubCategoryDescription::class);
 
+        $this->mockDocGen = m::mock(\Dvsa\Olcs\Api\Service\Document\DocumentGenerator::class);
+        $this->mockedSmServices = [
+            'DocumentGenerator' => $this->mockDocGen
+        ];
+
         parent::setUp();
     }
 
@@ -134,6 +139,37 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->repoMap['Category']->shouldReceive('fetchById')->with(9)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(234)->once()->andReturn($subCategory);
 
+        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
+            'Scanning_SeparatorSheet',
+            [],
+            [
+                'DOC_CATEGORY_ID_SCAN'       => 9,
+                'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
+                'LICENCE_NUMBER_SCAN'        => 'LIC001',
+                'LICENCE_NUMBER_REPEAT_SCAN' => 'LIC001',
+                'ENTITY_ID_TYPE_SCAN'        => 'Licence',
+                'ENTITY_ID_SCAN'             => 32,
+                'ENTITY_ID_REPEAT_SCAN'      => 32,
+                'DOC_SUBCATEGORY_ID_SCAN'    => 234,
+                'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
+                'DOC_DESCRIPTION_ID_SCAN'    => 74,
+                'DOC_DESCRIPTION_NAME_SCAN'  => 'DESCRIPTION',
+            ]
+        )->once()->andReturn('CONTENT');
+        $file = new \Dvsa\Olcs\Api\Service\File\File();
+        $file->setIdentifier('ABCDEFG');
+        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents')->once()
+            ->andReturn($file);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
+            [
+                'fileIdentifier' => 'ABCDEFG',
+                'jobName' => 'Scanning Separator Sheet'
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['scan' => 74], $result->getIds());
@@ -178,6 +214,37 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $this->repoMap['Category']->shouldReceive('fetchById')->with(9)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(234)->once()->andReturn($subCategory);
+
+        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
+            'Scanning_SeparatorSheet',
+            [],
+            [
+                'DOC_CATEGORY_ID_SCAN'       => 9,
+                'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
+                'LICENCE_NUMBER_SCAN'        => 'LIC001',
+                'LICENCE_NUMBER_REPEAT_SCAN' => 'LIC001',
+                'ENTITY_ID_TYPE_SCAN'        => 'Licence',
+                'ENTITY_ID_SCAN'             => 32,
+                'ENTITY_ID_REPEAT_SCAN'      => 32,
+                'DOC_SUBCATEGORY_ID_SCAN'    => 234,
+                'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
+                'DOC_DESCRIPTION_ID_SCAN'    => 74,
+                'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
+            ]
+        )->once()->andReturn('CONTENT');
+        $file = new \Dvsa\Olcs\Api\Service\File\File();
+        $file->setIdentifier('ABCDEFG');
+        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents')->once()
+            ->andReturn($file);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
+            [
+                'fileIdentifier' => 'ABCDEFG',
+                'jobName' => 'Scanning Separator Sheet'
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 
@@ -224,6 +291,37 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->repoMap['Category']->shouldReceive('fetchById')->with(1)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(92)->once()->andReturn($subCategory);
 
+        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
+            'Scanning_SeparatorSheet',
+            [],
+            [
+                'DOC_CATEGORY_ID_SCAN'       => 1,
+                'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
+                'LICENCE_NUMBER_SCAN'        => 'LIC001',
+                'LICENCE_NUMBER_REPEAT_SCAN' => 'LIC001',
+                'ENTITY_ID_TYPE_SCAN'        => 'Licence',
+                'ENTITY_ID_SCAN'             => 32,
+                'ENTITY_ID_REPEAT_SCAN'      => 32,
+                'DOC_SUBCATEGORY_ID_SCAN'    => 92,
+                'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
+                'DOC_DESCRIPTION_ID_SCAN'    => 74,
+                'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
+            ]
+        )->once()->andReturn('CONTENT');
+        $file = new \Dvsa\Olcs\Api\Service\File\File();
+        $file->setIdentifier('ABCDEFG');
+        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents')->once()
+            ->andReturn($file);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
+            [
+                'fileIdentifier' => 'ABCDEFG',
+                'jobName' => 'Scanning Separator Sheet'
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['scan' => 74], $result->getIds());
@@ -269,6 +367,37 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->repoMap['Category']->shouldReceive('fetchById')->with(7)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(92)->once()->andReturn($subCategory);
 
+        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
+            'Scanning_SeparatorSheet',
+            [],
+            [
+                'DOC_CATEGORY_ID_SCAN'       => 7,
+                'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
+                'LICENCE_NUMBER_SCAN'        => 'LIC001',
+                'LICENCE_NUMBER_REPEAT_SCAN' => 'LIC001',
+                'ENTITY_ID_TYPE_SCAN'        => 'Licence',
+                'ENTITY_ID_SCAN'             => 32,
+                'ENTITY_ID_REPEAT_SCAN'      => 32,
+                'DOC_SUBCATEGORY_ID_SCAN'    => 92,
+                'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
+                'DOC_DESCRIPTION_ID_SCAN'    => 74,
+                'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
+            ]
+        )->once()->andReturn('CONTENT');
+        $file = new \Dvsa\Olcs\Api\Service\File\File();
+        $file->setIdentifier('ABCDEFG');
+        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents')->once()
+            ->andReturn($file);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
+            [
+                'fileIdentifier' => 'ABCDEFG',
+                'jobName' => 'Scanning Separator Sheet'
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['scan' => 74], $result->getIds());
@@ -292,6 +421,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $licence->setLicNo('LIC001');
 
         $cases = new \Dvsa\Olcs\Api\Entity\Cases\Cases();
+        $cases->setId(35);
         $cases->setLicence($licence);
         $cases->setTransportManager('TM');
 
@@ -320,6 +450,37 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->repoMap['Category']->shouldReceive('fetchById')->with(2)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(92)->once()->andReturn($subCategory);
 
+        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
+            'Scanning_SeparatorSheet',
+            [],
+            [
+                'DOC_CATEGORY_ID_SCAN'       => 2,
+                'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
+                'LICENCE_NUMBER_SCAN'        => 'LIC001',
+                'LICENCE_NUMBER_REPEAT_SCAN' => 'LIC001',
+                'ENTITY_ID_TYPE_SCAN'        => 'Case',
+                'ENTITY_ID_SCAN'             => 35,
+                'ENTITY_ID_REPEAT_SCAN'      => 35,
+                'DOC_SUBCATEGORY_ID_SCAN'    => 92,
+                'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
+                'DOC_DESCRIPTION_ID_SCAN'    => 74,
+                'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
+            ]
+        )->once()->andReturn('CONTENT');
+        $file = new \Dvsa\Olcs\Api\Service\File\File();
+        $file->setIdentifier('ABCDEFG');
+        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents')->once()
+            ->andReturn($file);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
+            [
+                'fileIdentifier' => 'ABCDEFG',
+                'jobName' => 'Scanning Separator Sheet'
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['scan' => 74], $result->getIds());
@@ -343,6 +504,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $licence->setLicNo('LIC001');
 
         $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setId(767);
 
         $category = new \Dvsa\Olcs\Api\Entity\System\Category();
         $category->setDescription('CAT_NAME');
@@ -367,6 +529,37 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->repoMap['Category']->shouldReceive('fetchById')->with(8)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(92)->once()->andReturn($subCategory);
 
+        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
+            'Scanning_SeparatorSheet',
+            [],
+            [
+                'DOC_CATEGORY_ID_SCAN'       => 8,
+                'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
+                'LICENCE_NUMBER_SCAN'        => 'Unknown',
+                'LICENCE_NUMBER_REPEAT_SCAN' => 'Unknown',
+                'ENTITY_ID_TYPE_SCAN'        => 'IRFO',
+                'ENTITY_ID_SCAN'             => 767,
+                'ENTITY_ID_REPEAT_SCAN'      => 767,
+                'DOC_SUBCATEGORY_ID_SCAN'    => 92,
+                'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
+                'DOC_DESCRIPTION_ID_SCAN'    => 74,
+                'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
+            ]
+        )->once()->andReturn('CONTENT');
+        $file = new \Dvsa\Olcs\Api\Service\File\File();
+        $file->setIdentifier('ABCDEFG');
+        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents')->once()
+            ->andReturn($file);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
+            [
+                'fileIdentifier' => 'ABCDEFG',
+                'jobName' => 'Scanning Separator Sheet'
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['scan' => 74], $result->getIds());
@@ -385,11 +578,8 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
             ]
         );
 
-        $licence = m::mock(Licence::class)->makePartial();
-        $licence->setId(32);
-        $licence->setLicNo('LIC001');
-
         $tm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
+        $tm->setId(545);
 
         $category = new \Dvsa\Olcs\Api\Entity\System\Category();
         $category->setDescription('CAT_NAME');
@@ -413,6 +603,37 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $this->repoMap['Category']->shouldReceive('fetchById')->with(5)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(92)->once()->andReturn($subCategory);
+
+        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
+            'Scanning_SeparatorSheet',
+            [],
+            [
+                'DOC_CATEGORY_ID_SCAN'       => 5,
+                'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
+                'LICENCE_NUMBER_SCAN'        => 'Unknown',
+                'LICENCE_NUMBER_REPEAT_SCAN' => 'Unknown',
+                'ENTITY_ID_TYPE_SCAN'        => 'Transport Manager',
+                'ENTITY_ID_SCAN'             => 545,
+                'ENTITY_ID_REPEAT_SCAN'      => 545,
+                'DOC_SUBCATEGORY_ID_SCAN'    => 92,
+                'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
+                'DOC_DESCRIPTION_ID_SCAN'    => 74,
+                'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
+            ]
+        )->once()->andReturn('CONTENT');
+        $file = new \Dvsa\Olcs\Api\Service\File\File();
+        $file->setIdentifier('ABCDEFG');
+        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents')->once()
+            ->andReturn($file);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
+            [
+                'fileIdentifier' => 'ABCDEFG',
+                'jobName' => 'Scanning Separator Sheet'
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 
@@ -447,6 +668,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $busReg = new \Dvsa\Olcs\Api\Entity\Bus\BusReg();
         $busReg->setLicence($licence);
+        $busReg->setId(88);
 
         $this->repoMap['BusRegSearchView']->shouldReceive('fetchByRegNo')->with('entityIdentifier')->once()
             ->andReturn($busRegSearchView);
@@ -466,6 +688,37 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $this->repoMap['Category']->shouldReceive('fetchById')->with(3)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(92)->once()->andReturn($subCategory);
+
+        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
+            'Scanning_SeparatorSheet',
+            [],
+            [
+                'DOC_CATEGORY_ID_SCAN'       => 3,
+                'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
+                'LICENCE_NUMBER_SCAN'        => 'LIC001',
+                'LICENCE_NUMBER_REPEAT_SCAN' => 'LIC001',
+                'ENTITY_ID_TYPE_SCAN'        => 'Bus Route',
+                'ENTITY_ID_SCAN'             => 88,
+                'ENTITY_ID_REPEAT_SCAN'      => 88,
+                'DOC_SUBCATEGORY_ID_SCAN'    => 92,
+                'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
+                'DOC_DESCRIPTION_ID_SCAN'    => 74,
+                'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
+            ]
+        )->once()->andReturn('CONTENT');
+        $file = new \Dvsa\Olcs\Api\Service\File\File();
+        $file->setIdentifier('ABCDEFG');
+        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents')->once()
+            ->andReturn($file);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
+            [
+                'fileIdentifier' => 'ABCDEFG',
+                'jobName' => 'Scanning Separator Sheet'
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 

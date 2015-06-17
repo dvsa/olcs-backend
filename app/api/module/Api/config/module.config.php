@@ -150,8 +150,6 @@ return [
             'SubCategoryDescription' => RepositoryFactory::class,
             'Scan' => RepositoryFactory::class,
             'BusRegSearchView' => RepositoryFactory::class,
-            'TransportManager' => RepositoryFactory::class,
-            'Document' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
