@@ -52,7 +52,7 @@ class BusReg extends AbstractBusReg
      */
     public function canEdit()
     {
-        if ($this->isLatestVariation() && !$this->isFromEbsr()) {
+        if (!$this->isFromEbsr() && $this->isLatestVariation()) {
             return true;
         }
 
