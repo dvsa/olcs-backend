@@ -10,7 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCommand;
+use Dvsa\Olcs\Transfer\Command\Document\CreateDocument as CreateDocumentCommand;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
@@ -39,7 +39,6 @@ final class EnqueueFile extends AbstractCommandHandler
             'subCategory'   => CategoryEntity::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
             'isExternal'    => false,
             'isReadOnly'    => true,
-            'issuedDate'    => new DateTime('now'),
             // @TODO need to implement
             // $file->getSize()
             'size'          => 1000 // hard coded
