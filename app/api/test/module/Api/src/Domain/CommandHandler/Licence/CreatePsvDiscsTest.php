@@ -8,12 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\PsvDisc;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreatePsvDiscs;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs as Cmd;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\Licence\PsvDisc as PsvDiscEntity;
 
 /**
  * Create Psv Discs Test
@@ -36,11 +38,76 @@ class CreatePsvDiscsTest extends CommandHandlerTestCase
 
         ];
 
+        $this->references = [
+            LicenceEntity::class => [
+                111 => m::mock(LicenceEntity::class)
+            ]
+        ];
+
         parent::initReferences();
+    }
+
+    public function testHandleCommandFailedValidation()
+    {
+        $data = [
+            'licence' => 111,
+            'amount' => 6
+        ];
+
+        $command = Cmd::create($data);
+
+        /** @var LicenceEntity $licence */
+        $licence = $this->references[LicenceEntity::class][111];
+        $licence->setTotAuthVehicles(10);
+
+        $licence->shouldReceive('getPsvDiscs->matching->count')
+            ->andReturn(5);
+
+        $this->setExpectedException(ValidationException::class);
+
+        $this->sut->handleCommand($command);
     }
 
     public function testHandleCommand()
     {
-        $this->assertTrue(true);
+        $data = [
+            'licence' => 111,
+            'amount' => 2
+        ];
+
+        $command = Cmd::create($data);
+
+        /** @var LicenceEntity $licence */
+        $licence = $this->references[LicenceEntity::class][111];
+        $licence->setTotAuthVehicles(10);
+
+        $licence->shouldReceive('getPsvDiscs->matching->count')
+            ->andReturn(5);
+
+        $i = 0;
+
+        $this->repoMap['PsvDisc']->shouldReceive('save')
+            ->with(m::type(PsvDiscEntity::class))
+            ->andReturnUsing(
+                function (PsvDiscEntity $disc) use (&$i, $licence) {
+                    $disc->setId(++$i);
+
+                    $this->assertEquals('N', $disc->getIsCopy());
+                    $this->assertSame($licence, $disc->getLicence());
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'psvDiscs' => [1, 2]
+            ],
+            'messages' => [
+                '2 PSV Disc(s) created'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
     }
 }
