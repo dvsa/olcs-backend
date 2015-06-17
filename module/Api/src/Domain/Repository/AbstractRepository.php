@@ -11,18 +11,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Doctrine\ORM\Query;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
-use Doctrine\ORM\OptimisticLockException;
 use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
 use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * Abstract Repository
@@ -104,7 +104,7 @@ abstract class AbstractRepository implements RepositoryInterface
         $query = $qb->getQuery();
         $query->setHydrationMode($hydrateMode);
 
-        $paginator = new Paginator($query);
+        $paginator = $this->getPaginator($query);
         return $paginator->getIterator($hydrateMode);
     }
 
@@ -122,7 +122,7 @@ abstract class AbstractRepository implements RepositoryInterface
 
         $query = $qb->getQuery();
 
-        $paginator = new Paginator($query);
+        $paginator = $this->getPaginator($query);
         return $paginator->count();
     }
 
@@ -265,5 +265,13 @@ abstract class AbstractRepository implements RepositoryInterface
         if ($query instanceof OrderedQueryInterface) {
             $queryBuilderHelper->order($query->getSort(), $query->getOrder());
         }
+    }
+
+    /**
+     * Wrap paginator instantiation, mainly for unit testing
+     */
+    protected function getPaginator($query)
+    {
+        return new Paginator($query);
     }
 }

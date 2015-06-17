@@ -16,6 +16,7 @@ use Doctrine\DBAL\LockMode;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Query\Fee\FeeList as FeeListQry;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
@@ -33,7 +34,7 @@ class FeeTest extends RepositoryTestCase
 {
     public function setUp()
     {
-        $this->setUpSut(FeeRepo::class);
+        $this->setUpSut(FeeRepo::class, true);
     }
 
     private function setupFetchInterimFeesByApplicationId($mockQb, $applicationId)
@@ -129,6 +130,119 @@ class FeeTest extends RepositoryTestCase
         $this->assertSame(
             'result',
             $this->sut->fetchOutstandingFeesByOrganisationId($organisationId)
+        );
+    }
+
+    public function testFetchOutstandingFeesByIds()
+    {
+        $ids = [1, 2, 3];
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($mockQb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->with('invoicedDate', 'ASC')
+            ->once()
+            ->andReturnSelf();
+
+        $this->mockWhereOutstandingFee($mockQb);
+
+        $mockQb
+            ->shouldReceive('expr->eq');
+        $mockQb
+            ->shouldReceive('expr->in');
+        $mockQb
+            ->shouldReceive('andWhere')
+            ->andReturnSelf();
+        $mockQb
+            ->shouldReceive('setParameter')
+            ->with('feeIds', $ids)
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
+
+        $this->assertSame(
+            'result',
+            $this->sut->fetchOutstandingFeesByIds($ids)
+        );
+    }
+
+    public function testFetchList()
+    {
+        // $this->markTestSkipped('\Doctrine\ORM\Query is final so can\'t mock paginator');
+
+        $query = FeeListQry::create(
+            [
+                'application' => 11,
+                'licence' => 12,
+                'task' => 13,
+                'busReg' => 14,
+                'irfoGvPermit' => 15,
+                'page' => 1,
+                'limit' => 10,
+                'sort' => 'id',
+                'order' => 'ASC',
+            ]
+        );
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+         $this->queryBuilder->shouldReceive('modifyQuery')
+            ->with($mockQb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('paginate')
+            ->once()
+            ->with(1, 10)
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->once()
+            ->with('id', 'ASC')
+            ->andReturnSelf()
+            ->shouldReceive('withCreatedBy')
+            ->once()
+            ->andReturnSelf();
+
+        // we *could* assert all the conditions here, but just stub the methods // for now
+        $mockQb
+            ->shouldReceive('andWhere')
+            ->shouldReceive('setParameter');
+
+        // mock pagination
+        $mockQuery = m::mock();
+        $mockQb->shouldReceive('getQuery')->andReturn($mockQuery);
+        $mockQuery->shouldReceive('setHydrationMode');
+        $paginator = m::mock();
+        $this->sut->shouldReceive('getPaginator')->andReturn($paginator);
+        $paginator->shouldReceive('getIterator')->andReturn('result');
+
+        $this->assertSame(
+            'result',
+            $this->sut->fetchList($query)
         );
     }
 
