@@ -33,7 +33,7 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
 
         $sl = m::mock(ServiceManager::class)->makePartial();
         $sl->setService('ContentStore', $this->contentStoreMock);
-        $sl->setService('Config', ['location' => 'test']);
+        $sl->setService('Config', ['file_uploader' => ['config' => ['location' => 'test']]]);
 
         $this->uploader->setServiceLocator($sl);
     }
