@@ -208,7 +208,9 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
      * @ORM\OneToMany(
      *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact",
      *     mappedBy="contactDetails",
-     *     cascade={"persist"}
+     *     cascade={"persist"},
+     *     indexBy="id",
+     *     orphanRemoval=true
      * )
      */
     protected $phoneContacts;

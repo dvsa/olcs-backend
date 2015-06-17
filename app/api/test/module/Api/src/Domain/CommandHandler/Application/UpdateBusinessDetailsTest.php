@@ -90,42 +90,4 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
-
-    public function testHandleCommandWithoutChange()
-    {
-        $data = [
-            'id' => 111,
-            'licence' => 222,
-            'version' => 1
-        ];
-
-        $command = Cmd::create($data);
-
-        $licenceCmdData = [
-            'id' => 222,
-            'version' => 1,
-            'name' => null,
-            'natureOfBusinesses' => null,
-            'companyOrLlpNo' => null,
-            'registeredAddress' => null,
-            'tradingNames' => null
-        ];
-
-        $result1 = new Result();
-        $result1->addMessage('Business Details unchanged');
-        $result1->setFlag('hasChanged', false);
-
-        $this->expectedSideEffect(LicenceCmd::class, $licenceCmdData, $result1);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [],
-            'messages' => [
-                'Business Details unchanged'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-    }
 }

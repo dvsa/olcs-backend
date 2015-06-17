@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateVariationCompletion as VariationCommand;
 
 /**
  * Update Application Completion
@@ -53,12 +54,10 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
         /* @var $application Application  */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
-        // if Varaition then run UpdateVariationCompletion command
+        // if Variation then run UpdateVariationCompletion command
         if ($application->getIsVariation()) {
             return $this->getCommandHandler()->handleCommand(
-                \Dvsa\Olcs\Api\Domain\Command\Application\UpdateVariationCompletion::create(
-                    ['id' => $command->getId(), 'section' => $command->getSection()]
-                )
+                VariationCommand::create(['id' => $command->getId(), 'section' => $command->getSection()])
             );
         }
 

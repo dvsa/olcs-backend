@@ -34,7 +34,12 @@ return array(
         ),
         'allow_email' => array(
             'type' => 'yesno'
-        )
+        ),
+        'irfo_contact_details_id' => array(
+            'cascade' => array(
+                'persist'
+            )
+        ),
     ),
     'organisation_nature_of_business' => array(
         'organisation_id' => array(
@@ -96,15 +101,6 @@ return array(
         ),
         'written_permission_to_engage' => array(
             'type' => 'yesno'
-        ),
-        'phone_contacts' => array(
-            'cascade' => array(
-                'persist'
-            ),
-            'inversedBy' => array(
-                'entity' => 'PhoneContact',
-                'property' => 'contactDetails'
-            )
         )
     ),
     'user' => array(
@@ -1407,7 +1403,9 @@ return array(
                 'property' => 'phoneContact',
                 'cascade' => array(
                     'persist'
-                )
+                ),
+                'indexBy' => 'id',
+                'orphanRemoval' => 'true'
             )
         )
     ),
@@ -1437,9 +1435,21 @@ return array(
         'fee_id' => array(
             'inversedBy' => array(
                 'entity' => 'Fee',
-                'property' => 'feePayment'
-            )
-        )
+                'property' => 'feePayment',
+                'cascade' => array(
+                    'persist'
+                ),
+            ),
+        ),
+        'payment_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Payment',
+                'property' => 'feePayment',
+                'cascade' => array(
+                    'persist'
+                ),
+            ),
+        ),
     ),
     'tm_application_oc' => array(
         'transport_manager_application_id' => array(

@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Payment Abstract Entity
@@ -53,6 +55,15 @@ abstract class AbstractPayment implements BundleSerializableInterface, JsonSeria
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      */
     protected $createdOn;
+
+    /**
+     * Gateway url
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="gateway_url", length=255, nullable=true)
+     */
+    protected $gatewayUrl;
 
     /**
      * Guid
@@ -150,6 +161,32 @@ abstract class AbstractPayment implements BundleSerializableInterface, JsonSeria
     protected $version = 1;
 
     /**
+     * Fee payment
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\FeePayment",
+     *     mappedBy="payment",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $feePayments;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
+        $this->feePayments = new ArrayCollection();
+    }
+
+    /**
      * Set the completed date
      *
      * @param \DateTime $completedDate
@@ -216,6 +253,29 @@ abstract class AbstractPayment implements BundleSerializableInterface, JsonSeria
     public function getCreatedOn()
     {
         return $this->createdOn;
+    }
+
+    /**
+     * Set the gateway url
+     *
+     * @param string $gatewayUrl
+     * @return Payment
+     */
+    public function setGatewayUrl($gatewayUrl)
+    {
+        $this->gatewayUrl = $gatewayUrl;
+
+        return $this;
+    }
+
+    /**
+     * Get the gateway url
+     *
+     * @return string
+     */
+    public function getGatewayUrl()
+    {
+        return $this->gatewayUrl;
     }
 
     /**
@@ -446,6 +506,66 @@ abstract class AbstractPayment implements BundleSerializableInterface, JsonSeria
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the fee payment
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $feePayments
+     * @return Payment
+     */
+    public function setFeePayments($feePayments)
+    {
+        $this->feePayments = $feePayments;
+
+        return $this;
+    }
+
+    /**
+     * Get the fee payments
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getFeePayments()
+    {
+        return $this->feePayments;
+    }
+
+    /**
+     * Add a fee payments
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $feePayments
+     * @return Payment
+     */
+    public function addFeePayments($feePayments)
+    {
+        if ($feePayments instanceof ArrayCollection) {
+            $this->feePayments = new ArrayCollection(
+                array_merge(
+                    $this->feePayments->toArray(),
+                    $feePayments->toArray()
+                )
+            );
+        } elseif (!$this->feePayments->contains($feePayments)) {
+            $this->feePayments->add($feePayments);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a fee payments
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $feePayments
+     * @return Payment
+     */
+    public function removeFeePayments($feePayments)
+    {
+        if ($this->feePayments->contains($feePayments)) {
+            $this->feePayments->removeElement($feePayments);
+        }
+
+        return $this;
     }
 
     /**

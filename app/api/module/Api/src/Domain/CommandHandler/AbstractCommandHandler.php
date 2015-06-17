@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
+use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\FactoryInterface;
@@ -55,13 +56,15 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             $this->setAuthService($mainServiceLocator->get(AuthorizationService::class));
         }
 
-        if ($this->repoServiceName === null) {
-            throw new RuntimeException('The repoServiceName property must be define in a CommandHandler');
+        if ($this instanceof DocumentGeneratorAwareInterface) {
+            $this->setDocumentGenerator($mainServiceLocator->get('DocumentGenerator'));
         }
 
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
 
-        $this->extraRepos[] = $this->repoServiceName;
+        if ($this->repoServiceName !== null) {
+            $this->extraRepos[] = $this->repoServiceName;
+        }
 
         $this->commandHandler = $serviceLocator;
 
