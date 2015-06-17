@@ -19,7 +19,10 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_condition_undertaking_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_condition_undertaking_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_condition_undertaking_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_condition_undertaking_lic_condition_variation_id", columns={"lic_condition_variation_id"}),
+ *        @ORM\Index(
+ *            name="ix_condition_undertaking_lic_condition_variation_id",
+ *            columns={"lic_condition_variation_id"}
+ *        ),
  *        @ORM\Index(name="ix_condition_undertaking_approval_user_id", columns={"approval_user_id"})
  *    },
  *    uniqueConstraints={
@@ -29,5 +32,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ConditionUndertaking extends AbstractConditionUndertaking
 {
+    const ATTACHED_TO_LICENCE = 'cat_lic';
+    const ATTACHED_TO_OPERATING_CENTRE = 'cat_oc';
 
+    const ADDED_VIA_CASE = 'cav_case';
+    const ADDED_VIA_LICENCE = 'cav_lic';
+    const ADDED_VIA_APPLICATION = 'cav_app';
+
+    const TYPE_CONDITION = 'cdt_con';
+    const TYPE_UNDERTAKING = 'cdt_und';
 }

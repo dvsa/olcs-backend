@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Irfo;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * IrfoPartner Entity
@@ -21,5 +22,21 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IrfoPartner extends AbstractIrfoPartner
 {
+    public function __construct(Organisation $organisation, $name)
+    {
+        $this->organisation = $organisation;
+        $this->name = $name;
+    }
 
+    /**
+     * Gets calculated values
+     *
+     * @return array
+     */
+    public function getCalculatedValues()
+    {
+        return [
+            'organisation' => null,
+        ];
+    }
 }
