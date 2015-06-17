@@ -30,7 +30,6 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $this->sut = new UpdateVariationCompletion();
         $this->mockRepo('Application', Application::class);
 
-        parent::setUp();
     }
 
     protected function initReferences()
