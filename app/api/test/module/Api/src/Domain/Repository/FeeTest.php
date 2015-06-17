@@ -91,4 +91,106 @@ class FeeTest extends RepositoryTestCase
 
         $this->assertSame('result', $this->sut->fetchInterimFeesByApplicationId(12, true));
     }
+
+    public function testFetchOutstandingFeesByOrganisationId()
+    {
+        $organisationId = 123;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($mockQb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            //->withAnyArgs()
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->with('invoicedDate', 'ASC')
+            ->once()
+            ->andReturnSelf();
+
+        $this->mockWhereOutstandingFee($mockQb);
+
+        $this->mockWhereCurrentLicenceOrApplicationFee($mockQb, $organisationId);
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
+
+        $this->assertSame(
+            'result',
+            $this->sut->fetchOutstandingFeesByOrganisationId($organisationId)
+        );
+    }
+
+    private function mockWhereOutstandingFee($mockQb)
+    {
+        $where = m::mock();
+        $mockQb
+            ->shouldReceive('expr->in')
+            ->with('f.feeStatus', ':feeStatus')
+            ->once()
+            ->andReturn($where);
+
+        $mockQb
+            ->shouldReceive('setParameter')
+            ->with('feeStatus', m::type('array')); // refdata ['lfs_ot', 'lfs_wr']
+        $mockQb
+            ->shouldReceive('andWhere')
+            ->with($where);
+
+        $this->em
+            ->shouldReceive('getReference');
+    }
+
+    private function mockWhereCurrentLicenceOrApplicationFee($mockQb, $organisationId)
+    {
+        $mockQb
+            ->shouldReceive('leftJoin')
+            ->with('f.application', 'a')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('leftJoin')
+            ->with('f.licence', 'l')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('leftJoin')
+            ->with('a.licence', 'al')
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb
+            ->shouldReceive('expr->eq');
+        $mockQb
+            ->shouldReceive('expr->in');
+        $mockQb
+            ->shouldReceive('expr->orX');
+        $mockQb
+            ->shouldReceive('expr->isNotNull');
+        $mockQb
+            ->shouldReceive('andWhere')
+            ->andReturnSelf();
+
+        $mockQb
+            ->shouldReceive('setParameter')
+            ->with('organisationId', $organisationId)
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('appStatus', m::type('array')) // refdata ['apsts_consideration', 'apsts_granted']
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('licStatus', m::type('array')); // refdata ['lsts_valid', 'lsts_curtailed', 'lsts_suspended']
+
+        $this->em
+            ->shouldReceive('getReference');
+    }
 }

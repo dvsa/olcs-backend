@@ -18,5 +18,25 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Payment extends AbstractPayment
 {
+    const STATUS_OUTSTANDING = 'pay_s_os';
+    const STATUS_CANCELLED = 'pay_s_cn';
+    const STATUS_LEGACY = 'pay_s_leg';
+    const STATUS_FAILED = 'pay_s_fail';
+    const STATUS_PAID = 'pay_s_pd';
 
+    /**
+     * @return boolean
+     */
+    public function isOutstanding()
+    {
+        return $this->getStatus()->getId() === self::STATUS_OUTSTANDING;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPaid()
+    {
+        return $this->getStatus()->getId() === self::STATUS_PAID;
+    }
 }

@@ -369,7 +369,11 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Fee\FeePayment", mappedBy="fee")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\FeePayment",
+     *     mappedBy="fee",
+     *     cascade={"persist"}
+     * )
      */
     protected $feePayments;
 

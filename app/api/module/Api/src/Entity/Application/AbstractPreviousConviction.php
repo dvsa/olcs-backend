@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * PreviousConviction Abstract Entity
@@ -13,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="previous_conviction",
  *    indexes={
  *        @ORM\Index(name="ix_previous_conviction_application_id", columns={"application_id"}),
@@ -75,6 +77,15 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
      * @ORM\Column(type="string", name="court_fpn", length=70, nullable=true)
      */
     protected $courtFpn;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
 
     /**
      * Family name
@@ -270,6 +281,29 @@ abstract class AbstractPreviousConviction implements BundleSerializableInterface
     public function getCourtFpn()
     {
         return $this->courtFpn;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return PreviousConviction
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
     }
 
     /**
