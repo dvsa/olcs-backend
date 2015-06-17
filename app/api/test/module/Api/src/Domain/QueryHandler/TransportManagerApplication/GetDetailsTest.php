@@ -62,6 +62,7 @@ class GetDetailsTest extends QueryHandlerTestCase
         $tma->setOtherLicences([$tmaOl]);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchDetails')->with(32)->once()->andReturn($tma);
+        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchWithOperatingCentres')->with(32)->once();
 
         // loadApplicationOperatingCentres
         $this->repoMap['ApplicationOperatingCentre']->shouldReceive('fetchByApplication')->with(53)->once();

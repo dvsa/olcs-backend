@@ -44,6 +44,7 @@ class TransportManagerApplication extends AbstractRepository
      * @param int $tmaId Transport Manager Application ID
      *
      * @return Entity
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      */
     public function fetchDetails($tmaId)
     {
@@ -52,7 +53,6 @@ class TransportManagerApplication extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($dqb)
             ->withRefdata()
             ->with($this->alias .'.application', 'a')
-            ->with($this->alias .'.operatingCentres')
             ->with($this->alias .'.otherLicences', 'ol')
             ->with('ol.role')
             ->with('a.goodsOrPsv', 'gop')
@@ -61,6 +61,34 @@ class TransportManagerApplication extends AbstractRepository
             ->byId($tmaId);
 
         $this->joinTmContactDetails();
+
+        $results = $dqb->getQuery()->getResult();
+
+        if (empty($results)) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\NotFoundException('Resource not found');
+        }
+
+        return $results[0];
+    }
+
+    /**
+     * Fetch TMA with operating centres
+     *
+     * @param int $tmaId
+     *
+     * @return Entity
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
+     */
+    public function fetchWithOperatingCentres($tmaId)
+    {
+        $dqb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($dqb)
+            ->withRefdata()
+            ->with($this->alias .'.operatingCentres', 'oc')
+            ->with('oc.address', 'add')
+            ->with('add.countryCode')
+            ->byId($tmaId);
 
         $results = $dqb->getQuery()->getResult();
 

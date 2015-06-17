@@ -57,7 +57,6 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('tma.application', 'a')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('tma.operatingCentres')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('tma.otherLicences', 'ol')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('ol.role')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('a.goodsOrPsv', 'gop')->once()->andReturnSelf();
@@ -88,7 +87,6 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('tma.application', 'a')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('tma.operatingCentres')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('tma.otherLicences', 'ol')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('ol.role')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('a.goodsOrPsv', 'gop')->once()->andReturnSelf();
@@ -110,5 +108,43 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
 
         $this->sut->fetchDetails(834);
+    }
+
+    public function testFetchWithOperatingCentres()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tma.operatingCentres', 'oc')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('oc.address', 'add')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('add.countryCode')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('byId')->with(834)->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
+
+        $this->assertSame('RESULT', $this->sut->fetchWithOperatingCentres(834));
+    }
+
+    public function testFetchWithOperatingCentresEmpty()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tma.operatingCentres', 'oc')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('oc.address', 'add')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('add.countryCode')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('byId')->with(834)->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn([]);
+
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+
+        $this->assertSame('RESULT', $this->sut->fetchWithOperatingCentres(834));
     }
 }

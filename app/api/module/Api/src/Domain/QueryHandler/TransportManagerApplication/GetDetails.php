@@ -36,6 +36,8 @@ class GetDetails extends AbstractQueryHandler
         /* @var $tma TransportManagerApplication */
         $tma = $this->getRepo()->fetchDetails($query->getId());
 
+        // populate the required associated entities
+        $this->getRepo()->fetchWithOperatingCentres($query->getId());
         $this->getRepo('ApplicationOperatingCentre')->fetchByApplication($tma->getApplication()->getId());
         $this->getRepo('LicenceOperatingCentre')->fetchByLicence($tma->getApplication()->getLicence()->getId());
         $this->getRepo('PreviousConviction')->fetchByTransportManager($tma->getTransportManager()->getId());
