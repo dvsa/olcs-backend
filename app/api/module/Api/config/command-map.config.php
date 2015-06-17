@@ -57,6 +57,9 @@ return [
     TransferCommand\Licence\CreateCompanySubsidiary::class => CommandHandler\Licence\CreateCompanySubsidiary::class,
     TransferCommand\Licence\DeleteCompanySubsidiary::class => CommandHandler\Licence\DeleteCompanySubsidiary::class,
     TransferCommand\Licence\UpdateSafety::class => CommandHandler\Licence\UpdateSafety::class,
+    Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
+    Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
+    Command\Licence\Suspend::class => CommandHandler\Licence\Suspend::class,
 
     // Transfer - Variation
     TransferCommand\Variation\UpdateTypeOfLicence::class => CommandHandler\Variation\UpdateTypeOfLicence::class,
@@ -214,4 +217,10 @@ return [
     AppCompCommand\UpdateTaxiPhvStatus::class => AppCompCommandHandler\UpdateTaxiPhvStatus::class,
     AppCompCommand\UpdateCommunityLicencesStatus::class => AppCompCommandHandler\UpdateCommunityLicencesStatus::class,
     AppCompCommand\UpdateBusinessDetailsStatus::class => AppCompCommandHandler\UpdateBusinessDetailsStatus::class,
+
+    // Domain - LicenceStatusRule
+    Command\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class
+        => CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class,
+    Command\LicenceStatusRule\ProcessToValid::class
+        => CommandHandler\LicenceStatusRule\ProcessToValid::class,
 ];
