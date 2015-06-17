@@ -9,7 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Application\Create;
+use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Application\Create as CreateCmdHanlder;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
@@ -27,11 +27,11 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateCommunityLicenceTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new Create();
+        $this->sut = new CreateCmdHanlder();
         $this->mockRepo('CommunityLic', CommunityLicRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
         $this->mockRepo('Application', ApplicationRepo::class);
