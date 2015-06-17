@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Payment;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Payment\Payment as QueryHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Payment as PaymentRepo;
 use Dvsa\Olcs\Transfer\Query\Payment\Payment as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -32,7 +33,7 @@ class PaymentTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 69]);
 
-        $mockPayment = m::mock();
+        $mockPayment = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
 
         $this->repoMap['Payment']
             ->shouldReceive('fetchUsingId')
@@ -42,6 +43,6 @@ class PaymentTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertSame($mockPayment, $result);
+        $this->assertInstanceOf(Result::class, $result);
     }
 }
