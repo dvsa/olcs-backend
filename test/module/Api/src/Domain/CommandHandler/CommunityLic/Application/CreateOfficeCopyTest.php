@@ -40,20 +40,29 @@ class CreateOtherLicenceTest extends CommandHandlerTestCase
     /**
      * @dataProvider licenceDataProvider
      */
-    /*
-    public function testHandleCommand($goodsOrPsv, $niFlag, $template)
+
+    public function testHandleCommand($interimStatus)
     {
         $licenceId = 1;
         $identifier = 2;
-        $communityLicenceIds = [10];
         $data = [
             'licence' => $licenceId,
-            'communityLicenceIds' => $communityLicenceIds,
             'identifier' => $identifier
         ];
 
         $command = Cmd::create($data);
 
+        $this->repoMap['Application']
+            ->shouldReceive('getInterimStatus')
+            ->with($identifier)
+            ->andReturn($interimStatus);
+        
+        
+        
+        
+        
+        
+        
         $mockLicence = m::mock()
             ->shouldReceive('getGoodsOrPsv')
             ->andReturn(
@@ -129,5 +138,5 @@ class CreateOtherLicenceTest extends CommandHandlerTestCase
             [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, 'Y', 'GV_NI_European_Community_Licence'],
             [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, 'N', 'GV_GB_European_Community_Licence'],
         ];
-    }*/
+    }
 }
