@@ -102,14 +102,13 @@ return [
             'Workshop' => RepositoryFactory::class,
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
+            'PhoneContact' => RepositoryFactory::class,
             'OtherLicence' => RepositoryFactory::class,
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
-<<<<<<< HEAD
             'IrfoPartner' => RepositoryFactory::class,
             'Payment' => RepositoryFactory::class,
-=======
             'TransportManager' => RepositoryFactory::class,
             'DocParagraph' => RepositoryFactory::class,
             'Opposition' => RepositoryFactory::class,
@@ -120,7 +119,8 @@ return [
             'GoodsDisc' => RepositoryFactory::class,
             'PsvDisc' => RepositoryFactory::class,
             'PiHearing' => RepositoryFactory::class,
->>>>>>> 1319af8... Migration of Document Generation and Bookmarks
+            'Recipient' => RepositoryFactory::class,
+            'Partner' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

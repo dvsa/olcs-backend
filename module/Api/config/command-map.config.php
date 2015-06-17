@@ -12,6 +12,8 @@ return [
     TransferCommand\Application\CreateApplication::class => CommandHandler\Application\CreateApplication::class,
     TransferCommand\Application\UpdateFinancialHistory::class =>
         CommandHandler\Application\UpdateFinancialHistory::class,
+    TransferCommand\Application\UpdateFinancialEvidence::class =>
+        CommandHandler\Application\UpdateFinancialEvidence::class,
     TransferCommand\Application\UpdateLicenceHistory::class => CommandHandler\Application\UpdateLicenceHistory::class,
     TransferCommand\Application\UpdatePreviousConvictions::class =>
         CommandHandler\Application\UpdatePreviousConvictions::class,
@@ -24,6 +26,8 @@ return [
         => CommandHandler\Application\CreateCompanySubsidiary::class,
     TransferCommand\Application\DeleteCompanySubsidiary::class
         => CommandHandler\Application\DeleteCompanySubsidiary::class,
+    TransferCommand\Application\UpdateAddresses::class
+        => CommandHandler\Application\UpdateAddresses::class,
     TransferCommand\Application\UpdateSafety::class => CommandHandler\Application\UpdateSafety::class,
     TransferCommand\Application\DeleteWorkshop::class => CommandHandler\Application\DeleteWorkshop::class,
     TransferCommand\Application\CreateWorkshop::class => CommandHandler\Application\CreateWorkshop::class,
@@ -47,6 +51,7 @@ return [
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
+    TransferCommand\Licence\UpdateAddresses::class => CommandHandler\Licence\UpdateAddresses::class,
     TransferCommand\Licence\UpdateBusinessDetails::class => CommandHandler\Licence\UpdateBusinessDetails::class,
     TransferCommand\Licence\UpdateCompanySubsidiary::class => CommandHandler\Licence\UpdateCompanySubsidiary::class,
     TransferCommand\Licence\CreateCompanySubsidiary::class => CommandHandler\Licence\CreateCompanySubsidiary::class,
@@ -55,6 +60,7 @@ return [
 
     // Transfer - Variation
     TransferCommand\Variation\UpdateTypeOfLicence::class => CommandHandler\Variation\UpdateTypeOfLicence::class,
+    TransferCommand\Variation\UpdateAddresses::class => CommandHandler\Variation\UpdateAddresses::class,
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
@@ -87,18 +93,21 @@ return [
         => CommandHandler\Correspondence\AccessCorrespondence::class,
 
     // Transfer - IRFO
-    \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoDetails::class
-        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoDetails::class,
-    \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit::class
-        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoGvPermit::class,
-    \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoGvPermit::class
-        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoGvPermit::class,
-    \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoPermitStock::class
-        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoPermitStock::class,
-    \Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoPsvAuth::class
-        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoPsvAuth::class,
-    \Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth::class
-        => \Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
+    TransferCommand\Irfo\CreateIrfoGvPermit::class => CommandHandler\Irfo\CreateIrfoGvPermit::class,
+    TransferCommand\Irfo\UpdateIrfoGvPermit::class => CommandHandler\Irfo\UpdateIrfoGvPermit::class,
+    TransferCommand\Irfo\CreateIrfoPermitStock::class => CommandHandler\Irfo\CreateIrfoPermitStock::class,
+    TransferCommand\Irfo\CreateIrfoPsvAuth::class => CommandHandler\Irfo\CreateIrfoPsvAuth::class,
+    TransferCommand\Irfo\UpdateIrfoPsvAuth::class => CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
+
+    // Transfer - Publication
+    TransferCommand\Publication\CreateRecipient::class => CommandHandler\Publication\CreateRecipient::class,
+    TransferCommand\Publication\UpdateRecipient::class => CommandHandler\Publication\UpdateRecipient::class,
+    TransferCommand\Publication\DeleteRecipient::class => CommandHandler\Publication\DeleteRecipient::class,
+
+    // Transfer - User
+    TransferCommand\User\CreatePartner::class => CommandHandler\User\CreatePartner::class,
+    TransferCommand\User\UpdatePartner::class => CommandHandler\User\UpdatePartner::class,
+    TransferCommand\User\DeletePartner::class => CommandHandler\User\DeletePartner::class,
 
     // Transfer - Impounding
     TransferCommand\Cases\Impounding\CreateImpounding::class =>
@@ -154,6 +163,7 @@ return [
 
     // Domain - Licence
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
+    Command\Licence\SaveAddresses::class => CommandHandler\Licence\SaveAddresses::class,
 
     // Domain - ContactDetails
     Command\ContactDetails\SaveAddress::class => CommandHandler\ContactDetails\SaveAddress::class,
