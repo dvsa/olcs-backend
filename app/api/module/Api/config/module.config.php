@@ -90,6 +90,7 @@ return [
             'Fee' => RepositoryFactory::class,
             'Cases' => RepositoryFactory::class,
             'Pi' => \Dvsa\Olcs\Api\Domain\Repository\PiFactory::class,
+            'NonPi' => RepositoryFactory::class,
             'EventHistory' => RepositoryFactory::class,
             'PublicHoliday' => RepositoryFactory::class,
             'Sla' => RepositoryFactory::class,

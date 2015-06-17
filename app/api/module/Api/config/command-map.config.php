@@ -43,6 +43,11 @@ return [
     TransferCommand\Processing\Note\Update::class => CommandHandler\Processing\Note\Update::class,
     TransferCommand\Processing\Note\Delete::class => CommandHandler\Processing\Note\Delete::class,
 
+    // Non Pi
+    TransferCommand\Cases\NonPi\Create::class => CommandHandler\Cases\NonPi\Create::class,
+    TransferCommand\Cases\NonPi\Update::class => CommandHandler\Cases\NonPi\Update::class,
+    TransferCommand\Cases\NonPi\Delete::class => CommandHandler\Cases\NonPi\Delete::class,
+
     // Transfer - Bus
     TransferCommand\Bus\UpdateStops::class => CommandHandler\Bus\UpdateStops::class,
     TransferCommand\Bus\UpdateQualitySchemes::class => CommandHandler\Bus\UpdateQualitySchemes::class,
