@@ -25,4 +25,72 @@ class BusShortNotice extends AbstractBusShortNotice
     {
         return ['busReg' => null];
     }
+
+    /**
+     * Updates a short notice record
+     *
+     * @param string $bankHolidayChange
+     * @param string $unforseenChange
+     * @param string $unforseenDetail
+     * @param string $timetableChange
+     * @param string $timetableDetail
+     * @param string $replacementChange
+     * @param string $replacementDetail
+     * @param string $notAvailableChange
+     * @param string $notAvailableDetail
+     * @param string $specialOccasionChange
+     * @param string $specialOccasionDetail
+     * @param string $connectionChange
+     * @param string $connectionDetail
+     * @param string $holidayChange
+     * @param string $holidayDetail
+     * @param string $trcChange
+     * @param string $trcDetail
+     * @param string $policeChange
+     * @param string $policeDetail
+     */
+    public function update(
+        $bankHolidayChange,
+        $unforseenChange,
+        $unforseenDetail,
+        $timetableChange,
+        $timetableDetail,
+        $replacementChange,
+        $replacementDetail,
+        $notAvailableChange,
+        $notAvailableDetail,
+        $specialOccasionChange,
+        $specialOccasionDetail,
+        $connectionChange,
+        $connectionDetail,
+        $holidayChange,
+        $holidayDetail,
+        $trcChange,
+        $trcDetail,
+        $policeChange,
+        $policeDetail
+    )
+    {
+        $this->getBusReg()->canEdit();
+
+        $this->bankHolidayChange = $bankHolidayChange;
+        $this->unforseenChange = $unforseenChange;
+        $this->unforseenDetail = $unforseenDetail;
+        $this->timetableChange = $timetableChange;
+        $this->timetableDetail = $timetableDetail;
+        $this->replacementChange = $replacementChange;
+        $this->replacementDetail = $replacementDetail;
+        $this->notAvailableChange = $notAvailableChange;
+        $this->notAvailableDetail = $notAvailableDetail;
+        $this->specialOccasionChange = $specialOccasionChange;
+        $this->specialOccasionDetail = $specialOccasionDetail;
+        $this->connectionChange = $connectionChange;
+        $this->connectionDetail = $connectionDetail;
+        $this->holidayChange = $holidayChange;
+        $this->holidayDetail = $holidayDetail;
+        $this->trcChange = $trcChange;
+        $this->trcDetail = $trcDetail;
+        $this->policeChange = $policeChange;
+        $this->policeDetail = $policeDetail;
+    }
 }
