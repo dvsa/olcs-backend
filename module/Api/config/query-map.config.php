@@ -145,6 +145,9 @@ return [
     TransferQuery\Publication\Recipient::class => QueryHandler\Publication\Recipient::class,
     TransferQuery\Publication\RecipientList::class => QueryHandler\Publication\RecipientList::class,
 
+    // My Account
+    TransferQuery\MyAccount\MyAccount::class => QueryHandler\MyAccount\MyAccount::class,
+
     // User
     TransferQuery\User\Partner::class => QueryHandler\User\Partner::class,
     TransferQuery\User\PartnerList::class => QueryHandler\User\PartnerList::class,
