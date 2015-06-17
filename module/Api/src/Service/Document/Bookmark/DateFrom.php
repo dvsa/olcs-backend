@@ -28,10 +28,18 @@ class DateFrom extends DynamicBookmark
     {
         if (isset($this->data[1]['interimStatus']['id']) &&
             $this->data[1]['interimStatus']['id'] == Application::INTERIM_STATUS_INFORCE) {
-            $dateFrom = date('d/m/Y', strtotime($this->data[1]['interimStart']));
-        } else {
-            $dateFrom = date("d/m/Y", strtotime($this->data[0]['specifiedDate']));
+
+            if ($this->data[1]['interimStart'] === null) {
+                return null;
+            }
+
+            return $this->data[1]['interimStart']->format('d/m/Y');
         }
-        return $dateFrom;
+
+        if ($this->data[0]['specifiedDate'] === null) {
+            return null;
+        }
+
+        return $this->data[0]['specifiedDate']->format('d/m/Y');
     }
 }
