@@ -24,13 +24,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\PrintSchedulerInterface;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateOtherLicenceTest extends CommandHandlerTestCase
+class GenerateBatchTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
         $this->sut = new GenerateBatch();
         $this->mockRepo('CommunityLic', CommunityLicRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
+        $this->mockedSmServices = ['DocumentGenerator' => m::mock('Dvsa\Olcs\Api\Service\Document\DocumentGenerator')];
 
         parent::setUp();
     }
@@ -81,15 +82,24 @@ class CreateOtherLicenceTest extends CommandHandlerTestCase
             'fileName' => 'Community Licence'
 
         ];
-        $generateAndUploadResult = new Result();
-        $generateAndUploadResult->addMessage('Document generated and uploaded');
-        $generateAndUploadResult->addId('fileId', 1);
-        $this->expectedSideEffect(
-            GenerateAndUploadCmd::class,
-            $generateAndUploadData,
-            $generateAndUploadResult
-        );
 
+        $this->mockedSmServices['DocumentGenerator']
+            ->shouldReceive('generateFromTemplate')
+            ->with($template, $generateAndUploadData['data'])
+            ->andReturn('document')
+            ->once()
+            ->shouldReceive('uploadGeneratedContent')
+            ->with('document', 'documents')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getIdentifier')
+                ->andReturn(1)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+        
         $printResult = new Result();
         $printResult->addMessage('File printed');
         $printResult->addId('file', 1);
@@ -107,11 +117,9 @@ class CreateOtherLicenceTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'fileId' => 1,
                 'file' => 1
             ],
             'messages' => [
-                'Document generated and uploaded',
                 'File printed',
                 'Community Licence 10 processed'
             ]

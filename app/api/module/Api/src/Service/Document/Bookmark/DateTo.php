@@ -37,7 +37,6 @@ class DateTo extends DynamicBookmark
             return $this->data[1]['interimEnd'];
         }
 
-
         if ($this->data[0]['licence']['expiryDate'] instanceof \DateTime) {
             return $this->data[0]['licence']['expiryDate']->format('d/m/Y');
         }
