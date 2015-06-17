@@ -85,7 +85,7 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
     }
 
     /**
-     * Create the opposition  object
+     * Create the opposition object
      *
      * @param Cmd $command
      * @param Opposer $opposer
