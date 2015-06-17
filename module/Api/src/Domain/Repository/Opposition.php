@@ -49,7 +49,7 @@ class Opposition extends AbstractRepository
             ->setParameter('byCase', $query->getCase());
 
         $result = $qb->getQuery()->getResult($hydrateMode);
-        //\Doctrine\Common\Util\Debug::dump($result[0]);
+
         return $result[0];
     }
 
