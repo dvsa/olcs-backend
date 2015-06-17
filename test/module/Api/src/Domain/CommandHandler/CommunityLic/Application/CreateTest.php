@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Create Office Copy Test / Application
+ * Create Community Licence Test / Application
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -9,27 +9,29 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Application\CreateOfficeCopy;
+use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Application\Create;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\CommunityLic\Application\CreateOfficeCopy as Cmd;
+use Dvsa\Olcs\Transfer\Command\CommunityLic\Application\Create as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as GenerateBatchCmd;
+use Dvsa\Olcs\Api\Domain\Command\CommunityLic\Application\CreateOfficeCopy as CreateOfficeCopyCmd;
+use Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences as UpdateTclCommandCmd;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 
 /**
- * Create Office Copy Test / Application
+ * Create Community Licence Test / Application
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateOfficeCopyTest extends CommandHandlerTestCase
+class CreateTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new CreateOfficeCopy();
+        $this->sut = new Create();
         $this->mockRepo('CommunityLic', CommunityLicRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
         $this->mockRepo('Application', ApplicationRepo::class);
@@ -59,73 +61,31 @@ class CreateOfficeCopyTest extends CommandHandlerTestCase
         $identifier = 2;
         $data = [
             'licence' => $licenceId,
-            'identifier' => $identifier
+            'identifier' => $identifier,
+            'totalLicences' => 1
         ];
 
         $command = Cmd::create($data);
+
+        $mockLicence = m::mock()
+            ->shouldReceive('getIssueNo')
+            ->andReturn(2)
+            ->once()
+            ->getMock();
+
+        $mockApplication = m::mock()
+            ->shouldReceive('getTotAuthVehicles')
+            ->andReturn(10)
+            ->once()
+            ->getMock();
 
         $this->repoMap['Application']
             ->shouldReceive('getInterimStatus')
             ->with($identifier)
             ->andReturn(ApplicationEntity::INTERIM_STATUS_REQUESTED)
             ->once()
-            ->getMock();
-
-        $this->repoMap['Licence']
-            ->shouldReceive('getSerialNoPrefixFromTrafficArea')
-            ->with($licenceId)
-            ->andReturn('A')
-            ->once()
-            ->getMock();
-
-        $communityLic = null;
-
-        $this->repoMap['CommunityLic']
-            ->shouldReceive('fetchOfficeCopy')
-            ->andReturn(null)
-            ->once()
-            ->shouldReceive('save')
-            ->once()
-            ->with(m::type(CommunityLicEntity::class))
-            ->andReturnUsing(
-                function (CommunityLicEntity $lic) use (&$communityLic) {
-                    $lic->setId(111);
-                    $communityLic = $lic;
-                }
-            );
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'communityLic111' => 111
-            ],
-            'messages' => [
-                'Office copy created successfully'
-            ]
-        ];
-        $this->assertEquals($expected, $result->toArray());
-        $this->assertEquals('A', $communityLic->getSerialNoPrefix());
-        $this->assertEquals($licenceId, $communityLic->getLicence()->getId());
-        $this->assertEquals(0, $communityLic->getIssueNo());
-        $this->assertEquals(CommunityLicEntity::STATUS_PENDING, $communityLic->getStatus()->getId());
-    }
-
-    public function testHandleCommandInterimInForce()
-    {
-        $licenceId = 1;
-        $identifier = 2;
-        $data = [
-            'licence' => $licenceId,
-            'identifier' => $identifier
-        ];
-
-        $command = Cmd::create($data);
-
-        $this->repoMap['Application']
-            ->shouldReceive('getInterimStatus')
-            ->with($identifier)
-            ->andReturn(ApplicationEntity::INTERIM_STATUS_INFORCE)
+            ->shouldReceive('fetchById')
+            ->andReturn($mockApplication)
             ->once()
             ->getMock();
 
@@ -139,11 +99,13 @@ class CreateOfficeCopyTest extends CommandHandlerTestCase
         $communityLic = null;
 
         $this->repoMap['CommunityLic']
+            ->shouldReceive('fetchValidLicences')
+            ->andReturn([$mockLicence])
+            ->once()
             ->shouldReceive('fetchOfficeCopy')
             ->andReturn(null)
             ->once()
             ->shouldReceive('save')
-            ->once()
             ->with(m::type(CommunityLicEntity::class))
             ->andReturnUsing(
                 function (CommunityLicEntity $lic) use (&$communityLic) {
@@ -153,11 +115,18 @@ class CreateOfficeCopyTest extends CommandHandlerTestCase
             );
 
         $this->expectedSideEffect(
-            GenerateBatchCmd::class,
+            CreateOfficeCopyCmd::class,
             [
                 'licence' => $licenceId,
-                'identifier' => $identifier,
-                'communityLicenceIds' => [111]
+                'identifier' => $identifier
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            UpdateTclCommandCmd::class,
+            [
+                'id' => $licenceId,
             ],
             new Result()
         );
@@ -169,18 +138,120 @@ class CreateOfficeCopyTest extends CommandHandlerTestCase
                 'communityLic111' => 111
             ],
             'messages' => [
-                'Office copy created successfully'
+                'Community licence created successfully'
             ]
         ];
-
         $this->assertEquals($expected, $result->toArray());
         $this->assertEquals('A', $communityLic->getSerialNoPrefix());
         $this->assertEquals($licenceId, $communityLic->getLicence()->getId());
-        $this->assertEquals(0, $communityLic->getIssueNo());
+        $this->assertEquals(3, $communityLic->getIssueNo());
+        $this->assertEquals(CommunityLicEntity::STATUS_PENDING, $communityLic->getStatus()->getId());
+    }
+
+    public function testHandleCommandInterimInForce()
+    {
+        $licenceId = 1;
+        $identifier = 2;
+        $data = [
+            'licence' => $licenceId,
+            'identifier' => $identifier,
+            'totalLicences' => 1
+        ];
+
+        $command = Cmd::create($data);
+
+        $mockLicence = m::mock()
+            ->shouldReceive('getIssueNo')
+            ->andReturn(2)
+            ->once()
+            ->getMock();
+
+        $mockApplication = m::mock()
+            ->shouldReceive('getTotAuthVehicles')
+            ->andReturn(10)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Application']
+            ->shouldReceive('getInterimStatus')
+            ->with($identifier)
+            ->andReturn(ApplicationEntity::INTERIM_STATUS_INFORCE)
+            ->once()
+            ->shouldReceive('fetchById')
+            ->andReturn($mockApplication)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Licence']
+            ->shouldReceive('getSerialNoPrefixFromTrafficArea')
+            ->with($licenceId)
+            ->andReturn('A')
+            ->once()
+            ->getMock();
+
+        $communityLic = null;
+
+        $this->repoMap['CommunityLic']
+            ->shouldReceive('fetchValidLicences')
+            ->andReturn([$mockLicence])
+            ->once()
+            ->shouldReceive('fetchOfficeCopy')
+            ->andReturn(null)
+            ->once()
+            ->shouldReceive('save')
+            ->with(m::type(CommunityLicEntity::class))
+            ->andReturnUsing(
+                function (CommunityLicEntity $lic) use (&$communityLic) {
+                    $lic->setId(111);
+                    $communityLic = $lic;
+                }
+            );
+
+        $this->expectedSideEffect(
+            CreateOfficeCopyCmd::class,
+            [
+                'licence' => $licenceId,
+                'identifier' => $identifier
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            UpdateTclCommandCmd::class,
+            [
+                'id' => $licenceId,
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            GenerateBatchCmd::class,
+            [
+                'licence' => $licenceId,
+                'communityLicenceIds' => [111],
+                'identifier' => $identifier
+            ],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'communityLic111' => 111
+            ],
+            'messages' => [
+                'Community licence created successfully'
+            ]
+        ];
+        $this->assertEquals($expected, $result->toArray());
+        $this->assertEquals('A', $communityLic->getSerialNoPrefix());
+        $this->assertEquals($licenceId, $communityLic->getLicence()->getId());
+        $this->assertEquals(3, $communityLic->getIssueNo());
         $this->assertEquals(CommunityLicEntity::STATUS_ACTIVE, $communityLic->getStatus()->getId());
     }
 
-    public function testHandleCommandOfficeCopyExists()
+    public function testHandleCommandNotValid()
     {
         $this->setExpectedException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
 
@@ -188,14 +259,32 @@ class CreateOfficeCopyTest extends CommandHandlerTestCase
         $identifier = 2;
         $data = [
             'licence' => $licenceId,
+            'totalLicences' => 1,
             'identifier' => $identifier
         ];
 
+        $mockApplication = m::mock()
+            ->shouldReceive('getTotAuthVehicles')
+            ->andReturn(1)
+            ->once()
+            ->getMock();
+
         $command = Cmd::create($data);
         $this->repoMap['CommunityLic']
-            ->shouldReceive('fetchOfficeCopy')
-            ->andReturn('officeCopy')
-            ->once();
+            ->shouldReceive('fetchValidLicences')
+            ->andReturn(['licence'])
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Application']
+            ->shouldReceive('getInterimStatus')
+            ->with($identifier)
+            ->andReturn(ApplicationEntity::INTERIM_STATUS_REQUESTED)
+            ->once()
+            ->shouldReceive('fetchById')
+            ->andReturn($mockApplication)
+            ->once()
+            ->getMock();
 
         $this->sut->handleCommand($command);
     }

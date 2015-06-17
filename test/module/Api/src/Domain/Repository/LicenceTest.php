@@ -8,13 +8,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-
-namespace Dvsa\OlcsTest\Api\Domain\Repository;
-
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
@@ -24,7 +17,8 @@ use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Doctrine\DBAL\LockMode;
-
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 
 /**
  * Licence test

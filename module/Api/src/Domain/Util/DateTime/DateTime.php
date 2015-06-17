@@ -2,11 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Domain\Util\DateTime;
 
+/**
+ * DateTime
+ */
 class DateTime extends \DateTime
 {
     protected static $now;
 
-    public function __construct($time='now', \DateTimeZone $timezone=null)
+    public function __construct($time = 'now', \DateTimeZone $timezone = null)
     {
         if ($time == 'now') {
             $now = static::getNow();
@@ -27,17 +30,5 @@ class DateTime extends \DateTime
         }
 
         return static::$now;
-    }
-
-    public static function advanceNow(\DateInterval $by)
-    {
-        $now = static::getNow();
-        $now->add($by);
-    }
-
-    public static function reverseNow(\DateInterval $by)
-    {
-        $now = static::getNow();
-        $now->sub($by);
     }
 }
