@@ -31,5 +31,24 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Document extends AbstractDocument
 {
+    public function __construct($identifier)
+    {
+        parent::__construct();
 
+        $this->setIdentifier($identifier);
+    }
+
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        parent::setCreatedOnBeforePersist();
+
+        if ($this->getIssuedDate() === null) {
+            $this->setIssuedDate(new \DateTime());
+        }
+    }
 }
