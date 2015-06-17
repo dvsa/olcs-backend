@@ -2,80 +2,129 @@
 
 /**
  * Create Document
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * 
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Doc\Document as DocumetnEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
-use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
+use Dvsa\Olcs\Api\Entity\Opposition\Opposition;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Submission\Submission;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Transfer\Command\Document\CreateDocument as Cmd;
 
 /**
  * Create Document
  *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateDocument extends AbstractCommandHandler
+final class CreateDocument extends AbstractCommandHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'Document';
 
     public function handleCommand(CommandInterface $command)
     {
-        // Stub
+        $result = new Result();
 
-        $document = $this->createDocumentObject($command);
+        $document = $this->createDocumentEntity($command);
+
         $this->getRepo()->save($document);
 
-        $result = new Result();
         $result->addId('document', $document->getId());
-        $result->addMessage('Document created successfully');
+        $result->addMessage('Document created');
 
         return $result;
     }
 
     /**
      * @param Cmd $command
-     * @return DocumetnEntity
+     * @return Document
      */
-    private function createDocumentObject(Cmd $command)
+    private function createDocumentEntity(Cmd $command)
     {
-        $document = new DocumetnEntity();
+        $document = new Document($command->getIdentifier());
 
-        if ($command->getLicence() !== null) {
-            $licence = $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence());
-        } else {
-            $licence = null;
-        }
-        if ($command->getCategory() !== null) {
-            $category = $this->getRepo()->getReference(CategoryEntity::class, $command->getCategory());
-        } else {
-            $category = null;
-        }
-        if ($command->getSubCategory() !== null) {
-            $subCategory = $this->getRepo()->getReference(SubCategoryEntity::class, $command->getSubCategory());
-        } else {
-            $subCategory = null;
-        }
-        $issuedDate = new \DateTime($command->getIssuedDate());
+        $this->categoriseDocument($document, $command);
+        $this->linkDocument($document, $command);
+        $this->setDocumentDetails($document, $command);
+        $this->setDocumentFlags($document, $command);
 
-        $document->updateDocument(
-            $command->getIdentifier(),
-            $command->getDescription(),
-            $command->getFilename(),
-            $licence,
-            $category,
-            $subCategory,
-            $command->getIsExternal(),
-            $command->getIsReadOnly(),
-            $issuedDate,
-            $command->getSize()
-        );
         return $document;
+    }
+
+    private function setDocumentFlags(Document $document, Cmd $command)
+    {
+        if ($command->getIsExternal() === null) {
+            $isExternal = $this->isGranted(Permission::SELFSERVE_USER);
+        } else {
+            $isExternal = $command->getIsExternal();
+        }
+
+        $document->setIsExternal($isExternal);
+        $document->setIsReadOnly($command->getIsReadOnly());
+        $document->setIsScan($command->getIsScan());
+    }
+
+    private function setDocumentDetails(Document $document, Cmd $command)
+    {
+        $document->setFilename($command->getFilename());
+        $document->setSize($command->getSize());
+        $document->setDescription($command->getDescription());
+
+        if ($command->getIssuedDate() !== null) {
+            $document->setIssuedDate(new \DateTime($command->getIssuedDate()));
+        }
+    }
+
+    private function linkDocument(Document $document, Cmd $command)
+    {
+        $this->maybeLinkDocument($document, $command, Application::class, 'Application');
+        $this->maybeLinkDocument($document, $command, BusReg::class, 'BusReg');
+        $this->maybeLinkDocument($document, $command, Cases::class, 'Case');
+        $this->maybeLinkDocument($document, $command, Organisation::class, 'IrfoOrganisation');
+        $this->maybeLinkDocument($document, $command, Submission::class, 'Submission');
+        $this->maybeLinkDocument($document, $command, TrafficArea::class, 'TrafficArea');
+        $this->maybeLinkDocument($document, $command, TransportManager::class, 'TransportManager');
+        $this->maybeLinkDocument($document, $command, Licence::class, 'Licence');
+        $this->maybeLinkDocument($document, $command, OperatingCentre::class, 'OperatingCentre');
+        $this->maybeLinkDocument($document, $command, Opposition::class, 'Opposition');
+    }
+
+    private function maybeLinkDocument(Document $document, Cmd $command, $entity, $suffix)
+    {
+        $getter = 'get' . $suffix;
+        $setter = 'set' . $suffix;
+        $value = $command->{$getter}();
+
+        if ($value !== null) {
+            $reference = $this->getRepo()->getReference($entity, $value);
+            $document->{$setter}($reference);
+        }
+    }
+
+    private function categoriseDocument(Document $document, Cmd $command)
+    {
+        if ($command->getCategory() != null) {
+            $document->setCategory($this->getRepo()->getCategoryReference($command->getCategory()));
+        }
+
+        if ($command->getSubCategory() != null) {
+            $document->setSubCategory($this->getRepo()->getCategoryReference($command->getSubCategory()));
+        }
     }
 }

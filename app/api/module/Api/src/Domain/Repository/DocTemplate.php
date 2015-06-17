@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Document
+ * DocTemplate
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
+use Dvsa\Olcs\Api\Entity\Doc\DocTemplate as Entity;
 
 /**
- * Document
+ * DocTemplate
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Document extends AbstractRepository
+class DocTemplate extends AbstractRepository
 {
     protected $entity = Entity::class;
 }
