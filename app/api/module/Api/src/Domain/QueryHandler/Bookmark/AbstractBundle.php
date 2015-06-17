@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -19,7 +20,11 @@ abstract class AbstractBundle extends AbstractQueryHandler
 {
     public function handleQuery(QueryInterface $query)
     {
-        $entity = $this->getRepo()->fetchUsingId($query);
+        try {
+            $entity = $this->getRepo()->fetchUsingId($query);
+        } catch (NotFoundException $ex) {
+            return null;
+        }
 
         return $this->result(
             $entity,
