@@ -148,6 +148,9 @@ return [
     TransferCommand\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class =>
         CommandHandler\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
 
+    // Transfer - Document
+    TransferCommand\Document\CreateLetter::class => CommandHandler\Document\CreateLetter::class,
+
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
     Command\Application\ResetApplication::class => CommandHandler\Application\ResetApplication::class,

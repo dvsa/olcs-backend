@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PublicationLinkBundle Bookmark
+ * Publication Link Bundle Bookmark
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * PublicationLinkBundle Bookmark
+ * Publication Link Bundle Bookmark
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
