@@ -162,6 +162,9 @@ return [
     // Transfer - Document
     TransferCommand\Document\CreateLetter::class => CommandHandler\Document\CreateLetter::class,
 
+    // Transfer - Licence Decisions
+    TransferCommand\Licence\RevokeLicence::class => CommandHandler\Licence\Revoke::class,
+
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
     Command\Application\ResetApplication::class => CommandHandler\Application\ResetApplication::class,
@@ -178,6 +181,13 @@ return [
     // Domain - Licence
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
     Command\Licence\SaveAddresses::class => CommandHandler\Licence\SaveAddresses::class,
+
+    // Domain - Discs
+    Command\Discs\CeaseGoodsDiscs::class => CommandHandler\Discs\CeaseGoodsDiscs::class,
+    Command\Discs\CeasePsvDiscs::class => CommandHandler\Discs\CeasePsvDiscs::class,
+
+    // Domain - Licence Vehicles
+    Command\LicenceVehicle\RemoveLicenceVehicle::class => CommandHandler\LicenceVehicle\RemoveLicenceVehicle::class,
 
     // Domain - ContactDetails
     Command\ContactDetails\SaveAddress::class => CommandHandler\ContactDetails\SaveAddress::class,

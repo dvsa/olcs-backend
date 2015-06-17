@@ -1,7 +1,7 @@
 <?php
 
 /**
- * GoodsDisc.php
+ * LicenceVehicle.php
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -9,14 +9,14 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as Entity;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as Entity;
 
 /**
- * GoodsDisc
+ * Licence Vehicle
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GoodsDisc extends AbstractRepository
+class LicenceVehicle extends AbstractRepository
 {
     protected $entity = Entity::class;
 }
