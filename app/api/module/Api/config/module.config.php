@@ -9,7 +9,14 @@ return [
         'routes' => include(__DIR__ . '/../../../vendor/olcs/olcs-transfer/config/backend-routes.config.php')
     ],
     'service_manager' => [
+        'invokables' => [
+            'Document' => \Dvsa\Olcs\Api\Service\Document\Document::class,
+            'DocumentGenerator' => \Dvsa\Olcs\Api\Service\Document\DocumentGenerator::class,
+            'DateService' => \Dvsa\Olcs\Api\Service\Date::class,
+            'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
+        ],
         'factories' => [
+            'ContentStore' => \Dvsa\Jackrabbit\Client\Service\ClientFactory::class,
             'IdentityProvider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
             'CommandHandlerManager' => \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::class,
@@ -102,6 +109,16 @@ return [
             'TaskAllocationRule' => RepositoryFactory::class,
             'IrfoPartner' => RepositoryFactory::class,
             'Payment' => RepositoryFactory::class,
+            'TransportManager' => RepositoryFactory::class,
+            'DocParagraph' => RepositoryFactory::class,
+            'Opposition' => RepositoryFactory::class,
+            'Statement' => RepositoryFactory::class,
+            'CommunityLic' => RepositoryFactory::class,
+            'PublicationLink' => RepositoryFactory::class,
+            'Publication' => RepositoryFactory::class,
+            'GoodsDisc' => RepositoryFactory::class,
+            'PsvDisc' => RepositoryFactory::class,
+            'PiHearing' => RepositoryFactory::class,
             'Recipient' => RepositoryFactory::class,
             'Partner' => RepositoryFactory::class,
         ]

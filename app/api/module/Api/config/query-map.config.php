@@ -2,8 +2,34 @@
 
 use Dvsa\Olcs\Transfer\Query as TransferQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark as BookmarkQuery;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark as BookmarkQueryHandler;
 
 return [
+    // Bookmarks
+    BookmarkQuery\LicenceBundle::class => BookmarkQueryHandler\LicenceBundle::class,
+    BookmarkQuery\TransportManagerBundle::class => BookmarkQueryHandler\TransportManagerBundle::class,
+    BookmarkQuery\DocParagraphBundle::class => BookmarkQueryHandler\DocParagraphBundle::class,
+    BookmarkQuery\OppositionBundle::class => BookmarkQueryHandler\OppositionBundle::class,
+    BookmarkQuery\StatementBundle::class => BookmarkQueryHandler\StatementBundle::class,
+    BookmarkQuery\CommunityLicBundle::class => BookmarkQueryHandler\CommunityLicBundle::class,
+    BookmarkQuery\FeeBundle::class => BookmarkQueryHandler\FeeBundle::class,
+    BookmarkQuery\ApplicationBundle::class => BookmarkQueryHandler\ApplicationBundle::class,
+    BookmarkQuery\InterimUnlinkedTm::class => BookmarkQueryHandler\InterimUnlinkedTm::class,
+    BookmarkQuery\InterimOperatingCentres::class => BookmarkQueryHandler\InterimOperatingCentres::class,
+    BookmarkQuery\UserBundle::class => BookmarkQueryHandler\UserBundle::class,
+    BookmarkQuery\BusRegBundle::class => BookmarkQueryHandler\BusRegBundle::class,
+    BookmarkQuery\PublicationLinkBundle::class => BookmarkQueryHandler\PublicationLinkBundle::class,
+    BookmarkQuery\PublicationBundle::class => BookmarkQueryHandler\PublicationBundle::class,
+    BookmarkQuery\ConditionsUndertakings::class => BookmarkQueryHandler\ConditionsUndertakings::class,
+    BookmarkQuery\GoodsDiscBundle::class => BookmarkQueryHandler\GoodsDiscBundle::class,
+    BookmarkQuery\PsvDiscBundle::class => BookmarkQueryHandler\PsvDiscBundle::class,
+    BookmarkQuery\InterimConditionsUndertakings::class
+        => BookmarkQueryHandler\InterimConditionsUndertakings::class,
+    BookmarkQuery\FstandingAdditionalVeh::class => BookmarkQueryHandler\FstandingAdditionalVeh::class,
+    BookmarkQuery\PiHearingBundle::class => BookmarkQueryHandler\PiHearingBundle::class,
+    BookmarkQuery\TotalContFee::class => BookmarkQueryHandler\TotalContFee::class,
+
     // Application
     TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
     TransferQuery\Application\FinancialHistory::class => QueryHandler\Application\FinancialHistory::class,
@@ -40,10 +66,10 @@ return [
     TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
     TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
     TransferQuery\Cases\Complaint\ComplaintList::class => QueryHandler\Cases\Complaint\ComplaintList::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
-        QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
-        QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
+    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class
+        => QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
+    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class
+        => QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
 
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
@@ -56,20 +82,20 @@ return [
 
     // Prohibition
     TransferQuery\Cases\Prohibition\Prohibition::class => QueryHandler\Cases\Prohibition\Prohibition::class,
-    TransferQuery\Cases\Prohibition\ProhibitionList::class =>
-        QueryHandler\Cases\Prohibition\ProhibitionList::class,
+    TransferQuery\Cases\Prohibition\ProhibitionList::class
+        => QueryHandler\Cases\Prohibition\ProhibitionList::class,
 
     // Prohibition / Defect
     TransferQuery\Cases\Prohibition\Defect::class => QueryHandler\Cases\Prohibition\Defect::class,
     TransferQuery\Cases\Prohibition\DefectList::class => QueryHandler\Cases\Prohibition\DefectList::class,
 
     // Previous Conviction
-    TransferQuery\PreviousConviction\PreviousConviction::class =>
-        QueryHandler\PreviousConviction\PreviousConviction::class,
+    TransferQuery\PreviousConviction\PreviousConviction::class
+        => QueryHandler\PreviousConviction\PreviousConviction::class,
 
     // Company Subsidiary
     TransferQuery\CompanySubsidiary\CompanySubsidiary::class
-    => QueryHandler\CompanySubsidiary\CompanySubsidiary::class,
+        => QueryHandler\CompanySubsidiary\CompanySubsidiary::class,
 
     // Bus
     TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,

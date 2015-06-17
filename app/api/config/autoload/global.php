@@ -19,5 +19,10 @@ return array(
                 'proxy_namespace'   => 'OlcsBe\Proxy',
             ),
         )
+    ),
+    'jackrabbit' => array(
+        'http' => array(
+            'adapter' => 'Zend\Http\Client\Adapter\Curl'
+        ),
     )
 );
