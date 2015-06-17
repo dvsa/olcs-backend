@@ -11,11 +11,12 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Transfer\Command\Bus\UpdateStops as UpdateStopsCmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Update Stops
  */
-final class UpdateStops extends AbstractCommandHandler
+final class UpdateStops extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Bus';
 
@@ -45,12 +46,9 @@ final class UpdateStops extends AbstractCommandHandler
             $command->getSubsidyDetail()
         );
 
-        try {
-            $this->getRepo()->save($busReg);
-            $result->addMessage('Saved successfully');
-            return $result;
-        } catch (\Exception $ex) {
-            throw $ex;
-        }
+        $this->getRepo()->save($busReg);
+        $result->addMessage('Saved successfully');
+        $result->addId('id', $busReg->getId());
+        return $result;
     }
 }
