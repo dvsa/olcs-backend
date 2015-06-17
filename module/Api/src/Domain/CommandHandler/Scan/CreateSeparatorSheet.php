@@ -9,14 +9,19 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 
 /**
  * CreateSeperatorSheet
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class CreateSeparatorSheet extends AbstractCommandHandler implements TransactionedInterface
+final class CreateSeparatorSheet extends AbstractCommandHandler implements
+    TransactionedInterface,
+    DocumentGeneratorAwareInterface
 {
+    use \Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
+
     protected $repoServiceName = 'Scan';
 
     protected $extraRepos = [
@@ -36,7 +41,7 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements Trans
 
     public function handleCommand(CommandInterface $command)
     {
-        /* @var $command \Dvsa\Olcs\Transfer\Command\Scan\CreateSeperatorSheet */
+        /* @var $command \Dvsa\Olcs\Transfer\Command\Scan\CreateSeparatorSheet */
 
         if (empty($command->getDescription()) && empty($command->getDescriptionId())) {
             throw new ValidationException(['description or descriptionId must be specified']);
@@ -77,19 +82,16 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements Trans
             'DOC_DESCRIPTION_NAME_SCAN'  => $descriptionName,
         ];
 
-        // @todo Integrate with doc generation when its merged in
-
-//        $docService = $this->getDocumentGenerator();
-//        $content = $docService->generateFromTemplate('Scanning_SeparatorSheet', [], $knownValues);
-//        $storedFile = $docService->uploadGeneratedContent($content, 'documents', 'Scanning Separator Sheet');
+        $docService = $this->getDocumentGenerator();
+        $content = $docService->generateFromTemplate('Scanning_SeparatorSheet', [], $knownValues);
+        $storedFile = $docService->uploadGeneratedContent($content, 'documents');
 
         $result = new Result();
         $result->merge(
             $this->handleSideEffect(
                 \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::create(
                     [
-    //                    'fileIdentifier' => $storedFile->getIdentifier(),
-                        'fileIdentifier' => $scan->getId() .'-'. uniqid(),
+                        'fileIdentifier' => $storedFile->getIdentifier(),
                         'jobName' => 'Scanning Separator Sheet',
                     ]
                 )
