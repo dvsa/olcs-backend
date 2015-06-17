@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\ConditionUndertaking\ConditionUndert
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\ConditionUndertaking\ConditionUndertakingList as Qry;
+use Mockery as m;
 
 /**
  * ConditionUndertakingList Test
@@ -31,9 +32,12 @@ class ConditionUndertakingListTest extends QueryHandlerTestCase
     {
         $query = Qry::create([]);
 
+        $mockResult = m::mock();
+        $mockResult->shouldReceive('serialize')->once()->andReturn('foo');
+
         $this->repoMap['ConditionUndertaking']->shouldReceive('fetchList')
-            ->with($query)
-            ->andReturn(['foo']);
+            ->with($query, m::type('integer'))
+            ->andReturn([$mockResult]);
 
         $this->repoMap['ConditionUndertaking']->shouldReceive('fetchCount')
             ->with($query)
