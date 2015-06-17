@@ -135,6 +135,7 @@ return [
             'LicenceStatusRule' => RepositoryFactory::class,
             'GoodsDisc' => RepositoryFactory::class,
             'LicenceVehicle' => RepositoryFactory::class,
+            'TransportManagerLicence' => RepositoryFactory::class
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

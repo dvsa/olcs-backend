@@ -134,4 +134,6 @@ return [
     // Payment
     TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
     TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
+
+    TransferQuery\Licence\LicenceDecisions::class => QueryHandler\Licence\LicenceDecisions::class
 ];

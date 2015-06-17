@@ -189,6 +189,9 @@ return [
     // Domain - Licence Vehicles
     Command\LicenceVehicle\RemoveLicenceVehicle::class => CommandHandler\LicenceVehicle\RemoveLicenceVehicle::class,
 
+    // Domain - Transport Managers
+    Command\Tm\DeleteTransportManagerLicence::class => CommandHandler\Tm\DeleteTransportManagerLicence::class,
+
     // Domain - ContactDetails
     Command\ContactDetails\SaveAddress::class => CommandHandler\ContactDetails\SaveAddress::class,
 
