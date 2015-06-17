@@ -15,14 +15,20 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndUploadDocument as GenerateAndUploadDocumentCommand;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\EnqueueFile as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\PrintSchedulerInterface;
+use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
+use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 
 /**
  * Generate Batch
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class GenerateBatch extends AbstractCommandHandler implements TransactionedInterface
+final class GenerateBatch extends AbstractCommandHandler implements
+    TransactionedInterface,
+    DocumentGeneratorAwareInterface
 {
+    use DocumentGeneratorAwareTrait;
+
     protected $repoServiceName = 'CommunityLic';
 
     protected $extraRepos = ['Licence'];
@@ -41,28 +47,20 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
 
             $query = [
                 'licence' => $licenceId,
-                'communityLic' => $id
+                'communityLic' => $id,
             ];
             if ($identifier) {
                 $query['application'] = $identifier;
             }
 
-            $processDocument = GenerateAndUploadDocumentCommand::create(
-                [
-                    'template' => $template,
-                    'data'     => $query,
-                    'folder'   => 'documents',
-                    'fileName' => 'Community Licence'
-                ]
-            );
+            $documentGenerator = $this->getDocumentGenerator();
 
-            $processDocResult = $this->getCommandHandler()->handleCommand($processDocument);
-            $fileId = $processDocResult->getIds()['fileId'];
-            $result->merge($processDocResult);
+            $document = $documentGenerator->generateFromTemplate($template, $query);
+            $file = $documentGenerator->uploadGeneratedContent($document, 'documents');
 
             $printQueue = EnqueueFileCommand::create(
                 [
-                    'fileId' => $fileId,
+                    'fileId' => $file->getIdentifier(),
                     'options' => [PrintSchedulerInterface::OPTION_DOUBLE_SIDED],
                     'jobName' => 'Community Licence'
                 ]
