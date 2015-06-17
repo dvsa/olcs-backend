@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 
 /**
  * Licence
@@ -54,5 +55,49 @@ class Licence extends AbstractRepository
             $retv = CommunityLicEntity::PREFIX_NI;
         }
         return $retv;
+    }
+
+    public function fetchWithAddressesUsingId($query)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->buildDefaultQuery($qb, $query->getId())
+            ->withContactDetails('correspondenceCd', 'c')
+            ->with('c.phoneContacts', 'c_p')
+            ->with('c_p.phoneContactType', 'c_p_pct')
+            ->withRefData(PhoneContact::class, 'c_p')
+            ->withContactDetails('establishmentCd', 'e')
+            ->withContactDetails('transportConsultantCd', 't')
+            ->with('t.phoneContacts', 't_p')
+            ->with('t_p.phoneContactType', 't_p_pct')
+            ->withRefData(PhoneContact::class, 't_p');
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
+    public function fetchSafetyDetailsUsingId($command, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
+    {
+        return $this->fetchSafetyDetailsById($command->getId(), $hydrateMode, $version);
+    }
+
+    public function fetchSafetyDetailsById($id, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->buildDefaultQuery($qb, $id)
+            ->with('workshops', 'w')
+            ->withContactDetails('w.contactDetails');
+
+        $results = $qb->getQuery()->getResult($hydrateMode);
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+
+        if ($hydrateMode === Query::HYDRATE_OBJECT && $version !== null) {
+            $this->lock($results[0], $version);
+        }
+
+        return $results[0];
     }
 }

@@ -30,13 +30,8 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Tran
     {
         $result = new Result();
 
-        $updateResult = $this->updateBusinessDetails($command);
-
-        $result->merge($updateResult);
-
-        if ($updateResult->getFlag('hasChanged')) {
-            $result->merge($this->updateApplicationCompletion($command));
-        }
+        $result->merge($this->updateBusinessDetails($command));
+        $result->merge($this->updateApplicationCompletion($command));
 
         return $result;
     }

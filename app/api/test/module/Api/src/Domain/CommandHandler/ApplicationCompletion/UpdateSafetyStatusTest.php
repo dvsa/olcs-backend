@@ -119,7 +119,7 @@ class UpdateSafetyStatusTest extends AbstractUpdateStatusTestCase
         $this->application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE]);
 
         $this->licence->setSafetyInsVehicles(1);
-        $this->licence->setSafetyInsVaries(1);
+        $this->licence->setSafetyInsVaries('Y');
         $this->licence->setTachographIns($this->refData[Licence::TACH_EXT]);
         $this->licence->setWorkshops(['foo']);
         $this->application->setSafetyConfirmation('Y');
@@ -135,7 +135,7 @@ class UpdateSafetyStatusTest extends AbstractUpdateStatusTestCase
         $this->application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE]);
 
         $this->licence->setSafetyInsVehicles(1);
-        $this->licence->setSafetyInsVaries(1);
+        $this->licence->setSafetyInsVaries('Y');
         $this->licence->setTachographIns($this->refData[Licence::TACH_EXT]);
         $this->licence->setWorkshops(['foo']);
         $this->application->setSafetyConfirmation('Y');
@@ -152,7 +152,7 @@ class UpdateSafetyStatusTest extends AbstractUpdateStatusTestCase
         $this->application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_PSV]);
 
         $this->licence->setSafetyInsVehicles(1);
-        $this->licence->setSafetyInsVaries(1);
+        $this->licence->setSafetyInsVaries('Y');
         $this->licence->setTachographIns($this->refData[Licence::TACH_EXT]);
         $this->licence->setWorkshops(['foo']);
         $this->application->setSafetyConfirmation('Y');

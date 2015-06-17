@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\Impounding as ImpoundingRepo;
 
 /**
