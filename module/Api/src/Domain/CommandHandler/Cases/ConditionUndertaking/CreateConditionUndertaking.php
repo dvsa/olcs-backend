@@ -90,7 +90,7 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
                 )
             );
         } else {
-            $operatingCentre = $this->getRepo('OperatingCentre')
+            $operatingCentre = $this->getRepo()
                 ->getReference(OperatingCentre::class, $command->getOperatingCentre());
             $conditionUndertaking->setOperatingCentre($operatingCentre);
             $conditionUndertaking->setAttachedTo(

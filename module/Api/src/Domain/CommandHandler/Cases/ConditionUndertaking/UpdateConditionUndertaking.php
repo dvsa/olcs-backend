@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Transfer\Command\Cases\ConditionUndertaking\UpdateConditionUndertaking as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
@@ -24,8 +25,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 final class UpdateConditionUndertaking extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'ConditionUndertaking';
-
-    protected $extraRepos = ['Cases', 'Licence', 'OperatingCentre'];
 
     /**
      * Update complaint
@@ -87,7 +86,7 @@ final class UpdateConditionUndertaking extends AbstractCommandHandler implements
             $conditionUndertaking->setOperatingCentre(null);
 
         } else {
-            $operatingCentre = $this->getRepo('OperatingCentre')
+            $operatingCentre = $this->getRepo()
                 ->getReference(OperatingCentre::class, $command->getOperatingCentre());
             $conditionUndertaking->setOperatingCentre($operatingCentre);
             $conditionUndertaking->setAttachedTo(

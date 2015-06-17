@@ -47,8 +47,8 @@ class ConditionUndertaking extends AbstractConditionUndertaking
     /**
      * Construct Condition Undertaking entity
      * @param RefData $conditionType
-     * @param String $isDraft
-     * @param String $isFulfilled
+     * @param String $isDraft Y|N
+     * @param String $isFulfilled Y|N
      */
     public function __construct(
         RefData $conditionType,
