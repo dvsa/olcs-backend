@@ -83,6 +83,7 @@ return [
             'Bus' => RepositoryFactory::class,
             'BusRegOtherService' => RepositoryFactory::class,
             'BusNoticePeriod' => RepositoryFactory::class,
+            'BusShortNotice' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
             'GracePeriod' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,

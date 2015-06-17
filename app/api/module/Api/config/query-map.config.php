@@ -103,6 +103,7 @@ return [
 
     // Bus
     TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
+    TransferQuery\Bus\ShortNoticeByBusReg::class => QueryHandler\Bus\ShortNoticeByBusReg::class,
 
     // Trailer
     TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
