@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Opposition\OppositionList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Opposition as OppositionRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\Opposition\OppositionList as Qry;
+use Mockery as m;
 
 /**
  * OppositionList Test
@@ -31,9 +32,12 @@ class OppositionListTest extends QueryHandlerTestCase
     {
         $query = Qry::create([]);
 
+        $mockResult = m::mock();
+        $mockResult->shouldReceive('serialize')->once()->andReturn('foo');
+
         $this->repoMap['Opposition']->shouldReceive('fetchList')
-            ->with($query)
-            ->andReturn(['foo']);
+            ->with($query, m::type('integer'))
+            ->andReturn([$mockResult]);
 
         $this->repoMap['Opposition']->shouldReceive('fetchCount')
             ->with($query)
