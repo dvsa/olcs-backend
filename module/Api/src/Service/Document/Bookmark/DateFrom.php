@@ -29,17 +29,17 @@ class DateFrom extends DynamicBookmark
         if (isset($this->data[1]['interimStatus']['id']) &&
             $this->data[1]['interimStatus']['id'] == Application::INTERIM_STATUS_INFORCE) {
 
-            if ($this->data[1]['interimStart'] === null) {
-                return null;
+            if ($this->data[1]['interimStart'] instanceof \DateTime) {
+                return $this->data[1]['interimStart']->format('d/m/Y');
             }
 
-            return $this->data[1]['interimStart']->format('d/m/Y');
+            return $this->data[1]['interimStart'];
         }
 
-        if ($this->data[0]['specifiedDate'] === null) {
-            return null;
+        if ($this->data[0]['specifiedDate'] instanceof \DateTime) {
+            return $this->data[0]['specifiedDate']->format('d/m/Y');
         }
 
-        return $this->data[0]['specifiedDate']->format('d/m/Y');
+        return $this->data[0]['specifiedDate'];
     }
 }
