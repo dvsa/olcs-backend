@@ -1,28 +1,28 @@
 <?php
 
 /**
- * ComplaintList Test
+ * OppositionList Test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Complaint;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Complaint\ComplaintList;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Opposition\OppositionList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\Complaint as ComplaintRepo;
-use Dvsa\Olcs\Transfer\Query\Cases\Complaint\ComplaintList as Qry;
+use Dvsa\Olcs\Api\Domain\Repository\Opposition as OppositionRepo;
+use Dvsa\Olcs\Transfer\Query\Cases\Opposition\OppositionList as Qry;
 
 /**
- * ComplaintList Test
+ * OppositionList Test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class ComplaintListTest extends QueryHandlerTestCase
+class OppositionListTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new ComplaintList();
-        $this->mockRepo('Complaint', ComplaintRepo::class);
+        $this->sut = new OppositionList();
+        $this->mockRepo('Opposition', OppositionRepo::class);
 
         parent::setUp();
     }
@@ -31,11 +31,11 @@ class ComplaintListTest extends QueryHandlerTestCase
     {
         $query = Qry::create([]);
 
-        $this->repoMap['Complaint']->shouldReceive('fetchList')
+        $this->repoMap['Opposition']->shouldReceive('fetchList')
             ->with($query)
             ->andReturn(['foo']);
 
-        $this->repoMap['Complaint']->shouldReceive('fetchCount')
+        $this->repoMap['Opposition']->shouldReceive('fetchCount')
             ->with($query)
             ->andReturn(2);
 
