@@ -7,7 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\NonPi;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Cases\NonPi as Entity;
+use Dvsa\Olcs\Api\Entity\Cases\Hearing as Entity;
 use Dvsa\Olcs\Api\Domain\Repository\NonPi as Repository;
 use Dvsa\Olcs\Api\Entity as Entities;
 use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Update as UpdateCommand;

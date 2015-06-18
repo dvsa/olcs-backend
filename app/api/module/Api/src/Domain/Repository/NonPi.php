@@ -4,7 +4,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Cases\NonPi as NonPiEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Hearing as NonPiEntity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
