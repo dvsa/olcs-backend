@@ -187,6 +187,14 @@ return [
     TransferCommand\Cases\ConditionUndertaking\DeleteConditionUndertaking::class =>
         CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertaking::class,
 
+    // Transfer - Opposition
+    TransferCommand\Cases\Opposition\CreateOpposition::class =>
+        CommandHandler\Cases\Opposition\CreateOpposition::class,
+    TransferCommand\Cases\Opposition\UpdateOpposition::class =>
+        CommandHandler\Cases\Opposition\UpdateOpposition::class,
+    TransferCommand\Cases\Opposition\DeleteOpposition::class =>
+        CommandHandler\Cases\Opposition\DeleteOpposition::class,
+
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
     Command\Application\ResetApplication::class => CommandHandler\Application\ResetApplication::class,
