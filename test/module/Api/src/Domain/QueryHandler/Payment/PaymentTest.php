@@ -44,5 +44,8 @@ class PaymentTest extends QueryHandlerTestCase
         $result = $this->sut->handleQuery($query);
 
         $this->assertInstanceOf(Result::class, $result);
+
+        $mockPayment->shouldReceive('serialize')->once()->andReturn(['PAYMENT']);
+        $this->assertEquals(['PAYMENT'], $result->serialize());
     }
 }
