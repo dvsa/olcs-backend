@@ -21,13 +21,6 @@ class Complaint extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function __construct(
-        EntityManagerInterface $em,
-        QueryBuilderInterface $queryBuilder
-    ) {
-        parent::__construct($em, $queryBuilder);
-    }
-
     /**
      * Fetch the default record by it's id
      *
