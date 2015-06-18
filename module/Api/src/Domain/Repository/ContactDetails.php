@@ -38,6 +38,12 @@ class ContactDetails extends AbstractRepository
             }
         }
 
+        if (!empty($contactParams['person']['title'])) {
+            $contactParams['person']['title'] = $this->getRefdataReference(
+                $contactParams['person']['title']
+            );
+        }
+
         return $contactParams;
     }
 }

@@ -37,6 +37,8 @@ class Address extends AbstractAddress
         $this->setAddressLine4($addressLine4);
         $this->setTown($town);
         $this->setPostcode($postcode);
-        $this->setCountryCode($countryCode);
+        if (!is_null($countryCode)) {
+            $this->setCountryCode($countryCode);
+        }
     }
 }
