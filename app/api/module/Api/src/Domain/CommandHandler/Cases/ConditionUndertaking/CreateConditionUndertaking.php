@@ -63,7 +63,7 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
             $command->getIsFulfilled(),
             $isDraft
         );
-        $conditionUndertaking->setCase($this->getRepo()->getReference(Cases::class, $command->getCase()));
+        $conditionUndertaking->setCase($case);
         $conditionUndertaking->setAttachedTo($this->getRepo()->getRefdataReference($command->getAttachedTo()));
         $conditionUndertaking->setLicence($licence);
 
