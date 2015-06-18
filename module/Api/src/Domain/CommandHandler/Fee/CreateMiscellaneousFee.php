@@ -49,7 +49,7 @@ final class CreateMiscellaneousFee extends AbstractCommandHandler
 
         if ($feeType->getIsMiscellaneous() !== true) {
             // only allow misc. fees to be create via this command
-            throw new ValidationException(['Invalid fee type: ' . $command->getFeeType()]);
+            throw new Exception\ValidationException(['Invalid fee type: ' . $command->getFeeType()]);
         }
 
         $feeStatus = $this->getRepo()->getRefdataReference(Fee::STATUS_OUTSTANDING);
