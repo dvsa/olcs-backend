@@ -8,6 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Fee;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
+use Doctrine\ORM\Query as DoctrineQuery;
 
 /**
  * Fee
@@ -22,7 +23,7 @@ class FeeList extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         return [
-            'result' => $repo->fetchList($query),
+            'result' => $this->resultList($repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT)),
             'count' => $repo->fetchCount($query)
         ];
     }
