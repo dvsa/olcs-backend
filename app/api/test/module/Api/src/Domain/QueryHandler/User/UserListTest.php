@@ -5,7 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Trailers;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\User\UserList as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
@@ -31,11 +31,15 @@ class UserListTest extends QueryHandlerTestCase
     {
         $query = Query::create(['QUERY']);
 
-        $this->repoMap['User']->shouldReceive('fetchList')->with($query)->andReturn('LIST');
+        $user = new \Dvsa\Olcs\Api\Entity\User\User();
+        $user->setId(74);
+
+        $this->repoMap['User']->shouldReceive('fetchList')->with($query)->andReturn([$user]);
         $this->repoMap['User']->shouldReceive('fetchCount')->with($query)->andReturn('COUNT');
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertSame(['result' => 'LIST', 'count' => 'COUNT'], $result);
+        $this->assertSame(74, $result['result'][0]['id']);
+        $this->assertSame('COUNT', $result['count']);
     }
 }
