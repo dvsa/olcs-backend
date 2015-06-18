@@ -137,6 +137,7 @@ abstract class AbstractRepository implements RepositoryInterface
     /**
      * Override to add additional data to the default fetchList() method
      * @param QueryBuilder $qb
+     * @inheritdoc
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
@@ -146,6 +147,7 @@ abstract class AbstractRepository implements RepositoryInterface
     /**
      * Override to add additional data to the default fetchById() method
      * @param QueryBuilder $qb
+     * @inheritdoc
      */
     protected function applyFetchJoins(QueryBuilder $qb)
     {
