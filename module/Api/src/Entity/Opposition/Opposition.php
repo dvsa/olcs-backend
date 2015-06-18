@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposer;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
-
 /**
  * Opposition Entity
  *
@@ -45,8 +44,7 @@ class Opposition extends AbstractOpposition
         $isPublicInquiry,
         $isWillingToAttendPi,
         $isWithdrawn
-    )
-    {
+    ) {
         parent::__construct();
         $this->setCase($case);
         $this->setLicence($licence);

@@ -94,7 +94,6 @@ class CreateOppositionTest extends CommandHandlerTestCase
         return [
             'case' => 24,
             "oppositionType" => "otf_eob",
-            "contactDetailsDescription" => "CD notes",
             "raisedDate" => "2015-05-04",
             "opposerType" => "obj_t_police",
             "isValid" => "opp_v_yes",
@@ -117,6 +116,7 @@ class CreateOppositionTest extends CommandHandlerTestCase
             "operatingCentres" => null,
             "opposerContactDetails" => [
                 "emailAddress" => "bobED@jones.com",
+                "description" => "CD notes",
                 "person" => [
                     "forename" => "Bob",
                     "familyName" => "Jones"
