@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Hearing\Stay;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Stay as StayRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\Hearing\Stay as Qry;
+use Mockery as m;
 
 /**
  * Stay Test
@@ -31,11 +32,13 @@ class StayTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 1]);
 
+        $mockResult = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+
         $this->repoMap['Stay']->shouldReceive('fetchUsingCaseId')
             ->with($query)
-            ->andReturn(['foo']);
+            ->andReturn($mockResult);
 
         $result = $this->sut->handleQuery($query);
-        $this->assertEquals($result, ['foo']);
+        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result);
     }
 }
