@@ -114,6 +114,11 @@ class ContactDetails extends AbstractContactDetails
             $this->setEmailAddress($contactParams['emailAddress']);
         }
 
+        if ($contactParams['description'] !== null) {
+            // set description
+            $this->setDescription($contactParams['description']);
+        }
+
         if ($contactParams['address'] !== null) {
             // populate address
             $this->populateAddress($contactParams['address']);
