@@ -69,8 +69,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
                 return $this->chequePayment($customerReference, $command, $feesToPay, $result);
             case FeeEntity::METHOD_POSTAL_ORDER:
                 return $this->poPayment($customerReference, $command, $feesToPay, $result);
-            default:
-                throw new ValidationException(['invalid payment method: ' . $command->getPaymentMethod()]);
         }
     }
 
@@ -367,10 +365,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
      */
     protected function getCustomerReference($fees)
     {
-        if (empty($fees)) {
-            return null;
-        }
-
         $reference = 'Miscellaneous'; // default value
 
         foreach ($fees as $fee) {
