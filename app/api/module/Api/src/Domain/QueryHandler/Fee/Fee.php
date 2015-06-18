@@ -21,6 +21,14 @@ class Fee extends AbstractQueryHandler
         /** @var FeeRepository $repo */
         $repo = $this->getRepo();
 
-        return $this->result($repo->fetchUsingId($query));
+        $fee = $repo->fetchUsingId($query);
+
+        return $this->result(
+            $fee,
+            [],
+            [
+                'allowEdit' => $fee->allowEdit(),
+            ]
+        );
     }
 }

@@ -45,13 +45,12 @@ class UpdateFeeTest extends CommandHandlerTestCase
                 'id' => $feeId,
                 'version' => 1,
                 'status' => FeeEntity::STATUS_WAIVED,
+                'waiveReason' => 'foo',
             ]
         );
 
         $fee = m::mock(FeeEntity::class)->makePartial();
-        $fee
-            ->setId($feeId)
-            ->setWaiveReason('foo');
+        $fee->setId($feeId);
 
         $this->repoMap['Fee']
             ->shouldReceive('fetchUsingId')

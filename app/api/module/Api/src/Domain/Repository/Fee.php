@@ -34,7 +34,7 @@ class Fee extends AbstractRepository
     {
         $doctrineQb = $this->createQueryBuilder();
         $this->getQueryBuilder()->withRefdata()->order('invoicedDate', 'DESC');
-        $doctrineQb->andWhere($doctrineQb->expr()->eq('f.busReg', ':busRegId'));
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.busReg', ':busRegId'));
         $doctrineQb->setParameter('busRegId', $busRegId);
         $doctrineQb->setMaxResults(1);
 
