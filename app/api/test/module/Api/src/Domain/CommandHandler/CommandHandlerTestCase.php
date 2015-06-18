@@ -137,6 +137,7 @@ class CommandHandlerTestCase extends MockeryTestCase
     {
         $this->initRefdata = false;
         $this->assertCommandData();
+        return parent::tearDown();
     }
 
     public function expectedSideEffect($class, $data, $result)
