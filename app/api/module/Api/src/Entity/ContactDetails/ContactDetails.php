@@ -43,7 +43,7 @@ class ContactDetails extends AbstractContactDetails
     const CONTACT_TYPE_PARTNER = 'ct_partner';
     const CONTACT_TYPE_OBJECTOR = 'ct_obj';
     const CONTACT_TYPE_STATEMENT_REQUESTOR = 'ct_requestor';
-    const CONTACT_TYPE_TEAM_USER = 'ct_team_user';
+    const CONTACT_TYPE_USER = 'ct_user';
 
     public function __construct(RefData $contactType)
     {
@@ -83,8 +83,8 @@ class ContactDetails extends AbstractContactDetails
             case self::CONTACT_TYPE_STATEMENT_REQUESTOR:
                 $this->updateStatementRequestor($contactParams);
                 break;
-            case self::CONTACT_TYPE_TEAM_USER:
-                $this->updateTeamUser($contactParams);
+            case self::CONTACT_TYPE_USER:
+                $this->updateUser($contactParams);
                 break;
         }
 
@@ -171,7 +171,7 @@ class ContactDetails extends AbstractContactDetails
     /**
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
      */
-    private function updateTeamUser(array $contactParams)
+    private function updateUser(array $contactParams)
     {
         // set email address
         $this->setEmailAddress($contactParams['emailAddress']);

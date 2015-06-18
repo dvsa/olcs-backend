@@ -50,7 +50,7 @@ final class UpdateMyAccount extends AbstractCommandHandler implements AuthAwareI
             // create new contact details
             $user->setContactDetails(
                 ContactDetails::create(
-                    $this->getRepo()->getRefdataReference(ContactDetails::CONTACT_TYPE_TEAM_USER),
+                    $this->getRepo()->getRefdataReference(ContactDetails::CONTACT_TYPE_USER),
                     $this->getRepo('ContactDetails')->populateRefDataReference(
                         $command->getContactDetails()
                     )

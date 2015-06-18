@@ -255,7 +255,7 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertEquals(0, $entity->getPhoneContacts()->count());
     }
 
-    public function testCreateForTeamUser()
+    public function testCreateForUser()
     {
         $data = [
             'emailAddress' => 'test1@test.me',
@@ -287,7 +287,7 @@ class ContactDetailsEntityTest extends EntityTester
         ];
 
         $contactType = m::mock(RefData::class)->makePartial();
-        $contactType->setId(ContactDetails::CONTACT_TYPE_TEAM_USER);
+        $contactType->setId(ContactDetails::CONTACT_TYPE_USER);
 
         $entity = ContactDetails::create($contactType, $data);
 
@@ -310,7 +310,7 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertEquals(2, count($entity->getPhoneContacts()));
     }
 
-    public function testUpdateForTeamUser()
+    public function testUpdateForUser()
     {
         $data = [
             'emailAddress' => 'updated@test.me',
@@ -347,7 +347,7 @@ class ContactDetailsEntityTest extends EntityTester
         ];
 
         $contactType = m::mock(RefData::class)->makePartial();
-        $contactType->setId(ContactDetails::CONTACT_TYPE_TEAM_USER);
+        $contactType->setId(ContactDetails::CONTACT_TYPE_USER);
 
         $entity = new ContactDetails($contactType);
 
