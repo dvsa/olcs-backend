@@ -23,11 +23,10 @@ final class PayFee extends AbstractCommandHandler
     /**
      * @todo implement fee payment side effects
      * @see Common\Service\Listener\FeeListenerService
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function handleCommand(CommandInterface $command)
     {
-        unset($command);
-        $result = new Result();
-        return $result;
+        return new Result();
     }
 }
