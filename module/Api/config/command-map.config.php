@@ -171,6 +171,14 @@ return [
     // Transfer - Document
     TransferCommand\Document\CreateLetter::class => CommandHandler\Document\CreateLetter::class,
 
+    // Transfer - ConditionUndertaking
+    TransferCommand\Cases\ConditionUndertaking\CreateConditionUndertaking::class =>
+        CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
+    TransferCommand\Cases\ConditionUndertaking\UpdateConditionUndertaking::class =>
+        CommandHandler\Cases\ConditionUndertaking\UpdateConditionUndertaking::class,
+    TransferCommand\Cases\ConditionUndertaking\DeleteConditionUndertaking::class =>
+        CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertaking::class,
+
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
     Command\Application\ResetApplication::class => CommandHandler\Application\ResetApplication::class,
