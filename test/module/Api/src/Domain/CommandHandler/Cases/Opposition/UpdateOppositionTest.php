@@ -1,36 +1,42 @@
 <?php
 
 /**
- * Create Opposition Test
+ * Update Opposition Test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Opposition;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Opposition\CreateOpposition;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Opposition\UpdateOpposition;
 use Dvsa\Olcs\Api\Domain\Repository\Opposition as OppositionRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\Opposition\CreateOpposition as Cmd;
+use Dvsa\Olcs\Transfer\Command\Cases\Opposition\UpdateOpposition as Cmd;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition as OppositionEntity;
+use Dvsa\Olcs\Api\Entity\Opposition\Opposer as OpposerEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact as PhoneContactEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
+use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
- * Create Opposition Test
+ * Update Opposition Test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class CreateOppositionTest extends CommandHandlerTestCase
+class UpdateOppositionTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new CreateOpposition();
+        $this->sut = new UpdateOpposition();
         $this->mockRepo('Opposition', OppositionRepo::class);
         $this->mockRepo('ContactDetails', ContactDetailsRepo::class);
         $this->mockRepo('Cases', CasesRepo::class);
@@ -41,6 +47,8 @@ class CreateOppositionTest extends CommandHandlerTestCase
     private function getPayload()
     {
         return [
+            'id' => 99,
+            'version' => 3,
             'case' => 24,
             "oppositionType" => "otf_eob",
             "contactDetailsDescription" => "CD notes",
@@ -95,7 +103,6 @@ class CreateOppositionTest extends CommandHandlerTestCase
             'id' => 99,
             'version' => 3,
             "oppositionType" => "otf_eob",
-            "contactDetailsDescription" => "CD notes",
             "raisedDate" => "2015-05-04",
             "opposerType" => "obj_t_police",
             "isValid" => "opp_v_yes",
@@ -117,13 +124,14 @@ class CreateOppositionTest extends CommandHandlerTestCase
             "notes" => "Notes",
             "operatingCentres" => null,
             "opposerContactDetails" => [
-                "emailAddress" => "bobED@jones.com",
+                "emailAddress" => "bob@jones.com",
+                "description" => "CD notes",
                 "person" => [
                     "forename" => "Bob",
                     "familyName" => "Jones"
                 ],
                 "address" => [
-                    "addressLine1" => "Unit 5ED",
+                    "addressLine1" => "Unit 5",
                     "addressLine2" => "12 Albert Street",
                     "addressLine3" => "Westpoint",
                     "addressLine4" => "",
@@ -150,7 +158,8 @@ class CreateOppositionTest extends CommandHandlerTestCase
             'opp_v_yes',
             'opp_ack',
             'ogf_env',
-            'phone_t_tel'
+            'phone_t_tel',
+            'ct_obj'
         ];
 
         $this->references = [
@@ -184,16 +193,44 @@ class CreateOppositionTest extends CommandHandlerTestCase
         $mockCase = m::mock(CasesEntity::class)->makePartial();
         $mockCase->setLicence($mockLicence);
 
-        $this->repoMap['Cases']
-            ->shouldReceive('fetchById')
-            ->with($payload['case'], m::type('integer'))
+        /** @var PersonEntity $person */
+        $person = m::mock(PersonEntity::class)->makePartial();
+        $person->setId(44);
+
+        /** @var AddressEntity $address */
+        $address = m::mock(AddressEntity::class)->makePartial();
+        $address->setId(55);
+
+        /** @var PhoneContactEntity $phoneContact */
+        $phoneContact = m::mock(PhoneContactEntity::class)->makePartial();
+        $phoneContact->setId(66);
+
+        /** @var RefDataEntity $contactType */
+        $contactType = m::mock(RefDataEntity::class)->makePartial();
+        $contactType->setId('ct_obj');
+
+        /** @var ContactDetailsEntity $contactDetails */
+        $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
+        $contactDetails->setId(33);
+        $contactDetails->setContactType($contactType);
+        $contactDetails->setPerson($person);
+        $contactDetails->setAddress($address);
+        $contactDetails->setPhoneContacts(new ArrayCollection([66 => $phoneContact]));
+
+        /** @var OpposerEntity $opposer */
+        $opposer = m::mock(OpposerEntity::class)->makePartial();
+        $opposer->setId(66);
+        $opposer->setContactDetails($contactDetails);
+
+        /** @var OppositionEntity $opposition */
+        $opposition = m::mock(OppositionEntity::class)->makePartial();
+        $opposition->setId($command->getId());
+        $opposition->setOpposer($opposer);
+
+        $this->repoMap['Opposition']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
+            ->andReturn($opposition)
             ->once()
-            ->andReturn($mockCase);
-
-        /** @var OppositionEntity $opp */
-        $opp = null;
-
-        $this->repoMap['Opposition']
             ->shouldReceive('generateRefdataArrayCollection')
             ->shouldReceive('save')
             ->with(m::type(OppositionEntity::class))
@@ -210,6 +247,6 @@ class CreateOppositionTest extends CommandHandlerTestCase
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
-        $this->assertContains('Opposition created', $result->getMessages());
+        $this->assertContains('Opposition updated', $result->getMessages());
     }
 }
