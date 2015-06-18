@@ -69,6 +69,8 @@ return [
     // Transfer - Variation
     TransferCommand\Variation\UpdateTypeOfLicence::class => CommandHandler\Variation\UpdateTypeOfLicence::class,
     TransferCommand\Variation\UpdateAddresses::class => CommandHandler\Variation\UpdateAddresses::class,
+    TransferCommand\Variation\TransportManagerDeleteDelta::class
+        => CommandHandler\Variation\TransportManagerDeleteDelta::class,
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
@@ -77,6 +79,10 @@ return [
     TransferCommand\OtherLicence\UpdateOtherLicence::class => CommandHandler\OtherLicence\UpdateOtherLicence::class,
     TransferCommand\OtherLicence\CreateOtherLicence::class => CommandHandler\OtherLicence\CreateOtherLicence::class,
     TransferCommand\OtherLicence\DeleteOtherLicence::class => CommandHandler\OtherLicence\DeleteOtherLicence::class,
+    TransferCommand\OtherLicence\CreateForTma::class => CommandHandler\OtherLicence\CreateForTma::class,
+    TransferCommand\OtherLicence\UpdateForTma::class => CommandHandler\OtherLicence\UpdateForTma::class,
+    TransferCommand\OtherLicence\CreatePreviousLicence::class
+        => CommandHandler\OtherLicence\CreatePreviousLicence::class,
 
     // Transfer - Previous Conviction
     TransferCommand\PreviousConviction\CreatePreviousConviction::class =>
@@ -85,6 +91,8 @@ return [
         CommandHandler\PreviousConviction\UpdatePreviousConviction::class,
     TransferCommand\PreviousConviction\DeletePreviousConviction::class =>
         CommandHandler\PreviousConviction\DeletePreviousConviction::class,
+    TransferCommand\PreviousConviction\CreateForTma::class
+        => CommandHandler\PreviousConviction\CreateForTma::class,
 
     // Transfer - Trailer
     TransferCommand\Trailer\CreateTrailer::class => CommandHandler\Trailer\CreateTrailer::class,
@@ -228,4 +236,25 @@ return [
         => CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class,
     Command\LicenceStatusRule\ProcessToValid::class
         => CommandHandler\LicenceStatusRule\ProcessToValid::class,
+    
+    // Transport Manager Application
+    TransferCommand\TransportManagerApplication\Delete::class
+        => CommandHandler\TransportManagerApplication\Delete::class,
+    TransferCommand\TransportManagerApplication\Create::class
+        => CommandHandler\TransportManagerApplication\Create::class,
+    TransferCommand\TransportManagerApplication\UpdateStatus::class
+        => CommandHandler\TransportManagerApplication\UpdateStatus::class,
+    TransferCommand\TransportManagerApplication\UpdateDetails::class
+        => CommandHandler\TransportManagerApplication\UpdateDetails::class,
+
+    // Email
+    Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
+
+    // Person
+    TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,
+
+    // TM Employment
+    TransferCommand\TmEmployment\DeleteList::class => CommandHandler\TmEmployment\DeleteList::class,
+    TransferCommand\TmEmployment\Create::class => CommandHandler\TmEmployment\Create::class,
+    TransferCommand\TmEmployment\Update::class => CommandHandler\TmEmployment\Update::class,
 ];
