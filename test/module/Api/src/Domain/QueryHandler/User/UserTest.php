@@ -5,12 +5,13 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Trailers;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\User\User as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
 use Dvsa\Olcs\Transfer\Query\User\User as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Mockery as m;
 
 /**
  * UserTest
@@ -31,10 +32,13 @@ class UserTest extends QueryHandlerTestCase
     {
         $query = Query::create(['QUERY']);
 
-        $this->repoMap['User']->shouldReceive('fetchUsingId')->with($query)->andReturn('ENTITY');
+        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
+        $mockUser->shouldReceive('serialize')->once()->andReturn(['foo' => 'bar']);
 
-        $result = $this->sut->handleQuery($query);
+        $this->repoMap['User']->shouldReceive('fetchUsingId')->with($query)->andReturn($mockUser);
 
-        $this->assertSame('ENTITY', $result);
+        $result = $this->sut->handleQuery($query)->serialize();
+
+        $this->assertSame(['foo' => 'bar'], $result);
     }
 }

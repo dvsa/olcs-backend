@@ -5,12 +5,12 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TmEmployment;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\TmEmployment\GetSingle as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\TmEmployment\GetSingle as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Mockery as m;
 
 /**
  * GetSingleTest
@@ -31,10 +31,14 @@ class GetSingleTest extends QueryHandlerTestCase
     {
         $query = Query::create(['id' => 1066]);
 
-        $this->repoMap['TmEmployment']->shouldReceive('fetchUsingId')->with($query)->once()->andReturn('RESULT');
+        $mockTmEmployment = m::mock(\Dvsa\Olcs\Api\Entity\Tm\TmEmployment::class);
+        $mockTmEmployment->shouldReceive('serialize')->once()->andReturn(['foo' => 'bar']);
 
-        $result = $this->sut->handleQuery($query);
+        $this->repoMap['TmEmployment']->shouldReceive('fetchUsingId')->with($query)->once()
+            ->andReturn($mockTmEmployment);
 
-        $this->assertSame('RESULT', $result);
+        $result = $this->sut->handleQuery($query)->serialize();
+
+        $this->assertEquals(['foo' => 'bar'], $result);
     }
 }
