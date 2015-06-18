@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Hearing;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Stay as StayRepo;
+use Doctrine\ORM\Query;
 
 /**
  * Stay QueryHandler
@@ -19,7 +20,7 @@ final class StayList extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         return [
-            'result' => $repo->fetchList($query),
+            'result' => $this->resultList($repo->fetchList($query, Query::HYDRATE_OBJECT)),
             'count' => $repo->fetchCount($query)
         ];
     }

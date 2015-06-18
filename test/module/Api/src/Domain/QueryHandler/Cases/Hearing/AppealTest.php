@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Hearing\Appeal;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Appeal as AppealRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\Hearing\Appeal as Qry;
+use Mockery as m;
 
 /**
  * Appeal Test
@@ -31,11 +32,13 @@ class AppealTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 1]);
 
+        $mockResult = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+
         $this->repoMap['Appeal']->shouldReceive('fetchUsingCaseId')
             ->with($query)
-            ->andReturn(['foo']);
+            ->andReturn($mockResult);
 
         $result = $this->sut->handleQuery($query);
-        $this->assertEquals($result, ['foo']);
+        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result);
     }
 }

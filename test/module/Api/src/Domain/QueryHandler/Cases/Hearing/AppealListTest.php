@@ -9,8 +9,9 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Hearing;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Hearing\AppealList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\Hearing as AppealRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Appeal as AppealRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\Hearing\AppealList as Qry;
+use Mockery as m;
 
 /**
  * AppealList Test
@@ -31,9 +32,12 @@ class AppealListTest extends QueryHandlerTestCase
     {
         $query = Qry::create([]);
 
+        $mockResult = m::mock();
+        $mockResult->shouldReceive('serialize')->once()->andReturn('foo');
+
         $this->repoMap['Appeal']->shouldReceive('fetchList')
-            ->with($query)
-            ->andReturn(['foo']);
+            ->with($query, m::type('integer'))
+            ->andReturn([$mockResult]);
 
         $this->repoMap['Appeal']->shouldReceive('fetchCount')
             ->with($query)

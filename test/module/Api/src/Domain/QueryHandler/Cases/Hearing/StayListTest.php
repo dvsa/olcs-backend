@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Hearing\StayList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Hearing as StayRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\Hearing\StayList as Qry;
+use Mockery as m;
 
 /**
  * StayList Test
@@ -31,9 +32,12 @@ class StayListTest extends QueryHandlerTestCase
     {
         $query = Qry::create([]);
 
+        $mockResult = m::mock();
+        $mockResult->shouldReceive('serialize')->once()->andReturn('foo');
+
         $this->repoMap['Stay']->shouldReceive('fetchList')
-            ->with($query)
-            ->andReturn(['foo']);
+            ->with($query, m::type('integer'))
+            ->andReturn([$mockResult]);
 
         $this->repoMap['Stay']->shouldReceive('fetchCount')
             ->with($query)
