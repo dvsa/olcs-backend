@@ -40,7 +40,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            ContactDetailsEntity::CONTACT_TYPE_TEAM_USER
+            ContactDetailsEntity::CONTACT_TYPE_USER
         ];
 
         $this->references = [
