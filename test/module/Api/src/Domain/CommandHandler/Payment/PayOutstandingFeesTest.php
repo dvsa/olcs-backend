@@ -8,8 +8,10 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Payment;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Payment\PayOutstandingFees;
 use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
@@ -45,12 +47,24 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             PaymentEntity::STATUS_PAID,
             PaymentEntity::STATUS_FAILED,
             FeeEntity::METHOD_CARD_ONLINE,
+            FeeEntity::METHOD_CASH,
+            FeeEntity::METHOD_CHEQUE,
+            FeeEntity::METHOD_POSTAL_ORDER,
+            FeeEntity::STATUS_PAID,
         ];
+
+        $this->mockCpmsService
+            ->shouldReceive('formatAmount')
+            ->andReturnUsing(
+                function ($input) {
+                    return (string)$input;
+                }
+            );
 
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    public function testHandleCommandWithOrgId()
     {
         // set up data
         $organisationId = 69;
@@ -237,6 +251,319 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->andReturn($updatedPayment);
 
         $this->sut->resolvePaidFees($fees, $result);
+    }
+
+    public function testHandleCommandWithFeeIds()
+    {
+        // set up data
+        $organisationId = 77;
+        $feeIds = [99, 100, 101];
+        $cpmsRedirectUrl = 'https://olcs-selfserve/foo';
+
+        $paymentId = 999; // payment to be created
+
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fee2 = $this->getStubFee(101, 99.99);
+        $fees = [$fee1, $fee2];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'cpmsRedirectUrl' => $cpmsRedirectUrl,
+            'paymentMethod' => FeeEntity::METHOD_CARD_OFFLINE,
+        ];
+
+        $command = Cmd::create($data);
+
+        // mocks
+        $licence = m::mock();
+        $organisation = m::mock();
+        $licence
+            ->shouldReceive('getOrganisation')
+            ->andReturn($organisation)
+            ->getMock();
+        $organisation
+            ->shouldReceive('getId')
+            ->andReturn($organisationId);
+        $fee1->setLicence($licence);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('initiateCardRequest')
+            ->once()
+            ->with($organisationId, $cpmsRedirectUrl, $fees);
+
+        /** @var PaymentEntity $savedPayment */
+        $savedPayment = null;
+        $this->repoMap['Payment']
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(PaymentEntity::class))
+            ->andReturnUsing(
+                function (PaymentEntity $payment) use (&$savedPayment, $paymentId) {
+                    $payment->setId($paymentId);
+                    $savedPayment = $payment;
+                }
+            );
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'payment' => $paymentId,
+            ],
+            'messages' => [
+                'Payment record created',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals(PaymentEntity::STATUS_OUTSTANDING, $savedPayment->getStatus()->getId());
+    }
+
+    public function testHandleCommandCashPayment()
+    {
+        // set up data
+        $feeIds = [99];
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fees = [$fee1];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => FeeEntity::METHOD_CASH,
+            'receiptDate' => '2015-06-17',
+            'payer' => 'Dan',
+            'slipNo' => '12345',
+            'received' => '99.99',
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('recordCashPayment')
+            ->once()
+            ->with($fees, 'Miscellaneous', '99.99', '2015-06-17', 'Dan', '12345')
+            ->andReturn(
+                [
+                    'code' => CpmsHelper::RESPONSE_SUCCESS,
+                    'receipt_reference' => 'OLCS-1234-CASH',
+                ]
+            );
+
+        $this->repoMap['Fee']
+            ->shouldReceive('save')
+            ->once()
+            ->with($fee1);
+
+        $updateData = ['id' => 99];
+        $result2 = new Result();
+        $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Fee(s) updated as Paid by cash',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals(FeeEntity::STATUS_PAID, $fee1->getFeeStatus()->getId());
+        $this->assertEquals('2015-06-17', $fee1->getReceivedDate()->format('Y-m-d'));
+        $this->assertEquals('OLCS-1234-CASH', $fee1->getReceiptNo());
+        $this->assertEquals(FeeEntity::METHOD_CASH, $fee1->getPaymentMethod()->getId());
+        $this->assertEquals('Dan', $fee1->getPayerName());
+        $this->assertEquals('12345', $fee1->getPayingInSlipNumber());
+        $this->assertEquals('99.99', $fee1->getReceivedAmount());
+    }
+
+    public function testHandleCommandChequePayment()
+    {
+        // set up data
+        $feeIds = [99];
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fees = [$fee1];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => FeeEntity::METHOD_CHEQUE,
+            'receiptDate' => '2015-06-17',
+            'payer' => 'Dan',
+            'slipNo' => '12345',
+            'received' => '99.99',
+            'chequeNo' => '23456',
+            'chequeDate' => '2015-06-10',
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('recordChequePayment')
+            ->once()
+            ->with($fees, 'Miscellaneous', '99.99', '2015-06-17', 'Dan', '12345', '23456', '2015-06-10')
+            ->andReturn(
+                [
+                    'code' => CpmsHelper::RESPONSE_SUCCESS,
+                    'receipt_reference' => 'OLCS-1234-CHEQUE',
+                ]
+            );
+
+        $this->repoMap['Fee']
+            ->shouldReceive('save')
+            ->once()
+            ->with($fee1);
+
+        $updateData = ['id' => 99];
+        $result2 = new Result();
+        $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Fee(s) updated as Paid by cheque',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals(FeeEntity::STATUS_PAID, $fee1->getFeeStatus()->getId());
+        $this->assertEquals('2015-06-17', $fee1->getReceivedDate()->format('Y-m-d'));
+        $this->assertEquals('OLCS-1234-CHEQUE', $fee1->getReceiptNo());
+        $this->assertEquals(FeeEntity::METHOD_CHEQUE, $fee1->getPaymentMethod()->getId());
+        $this->assertEquals('Dan', $fee1->getPayerName());
+        $this->assertEquals('12345', $fee1->getPayingInSlipNumber());
+        $this->assertEquals('99.99', $fee1->getReceivedAmount());
+        $this->assertEquals('23456', $fee1->getChequePoNumber());
+        $this->assertEquals('2015-06-10', $fee1->getChequePoDate()->format('Y-m-d'));
+    }
+
+    public function testHandleCommandPoPayment()
+    {
+        // set up data
+        $feeIds = [99];
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fees = [$fee1];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => FeeEntity::METHOD_POSTAL_ORDER,
+            'receiptDate' => '2015-06-17',
+            'payer' => 'Dan',
+            'slipNo' => '12345',
+            'received' => '99.99',
+            'poNo' => '23456',
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('recordPostalOrderPayment')
+            ->once()
+            ->with($fees, 'Miscellaneous', '99.99', '2015-06-17', 'Dan', '12345', '23456')
+            ->andReturn(
+                [
+                    'code' => CpmsHelper::RESPONSE_SUCCESS,
+                    'receipt_reference' => 'OLCS-1234-PO',
+                ]
+            );
+
+        $this->repoMap['Fee']
+            ->shouldReceive('save')
+            ->once()
+            ->with($fee1);
+
+        $updateData = ['id' => 99];
+        $result2 = new Result();
+        $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Fee(s) updated as Paid by postal order',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals(FeeEntity::STATUS_PAID, $fee1->getFeeStatus()->getId());
+        $this->assertEquals('2015-06-17', $fee1->getReceivedDate()->format('Y-m-d'));
+        $this->assertEquals('OLCS-1234-PO', $fee1->getReceiptNo());
+        $this->assertEquals(FeeEntity::METHOD_POSTAL_ORDER, $fee1->getPaymentMethod()->getId());
+        $this->assertEquals('Dan', $fee1->getPayerName());
+        $this->assertEquals('12345', $fee1->getPayingInSlipNumber());
+        $this->assertEquals('99.99', $fee1->getReceivedAmount());
+        $this->assertEquals('23456', $fee1->getChequePoNumber());
+    }
+
+    public function testHandleCommandAmountMismatch()
+    {
+        // set up data
+        $feeIds = [99];
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fees = [$fee1];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => FeeEntity::METHOD_CASH,
+            'receiptDate' => '2015-06-17',
+            'payer' => 'Dan',
+            'slipNo' => '12345',
+            'received' => '98.99', // 1 quid short :(
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('recordCashPayment')
+            ->never();
+
+        $this->setExpectedException(ValidationException::class);
+
+        $this->sut->handleCommand($command);
     }
 
     /**
