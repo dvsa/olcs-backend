@@ -77,10 +77,6 @@ return [
         QueryHandler\Cases\ConditionUndertaking\ConditionUndertaking::class,
     TransferQuery\Cases\ConditionUndertaking\ConditionUndertakingList::class =>
         QueryHandler\Cases\ConditionUndertaking\ConditionUndertakingList::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class
-        => QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class
-        => QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
     TransferQuery\Cases\Opposition\Opposition::class => QueryHandler\Cases\Opposition\Opposition::class,
     TransferQuery\Cases\Opposition\OppositionList::class =>
         QueryHandler\Cases\Opposition\OppositionList::class,
@@ -92,6 +88,9 @@ return [
 
     TransferQuery\Cases\Hearing\Stay::class => QueryHandler\Cases\Hearing\Stay::class,
     TransferQuery\Cases\Hearing\StayList::class => QueryHandler\Cases\Hearing\StayList::class,
+
+    TransferQuery\Cases\Statement\Statement::class => QueryHandler\Cases\Statement\Statement::class,
+    TransferQuery\Cases\Statement\StatementList::class => QueryHandler\Cases\Statement\StatementList::class,
 
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
