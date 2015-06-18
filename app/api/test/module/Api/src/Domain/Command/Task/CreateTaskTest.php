@@ -30,7 +30,12 @@ class CreateTaskTest extends PHPUnit_Framework_TestCase
             'isClosed' => true,
             'urgent' => true,
             'application' => 555,
-            'licence' => 666
+            'licence' => 666,
+            'busReg' => 123,
+            'case' => 124,
+            'transportManager' => 125,
+            'irfoOrganisation' => 126,
+
         ];
 
         $command = CreateTask::create($data);
@@ -45,6 +50,10 @@ class CreateTaskTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(true, $command->getUrgent());
         $this->assertEquals(555, $command->getApplication());
         $this->assertEquals(666, $command->getLicence());
+        $this->assertEquals(123, $command->getBusReg());
+        $this->assertEquals(124, $command->getCase());
+        $this->assertEquals(125, $command->getTransportManager());
+        $this->assertEquals(126, $command->getIrfoOrganisation());
 
         $this->assertEquals(
             [
@@ -57,7 +66,11 @@ class CreateTaskTest extends PHPUnit_Framework_TestCase
                 'isClosed' => true,
                 'urgent' => true,
                 'application' => 555,
-                'licence' => 666
+                'licence' => 666,
+                'busReg' => 123,
+                'case' => 124,
+                'transportManager' => 125,
+                'irfoOrganisation' => 126,
             ],
             $command->getArrayCopy()
         );

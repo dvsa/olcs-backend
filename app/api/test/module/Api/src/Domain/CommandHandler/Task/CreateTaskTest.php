@@ -7,22 +7,25 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Task;
 
-use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Api\Domain\Repository\Task;
 use Dvsa\Olcs\Api\Domain\Repository\TaskAllocationRule;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as Cmd;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Entity\User\Team;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule as TaskAllocationRuleEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Entity\User\Team;
+use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Create Task Test
@@ -69,7 +72,19 @@ class CreateTaskTest extends CommandHandlerTestCase
             ],
             Licence::class => [
                 222 => m::mock(Licence::class)
-            ]
+            ],
+            BusReg::class => [
+                64 => m::mock(BusReg::class)
+            ],
+            Cases::class => [
+                164 => m::mock(Cases::class)
+            ],
+            TransportManager::class => [
+                264 => m::mock(TransportManager::class)
+            ],
+            Organisation::class => [
+                364 => m::mock(Organisation::class)
+            ],
         ];
 
         parent::initReferences();
@@ -87,7 +102,11 @@ class CreateTaskTest extends CommandHandlerTestCase
             'actionDate' => '2015-01-01',
             'description' => 'Some task',
             'isClosed' => false,
-            'urgent' => false
+            'urgent' => false,
+            'busReg' => 64,
+            'case' => 164,
+            'transportManager' => 264,
+            'irfoOrganisation' => 364,
         ];
 
         $command = Cmd::create($data);
@@ -105,6 +124,11 @@ class CreateTaskTest extends CommandHandlerTestCase
                     $this->assertSame($this->references[Team::class][22], $task->getAssignedToTeam());
                     $this->assertSame($this->references[Application::class][111], $task->getApplication());
                     $this->assertSame($this->references[Licence::class][222], $task->getLicence());
+
+                    $this->assertSame($this->references[BusReg::class][64], $task->getBusReg());
+                    $this->assertSame($this->references[Cases::class][164], $task->getCase());
+                    $this->assertSame($this->references[TransportManager::class][264], $task->getTransportManager());
+                    $this->assertSame($this->references[Organisation::class][364], $task->getIrfoOrganisation());
 
                     $this->assertEquals('2015-01-01', $task->getActionDate()->format('Y-m-d'));
                     $this->assertEquals('Some task', $task->getDescription());

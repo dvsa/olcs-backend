@@ -174,4 +174,7 @@ return [
 
     // Bus Reg History View
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
+    
+    // Scan
+    TransferQuery\Scan\GetSingle::class => QueryHandler\Scan\GetSingle::class
 ];
