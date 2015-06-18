@@ -75,6 +75,7 @@ class ContactDetails extends AbstractContactDetails
                 break;
             case self::CONTACT_TYPE_PARTNER:
                 $this->updatePartner($contactParams);
+                break;
             case self::CONTACT_TYPE_OBJECTOR:
                 $this->updateObjector($contactParams);
                 break;
@@ -134,7 +135,7 @@ class ContactDetails extends AbstractContactDetails
             $this->populatePhoneContacts($contactParams['phoneContacts']);
         }
     }
-    
+
     /**
     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\User\UpdatePartner
     */

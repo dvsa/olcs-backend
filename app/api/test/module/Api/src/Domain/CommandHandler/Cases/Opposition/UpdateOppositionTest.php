@@ -51,7 +51,6 @@ class UpdateOppositionTest extends CommandHandlerTestCase
             'version' => 3,
             'case' => 24,
             "oppositionType" => "otf_eob",
-            "contactDetailsDescription" => "CD notes",
             "raisedDate" => "2015-05-04",
             "opposerType" => "obj_t_police",
             "isValid" => "opp_v_yes",
@@ -74,6 +73,7 @@ class UpdateOppositionTest extends CommandHandlerTestCase
             "operatingCentres" => null,
             "opposerContactDetails" => [
                 "emailAddress" => "bobED@jones.com",
+                "description" => "CD notes",
                 "person" => [
                     "forename" => "Bob",
                     "familyName" => "Jones"
@@ -213,6 +213,7 @@ class UpdateOppositionTest extends CommandHandlerTestCase
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->setId(33);
         $contactDetails->setContactType($contactType);
+        $contactDetails->setDescription($payload['opposerContactDetails']['description']);
         $contactDetails->setPerson($person);
         $contactDetails->setAddress($address);
         $contactDetails->setPhoneContacts(new ArrayCollection([66 => $phoneContact]));
@@ -234,12 +235,6 @@ class UpdateOppositionTest extends CommandHandlerTestCase
             ->shouldReceive('generateRefdataArrayCollection')
             ->shouldReceive('save')
             ->with(m::type(OppositionEntity::class))
-            ->andReturnUsing(
-                function (OppositionEntity $opposition) use (&$opp) {
-                    $opp = $opposition;
-                    $opposition->setId(99);
-                }
-            )
             ->once();
 
         $result = $this->sut->handleCommand($command);

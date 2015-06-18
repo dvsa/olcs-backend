@@ -29,8 +29,7 @@ class Opposer extends AbstractOpposer
         ContactDetails $contactDetails,
         RefData $opposerType,
         RefData $oppositionType = null
-    )
-    {
+    ) {
         $this->setContactDetails($contactDetails);
 
         $this->checkObjectionOpposerType($opposerType, $oppositionType);
@@ -57,5 +56,4 @@ class Opposer extends AbstractOpposer
 
         $this->setOpposerType($opposerParams['opposerType']);
     }
-
 }
