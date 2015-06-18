@@ -101,6 +101,17 @@ class Fee extends AbstractFee
         }
     }
 
+    public function allowEdit()
+    {
+        return !in_array(
+            $this->getFeeStatus()->getId(),
+            [
+                self::STATUS_PAID,
+                self::STATUS_CANCELLED,
+            ]
+        );
+    }
+
     /**************************************************************************/
     /* Allow injection of current date/time */
 
@@ -130,22 +141,4 @@ class Fee extends AbstractFee
         $this->now = $datetime;
     }
     /**************************************************************************/
-
-    public function allowEdit()
-    {
-        return !in_array(
-            $this->getFeeStatus()->getId(),
-            [
-                self::STATUS_PAID,
-                self::STATUS_CANCELLED,
-            ]
-        );
-    }
-
-    protected function getCalculatedValues()
-    {
-        return [
-            'allowEdit' => $this->allowEdit(),
-        ];
-    }
 }
