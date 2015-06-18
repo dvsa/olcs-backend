@@ -107,6 +107,6 @@ class CreateMiscellaneousFeeTest extends CommandHandlerTestCase
 
         $this->setExpectedException(ValidationException::class);
 
-        $result = $this->sut->handleCommand($command);
+        $this->sut->handleCommand($command);
     }
 }

@@ -122,6 +122,7 @@ class Fee extends AbstractFee
     protected $now;
 
     /**
+     * @codeCoverageIgnore
      * @return \DateTime
      */
     public function getCurrentDateTime()
@@ -133,6 +134,7 @@ class Fee extends AbstractFee
     }
 
     /**
+     * @codeCoverageIgnore
      * @param \DateTime $datetime
      * @return $this
      */
