@@ -44,7 +44,6 @@ class FeeTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('order')->with('invoicedDate', 'ASC')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('join')->with('f.feeType', 'ft')->once()->andReturnSelf();
-        //$mockQb->shouldReceive('expr->eq')->with('f.application', ':applicationId')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('expr->eq')->with('ft.feeType', ':feeTypeFeeType')->once()->andReturn('foo');
         $mockQb->shouldReceive('andWhere')->with('foo')->once()->andReturnSelf();
@@ -182,10 +181,14 @@ class FeeTest extends RepositoryTestCase
         );
     }
 
-    public function testFetchList()
+    /**
+     * @param string $status
+     * @dataProvider statusProvider
+     */
+    public function testFetchList($status)
     {
-        // $this->markTestSkipped('\Doctrine\ORM\Query is final so can\'t mock paginator');
-
+        // in practice this query would never return results, but it covers all
+        // possible conditions
         $query = FeeListQry::create(
             [
                 'application' => 11,
@@ -197,6 +200,9 @@ class FeeTest extends RepositoryTestCase
                 'limit' => 10,
                 'sort' => 'id',
                 'order' => 'ASC',
+                'isMiscellaneous' => true,
+                'ids' => [1,2,3],
+                'status' => $status,
             ]
         );
 
@@ -227,10 +233,16 @@ class FeeTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf();
 
-        // we *could* assert all the conditions here, but just stub the methods // for now
+        // we *could* assert all the conditions here, but just stub the methods for now
         $mockQb
             ->shouldReceive('andWhere')
-            ->shouldReceive('setParameter');
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->in');
 
         // mock pagination
         $mockQuery = m::mock();
@@ -244,6 +256,15 @@ class FeeTest extends RepositoryTestCase
             'result',
             $this->sut->fetchList($query)
         );
+    }
+
+    public function statusProvider()
+    {
+        return [
+            ['all'],
+            ['current'],
+            ['historical'],
+        ];
     }
 
     private function mockWhereOutstandingFee($mockQb)
