@@ -68,10 +68,14 @@ return [
     TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
     TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
     TransferQuery\Cases\Complaint\ComplaintList::class => QueryHandler\Cases\Complaint\ComplaintList::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class
-        => QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class
-        => QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
+    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
+        QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
+    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
+        QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
+    TransferQuery\Cases\ConditionUndertaking\ConditionUndertaking::class =>
+        QueryHandler\Cases\ConditionUndertaking\ConditionUndertaking::class,
+    TransferQuery\Cases\ConditionUndertaking\ConditionUndertakingList::class =>
+        QueryHandler\Cases\ConditionUndertaking\ConditionUndertakingList::class,
 
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
