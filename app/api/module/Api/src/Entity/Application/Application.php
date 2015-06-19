@@ -53,6 +53,9 @@ class Application extends AbstractApplication
     const VARIATION_STATUS_REQUIRES_ATTENTION = 1;
     const VARIATION_STATUS_UPDATED = 2;
 
+    const APPLICATION_TYPE_NEW = 0;
+    const APPLICATION_TYPE_VARIATION = 1;
+
     public function __construct(Licence $licence, RefData $status, $isVariation)
     {
         parent::__construct();
@@ -379,5 +382,23 @@ class Application extends AbstractApplication
         $this->prevBeenAtPi = $prevBeenAtPi;
         $this->prevBeenDisqualifiedTc = $prevBeenDisqualifiedTc;
         $this->prevPurchasedAssets = $prevPurchasedAssets;
+    }
+
+    public function getApplicationType()
+    {
+        if ($this->getIsVariation()) {
+            return self::APPLICATION_TYPE_VARIATION;
+        }
+
+        return self::APPLICATION_TYPE_NEW;
+    }
+
+    public function getApplicationDate()
+    {
+        if ($this->getReceivedDate() === null) {
+            return $this->getCreatedOn();
+        }
+
+        return $this->getReceivedDate();
     }
 }
