@@ -5,11 +5,13 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Scan;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 
 /**
  * CreateSeperatorSheet
@@ -29,10 +31,6 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements
         'Bus',
         'BusRegSearchView',
         'Cases',
-        'Licence',
-        'Licence',
-        'Organisation',
-        'TransportManager',
         'Category',
         'SubCategory',
         'SubCategoryDescription'
@@ -158,10 +156,10 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements
                 $entity = $this->getRepo('Cases')->fetchById($entityIdentifier);
                 break;
             case Category::CATEGORY_IRFO:
-                $entity = $this->getRepo('Organisation')->fetchById($entityIdentifier);
+                $entity = $this->getRepo()->getReference(Organisation::class, $entityIdentifier);
                 break;
             case Category::CATEGORY_TRANSPORT_MANAGER:
-                $entity = $this->getRepo('TransportManager')->fetchById($entityIdentifier);
+                $entity = $this->getRepo()->getReference(TransportManager::class, $entityIdentifier);
                 break;
             case Category::CATEGORY_BUS_REGISTRATION:
                 /* @var $busRegSearch \Dvsa\Olcs\Api\Entity\View\BusRegSearchView */
@@ -170,7 +168,7 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements
                 break;
             default:
                 throw new RuntimeException("Cannot get an entity for category Id {$categoryId}");
-        };
+        }
 
         return $entity;
     }

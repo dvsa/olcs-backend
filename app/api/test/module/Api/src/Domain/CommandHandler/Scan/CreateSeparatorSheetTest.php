@@ -57,6 +57,15 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
             234 => m::mock(\Dvsa\Olcs\Api\Entity\System\SubCategory::class),
         ];
 
+        $this->references = [
+            \Dvsa\Olcs\Api\Entity\Organisation\Organisation::class => [
+                'entityIdentifier' => m::mock(\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class),
+            ],
+            \Dvsa\Olcs\Api\Entity\Tm\TransportManager::class => [
+                'entityIdentifier' => m::mock(\Dvsa\Olcs\Api\Entity\Tm\TransportManager::class),
+            ]
+        ];
+
         parent::initReferences();
     }
 
@@ -503,26 +512,23 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $licence->setId(32);
         $licence->setLicNo('LIC001');
 
-        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
-        $organisation->setId(767);
-
         $category = new \Dvsa\Olcs\Api\Entity\System\Category();
         $category->setDescription('CAT_NAME');
 
         $subCategory = new \Dvsa\Olcs\Api\Entity\System\SubCategory();
         $subCategory->setSubCategoryName('SUB_CAT_NAME');
 
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with('entityIdentifier')->once()
-            ->andReturn($organisation);
-
         $this->repoMap['Scan']->shouldReceive('save')->with(m::type(\Dvsa\Olcs\Api\Entity\PrintScan\Scan::class))
             ->once()->andReturnUsing(
-                function (\Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan) use ($organisation) {
+                function (\Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan) {
                     $scan->setId(74);
                     $this->assertSame($this->categoryReferences[8], $scan->getCategory());
                     $this->assertSame($this->subCategoryReferences[92], $scan->getSubCategory());
                     $this->assertSame('TEST 1', $scan->getDescription());
-                    $this->assertSame($organisation, $scan->getIrfoOrganisation());
+                    $this->assertSame(
+                        $this->references[\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class]['entityIdentifier'],
+                        $scan->getIrfoOrganisation()
+                    );
                 }
             );
 
@@ -538,8 +544,8 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 'LICENCE_NUMBER_SCAN'        => 'Unknown',
                 'LICENCE_NUMBER_REPEAT_SCAN' => 'Unknown',
                 'ENTITY_ID_TYPE_SCAN'        => 'IRFO',
-                'ENTITY_ID_SCAN'             => 767,
-                'ENTITY_ID_REPEAT_SCAN'      => 767,
+                'ENTITY_ID_SCAN'             => 'entityIdentifier',
+                'ENTITY_ID_REPEAT_SCAN'      => 'entityIdentifier',
                 'DOC_SUBCATEGORY_ID_SCAN'    => 92,
                 'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
                 'DOC_DESCRIPTION_ID_SCAN'    => 74,
@@ -578,26 +584,23 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
             ]
         );
 
-        $tm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
-        $tm->setId(545);
-
         $category = new \Dvsa\Olcs\Api\Entity\System\Category();
         $category->setDescription('CAT_NAME');
 
         $subCategory = new \Dvsa\Olcs\Api\Entity\System\SubCategory();
         $subCategory->setSubCategoryName('SUB_CAT_NAME');
 
-        $this->repoMap['TransportManager']->shouldReceive('fetchById')->with('entityIdentifier')->once()
-            ->andReturn($tm);
-
         $this->repoMap['Scan']->shouldReceive('save')->with(m::type(\Dvsa\Olcs\Api\Entity\PrintScan\Scan::class))
             ->once()->andReturnUsing(
-                function (\Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan) use ($tm) {
+                function (\Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan) {
                     $scan->setId(74);
                     $this->assertSame($this->categoryReferences[5], $scan->getCategory());
                     $this->assertSame($this->subCategoryReferences[92], $scan->getSubCategory());
                     $this->assertSame('TEST 1', $scan->getDescription());
-                    $this->assertSame($tm, $scan->getTransportManager());
+                    $this->assertSame(
+                        $this->references[\Dvsa\Olcs\Api\Entity\Tm\TransportManager::class]['entityIdentifier'],
+                        $scan->getTransportManager()
+                    );
                 }
             );
 
@@ -613,8 +616,8 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 'LICENCE_NUMBER_SCAN'        => 'Unknown',
                 'LICENCE_NUMBER_REPEAT_SCAN' => 'Unknown',
                 'ENTITY_ID_TYPE_SCAN'        => 'Transport Manager',
-                'ENTITY_ID_SCAN'             => 545,
-                'ENTITY_ID_REPEAT_SCAN'      => 545,
+                'ENTITY_ID_SCAN'             => 'entityIdentifier',
+                'ENTITY_ID_REPEAT_SCAN'      => 'entityIdentifier',
                 'DOC_SUBCATEGORY_ID_SCAN'    => 92,
                 'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
                 'DOC_DESCRIPTION_ID_SCAN'    => 74,
