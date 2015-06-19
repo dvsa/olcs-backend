@@ -21,5 +21,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PsvDisc extends AbstractPsvDisc
 {
+    const ERROR_CANT_EXCEED_TOT_AUTH = 'LIC-PSVDISC-1';
 
+    public function __construct(Licence $licence)
+    {
+        $this->setLicence($licence);
+    }
+
+    public function cease()
+    {
+        $this->setCeasedDate(new \DateTime());
+    }
 }

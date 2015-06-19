@@ -59,7 +59,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
      * @param string $parent Class name of the parent
      * @param array $stack The stack of nodes from the parents
      */
-    public function build($config, $alias = 'm', $parent = null, $stack = [])
+    public function build($config, $alias = 'm', $parent = null, $stack = [], $checkIsRefdata = true)
     {
         $this->addSelect($alias);
 
@@ -76,11 +76,20 @@ class BundleQuery implements ServiceLocatorAwareInterface
             $parent = $this->qb->getRootEntities()[0];
         }
 
-        // Grab the metadata of the parent entity
+        // grab the metadata of the parent entity
         $metadata = $this->qb->getEntityManager()->getClassMetadata($parent);
 
         $processed = [];
         foreach ($config['children'] as $childName => $childConfig) {
+
+            $newCheckIsRefdata = true;
+
+            // If our child is going to be a list, we don't want to check it's refdata
+            if (isset($metadata->associationMappings[$childName]['isOwningSide'])
+                && !$metadata->associationMappings[$childName]['isOwningSide']
+            ) {
+                $newCheckIsRefdata = false;
+            }
 
             if (is_numeric($childName) && is_string($childConfig)) {
 
@@ -99,7 +108,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
 
             // If we find a refData relationship
             // Store the stack reference to it's location and skip it
-            if ($this->isRefData($metadata, $childName)) {
+            if (/*$checkIsRefdata &&*/ $this->isRefData($metadata, $childName)) {
                 $this->refDataReplacements[] = [
                     'stack' => $childStack
                 ];
@@ -124,7 +133,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
 
             $this->addJoin($alias, $childName, $childAlias, $childConfig, $joinType);
 
-            $this->build($childConfig, $childAlias, $entityClass, $childStack);
+            $this->build($childConfig, $childAlias, $entityClass, $childStack, $newCheckIsRefdata);
         }
     }
 
@@ -146,7 +155,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
      *
      * @param object $metadata
      * @param string $name
-     * @return booleab
+     * @return boolean
      */
     protected function isRefData($metadata, $name)
     {
