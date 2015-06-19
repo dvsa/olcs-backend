@@ -62,6 +62,17 @@ class QueryHandlerTestCase extends MockeryTestCase
         $this->sut = $this->sut->createService($this->queryHandler);
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        unset($this->sut);
+        unset($this->queryHandler);
+        unset($this->repoManager);
+        unset($this->repoMap);
+        unset($this->mockedSmServices);
+    }
+
     protected function mockRepo($name, $class)
     {
         $this->repoMap[$name] = m::mock($class);

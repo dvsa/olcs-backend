@@ -62,15 +62,23 @@ return [
     TransferCommand\Licence\CreateCompanySubsidiary::class => CommandHandler\Licence\CreateCompanySubsidiary::class,
     TransferCommand\Licence\DeleteCompanySubsidiary::class => CommandHandler\Licence\DeleteCompanySubsidiary::class,
     TransferCommand\Licence\UpdateSafety::class => CommandHandler\Licence\UpdateSafety::class,
+
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
     Command\Licence\Suspend::class => CommandHandler\Licence\Suspend::class,
+
+    TransferCommand\Licence\CreatePsvDiscs::class => CommandHandler\Licence\CreatePsvDiscs::class,
+    TransferCommand\Licence\VoidPsvDiscs::class => CommandHandler\Licence\VoidPsvDiscs::class,
+    TransferCommand\Licence\ReplacePsvDiscs::class => CommandHandler\Licence\ReplacePsvDiscs::class,
 
     // Transfer - Variation
     TransferCommand\Variation\UpdateTypeOfLicence::class => CommandHandler\Variation\UpdateTypeOfLicence::class,
     TransferCommand\Variation\UpdateAddresses::class => CommandHandler\Variation\UpdateAddresses::class,
     TransferCommand\Variation\TransportManagerDeleteDelta::class
         => CommandHandler\Variation\TransportManagerDeleteDelta::class,
+    TransferCommand\Variation\CreatePsvDiscs::class => CommandHandler\Variation\CreatePsvDiscs::class,
+    TransferCommand\Variation\VoidPsvDiscs::class => CommandHandler\Variation\VoidPsvDiscs::class,
+    TransferCommand\Variation\ReplacePsvDiscs::class => CommandHandler\Variation\ReplacePsvDiscs::class,
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
@@ -170,6 +178,22 @@ return [
 
     // Transfer - Document
     TransferCommand\Document\CreateLetter::class => CommandHandler\Document\CreateLetter::class,
+
+    // Transfer - ConditionUndertaking
+    TransferCommand\Cases\ConditionUndertaking\CreateConditionUndertaking::class =>
+        CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
+    TransferCommand\Cases\ConditionUndertaking\UpdateConditionUndertaking::class =>
+        CommandHandler\Cases\ConditionUndertaking\UpdateConditionUndertaking::class,
+    TransferCommand\Cases\ConditionUndertaking\DeleteConditionUndertaking::class =>
+        CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertaking::class,
+
+    // Transfer - Opposition
+    TransferCommand\Cases\Opposition\CreateOpposition::class =>
+        CommandHandler\Cases\Opposition\CreateOpposition::class,
+    TransferCommand\Cases\Opposition\UpdateOpposition::class =>
+        CommandHandler\Cases\Opposition\UpdateOpposition::class,
+    TransferCommand\Cases\Opposition\DeleteOpposition::class =>
+        CommandHandler\Cases\Opposition\DeleteOpposition::class,
 
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
