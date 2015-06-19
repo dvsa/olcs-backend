@@ -141,6 +141,9 @@ return [
     TransferCommand\CommunityLic\Licence\CreateOfficeCopy::class =>
         CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
     TransferCommand\CommunityLic\GenerateBatch::class => CommandHandler\CommunityLic\GenerateBatch::class,
+    TransferCommand\CommunityLic\Void::class => CommandHandler\CommunityLic\Void::class,
+    TransferCommand\CommunityLic\Restore::class => CommandHandler\CommunityLic\Restore::class,
+    TransferCommand\CommunityLic\Stop::class => CommandHandler\CommunityLic\Stop::class,
 
     // Conviction
     TransferCommand\Cases\Conviction\Create::class => CommandHandler\Cases\Conviction\Create::class,
