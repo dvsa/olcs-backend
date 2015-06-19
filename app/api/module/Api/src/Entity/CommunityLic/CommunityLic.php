@@ -34,6 +34,8 @@ class CommunityLic extends AbstractCommunityLic
     const PREFIX_NI = 'UKNI';
 
     const ERROR_OFFICE_COPY_EXISTS = 'CL_OC_EXISTS';
+    const ERROR_CANT_ANNUL = 'CL_CANT_ANNUL';
+    const ERROR_CANT_RESTORE = 'CL_CANT_RESTORE';
 
     public function updateCommunityLic($data)
     {
@@ -44,5 +46,13 @@ class CommunityLic extends AbstractCommunityLic
         $this->setSerialNoPrefix($data['serialNoPrefix']);
         $this->setLicence($data['licence']);
         $this->setIssueNo($data['issueNo']);
+    }
+
+    public function changeStatusAndExpiryDate($status, $expiryDate = '')
+    {
+        $this->setStatus($status);
+        if ($expiryDate !== '') {
+            $this->setExpiredDate($expiryDate);
+        }
     }
 }

@@ -126,7 +126,6 @@ return [
             'DocParagraph' => RepositoryFactory::class,
             'Opposition' => RepositoryFactory::class,
             'Statement' => RepositoryFactory::class,
-            'CommunityLic' => RepositoryFactory::class,
             'PublicationLink' => RepositoryFactory::class,
             'Publication' => RepositoryFactory::class,
             'GoodsDisc' => RepositoryFactory::class,
@@ -137,6 +136,10 @@ return [
             'Document' => RepositoryFactory::class,
             'DocTemplate' => RepositoryFactory::class,
             'LicenceStatusRule' => RepositoryFactory::class,
+            'CommunityLicSuspension' => RepositoryFactory::class,
+            'CommunityLicSuspensionReason' => RepositoryFactory::class,
+            'CommunityLicWithdrawal' => RepositoryFactory::class,
+            'CommunityLicWithdrawalReason' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

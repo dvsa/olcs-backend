@@ -72,4 +72,28 @@ class CommunityLic extends AbstractRepository
             ->orderBy($this->alias . '.issueNo', 'ASC');
         return $qb->getQuery()->execute();
     }
+
+    public function fetchLicencesByIds($ids)
+    {
+        $qb = $this->createQueryBuilder();
+        $i = 1;
+        foreach ($ids as $id) {
+            $qb->orWhere($qb->expr()->eq($this->alias . '.id', ':id' . $i));
+            $qb->setParameter('id' . $i++, $id);
+        }
+        return $qb->getQuery()->execute();
+    }
+
+    public function hasOfficeCopy($licenceId, $ids)
+    {
+        $hasOfficeCopy = false;
+        $officeCopy = $this->fetchOfficeCopy($licenceId);
+        if ($officeCopy) {
+            $officeCopyId = $officeCopy->getId();
+            if (in_array($officeCopyId, $ids)) {
+                $hasOfficeCopy = true;
+            }
+        }
+        return $hasOfficeCopy;
+    }
 }

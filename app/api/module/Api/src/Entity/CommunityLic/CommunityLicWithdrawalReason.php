@@ -22,5 +22,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CommunityLicWithdrawalReason extends AbstractCommunityLicWithdrawalReason
 {
-
+    public function updateReason($withdrawal, $type)
+    {
+        $this->communityLicWithdrawal = $withdrawal;
+        $this->type = $type;
+    }
 }

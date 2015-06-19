@@ -22,5 +22,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CommunityLicSuspensionReason extends AbstractCommunityLicSuspensionReason
 {
-
+    public function updateReason($withdrawal, $type, $startDate, $endDate)
+    {
+        $this->communityLicSuspension = $withdrawal;
+        $this->type = $type;
+        $this->startDate = new \DateTime($startDate);
+        $this->enDate = new \DateTime($endDate);
+    }
 }
