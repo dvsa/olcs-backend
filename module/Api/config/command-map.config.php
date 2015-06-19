@@ -205,7 +205,7 @@ return [
     TransferCommand\Cases\Statement\CreateStatement::class =>
         CommandHandler\Cases\Statement\CreateStatement::class,
     TransferCommand\Cases\Statement\UpdateStatement::class =>
-        CommandHandler\Cases\Opposition\UpdateStatement::class,
+        CommandHandler\Cases\Statement\UpdateStatement::class,
     TransferCommand\Cases\Statement\DeleteStatement::class =>
         CommandHandler\Cases\Statement\DeleteStatement::class,
 

@@ -237,7 +237,7 @@ class ContactDetails extends AbstractContactDetails
         }
 
         // ensure we have all variables set
-        $title = $this->getDefaultParameter($personParams, 'title');
+        $title = isset($personParams['title']) && !empty($personParams['title']) ? $personParams['title'] : null;
         $forename = $this->getDefaultParameter($personParams, 'forename');
         $familyName = $this->getDefaultParameter($personParams, 'familyName');
         $birthDate = $this->getDefaultParameter($personParams, 'birthDate');
