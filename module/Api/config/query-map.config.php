@@ -159,7 +159,7 @@ return [
 
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
-    
+
     // Transport Manager Application
     TransferQuery\TransportManagerApplication\GetDetails::class
         => QueryHandler\TransportManagerApplication\GetDetails::class,

@@ -30,7 +30,9 @@ final class Void extends AbstractCommandHandler implements TransactionedInterfac
         $ids = $command->getCommunityLicenceIds();
         $licenceId = $command->getLicence();
 
-        $this->validateLicences($ids, $licenceId);                
+        if ($command->getCheckOfficeCopy()) {
+            $this->validateLicences($ids, $licenceId);
+        }
         $licences = $this->getRepo()->fetchLicencesByIds($ids);
 
         $result = new Result();

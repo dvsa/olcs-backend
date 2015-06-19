@@ -24,8 +24,14 @@ class CommunityLic extends AbstractRepository
     {
         if ($query->getStatuses() !== null) {
             $statuses = explode(',', $query->getStatuses());
+            $conditions = [];
             for ($i = 0; $i < count($statuses); $i++) {
-                $qb->orWhere($qb->expr()->eq($this->alias . '.status', ':status' . $i));
+                $conditions[] = $this->alias . '.status = :status' . $i;
+            }
+            $orX = $qb->expr()->orX();
+            $orX->addMultiple($conditions);
+            $qb->andWhere($orX);
+            for ($i = 0; $i < count($statuses); $i++) {
                 $qb->setParameter('status' . $i, $statuses[$i]);
             }
         }
@@ -40,8 +46,20 @@ class CommunityLic extends AbstractRepository
         $qb = $this->createQueryBuilder();
         $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
             ->andWhere($qb->expr()->eq($this->alias . '.issueNo', ':issueNo'))
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->eq($this->alias . '.status', ':pending'),
+                    $qb->expr()->eq($this->alias . '.status', ':active'),
+                    $qb->expr()->eq($this->alias . '.status', ':withdrawn'),
+                    $qb->expr()->eq($this->alias . '.status', ':suspended')
+                )
+            )
             ->setParameter('licence', $licenceId)
-            ->setParameter('issueNo', 0);
+            ->setParameter('issueNo', 0)
+            ->setParameter('pending', CommunityLicEntity::STATUS_PENDING)
+            ->setParameter('active', CommunityLicEntity::STATUS_ACTIVE)
+            ->setParameter('withdrawn', CommunityLicEntity::STATUS_WITHDRAWN)
+            ->setParameter('suspended', CommunityLicEntity::STATUS_SUSPENDED);
         $results = $qb->getQuery()->execute();
         $retv = null;
         if (count($results)) {
@@ -95,5 +113,16 @@ class CommunityLic extends AbstractRepository
             }
         }
         return $hasOfficeCopy;
+    }
+
+    public function fetchActiveLicences($licence)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->andWhere($qb->expr()->eq($this->alias . '.status', ':status'))
+            ->setParameter('licence', $licence)
+            ->setParameter('status', CommunityLicEntity::STATUS_ACTIVE)
+            ->orderBy($this->alias . '.issueNo', 'ASC');
+        return $qb->getQuery()->execute();
     }
 }
