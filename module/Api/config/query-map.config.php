@@ -163,4 +163,7 @@ return [
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
+
+    // Bus Reg History View
+    TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
 ];
