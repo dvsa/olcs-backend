@@ -2,7 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Entity\Opposition;
 
+use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Opposer Entity
@@ -22,5 +25,35 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Opposer extends AbstractOpposer
 {
+    public function __construct(
+        ContactDetails $contactDetails,
+        RefData $opposerType,
+        RefData $oppositionType = null
+    ) {
+        $this->setContactDetails($contactDetails);
 
+        $this->checkObjectionOpposerType($opposerType, $oppositionType);
+
+        $this->setOpposerType($opposerType);
+    }
+
+    private function checkObjectionOpposerType($opposerType, $oppositionType)
+    {
+        if ((!is_null($oppositionType) &&
+                ($oppositionType->getId() == Opposition::OPPOSITION_TYPE_ENV)) &&
+            (empty($opposerType->getId()))
+        ) {
+            throw new InvalidArgumentException('Environmental objections must specify a type of opposer');
+        }
+    }
+
+    /**
+     * @param array $opposerParams Array of data
+     */
+    public function update(array $opposerParams)
+    {
+        $this->checkObjectionOpposerType($opposerParams['opposerType'], $opposerParams['oppositionType']);
+
+        $this->setOpposerType($opposerParams['opposerType']);
+    }
 }
