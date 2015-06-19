@@ -59,6 +59,7 @@ return [
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
             'withContactDetails' => QueryPartial\WithContactDetailsFactory::class,
+            'withCase' => QueryPartial\WithCaseFactory::class,
             'withCreatedBy'      => QueryPartial\WithCreatedByFactory::class,
             'withRefdata' => QueryPartial\WithRefdataFactory::class,
             'withUser' => QueryPartial\WithUserFactory::class,
@@ -81,6 +82,7 @@ return [
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
+            'BusRegHistory' => RepositoryFactory::class,
             'BusRegOtherService' => RepositoryFactory::class,
             'BusNoticePeriod' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
