@@ -25,9 +25,6 @@ class OutstandingFees extends AbstractQueryHandler
 
     protected $extraRepos = ['Fee', 'FeeType'];
 
-    public function handleQuery(QueryInterface $query)
-    {
-        $application = $this->getRepo()->fetchUsingId($query);
 
         /*
          * Get fees pertaining to the application
@@ -35,26 +32,11 @@ class OutstandingFees extends AbstractQueryHandler
          * AC specify we should only get the *latest* application and interim
          * fees in the event there are multiple fees outstanding.
          */
-        $applicationType = $application->getApplicationType();
-        $feeTypeFeeTypeId = ($applicationType == ApplicationEntity::APPLICATION_TYPE_VARIATION)
-            ? FeeTypeEntity::FEE_TYPE_VAR
-            : FeeTypeEntity::FEE_TYPE_APP;
+    public function handleQuery(QueryInterface $query)
+    {
+        $application = $this->getRepo('Application')->fetchUsingId($query);
 
-        $applicationDate = new \DateTime($application->getApplicationDate());
-
-        $feeType = $this->getRepo('FeeType')->fetchLatest(
-            $this->getRepo()->getRefdataReference($feeTypeFeeTypeId),
-            $application->getGoodsOrPsv(),
-            $application->getLicenceType(),
-            $applicationDate,
-            $application->getLicence()->getTrafficArea()
-        );
-
-        $applicationFee = $this->getRepo('Fee')->fetchLatestFeeByTypeStatusesAndApplicationId(
-            $feeType->getId(),
-            [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED],
-            $application->getId()
-        );
+        $applicationFee = $this->getLatestOutstandingApplicationFeeForApplication($application);
 
         $outstandingFees = [];
         if ($applicationFee) {
@@ -74,6 +56,33 @@ class OutstandingFees extends AbstractQueryHandler
             [
                 'outstandingFees' => $outstandingFees,
             ]
+        );
+    }
+
+    /**
+     * @param ApplicationEntity $application
+     */
+    protected function getLatestOutstandingApplicationFeeForApplication($application)
+    {
+        $applicationType = $application->getApplicationType();
+        $feeTypeFeeTypeId = ($applicationType == ApplicationEntity::APPLICATION_TYPE_VARIATION)
+            ? FeeTypeEntity::FEE_TYPE_VAR
+            : FeeTypeEntity::FEE_TYPE_APP;
+
+        $applicationDate = new \DateTime($application->getApplicationDate());
+
+        $feeType = $this->getRepo('FeeType')->fetchLatest(
+            $this->getRepo()->getRefdataReference($feeTypeFeeTypeId),
+            $application->getGoodsOrPsv(),
+            $application->getLicenceType(),
+            $applicationDate,
+            $application->getLicence()->getTrafficArea()
+        );
+
+        return $this->getRepo('Fee')->fetchLatestFeeByTypeStatusesAndApplicationId(
+            $feeType->getId(),
+            [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED],
+            $application->getId()
         );
     }
 }
