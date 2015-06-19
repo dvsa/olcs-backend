@@ -201,6 +201,14 @@ return [
     TransferCommand\Cases\Opposition\DeleteOpposition::class =>
         CommandHandler\Cases\Opposition\DeleteOpposition::class,
 
+    // Transfer - Statement
+    TransferCommand\Cases\Statement\CreateStatement::class =>
+        CommandHandler\Cases\Statement\CreateStatement::class,
+    TransferCommand\Cases\Statement\UpdateStatement::class =>
+        CommandHandler\Cases\Opposition\UpdateStatement::class,
+    TransferCommand\Cases\Statement\DeleteStatement::class =>
+        CommandHandler\Cases\Statement\DeleteStatement::class,
+
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
     Command\Application\ResetApplication::class => CommandHandler\Application\ResetApplication::class,

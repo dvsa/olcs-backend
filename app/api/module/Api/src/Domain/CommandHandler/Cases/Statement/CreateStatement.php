@@ -43,13 +43,13 @@ final class CreateStatement extends AbstractCommandHandler implements Transactio
         $contactDetails = $this->createContactDetailsObject($command);
         $result->addMessage('Contact details created');
 
-        $statement = $this->createStatementObject($command);
+        $statement = $this->createStatementObject($command, $contactDetails);
         $result->addMessage('Statement created');
+        $statement->setRequestorsContactDetails($contactDetails);
 
-        $this->getRepo()->save($opposition);
+        $this->getRepo()->save($statement);
 
-        $result->addId('opposition ', $opposition->getId());
-        $result->addId('opposer ', $opposer->getId());
+        $result->addId('Statement ', $statement->getId());
         $result->addId('contactDetails', $contactDetails->getId());
 
         return $result;
@@ -69,97 +69,31 @@ final class CreateStatement extends AbstractCommandHandler implements Transactio
      * Create the opposition object
      *
      * @param Cmd $command
-     * @param Opposer $opposer
      * @return Statement
      */
-    private function createStatementObject(Cmd $command, ContactDetails $contactDetails)
+    private function createStatementObject(Cmd $command)
     {
+        /** @var Cases $case */
         $case = $this->getRepo()->getReference(Cases::class, $command->getCase());
 
         $statement = new Statement(
             $case,
-            $this->getRepo()->getRefdataReference($command->getStatementType()),
-        );
-
-        if (!is_null($application)) {
-            $opposition->setApplication($application);
-        }
-
-        if ($command->getRaisedDate() !== null) {
-            $opposition->setRaisedDate(new \DateTime($command->getRaisedDate()));
-        }
-
-        if ($command->getIsValid() !== null) {
-            $opposition->setIsValid($this->getRepo()->getRefdataReference($command->getIsValid()));
-        }
-
-        if ($command->getValidNotes() !== null) {
-            $opposition->setValidNotes($command->getValidNotes());
-        }
-
-        if ($command->getStatus() !== null) {
-            $opposition->setStatus($this->getRepo()->getRefdataReference($command->getStatus()));
-        }
-
-        $operatingCentres = $this->generateOperatingCentres($command);
-        $opposition->setOperatingCentres($operatingCentres);
-
-        if ($command->getGrounds() !== null) {
-            $opposition->setGrounds($this->getRepo()->generateRefdataArrayCollection($command->getGrounds()));
-        }
-
-        if ($command->getNotes() !== null) {
-            $opposition->setNotes($command->getNotes());
-        }
-
-        return $opposition;
-    }
-
-    /**
-     * Create the opposer  object
-     *
-     * @param Cmd $command
-     * @param ContactDetails $contactDetails
-     * @return Opposer
-     */
-    private function createOpposerObject(Cmd $command, ContactDetails $contactDetails)
-    {
-        $opposer = new Opposer(
-            $contactDetails,
-            $this->getRepo()->getRefdataReference($command->getOpposerType()),
             $this->getRepo()->getRefdataReference($command->getStatementType())
         );
+        $statement->setLicenceNo($case->getLicence()->getLicNo());
+        $statement->setLicenceType($case->getLicence()->getLicenceType());
 
-        return $opposer;
-    }
+        $statement->setVrm($command->getVrm());
+        $statement->setRequestorsBody($command->getRequestorsBody());
+        $statement->setStoppedDate(new \DateTime($command->getStoppedDate()));
+        $statement->setRequestedDate(new \DateTime($command->getRequestedDate()));
+        $statement->setAuthorisersDecision($command->getAuthorisersDecision());
 
-    /**
-     * Generate list of operatingCentres based on type of opposition. At present it allows both types to specify OCs
-     * This may need to be either one or the other.
-     *
-     * @param Cmd $command
-     * @return ArrayCollection
-     */
-    private function generateOperatingCentres(Cmd $command)
-    {
-        $collection = new ArrayCollection();
-        if (!empty($command->getLicenceOperatingCentres() || !empty($command->getApplicationOperatingCentres()))) {
-
-            if (!empty($command->getLicenceOperatingCentres())) {
-                $operatingCentres = $command->getLicenceOperatingCentres();
-                foreach ($operatingCentres as $oc) {
-                    $collection->add($this->getRepo()->getReference(OperatingCentre::class, $oc));
-                }
-            }
-
-            if (!empty($command->getApplicationOperatingCentres())) {
-                $operatingCentres = $command->getApplicationOperatingCentres();
-                foreach ($operatingCentres as $oc) {
-                    $collection->add($this->getRepo()->getReference(OperatingCentre::class, $oc));
-                }
-            }
+        if ($command->getContactType() !== null) {
+            // this is the statement.contact_type field
+            $statement->setContactType($this->getRepo()->getRefdataReference($command->getContactType()));
         }
 
-        return $collection;
+        return $statement;
     }
 }
