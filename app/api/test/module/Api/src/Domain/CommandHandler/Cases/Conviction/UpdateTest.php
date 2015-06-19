@@ -67,9 +67,9 @@ class UpdateTest extends CommandHandlerTestCase
             "convictionCategory" => "conv_c_cat_1",
             "offenceDate" => "2014-01-01",
             "convictionDate" => "2014-01-02",
-            "msi" => "Yes",
-            "isDeclared" => "Yes",
-            "isDealtWith" => "No",
+            "msi" => "Y",
+            "isDeclared" => "Y",
+            "isDealtWith" => "N",
             "personFirstName" => "Craig",
             "personLastName" => "PA",
             "convictionDate" => "1980-01-02"
@@ -104,6 +104,10 @@ class UpdateTest extends CommandHandlerTestCase
                             ->getMock()
                     )
 
+                    // Person
+                    ->shouldreceive('setCategoryText')
+                    ->with(null)
+
                     // Get ID
                     ->shouldreceive('getId')
                     ->andReturn($id)
@@ -128,13 +132,13 @@ class UpdateTest extends CommandHandlerTestCase
                     ->with(m::type(\DateTime::class))
 
                     ->shouldreceive('setMsi')
-                    ->with("Yes")
+                    ->with("Y")
 
                     ->shouldreceive('setIsDeclared')
-                    ->with("Yes")
+                    ->with("Y")
 
                     ->shouldreceive('setIsDealtWith')
-                    ->with("No")
+                    ->with("N")
 
                     ->getMock()
             )

@@ -65,7 +65,7 @@ trait BundleSerializableTrait
     /**
      * @return array
      */
-    public function serialize(array $bundle = null)
+    public function serialize(array $bundle = [])
     {
         $output = [];
 

@@ -5,7 +5,7 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Complaint;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Complaint\ComplaintList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
