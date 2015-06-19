@@ -7,7 +7,9 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -119,6 +121,29 @@ class Fee extends AbstractRepository
             ->setParameter('feeIds', $ids);
 
         return $doctrineQb->getQuery()->getResult();
+    }
+
+    public function fetchLatestFeeByTypeStatusesAndApplicationId(
+        $feeType,
+        $feeStatuses,
+        $applicationId
+    ) {
+        $doctrineQb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->withRefdata()->order('invoicedDate', 'DESC');
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.application', ':application'))
+            ->andWhere($doctrineQb->expr()->in($this->alias . '.feeStatus', ':feeStatuses'))
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.feeType', ':feeType'))
+            ->setParameter('application', $applicationId)
+            ->setParameter('feeStatuses', $feeStatuses)
+            ->setParameter('feeType', $feeType)
+            ->setMaxResults(1);
+
+        $results = $doctrineQb->getQuery()->getResult();
+
+        if (!empty($results)) {
+            return $results[0];
+        }
     }
 
     /**
