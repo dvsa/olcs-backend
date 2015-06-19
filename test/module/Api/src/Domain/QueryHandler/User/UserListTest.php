@@ -34,7 +34,8 @@ class UserListTest extends QueryHandlerTestCase
         $user = new \Dvsa\Olcs\Api\Entity\User\User();
         $user->setId(74);
 
-        $this->repoMap['User']->shouldReceive('fetchList')->with($query)->andReturn([$user]);
+        $this->repoMap['User']->shouldReceive('fetchList')->with($query, \Doctrine\ORM\Query::HYDRATE_OBJECT)
+            ->andReturn([$user]);
         $this->repoMap['User']->shouldReceive('fetchCount')->with($query)->andReturn('COUNT');
 
         $result = $this->sut->handleQuery($query);
