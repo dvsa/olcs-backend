@@ -50,7 +50,7 @@ class Impounding extends AbstractRepository
     }
 
     /**
-     * Applies a case filter and adds presidingTc data to query
+     * Applies a case filter
      * @param QueryBuilder $qb
      * @param QueryInterface $query
      */

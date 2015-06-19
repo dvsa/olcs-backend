@@ -38,4 +38,13 @@ trait AuthAwareTrait
     {
         return $this->authService->isGranted($permission, $context);
     }
+
+    /**
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getUser()
+    {
+        return $this->authService->getIdentity()->getUser();
+    }
 }

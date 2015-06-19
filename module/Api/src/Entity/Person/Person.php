@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Person;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Person Entity
@@ -23,5 +24,30 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Person extends AbstractPerson
 {
-
+    /**
+     * Update person details
+     *
+     * @param RefData $title
+     * @param string|null $forename
+     * @param string|null $familyName
+     * @param string|null $birthDate
+     * @param string|null $birthPlace
+     * @param string|null $otherName
+     * @return $this
+     */
+    public function updatePerson(
+        RefData $title = null,
+        $forename = null,
+        $familyName = null,
+        $birthDate = null,
+        $birthPlace = null,
+        $otherName = null
+    ) {
+        $this->setTitle($title);
+        $this->setForename($forename);
+        $this->setFamilyName($familyName);
+        $this->setBirthDate($birthDate);
+        $this->setBirthPlace($birthPlace);
+        $this->setOtherName($otherName);
+    }
 }

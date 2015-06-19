@@ -28,15 +28,29 @@ class CancelAllInterimFeesTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
+    protected function initReferences()
+    {
+        $this->refData = [
+        ];
+
+        $this->references = [
+            FeeEntity::class => [
+                23 => m::mock(FeeEntity::class),
+                24 => m::mock(FeeEntity::class),
+                25 => m::mock(FeeEntity::class)
+            ]
+        ];
+
+        parent::initReferences();
+    }
+
     public function testHandleCommand()
     {
-        $fees = [];
-
-        for ($id = 23; $id < 26; $id++) {
-            $mockFee = m::mock(FeeEntity::class)->makePartial();
-            $mockFee->setId($id);
-            $fees[] = $mockFee;
-        }
+        $fees = [
+            $this->references[FeeEntity::class][23],
+            $this->references[FeeEntity::class][24],
+            $this->references[FeeEntity::class][25]
+        ];
 
         $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')->with(542, true)->once()
             ->andReturn($fees);
