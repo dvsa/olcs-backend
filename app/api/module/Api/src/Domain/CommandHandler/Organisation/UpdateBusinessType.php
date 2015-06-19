@@ -90,10 +90,18 @@ final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwa
 
     private function maybeUpdateApplicationCompletion(Cmd $command, Result $result)
     {
+        $appId = null;
+
         if ($command->getApplication() !== null) {
+            $appId = $command->getApplication();
+        } elseif ($command->getVariation() !== null) {
+            $appId = $command->getVariation();
+        }
+
+        if ($appId !== null) {
             $result->merge(
                 $this->getCommandHandler()->handleCommand(
-                    $this->createUpdateApplicationCompletionCommand($command->getApplication())
+                    $this->createUpdateApplicationCompletionCommand($appId)
                 )
             );
         }

@@ -108,7 +108,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
 
             // If we find a refData relationship
             // Store the stack reference to it's location and skip it
-            if ($checkIsRefdata && $this->isRefData($metadata, $childName)) {
+            if (/*$checkIsRefdata &&*/ $this->isRefData($metadata, $childName)) {
                 $this->refDataReplacements[] = [
                     'stack' => $childStack
                 ];
