@@ -13,10 +13,13 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
-use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Query\Application\OutstandingFees as AppOutstandingFeesQuery;
 use Doctrine\Common\Collections\ArrayCollection;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -30,7 +33,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
 {
     protected $repoServiceName = 'Payment';
 
-    protected $extraRepos = ['Fee'];
+    protected $extraRepos = ['Fee', 'FeeType', 'Application'];
 
     protected $cpmsHelper;
 
@@ -38,6 +41,11 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     {
         $result = new Result();
 
+        // @TODO refactor this - split up commands or add validation to Transfer query
+        // The three valid use cases are:
+        // organisationId AND feeIds
+        // applicationId only
+        // feeIds only
         if (!empty($command->getOrganisationId())) {
             // get outstanding fees for organisation
             $outstandingFees = $this->getRepo('Fee')
@@ -45,6 +53,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $customerReference = $command->getOrganisationId();
             // filter requested fee ids against outstanding fees
             $fees = $this->filterValid($command, $outstandingFees);
+        } else if (!empty($command->getApplicationId())) {
+            $fees = $this->getOutstandingFeesForApplication($command->getApplicationId());
+            $customerReference = $this->getCustomerReference($fees);
         } else {
             $fees = $this->getRepo('Fee')
                 ->fetchOutstandingFeesByIds($command->getFeeIds());
@@ -414,5 +425,52 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
         if ($amount !== $totalFees) {
             throw new ValidationException(["Amount must match the fee(s) due"]);
         }
+    }
+
+     /**
+      * @todo share with AppOutstandingFeesQuery
+      * Get fees pertaining to the application
+      *
+      * AC specify we should only get the *latest* application and interim
+      * fees in the event there are multiple fees outstanding.
+      */
+    protected function getOutstandingFeesForApplication($applicationId)
+    {
+        $outstandingFees = [];
+        $applicationFee = $this->getLatestOutstandingApplicationFeeForApplication($applicationId);
+
+        if ($applicationFee) {
+            $outstandingFees[] = $applicationFee;
+        }
+
+        // @TODO get interim fee
+
+        return $outstandingFees;
+    }
+
+    protected function getLatestOutstandingApplicationFeeForApplication($applicationId)
+    {
+        $application = $this->getRepo('Application')->fetchById($applicationId);
+
+        $applicationType = $application->getApplicationType();
+        $feeTypeFeeTypeId = ($applicationType == ApplicationEntity::APPLICATION_TYPE_VARIATION)
+            ? FeeTypeEntity::FEE_TYPE_VAR
+            : FeeTypeEntity::FEE_TYPE_APP;
+
+        $applicationDate = new \DateTime($application->getApplicationDate());
+
+        $feeType = $this->getRepo('FeeType')->fetchLatest(
+            $this->getRepo()->getRefdataReference($feeTypeFeeTypeId),
+            $application->getGoodsOrPsv(),
+            $application->getLicenceType(),
+            $applicationDate,
+            $application->getLicence()->getTrafficArea()
+        );
+
+        return $this->getRepo('Fee')->fetchLatestFeeByTypeStatusesAndApplicationId(
+            $feeType->getId(),
+            [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED],
+            $application->getId()
+        );
     }
 }
