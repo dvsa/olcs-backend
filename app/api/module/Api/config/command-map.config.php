@@ -160,6 +160,7 @@ return [
     TransferCommand\CommunityLic\Void::class => CommandHandler\CommunityLic\Void::class,
     TransferCommand\CommunityLic\Restore::class => CommandHandler\CommunityLic\Restore::class,
     TransferCommand\CommunityLic\Stop::class => CommandHandler\CommunityLic\Stop::class,
+    TransferCommand\CommunityLic\Reprint::class => CommandHandler\CommunityLic\Reprint::class,
 
     // Conviction
     TransferCommand\Cases\Conviction\Create::class => CommandHandler\Cases\Conviction\Create::class,
@@ -285,7 +286,7 @@ return [
         => CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class,
     Command\LicenceStatusRule\ProcessToValid::class
         => CommandHandler\LicenceStatusRule\ProcessToValid::class,
-    
+
     // Transport Manager Application
     TransferCommand\TransportManagerApplication\Delete::class
         => CommandHandler\TransportManagerApplication\Delete::class,

@@ -44,7 +44,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
         $endDate = $command->getEndDate();
         $reasons = $command->getReasons();
 
-        $this->validateLicences($ids, $licenceId);                
+        $this->validateLicences($ids, $licenceId);
         $licences = $this->getRepo()->fetchLicencesByIds($ids);
 
         $result = new Result();
@@ -89,7 +89,6 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
                 $this->getRepo('CommunityLicWithdrawalReason')->save($withdrawalReason);
             }
         }
-        
     }
 
     protected function createSuspensionAndReasons($communityLics, $reasons, $startDate, $endDate)
@@ -109,7 +108,6 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
                 $this->getRepo('CommunityLicSuspensionReason')->save($suspensionReason);
             }
         }
-        
     }
 
     protected function validateLicences($ids, $licenceId)

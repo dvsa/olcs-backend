@@ -36,6 +36,7 @@ class CommunityLic extends AbstractCommunityLic
     const ERROR_OFFICE_COPY_EXISTS = 'CL_OC_EXISTS';
     const ERROR_CANT_ANNUL = 'CL_CANT_ANNUL';
     const ERROR_CANT_RESTORE = 'CL_CANT_RESTORE';
+    const ERROR_CANT_REPRINT = 'CL_CANT_REPRINT';
 
     public function updateCommunityLic($data)
     {

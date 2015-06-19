@@ -36,7 +36,7 @@ final class Restore extends AbstractCommandHandler implements TransactionedInter
         $ids = $command->getCommunityLicenceIds();
         $licenceId = $command->getLicence();
 
-        $this->validateLicences($ids, $licenceId);                
+        $this->validateLicences($ids, $licenceId);
         $licences = $this->getRepo()->fetchLicencesByIds($ids);
 
         $result = new Result();
@@ -52,10 +52,10 @@ final class Restore extends AbstractCommandHandler implements TransactionedInter
             $result->addMessage("Community Licence {$id} restored");
             $result->addId('communityLic' . $id, $id);
         }
-        
+
         $this->deleteSuspensionsAndReasons($ids);
         $this->deleteWithdrawalsAndReasons($ids);
-        
+
         $updateTotalCommunityLicences =  UpdateTotalCommunityLicencesCommand::create(['id' => $licenceId]);
         $updateResult = $this->handleSideEffect($updateTotalCommunityLicences);
         $result->merge($updateResult);
