@@ -15,6 +15,19 @@ final class Statement extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->result($this->getRepo()->fetchUsingCaseId($query));
+        return $this->result(
+            $this->getRepo()->fetchUsingId($query),
+            [
+                'case',
+                'requestorsContactDetails' => [
+                    'address' => [
+                        'countryCode'
+                    ],
+                    'contactType',
+                    'person'
+                ]
+            ]
+
+        );
     }
 }

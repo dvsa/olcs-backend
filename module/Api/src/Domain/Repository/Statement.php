@@ -24,42 +24,7 @@ class Statement extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
-     * Fetch the default record by it's id
-     *
-     * @param Query|QryCmd $query
-     * @param int $hydrateMode
-
-     * @return mixed
-     * @throws Exception\NotFoundException
-     * @throws Exception\VersionConflictException
-     */
-    public function fetchUsingCaseId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
-    {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
-            ->with('case')
-            ->withPersonContactDetails('requestorsContactDetails')
-            ->with('createdBy')
-            ->with('lastModifiedBy')
-            ->byId($query->getId());
-
-        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
-            ->setParameter('byCase', $query->getCase());
-
-        $result = $qb->getQuery()->getResult($hydrateMode);
-
-        if (empty($result)) {
-            throw new Exception\NotFoundException('Resource not found');
-        }
-
-        return $result[0];
-    }
-
-    /**
-     *
+     * Apply List Filters
      * @param QueryBuilder $qb
      * @param QueryInterface $query
      */
@@ -67,5 +32,7 @@ class Statement extends AbstractRepository
     {
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
+
+        return $qb;
     }
 }
