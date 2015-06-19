@@ -137,6 +137,21 @@ class CommandHandlerTestCase extends MockeryTestCase
     {
         $this->initRefdata = false;
         $this->assertCommandData();
+
+        parent::tearDown();
+
+        unset($this->sut);
+        unset($this->commandHandler);
+        unset($this->repoManager);
+        unset($this->repoMap);
+        unset($this->sideEffects);
+        unset($this->commands);
+        unset($this->refData);
+        unset($this->references);
+        unset($this->categoryReferences);
+        unset($this->subCategoryReferences);
+        unset($this->initRefdata);
+        unset($this->mockedSmServices);
     }
 
     public function expectedSideEffect($class, $data, $result)

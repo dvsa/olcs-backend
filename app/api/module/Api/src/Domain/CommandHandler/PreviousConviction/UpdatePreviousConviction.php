@@ -31,11 +31,18 @@ final class UpdatePreviousConviction extends AbstractCommandHandler implements T
                 $command->getVersion()
             );
 
-        $title = $this->getRepo()->getRefdataReference($command->getTitle());
+        if ($command->getTitle()) {
+            $title = $this->getRepo()->getRefdataReference($command->getTitle());
 
-        $conviction->setTitle($title);
-        $conviction->setForename($command->getForename());
-        $conviction->setFamilyName($command->getFamilyName());
+            $conviction->setTitle($title);
+        }
+        if ($command->getForename()) {
+            $conviction->setForename($command->getForename());
+        }
+        if ($command->getFamilyName()) {
+            $conviction->setFamilyName($command->getFamilyName());
+        }
+
         $conviction->setConvictionDate(
             new \DateTime($command->getConvictionDate())
         );
@@ -50,9 +57,11 @@ final class UpdatePreviousConviction extends AbstractCommandHandler implements T
 
         $this->getRepo()->save($conviction);
 
-        $result->merge(
-            $this->updateApplicationCompletion($application->getId())
-        );
+        if ($application) {
+            $result->merge(
+                $this->updateApplicationCompletion($application->getId())
+            );
+        }
 
         $result->addId('previousConviction', $conviction->getId());
         $result->addMessage('Previous conviction updated');

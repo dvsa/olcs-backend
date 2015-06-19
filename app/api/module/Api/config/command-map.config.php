@@ -62,13 +62,23 @@ return [
     TransferCommand\Licence\CreateCompanySubsidiary::class => CommandHandler\Licence\CreateCompanySubsidiary::class,
     TransferCommand\Licence\DeleteCompanySubsidiary::class => CommandHandler\Licence\DeleteCompanySubsidiary::class,
     TransferCommand\Licence\UpdateSafety::class => CommandHandler\Licence\UpdateSafety::class,
+
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
     Command\Licence\Suspend::class => CommandHandler\Licence\Suspend::class,
 
+    TransferCommand\Licence\CreatePsvDiscs::class => CommandHandler\Licence\CreatePsvDiscs::class,
+    TransferCommand\Licence\VoidPsvDiscs::class => CommandHandler\Licence\VoidPsvDiscs::class,
+    TransferCommand\Licence\ReplacePsvDiscs::class => CommandHandler\Licence\ReplacePsvDiscs::class,
+
     // Transfer - Variation
     TransferCommand\Variation\UpdateTypeOfLicence::class => CommandHandler\Variation\UpdateTypeOfLicence::class,
     TransferCommand\Variation\UpdateAddresses::class => CommandHandler\Variation\UpdateAddresses::class,
+    TransferCommand\Variation\TransportManagerDeleteDelta::class
+        => CommandHandler\Variation\TransportManagerDeleteDelta::class,
+    TransferCommand\Variation\CreatePsvDiscs::class => CommandHandler\Variation\CreatePsvDiscs::class,
+    TransferCommand\Variation\VoidPsvDiscs::class => CommandHandler\Variation\VoidPsvDiscs::class,
+    TransferCommand\Variation\ReplacePsvDiscs::class => CommandHandler\Variation\ReplacePsvDiscs::class,
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
@@ -77,6 +87,10 @@ return [
     TransferCommand\OtherLicence\UpdateOtherLicence::class => CommandHandler\OtherLicence\UpdateOtherLicence::class,
     TransferCommand\OtherLicence\CreateOtherLicence::class => CommandHandler\OtherLicence\CreateOtherLicence::class,
     TransferCommand\OtherLicence\DeleteOtherLicence::class => CommandHandler\OtherLicence\DeleteOtherLicence::class,
+    TransferCommand\OtherLicence\CreateForTma::class => CommandHandler\OtherLicence\CreateForTma::class,
+    TransferCommand\OtherLicence\UpdateForTma::class => CommandHandler\OtherLicence\UpdateForTma::class,
+    TransferCommand\OtherLicence\CreatePreviousLicence::class
+        => CommandHandler\OtherLicence\CreatePreviousLicence::class,
 
     // Transfer - Previous Conviction
     TransferCommand\PreviousConviction\CreatePreviousConviction::class =>
@@ -85,6 +99,8 @@ return [
         CommandHandler\PreviousConviction\UpdatePreviousConviction::class,
     TransferCommand\PreviousConviction\DeletePreviousConviction::class =>
         CommandHandler\PreviousConviction\DeletePreviousConviction::class,
+    TransferCommand\PreviousConviction\CreateForTma::class
+        => CommandHandler\PreviousConviction\CreateForTma::class,
 
     // Transfer - Trailer
     TransferCommand\Trailer\CreateTrailer::class => CommandHandler\Trailer\CreateTrailer::class,
@@ -170,6 +186,22 @@ return [
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
     TransferCommand\Document\DeleteDocument::class => CommandHandler\Document\DeleteDocument::class,
 
+    // Transfer - ConditionUndertaking
+    TransferCommand\Cases\ConditionUndertaking\CreateConditionUndertaking::class =>
+        CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
+    TransferCommand\Cases\ConditionUndertaking\UpdateConditionUndertaking::class =>
+        CommandHandler\Cases\ConditionUndertaking\UpdateConditionUndertaking::class,
+    TransferCommand\Cases\ConditionUndertaking\DeleteConditionUndertaking::class =>
+        CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertaking::class,
+
+    // Transfer - Opposition
+    TransferCommand\Cases\Opposition\CreateOpposition::class =>
+        CommandHandler\Cases\Opposition\CreateOpposition::class,
+    TransferCommand\Cases\Opposition\UpdateOpposition::class =>
+        CommandHandler\Cases\Opposition\UpdateOpposition::class,
+    TransferCommand\Cases\Opposition\DeleteOpposition::class =>
+        CommandHandler\Cases\Opposition\DeleteOpposition::class,
+
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
     Command\Application\ResetApplication::class => CommandHandler\Application\ResetApplication::class,
@@ -250,5 +282,25 @@ return [
         => CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class,
     Command\LicenceStatusRule\ProcessToValid::class
         => CommandHandler\LicenceStatusRule\ProcessToValid::class,
+    
+    // Transport Manager Application
+    TransferCommand\TransportManagerApplication\Delete::class
+        => CommandHandler\TransportManagerApplication\Delete::class,
+    TransferCommand\TransportManagerApplication\Create::class
+        => CommandHandler\TransportManagerApplication\Create::class,
+    TransferCommand\TransportManagerApplication\UpdateStatus::class
+        => CommandHandler\TransportManagerApplication\UpdateStatus::class,
+    TransferCommand\TransportManagerApplication\UpdateDetails::class
+        => CommandHandler\TransportManagerApplication\UpdateDetails::class,
 
+    // Email
+    Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
+
+    // Person
+    TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,
+
+    // TM Employment
+    TransferCommand\TmEmployment\DeleteList::class => CommandHandler\TmEmployment\DeleteList::class,
+    TransferCommand\TmEmployment\Create::class => CommandHandler\TmEmployment\Create::class,
+    TransferCommand\TmEmployment\Update::class => CommandHandler\TmEmployment\Update::class,
 ];

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\NonPi\Update as UpdateCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Update as UpdateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\NonPi;
-use Dvsa\Olcs\Api\Entity\Cases\NonPi as NonPiEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Hearing as NonPiEntity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
