@@ -260,7 +260,7 @@ return [
         => CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class,
     Command\LicenceStatusRule\ProcessToValid::class
         => CommandHandler\LicenceStatusRule\ProcessToValid::class,
-    
+
     // Transport Manager Application
     TransferCommand\TransportManagerApplication\Delete::class
         => CommandHandler\TransportManagerApplication\Delete::class,
@@ -281,4 +281,12 @@ return [
     TransferCommand\TmEmployment\DeleteList::class => CommandHandler\TmEmployment\DeleteList::class,
     TransferCommand\TmEmployment\Create::class => CommandHandler\TmEmployment\Create::class,
     TransferCommand\TmEmployment\Update::class => CommandHandler\TmEmployment\Update::class,
+
+    // Transfer - Scan
+    TransferCommand\Scan\CreateSeparatorSheet::class  => CommandHandler\Scan\CreateSeparatorSheet::class,
+    TransferCommand\Scan\CreateContinuationSeparatorSheet::class  =>
+        CommandHandler\Scan\CreateContinuationSeparatorSheet::class,
+
+    // Domain - PrintScheduler
+    Command\PrintScheduler\Enqueue::class  => CommandHandler\PrintScheduler\Enqueue::class,
 ];
