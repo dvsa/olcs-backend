@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -71,6 +72,8 @@ abstract class AbstractRepository implements RepositoryInterface
 
         $this->buildDefaultQuery($qb, $id);
 
+        $this->applyFetchJoins($qb);
+
         $results = $qb->getQuery()->getResult($hydrateMode);
 
         if (empty($results)) {
@@ -95,6 +98,8 @@ abstract class AbstractRepository implements RepositoryInterface
 
         $this->buildDefaultListQuery($qb, $query);
         $this->applyListFilters($qb, $query);
+
+        $this->applyListJoins($qb, $query);
 
         $query = $qb->getQuery();
         $query->setHydrationMode($hydrateMode);
@@ -122,6 +127,24 @@ abstract class AbstractRepository implements RepositoryInterface
     }
 
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+
+    }
+
+    /**
+     * Override to add additional data to the default fetchList() method
+     * @param QueryBuilder $qb
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+
+    }
+
+    /**
+     * Override to add additional data to the default fetchById() method
+     * @param QueryBuilder $qb
+     */
+    protected function applyFetchJoins(QueryBuilder $qb)
     {
 
     }
@@ -177,6 +200,17 @@ abstract class AbstractRepository implements RepositoryInterface
     public function getReference($entityClass, $id)
     {
         return $this->getEntityManager()->getReference($entityClass, $id);
+    }
+
+    public function generateRefdataArrayCollection($ids)
+    {
+        $refDataArray = [];
+        if (!empty($ids)) {
+            foreach ($ids as $id) {
+                $refDataArray[] = $this->getRefdataReference($id);
+            }
+        }
+        return new ArrayCollection($refDataArray);
     }
 
     /**
