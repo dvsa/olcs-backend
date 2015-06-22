@@ -35,6 +35,32 @@ class CommunityLicTest extends RepositoryTestCase
         $mockQb->shouldReceive('setParameter')->with('licence', $licenceId)->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('issueNo', $issueNo)->once()->andReturnSelf();
 
+        $mockQb->shouldReceive('expr->eq')->with('m.status', ':pending')->once()->andReturn('pending');
+        $mockQb->shouldReceive('expr->eq')->with('m.status', ':active')->once()->andReturn('active');
+        $mockQb->shouldReceive('expr->eq')->with('m.status', ':withdrawn')->once()->andReturn('withdrawn');
+        $mockQb->shouldReceive('expr->eq')->with('m.status', ':suspended')->once()->andReturn('suspended');
+        $mockQb->shouldReceive('setParameter')
+            ->with('pending', CommunityLicEntity::STATUS_PENDING)
+            ->once()
+            ->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('active', CommunityLicEntity::STATUS_ACTIVE)
+            ->once()
+            ->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('withdrawn', CommunityLicEntity::STATUS_WITHDRAWN)
+            ->once()
+            ->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('suspended', CommunityLicEntity::STATUS_SUSPENDED)
+            ->once()
+            ->andReturnSelf();
+        $mockQb->shouldReceive('expr->orX')
+            ->with('pending', 'active', 'withdrawn', 'suspended')
+            ->once()
+            ->andReturn('statuses');
+        $mockQb->shouldReceive('andWhere')->with('statuses')->once()->andReturnSelf();
+
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
         $mockQb->shouldReceive('getQuery->execute')->once()->andReturn(['result']);
 
