@@ -36,4 +36,12 @@ class Statement extends AbstractRepository
 
         return $qb;
     }
+
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('requestorsContactDetails', 'rc')
+            ->with('rc.person');
+    }
 }
