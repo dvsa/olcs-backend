@@ -40,31 +40,35 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
             CeaseGoodsDiscs::class : CeasePsvDiscs::class
         );
 
+        $result = new Result();
         $command = $discsCommand::create(
             [
                 'licence' => $licence
             ]
         );
-        $this->handleSideEffect($command);
+        $result->merge($this->handleSideEffect($command));
 
-        $this->handleSideEffect(
-            RemoveLicenceVehicle::create(
-                [
-                    'licence' => $licence
-                ]
+        $result->merge(
+            $this->handleSideEffect(
+                RemoveLicenceVehicle::create(
+                    [
+                        'licence' => $licence
+                    ]
+                )
             )
         );
-        $this->handleSideEffect(
-            DeleteTransportManagerLicence::create(
-                [
-                    'licence' => $licence
-                ]
+
+        $result->merge(
+            $this->handleSideEffect(
+                DeleteTransportManagerLicence::create(
+                    [
+                            'licence' => $licence
+                    ]
+                )
             )
         );
 
         $this->getRepo()->save($licence);
-
-        $result = new Result();
         $result->addMessage("Licence ID {$licence->getId()} revoked");
 
         return $result;

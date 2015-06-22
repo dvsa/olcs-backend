@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Discs;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -35,5 +36,10 @@ final class CeaseGoodsDiscs extends AbstractCommandHandler implements Transactio
                 $this->getRepo()->save($disc);
             }
         }
+
+        $result = new Result();
+        $result->addMessage('Ceased discs for licence.');
+
+        return $result;
     }
 }
