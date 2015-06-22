@@ -19,7 +19,12 @@ final class ImpoundingList extends AbstractQueryHandler
         /** @var ImpoundingRepo $repo */
         $repo = $this->getRepo();
         return [
-            'result' => $this->resultList($repo->fetchList($query, Query::HYDRATE_OBJECT)),
+            'result' => $this->resultList(
+                $repo->fetchList($query, Query::HYDRATE_OBJECT),
+                [
+                   'presidingTc'
+                ]
+            ),
             'count' => $repo->fetchCount($query)
         ];
     }

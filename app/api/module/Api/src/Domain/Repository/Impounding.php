@@ -38,4 +38,16 @@ class Impounding extends AbstractRepository
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
     }
+
+    /**
+     * Applies list joins
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('presidingTc');
+    }
 }
