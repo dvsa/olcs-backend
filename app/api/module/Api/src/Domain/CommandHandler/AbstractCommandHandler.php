@@ -60,6 +60,13 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             $this->setDocumentGenerator($mainServiceLocator->get('DocumentGenerator'));
         }
 
+        if ($this instanceof \Dvsa\Olcs\Api\Domain\EmailAwareInterface) {
+            $this->setEmailService($mainServiceLocator->get(\Dvsa\Olcs\Email\Service\Client::class));
+            $this->setTemplateRendererService(
+                $mainServiceLocator->get(\Dvsa\Olcs\Email\Service\TemplateRenderer::class)
+            );
+        }
+
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
 
         if ($this->repoServiceName !== null) {

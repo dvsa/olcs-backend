@@ -14,12 +14,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 /**
  * Send Transport Manager Application Email
  *
- * @todo This needs implementing
- *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class SendTmApplication extends AbstractCommandHandler
+final class SendTmApplication extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Domain\EmailAwareInterface
 {
+    use \Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+
     protected $repoServiceName = 'TransportManagerApplication';
 
     /**
@@ -28,13 +28,34 @@ final class SendTmApplication extends AbstractCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
-        //$tma = $this->getRepo()->fetchUsingId($command);
+        /* @var $tma \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication */
+        $tma = $this->getRepo()->fetchUsingId($command);
 
-        //$testMessage = "Send message to TMA {$command->getId()}";
-        //file_put_contents('/tmp/'. uniqid(), $testMessage);
+        $message = new \Dvsa\Olcs\Email\Data\Message(
+            $tma->getTransportManager()->getHomeCd()->getEmailAddress(),
+            'email.transport-manager-complete-digital-form.subject'
+        );
+        $message->setTranslateToWelsh($tma->getApplication()->getLicence()->getTranslateToWelsh());
+
+        $this->sendEmailTemplate(
+            $message,
+            'transport-manager-complete-digital-form',
+            [
+                'name' => $tma->getTransportManager()->getHomeCd()->getPerson()->getForename(),
+                'organisation' => $tma->getApplication()->getLicence()->getOrganisation()->getName(),
+                'reference' => $tma->getApplication()->getLicence()->getLicNo() .'/'. $tma->getApplication()->getId(),
+                'signInLink' => sprintf(
+                    'http://selfserve/%s/%d/transport-managers/details/%d/edit-details/',
+                    ($tma->getApplication()->getIsVariation()) ? 'variation' : 'application',
+                    $tma->getApplication()->getId(),
+                    $tma->getId()
+                )
+            ]
+        );
 
         $result = new Result();
-        $result->addMessage('SendTmApplication needs to be implemented.');
+        $result->addId('transportManagerApplication', $tma->getId());
+        $result->addMessage('Transport Manager Application email sent');
         return $result;
     }
 }
