@@ -53,7 +53,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $customerReference = $command->getOrganisationId();
             // filter requested fee ids against outstanding fees
             $fees = $this->filterValid($command, $outstandingFees);
-        } else if (!empty($command->getApplicationId())) {
+        } elseif (!empty($command->getApplicationId())) {
             $fees = $this->getOutstandingFeesForApplication($command->getApplicationId());
             $customerReference = $this->getCustomerReference($fees);
         } else {
@@ -443,7 +443,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $outstandingFees[] = $applicationFee;
         }
 
-        // @TODO get interim fee
+        // @TODO get the interim fee as well
 
         return $outstandingFees;
     }
