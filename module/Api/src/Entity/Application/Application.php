@@ -56,6 +56,14 @@ class Application extends AbstractApplication
     const APPLICATION_TYPE_NEW = 0;
     const APPLICATION_TYPE_VARIATION = 1;
 
+    const CODE_GV_APP = 'GV79';
+    const CODE_GV_VAR_UPGRADE = 'GV80A';
+    const CODE_GV_VAR_NO_UPGRADE = 'GV81';
+    const CODE_PSV_APP = 'PSV421';
+    const CODE_PSV_APP_SR = 'PSV356';
+    const CODE_PSV_VAR_UPGRADE    = 'PSV431A';
+    const CODE_PSV_VAR_NO_UPGRADE = 'PSV431';
+
     public function __construct(Licence $licence, RefData $status, $isVariation)
     {
         parent::__construct();
@@ -386,7 +394,7 @@ class Application extends AbstractApplication
 
     public function getApplicationType()
     {
-        if ($this->getIsVariation()) {
+        if ($this->isVariation()) {
             return self::APPLICATION_TYPE_VARIATION;
         }
 
@@ -400,5 +408,76 @@ class Application extends AbstractApplication
         }
 
         return $this->getReceivedDate();
+    }
+
+    public function canSubmit()
+    {
+        return $this->getStatus()->getId() === self::APPLICATION_STATUS_NOT_SUBMITTED;
+    }
+
+    /**
+     * Essentially an alias of getIsVariation()
+     *
+     * @return @boolean
+     */
+    public function isVariation()
+    {
+        return (boolean) $this->getIsVariation();
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isGoods()
+    {
+        return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPsv()
+    {
+        return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_PSV;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isSpecialRestricted()
+    {
+        return $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        if ($this->isVariation()) {
+            $isUpgrade = $this->isLicenceUpgrade();
+            if ($this->isGoods()) {
+                $code = $isUpgrade
+                    ? self::CODE_GV_VAR_UPGRADE
+                    : self::CODE_GV_VAR_NO_UPGRADE;
+            } else {
+                $code = $isUpgrade
+                    ? self::CODE_PSV_VAR_UPGRADE
+                    : self::CODE_PSV_VAR_NO_UPGRADE;
+            }
+        } else {
+            // new app.
+            if ($this->isGoods()) {
+                $code = self::CODE_GV_APP;
+            } else {
+                if ($this->isSpecialRestricted()) {
+                    $code = self::CODE_PSV_APP_SR;
+                } else {
+                    $code = self::CODE_PSV_APP;
+                }
+            }
+        }
+
+        return $code;
     }
 }
