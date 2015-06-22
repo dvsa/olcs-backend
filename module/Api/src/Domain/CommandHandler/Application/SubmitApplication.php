@@ -91,6 +91,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     /**
      * @todo call code to generate snapshot, requires OLCS-9586 and possibly
      * others to be completed first
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     private function snapshotApplication(ApplicationEntity $application)
     {
