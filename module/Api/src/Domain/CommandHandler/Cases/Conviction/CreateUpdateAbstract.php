@@ -33,8 +33,14 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
         // Defendant Type - required - no if needed.
         $entity->setDefendantType($repo->getRefdataReference($command->getDefendantType()));
 
-        // Conviction Category - required - no if needed.
-        $entity->setConvictionCategory($repo->getRefdataReference($command->getConvictionCategory()));
+        if ($command->getConvictionCategory()) {
+            $entity->setConvictionCategory($repo->getRefdataReference($command->getConvictionCategory()));
+            $entity->setCategoryText(null);
+        } else {
+            $entity->setConvictionCategory(null);
+            $entity->setCategoryText($command->getCategoryText());
+        }
+
 
         // Transport Manager is optional if Case is present.
         if ($command->getTransportManager() !== null) {

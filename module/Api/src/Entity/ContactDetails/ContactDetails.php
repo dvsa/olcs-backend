@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
+use Dvsa\Olcs\Api\Entity\Person\Person;
 
 /**
  * ContactDetails Entity
@@ -26,6 +27,12 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
  */
 class ContactDetails extends AbstractContactDetails
 {
+    const TRANSPORT_MANAGER_STATUS_CURRENT = 'tm_s_cur';
+    const TRANSPORT_MANAGER_STATUS_ACTIVE = 'tm_st_act';
+    const TRANSPORT_MANAGER_STATUS_DISABLED = 'tm_st_disa';
+    const TRANSPORT_MANAGER_TYPE_EXTERNAL = 'tm_t_e';
+    const TRANSPORT_MANAGER_TYPE_BOTH = 'tm_t_b';
+
     const CONTACT_TYPE_REGISTERED_ADDRESS = 'ct_reg';
     const CONTACT_TYPE_COMPLAINANT = 'ct_complainant';
     const CONTACT_TYPE_ESTABLISHMENT_ADDRESS = 'ct_est';
@@ -35,6 +42,7 @@ class ContactDetails extends AbstractContactDetails
     const CONTACT_TYPE_WORKSHOP = 'ct_work';
     const CONTACT_TYPE_IRFO_OPERATOR = 'ct_irfo_op';
     const CONTACT_TYPE_PARTNER = 'ct_partner';
+    const CONTACT_TYPE_OBJECTOR = 'ct_obj';
 
     public function __construct(RefData $contactType)
     {
@@ -68,6 +76,9 @@ class ContactDetails extends AbstractContactDetails
             case self::CONTACT_TYPE_PARTNER:
                 $this->updatePartner($contactParams);
                 break;
+            case self::CONTACT_TYPE_OBJECTOR:
+                $this->updateObjector($contactParams);
+                break;
         }
 
         return $this;
@@ -95,8 +106,39 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
-     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\User\UpdatePartner
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
      */
+    private function updateObjector(array $contactParams)
+    {
+        if ($contactParams['emailAddress'] !== null) {
+            // set email address
+            $this->setEmailAddress($contactParams['emailAddress']);
+        }
+
+        if ($contactParams['description'] !== null) {
+            // set description
+            $this->setDescription($contactParams['description']);
+        }
+
+        if ($contactParams['address'] !== null) {
+            // populate address
+            $this->populateAddress($contactParams['address']);
+        }
+
+        if ($contactParams['person'] !== null) {
+            // populate person
+            $this->populatePerson($contactParams['person']);
+        }
+
+        if ($contactParams['phoneContacts'] !== null) {
+            // populate phone contacts
+            $this->populatePhoneContacts($contactParams['phoneContacts']);
+        }
+    }
+
+    /**
+    * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\User\UpdatePartner
+    */
     private function updatePartner(array $contactParams)
     {
         // set description
@@ -107,7 +149,9 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
-     * @param array $addressParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\Address
+     * Create address object
+     * @param Cmd $command
+     * @return Address|null
      */
     private function populateAddress(array $addressParams)
     {
@@ -122,7 +166,7 @@ class ContactDetails extends AbstractContactDetails
             $addressParams['addressLine4'],
             $addressParams['town'],
             $addressParams['postcode'],
-            $addressParams['countryCode']
+            isset($addressParams['countryCode']) ? $addressParams['countryCode'] : null
         );
     }
 
@@ -163,5 +207,45 @@ class ContactDetails extends AbstractContactDetails
             // unlink
             $this->phoneContacts->remove($key);
         }
+    }
+
+    /**
+     * @param array $personParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\Person
+     */
+    private function populatePerson(array $personParams)
+    {
+        if (!($this->person instanceof Person)) {
+            $this->person = new Person();
+        }
+
+        // ensure we have all variables set
+        $title = $this->getDefaultParameter($personParams, 'title');
+        $forename = $this->getDefaultParameter($personParams, 'forename');
+        $familyName = $this->getDefaultParameter($personParams, 'familyName');
+        $birthDate = $this->getDefaultParameter($personParams, 'birthDate');
+        $birthPlace = $this->getDefaultParameter($personParams, 'birthPlace');
+        $otherName = $this->getDefaultParameter($personParams, 'otherName');
+
+        $this->person->updatePerson(
+            $title,
+            $forename,
+            $familyName,
+            $birthDate,
+            $birthPlace,
+            $otherName
+        );
+    }
+
+    /**
+     * Generates a parameter from either the params array, or returns a default.
+     *
+     * @param $params
+     * @param $var
+     * @param null $default
+     * @return null
+     */
+    private function getDefaultParameter($params, $var, $default = null)
+    {
+        return isset($params[$var]) ? $params[$var] : $default;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Licence;
 
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Mockery as m;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc as Entity;
 
@@ -18,4 +20,17 @@ class PsvDiscEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testCease()
+    {
+        $licence = m::mock(Licence::class)->makePartial();
+
+        $psvDisc = new Entity($licence);
+
+        $this->assertNull($psvDisc->getCeasedDate());
+        $psvDisc->cease();
+        $this->assertInstanceOf('DateTime', $psvDisc->getCeasedDate());
+
+        $this->assertEquals(date('Y-m-d'), $psvDisc->getCeasedDate()->format('Y-m-d'));
+    }
 }
