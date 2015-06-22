@@ -48,6 +48,7 @@ return [
     TransferQuery\Licence\Addresses::class => QueryHandler\Licence\Addresses::class,
     TransferQuery\Licence\TransportManagers::class => QueryHandler\Licence\TransportManagers::class,
     TransferQuery\Licence\PsvDiscs::class => QueryHandler\Licence\PsvDiscs::class,
+    TransferQuery\Licence\LicenceDecisions::class => QueryHandler\Licence\LicenceDecisions::class,
 
     // Other Licence
     TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
@@ -154,8 +155,6 @@ return [
     // Payment
     TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
     TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
-
-    TransferQuery\Licence\LicenceDecisions::class => QueryHandler\Licence\LicenceDecisions::class,
 
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
