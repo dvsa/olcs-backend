@@ -27,7 +27,6 @@ final class Statement extends AbstractQueryHandler
                     'person'
                 ]
             ]
-
         );
     }
 }

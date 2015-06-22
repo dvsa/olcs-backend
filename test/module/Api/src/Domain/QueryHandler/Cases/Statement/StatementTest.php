@@ -39,6 +39,6 @@ class StatementTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result',$result);
+        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result);
     }
 }

@@ -141,7 +141,7 @@ class UpdateStatementTest extends CommandHandlerTestCase
                 $referencedPayload['requestorsContactDetails']
             );
 
-        $this->references[LicenceEntity::class][7]->shouldReceive('getLicNo')->andReturn('12345');;
+        $this->references[LicenceEntity::class][7]->shouldReceive('getLicNo')->andReturn('12345');
         $this->references[CasesEntity::class][24]->setLicence($this->references[LicenceEntity::class][7]);
 
         /** @var PersonEntity $person */
