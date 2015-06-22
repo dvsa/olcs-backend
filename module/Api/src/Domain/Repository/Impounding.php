@@ -28,27 +28,6 @@ class Impounding extends AbstractRepository
         parent::__construct($em, $queryBuilder);
     }
 
-    public function fetchCaseImpoundingUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
-    {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
-            ->with('case')
-            ->with('presidingTc')
-            ->with('piVenue')
-            ->with('createdBy')
-            ->with('lastModifiedBy')
-            ->byId($query->getId());
-
-        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
-            ->setParameter('byCase', $query->getCase());
-
-        $result = $qb->getQuery()->getResult($hydrateMode);
-        return $result[0];
-    }
-
     /**
      * Applies a case filter
      * @param QueryBuilder $qb

@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Impounding;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -16,9 +16,6 @@ final class Impounding extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        /** @var ImpoundingRepo $repo */
-        $repo = $this->getRepo();
-
-        return $repo->fetchCaseImpoundingUsingId($query);
+        return $this->result($this->getRepo()->fetchUsingId($query));
     }
 }
