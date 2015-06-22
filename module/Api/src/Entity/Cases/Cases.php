@@ -3,6 +3,11 @@
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 
 /**
  * Cases Entity
@@ -23,4 +28,63 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Cases extends AbstractCases
 {
+
+    /**
+     * Creates a new case entity and sets the open date
+     *
+     * @param \DateTime $openDate
+     */
+    public function __construct(\DateTime $openDate)
+    {
+        parent::__construct();
+
+        $this->setOpenDate($openDate);
+    }
+
+    /**
+     * @param RefData $caseType
+     * @param ArrayCollection $categorys
+     * @param ArrayCollection $outcomes
+     * @param Application|null $application
+     * @param Licence|null $licence
+     * @param TransportManager|null $transportManager
+     * @param string $ecmsNo
+     * @param string $description
+     * @return bool
+     */
+    public function update(
+        $caseType,
+        $categorys,
+        $outcomes,
+        $application,
+        $licence,
+        $transportManager,
+        $ecmsNo,
+        $description
+    )
+    {
+        $this->setCaseType($caseType);
+        $this->setCategorys($categorys);
+        $this->setOutcomes($outcomes);
+        $this->setApplication($application);
+        $this->setLicence($licence);
+        $this->setTransportManager($transportManager);
+        $this->setEcmsNo($ecmsNo);
+        $this->setDescription($description);
+
+        return true;
+    }
+
+    /**
+     * Updates annual test history
+     *
+     * @param string $annualTestHistory
+     * @return bool
+     */
+    public function updateAnnualTestHistory($annualTestHistory)
+    {
+        $this->setAnnualTestHistory($annualTestHistory);
+
+        return true;
+    }
 }
