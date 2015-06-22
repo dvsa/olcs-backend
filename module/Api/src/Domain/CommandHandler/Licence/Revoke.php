@@ -62,7 +62,7 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
             $this->handleSideEffect(
                 DeleteTransportManagerLicence::create(
                     [
-                            'licence' => $licence
+                        'licence' => $licence
                     ]
                 )
             )

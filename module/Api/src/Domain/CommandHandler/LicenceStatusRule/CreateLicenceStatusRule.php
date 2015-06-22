@@ -8,6 +8,13 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
+/**
+ * Class CreateLicenceStatusRule
+ *
+ * Create a licence status rule.
+ *
+ * @package Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule
+ */
 final class CreateLicenceStatusRule extends AbstractCommandHandler
 {
     protected $repoServiceName = 'LicenceStatusRule';

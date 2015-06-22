@@ -166,11 +166,14 @@ class Licence extends AbstractLicence
     public function getActiveBusRoutes($licence)
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('licence', $licence))
+            ->where(
+                Criteria::expr()->eq('licence',$licence)
+            )
             ->andWhere(Criteria::expr()->notIn(
                 'status',
                 [
-                    BusReg::STATUS_REFUSED, BusReg::STATUS_WITHDRAWN
+                    BusReg::STATUS_REFUSED,
+                    BusReg::STATUS_WITHDRAWN
                 ]
             )
         );
