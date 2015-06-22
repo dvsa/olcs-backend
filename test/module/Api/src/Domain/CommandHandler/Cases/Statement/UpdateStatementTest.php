@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Create Statement Test
+ * Update Statement Test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
@@ -9,28 +9,31 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Statement;
 
 use Doctrine\ORM\Query;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Statement\CreateStatement;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Statement\UpdateStatement;
 use Dvsa\Olcs\Api\Domain\Repository\Statement as StatementRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\Statement\CreateStatement as Cmd;
+use Dvsa\Olcs\Transfer\Command\Cases\Statement\UpdateStatement as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Statement as StatementEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
+use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 
 /**
- * Create Statement Test
+ * Update Statement Test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class CreateStatementTest extends CommandHandlerTestCase
+class UpdateStatementTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new CreateStatement();
+        $this->sut = new UpdateStatement();
         $this->mockRepo('Statement', StatementRepo::class);
         $this->mockRepo('ContactDetails', ContactDetailsRepo::class);
         $this->mockRepo('Cases', CasesRepo::class);
@@ -41,6 +44,8 @@ class CreateStatementTest extends CommandHandlerTestCase
     private function getPayload()
     {
         return [
+            "id" => 99,
+            "version" => 2,
             "case" => 24,
             "statementType" => "statement_t_36",
             "vrm" => "AB12CDE",
@@ -71,6 +76,8 @@ class CreateStatementTest extends CommandHandlerTestCase
     private function getReferencedPayload()
     {
         return [
+            "id" => 99,
+            "version" => 2,
             "case" => 24,
             "statementType" => new RefDataEntity(),
             "vrm" => "AB12CDE",
@@ -137,10 +144,37 @@ class CreateStatementTest extends CommandHandlerTestCase
         $this->references[LicenceEntity::class][7]->shouldReceive('getLicNo')->andReturn('12345');;
         $this->references[CasesEntity::class][24]->setLicence($this->references[LicenceEntity::class][7]);
 
+        /** @var PersonEntity $person */
+        $person = m::mock(PersonEntity::class)->makePartial();
+        $person->setId(44);
+
+        /** @var AddressEntity $address */
+        $address = m::mock(AddressEntity::class)->makePartial();
+        $address->setId(55);
+
+        /** @var RefDataEntity $contactType */
+        $contactType = m::mock(RefDataEntity::class)->makePartial();
+        $contactType->setId('ct_requestor');
+
+        /** @var ContactDetailsEntity $contactDetails */
+        $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
+        $contactDetails->setId(33);
+        $contactDetails->setContactType($contactType);
+        $contactDetails->setPerson($person);
+        $contactDetails->setAddress($address);
+
+        /** @var StatementEntity $statement */
+        $statement = m::mock(StatementEntity::class)->makePartial();
+        $statement->setId(99);
+        $statement->setRequestorsContactDetails($contactDetails);
+
         /** @var StatementEntity $se */
         $se = null;
 
-        $this->repoMap['Statement']
+        $this->repoMap['Statement']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
+            ->andReturn($statement)
+            ->once()
             ->shouldReceive('save')
             ->with(m::type(StatementEntity::class))
             ->andReturnUsing(
@@ -156,6 +190,7 @@ class CreateStatementTest extends CommandHandlerTestCase
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
-        $this->assertContains('Statement created', $result->getMessages());
+        $this->assertContains('Statement updated', $result->getMessages());
+
     }
 }
