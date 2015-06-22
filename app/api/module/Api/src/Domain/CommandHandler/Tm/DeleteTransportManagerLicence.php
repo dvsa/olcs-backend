@@ -29,5 +29,10 @@ final class DeleteTransportManagerLicence extends AbstractCommandHandler impleme
         foreach ($transportManagers as $transportManager) {
             $this->getRepo()->delete($transportManager);
         }
+
+        $result = new Result();
+        $result->addMessage('Removed transport managers for licence.');
+
+        return $result;
     }
 }

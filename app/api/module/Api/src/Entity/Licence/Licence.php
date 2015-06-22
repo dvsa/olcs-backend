@@ -149,12 +149,15 @@ class Licence extends AbstractLicence
     public function getActiveCommunityLicences($licence)
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()
-                ->in('status', [
+            ->where(
+                Criteria::expr()->in(
+                    'status',
+                    [
                         CommunityLic::STATUS_PENDING,
                         CommunityLic::STATUS_ACTIVE,
                         CommunityLic::STATUS_SUSPENDED
-                    ])
+                    ]
+                )
             )->andWhere(Criteria::expr()->eq('licence', $licence));
 
         return $this->getCommunityLics()->matching($criteria)->current();
@@ -164,7 +167,13 @@ class Licence extends AbstractLicence
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('licence', $licence))
-            ->andWhere(Criteria::expr()->notIn('status', [BusReg::STATUS_REFUSED, BusReg::STATUS_WITHDRAWN]));
+            ->andWhere(Criteria::expr()->notIn(
+                'status',
+                [
+                    BusReg::STATUS_REFUSED, BusReg::STATUS_WITHDRAWN
+                ]
+            )
+        );
 
         return $this->getBusRegs()->matching($criteria)->current();
     }

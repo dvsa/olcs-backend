@@ -31,5 +31,10 @@ final class RemoveLicenceVehicle extends AbstractCommandHandler implements Trans
 
             $this->getRepo()->save($licenceVehicle);
         }
+
+        $result = new Result();
+        $result->addMessage('Removed vehicles for licence.');
+
+        return $result;
     }
 }

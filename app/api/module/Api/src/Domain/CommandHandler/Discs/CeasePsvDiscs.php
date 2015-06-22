@@ -31,5 +31,10 @@ final class CeasePsvDiscs extends AbstractCommandHandler implements Transactione
             $disc->setCeasedDate(new \DateTime());
             $this->getRepo()->save($disc);
         }
+
+        $result = new Result();
+        $result->addMessage('Ceased discs for licence.');
+
+        return $result;
     }
 }
