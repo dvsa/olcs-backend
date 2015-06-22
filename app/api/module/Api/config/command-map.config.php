@@ -141,6 +141,12 @@ return [
     TransferCommand\Cases\Impounding\DeleteImpounding::class =>
         CommandHandler\Cases\Impounding\DeleteImpounding::class,
 
+    // Transfer - ProposeToRevoke
+    TransferCommand\Cases\ProposeToRevoke\CreateProposeToRevoke::class =>
+        CommandHandler\Cases\ProposeToRevoke\CreateProposeToRevoke::class,
+    TransferCommand\Cases\ProposeToRevoke\UpdateProposeToRevoke::class =>
+        CommandHandler\Cases\ProposeToRevoke\UpdateProposeToRevoke::class,
+
     // Transfer - Complaint
     TransferCommand\Cases\Complaint\CreateComplaint::class =>
         CommandHandler\Cases\Complaint\CreateComplaint::class,
