@@ -154,6 +154,7 @@ return [
             'SubCategoryDescription' => RepositoryFactory::class,
             'Scan' => RepositoryFactory::class,
             'BusRegSearchView' => RepositoryFactory::class,
+            'ProposeToRevoke' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
