@@ -78,6 +78,7 @@ final class CreateStatement extends AbstractCommandHandler implements Transactio
             $case,
             $this->getRepo()->getRefdataReference($command->getStatementType())
         );
+
         $statement->setLicenceNo($case->getLicence()->getLicNo());
 
         if (!is_null($case->getLicence()->getLicenceType())) {
