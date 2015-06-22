@@ -41,7 +41,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
 
         $this->validate($application);
 
-        $this->snapshotApplication($application, $result);
+        $this->snapshotApplication($application);
 
         $this->updateStatus($application, $result);
 
@@ -88,11 +88,12 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
         }
     }
 
-    private function snapshotApplication(ApplicationEntity $application, $result)
+    /**
+     * @todo call code to generate snapshot, requires OLCS-9586 and possibly
+     * others to be completed first
+     */
+    private function snapshotApplication(ApplicationEntity $application)
     {
-        // @TODO
-        // $this->getServiceLocator()->get('Processing\ApplicationSnapshot')
-        //     ->storeSnapshot($applicationId, ApplicationSnapshotProcessingService::ON_SUBMIT);
 
     }
 
