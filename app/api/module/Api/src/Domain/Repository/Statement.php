@@ -27,6 +27,7 @@ class Statement extends AbstractRepository
      * Apply List Filters
      * @param QueryBuilder $qb
      * @param QueryInterface $query
+     * @return QueryBuilder|void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
