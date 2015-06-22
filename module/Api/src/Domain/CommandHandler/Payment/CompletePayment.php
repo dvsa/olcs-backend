@@ -54,8 +54,8 @@ final class CompletePayment extends AbstractCommandHandler implements Transactio
         $result->merge($this->resolvePayment($command, $payment));
 
         // handle application submission
-        if (!$command->getSubmitApplicationId()) {
-            $result->merge($this->updateApplication($command, $payment));
+        if ($payment->isPaid() && $command->getSubmitApplicationId()) {
+            $result->merge($this->updateApplication($command));
         }
 
         $result->addId('payment', $payment->getId());
@@ -75,14 +75,15 @@ final class CompletePayment extends AbstractCommandHandler implements Transactio
         );
     }
 
-    protected function updateApplication($command, $payment)
+    protected function updateApplication($command)
     {
         return $this->getCommandHandler()->handleCommand(
             SubmitApplicationCmd::create(
                 [
                     'id' => $command->getSubmitApplicationId(),
-                    // we don't have version, we would have to store
-                    // it at the point we create the payment
+                    // we don't have the application version when we call
+                    // this as an internal command - we would have to store
+                    // it at the point we initiate the payment flow
                 ]
             )
         );
