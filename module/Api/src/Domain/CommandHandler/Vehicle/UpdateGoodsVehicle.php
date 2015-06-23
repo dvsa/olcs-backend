@@ -30,6 +30,12 @@ final class UpdateGoodsVehicle extends AbstractCommandHandler implements Transac
         /** @var LicenceVehicle $licenceVehicle */
         $licenceVehicle = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
         $licenceVehicle->getVehicle()->setPlatedWeight($command->getPlatedWeight());
+        if ($command->getSpecifiedDate() !== null) {
+            $licenceVehicle->setSpecifiedDate(new \DateTime($command->getSpecifiedDate()));
+        }
+        if ($command->getReceivedDate() !== null) {
+            $licenceVehicle->setReceivedDate(new \DateTime($command->getReceivedDate()));
+        }
         $this->getRepo()->save($licenceVehicle);
 
         $result->addMessage('Vehicle updated');

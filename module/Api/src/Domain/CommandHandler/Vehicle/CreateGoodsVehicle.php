@@ -61,7 +61,9 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         if ($command->getSpecifiedDate() !== null) {
             $licenceVehicle->setSpecifiedDate(new \DateTime($command->getSpecifiedDate()));
         }
-        // @todo implement licenceVehicle fields
+        if ($command->getReceivedDate() !== null) {
+            $licenceVehicle->setReceivedDate(new \DateTime($command->getReceivedDate()));
+        }
 
         $this->getRepo('LicenceVehicle')->save($licenceVehicle);
 
