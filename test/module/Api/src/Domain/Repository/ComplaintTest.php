@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Complaint;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
-use Dvsa\Olcs\Api\Domain\Repository\Complaint as Repo;
+use Dvsa\Olcs\Api\Domain\Repository\Complaint as ComplaintRepo;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
@@ -29,7 +29,7 @@ class ComplaintTest extends RepositoryTestCase
 {
     public function setUp()
     {
-        $this->setUpSut(Repo::class);
+        $this->setUpSut(ComplaintRepo::class);
     }
 
     public function testFetchUsingCaseId()

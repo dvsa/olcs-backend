@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Impounding Repo test
+ * Stay Repo test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
@@ -11,28 +11,28 @@ use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\DBAL\LockMode;
-use Dvsa\Olcs\Api\Entity\Cases\Impounding;
+use Dvsa\Olcs\Api\Entity\Cases\Stay;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
-use Dvsa\Olcs\Api\Domain\Repository\Impounding as Repo;
+use Dvsa\Olcs\Api\Domain\Repository\Stay as StayRepo;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
 /**
- * Impounding Repo test
+ * Stay Repo test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class ImpoundingTest extends RepositoryTestCase
+class StayTest extends RepositoryTestCase
 {
     public function setUp()
     {
-        $this->setUpSut(Repo::class);
+        $this->setUpSut(StayRepo::class);
     }
 
-    public function testFetchCaseImpoundingUsingId()
+    public function testFetchUsingCaseId()
     {
         $id = 99;
         $case = 24;
@@ -65,7 +65,7 @@ class ImpoundingTest extends RepositoryTestCase
             ->andReturnSelf();
 
         $this->queryBuilder->shouldReceive('modifyQuery')
-            ->once()
+            ->times(2)
             ->with($qb)
             ->andReturnSelf()
             ->shouldReceive('withRefData')
@@ -74,14 +74,6 @@ class ImpoundingTest extends RepositoryTestCase
             ->shouldReceive('with')
             ->once()
             ->with('case')
-            ->andReturnSelf()
-            ->shouldReceive('with')
-            ->once()
-            ->with('presidingTc')
-            ->andReturnSelf()
-            ->shouldReceive('with')
-            ->once()
-            ->with('piVenue')
             ->andReturnSelf()
             ->shouldReceive('with')
             ->once()
@@ -106,10 +98,10 @@ class ImpoundingTest extends RepositoryTestCase
             ->andReturn($qb);
 
         $this->em->shouldReceive('getRepository')
-            ->with(Impounding::class)
+            ->with(Stay::class)
             ->andReturn($repo);
 
-        $result = $this->sut->fetchCaseImpoundingUsingId($command, Query::HYDRATE_OBJECT);
+        $result = $this->sut->fetchUsingCaseId($command, Query::HYDRATE_OBJECT);
 
         $this->assertEquals($result, $mockResult[0]);
     }

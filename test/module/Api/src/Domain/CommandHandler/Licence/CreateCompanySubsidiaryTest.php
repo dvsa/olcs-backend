@@ -93,7 +93,11 @@ class CreateCompanySubsidiaryTest extends CommandHandlerTestCase
             'assignedToTeam' => null,
             'isClosed' => false,
             'urgent' => false,
-            'application' => null
+            'application' => null,
+            'busReg' => null,
+            'case' => null,
+            'transportManager' => null,
+            'irfoOrganisation' => null,
         ];
 
         $result1 = new Result();

@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Api\Entity\Pi\PresidingTc;
 
 /**
  * ProposeToRevoke Entity
@@ -19,5 +21,18 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProposeToRevoke extends AbstractProposeToRevoke
 {
+    public function __construct(Cases $case, array $reasons, PresidingTc $presidingTc, \DateTime $ptrAgreedDate)
+    {
+        $this->case = $case;
+        $this->reasons = $reasons;
+        $this->presidingTc = $presidingTc;
+        $this->ptrAgreedDate = $ptrAgreedDate;
+    }
 
+    public function update(array $reasons, PresidingTc $presidingTc, \DateTime $ptrAgreedDate)
+    {
+        $this->reasons = $reasons;
+        $this->presidingTc = $presidingTc;
+        $this->ptrAgreedDate = $ptrAgreedDate;
+    }
 }

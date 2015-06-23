@@ -43,6 +43,7 @@ class ContactDetails extends AbstractContactDetails
     const CONTACT_TYPE_IRFO_OPERATOR = 'ct_irfo_op';
     const CONTACT_TYPE_PARTNER = 'ct_partner';
     const CONTACT_TYPE_OBJECTOR = 'ct_obj';
+    const CONTACT_TYPE_STATEMENT_REQUESTOR = 'ct_requestor';
 
     public function __construct(RefData $contactType)
     {
@@ -79,6 +80,10 @@ class ContactDetails extends AbstractContactDetails
             case self::CONTACT_TYPE_OBJECTOR:
                 $this->updateObjector($contactParams);
                 break;
+            case self::CONTACT_TYPE_STATEMENT_REQUESTOR:
+                $this->updateStatementRequestor($contactParams);
+                break;
+
         }
 
         return $this;
@@ -136,6 +141,19 @@ class ContactDetails extends AbstractContactDetails
         }
     }
 
+
+    /**
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     */
+    private function updateStatementRequestor(array $contactParams)
+    {
+        // populate address
+        $this->populateAddress($contactParams['address']);
+
+        // populate person
+        $this->populatePerson($contactParams['person']);
+    }
+
     /**
     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\User\UpdatePartner
     */
@@ -150,7 +168,7 @@ class ContactDetails extends AbstractContactDetails
 
     /**
      * Create address object
-     * @param Cmd $command
+     * @param array $addressParams
      * @return Address|null
      */
     private function populateAddress(array $addressParams)
@@ -219,7 +237,7 @@ class ContactDetails extends AbstractContactDetails
         }
 
         // ensure we have all variables set
-        $title = $this->getDefaultParameter($personParams, 'title');
+        $title = isset($personParams['title']) && !empty($personParams['title']) ? $personParams['title'] : null;
         $forename = $this->getDefaultParameter($personParams, 'forename');
         $familyName = $this->getDefaultParameter($personParams, 'familyName');
         $birthDate = $this->getDefaultParameter($personParams, 'birthDate');

@@ -47,6 +47,7 @@ return [
     TransferQuery\Licence\Safety::class => QueryHandler\Licence\Safety::class,
     TransferQuery\Licence\Addresses::class => QueryHandler\Licence\Addresses::class,
     TransferQuery\Licence\TransportManagers::class => QueryHandler\Licence\TransportManagers::class,
+    TransferQuery\Licence\PsvDiscs::class => QueryHandler\Licence\PsvDiscs::class,
 
     // Other Licence
     TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
@@ -64,8 +65,8 @@ return [
     TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
     TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
     TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
-    TransferQuery\Cases\ImpoundingList::class => QueryHandler\Cases\ImpoundingList::class,
-    TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
+    TransferQuery\Cases\Impounding\ImpoundingList::class => QueryHandler\Cases\Impounding\ImpoundingList::class,
+    TransferQuery\Cases\Impounding\Impounding::class => QueryHandler\Cases\Impounding\Impounding::class,
     TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
     TransferQuery\Cases\Complaint\ComplaintList::class => QueryHandler\Cases\Complaint\ComplaintList::class,
     TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
@@ -76,13 +77,20 @@ return [
         QueryHandler\Cases\ConditionUndertaking\ConditionUndertaking::class,
     TransferQuery\Cases\ConditionUndertaking\ConditionUndertakingList::class =>
         QueryHandler\Cases\ConditionUndertaking\ConditionUndertakingList::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class
-        => QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class
-        => QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
     TransferQuery\Cases\Opposition\Opposition::class => QueryHandler\Cases\Opposition\Opposition::class,
     TransferQuery\Cases\Opposition\OppositionList::class =>
         QueryHandler\Cases\Opposition\OppositionList::class,
+    TransferQuery\Cases\ProposeToRevoke\ProposeToRevokeByCase::class
+        => QueryHandler\Cases\ProposeToRevoke\ProposeToRevokeByCase::class,
+
+    TransferQuery\Cases\Hearing\Appeal::class => QueryHandler\Cases\Hearing\Appeal::class,
+    TransferQuery\Cases\Hearing\AppealList::class => QueryHandler\Cases\Hearing\AppealList::class,
+
+    TransferQuery\Cases\Hearing\Stay::class => QueryHandler\Cases\Hearing\Stay::class,
+    TransferQuery\Cases\Hearing\StayList::class => QueryHandler\Cases\Hearing\StayList::class,
+
+    TransferQuery\Cases\Statement\Statement::class => QueryHandler\Cases\Statement\Statement::class,
+    TransferQuery\Cases\Statement\StatementList::class => QueryHandler\Cases\Statement\StatementList::class,
 
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
@@ -156,7 +164,7 @@ return [
 
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
-    
+
     // Transport Manager Application
     TransferQuery\TransportManagerApplication\GetDetails::class
         => QueryHandler\TransportManagerApplication\GetDetails::class,
@@ -166,4 +174,7 @@ return [
 
     // Bus Reg History View
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
+
+    // Scan
+    TransferQuery\Scan\GetSingle::class => QueryHandler\Scan\GetSingle::class
 ];
