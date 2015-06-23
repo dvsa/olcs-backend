@@ -22,6 +22,9 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_propose_to_revoke_presiding_tc_id", columns={"presiding_tc_id"}),
  *        @ORM\Index(name="ix_propose_to_revoke_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_propose_to_revoke_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_propose_to_revoke_case_id", columns={"case_id"})
  *    }
  * )
  */
@@ -34,7 +37,7 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY")
+     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", fetch="LAZY")
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;

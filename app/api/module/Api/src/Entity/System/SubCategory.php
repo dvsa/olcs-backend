@@ -21,4 +21,5 @@ class SubCategory extends AbstractSubCategory
     // copy constants from old Common\Service\Data\CategoryDataService as required
     const DOC_SUB_CATEGORY_LICENCE_INSOLVENCY_DOCUMENT_DIGITAL = 112;
     const DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL = 13;
+    const DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE = 74;
 }
