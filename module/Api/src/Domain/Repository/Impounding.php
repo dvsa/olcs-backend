@@ -21,6 +21,22 @@ class Impounding extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    /**
+     * Overridden default query to return appropriate table joins
+     * @param QueryBuilder $qb
+     * @param int $id
+     * @return \Dvsa\Olcs\Api\Domain\QueryBuilder
+     */
+    protected function buildDefaultQuery(QueryBuilder $qb, $id)
+    {
+        return $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('presidingTc')
+            ->with('impoundingLegislationTypes')
+            ->with('piVenue')
+            ->byId($id);
+    }
+
     public function __construct(
         EntityManagerInterface $em,
         QueryBuilderInterface $queryBuilder
