@@ -16,7 +16,13 @@ final class Impounding extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->result($this->getRepo()->fetchUsingId($query), ['presidingTc', 'impoundingLegislationTypes',
-            'piVenue']);
+        return $this->result(
+            $this->getRepo()->fetchUsingId($query),
+            [
+                'presidingTc',
+                'impoundingLegislationTypes',
+                'piVenue'
+            ]
+        );
     }
 }
