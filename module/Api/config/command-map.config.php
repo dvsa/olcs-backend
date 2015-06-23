@@ -175,6 +175,22 @@ return [
     TransferCommand\Cases\Prohibition\Defect\Update::class => CommandHandler\Cases\Prohibition\Defect\Update::class,
     TransferCommand\Cases\Prohibition\Defect\Delete::class => CommandHandler\Cases\Prohibition\Defect\Delete::class,
 
+    // Transfer - Appeal
+    TransferCommand\Cases\Hearing\CreateAppeal::class =>
+        CommandHandler\Cases\Hearing\CreateAppeal::class,
+    TransferCommand\Cases\Hearing\UpdateAppeal::class =>
+        CommandHandler\Cases\Hearing\UpdateAppeal::class,
+    TransferCommand\Cases\Hearing\DeleteAppeal::class =>
+        CommandHandler\Cases\Hearing\DeleteAppeal::class,
+
+    // Transfer - Stay
+    TransferCommand\Cases\Hearing\CreateStay::class =>
+        CommandHandler\Cases\Hearing\CreateStay::class,
+    TransferCommand\Cases\Hearing\UpdateStay::class =>
+        CommandHandler\Cases\Hearing\UpdateStay::class,
+    TransferCommand\Cases\Hearing\DeleteStay::class =>
+        CommandHandler\Cases\Hearing\DeleteStay::class,
+
     // Transfer - Environmental Complaint
     TransferCommand\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class =>
         CommandHandler\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class,

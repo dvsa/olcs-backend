@@ -23,5 +23,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Appeal extends AbstractAppeal
 {
-
+    public function __construct($appealNo)
+    {
+        $this->setAppealNo($appealNo);
+    }
 }
