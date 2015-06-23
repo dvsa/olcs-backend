@@ -22,7 +22,7 @@ class SystemParameter extends AbstractRepository
     public function fetchValue($key)
     {
         try {
-            return $this->fetchById($key);
+            return $this->fetchById($key)->getParamValue();
         } catch (NotFoundException $ex) {
             return null;
         }
