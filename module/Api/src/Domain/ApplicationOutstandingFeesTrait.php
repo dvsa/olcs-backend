@@ -79,7 +79,7 @@ trait ApplicationOutstandingFeesTrait
         $applicationDate = new \DateTime($application->getApplicationDate());
 
         $feeType = $this->getRepo('FeeType')->fetchLatest(
-            $this->getRepo()->getRefdataReference($feeTypeFeeTypeId),
+            $this->getRepo('FeeType')->getRefdataReference($feeTypeFeeTypeId),
             $application->getGoodsOrPsv(),
             $application->getLicenceType(),
             $applicationDate,

@@ -7,14 +7,15 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Payment;
 
+use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Payment\CompletePayment;
-use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Payment as PaymentRepo;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperService as CpmsHelper;
+use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCommand;
 use Dvsa\Olcs\Transfer\Command\Payment\CompletePayment as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -52,17 +53,25 @@ class CompletePaymentTest extends CommandHandlerTestCase
         $paymentId = 69;
         $guid = 'OLCS-1234-ABCDE';
         $cpmsData = ['foo' => 'bar'];
+        $applicationId = 99;
 
         $data = [
             'reference' => $guid,
             'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
             'cpmsData' => $cpmsData,
+            'submitApplicationId' => $applicationId,
         ];
 
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
         $payment->setGuid($guid);
-        $payment->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING]);
+        $payment
+            ->shouldReceive('getStatus')
+            ->twice()
+            ->andReturn(
+                $this->refData[PaymentEntity::STATUS_OUTSTANDING],
+                $this->refData[PaymentEntity::STATUS_PAID]
+            );
 
         $command = Cmd::create($data);
 
@@ -79,7 +88,9 @@ class CompletePaymentTest extends CommandHandlerTestCase
             ->with($guid, $cpmsData);
 
         $resolveResult = new Result();
-        $resolveResult->addId('payment', 69);
+        $resolveResult
+            ->addId('payment', $paymentId)
+            ->addMessage('payment updated');
         $this->expectedSideEffect(
             ResolvePaymentCommand::class,
             [
@@ -89,14 +100,30 @@ class CompletePaymentTest extends CommandHandlerTestCase
             $resolveResult
         );
 
+        $submitResult = new Result();
+        $submitResult
+            ->addId('application', $applicationId)
+            ->addMessage('application submitted');
+        $this->expectedSideEffect(
+            SubmitApplicationCommand::class,
+            [
+                'id' => $applicationId,
+                'version' => null,
+            ],
+            $submitResult
+        );
+
         // assertions
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [
                 'payment' => $paymentId,
+                'application' => $applicationId,
             ],
             'messages' => [
+                'payment updated',
+                'application submitted',
                 'CPMS record updated',
             ]
         ];

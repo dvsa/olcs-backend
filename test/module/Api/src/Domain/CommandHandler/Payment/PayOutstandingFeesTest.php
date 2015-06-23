@@ -7,16 +7,21 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Payment;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Payment\PayOutstandingFees;
 use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Payment\PayOutstandingFees;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperService as CpmsHelper;
 use Dvsa\Olcs\Transfer\Command\Payment\PayOutstandingFees as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -39,19 +44,10 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         ];
 
         $this->sut = new PayOutstandingFees();
-        $this->mockRepo('Fee', '\Dvsa\Olcs\Api\Domain\Repository\Fee');
-        $this->mockRepo('Payment', '\Dvsa\Olcs\Api\Domain\Repository\Payment');
-
-        $this->refData = [
-            PaymentEntity::STATUS_OUTSTANDING,
-            PaymentEntity::STATUS_PAID,
-            PaymentEntity::STATUS_FAILED,
-            FeeEntity::METHOD_CARD_ONLINE,
-            FeeEntity::METHOD_CASH,
-            FeeEntity::METHOD_CHEQUE,
-            FeeEntity::METHOD_POSTAL_ORDER,
-            FeeEntity::STATUS_PAID,
-        ];
+        $this->mockRepo('Fee', Repository\Fee::class);
+        $this->mockRepo('Payment', Repository\Payment::class);
+        $this->mockRepo('FeeType', Repository\FeeType::class);
+        $this->mockRepo('Application', Repository\Application::class);
 
         $this->mockCpmsService
             ->shouldReceive('formatAmount')
@@ -62,6 +58,45 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             );
 
         parent::setUp();
+    }
+
+    protected function initReferences()
+    {
+        $this->refData = [
+            PaymentEntity::STATUS_OUTSTANDING,
+            PaymentEntity::STATUS_PAID,
+            PaymentEntity::STATUS_FAILED,
+            FeeEntity::METHOD_CARD_ONLINE,
+            FeeEntity::METHOD_CASH,
+            FeeEntity::METHOD_CHEQUE,
+            FeeEntity::METHOD_POSTAL_ORDER,
+            FeeEntity::STATUS_PAID,
+            LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+            FeeTypeEntity::FEE_TYPE_APP,
+            FeeTypeEntity::FEE_TYPE_GRANTINT,
+        ];
+
+        $this->references = [
+            TrafficAreaEntity::class => [
+                TrafficAreaEntity::NORTH_EASTERN_TRAFFIC_AREA_CODE => m::mock(TrafficAreaEntity::class),
+            ],
+            FeeTypeEntity::class => [
+                123 => m::mock(FeeTypeEntity::class),
+                234 => m::mock(FeeTypeEntity::class),
+            ],
+            OrganisationEntity::class => [
+                77 => m::mock(OrganisationEntity::class),
+            ],
+            LicenceEntity::class => [
+                7 => m::mock(LicenceEntity::class),
+            ],
+            ApplicationEntity::class => [
+                69 => m::mock(ApplicationEntity::class)
+            ]
+        ];
+
+        parent::initReferences();
     }
 
     public function testHandleCommandWithOrgId()
@@ -175,13 +210,13 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $paymentId = 222;
         $payment = new PaymentEntity();
         $payment
-            ->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING])
+            ->setStatus($this->mapRefData(PaymentEntity::STATUS_OUTSTANDING))
             ->setId($paymentId);
         $fp = new FeePaymentEntity();
         $fp->setPayment($payment);
         $fee1 = $this->getStubFee(99, 150.00);
         $fee1
-            ->setPaymentMethod($this->refData[FeeEntity::METHOD_CARD_ONLINE])
+            ->setPaymentMethod($this->mapRefData(FeeEntity::METHOD_CARD_ONLINE))
             ->getFeePayments()->add($fp);
 
         $fees = [$fee1];
@@ -200,7 +235,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $updatedPayment = new PaymentEntity();
         $updatedPayment
             ->setId($paymentId)
-            ->setStatus($this->refData[PaymentEntity::STATUS_PAID]);
+            ->setStatus($this->mapRefData(PaymentEntity::STATUS_PAID));
         $this->repoMap['Payment']
             ->shouldReceive('fetchById')
             ->once()
@@ -218,13 +253,13 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $paymentId = 222;
         $payment = new PaymentEntity();
         $payment
-            ->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING])
+            ->setStatus($this->mapRefData(PaymentEntity::STATUS_OUTSTANDING))
             ->setId($paymentId);
         $fp = new FeePaymentEntity();
         $fp->setPayment($payment);
         $fee1 = $this->getStubFee(99, 150.00);
         $fee1
-            ->setPaymentMethod($this->refData[FeeEntity::METHOD_CARD_ONLINE])
+            ->setPaymentMethod($this->mapRefData(FeeEntity::METHOD_CARD_ONLINE))
             ->getFeePayments()->add($fp);
 
         $fees = [$fee1];
@@ -243,7 +278,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $updatedPayment = new PaymentEntity();
         $updatedPayment
             ->setId($paymentId)
-            ->setStatus($this->refData[PaymentEntity::STATUS_FAILED]);
+            ->setStatus($this->mapRefData(PaymentEntity::STATUS_FAILED));
         $this->repoMap['Payment']
             ->shouldReceive('fetchById')
             ->once()
@@ -292,6 +327,138 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->once()
             ->with($feeIds)
             ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('initiateCardRequest')
+            ->once()
+            ->with($organisationId, $cpmsRedirectUrl, $fees);
+
+        /** @var PaymentEntity $savedPayment */
+        $savedPayment = null;
+        $this->repoMap['Payment']
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(PaymentEntity::class))
+            ->andReturnUsing(
+                function (PaymentEntity $payment) use (&$savedPayment, $paymentId) {
+                    $payment->setId($paymentId);
+                    $savedPayment = $payment;
+                }
+            );
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'payment' => $paymentId,
+            ],
+            'messages' => [
+                'Payment record created',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals(PaymentEntity::STATUS_OUTSTANDING, $savedPayment->getStatus()->getId());
+    }
+
+    public function testHandleCommandWithApplicationId()
+    {
+        // set up data
+        $cpmsRedirectUrl = 'https://olcs-selfserve/foo';
+        $applicationId = 69;
+        $organisationId = 77;
+        $licenceId = 7;
+        $applicationFeeTypeId = 123;
+        $interimFeeTypeId = 234;
+
+        $paymentId = 999; // payment to be created
+
+        $applicationFee = $this->getStubFee(99, 99.99);
+        $interimFee = $this->getStubFee(101, 99.99);
+        $fees = [$applicationFee, $interimFee];
+
+        $data = [
+            'applicationId' => $applicationId,
+            'cpmsRedirectUrl' => $cpmsRedirectUrl,
+            'paymentMethod' => FeeEntity::METHOD_CARD_OFFLINE,
+        ];
+
+        $command = Cmd::create($data);
+
+        // mocks/set up references
+        $organisation = $this->mapReference(OrganisationEntity::class, $organisationId);
+        $licence = $this->mapReference(LicenceEntity::class, $licenceId);
+        $licence
+            ->setTrafficArea(
+                $this->mapReference(
+                    TrafficAreaEntity::class,
+                    TrafficAreaEntity::NORTH_EASTERN_TRAFFIC_AREA_CODE
+                )
+            )
+            ->setOrganisation($organisation);
+        $application = $this->mapReference(ApplicationEntity::class, $applicationId);
+        $application
+            ->setLicence($licence)
+            ->setGoodsOrPsv($this->mapRefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE))
+            ->setLicenceType($this->mapRefData(LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL));
+        $applicationFee->setLicence($licence);
+
+        // expectations
+        $this->repoMap['Application']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($applicationId)
+            ->andReturn($application);
+
+        $this->repoMap['FeeType']
+            ->shouldReceive('fetchLatest')
+            ->once()
+            ->with(
+                $this->mapRefData(FeeTypeEntity::FEE_TYPE_APP),
+                $this->mapRefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
+                $this->mapRefData(LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL),
+                m::type(\DateTime::class),
+                $this->mapReference(
+                    TrafficAreaEntity::class,
+                    TrafficAreaEntity::NORTH_EASTERN_TRAFFIC_AREA_CODE
+                )
+            )
+            ->andReturn($this->mapReference(FeeTypeEntity::class, $applicationFeeTypeId))
+            ->shouldReceive('fetchLatest')
+            ->once()
+            ->with(
+                $this->mapRefData(FeeTypeEntity::FEE_TYPE_GRANTINT),
+                $this->mapRefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
+                $this->mapRefData(LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL),
+                m::type(\DateTime::class),
+                $this->mapReference(
+                    TrafficAreaEntity::class,
+                    TrafficAreaEntity::NORTH_EASTERN_TRAFFIC_AREA_CODE
+                )
+            )
+            ->andReturn($this->mapReference(FeeTypeEntity::class, $interimFeeTypeId));
+
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchLatestFeeByTypeStatusesAndApplicationId')
+            ->once()
+            ->with(
+                $applicationFeeTypeId,
+                [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED],
+                $applicationId
+            )
+            ->andReturn($applicationFee);
+
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchLatestFeeByTypeStatusesAndApplicationId')
+            ->once()
+            ->with(
+                $interimFeeTypeId,
+                [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED],
+                $applicationId
+            )
+            ->andReturn($interimFee);
 
         $this->mockCpmsService
             ->shouldReceive('initiateCardRequest')
