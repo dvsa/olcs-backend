@@ -80,8 +80,7 @@ class CreateImpoundingTest extends CommandHandlerTestCase
         /** @var ImpoundingEntity $app */
         $imp = null;
 
-        $this->repoMap['Impounding']->shouldReceive('beginTransaction')
-            ->once()
+        $this->repoMap['Impounding']
             ->shouldReceive('save')
             ->with(m::type(ImpoundingEntity::class))
             ->andReturnUsing(
@@ -90,7 +89,6 @@ class CreateImpoundingTest extends CommandHandlerTestCase
                     $impounding->setId(99);
                 }
             )
-            ->shouldReceive('commit')
             ->once();
 
         $result = $this->sut->handleCommand($command);
