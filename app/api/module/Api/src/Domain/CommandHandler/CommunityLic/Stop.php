@@ -101,9 +101,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
                 $suspensionReason = new CommunityLicSuspensionReasonEntity();
                 $suspensionReason->updateReason(
                     $this->getRepo()->getReference(CommunityLicSuspensionEntity::class, $suspension->getId()),
-                    $this->getRepo()->getRefdataReference($reason),
-                    $startDate,
-                    $endDate
+                    $this->getRepo()->getRefdataReference($reason)
                 );
                 $this->getRepo('CommunityLicSuspensionReason')->save($suspensionReason);
             }
