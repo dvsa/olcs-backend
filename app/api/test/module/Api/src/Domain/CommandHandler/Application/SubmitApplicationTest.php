@@ -11,6 +11,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\SubmitApplication;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
@@ -48,7 +49,12 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommand($isVariation = false)
+    /**
+     * @param boolean $isVariation
+     * @param array $expected
+     * @dataProvider isVariationProvider
+     */
+    public function testHandleCommand($isVariation, $expected)
     {
         $applicationId = 69;
         $version       = 10;
@@ -61,7 +67,6 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 'version' => $version,
             ]
         );
-
 
         /** @var LicenceEntity $licence */
         $licence = $this->mapReference(LicenceEntity::class, $licenceId);
@@ -106,7 +111,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             'category' => CategoryEntity::CATEGORY_APPLICATION,
             'subCategory' => CategoryEntity::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL,
             'description' => 'TEST CODE Application',
-            'actionDate' => date('Y-m-d'), // @TODO
+            'actionDate' => date('Y-m-d'), // @TODO mock date
             'assignedToUser' => null,
             'assignedToTeam' => null,
             'isClosed' => false,
@@ -121,19 +126,66 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $expected = [
-            'id' => [
-                'application' => 69,
-                'licence' => 7,
-                'task' => 111,
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function isVariationProvider()
+    {
+        return [
+            'new app' => [
+                false,
+                [
+                    'id' => [
+                        'application' => 69,
+                        'licence' => 7,
+                        'task' => 111,
+                    ],
+                    'messages' => [
+                        'Application updated',
+                        'Licence updated',
+                        'task created',
+                    ],
+                ],
             ],
-            'messages' => [
-                'Application updated',
-                'Licence updated',
-                'task created',
+            'variation' => [
+                true,
+                [
+                    'id' => [
+                        'application' => 69,
+                        'task' => 111,
+                    ],
+                    'messages' => [
+                        'Application updated',
+                        'task created',
+                    ],
+                ],
             ],
         ];
+    }
 
-        $this->assertEquals($expected, $result->toArray());
+    public function testHandleInvalidStatus()
+    {
+        $applicationId = 69;
+        $version = 10;
+
+        $command = Cmd::create(
+            [
+                'id' => $applicationId,
+                'version' => $version,
+            ]
+        );
+
+        /** @var ApplicationEntity $application */
+        $application = $this->mapReference(ApplicationEntity::class, $applicationId);
+        $application->setStatus($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION));
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, $version)
+            ->andReturn($application);
+
+        $this->setExpectedException(ValidationException::class);
+
+        $this->sut->handleCommand($command);
     }
 }
