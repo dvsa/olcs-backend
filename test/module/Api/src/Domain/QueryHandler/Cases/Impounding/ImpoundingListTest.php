@@ -5,12 +5,13 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Impounding;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\ImpoundingList;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Impounding\ImpoundingList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Impounding as ImpoundingRepo;
-use Dvsa\Olcs\Transfer\Query\Cases\ImpoundingList as Qry;
+use Dvsa\Olcs\Transfer\Query\Cases\Impounding\ImpoundingList as Qry;
+use Mockery as m;
 
 /**
  * ImpoundingList Test
@@ -31,9 +32,12 @@ class ImpoundingListTest extends QueryHandlerTestCase
     {
         $query = Qry::create([]);
 
+        $mockResult = m::mock();
+        $mockResult->shouldReceive('serialize')->once()->andReturn('foo');
+
         $this->repoMap['Impounding']->shouldReceive('fetchList')
-            ->with($query)
-            ->andReturn(['foo']);
+            ->with($query, m::type('integer'))
+            ->andReturn([$mockResult]);
 
         $this->repoMap['Impounding']->shouldReceive('fetchCount')
             ->with($query)
