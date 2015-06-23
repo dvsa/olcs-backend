@@ -69,8 +69,8 @@ return [
     TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
     TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
     TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
-    TransferQuery\Cases\ImpoundingList::class => QueryHandler\Cases\ImpoundingList::class,
-    TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
+    TransferQuery\Cases\Impounding\ImpoundingList::class => QueryHandler\Cases\Impounding\ImpoundingList::class,
+    TransferQuery\Cases\Impounding\Impounding::class => QueryHandler\Cases\Impounding\Impounding::class,
     TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
     TransferQuery\Cases\Complaint\ComplaintList::class => QueryHandler\Cases\Complaint\ComplaintList::class,
     TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
@@ -81,10 +81,6 @@ return [
         QueryHandler\Cases\ConditionUndertaking\ConditionUndertaking::class,
     TransferQuery\Cases\ConditionUndertaking\ConditionUndertakingList::class =>
         QueryHandler\Cases\ConditionUndertaking\ConditionUndertakingList::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class
-        => QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class
-        => QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
     TransferQuery\Cases\Opposition\Opposition::class => QueryHandler\Cases\Opposition\Opposition::class,
     TransferQuery\Cases\Opposition\OppositionList::class =>
         QueryHandler\Cases\Opposition\OppositionList::class,
@@ -96,6 +92,9 @@ return [
 
     TransferQuery\Cases\Hearing\Stay::class => QueryHandler\Cases\Hearing\Stay::class,
     TransferQuery\Cases\Hearing\StayList::class => QueryHandler\Cases\Hearing\StayList::class,
+
+    TransferQuery\Cases\Statement\Statement::class => QueryHandler\Cases\Statement\Statement::class,
+    TransferQuery\Cases\Statement\StatementList::class => QueryHandler\Cases\Statement\StatementList::class,
 
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
@@ -179,4 +178,7 @@ return [
 
     // Bus Reg History View
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
+
+    // Scan
+    TransferQuery\Scan\GetSingle::class => QueryHandler\Scan\GetSingle::class
 ];

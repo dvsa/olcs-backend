@@ -81,7 +81,11 @@ class UpdateAddressesTest extends CommandHandlerTestCase
                 'assignedToUser' => null,
                 'assignedToTeam' => null,
                 'isClosed' => false,
-                'urgent' => false
+                'urgent' => false,
+                'busReg' => null,
+                'case' => null,
+                'transportManager' => null,
+                'irfoOrganisation' => null,
             ],
             $result
         );
