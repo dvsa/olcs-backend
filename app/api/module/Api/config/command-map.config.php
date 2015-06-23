@@ -138,6 +138,9 @@ return [
     TransferCommand\Cases\CreateCase::class => CommandHandler\Cases\CreateCase::class,
     TransferCommand\Cases\UpdateCase::class => CommandHandler\Cases\UpdateCase::class,
 
+    // Transfer - Annual Test History
+    TransferCommand\Cases\UpdateAnnualTestHistory::class => CommandHandler\Cases\UpdateAnnualTestHistory::class,
+
     // Transfer - Impounding
     TransferCommand\Cases\Impounding\CreateImpounding::class =>
         CommandHandler\Cases\Impounding\CreateImpounding::class,
