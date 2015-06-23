@@ -76,6 +76,7 @@ return [
         'factories' => [
             'Application' => RepositoryFactory::class,
             'Address' => RepositoryFactory::class,
+            'Appeal' => RepositoryFactory::class,
             'ContactDetails' => RepositoryFactory::class,
             'CompanySubsidiary' => RepositoryFactory::class,
             'Conviction' => RepositoryFactory::class,
@@ -118,6 +119,7 @@ return [
             'OtherLicence' => RepositoryFactory::class,
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
+            'Stay' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
             'IrfoPartner' => RepositoryFactory::class,
             'Payment' => RepositoryFactory::class,
@@ -155,6 +157,7 @@ return [
             'SubCategoryDescription' => RepositoryFactory::class,
             'Scan' => RepositoryFactory::class,
             'BusRegSearchView' => RepositoryFactory::class,
+            'ProposeToRevoke' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

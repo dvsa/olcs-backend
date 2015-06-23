@@ -88,6 +88,14 @@ return [
     TransferQuery\Cases\Opposition\Opposition::class => QueryHandler\Cases\Opposition\Opposition::class,
     TransferQuery\Cases\Opposition\OppositionList::class =>
         QueryHandler\Cases\Opposition\OppositionList::class,
+    TransferQuery\Cases\ProposeToRevoke\ProposeToRevokeByCase::class
+        => QueryHandler\Cases\ProposeToRevoke\ProposeToRevokeByCase::class,
+
+    TransferQuery\Cases\Hearing\Appeal::class => QueryHandler\Cases\Hearing\Appeal::class,
+    TransferQuery\Cases\Hearing\AppealList::class => QueryHandler\Cases\Hearing\AppealList::class,
+
+    TransferQuery\Cases\Hearing\Stay::class => QueryHandler\Cases\Hearing\Stay::class,
+    TransferQuery\Cases\Hearing\StayList::class => QueryHandler\Cases\Hearing\StayList::class,
 
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
