@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Statement Entity
@@ -24,5 +25,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Statement extends AbstractStatement
 {
-
+    /**
+     * Construct Statement entity
+     * @param Cases $case
+     * @param RefData $statementType
+     */
+    public function __construct(Cases $case, RefData $statementType)
+    {
+        $this->setCase($case);
+        $this->setStatementType($statementType);
+    }
 }

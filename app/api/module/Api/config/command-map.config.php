@@ -141,6 +141,12 @@ return [
     TransferCommand\Cases\Impounding\DeleteImpounding::class =>
         CommandHandler\Cases\Impounding\DeleteImpounding::class,
 
+    // Transfer - ProposeToRevoke
+    TransferCommand\Cases\ProposeToRevoke\CreateProposeToRevoke::class =>
+        CommandHandler\Cases\ProposeToRevoke\CreateProposeToRevoke::class,
+    TransferCommand\Cases\ProposeToRevoke\UpdateProposeToRevoke::class =>
+        CommandHandler\Cases\ProposeToRevoke\UpdateProposeToRevoke::class,
+
     // Transfer - Complaint
     TransferCommand\Cases\Complaint\CreateComplaint::class =>
         CommandHandler\Cases\Complaint\CreateComplaint::class,
@@ -151,6 +157,7 @@ return [
 
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
+    Command\Document\CreateDocumentSpecific::class => CommandHandler\Document\CreateDocumentSpecific::class,
     TransferCommand\Document\DeleteDocument::class => CommandHandler\Document\DeleteDocument::class,
 
     // Conviction
@@ -194,6 +201,14 @@ return [
         CommandHandler\Cases\Opposition\UpdateOpposition::class,
     TransferCommand\Cases\Opposition\DeleteOpposition::class =>
         CommandHandler\Cases\Opposition\DeleteOpposition::class,
+
+    // Transfer - Statement
+    TransferCommand\Cases\Statement\CreateStatement::class =>
+        CommandHandler\Cases\Statement\CreateStatement::class,
+    TransferCommand\Cases\Statement\UpdateStatement::class =>
+        CommandHandler\Cases\Statement\UpdateStatement::class,
+    TransferCommand\Cases\Statement\DeleteStatement::class =>
+        CommandHandler\Cases\Statement\DeleteStatement::class,
 
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
@@ -283,6 +298,7 @@ return [
     TransferCommand\TmEmployment\Update::class => CommandHandler\TmEmployment\Update::class,
 
     // Transfer - Scan
+    TransferCommand\Scan\CreateDocument::class => CommandHandler\Scan\CreateDocument::class,
     TransferCommand\Scan\CreateSeparatorSheet::class  => CommandHandler\Scan\CreateSeparatorSheet::class,
     TransferCommand\Scan\CreateContinuationSeparatorSheet::class  =>
         CommandHandler\Scan\CreateContinuationSeparatorSheet::class,

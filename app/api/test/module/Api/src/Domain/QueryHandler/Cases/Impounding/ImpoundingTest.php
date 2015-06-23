@@ -5,12 +5,13 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Impounding\Cases;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Impounding;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Impounding\Impounding;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Impounding as ImpoundingRepo;
-use Dvsa\Olcs\Transfer\Query\Cases\Impounding as Qry;
+use Dvsa\Olcs\Transfer\Query\Cases\Impounding\Impounding as Qry;
+use Mockery as m;
 
 /**
  * Impounding Test
@@ -31,11 +32,13 @@ class ImpoundingTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 1]);
 
-        $this->repoMap['Impounding']->shouldReceive('fetchCaseImpoundingUsingId')
+        $mockResult = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+
+        $this->repoMap['Impounding']->shouldReceive('fetchUsingId')
             ->with($query)
-            ->andReturn(['foo']);
+            ->andReturn($mockResult);
 
         $result = $this->sut->handleQuery($query);
-        $this->assertEquals($result, ['foo']);
+        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result);
     }
 }

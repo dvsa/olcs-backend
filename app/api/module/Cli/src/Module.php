@@ -8,6 +8,7 @@ namespace Dvsa\Olcs\Cli;
 
 use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
 use Zend\Console\Adapter\AdapterInterface as ConsoleAdapterInterface;
+use Zend\Mvc\MvcEvent;
 
 /**
  * Cli Module
@@ -33,6 +34,17 @@ class Module implements ConsoleUsageProviderInterface
             'licence-status-rules [--verbose|-v]' => 'Process licence status change rules',
             array( '--verbose|-v', '(optional) turn on verbose mode'),
         );
+    }
+
+    public function onBootstrap(MvcEvent $event)
+    {
+        // block session saving when running cli, as causes permissions errors
+        if (PHP_SAPI === 'cli') {
+            $handler = new Session\NullSaveHandler();
+            $manager = new \Zend\Session\SessionManager();
+            $manager->setSaveHandler($handler);
+            \Zend\Session\Container::setDefaultManager($manager);
+        }
     }
 
     public function getConfig()

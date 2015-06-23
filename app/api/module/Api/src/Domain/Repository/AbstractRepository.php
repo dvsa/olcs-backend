@@ -99,7 +99,7 @@ abstract class AbstractRepository implements RepositoryInterface
         $this->buildDefaultListQuery($qb, $query);
         $this->applyListFilters($qb, $query);
 
-        $this->applyListJoins($qb, $query);
+        $this->applyListJoins($qb);
 
         $query = $qb->getQuery();
         $query->setHydrationMode($hydrateMode);
