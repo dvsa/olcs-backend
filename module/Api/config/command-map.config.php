@@ -179,12 +179,15 @@ return [
     // Transfer - Licence Status Rule
     TransferCommand\LicenceStatusRule\CreateLicenceStatusRule::class
         => CommandHandler\LicenceStatusRule\CreateLicenceStatusRule::class,
+    TransferCommand\LicenceStatusRule\DeleteLicenceStatusRule::class
+    => CommandHandler\LicenceStatusRule\DeleteLicenceStatusRule::class,
 
     // Transfer - Document
     TransferCommand\Document\CreateLetter::class => CommandHandler\Document\CreateLetter::class,
 
     // Transfer - Licence Decisions
     TransferCommand\Licence\RevokeLicence::class => CommandHandler\Licence\Revoke::class,
+    TransferCommand\Licence\ResetToValid::class => CommandHandler\Licence\ResetToValid::class,
 
     // Transfer - ConditionUndertaking
     TransferCommand\Cases\ConditionUndertaking\CreateConditionUndertaking::class =>

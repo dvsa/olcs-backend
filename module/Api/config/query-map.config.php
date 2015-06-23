@@ -50,6 +50,9 @@ return [
     TransferQuery\Licence\PsvDiscs::class => QueryHandler\Licence\PsvDiscs::class,
     TransferQuery\Licence\LicenceDecisions::class => QueryHandler\Licence\LicenceDecisions::class,
 
+    // LicenceStatusRule
+    TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
+
     // Other Licence
     TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
 
@@ -158,7 +161,7 @@ return [
 
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
-    
+
     // Transport Manager Application
     TransferQuery\TransportManagerApplication\GetDetails::class
         => QueryHandler\TransportManagerApplication\GetDetails::class,
