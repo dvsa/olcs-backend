@@ -54,11 +54,11 @@ final class CreateImpounding extends AbstractCommandHandler implements Transacti
         $piVenue = $command->getPiVenue();
         if (!empty($piVenue) && $piVenue !== Impounding::PI_VENUE_OTHER) {
             $piVenue = $this->getRepo()->getReference(PiVenue::class, $command->getPiVenue());
-            $impounding->setPiVenueProperties(
-                $piVenue,
-                $command->getPiVenueOther()
-            );
         }
+        $impounding->setPiVenueProperties(
+            $piVenue,
+            $command->getPiVenueOther()
+        );
 
         $impoundingLegislationTypes = $this->generateImpoundingLegislationTypes(
             $command->getImpoundingLegislationTypes()
