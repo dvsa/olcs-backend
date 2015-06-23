@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule as Entity;
 
 /**
@@ -20,7 +20,7 @@ class TaskAllocationRule extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function fetchForSimpleTaskAssignment(Category $category)
+    public function fetchForSimpleTaskAssignment(CategoryEntity $category)
     {
         $qb = $this->createQueryBuilder();
 

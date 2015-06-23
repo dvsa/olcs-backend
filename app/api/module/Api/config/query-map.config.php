@@ -47,6 +47,7 @@ return [
     TransferQuery\Licence\Safety::class => QueryHandler\Licence\Safety::class,
     TransferQuery\Licence\Addresses::class => QueryHandler\Licence\Addresses::class,
     TransferQuery\Licence\TransportManagers::class => QueryHandler\Licence\TransportManagers::class,
+    TransferQuery\Licence\PsvDiscs::class => QueryHandler\Licence\PsvDiscs::class,
 
     // Other Licence
     TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
@@ -83,6 +84,14 @@ return [
     TransferQuery\Cases\Opposition\Opposition::class => QueryHandler\Cases\Opposition\Opposition::class,
     TransferQuery\Cases\Opposition\OppositionList::class =>
         QueryHandler\Cases\Opposition\OppositionList::class,
+    TransferQuery\Cases\ProposeToRevoke\ProposeToRevokeByCase::class
+        => QueryHandler\Cases\ProposeToRevoke\ProposeToRevokeByCase::class,
+
+    TransferQuery\Cases\Hearing\Appeal::class => QueryHandler\Cases\Hearing\Appeal::class,
+    TransferQuery\Cases\Hearing\AppealList::class => QueryHandler\Cases\Hearing\AppealList::class,
+
+    TransferQuery\Cases\Hearing\Stay::class => QueryHandler\Cases\Hearing\Stay::class,
+    TransferQuery\Cases\Hearing\StayList::class => QueryHandler\Cases\Hearing\StayList::class,
 
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
@@ -159,11 +168,14 @@ return [
 
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
-    
+
     // Transport Manager Application
     TransferQuery\TransportManagerApplication\GetDetails::class
         => QueryHandler\TransportManagerApplication\GetDetails::class,
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
+
+    // Bus Reg History View
+    TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
 ];

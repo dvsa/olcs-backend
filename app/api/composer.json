@@ -32,10 +32,6 @@
         {
             "type": "vcs",
             "url": "git@gitlab.inf.mgt.mtpdvsa:sc/jackrabbit.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@gitlab.inf.mgt.mtpdvsa:sc/jackrabbit.git"
         }
     ],
     "require": {
@@ -56,8 +52,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^4.0.0",
-        "mockery/mockery": "~0.9.3",
-        "dvsa/jackrabbit": "~2.1.0"
+        "mockery/mockery": "~0.9.3"
     },
     "autoload": {
         "classmap": [
