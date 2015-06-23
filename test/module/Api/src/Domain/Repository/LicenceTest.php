@@ -148,4 +148,48 @@ class LicenceTest extends RepositoryTestCase
 
         $this->sut->fetchSafetyDetailsUsingId($command, Query::HYDRATE_OBJECT, 1);
     }
+
+    public function testFetchByLicNo()
+    {
+        $qb = m::mock(QueryBuilder::class);
+        $repo = m::mock(EntityRepository::class);
+
+        $this->em->shouldReceive('getRepository')->with(Licence::class)->andReturn($repo);
+
+        $repo->shouldReceive('createQueryBuilder')->with('m')->once()->andReturn($qb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')->with('m.licNo', ':licNo')->once()->andReturn('EXPR');
+        $qb->shouldReceive('where')->with('EXPR')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('licNo', 'LIC0001')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn(['RESULTS']);
+
+        $this->assertSame('RESULTS', $this->sut->fetchByLicNo('LIC0001'));
+    }
+
+    public function testFetchByLicNoNotFound()
+    {
+        $qb = m::mock(QueryBuilder::class);
+        $repo = m::mock(EntityRepository::class);
+
+        $this->em->shouldReceive('getRepository')->with(Licence::class)->andReturn($repo);
+
+        $repo->shouldReceive('createQueryBuilder')->with('m')->once()->andReturn($qb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')->with('m.licNo', ':licNo')->once()->andReturn('EXPR');
+        $qb->shouldReceive('where')->with('EXPR')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('licNo', 'LIC0001')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn([]);
+
+        $this->setExpectedException(NotFoundException::class);
+
+        $this->sut->fetchByLicNo('LIC0001');
+    }
 }
