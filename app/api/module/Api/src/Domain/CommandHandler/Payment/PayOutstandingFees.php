@@ -37,28 +37,25 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
 
     protected $cpmsHelper;
 
+    /**
+     * There are three valid use cases for this command
+     *  - organisationId AND feeIds
+     *  - applicationId only
+     *  - feeIds only
+     * @todo add validation to DTO
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
 
-        // @TODO refactor this - split up commands or add validation to Transfer query
-        // The three valid use cases are:
-        // organisationId AND feeIds
-        // applicationId only
-        // feeIds only
         if (!empty($command->getOrganisationId())) {
-            // get outstanding fees for organisation
-            $outstandingFees = $this->getRepo('Fee')
-                ->fetchOutstandingFeesByOrganisationId($command->getOrganisationId());
+            $fees = $this->getOutstandingFeesForOrganisation($command);
             $customerReference = $command->getOrganisationId();
-            // filter requested fee ids against outstanding fees
-            $fees = $this->filterValid($command, $outstandingFees);
         } elseif (!empty($command->getApplicationId())) {
             $fees = $this->getOutstandingFeesForApplication($command->getApplicationId());
             $customerReference = $this->getCustomerReference($fees);
         } else {
-            $fees = $this->getRepo('Fee')
-                ->fetchOutstandingFeesByIds($command->getFeeIds());
+            $fees = $this->getRepo('Fee')->fetchOutstandingFeesByIds($command->getFeeIds());
             $customerReference = $this->getCustomerReference($fees);
         }
 
@@ -427,36 +424,89 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
         }
     }
 
+    protected function getOutstandingFeesForOrganisation(CommandInterface $command)
+    {
+        // get outstanding fees for organisation
+        $outstandingFees = $this->getRepo('Fee')
+                ->fetchOutstandingFeesByOrganisationId($command->getOrganisationId());
+
+        // filter requested fee ids against outstanding fees
+        $fees = [];
+        if (!empty($outstandingFees)) {
+            $ids = $command->getFeeIds();
+            foreach ($outstandingFees as $fee) {
+                if (in_array($fee->getId(), $ids)) {
+                    $fees[] = $fee;
+                }
+            }
+        }
+        return $fees;
+    }
+
      /**
-      * @todo share with AppOutstandingFeesQuery
+      * @todo share with QueryHandler\Application\OutstandingFees
       * Get fees pertaining to the application
       *
       * AC specify we should only get the *latest* application and interim
       * fees in the event there are multiple fees outstanding.
+      *
+      * @param int $applicationId
+      * @return array
       */
     protected function getOutstandingFeesForApplication($applicationId)
     {
         $outstandingFees = [];
-        $applicationFee = $this->getLatestOutstandingApplicationFeeForApplication($applicationId);
 
-        if ($applicationFee) {
+        $application = $this->getRepo('Application')->fetchById($applicationId);
+
+        // get application fee
+        $applicationFee = $this->getLatestOutstandingApplicationFeeForApplication($application);
+        if (!empty($applicationFee)) {
             $outstandingFees[] = $applicationFee;
         }
 
-        // @TODO get the interim fee as well
+        // get interim fee if applicable
+        if ($application->isGoods()) {
+            $interimFee = $processingService->getInterimFee($applicationId);
+            if (!empty($interimFee)) {
+                $outstandingFees[] = $interimFee;
+            }
+        }
 
         return $outstandingFees;
     }
 
-    protected function getLatestOutstandingApplicationFeeForApplication($applicationId)
+    /**
+     * @param ApplicationEntity $application
+     * @return FeeEntity
+     */
+    protected function getLatestOutstandingApplicationFeeForApplication(ApplicationEntity $application)
     {
-        $application = $this->getRepo('Application')->fetchById($applicationId);
+        if ($application->isVariation()) {
+            $feeTypeFeeTypeId = FeeTypeEntity::FEE_TYPE_VAR;
+        } else {
+            $feeTypeFeeTypeId = FeeTypeEntity::FEE_TYPE_APP;
+        }
 
-        $applicationType = $application->getApplicationType();
-        $feeTypeFeeTypeId = ($applicationType == ApplicationEntity::APPLICATION_TYPE_VARIATION)
-            ? FeeTypeEntity::FEE_TYPE_VAR
-            : FeeTypeEntity::FEE_TYPE_APP;
+        return $this->getLatestOutstandingFeeForApplicationByType($application, $feeTypeFeeTypeId);
+    }
 
+    /**
+     * @param ApplicationEntity $application
+     * @return FeeEntity
+     */
+    protected function getLatestOutstandingInterimFeeForApplication(ApplicationEntity $application)
+    {
+        return $this->getLatestOutstandingFeeForApplicationByType($application, FeeTypeEntity::FEE_TYPE_GRANTINT);
+    }
+
+    /**
+     * @param ApplicationEntity $application
+     * @param string $feeTypeFeeTypeId
+     * @return FeeEntity
+     */
+    protected function getLatestOutstandingFeeForApplicationByType($application, $feeTypeFeeTypeId)
+    {
         $applicationDate = new \DateTime($application->getApplicationDate());
 
         $feeType = $this->getRepo('FeeType')->fetchLatest(
