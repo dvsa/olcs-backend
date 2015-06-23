@@ -8,11 +8,13 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+
+use Dvsa\Olcs\Api\Domain\ApplicationOutstandingFeesTrait;
 
 /**
  * Application - Outstanding Fees
@@ -21,68 +23,51 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class OutstandingFees extends AbstractQueryHandler
 {
+    use ApplicationOutstandingFeesTrait;
+
     protected $repoServiceName = 'Application';
 
     protected $extraRepos = ['Fee', 'FeeType'];
 
-
-    /**
-     * Get fees pertaining to the application
-     *
-     * AC specify we should only get the *latest* application and interim
-     * fees in the event there are multiple fees outstanding.
-     */
     public function handleQuery(QueryInterface $query)
     {
         $application = $this->getRepo('Application')->fetchUsingId($query);
 
-        $applicationFee = $this->getLatestOutstandingApplicationFeeForApplication($application);
+        $outstandingFees = $this->getOutstandingFeesForApplication($application->getId());
 
-        $outstandingFees = [];
-        if ($applicationFee) {
-            $outstandingFees[] = $this->result($applicationFee)->serialize();
-            // [
-            //     'licence',
-            //     'feePayments' => [
-            //         'payment'
-            //     ]
-            // ]
-        }
-
-        // @TODO get $interimFee
         return $this->result(
             $application,
             [],
             [
-                'outstandingFees' => $outstandingFees,
+                'outstandingFeeTotal' => $this->totalFees($outstandingFees),
+                'outstandingFees' => $this->resultList(
+                    $outstandingFees,
+                    [
+                        'feeType',
+                        'feeStatus',
+                        'feePayments' => [
+                            'payment',
+                        ]
+                    ]
+                ),
             ]
         );
     }
 
     /**
-     * @param ApplicationEntity $application
+     * @param array $outstandingFees
+     * @return string formatted amount (1234.56)
      */
-    protected function getLatestOutstandingApplicationFeeForApplication($application)
+    protected function totalFees($outstandingFees)
     {
-        $applicationType = $application->getApplicationType();
-        $feeTypeFeeTypeId = ($applicationType == ApplicationEntity::APPLICATION_TYPE_VARIATION)
-            ? FeeTypeEntity::FEE_TYPE_VAR
-            : FeeTypeEntity::FEE_TYPE_APP;
+        $total = 0;
 
-        $applicationDate = new \DateTime($application->getApplicationDate());
+        if (is_array($outstandingFees)) {
+            foreach ($outstandingFees as $fee) {
+                $total += $fee->getAmount();
+            }
+        }
 
-        $feeType = $this->getRepo('FeeType')->fetchLatest(
-            $this->getRepo()->getRefdataReference($feeTypeFeeTypeId),
-            $application->getGoodsOrPsv(),
-            $application->getLicenceType(),
-            $applicationDate,
-            $application->getLicence()->getTrafficArea()
-        );
-
-        return $this->getRepo('Fee')->fetchLatestFeeByTypeStatusesAndApplicationId(
-            $feeType->getId(),
-            [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED],
-            $application->getId()
-        );
+        return number_format($total, 2, null, null);
     }
 }
