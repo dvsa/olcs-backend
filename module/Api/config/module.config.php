@@ -59,6 +59,7 @@ return [
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
             'withContactDetails' => QueryPartial\WithContactDetailsFactory::class,
+            'withCase' => QueryPartial\WithCaseFactory::class,
             'withCreatedBy'      => QueryPartial\WithCreatedByFactory::class,
             'withRefdata' => QueryPartial\WithRefdataFactory::class,
             'withUser' => QueryPartial\WithUserFactory::class,
@@ -75,12 +76,14 @@ return [
         'factories' => [
             'Application' => RepositoryFactory::class,
             'Address' => RepositoryFactory::class,
+            'Appeal' => RepositoryFactory::class,
             'ContactDetails' => RepositoryFactory::class,
             'CompanySubsidiary' => RepositoryFactory::class,
             'Conviction' => RepositoryFactory::class,
             'Organisation' => RepositoryFactory::class,
             'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
+            'BusRegHistory' => RepositoryFactory::class,
             'BusRegOtherService' => RepositoryFactory::class,
             'BusNoticePeriod' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
@@ -119,6 +122,7 @@ return [
             'Document' => RepositoryFactory::class,
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
+            'Stay' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
             'IrfoPartner' => RepositoryFactory::class,
             'Payment' => RepositoryFactory::class,
@@ -151,6 +155,12 @@ return [
             'CommunityLicWithdrawalReason' => RepositoryFactory::class,
             'ConditionUndertaking' => RepositoryFactory::class,
             'OperatingCentre' => RepositoryFactory::class,
+            'Category' => RepositoryFactory::class,
+            'SubCategory' => RepositoryFactory::class,
+            'SubCategoryDescription' => RepositoryFactory::class,
+            'Scan' => RepositoryFactory::class,
+            'BusRegSearchView' => RepositoryFactory::class,
+            'ProposeToRevoke' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

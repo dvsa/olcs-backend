@@ -141,6 +141,12 @@ return [
     TransferCommand\Cases\Impounding\DeleteImpounding::class =>
         CommandHandler\Cases\Impounding\DeleteImpounding::class,
 
+    // Transfer - ProposeToRevoke
+    TransferCommand\Cases\ProposeToRevoke\CreateProposeToRevoke::class =>
+        CommandHandler\Cases\ProposeToRevoke\CreateProposeToRevoke::class,
+    TransferCommand\Cases\ProposeToRevoke\UpdateProposeToRevoke::class =>
+        CommandHandler\Cases\ProposeToRevoke\UpdateProposeToRevoke::class,
+
     // Transfer - Complaint
     TransferCommand\Cases\Complaint\CreateComplaint::class =>
         CommandHandler\Cases\Complaint\CreateComplaint::class,
@@ -307,4 +313,12 @@ return [
     TransferCommand\TmEmployment\DeleteList::class => CommandHandler\TmEmployment\DeleteList::class,
     TransferCommand\TmEmployment\Create::class => CommandHandler\TmEmployment\Create::class,
     TransferCommand\TmEmployment\Update::class => CommandHandler\TmEmployment\Update::class,
+
+    // Transfer - Scan
+    TransferCommand\Scan\CreateSeparatorSheet::class  => CommandHandler\Scan\CreateSeparatorSheet::class,
+    TransferCommand\Scan\CreateContinuationSeparatorSheet::class  =>
+        CommandHandler\Scan\CreateContinuationSeparatorSheet::class,
+
+    // Domain - PrintScheduler
+    Command\PrintScheduler\Enqueue::class  => CommandHandler\PrintScheduler\Enqueue::class,
 ];
