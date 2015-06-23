@@ -113,8 +113,7 @@ class Licence extends AbstractLicence
         $tachographIns,
         $tachographInsName,
         $safetyInsVaries
-    )
-    {
+    ) {
         if ($tachographIns !== null && $tachographIns !== self::TACH_NA && empty($tachographInsName)) {
             throw new ValidationException(
                 [
@@ -167,16 +166,17 @@ class Licence extends AbstractLicence
     {
         $criteria = Criteria::create()
             ->where(
-                Criteria::expr()->eq('licence',$licence)
+                Criteria::expr()->eq('licence', $licence)
             )
-            ->andWhere(Criteria::expr()->notIn(
-                'status',
-                [
-                    BusReg::STATUS_REFUSED,
-                    BusReg::STATUS_WITHDRAWN
-                ]
-            )
-        );
+            ->andWhere(
+                Criteria::expr()->notIn(
+                    'status',
+                    [
+                        BusReg::STATUS_REFUSED,
+                        BusReg::STATUS_WITHDRAWN
+                    ]
+                )
+            );
 
         return $this->getBusRegs()->matching($criteria)->current();
     }
