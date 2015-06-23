@@ -26,12 +26,12 @@ class OutstandingFees extends AbstractQueryHandler
     protected $extraRepos = ['Fee', 'FeeType'];
 
 
-        /*
-         * Get fees pertaining to the application
-         *
-         * AC specify we should only get the *latest* application and interim
-         * fees in the event there are multiple fees outstanding.
-         */
+    /**
+     * Get fees pertaining to the application
+     *
+     * AC specify we should only get the *latest* application and interim
+     * fees in the event there are multiple fees outstanding.
+     */
     public function handleQuery(QueryInterface $query)
     {
         $application = $this->getRepo('Application')->fetchUsingId($query);
