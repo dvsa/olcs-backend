@@ -65,8 +65,8 @@ return [
     TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
     TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
     TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
-    TransferQuery\Cases\ImpoundingList::class => QueryHandler\Cases\ImpoundingList::class,
-    TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
+    TransferQuery\Cases\Impounding\ImpoundingList::class => QueryHandler\Cases\Impounding\ImpoundingList::class,
+    TransferQuery\Cases\Impounding\Impounding::class => QueryHandler\Cases\Impounding\Impounding::class,
     TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
     TransferQuery\Cases\Complaint\ComplaintList::class => QueryHandler\Cases\Complaint\ComplaintList::class,
     TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
@@ -174,7 +174,7 @@ return [
 
     // Bus Reg History View
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
-    
+
     // Scan
     TransferQuery\Scan\GetSingle::class => QueryHandler\Scan\GetSingle::class
 ];
