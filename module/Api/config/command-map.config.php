@@ -128,6 +128,9 @@ return [
     TransferCommand\Publication\UpdateRecipient::class => CommandHandler\Publication\UpdateRecipient::class,
     TransferCommand\Publication\DeleteRecipient::class => CommandHandler\Publication\DeleteRecipient::class,
 
+    // Transfer - My Account
+    TransferCommand\MyAccount\UpdateMyAccount::class => CommandHandler\MyAccount\UpdateMyAccount::class,
+
     // Transfer - User
     TransferCommand\User\CreatePartner::class => CommandHandler\User\CreatePartner::class,
     TransferCommand\User\UpdatePartner::class => CommandHandler\User\UpdatePartner::class,
