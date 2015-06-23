@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Discs;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * Class CeasePsvDiscs
