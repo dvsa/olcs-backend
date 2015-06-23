@@ -267,6 +267,65 @@ class FeeTest extends RepositoryTestCase
         ];
     }
 
+    public function testFetchLatestFeeByTypeStatusesAndApplicationId()
+    {
+        $feeType = 'APP';
+        $feeStatuses = ['lfs_ot', 'lfs_w'];
+        $applicationId = 69;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $this->queryBuilder
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->with('invoicedDate', 'DESC')
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb
+            ->shouldReceive('expr->in');
+        $mockQb
+            ->shouldReceive('expr->eq');
+        $mockQb
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('application', $applicationId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('feeType', $feeType)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('feeStatuses', $feeStatuses)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setMaxResults')
+            ->with(1)
+            ->andReturnSelf();
+
+        $fee1 = m::mock();
+        $results = [$fee1];
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn($results);
+
+        $this->assertSame(
+            $fee1,
+            $this->sut->fetchLatestFeeByTypeStatusesAndApplicationId($feeType, $feeStatuses, $applicationId)
+        );
+    }
+
     private function mockWhereOutstandingFee($mockQb)
     {
         $where = m::mock();
