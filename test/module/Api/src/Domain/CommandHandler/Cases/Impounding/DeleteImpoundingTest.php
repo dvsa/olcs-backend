@@ -83,8 +83,6 @@ class DeleteImpoundingTest extends CommandHandlerTestCase
         $this->repoMap['Impounding']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
             ->andReturn($impounding)
-            ->shouldReceive('beginTransaction')
-            ->once()
             ->shouldReceive('delete')
             ->with(m::type(ImpoundingEntity::class))
             ->andReturnUsing(
@@ -93,7 +91,6 @@ class DeleteImpoundingTest extends CommandHandlerTestCase
                     $impounding->setId(99);
                 }
             )
-            ->shouldReceive('commit')
             ->once();
 
 

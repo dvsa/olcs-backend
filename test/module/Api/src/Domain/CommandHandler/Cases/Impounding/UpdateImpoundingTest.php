@@ -83,7 +83,6 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
         $this->repoMap['Impounding']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
             ->andReturn($impounding)
-            ->shouldReceive('beginTransaction')
             ->once()
             ->shouldReceive('save')
             ->with(m::type(ImpoundingEntity::class))
@@ -93,7 +92,6 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
                     $impounding->setId(99);
                 }
             )
-            ->shouldReceive('commit')
             ->once();
 
 
