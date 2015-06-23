@@ -61,8 +61,12 @@ final class Update extends CreateUpdateAbstract implements TransactionedInterfac
 
         // Conviction Category - required - no if needed.
         if ($command->getConvictionCategory() !== '') {
-            $entity->setConvictionCategory($repo->getRefdataReference($command->getConvictionCategory()));
+            $convictionCategory = $repo->getRefdataReference($command->getConvictionCategory());
+        } else {
+            $convictionCategory = null;
         }
+
+        $entity->updateConvictionCategory($convictionCategory, $command->getCategoryText());
 
         // Transport Manager is optional if Case is present.
         if ($command->getTransportManager() !== null) {
