@@ -14,36 +14,28 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\DeleteImpounding as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Delete Impounding
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-final class DeleteImpounding extends AbstractCommandHandler
+final class DeleteImpounding extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Impounding';
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-        try {
-            $this->getRepo()->beginTransaction();
 
-            $impounding = $this->createImpoundingObject($command);
+        $impounding = $this->createImpoundingObject($command);
 
-            $this->getRepo()->delete($impounding);
-            $this->getRepo()->commit();
+        $this->getRepo()->delete($impounding);
 
-            $result->addMessage('Impounding deleted');
+        $result->addMessage('Impounding deleted');
 
-            return $result;
-
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-
-            throw $ex;
-        }
+        return $result;
     }
 
     /**
