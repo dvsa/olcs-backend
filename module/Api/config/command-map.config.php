@@ -157,6 +157,7 @@ return [
 
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
+    Command\Document\CreateDocumentSpecific::class => CommandHandler\Document\CreateDocumentSpecific::class,
     TransferCommand\Document\DeleteDocument::class => CommandHandler\Document\DeleteDocument::class,
 
     // Conviction
@@ -297,6 +298,7 @@ return [
     TransferCommand\TmEmployment\Update::class => CommandHandler\TmEmployment\Update::class,
 
     // Transfer - Scan
+    TransferCommand\Scan\CreateDocument::class => CommandHandler\Scan\CreateDocument::class,
     TransferCommand\Scan\CreateSeparatorSheet::class  => CommandHandler\Scan\CreateSeparatorSheet::class,
     TransferCommand\Scan\CreateContinuationSeparatorSheet::class  =>
         CommandHandler\Scan\CreateContinuationSeparatorSheet::class,
