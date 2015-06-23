@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Application\FinancialEvidence;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\FinancialStandingRate as RateRepo;
-use Dvsa\Olcs\Transfer\Query\Application\Application as Qry;
+use Dvsa\Olcs\Transfer\Query\Application\FinancialEvidence as Qry;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
