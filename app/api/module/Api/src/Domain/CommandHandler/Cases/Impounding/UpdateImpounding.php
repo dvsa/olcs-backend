@@ -15,36 +15,28 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding;
 use Dvsa\Olcs\Api\Entity\Pi\PiVenue;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\UpdateImpounding as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Update Impounding
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-final class UpdateImpounding extends AbstractCommandHandler
+final class UpdateImpounding extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Impounding';
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-        try {
-            $this->getRepo()->beginTransaction();
 
-            $impounding = $this->createImpoundingObject($command);
+        $impounding = $this->createImpoundingObject($command);
 
-            $this->getRepo()->save($impounding);
-            $this->getRepo()->commit();
+        $this->getRepo()->save($impounding);
 
-            $result->addMessage('Impounding updated');
+        $result->addMessage('Impounding updated');
 
-            return $result;
-
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-
-            throw $ex;
-        }
+        return $result;
     }
 
     /**
