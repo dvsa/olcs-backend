@@ -94,7 +94,6 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
             )
             ->once();
 
-
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
