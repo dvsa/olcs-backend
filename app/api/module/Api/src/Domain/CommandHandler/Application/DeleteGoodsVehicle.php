@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Update Goods Vehicle
+ * Delete Goods Vehicle
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -12,14 +12,14 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Vehicle\UpdateGoodsVehicle as VehicleCmd;
+use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteGoodsVehicle as VehicleCmd;
 
 /**
- * Update Goods Vehicle
+ * Delete Goods Vehicle
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateGoodsVehicle extends AbstractCommandHandler implements TransactionedInterface
+final class DeleteGoodsVehicle extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
 

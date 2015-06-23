@@ -23,6 +23,7 @@ class VehicleHistoryView extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere($qb->expr()->eq('m.vrm', ':vrm'));
+        $qb->andWhere($qb->expr()->isNotNull('m.id'));
         $qb->setParameter('vrm', $vrm);
 
         $qb->orderBy('m.specifiedDate', 'DESC');

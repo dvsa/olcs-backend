@@ -36,6 +36,9 @@ return [
     TransferCommand\Application\UpdateVehicles::class => CommandHandler\Application\UpdateVehicles::class,
     TransferCommand\Application\CreateGoodsVehicle::class => CommandHandler\Application\CreateGoodsVehicle::class,
     TransferCommand\Application\UpdateGoodsVehicle::class => CommandHandler\Application\UpdateGoodsVehicle::class,
+    TransferCommand\Application\DeleteGoodsVehicle::class => CommandHandler\Application\DeleteGoodsVehicle::class,
+    TransferCommand\Application\CreateVehicleListDocument::class
+        => CommandHandler\Application\CreateVehicleListDocument::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -68,6 +71,7 @@ return [
     TransferCommand\Licence\DeleteCompanySubsidiary::class => CommandHandler\Licence\DeleteCompanySubsidiary::class,
     TransferCommand\Licence\UpdateSafety::class => CommandHandler\Licence\UpdateSafety::class,
     TransferCommand\Licence\CreateGoodsVehicle::class => CommandHandler\Licence\CreateGoodsVehicle::class,
+    TransferCommand\Licence\CreateVehicleListDocument::class => CommandHandler\Licence\CreateVehicleListDocument::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
@@ -366,4 +370,5 @@ return [
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
     TransferCommand\Vehicle\UpdateGoodsVehicle::class => CommandHandler\Vehicle\UpdateGoodsVehicle::class,
+    TransferCommand\Vehicle\DeleteGoodsVehicle::class => CommandHandler\Vehicle\DeleteGoodsVehicle::class,
 ];

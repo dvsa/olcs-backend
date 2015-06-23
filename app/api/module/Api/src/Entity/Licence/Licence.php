@@ -164,14 +164,22 @@ class Licence extends AbstractLicence
 
     public function getRemainingSpaces()
     {
+        return $this->getTotAuthVehicles() - $this->getActiveVehiclesCount();
+    }
+
+    public function getActiveVehiclesCount()
+    {
+        return $this->getActiveVehicles()->count();
+    }
+
+    public function getActiveVehicles()
+    {
         $criteria = Criteria::create();
         $criteria->andWhere(
             $criteria->expr()->isNull('removalDate')
         );
 
-        $vehicles = $this->getLicenceVehicles()->matching($criteria);
-
-        return $this->getTotAuthVehicles() - $vehicles->count();
+        return $this->getLicenceVehicles()->matching($criteria);
     }
 
     public function hasCommunityLicenceOfficeCopy($ids)

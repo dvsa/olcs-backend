@@ -30,6 +30,11 @@ final class CreateGoodsVehicle extends AbstractCommand
     protected $specifiedDate;
 
     /**
+     * @Transfer\Optional
+     */
+    protected $receivedDate;
+
+    /**
      * @Transfer\Filter({"name": "Zend\Filter\Boolean"})
      * @Transfer\Optional
      */
@@ -49,6 +54,14 @@ final class CreateGoodsVehicle extends AbstractCommand
     public function getSpecifiedDate()
     {
         return $this->specifiedDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReceivedDate()
+    {
+        return $this->receivedDate;
     }
 
     /**
