@@ -10,6 +10,8 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Community Lic test
@@ -107,7 +109,7 @@ class CommunityLicTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->execute')->once()->andReturn('result');
         $this->assertEquals('result', $this->sut->fetchValidLicences($licenceId));
     }
-    
+
     public function testFetchLicencesById()
     {
         $mockQb = m::mock();
@@ -119,7 +121,7 @@ class CommunityLicTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->execute')->once()->andReturn('result');
         $this->assertEquals('result', $this->sut->fetchLicencesByIds([1]));
     }
-    
+
     public function testHasOfficeCopy()
     {
         $licenceId = 1;
@@ -140,9 +142,9 @@ class CommunityLicTest extends RepositoryTestCase
 
         $this->assertTrue($sut->hasOfficeCopy($licenceId, $ids));
     }
-    
+
     public function testFetchActiveLicences()
-    {        
+    {
         $licenceId = 1;
 
         $mockQb = m::mock();
@@ -157,30 +159,39 @@ class CommunityLicTest extends RepositoryTestCase
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
         $mockQb->shouldReceive('getQuery->execute')->once()->andReturn('result');
-        $this->assertEquals('result', $this->sut->fetchActiveLicences($licenceId));        
+        $this->assertEquals('result', $this->sut->fetchActiveLicences($licenceId));
     }
 
     public function testApplyListFilters()
     {
+        // it's quite hard to test this protected method because of a lot of doctrine's
+        // internal methods mocking required
+        // so it's more reasonable to test this method in isolation
+        $sut = m::mock(CommunityLicRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
+        $licenceId = 1;
+        $statuses = 'active';
+        $conditions = [
+            'm.status = :status0'
+        ];
+
+        $mockQuery = m::mock(QueryInterface::class);
+        $mockQuery->shouldReceive('getStatuses')
+            ->andReturn($statuses)
+            ->twice()
+            ->shouldReceive('getLicence')
+            ->andReturn($licenceId)
+            ->twice()
+            ->getMock();
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->orX->addMultiple')->with($conditions)->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('status0', 'active')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturn('licence');
+        $mockQb->shouldReceive('andWhere')->with('licence')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('licence', $licenceId)->once()->andReturnSelf();
+
+        $sut->applyListFilters($mockQb, $mockQuery);
     }
 }
-/*
-        if ($query->getStatuses() !== null) {
-            $statuses = explode(',', $query->getStatuses());
-            $conditions = [];
-            for ($i = 0; $i < count($statuses); $i++) {
-                $conditions[] = $this->alias . '.status = :status' . $i;
-            }
-            $orX = $qb->expr()->orX();
-            $orX->addMultiple($conditions);
-            $qb->andWhere($orX);
-            for ($i = 0; $i < count($statuses); $i++) {
-                $qb->setParameter('status' . $i, $statuses[$i]);
-            }
-        }
-        if ($query->getLicence() !== null) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'));
-            $qb->setParameter('licence', $query->getLicence());
-        }
-*/

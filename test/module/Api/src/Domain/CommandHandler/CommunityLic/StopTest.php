@@ -95,12 +95,25 @@ class StopTest extends CommandHandlerTestCase
             ->shouldReceive('changeStatusAndExpiryDate')
             ->with($this->refData[CommunityLicEntity::STATUS_SUSPENDED])
             ->once()
+            ->shouldReceive('getStatus')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(CommunityLicEntity::STATUS_VOID)
+                ->once()
+                ->getMock()
+            )
+            ->once()
             ->getMock();
 
         $this->repoMap['CommunityLic']
             ->shouldReceive('hasOfficeCopy')
             ->with($licenceId, $communityLicenceIds)
-            ->andReturn(false)
+            ->andReturn(true)
+            ->once()
+            ->shouldReceive('fetchValidLicences')
+            ->with($licenceId)
+            ->andReturn([$mockCommunityLicence])
             ->once()
             ->shouldReceive('fetchLicencesByIds')
             ->andReturn([$mockCommunityLicence])
@@ -270,6 +283,54 @@ class StopTest extends CommandHandlerTestCase
                 ->once()
                 ->getMock()
             )
+            ->once()
+            ->getMock();
+
+        $this->repoMap['CommunityLic']
+            ->shouldReceive('hasOfficeCopy')
+            ->with($licenceId, $communityLicenceIds)
+            ->andReturn(true)
+            ->once()
+            ->shouldReceive('fetchValidLicences')
+            ->with($licenceId)
+            ->andReturn([$mockCommunityLicence])
+            ->once()
+            ->getMock();
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testCommandHandlerWithExceptionAlternative()
+    {
+        $this->setExpectedException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
+
+        $licenceId = 1;
+        $communityLicenceIds = [10];
+
+        $data = [
+            'licence' => $licenceId,
+            'communityLicenceIds' => $communityLicenceIds,
+            'type' => 'withdrawal',
+            'startDate' => '',
+            'endDate' => '',
+            'reasons' => [
+                'reason'
+            ]
+        ];
+        $command = Cmd::create($data);
+
+        $mockCommunityLicence = m::mock()
+            ->shouldReceive('getStatus')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(CommunityLicEntity::STATUS_ACTIVE)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getId')
+            ->andReturn(2)
             ->once()
             ->getMock();
 
