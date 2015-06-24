@@ -99,7 +99,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
             )
             ->once()
             ->getMock();
-        
+
         $printResult = new Result();
         $printResult->addMessage('File printed');
         $printResult->addId('file', 1);
