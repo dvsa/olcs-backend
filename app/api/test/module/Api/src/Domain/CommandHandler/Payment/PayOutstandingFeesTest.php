@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperService as CpmsHelper;
+use Dvsa\Olcs\Api\Service\FeesHelperService as FeesHelper;
 use Dvsa\Olcs\Transfer\Command\Payment\PayOutstandingFees as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -36,17 +37,20 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 {
     protected $mockCpmsService;
 
+    protected $mockFeesHelperService;
+
     public function setUp()
     {
         $this->mockCpmsService = m::mock(CpmsHelper::class);
+        $this->mockFeesHelperService = m::mock(FeesHelper::class);
         $this->mockedSmServices = [
             'CpmsHelperService' => $this->mockCpmsService,
+            'FeesHelperService' => $this->mockFeesHelperService,
         ];
 
         $this->sut = new PayOutstandingFees();
         $this->mockRepo('Fee', Repository\Fee::class);
         $this->mockRepo('Payment', Repository\Payment::class);
-        $this->mockRepo('FeeType', Repository\FeeType::class);
         $this->mockRepo('Application', Repository\Application::class);
 
         $this->mockCpmsService
@@ -73,18 +77,9 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             FeeEntity::STATUS_PAID,
             LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
-            FeeTypeEntity::FEE_TYPE_APP,
-            FeeTypeEntity::FEE_TYPE_GRANTINT,
         ];
 
         $this->references = [
-            TrafficAreaEntity::class => [
-                TrafficAreaEntity::NORTH_EASTERN_TRAFFIC_AREA_CODE => m::mock(TrafficAreaEntity::class),
-            ],
-            FeeTypeEntity::class => [
-                123 => m::mock(FeeTypeEntity::class),
-                234 => m::mock(FeeTypeEntity::class),
-            ],
             OrganisationEntity::class => [
                 77 => m::mock(OrganisationEntity::class),
             ],
@@ -370,8 +365,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $applicationId = 69;
         $organisationId = 77;
         $licenceId = 7;
-        $applicationFeeTypeId = 123;
-        $interimFeeTypeId = 234;
 
         $paymentId = 999; // payment to be created
 
@@ -390,75 +383,17 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         // mocks/set up references
         $organisation = $this->mapReference(OrganisationEntity::class, $organisationId);
         $licence = $this->mapReference(LicenceEntity::class, $licenceId);
-        $licence
-            ->setTrafficArea(
-                $this->mapReference(
-                    TrafficAreaEntity::class,
-                    TrafficAreaEntity::NORTH_EASTERN_TRAFFIC_AREA_CODE
-                )
-            )
-            ->setOrganisation($organisation);
+        $licence->setOrganisation($organisation);
         $application = $this->mapReference(ApplicationEntity::class, $applicationId);
-        $application
-            ->setLicence($licence)
-            ->setGoodsOrPsv($this->mapRefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE))
-            ->setLicenceType($this->mapRefData(LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL));
+        $application->setLicence($licence);
         $applicationFee->setLicence($licence);
 
         // expectations
-        $this->repoMap['Application']
-            ->shouldReceive('fetchById')
+        $this->mockFeesHelperService
+            ->shouldReceive('getOutstandingFeesForApplication')
             ->once()
             ->with($applicationId)
-            ->andReturn($application);
-
-        $this->repoMap['FeeType']
-            ->shouldReceive('fetchLatest')
-            ->once()
-            ->with(
-                $this->mapRefData(FeeTypeEntity::FEE_TYPE_APP),
-                $this->mapRefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
-                $this->mapRefData(LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL),
-                m::type(\DateTime::class),
-                $this->mapReference(
-                    TrafficAreaEntity::class,
-                    TrafficAreaEntity::NORTH_EASTERN_TRAFFIC_AREA_CODE
-                )
-            )
-            ->andReturn($this->mapReference(FeeTypeEntity::class, $applicationFeeTypeId))
-            ->shouldReceive('fetchLatest')
-            ->once()
-            ->with(
-                $this->mapRefData(FeeTypeEntity::FEE_TYPE_GRANTINT),
-                $this->mapRefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
-                $this->mapRefData(LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL),
-                m::type(\DateTime::class),
-                $this->mapReference(
-                    TrafficAreaEntity::class,
-                    TrafficAreaEntity::NORTH_EASTERN_TRAFFIC_AREA_CODE
-                )
-            )
-            ->andReturn($this->mapReference(FeeTypeEntity::class, $interimFeeTypeId));
-
-        $this->repoMap['Fee']
-            ->shouldReceive('fetchLatestFeeByTypeStatusesAndApplicationId')
-            ->once()
-            ->with(
-                $applicationFeeTypeId,
-                [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED],
-                $applicationId
-            )
-            ->andReturn($applicationFee);
-
-        $this->repoMap['Fee']
-            ->shouldReceive('fetchLatestFeeByTypeStatusesAndApplicationId')
-            ->once()
-            ->with(
-                $interimFeeTypeId,
-                [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED],
-                $applicationId
-            )
-            ->andReturn($interimFee);
+            ->andReturn($fees);
 
         $this->mockCpmsService
             ->shouldReceive('initiateCardRequest')
