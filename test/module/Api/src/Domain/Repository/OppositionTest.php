@@ -111,4 +111,62 @@ class OppositionTest extends RepositoryTestCase
 
         $this->assertEquals($result, $mockResult[0]);
     }
+
+    public function testBuildDefaultListQuery()
+    {
+        // mock SUT to allow testing the protected method
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $qb = m::mock(QueryBuilder::class);
+        $query = m::mock(QueryInterface::class);
+        $mockQb = m::mock(\Dvsa\Olcs\Api\Domain\QueryBuilder::class);
+
+        $sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
+
+        $mockQb->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
+        $mockQb->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('application')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('case', 'ca')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('opposer', 'o')->once()->andReturnSelf();
+        $mockQb->shouldReceive('withPersonContactDetails')->with('o.contactDetails')->once()
+            ->andReturnSelf();
+
+        $sut->buildDefaultListQuery($qb, $query);
+    }
+
+    public function testApplyFiltersCase()
+    {
+        // mock SUT to allow testing the protected method
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $qb = m::mock(QueryBuilder::class);
+        $query = m::mock(QueryInterface::class);
+
+        $query->shouldReceive('getCase')->with()->andReturn(746);
+        $query->shouldReceive('getLicence')->with()->andReturn(null);
+
+        $qb->shouldReceive('expr->eq')->with('m.case', ':byCase')->once()->andReturn('EXPR');
+        $qb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('byCase', 746)->once()->andReturnSelf();
+
+        $sut->applyListFilters($qb, $query);
+    }
+
+    public function testApplyFiltersLicence()
+    {
+        // mock SUT to allow testing the protected method
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $qb = m::mock(QueryBuilder::class);
+        $query = m::mock(QueryInterface::class);
+
+        $query->shouldReceive('getCase')->with()->andReturn(null);
+        $query->shouldReceive('getLicence')->with()->andReturn(43);
+
+        $qb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturn('EXPR');
+        $qb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('licence', 43)->once()->andReturnSelf();
+
+        $sut->applyListFilters($qb, $query);
+    }
 }
