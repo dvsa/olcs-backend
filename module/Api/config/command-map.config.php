@@ -164,6 +164,15 @@ return [
     Command\Document\CreateDocumentSpecific::class => CommandHandler\Document\CreateDocumentSpecific::class,
     TransferCommand\Document\DeleteDocument::class => CommandHandler\Document\DeleteDocument::class,
 
+    // Transfer - CommunityLic
+    TransferCommand\CommunityLic\Application\Create::class => CommandHandler\CommunityLic\Application\Create::class,
+    TransferCommand\CommunityLic\Application\CreateOfficeCopy::class =>
+        CommandHandler\CommunityLic\Application\CreateOfficeCopy::class,
+    TransferCommand\CommunityLic\Licence\Create::class => CommandHandler\CommunityLic\Licence\Create::class,
+    TransferCommand\CommunityLic\Licence\CreateOfficeCopy::class =>
+        CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
+    TransferCommand\CommunityLic\GenerateBatch::class => CommandHandler\CommunityLic\GenerateBatch::class,
+
     // Conviction
     TransferCommand\Cases\Conviction\Create::class => CommandHandler\Cases\Conviction\Create::class,
     TransferCommand\Cases\Conviction\Update::class => CommandHandler\Cases\Conviction\Update::class,
@@ -245,6 +254,7 @@ return [
 
     // Domain - Licence
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
+    Command\Licence\UpdateTotalCommunityLicences::class => CommandHandler\Licence\UpdateTotalCommunityLicences::class,
     Command\Licence\SaveAddresses::class => CommandHandler\Licence\SaveAddresses::class,
 
     // Domain - ContactDetails
@@ -289,6 +299,20 @@ return [
     AppCompCommand\UpdateTaxiPhvStatus::class => AppCompCommandHandler\UpdateTaxiPhvStatus::class,
     AppCompCommand\UpdateCommunityLicencesStatus::class => AppCompCommandHandler\UpdateCommunityLicencesStatus::class,
     AppCompCommand\UpdateBusinessDetailsStatus::class => AppCompCommandHandler\UpdateBusinessDetailsStatus::class,
+
+    // Domain - CommunityLic
+    Command\CommunityLic\GenerateBatch::class => CommandHandler\CommunityLic\GenerateBatch::class,
+    Command\CommunityLic\Application\CreateOfficeCopy::class =>
+        CommandHandler\CommunityLic\Application\CreateOfficeCopy::class,
+    Command\CommunityLic\Licence\CreateOfficeCopy::class =>
+        CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
+
+    // Domain - Document
+    Command\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
+    Command\Document\GenerateAndUploadDocument::class => CommandHandler\Document\GenerateAndUploadDocument::class,
+
+    // Domain - PrintScheduler
+    Command\PrintScheduler\EnqueueFile::class => CommandHandler\PrintScheduler\EnqueueFile::class,
 
     // Domain - LicenceStatusRule
     Command\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class
