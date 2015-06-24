@@ -188,7 +188,8 @@ class FeesHelperServiceTest extends MockeryTestCase
         return $fee;
     }
 
-    private function refData($id){
+    private function refData($id)
+    {
         return m::mock(RefData::class)
             ->makePartial()
             ->setId($id);
