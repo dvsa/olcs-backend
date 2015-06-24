@@ -128,6 +128,7 @@ return [
 
     // Bus
     TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
+    TransferQuery\Bus\ShortNoticeByBusReg::class => QueryHandler\Bus\ShortNoticeByBusReg::class,
 
     // Trailer
     TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
@@ -148,6 +149,9 @@ return [
     // Publication
     TransferQuery\Publication\Recipient::class => QueryHandler\Publication\Recipient::class,
     TransferQuery\Publication\RecipientList::class => QueryHandler\Publication\RecipientList::class,
+
+    // My Account
+    TransferQuery\MyAccount\MyAccount::class => QueryHandler\MyAccount\MyAccount::class,
 
     // User
     TransferQuery\User\Partner::class => QueryHandler\User\Partner::class,

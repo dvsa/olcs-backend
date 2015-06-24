@@ -29,7 +29,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
         $repo = $this->getRepo();
 
         // Hearing Type - required - no if needed.
-        $entity->setHearingType($repo->getRefdataReference($command->getNonPiType()));
+        $entity->setHearingType($repo->getRefdataReference($command->getHearingType()));
 
         // Business logic?
         if ($command->getVenue() !== null) {
@@ -43,7 +43,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
 
         // Amazingly these foreign keys are optional.
 
-        if ($command->getPresidingTC() !== null) {
+        if ($command->getPresidingTC() != '') {
             $tc = $this->getRepo()->getReference(Entities\Pi\PresidingTc::class, $command->getPresidingTC());
             $entity->setPresidingTc($tc);
         }

@@ -78,7 +78,7 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
         /** @var Application $application */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
-        $currentUser = $this->fetchCurrentUser();
+        $currentUser = $this->getCurrentUser();
 
         $data = [
             'category' => Task::CATEGORY_APPLICATION,
@@ -146,13 +146,5 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
     private function shouldCreateTask()
     {
         return $this->isGranted(Permission::INTERNAL_USER);
-    }
-
-    /**
-     * @return UserEntity
-     */
-    private function fetchCurrentUser()
-    {
-        return $this->getAuthService()->getIdentity()->getUser();
     }
 }

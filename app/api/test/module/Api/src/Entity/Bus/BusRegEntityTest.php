@@ -28,6 +28,42 @@ class BusRegEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
+    private function getAssertionsForCanEditIsTrue() {
+        $id = 15;
+        $regNo = 12345;
+
+        //the bus reg entity which exists on the licence
+        $licenceBusReg = new Entity();
+        $licenceBusReg->setId($id);
+
+        $licenceEntityMock = m::mock(LicenceEntity::class);
+        $licenceEntityMock->shouldReceive('getLatestBusVariation')->once()->with($regNo)->andReturn($licenceBusReg);
+
+        $this->entity->setRegNo($regNo);
+        $this->entity->setId($id);
+        $this->entity->setLicence($licenceEntityMock);
+        $this->entity->setIsTxcApp('N');
+    }
+
+    private function getAssertionsForCanEditIsFalseDueToVariation() {
+        $id = 15;
+        $otherBusId = 16;
+        $regNo = 12345;
+
+        //the bus reg entity which exists on the licence
+        $licenceBusReg = new Entity();
+        $licenceBusReg->setId($otherBusId);
+
+        $licenceEntityMock = m::mock(LicenceEntity::class);
+        $licenceEntityMock->shouldReceive('getLatestBusVariation')->once()->with($regNo)->andReturn($licenceBusReg);
+
+        $this->entity->setRegNo($regNo);
+        $this->entity->setId($id);
+        $this->entity->setLicence($licenceEntityMock);
+        $this->entity->setIsTxcApp('N');
+    }
+
+
     /**
      * Tests calculated values
      */
@@ -55,6 +91,110 @@ class BusRegEntityTest extends EntityTester
     }
 
     /**
+     * Tests updateStops throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateStopsThrowsCanEditExceptionForEbsr()
+    {
+        $this->entity->setIsTxcApp('Y');
+        $this->entity->updateStops(null, null, null, null, null, null, null, null, null);
+
+        return true;
+    }
+
+    /**
+     * Tests updateStops throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateStopsThrowsCanEditExceptionForLatestVariation()
+    {
+        $this->getAssertionsForCanEditIsFalseDueToVariation();
+        $this->entity->updateStops(null, null, null, null, null, null, null, null, null);
+
+        return true;
+    }
+
+    /**
+     * Tests updateQualitySchemes throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateQualitySchemesThrowsCanEditExceptionForEbsr()
+    {
+        $this->entity->setIsTxcApp('Y');
+        $this->entity->updateQualitySchemes(null, null, null, null, null);
+
+        return true;
+    }
+
+    /**
+     * Tests updateQualitySchemes throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateQualitySchemesThrowsCanEditExceptionForLatestVariation()
+    {
+        $this->getAssertionsForCanEditIsFalseDueToVariation();
+        $this->entity->updateQualitySchemes(null, null, null, null, null);
+
+        return true;
+    }
+
+    /**
+     * Tests updateServiceDetails throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateServiceDetailsThrowsCanEditExceptionForEbsr()
+    {
+        $this->entity->setIsTxcApp('Y');
+        $this->entity->updateServiceDetails(null, null, null, null, null, null, null, null, null, null);
+
+        return true;
+    }
+
+    /**
+     * Tests updateServiceDetails throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateServiceDetailsThrowsCanEditExceptionForLatestVariation()
+    {
+        $this->getAssertionsForCanEditIsFalseDueToVariation();
+        $this->entity->updateServiceDetails(null, null, null, null, null, null, null, null, null, null);
+
+        return true;
+    }
+
+    /**
+     * Tests updateTaAuthority throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateTaAuthorityThrowsCanEditExceptionForEbsr()
+    {
+        $this->entity->setIsTxcApp('Y');
+        $this->entity->updateTaAuthority(null);
+
+        return true;
+    }
+
+    /**
+     * Tests updateTaAuthority throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateTaAuthorityThrowsCanEditExceptionForLatestVariation()
+    {
+        $this->getAssertionsForCanEditIsFalseDueToVariation();
+        $this->entity->updateTaAuthority(null);
+
+        return true;
+    }
+
+    /**
      * Tests updateStops
      */
     public function testUpdateStops()
@@ -68,6 +208,8 @@ class BusRegEntityTest extends EntityTester
         $notFixedStopDetail = 'string 3';
         $subsidised = 'Y';
         $subsidyDetail = 'string 4';
+
+        $this->getAssertionsForCanEditIsTrue();
 
         $this->entity->updateStops(
             $useAllStops,
@@ -105,6 +247,8 @@ class BusRegEntityTest extends EntityTester
         $isQualityContract = 'Y';
         $qualityContractDetails = 'string 2';
 
+        $this->getAssertionsForCanEditIsTrue();
+
         $this->entity->updateQualitySchemes(
             $isQualityPartnership,
             $qualityPartnershipDetails,
@@ -128,6 +272,8 @@ class BusRegEntityTest extends EntityTester
     public function testUpdateTaAuthority()
     {
         $stoppingArrangements = 'Stopping arrangements';
+
+        $this->getAssertionsForCanEditIsTrue();
 
         $this->entity->updateTaAuthority(
             $stoppingArrangements
@@ -158,10 +304,11 @@ class BusRegEntityTest extends EntityTester
         $endDate = null;
         $busNoticePeriod = 2;
 
-
         $busRules = new BusNoticePeriod();
         $busRules->setCancellationPeriod($rules['cancellationPeriod']);
         $busRules->setStandardPeriod($rules['standardPeriod']);
+
+        $this->getAssertionsForCanEditIsTrue();
 
         $this->entity->setVariationNo($variationNo);
         $this->entity->setParent($parent);
