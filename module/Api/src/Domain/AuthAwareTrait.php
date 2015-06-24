@@ -31,6 +31,14 @@ trait AuthAwareTrait
     }
 
     /**
+     * @return UserEntity
+     */
+    public function getCurrentUser()
+    {
+        return $this->authService->getIdentity()->getUser();
+    }
+
+    /**
      * @param $permission
      * @return bool
      */

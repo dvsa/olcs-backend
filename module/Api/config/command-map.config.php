@@ -53,6 +53,7 @@ return [
     TransferCommand\Bus\UpdateQualitySchemes::class => CommandHandler\Bus\UpdateQualitySchemes::class,
     TransferCommand\Bus\UpdateTaAuthority::class => CommandHandler\Bus\UpdateTaAuthority::class,
     TransferCommand\Bus\UpdateServiceDetails::class => CommandHandler\Bus\UpdateServiceDetails::class,
+    TransferCommand\Bus\UpdateShortNotice::class => CommandHandler\Bus\UpdateShortNotice::class,
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
@@ -128,6 +129,9 @@ return [
     TransferCommand\Publication\UpdateRecipient::class => CommandHandler\Publication\UpdateRecipient::class,
     TransferCommand\Publication\DeleteRecipient::class => CommandHandler\Publication\DeleteRecipient::class,
 
+    // Transfer - My Account
+    TransferCommand\MyAccount\UpdateMyAccount::class => CommandHandler\MyAccount\UpdateMyAccount::class,
+
     // Transfer - User
     TransferCommand\User\CreatePartner::class => CommandHandler\User\CreatePartner::class,
     TransferCommand\User\UpdatePartner::class => CommandHandler\User\UpdatePartner::class,
@@ -174,6 +178,22 @@ return [
     TransferCommand\Cases\Prohibition\Defect\Create::class => CommandHandler\Cases\Prohibition\Defect\Create::class,
     TransferCommand\Cases\Prohibition\Defect\Update::class => CommandHandler\Cases\Prohibition\Defect\Update::class,
     TransferCommand\Cases\Prohibition\Defect\Delete::class => CommandHandler\Cases\Prohibition\Defect\Delete::class,
+
+    // Transfer - Appeal
+    TransferCommand\Cases\Hearing\CreateAppeal::class =>
+        CommandHandler\Cases\Hearing\CreateAppeal::class,
+    TransferCommand\Cases\Hearing\UpdateAppeal::class =>
+        CommandHandler\Cases\Hearing\UpdateAppeal::class,
+    TransferCommand\Cases\Hearing\DeleteAppeal::class =>
+        CommandHandler\Cases\Hearing\DeleteAppeal::class,
+
+    // Transfer - Stay
+    TransferCommand\Cases\Hearing\CreateStay::class =>
+        CommandHandler\Cases\Hearing\CreateStay::class,
+    TransferCommand\Cases\Hearing\UpdateStay::class =>
+        CommandHandler\Cases\Hearing\UpdateStay::class,
+    TransferCommand\Cases\Hearing\DeleteStay::class =>
+        CommandHandler\Cases\Hearing\DeleteStay::class,
 
     // Transfer - Environmental Complaint
     TransferCommand\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class =>
