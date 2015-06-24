@@ -374,4 +374,5 @@ return [
     TransferCommand\Vehicle\DeleteGoodsVehicle::class => CommandHandler\Vehicle\DeleteGoodsVehicle::class,
     Command\Vehicle\CeaseActiveDiscs::class => CommandHandler\Vehicle\CeaseActiveDiscs::class,
     TransferCommand\Vehicle\ReprintDisc::class => CommandHandler\Vehicle\ReprintDisc::class,
+    Command\Vehicle\CreateGoodsDiscs::class => CommandHandler\Vehicle\CreateGoodsDiscs::class,
 ];

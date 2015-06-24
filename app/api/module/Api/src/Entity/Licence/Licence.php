@@ -44,6 +44,8 @@ class Licence extends AbstractLicence
     const ERROR_SAFETY_REQUIRES_TACHO_NAME = 'LIC-SAFE-TACH-1';
 
     const ERROR_TRANSFER_TOT_AUTH = 'LIC_TRAN_1';
+    const ERROR_TRANSFER_OVERLAP_ONE = 'LIC_TRAN_2';
+    const ERROR_TRANSFER_OVERLAP_MANY = 'LIC_TRAN_3';
 
     const LICENCE_CATEGORY_GOODS_VEHICLE = 'lcat_gv';
     const LICENCE_CATEGORY_PSV = 'lcat_psv';

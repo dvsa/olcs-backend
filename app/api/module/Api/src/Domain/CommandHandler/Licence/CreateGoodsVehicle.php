@@ -8,11 +8,10 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
-use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -26,8 +25,6 @@ use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle as VehicleCmd;
 final class CreateGoodsVehicle extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Licence';
-
-    protected $extraRepos = ['GoodsDisc'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -60,11 +57,9 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
 
         $licenceVehicleId = $vehicleResult->getId('licenceVehicle');
 
-        // @todo maybe move this to another command
-        $goodsDisc = new GoodsDisc();
-        $goodsDisc->setLicenceVehicle($this->getRepo()->getReference(LicenceVehicle::class, $licenceVehicleId));
-        $goodsDisc->setIsCopy('N');
-        $this->getRepo('GoodsDisc')->save($goodsDisc);
+        $result->merge(
+            $this->handleSideEffect(CreateGoodsDiscs::create(['ids' => [$licenceVehicleId], 'isCopy' => 'N']))
+        );
 
         return $result;
     }
