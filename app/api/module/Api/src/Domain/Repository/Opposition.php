@@ -54,13 +54,34 @@ class Opposition extends AbstractRepository
     }
 
     /**
-     * Applies a case filter
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query)
+    {
+        parent::buildDefaultListQuery($qb, $query);
+
+        $this->getQueryBuilder()
+            ->with('application')
+            ->with('case', 'ca')
+            ->with('opposer', 'o')
+            ->withPersonContactDetails('o.contactDetails');
+
+    }
+
+    /**
      * @param QueryBuilder $qb
      * @param QueryInterface $query
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
-            ->setParameter('byCase', $query->getCase());
+        if ($query->getCase()) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
+                ->setParameter('byCase', $query->getCase());
+        }
+        if ($query->getLicence()) {
+            $qb->andWhere($qb->expr()->eq($this->alias .'.licence', ':licence'))
+                ->setParameter('licence', $query->getLicence());
+        }
     }
 }
