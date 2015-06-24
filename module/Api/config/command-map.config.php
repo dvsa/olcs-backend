@@ -303,4 +303,7 @@ return [
 
     // Domain - PrintScheduler
     Command\PrintScheduler\Enqueue::class  => CommandHandler\PrintScheduler\Enqueue::class,
+
+    // Transfer - Operator
+    TransferCommand\Operator\Create::class => CommandHandler\Operator\CreateOperator::class,
 ];

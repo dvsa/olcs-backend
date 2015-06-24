@@ -66,4 +66,19 @@ class Organisation extends AbstractOrganisation
             'hasInforceLicences' => $this->hasInforceLicences()
         ];
     }
+
+    public function updateOrganisation($name, $companyNumber, $firstName, $lastName, $isIrfo)
+    {
+        if ($isIrfo) {
+            $this->isIrfo = 'Y';
+        }
+        if ($companyNumber) {
+            $this->companyOrLLpNo = $companyNumber;
+        }
+        if (!empty($lastName)) {
+            $this->name = trim($firstName . ' ' . $lastName);
+        } else {
+            $this->name = $name;
+        }
+    }
 }
