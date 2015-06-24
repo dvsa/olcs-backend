@@ -118,6 +118,10 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             'urgent' => false,
             'application' => $applicationId,
             'licence' => $licenceId,
+            'busReg' => null,
+            'case' => null,
+            'transportManager' => null,
+            'irfoOrganisation' => null,
         ];
         $taskResult = new Result();
         $taskResult->addId('task', $taskId);
