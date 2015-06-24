@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Service\FeesHelperService as FeesHelper;
 use Dvsa\Olcs\Transfer\Query\Application\OutstandingFees as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -26,6 +27,11 @@ class OutstandingFeesTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
+        $this->mockFeesHelperService = m::mock(FeesHelper::class);
+        $this->mockedSmServices = [
+            'FeesHelperService' => $this->mockFeesHelperService,
+        ];
+
         $this->sut = m::mock(OutstandingFees::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -57,8 +63,7 @@ class OutstandingFeesTest extends QueryHandlerTestCase
         $interimFee =  $this->getMockFee('66.70');
         $fees = [$applicationFee, $interimFee];
 
-        // mock getOutstandingFeesForApplication, it is tested elsewhere
-        $this->sut
+        $this->mockFeesHelperService
             ->shouldReceive('getOutstandingFeesForApplication')
             ->with($applicationId)
             ->once()
