@@ -28,7 +28,7 @@ class DateToTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     'licence' => [
-                        'expiryDate' => '2014-02-03 11:12:34'
+                        'expiryDate' => new \DateTime('2014-02-03 11:12:34')
                     ]
                 ],
                 [
@@ -50,14 +50,14 @@ class DateToTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     'licence' => [
-                        'expiryDate' => '2014-02-03 11:12:34'
+                        'expiryDate' => new \DateTime('2014-02-03 11:12:34')
                     ]
                 ],
                 [
                     'interimStatus' => [
                         'id' => Application::INTERIM_STATUS_INFORCE
                     ],
-                    'interimEnd' => '2011-01-01 10:10:10'
+                    'interimEnd' => new \DateTime('2011-01-01 10:10:10')
                 ]
             ]
         );

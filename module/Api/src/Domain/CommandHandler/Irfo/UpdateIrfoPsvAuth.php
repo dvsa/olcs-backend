@@ -28,18 +28,17 @@ final class UpdateIrfoPsvAuth extends AbstractCommandHandler implements Transact
     {
         $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        $irfoPsvAuth->setIrfoPsvAuthType(
-            $this->getRepo()->getReference(IrfoPsvAuthType::class, $command->getIrfoPsvAuthType())
+        $irfoPsvAuth->update(
+            $this->getRepo()->getReference(IrfoPsvAuthType::class, $command->getIrfoPsvAuthType()),
+            $this->getRepo()->getRefdataReference($command->getStatus()),
+            $command->getValidityPeriod(),
+            new \DateTime($command->getInForceDate()),
+            $command->getServiceRouteFrom(),
+            $command->getServiceRouteTo(),
+            $this->getRepo()->getRefdataReference($command->getJourneyFrequency()),
+            $command->getCopiesRequired(),
+            $command->getCopiesRequiredTotal()
         );
-        $irfoPsvAuth->setStatus($this->getRepo()->getRefdataReference($command->getStatus()));
-
-        $irfoPsvAuth->setValidityPeriod($command->getValidityPeriod());
-        $irfoPsvAuth->setInForceDate(new \DateTime($command->getInForceDate()));
-        $irfoPsvAuth->setServiceRouteFrom($command->getServiceRouteFrom());
-        $irfoPsvAuth->setServiceRouteTo($command->getServiceRouteTo());
-        $irfoPsvAuth->setJourneyFrequency($this->getRepo()->getRefdataReference($command->getJourneyFrequency()));
-        $irfoPsvAuth->setCopiesRequired($command->getCopiesRequired());
-        $irfoPsvAuth->setCopiesRequiredTotal($command->getCopiesRequiredTotal());
 
         if ($command->getExpiryDate() !== null) {
             $irfoPsvAuth->setExpiryDate(new \DateTime($command->getExpiryDate()));

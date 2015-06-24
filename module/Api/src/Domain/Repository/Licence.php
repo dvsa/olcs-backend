@@ -44,7 +44,6 @@ class Licence extends AbstractRepository
         return $results[0];
     }
 
-
     public function fetchWithAddressesUsingId($query)
     {
         $qb = $this->createQueryBuilder();
