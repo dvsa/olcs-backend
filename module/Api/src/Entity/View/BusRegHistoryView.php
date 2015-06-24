@@ -15,6 +15,9 @@
 namespace Dvsa\Olcs\Api\Entity\View;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 
 /**
  * Bus Reg History View
@@ -22,26 +25,28 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(readOnly=true)
  * @ORM\Table(name="bus_reg_history_view")
  */
-class BusRegHistoryView
+class BusRegHistoryView implements BundleSerializableInterface, JsonSerializable
 {
+    use BundleSerializableTrait;
+
     /**
-     * ehid
+     * id
      *
      * @var int
      *
      * @ORM\Id
-     * @ORM\Column(type="integer", name="ehid")
+     * @ORM\Column(type="integer", name="id")
      */
-    protected $identifier;
+    protected $id;
 
     /**
-     * busRegId
+     * busReg
      *
      * @var int
      *
      * @ORM\Column(type="integer", name="bus_reg_id")
      */
-    protected $busRegId;
+    protected $busReg;
 
     /**
      * eventDatetime
@@ -84,9 +89,17 @@ class BusRegHistoryView
     /**
      * @return int
      */
-    public function getBusRegId()
+    public function getId()
     {
-        return $this->busRegId;
+        return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBusReg()
+    {
+        return $this->busReg;
     }
 
     /**

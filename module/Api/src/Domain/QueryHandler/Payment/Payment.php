@@ -22,6 +22,15 @@ class Payment extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchUsingId($query);
+        $payment = $this->getRepo()->fetchUsingId($query);
+
+        return $this->result(
+            $payment,
+            [
+                'feePayments' => [
+                    'fee',
+                ],
+            ]
+        );
     }
 }

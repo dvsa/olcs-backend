@@ -11,18 +11,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Doctrine\ORM\Query;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
-use Doctrine\ORM\OptimisticLockException;
 use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
 use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * Abstract Repository
@@ -99,12 +99,12 @@ abstract class AbstractRepository implements RepositoryInterface
         $this->buildDefaultListQuery($qb, $query);
         $this->applyListFilters($qb, $query);
 
-        $this->applyListJoins($qb, $query);
+        $this->applyListJoins($qb);
 
         $query = $qb->getQuery();
         $query->setHydrationMode($hydrateMode);
 
-        $paginator = new Paginator($query);
+        $paginator = $this->getPaginator($query);
         return $paginator->getIterator($hydrateMode);
     }
 
@@ -122,10 +122,13 @@ abstract class AbstractRepository implements RepositoryInterface
 
         $query = $qb->getQuery();
 
-        $paginator = new Paginator($query);
+        $paginator = $this->getPaginator($query);
         return $paginator->count();
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
 
@@ -134,6 +137,7 @@ abstract class AbstractRepository implements RepositoryInterface
     /**
      * Override to add additional data to the default fetchList() method
      * @param QueryBuilder $qb
+     * @inheritdoc
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
@@ -143,6 +147,7 @@ abstract class AbstractRepository implements RepositoryInterface
     /**
      * Override to add additional data to the default fetchById() method
      * @param QueryBuilder $qb
+     * @inheritdoc
      */
     protected function applyFetchJoins(QueryBuilder $qb)
     {
@@ -265,5 +270,13 @@ abstract class AbstractRepository implements RepositoryInterface
         if ($query instanceof OrderedQueryInterface) {
             $queryBuilderHelper->order($query->getSort(), $query->getOrder());
         }
+    }
+
+    /**
+     * Wrap paginator instantiation, mainly for unit testing
+     */
+    protected function getPaginator($query)
+    {
+        return new Paginator($query);
     }
 }

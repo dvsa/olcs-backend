@@ -26,6 +26,9 @@ class ContactDetailsTest extends RepositoryTestCase
             'address' => ['countryCode' => 'GB'],
             'phoneContacts' => [
                 ['phoneContactType' => 'phone_t_tel']
+            ],
+            'person' => [
+                'title' => 'title_miss'
             ]
         ];
 
@@ -42,6 +45,11 @@ class ContactDetailsTest extends RepositoryTestCase
             ->with(RefDataEntity::class, 'phone_t_tel')
             ->andReturn($refDataEntity);
 
+        $this->em->shouldReceive('getReference')
+            ->once()
+            ->with(RefDataEntity::class, 'title_miss')
+            ->andReturn($refDataEntity);
+
         $result = $this->sut->populateRefDataReference($data);
 
         $this->assertEquals(
@@ -49,6 +57,9 @@ class ContactDetailsTest extends RepositoryTestCase
                 'address' => ['countryCode' => $countryEntity],
                 'phoneContacts' => [
                     ['phoneContactType' => $refDataEntity]
+                ],
+                'person' => [
+                    'title' => $refDataEntity
                 ]
             ],
             $result

@@ -49,4 +49,51 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
         $this->irfoPsvAuthType = $type;
         $this->status = $status;
     }
+
+    /**
+     * Update
+     * @return IrfoPsvAuth
+     */
+    public function update(
+        IrfoPsvAuthType $type,
+        RefData $status,
+        $validityPeriod,
+        \DateTime $inForceDate,
+        $serviceRouteFrom,
+        $serviceRouteTo,
+        RefData $journeyFrequency,
+        $copiesRequired,
+        $copiesRequiredTotal
+    ) {
+        $this->irfoPsvAuthType = $type;
+        $this->status = $status;
+        $this->validityPeriod = $validityPeriod;
+        $this->inForceDate = $inForceDate;
+        $this->serviceRouteFrom = $serviceRouteFrom;
+        $this->serviceRouteTo = $serviceRouteTo;
+        $this->journeyFrequency = $journeyFrequency;
+        $this->copiesRequired = $copiesRequired;
+        $this->copiesRequiredTotal = $copiesRequiredTotal;
+
+        // deal with IrfoFileNo
+        $this->populateFileNo();
+
+        return $this;
+    }
+
+    /**
+     * Populate File Number
+     * @return IrfoPsvAuth
+     */
+    public function populateFileNo()
+    {
+        $irfoFileNo = sprintf(
+            '%s/%d',
+            $this->getIrfoPsvAuthType()->getSectionCode(),
+            $this->getId()
+        );
+        $this->setIrfoFileNo($irfoFileNo);
+
+        return $this;
+    }
 }

@@ -440,6 +440,10 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             'isClosed' => false,
             'urgent' => false,
             'application' => null,
+            'busReg' => null,
+            'case' => null,
+            'transportManager' => null,
+            'irfoOrganisation' => null,
         ];
         $result3 = new Result();
         $result3->addId('task', 321);
@@ -564,6 +568,10 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             'isClosed' => false,
             'urgent' => false,
             'application' => null,
+            'busReg' => null,
+            'case' => null,
+            'transportManager' => null,
+            'irfoOrganisation' => null,
         ];
         $result3 = new Result();
         $result3->addId('task', 321);

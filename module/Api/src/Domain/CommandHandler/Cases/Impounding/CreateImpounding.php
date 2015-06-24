@@ -15,37 +15,29 @@ use Dvsa\Olcs\Api\Entity\Cases\Impounding;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Pi\PiVenue;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\CreateImpounding as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Create Impounding
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-final class CreateImpounding extends AbstractCommandHandler
+final class CreateImpounding extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Impounding';
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-        try {
-            $this->getRepo()->beginTransaction();
 
-            $impounding = $this->createImpoundingObject($command);
+        $impounding = $this->createImpoundingObject($command);
 
-            $this->getRepo()->save($impounding);
-            $result->addMessage('Impounding created');
-            $result->addId('impounding', $impounding->getId());
+        $this->getRepo()->save($impounding);
+        $result->addMessage('Impounding created');
+        $result->addId('impounding', $impounding->getId());
 
-            $this->getRepo()->commit();
+        return $result;
 
-            return $result;
-
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-
-            throw $ex;
-        }
     }
 
     /**
@@ -60,10 +52,9 @@ final class CreateImpounding extends AbstractCommandHandler
         );
 
         $piVenue = $command->getPiVenue();
-        if ($piVenue !== Impounding::PI_VENUE_OTHER) {
+        if (!empty($piVenue) && $piVenue !== Impounding::PI_VENUE_OTHER) {
             $piVenue = $this->getRepo()->getReference(PiVenue::class, $command->getPiVenue());
         }
-
         $impounding->setPiVenueProperties(
             $piVenue,
             $command->getPiVenueOther()
