@@ -40,8 +40,6 @@ final class UpdateFee extends AbstractCommandHandler
             $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))
         );
 
-        $result = new Result();
-
         $result->addId('fee', $fee->getId());
         $result->addMessage('Fee updated');
 

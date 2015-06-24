@@ -1,18 +1,55 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain;
+/**
+ * Fees Helper Service
+ *
+ * @author Dan Eggleston <dan@stolenegg.com>
+ */
+namespace Dvsa\Olcs\Api\Service;
 
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Application Outstanding Fees trait, can be shared by Commands and Queries
+ * Fees Helper Service
  *
- * @note requires Application, Fee and FeeType repos
+ * @author Dan Eggleston <dan@stolenegg.com>
  */
-trait ApplicationOutstandingFeesTrait
+class FeesHelperService implements FactoryInterface
 {
+    /**
+     * @var \Dvsa\Olcs\Api\Domain\Repository\Application
+     */
+    protected $applicationRepo;
+
+    /**
+     * @var \Dvsa\Olcs\Api\Domain\Repository\Fee
+     */
+    protected $feeRepo;
+
+    /**
+     * @var \Dvsa\Olcs\Api\Domain\Repository\FeeType
+     */
+    protected $feeTypeRepo;
+
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        /** @var ServiceLocatorInterface $mainServiceLocator  */
+        // $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $repoManager = $serviceLocator->get('RepositoryServiceManager');
+
+        // inject required repos
+        $this->applicationRepo = $repoManager->get('Application');
+        $this->feeRepo = $repoManager->get('Fee');
+        $this->feeTypeRepo = $repoManager->get('FeeType');
+
+        return $this;
+    }
+
     /**
      * Get fees pertaining to an application
      *
@@ -22,11 +59,11 @@ trait ApplicationOutstandingFeesTrait
      * @param int $applicationId
      * @return array
      */
-    protected function getOutstandingFeesForApplication($applicationId)
+    public function getOutstandingFeesForApplication($applicationId)
     {
         $outstandingFees = [];
 
-        $application = $this->getRepo('Application')->fetchById($applicationId);
+        $application = $this->applicationRepo->fetchById($applicationId);
 
         // get application fee
         $applicationFee = $this->getLatestOutstandingApplicationFeeForApplication($application);
@@ -78,15 +115,15 @@ trait ApplicationOutstandingFeesTrait
     {
         $applicationDate = new \DateTime($application->getApplicationDate());
 
-        $feeType = $this->getRepo('FeeType')->fetchLatest(
-            $this->getRepo('FeeType')->getRefdataReference($feeTypeFeeTypeId),
+        $feeType = $this->feeTypeRepo->fetchLatest(
+            $this->feeTypeRepo->getRefdataReference($feeTypeFeeTypeId),
             $application->getGoodsOrPsv(),
             $application->getLicenceType(),
             $applicationDate,
             $application->getLicence()->getTrafficArea()
         );
 
-        return $this->getRepo('Fee')->fetchLatestFeeByTypeStatusesAndApplicationId(
+        return $this->feeRepo->fetchLatestFeeByTypeStatusesAndApplicationId(
             $feeType->getId(),
             [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED],
             $application->getId()

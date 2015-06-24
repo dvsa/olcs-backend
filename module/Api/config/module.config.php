@@ -31,6 +31,7 @@ return [
             'TransactionManager' => \Dvsa\Olcs\Api\Domain\Repository\TransactionManagerFactory::class,
             'CpmsIdentityProvider' => \Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
             'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperService::class,
+            'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
         ],
     ],
     'file_uploader' => array(
