@@ -129,10 +129,11 @@ class GenericControllerTest extends TestCase
         $viewModel = new JsonModel();
         $application = new Application();
         $data = ['foo' => 'var'];
+        $extra = ['bar' => 'cake'];
         $count = 54;
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('multipleResults')->with($count, $data)->andReturn($viewModel);
+        $mockResponse->shouldReceive('multipleResults')->with($count, $data, $extra)->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
@@ -140,7 +141,7 @@ class GenericControllerTest extends TestCase
         $mockQueryHandler = m::mock(QueryHandlerInterface::class);
         $mockQueryHandler->shouldReceive('handleQuery')
                          ->with($application)
-                         ->andReturn(['result'=>$data, 'count'=>$count]);
+                         ->andReturn(['result'=>$data, 'count'=>$count, 'bar' => 'cake']);
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler);
 
