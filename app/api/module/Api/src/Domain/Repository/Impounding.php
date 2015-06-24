@@ -21,32 +21,27 @@ class Impounding extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    /**
+     * Overridden default query to return appropriate table joins
+     * @param QueryBuilder $qb
+     * @param int $id
+     * @return \Dvsa\Olcs\Api\Domain\QueryBuilder
+     */
+    protected function buildDefaultQuery(QueryBuilder $qb, $id)
+    {
+        return $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('presidingTc')
+            ->with('impoundingLegislationTypes')
+            ->with('piVenue')
+            ->byId($id);
+    }
+
     public function __construct(
         EntityManagerInterface $em,
         QueryBuilderInterface $queryBuilder
     ) {
         parent::__construct($em, $queryBuilder);
-    }
-
-    public function fetchCaseImpoundingUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
-    {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
-            ->with('case')
-            ->with('presidingTc')
-            ->with('piVenue')
-            ->with('createdBy')
-            ->with('lastModifiedBy')
-            ->byId($query->getId());
-
-        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
-            ->setParameter('byCase', $query->getCase());
-
-        $result = $qb->getQuery()->getResult($hydrateMode);
-        return $result[0];
     }
 
     /**
@@ -58,5 +53,17 @@ class Impounding extends AbstractRepository
     {
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
+    }
+
+    /**
+     * Applies list joins
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('presidingTc');
     }
 }

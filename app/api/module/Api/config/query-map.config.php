@@ -39,6 +39,7 @@ return [
     TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
     TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
     TransferQuery\Application\TransportManagers::class => QueryHandler\Application\TransportManagers::class,
+    TransferQuery\Application\OutstandingFees::class => QueryHandler\Application\OutstandingFees::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -65,8 +66,8 @@ return [
     TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
     TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
     TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
-    TransferQuery\Cases\ImpoundingList::class => QueryHandler\Cases\ImpoundingList::class,
-    TransferQuery\Cases\Impounding::class => QueryHandler\Cases\Impounding::class,
+    TransferQuery\Cases\Impounding\ImpoundingList::class => QueryHandler\Cases\Impounding\ImpoundingList::class,
+    TransferQuery\Cases\Impounding\Impounding::class => QueryHandler\Cases\Impounding\Impounding::class,
     TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
     TransferQuery\Cases\Complaint\ComplaintList::class => QueryHandler\Cases\Complaint\ComplaintList::class,
     TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
@@ -124,6 +125,7 @@ return [
 
     // Bus
     TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
+    TransferQuery\Bus\ShortNoticeByBusReg::class => QueryHandler\Bus\ShortNoticeByBusReg::class,
 
     // Trailer
     TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
@@ -145,6 +147,9 @@ return [
     TransferQuery\Publication\Recipient::class => QueryHandler\Publication\Recipient::class,
     TransferQuery\Publication\RecipientList::class => QueryHandler\Publication\RecipientList::class,
 
+    // My Account
+    TransferQuery\MyAccount\MyAccount::class => QueryHandler\MyAccount\MyAccount::class,
+
     // User
     TransferQuery\User\Partner::class => QueryHandler\User\Partner::class,
     TransferQuery\User\PartnerList::class => QueryHandler\User\PartnerList::class,
@@ -162,6 +167,9 @@ return [
     TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
     TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
 
+    // CommunityLic
+    TransferQuery\CommunityLic\CommunityLic::class => QueryHandler\CommunityLic\CommunityLic::class,
+
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
 
@@ -174,4 +182,11 @@ return [
 
     // Bus Reg History View
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
+
+    // Scan
+    TransferQuery\Scan\GetSingle::class => QueryHandler\Scan\GetSingle::class,
+
+    // Fee
+    TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
+    TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
 ];

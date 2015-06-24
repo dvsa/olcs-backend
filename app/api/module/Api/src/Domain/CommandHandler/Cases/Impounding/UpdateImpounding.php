@@ -15,36 +15,28 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding;
 use Dvsa\Olcs\Api\Entity\Pi\PiVenue;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\UpdateImpounding as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Update Impounding
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-final class UpdateImpounding extends AbstractCommandHandler
+final class UpdateImpounding extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Impounding';
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-        try {
-            $this->getRepo()->beginTransaction();
 
-            $impounding = $this->createImpoundingObject($command);
+        $impounding = $this->createImpoundingObject($command);
 
-            $this->getRepo()->save($impounding);
-            $this->getRepo()->commit();
+        $this->getRepo()->save($impounding);
 
-            $result->addMessage('Impounding updated');
+        $result->addMessage('Impounding updated');
 
-            return $result;
-
-        } catch (\Exception $ex) {
-            $this->getRepo()->rollback();
-
-            throw $ex;
-        }
+        return $result;
     }
 
     /**
@@ -56,10 +48,9 @@ final class UpdateImpounding extends AbstractCommandHandler
         $impounding = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $piVenue = $command->getPiVenue();
-        if ($piVenue !== Impounding::PI_VENUE_OTHER) {
+        if (!empty($piVenue) && $piVenue !== Impounding::PI_VENUE_OTHER) {
             $piVenue = $this->getRepo()->getReference(PiVenue::class, $command->getPiVenue());
         }
-
         $impounding->setPiVenueProperties(
             $piVenue,
             $command->getPiVenueOther()
