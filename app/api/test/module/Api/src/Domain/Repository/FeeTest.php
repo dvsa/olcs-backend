@@ -231,6 +231,18 @@ class FeeTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('withCreatedBy')
             ->once()
+            ->andReturnSelf()
+            ->shouldReceive('filterByLicence')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('filterByApplication')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('filterByBusReg')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('filterByIds')
+            ->once()
             ->andReturnSelf();
 
         // we *could* assert all the conditions here, but just stub the methods for now

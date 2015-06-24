@@ -71,6 +71,10 @@ return [
             'with' => QueryPartial\With::class,
             'paginate' => QueryPartial\Paginate::class,
             'order' => QueryPartial\Order::class,
+            'filterByLicence' => QueryPartial\Filter\ByLicence::class,
+            'filterByApplication' => QueryPartial\Filter\ByApplication::class,
+            'filterByBusReg' => QueryPartial\Filter\ByBusReg::class,
+            'filterByIds' => QueryPartial\Filter\ByIds::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::CONFIG_KEY => [
