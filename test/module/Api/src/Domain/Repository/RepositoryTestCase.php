@@ -56,6 +56,12 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb = null;
     }
 
+    protected function mockCreateQueryBuilder($mock)
+    {
+        $this->em->shouldReceive('getRepository->createQueryBuilder')
+            ->andReturn($mock);
+    }
+
     protected function createMockQb($query = '')
     {
         $this->query = $query;
@@ -68,8 +74,43 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->isNull')
             ->andReturnUsing([$this, 'mockExprIsNull']);
 
+        $this->qb->shouldReceive('expr->isNotNull')
+            ->andReturnUsing([$this, 'mockExprIsNotNull']);
+
+        $this->qb->shouldReceive('expr->like')
+            ->andReturnUsing([$this, 'mockExprLike']);
+
+        $this->qb->shouldReceive('expr->orX')
+            ->andReturnUsing([$this, 'mockOrX']);
+
         $this->qb->shouldReceive('andWhere')
             ->andReturnUsing([$this, 'mockAndWhere']);
+
+        $this->qb->shouldReceive('innerJoin')
+            ->andReturnUsing([$this, 'mockInnerJoin']);
+
+        $this->qb->shouldReceive('leftJoin')
+            ->andReturnUsing([$this, 'mockLeftJoin']);
+
+        $this->qb->shouldReceive('orderBy')
+            ->andReturnUsing([$this, 'mockOrderBy']);
+
+        $this->qb->shouldReceive('setParameter')
+            ->andReturnUsing([$this, 'mockSetParameter']);
+
+        return $this->qb;
+    }
+
+    public function mockOrderBy($sort, $order)
+    {
+        $this->query .= ' ORDER BY ' . $sort . ' ' . $order;
+
+        return $this->qb;
+    }
+
+    public function mockSetParameter($name, $value)
+    {
+        $this->query = str_replace(':' . $name, '[[' . $value . ']]', $this->query);
 
         return $this->qb;
     }
@@ -77,6 +118,30 @@ class RepositoryTestCase extends MockeryTestCase
     public function mockAndWhere($where)
     {
         $this->query .= ' AND ' . $where;
+
+        return $this->qb;
+    }
+
+    public function mockInnerJoin($field, $alias, $type = null, $condition = null)
+    {
+        $this->query .= ' INNER JOIN ' . $field . ' ' . $alias;
+
+        if ($condition !== null) {
+            $this->query .= ' ' . $type;
+            $this->query .= ' ' . $condition;
+        }
+
+        return $this->qb;
+    }
+
+    public function mockLeftJoin($field, $alias, $type = null, $condition = null)
+    {
+        $this->query .= ' LEFT JOIN ' . $field . ' ' . $alias;
+
+        if ($condition !== null) {
+            $this->query .= ' ' . $type;
+            $this->query .= ' ' . $condition;
+        }
 
         return $this->qb;
     }
@@ -89,5 +154,20 @@ class RepositoryTestCase extends MockeryTestCase
     public function mockExprIsNull($field)
     {
         return $field . ' IS NULL';
+    }
+
+    public function mockExprIsNotNull($field)
+    {
+        return $field . ' IS NOT NULL';
+    }
+
+    public function mockExprLike($field, $value)
+    {
+        return $field . ' LIKE ' . $value;
+    }
+
+    public function mockOrX()
+    {
+        return '(' . implode(' OR ', func_get_args()) . ')';
     }
 }

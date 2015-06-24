@@ -8,12 +8,10 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs as CreateGoodsDiscsCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CeaseActiveDiscs as CeaseCmd;
 
 /**
@@ -34,7 +32,7 @@ final class ReprintDisc extends AbstractCommandHandler implements TransactionedI
         $dtoData = $command->getArrayCopy();
         $dtoData['isCopy'] = 'Y';
 
-        $result->merge($this->handleSideEffect(CreateGoodsDiscs::create($dtoData)));
+        $result->merge($this->handleSideEffect(CreateGoodsDiscsCmd::create($dtoData)));
 
         return $result;
     }

@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -107,7 +106,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
 
                 if (empty($licNo)) {
                     $applications = $otherLicence->getApplications();
-                    if ($applications->count() > 1) {
+                    if ($applications->count() > 0) {
                         $licNo = 'APP-' . $applications->first()->getId();
                     }
                 }
@@ -128,10 +127,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
      */
     protected function checkIfVrmAlreadyExistsOnLicence(LicenceEntity $licence, $vrm)
     {
-        $criteria = Criteria::create();
-        $criteria->andWhere($criteria->expr()->isNull('removalDate'));
-
-        $currentLicenceVehicles = $licence->getLicenceVehicles()->matching($criteria);
+        $currentLicenceVehicles = $licence->getActiveVehicles();
 
         if ($currentLicenceVehicles->count() < 1) {
             return;

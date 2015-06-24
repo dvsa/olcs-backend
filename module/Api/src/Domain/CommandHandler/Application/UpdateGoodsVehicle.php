@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -30,7 +30,7 @@ final class UpdateGoodsVehicle extends AbstractCommandHandler implements Transac
         $result->merge($this->proxyCommand($command, VehicleCmd::class));
 
         $dtoData = ['id' => $command->getApplication(), 'section' => 'vehicles'];
-        $result->merge($this->handleSideEffect(UpdateApplicationCompletion::create($dtoData)));
+        $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($dtoData)));
 
         return $result;
     }

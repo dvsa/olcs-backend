@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -59,7 +59,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
         $this->getRepo('LicenceVehicle')->save($licenceVehicle);
 
         $dtoData = ['id' => $command->getId(), 'section' => 'vehicles'];
-        $result->merge($this->handleSideEffect(UpdateApplicationCompletion::create($dtoData)));
+        $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($dtoData)));
 
         return $result;
     }

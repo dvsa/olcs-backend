@@ -2,7 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Licence;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
@@ -74,6 +78,87 @@ class LicenceEntityTest extends EntityTester
             $this->assertEquals($tachographInsName, $licence->getTachographInsName());
             $this->assertEquals($safetyInsVaries, $licence->getSafetyInsVaries());
         }
+    }
+
+    public function testGetRemainingSpaces()
+    {
+        $lvCollection = m::mock(ArrayCollection::class);
+        $activeCollection = m::mock(ArrayCollection::class);
+
+        $lvCollection->shouldReceive('matching')
+            ->once()
+            ->with(m::type(Criteria::class))
+            ->andReturn($activeCollection);
+
+        $activeCollection->shouldReceive('count')
+            ->andReturn(6);
+
+        $licence = $this->instantiate(Entity::class);
+
+        $licence->setTotAuthVehicles(10);
+        $licence->setLicenceVehicles($lvCollection);
+
+        $this->assertEquals(4, $licence->getRemainingSpaces());
+    }
+
+    public function testGetActiveVehiclesCount()
+    {
+        $lvCollection = m::mock(ArrayCollection::class);
+        $activeCollection = m::mock(ArrayCollection::class);
+
+        $lvCollection->shouldReceive('matching')
+            ->once()
+            ->with(m::type(Criteria::class))
+            ->andReturn($activeCollection);
+
+        $activeCollection->shouldReceive('count')
+            ->andReturn(6);
+
+        $licence = $this->instantiate(Entity::class);
+        $licence->setLicenceVehicles($lvCollection);
+
+        $this->assertEquals(6, $licence->getActiveVehiclesCount());
+    }
+
+    public function testGetActiveVehicles()
+    {
+        $lvCollection = m::mock(ArrayCollection::class);
+        $activeCollection = m::mock(ArrayCollection::class);
+
+        $lvCollection->shouldReceive('matching')
+            ->once()
+            ->with(m::type(Criteria::class))
+            ->andReturn($activeCollection);
+
+        $licence = $this->instantiate(Entity::class);
+        $licence->setLicenceVehicles($lvCollection);
+
+        $this->assertSame($activeCollection, $licence->getActiveVehicles());
+    }
+
+    public function testGetOtherActiveLicences()
+    {
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_PSV);
+
+        $licence1 = m::mock(Entity::class)->makePartial();
+
+        $licences = m::mock(ArrayCollection::class)->makePartial();
+        $licences->add($licence1);
+
+        $org = m::mock(Organisation::class)->makePartial();
+        $org->setLicences($licences);
+
+        $licences->shouldReceive('matching')
+            ->with(m::type(Criteria::class))
+            ->andReturn(['RETURN']);
+
+        $licence = $this->instantiate(Entity::class);
+        $licence->setId(111);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+        $licence->setOrganisation($org);
+
+        $this->assertEquals(['RETURN'], $licence->getOtherActiveLicences());
     }
 
     public function updateSafetyDetails()

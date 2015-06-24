@@ -34,20 +34,17 @@ final class UpdateVehicles extends AbstractCommandHandler implements Transaction
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        // If we are entering vehicles, and it is not a partial save then we need to count the vehicles
-        if ($hasEnteredReg == 'Y' && !$command->getPartial()) {
-            $criteria = Criteria::create();
-            $criteria->andWhere(
-                $criteria->expr()->isNull('removalDate')
-            );
-
-            if ($application->getLicence()->getLicenceVehicles()->matching($criteria)->count() < 1) {
-                throw new ValidationException([
+        // If we are entering vehicles, and it is not a partial save then we need to have some active vehicles
+        if ($hasEnteredReg == 'Y' && !$command->getPartial()
+            && $application->getLicence()->getActiveVehiclesCount() < 1
+        ) {
+            throw new ValidationException(
+                [
                     'vehicles' => [
                         ApplicationEntity::ERROR_NO_VEH_ENTERED => 'No vehicles added'
                     ]
-                ]);
-            }
+                ]
+            );
         }
 
         $application->setHasEnteredReg($hasEnteredReg);

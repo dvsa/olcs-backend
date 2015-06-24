@@ -66,39 +66,6 @@ class GoodsVehicles extends AbstractQueryHandler implements AuthAwareInterface
 
     private function canTransfer(LicenceEntity $licence)
     {
-        $criteria = Criteria::create();
-
-        // Where statuses are active
-        $criteria->andWhere(
-            $criteria->expr()->in(
-                'status',
-                [
-                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                    LicenceEntity::LICENCE_STATUS_VALID,
-                    LicenceEntity::LICENCE_STATUS_CURTAILED
-                ]
-            )
-        );
-
-        // Ignore the current licence
-        $criteria->andWhere(
-            $criteria->expr()->neq('id', $licence->getId())
-        );
-
-        // Where the licence category is the same
-        $criteria->andWhere(
-            $criteria->expr()->eq('goodsOrPsv', $licence->getGoodsOrPsv())
-        );
-
-        // Where not special restricted
-        if ($licence->getGoodsOrPsv()->getId() == LicenceEntity::LICENCE_CATEGORY_PSV) {
-            $criteria->andWhere(
-                $criteria->expr()->neq('licenceType', LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED)
-            );
-        }
-
-        $otherLicences = $licence->getOrganisation()->getLicences()->matching($criteria);
-
-        return $otherLicences->count() > 0;
+        return $licence->getOtherActiveLicences()->count() > 0;
     }
 }
