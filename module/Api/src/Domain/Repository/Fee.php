@@ -246,11 +246,21 @@ class Fee extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $this->applyLicenceFilter($qb, $query);
-        $this->applyApplicationFilter($qb, $query);
-        $this->applyBusRegFilter($qb, $query);
-        $this->applyTaskFilter($qb, $query);
-        $this->applyIrfoGvPermitFilter($qb, $query);
+        $this->getQueryBuilder()
+            ->filterByLicence($query->getLicence())
+            ->filterByApplication($query->getApplication())
+            ->filterByBusReg($query->getBusReg())
+            ->filterByIds($query->getIds());
+
+        if ($query->getTask() !== null) {
+            $qb->andWhere($this->alias . '.task = :taskId');
+            $qb->setParameter('taskId', $query->getTask());
+        }
+
+        if ($query->getIrfoGvPermit() !== null) {
+            $qb->andWhere($this->alias . '.irfoGvPermit = :irfoGvPermitId');
+            $qb->setParameter('irfoGvPermitId', $query->getIrfoGvPermit());
+        }
 
         if ($query->getIsMiscellaneous() !== null) {
             $qb->innerJoin($this->alias . '.feeType', 'ft')
@@ -285,52 +295,6 @@ class Fee extends AbstractRepository
             }
         }
 
-        if (!empty($query->getIds())) {
-            $qb
-                ->andWhere($qb->expr()->in($this->alias . '.id', ':ids'))
-                ->setParameter('ids', $query->getIds());
-        }
-
         $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
-    }
-
-    private function applyLicenceFilter(QueryBuilder $qb, QueryInterface $query)
-    {
-        if ($query->getLicence() !== null) {
-            $qb->andWhere($this->alias . '.licence = :licenceId');
-            $qb->setParameter('licenceId', $query->getLicence());
-        }
-    }
-
-    private function applyApplicationFilter(QueryBuilder $qb, QueryInterface $query)
-    {
-        if ($query->getApplication() !== null) {
-            $qb->andWhere($this->alias . '.application = :applicationId');
-            $qb->setParameter('applicationId', $query->getApplication());
-        }
-    }
-
-    private function applyBusRegFilter(QueryBuilder $qb, QueryInterface $query)
-    {
-        if ($query->getBusReg() !== null) {
-            $qb->andWhere($this->alias . '.busReg = :busRegId');
-            $qb->setParameter('busRegId', $query->getBusReg());
-        }
-    }
-
-    private function applyTaskFilter(QueryBuilder $qb, QueryInterface $query)
-    {
-        if ($query->getTask() !== null) {
-            $qb->andWhere($this->alias . '.task = :taskId');
-            $qb->setParameter('taskId', $query->getTask());
-        }
-    }
-
-    private function applyIrfoGvPermitFilter(QueryBuilder $qb, QueryInterface $query)
-    {
-        if ($query->getIrfoGvPermit() !== null) {
-            $qb->andWhere($this->alias . '.irfoGvPermit = :irfoGvPermitId');
-            $qb->setParameter('irfoGvPermitId', $query->getIrfoGvPermit());
-        }
     }
 }
