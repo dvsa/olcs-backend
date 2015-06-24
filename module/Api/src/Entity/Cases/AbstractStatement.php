@@ -21,7 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_statement_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_statement_contact_type", columns={"contact_type"}),
  *        @ORM\Index(name="ix_statement_statement_type", columns={"statement_type"}),
- *        @ORM\Index(name="ix_statement_licence_type", columns={"licence_type"}),
  *        @ORM\Index(name="fk_statement_contact_details1_idx",
      *     columns={"requestors_contact_details_id"})
  *    },
@@ -137,10 +136,9 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Licence type
      *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="licence_type", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="licence_type", length=32, nullable=true)
      */
     protected $licenceType;
 
@@ -456,7 +454,7 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the licence type
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $licenceType
+     * @param string $licenceType
      * @return Statement
      */
     public function setLicenceType($licenceType)
@@ -469,7 +467,7 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Get the licence type
      *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     * @return string
      */
     public function getLicenceType()
     {
