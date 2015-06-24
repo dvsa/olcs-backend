@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Cease Active Discs
+ * Create Goods Discs
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -11,11 +11,11 @@ use Dvsa\Olcs\Transfer\Util\Annotation as Transfer;
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**
- * Cease Active Discs
+ * Create Goods Discs
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CeaseActiveDiscs extends AbstractCommand
+final class CreateGoodsDiscs extends AbstractCommand
 {
     /**
      * @Transfer\ArrayInput
@@ -25,11 +25,21 @@ final class CeaseActiveDiscs extends AbstractCommand
      */
     protected $ids;
 
+    protected $isCopy = 'N';
+
     /**
      * @return mixed
      */
     public function getIds()
     {
         return $this->ids;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsCopy()
+    {
+        return $this->isCopy;
     }
 }

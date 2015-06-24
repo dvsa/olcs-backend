@@ -56,6 +56,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         $this->getRepo('Vehicle')->save($vehicle);
 
         $result->addId('vehicle', $vehicle->getId());
+        $result->addMessage('Vehicle created');
 
         $licenceVehicle = new LicenceVehicle($licence, $vehicle);
         if ($command->getSpecifiedDate() !== null) {
@@ -68,6 +69,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         $this->getRepo('LicenceVehicle')->save($licenceVehicle);
 
         $result->addId('licenceVehicle', $licenceVehicle->getId());
+        $result->addMessage('Licence Vehicle created');
 
         return $result;
     }
