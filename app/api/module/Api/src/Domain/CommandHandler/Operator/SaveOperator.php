@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Create Operator
+ * Save Operator
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -15,17 +15,17 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson as OrganisationPersonEntity;
-use Dvsa\Olcs\Transfer\Command\Operator\Create as Cmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
+use Doctrine\ORM\Query;
 
 /**
- * Create Operator
+ * Save Operator
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class CreateOperator extends AbstractCommandHandler implements TransactionedInterface
+final class SaveOperator extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Organisation';
 
@@ -38,7 +38,14 @@ final class CreateOperator extends AbstractCommandHandler implements Transaction
         $this->validateOrganisation($command);
         $type = $command->getBusinessType();
 
-        $organisation = $this->createOrganisationObject($command);
+        if ($command instanceof \Dvsa\Olcs\Transfer\Command\Operator\Update) {
+            $organisation = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+            $message = 'Organisation updated successfully';
+        } else {
+            $organisation = new OrganisationEntity();
+            $message = 'Organisation created successfully';
+        }
+        $this->updateOrganisation($command, $organisation);
 
         if ($type === OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY || $type === OrganisationEntity::ORG_TYPE_LLP) {
             $this->saveAddress($command, $organisation);
@@ -52,12 +59,12 @@ final class CreateOperator extends AbstractCommandHandler implements Transaction
 
         $result = new Result();
         $result->addId('organisation', $organisation->getId());
-        $result->addMessage('Organisation created successfully');
+        $result->addMessage($message);
 
         return $result;
     }
 
-    private function saveAddress(Cmd $command, $organisation)
+    private function saveAddress($command, $organisation)
     {
         $address = $command->getAddress();
         $address['contactType'] = AddressEntity::CONTACT_TYPE_REGISTERED_ADDRESS;
@@ -72,39 +79,50 @@ final class CreateOperator extends AbstractCommandHandler implements Transaction
         }
     }
 
-    private function saveOrganisationPerson(Cmd $command, $organisation)
+    private function saveOrganisationPerson($command, $organisation)
     {
         $person = $this->createPersonObject($command);
         $this->getRepo('Person')->save($person);
-        $organisationPerson = new OrganisationPersonEntity();
-        $organisationPerson->setPerson($person);
-        $organisationPerson->setOrganisation($organisation);
-        $this->getRepo('OrganisationPerson')->save($organisationPerson);
+        if ($command instanceof \Dvsa\Olcs\Transfer\Command\Operator\Create ||
+            !$command->getPersonId()) {
+            $organisationPerson = new OrganisationPersonEntity();
+            $organisationPerson->setPerson($person);
+            $organisationPerson->setOrganisation($organisation);
+            $this->getRepo('OrganisationPerson')->save($organisationPerson);
+            }
     }
 
     /**
      * Create person object
-     * @param Cmd $command
+     * @param $command
      * @return Person
      */
-    private function createPersonObject(Cmd $command)
+    private function createPersonObject($command)
     {
-        $person = new PersonEntity();
-
-        $person->setForename($command->getFirstName());
-        $person->setFamilyName($command->getLastName());
+        if ($command instanceof \Dvsa\Olcs\Transfer\Command\Operator\Create ||
+            !$command->getPersonId()) {
+            $person = new PersonEntity();
+        } else {
+            $person = $this->getRepo('Person')->fetchById(
+                $command->getPersonId(), Query::HYDRATE_OBJECT, $command->getPersonVersion()
+            );
+        }
+        $person->updatePerson(
+            null,
+            $command->getFirstName(),
+            $command->getLastName()
+        );
 
         return $person;
     }
 
     /**
-     * @param Cmd $command
+     * @param $command
+     * @param Organisation
      * @return Organisation
      */
-    private function createOrganisationObject(Cmd $command)
+    private function updateOrganisation($command, $organisation)
     {
-        $organisation = new OrganisationEntity();
-
         $organisation->updateOrganisation(
             $command->getName(),
             $command->getCompanyNumber(),
@@ -121,7 +139,6 @@ final class CreateOperator extends AbstractCommandHandler implements Transaction
             }
             $organisation->setNatureOfBusinesses($references);
         }
-
         return $organisation;
     }
 

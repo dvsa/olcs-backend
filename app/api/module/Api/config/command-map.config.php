@@ -305,5 +305,6 @@ return [
     Command\PrintScheduler\Enqueue::class  => CommandHandler\PrintScheduler\Enqueue::class,
 
     // Transfer - Operator
-    TransferCommand\Operator\Create::class => CommandHandler\Operator\CreateOperator::class,
+    TransferCommand\Operator\Create::class => CommandHandler\Operator\SaveOperator::class,
+    TransferCommand\Operator\Update::class => CommandHandler\Operator\SaveOperator::class,
 ];
