@@ -166,6 +166,9 @@ return [
     TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
     TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
 
+    // CommunityLic
+    TransferQuery\CommunityLic\CommunityLic::class => QueryHandler\CommunityLic\CommunityLic::class,
+
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
 
