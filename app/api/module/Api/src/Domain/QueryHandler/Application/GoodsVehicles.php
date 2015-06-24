@@ -28,12 +28,14 @@ class GoodsVehicles extends AbstractQueryHandler implements AuthAwareInterface
 
     protected $extraRepos = ['LicenceVehicle'];
 
+    protected $licenceVehicleMethod = 'createPaginatedVehiclesDataForApplicationQuery';
+
     public function handleQuery(QueryInterface $query)
     {
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($query);
 
-        $lvQuery = $this->getRepo('LicenceVehicle')->createPaginatedVehiclesDataForApplicationQuery(
+        $lvQuery = $this->getRepo('LicenceVehicle')->{$this->licenceVehicleMethod}(
             $query,
             $application->getId(),
             $application->getLicence()->getId()

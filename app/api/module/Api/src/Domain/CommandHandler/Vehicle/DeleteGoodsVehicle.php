@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Vehicle\CeaseActiveDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Vehicle\CeaseActiveDiscs as CeaseActiveDiscsCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -30,7 +30,7 @@ final class DeleteGoodsVehicle extends AbstractCommandHandler implements Transac
 
         $vehicles = 0;
 
-        $result->merge($this->proxyCommand($command, CeaseActiveDiscs::class));
+        $result->merge($this->proxyCommand($command, CeaseActiveDiscsCmd::class));
 
         foreach ($command->getIds() as $id) {
             /** @var LicenceVehicle $licenceVehicle */

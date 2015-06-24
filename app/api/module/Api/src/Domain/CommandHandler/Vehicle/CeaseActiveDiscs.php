@@ -41,7 +41,7 @@ final class CeaseActiveDiscs extends AbstractCommandHandler implements Transacti
             }
         }
 
-        $result->addMessage($discs . ' Discs(s) Ceased');
+        $result->addMessage($discs . ' Disc(s) Ceased');
 
         return $result;
     }

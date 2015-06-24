@@ -44,7 +44,7 @@ final class CreateGoodsDiscs extends AbstractCommandHandler implements Transacti
             $count++;
         }
 
-        $result->addMessage($count . ' Discs(s) created');
+        $result->addMessage($count . ' Disc(s) created');
 
         return $result;
     }

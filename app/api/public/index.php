@@ -2,7 +2,8 @@
 
 // Ensures at the very least we send a 500 response on fatal
 register_shutdown_function('handleFatal');
-function handleFatal() {
+function handleFatal()
+{
     $error = error_get_last();
     if ($error) {
         http_response_code(500);
@@ -15,7 +16,8 @@ function handleFatal() {
                         $error['file'] . ': ' . $error['line']
                     ]
                 ]
-            ]);
+            ]
+        );
         exit;
     }
 }

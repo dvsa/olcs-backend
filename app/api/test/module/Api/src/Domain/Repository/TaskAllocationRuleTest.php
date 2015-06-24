@@ -33,8 +33,6 @@ class TaskAllocationRuleTest extends RepositoryTestCase
         $category->setId(111);
 
         $qb = $this->createMockQb('[QUERY]');
-        $qb->shouldReceive('setParameter')
-            ->with('category', 111);
         $qb->shouldReceive('getQuery->getResult')
             ->with(Query::HYDRATE_OBJECT)
             ->andReturn('RESULT');
@@ -52,7 +50,7 @@ class TaskAllocationRuleTest extends RepositoryTestCase
         $this->assertEquals('RESULT', $this->sut->fetchForSimpleTaskAssignment($category));
 
         $this->assertEquals(
-            '[QUERY] AND m.category = :category AND m.isMlh IS NULL AND m.trafficArea IS NULL',
+            '[QUERY] AND m.category = [[111]] AND m.isMlh IS NULL AND m.trafficArea IS NULL',
             $this->query
         );
     }
