@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * UpdateLicenceStatusRule.php
+ */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -9,25 +12,19 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
- * Class CreateLicenceStatusRule
+ * Class UpdateLicenceStatusRule
  *
  * Create a licence status rule.
  *
  * @package Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule
  */
-final class CreateLicenceStatusRule extends AbstractCommandHandler
+final class UpdateLicenceStatusRule extends AbstractCommandHandler
 {
     protected $repoServiceName = 'LicenceStatusRule';
 
     public function handleCommand(CommandInterface $command)
     {
-        $licence = $this->getRepo()
-            ->getReference(Licence::class, $command->getLicence());
-
-        $status = $this->getRepo()->getRefdataReference($command->getStatus());
-
-        $statusRule = new LicenceStatusRule();
-        $statusRule->setLicenceStatus($status);
+        $statusRule = $this->getRepo()->fetchById($command->getId());
 
         if (!is_null($command->getStartDate())) {
             $statusRule->setStartDate(new \DateTime($command->getStartDate()));
@@ -37,13 +34,11 @@ final class CreateLicenceStatusRule extends AbstractCommandHandler
             $statusRule->setEndDate(new \DateTime($command->getEndDate()));
         }
 
-        $statusRule->setLicence($licence);
-
         $this->getRepo()->save($statusRule);
 
         $result = new Result();
         $result->addId('licence-status-rule', $statusRule->getId());
-        $result->addMessage('Licence status rule created successfully');
+        $result->addMessage('Licence status rule updated successfully');
 
         return $result;
     }

@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -33,9 +33,13 @@ final class ResetToValid extends AbstractCommandHandler implements Transactioned
         $licence->setCurtailedDate(null);
         $licence->setSuspendedDate(null);
 
-        $this->getRepo()->save($licence);
+        $result = $this->handleSideEffect(RemoveLicenceStatusRulesForLicence::create(
+            [
+                'licence' => $licence
+            ]
+        ));
 
-        $result = new Result();
+        $this->getRepo()->save($licence);
         $result->addMessage("Licence ID {$licence->getId()} reset to valid");
 
         return $result;
