@@ -15,7 +15,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
 /**
  * Abstract Command Handler
