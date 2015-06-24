@@ -176,6 +176,8 @@ return [
     // Transport Manager Application
     TransferQuery\TransportManagerApplication\GetDetails::class
         => QueryHandler\TransportManagerApplication\GetDetails::class,
+    TransferQuery\TransportManagerApplication\GetList::class
+        => QueryHandler\TransportManagerApplication\GetList::class,
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
