@@ -43,7 +43,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
      *  - organisationId AND feeIds
      *  - applicationId only
      *  - feeIds only
-     * @todo add validation to DTO
      */
     public function handleCommand(CommandInterface $command)
     {
