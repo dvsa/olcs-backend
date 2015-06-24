@@ -32,6 +32,7 @@ return [
     TransferCommand\Application\DeleteWorkshop::class => CommandHandler\Application\DeleteWorkshop::class,
     TransferCommand\Application\CreateWorkshop::class => CommandHandler\Application\CreateWorkshop::class,
     TransferCommand\Application\UpdateWorkshop::class => CommandHandler\Application\UpdateWorkshop::class,
+    TransferCommand\Application\SubmitApplication::class => CommandHandler\Application\SubmitApplication::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -53,6 +54,7 @@ return [
     TransferCommand\Bus\UpdateQualitySchemes::class => CommandHandler\Bus\UpdateQualitySchemes::class,
     TransferCommand\Bus\UpdateTaAuthority::class => CommandHandler\Bus\UpdateTaAuthority::class,
     TransferCommand\Bus\UpdateServiceDetails::class => CommandHandler\Bus\UpdateServiceDetails::class,
+    TransferCommand\Bus\UpdateShortNotice::class => CommandHandler\Bus\UpdateShortNotice::class,
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
@@ -128,6 +130,9 @@ return [
     TransferCommand\Publication\UpdateRecipient::class => CommandHandler\Publication\UpdateRecipient::class,
     TransferCommand\Publication\DeleteRecipient::class => CommandHandler\Publication\DeleteRecipient::class,
 
+    // Transfer - My Account
+    TransferCommand\MyAccount\UpdateMyAccount::class => CommandHandler\MyAccount\UpdateMyAccount::class,
+
     // Transfer - User
     TransferCommand\User\CreatePartner::class => CommandHandler\User\CreatePartner::class,
     TransferCommand\User\UpdatePartner::class => CommandHandler\User\UpdatePartner::class,
@@ -154,6 +159,11 @@ return [
         CommandHandler\Cases\Complaint\UpdateComplaint::class,
     TransferCommand\Cases\Complaint\DeleteComplaint::class =>
         CommandHandler\Cases\Complaint\DeleteComplaint::class,
+
+    // Transfer - Document
+    TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
+    Command\Document\CreateDocumentSpecific::class => CommandHandler\Document\CreateDocumentSpecific::class,
+    TransferCommand\Document\DeleteDocument::class => CommandHandler\Document\DeleteDocument::class,
 
     // Transfer - CommunityLic
     TransferCommand\CommunityLic\Application\Create::class => CommandHandler\CommunityLic\Application\Create::class,
@@ -183,6 +193,22 @@ return [
     TransferCommand\Cases\Prohibition\Defect\Update::class => CommandHandler\Cases\Prohibition\Defect\Update::class,
     TransferCommand\Cases\Prohibition\Defect\Delete::class => CommandHandler\Cases\Prohibition\Defect\Delete::class,
 
+    // Transfer - Appeal
+    TransferCommand\Cases\Hearing\CreateAppeal::class =>
+        CommandHandler\Cases\Hearing\CreateAppeal::class,
+    TransferCommand\Cases\Hearing\UpdateAppeal::class =>
+        CommandHandler\Cases\Hearing\UpdateAppeal::class,
+    TransferCommand\Cases\Hearing\DeleteAppeal::class =>
+        CommandHandler\Cases\Hearing\DeleteAppeal::class,
+
+    // Transfer - Stay
+    TransferCommand\Cases\Hearing\CreateStay::class =>
+        CommandHandler\Cases\Hearing\CreateStay::class,
+    TransferCommand\Cases\Hearing\UpdateStay::class =>
+        CommandHandler\Cases\Hearing\UpdateStay::class,
+    TransferCommand\Cases\Hearing\DeleteStay::class =>
+        CommandHandler\Cases\Hearing\DeleteStay::class,
+
     // Transfer - Environmental Complaint
     TransferCommand\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class =>
         CommandHandler\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class,
@@ -193,8 +219,6 @@ return [
 
     // Transfer - Document
     TransferCommand\Document\CreateLetter::class => CommandHandler\Document\CreateLetter::class,
-    TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
-    TransferCommand\Document\DeleteDocument::class => CommandHandler\Document\DeleteDocument::class,
 
     // Transfer - ConditionUndertaking
     TransferCommand\Cases\ConditionUndertaking\CreateConditionUndertaking::class =>
@@ -211,6 +235,14 @@ return [
         CommandHandler\Cases\Opposition\UpdateOpposition::class,
     TransferCommand\Cases\Opposition\DeleteOpposition::class =>
         CommandHandler\Cases\Opposition\DeleteOpposition::class,
+
+    // Transfer - Statement
+    TransferCommand\Cases\Statement\CreateStatement::class =>
+        CommandHandler\Cases\Statement\CreateStatement::class,
+    TransferCommand\Cases\Statement\UpdateStatement::class =>
+        CommandHandler\Cases\Statement\UpdateStatement::class,
+    TransferCommand\Cases\Statement\DeleteStatement::class =>
+        CommandHandler\Cases\Statement\DeleteStatement::class,
 
     // Domain - Application
     Command\Application\CreateApplicationFee::class => CommandHandler\Application\CreateApplicationFee::class,
@@ -242,6 +274,9 @@ return [
     // Domain - Fee
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
+    Command\Fee\PayFee::class => CommandHandler\Fee\PayFee::class,
+    TransferCommand\Fee\UpdateFee::class => CommandHandler\Fee\UpdateFee::class,
+    TransferCommand\Fee\CreateMiscellaneousFee::class => CommandHandler\Fee\CreateMiscellaneousFee::class,
 
     // Domain - Payment
     Command\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
@@ -315,6 +350,7 @@ return [
     TransferCommand\TmEmployment\Update::class => CommandHandler\TmEmployment\Update::class,
 
     // Transfer - Scan
+    TransferCommand\Scan\CreateDocument::class => CommandHandler\Scan\CreateDocument::class,
     TransferCommand\Scan\CreateSeparatorSheet::class  => CommandHandler\Scan\CreateSeparatorSheet::class,
     TransferCommand\Scan\CreateContinuationSeparatorSheet::class  =>
         CommandHandler\Scan\CreateContinuationSeparatorSheet::class,

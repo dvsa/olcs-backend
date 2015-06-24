@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\User\Team;
 
 /**
  * User Entity
@@ -25,5 +26,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User extends AbstractUser
 {
-
+    public function update(Team $team, $loginId)
+    {
+        $this->team = $team;
+        $this->loginId = $loginId;
+    }
 }

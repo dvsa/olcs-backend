@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Impounding;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -18,9 +18,13 @@ final class ImpoundingList extends AbstractQueryHandler
     {
         /** @var ImpoundingRepo $repo */
         $repo = $this->getRepo();
-
         return [
-            'result' => $repo->fetchList($query),
+            'result' => $this->resultList(
+                $repo->fetchList($query, Query::HYDRATE_OBJECT),
+                [
+                   'presidingTc'
+                ]
+            ),
             'count' => $repo->fetchCount($query)
         ];
     }

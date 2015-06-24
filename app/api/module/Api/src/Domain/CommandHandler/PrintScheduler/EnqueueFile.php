@@ -18,6 +18,8 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  * Enqueue File
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @TODO this class and the Enqueue handler appear to be duplicates in function.
+ * When printing is implemented for real we need to resolve this duplication.
  */
 final class EnqueueFile extends AbstractCommandHandler
 {
