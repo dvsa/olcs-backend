@@ -2,8 +2,9 @@
 
 /**
  * Licence test
- *
+ * 
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
@@ -16,11 +17,14 @@ use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Doctrine\DBAL\LockMode;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 
 /**
  * Licence test
- *
+ * 
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 class LicenceTest extends RepositoryTestCase
 {

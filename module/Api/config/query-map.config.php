@@ -124,6 +124,7 @@ return [
 
     // Bus
     TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
+    TransferQuery\Bus\ShortNoticeByBusReg::class => QueryHandler\Bus\ShortNoticeByBusReg::class,
 
     // Trailer
     TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
@@ -164,6 +165,9 @@ return [
     // Payment
     TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
     TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
+
+    // CommunityLic
+    TransferQuery\CommunityLic\CommunityLic::class => QueryHandler\CommunityLic\CommunityLic::class,
 
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
