@@ -68,16 +68,15 @@ class CreateCommunityLicenceTest extends CommandHandlerTestCase
             ->shouldReceive('getTotAuthVehicles')
             ->andReturn(10)
             ->once()
+            ->shouldReceive('getSerialNoPrefixFromTrafficArea')
+            ->andReturn('A')
+            ->once()
             ->getMock();
 
         $this->repoMap['Licence']
-            ->shouldReceive('getSerialNoPrefixFromTrafficArea')
-            ->with($licenceId)
-            ->andReturn('A')
-            ->once()
             ->shouldReceive('fetchById')
             ->andReturn($mockLicence)
-            ->once()
+            ->twice()
             ->getMock();
 
         $communityLic = null;

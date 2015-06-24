@@ -33,31 +33,6 @@ class LicenceTest extends RepositoryTestCase
         $this->setUpSut(LicenceRepo::class);
     }
 
-    public function testGetSerialNoPrefixFromTrafficArea()
-    {
-        $licenceId = 1;
-        $mockLicence = m::mock()
-            ->shouldReceive('getTrafficArea')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getId')
-                ->andReturn(TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE)
-                ->once()
-                ->getMock()
-            )
-            ->once()
-            ->getMock();
-
-        $sut = m::mock(LicenceRepo::class)
-            ->makePartial()
-            ->shouldReceive('fetchById')
-            ->with($licenceId)
-            ->andReturn($mockLicence)
-            ->getMock();
-
-        $this->assertEquals(CommunityLicEntity::PREFIX_NI, $sut->getSerialNoPrefixFromTrafficArea($licenceId));
-    }
-
     public function testFetchSafetyDetailsUsingId()
     {
         $command = m::mock(QueryInterface::class);
