@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
@@ -39,6 +40,19 @@ final class UpdateGoodsVehicle extends AbstractCommandHandler implements Transac
 
         /** @var LicenceVehicle $licenceVehicle */
         $licenceVehicle = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+
+        // Can't update removalDate of active vehicle
+        if ($licenceVehicle->getRemovalDate() === null && $command->getRemovalDate() !== null) {
+            throw new BadRequestException('You cannot update the removal date of an active vehicle');
+        }
+
+        // Can't update specified date or received date of removed vehicle
+        if ($licenceVehicle->getRemovalDate() !== null
+            && ($command->getSpecifiedDate() !== null || $command->getReceivedDate() !== null)
+        ) {
+            throw new BadRequestException('You cannot update a removed vehicle');
+        }
+
         $licenceVehicle->getVehicle()->setPlatedWeight($command->getPlatedWeight());
         if ($command->getSpecifiedDate() !== null) {
             $licenceVehicle->setSpecifiedDate(new \DateTime($command->getSpecifiedDate()));
