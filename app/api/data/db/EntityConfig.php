@@ -1136,7 +1136,13 @@ return array(
                 'entity' => 'Licence',
                 'property' => 'fee'
             )
-        )
+        ),
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'fee',
+            ),
+        ),
     ),
     'ebsr_submission_result' => array(
         'email_authority' => array(
