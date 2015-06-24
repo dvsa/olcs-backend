@@ -10,8 +10,6 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 
 /**
@@ -44,17 +42,6 @@ class Licence extends AbstractRepository
         }
 
         return $results[0];
-    }
-
-    public function getSerialNoPrefixFromTrafficArea($licenceId)
-    {
-        $licence = $this->fetchById($licenceId);
-        $trafficArea = $licence->getTrafficArea();
-        $retv = CommunityLicEntity::PREFIX_GB;
-        if ($trafficArea && $trafficArea->getId() === TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE) {
-            $retv = CommunityLicEntity::PREFIX_NI;
-        }
-        return $retv;
     }
 
     public function fetchWithAddressesUsingId($query)

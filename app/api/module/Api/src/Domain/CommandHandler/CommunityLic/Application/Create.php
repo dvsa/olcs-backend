@@ -38,7 +38,8 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         $totalLicences = $command->getTotalLicences();
         $identifier = $command->getIdentifier();
 
-        $interimStatus = $this->getRepo('Application')->getInterimStatus($identifier);
+        $application = $this->getRepo('Application')->fetchById($identifier);
+        $interimStatus = $application->getInterimStatus() ? $application->getInterimStatus()->getId() : null;
 
         if ($interimStatus !== ApplicationEntity::INTERIM_STATUS_INFORCE) {
             $data = [
@@ -60,7 +61,8 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         $startIssueNo = $validLicencesCount ?
             $validLicences[$validLicencesCount - 1]->getIssueNo() + 1 : 1;
 
-        $data['serialNoPrefix'] = $this->getRepo('Licence')->getSerialNoPrefixFromTrafficArea($licenceId);
+        $licence = $this->getRepo('Licence')->fetchById($licenceId);
+        $data['serialNoPrefix'] = $licence->getSerialNoPrefixFromTrafficArea();
         $data['licence'] = $this->getRepo()->getReference(LicenceEntity::class, $licenceId);
 
         $ids = [];

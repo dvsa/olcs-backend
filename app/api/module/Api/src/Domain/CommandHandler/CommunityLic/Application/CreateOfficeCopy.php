@@ -35,7 +35,8 @@ final class CreateOfficeCopy extends AbstractCommandHandler
 
         $this->validateOfficeCopy($licenceId);
 
-        $interimStatus = $this->getRepo('Application')->getInterimStatus($identifier);
+        $application = $this->getRepo('Application')->fetchById($identifier);
+        $interimStatus = $application->getInterimStatus() ? $application->getInterimStatus()->getId() : null;
 
         if ($interimStatus !== ApplicationEntity::INTERIM_STATUS_INFORCE) {
             $data = [
@@ -48,7 +49,8 @@ final class CreateOfficeCopy extends AbstractCommandHandler
             ];
         }
 
-        $data['serialNoPrefix'] = $this->getRepo('Licence')->getSerialNoPrefixFromTrafficArea($licenceId);
+        $licence = $this->getRepo('Licence')->fetchById($licenceId);
+        $data['serialNoPrefix'] = $licence->getSerialNoPrefixFromTrafficArea();
         $data['licence'] = $this->getRepo()->getReference(LicenceEntity::class, $licenceId);
         $data['issueNo'] = 0;
 

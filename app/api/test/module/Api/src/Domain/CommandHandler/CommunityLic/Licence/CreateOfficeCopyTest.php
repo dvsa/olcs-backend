@@ -58,10 +58,16 @@ class CreateOfficeCopyTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $this->repoMap['Licence']
+        $mockLicence = m::mock()
             ->shouldReceive('getSerialNoPrefixFromTrafficArea')
-            ->with($licenceId)
             ->andReturn('A')
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchById')
+            ->with($licenceId)
+            ->andReturn($mockLicence)
             ->once()
             ->getMock();
 

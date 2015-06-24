@@ -50,7 +50,8 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         $startIssueNo = $validLicencesCount ?
             $validLicences[$validLicencesCount - 1]->getIssueNo() + 1 : 1;
 
-        $data['serialNoPrefix'] = $this->getRepo('Licence')->getSerialNoPrefixFromTrafficArea($licenceId);
+        $licence = $this->getRepo('Licence')->fetchById($licenceId);
+        $data['serialNoPrefix'] = $licence->getSerialNoPrefixFromTrafficArea();
         $data['licence'] = $this->getRepo()->getReference(LicenceEntity::class, $licenceId);
 
         $ids = [];
