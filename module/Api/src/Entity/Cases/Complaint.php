@@ -32,15 +32,14 @@ class Complaint extends AbstractComplaint
      * @param $contactDetails
      * @param $complaintDate
      */
-    public function __construct(Cases $case,
-                                RefData $complaintType,
-                                RefData $status,
-                                \DateTime $complaintDate,
-                                ContactDetails $contactDetails,
-                                $isCompliance
-
-    )
-    {
+    public function __construct(
+        Cases $case,
+        RefData $complaintType,
+        RefData $status,
+        \DateTime $complaintDate,
+        ContactDetails $contactDetails,
+        $isCompliance
+    ) {
         parent::__construct();
 
         $this->setCase($case);

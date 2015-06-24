@@ -20,13 +20,13 @@ final class ComplaintList extends AbstractQueryHandler
         $repo = $this->getRepo();
         return [
             'result' => $this->resultList(
-                    $repo->fetchList($query, Query::HYDRATE_OBJECT),
-                    [
-                        'complainantContactDetails' => [
-                            'person'
-                        ]
+                $repo->fetchList($query, Query::HYDRATE_OBJECT),
+                [
+                    'complainantContactDetails' => [
+                        'person'
                     ]
-                ),
+                ]
+            ),
             'count' => $repo->fetchCount($query)
         ];
     }
