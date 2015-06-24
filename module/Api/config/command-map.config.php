@@ -32,6 +32,7 @@ return [
     TransferCommand\Application\DeleteWorkshop::class => CommandHandler\Application\DeleteWorkshop::class,
     TransferCommand\Application\CreateWorkshop::class => CommandHandler\Application\CreateWorkshop::class,
     TransferCommand\Application\UpdateWorkshop::class => CommandHandler\Application\UpdateWorkshop::class,
+    TransferCommand\Application\SubmitApplication::class => CommandHandler\Application\SubmitApplication::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -269,6 +270,9 @@ return [
     // Domain - Fee
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
+    Command\Fee\PayFee::class => CommandHandler\Fee\PayFee::class,
+    TransferCommand\Fee\UpdateFee::class => CommandHandler\Fee\UpdateFee::class,
+    TransferCommand\Fee\CreateMiscellaneousFee::class => CommandHandler\Fee\CreateMiscellaneousFee::class,
 
     // Domain - Payment
     Command\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,

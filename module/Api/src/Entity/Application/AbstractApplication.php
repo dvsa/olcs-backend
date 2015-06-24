@@ -694,6 +694,15 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     protected $documents;
 
     /**
+     * Fee
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee", mappedBy="application")
+     */
+    protected $fees;
+
+    /**
      * Licence vehicle
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -788,6 +797,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
         $this->applicationOrganisationPersons = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->fees = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
         $this->oppositions = new ArrayCollection();
         $this->otherLicences = new ArrayCollection();
@@ -2504,6 +2514,66 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the fee
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees
+     * @return Application
+     */
+    public function setFees($fees)
+    {
+        $this->fees = $fees;
+
+        return $this;
+    }
+
+    /**
+     * Get the fees
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getFees()
+    {
+        return $this->fees;
+    }
+
+    /**
+     * Add a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees
+     * @return Application
+     */
+    public function addFees($fees)
+    {
+        if ($fees instanceof ArrayCollection) {
+            $this->fees = new ArrayCollection(
+                array_merge(
+                    $this->fees->toArray(),
+                    $fees->toArray()
+                )
+            );
+        } elseif (!$this->fees->contains($fees)) {
+            $this->fees->add($fees);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees
+     * @return Application
+     */
+    public function removeFees($fees)
+    {
+        if ($this->fees->contains($fees)) {
+            $this->fees->removeElement($fees);
         }
 
         return $this;
