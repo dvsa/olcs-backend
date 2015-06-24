@@ -47,6 +47,7 @@ class Complaint extends AbstractComplaint
         $this->setIsCompliance($isCompliance);
         $this->setComplaintType($complaintType);
         $this->setStatus($status);
+        $this->setComplaintDate($complaintDate);
 
         $this->setComplainantContactDetails($contactDetails);
     }

@@ -18,6 +18,7 @@ final class Complaint extends AbstractQueryHandler
         return $this->result(
             $this->getRepo()->fetchUsingId($query),
             [
+                'case',
                 'complainantContactDetails' => [
                     'person'
                 ]
