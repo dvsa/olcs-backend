@@ -3,7 +3,7 @@
 /**
  * Bus Test
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Bus;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
