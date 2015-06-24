@@ -26,8 +26,11 @@ class HistoryList extends AbstractQueryHandler
         /** @var Repository $repo */
         $repo = $this->getRepo();
 
+        //die('<pre>' . print_r($query, 1));
+
         return [
-            'result' => $this->resultList($repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT)),
+            'result' => $this->resultList(
+                $repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT), ['eventHistoryType', 'user']),
             'count' => $repo->fetchCount($query)
         ];
     }
