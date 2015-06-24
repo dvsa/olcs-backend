@@ -8047,7 +8047,7 @@ DROP VIEW IF EXISTS bus_reg_history_view;
 
 CREATE VIEW `bus_reg_history_view` AS
     SELECT
-   `eh`.`id` AS `ehid`,
+   `eh`.`id` AS `id`,
    `br1`.`id` AS `bus_reg_id`,
    `br2`.`id` AS `id2`,
    `eh`.`event_datetime` AS `event_datetime`,
