@@ -37,9 +37,6 @@ class FeesHelperService implements FactoryInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var ServiceLocatorInterface $mainServiceLocator  */
-        // $mainServiceLocator = $serviceLocator->getServiceLocator();
-
         $repoManager = $serviceLocator->get('RepositoryServiceManager');
 
         // inject required repos
