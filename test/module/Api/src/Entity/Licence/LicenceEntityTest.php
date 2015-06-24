@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 
 /**
  * Licence Entity Unit Tests
@@ -142,5 +144,33 @@ class LicenceEntityTest extends EntityTester
         $sut = m::mock(Entity::class)->makePartial();
         $sut->updateTotalCommunityLicences(10);
         $this->assertEquals(10, $sut->getTotCommunityLicences());
+    }
+
+    /**
+     * @dataProvider trafficAreaProvider
+     */
+    public function testGetSerialNoPrefixFromTrafficArea($trafficArea, $expected)
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('getTrafficArea')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn($trafficArea)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $this->assertEquals($expected, $sut->getSerialNoPrefixFromTrafficArea());
+    }
+
+    public function trafficAreaProvider()
+    {
+        return [
+            [TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE, CommunityLicEntity::PREFIX_NI],
+            [TrafficAreaEntity::NORTH_WESTERN_TRAFFIC_AREA_CODE, CommunityLicEntity::PREFIX_GB],
+        ];
     }
 }

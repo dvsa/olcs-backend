@@ -64,17 +64,34 @@ class CreateOfficeCopyTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $this->repoMap['Application']
+        $mockApplication = m::mock()
             ->shouldReceive('getInterimStatus')
-            ->with($identifier)
-            ->andReturn(ApplicationEntity::INTERIM_STATUS_REQUESTED)
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(ApplicationEntity::INTERIM_STATUS_REQUESTED)
+                ->once()
+                ->getMock()
+            )
+            ->twice()
+            ->getMock();
+
+        $mockLicence = m::mock()
+            ->shouldReceive('getSerialNoPrefixFromTrafficArea')
+            ->andReturn('A')
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchById')
+            ->andReturn($mockApplication)
             ->once()
             ->getMock();
 
         $this->repoMap['Licence']
-            ->shouldReceive('getSerialNoPrefixFromTrafficArea')
+            ->shouldReceive('fetchById')
             ->with($licenceId)
-            ->andReturn('A')
+            ->andReturn($mockLicence)
             ->once()
             ->getMock();
 
@@ -122,17 +139,34 @@ class CreateOfficeCopyTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $this->repoMap['Application']
+        $mockApplication = m::mock()
             ->shouldReceive('getInterimStatus')
-            ->with($identifier)
-            ->andReturn(ApplicationEntity::INTERIM_STATUS_INFORCE)
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(ApplicationEntity::INTERIM_STATUS_INFORCE)
+                ->once()
+                ->getMock()
+            )
+            ->twice()
+            ->getMock();
+
+        $mockLicence = m::mock()
+            ->shouldReceive('getSerialNoPrefixFromTrafficArea')
+            ->andReturn('A')
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchById')
+            ->andReturn($mockApplication)
             ->once()
             ->getMock();
 
         $this->repoMap['Licence']
-            ->shouldReceive('getSerialNoPrefixFromTrafficArea')
+            ->shouldReceive('fetchById')
             ->with($licenceId)
-            ->andReturn('A')
+            ->andReturn($mockLicence)
             ->once()
             ->getMock();
 

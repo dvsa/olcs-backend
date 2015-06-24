@@ -71,28 +71,36 @@ class CreateCommunityLicenceTest extends CommandHandlerTestCase
             ->shouldReceive('getIssueNo')
             ->andReturn(2)
             ->once()
+            ->shouldReceive('getSerialNoPrefixFromTrafficArea')
+            ->andReturn('A')
+            ->once()
             ->getMock();
 
         $mockApplication = m::mock()
             ->shouldReceive('getTotAuthVehicles')
             ->andReturn(10)
             ->once()
+            ->shouldReceive('getInterimStatus')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(ApplicationEntity::INTERIM_STATUS_REQUESTED)
+                ->once()
+                ->getMock()
+            )
+            ->twice()
             ->getMock();
 
         $this->repoMap['Application']
-            ->shouldReceive('getInterimStatus')
-            ->with($identifier)
-            ->andReturn(ApplicationEntity::INTERIM_STATUS_REQUESTED)
-            ->once()
             ->shouldReceive('fetchById')
             ->andReturn($mockApplication)
-            ->once()
+            ->twice()
             ->getMock();
 
         $this->repoMap['Licence']
-            ->shouldReceive('getSerialNoPrefixFromTrafficArea')
+            ->shouldReceive('fetchById')
             ->with($licenceId)
-            ->andReturn('A')
+            ->andReturn($mockLicence)
             ->once()
             ->getMock();
 
@@ -164,29 +172,36 @@ class CreateCommunityLicenceTest extends CommandHandlerTestCase
             ->shouldReceive('getIssueNo')
             ->andReturn(2)
             ->once()
+            ->shouldReceive('getSerialNoPrefixFromTrafficArea')
+            ->andReturn('A')
+            ->once()
             ->getMock();
 
         $mockApplication = m::mock()
             ->shouldReceive('getTotAuthVehicles')
             ->andReturn(10)
             ->once()
+            ->shouldReceive('getInterimStatus')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(ApplicationEntity::INTERIM_STATUS_INFORCE)
+                ->once()
+                ->getMock()
+            )
+            ->twice()
             ->getMock();
 
         $this->repoMap['Application']
-            ->shouldReceive('getInterimStatus')
-            ->with($identifier)
-            ->andReturn(ApplicationEntity::INTERIM_STATUS_INFORCE)
-            ->once()
             ->shouldReceive('fetchById')
             ->andReturn($mockApplication)
-            ->once()
+            ->twice()
             ->getMock();
 
         $this->repoMap['Licence']
-            ->shouldReceive('getSerialNoPrefixFromTrafficArea')
+            ->shouldReceive('fetchById')
             ->with($licenceId)
-            ->andReturn('A')
-            ->once()
+            ->andReturn($mockLicence)
             ->getMock();
 
         $communityLic = null;
@@ -267,6 +282,15 @@ class CreateCommunityLicenceTest extends CommandHandlerTestCase
             ->shouldReceive('getTotAuthVehicles')
             ->andReturn(1)
             ->once()
+            ->shouldReceive('getInterimStatus')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(ApplicationEntity::INTERIM_STATUS_REQUESTED)
+                ->once()
+                ->getMock()
+            )
+            ->twice()
             ->getMock();
 
         $command = Cmd::create($data);
@@ -277,13 +301,9 @@ class CreateCommunityLicenceTest extends CommandHandlerTestCase
             ->getMock();
 
         $this->repoMap['Application']
-            ->shouldReceive('getInterimStatus')
-            ->with($identifier)
-            ->andReturn(ApplicationEntity::INTERIM_STATUS_REQUESTED)
-            ->once()
             ->shouldReceive('fetchById')
             ->andReturn($mockApplication)
-            ->once()
+            ->twice()
             ->getMock();
 
         $this->sut->handleCommand($command);
