@@ -14,8 +14,6 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-use Dvsa\Olcs\Api\Domain\ApplicationOutstandingFeesTrait;
-
 /**
  * Application - Outstanding Fees
  *
@@ -23,7 +21,10 @@ use Dvsa\Olcs\Api\Domain\ApplicationOutstandingFeesTrait;
  */
 class OutstandingFees extends AbstractQueryHandler
 {
-    use ApplicationOutstandingFeesTrait;
+    /**
+     * @var \Dvsa\Olcs\Api\Service\FeesHelperService
+     */
+    protected $feesHelper;
 
     protected $repoServiceName = 'Application';
 
@@ -33,7 +34,7 @@ class OutstandingFees extends AbstractQueryHandler
     {
         $application = $this->getRepo('Application')->fetchUsingId($query);
 
-        $outstandingFees = $this->getOutstandingFeesForApplication($application->getId());
+        $outstandingFees = $this->feesHelper->getOutstandingFeesForApplication($application->getId());
 
         return $this->result(
             $application,
@@ -69,5 +70,12 @@ class OutstandingFees extends AbstractQueryHandler
         }
 
         return number_format($total, 2, null, null);
+    }
+
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        parent::createService($serviceLocator);
+        $this->feesHelper = $serviceLocator->getServiceLocator()->get('FeesHelperService');
+        return $this;
     }
 }

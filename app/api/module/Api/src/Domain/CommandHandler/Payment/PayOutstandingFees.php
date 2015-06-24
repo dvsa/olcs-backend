@@ -20,8 +20,6 @@ use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-use Dvsa\Olcs\Api\Domain\ApplicationOutstandingFeesTrait;
-
 /**
  * Pay Outstanding Fees
  * (initiates a CPMS payment which is a two-step process)
@@ -30,7 +28,10 @@ use Dvsa\Olcs\Api\Domain\ApplicationOutstandingFeesTrait;
  */
 final class PayOutstandingFees extends AbstractCommandHandler implements TransactionedInterface
 {
-    use ApplicationOutstandingFeesTrait;
+    /**
+     * @var \Dvsa\Olcs\Api\Service\FeesHelperService
+     */
+    protected $feesHelper;
 
     protected $repoServiceName = 'Payment';
 
@@ -52,7 +53,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $fees = $this->getOutstandingFeesForOrganisation($command);
             $customerReference = $command->getOrganisationId();
         } elseif (!empty($command->getApplicationId())) {
-            $fees = $this->getOutstandingFeesForApplication($command->getApplicationId());
+            $fees = $this->feesHelper->getOutstandingFeesForApplication($command->getApplicationId());
             $customerReference = $this->getCustomerReference($fees);
         } else {
             $fees = $this->getRepo('Fee')->fetchOutstandingFeesByIds($command->getFeeIds());
@@ -301,7 +302,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         parent::createService($serviceLocator);
-        $this->cpmsHelper = $serviceLocator->getServiceLocator()->get('CpmsHelperService');
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+        $this->cpmsHelper = $mainServiceLocator->get('CpmsHelperService');
+        $this->feesHelper = $mainServiceLocator->get('FeesHelperService');
         return $this;
     }
 
