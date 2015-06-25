@@ -21,5 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CommunityLicWithdrawal extends AbstractCommunityLicWithdrawal
 {
-
+    public function updateCommunityLicWithdrawal($communityLic)
+    {
+        $this->communityLic = $communityLic;
+    }
 }

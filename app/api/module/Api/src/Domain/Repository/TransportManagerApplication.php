@@ -113,4 +113,31 @@ class TransportManagerApplication extends AbstractRepository
             ->with('wcd.address', 'wadd')
             ->with('wadd.countryCode');
     }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query
+     */
+    protected function applyListFilters(\Doctrine\ORM\QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
+    {
+        // if user param exists then add where clauses
+        if ($query->getUser()) {
+            $qb->join('tma.transportManager', 'tm');
+            $qb->join('tm.users', 'u');
+            $qb->where($qb->expr()->eq('u.id', ':user'))
+                ->setParameter('user', $query->getUser());
+        }
+    }
+
+    /**
+     * Add joins
+     *
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     */
+    protected function applyListJoins(\Doctrine\ORM\QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()
+            ->with('application', 'a')
+            ->with('a.licence', 'l');
+    }
 }

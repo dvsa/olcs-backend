@@ -123,7 +123,13 @@ return array(
                 'entity' => 'UserRole',
                 'property' => 'user'
             )
-        )
+        ),
+        'transport_manager_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManager',
+                'property' => 'user'
+            ),
+        ),
     ),
     'user_role' => array(
         'user_id' => array(

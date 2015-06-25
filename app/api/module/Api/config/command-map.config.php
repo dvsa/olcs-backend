@@ -119,6 +119,7 @@ return [
         => CommandHandler\Correspondence\AccessCorrespondence::class,
 
     // Transfer - IRFO
+    TransferCommand\Irfo\UpdateIrfoDetails::class => CommandHandler\Irfo\UpdateIrfoDetails::class,
     TransferCommand\Irfo\CreateIrfoGvPermit::class => CommandHandler\Irfo\CreateIrfoGvPermit::class,
     TransferCommand\Irfo\UpdateIrfoGvPermit::class => CommandHandler\Irfo\UpdateIrfoGvPermit::class,
     TransferCommand\Irfo\CreateIrfoPermitStock::class => CommandHandler\Irfo\CreateIrfoPermitStock::class,
@@ -173,6 +174,10 @@ return [
     TransferCommand\CommunityLic\Licence\CreateOfficeCopy::class =>
         CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
     TransferCommand\CommunityLic\GenerateBatch::class => CommandHandler\CommunityLic\GenerateBatch::class,
+    TransferCommand\CommunityLic\Void::class => CommandHandler\CommunityLic\Void::class,
+    TransferCommand\CommunityLic\Restore::class => CommandHandler\CommunityLic\Restore::class,
+    TransferCommand\CommunityLic\Stop::class => CommandHandler\CommunityLic\Stop::class,
+    TransferCommand\CommunityLic\Reprint::class => CommandHandler\CommunityLic\Reprint::class,
 
     // Conviction
     TransferCommand\Cases\Conviction\Create::class => CommandHandler\Cases\Conviction\Create::class,

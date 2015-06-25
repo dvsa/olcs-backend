@@ -10,7 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="community_lic_withdrawal_reason",
  *    indexes={
- *        @ORM\Index(name="ix_community_lic_withdrawal_reason_community_lic_withdrawal_id", columns={"community_lic_withdrawal_id"}),
+ *        @ORM\Index(name="ix_community_lic_withdrawal_reason_community_lic_withdrawal_id",
+ *          columns={"community_lic_withdrawal_id"}),
  *        @ORM\Index(name="ix_community_lic_withdrawal_reason_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_community_lic_withdrawal_reason_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_community_lic_withdrawal_reason_ref_data1_idx", columns={"type_id"})
@@ -22,5 +23,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CommunityLicWithdrawalReason extends AbstractCommunityLicWithdrawalReason
 {
-
+    public function updateReason($withdrawal, $type)
+    {
+        $this->communityLicWithdrawal = $withdrawal;
+        $this->type = $type;
+    }
 }

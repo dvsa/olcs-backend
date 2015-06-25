@@ -268,6 +268,15 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     protected $tmLicences;
 
     /**
+     * User
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\User\User", mappedBy="transportManager")
+     */
+    protected $users;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -284,6 +293,7 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
         $this->qualifications = new ArrayCollection();
         $this->tmApplications = new ArrayCollection();
         $this->tmLicences = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -1069,6 +1079,66 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     {
         if ($this->tmLicences->contains($tmLicences)) {
             $this->tmLicences->removeElement($tmLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the user
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $users
+     * @return TransportManager
+     */
+    public function setUsers($users)
+    {
+        $this->users = $users;
+
+        return $this;
+    }
+
+    /**
+     * Get the users
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * Add a users
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $users
+     * @return TransportManager
+     */
+    public function addUsers($users)
+    {
+        if ($users instanceof ArrayCollection) {
+            $this->users = new ArrayCollection(
+                array_merge(
+                    $this->users->toArray(),
+                    $users->toArray()
+                )
+            );
+        } elseif (!$this->users->contains($users)) {
+            $this->users->add($users);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a users
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $users
+     * @return TransportManager
+     */
+    public function removeUsers($users)
+    {
+        if ($this->users->contains($users)) {
+            $this->users->removeElement($users);
         }
 
         return $this;

@@ -24,8 +24,14 @@ class CommunityLic extends AbstractRepository
     {
         if ($query->getStatuses() !== null) {
             $statuses = explode(',', $query->getStatuses());
+            $conditions = [];
             for ($i = 0; $i < count($statuses); $i++) {
-                $qb->orWhere($qb->expr()->eq($this->alias . '.status', ':status' . $i));
+                $conditions[] = $this->alias . '.status = :status' . $i;
+            }
+            $orX = $qb->expr()->orX();
+            $orX->addMultiple($conditions);
+            $qb->andWhere($orX);
+            for ($i = 0; $i < count($statuses); $i++) {
                 $qb->setParameter('status' . $i, $statuses[$i]);
             }
         }
@@ -81,6 +87,28 @@ class CommunityLic extends AbstractRepository
             ->setParameter('active', CommunityLicEntity::STATUS_ACTIVE)
             ->setParameter('withdrawn', CommunityLicEntity::STATUS_WITHDRAWN)
             ->setParameter('suspended', CommunityLicEntity::STATUS_SUSPENDED)
+            ->orderBy($this->alias . '.issueNo', 'ASC');
+        return $qb->getQuery()->execute();
+    }
+
+    public function fetchLicencesByIds($ids)
+    {
+        $qb = $this->createQueryBuilder();
+        $i = 1;
+        foreach ($ids as $id) {
+            $qb->orWhere($qb->expr()->eq($this->alias . '.id', ':id' . $i));
+            $qb->setParameter('id' . $i++, $id);
+        }
+        return $qb->getQuery()->execute();
+    }
+
+    public function fetchActiveLicences($licence)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->andWhere($qb->expr()->eq($this->alias . '.status', ':status'))
+            ->setParameter('licence', $licence)
+            ->setParameter('status', CommunityLicEntity::STATUS_ACTIVE)
             ->orderBy($this->alias . '.issueNo', 'ASC');
         return $qb->getQuery()->execute();
     }
