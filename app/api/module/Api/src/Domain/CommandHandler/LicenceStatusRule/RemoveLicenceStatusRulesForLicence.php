@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\LicenceStatusRule\DeleteLicenceStatusRule;
+use Dvsa\Olcs\Transfer\Command\LicenceStatusRule\DeleteLicenceStatusRule as DeleteRule;
 
 /**
  * Remove licence status rules for a licence.
@@ -31,7 +31,7 @@ final class RemoveLicenceStatusRulesForLicence extends AbstractCommandHandler im
         foreach ($rules as $statusRule) {
             $result->merge(
                 $this->handleSideEffect(
-                    DeleteLicenceStatusRule::create(
+                    DeleteRule::create(
                         [
                             'id' => $statusRule->getId()
                         ]
