@@ -26,13 +26,16 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 final class Stop extends AbstractCommandHandler implements TransactionedInterface
 {
+    const STOP_TYPE_WITHDRAWN = 'withdrawal';
+
     protected $repoServiceName = 'CommunityLic';
 
     protected $extraRepos = [
         'CommunityLicSuspension',
         'CommunityLicSuspensionReason',
         'CommunityLicWithdrawal',
-        'CommunityLicWithdrawalReason'
+        'CommunityLicWithdrawalReason',
+        'Licence'
     ];
 
     public function handleCommand(CommandInterface $command)
@@ -50,7 +53,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
         $result = new Result();
         foreach ($licences as $communityLicence) {
             $id = $communityLicence->getId();
-            if ($type == 'withdrawal') {
+            if ($type == self::STOP_TYPE_WITHDRAWN) {
                 $communityLicence->changeStatusAndExpiryDate(
                     $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_WITHDRAWN),
                     new DateTime('now')
@@ -110,7 +113,8 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
 
     protected function validateLicences($ids, $licenceId)
     {
-        if ($this->getRepo()->hasOfficeCopy($licenceId, $ids)) {
+        $licence = $this->getRepo('Licence')->fetchById($licenceId);
+        if ($licence->hasCommunityLicenceOfficeCopy($ids)) {
             $validLicences = $this->getRepo()->fetchValidLicences($licenceId);
             foreach ($validLicences as $communityLicence) {
                 $status = $communityLicence->getStatus()->getId();

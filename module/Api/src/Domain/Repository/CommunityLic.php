@@ -102,19 +102,6 @@ class CommunityLic extends AbstractRepository
         return $qb->getQuery()->execute();
     }
 
-    public function hasOfficeCopy($licenceId, $ids)
-    {
-        $hasOfficeCopy = false;
-        $officeCopy = $this->fetchOfficeCopy($licenceId);
-        if ($officeCopy) {
-            $officeCopyId = $officeCopy->getId();
-            if (in_array($officeCopyId, $ids)) {
-                $hasOfficeCopy = true;
-            }
-        }
-        return $hasOfficeCopy;
-    }
-
     public function fetchActiveLicences($licence)
     {
         $qb = $this->createQueryBuilder();

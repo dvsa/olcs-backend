@@ -122,27 +122,6 @@ class CommunityLicTest extends RepositoryTestCase
         $this->assertEquals('result', $this->sut->fetchLicencesByIds([1]));
     }
 
-    public function testHasOfficeCopy()
-    {
-        $licenceId = 1;
-        $officeCopyId = 1;
-        $ids = [1];
-        $sut = m::mock(CommunityLicRepo::class)->makePartial();
-        $sut->shouldReceive('fetchOfficeCopy')
-            ->with($licenceId)
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getId')
-                ->andReturn($officeCopyId)
-                ->once()
-                ->getMock()
-            )
-            ->once()
-            ->getMock();
-
-        $this->assertTrue($sut->hasOfficeCopy($licenceId, $ids));
-    }
-
     public function testFetchActiveLicences()
     {
         $licenceId = 1;
