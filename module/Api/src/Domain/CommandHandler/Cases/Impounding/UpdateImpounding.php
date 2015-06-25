@@ -47,6 +47,8 @@ final class UpdateImpounding extends AbstractCommandHandler implements Transacti
     {
         $impounding = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
+        $impounding->setImpoundingType($this->getRepo()->getRefdataReference($command->getImpoundingType()));
+
         $piVenue = $command->getPiVenue();
         if (!empty($piVenue) && $piVenue !== Impounding::PI_VENUE_OTHER) {
             $piVenue = $this->getRepo()->getReference(PiVenue::class, $command->getPiVenue());
