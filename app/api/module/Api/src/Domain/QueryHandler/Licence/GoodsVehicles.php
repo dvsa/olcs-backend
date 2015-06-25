@@ -8,12 +8,14 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+
 /**
  * Goods Vehicles
  *
@@ -25,10 +27,17 @@ class GoodsVehicles extends AbstractQueryHandler implements AuthAwareInterface
 
     protected $repoServiceName = 'Licence';
 
+    protected $extraRepos = ['LicenceVehicle'];
+
     public function handleQuery(QueryInterface $query)
     {
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
+
+        $lvQuery = $this->getRepo('LicenceVehicle')->createPaginatedVehiclesDataForLicenceQuery(
+            $query,
+            $licence->getId()
+        );
 
         return $this->result(
             $licence,
@@ -37,7 +46,18 @@ class GoodsVehicles extends AbstractQueryHandler implements AuthAwareInterface
                 'canReprint' => true,
                 'canTransfer' => $this->canTransfer($licence),
                 'canExport' => $this->isGranted(Permission::SELFSERVE_USER),
-                'canPrintVehicle' => $this->isGranted(Permission::INTERNAL_USER)
+                'canPrintVehicle' => $this->isGranted(Permission::INTERNAL_USER),
+                'licenceVehicles' => [
+                    'results' => $this->resultList(
+                        $this->getRepo('LicenceVehicle')->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
+                        [
+                            'vehicle',
+                            'goodsDiscs',
+                            'interimApplication'
+                        ]
+                    ),
+                    'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
+                ]
             ]
         );
     }

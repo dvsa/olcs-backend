@@ -101,6 +101,14 @@ abstract class AbstractRepository implements RepositoryInterface
 
         $this->applyListJoins($qb);
 
+        return $this->fetchPaginatedList($qb, $hydrateMode);
+    }
+
+    /**
+     * Abstracted paginator logic so it can be re-used with alternative queries
+     */
+    public function fetchPaginatedList(QueryBuilder $qb, $hydrateMode = Query::HYDRATE_ARRAY)
+    {
         $query = $qb->getQuery();
         $query->setHydrationMode($hydrateMode);
 
@@ -120,6 +128,14 @@ abstract class AbstractRepository implements RepositoryInterface
         $this->buildDefaultListQuery($qb, $query);
         $this->applyListFilters($qb, $query);
 
+        return $this->fetchPaginatedCount($qb);
+    }
+
+    /**
+     * Abstracted the count functionality so it can be re-used with alternative queries
+     */
+    public function fetchPaginatedCount(QueryBuilder $qb)
+    {
         $query = $qb->getQuery();
 
         $paginator = $this->getPaginator($query);
@@ -252,6 +268,14 @@ abstract class AbstractRepository implements RepositoryInterface
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
         return $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($id);
+    }
+
+    protected function createDefaultListQuery(QueryInterface $query)
+    {
+        $qb = $this->createQueryBuilder();
+        $this->buildDefaultListQuery($qb, $query);
+
+        return $qb;
     }
 
     /**
