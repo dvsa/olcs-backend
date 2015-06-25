@@ -154,11 +154,24 @@ class Licence extends AbstractLicence
     public function getSerialNoPrefixFromTrafficArea()
     {
         $trafficArea = $this->getTrafficArea();
-        $retv = CommunityLicEntity::PREFIX_GB;
+
         if ($trafficArea && $trafficArea->getId() === TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE) {
-            $retv = CommunityLicEntity::PREFIX_NI;
+            return CommunityLicEntity::PREFIX_NI;
         }
-        return $retv;
+
+        return CommunityLicEntity::PREFIX_GB;
+    }
+
+    public function getRemainingSpaces()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->isNull('removalDate')
+        );
+
+        $vehicles = $this->getLicenceVehicles()->matching($criteria);
+
+        return $this->getTotAuthVehicles() - $vehicles->count();
     }
 
     public function hasCommunityLicenceOfficeCopy($ids)

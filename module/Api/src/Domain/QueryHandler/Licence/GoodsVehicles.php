@@ -57,7 +57,8 @@ class GoodsVehicles extends AbstractQueryHandler implements AuthAwareInterface
                         ]
                     ),
                     'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
-                ]
+                ],
+                'spacesRemaining' => $licence->getRemainingSpaces()
             ]
         );
     }

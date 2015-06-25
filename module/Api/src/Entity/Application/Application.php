@@ -481,4 +481,16 @@ class Application extends AbstractApplication
 
         return $code;
     }
+
+    public function getRemainingSpaces()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->isNull('removalDate')
+        );
+
+        $vehicles = $this->getLicence()->getLicenceVehicles()->matching($criteria);
+
+        return $this->getTotAuthVehicles() - $vehicles->count();
+    }
 }
