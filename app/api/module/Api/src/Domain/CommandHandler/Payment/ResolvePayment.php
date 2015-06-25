@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Payment;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Payment;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
@@ -37,19 +38,27 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
 
         $now = new \DateTime();
 
+        $result = new Result();
+
         switch ($cpmsStatus) {
             case Cpms::PAYMENT_SUCCESS:
                 $status = Payment::STATUS_PAID;
                 $payment->setCompletedDate($now);
+                $paymentMethodRef = $this->getRepo()->getRefdataReference($command->getPaymentMethod());
+                $feeStatusRef = $this->getRepo()->getRefdataReference(Fee::STATUS_PAID);
                 foreach ($payment->getFeePayments() as $fp) {
                     $fee = $fp->getFee();
                     $fee
-                        ->setFeeStatus($this->getRepo()->getRefdataReference(Fee::STATUS_PAID))
+                        ->setFeeStatus($feeStatusRef)
                         ->setReceivedDate($now)
                         ->setReceiptNo($payment->getGuid())
-                        ->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()))
+                        ->setPaymentMethod($paymentMethodRef)
                         ->setReceivedAmount($fee->getAmount());
                     $this->getRepo('Fee')->save($fee);
+                    // trigger side effects
+                    $result->merge(
+                        $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))
+                    );
                 }
                 break;
             case Cpms::PAYMENT_FAILURE:
@@ -69,7 +78,6 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
         $payment->setStatus($this->getRepo()->getRefdataReference($status));
         $this->getRepo()->save($payment);
 
-        $result = new Result();
         $result->addId('payment', $payment->getId());
         $result->addMessage('Payment resolved as '. $payment->getStatus()->getDescription());
 

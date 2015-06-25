@@ -31,6 +31,7 @@ return [
             'TransactionManager' => \Dvsa\Olcs\Api\Domain\Repository\TransactionManagerFactory::class,
             'CpmsIdentityProvider' => \Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
             'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperService::class,
+            'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
         ],
     ],
     'file_uploader' => array(
@@ -70,6 +71,10 @@ return [
             'with' => QueryPartial\With::class,
             'paginate' => QueryPartial\Paginate::class,
             'order' => QueryPartial\Order::class,
+            'filterByLicence' => QueryPartial\Filter\ByLicence::class,
+            'filterByApplication' => QueryPartial\Filter\ByApplication::class,
+            'filterByBusReg' => QueryPartial\Filter\ByBusReg::class,
+            'filterByIds' => QueryPartial\Filter\ByIds::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::CONFIG_KEY => [
@@ -111,11 +116,14 @@ return [
             'IrfoPsvAuth' => RepositoryFactory::class,
             'IrfoPsvAuthNumber' => RepositoryFactory::class,
             'Impounding' => RepositoryFactory::class,
+            'CommunityLic' => RepositoryFactory::class,
             'Workshop' => RepositoryFactory::class,
             'FinancialStandingRate' => RepositoryFactory::class,
             'Complaint' => RepositoryFactory::class,
             'PhoneContact' => RepositoryFactory::class,
             'OtherLicence' => RepositoryFactory::class,
+            'IrfoGvPermit' => RepositoryFactory::class,
+            'Document' => RepositoryFactory::class,
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
             'Stay' => RepositoryFactory::class,

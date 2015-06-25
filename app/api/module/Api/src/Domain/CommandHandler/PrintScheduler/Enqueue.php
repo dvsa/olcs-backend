@@ -15,6 +15,9 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * Queue a print job
+ *
+ * @TODO this class and the EnqueueFile handler appear to be duplicates in function.
+ * When printing is implemented for real we need to resolve this duplication.
  */
 final class Enqueue extends AbstractCommandHandler
 {

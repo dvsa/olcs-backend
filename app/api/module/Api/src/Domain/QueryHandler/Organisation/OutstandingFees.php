@@ -44,15 +44,4 @@ class OutstandingFees extends AbstractQueryHandler
             ]
         );
     }
-
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        parent::createService($serviceLocator);
-        $serviceLocator = $serviceLocator->getServiceLocator();
-
-        $this->feeRepo = $serviceLocator->get('RepositoryServiceManager')->get('Fee');
-
-        return $this;
-    }
 }

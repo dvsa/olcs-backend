@@ -8,9 +8,10 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Payment;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Payment\ResolvePayment;
+use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as Cmd;
-use Dvsa\Olcs\Api\Domain\Repository\Payment as PaymentRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\AbstractRepository as Repo;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -37,8 +38,8 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         ];
 
         $this->sut = new ResolvePayment();
-        $this->mockRepo('Payment', PaymentRepo::class);
-        $this->mockRepo('Fee', FeeRepo::class);
+        $this->mockRepo('Payment', Repo::class);
+        $this->mockRepo('Fee', Repo::class);
 
         $this->refData = [
             PaymentEntity::STATUS_PAID => m::mock(RefData::class)
@@ -120,6 +121,10 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->once()
             ->with($fee);
+
+        $updateData = ['id' => 22];
+        $result2 = new Result();
+        $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
 
         // assertions
         $result = $this->sut->handleCommand($command);

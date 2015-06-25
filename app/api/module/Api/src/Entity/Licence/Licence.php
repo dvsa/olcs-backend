@@ -10,6 +10,8 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 
 /**
  * Licence Entity
@@ -105,6 +107,11 @@ class Licence extends AbstractLicence
             ->setMaxResults(1);
 
         return $this->getBusRegs()->matching($criteria)->current();
+    }
+
+    public function updateTotalCommunityLicences($totalCount)
+    {
+        $this->totCommunityLicences = $totalCount;
     }
 
     public function updateSafetyDetails(
@@ -207,5 +214,15 @@ class Licence extends AbstractLicence
         return [
             'suitableForDecisions' => $result()
         ];
+    }
+
+    public function getSerialNoPrefixFromTrafficArea()
+    {
+        $trafficArea = $this->getTrafficArea();
+        $retv = CommunityLicEntity::PREFIX_GB;
+        if ($trafficArea && $trafficArea->getId() === TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE) {
+            $retv = CommunityLicEntity::PREFIX_NI;
+        }
+        return $retv;
     }
 }

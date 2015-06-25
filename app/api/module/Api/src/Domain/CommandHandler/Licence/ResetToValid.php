@@ -33,11 +33,13 @@ final class ResetToValid extends AbstractCommandHandler implements Transactioned
         $licence->setCurtailedDate(null);
         $licence->setSuspendedDate(null);
 
-        $result = $this->handleSideEffect(RemoveLicenceStatusRulesForLicence::create(
-            [
-                'licence' => $licence
-            ]
-        ));
+        $result = $this->handleSideEffect(
+            RemoveLicenceStatusRulesForLicence::create(
+                [
+                    'licence' => $licence
+                ]
+            )
+        );
 
         $this->getRepo()->save($licence);
         $result->addMessage("Licence ID {$licence->getId()} reset to valid");
