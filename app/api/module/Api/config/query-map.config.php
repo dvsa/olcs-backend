@@ -51,6 +51,7 @@ return [
     TransferQuery\Licence\TransportManagers::class => QueryHandler\Licence\TransportManagers::class,
     TransferQuery\Licence\PsvDiscs::class => QueryHandler\Licence\PsvDiscs::class,
     TransferQuery\Licence\GoodsVehicles::class => QueryHandler\Licence\GoodsVehicles::class,
+    TransferQuery\Licence\OtherActiveLicences::class => QueryHandler\Licence\OtherActiveLicences::class,
 
     // Other Licence
     TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
