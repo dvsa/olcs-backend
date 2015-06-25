@@ -33,6 +33,7 @@ return [
     TransferCommand\Application\CreateWorkshop::class => CommandHandler\Application\CreateWorkshop::class,
     TransferCommand\Application\UpdateWorkshop::class => CommandHandler\Application\UpdateWorkshop::class,
     TransferCommand\Application\SubmitApplication::class => CommandHandler\Application\SubmitApplication::class,
+    TransferCommand\Application\UpdateVehicles::class => CommandHandler\Application\UpdateVehicles::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,

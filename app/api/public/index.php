@@ -1,4 +1,17 @@
 <?php
+
+// Ensures at the very least we send a 500 response on fatal
+register_shutdown_function('handleFatal');
+function handleFatal() {
+    $error = error_get_last();
+    if ($error) {
+        http_response_code(500);
+        ob_clean();
+        echo json_encode(['messages' => ['An unexpected error occurred']]);
+        exit;
+    }
+}
+
 $profile = getenv("XHPROF_ENABLE") == 1;
 
 if ($profile) {
