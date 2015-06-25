@@ -129,6 +129,36 @@ final class CreateTask extends AbstractCommandHandler
             $task->setLicence($Licence);
         }
 
+        if ($command->getBusReg() !== null) {
+            $task->setBusReg(
+                $this->getRepo()->getReference(\Dvsa\Olcs\Api\Entity\Bus\BusReg::class, $command->getBusReg())
+            );
+        }
+
+        if ($command->getCase() !== null) {
+            $task->setCase(
+                $this->getRepo()->getReference(\Dvsa\Olcs\Api\Entity\Cases\Cases::class, $command->getCase())
+            );
+        }
+
+        if ($command->getTransportManager() !== null) {
+            $task->setTransportManager(
+                $this->getRepo()->getReference(
+                    \Dvsa\Olcs\Api\Entity\Tm\TransportManager::class,
+                    $command->getTransportManager()
+                )
+            );
+        }
+
+        if ($command->getIrfoOrganisation() !== null) {
+            $task->setIrfoOrganisation(
+                $this->getRepo()->getReference(
+                    \Dvsa\Olcs\Api\Entity\Organisation\Organisation::class,
+                    $command->getIrfoOrganisation()
+                )
+            );
+        }
+
         if ($command->getActionDate() !== null) {
             $task->setActionDate(new \DateTime($command->getActionDate()));
         } else {

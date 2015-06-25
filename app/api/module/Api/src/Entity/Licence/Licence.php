@@ -9,6 +9,8 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 
 /**
  * Licence Entity
@@ -106,6 +108,11 @@ class Licence extends AbstractLicence
         return $this->getBusRegs()->matching($criteria)->current();
     }
 
+    public function updateTotalCommunityLicences($totalCount)
+    {
+        $this->totCommunityLicences = $totalCount;
+    }
+
     public function updateSafetyDetails(
         $safetyInsVehicles,
         $safetyInsTrailers,
@@ -142,5 +149,44 @@ class Licence extends AbstractLicence
         $this->setTachographInsName($tachographInsName);
 
         $this->setSafetyInsVaries($safetyInsVaries);
+    }
+
+    public function getSerialNoPrefixFromTrafficArea()
+    {
+        $trafficArea = $this->getTrafficArea();
+        $retv = CommunityLicEntity::PREFIX_GB;
+        if ($trafficArea && $trafficArea->getId() === TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE) {
+            $retv = CommunityLicEntity::PREFIX_NI;
+        }
+        return $retv;
+    }
+
+    public function hasCommunityLicenceOfficeCopy($ids)
+    {
+        $hasOfficeCopy = false;
+
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('issueNo', 0))
+            ->andWhere(
+                Criteria::expr()->in(
+                    'status',
+                    [
+                        CommunityLicEntity::STATUS_PENDING,
+                        CommunityLicEntity::STATUS_ACTIVE,
+                        CommunityLicEntity::STATUS_WITHDRAWN,
+                        CommunityLicEntity::STATUS_SUSPENDED
+                    ]
+                )
+            )
+            ->setMaxResults(1);
+
+        $officeCopy = $this->getCommunityLics()->matching($criteria)->current();
+        if ($officeCopy) {
+            $officeCopyId = $officeCopy->getId();
+            if (in_array($officeCopyId, $ids)) {
+                $hasOfficeCopy = true;
+            }
+        }
+        return $hasOfficeCopy;
     }
 }

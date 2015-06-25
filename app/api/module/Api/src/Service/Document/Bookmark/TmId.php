@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\TransportmanagerBundle as Qry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\TransportManagerBundle as Qry;
 
 /**
  * Transport manager id bookmark

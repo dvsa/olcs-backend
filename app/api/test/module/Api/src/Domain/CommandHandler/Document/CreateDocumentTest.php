@@ -1,34 +1,24 @@
 <?php
 
-/**
- * Create Document Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\Repository\Document;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Entity\User\Permission;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CreateDocument;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Document\CreateDocument as Cmd;
-use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CreateDocument as CommandHandler;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
- * Create Document Test
+ * CreateDocumentTest
  *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Mat Evans <mat.evans@valtech.co.uk>
  */
 class CreateDocumentTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new CreateDocument();
-        $this->mockRepo('Document', Document::class);
+        $this->sut = new CommandHandler();
+        $this->mockRepo('Document', \Dvsa\Olcs\Api\Domain\Repository\Document::class);
 
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class)
@@ -37,169 +27,118 @@ class CreateDocumentTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [];
-
-        $this->references = [
-            Application::class => [
-                123 => m::mock(Application::class)
-            ]
-        ];
-
-        $this->categoryReferences = [
-            1 => m::mock(Category::class),
-            2 => m::mock(Category::class)
-        ];
-
-        parent::initReferences();
-    }
-
     public function testHandleCommand()
     {
         $data = [
-            'identifier' => 'ABCDEF',
-            'filename' => 'foo.pdf',
-            'size' => 1024,
-            'category' => 1,
-            'subCategory' => 2,
-            'application' => 123,
-            'issuedDate' => '2015-01-01'
+            'filename' => 'a',
+            'identifier' => 'b',
+            'size' => 'c',
+            'application' => 'd',
+            'busReg' => 'e',
+            'case' => 'f',
+            'irfoOrganisation' => 'g',
+            'submission' => 'h',
+            'trafficArea' => 'i',
+            'transportManager' => 'j',
+            'licence' => 'k',
+            'operatingCentre' => 'l',
+            'opposition' => 'm',
+            'category' => 'n',
+            'subCategory' => 'o',
+            'description' => 'p',
+            'isExternal' => 'q',
+            'isReadOnly' => 'r',
+            'isScan' => 's',
+            'issuedDate' => 't',
         ];
+        $command = Cmd::create($data);
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific::class,
+            [
+                'filename' => 'a',
+                'identifier' => 'b',
+                'size' => 'c',
+                'application' => 'd',
+                'busReg' => 'e',
+                'case' => 'f',
+                'irfoOrganisation' => 'g',
+                'submission' => 'h',
+                'trafficArea' => 'i',
+                'transportManager' => 'j',
+                'licence' => 'k',
+                'operatingCentre' => 'l',
+                'opposition' => 'm',
+                'category' => 'n',
+                'subCategory' => 'o',
+                'description' => 'p',
+                'isExternal' => 'q',
+                'isReadOnly' => 'r',
+                'isScan' => 's',
+                'issuedDate' => 't',
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandDefaultExternal()
+    {
+        $data = [
+            'filename' => 'a',
+            'identifier' => 'b',
+            'size' => 'c',
+            'application' => 'd',
+            'busReg' => 'e',
+            'case' => 'f',
+            'irfoOrganisation' => 'g',
+            'submission' => 'h',
+            'trafficArea' => 'i',
+            'transportManager' => 'j',
+            'licence' => 'k',
+            'operatingCentre' => 'l',
+            'opposition' => 'm',
+            'category' => 'n',
+            'subCategory' => 'o',
+            'description' => 'p',
+            'isReadOnly' => 'r',
+            'isScan' => 's',
+            'issuedDate' => 't',
+        ];
         $command = Cmd::create($data);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_USER, null)
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER, null)
             ->andReturn(true);
 
-        $this->repoMap['Document']->shouldReceive('save')
-            ->with(m::type(Entity::class))
-            ->andReturnUsing(
-                function (Entity $document) {
-                    $document->setId(111);
-
-                    $this->assertEquals('ABCDEF', $document->getIdentifier());
-                    $this->assertTrue($document->getIsExternal());
-                    $this->assertEquals('foo.pdf', $document->getFilename());
-                    $this->assertEquals(1024, $document->getSize());
-                    $this->assertSame($this->categoryReferences[1], $document->getCategory());
-                    $this->assertSame($this->categoryReferences[2], $document->getSubCategory());
-                    $this->assertSame($this->references[Application::class][123], $document->getApplication());
-                    $this->assertNull($document->getLicence());
-                    $this->assertInstanceOf('\DateTime', $document->getIssuedDate());
-                    $this->assertEquals('2015-01-01', $document->getIssuedDate()->format('Y-m-d'));
-                }
-            );
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'document' => 111
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific::class,
+            [
+                'filename' => 'a',
+                'identifier' => 'b',
+                'size' => 'c',
+                'application' => 'd',
+                'busReg' => 'e',
+                'case' => 'f',
+                'irfoOrganisation' => 'g',
+                'submission' => 'h',
+                'trafficArea' => 'i',
+                'transportManager' => 'j',
+                'licence' => 'k',
+                'operatingCentre' => 'l',
+                'opposition' => 'm',
+                'category' => 'n',
+                'subCategory' => 'o',
+                'description' => 'p',
+                'isExternal' => true,
+                'isReadOnly' => 'r',
+                'isScan' => 's',
+                'issuedDate' => 't',
             ],
-            'messages' => [
-                'Document created'
-            ]
-        ];
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
 
-        $this->assertEquals($expected, $result->toArray());
-    }
-
-    public function testHandleCommandInternal()
-    {
-        $data = [
-            'identifier' => 'ABCDEF',
-            'filename' => 'foo.pdf',
-            'size' => 1024,
-            'category' => 1,
-            'subCategory' => 2,
-            'application' => 123
-        ];
-
-        $command = Cmd::create($data);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_USER, null)
-            ->andReturn(false);
-
-        $this->repoMap['Document']->shouldReceive('save')
-            ->with(m::type(Entity::class))
-            ->andReturnUsing(
-                function (Entity $document) {
-                    $document->setId(111);
-
-                    $this->assertEquals('ABCDEF', $document->getIdentifier());
-                    $this->assertFalse($document->getIsExternal());
-                    $this->assertEquals('foo.pdf', $document->getFilename());
-                    $this->assertEquals(1024, $document->getSize());
-                    $this->assertSame($this->categoryReferences[1], $document->getCategory());
-                    $this->assertSame($this->categoryReferences[2], $document->getSubCategory());
-                    $this->assertSame($this->references[Application::class][123], $document->getApplication());
-                    $this->assertNull($document->getLicence());
-                }
-            );
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'document' => 111
-            ],
-            'messages' => [
-                'Document created'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-    }
-
-    public function testHandleCommandIsExternalSet()
-    {
-        $data = [
-            'identifier' => 'ABCDEF',
-            'filename' => 'foo.pdf',
-            'size' => 1024,
-            'category' => 1,
-            'subCategory' => 2,
-            'application' => 123,
-            'isExternal' => true
-        ];
-
-        $command = Cmd::create($data);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_USER, null)
-            ->andReturn(false);
-
-        $this->repoMap['Document']->shouldReceive('save')
-            ->with(m::type(Entity::class))
-            ->andReturnUsing(
-                function (Entity $document) {
-                    $document->setId(111);
-
-                    $this->assertEquals('ABCDEF', $document->getIdentifier());
-                    $this->assertTrue($document->getIsExternal());
-                    $this->assertEquals('foo.pdf', $document->getFilename());
-                    $this->assertEquals(1024, $document->getSize());
-                    $this->assertSame($this->categoryReferences[1], $document->getCategory());
-                    $this->assertSame($this->categoryReferences[2], $document->getSubCategory());
-                    $this->assertSame($this->references[Application::class][123], $document->getApplication());
-                    $this->assertNull($document->getLicence());
-                }
-            );
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'document' => 111
-            ],
-            'messages' => [
-                'Document created'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
+        $this->sut->handleCommand($command);
     }
 }

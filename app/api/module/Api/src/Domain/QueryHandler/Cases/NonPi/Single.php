@@ -21,6 +21,6 @@ class Single extends AbstractQueryHandler
         /** @var NonPiRepository $repo */
         $repo = $this->getRepo();
 
-        return $this->result($repo->fetchUsingCaseId($query));
+        return $this->result($repo->fetchUsingCaseId($query), ['case', 'venue', 'presidingTc']);
     }
 }

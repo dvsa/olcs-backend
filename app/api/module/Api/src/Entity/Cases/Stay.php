@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Stay Entity
@@ -20,5 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Stay extends AbstractStay
 {
-
+    public function __construct(Cases $case, RefData $stayType)
+    {
+        $this->setCase($case);
+        $this->setStayType($stayType);
+    }
 }
