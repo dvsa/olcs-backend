@@ -44,7 +44,9 @@ class DashboardTest extends QueryHandlerTestCase
 
         $mockOrganisation = m::mock(OrganisationEntity::class)
             ->makePartial()
-            ->setId($organisationId);
+            ->setId($organisationId)
+            ->shouldReceive('serialize')->andReturn(['id' => $organisationId])
+            ->getMock();
 
         $mockLicence = m::mock(LicenceEntity::class)
             ->makePartial()
@@ -52,6 +54,8 @@ class DashboardTest extends QueryHandlerTestCase
         $mockLicence
             ->shouldReceive('getStatus->getId')
             ->andReturn(LicenceEntity::LICENCE_STATUS_VALID);
+        $mockLicence
+            ->shouldReceive('serialize')->andReturn(['id' => $licenceId]);
 
         $mockApplication = m::mock(ApplicationEntity::class)
             ->makePartial()
@@ -59,6 +63,8 @@ class DashboardTest extends QueryHandlerTestCase
         $mockApplication
             ->shouldReceive('getStatus->getId')
             ->andReturn(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION);
+        $mockApplication
+            ->shouldReceive('serialize')->andReturn(['id' => $applicationId]);
 
         $mockVariation = m::mock(ApplicationEntity::class)
             ->makePartial()
@@ -67,6 +73,8 @@ class DashboardTest extends QueryHandlerTestCase
         $mockVariation
             ->shouldReceive('getStatus->getId')
             ->andReturn(ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED);
+        $mockVariation
+            ->shouldReceive('serialize')->andReturn(['id' => $variationId]);
 
         $applications = new ArrayCollection();
         $applications->add($mockApplication);
@@ -88,6 +96,21 @@ class DashboardTest extends QueryHandlerTestCase
 
         $this->assertInstanceOf(Result::class, $result);
 
-        // @TODO serialize and assert content
+        $expected = [
+            'id' => 69,
+            'dashboard' => [
+                'licences' => [
+                    ['id' => 7],
+                ],
+                'applications' => [
+                    ['id' => 1],
+                ],
+                'variations' =>[
+                    [ 'id' => 2],
+                ],
+            ],
+        ];
+
+        $this->assertEquals($expected, $result->serialize());
     }
 }
