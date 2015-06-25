@@ -63,6 +63,7 @@ return [
     TransferQuery\Variation\TypeOfLicence::class => QueryHandler\Variation\TypeOfLicence::class,
 
     // Cases
+    TransferQuery\Cases\Cases::class => QueryHandler\Cases\Cases::class,
     TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
     TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
     TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
