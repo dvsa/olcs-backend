@@ -35,8 +35,6 @@ final class CreateCase extends AbstractCommandHandler implements TransactionedIn
 
         $result = new Result();
 
-        $case = new Cases(new \DateTime());
-
         $caseType = $this->getRepo()->getRefdataReference($command->getCaseType());
         $categorys = $this->processCategorys($command->getCategorys());
         $outcomes = $this->processOutcomes($command->getOutcomes());
@@ -48,7 +46,8 @@ final class CreateCase extends AbstractCommandHandler implements TransactionedIn
         $transportManager = (is_numeric($command->getTransportManager())
             ? $this->getRepo()->getReference(TransportManager::class, $command->getTransportManager()) : null);
 
-        $case->update(
+        $case = new Cases(
+            new \DateTime(),
             $caseType,
             $categorys,
             $outcomes,
