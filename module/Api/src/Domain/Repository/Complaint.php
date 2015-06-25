@@ -22,40 +22,18 @@ class Complaint extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
-     * Fetch the default record by it's id
-     *
-     * @param Query|QryCmd $query
-     * @param int $hydrateMode
-
-     * @return mixed
-     * @throws Exception\NotFoundException
-     * @throws Exception\VersionConflictException
+     * Overridden default query to return appropriate table joins
+     * @param QueryBuilder $qb
+     * @param int $id
+     * @return \Dvsa\Olcs\Api\Domain\QueryBuilder
      */
-    public function fetchUsingCaseId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
+    protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
-            ->with('case')
-            ->withPersonContactDetails('complainantContactDetails')
-            ->with('createdBy')
-            ->with('lastModifiedBy')
-            ->byId($query->getId());
-
-        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
-            ->setParameter('byCase', $query->getCase());
-        $qb->andWhere($qb->expr()->eq($this->alias . '.isCompliance', ':isCompliance'))
-            ->setParameter('isCompliance', $query->getIsCompliance());
-
-        $result = $qb->getQuery()->getResult($hydrateMode);
-
-        if (empty($result)) {
-            throw new Exception\NotFoundException('Resource not found');
-        }
-
-        return $result[0];
+        return $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('complainantContactDetails', 'oc')
+            ->with('oc.person')
+            ->byId($id);
     }
 
     /**

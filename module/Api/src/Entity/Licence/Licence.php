@@ -160,4 +160,33 @@ class Licence extends AbstractLicence
         }
         return $retv;
     }
+
+    public function hasCommunityLicenceOfficeCopy($ids)
+    {
+        $hasOfficeCopy = false;
+
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('issueNo', 0))
+            ->andWhere(
+                Criteria::expr()->in(
+                    'status',
+                    [
+                        CommunityLicEntity::STATUS_PENDING,
+                        CommunityLicEntity::STATUS_ACTIVE,
+                        CommunityLicEntity::STATUS_WITHDRAWN,
+                        CommunityLicEntity::STATUS_SUSPENDED
+                    ]
+                )
+            )
+            ->setMaxResults(1);
+
+        $officeCopy = $this->getCommunityLics()->matching($criteria)->current();
+        if ($officeCopy) {
+            $officeCopyId = $officeCopy->getId();
+            if (in_array($officeCopyId, $ids)) {
+                $hasOfficeCopy = true;
+            }
+        }
+        return $hasOfficeCopy;
+    }
 }

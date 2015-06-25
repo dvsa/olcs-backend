@@ -204,7 +204,7 @@ abstract class AbstractRepository implements RepositoryInterface
 
     public function getReference($entityClass, $id)
     {
-        return $this->getEntityManager()->getReference($entityClass, $id);
+        return !empty($id) ? $this->getEntityManager()->getReference($entityClass, $id) : null;
     }
 
     public function generateRefdataArrayCollection($ids)

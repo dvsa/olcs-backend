@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Complaint\Complaint;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Complaint as ComplaintRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\Complaint\Complaint as Qry;
+use Mockery as m;
 
 /**
  * Complaint Test
@@ -31,11 +32,13 @@ class ComplaintTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 1]);
 
-        $this->repoMap['Complaint']->shouldReceive('fetchUsingCaseId')
+        $mockResult = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+
+        $this->repoMap['Complaint']->shouldReceive('fetchUsingId')
             ->with($query)
-            ->andReturn(['foo']);
+            ->andReturn($mockResult);
 
         $result = $this->sut->handleQuery($query);
-        $this->assertEquals($result, ['foo']);
+        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result);
     }
 }
