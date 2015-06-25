@@ -39,4 +39,12 @@ class CommunityLicEntityTest extends EntityTester
         $this->assertEquals(1, $sut->getLicence());
         $this->assertEquals(0, $sut->getIssueNo());
     }
+
+    public function testChangeStatusAndExpiryDate()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->changeStatusAndExpiryDate('status', '2015-01-01');
+        $this->assertEquals('status', $sut->getStatus());
+        $this->assertEquals('2015-01-01', $sut->getExpiredDate());
+    }
 }
