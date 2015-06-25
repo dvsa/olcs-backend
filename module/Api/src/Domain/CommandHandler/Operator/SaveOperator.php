@@ -89,7 +89,7 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
             $organisationPerson->setPerson($person);
             $organisationPerson->setOrganisation($organisation);
             $this->getRepo('OrganisationPerson')->save($organisationPerson);
-            }
+        }
     }
 
     /**
@@ -108,7 +108,6 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
             );
         }
         $person->updatePerson(
-            null,
             $command->getFirstName(),
             $command->getLastName()
         );

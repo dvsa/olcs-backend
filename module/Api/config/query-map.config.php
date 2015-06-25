@@ -189,4 +189,7 @@ return [
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
+
+    // Operator
+    TransferQuery\Operator\BusinessDetails::class => QueryHandler\Operator\BusinessDetails::class,
 ];
