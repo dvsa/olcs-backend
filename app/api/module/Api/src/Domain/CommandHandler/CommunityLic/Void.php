@@ -25,6 +25,8 @@ final class Void extends AbstractCommandHandler implements TransactionedInterfac
 {
     protected $repoServiceName = 'CommunityLic';
 
+    protected $extraRepos = ['Licence'];
+
     public function handleCommand(CommandInterface $command)
     {
         $ids = $command->getCommunityLicenceIds();
@@ -55,7 +57,8 @@ final class Void extends AbstractCommandHandler implements TransactionedInterfac
 
     protected function validateLicences($ids, $licenceId)
     {
-        if ($this->getRepo()->hasOfficeCopy($licenceId, $ids)) {
+        $licence = $this->getRepo('Licence')->fetchById($licenceId);
+        if ($licence->hasCommunityLicenceOfficeCopy($ids)) {
             $validLicences = $this->getRepo()->fetchValidLicences($licenceId);
             foreach ($validLicences as $validLicence) {
                 if (!in_array($validLicence->getId(), $ids)) {

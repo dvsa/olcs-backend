@@ -28,7 +28,8 @@ final class Restore extends AbstractCommandHandler implements TransactionedInter
         'CommunityLicSuspension',
         'CommunityLicSuspensionReason',
         'CommunityLicWithdrawal',
-        'CommunityLicWithdrawalReason'
+        'CommunityLicWithdrawalReason',
+        'Licence'
     ];
 
     public function handleCommand(CommandInterface $command)
@@ -65,7 +66,8 @@ final class Restore extends AbstractCommandHandler implements TransactionedInter
 
     protected function validateLicences($ids, $licenceId)
     {
-        if (!$this->getRepo()->hasOfficeCopy($licenceId, $ids)) {
+        $licence = $this->getRepo('Licence')->fetchById($licenceId);
+        if (!$licence->hasCommunityLicenceOfficeCopy($ids)) {
             $officeCopy = $this->getRepo()->fetchOfficeCopy($licenceId);
             $status = $officeCopy->getStatus()->getId();
             if ($status === CommunityLicEntity::STATUS_WITHDRAWN ||

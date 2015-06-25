@@ -10,11 +10,12 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Restore;
-use Dvsa\Olcs\Api\Domain\Repository\CommunityLicRepo;
-use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspensionRepo;
-use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspensionReasonRepo;
-use Dvsa\Olcs\Api\Domain\Repository\CommunityLicWithdrawalRepo;
-use Dvsa\Olcs\Api\Domain\Repository\CommunityLicWithdrawalReasonRepo;
+use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
+use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspension as CommunityLicSuspensionRepo;
+use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspensionReason as CommunityLicSuspensionReasonRepo;
+use Dvsa\Olcs\Api\Domain\Repository\CommunityLicWithdrawal as CommunityLicWithdrawalRepo;
+use Dvsa\Olcs\Api\Domain\Repository\CommunityLicWithdrawalReason as CommunityLicWithdrawalReasonRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\CommunityLic\Restore as Cmd;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
@@ -36,6 +37,7 @@ class RestoreTest extends CommandHandlerTestCase
         $this->mockRepo('CommunityLicSuspensionReason', CommunityLicSuspensionReasonRepo::class);
         $this->mockRepo('CommunityLicWithdrawal', CommunityLicWithdrawalRepo::class);
         $this->mockRepo('CommunityLicWithdrawalReason', CommunityLicWithdrawalReasonRepo::class);
+        $this->mockRepo('Licence', LicenceRepo::class);
 
         parent::setUp();
     }
@@ -106,6 +108,7 @@ class RestoreTest extends CommandHandlerTestCase
 
     /**
      * @dataProvider statusProvider
+     * @group test123
      */
     public function testHandleCommand($specifiedDate, $status)
     {
@@ -145,11 +148,21 @@ class RestoreTest extends CommandHandlerTestCase
 
         $communityLic = null;
 
-        $this->repoMap['CommunityLic']
-            ->shouldReceive('hasOfficeCopy')
-            ->with($licenceId, $communityLicenceIds)
+        $mockLicence = m::mock()
+            ->shouldReceive('hasCommunityLicenceOfficeCopy')
+            ->with($communityLicenceIds)
             ->andReturn(false)
             ->once()
+            ->getMock();
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchById')
+            ->with($licenceId)
+            ->andReturn($mockLicence)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['CommunityLic']
             ->shouldReceive('fetchOfficeCopy')
             ->with($licenceId)
             ->andReturn($mockOfficeCopy)
@@ -227,11 +240,21 @@ class RestoreTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $this->repoMap['CommunityLic']
-            ->shouldReceive('hasOfficeCopy')
-            ->with($licenceId, $communityLicenceIds)
+        $mockLicence = m::mock()
+            ->shouldReceive('hasCommunityLicenceOfficeCopy')
+            ->with($communityLicenceIds)
             ->andReturn(false)
             ->once()
+            ->getMock();
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchById')
+            ->with($licenceId)
+            ->andReturn($mockLicence)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['CommunityLic']
             ->shouldReceive('fetchOfficeCopy')
             ->with($licenceId)
             ->andReturn($mockOfficeCopy)
