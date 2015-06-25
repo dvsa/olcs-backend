@@ -43,6 +43,8 @@ class Licence extends AbstractLicence
     const ERROR_REQUIRES_VARIATION = 'LIC-REQ-VAR';
     const ERROR_SAFETY_REQUIRES_TACHO_NAME = 'LIC-SAFE-TACH-1';
 
+    const ERROR_TRANSFER_TOT_AUTH = 'LIC_TRAN_1';
+
     const LICENCE_CATEGORY_GOODS_VEHICLE = 'lcat_gv';
     const LICENCE_CATEGORY_PSV = 'lcat_psv';
 
@@ -209,5 +211,34 @@ class Licence extends AbstractLicence
             }
         }
         return $hasOfficeCopy;
+    }
+
+    public function getOtherActiveLicences()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->in(
+                'status',
+                [
+                    self::LICENCE_STATUS_SUSPENDED,
+                    self::LICENCE_STATUS_VALID,
+                    self::LICENCE_STATUS_CURTAILED
+                ]
+            )
+        );
+        $criteria->andWhere(
+            $criteria->expr()->eq('goodsOrPsv', $this->getGoodsOrPsv())
+        );
+        $criteria->andWhere(
+            $criteria->expr()->neq('id', $this->getId())
+        );
+
+        if ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV) {
+            $criteria->andWhere(
+                $criteria->expr()->neq('licenceType', self::LICENCE_TYPE_SPECIAL_RESTRICTED)
+            );
+        }
+
+        return $this->getOrganisation()->getLicences()->matching($criteria);
     }
 }
