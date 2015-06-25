@@ -31,12 +31,9 @@ class CasesEntityTest extends EntityTester
      */
     public function testUpdate()
     {
-        $caseType = '';
+        $caseType = 'case_t_lic';
         $categorys = new ArrayCollection();
         $outcomes = new ArrayCollection();
-        $application = null;
-        $licence = null;
-        $transportManager = null;
         $ecmsNo = 'abcd123456';
         $description = 'description';
 
@@ -44,9 +41,6 @@ class CasesEntityTest extends EntityTester
             $caseType,
             $categorys,
             $outcomes,
-            $application,
-            $licence,
-            $transportManager,
             $ecmsNo,
             $description
         );
@@ -54,9 +48,6 @@ class CasesEntityTest extends EntityTester
         $this->assertEquals($caseType, $this->entity->getCaseType());
         $this->assertEquals($categorys, $this->entity->getCategorys());
         $this->assertEquals($outcomes, $this->entity->getOutcomes());
-        $this->assertEquals($application, $this->entity->getApplication());
-        $this->assertEquals($licence, $this->entity->getLicence());
-        $this->assertEquals($transportManager, $this->entity->getTransportManager());
         $this->assertEquals($ecmsNo, $this->entity->getEcmsNo());
         $this->assertEquals($description, $this->entity->getDescription());
 
