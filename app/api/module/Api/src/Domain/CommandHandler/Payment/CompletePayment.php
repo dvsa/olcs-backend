@@ -7,13 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Payment;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
+use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -26,6 +27,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 final class CompletePayment extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Payment';
+
+    protected $extraRepos = ['Application'];
 
     protected $cpmsHelper;
 
@@ -50,6 +53,11 @@ final class CompletePayment extends AbstractCommandHandler implements Transactio
         // resolve payment
         $result->merge($this->resolvePayment($command, $payment));
 
+        // handle application submission
+        if ($payment->isPaid() && $command->getSubmitApplicationId()) {
+            $result->merge($this->updateApplication($command));
+        }
+
         $result->addId('payment', $payment->getId());
         $result->addMessage('CPMS record updated');
         return $result;
@@ -62,6 +70,20 @@ final class CompletePayment extends AbstractCommandHandler implements Transactio
                 [
                     'id' => $payment->getId(),
                     'paymentMethod' => $command->getPaymentMethod(),
+                ]
+            )
+        );
+    }
+
+    protected function updateApplication($command)
+    {
+        return $this->getCommandHandler()->handleCommand(
+            SubmitApplicationCmd::create(
+                [
+                    'id' => $command->getSubmitApplicationId(),
+                    // we don't have the application version when we call
+                    // this as an internal command - we would have to store
+                    // it at the point we initiate the payment flow
                 ]
             )
         );

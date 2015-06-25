@@ -39,6 +39,7 @@ return [
     TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
     TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
     TransferQuery\Application\TransportManagers::class => QueryHandler\Application\TransportManagers::class,
+    TransferQuery\Application\OutstandingFees::class => QueryHandler\Application\OutstandingFees::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -175,6 +176,8 @@ return [
     // Transport Manager Application
     TransferQuery\TransportManagerApplication\GetDetails::class
         => QueryHandler\TransportManagerApplication\GetDetails::class,
+    TransferQuery\TransportManagerApplication\GetList::class
+        => QueryHandler\TransportManagerApplication\GetList::class,
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
@@ -183,5 +186,9 @@ return [
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
 
     // Scan
-    TransferQuery\Scan\GetSingle::class => QueryHandler\Scan\GetSingle::class
+    TransferQuery\Scan\GetSingle::class => QueryHandler\Scan\GetSingle::class,
+
+    // Fee
+    TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
+    TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
 ];
