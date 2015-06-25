@@ -88,6 +88,9 @@ class UpdateTest extends CommandHandlerTestCase
                     ->shouldReceive('setPersonFirstName')
                     ->with('Craig')
 
+                    ->shouldReceive('updateConvictionCategory')
+                    ->with(m::type(Entity\System\RefData::class), null)
+
                     ->shouldReceive('setDefendantType')
                     ->andReturn(
                         m::mock(Entity\System\RefData::class)
@@ -95,18 +98,6 @@ class UpdateTest extends CommandHandlerTestCase
                             ->andReturn('def_t_dir')
                             ->getMock()
                     )
-
-                    ->shouldReceive('setConvictionCategory')
-                    ->andReturn(
-                        m::mock(Entity\System\RefData::class)
-                            ->shouldReceive('getId')
-                            ->andReturn('conv_c_cat_1')
-                            ->getMock()
-                    )
-
-                    // Person
-                    ->shouldreceive('setCategoryText')
-                    ->with(null)
 
                     // Get ID
                     ->shouldreceive('getId')
