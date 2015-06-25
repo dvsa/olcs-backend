@@ -350,7 +350,11 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManager
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager",
+     *     fetch="LAZY",
+     *     inversedBy="users"
+     * )
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManager;

@@ -28,7 +28,7 @@ final class RemoveLicenceStatusRulesForLicence extends AbstractCommandHandler im
 
         $rules = $this->getRepo()->fetchForLicence($command->getLicence());
 
-        foreach($rules as $statusRule) {
+        foreach ($rules as $statusRule) {
             $result->merge(
                 $this->handleSideEffect(
                     DeleteLicenceStatusRule::create(

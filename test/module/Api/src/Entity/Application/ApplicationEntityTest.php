@@ -525,4 +525,153 @@ class ApplicationEntityTest extends EntityTester
         $this->assertEquals($this->entity->getPrevBeenDisqualifiedTc(), 'Y');
         $this->assertEquals($this->entity->getPrevPurchasedAssets(), 'Y');
     }
+
+    /**
+     * @dataProvider codeProvider
+     */
+    public function testGetCode($isVariation, $isUpgrade, $goodsOrPsv, $licenceType, $expected)
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+
+        $sut->shouldReceive('getIsVariation')->andReturn($isVariation);
+        $sut->shouldReceive('getGoodsOrPsv->getId')->andReturn($goodsOrPsv);
+        $sut->shouldReceive('getLicenceType->getId')->andReturn($licenceType);
+        $sut->shouldReceive('isLicenceUpgrade')->andReturn($isUpgrade);
+
+        $this->assertEquals($expected, $sut->getCode());
+    }
+
+    public function codeProvider()
+    {
+        return [
+            'gv new app' => [
+                false,
+                null,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                'GV79'
+            ],
+            'psv new app' => [
+                false,
+                null,
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                'PSV421'
+            ],
+            'psv sr new app' => [
+                false,
+                null,
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                'PSV356'
+            ],
+            'gv variation upgrade' => [
+                true,
+                true,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                'GV80A'
+            ],
+            'gv variation no upgrade' => [
+                true,
+                false,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                'GV81'
+            ],
+            'psv variation upgrade' => [
+                true,
+                true,
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                'PSV431A'
+            ],
+            'psv variation no upgrade' => [
+                true,
+                false,
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                'PSV431'
+            ],
+        ];
+    }
+
+    public function testGetApplicationType()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+
+        $sut->setIsVariation(true);
+        $this->assertEquals(Entity::APPLICATION_TYPE_VARIATION, $sut->getApplicationType());
+
+        $sut->setIsVariation(false);
+        $this->assertEquals(Entity::APPLICATION_TYPE_NEW, $sut->getApplicationType());
+    }
+
+    /**
+     * @dataProvider canSubmitProvider
+     */
+    public function testCanSubmit($status, $expected)
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+
+        $sut->shouldReceive('getStatus->getId')->once()->andReturn($status);
+        $this->assertEquals($expected, $sut->canSubmit());
+    }
+
+    public function canSubmitProvider()
+    {
+        return [
+            [Entity::APPLICATION_STATUS_NOT_SUBMITTED, true],
+            [Entity::APPLICATION_STATUS_GRANTED, false],
+            [Entity::APPLICATION_STATUS_UNDER_CONSIDERATION, false],
+            [Entity::APPLICATION_STATUS_VALID, false],
+            [Entity::APPLICATION_STATUS_WITHDRAWN, false],
+            [Entity::APPLICATION_STATUS_REFUSED, false],
+            [Entity::APPLICATION_STATUS_NOT_TAKEN_UP, false],
+        ];
+    }
+
+    /**
+     * @dataProvider goodsOrPsvHelperProvider
+     */
+    public function testIsGoodsAndIsPsvHelperMethods($goodsOrPsv, $isGoods, $isPsv)
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+
+        $sut->shouldReceive('getGoodsOrPsv->getId')->andReturn($goodsOrPsv);
+
+        $this->assertEquals($isGoods, $sut->isGoods());
+        $this->assertEquals($isPsv, $sut->isPsv());
+    }
+
+    public function goodsOrPsvHelperProvider()
+    {
+        return [
+            [Licence::LICENCE_CATEGORY_PSV, false, true],
+            [Licence::LICENCE_CATEGORY_GOODS_VEHICLE, true, false],
+        ];
+    }
+
+    /**
+     * @dataProvider applicationDateProvider
+     */
+    public function testGetApplicationDate($createdOn, $receivedDate, $expected)
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+
+        $sut->shouldReceive('getCreatedOn')->andReturn($createdOn);
+        $sut->shouldReceive('getReceivedDate')->andReturn($receivedDate);
+
+        $this->assertEquals($expected, $sut->getApplicationDate());
+    }
+
+    public function applicationDateProvider()
+    {
+        return [
+            ['2015-06-19', '2015-06-22', '2015-06-22'],
+            ['2015-06-19', null, '2015-06-19'],
+            [null, '2015-06-22', '2015-06-22'],
+            [null, null, null],
+        ];
+    }
 }

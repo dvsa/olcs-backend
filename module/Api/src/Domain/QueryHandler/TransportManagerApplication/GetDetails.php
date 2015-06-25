@@ -92,7 +92,12 @@ class GetDetails extends AbstractQueryHandler
                             ],
                             'person'
                         ]
-                    ]
+                    ],
+                    'documents' => [
+                        'application',
+                        'category',
+                        'subCategory',
+                    ],
                 ],
                 'otherLicences'
             ]
