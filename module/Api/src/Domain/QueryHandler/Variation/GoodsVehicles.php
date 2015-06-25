@@ -5,7 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Variation;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
@@ -31,7 +31,7 @@ class GoodsVehicles extends AbstractQueryHandler implements AuthAwareInterface
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($query);
 
-        $lvQuery = $this->getRepo('LicenceVehicle')->createPaginatedVehiclesDataForApplicationQuery(
+        $lvQuery = $this->getRepo('LicenceVehicle')->createPaginatedVehiclesDataForVariationQuery(
             $query,
             $application->getId(),
             $application->getLicence()->getId()

@@ -63,6 +63,7 @@ return [
     // Variation
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
     TransferQuery\Variation\TypeOfLicence::class => QueryHandler\Variation\TypeOfLicence::class,
+    TransferQuery\Variation\GoodsVehicles::class => QueryHandler\Variation\GoodsVehicles::class,
 
     // Cases
     TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
