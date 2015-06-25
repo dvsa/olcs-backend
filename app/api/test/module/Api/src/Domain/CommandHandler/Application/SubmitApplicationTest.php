@@ -90,7 +90,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->once()
             ->with(
                 m::on(
-                    function($value) use ($now) {
+                    function ($value) use ($now) {
                         return $value == $now;
                     }
                 )
@@ -100,7 +100,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->once()
             ->with(
                 m::on(
-                    function($value) use ($expectedTargetCompletionDate) {
+                    function ($value) use ($expectedTargetCompletionDate) {
                         return $value == $expectedTargetCompletionDate;
                     }
                 )
