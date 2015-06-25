@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
+use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -57,7 +58,8 @@ class GoodsVehicles extends AbstractQueryHandler implements AuthAwareInterface
                         ]
                     ),
                     'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
-                ]
+                ],
+                'spacesRemaining' => $application->getRemainingSpaces()
             ]
         );
     }
