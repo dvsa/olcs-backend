@@ -27,5 +27,10 @@ return array(
         'http' => array(
             'adapter' => 'Zend\Http\Client\Adapter\Curl'
         ),
+    ),
+    'email' => array(
+        'http' => array(
+            'adapter' => 'Zend\Http\Client\Adapter\Curl'
+        ),
     )
 );
