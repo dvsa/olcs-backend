@@ -1,25 +1,20 @@
 <?php
 
 /**
-<<<<<<< HEAD
- * TransportManagerLicence
+ * TransportManagerLicence.php
  *
  * @author Rob Caiger <rob@clocal.co.uk>
-=======
- * Transport Manager Licence Repository
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
->>>>>>> c37d244738f5c255e48d5756c36575beeb5d7337
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence as Entity;
 
 /**
- * TransportManagerLicence
+ * TransportManagerLicence repository
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
 class TransportManagerLicence extends AbstractRepository
 {
