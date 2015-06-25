@@ -43,6 +43,10 @@ class CreateCaseTest extends CommandHandlerTestCase
             ]
         ];
 
+        $this->refData = [
+            CasesEntity::LICENCE_CASE_TYPE,
+        ];
+
         parent::initReferences();
     }
 
@@ -54,7 +58,8 @@ class CreateCaseTest extends CommandHandlerTestCase
                 'outcomes' => ['case_o_opr'],
                 'application' => 5,
                 'licence' => 7,
-                'transportManager' => 9
+                'transportManager' => 9,
+                'caseType' => CasesEntity::LICENCE_CASE_TYPE
             ]
         );
 
