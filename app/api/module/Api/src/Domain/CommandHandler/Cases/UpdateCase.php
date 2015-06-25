@@ -42,20 +42,10 @@ final class UpdateCase extends AbstractCommandHandler implements TransactionedIn
         $categorys = $this->processCategorys($command->getCategorys());
         $outcomes = $this->processOutcomes($command->getOutcomes());
 
-        $application = (is_numeric($command->getApplication())
-            ? $this->getRepo()->getReference(Application::class, $command->getApplication()) : null);
-        $licence = (is_numeric($command->getLicence())
-            ? $this->getRepo()->getReference(Licence::class, $command->getLicence()) : null);
-        $transportManager = (is_numeric($command->getTransportManager())
-            ? $this->getRepo()->getReference(TransportManager::class, $command->getTransportManager()) : null);
-
         $case->update(
             $caseType,
             $categorys,
             $outcomes,
-            $application,
-            $licence,
-            $transportManager,
             $command->getEcmsNo(),
             $command->getDescription()
         );
