@@ -36,6 +36,14 @@ final class CreateTask extends AbstractCommand
 
     protected $licence;
 
+    protected $busReg;
+
+    protected $case;
+
+    protected $transportManager;
+
+    protected $irfoOrganisation;
+
     /**
      * @return mixed
      */
@@ -114,5 +122,37 @@ final class CreateTask extends AbstractCommand
     public function getLicence()
     {
         return $this->licence;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBusReg()
+    {
+        return $this->busReg;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCase()
+    {
+        return $this->case;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTransportManager()
+    {
+        return $this->transportManager;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIrfoOrganisation()
+    {
+        return $this->irfoOrganisation;
     }
 }

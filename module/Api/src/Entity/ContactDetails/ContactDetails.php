@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Entity\ContactDetails;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\Person\Person;
@@ -43,6 +42,8 @@ class ContactDetails extends AbstractContactDetails
     const CONTACT_TYPE_IRFO_OPERATOR = 'ct_irfo_op';
     const CONTACT_TYPE_PARTNER = 'ct_partner';
     const CONTACT_TYPE_OBJECTOR = 'ct_obj';
+    const CONTACT_TYPE_STATEMENT_REQUESTOR = 'ct_requestor';
+    const CONTACT_TYPE_USER = 'ct_user';
 
     public function __construct(RefData $contactType)
     {
@@ -78,6 +79,12 @@ class ContactDetails extends AbstractContactDetails
                 break;
             case self::CONTACT_TYPE_OBJECTOR:
                 $this->updateObjector($contactParams);
+                break;
+            case self::CONTACT_TYPE_STATEMENT_REQUESTOR:
+                $this->updateStatementRequestor($contactParams);
+                break;
+            case self::CONTACT_TYPE_USER:
+                $this->updateUser($contactParams);
                 break;
         }
 
@@ -136,6 +143,19 @@ class ContactDetails extends AbstractContactDetails
         }
     }
 
+
+    /**
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     */
+    private function updateStatementRequestor(array $contactParams)
+    {
+        // populate address
+        $this->populateAddress($contactParams['address']);
+
+        // populate person
+        $this->populatePerson($contactParams['person']);
+    }
+
     /**
     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\User\UpdatePartner
     */
@@ -149,8 +169,26 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     */
+    private function updateUser(array $contactParams)
+    {
+        // set email address
+        $this->setEmailAddress($contactParams['emailAddress']);
+
+        // populate person
+        $this->populatePerson($contactParams['person']);
+
+        // populate address
+        $this->populateAddress($contactParams['address']);
+
+        // populate phone contacts
+        $this->populatePhoneContacts($contactParams['phoneContacts']);
+    }
+
+    /**
      * Create address object
-     * @param Cmd $command
+     * @param array $addressParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\Address
      * @return Address|null
      */
     private function populateAddress(array $addressParams)
@@ -218,21 +256,11 @@ class ContactDetails extends AbstractContactDetails
             $this->person = new Person();
         }
 
-        // ensure we have all variables set
-        $title = $this->getDefaultParameter($personParams, 'title');
-        $forename = $this->getDefaultParameter($personParams, 'forename');
-        $familyName = $this->getDefaultParameter($personParams, 'familyName');
-        $birthDate = $this->getDefaultParameter($personParams, 'birthDate');
-        $birthPlace = $this->getDefaultParameter($personParams, 'birthPlace');
-        $otherName = $this->getDefaultParameter($personParams, 'otherName');
-
         $this->person->updatePerson(
-            $title,
-            $forename,
-            $familyName,
-            $birthDate,
-            $birthPlace,
-            $otherName
+            $personParams['forename'],
+            $personParams['familyName'],
+            $this->getDefaultParameter($personParams, 'title'),
+            $this->getDefaultParameter($personParams, 'birthDate')
         );
     }
 

@@ -27,27 +27,23 @@ class Person extends AbstractPerson
     /**
      * Update person details
      *
-     * @param RefData $title
-     * @param string|null $forename
-     * @param string|null $familyName
+     * @param string $forename
+     * @param string $familyName
+     * @param RefData|null $title
      * @param string|null $birthDate
-     * @param string|null $birthPlace
-     * @param string|null $otherName
      * @return $this
      */
-    public function updatePerson(
-        RefData $title = null,
-        $forename = null,
-        $familyName = null,
-        $birthDate = null,
-        $birthPlace = null,
-        $otherName = null
-    ) {
-        $this->setTitle($title);
+    public function updatePerson($forename, $familyName, RefData $title = null, $birthDate = null)
+    {
         $this->setForename($forename);
         $this->setFamilyName($familyName);
-        $this->setBirthDate($birthDate);
-        $this->setBirthPlace($birthPlace);
-        $this->setOtherName($otherName);
+
+        if ($title !== null) {
+            $this->setTitle($title);
+        }
+
+        if ($birthDate !== null) {
+            $this->setBirthDate(new \DateTime($birthDate));
+        }
     }
 }

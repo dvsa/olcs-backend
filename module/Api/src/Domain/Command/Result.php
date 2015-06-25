@@ -32,6 +32,7 @@ final class Result
     public function addId($name, $id)
     {
         $this->ids[$name] = $id;
+        return $this;
     }
 
     public function getId($name)
@@ -50,6 +51,7 @@ final class Result
     public function addMessage($message)
     {
         $this->messages[] = $message;
+        return $this;
     }
 
     /**
