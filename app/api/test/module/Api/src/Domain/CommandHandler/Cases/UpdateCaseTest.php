@@ -11,10 +11,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\UpdateCase;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\UpdateCase as Cmd;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 
 /**
  * Update Case Test
@@ -31,16 +28,8 @@ class UpdateCaseTest extends CommandHandlerTestCase
 
     protected function initReferences()
     {
-        $this->references = [
-            ApplicationEntity::class => [
-                5 => m::mock(ApplicationEntity::class)
-            ],
-            LicenceEntity::class => [
-                7 => m::mock(LicenceEntity::class)
-            ],
-            TransportManagerEntity::class => [
-                9 => m::mock(TransportManagerEntity::class)
-            ]
+        $this->refData = [
+            CasesEntity::LICENCE_CASE_TYPE,
         ];
 
         parent::initReferences();
@@ -53,9 +42,7 @@ class UpdateCaseTest extends CommandHandlerTestCase
                 'id' => 99,
                 'categorys' => ['case_cat_compl_proh'],
                 'outcomes' => ['case_o_opr'],
-                'application' => 5,
-                'licence' => 7,
-                'transportManager' => 9
+                'caseType' => CasesEntity::LICENCE_CASE_TYPE
             ]
         );
 
@@ -70,7 +57,6 @@ class UpdateCaseTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with(m::type(CasesEntity::class))
             ->once();
-
 
         $result = $this->sut->handleCommand($command);
 
