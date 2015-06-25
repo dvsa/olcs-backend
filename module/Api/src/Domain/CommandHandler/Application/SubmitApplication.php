@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
@@ -57,7 +58,10 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
      */
     private function updateStatus($application, $result)
     {
-        $now = new \DateTime();
+        $now = new DateTime();
+        $target = clone $now;
+        $target->modify('+9 week');
+
         $newStatus = ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION;
         $status = $this->getRepo()->getRefdataReference($newStatus);
         $licenceUpdated = false;
@@ -65,7 +69,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
         $application
             ->setStatus($status)
             ->setReceivedDate($now)
-            ->setTargetCompletionDate($now->modify('+9 week'));
+            ->setTargetCompletionDate($target);
 
         if (!$application->isVariation()) {
             // update licence status for new apps only, will cascade persist on save
