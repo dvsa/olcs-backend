@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * CreateDocument
@@ -63,7 +64,7 @@ final class CreateDocument extends AbstractCommandHandler implements Transaction
             'isExternal'     => false,
             'isReadOnly'    => true,
             'isScan'        => true,
-            'issuedDate'    => (new \DateTime())->format(\DateTime::W3C),
+            'issuedDate'    => (new DateTime())->format(\DateTime::W3C),
             'size'          => $command->getFileSize(),
         ];
 
