@@ -122,22 +122,24 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
      */
     private function updateOrganisation($command, $organisation)
     {
-        $organisation->updateOrganisation(
-            $command->getName(),
-            $command->getCompanyNumber(),
-            $command->getFirstName(),
-            $command->getLastName(),
-            ($command->getBusinessType() === OrganisationEntity::ORG_TYPE_IRFO) ? true : false
-        );
-        $organisation->setType($this->getRepo()->getRefdataReference($command->getBusinessType()));
+        $businessType = $this->getRepo()->getRefdataReference($command->getBusinessType());
+        $references = null;
         if ($command->getNatureOfBusiness() !== null) {
             $natureOfBusinesses = $command->getNatureOfBusiness();
             $references = [];
             foreach ($natureOfBusinesses as $natureOfBusiness) {
                 $references[] = $this->getRepo()->getRefdataReference($natureOfBusiness);
             }
-            $organisation->setNatureOfBusinesses($references);
         }
+        $organisation->updateOrganisation(
+            $command->getName(),
+            $command->getCompanyNumber(),
+            $command->getFirstName(),
+            $command->getLastName(),
+            $command->getIsIrfo(),
+            $businessType,
+            $references
+        );
         return $organisation;
     }
 
@@ -170,18 +172,10 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
     {
         $errors = [];
         if (!$command->getName()) {
-            $errors[] = [
-                'name' => [
-                    'Operator name is required'
-                ]
-            ];
+            $errors['name'][] = 'Operator name is required';
         }
         if (!$command->getNatureOfBusiness()) {
-            $errors[] = [
-                'natureOfBusiness' => [
-                    'Nature of Business is required'
-                ]
-            ];
+            $errors['natureOfBusiness'][] = 'Nature of Business is required';
         }
         if (count($errors)) {
             throw new ValidationException($errors);
@@ -192,25 +186,13 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
     {
         $errors = [];
         if (!$command->getCompanyNumber()) {
-            $errors[] = [
-                'companyNumber' => [
-                    'Company Number is required'
-                ]
-            ];
+            $errors['companyNumber'][] = 'Company Number is required';
         }
         if (!$command->getName()) {
-            $errors[] = [
-                'name' => [
-                    'Operator Name is required'
-                ]
-            ];
+            $errors['name'][] = 'Operator Name is required';
         }
         if (!$command->getNatureOfBusiness()) {
-            $errors[] = [
-                'natureOfBusiness' => [
-                    'Nature of Business is required'
-                ]
-            ];
+            $errors['natureOfBusiness'] = 'Nature of Business is required';
         }
         if (count($errors)) {
             throw new ValidationException($errors);
@@ -221,18 +203,10 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
     {
         $errors = [];
         if (!$command->getNatureOfBusiness()) {
-            $errors[] = [
-                'natureOfBusiness' => [
-                    'Nature of Business is required'
-                ]
-            ];
+            $errors['natureOfBusiness'][] = 'Nature of Business is required';
         }
         if (!$command->getLastName()) {
-            $errors[] = [
-                'lastName' => [
-                    'Last name is required'
-                ]
-            ];
+            $errors['lastName'][] = 'Last name is required';
         }
         if (count($errors)) {
             throw new ValidationException($errors);
@@ -243,11 +217,7 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
     {
         $errors = [];
         if (!$command->getName()) {
-            $errors[] = [
-                'name' => [
-                    'Operator Name is required'
-                ]
-            ];
+            $errors['name'][] = 'Operator Name is required';
         }
         if (count($errors)) {
             throw new ValidationException($errors);

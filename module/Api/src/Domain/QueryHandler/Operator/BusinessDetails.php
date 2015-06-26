@@ -21,6 +21,14 @@ class BusinessDetails extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchBusinessDetailsUsingId($query);
+        $orgamisation = $this->getRepo()->fetchBusinessDetailsUsingId($query);
+        return $this->result(
+            $orgamisation,
+            [
+                'organisationPersons' => ['person'],
+                'natureOfBusinesses',
+                'contactDetails' => ['address']
+            ]
+        );
     }
 }
