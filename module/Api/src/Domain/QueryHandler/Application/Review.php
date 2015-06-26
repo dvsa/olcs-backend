@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Transfer\Query\Application\Application as ApplicationQry;
 
 /**
  * Review
@@ -185,17 +186,22 @@ class Review extends AbstractQueryHandler
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($query);
 
+        $result = $this->getQueryHandler()->handleQuery(ApplicationQry::create($query->getArrayCopy()));
+        $data = $result->serialize();
+
+        $sections = array_keys($data['sections']);
+
         if ($application->isVariation()) {
-            $bundle = $this->getReviewDataBundleForVariation($application);
+            $bundle = $this->getReviewDataBundleForVariation($sections);
         } else {
-            $bundle = $this->getReviewDataBundleForApplication($application);
+            $bundle = $this->getReviewDataBundleForApplication($sections);
         }
 
         return $this->result(
             $application,
             $bundle,
             [
-                'sections' => [],
+                'sections' => $sections,
                 'isGoods' => $application->isGoods(),
                 'isSpecialRestricted' => $application->isSpecialRestricted()
             ]
