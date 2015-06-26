@@ -333,4 +333,34 @@ class Licence extends AbstractLicence
     {
         return $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED;
     }
+
+    /**
+     * Helper method to get the first trading name from a licence
+     * (Sorts trading names by createdOn date then alphabetically)
+     *
+     * @return string
+     */
+    public function getTradingName()
+    {
+        if (empty($this->getOrganisation()->getTradingNames())) {
+            return 'None';
+        }
+
+        $tradingNames = (array) $this->getOrganisation()->getTradingNames()->getIterator();
+        usort(
+            $tradingNames,
+            function ($a, $b) {
+                if ($a->getCreatedOn() == $b->getCreatedOn()) {
+                    // This *should* be an extreme edge case but there is a bug
+                    // in Business Details causing trading names to have the
+                    // same createdOn date. Sort alphabetically to avoid
+                    // 'random' behaviour.
+                    return strcasecmp($a->getName(), $b->getName());
+                }
+                return strtotime($a->getCreatedOn()) < strtotime($b->getCreatedOn()) ? -1 : 1;
+            }
+        );
+
+        return array_shift($tradingNames)->getName();
+    }
 }

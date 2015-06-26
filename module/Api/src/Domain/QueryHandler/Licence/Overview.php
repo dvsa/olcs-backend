@@ -21,6 +21,8 @@ class Overview extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
 
+    protected $extraRepos = ['Application'];
+
     public function handleQuery(QueryInterface $query)
     {
         $licence = $this->getRepo()->fetchUsingId($query);
@@ -47,6 +49,9 @@ class Overview extends AbstractQueryHandler
                 ]
             ));
 
+        $applications = $this->getRepo('Application')
+            ->fetchActiveForOrganisation($licence->getOrganisation()->getId());
+
         return $this->result(
             $licence,
             [
@@ -69,7 +74,12 @@ class Overview extends AbstractQueryHandler
                 ],
                 'operatingCentres',
                 'changeOfEntitys',
-                'trafficArea'
+                'trafficArea',
+                'gracePeriods',
+            ],
+            [
+                'currentApplications' => $this->resultList($applications),
+                'tradingName' => $licence->getTradingName(),
             ]
         );
     }
