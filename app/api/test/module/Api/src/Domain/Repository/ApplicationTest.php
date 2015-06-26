@@ -180,7 +180,7 @@ class ApplicationTest extends RepositoryTestCase
         /** @var EntityRepository $repo */
         $repo = m::mock(EntityRepository::class);
         $repo->shouldReceive('createQueryBuilder')
-            ->with('m')
+            ->with('a')
             ->andReturn($qb);
 
         $this->em->shouldReceive('getRepository')
@@ -225,7 +225,7 @@ class ApplicationTest extends RepositoryTestCase
         /** @var EntityRepository $repo */
         $repo = m::mock(EntityRepository::class);
         $repo->shouldReceive('createQueryBuilder')
-            ->with('m')
+            ->with('a')
             ->andReturn($qb);
 
         $this->em->shouldReceive('getRepository')
