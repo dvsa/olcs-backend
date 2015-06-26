@@ -254,7 +254,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
             '123456'
         );
 
-        $this->assertTrue($result);
+        $this->assertEquals($response, $result);
     }
 
     public function testRecordCashPaymentFailureReturnsFalse()
@@ -341,7 +341,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
             '2015-03-01'
         );
 
-        $this->assertTrue($result);
+        $this->assertEquals($response, $result);
     }
 
     public function testRecordChequePaymentFailureReturnsFalse()
@@ -427,7 +427,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
             '234567'
         );
 
-        $this->assertTrue($result);
+        $this->assertEquals($response, $result);
     }
 
     public function testRecordPostalOrderPaymentFailureReturnsFalse()
