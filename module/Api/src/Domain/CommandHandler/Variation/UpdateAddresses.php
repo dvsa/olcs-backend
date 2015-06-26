@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Variation Update Addresses
@@ -59,7 +60,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
                 'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_ADDRESS_CHANGE_DIGITAL,
                 'description' => 'Address Change',
                 'licence' => $licence->getId(),
-                'actionDate' => date('Y-m-d')
+                'actionDate' => (new DateTime)->format('Y-m-d H:i:s'),
             ];
 
             $result->merge($this->getCommandHandler()->handleCommand(CreateTask::create($taskParams)));
