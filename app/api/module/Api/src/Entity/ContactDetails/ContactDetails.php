@@ -179,11 +179,15 @@ class ContactDetails extends AbstractContactDetails
         // populate person
         $this->populatePerson($contactParams['person']);
 
-        // populate address
-        $this->populateAddress($contactParams['address']);
+        if ($contactParams['address'] !== null) {
+            // populate address
+            $this->populateAddress($contactParams['address']);
+        }
 
-        // populate phone contacts
-        $this->populatePhoneContacts($contactParams['phoneContacts']);
+        if ($contactParams['phoneContacts'] !== null) {
+            // populate phone contacts
+            $this->populatePhoneContacts($contactParams['phoneContacts']);
+        }
     }
 
     /**
