@@ -11,7 +11,9 @@ use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
 use Dvsa\Olcs\Transfer\Query\Application\Application as ApplicationQry;
+use Zend\Filter\Word\UnderscoreToCamelCase;
 
 /**
  * Review
@@ -72,7 +74,9 @@ class Review extends AbstractQueryHandler
             ]
         ],
         'licence_history' => [
-            'otherLicences'
+            'otherLicences' => [
+                'previousLicenceType'
+            ]
         ],
         'financial_history' => [
             'documents' => [
@@ -82,26 +86,28 @@ class Review extends AbstractQueryHandler
         ],
         'conditions_undertakings' => [
             'conditionUndertakings' => [
+                'conditionType',
                 'attachedTo',
                 'operatingCentre' => [
                     'address'
                 ]
             ]
-        ],
-        'people' => [
-            'applicationOrganisationPersons' => [
-                'person' => [
-                    'title'
-                ]
-            ]
-        ],
+        ]
     ];
 
     protected $applicationBundles = [
+        'business_type' => [
+            'licence' => [
+                'organisation' => [
+                    'type'
+                ]
+            ]
+        ],
         'business_details' => [
             'licence' => [
                 'companySubsidiaries',
                 'organisation' => [
+                    'type',
                     'natureOfBusinesses',
                     'contactDetails' => [
                         'address'
@@ -124,7 +130,9 @@ class Review extends AbstractQueryHandler
             'licence' => [
                 'correspondenceCd' => [
                     'address',
-                    'phoneContacts'
+                    'phoneContacts' => [
+                        'phoneContactType'
+                    ]
                 ],
                 'establishmentCd' => [
                     'address'
@@ -144,6 +152,7 @@ class Review extends AbstractQueryHandler
         'people' => [
             'licence' => [
                 'organisation' => [
+                    'type',
                     'organisationPersons' => [
                         'person' => [
                             'title'
@@ -152,7 +161,10 @@ class Review extends AbstractQueryHandler
                 ]
             ],
             'applicationOrganisationPersons' => [
-                'originalPerson'
+                'originalPerson',
+                'person' => [
+                    'title'
+                ]
             ]
         ],
         'vehicles_declarations' => [
@@ -163,11 +175,36 @@ class Review extends AbstractQueryHandler
     ];
 
     protected $variationBundles = [
+        'type_of_licence' => [
+            'licence' => [
+                'licenceType'
+            ]
+        ],
+        'people' => [
+            'licence' => [
+                'organisation' => [
+                    'type'
+                ]
+            ],
+            'applicationOrganisationPersons' => [
+                'person' => [
+                    'title'
+                ]
+            ]
+        ],
         'conditions_undertakings' => [
             'conditionUndertakings' => [
                 'licConditionVariation'
             ]
         ]
+    ];
+
+    protected $ignoredApplicationSections = [
+        'community_licences'
+    ];
+
+    protected $ignoredVariationSections = [
+        'community_licences'
     ];
 
     public function __construct()
@@ -192,8 +229,13 @@ class Review extends AbstractQueryHandler
         $sections = array_keys($data['sections']);
 
         if ($application->isVariation()) {
+
+            $sections = $this->filterVariationSections($sections, $application->getApplicationCompletion());
+
             $bundle = $this->getReviewDataBundleForVariation($sections);
         } else {
+            $sections = $this->filterApplicationSections($sections);
+
             $bundle = $this->getReviewDataBundleForApplication($sections);
         }
 
@@ -206,6 +248,29 @@ class Review extends AbstractQueryHandler
                 'isSpecialRestricted' => $application->isSpecialRestricted()
             ]
         );
+    }
+
+    protected function filterVariationSections($sections, ApplicationCompletionEntity $completion)
+    {
+        $sections = array_values(array_diff($sections, $this->ignoredVariationSections));
+
+        $filter = new UnderscoreToCamelCase();
+
+        foreach ($sections as $key => $section) {
+
+            $getter = 'get' . ucfirst($filter->filter($section)) . 'Status';
+
+            if ($completion->$getter() !== ApplicationEntity::VARIATION_STATUS_UPDATED) {
+                unset($sections[$key]);
+            }
+        }
+
+        return $sections;
+    }
+
+    protected function filterApplicationSections($sections)
+    {
+        return array_values(array_diff($sections, $this->ignoredApplicationSections));
     }
 
     protected function getReviewDataBundleForApplication(array $sections = [])
