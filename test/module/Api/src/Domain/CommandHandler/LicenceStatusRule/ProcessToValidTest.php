@@ -159,12 +159,16 @@ class ProcessToValidTest extends CommandHandlerTestCase
         $licence->setStatus($this->refData[$licenceStatus]);
         $lsr->setLicence($licence);
 
-        $licencedVehicle1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle();
-        $licencedVehicle1->setVehicle((new \Dvsa\Olcs\Api\Entity\Vehicle\Vehicle())->setSection26(9));
+        $licencedVehicle1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle(
+            $licence,
+            (new \Dvsa\Olcs\Api\Entity\Vehicle\Vehicle())->setSection26(9)
+        );
         $licence->getLicenceVehicles()->add($licencedVehicle1);
 
-        $licencedVehicle2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle();
-        $licencedVehicle2->setVehicle((new \Dvsa\Olcs\Api\Entity\Vehicle\Vehicle())->setSection26(9));
+        $licencedVehicle2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle(
+            $licence,
+            (new \Dvsa\Olcs\Api\Entity\Vehicle\Vehicle())->setSection26(9)
+        );
         $licence->getLicenceVehicles()->add($licencedVehicle2);
 
         return $lsr;
