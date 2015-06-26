@@ -64,6 +64,7 @@ return [
     TransferQuery\Organisation\BusinessDetails::class => QueryHandler\Organisation\BusinessDetails::class,
     TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
     TransferQuery\Organisation\OutstandingFees::class => QueryHandler\Organisation\OutstandingFees::class,
+    TransferQuery\Organisation\Dashboard::class => QueryHandler\Organisation\Dashboard::class,
 
     // Variation
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,

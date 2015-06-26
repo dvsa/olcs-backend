@@ -7,10 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Service;
 
+use CpmsClient\Service\ApiService;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use CpmsClient\Service\ApiService;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 
 /**
  * Cpms Helper Service
@@ -443,7 +444,7 @@ class CpmsHelperService implements FactoryInterface
     {
         if (!is_null($date)) {
             if (is_string($date)) {
-                $date = new \DateTime($date);
+                $date = new DateTime($date);
             }
             return $date->format(self::DATE_FORMAT);
         }
