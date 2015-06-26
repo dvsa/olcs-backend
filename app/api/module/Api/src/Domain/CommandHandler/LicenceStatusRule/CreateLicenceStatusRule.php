@@ -26,8 +26,7 @@ final class CreateLicenceStatusRule extends AbstractCommandHandler
 
         $status = $this->getRepo()->getRefdataReference($command->getStatus());
 
-        $statusRule = new LicenceStatusRule();
-        $statusRule->setLicenceStatus($status);
+        $statusRule = new LicenceStatusRule($licence, $status);
 
         if (!is_null($command->getStartDate())) {
             $statusRule->setStartDate(new \DateTime($command->getStartDate()));
@@ -36,8 +35,6 @@ final class CreateLicenceStatusRule extends AbstractCommandHandler
         if (!is_null($command->getEndDate())) {
             $statusRule->setEndDate(new \DateTime($command->getEndDate()));
         }
-
-        $statusRule->setLicence($licence);
 
         $this->getRepo()->save($statusRule);
 
