@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
-use Dvsa\Olcs\Api\Domain\Command\Discs\RemoveLicenceVehicleVehicles;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -23,6 +22,7 @@ use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
  * Revoke a licence
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
 final class Revoke extends AbstractCommandHandler implements TransactionedInterface
 {
