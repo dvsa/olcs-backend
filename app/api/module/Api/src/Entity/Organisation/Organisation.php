@@ -67,13 +67,24 @@ class Organisation extends AbstractOrganisation
         ];
     }
 
-    public function updateOrganisation($name, $companyNumber, $firstName, $lastName, $isIrfo)
-    {
-        if ($isIrfo) {
+    public function updateOrganisation(
+        $name,
+        $companyNumber,
+        $firstName,
+        $lastName,
+        $isIrfo,
+        $businessType,
+        $natureOfBusinesses
+    ) {
+        $this->setType($businessType);
+        $this->setNatureOfBusinesses($natureOfBusinesses);
+        if ($isIrfo === 'Y' || $this->getType()->getId() === self::ORG_TYPE_IRFO) {
             $this->isIrfo = 'Y';
+        } else {
+            $this->isIrfo = 'N';
         }
         if ($companyNumber) {
-            $this->companyOrLLpNo = $companyNumber;
+            $this->companyOrLlpNo = $companyNumber;
         }
         if (!empty($lastName)) {
             $this->name = trim($firstName . ' ' . $lastName);
