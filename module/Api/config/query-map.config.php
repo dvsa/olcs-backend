@@ -41,6 +41,7 @@ return [
     TransferQuery\Application\TransportManagers::class => QueryHandler\Application\TransportManagers::class,
     TransferQuery\Application\OutstandingFees::class => QueryHandler\Application\OutstandingFees::class,
     TransferQuery\Application\GoodsVehicles::class => QueryHandler\Application\GoodsVehicles::class,
+    TransferQuery\Application\VehicleDeclaration::class => QueryHandler\Application\VehicleDeclaration::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
