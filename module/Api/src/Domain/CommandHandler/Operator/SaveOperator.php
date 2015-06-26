@@ -83,8 +83,7 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
     {
         $person = $this->createPersonObject($command);
         $this->getRepo('Person')->save($person);
-        if ($command instanceof \Dvsa\Olcs\Transfer\Command\Operator\Create ||
-            !$command->getPersonId()) {
+        if ($command instanceof \Dvsa\Olcs\Transfer\Command\Operator\Create || !$command->getPersonId()) {
             $organisationPerson = new OrganisationPersonEntity();
             $organisationPerson->setPerson($person);
             $organisationPerson->setOrganisation($organisation);
@@ -99,8 +98,7 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
      */
     private function createPersonObject($command)
     {
-        if ($command instanceof \Dvsa\Olcs\Transfer\Command\Operator\Create ||
-            !$command->getPersonId()) {
+        if ($command instanceof \Dvsa\Olcs\Transfer\Command\Operator\Create || !$command->getPersonId()) {
             $person = new PersonEntity();
         } else {
             $person = $this->getRepo('Person')->fetchById(

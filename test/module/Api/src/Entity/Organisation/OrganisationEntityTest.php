@@ -89,4 +89,41 @@ class OrganisationEntityTest extends EntityTester
 
         $this->assertTrue($organisation->hasInforceLicences());
     }
+
+    /**
+     * @dataProvider organisationDataProvider
+     */
+    public function testUpdateOrganisation($isIrfo, $lastName, $expectedName)
+    {
+         $organisation = m::mock(Entity::class)->makePartial();
+
+         $mockBusinessType = m::mock()
+             ->shouldReceive('getId')
+            ->andReturn('type')
+            ->getMock();
+
+         $organisation->updateOrganisation(
+            'name',
+            '12345678',
+            'fname',
+            $lastName,
+            $isIrfo,
+            $mockBusinessType,
+            ['nob']
+        );
+
+        $this->assertEquals($organisation->getName(), $expectedName);
+        $this->assertEquals($organisation->getCompanyOrLlpNo(), '12345678');
+        $this->assertEquals($organisation->getIsIrfo(), $isIrfo);
+        $this->assertEquals($organisation->getType()->getId(), 'type');
+        $this->assertEquals($organisation->getNatureOfBusinesses(), ['nob']);
+    }
+
+    public function organisationDataProvider()
+    {
+        return [
+            ['Y', 'lname', 'fname lname'],
+            ['N', '', 'name']
+        ];
+    }
 }
