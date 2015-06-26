@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
-use Dvsa\Olcs\Api\Domain\Command\Discs\RemoveLicenceVehicleVehicles;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -20,12 +19,12 @@ use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 
 /**
- * Revoke a licence
+ * Surrender a licence
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-final class Revoke extends AbstractCommandHandler implements TransactionedInterface
+final class Surrender extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Licence';
 
@@ -33,8 +32,8 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
     {
         /* @var $licence Licence */
         $licence = $this->getRepo()->fetchUsingId($command);
-        $licence->setStatus($this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_REVOKED));
-        $licence->setRevokedDate(new \DateTime());
+        $licence->setStatus($this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_SURRENDERED));
+        $licence->setSurrenderedDate(new \DateTime($command->getSurrenderDate()));
 
         $discsCommand = (
             $licence->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE ?
@@ -70,7 +69,7 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
         );
 
         $this->getRepo()->save($licence);
-        $result->addMessage("Licence ID {$licence->getId()} revoked");
+        $result->addMessage("Licence ID {$licence->getId()} surrendered");
 
         return $result;
     }
