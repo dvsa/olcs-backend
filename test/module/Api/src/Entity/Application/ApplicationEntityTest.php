@@ -166,7 +166,7 @@ class ApplicationEntityTest extends EntityTester
     /**
      * @dataProvider notValidDataProvider
      * @group applicationEntity
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testUpdateFinancialHistoryNotValid(
         $bankrupt,
@@ -673,5 +673,29 @@ class ApplicationEntityTest extends EntityTester
             [null, '2015-06-22', '2015-06-22'],
             [null, null, null],
         ];
+
+    }
+
+    public function testGetRemainingSpaces()
+    {
+        $lvCollection = m::mock(ArrayCollection::class);
+        $activeCollection = m::mock(ArrayCollection::class);
+
+        $lvCollection->shouldReceive('matching')
+            ->once()
+            ->with(m::type(Criteria::class))
+            ->andReturn($activeCollection);
+
+        $activeCollection->shouldReceive('count')
+            ->andReturn(6);
+
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setLicenceVehicles($lvCollection);
+
+        $application = $this->instantiate(Entity::class);
+        $application->setTotAuthVehicles(10);
+        $application->setLicence($licence);
+
+        $this->assertEquals(4, $application->getRemainingSpaces());
     }
 }

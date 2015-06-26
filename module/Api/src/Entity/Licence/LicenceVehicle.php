@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 
 /**
  * LicenceVehicle Entity
@@ -24,5 +25,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LicenceVehicle extends AbstractLicenceVehicle
 {
+    public function __construct(Licence $licence, Vehicle $vehicle)
+    {
+        parent::__construct();
 
+        $this->setLicence($licence);
+        $this->setVehicle($vehicle);
+    }
 }

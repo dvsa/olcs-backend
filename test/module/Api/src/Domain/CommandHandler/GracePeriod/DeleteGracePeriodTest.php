@@ -66,6 +66,5 @@ class DeleteGracePeriodTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
-
     }
 }
