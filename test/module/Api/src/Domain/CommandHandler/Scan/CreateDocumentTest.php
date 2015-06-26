@@ -54,6 +54,7 @@ class CreateDocumentTest extends CommandHandlerTestCase
                 'isExternal'        => false,
                 'isReadOnly'        => true,
                 'isScan'            => true,
+                // @todo fix this once we have a solution to test the current date/time
                 'issuedDate'        => (new \DateTime())->format(\DateTime::W3C),
                 'size'              => 23454,
                 'licence'           => 61,

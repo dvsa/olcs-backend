@@ -40,6 +40,7 @@ return [
     TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
     TransferQuery\Application\TransportManagers::class => QueryHandler\Application\TransportManagers::class,
     TransferQuery\Application\OutstandingFees::class => QueryHandler\Application\OutstandingFees::class,
+    TransferQuery\Application\GoodsVehicles::class => QueryHandler\Application\GoodsVehicles::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -49,6 +50,8 @@ return [
     TransferQuery\Licence\Addresses::class => QueryHandler\Licence\Addresses::class,
     TransferQuery\Licence\TransportManagers::class => QueryHandler\Licence\TransportManagers::class,
     TransferQuery\Licence\PsvDiscs::class => QueryHandler\Licence\PsvDiscs::class,
+    TransferQuery\Licence\GoodsVehicles::class => QueryHandler\Licence\GoodsVehicles::class,
+    TransferQuery\Licence\OtherActiveLicences::class => QueryHandler\Licence\OtherActiveLicences::class,
     TransferQuery\Licence\LicenceDecisions::class => QueryHandler\Licence\LicenceDecisions::class,
 
     // LicenceStatusRule
@@ -65,6 +68,7 @@ return [
     // Variation
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
     TransferQuery\Variation\TypeOfLicence::class => QueryHandler\Variation\TypeOfLicence::class,
+    TransferQuery\Variation\GoodsVehicles::class => QueryHandler\Variation\GoodsVehicles::class,
 
     // Cases
     TransferQuery\Cases\Cases::class => QueryHandler\Cases\Cases::class,
@@ -196,4 +200,7 @@ return [
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
+
+    // Licence Vehicle
+    TransferQuery\LicenceVehicle\LicenceVehicle::class => QueryHandler\LicenceVehicle\LicenceVehicle::class,
 ];

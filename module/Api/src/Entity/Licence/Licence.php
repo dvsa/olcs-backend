@@ -44,6 +44,10 @@ class Licence extends AbstractLicence
     const ERROR_REQUIRES_VARIATION = 'LIC-REQ-VAR';
     const ERROR_SAFETY_REQUIRES_TACHO_NAME = 'LIC-SAFE-TACH-1';
 
+    const ERROR_TRANSFER_TOT_AUTH = 'LIC_TRAN_1';
+    const ERROR_TRANSFER_OVERLAP_ONE = 'LIC_TRAN_2';
+    const ERROR_TRANSFER_OVERLAP_MANY = 'LIC_TRAN_3';
+
     const LICENCE_CATEGORY_GOODS_VEHICLE = 'lcat_gv';
     const LICENCE_CATEGORY_PSV = 'lcat_psv';
 
@@ -219,11 +223,32 @@ class Licence extends AbstractLicence
     public function getSerialNoPrefixFromTrafficArea()
     {
         $trafficArea = $this->getTrafficArea();
-        $retv = CommunityLicEntity::PREFIX_GB;
+
         if ($trafficArea && $trafficArea->getId() === TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE) {
-            $retv = CommunityLicEntity::PREFIX_NI;
+            return CommunityLicEntity::PREFIX_NI;
         }
-        return $retv;
+
+        return CommunityLicEntity::PREFIX_GB;
+    }
+
+    public function getRemainingSpaces()
+    {
+        return $this->getTotAuthVehicles() - $this->getActiveVehiclesCount();
+    }
+
+    public function getActiveVehiclesCount()
+    {
+        return $this->getActiveVehicles()->count();
+    }
+
+    public function getActiveVehicles()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->isNull('removalDate')
+        );
+
+        return $this->getLicenceVehicles()->matching($criteria);
     }
 
     public function hasCommunityLicenceOfficeCopy($ids)
@@ -253,5 +278,34 @@ class Licence extends AbstractLicence
             }
         }
         return $hasOfficeCopy;
+    }
+
+    public function getOtherActiveLicences()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->in(
+                'status',
+                [
+                    self::LICENCE_STATUS_SUSPENDED,
+                    self::LICENCE_STATUS_VALID,
+                    self::LICENCE_STATUS_CURTAILED
+                ]
+            )
+        );
+        $criteria->andWhere(
+            $criteria->expr()->eq('goodsOrPsv', $this->getGoodsOrPsv())
+        );
+        $criteria->andWhere(
+            $criteria->expr()->neq('id', $this->getId())
+        );
+
+        if ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV) {
+            $criteria->andWhere(
+                $criteria->expr()->neq('licenceType', self::LICENCE_TYPE_SPECIAL_RESTRICTED)
+            );
+        }
+
+        return $this->getOrganisation()->getLicences()->matching($criteria);
     }
 }
