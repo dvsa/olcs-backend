@@ -7,9 +7,13 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Fee
@@ -32,7 +36,7 @@ class Fee extends AbstractRepository
     {
         $doctrineQb = $this->createQueryBuilder();
         $this->getQueryBuilder()->withRefdata()->order('invoicedDate', 'DESC');
-        $doctrineQb->andWhere($doctrineQb->expr()->eq('f.busReg', ':busRegId'));
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.busReg', ':busRegId'));
         $doctrineQb->setParameter('busRegId', $busRegId);
         $doctrineQb->setMaxResults(1);
 
@@ -65,7 +69,7 @@ class Fee extends AbstractRepository
      * Fetch outstanding fees for an organisation
      * (only those associated to a valid licence or in progress application)
      *
-     * @param int $oraganisationId Organisation ID
+     * @param int $organisationId Organisation ID
      *
      * @return array
      */
@@ -90,6 +94,59 @@ class Fee extends AbstractRepository
     }
 
     /**
+     * Fetch outstanding fees by IDs
+     *
+     * @param array $ids
+     *
+     * @return array
+     */
+    public function fetchOutstandingFeesByIds($ids)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($doctrineQb)
+            ->withRefdata()
+            ->with('licence')
+            ->with('application')
+            ->with('feePayments', 'fp')
+            ->with('fp.payment', 'p')
+            ->with('p.status')
+            ->order('invoicedDate', 'ASC');
+
+        $this->whereOutstandingFee($doctrineQb);
+
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->in($this->alias . '.id', ':feeIds'))
+            ->setParameter('feeIds', $ids);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    public function fetchLatestFeeByTypeStatusesAndApplicationId(
+        $feeType,
+        $feeStatuses,
+        $applicationId
+    ) {
+        $doctrineQb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->withRefdata()->order('invoicedDate', 'DESC');
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.application', ':application'))
+            ->andWhere($doctrineQb->expr()->in($this->alias . '.feeStatus', ':feeStatuses'))
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.feeType', ':feeType'))
+            ->setParameter('application', $applicationId)
+            ->setParameter('feeStatuses', $feeStatuses)
+            ->setParameter('feeType', $feeType)
+            ->setMaxResults(1);
+
+        $results = $doctrineQb->getQuery()->getResult();
+
+        if (!empty($results)) {
+            return $results[0];
+        }
+    }
+
+    /**
      * Get a QueryBuilder for listing application fees of a certain feeType.feeType
      *
      * @param int    $applicationId  Application ID
@@ -102,9 +159,9 @@ class Fee extends AbstractRepository
         $doctrineQb = $this->createQueryBuilder();
         $this->getQueryBuilder()->withRefdata()->order('invoicedDate', 'ASC');
 
-        $doctrineQb->join('f.feeType', 'ft')
+        $doctrineQb->join($this->alias . '.feeType', 'ft')
             ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeTypeFeeType'))
-            ->andWhere($doctrineQb->expr()->eq('f.application', ':applicationId'));
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.application', ':applicationId'));
 
         $doctrineQb->setParameter('feeTypeFeeType', $this->getRefdataReference($feeTypeFeeType))
             ->setParameter('applicationId', $applicationId);
@@ -181,5 +238,63 @@ class Fee extends AbstractRepository
                     $this->getRefdataReference(LicenceEntity::LICENCE_STATUS_SUSPENDED),
                 ]
             );
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $this->getQueryBuilder()
+            ->filterByLicence($query->getLicence())
+            ->filterByApplication($query->getApplication())
+            ->filterByBusReg($query->getBusReg())
+            ->filterByIds($query->getIds());
+
+        if ($query->getTask() !== null) {
+            $qb->andWhere($this->alias . '.task = :taskId');
+            $qb->setParameter('taskId', $query->getTask());
+        }
+
+        if ($query->getIrfoGvPermit() !== null) {
+            $qb->andWhere($this->alias . '.irfoGvPermit = :irfoGvPermitId');
+            $qb->setParameter('irfoGvPermitId', $query->getIrfoGvPermit());
+        }
+
+        if ($query->getIsMiscellaneous() !== null) {
+            $qb->innerJoin($this->alias . '.feeType', 'ft')
+                ->andWhere('ft.isMiscellaneous = :isMiscellaneous')
+                ->setParameter('isMiscellaneous', $query->getIsMiscellaneous());
+        }
+
+        if ($query->getStatus() !== null) {
+            switch ($query->getStatus()) {
+                case 'historical':
+                    $feeStatus = [
+                        Entity::STATUS_PAID,
+                        Entity::STATUS_WAIVED,
+                        Entity::STATUS_CANCELLED,
+                    ];
+                    break;
+                case 'all':
+                    $feeStatus = [];
+                    break;
+                case 'current':
+                default:
+                    $feeStatus = [
+                        Entity::STATUS_OUTSTANDING,
+                        Entity::STATUS_WAIVE_RECOMMENDED,
+                    ];
+                    break;
+            }
+            if (!empty($feeStatus)) {
+                $qb
+                    ->andWhere($qb->expr()->in($this->alias . '.feeStatus', ':feeStatus'))
+                    ->setParameter('feeStatus', $feeStatus);
+            }
+        }
+
+        $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
     }
 }

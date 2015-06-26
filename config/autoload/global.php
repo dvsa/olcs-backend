@@ -15,12 +15,20 @@ return array(
     'doctrine' => array(
         'configuration' => array(
             'orm_default' => array(
-                'proxy_dir'         => sys_get_temp_dir() . '/OlcsBe/Proxy',
-                'proxy_namespace'   => 'OlcsBe\Proxy',
+                // If running as CLI then use different directory to avoid permissions problems
+                'proxy_dir'         => (PHP_SAPI === 'cli') ?
+                    sys_get_temp_dir() .'/EntityCli/Proxy' :
+                    sys_get_temp_dir() .'/Entity/Proxy',
+                'proxy_namespace'   => 'Dvsa\Olcs\Api\Entity\Proxy',
             ),
         )
     ),
     'jackrabbit' => array(
+        'http' => array(
+            'adapter' => 'Zend\Http\Client\Adapter\Curl'
+        ),
+    ),
+    'email' => array(
         'http' => array(
             'adapter' => 'Zend\Http\Client\Adapter\Curl'
         ),

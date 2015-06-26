@@ -132,7 +132,11 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
             'application' => 111,
             'licence' => 222,
             'isClosed' => false,
-            'urgent' => false
+            'urgent' => false,
+            'busReg' => null,
+            'case' => null,
+            'transportManager' => null,
+            'irfoOrganisation' => null,
         ];
         $this->expectedSideEffect(CreateTask::class, $taskData, $result1);
 

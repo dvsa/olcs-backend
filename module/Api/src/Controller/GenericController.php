@@ -12,9 +12,11 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
  */
 class GenericController extends AbstractRestfulController
 {
+    /**
+     * @inheritdoc
+     */
     public function get($id)
     {
-        unset($id); // unused param
         try {
             $result = $this->handleQuery();
             return $this->response()->singleResult($result);
@@ -31,11 +33,18 @@ class GenericController extends AbstractRestfulController
     {
         try {
             $result = $this->handleQuery();
+
             if ($result instanceof Result) {
                 // we sometimes still get a single result if we're not retrieving by id
                 return $this->response()->singleResult($result);
             }
-            return $this->response()->multipleResults($result['count'], $result['result']);
+
+            $count = $result['count'];
+            $results = $result['result'];
+            unset($result['count'], $result['result']);
+
+            return $this->response()->multipleResults($count, $results, $result);
+
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
         } catch (Exception\Exception $ex) {
@@ -45,10 +54,11 @@ class GenericController extends AbstractRestfulController
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function update($id, $data)
     {
-        unset($id, $data); // unused params
-
         $dto = $this->params('dto');
 
         try {
@@ -63,10 +73,11 @@ class GenericController extends AbstractRestfulController
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function create($data)
     {
-        unset($data); // unused param
-
         $dto = $this->params('dto');
 
         try {
@@ -79,10 +90,11 @@ class GenericController extends AbstractRestfulController
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete($id)
     {
-        unset($id); // unused param
-
         $dto = $this->params('dto');
 
         try {

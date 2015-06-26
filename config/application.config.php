@@ -2,15 +2,16 @@
 return array(
     // This should be an array of module namespaces used in the application.
     'modules' => [
+        'Dvsa\Olcs\Email',
         'Dvsa\Jackrabbit\Client',
         'ZfcRbac',
         'Dvsa\Olcs\Transfer',
         'Olcs\Logging',
         'DoctrineModule',
         'DoctrineORMModule',
+        'CpmsClient',
         'Olcs\Db',
         'Dvsa\Olcs\Api',
-        'CpmsClient',
         'Dvsa\Olcs\Cli',
     ],
     // These are various options for the listeners attached to the ModuleManager

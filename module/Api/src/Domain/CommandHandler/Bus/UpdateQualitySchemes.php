@@ -11,11 +11,12 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Transfer\Command\Bus\UpdateQualitySchemes as UpdateQualityCmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Update Quality Schemes
  */
-final class UpdateQualitySchemes extends AbstractCommandHandler
+final class UpdateQualitySchemes extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Bus';
 
@@ -41,12 +42,9 @@ final class UpdateQualitySchemes extends AbstractCommandHandler
             $command->getQualityContractDetails()
         );
 
-        try {
-            $this->getRepo()->save($busReg);
-            $result->addMessage('Saved successfully');
-            return $result;
-        } catch (\Exception $ex) {
-            throw $ex;
-        }
+        $this->getRepo()->save($busReg);
+        $result->addMessage('Saved successfully');
+        $result->addId('id', $busReg->getId());
+        return $result;
     }
 }

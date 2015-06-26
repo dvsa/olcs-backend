@@ -45,12 +45,17 @@ class Impounding extends AbstractImpounding
      */
     public function setPiVenueProperties($piVenue, $piVenueOther = null)
     {
-        if ($piVenue === self::PI_VENUE_OTHER) {
+        if (empty($piVenue)) {
             $this->piVenue = null;
-            $this->piVenueOther = $piVenueOther;
-        } else {
-            $this->piVenue = $piVenue;
             $this->piVenueOther = null;
+        } else {
+            if ($piVenue === self::PI_VENUE_OTHER) {
+                $this->piVenue = null;
+                $this->piVenueOther = $piVenueOther;
+            } else {
+                $this->piVenue = $piVenue;
+                $this->piVenueOther = null;
+            }
         }
 
         return $this;

@@ -21,5 +21,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CommunityLicSuspension extends AbstractCommunityLicSuspension
 {
-
+    public function updateCommunityLicSuspension($communityLic, $startDate, $endDate)
+    {
+        $this->communityLic = $communityLic;
+        $this->startDate = new \DateTime($startDate);
+        $this->endDate = new \DateTime($endDate);
+    }
 }
