@@ -148,6 +148,7 @@ return [
             'TmEmployment' => RepositoryFactory::class,
             'DocTemplate' => RepositoryFactory::class,
             'LicenceStatusRule' => RepositoryFactory::class,
+            'LicenceVehicle' => RepositoryFactory::class,
             'CommunityLicSuspension' => RepositoryFactory::class,
             'CommunityLicSuspensionReason' => RepositoryFactory::class,
             'CommunityLicWithdrawal' => RepositoryFactory::class,

@@ -7,11 +7,17 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\Command\Discs\RemoveLicenceVehicleVehicles;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
+use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
+use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 
 /**
  * Revoke a licence
@@ -29,15 +35,40 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
         $licence->setStatus($this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_REVOKED));
         $licence->setRevokedDate(new \DateTime());
 
-        // @todo In old system Revoking a licence also did:
-        //$terminateData = $licenceService->getRevocationDataForLicence($row['licence']['id']);
-        //$licenceStatusHelperService->ceaseDiscs($terminateData);
-        //$licenceStatusHelperService->removeLicenceVehicles($terminateData['licenceVehicles']);
-        //$licenceStatusHelperService->removeTransportManagers($terminateData['tmLicences']);
-
-        $this->getRepo()->save($licence);
+        $discsCommand = (
+            $licence->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE ?
+            CeaseGoodsDiscs::class : CeasePsvDiscs::class
+        );
 
         $result = new Result();
+        $command = $discsCommand::create(
+            [
+                'licence' => $licence
+            ]
+        );
+        $result->merge($this->handleSideEffect($command));
+
+        $result->merge(
+            $this->handleSideEffect(
+                RemoveLicenceVehicle::create(
+                    [
+                        'licence' => $licence
+                    ]
+                )
+            )
+        );
+
+        $result->merge(
+            $this->handleSideEffect(
+                DeleteTransportManagerLicence::create(
+                    [
+                        'licence' => $licence
+                    ]
+                )
+            )
+        );
+
+        $this->getRepo()->save($licence);
         $result->addMessage("Licence ID {$licence->getId()} revoked");
 
         return $result;
