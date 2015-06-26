@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Licence;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\Criteria;
@@ -153,6 +154,70 @@ class Licence extends AbstractLicence
         $this->setTachographInsName($tachographInsName);
 
         $this->setSafetyInsVaries($safetyInsVaries);
+    }
+
+    public function getActiveCommunityLicences($licence)
+    {
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->in(
+                    'status',
+                    [
+                        CommunityLic::STATUS_PENDING,
+                        CommunityLic::STATUS_ACTIVE,
+                        CommunityLic::STATUS_SUSPENDED
+                    ]
+                )
+            )->andWhere(Criteria::expr()->eq('licence', $licence));
+
+        return $this->getCommunityLics()->matching($criteria)->current();
+    }
+
+    public function getActiveBusRoutes($licence)
+    {
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->eq('licence', $licence)
+            )
+            ->andWhere(
+                Criteria::expr()->notIn(
+                    'status',
+                    [
+                        BusReg::STATUS_REFUSED,
+                        BusReg::STATUS_WITHDRAWN
+                    ]
+                )
+            );
+
+        return $this->getBusRegs()->matching($criteria)->current();
+    }
+
+    public function getActiveVariations($licence)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('isVariation', true))
+            ->andWhere(Criteria::expr()->eq('licence', $licence));
+
+        return $this->getApplications()->matching($criteria)->current();
+    }
+
+    public function getCalculatedValues()
+    {
+        $result = function () {
+            $decisionCriteria['activeComLics'] = ($this->getActiveCommunityLicences($this) !== false ? true : false);
+            $decisionCriteria['activeBusRoutes'] = ($this->getActiveBusRoutes($this) !== false ? true : false);
+            $decisionCriteria['activeVariations'] = ($this->getActiveVariations($this) !== false ? true : false);
+
+            if (in_array(true, $decisionCriteria)) {
+                return $decisionCriteria;
+            }
+
+            return true;
+        };
+
+        return [
+            'suitableForDecisions' => $result()
+        ];
     }
 
     public function getSerialNoPrefixFromTrafficArea()

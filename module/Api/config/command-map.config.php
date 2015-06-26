@@ -227,8 +227,22 @@ return [
     TransferCommand\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class =>
         CommandHandler\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
 
+    // Transfer - Licence Status Rule
+    TransferCommand\LicenceStatusRule\CreateLicenceStatusRule::class
+        => CommandHandler\LicenceStatusRule\CreateLicenceStatusRule::class,
+    TransferCommand\LicenceStatusRule\UpdateLicenceStatusRule::class
+        => CommandHandler\LicenceStatusRule\UpdateLicenceStatusRule::class,
+    TransferCommand\LicenceStatusRule\DeleteLicenceStatusRule::class
+        => CommandHandler\LicenceStatusRule\DeleteLicenceStatusRule::class,
+
     // Transfer - Document
     TransferCommand\Document\CreateLetter::class => CommandHandler\Document\CreateLetter::class,
+
+    // Transfer - Licence Decisions
+    TransferCommand\Licence\RevokeLicence::class => CommandHandler\Licence\Revoke::class,
+    TransferCommand\Licence\CurtailLicence ::class => CommandHandler\Licence\Curtail::class,
+    TransferCommand\Licence\SuspendLicence ::class => CommandHandler\Licence\Suspend::class,
+    TransferCommand\Licence\ResetToValid::class => CommandHandler\Licence\ResetToValid::class,
 
     // Transfer - ConditionUndertaking
     TransferCommand\Cases\ConditionUndertaking\CreateConditionUndertaking::class =>
@@ -271,6 +285,16 @@ return [
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
     Command\Licence\UpdateTotalCommunityLicences::class => CommandHandler\Licence\UpdateTotalCommunityLicences::class,
     Command\Licence\SaveAddresses::class => CommandHandler\Licence\SaveAddresses::class,
+
+    // Domain - Discs
+    Command\Discs\CeaseGoodsDiscs::class => CommandHandler\Discs\CeaseGoodsDiscs::class,
+    Command\Discs\CeasePsvDiscs::class => CommandHandler\Discs\CeasePsvDiscs::class,
+
+    // Domain - Licence Vehicles
+    Command\LicenceVehicle\RemoveLicenceVehicle::class => CommandHandler\LicenceVehicle\RemoveLicenceVehicle::class,
+
+    // Domain - Transport Managers
+    Command\Tm\DeleteTransportManagerLicence::class => CommandHandler\Tm\DeleteTransportManagerLicence::class,
 
     // Domain - ContactDetails
     Command\ContactDetails\SaveAddress::class => CommandHandler\ContactDetails\SaveAddress::class,
@@ -337,6 +361,8 @@ return [
         => CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class,
     Command\LicenceStatusRule\ProcessToValid::class
         => CommandHandler\LicenceStatusRule\ProcessToValid::class,
+    Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence::class
+        => CommandHandler\LicenceStatusRule\RemoveLicenceStatusRulesForLicence::class,
 
     // Transport Manager Application
     TransferCommand\TransportManagerApplication\Delete::class
