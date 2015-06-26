@@ -139,4 +139,17 @@ class Cases extends AbstractCases
     {
         return !($this->getAppeals()->isEmpty());
     }
+
+    public function isOpen()
+    {
+        return (
+            is_null($this->getClosedDate())
+            && is_null($this->getDeletedDate())
+        );
+    }
+
+    public function hasComplaints()
+    {
+        return !$this->getComplaints()->isEmpty();
+    }
 }

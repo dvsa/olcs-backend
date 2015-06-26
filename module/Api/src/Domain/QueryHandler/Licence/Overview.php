@@ -47,15 +47,8 @@ class Overview extends AbstractQueryHandler
                 ]
             ));
 
-        $caseCriteria = Criteria::create();
-        $caseCriteria
-            ->where($caseCriteria->expr()->eq('licence', $licence->getId()))
-            ->where($caseCriteria->expr()->isNull('closedDate'))
-            ->andWhere($caseCriteria->expr()->isNull('deletedDate'));
-
-        $applications = $this->getRepo('Application')
-            ->fetchActiveForOrganisation($licence->getOrganisation()->getId());
-
+        $applications = $this->getOtherApplicationsFromLicence($licence);
+        $openCases = $this->getOpenCases($licence);
 
         return $this->result(
             $licence,
@@ -81,15 +74,31 @@ class Overview extends AbstractQueryHandler
                 'changeOfEntitys',
                 'trafficArea',
                 'gracePeriods',
-                'cases' => [
-                    'criteria' => $caseCriteria,
-                    'publicInquirys',
-                ],
             ],
             [
                 'currentApplications' => $this->resultList($applications),
+                'openCases' => $this->resultList($openCases, ['publicInquirys']),
                 'tradingName' => $licence->getTradingName(),
+                'complaintsCount' => $licence->getOpenComplaintsCount(),
             ]
         );
+    }
+
+    protected function getOtherApplicationsFromLicence($licence)
+    {
+        $organisationId = $licence->getOrganisation()->getId();
+        return $this->getRepo('Application')->fetchActiveForOrganisation($organisationId);
+    }
+
+    protected function getOpenCases($licence)
+    {
+        $allCases = (array) $licence->getCases()->getIterator();
+        return array_filter(
+            $allCases,
+            function ($case) {
+                return $case->isOpen();
+            }
+        );
+
     }
 }
