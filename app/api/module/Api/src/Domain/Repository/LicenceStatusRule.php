@@ -71,4 +71,20 @@ class LicenceStatusRule extends AbstractRepository
 
         return $doctrineQb->getQuery()->getResult();
     }
+
+    /**
+     * Fetch for a licence.
+     *
+     * @param null $licence
+     * @return array
+     */
+    public function fetchForLicence($licence = null)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->where($qb->expr()->eq($this->alias . '.licence', ':licenceId'));
+        $qb->setParameter('licenceId', $licence->getId());
+
+        return $qb->getQuery()->getResult();
+    }
 }

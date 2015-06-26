@@ -1,23 +1,36 @@
 <?php
 
 /**
- * Transport Manager Licence Repository
+ * TransportManagerLicence.php
  *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence as Entity;
 
 /**
- * Transport Manager Licence Repository
+ * TransportManagerLicence repository
  *
+ * @author Rob Caiger <rob@clocal.co.uk>
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
 class TransportManagerLicence extends AbstractRepository
 {
-    protected $entity = Entity::class;
     protected $alias = 'tml';
+
+    protected $entity = Entity::class;
+
+    public function fetchForLicence($licence = null)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->where($qb->expr()->eq($this->alias . '.licence', ':licenceId'));
+        $qb->setParameter('licenceId', $licence->getId());
+
+        return $qb->getQuery()->getResult();
+    }
 
     /**
      * Get a list of transport manager licences with contact details

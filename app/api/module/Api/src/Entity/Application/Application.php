@@ -34,6 +34,7 @@ class Application extends AbstractApplication
     const ERROR_REQUIRES_CONFIRMATION = 'AP-TOL-5';
     const ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED = 'AP-FH-1';
     const ERROR_SAFE_REQUIRE_CONFIRMATION = 'AP-SAFE-1';
+    const ERROR_NO_VEH_ENTERED = 'AP-VEH-1';
 
     const APPLICATION_STATUS_NOT_SUBMITTED = 'apsts_not_submitted';
     const APPLICATION_STATUS_GRANTED = 'apsts_granted';
@@ -479,5 +480,17 @@ class Application extends AbstractApplication
         }
 
         return $code;
+    }
+
+    public function getRemainingSpaces()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->isNull('removalDate')
+        );
+
+        $vehicles = $this->getLicence()->getLicenceVehicles()->matching($criteria);
+
+        return $this->getTotAuthVehicles() - $vehicles->count();
     }
 }

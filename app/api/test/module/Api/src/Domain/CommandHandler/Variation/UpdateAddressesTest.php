@@ -10,20 +10,15 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\UpdateAddresses;
-
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-
 use Dvsa\Olcs\Transfer\Command\Variation\UpdateAddresses as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
-
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\Permission;
-
 use Dvsa\Olcs\Api\Entity\System\Category;
 
 /**
@@ -89,8 +84,7 @@ class UpdateAddressesTest extends CommandHandlerTestCase
                 'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_ADDRESS_CHANGE_DIGITAL,
                 'description' => 'Address Change',
                 'licence' => 456,
-                // @TODO: no...
-                'actionDate' => date('Y-m-d H:i:s'),
+                'actionDate' => date('Y-m-d'),
                 'application' => null,
                 'assignedToUser' => null,
                 'assignedToTeam' => null,
