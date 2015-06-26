@@ -141,4 +141,31 @@ class FeeEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @param string $status
+     * @param boolean $expected
+     *
+     * @dataProvider allowEditProvider
+     */
+    public function testAllowEdit($status, $expected)
+    {
+        $feeStatus = m::mock(RefData::class)->makePartial();
+        $feeStatus->setId($status);
+        $this->sut->setFeeStatus($feeStatus);
+
+        $this->assertEquals($expected, $this->sut->allowEdit());
+    }
+
+    public function allowEditProvider()
+    {
+        return [
+            [Entity::STATUS_PAID, false],
+            [Entity::STATUS_CANCELLED, false],
+            [Entity::STATUS_OUTSTANDING, true],
+            [Entity::STATUS_WAIVE_RECOMMENDED, true],
+            [Entity::STATUS_WAIVED, true],
+            ['invalid', true],
+        ];
+    }
 }

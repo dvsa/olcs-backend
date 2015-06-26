@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Bus;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
  * BusReg Entity
@@ -41,6 +42,23 @@ class BusReg extends AbstractBusReg
     const STATUS_CNS = 'breg_s_cns';
     const STATUS_CANCELLED = 'breg_s_cancelled';
 
+    const FORBIDDEN_ERROR = 'This bus reg can\'t be edited. It must be the latest variation, and not from EBSR';
+
+    /**
+     * A bus reg may only be edited if it's the latest variation, and the record didn't come from EBSR
+     *
+     * @return bool
+     * @throws ForbiddenException
+     */
+    public function canEdit()
+    {
+        if (!$this->isFromEbsr() && $this->isLatestVariation()) {
+            return true;
+        }
+
+        throw new ForbiddenException('No permission to edit this record');
+    }
+
     /**
      * Returns whether the variation is the latest one
      *
@@ -49,6 +67,16 @@ class BusReg extends AbstractBusReg
     public function isLatestVariation()
     {
         return $this->getId() === $this->getLicence()->getLatestBusVariation($this->getRegNo())->getId();
+    }
+
+    /**
+     * Returns whether the record is from EBSR
+     *
+     * @return bool
+     */
+    public function isFromEbsr()
+    {
+        return ($this->isTxcApp === 'Y' ? true : false);
     }
 
     /**
@@ -89,6 +117,8 @@ class BusReg extends AbstractBusReg
         $subsidyDetail
     )
     {
+        $this->canEdit();
+
         $this->setUseAllStops($useAllStops);
         $this->setHasManoeuvre($hasManoeuvre);
         $this->setManoeuvreDetail($manoeuvreDetail);
@@ -118,6 +148,8 @@ class BusReg extends AbstractBusReg
         $qualityContractDetails
     )
     {
+        $this->canEdit();
+
         $this->setIsQualityPartnership($isQualityPartnership);
         $this->setQualityPartnershipDetails($qualityPartnershipDetails);
         $this->setQualityPartnershipFacilitiesUsed($qualityPartnershipFacilitiesUsed);
@@ -133,6 +165,8 @@ class BusReg extends AbstractBusReg
      */
     public function updateTaAuthority($stoppingArrangements)
     {
+        $this->canEdit();
+
         $this->stoppingArrangements = $stoppingArrangements;
 
         return true;
@@ -151,6 +185,8 @@ class BusReg extends AbstractBusReg
         $busRules
     )
     {
+        $this->canEdit();
+
         $this->serviceNo = $serviceNo;
         $this->startPoint = $startPoint;
         $this->finishPoint = $finishPoint;

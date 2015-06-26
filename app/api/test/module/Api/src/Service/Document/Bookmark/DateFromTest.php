@@ -27,7 +27,7 @@ class DateFromTest extends \PHPUnit_Framework_TestCase
         $bookmark->setData(
             [
                 [
-                    'specifiedDate' => '2014-02-03 11:12:34'
+                    'specifiedDate' => new \DateTime('2014-02-03 11:12:34')
                 ],
                 [
                     'Count' => 0, 'Results' => []
@@ -47,13 +47,13 @@ class DateFromTest extends \PHPUnit_Framework_TestCase
         $bookmark->setData(
             [
                 [
-                    'specifiedDate' => '2014-02-03 11:12:34'
+                    'specifiedDate' => new \DateTime('2014-02-03 11:12:34')
                 ],
                 [
                     'interimStatus' => [
                         'id' => Application::INTERIM_STATUS_INFORCE
                     ],
-                    'interimStart' => '2011-01-01 10:10:10'
+                    'interimStart' => new \DateTime('2011-01-01 10:10:10')
                 ]
             ]
         );

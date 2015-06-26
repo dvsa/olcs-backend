@@ -32,12 +32,7 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
         $this->getRepo()->save($irfoPsvAuth);
 
         // deal with IrfoFileNo
-        $irfoFileNo = sprintf(
-            '%s/%d',
-            $irfoPsvAuth->getIrfoPsvAuthType()->getSectionCode(),
-            $irfoPsvAuth->getId()
-        );
-        $irfoPsvAuth->setIrfoFileNo($irfoFileNo);
+        $irfoPsvAuth->populateFileNo();
         $this->getRepo()->save($irfoPsvAuth);
 
         // deal with IrfoPsvAuthNumbers

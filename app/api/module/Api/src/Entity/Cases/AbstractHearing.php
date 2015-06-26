@@ -164,7 +164,7 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
      * @var \Dvsa\Olcs\Api\Entity\Pi\PiVenue
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Pi\PiVenue", fetch="LAZY")
-     * @ORM\JoinColumn(name="venue_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="venue_id", referencedColumnName="id", nullable=true)
      */
     protected $venue;
 

@@ -63,8 +63,9 @@ class SystemParameterTest extends RepositoryTestCase
 
     public function testFetchValue()
     {
-        $result = m::mock(SystemParameterEntity::class);
-        $results = [$result];
+        $spe = new SystemParameterEntity();
+        $spe->setParamValue('VALUE');
+        $results = [$spe];
 
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
@@ -93,6 +94,6 @@ class SystemParameterTest extends RepositoryTestCase
             ->with(SystemParameterEntity::class)
             ->andReturn($repo);
 
-        $this->assertSame($result, $this->sut->fetchValue('system.foo'));
+        $this->assertSame('VALUE', $this->sut->fetchValue('system.foo'));
     }
 }

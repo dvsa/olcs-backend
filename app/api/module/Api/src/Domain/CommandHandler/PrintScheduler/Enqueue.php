@@ -15,6 +15,9 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * Queue a print job
+ *
+ * @TODO this class and the EnqueueFile handler appear to be duplicates in function.
+ * When printing is implemented for real we need to resolve this duplication.
  */
 final class Enqueue extends AbstractCommandHandler
 {
@@ -24,9 +27,8 @@ final class Enqueue extends AbstractCommandHandler
     {
         /* @var $command \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue */
 
-        $document = new \Dvsa\Olcs\Api\Entity\Doc\Document();
+        $document = new \Dvsa\Olcs\Api\Entity\Doc\Document($command->getFileIdentifier());
 
-        $document->setIdentifier($command->getFileIdentifier());
         $document->setDescription($command->getJobName());
         $document->setFilename(str_replace(' ', '_', $command->getJobName()) . '.rtf');
         // hard coded simply so we can demo against *something*
