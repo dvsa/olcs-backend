@@ -145,9 +145,6 @@ class ProcessToValidTest extends CommandHandlerTestCase
      */
     protected function createLicenceStatusRule($licenceStatus)
     {
-        $lsr = new LicenceStatusRule();
-        $lsr->setId(556);
-
         $licence = new \Dvsa\Olcs\Api\Entity\Licence\Licence(
             m::mock(\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class),
             m::mock(\Dvsa\Olcs\Api\Entity\System\RefData::class)
@@ -157,7 +154,9 @@ class ProcessToValidTest extends CommandHandlerTestCase
         $licence->setSuspendedDate('CCC');
         $licence->setId((46));
         $licence->setStatus($this->refData[$licenceStatus]);
-        $lsr->setLicence($licence);
+
+        $lsr = new LicenceStatusRule($licence, $this->refData[$licenceStatus]);
+        $lsr->setId(556);
 
         $licencedVehicle1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle(
             $licence,

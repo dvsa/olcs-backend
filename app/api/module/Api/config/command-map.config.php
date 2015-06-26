@@ -240,8 +240,8 @@ return [
 
     // Transfer - Licence Decisions
     TransferCommand\Licence\RevokeLicence::class => CommandHandler\Licence\Revoke::class,
-    TransferCommand\Licence\CurtailLicence ::class => CommandHandler\Licence\Curtail::class,
-    TransferCommand\Licence\SuspendLicence ::class => CommandHandler\Licence\Suspend::class,
+    TransferCommand\Licence\CurtailLicence::class => CommandHandler\Licence\Curtail::class,
+    TransferCommand\Licence\SuspendLicence::class => CommandHandler\Licence\Suspend::class,
     TransferCommand\Licence\ResetToValid::class => CommandHandler\Licence\ResetToValid::class,
 
     // Transfer - ConditionUndertaking
