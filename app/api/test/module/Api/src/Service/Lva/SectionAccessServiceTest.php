@@ -7,7 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Service\Lva;
 
-use Dvsa\OlcsTest\Bootstrap;
+use OlcsTest\Bootstrap;
 use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
 
@@ -43,10 +43,10 @@ class SectionAccessServiceTest extends PHPUnit_Framework_TestCase
 
         $this->serviceLocator = Bootstrap::getServiceManager();
         $this->serviceLocator->setAllowOverride(true);
-        $this->serviceLocator->setService('Helper\Restriction', $this->mockRestrictionHelper);
+        $this->serviceLocator->setService('RestrictionService', $this->mockRestrictionHelper);
 
-        $this->sut = new SectionAccessService();
-        $this->sut->setServiceLocator($this->serviceLocator);
+        $sut = new SectionAccessService();
+        $this->sut = $sut->createService($this->serviceLocator);
 
         $sections = array(
             'no_restriction' => array(),
