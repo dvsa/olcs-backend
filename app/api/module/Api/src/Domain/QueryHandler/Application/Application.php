@@ -51,7 +51,9 @@ class Application extends AbstractQueryHandler implements AuthAwareInterface
 
         return $this->result(
             $application,
-            [],
+            [
+                'licence'
+            ],
             [
                 'sections' => $this->getSections($application)
             ]
@@ -65,11 +67,21 @@ class Application extends AbstractQueryHandler implements AuthAwareInterface
 
         $hasConditions = $application->getLicence()->hasApprovedUnfulfilledConditions();
 
+        $goodsOrPsv = null;
+        if ($application->getGoodsOrPsv() !== null) {
+            $goodsOrPsv = $application->getGoodsOrPsv()->getId();
+        }
+
+        $licenceType = null;
+        if ($application->getLicenceType() !== null) {
+            $licenceType = $application->getLicenceType()->getId();
+        }
+
         $access = [
             $location,
             $lva,
-            $application->getGoodsOrPsv()->getId(),
-            $application->getLicenceType()->getId(),
+            $goodsOrPsv,
+            $licenceType,
             $hasConditions ? 'hasConditions' : 'noConditions'
         ];
 

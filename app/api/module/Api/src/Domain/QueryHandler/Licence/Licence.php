@@ -67,11 +67,21 @@ class Licence extends AbstractQueryHandler implements AuthAwareInterface
 
         $hasConditions = $licence->hasApprovedUnfulfilledConditions();
 
+        $goodsOrPsv = null;
+        if ($licence->getGoodsOrPsv() !== null) {
+            $goodsOrPsv = $licence->getGoodsOrPsv()->getId();
+        }
+
+        $licenceType = null;
+        if ($licence->getLicenceType() !== null) {
+            $licenceType = $licence->getLicenceType()->getId();
+        }
+
         $access = [
             $location,
             'licence',
-            $licence->getGoodsOrPsv()->getId(),
-            $licence->getLicenceType()->getId(),
+            $goodsOrPsv,
+            $licenceType,
             $hasConditions ? 'hasConditions' : 'noConditions'
         ];
 
