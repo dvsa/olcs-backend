@@ -203,20 +203,18 @@ class Licence extends AbstractLicence
 
     public function getCalculatedValues()
     {
-        $result = function () {
-            $decisionCriteria['activeComLics'] = ($this->getActiveCommunityLicences($this) !== false ? true : false);
-            $decisionCriteria['activeBusRoutes'] = ($this->getActiveBusRoutes($this) !== false ? true : false);
-            $decisionCriteria['activeVariations'] = ($this->getActiveVariations($this) !== false ? true : false);
+        $decisionCriteria['activeComLics'] = $this->getActiveCommunityLicences($this) !== false;
+        $decisionCriteria['activeBusRoutes'] = $this->getActiveBusRoutes($this) !== false;
+        $decisionCriteria['activeVariations'] = $this->getActiveVariations($this) !== false;
 
-            if (in_array(true, $decisionCriteria)) {
-                return $decisionCriteria;
-            }
+        $suitableForDecisions = true;
 
-            return true;
-        };
+        if (in_array(true, $decisionCriteria)) {
+            $suitableForDecisions = $decisionCriteria;
+        }
 
         return [
-            'suitableForDecisions' => $result()
+            'suitableForDecisions' => $suitableForDecisions
         ];
     }
 

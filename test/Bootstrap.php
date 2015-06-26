@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest;
+namespace OlcsTest;
 
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
