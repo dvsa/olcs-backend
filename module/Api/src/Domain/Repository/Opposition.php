@@ -33,6 +33,7 @@ class Opposition extends AbstractRepository
             ->withRefData()
             ->with('case')
             ->with('opposer', 'o')
+            ->with('grounds')
             ->withPersonContactDetails('o.contactDetails', 'c')
             ->with('createdBy')
             ->with('lastModifiedBy')
