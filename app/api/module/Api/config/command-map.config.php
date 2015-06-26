@@ -39,6 +39,8 @@ return [
     TransferCommand\Application\DeleteGoodsVehicle::class => CommandHandler\Application\DeleteGoodsVehicle::class,
     TransferCommand\Application\CreateVehicleListDocument::class
         => CommandHandler\Application\CreateVehicleListDocument::class,
+    TransferCommand\Application\UpdateVehicleDeclaration::class =>
+        CommandHandler\Application\UpdateVehicleDeclaration::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
