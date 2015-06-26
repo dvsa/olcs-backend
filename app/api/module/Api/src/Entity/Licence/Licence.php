@@ -363,4 +363,17 @@ class Licence extends AbstractLicence
 
         return array_shift($tradingNames)->getName();
     }
+
+    public function getOpenComplaintsCount()
+    {
+        $count = 0;
+        foreach ($this->getCases() as $case) {
+            foreach ($case->getComplaints() as $complaint) {
+                if ($complaint->getIsCompliance() == 0 && $complaint->isOpen()) {
+                    $count++;
+                }
+            }
+        }
+        return $count;
+    }
 }
