@@ -57,7 +57,6 @@ class Overview extends AbstractQueryHandler
                 'status',
                 'goodsOrPsv',
                 'organisation' => [
-                    'tradingNames',
                     'licences' => [
                         'criteria' => $statusCriteria,
                         'status',
