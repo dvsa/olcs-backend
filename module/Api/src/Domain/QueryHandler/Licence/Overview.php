@@ -28,14 +28,12 @@ class Overview extends AbstractQueryHandler
         $licence = $this->getRepo()->fetchUsingId($query);
 
         $discCriteria = Criteria::create();
-        $discCriteria->where(
-            $discCriteria->expr()->isNull('ceasedDate')
-        );
+        $discCriteria
+            ->where($discCriteria->expr()->isNull('ceasedDate'));
 
         $vehicleCriteria = Criteria::create();
         $vehicleCriteria
             ->where($vehicleCriteria->expr()->isNull('removalDate'))
-            // ->andWhere($vehicleCriteria->expr()->isNotNull('specifiedDate'));
             ->andWhere($vehicleCriteria->expr()->neq('specifiedDate', null));
 
         $statusCriteria = Criteria::create();
@@ -49,8 +47,15 @@ class Overview extends AbstractQueryHandler
                 ]
             ));
 
+        $caseCriteria = Criteria::create();
+        $caseCriteria
+            ->where($caseCriteria->expr()->eq('licence', $licence->getId()))
+            ->where($caseCriteria->expr()->isNull('closedDate'))
+            ->andWhere($caseCriteria->expr()->isNull('deletedDate'));
+
         $applications = $this->getRepo('Application')
             ->fetchActiveForOrganisation($licence->getOrganisation()->getId());
+
 
         return $this->result(
             $licence,
@@ -76,6 +81,10 @@ class Overview extends AbstractQueryHandler
                 'changeOfEntitys',
                 'trafficArea',
                 'gracePeriods',
+                'cases' => [
+                    'criteria' => $caseCriteria,
+                    'publicInquirys',
+                ],
             ],
             [
                 'currentApplications' => $this->resultList($applications),
