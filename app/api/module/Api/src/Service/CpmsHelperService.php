@@ -184,7 +184,7 @@ class CpmsHelperService implements FactoryInterface
      * @param string|DateTime $receiptDate
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
-     * @return boolean success
+     * @return array|false only return successful response, otherwise false
      */
     public function recordCashPayment(
         $fees,
@@ -237,7 +237,11 @@ class CpmsHelperService implements FactoryInterface
 
         $this->debug('Cash payment response', ['response' => $response]);
 
-        return $this->isSuccessfulPaymentResponse($response);
+        if ($this->isSuccessfulPaymentResponse($response)) {
+            return $response;
+        }
+
+        return false;
     }
 
     /**
@@ -251,7 +255,7 @@ class CpmsHelperService implements FactoryInterface
      * @param string $slipNo paying in slip number
      * @param string $chequeNo cheque number
      * @param string $chequeDate (from DateSelect)
-     * @return boolean success
+     * @return array|false only return successful response, otherwise false
      */
     public function recordChequePayment(
         $fees,
@@ -308,7 +312,11 @@ class CpmsHelperService implements FactoryInterface
 
         $this->debug('Cheque payment response', ['response' => $response]);
 
-        return $this->isSuccessfulPaymentResponse($response);
+        if ($this->isSuccessfulPaymentResponse($response)) {
+            return $response;
+        }
+
+        return false;
     }
 
     /**
@@ -321,7 +329,7 @@ class CpmsHelperService implements FactoryInterface
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
      * @param string $poNo Postal Order number
-     * @return boolean success
+     * @return array|false only return successful response, otherwise false
      */
     public function recordPostalOrderPayment(
         $fees,
@@ -376,7 +384,11 @@ class CpmsHelperService implements FactoryInterface
 
         $this->debug('Postal order payment response', ['response' => $response]);
 
-        return $this->isSuccessfulPaymentResponse($response);
+        if ($this->isSuccessfulPaymentResponse($response)) {
+            return $response;
+        }
+
+        return false;
     }
 
     /**
