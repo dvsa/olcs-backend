@@ -19,11 +19,13 @@ class ShortNoticeByBusReg extends AbstractQueryHandler
     {
         $shortNotice = $this->getRepo()->fetchByBusReg($query);
 
-        return $this->resultList(
-            $shortNotice,
-            [
-                'busReg'
-            ]
-        );
+        return [
+            'result' => $this->resultList(
+                $shortNotice,
+                [
+                    'busReg'
+                ]
+            )
+        ];
     }
 }
