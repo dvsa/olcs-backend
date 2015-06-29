@@ -13,6 +13,7 @@ use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Repository Interface
@@ -32,12 +33,16 @@ interface RepositoryInterface
      */
     public function fetchList(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY);
 
+    public function fetchPaginatedList(QueryBuilder $qb, $hydrateMode = Query::HYDRATE_ARRAY);
+
     /**
      * @param QueryInterface $query
      * @param int $hydrateMode
      * @return int
      */
     public function fetchCount(QueryInterface $query);
+
+    public function fetchPaginatedCount(QueryBuilder $qb);
 
     public function lock($entity, $version);
 

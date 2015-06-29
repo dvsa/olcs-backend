@@ -1,18 +1,21 @@
 <?php
 
 /**
- * LicenceStatusRule Repo
+ * LicenceStatusRule.php
  *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Joshua Curtis <josh.curtis@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule as Entity;
 
 /**
  * LicenceStatusRule Repo
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Joshua Curtis <josh.curtis@valtech.co.uk>
  */
 class LicenceStatusRule extends AbstractRepository
 {
@@ -67,5 +70,21 @@ class LicenceStatusRule extends AbstractRepository
         $doctrineQb->setParameter('endDate', $date);
 
         return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch for a licence.
+     *
+     * @param null $licence
+     * @return array
+     */
+    public function fetchForLicence($licence = null)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->where($qb->expr()->eq($this->alias . '.licence', ':licenceId'));
+        $qb->setParameter('licenceId', $licence->getId());
+
+        return $qb->getQuery()->getResult();
     }
 }

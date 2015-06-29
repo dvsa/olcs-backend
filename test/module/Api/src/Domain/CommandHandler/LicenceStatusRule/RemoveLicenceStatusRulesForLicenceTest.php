@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * RemoveLicenceStatusRulesForLicenceTest.php
+ *
+ * @author Josh Curtis <josh.curtis@valtech.co.uk>
+ */
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\LicenceStatusRule;
+
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Mockery as m;
+use Doctrine\ORM\Query;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Transfer\Command\LicenceStatusRule\DeleteLicenceStatusRule;
+use Dvsa\Olcs\Api\Domain\Repository\LicenceStatusRule as LicenceStatusRuleRepo;
+use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
+use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence as Cmd;
+
+/**
+ * Class RemoveLicenceStatusRulesForLicenceTest
+ *
+ * @package Dvsa\OlcsTest\Api\Domain\CommandHandler\LicenceStatusRule
+ *
+ * @author Josh Curtis <josh.curtis@valtech.co.uk>
+ */
+class RemoveLicenceStatusRulesForLicenceTest extends CommandHandlerTestCase
+{
+    public function setUp()
+    {
+        $this->sut = new RemoveLicenceStatusRulesForLicence();
+        $this->mockRepo('LicenceStatusRule', LicenceStatusRuleRepo::class);
+
+        parent::setUp();
+    }
+
+    public function testHandleCommand()
+    {
+        $data = [
+            'licence' => m::mock(Licence::class)->shouldReceive('getId')->getMock()
+        ];
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['LicenceStatusRule']
+            ->shouldReceive('fetchForLicence')
+            ->once()
+            ->andReturn(
+                [
+                    m::mock(LicenceStatusRule::class)
+                        ->shouldReceive('getId')
+                        ->once()
+                        ->andReturn(1)
+                        ->getMock()
+                ]
+            );
+
+        $this->expectedSideEffect(DeleteLicenceStatusRule::class, ['id' => 1], new Result());
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+            ],
+            'messages' => [
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+}

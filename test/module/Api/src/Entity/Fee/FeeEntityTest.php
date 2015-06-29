@@ -2,9 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
 
 /**
@@ -76,9 +77,6 @@ class FeeEntityTest extends EntityTester
      */
     public function testGetRuleStartDate($accrualRuleId, $licence, $expected)
     {
-        $now = new \DateTime('2015-06-10 12:34:56');
-        $this->sut->setCurrentDateTime($now);
-
         $feeType = m::mock()
             ->shouldReceive('getAccrualRule')
             ->andReturn((new RefData())->setId($accrualRuleId))
@@ -94,7 +92,7 @@ class FeeEntityTest extends EntityTester
 
     public function ruleStartDateProvider()
     {
-        $now = new \DateTime('2015-06-10 12:34:56');
+        $now = new DateTime();
 
         return [
             'immediate' => [
@@ -108,7 +106,7 @@ class FeeEntityTest extends EntityTester
                     ->shouldReceive('getInForceDate')
                     ->andReturn('2015-04-03')
                     ->getMock(),
-                new \DateTime('2015-04-03'),
+                new DateTime('2015-04-03'),
             ],
             'licence start date missing' => [
                 Entity::ACCRUAL_RULE_LICENCE_START,
@@ -124,7 +122,7 @@ class FeeEntityTest extends EntityTester
                     ->shouldReceive('getExpiryDate')
                     ->andReturn('2015-04-03')
                     ->getMock(),
-                new \DateTime('2015-04-04'),
+                new DateTime('2015-04-04'),
             ],
             'continuation date missing' => [
                 Entity::ACCRUAL_RULE_CONTINUATION,
