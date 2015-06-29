@@ -21,10 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BusShortNotice extends AbstractBusShortNotice
 {
-    public function getCalculatedValues()
+    public function getCalculatedBundleValues()
     {
         return [
-            'busReg' => null,
             'isLatestVariation' => $this->getBusReg()->isLatestVariation()
         ];
     }
