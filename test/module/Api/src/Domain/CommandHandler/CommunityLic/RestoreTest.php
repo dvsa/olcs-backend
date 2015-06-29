@@ -108,7 +108,6 @@ class RestoreTest extends CommandHandlerTestCase
 
     /**
      * @dataProvider statusProvider
-     * @group test123
      */
     public function testHandleCommand($specifiedDate, $status)
     {
