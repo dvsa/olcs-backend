@@ -10,7 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Task;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -36,6 +36,6 @@ final class CreateTranslateToWelshTask extends AbstractCommandHandler implements
             'assignedToTeam' => $this->getUser()->getTeam()->getId()
         ];
 
-        return $this->handleSideEffect(CreateTask::create($data));
+        return $this->handleSideEffect(CreateTaskCmd::create($data));
     }
 }

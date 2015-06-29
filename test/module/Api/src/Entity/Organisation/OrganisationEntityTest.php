@@ -126,4 +126,14 @@ class OrganisationEntityTest extends EntityTester
             ['N', '', 'name']
         ];
     }
+
+    public function testGetAdminOrganisationUsers()
+    {
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getOrganisationUsers->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturn(['foo' => 'bar']);
+
+        $this->assertEquals(['foo' => 'bar'], $organisation->getAdminOrganisationUsers());
+    }
 }
