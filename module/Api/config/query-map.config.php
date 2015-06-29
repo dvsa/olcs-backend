@@ -206,6 +206,9 @@ return [
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
 
+    // Operator
+    TransferQuery\Operator\BusinessDetails::class => QueryHandler\Operator\BusinessDetails::class,
+
     // Licence Vehicle
     TransferQuery\LicenceVehicle\LicenceVehicle::class => QueryHandler\LicenceVehicle\LicenceVehicle::class,
 ];
