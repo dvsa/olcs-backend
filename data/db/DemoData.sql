@@ -110,9 +110,9 @@ SET @decision_submission_id = LAST_INSERT_ID();
 
 -- submission actions
 
-INSERT INTO submission_action SET comment = 'Submission ation for recommendation', urgent = 1, submission_id = @recommendation_submission_id, created_on = NOW(), last_updated_on = NOW(), sender_user_id = 1, recipient_user_id = 1, submission_action_status_id = @recommentation_submission_action_status_id;
+INSERT INTO submission_action SET comment = 'Submission ation for recommendation', submission_id = @recommendation_submission_id, created_on = NOW(), last_updated_on = NOW(), submission_action_status_id = @recommentation_submission_action_status_id;
 
-INSERT INTO submission_action SET comment = 'Submission ation for decision', urgent = 1, submission_id = @decision_submission_id, created_on = NOW(), last_updated_on = NOW(), sender_user_id = 1, recipient_user_id = 1, submission_action_status_id = @decision_submission_action_status_id;
+INSERT INTO submission_action SET comment = 'Submission ation for decision', submission_id = @decision_submission_id, created_on = NOW(), last_updated_on = NOW(), submission_action_status_id = @decision_submission_action_status_id;
 
 COMMIT;
 
