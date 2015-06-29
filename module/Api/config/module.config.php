@@ -16,8 +16,11 @@ return [
             'DocumentGenerator' => \Dvsa\Olcs\Api\Service\Document\DocumentGenerator::class,
             'DateService' => \Dvsa\Olcs\Api\Service\Date::class,
             'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
+            'RestrictionService' => \Dvsa\Olcs\Api\Service\Lva\RestrictionService::class,
+            'SectionConfig' =>  \Dvsa\Olcs\Api\Service\Lva\SectionConfig::class,
         ],
         'factories' => [
+            'SectionAccessService' => \Dvsa\Olcs\Api\Service\Lva\SectionAccessService::class,
             'ContentStore' => \Dvsa\Jackrabbit\Client\Service\ClientFactory::class,
             'IdentityProvider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
