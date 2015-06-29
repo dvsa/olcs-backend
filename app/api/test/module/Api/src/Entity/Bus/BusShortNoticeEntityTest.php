@@ -32,8 +32,23 @@ class BusShortNoticeEntityTest extends EntityTester
      */
     public function testGetCalculatedValues()
     {
-        $result = $this->entity->getCalculatedValues();
+        $id = 15;
+        $isLatestVariation = true;
+
+        //the bus reg entity related to short notice
+        $licenceBusReg = new Entity();
+        $licenceBusReg->setId($id);
+
+        $busRegMock = m::mock(BusRegEntity::class);
+        $busRegMock->shouldReceive('isLatestVariation')->once()->andReturn($isLatestVariation);
+
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('getBusReg')->once()->andReturn($busRegMock);
+
+        $result = $sut->getCalculatedValues();
+
         $this->assertEquals($result['busReg'], null);
+        $this->assertEquals($result['isLatestVariation'], true);
     }
 
     /**
