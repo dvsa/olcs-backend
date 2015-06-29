@@ -38,7 +38,6 @@ final class Overview extends AbstractCommandHandler implements TransactionedInte
 
         $this->setLeadTcArea($application, $command);
 
-        // @todo set received date and target completion date
         if (!is_null($command->getReceivedDate())) {
             $application->setReceivedDate(new \DateTime($command->getReceivedDate()));
         }
