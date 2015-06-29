@@ -21,7 +21,7 @@ class Overview extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['Application'];
+    protected $extraRepos = ['Application', 'TrafficArea'];
 
     public function handleQuery(QueryInterface $query)
     {
@@ -49,6 +49,7 @@ class Overview extends AbstractQueryHandler
 
         $applications = $this->getOtherApplicationsFromLicence($licence);
         $openCases = $this->getOpenCases($licence);
+        $trafficAreas = $this->getRepo('TrafficArea')->getValueOptions();
 
         return $this->result(
             $licence,
@@ -79,6 +80,10 @@ class Overview extends AbstractQueryHandler
                 'openCases' => $this->resultList($openCases, ['publicInquirys']),
                 'tradingName' => $licence->getTradingName(),
                 'complaintsCount' => $licence->getOpenComplaintsCount(),
+                // extra data needed to populate select boxes
+                'valueOptions' => [
+                    'trafficAreas' => $trafficAreas,
+                ]
             ]
         );
     }
