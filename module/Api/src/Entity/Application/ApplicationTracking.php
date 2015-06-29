@@ -21,6 +21,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ApplicationTracking extends AbstractApplicationTracking
 {
+    const STATUS_NOT_SET        = 0;
+    const STATUS_ACCEPTED       = 1;
+    const STATUS_NOT_ACCEPTED   = 2;
+    const STATUS_NOT_APPLICABLE = 3;
+
     public function __construct(Application $application)
     {
         $this->setApplication($application);
@@ -29,5 +34,15 @@ class ApplicationTracking extends AbstractApplicationTracking
     protected function getCalculatedValues()
     {
         return ['application' => null];
+    }
+
+    public static function getValueOptions()
+    {
+        return [
+            (string) self::STATUS_NOT_SET        => '',
+            (string) self::STATUS_ACCEPTED       => 'Accepted',
+            (string) self::STATUS_NOT_ACCEPTED   => 'Not accepted',
+            (string) self::STATUS_NOT_APPLICABLE => 'Not applicable',
+        ];
     }
 }

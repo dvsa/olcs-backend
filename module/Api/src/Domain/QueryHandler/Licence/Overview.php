@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Licence
+ * Licence Overview
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
@@ -13,7 +13,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
- * Licence
+ * Licence Overview
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
