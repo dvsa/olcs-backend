@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocumentSpecificCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\CreateCorrespondenceRecord;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -46,7 +46,7 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
             $result->merge($this->generateTranslationTask($licence, $command->getDescription()));
         }
 
-        $documentResult = $this->proxyCommand($command, CreateDocumentSpecific::class);
+        $documentResult = $this->proxyCommand($command, CreateDocumentSpecificCmd::class);
         $result->merge($documentResult);
 
         if ($licence->getOrganisation()->getAllowEmail() === 'N'

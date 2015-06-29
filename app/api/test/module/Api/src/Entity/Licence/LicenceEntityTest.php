@@ -325,4 +325,76 @@ class LicenceEntityTest extends EntityTester
 
         $this->assertFalse($licence->hasApprovedUnfulfilledConditions());
     }
+
+    public function testIsGoods()
+    {
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_GOODS_VEHICLE);
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+
+        $this->assertTrue($licence->isGoods());
+    }
+
+    public function testIsGoodsFalse()
+    {
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_PSV);
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+
+        $this->assertFalse($licence->isGoods());
+    }
+
+    public function testIsPsv()
+    {
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_PSV);
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+
+        $this->assertTrue($licence->isPsv());
+    }
+
+    public function testIsPsvFalse()
+    {
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_GOODS_VEHICLE);
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+
+        $this->assertFalse($licence->isPsv());
+    }
+
+    public function testIsSpecialRestricted()
+    {
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_SPECIAL_RESTRICTED);
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertTrue($licence->isSpecialRestricted());
+    }
+
+    public function testIsSpecialRestrictedFalse()
+    {
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertFalse($licence->isSpecialRestricted());
+    }
 }
