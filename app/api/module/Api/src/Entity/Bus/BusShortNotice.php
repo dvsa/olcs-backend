@@ -72,8 +72,7 @@ class BusShortNotice extends AbstractBusShortNotice
         $trcDetail,
         $policeChange,
         $policeDetail
-    )
-    {
+    ) {
         $this->getBusReg()->canEdit();
 
         $this->bankHolidayChange = $bankHolidayChange;
