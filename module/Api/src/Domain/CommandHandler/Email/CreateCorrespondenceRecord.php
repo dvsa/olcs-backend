@@ -49,7 +49,7 @@ final class CreateCorrespondenceRecord extends AbstractCommandHandler implements
         $users = $this->getAdminEmailAddresses($licence->getOrganisation());
 
         $message = new Message(
-            implode(',', $users),
+            $users,
             'email.licensing-information.' . $command->getType()  . '.subject'
         );
 
@@ -78,18 +78,7 @@ final class CreateCorrespondenceRecord extends AbstractCommandHandler implements
         foreach ($organisation->getAdminOrganisationUsers() as $orgUser) {
 
             if ($orgUser->getUser()->getEmailAddress() !== null) {
-                $person = $orgUser->getUser()->getContactDetails()->getPerson();
-
-                if ($person === null) {
-                    $users[] = $orgUser->getUser()->getEmailAddress();
-                } else {
-                    $users[] = sprintf(
-                        '%s %s <%s>',
-                        $person->getForename(),
-                        $person->getFamilyName(),
-                        $orgUser->getUser()->getEmailAddress()
-                    );
-                }
+                $users[] = $orgUser->getUser()->getEmailAddress();
             }
         }
 
