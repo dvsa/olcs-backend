@@ -23,7 +23,10 @@ class BusShortNotice extends AbstractBusShortNotice
 {
     public function getCalculatedValues()
     {
-        return ['busReg' => null];
+        return [
+            'busReg' => null,
+            'isLatestVariation' => $this->getBusReg()->isLatestVariation()
+        ];
     }
 
     /**
