@@ -84,6 +84,7 @@ return [
     TransferCommand\Licence\TransferVehicles::class => CommandHandler\Licence\TransferVehicles::class,
     TransferCommand\Licence\PrintLicence::class => CommandHandler\Licence\PrintLicence::class,
     Command\Document\DispatchDocument::class => CommandHandler\Document\DispatchDocument::class,
+    TransferCommand\Licence\Overview::class => CommandHandler\Licence\Overview::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
