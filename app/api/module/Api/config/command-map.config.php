@@ -75,6 +75,8 @@ return [
     TransferCommand\Licence\CreateGoodsVehicle::class => CommandHandler\Licence\CreateGoodsVehicle::class,
     TransferCommand\Licence\CreateVehicleListDocument::class => CommandHandler\Licence\CreateVehicleListDocument::class,
     TransferCommand\Licence\TransferVehicles::class => CommandHandler\Licence\TransferVehicles::class,
+    TransferCommand\Licence\PrintLicence::class => CommandHandler\Licence\PrintLicence::class,
+    Command\Document\DispatchDocument::class => CommandHandler\Document\DispatchDocument::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
@@ -379,6 +381,7 @@ return [
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
+    Command\Email\CreateCorrespondenceRecord::class => CommandHandler\Email\CreateCorrespondenceRecord::class,
 
     // Person
     TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,

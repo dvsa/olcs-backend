@@ -61,6 +61,7 @@ final class CreateTask extends AbstractCommandHandler
             case Task::TYPE_MEDIUM:
             case Task::TYPE_COMPLEX:
             default:
+                $rules = [];
                 return;
         }
 

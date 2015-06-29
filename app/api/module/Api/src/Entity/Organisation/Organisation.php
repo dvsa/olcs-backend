@@ -47,6 +47,16 @@ class Organisation extends AbstractOrganisation
         return $this->hasInforceLicences;
     }
 
+    public function getAdminOrganisationUsers()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->eq('isAdministrator', 'Y')
+        );
+
+        return $this->getOrganisationUsers()->matching($criteria);
+    }
+
     /**
      * @return array
      * @deprecated
