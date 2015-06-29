@@ -102,7 +102,7 @@ class OrganisationEntityTest extends EntityTester
             ->andReturn('type')
             ->getMock();
 
-         $organisation->updateOrganisation(
+        $organisation->updateOrganisation(
             'name',
             '12345678',
             'fname',

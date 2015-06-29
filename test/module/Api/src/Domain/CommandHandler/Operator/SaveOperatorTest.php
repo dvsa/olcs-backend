@@ -33,7 +33,7 @@ use Doctrine\ORM\Query;
 class SaveOperatorTest extends CommandHandlerTestCase
 {
     const NATURE_OF_BUSINESS = 'testnob';
-    
+
     public function setUp()
     {
         $this->sut = new SaveOperator();
@@ -83,7 +83,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
         $command = CreateCmd::create($data);
         $this->sut->handleCommand($command);
     }
-    
+
     public function organisationProvider()
     {
         return [
@@ -99,7 +99,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
                 [
                     'name' => ['Operator name is required'],
                     'natureOfBusiness' => ['Nature of Business is required']
-                ]                
+                ]
             ],
             [
                 // ORG_TYPE_REGISTERED_COMPANY or OrganisationEntity::ORG_TYPE_LLP
@@ -158,7 +158,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ]
         ];
     }
-    
+
     public function testHanldeCommandCreateRcOrLlp()
     {
         $data = [
@@ -181,14 +181,14 @@ class SaveOperatorTest extends CommandHandlerTestCase
         ];
 
         $command = CreateCmd::create($data);
-        
+
         $address = $data['address'];
         $address['countryCode'] = null;
         $address['town'] = null;
         $address['contactType'] = AddressEntity::CONTACT_TYPE_REGISTERED_ADDRESS;
         $addressResult = new Result();
         $addressResult->addId('contactDetails', 1);
-        
+
         $this->expectedSideEffect(
             SaveAddressCmd::class,
             $address,
@@ -211,7 +211,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
         $this->assertEquals(1, $result->getIds()['organisation']);
         $this->assertEquals('Organisation created successfully', $result->getMessages()[0]);
     }
-    
+
     public function testHanldeCommandUpdatePartnershipOrOther()
     {
         $data = [
@@ -228,7 +228,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
         ];
 
         $command = UpdateCmd::create($data);
-        
+
         $mockOrganisation = m::mock(OrganisationEntity::class)->makePartial();
         $mockOrganisation->setId(1);
 
@@ -243,7 +243,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
         $this->assertEquals(1, $result->getIds()['organisation']);
         $this->assertEquals('Organisation updated successfully', $result->getMessages()[0]);
-        
+
     }
 
     public function testHanldeCommandUpdateSoleTrader()
@@ -283,16 +283,13 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with($mockPerson)
             ->once();
-                
+
         $result = $this->sut->handleCommand($command);
         $this->assertEquals(1, $result->getIds()['organisation']);
         $this->assertEquals('Organisation updated successfully', $result->getMessages()[0]);
-        
+
     }
-    
-    /**
-     * @group test123
-     */
+
     public function testHanldeCommandCreateSoleTrader()
     {
         $data = [
@@ -320,23 +317,49 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->with($mockOrganisation)
             ->once();
 
-        $mockPerson = m::mock(PersonEntity::class)->makePartial();
-        $mockPerson->setForename('firstname');
-        $mockPerson->setForename('familyName');
+        $this->repoMap['Person']
+            ->shouldReceive('save')
+            ->with(m::type(PersonEntity::class))
+            ->once()
+            ->getMock();
 
-        $this->repoMap['Person']
+        $this->repoMap['OrganisationPerson']
             ->shouldReceive('save')
-            ->with($mockPerson)
-            ->once();
-                
-        $this->repoMap['Person']
+            ->with(m::type(OrganisationPersonEntity::class))
+            ->once()
+            ->getMock();
+
+        $result = $this->sut->handleCommand($command);
+        $this->assertEquals(1, $result->getIds()['organisation']);
+        $this->assertEquals('Organisation updated successfully', $result->getMessages()[0]);
+    }
+
+    public function testHanldeCommandUpdateIrfo()
+    {
+        $data = [
+            'businessType' => OrganisationEntity::ORG_TYPE_IRFO,
+            'natureOfBusiness' => [self::NATURE_OF_BUSINESS],
+            'name' => 'name',
+            'isIrfo' => 'Y',
+            'id' => 1,
+            'version' => 2,
+        ];
+
+        $command = UpdateCmd::create($data);
+
+        $mockOrganisation = m::mock(OrganisationEntity::class)->makePartial();
+        $mockOrganisation->setId(1);
+
+        $this->repoMap['Organisation']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 2)
+            ->andReturn($mockOrganisation)
+            ->once()
             ->shouldReceive('save')
-            ->with($mockPerson)
+            ->with($mockOrganisation)
             ->once();
 
         $result = $this->sut->handleCommand($command);
         $this->assertEquals(1, $result->getIds()['organisation']);
         $this->assertEquals('Organisation updated successfully', $result->getMessages()[0]);
-        
-    }    
+    }
 }

@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Operator\BusinessDetails as BusinessDetail
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Transfer\Query\Operator\BusinessDetails as Qry;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
+use Mockery as m;
 
 /**
  * Operator Business Details Test
@@ -21,7 +22,7 @@ class BusinessDetailsTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = m::mock(BusinessDetailsQueryHanlder::class)->makePartial();
+        $this->sut = m::mock(BusinessDetailsQueryHanlder::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->mockRepo('Organisation', OrganisationRepo::class);
 
         parent::setUp();
@@ -35,7 +36,7 @@ class BusinessDetailsTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn('organisation')
             ->once();
-        
+
         $this->sut->shouldReceive('result')
             ->with(
                 'organisation',
