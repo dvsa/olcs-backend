@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Submission;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Submission\Submission;
 
 /**
  * SubmissionAction Entity
@@ -18,5 +19,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SubmissionAction extends AbstractSubmissionAction
 {
+    public function __construct(Submission $submission, $isDecision, array $actionTypes, $comment)
+    {
+        $this->submission = $submission;
+        $this->isDecision = $isDecision;
+        $this->actionTypes = $actionTypes;
+        $this->comment = $comment;
+    }
 
+    public function update(array $actionTypes, $comment)
+    {
+        $this->actionTypes = $actionTypes;
+        $this->comment = $comment;
+    }
 }

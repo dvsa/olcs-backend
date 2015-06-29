@@ -184,6 +184,12 @@ return [
     TransferCommand\Cases\Complaint\DeleteComplaint::class =>
         CommandHandler\Cases\Complaint\DeleteComplaint::class,
 
+    // Transfer - Submission
+    TransferCommand\Submission\CreateSubmissionAction::class =>
+        CommandHandler\Submission\CreateSubmissionAction::class,
+    TransferCommand\Submission\UpdateSubmissionAction::class =>
+        CommandHandler\Submission\UpdateSubmissionAction::class,
+
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
     Command\Document\CreateDocumentSpecific::class => CommandHandler\Document\CreateDocumentSpecific::class,

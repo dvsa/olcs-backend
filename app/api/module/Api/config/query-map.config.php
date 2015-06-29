@@ -107,6 +107,9 @@ return [
     TransferQuery\Cases\Statement\Statement::class => QueryHandler\Cases\Statement\Statement::class,
     TransferQuery\Cases\Statement\StatementList::class => QueryHandler\Cases\Statement\StatementList::class,
 
+    // Submission
+    TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
+
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
     TransferQuery\Processing\Note::class => QueryHandler\Processing\Note::class,
