@@ -33,6 +33,14 @@ return [
     TransferCommand\Application\CreateWorkshop::class => CommandHandler\Application\CreateWorkshop::class,
     TransferCommand\Application\UpdateWorkshop::class => CommandHandler\Application\UpdateWorkshop::class,
     TransferCommand\Application\SubmitApplication::class => CommandHandler\Application\SubmitApplication::class,
+    TransferCommand\Application\UpdateVehicles::class => CommandHandler\Application\UpdateVehicles::class,
+    TransferCommand\Application\CreateGoodsVehicle::class => CommandHandler\Application\CreateGoodsVehicle::class,
+    TransferCommand\Application\UpdateGoodsVehicle::class => CommandHandler\Application\UpdateGoodsVehicle::class,
+    TransferCommand\Application\DeleteGoodsVehicle::class => CommandHandler\Application\DeleteGoodsVehicle::class,
+    TransferCommand\Application\CreateVehicleListDocument::class
+        => CommandHandler\Application\CreateVehicleListDocument::class,
+    TransferCommand\Application\UpdateVehicleDeclaration::class =>
+        CommandHandler\Application\UpdateVehicleDeclaration::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -64,6 +72,9 @@ return [
     TransferCommand\Licence\CreateCompanySubsidiary::class => CommandHandler\Licence\CreateCompanySubsidiary::class,
     TransferCommand\Licence\DeleteCompanySubsidiary::class => CommandHandler\Licence\DeleteCompanySubsidiary::class,
     TransferCommand\Licence\UpdateSafety::class => CommandHandler\Licence\UpdateSafety::class,
+    TransferCommand\Licence\CreateGoodsVehicle::class => CommandHandler\Licence\CreateGoodsVehicle::class,
+    TransferCommand\Licence\CreateVehicleListDocument::class => CommandHandler\Licence\CreateVehicleListDocument::class,
+    TransferCommand\Licence\TransferVehicles::class => CommandHandler\Licence\TransferVehicles::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
@@ -218,8 +229,23 @@ return [
     TransferCommand\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class =>
         CommandHandler\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
 
+    // Transfer - Licence Status Rule
+    TransferCommand\LicenceStatusRule\CreateLicenceStatusRule::class
+        => CommandHandler\LicenceStatusRule\CreateLicenceStatusRule::class,
+    TransferCommand\LicenceStatusRule\UpdateLicenceStatusRule::class
+        => CommandHandler\LicenceStatusRule\UpdateLicenceStatusRule::class,
+    TransferCommand\LicenceStatusRule\DeleteLicenceStatusRule::class
+        => CommandHandler\LicenceStatusRule\DeleteLicenceStatusRule::class,
+
     // Transfer - Document
     TransferCommand\Document\CreateLetter::class => CommandHandler\Document\CreateLetter::class,
+
+    // Transfer - Licence Decisions
+    TransferCommand\Licence\RevokeLicence::class => CommandHandler\Licence\Revoke::class,
+    TransferCommand\Licence\CurtailLicence::class => CommandHandler\Licence\Curtail::class,
+    TransferCommand\Licence\SuspendLicence::class => CommandHandler\Licence\Suspend::class,
+    TransferCommand\Licence\SurrenderLicence::class => CommandHandler\Licence\Surrender::class,
+    TransferCommand\Licence\ResetToValid::class => CommandHandler\Licence\ResetToValid::class,
 
     // Transfer - ConditionUndertaking
     TransferCommand\Cases\ConditionUndertaking\CreateConditionUndertaking::class =>
@@ -262,6 +288,16 @@ return [
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
     Command\Licence\UpdateTotalCommunityLicences::class => CommandHandler\Licence\UpdateTotalCommunityLicences::class,
     Command\Licence\SaveAddresses::class => CommandHandler\Licence\SaveAddresses::class,
+
+    // Domain - Discs
+    Command\Discs\CeaseGoodsDiscs::class => CommandHandler\Discs\CeaseGoodsDiscs::class,
+    Command\Discs\CeasePsvDiscs::class => CommandHandler\Discs\CeasePsvDiscs::class,
+
+    // Domain - Licence Vehicles
+    Command\LicenceVehicle\RemoveLicenceVehicle::class => CommandHandler\LicenceVehicle\RemoveLicenceVehicle::class,
+
+    // Domain - Transport Managers
+    Command\Tm\DeleteTransportManagerLicence::class => CommandHandler\Tm\DeleteTransportManagerLicence::class,
 
     // Domain - ContactDetails
     Command\ContactDetails\SaveAddress::class => CommandHandler\ContactDetails\SaveAddress::class,
@@ -328,6 +364,8 @@ return [
         => CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class,
     Command\LicenceStatusRule\ProcessToValid::class
         => CommandHandler\LicenceStatusRule\ProcessToValid::class,
+    Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence::class
+        => CommandHandler\LicenceStatusRule\RemoveLicenceStatusRulesForLicence::class,
 
     // Transport Manager Application
     TransferCommand\TransportManagerApplication\Delete::class
@@ -359,7 +397,16 @@ return [
     // Domain - PrintScheduler
     Command\PrintScheduler\Enqueue::class  => CommandHandler\PrintScheduler\Enqueue::class,
 
+
     // Transfer - Operator
     TransferCommand\Operator\Create::class => CommandHandler\Operator\SaveOperator::class,
     TransferCommand\Operator\Update::class => CommandHandler\Operator\SaveOperator::class,
+
+    // Vehicle
+    Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
+    TransferCommand\Vehicle\UpdateGoodsVehicle::class => CommandHandler\Vehicle\UpdateGoodsVehicle::class,
+    TransferCommand\Vehicle\DeleteGoodsVehicle::class => CommandHandler\Vehicle\DeleteGoodsVehicle::class,
+    Command\Vehicle\CeaseActiveDiscs::class => CommandHandler\Vehicle\CeaseActiveDiscs::class,
+    TransferCommand\Vehicle\ReprintDisc::class => CommandHandler\Vehicle\ReprintDisc::class,
+    Command\Vehicle\CreateGoodsDiscs::class => CommandHandler\Vehicle\CreateGoodsDiscs::class,
 ];

@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Fee;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -73,14 +74,14 @@ class Fee extends AbstractFee
      *
      * @see https://jira.i-env.net/browse/OLCS-6005 for business rules
      *
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getRuleStartDate()
     {
         $rule = $this->getFeeType()->getAccrualRule()->getId();
         switch ($rule) {
             case self::ACCRUAL_RULE_IMMEDIATE:
-                return $this->getCurrentDateTime();
+                return new DateTime();
             case self::ACCRUAL_RULE_LICENCE_START:
                 $licenceStart = $this->getLicence()->getInForceDate();
                 if (!is_null($licenceStart)) {
@@ -111,36 +112,4 @@ class Fee extends AbstractFee
             ]
         );
     }
-
-    /**************************************************************************/
-    /* Allow injection of current date/time */
-
-    /**
-     * @var \DateTime $now
-     * @todo migrate this to use Util\DateTime class when available
-     */
-    protected $now;
-
-    /**
-     * @codeCoverageIgnore
-     * @return \DateTime
-     */
-    public function getCurrentDateTime()
-    {
-        if (is_null($this->now)) {
-            $this->now = new \DateTime();
-        }
-        return $this->now;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @param \DateTime $datetime
-     * @return $this
-     */
-    public function setCurrentDateTime(\DateTime $datetime)
-    {
-        $this->now = $datetime;
-    }
-    /**************************************************************************/
 }
