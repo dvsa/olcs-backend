@@ -308,4 +308,17 @@ class Licence extends AbstractLicence
 
         return $this->getOrganisation()->getLicences()->matching($criteria);
     }
+
+    public function hasApprovedUnfulfilledConditions()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->eq('isDraft', 0)
+        );
+        $criteria->andWhere(
+            $criteria->expr()->eq('isFulfilled', 0)
+        );
+
+        return ($this->getConditionUndertakings()->matching($criteria)->count() > 0);
+    }
 }
