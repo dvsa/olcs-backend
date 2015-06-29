@@ -1,7 +1,7 @@
 <?php
 
 /**
- * GoodsDisc
+ * Goods Disc
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -10,7 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as Entity;
 
 /**
- * GoodsDisc
+ * Goods Disc
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */

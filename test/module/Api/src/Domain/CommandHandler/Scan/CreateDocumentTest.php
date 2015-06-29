@@ -6,6 +6,7 @@ use Dvsa\Olcs\Transfer\Command\Scan\CreateDocument as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Scan\CreateDocument as CommandHandler;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * CreateDocumentTest
@@ -54,7 +55,7 @@ class CreateDocumentTest extends CommandHandlerTestCase
                 'isExternal'        => false,
                 'isReadOnly'        => true,
                 'isScan'            => true,
-                'issuedDate'        => (new \DateTime())->format(\DateTime::W3C),
+                'issuedDate'        => (new DateTime())->format(\DateTime::W3C),
                 'size'              => 23454,
                 'licence'           => 61,
                 'busReg'            => 62,

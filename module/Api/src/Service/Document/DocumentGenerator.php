@@ -78,7 +78,7 @@ class DocumentGenerator implements ServiceLocatorAwareInterface
         return $documentService->populateBookmarks($file, $result);
     }
 
-    public function uploadGeneratedContent($content, $folder, $meta = null)
+    public function uploadGeneratedContent($content, $folder = null, $meta = null)
     {
         /** @var ContentStoreFileUploader $uploader */
         $uploader = $this->getServiceLocator()->get('FileUploader');

@@ -16,6 +16,7 @@ class RequiresConfirmationException extends Exception
 {
     public function __construct($message, $code)
     {
+        $this->message = $message;
         $this->messages[$code] = $message;
     }
 }

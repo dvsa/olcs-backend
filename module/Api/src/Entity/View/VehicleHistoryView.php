@@ -96,8 +96,6 @@ class VehicleHistoryView
      */
     protected $discNo;
 
-
-
     /**
      * Get the id
      *
