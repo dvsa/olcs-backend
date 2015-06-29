@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Vehicle;
 
+use Mockery as m;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as Entity;
 
@@ -18,4 +20,13 @@ class GoodsDiscEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testConstruct()
+    {
+        $licenceVehicle = m::mock(LicenceVehicle::class);
+
+        $entity = new Entity($licenceVehicle);
+
+        $this->assertSame($licenceVehicle, $entity->getLicenceVehicle());
+    }
 }

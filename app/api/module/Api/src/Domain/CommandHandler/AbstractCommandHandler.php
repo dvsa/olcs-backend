@@ -121,4 +121,17 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     {
         return $this->getCommandHandler()->handleCommand($command);
     }
+
+    /**
+     * Proxy to another command, using all data from the original command
+     *
+     * @param $originalCommand
+     * @param $proxyCommandClassName
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
+    protected function proxyCommand($originalCommand, $proxyCommandClassName)
+    {
+        $dtoData = $originalCommand->getArrayCopy();
+        return $this->handleSideEffect($proxyCommandClassName::create($dtoData));
+    }
 }

@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
@@ -150,6 +151,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $command->getSlipNo()
         );
 
+        if ($response === false) {
+            throw new RuntimeException('error from CPMS service');
+        }
+
         $receiptDate = new \DateTime($command->getReceiptDate());
         $feeStatusRef = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID);
         $paymentMethodRef = $this->getRepo()->getRefdataReference(FeeEntity::METHOD_CASH);
@@ -201,6 +206,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $command->getChequeNo(),
             $command->getChequeDate()
         );
+
+        if ($response === false) {
+            throw new RuntimeException('error from CPMS service');
+        }
 
         $receiptDate = new \DateTime($command->getReceiptDate());
         $chequeDate = new \DateTime($command->getChequeDate());
@@ -255,6 +264,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $command->getSlipNo(),
             $command->getPoNo()
         );
+
+        if ($response === false) {
+            throw new RuntimeException('error from CPMS service');
+        }
 
         $receiptDate = new \DateTime($command->getReceiptDate());
         $feeStatusRef = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID);

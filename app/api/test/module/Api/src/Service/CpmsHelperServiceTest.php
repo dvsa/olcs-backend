@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Service;
 
 use Dvsa\Olcs\Api\Service\CpmsHelperService;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -79,6 +80,8 @@ class CpmsHelperServiceTest extends MockeryTestCase
             $this->getStubFee(2, 125.25, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25'),
         ];
 
+        $now = (new DateTime())->format('Y-m-d');
+
         $params = [
             'customer_reference' => '99',
             'scope' => 'CARD',
@@ -90,7 +93,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
                     'sales_reference' => '1',
                     'product_reference' => 'GVR_APPLICATION_FEE',
                     'payment_reference' => [
-                        'rule_start_date' => '2015-06-10',
+                        'rule_start_date' => $now,
                     ],
                 ],
                 [
@@ -254,7 +257,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
             '123456'
         );
 
-        $this->assertTrue($result);
+        $this->assertEquals($response, $result);
     }
 
     public function testRecordCashPaymentFailureReturnsFalse()
@@ -341,7 +344,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
             '2015-03-01'
         );
 
-        $this->assertTrue($result);
+        $this->assertEquals($response, $result);
     }
 
     public function testRecordChequePaymentFailureReturnsFalse()
@@ -427,7 +430,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
             '234567'
         );
 
-        $this->assertTrue($result);
+        $this->assertEquals($response, $result);
     }
 
     public function testRecordPostalOrderPaymentFailureReturnsFalse()
@@ -485,9 +488,6 @@ class CpmsHelperServiceTest extends MockeryTestCase
             $licence->setInForceDate($licenceStartDate);
             $fee->setLicence($licence);
         }
-
-        $now = new \DateTime('2015-06-10 12:34:56');
-        $fee->setCurrentDateTime($now);
 
         return $fee;
     }

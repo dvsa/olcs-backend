@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Conviction Entity
@@ -31,4 +32,18 @@ class Conviction extends AbstractConviction
     const DEFENDANT_TYPE_OWNER        = 'def_t_owner';
     const DEFENDANT_TYPE_PARTNER      = 'def_t_part';
     const DEFENDANT_TYPE_TM           = 'def_t_tm';
+
+    const ERROR_CON_CAT = 'con-cat';
+
+    public function updateConvictionCategory($type, $description)
+    {
+        if ($type === null && empty($description)) {
+            throw new ValidationException(
+                ['convictionCategory' => [self::ERROR_CON_CAT => 'You must specify a conviction category']]
+            );
+        }
+
+        $this->convictionCategory = $type;
+        $this->categoryText = $description;
+    }
 }

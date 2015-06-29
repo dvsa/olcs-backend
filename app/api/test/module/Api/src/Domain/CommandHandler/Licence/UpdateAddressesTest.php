@@ -7,22 +7,18 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateAddresses;
-
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-
-use Dvsa\Olcs\Transfer\Command\Licence\UpdateAddresses as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
-
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\User\Permission;
-
+use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateAddresses;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Transfer\Command\Licence\UpdateAddresses as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Update Addresses test
@@ -68,6 +64,7 @@ class UpdateAddressesTest extends CommandHandlerTestCase
             $result
         );
 
+        $now = (new DateTime())->format('Y-m-d H:i:s');
         $this->expectedSideEffect(
             CreateTask::class,
             [
@@ -75,8 +72,7 @@ class UpdateAddressesTest extends CommandHandlerTestCase
                 'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_ADDRESS_CHANGE_DIGITAL,
                 'description' => 'Address Change',
                 'licence' => 123,
-                // @TODO: no...
-                'actionDate' => date('Y-m-d H:i:s'),
+                'actionDate' => $now,
                 'application' => null,
                 'assignedToUser' => null,
                 'assignedToTeam' => null,
