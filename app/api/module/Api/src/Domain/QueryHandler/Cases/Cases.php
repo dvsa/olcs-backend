@@ -28,6 +28,7 @@ final class Cases extends AbstractQueryHandler
             $case,
             [
                 'outcomes',
+                'categorys',
                 'appeals',
                 'stays',
                 'legacyOffences',
