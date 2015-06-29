@@ -41,6 +41,10 @@ return [
         => CommandHandler\Application\CreateVehicleListDocument::class,
     TransferCommand\Application\UpdateVehicleDeclaration::class =>
         CommandHandler\Application\UpdateVehicleDeclaration::class,
+    TransferCommand\Application\WithdrawApplication::class
+        => CommandHandler\Application\WithdrawApplication::class,
+    TransferCommand\Application\ReviveApplication::class
+        => CommandHandler\Application\ReviveApplication::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -79,6 +83,9 @@ return [
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
     Command\Licence\Suspend::class => CommandHandler\Licence\Suspend::class,
+    Command\Licence\Withdraw::class => CommandHandler\Licence\Withdraw::class,
+    Command\Licence\Grant::class => CommandHandler\Licence\Grant::class,
+    Command\Licence\UnderConsideration::class => CommandHandler\Licence\UnderConsideration::class,
 
     TransferCommand\Licence\CreatePsvDiscs::class => CommandHandler\Licence\CreatePsvDiscs::class,
     TransferCommand\Licence\VoidPsvDiscs::class => CommandHandler\Licence\VoidPsvDiscs::class,
