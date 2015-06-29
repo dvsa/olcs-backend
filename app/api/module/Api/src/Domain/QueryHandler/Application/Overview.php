@@ -21,7 +21,7 @@ class Overview extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['Fee'];
+    protected $extraRepos = ['Fee', 'Opposition'];
 
     public function handleQuery(QueryInterface $query)
     {
@@ -57,23 +57,9 @@ class Overview extends AbstractQueryHandler
         return count($fees);
     }
 
-    /**
-     * @todo
-     */
     protected function getOppositionCount($application)
     {
-        // $query = [
-        //     'sort' => 'createdOn',
-        //     'order' => 'DESC',
-        // ];
-
-        // $bundle = $this->tableBundle;
-        // $bundle['children']['case'] = [
-        //     'criteria' => [
-        //         'application' => $applicationId,
-        //     ],
-        //     'required' => true
-        // ];
-        return 0;
+        $oppositions = $this->getRepo('Opposition')->fetchByApplicationId($application->getId());
+        return count($oppositions);
     }
 }

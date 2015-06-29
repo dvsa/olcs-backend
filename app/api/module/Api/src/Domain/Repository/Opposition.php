@@ -24,13 +24,6 @@ class Opposition extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function __construct(
-        EntityManagerInterface $em,
-        QueryBuilderInterface $queryBuilder
-    ) {
-        parent::__construct($em, $queryBuilder);
-    }
-
     public function fetchUsingCaseId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
@@ -51,6 +44,22 @@ class Opposition extends AbstractRepository
         $result = $qb->getQuery()->getResult($hydrateMode);
 
         return $result[0];
+    }
+
+
+    public function fetchByApplicationId($applicationId)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('case', 'c')
+            ->order('createdOn', 'DESC');
+
+        $qb->andWhere($qb->expr()->eq('c.application', ':application'))
+            ->setParameter('application', $applicationId);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
