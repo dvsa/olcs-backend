@@ -45,11 +45,18 @@ class Appeal extends AbstractRepository
 
         $this->applyListJoins($qb);
 
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->byId($query->getId());
+        if (method_exists($query, 'getId')) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.id', ':id'))
+                ->setParameter('id', $query->getId());
+        }
 
-        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
-            ->setParameter('byCase', $query->getCase());
+        if (method_exists($query, 'getCase')) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
+                ->setParameter('byCase', $query->getCase());
+        }
+
+        $queryBuilderHelper = $this->getQueryBuilder()->modifyQuery($qb);
+        $queryBuilderHelper->withRefdata();
 
         $result = $qb->getQuery()->getResult($hydrateMode);
 
