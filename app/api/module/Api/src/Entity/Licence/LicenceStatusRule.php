@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * LicenceStatusRule Entity
@@ -19,5 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LicenceStatusRule extends AbstractLicenceStatusRule
 {
-
+    public function __construct(Licence $licence, RefData $status)
+    {
+        $this->licence = $licence;
+        $this->licenceStatus = $status;
+    }
 }

@@ -232,17 +232,15 @@ class ProcessToRevokeCurtailSuspendTest extends CommandHandlerTestCase
      */
     protected function createLicenceStatusRule($licenceStatus, $ruleStatus = Licence::LICENCE_STATUS_VALID)
     {
-        $lsr = new LicenceStatusRule();
-        $lsr->setId(556);
-        $lsr->setLicenceStatus($this->refData[$ruleStatus]);
-
         $licence = new \Dvsa\Olcs\Api\Entity\Licence\Licence(
             m::mock(\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class),
             m::mock(\Dvsa\Olcs\Api\Entity\System\RefData::class)
         );
         $licence->setId((46));
         $licence->setStatus($this->refData[$licenceStatus]);
-        $lsr->setLicence($licence);
+
+        $lsr = new LicenceStatusRule($licence, $this->refData[$ruleStatus]);
+        $lsr->setId(556);
 
         return $lsr;
     }
