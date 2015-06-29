@@ -31,7 +31,7 @@ trait AuthAwareTrait
     }
 
     /**
-     * @return UserEntity
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCurrentUser()
     {
