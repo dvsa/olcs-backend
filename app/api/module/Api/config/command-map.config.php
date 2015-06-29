@@ -47,6 +47,7 @@ return [
         => CommandHandler\Application\ReviveApplication::class,
     TransferCommand\Application\RefuseApplication::class
         => CommandHandler\Application\RefuseApplication::class,
+    TransferCommand\Application\Overview::class => CommandHandler\Application\Overview::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
