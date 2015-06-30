@@ -45,6 +45,8 @@ return [
         => CommandHandler\Application\WithdrawApplication::class,
     TransferCommand\Application\ReviveApplication::class
         => CommandHandler\Application\ReviveApplication::class,
+    TransferCommand\Application\RefuseApplication::class
+        => CommandHandler\Application\RefuseApplication::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -87,6 +89,7 @@ return [
     Command\Licence\Suspend::class => CommandHandler\Licence\Suspend::class,
     Command\Licence\Withdraw::class => CommandHandler\Licence\Withdraw::class,
     Command\Licence\Grant::class => CommandHandler\Licence\Grant::class,
+    Command\Licence\Refuse::class => CommandHandler\Licence\Refuse::class,
     Command\Licence\UnderConsideration::class => CommandHandler\Licence\UnderConsideration::class,
 
     TransferCommand\Licence\CreatePsvDiscs::class => CommandHandler\Licence\CreatePsvDiscs::class,
