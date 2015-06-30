@@ -164,6 +164,7 @@ return [
             'LicenceVehicle' => RepositoryFactory::class,
             'Vehicle' => RepositoryFactory::class,
             'VehicleHistoryView' => RepositoryFactory::class,
+            'InspectionRequest' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
