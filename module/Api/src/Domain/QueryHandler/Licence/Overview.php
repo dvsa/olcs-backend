@@ -49,7 +49,6 @@ class Overview extends AbstractQueryHandler
         );
 
         $applications = $this->getOtherApplicationsFromLicence($licence);
-        $openCases = $this->getOpenCases($licence);
         $trafficAreas = $this->getRepo('TrafficArea')->getValueOptions();
 
         return $this->result(
@@ -78,7 +77,7 @@ class Overview extends AbstractQueryHandler
             ],
             [
                 'currentApplications' => $this->resultList($applications),
-                'openCases' => $this->resultList($openCases, ['publicInquirys']),
+                'openCases' => $this->resultList($licence->getOpenCases(), ['publicInquirys']),
                 'tradingName' => $licence->getTradingName(),
                 'complaintsCount' => $licence->getOpenComplaintsCount(),
                 // extra data needed to populate select boxes
@@ -93,17 +92,5 @@ class Overview extends AbstractQueryHandler
     {
         $organisationId = $licence->getOrganisation()->getId();
         return $this->getRepo('Application')->fetchActiveForOrganisation($organisationId);
-    }
-
-    protected function getOpenCases($licence)
-    {
-        $allCases = (array) $licence->getCases()->getIterator();
-        return array_filter(
-            $allCases,
-            function ($case) {
-                return $case->isOpen();
-            }
-        );
-
     }
 }
