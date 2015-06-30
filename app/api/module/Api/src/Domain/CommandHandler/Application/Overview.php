@@ -78,7 +78,7 @@ final class Overview extends AbstractCommandHandler implements TransactionedInte
             /** @var OrganisationEntity $organisation */
             $organisation = $application->getLicence()->getOrganisation();
             $organisation->setLeadTcArea(
-                 $this->getRepo()->getReference(TrafficAreaEntity::class, $command->getLeadTcArea())
+                $this->getRepo()->getReference(TrafficAreaEntity::class, $command->getLeadTcArea())
             );
         }
     }

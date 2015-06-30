@@ -37,15 +37,16 @@ class Overview extends AbstractQueryHandler
             ->andWhere($vehicleCriteria->expr()->neq('specifiedDate', null));
 
         $statusCriteria = Criteria::create();
-        $statusCriteria
-            ->where($statusCriteria->expr()->in(
+        $statusCriteria->where(
+            $statusCriteria->expr()->in(
                 'status',
                 [
                     LicenceEntity::LICENCE_STATUS_VALID,
                     LicenceEntity::LICENCE_STATUS_SUSPENDED,
                     LicenceEntity::LICENCE_STATUS_CURTAILED,
                 ]
-            ));
+            )
+        );
 
         $applications = $this->getOtherApplicationsFromLicence($licence);
         $openCases = $this->getOpenCases($licence);
