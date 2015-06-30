@@ -112,26 +112,21 @@ class OppositionTest extends RepositoryTestCase
         $this->assertEquals($result, $mockResult[0]);
     }
 
-    public function testBuildDefaultListQuery()
+    public function testApplyListJoins()
     {
         // mock SUT to allow testing the protected method
         $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $qb = m::mock(QueryBuilder::class);
-        $query = m::mock(QueryInterface::class);
-        $mockQb = m::mock(\Dvsa\Olcs\Api\Domain\QueryBuilder::class);
+        $mockQb = m::mock(QueryBuilder::class);
 
         $sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
-
-        $mockQb->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
-        $mockQb->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
         $mockQb->shouldReceive('with')->with('application')->once()->andReturnSelf();
         $mockQb->shouldReceive('with')->with('case', 'ca')->once()->andReturnSelf();
         $mockQb->shouldReceive('with')->with('opposer', 'o')->once()->andReturnSelf();
         $mockQb->shouldReceive('withPersonContactDetails')->with('o.contactDetails')->once()
             ->andReturnSelf();
 
-        $sut->buildDefaultListQuery($qb, $query);
+        $sut->applyListJoins($mockQb);
     }
 
     public function testApplyFiltersCase()
