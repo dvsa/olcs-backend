@@ -54,19 +54,16 @@ class Opposition extends AbstractRepository
     }
 
     /**
+     * Override to add additional data to the default fetchList() method
      * @param QueryBuilder $qb
-     * @param QueryInterface $query
      */
-    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query)
+    protected function applyListJoins(QueryBuilder $qb)
     {
-        parent::buildDefaultListQuery($qb, $query);
-
         $this->getQueryBuilder()
             ->with('application')
             ->with('case', 'ca')
             ->with('opposer', 'o')
             ->withPersonContactDetails('o.contactDetails');
-
     }
 
     /**
