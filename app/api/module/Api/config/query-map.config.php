@@ -223,4 +223,7 @@ return [
 
     // Complaint
     TransferQuery\Complaint\GetList::class => QueryHandler\Complaint\GetList::class,
+    
+    // Inspection Request
+    TransferQuery\InspectionRequest\OperatingCentres::class => QueryHandler\InspectionRequest\OperatingCentres::class,
 ];
