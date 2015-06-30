@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository\LicenceRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndUploadDocument as GenerateAndUploadCmd;
-use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\EnqueueFile as EnqueueFileCmd;
+use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCmd;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\PrintSchedulerInterface;
 
@@ -106,8 +106,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             EnqueueFileCmd::class,
             [
-                'fileId' => 1,
-                'options' => [PrintSchedulerInterface::OPTION_DOUBLE_SIDED],
+                'fileIdentifier' => 1,
                 'jobName' => 'Community Licence'
             ],
             $printResult

@@ -104,10 +104,16 @@ class ReprintTest extends CommandHandlerTestCase
             new Result()
         );
 
-        $this->repoMap['Licence']
+        $mockLicence = m::mock()
             ->shouldReceive('getSerialNoPrefixFromTrafficArea')
-            ->with($licenceId)
             ->andReturn($serialNoPrefix)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchById')
+            ->with($licenceId)
+            ->andReturn($mockLicence)
             ->once()
             ->getMock();
 
