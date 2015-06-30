@@ -89,7 +89,8 @@ class BusReg extends AbstractBusReg
         return [
             'licence' => null,
             'parent' => null,
-            'isLatestVariation' => $this->isLatestVariation()
+            'isLatestVariation' => $this->isLatestVariation(),
+            'shortNotice' => null
         ];
     }
 
@@ -115,8 +116,7 @@ class BusReg extends AbstractBusReg
         $notFixedStopDetail,
         $subsidised,
         $subsidyDetail
-    )
-    {
+    ) {
         $this->canEdit();
 
         $this->setUseAllStops($useAllStops);
@@ -146,8 +146,7 @@ class BusReg extends AbstractBusReg
         $qualityPartnershipFacilitiesUsed,
         $isQualityContract,
         $qualityContractDetails
-    )
-    {
+    ) {
         $this->canEdit();
 
         $this->setIsQualityPartnership($isQualityPartnership);
@@ -183,8 +182,7 @@ class BusReg extends AbstractBusReg
         $endDate,
         $busNoticePeriod,
         $busRules
-    )
-    {
+    ) {
         $this->canEdit();
 
         $this->serviceNo = $serviceNo;
