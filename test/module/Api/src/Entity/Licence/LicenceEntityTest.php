@@ -305,4 +305,24 @@ class LicenceEntityTest extends EntityTester
 
         $this->assertTrue($licence->hasCommunityLicenceOfficeCopy([1]));
     }
+
+    public function testHasApprovedUnfulfilledConditions()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getConditionUndertakings->matching->count')
+            ->andReturn(1);
+
+        $this->assertTrue($licence->hasApprovedUnfulfilledConditions());
+    }
+
+    public function testHasApprovedUnfulfilledConditionsNone()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getConditionUndertakings->matching->count')
+            ->andReturn(0);
+
+        $this->assertFalse($licence->hasApprovedUnfulfilledConditions());
+    }
 }

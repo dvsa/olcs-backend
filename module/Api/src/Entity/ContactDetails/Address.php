@@ -22,6 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Address extends AbstractAddress
 {
+    const CONTACT_TYPE_REGISTERED_ADDRESS = 'ct_reg';
+
     public function updateAddress(
         $addressLine1 = null,
         $addressLine2 = null,
