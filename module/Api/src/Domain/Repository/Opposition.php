@@ -65,6 +65,7 @@ class Opposition extends AbstractRepository
     /**
      * Override to add additional data to the default fetchList() method
      * @param QueryBuilder $qb
+     * @inheritdoc
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
