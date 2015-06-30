@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking as ApplicationTrackingEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Command\Application\Overview as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -42,6 +43,9 @@ class OverviewTest extends CommandHandlerTestCase
             ],
             OrganisationEntity::class => [
                 1 => m::mock(OrganisationEntity::class)
+            ],
+            TrafficAreaEntity::class => [
+                'B' => m::mock(TrafficAreaEntity::class)
             ],
         ];
 
@@ -115,5 +119,9 @@ class OverviewTest extends CommandHandlerTestCase
         $this->assertEquals('2015-06-10', $application->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals('2016-01-02', $application->getTargetCompletionDate()->format('Y-m-d'));
         $this->assertEquals(2, $application->getApplicationTracking()->getAddressesStatus());
+        $this->assertEquals(
+            $this->mapReference(TrafficAreaEntity::class, 'B'),
+            $application->getLicence()->getOrganisation()->getLeadTcArea()
+        );
     }
 }
