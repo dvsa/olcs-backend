@@ -36,7 +36,7 @@ final class UnderConsideration extends AbstractCommandHandler implements Transac
         $this->getRepo()->save($licence);
 
         $result = new Result();
-        $result->addMessage('Licence' . $licence->getId() . ' has been set to under consideration');
+        $result->addMessage('Licence ' . $licence->getId() . ' has been set to under consideration');
 
         return $result;
     }

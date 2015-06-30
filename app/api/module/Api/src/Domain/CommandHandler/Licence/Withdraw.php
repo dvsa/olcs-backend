@@ -36,7 +36,7 @@ final class Withdraw extends AbstractCommandHandler implements TransactionedInte
         $this->getRepo()->save($licence);
 
         $result = new Result();
-        $result->addMessage('Licence' . $licence->getId() . ' has been withdrawn');
+        $result->addMessage('Licence ' . $licence->getId() . ' withdrawn');
 
         return $result;
     }

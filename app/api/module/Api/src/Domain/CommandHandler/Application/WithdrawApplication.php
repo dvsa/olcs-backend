@@ -30,7 +30,7 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
     public function handleCommand(CommandInterface $command)
     {
         /** @var Application $application */
-        $application = $this->getRepo()->getReference(Application::class, $command->getId());
+        $application = $this->getRepo()->fetchById($command->getId());
 
         $application->setStatus($this->getRepo()->getRefdataReference(Application::APPLICATION_STATUS_WITHDRAWN));
         $application->setWithdrawnDate(new \DateTime());
@@ -61,6 +61,8 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
                 )
             )
         );
+
+        $result->addMessage('Application ' . $application->getId() . ' withdrawn.');
 
         return $result;
     }
