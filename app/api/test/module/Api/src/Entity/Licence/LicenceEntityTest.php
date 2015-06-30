@@ -185,7 +185,7 @@ class LicenceEntityTest extends EntityTester
                 'tach_internal',
                 '',
                 'Y',
-                ValidationException::class
+                null
             ],
             [
                 2,
