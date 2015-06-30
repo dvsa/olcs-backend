@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Withdraw;
 use Dvsa\Olcs\Transfer\Query\LicenceVehicle\LicenceVehicle;
@@ -29,6 +30,8 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
     public function handleCommand(CommandInterface $command)
     {
+        $result = new Result();
+
         /** @var Application $application */
         $application = $this->getRepo()->fetchById($command->getId());
 
@@ -38,7 +41,7 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
         $this->getRepo()->save($application);
 
-        $result = new Result();
+        $result->merge($this->createSnapshot($command->getId()));
 
         if ($application->getIsVariation() === false) {
             $result->merge(
@@ -65,5 +68,11 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
         $result->addMessage('Application ' . $application->getId() . ' withdrawn.');
 
         return $result;
+    }
+
+    protected function createSnapshot($applicationId)
+    {
+        $data = ['id' => $applicationId, 'event' => CreateSnapshotCmd::ON_REFUSE];
+        return $this->handleSideEffect(CreateSnapshotCmd::create($data));
     }
 }
