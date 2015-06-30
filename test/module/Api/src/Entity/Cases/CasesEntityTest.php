@@ -37,6 +37,8 @@ class CasesEntityTest extends EntityTester
         $ecmsNo = 'abcd123456';
         $description = 'description';
 
+        $this->entity->setCaseType('case_t_lic');
+
         $this->entity->update(
             $caseType,
             $categorys,
