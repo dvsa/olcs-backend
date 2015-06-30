@@ -211,4 +211,10 @@ return [
 
     // Licence Vehicle
     TransferQuery\LicenceVehicle\LicenceVehicle::class => QueryHandler\LicenceVehicle\LicenceVehicle::class,
+
+    // Opposition
+    TransferQuery\Opposition\GetList::class => QueryHandler\Opposition\GetList::class,
+
+    // Complaint
+    TransferQuery\Complaint\GetList::class => QueryHandler\Complaint\GetList::class,
 ];
