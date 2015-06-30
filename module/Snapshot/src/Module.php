@@ -1,11 +1,16 @@
 <?php
 
-namespace Dvsa\Olcs\Email;
+/**
+ * Module
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
+namespace Dvsa\Olcs\Snapshot;
 
 /**
- * Email Module
+ * Module
  *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
 class Module
 {
@@ -15,7 +20,7 @@ class Module
         /* @var $translator \Zend\I18n\Translator\Translator */
         $translator = $e->getApplication()->getServiceManager()->get('translator');
         $translator->setLocale('en_GB');
-        $translator->addTranslationFilePattern('phparray', __DIR__ . '/../config/language', '%s.php', 'email');
+        $translator->addTranslationFilePattern('phparray', __DIR__ . '/../config/language', '%s.php', 'snapshot');
     }
 
     public function getConfig()
@@ -23,11 +28,14 @@ class Module
         return include __DIR__ . '/../config/module.config.php';
     }
 
-    /**
-     * Empty on purpose to defer loading to composer
-     * @codeCoverageIgnore No value in testing an empty method
-     */
     public function getAutoloaderConfig()
     {
+        return [
+            'Zend\Loader\StandardAutoloader' => [
+                'namespaces' => [
+                    __NAMESPACE__ => __DIR__,
+                ],
+            ],
+        ];
     }
 }
