@@ -17,6 +17,15 @@ class ShortNoticeByBusReg extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchByBusReg($query);
+        $shortNotice = $this->getRepo()->fetchByBusReg($query);
+
+        return [
+            'result' => $this->resultList(
+                $shortNotice,
+                [
+                    'busReg'
+                ]
+            )
+        ];
     }
 }
