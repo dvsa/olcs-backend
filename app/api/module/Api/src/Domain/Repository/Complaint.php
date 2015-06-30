@@ -37,15 +37,12 @@ class Complaint extends AbstractRepository
     }
 
     /**
+     * Override to add additional data to the default fetchList() method
      * @param QueryBuilder $qb
-     * @param QueryInterface $query
      */
-    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query)
+    protected function applyListJoins(QueryBuilder $qb)
     {
-        parent::buildDefaultListQuery($qb, $query);
-
         $this->getQueryBuilder()
-            ->with('case', 'ca')
             ->with('complainantContactDetails', 'ccd')
             ->with('ccd.person')
             ->with('ocComplaints', 'occ')
@@ -59,6 +56,7 @@ class Complaint extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
+
         if ($query->getCase()) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
                 ->setParameter('byCase', $query->getCase());
@@ -68,6 +66,7 @@ class Complaint extends AbstractRepository
                 ->setParameter('isCompliance', $query->getIsCompliance());
         }
         if ($query->getLicence() !== null) {
+            $this->getQueryBuilder()->with('case', 'ca');
             $qb->andWhere($qb->expr()->eq('ca.licence', ':licence'))
                 ->setParameter('licence', $query->getLicence());
         }
