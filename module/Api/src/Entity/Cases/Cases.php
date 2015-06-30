@@ -140,6 +140,9 @@ class Cases extends AbstractCases
         return !($this->getAppeals()->isEmpty());
     }
 
+    /**
+     * @return boolean
+     */
     public function isOpen()
     {
         return (
@@ -148,6 +151,9 @@ class Cases extends AbstractCases
         );
     }
 
+    /**
+     * @return boolean
+     */
     public function hasComplaints()
     {
         return !$this->getComplaints()->isEmpty();
