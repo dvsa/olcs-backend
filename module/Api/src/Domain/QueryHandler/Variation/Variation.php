@@ -7,20 +7,16 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Variation;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * Variation
+ * Variation (Identical to Application)
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Variation extends AbstractQueryHandler
+class Variation extends Application
 {
-    protected $repoServiceName = 'Application';
 
-    public function handleQuery(QueryInterface $query)
-    {
-        return $this->getRepo()->fetchUsingId($query);
-    }
 }
