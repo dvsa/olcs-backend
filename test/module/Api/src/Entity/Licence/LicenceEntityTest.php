@@ -5,13 +5,16 @@ namespace Dvsa\OlcsTest\Api\Entity\Licence;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Mockery as m;
 
 /**
  * Licence Entity Unit Tests
@@ -145,7 +148,7 @@ class LicenceEntityTest extends EntityTester
         $licences = m::mock(ArrayCollection::class)->makePartial();
         $licences->add($licence1);
 
-        $org = m::mock(Organisation::class)->makePartial();
+        $org = m::mock(OrganisationEntity::class)->makePartial();
         $org->setLicences($licences);
 
         $licences->shouldReceive('matching')
@@ -396,5 +399,85 @@ class LicenceEntityTest extends EntityTester
         $licence->setLicenceType($licenceType);
 
         $this->assertFalse($licence->isSpecialRestricted());
+    }
+
+    public function testGetTradingNameNone()
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence
+            ->shouldReceive('getOrganisation->getTradingNames')
+            ->once()
+            ->andReturn(null);
+
+        $this->assertEquals('None', $licence->getTradingName());
+    }
+
+    public function testGetTradingNamesSorting()
+    {
+        $tradingName1 = m::mock(TradingNameEntity::class)
+            ->makePartial()
+            ->setName('Foo')
+            ->setCreatedOn('2015-06-01 00:00:00');
+        $tradingName2 = m::mock(TradingNameEntity::class)
+            ->makePartial()
+            ->setName('Bar')
+            ->setCreatedOn('2015-06-01 00:00:00');
+        $tradingName3 = m::mock(TradingNameEntity::class)
+            ->makePartial()
+            ->setName('Baz')
+            ->setCreatedOn('2015-07-01 00:00:00');
+        $tradingNames = new ArrayCollection();
+        $tradingNames->add($tradingName1);
+        $tradingNames->add($tradingName2);
+        $tradingNames->add($tradingName3);
+
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence
+            ->shouldReceive('getOrganisation->getTradingNames')
+            ->once()
+            ->andReturn($tradingNames);
+
+        $this->assertEquals('Bar', $licence->getTradingName());
+    }
+
+    public function testGetOpenComplaintsCount()
+    {
+        $case1 = m::mock(CaseEntity::class)->makePartial();
+        $case2 = m::mock(CaseEntity::class)->makePartial();
+        $cases = new ArrayCollection();
+        $cases->add($case1);
+        $cases->add($case2);
+
+        $case1
+            ->shouldReceive('getComplaints')
+            ->andReturn(
+                [
+                    m::mock(ComplaintEntity::class)
+                        ->makePartial()
+                        ->shouldReceive('getIsCompliance')
+                        ->andReturn(0)
+                        ->shouldReceive('isOpen')
+                        ->andReturn(true)
+                        ->getMock()
+                ]
+            );
+        $case2
+            ->shouldReceive('getComplaints')
+            ->andReturn(
+                [
+                    m::mock(ComplaintEntity::class)
+                        ->makePartial()
+                        ->shouldReceive('getIsCompliance')
+                        ->andReturn(1)
+                        ->shouldReceive('isOpen')
+                        ->andReturn(true)
+                        ->getMock()
+                ]
+            );
+
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setCases($cases);
+
+        $this->assertEquals(1, $licence->getOpenComplaintsCount());
     }
 }
