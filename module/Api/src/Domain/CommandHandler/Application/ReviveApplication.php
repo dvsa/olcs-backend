@@ -46,7 +46,15 @@ final class ReviveApplication extends AbstractCommandHandler implements Transact
                             Application::APPLICATION_STATUS_GRANTED
                         )
                 );
-                $result->merge($this->handleSideEffect(Grant::create(['id' => $application->getLicence()->getId()])));
+                $result->merge(
+                    $this->handleSideEffect(
+                        Grant::create(
+                            [
+                                'id' => $application->getLicence()->getId()
+                            ]
+                        )
+                    )
+                );
                 break;
             case Application::APPLICATION_STATUS_WITHDRAWN:
             case Application::APPLICATION_STATUS_REFUSED:
@@ -58,7 +66,15 @@ final class ReviveApplication extends AbstractCommandHandler implements Transact
                 );
 
                 if (!$application->getIsVariation()) {
-                    $result->merge($this->handleSideEffect(UnderConsideration::create(['id' => $application->getLicence()->getId()])));
+                    $result->merge(
+                        $this->handleSideEffect(
+                            UnderConsideration::create(
+                                [
+                                    'id' => $application->getLicence()->getId()
+                                ]
+                            )
+                        )
+                    );
                 }
                 break;
         }
