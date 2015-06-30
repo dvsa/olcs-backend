@@ -342,11 +342,13 @@ class Licence extends AbstractLicence
      */
     public function getTradingName()
     {
-        if (empty($this->getOrganisation()->getTradingNames())) {
+        $tradingNames = $this->getOrganisation()->getTradingNames();
+
+        if (empty($tradingNames)) {
             return 'None';
         }
 
-        $tradingNames = (array) $this->getOrganisation()->getTradingNames()->getIterator();
+        $tradingNames = (array) $tradingNames->getIterator();
         usort(
             $tradingNames,
             function ($a, $b) {
