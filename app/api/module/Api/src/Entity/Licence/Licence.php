@@ -125,7 +125,7 @@ class Licence extends AbstractLicence
         $tachographInsName,
         $safetyInsVaries
     ) {
-        if ($tachographIns !== null && $tachographIns !== self::TACH_NA && empty($tachographInsName)) {
+        if ($tachographIns !== null && $tachographIns == self::TACH_EXT && empty($tachographInsName)) {
             throw new ValidationException(
                 [
                     'tachographInsName' => [
@@ -203,20 +203,18 @@ class Licence extends AbstractLicence
 
     public function getCalculatedValues()
     {
-        $result = function () {
-            $decisionCriteria['activeComLics'] = ($this->getActiveCommunityLicences($this) !== false ? true : false);
-            $decisionCriteria['activeBusRoutes'] = ($this->getActiveBusRoutes($this) !== false ? true : false);
-            $decisionCriteria['activeVariations'] = ($this->getActiveVariations($this) !== false ? true : false);
+        $decisionCriteria['activeComLics'] = $this->getActiveCommunityLicences($this) !== false;
+        $decisionCriteria['activeBusRoutes'] = $this->getActiveBusRoutes($this) !== false;
+        $decisionCriteria['activeVariations'] = $this->getActiveVariations($this) !== false;
 
-            if (in_array(true, $decisionCriteria)) {
-                return $decisionCriteria;
-            }
+        $suitableForDecisions = true;
 
-            return true;
-        };
+        if (in_array(true, $decisionCriteria)) {
+            $suitableForDecisions = $decisionCriteria;
+        }
 
         return [
-            'suitableForDecisions' => $result()
+            'suitableForDecisions' => $suitableForDecisions
         ];
     }
 
@@ -307,5 +305,18 @@ class Licence extends AbstractLicence
         }
 
         return $this->getOrganisation()->getLicences()->matching($criteria);
+    }
+
+    public function hasApprovedUnfulfilledConditions()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->eq('isDraft', 0)
+        );
+        $criteria->andWhere(
+            $criteria->expr()->eq('isFulfilled', 0)
+        );
+
+        return ($this->getConditionUndertakings()->matching($criteria)->count() > 0);
     }
 }

@@ -404,6 +404,11 @@ return [
     // Domain - PrintScheduler
     Command\PrintScheduler\Enqueue::class  => CommandHandler\PrintScheduler\Enqueue::class,
 
+
+    // Transfer - Operator
+    TransferCommand\Operator\Create::class => CommandHandler\Operator\SaveOperator::class,
+    TransferCommand\Operator\Update::class => CommandHandler\Operator\SaveOperator::class,
+
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
     TransferCommand\Vehicle\UpdateGoodsVehicle::class => CommandHandler\Vehicle\UpdateGoodsVehicle::class,
