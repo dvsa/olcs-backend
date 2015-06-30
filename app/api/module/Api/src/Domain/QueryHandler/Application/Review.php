@@ -14,6 +14,8 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
 use Dvsa\Olcs\Transfer\Query\Application\Application as ApplicationQry;
 use Zend\Filter\Word\UnderscoreToCamelCase;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator;
 
 /**
  * Review
@@ -207,6 +209,18 @@ class Review extends AbstractQueryHandler
         'community_licences'
     ];
 
+    /**
+     * @var Generator
+     */
+    protected $reviewSnapshotService;
+
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->reviewSnapshotService = $serviceLocator->getServiceLocator()->get('ReviewSnapshot');
+
+        return parent::createService($serviceLocator);
+    }
+
     public function __construct()
     {
         $notRemovedCriteria = Criteria::create();
@@ -239,7 +253,7 @@ class Review extends AbstractQueryHandler
             $bundle = $this->getReviewDataBundleForApplication($sections);
         }
 
-        return $this->result(
+        $result = $this->result(
             $application,
             $bundle,
             [
@@ -248,6 +262,12 @@ class Review extends AbstractQueryHandler
                 'isSpecialRestricted' => $application->isSpecialRestricted()
             ]
         );
+
+        $data = $result->serialize();
+
+        $markup = $this->reviewSnapshotService->generate($data);
+
+        return ['markup' => $markup];
     }
 
     protected function filterVariationSections($sections, ApplicationCompletionEntity $completion)

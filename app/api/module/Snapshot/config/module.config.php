@@ -1,9 +1,71 @@
 <?php
 
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section as Review;
+
 return [
     'service_manager' => [
         'invokables' => [
             'ReviewSnapshot' => \Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator::class,
+            'Review\VariationTypeOfLicence' => Review\VariationTypeOfLicenceReviewService::class,
+            'Review\TransportManagerPreviousLicence' => Review\TransportManagerPreviousLicenceReviewService::class,
+            'Review\VariationBusinessType' => Review\VariationBusinessTypeReviewService::class,
+            'Review\AbstractVariationOcTotalAuth' => Review\AbstractVariationOcTotalAuthReviewService::class,
+            'Review\VariationFinancialEvidence' => Review\VariationFinancialEvidenceReviewService::class,
+            'Review\ApplicationFinancialEvidence' => Review\ApplicationFinancialEvidenceReviewService::class,
+            'Review\VariationLicenceHistory' => Review\VariationLicenceHistoryReviewService::class,
+            'Review\ApplicationVehiclesDeclarations' => Review\ApplicationVehiclesDeclarationsReviewService::class,
+            'Review\ApplicationSafety' => Review\ApplicationSafetyReviewService::class,
+            'Review\VariationBusinessDetails' => Review\VariationBusinessDetailsReviewService::class,
+            'Review\VariationAddresses' => Review\VariationAddressesReviewService::class,
+            'Review\ApplicationOperatingCentres' => Review\ApplicationOperatingCentresReviewService::class,
+            'Review\ReviewServiceInterface' => Review\ReviewServiceInterface::class,
+            'Review\VariationPsvOcTotalAuth' => Review\VariationPsvOcTotalAuthReviewService::class,
+            'Review\VariationSafety' => Review\VariationSafetyReviewService::class,
+            'Review\VariationVehiclesDeclarations' => Review\VariationVehiclesDeclarationsReviewService::class,
+            'Review\ApplicationBusinessDetails' => Review\ApplicationBusinessDetailsReviewService::class,
+            'Review\ApplicationTypeOfLicence' => Review\ApplicationTypeOfLicenceReviewService::class,
+            'Review\TransportManagerPreviousConviction'
+                => Review\TransportManagerPreviousConvictionReviewService::class,
+            'Review\GoodsOperatingCentre' => Review\GoodsOperatingCentreReviewService::class,
+            'Review\ApplicationConditionsUndertakings' => Review\ApplicationConditionsUndertakingsReviewService::class,
+            'Review\ConditionsUndertakings' => Review\ConditionsUndertakingsReviewService::class,
+            'Review\ApplicationGoodsOcTotalAuth' => Review\ApplicationGoodsOcTotalAuthReviewService::class,
+            'Review\VariationPeople' => Review\VariationPeopleReviewService::class,
+            'Review\VehiclesPsv' => Review\VehiclesPsvReviewService::class,
+            'Review\ApplicationPsvOcTotalAuth' => Review\ApplicationPsvOcTotalAuthReviewService::class,
+            'Review\Abstract' => Review\AbstractReviewService::class,
+            'Review\VariationConditionsUndertakings' => Review\VariationConditionsUndertakingsReviewService::class,
+            'Review\ApplicationBusinessType' => Review\ApplicationBusinessTypeReviewService::class,
+            'Review\VariationOperatingCentres' => Review\VariationOperatingCentresReviewService::class,
+            'Review\ApplicationFinancialHistory' => Review\ApplicationFinancialHistoryReviewService::class,
+            'Review\VariationDiscs' => Review\VariationDiscsReviewService::class,
+            'Review\VariationTransportManagers' => Review\VariationTransportManagersReviewService::class,
+            'Review\PsvOperatingCentre' => Review\PsvOperatingCentreReviewService::class,
+            'Review\VariationConvictionsPenalties' => Review\VariationConvictionsPenaltiesReviewService::class,
+            'Review\ApplicationLicenceHistory' => Review\ApplicationLicenceHistoryReviewService::class,
+            'Review\ApplicationPeople' => Review\ApplicationPeopleReviewService::class,
+            'Review\TransportManagerResponsibility' => Review\TransportManagerResponsibilityReviewService::class,
+            'Review\TransportManagers' => Review\TransportManagersReviewService::class,
+            'Review\TrafficArea' => Review\TrafficAreaReviewService::class,
+            'Review\VariationFinancialHistory' => Review\VariationFinancialHistoryReviewService::class,
+            'Review\LicenceConditionsUndertakings' => Review\LicenceConditionsUndertakingsReviewService::class,
+            'Review\VariationVehiclesPsv' => Review\VariationVehiclesPsvReviewService::class,
+            'Review\ApplicationVehicles' => Review\ApplicationVehiclesReviewService::class,
+            'Review\ApplicationConvictionsPenalties' => Review\ApplicationConvictionsPenaltiesReviewService::class,
+            'Review\TransportManagerOtherEmployment' => Review\TransportManagerOtherEmploymentReviewService::class,
+            'Review\ApplicationTransportManagers' => Review\ApplicationTransportManagersReviewService::class,
+            'Review\VariationGoodsOcTotalAuth' => Review\VariationGoodsOcTotalAuthReviewService::class,
+            'Review\People' => Review\PeopleReviewService::class,
+            'Review\ApplicationVehiclesPsv' => Review\ApplicationVehiclesPsvReviewService::class,
+            'Review\TransportManagerMain' => Review\TransportManagerMainReviewService::class,
+            'Review\ApplicationAddresses' => Review\ApplicationAddressesReviewService::class,
+            'Review\ApplicationTaxiPhv' => Review\ApplicationTaxiPhvReviewService::class,
+            'Review\VariationVehicles' => Review\VariationVehiclesReviewService::class,
         ],
+    ],
+    'view_manager' => [
+        'template_path_stack' => [
+            __DIR__ . '/../view'
+        ]
     ],
 ];
