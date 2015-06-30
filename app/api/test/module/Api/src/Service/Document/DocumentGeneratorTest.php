@@ -147,10 +147,10 @@ class DocumentGeneratorTest extends MockeryTestCase
             ->with('prefix-template', [], [])
             ->andReturn('content')
             ->shouldReceive('uploadGeneratedContent')
-            ->with('content', 'documents', 'description')
+            ->with('content', 'documents')
             ->andReturn('result');
 
-        $this->assertEquals('result', $helper->generateAndStore('template', 'description'));
+        $this->assertEquals('result', $helper->generateAndStore('template'));
     }
 
     public function testAddTemplatePrefixWithNoMatchingKey()

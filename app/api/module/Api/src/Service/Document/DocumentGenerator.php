@@ -104,13 +104,13 @@ class DocumentGenerator implements ServiceLocatorAwareInterface
      *
      * @return \Common\Service\File\File
      */
-    public function generateAndStore($template, $description, $queryData = [], $knownValues = [])
+    public function generateAndStore($template, $queryData = [], $knownValues = [])
     {
         $template = $this->addTemplatePrefix($queryData, $template);
 
         $content = $this->generateFromTemplate($template, $queryData, $knownValues);
 
-        return $this->uploadGeneratedContent($content, 'documents', $description);
+        return $this->uploadGeneratedContent($content, 'documents');
     }
 
     public function addTemplatePrefix($queryData, $template)

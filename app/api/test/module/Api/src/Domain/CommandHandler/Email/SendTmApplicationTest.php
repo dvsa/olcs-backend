@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendTmApplication as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendTmApplication as Command;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
@@ -25,7 +26,7 @@ class SendTmApplicationTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new CommandHandler();
-        $this->mockRepo('TransportManagerApplication', Fee::class);
+        $this->mockRepo('TransportManagerApplication', TransportManagerApplicationRepo::class);
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
@@ -34,12 +35,6 @@ class SendTmApplicationTest extends CommandHandlerTestCase
 
         parent::setUp();
     }
-
-    protected function initReferences()
-    {
-        parent::initReferences();
-    }
-
 
     public function dataProviderTestHandleCommand()
     {

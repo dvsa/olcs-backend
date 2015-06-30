@@ -165,9 +165,9 @@ return [
             'BusRegSearchView' => RepositoryFactory::class,
             'ProposeToRevoke' => RepositoryFactory::class,
             'OrganisationPerson' => RepositoryFactory::class,
-            'LicenceVehicle' => RepositoryFactory::class,
             'Vehicle' => RepositoryFactory::class,
             'VehicleHistoryView' => RepositoryFactory::class,
+            'CorrespondenceInbox' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

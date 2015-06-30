@@ -9,7 +9,7 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class CreateDocumentSpecific extends AbstractCommand
+class CreateDocumentSpecific extends AbstractCommand
 {
     protected $filename;
 
