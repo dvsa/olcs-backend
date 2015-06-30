@@ -429,7 +429,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $licence->setId(32);
         $licence->setLicNo('LIC001');
 
-        $cases = new \Dvsa\Olcs\Api\Entity\Cases\Cases();
+        $cases = m::mock(\Dvsa\Olcs\Api\Entity\Cases\Cases::class)->makePartial();
         $cases->setId(35);
         $cases->setLicence($licence);
         $cases->setTransportManager('TM');
