@@ -378,4 +378,16 @@ class Licence extends AbstractLicence
         }
         return $count;
     }
+
+    public function getOpenCases()
+    {
+        $allCases = (array) $this->getCases()->getIterator();
+        return array_filter(
+            $allCases,
+            function ($case) {
+                return $case->isOpen();
+            }
+        );
+
+    }
 }
