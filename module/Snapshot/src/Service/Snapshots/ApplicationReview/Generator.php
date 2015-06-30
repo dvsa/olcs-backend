@@ -8,14 +8,19 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview;
 
 use Zend\Filter\Word\UnderscoreToCamelCase;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\View\Model\ViewModel;
 
 /**
  * Application Review
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Generator
+class Generator implements ServiceLocatorAwareInterface
 {
+    use ServiceLocatorAwareTrait;
+
     protected $lva;
 
     public function generate($data)
@@ -34,7 +39,12 @@ class Generator
 
     protected function generateReadonly(array $config)
     {
-        return '';
+        $model = new ViewModel($config);
+        $model->setTerminal(true);
+        $model->setTemplate('layout/review');
+
+        $renderer = $this->getServiceLocator()->get('ViewRenderer');
+        return $renderer->render($model);
     }
 
     protected function buildReadonlyConfigForSections($sections, $reviewData)
@@ -47,6 +57,7 @@ class Generator
 
         foreach ($sections as $section) {
             $serviceName = 'Review\\' . $entity . ucfirst($filter->filter($section));
+
             $config = null;
 
             // @NOTE this check is in place while we implement each section
