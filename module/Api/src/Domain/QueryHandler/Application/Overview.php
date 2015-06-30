@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking as ApplicationTrackingEntity;
 use Dvsa\Olcs\Transfer\Query\Licence\Overview as LicenceOverviewQry;
+
 /**
  * Application Overview
  *
