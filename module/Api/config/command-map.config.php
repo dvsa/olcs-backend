@@ -153,6 +153,7 @@ return [
     // Transfer - Cases
     TransferCommand\Cases\CreateCase::class => CommandHandler\Cases\CreateCase::class,
     TransferCommand\Cases\UpdateCase::class => CommandHandler\Cases\UpdateCase::class,
+    TransferCommand\Cases\DeleteCase::class => CommandHandler\Cases\DeleteCase::class,
 
     // Transfer - Annual Test History
     TransferCommand\Cases\UpdateAnnualTestHistory::class => CommandHandler\Cases\UpdateAnnualTestHistory::class,
