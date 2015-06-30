@@ -113,9 +113,6 @@ class UpdateTest extends CommandHandlerTestCase
                     ->shouldreceive('setBirthDate')
                     ->with(m::type(\DateTime::class))
 
-                    ->shouldReceive('setCase')
-                    ->with(m::type(Entity\Cases\Cases::class))
-
                     ->shouldreceive('setOffenceDate')
                     ->with(m::type(\DateTime::class))
 
