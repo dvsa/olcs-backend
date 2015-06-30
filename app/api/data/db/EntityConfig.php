@@ -880,9 +880,6 @@ return array(
         'is_decision' => array(
             'type' => 'yesno'
         ),
-        'urgent' => array(
-            'type' => 'yesnonull'
-        ),
         'submission_id' => array(
             'inversedBy' => array(
                 'entity' => 'Submission',
