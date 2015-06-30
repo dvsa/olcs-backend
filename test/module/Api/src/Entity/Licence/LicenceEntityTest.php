@@ -480,4 +480,25 @@ class LicenceEntityTest extends EntityTester
 
         $this->assertEquals(1, $licence->getOpenComplaintsCount());
     }
+
+    public function testGetOpenCases()
+    {
+        $case1 = m::mock(CaseEntity::class)->makePartial();
+        $case2 = m::mock(CaseEntity::class)->makePartial();
+        $cases = new ArrayCollection();
+        $cases->add($case1);
+        $cases->add($case2);
+
+        $case1
+            ->shouldReceive('isOpen')
+            ->andReturn(true);
+        $case2
+            ->shouldReceive('isOpen')
+            ->andReturn(false);
+
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setCases($cases);
+
+        $this->assertEquals([$case1], $licence->getOpenCases());
+    }
 }
