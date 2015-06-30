@@ -41,6 +41,12 @@ return [
         => CommandHandler\Application\CreateVehicleListDocument::class,
     TransferCommand\Application\UpdateVehicleDeclaration::class =>
         CommandHandler\Application\UpdateVehicleDeclaration::class,
+    TransferCommand\Application\WithdrawApplication::class
+        => CommandHandler\Application\WithdrawApplication::class,
+    TransferCommand\Application\ReviveApplication::class
+        => CommandHandler\Application\ReviveApplication::class,
+    TransferCommand\Application\RefuseApplication::class
+        => CommandHandler\Application\RefuseApplication::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -75,10 +81,16 @@ return [
     TransferCommand\Licence\CreateGoodsVehicle::class => CommandHandler\Licence\CreateGoodsVehicle::class,
     TransferCommand\Licence\CreateVehicleListDocument::class => CommandHandler\Licence\CreateVehicleListDocument::class,
     TransferCommand\Licence\TransferVehicles::class => CommandHandler\Licence\TransferVehicles::class,
+    TransferCommand\Licence\PrintLicence::class => CommandHandler\Licence\PrintLicence::class,
+    Command\Document\DispatchDocument::class => CommandHandler\Document\DispatchDocument::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
     Command\Licence\Suspend::class => CommandHandler\Licence\Suspend::class,
+    Command\Licence\Withdraw::class => CommandHandler\Licence\Withdraw::class,
+    Command\Licence\Grant::class => CommandHandler\Licence\Grant::class,
+    Command\Licence\Refuse::class => CommandHandler\Licence\Refuse::class,
+    Command\Licence\UnderConsideration::class => CommandHandler\Licence\UnderConsideration::class,
 
     TransferCommand\Licence\CreatePsvDiscs::class => CommandHandler\Licence\CreatePsvDiscs::class,
     TransferCommand\Licence\VoidPsvDiscs::class => CommandHandler\Licence\VoidPsvDiscs::class,
@@ -179,6 +191,12 @@ return [
         CommandHandler\Cases\Complaint\UpdateComplaint::class,
     TransferCommand\Cases\Complaint\DeleteComplaint::class =>
         CommandHandler\Cases\Complaint\DeleteComplaint::class,
+
+    // Transfer - Submission
+    TransferCommand\Submission\CreateSubmissionAction::class =>
+        CommandHandler\Submission\CreateSubmissionAction::class,
+    TransferCommand\Submission\UpdateSubmissionAction::class =>
+        CommandHandler\Submission\UpdateSubmissionAction::class,
 
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
@@ -387,6 +405,7 @@ return [
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
+    Command\Email\CreateCorrespondenceRecord::class => CommandHandler\Email\CreateCorrespondenceRecord::class,
 
     // Person
     TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,
