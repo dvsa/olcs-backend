@@ -289,7 +289,6 @@ class ApplicationTest extends RepositoryTestCase
 
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
-        $where = m::mock();
 
         $qb->shouldReceive('expr->eq')
             ->with('l.organisation', ':organisationId');
