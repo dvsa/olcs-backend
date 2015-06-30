@@ -125,7 +125,7 @@ class Licence extends AbstractLicence
         $tachographInsName,
         $safetyInsVaries
     ) {
-        if ($tachographIns !== null && $tachographIns !== self::TACH_NA && empty($tachographInsName)) {
+        if ($tachographIns !== null && $tachographIns == self::TACH_EXT && empty($tachographInsName)) {
             throw new ValidationException(
                 [
                     'tachographInsName' => [
