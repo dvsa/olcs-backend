@@ -79,7 +79,6 @@ class OverviewTest extends CommandHandlerTestCase
             ->with($licence)
             ->once();
 
-
         $result = $this->sut->handleCommand($command);
 
         $expected = [

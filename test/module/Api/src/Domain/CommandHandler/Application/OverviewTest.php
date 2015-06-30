@@ -101,7 +101,6 @@ class OverviewTest extends CommandHandlerTestCase
             ->with($application)
             ->once();
 
-
         $result = $this->sut->handleCommand($command);
 
         $expected = [
