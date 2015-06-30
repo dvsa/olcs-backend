@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Submission;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Submission\Submission;
 
 /**
  * SubmissionAction Entity
@@ -10,8 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="submission_action",
  *    indexes={
- *        @ORM\Index(name="ix_submission_action_sender_user_id", columns={"sender_user_id"}),
- *        @ORM\Index(name="ix_submission_action_recipient_user_id", columns={"recipient_user_id"}),
  *        @ORM\Index(name="ix_submission_action_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_submission_action_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_submission_action_submission_id", columns={"submission_id"})
@@ -20,5 +19,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SubmissionAction extends AbstractSubmissionAction
 {
+    public function __construct(Submission $submission, $isDecision, array $actionTypes, $comment)
+    {
+        $this->submission = $submission;
+        $this->isDecision = $isDecision;
+        $this->actionTypes = $actionTypes;
+        $this->comment = $comment;
+    }
 
+    public function update(array $actionTypes, $comment)
+    {
+        $this->actionTypes = $actionTypes;
+        $this->comment = $comment;
+    }
 }
