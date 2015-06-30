@@ -37,15 +37,38 @@ class Complaint extends AbstractRepository
     }
 
     /**
-     *
+     * Override to add additional data to the default fetchList() method
+     * @param QueryBuilder $qb
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()
+            ->with('complainantContactDetails', 'ccd')
+            ->with('ccd.person')
+            ->with('ocComplaints', 'occ')
+            ->with('occ.operatingCentre', 'oc')
+            ->with('oc.address');
+    }
+
+    /**
      * @param QueryBuilder $qb
      * @param QueryInterface $query
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
-            ->setParameter('byCase', $query->getCase());
-        $qb->andWhere($qb->expr()->eq($this->alias . '.isCompliance', ':isCompliance'))
-            ->setParameter('isCompliance', $query->getIsCompliance());
+
+        if ($query->getCase()) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
+                ->setParameter('byCase', $query->getCase());
+        }
+        if ($query->getIsCompliance() !== null) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.isCompliance', ':isCompliance'))
+                ->setParameter('isCompliance', $query->getIsCompliance());
+        }
+        if ($query->getLicence() !== null) {
+            $this->getQueryBuilder()->with('case', 'ca');
+            $qb->andWhere($qb->expr()->eq('ca.licence', ':licence'))
+                ->setParameter('licence', $query->getLicence());
+        }
     }
 }
