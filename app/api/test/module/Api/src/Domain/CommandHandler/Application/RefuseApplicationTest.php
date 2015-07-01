@@ -47,6 +47,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
+            ->once()
             ->andReturn(123);
 
         $application = m::mock(Application::class)->makePartial();
@@ -70,7 +71,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             CeaseGoodsDiscs::class,
             [
-                'licence' => $licence->getMock(),
+                'licenceVehicles' => null,
                 'id' => null
             ],
             $discsResult

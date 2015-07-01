@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
 
 /**
  * Curtail a licence
@@ -32,6 +33,17 @@ final class Curtail extends AbstractCommandHandler implements TransactionedInter
         $this->getRepo()->save($licence);
 
         $result = new Result();
+
+        $result->merge(
+            $this->handleSideEffect(
+                RemoveLicenceStatusRulesForLicence::create(
+                    [
+                        'licence' => $command->getId()
+                    ]
+                )
+            )
+        );
+
         $result->addMessage("Licence ID {$licence->getId()} curtailed");
 
         return $result;
