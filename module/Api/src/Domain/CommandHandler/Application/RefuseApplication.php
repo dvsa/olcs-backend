@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Refuse;
 
@@ -28,6 +29,8 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
 
     public function handleCommand(CommandInterface $command)
     {
+        $result = new Result();
+
         /** @var Application $application */
         $application = $this->getRepo()->fetchById($command->getId());
 
@@ -36,7 +39,7 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
 
         $this->getRepo()->save($application);
 
-        $result = new Result();
+        $result->merge($this->createSnapshot($command->getId()));
 
         if ($application->getIsVariation() === false) {
             $result->merge(
@@ -63,5 +66,11 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
         $result->addMessage('Application ' . $application->getId() . ' refused.');
 
         return $result;
+    }
+
+    protected function createSnapshot($applicationId)
+    {
+        $data = ['id' => $applicationId, 'event' => CreateSnapshotCmd::ON_REFUSE];
+        return $this->handleSideEffect(CreateSnapshotCmd::create($data));
     }
 }
