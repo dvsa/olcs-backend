@@ -33,13 +33,15 @@ class DateFrom extends DynamicBookmark
                 return $this->data[1]['interimStart']->format('d/m/Y');
             }
 
-            return $this->data[1]['interimStart'];
+            $timeStamp = strtotime($this->data[1]['interimStart']);
+            return \DateTime::createFromFormat('U', $timeStamp)->format('d/m/Y');
         }
 
         if ($this->data[0]['specifiedDate'] instanceof \DateTime) {
             return $this->data[0]['specifiedDate']->format('d/m/Y');
         }
 
-        return $this->data[0]['specifiedDate'];
+        $timeStamp = strtotime($this->data[0]['specifiedDate']);
+        return \DateTime::createFromFormat('U', $timeStamp)->format('d/m/Y');
     }
 }
