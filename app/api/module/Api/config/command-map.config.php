@@ -162,6 +162,14 @@ return [
     TransferCommand\User\UpdatePartner::class => CommandHandler\User\UpdatePartner::class,
     TransferCommand\User\DeletePartner::class => CommandHandler\User\DeletePartner::class,
 
+    // Transfer - Cases
+    TransferCommand\Cases\CreateCase::class => CommandHandler\Cases\CreateCase::class,
+    TransferCommand\Cases\UpdateCase::class => CommandHandler\Cases\UpdateCase::class,
+    TransferCommand\Cases\DeleteCase::class => CommandHandler\Cases\DeleteCase::class,
+
+    // Transfer - Annual Test History
+    TransferCommand\Cases\UpdateAnnualTestHistory::class => CommandHandler\Cases\UpdateAnnualTestHistory::class,
+
     // Transfer - Impounding
     TransferCommand\Cases\Impounding\CreateImpounding::class =>
         CommandHandler\Cases\Impounding\CreateImpounding::class,
