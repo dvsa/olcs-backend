@@ -226,7 +226,10 @@ class Client
         $to = $message->getTo();
         if ($this->getSendAllMailTo()) {
             $to = $this->getSendAllMailTo();
-            $message->setSubject($message->getTo() .' : '. $message->getSubject());
+
+            $originalTo = implode(', ', (array)$message->getTo());
+
+            $message->setSubject($originalTo .' : '. $message->getSubject());
         }
 
         $this->getHttpClient()->getRequest()
