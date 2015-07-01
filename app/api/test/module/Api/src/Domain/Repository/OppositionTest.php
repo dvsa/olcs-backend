@@ -164,4 +164,47 @@ class OppositionTest extends RepositoryTestCase
 
         $sut->applyListFilters($qb, $query);
     }
+
+    public function testFetchByApplicationId()
+    {
+        $applicationId = 69;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->once()
+            ->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($mockQb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('case', 'c')
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->with('createdOn', 'DESC')
+            ->andReturnSelf();
+
+        $mockQb
+            ->shouldReceive('expr->eq')
+            ->with('c.application', ':application')
+            ->andReturnSelf();
+        $mockQb
+            ->shouldReceive('andWhere')
+            ->andReturnSelf();
+        $mockQb
+            ->shouldReceive('setParameter')
+            ->with('application', $applicationId)
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
+
+        $this->assertSame(
+            'result',
+            $this->sut->fetchByApplicationId($applicationId)
+        );
+    }
 }
