@@ -48,6 +48,7 @@ return [
     TransferCommand\Application\RefuseApplication::class
         => CommandHandler\Application\RefuseApplication::class,
     TransferCommand\Application\Overview::class => CommandHandler\Application\Overview::class,
+    TransferCommand\Application\CreateSnapshot::class => CommandHandler\Application\CreateSnapshot::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
