@@ -11,49 +11,37 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest as InspectionRequestEntity;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Inspection Request / Create From Grant
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class CreateFromGrant extends AbstractCommandHandler
+final class CreateFromGrant extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'InspectionRequest';
+
+    protected $extraRepos = ['Application'];
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-        
+
         $inspectionRequest = $this->createInspectionRequestObject($command);
-        /*
-        $licenceId = $command->getLicence();
+        $this->getRepo()->save($inspectionRequest);
 
-        $this->validateOfficeCopy($licenceId);
+        $result->addId('inspectionRequest', $inspectionRequest->getId());
+        $result->addMessage('Inspection request created successfully');
 
-        $data = [
-            'status' => $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_ACTIVE),
-            'specifiedDate' => new DateTime('now')
-        ];
-
-        $licence = $this->getRepo('Licence')->fetchById($licenceId);
-        $data['serialNoPrefix'] = $licence->getSerialNoPrefixFromTrafficArea();
-        $data['licence'] = $this->getRepo()->getReference(LicenceEntity::class, $licenceId);
-        $data['issueNo'] = 0;
-
-        $communityLic = $this->createCommunityLicObject($data);
-        $this->getRepo()->save($communityLic);
-        $result->addId('communityLic' . $communityLic->getId(), $communityLic->getId());
-        $result->addMessage('Office copy created successfully');
-
-        $sideEffects = $this->determineSideEffects($licenceId, $communityLic->getId());
-        foreach ($sideEffects as $sideEffect) {
-            $result->merge($this->getCommandHandler()->handleCommand($sideEffect));
-        }
-        */
         return $result;
     }
 
@@ -64,30 +52,27 @@ final class CreateFromGrant extends AbstractCommandHandler
     private function createInspectionRequestObject($command)
     {
         $inspectionRequest = new InspectionRequestEntity();
-        
-        $today = new DateTime('now');
+
+        $application = $this->getRepo('Application')->fetchWithLicenceAndOc($command->getApplication());
+
+        $operatingCentres = $application->getOcForInspectionRequest();
+
+        $operatingCentre = count($operatingCentres) ?
+            $this->getRepo()->getReference(OperatingCentreEntity::class, $operatingCentres[0]->getId()) : null;
+
         $inspectionRequest->updateInspectionRequest(
-            InspectionRequestEntityService::REQUEST_TYPE_NEW_OP,
-            $today,
-            $today->add(new \DateInterval('P' . $command->getDueDate() . 'M')),
-            InspectionRequestEntityService::RESULT_TYPE_NEW,
+            $this->getRepo()->getRefdataReference(InspectionRequestEntity::REQUEST_TYPE_NEW_OP),
+            null,
+            null,
+            $command->getDuePeriod(),
+            $this->getRepo()->getRefdataReference(InspectionRequestEntity::RESULT_TYPE_NEW),
             $command->getCaseworkerNotes(),
-            InspectionRequestEntityService::REPORT_TYPE_MAINTENANCE_REQUEST,
-            $operatingCentreId
+            $this->getRepo()->getRefdataReference(InspectionRequestEntity::REPORT_TYPE_MAINTENANCE_REQUEST),
+            $this->getRepo()->getReference(ApplicationEntity::class, $command->getApplication()),
+            $this->getRepo()->getReference(LicenceEntity::class, $application->getLicence()->getId()),
+            $this->getCurrentUser(),
+            $operatingCentre
         );
         return $inspectionRequest;
-    }
-
-    private function validateOfficeCopy($licenceId)
-    {
-        if ($this->getRepo()->fetchOfficeCopy($licenceId)) {
-            throw new ValidationException(
-                [
-                    'officeCopy' => [
-                        CommunityLicEntity::ERROR_OFFICE_COPY_EXISTS => 'Office copy already exists'
-                    ]
-                ]
-            );
-        }
     }
 }

@@ -513,4 +513,30 @@ class Application extends AbstractApplication
 
         return false;
     }
+
+    public function getOcForInspectionRequest()
+    {
+        $list = [];
+        $deleted = [];
+
+        $applicationOperatingCentres = $this->getOperatingCentres();
+        foreach ($applicationOperatingCentres as $applicationOperatingCentre) {
+            $id = $applicationOperatingCentre->getId();
+            if ($applicationOperatingCentre->getAction() !== 'D') {
+                $list[$id] = $applicationOperatingCentre->getOperatingCentre();
+            } else {
+                $deleted[] = $id;
+            }
+        }
+
+        $licenceOperatingCentres = $this->getLicence()->getOperatingCentres();
+        foreach ($licenceOperatingCentres as $licenceOperatingCentre) {
+            $id = $licenceOperatingCentre->getId();
+            if (!in_array($id, $deleted)) {
+                $list[$id] = $licenceOperatingCentre->getOperatingCentre();
+            }
+        }
+
+        return array_values($list);
+    }
 }
