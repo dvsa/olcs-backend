@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Cases;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Cases Entity
@@ -25,6 +26,94 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class Cases extends AbstractCases
 {
+    const LICENCE_CASE_TYPE = 'case_t_lic';
+    const IMPOUNDING_CASE_TYPE = 'case_t_imp';
+    const APP_CASE_TYPE = 'case_t_app';
+    const TM_CASE_TYPE = 'case_t_tm';
+
+    /**
+     * Creates a new case entity and sets the open date
+     *
+     * @param \DateTime $openDate
+     * @param RefData $caseType
+     * @param ArrayCollection $categorys
+     * @param ArrayCollection $outcomes
+     * @param RefData|null $application
+     * @param RefData|null $licence
+     * @param RefData|null $transportManager
+     * @param string $ecmsNo
+     * @param string $description
+     */
+    public function __construct(
+        \DateTime $openDate,
+        RefData $caseType,
+        ArrayCollection $categorys,
+        ArrayCollection $outcomes,
+        $application,
+        $licence,
+        $transportManager,
+        $ecmsNo,
+        $description
+    )
+    {
+        parent::__construct();
+
+        $this->setOpenDate($openDate);
+        $this->setCaseType($caseType);
+        $this->setCategorys($categorys);
+        $this->setOutcomes($outcomes);
+        $this->setApplication($application);
+        $this->setLicence($licence);
+        $this->setTransportManager($transportManager);
+        $this->setEcmsNo($ecmsNo);
+        $this->setDescription($description);
+    }
+
+    /**
+     * @param RefData $caseType
+     * @param ArrayCollection $categorys
+     * @param ArrayCollection $outcomes
+     * @param string $ecmsNo
+     * @param string $description
+     * @return bool
+     */
+    public function update(
+        $caseType,
+        $categorys,
+        $outcomes,
+        $ecmsNo,
+        $description
+    )
+    {
+        $caseTypeModifyAllowed = [self::IMPOUNDING_CASE_TYPE, self::LICENCE_CASE_TYPE];
+
+        //if case type is allowed to be modified, make sure it's modified to something allowable
+        if (in_array($this->caseType, $caseTypeModifyAllowed) && in_array($caseType, $caseTypeModifyAllowed)) {
+            $this->setCaseType($caseType);
+        }
+
+        $this->setCaseType($caseType);
+        $this->setCategorys($categorys);
+        $this->setOutcomes($outcomes);
+        $this->setEcmsNo($ecmsNo);
+        $this->setDescription($description);
+
+        return true;
+    }
+
+    /**
+     * Updates annual test history
+     *
+     * @param string $annualTestHistory
+     * @return bool
+     */
+    public function updateAnnualTestHistory($annualTestHistory)
+    {
+        $this->setAnnualTestHistory($annualTestHistory);
+
+        return true;
+    }
+    
     /**
      * Checks a stay type exists
      * @param RefData $stayType

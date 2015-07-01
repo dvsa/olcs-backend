@@ -27,16 +27,8 @@ final class UpdateVehicleDeclaration extends AbstractCommandHandler implements T
         /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        // validate that the required confirmation have been completed
-        $errors = array_merge(
-            $this->validateMainOccupation($command, $application),
-            $this->validateSmallVehicleIntention($command, $application),
-            $this->validateNineOrMore($command, $application),
-            $this->validateLimousines($command, $application)
-        );
-        if (!empty($errors)) {
-            throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException($errors);
-        }
+        // This data is validated by the front end form, if that is incorrect/fails then the
+        // updateApplicationCompletion will handle it by setting the section to incomplete
 
         $application->setPsvNoSmallVhlConfirmation($command->getPsvNoSmallVhlConfirmation());
         $application->setPsvOperateSmallVhl($command->getPsvOperateSmallVhl());
@@ -51,101 +43,11 @@ final class UpdateVehicleDeclaration extends AbstractCommandHandler implements T
 
         $result = $this->handleSideEffect(
             UpdateApplicationCompletionCmd::create(
-                ['id' => $application->getId(), 'section' => 'vehicles_declarations']
+                ['id' => $application->getId(), 'section' => 'vehiclesDeclarations']
             )
         );
 
         $result->addMessage("Application ID {$application->getId()} vehicle declaration updated.");
         return $result;
-    }
-
-    /**
-     * @param Command $command
-     * @param ApplicationEntity $application
-     *
-     * @return array
-     */
-    protected function validateMainOccupation(Command $command, ApplicationEntity $application)
-    {
-        $messages = [];
-        // mainOccupation
-        if ((int) $application->getTotAuthMediumVehicles() > 0 &&
-            $application->getLicenceType()->getId() === LicenceEntity::LICENCE_TYPE_RESTRICTED
-            ) {
-            if ($command->getPsvMediumVhlConfirmation() !== 'Y') {
-                $messages['psvMediumVhlConfirmation'] = 'psvMediumVhlConfirmation must be Y';
-            }
-            if (empty($command->getPsvMediumVhlNotes())) {
-                $messages['psvMediumVhlNotes'] = 'psvMediumVhlNotes must be not be empty';
-            }
-        }
-        return $messages;
-    }
-
-    /**
-     * @param Command $command
-     * @param ApplicationEntity $application
-     *
-     * @return array
-     */
-    protected function validateSmallVehicleIntention(Command $command, ApplicationEntity $application)
-    {
-        $messages = [];
-        // smallVehiclesIntention
-        if ((int) $application->getTotAuthSmallVehicles() > 0) {
-            if ($command->getPsvOperateSmallVhl() === 'Y') {
-                if (empty($command->getPsvSmallVhlNotes())) {
-                    $messages['psvSmallVhlNotes'] = 'psvSmallVhlNotes must be not be empty';
-                }
-            } else {
-                if ($command->getPsvSmallVhlConfirmation() !== 'Y') {
-                    $messages['psvSmallVhlConfirmation'] = 'psvSmallVhlConfirmation must be Y';
-                }
-            }
-        }
-        return $messages;
-    }
-
-    /**
-     * @param Command $command
-     * @param ApplicationEntity $application
-     *
-     * @return array
-     */
-    protected function validateNineOrMore(Command $command, ApplicationEntity $application)
-    {
-        $messages = [];
-        // noneOrMore
-        if ((int) $application->getTotAuthSmallVehicles() === 0) {
-            if ($command->getPsvNoSmallVhlConfirmation() !== 'Y') {
-                $messages['psvNoSmallVhlConfirmation'] = 'psvNoSmallVhlConfirmation must be Y';
-            }
-        }
-        return $messages;
-    }
-
-    /**
-     * @param Command $command
-     * @param ApplicationEntity $application
-     *
-     * @return array
-     */
-    protected function validateLimousines(Command $command, ApplicationEntity $application)
-    {
-        $messages = [];
-        // limousines
-        if ($command->getPsvLimousines() === 'Y') {
-            if (((int) $application->getTotAuthMediumVehicles() !== 0 ||
-                (int) $application->getTotAuthLargeVehicles() !== 0) &&
-                $command->getPsvOnlyLimousinesConfirmation() !== 'Y'
-            ) {
-                $messages['psvOnlyLimousinesConfirmation'] = 'psvOnlyLimousinesConfirmation must be Y';
-            }
-        } else {
-            if ($command->getPsvNoLimousineConfirmation() !== 'Y') {
-                $messages['psvNoLimousineConfirmation'] = 'psvNoLimousineConfirmation must be Y';
-            }
-        }
-        return $messages;
     }
 }

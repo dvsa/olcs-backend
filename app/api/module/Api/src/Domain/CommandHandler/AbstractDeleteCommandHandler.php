@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Delete Conviction
+ * Delete Abstract
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
@@ -14,11 +14,11 @@ use Dvsa\Olcs\Transfer\Command\AbstractDeleteCommand as DeleteCommand;
 use Doctrine\ORM\Query;
 
 /**
- * Delete Conviction
+ * Delete Abstract
  */
 abstract class AbstractDeleteCommandHandler extends AbstractCommandHandler implements TransactionedInterface
 {
-    protected $repoServiceName = 'Prohibition';
+    protected $repoServiceName;
 
     /**
      * Delete Command Handler Abstract
