@@ -43,7 +43,7 @@ class DateFromTest extends \PHPUnit_Framework_TestCase
             $bookmark->render()
         );
     }
-    
+
     public function specifiedDateProvider()
     {
         return [
