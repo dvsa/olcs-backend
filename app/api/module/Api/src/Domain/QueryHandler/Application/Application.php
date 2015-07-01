@@ -7,12 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -20,16 +16,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Application extends AbstractQueryHandler implements AuthAwareInterface
+class Application extends AbstractQueryHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'Application';
-
-    /**
-     * @var \Dvsa\Olcs\Api\Service\Lva\SectionConfig
-     */
-    private $sectionConfig;
 
     /**
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
@@ -40,7 +29,6 @@ class Application extends AbstractQueryHandler implements AuthAwareInterface
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->sectionConfig = $mainServiceLocator->get('SectionConfig');
         $this->sectionAccessService = $mainServiceLocator->get('SectionAccessService');
         return parent::createService($serviceLocator);
     }
@@ -55,42 +43,8 @@ class Application extends AbstractQueryHandler implements AuthAwareInterface
                 'licence'
             ],
             [
-                'sections' => $this->getSections($application)
+                'sections' => $this->sectionAccessService->getAccessibleSections($application)
             ]
         );
-    }
-
-    protected function getSections(ApplicationEntity $application)
-    {
-        $lva = $application->isVariation() ? 'variation' : 'application';
-        $location = $this->isGranted(Permission::INTERNAL_USER) ? 'internal' : 'external';
-
-        $hasConditions = $application->getLicence()->hasApprovedUnfulfilledConditions();
-
-        $goodsOrPsv = null;
-        if ($application->getGoodsOrPsv() !== null) {
-            $goodsOrPsv = $application->getGoodsOrPsv()->getId();
-        }
-
-        $licenceType = null;
-        if ($application->getLicenceType() !== null) {
-            $licenceType = $application->getLicenceType()->getId();
-        }
-
-        $access = [
-            $location,
-            $lva,
-            $goodsOrPsv,
-            $licenceType,
-            $hasConditions ? 'hasConditions' : 'noConditions'
-        ];
-
-        if ($lva === 'variation') {
-            $this->sectionConfig->setVariationCompletion($application->getApplicationCompletion());
-        }
-
-        $inputSections = $this->sectionConfig->getAll();
-
-        return $this->sectionAccessService->setSections($inputSections)->getAccessibleSections($access);
     }
 }
