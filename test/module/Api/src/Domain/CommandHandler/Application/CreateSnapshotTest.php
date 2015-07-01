@@ -48,8 +48,17 @@ class CreateSnapshotTest extends CommandHandlerTestCase
     /**
      * @dataProvider provider
      */
-    public function testHandleCommand($isVariation, $isGoods, $isRealUpgrade, $isSpecialRestricted, $event, $fileName, $description, $subCategory, $isExternal)
-    {
+    public function testHandleCommand(
+        $isVariation,
+        $isGoods,
+        $isRealUpgrade,
+        $isSpecialRestricted,
+        $event,
+        $fileName,
+        $description,
+        $subCategory,
+        $isExternal
+    ) {
         $command = Cmd::create(['id' => 111, 'event' => $event]);
 
         /** @var Licence $licence */
