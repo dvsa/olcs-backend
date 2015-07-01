@@ -5,6 +5,8 @@ namespace Dvsa\OlcsTest\Api\Entity\Cases;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as Entity;
+use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
+use Mockery as m;
 
 /**
  * Cases Entity Unit Tests
@@ -70,5 +72,33 @@ class CasesEntityTest extends EntityTester
         $this->assertEquals($annualTestHistory, $this->entity->getAnnualTestHistory());
 
         return true;
+    }
+
+    public function testIsOpen()
+    {
+        $sut = $this->instantiate($this->entityClass);
+
+        $this->assertTrue($sut->isOpen());
+
+        $sut->setClosedDate('2015-06-10');
+
+        $this->assertFalse($sut->isOpen());
+
+        $sut->setClosedDate(null);
+        $sut->setDeletedDate('2015-06-10');
+
+        $this->assertFalse($sut->isOpen());
+    }
+
+    public function testHasComplaints()
+    {
+        $sut = $this->instantiate($this->entityClass);
+
+        $this->assertFalse($sut->hasComplaints());
+
+        $complaint = m::mock(ComplaintEntity::class)->makePartial();
+        $sut->getComplaints()->add($complaint);
+
+        $this->assertTrue($sut->hasComplaints());
     }
 }
