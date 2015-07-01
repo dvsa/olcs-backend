@@ -47,6 +47,8 @@ return [
         => CommandHandler\Application\ReviveApplication::class,
     TransferCommand\Application\RefuseApplication::class
         => CommandHandler\Application\RefuseApplication::class,
+    TransferCommand\Application\NotTakenUpApplication::class
+        => CommandHandler\Application\NotTakenUpApplication::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -90,6 +92,7 @@ return [
     Command\Licence\Withdraw::class => CommandHandler\Licence\Withdraw::class,
     Command\Licence\Grant::class => CommandHandler\Licence\Grant::class,
     Command\Licence\Refuse::class => CommandHandler\Licence\Refuse::class,
+    Command\Licence\NotTakenUp::class => CommandHandler\Licence\NotTakenUp::class,
     Command\Licence\UnderConsideration::class => CommandHandler\Licence\UnderConsideration::class,
 
     TransferCommand\Licence\CreatePsvDiscs::class => CommandHandler\Licence\CreatePsvDiscs::class,
@@ -377,6 +380,8 @@ return [
         CommandHandler\CommunityLic\Application\CreateOfficeCopy::class,
     Command\CommunityLic\Licence\CreateOfficeCopy::class =>
         CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
+    Command\CommunityLic\Void::class =>
+        CommandHandler\CommunityLic\Void::class,
 
     // Domain - Document
     Command\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
