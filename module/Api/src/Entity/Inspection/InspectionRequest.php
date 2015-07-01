@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Entity\Inspection;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * InspectionRequest Entity
@@ -67,13 +66,12 @@ class InspectionRequest extends AbstractInspectionRequest
 
         $this->setRequestType($requestType);
 
-        $today = new DateTime('now');
         if (!$requestDate) {
-            $this->setRequestDate($today);
+            $this->setRequestDate(new \DateTime());
         }
         if (!$dueDate) {
             $this->setDueDate(
-                $today->add(new \DateInterval('P' . $duePeriod . 'M'))
+                (new \DateTime())->add(new \DateInterval('P' . $duePeriod . 'M'))
             );
         }
         $this->setResultType($resultType);
@@ -84,9 +82,15 @@ class InspectionRequest extends AbstractInspectionRequest
         $this->setRequestorUser($requestorUser);
         $this->setOperatingCentre($operatingCentre);
         $this->setInspectorName($inspectorName);
-        $this->setReturnDate($returnDate);
-        $this->setFromDate($fromDate);
-        $this->setToDate($toDate);
+        if ($returnDate) {
+            $this->setReturnDate(new \DateTime($returnDate));
+        }
+        if ($fromDate) {
+            $this->setFromDate(new \DateTime($fromDate));
+        }
+        if ($toDate) {
+            $this->setToDate(new \DateTime($toDate));
+        }
         $this->setVehiclesExaminedNo($vehiclesExaminedNo);
         $this->setTrailersExaminedNo($trailersExaminedNo);
         $this->setInspectorNotes($inspectorNotes);
