@@ -17,6 +17,7 @@ use Dvsa\Olcs\Transfer\Command\CommunityLic\Reprint as Cmd;
 use Dvsa\Olcs\Transfer\Command\CommunityLic\Void as VoidCmd;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as GenerateBatchCmd;
 
 /**
  * Reprint Test
@@ -116,6 +117,16 @@ class ReprintTest extends CommandHandlerTestCase
             ->andReturn($mockLicence)
             ->once()
             ->getMock();
+
+        $this->expectedSideEffect(
+            GenerateBatchCmd::class,
+            [
+                'licence' => $licenceId,
+                'communityLicenceIds' => $communityLicenceIds,
+                'identifier' => null
+            ],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 

@@ -21,13 +21,16 @@ class DateFromTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query[1]);
     }
 
-    public function testRender()
+    /**
+     * @dataProvider specifiedDateProvider
+     */
+    public function testRender($specifiedDate)
     {
         $bookmark = new DateFrom();
         $bookmark->setData(
             [
                 [
-                    'specifiedDate' => new \DateTime('2014-02-03 11:12:34')
+                    'specifiedDate' => $specifiedDate
                 ],
                 [
                     'Count' => 0, 'Results' => []
@@ -41,7 +44,18 @@ class DateFromTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testRenderWithInterim()
+    public function specifiedDateProvider()
+    {
+        return [
+            [new \DateTime('2014-02-03 11:12:34')],
+            ['2014-02-03 11:12:34']
+        ];
+    }
+
+    /**
+     * @dataProvider interimStartDateProvider
+     */
+    public function testRenderWithInterim($interimStartDate)
     {
         $bookmark = new DateFrom();
         $bookmark->setData(
@@ -53,7 +67,7 @@ class DateFromTest extends \PHPUnit_Framework_TestCase
                     'interimStatus' => [
                         'id' => Application::INTERIM_STATUS_INFORCE
                     ],
-                    'interimStart' => new \DateTime('2011-01-01 10:10:10')
+                    'interimStart' => $interimStartDate
                 ]
             ]
         );
@@ -62,5 +76,13 @@ class DateFromTest extends \PHPUnit_Framework_TestCase
             '01/01/2011',
             $bookmark->render()
         );
+    }
+
+    public function interimStartDateProvider()
+    {
+        return [
+            [new \DateTime('2011-01-01 10:10:10')],
+            ['2011-01-01 10:10:10']
+        ];
     }
 }
