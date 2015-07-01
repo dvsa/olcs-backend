@@ -24,6 +24,9 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
  */
 class Complaint extends AbstractComplaint
 {
+    const COMPLAIN_STATUS_CLOSED = 'ecst_closed';
+    const COMPLAIN_STATUS_OPEN = 'ecst_open';
+
     /**
      * Construct Complaint entity
      * @param Cases $case
@@ -49,5 +52,10 @@ class Complaint extends AbstractComplaint
         $this->setComplaintDate($complaintDate);
 
         $this->setComplainantContactDetails($contactDetails);
+    }
+
+    public function isOpen()
+    {
+        return ($this->getStatus()->getId() === self::COMPLAIN_STATUS_OPEN);
     }
 }

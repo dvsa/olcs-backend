@@ -94,6 +94,26 @@ class Fee extends AbstractRepository
     }
 
     /**
+     * Fetch outstanding fees for an application
+     *
+     * @param int $applicationId Application ID
+     *
+     * @return array
+     */
+    public function fetchOutstandingFeesByApplicationId($applicationId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $this->whereOutstandingFee($doctrineQb);
+
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.application', ':application'))
+            ->setParameter('application', $applicationId);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
      * Fetch outstanding fees by IDs
      *
      * @param array $ids
