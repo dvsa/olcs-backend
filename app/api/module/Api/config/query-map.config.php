@@ -107,6 +107,9 @@ return [
     TransferQuery\Cases\Statement\Statement::class => QueryHandler\Cases\Statement\Statement::class,
     TransferQuery\Cases\Statement\StatementList::class => QueryHandler\Cases\Statement\StatementList::class,
 
+    // Submission
+    TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
+
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
     TransferQuery\Processing\Note::class => QueryHandler\Processing\Note::class,
@@ -214,4 +217,11 @@ return [
 
     // Inspection Request
     TransferQuery\InspectionRequest\OperatingCentres::class => QueryHandler\InspectionRequest\OperatingCentres::class,
+
+    // Opposition
+    TransferQuery\Opposition\GetList::class => QueryHandler\Opposition\GetList::class,
+
+    // Complaint
+    TransferQuery\Complaint\GetList::class => QueryHandler\Complaint\GetList::class,
+
 ];
