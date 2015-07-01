@@ -44,10 +44,12 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
         $this->handleSideEffect($voidLicencesCommand);
         $issueNumbers = $this->getIssueNumbersByIds($ids);
 
+        $licence = $this->getRepo('Licence')->fetchById($licenceId);
+
         $data = [
             'status' => $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_ACTIVE),
             'specifiedDate' => new DateTime('now'),
-            'serialNoPrefix' => $this->getRepo('Licence')->getSerialNoPrefixFromTrafficArea($licenceId),
+            'serialNoPrefix' => $licence->getSerialNoPrefixFromTrafficArea(),
             'licence' => $this->getRepo()->getReference(LicenceEntity::class, $licenceId)
         ];
         $result = new Result();

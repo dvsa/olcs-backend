@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
@@ -125,7 +124,7 @@ class Licence extends AbstractLicence
         $tachographInsName,
         $safetyInsVaries
     ) {
-        if ($tachographIns !== null && $tachographIns !== self::TACH_NA && empty($tachographInsName)) {
+        if ($tachographIns !== null && $tachographIns == self::TACH_EXT && empty($tachographInsName)) {
             throw new ValidationException(
                 [
                     'tachographInsName' => [
@@ -318,5 +317,20 @@ class Licence extends AbstractLicence
         );
 
         return ($this->getConditionUndertakings()->matching($criteria)->count() > 0);
+    }
+
+    public function isGoods()
+    {
+        return $this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_GOODS_VEHICLE;
+    }
+
+    public function isPsv()
+    {
+        return $this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV;
+    }
+
+    public function isSpecialRestricted()
+    {
+        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED;
     }
 }
