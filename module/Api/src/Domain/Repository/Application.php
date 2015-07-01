@@ -54,4 +54,19 @@ class Application extends AbstractRepository
     {
         return $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->with('licence')->byId($id);
     }
+
+    public function fetchWithLicenceAndOc($applicationId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->with('l.operatingCentres', 'l_oc')
+            ->with('l_oc.operatingCentre', 'l_oc_oc')
+            ->with('operatingCentres', 'a_oc')
+            ->with('a_oc.operatingCentre', 'a_oc_oc')
+            ->byId($applicationId);
+
+        return $qb->getQuery()->getSingleResult();
+    }
 }
