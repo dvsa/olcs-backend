@@ -5,7 +5,7 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Opposition;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Opposition;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Dvsa\Olcs\Transfer\Command\Cases\Opposition\UpdateOpposition as Cmd;
+use Dvsa\Olcs\Transfer\Command\Opposition\UpdateOpposition as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**

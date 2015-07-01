@@ -2,24 +2,22 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Opposition;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Repository\Opposition as OppositionRepo;
 
 /**
- * Get a list of Oppositions
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * Opposition QueryHandler
  */
-class GetList extends AbstractQueryHandler
+final class OppositionList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Opposition';
 
     public function handleQuery(QueryInterface $query)
     {
-        /** @var \Dvsa\Olcs\Api\Domain\Repository\Opposition $repo */
+        /** @var OppositionRepo $repo */
         $repo = $this->getRepo();
-
         return [
             'result' => $this->resultList(
                 $repo->fetchList($query, Query::HYDRATE_OBJECT),
