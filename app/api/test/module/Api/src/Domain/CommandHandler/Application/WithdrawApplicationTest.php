@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\WithdrawApplication as CommandHandler;
@@ -76,8 +77,13 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             $discsResult
         );
 
+        $result1 = new Result();
+        $result1->addMessage('Snapshot created');
+        $data = ['id' => 532, 'event' => CreateSnapshot::ON_WITHDRAW];
+        $this->expectedSideEffect(CreateSnapshot::class, $data, $result1);
+
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(["Application 1 withdrawn."], $result->getMessages());
+        $this->assertSame(['Snapshot created', 'Application 1 withdrawn.'], $result->getMessages());
     }
 }

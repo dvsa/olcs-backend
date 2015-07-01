@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -153,34 +154,36 @@ final class CreateSnapshot extends AbstractCommandHandler
     {
         $descriptionPrefix = $code . ' Application Snapshot ';
 
-        switch ($event) {
-            case Cmd::ON_GRANT:
+        switch ((string)$event) {
+            case (string)Cmd::ON_GRANT:
                 return [
                     'filename' => $descriptionPrefix . 'Grant.html',
                     'description' => $descriptionPrefix .'(at grant/valid)',
                 ];
-            case Cmd::ON_SUBMIT:
+            case (string)Cmd::ON_SUBMIT:
                 return [
                     'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL,
                     'filename' => $descriptionPrefix . 'Submit.html',
                     'description' => $descriptionPrefix .'(at submission)',
                     'isExternal' => true,
                 ];
-            case Cmd::ON_REFUSE:
+            case (string)Cmd::ON_REFUSE:
                 return [
                     'filename' => $descriptionPrefix . 'Refuse.html',
                     'description' => $descriptionPrefix .'(at refuse)',
                 ];
-            case Cmd::ON_WITHDRAW:
+            case (string)Cmd::ON_WITHDRAW:
                 return [
                     'filename' => $descriptionPrefix . 'Withdraw.html',
                     'description' => $descriptionPrefix .'(at withdraw)',
                 ];
-            case Cmd::ON_NTU:
+            case (string)Cmd::ON_NTU:
                 return [
                     'filename' => $descriptionPrefix . 'NTU.html',
                     'description' => $descriptionPrefix .'(at NTU)',
                 ];
+            default:
+                throw new ValidationException(['Unexpected event']);
         }
     }
 }

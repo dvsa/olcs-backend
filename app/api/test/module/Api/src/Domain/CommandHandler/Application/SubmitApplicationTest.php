@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -151,6 +152,10 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $taskResult->addMessage('task created');
         $this->expectedSideEffect(CreateTaskCmd::class, $expectedTaskData, $taskResult);
 
+        $result1 = new Result();
+        $result1->addMessage('Snapshot created');
+        $this->expectedSideEffect(CreateSnapshot::class, ['id' => 69, 'event' => CreateSnapshot::ON_SUBMIT], $result1);
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals($expected, $result->toArray());
@@ -168,6 +173,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                         'task' => 111,
                     ],
                     'messages' => [
+                        'Snapshot created',
                         'Application updated',
                         'Licence updated',
                         'task created',
@@ -182,8 +188,9 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                         'task' => 111,
                     ],
                     'messages' => [
+                        'Snapshot created',
                         'Application updated',
-                        'task created',
+                        'task created'
                     ],
                 ],
             ],
