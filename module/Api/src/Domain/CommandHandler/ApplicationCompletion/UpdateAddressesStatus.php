@@ -29,13 +29,14 @@ final class UpdateAddressesStatus extends AbstractUpdateStatus
 
         // Must have correspondence address
         $corAdd = $licence->getCorrespondenceCd();
+
         if ($corAdd === null) {
             return false;
         }
 
         // Must have at least 1 phone contact
         $phoneContacts = $corAdd->getPhoneContacts();
-        if (count($phoneContacts) < 1) {
+        if ($phoneContacts->count() < 1) {
             return false;
         }
 
