@@ -7,16 +7,23 @@
  */
 namespace Dvsa\OlcsTest\Api\Service\Lva;
 
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Service\Lva\RestrictionService;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
-use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Access Helper Tests
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class SectionAccessServiceTest extends PHPUnit_Framework_TestCase
+class SectionAccessServiceTest extends MockeryTestCase
 {
     /**
      * Holds the sut
@@ -34,91 +41,160 @@ class SectionAccessServiceTest extends PHPUnit_Framework_TestCase
 
     private $serviceLocator;
 
+    private $sectionConfig;
+    private $authService;
+
     public function setUp()
     {
-        $this->mockRestrictionHelper = $this->getMock(
-            '\Dvsa\Olcs\Api\Service\Lva\RestrictionService',
-            array('isRestrictionSatisfied')
-        );
+        $this->mockRestrictionHelper = m::mock(RestrictionService::class);
+
+        $this->sectionConfig = m::mock();
+        $this->authService = m::mock(AuthorizationService::class);
 
         $this->serviceLocator = Bootstrap::getServiceManager();
         $this->serviceLocator->setAllowOverride(true);
         $this->serviceLocator->setService('RestrictionService', $this->mockRestrictionHelper);
+        $this->serviceLocator->setService('SectionConfig', $this->sectionConfig);
+        $this->serviceLocator->setService(AuthorizationService::class, $this->authService);
 
         $sut = new SectionAccessService();
         $this->sut = $sut->createService($this->serviceLocator);
 
-        $sections = array(
-            'no_restriction' => array(),
-            'has_access' => array(
-                'restricted' => array(
+        $sections = [
+            'no_restriction' => [],
+            'has_access' => [
+                'restricted' => [
                     'access'
-                )
-            ),
-            'hasnt_got_access' => array(
-                'restricted' => array(
+                ]
+            ],
+            'hasnt_got_access' => [
+                'restricted' => [
                     'no-access'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
-        $this->sut->setSections($sections);
+        $this->sectionConfig->shouldReceive('getAll')
+            ->andReturn($sections);
     }
 
-    /**
-     * @group helper_service
-     * @group access_helper_service
-     */
-    public function testDoesHaveAccess()
+    public function testGetAccessibleSectionsApplication()
     {
-        $access = array('access');
+        /** @var RefData $goodsOrPsv */
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
 
-        $this->setSharedMockRestrictionHelperExpectations();
+        /** @var RefData $licenceType */
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
 
-        $this->assertTrue($this->sut->doesHaveAccess('no_restriction', $access));
-        $this->assertTrue($this->sut->doesHaveAccess('has_access', $access));
-        $this->assertFalse($this->sut->doesHaveAccess('hasnt_got_access', $access));
-    }
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->shouldReceive('hasApprovedUnfulfilledConditions')
+            ->andReturn(false);
 
-    /**
-     * @group helper_service
-     * @group access_helper_service
-     */
-    public function testGetAccessibleSections()
-    {
-        $access = array('access');
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setIsVariation(false);
+        $application->setGoodsOrPsv($goodsOrPsv);
+        $application->setLicenceType($licenceType);
+        $application->setLicence($licence);
 
-        $expected = array(
-            'no_restriction' => array(),
-            'has_access' => array(
-                'restricted' => array(
+        $this->authService->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn(true);
+
+        $expectedAccess = [
+            'internal',
+            'application',
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            'noConditions'
+        ];
+
+        $this->setSharedMockRestrictionHelperExpectations($expectedAccess);
+
+        $sections = $this->sut->getAccessibleSections($application);
+
+        $expected = [
+            'no_restriction' => [],
+            'has_access' => [
+                'restricted' => [
                     'access'
-                )
-            )
-        );
+                ]
+            ],
+        ];
 
-        $this->setSharedMockRestrictionHelperExpectations();
+        $this->assertEquals($expected, $sections);
+    }
 
-        $output = $this->sut->getAccessibleSections($access);
+    public function testGetAccessibleSectionsVariation()
+    {
+        $appCompletion = m::mock(ApplicationCompletion::class);
 
-        $this->assertEquals($expected, $output);
+        /** @var RefData $goodsOrPsv */
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
+
+        /** @var RefData $licenceType */
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->shouldReceive('hasApprovedUnfulfilledConditions')
+            ->andReturn(true);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setIsVariation(true);
+        $application->setGoodsOrPsv($goodsOrPsv);
+        $application->setLicenceType($licenceType);
+        $application->setLicence($licence);
+        $application->setApplicationCompletion($appCompletion);
+
+        $this->authService->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn(false);
+
+        $this->sectionConfig->shouldReceive('setVariationCompletion')
+            ->with($appCompletion);
+
+        $expectedAccess = [
+            'external',
+            'variation',
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            'hasConditions'
+        ];
+
+        $this->setSharedMockRestrictionHelperExpectations($expectedAccess);
+
+        $sections = $this->sut->getAccessibleSections($application);
+
+        $expected = [
+            'no_restriction' => [],
+            'has_access' => [
+                'restricted' => [
+                    'access'
+                ]
+            ],
+        ];
+
+        $this->assertEquals($expected, $sections);
     }
 
     /**
      * Helper method to DRY up the test
      */
-    private function setSharedMockRestrictionHelperExpectations()
+    private function setSharedMockRestrictionHelperExpectations($access)
     {
-        $access = array('access');
+        $this->mockRestrictionHelper->shouldReceive('isRestrictionSatisfied')
+            ->with(['access'], $access, 'has_access')
+            ->andReturn(true);
 
-        $this->mockRestrictionHelper->expects($this->at(0))
-            ->method('isRestrictionSatisfied')
-            ->with(array('access'), $access)
-            ->willReturn(true);
-
-        $this->mockRestrictionHelper->expects($this->at(1))
-            ->method('isRestrictionSatisfied')
-            ->with(array('no-access'), $access)
-            ->willReturn(false);
+        $this->mockRestrictionHelper->shouldReceive('isRestrictionSatisfied')
+            ->with(['no-access'], $access, 'hasnt_got_access')
+            ->andReturn(false);
     }
 }

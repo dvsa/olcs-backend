@@ -72,7 +72,7 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
     protected function createSnapshot($applicationId)
     {
-        $data = ['id' => $applicationId, 'event' => CreateSnapshotCmd::ON_REFUSE];
+        $data = ['id' => $applicationId, 'event' => CreateSnapshotCmd::ON_WITHDRAW];
         return $this->handleSideEffect(CreateSnapshotCmd::create($data));
     }
 }
