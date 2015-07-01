@@ -1659,4 +1659,12 @@ return array(
             ),
         ),
     ),
+    'grace_period' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'gracePeriod'
+            )
+        ),
+    ),
 );

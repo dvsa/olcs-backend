@@ -170,6 +170,7 @@ return [
             'InspectionRequest' => RepositoryFactory::class,
             'CorrespondenceInbox' => RepositoryFactory::class,
             'SubmissionAction' => RepositoryFactory::class,
+            'TrafficArea' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
