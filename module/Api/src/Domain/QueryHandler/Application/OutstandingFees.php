@@ -38,7 +38,9 @@ class OutstandingFees extends AbstractQueryHandler
 
         return $this->result(
             $application,
-            [],
+            [
+                'applicationCompletion',
+            ],
             [
                 'outstandingFeeTotal' => $this->totalFees($outstandingFees),
                 'outstandingFees' => $this->resultList(
