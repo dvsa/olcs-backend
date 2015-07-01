@@ -94,9 +94,6 @@ return [
         QueryHandler\Cases\ConditionUndertaking\ConditionUndertaking::class,
     TransferQuery\Cases\ConditionUndertaking\ConditionUndertakingList::class =>
         QueryHandler\Cases\ConditionUndertaking\ConditionUndertakingList::class,
-    TransferQuery\Cases\Opposition\Opposition::class => QueryHandler\Cases\Opposition\Opposition::class,
-    TransferQuery\Cases\Opposition\OppositionList::class =>
-        QueryHandler\Cases\Opposition\OppositionList::class,
     TransferQuery\Cases\ProposeToRevoke\ProposeToRevokeByCase::class
         => QueryHandler\Cases\ProposeToRevoke\ProposeToRevokeByCase::class,
 
@@ -220,7 +217,8 @@ return [
     TransferQuery\LicenceVehicle\LicenceVehicle::class => QueryHandler\LicenceVehicle\LicenceVehicle::class,
 
     // Opposition
-    TransferQuery\Opposition\GetList::class => QueryHandler\Opposition\GetList::class,
+    TransferQuery\Opposition\Opposition::class => QueryHandler\Opposition\Opposition::class,
+    TransferQuery\Opposition\OppositionList::class => QueryHandler\Opposition\OppositionList::class,
 
     // Complaint
     TransferQuery\Complaint\GetList::class => QueryHandler\Complaint\GetList::class,

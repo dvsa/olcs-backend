@@ -5,16 +5,16 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Opposition;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Opposition;
 
 use Doctrine\ORM\Query;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Opposition\CreateOpposition;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Opposition\CreateOpposition;
 use Dvsa\Olcs\Api\Domain\Repository\Opposition as OppositionRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\Opposition\CreateOpposition as Cmd;
+use Dvsa\Olcs\Transfer\Command\Opposition\CreateOpposition as Cmd;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition as OppositionEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;

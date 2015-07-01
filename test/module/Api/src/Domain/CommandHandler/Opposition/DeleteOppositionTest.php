@@ -1,22 +1,20 @@
 <?php
 
 /**
- * Create Opposition Test
+ * Delete Opposition Test
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Opposition;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Opposition\DeleteOpposition as DeleteCommandHandler;
-use Dvsa\Olcs\Transfer\Command\Cases\Opposition\DeleteOpposition as DeleteCommand;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Opposition\DeleteOpposition as DeleteCommandHandler;
+use Dvsa\Olcs\Transfer\Command\Opposition\DeleteOpposition as DeleteCommand;
 use Dvsa\Olcs\Api\Domain\Repository\Opposition;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition as OppositionEntity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
-use Dvsa\Olcs\Api\Entity;
-
 /**
- * Create Opposition Test
+ * Delete Opposition Test
  */
 class DeleteOppositionTest extends CommandHandlerTestCase
 {

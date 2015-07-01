@@ -5,12 +5,12 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Opposition;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Opposition\OppositionList;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Opposition\OppositionList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Opposition as OppositionRepo;
-use Dvsa\Olcs\Transfer\Query\Cases\Opposition\OppositionList as Qry;
+use Dvsa\Olcs\Transfer\Query\Opposition\OppositionList as Qry;
 use Mockery as m;
 
 /**

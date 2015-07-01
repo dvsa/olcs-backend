@@ -288,12 +288,12 @@ return [
         CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertaking::class,
 
     // Transfer - Opposition
-    TransferCommand\Cases\Opposition\CreateOpposition::class =>
-        CommandHandler\Cases\Opposition\CreateOpposition::class,
-    TransferCommand\Cases\Opposition\UpdateOpposition::class =>
-        CommandHandler\Cases\Opposition\UpdateOpposition::class,
-    TransferCommand\Cases\Opposition\DeleteOpposition::class =>
-        CommandHandler\Cases\Opposition\DeleteOpposition::class,
+    TransferCommand\Opposition\CreateOpposition::class =>
+        CommandHandler\Opposition\CreateOpposition::class,
+    TransferCommand\Opposition\UpdateOpposition::class =>
+        CommandHandler\Opposition\UpdateOpposition::class,
+    TransferCommand\Opposition\DeleteOpposition::class =>
+        CommandHandler\Opposition\DeleteOpposition::class,
 
     // Transfer - Statement
     TransferCommand\Cases\Statement\CreateStatement::class =>

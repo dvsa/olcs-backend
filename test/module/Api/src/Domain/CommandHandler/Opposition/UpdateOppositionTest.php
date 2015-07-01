@@ -5,17 +5,17 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Opposition;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Opposition;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Opposition\UpdateOpposition;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Opposition\UpdateOpposition;
 use Dvsa\Olcs\Api\Domain\Repository\Opposition as OppositionRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\Opposition\UpdateOpposition as Cmd;
+use Dvsa\Olcs\Transfer\Command\Opposition\UpdateOpposition as Cmd;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition as OppositionEntity;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposer as OpposerEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
