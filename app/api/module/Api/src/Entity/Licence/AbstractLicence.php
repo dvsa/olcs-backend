@@ -587,6 +587,15 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     protected $fees;
 
     /**
+     * Grace period
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Licence\GracePeriod", mappedBy="licence")
+     */
+    protected $gracePeriods;
+
+    /**
      * Operating centre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -702,6 +711,7 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->fees = new ArrayCollection();
+        $this->gracePeriods = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
         $this->licenceStatusRules = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
@@ -2329,6 +2339,66 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     {
         if ($this->fees->contains($fees)) {
             $this->fees->removeElement($fees);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the grace period
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $gracePeriods
+     * @return Licence
+     */
+    public function setGracePeriods($gracePeriods)
+    {
+        $this->gracePeriods = $gracePeriods;
+
+        return $this;
+    }
+
+    /**
+     * Get the grace periods
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getGracePeriods()
+    {
+        return $this->gracePeriods;
+    }
+
+    /**
+     * Add a grace periods
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $gracePeriods
+     * @return Licence
+     */
+    public function addGracePeriods($gracePeriods)
+    {
+        if ($gracePeriods instanceof ArrayCollection) {
+            $this->gracePeriods = new ArrayCollection(
+                array_merge(
+                    $this->gracePeriods->toArray(),
+                    $gracePeriods->toArray()
+                )
+            );
+        } elseif (!$this->gracePeriods->contains($gracePeriods)) {
+            $this->gracePeriods->add($gracePeriods);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a grace periods
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $gracePeriods
+     * @return Licence
+     */
+    public function removeGracePeriods($gracePeriods)
+    {
+        if ($this->gracePeriods->contains($gracePeriods)) {
+            $this->gracePeriods->removeElement($gracePeriods);
         }
 
         return $this;
