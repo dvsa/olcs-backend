@@ -180,7 +180,7 @@ class ApplicationTest extends RepositoryTestCase
         /** @var EntityRepository $repo */
         $repo = m::mock(EntityRepository::class);
         $repo->shouldReceive('createQueryBuilder')
-            ->with('m')
+            ->with('a')
             ->andReturn($qb);
 
         $this->em->shouldReceive('getRepository')
@@ -225,7 +225,7 @@ class ApplicationTest extends RepositoryTestCase
         /** @var EntityRepository $repo */
         $repo = m::mock(EntityRepository::class);
         $repo->shouldReceive('createQueryBuilder')
-            ->with('m')
+            ->with('a')
             ->andReturn($qb);
 
         $this->em->shouldReceive('getRepository')
@@ -332,6 +332,54 @@ class ApplicationTest extends RepositoryTestCase
             ->andReturn($repo);
 
         $result = $this->sut->fetchWithLicenceAndOc($applicationId);
+        $this->assertEquals('RESULT', $result);
+    }
+
+
+    public function testFetchActiveForForOrganisation()
+    {
+        $organisationId = 123;
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $qb->shouldReceive('expr->eq')
+            ->with('l.organisation', ':organisationId');
+
+        $qb->shouldReceive('expr->in')
+            ->with('a.status', ['apsts_consideration', 'apsts_granted']);
+
+        $qb
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('organisationId', $organisationId)
+            ->shouldReceive('getQuery->execute')
+            ->andReturn('RESULT');
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->once()
+            ->with('licence', 'l')
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Application::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchActiveForOrganisation($organisationId);
+
         $this->assertEquals('RESULT', $result);
     }
 }

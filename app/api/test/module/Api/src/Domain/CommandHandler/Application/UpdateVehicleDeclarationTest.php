@@ -61,15 +61,15 @@ class UpdateVehicleDeclarationTest extends CommandHandlerTestCase
             [
                 'id' => 423,
                 'version' => 32,
-                'psvNoSmallVhlConfirmation' => 'Y',
-                'psvOperateSmallVhl' => 'Y',
-                'psvSmallVhlConfirmation' => 'Y',
-                'psvSmallVhlNotes' => 'Y',
-                'psvMediumVhlConfirmation' => 'Y',
-                'psvMediumVhlNotes' => 'Y',
-                'psvLimousines' => 'Y',
-                'psvNoLimousineConfirmation' => 'Y',
-                'psvOnlyLimousinesConfirmation' => 'Y',
+                'psvNoSmallVhlConfirmation' => '1',
+                'psvOperateSmallVhl' => '2',
+                'psvSmallVhlConfirmation' => '3',
+                'psvSmallVhlNotes' => '4',
+                'psvMediumVhlConfirmation' => '5',
+                'psvMediumVhlNotes' => '6',
+                'psvLimousines' => '7',
+                'psvNoLimousineConfirmation' => '8',
+                'psvOnlyLimousinesConfirmation' => '9',
             ]
         );
 
@@ -79,214 +79,19 @@ class UpdateVehicleDeclarationTest extends CommandHandlerTestCase
             ->shouldReceive('save')->with($application)->once();
 
         $this->expectedSideEffect(
-            UpdateApplicationCompletionCmd::class, ['id' => 423, 'section' => 'vehicles_declarations'], new Result()
+            UpdateApplicationCompletionCmd::class, ['id' => 423, 'section' => 'vehiclesDeclarations'], new Result()
         );
 
         $this->sut->handleCommand($command);
 
-        $this->assertSame('Y', $application->getPsvNoSmallVhlConfirmation());
-        $this->assertSame('Y', $application->getPsvOperateSmallVhl());
-        $this->assertSame('Y', $application->getPsvSmallVhlConfirmation());
-        $this->assertSame('Y', $application->getPsvSmallVhlNotes());
-        $this->assertSame('Y', $application->getPsvMediumVhlConfirmation());
-        $this->assertSame('Y', $application->getPsvMediumVhlNotes());
-        $this->assertSame('Y', $application->getPsvLimousines());
-        $this->assertSame('Y', $application->getPsvNoLimousineConfirmation());
-        $this->assertSame('Y', $application->getPsvOnlyLimousinesConfirmation());
-    }
-
-    public function testHandleCommandValidateMainOccupation()
-    {
-        $command = Cmd::create(
-            [
-                'id' => 423,
-                'version' => 32,
-                'psvNoSmallVhlConfirmation' => 'Y',
-                'psvOperateSmallVhl' => 'Y',
-                'psvSmallVhlConfirmation' => 'Y',
-                'psvSmallVhlNotes' => 'Y',
-                'psvMediumVhlConfirmation' => 'N',
-                'psvMediumVhlNotes' => '',
-                'psvLimousines' => 'Y',
-                'psvNoLimousineConfirmation' => 'Y',
-                'psvOnlyLimousinesConfirmation' => 'Y',
-            ]
-        );
-
-        $application = $this->setupApplication(0, 10, 0);
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->once()->with($command, Query::HYDRATE_OBJECT, 32)
-            ->andReturn($application);
-
-        try {
-            $this->sut->handleCommand($command);
-        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
-
-            $this->assertSame(
-                [
-                    'psvMediumVhlConfirmation' => 'psvMediumVhlConfirmation must be Y',
-                    'psvMediumVhlNotes' => 'psvMediumVhlNotes must be not be empty'
-                ],
-                $e->getMessages()
-            );
-        }
-    }
-
-    public function testHandleCommandValidateSmall1()
-    {
-        $command = Cmd::create(
-            [
-                'id' => 423,
-                'version' => 32,
-                'psvNoSmallVhlConfirmation' => 'Y',
-                'psvOperateSmallVhl' => 'Y',
-                'psvSmallVhlConfirmation' => 'Y',
-                'psvSmallVhlNotes' => '',
-                'psvMediumVhlConfirmation' => 'N',
-                'psvMediumVhlNotes' => '',
-                'psvLimousines' => 'Y',
-                'psvNoLimousineConfirmation' => 'Y',
-                'psvOnlyLimousinesConfirmation' => 'Y',
-            ]
-        );
-
-        $application = $this->setupApplication(10, 0, 0);
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->once()->with($command, Query::HYDRATE_OBJECT, 32)
-            ->andReturn($application);
-
-        try {
-            $this->sut->handleCommand($command);
-        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
-
-            $this->assertSame(['psvSmallVhlNotes' => 'psvSmallVhlNotes must be not be empty'], $e->getMessages());
-        }
-    }
-
-    public function testHandleCommandValidateSmall2()
-    {
-        $command = Cmd::create(
-            [
-                'id' => 423,
-                'version' => 32,
-                'psvNoSmallVhlConfirmation' => 'Y',
-                'psvOperateSmallVhl' => 'N',
-                'psvSmallVhlConfirmation' => 'N',
-                'psvSmallVhlNotes' => '',
-                'psvMediumVhlConfirmation' => 'N',
-                'psvMediumVhlNotes' => '',
-                'psvLimousines' => 'Y',
-                'psvNoLimousineConfirmation' => 'Y',
-                'psvOnlyLimousinesConfirmation' => 'Y',
-            ]
-        );
-
-        $application = $this->setupApplication(10, 0, 0);
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->once()->with($command, Query::HYDRATE_OBJECT, 32)
-            ->andReturn($application);
-
-        try {
-            $this->sut->handleCommand($command);
-        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
-
-            $this->assertSame(['psvSmallVhlConfirmation' => 'psvSmallVhlConfirmation must be Y'], $e->getMessages());
-        }
-    }
-
-    public function testHandleCommandValidateNineOrMore()
-    {
-        $command = Cmd::create(
-            [
-                'id' => 423,
-                'version' => 32,
-                'psvNoSmallVhlConfirmation' => 'N',
-                'psvOperateSmallVhl' => 'N',
-                'psvSmallVhlConfirmation' => 'N',
-                'psvSmallVhlNotes' => '',
-                'psvMediumVhlConfirmation' => 'N',
-                'psvMediumVhlNotes' => '',
-                'psvLimousines' => 'Y',
-                'psvNoLimousineConfirmation' => 'Y',
-                'psvOnlyLimousinesConfirmation' => 'Y',
-            ]
-        );
-
-        $application = $this->setupApplication(0, 0, 0);
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->once()->with($command, Query::HYDRATE_OBJECT, 32)
-            ->andReturn($application);
-
-        try {
-            $this->sut->handleCommand($command);
-        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
-
-            $this->assertSame(
-                ['psvNoSmallVhlConfirmation' => 'psvNoSmallVhlConfirmation must be Y'],
-                $e->getMessages()
-            );
-        }
-    }
-
-    public function testHandleCommandValidateLimousines1()
-    {
-        $command = Cmd::create(
-            [
-                'id' => 423,
-                'version' => 32,
-                'psvNoSmallVhlConfirmation' => 'Y',
-                'psvOperateSmallVhl' => 'N',
-                'psvSmallVhlConfirmation' => 'Y',
-                'psvSmallVhlNotes' => '',
-                'psvMediumVhlConfirmation' => 'Y',
-                'psvMediumVhlNotes' => 'X',
-                'psvLimousines' => 'Y',
-                'psvNoLimousineConfirmation' => 'Y',
-                'psvOnlyLimousinesConfirmation' => 'N',
-            ]
-        );
-
-        $application = $this->setupApplication(0, 10, 0);
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->once()->with($command, Query::HYDRATE_OBJECT, 32)
-            ->andReturn($application);
-
-        try {
-            $this->sut->handleCommand($command);
-        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
-
-            $this->assertSame(
-                ['psvOnlyLimousinesConfirmation' => 'psvOnlyLimousinesConfirmation must be Y'],
-                $e->getMessages()
-            );
-        }
-    }
-
-    public function testHandleCommandValidateLimousines2()
-    {
-        $command = Cmd::create(
-            [
-                'id' => 423,
-                'version' => 32,
-                'psvNoSmallVhlConfirmation' => 'Y',
-                'psvOperateSmallVhl' => 'N',
-                'psvSmallVhlConfirmation' => 'Y',
-                'psvSmallVhlNotes' => '',
-                'psvMediumVhlConfirmation' => 'Y',
-                'psvMediumVhlNotes' => 'X',
-                'psvLimousines' => 'N',
-                'psvNoLimousineConfirmation' => 'N',
-                'psvOnlyLimousinesConfirmation' => 'N',
-            ]
-        );
-
-        $application = $this->setupApplication(0, 10, 0);
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->once()->with($command, Query::HYDRATE_OBJECT, 32)
-            ->andReturn($application);
-
-        try {
-            $this->sut->handleCommand($command);
-        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
-
-            $this->assertSame(
-                ['psvNoLimousineConfirmation' => 'psvNoLimousineConfirmation must be Y'],
-                $e->getMessages()
-            );
-        }
+        $this->assertSame('1', $application->getPsvNoSmallVhlConfirmation());
+        $this->assertSame('2', $application->getPsvOperateSmallVhl());
+        $this->assertSame('3', $application->getPsvSmallVhlConfirmation());
+        $this->assertSame('4', $application->getPsvSmallVhlNotes());
+        $this->assertSame('5', $application->getPsvMediumVhlConfirmation());
+        $this->assertSame('6', $application->getPsvMediumVhlNotes());
+        $this->assertSame('7', $application->getPsvLimousines());
+        $this->assertSame('8', $application->getPsvNoLimousineConfirmation());
+        $this->assertSame('9', $application->getPsvOnlyLimousinesConfirmation());
     }
 }

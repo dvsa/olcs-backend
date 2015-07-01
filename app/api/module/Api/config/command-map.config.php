@@ -47,6 +47,7 @@ return [
         => CommandHandler\Application\ReviveApplication::class,
     TransferCommand\Application\RefuseApplication::class
         => CommandHandler\Application\RefuseApplication::class,
+    TransferCommand\Application\Overview::class => CommandHandler\Application\Overview::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -83,6 +84,7 @@ return [
     TransferCommand\Licence\TransferVehicles::class => CommandHandler\Licence\TransferVehicles::class,
     TransferCommand\Licence\PrintLicence::class => CommandHandler\Licence\PrintLicence::class,
     Command\Document\DispatchDocument::class => CommandHandler\Document\DispatchDocument::class,
+    TransferCommand\Licence\Overview::class => CommandHandler\Licence\Overview::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
@@ -161,6 +163,14 @@ return [
     TransferCommand\User\CreatePartner::class => CommandHandler\User\CreatePartner::class,
     TransferCommand\User\UpdatePartner::class => CommandHandler\User\UpdatePartner::class,
     TransferCommand\User\DeletePartner::class => CommandHandler\User\DeletePartner::class,
+
+    // Transfer - Cases
+    TransferCommand\Cases\CreateCase::class => CommandHandler\Cases\CreateCase::class,
+    TransferCommand\Cases\UpdateCase::class => CommandHandler\Cases\UpdateCase::class,
+    TransferCommand\Cases\DeleteCase::class => CommandHandler\Cases\DeleteCase::class,
+
+    // Transfer - Annual Test History
+    TransferCommand\Cases\UpdateAnnualTestHistory::class => CommandHandler\Cases\UpdateAnnualTestHistory::class,
 
     // Transfer - Impounding
     TransferCommand\Cases\Impounding\CreateImpounding::class =>
