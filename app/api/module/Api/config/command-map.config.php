@@ -191,12 +191,12 @@ return [
         CommandHandler\Cases\ProposeToRevoke\UpdateProposeToRevoke::class,
 
     // Transfer - Complaint
-    TransferCommand\Cases\Complaint\CreateComplaint::class =>
-        CommandHandler\Cases\Complaint\CreateComplaint::class,
-    TransferCommand\Cases\Complaint\UpdateComplaint::class =>
-        CommandHandler\Cases\Complaint\UpdateComplaint::class,
-    TransferCommand\Cases\Complaint\DeleteComplaint::class =>
-        CommandHandler\Cases\Complaint\DeleteComplaint::class,
+    TransferCommand\Complaint\CreateComplaint::class =>
+        CommandHandler\Complaint\CreateComplaint::class,
+    TransferCommand\Complaint\UpdateComplaint::class =>
+        CommandHandler\Complaint\UpdateComplaint::class,
+    TransferCommand\Complaint\DeleteComplaint::class =>
+        CommandHandler\Complaint\DeleteComplaint::class,
 
     // Transfer - Submission
     TransferCommand\Submission\CreateSubmissionAction::class =>
