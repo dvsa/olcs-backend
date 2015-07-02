@@ -89,6 +89,6 @@ class DeleteComplaintTest extends CommandHandlerTestCase
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
-        $this->assertContains('Complaint deleted', $result->getMessages());
+        $this->assertContains('Deleted', $result->getMessages());
     }
 }

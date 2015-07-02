@@ -7,36 +7,12 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Complaint;
 
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractDeleteCommandHandler;
 
 /**
  * Delete Complaint
- *
- * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-final class DeleteComplaint extends AbstractCommandHandler implements TransactionedInterface
+final class DeleteComplaint extends AbstractDeleteCommandHandler
 {
     protected $repoServiceName = 'Complaint';
-
-    /**
-     * Delete complaint
-     * @param CommandInterface $command
-     * @return Result
-     */
-    public function handleCommand(CommandInterface $command)
-    {
-        $result = new Result();
-
-        $complaint = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
-
-        $this->getRepo()->delete($complaint);
-
-        $result->addMessage('Complaint deleted');
-
-        return $result;
-    }
 }

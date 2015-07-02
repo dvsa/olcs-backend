@@ -5,12 +5,12 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\EnvironmentalComplaint;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList;
+use Dvsa\Olcs\Api\Domain\QueryHandler\EnvironmentalComplaint\EnvironmentalComplaintList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Complaint as ComplaintRepo;
-use Dvsa\Olcs\Transfer\Query\Cases\EnvironmentalComplaint\EnvironmentalComplaintList as Qry;
+use Dvsa\Olcs\Transfer\Query\EnvironmentalComplaint\EnvironmentalComplaintList as Qry;
 use Mockery as m;
 
 /**
