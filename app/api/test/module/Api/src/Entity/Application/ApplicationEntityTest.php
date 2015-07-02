@@ -770,8 +770,8 @@ class ApplicationEntityTest extends EntityTester
         $this->assertFalse($application->isRealUpgrade());
     }
 
-   public function testGetOcForInspectionRequest()
-   {
+    public function testGetOcForInspectionRequest()
+    {
         $oc1 = m::mock()
             ->shouldReceive('getId')
             ->andReturn(1)
