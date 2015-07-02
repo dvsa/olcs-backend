@@ -5,7 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace CommonTest\Service\Helper;
+namespace Dvsa\OlcsTest\Api\Service\Lva;
 
 use Dvsa\Olcs\Api\Service\Lva\RestrictionService;
 use PHPUnit_Framework_TestCase;
