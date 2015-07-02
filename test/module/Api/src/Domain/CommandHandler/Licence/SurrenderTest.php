@@ -61,21 +61,24 @@ class SurrenderTest extends CommandHandlerTestCase
             function (LicenceEntity $saveLicence) {
                 $this->assertSame($this->refData['lsts_surrendered'], $saveLicence->getStatus());
                 $this->assertInstanceOf(\DateTime::class, $saveLicence->getSurrenderedDate());
-                $this->assertSame((new \DateTime())->format('Y-m-d'), $saveLicence->getSurrenderedDate()->format('Y-m-d'));
+                $this->assertSame(
+                    (new \DateTime())->format('Y-m-d'),
+                    $saveLicence->getSurrenderedDate()->format('Y-m-d')
+                );
             }
         );
 
         $ceaseDiscsResult = new Result();
         $this->expectedSideEffect(
             CeasePsvDiscs::class,
-            array('licence' => $licence, 'id' => null),
+            array('discs' => null, 'id' => null),
             $ceaseDiscsResult
         );
 
         $removeVehicleResult = new Result();
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            array('licence' => $licence, 'id' => null),
+            array('licenceVehicles' => null, 'id' => null),
             $removeVehicleResult
         );
 
