@@ -27,7 +27,7 @@ class DefectList extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         return [
-            'result' => $this->resultList($repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT)),
+            'result' => $this->resultList($repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT), ['prohibition']),
             'count' => $repo->fetchCount($query)
         ];
     }
