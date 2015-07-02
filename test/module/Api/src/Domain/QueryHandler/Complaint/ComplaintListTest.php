@@ -5,12 +5,12 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Complaint;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Complaint;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Complaint\ComplaintList;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Complaint\ComplaintList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Complaint as ComplaintRepo;
-use Dvsa\Olcs\Transfer\Query\Cases\Complaint\ComplaintList as Qry;
+use Dvsa\Olcs\Transfer\Query\Complaint\ComplaintList as Qry;
 use Mockery as m;
 
 /**

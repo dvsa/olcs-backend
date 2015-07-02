@@ -84,8 +84,6 @@ return [
     TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
     TransferQuery\Cases\Impounding\ImpoundingList::class => QueryHandler\Cases\Impounding\ImpoundingList::class,
     TransferQuery\Cases\Impounding\Impounding::class => QueryHandler\Cases\Impounding\Impounding::class,
-    TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
-    TransferQuery\Cases\Complaint\ComplaintList::class => QueryHandler\Cases\Complaint\ComplaintList::class,
     TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
         QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
     TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
@@ -221,7 +219,8 @@ return [
     TransferQuery\Opposition\OppositionList::class => QueryHandler\Opposition\OppositionList::class,
 
     // Complaint
-    TransferQuery\Complaint\GetList::class => QueryHandler\Complaint\GetList::class,
+    TransferQuery\Complaint\Complaint::class => QueryHandler\Complaint\Complaint::class,
+    TransferQuery\Complaint\ComplaintList::class => QueryHandler\Complaint\ComplaintList::class,
 
     // Inspection Request
     TransferQuery\InspectionRequest\OperatingCentres::class => QueryHandler\InspectionRequest\OperatingCentres::class,

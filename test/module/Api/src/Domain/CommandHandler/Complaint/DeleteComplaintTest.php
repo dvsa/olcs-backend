@@ -1,33 +1,33 @@
 <?php
 
 /**
- * Update Complaint Test
+ * Delete Complaint Test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Complaint;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Complaint;
 
 use Doctrine\ORM\Query;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Complaint\UpdateComplaint;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Complaint\DeleteComplaint;
 use Dvsa\Olcs\Api\Domain\Repository\Complaint;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\Complaint\UpdateComplaint as Cmd;
+use Dvsa\Olcs\Transfer\Command\Complaint\DeleteComplaint as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 
 /**
- * Update Complaint Test
+ * Delete Complaint Test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class UpdateComplaintTest extends CommandHandlerTestCase
+class DeleteComplaintTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new UpdateComplaint();
+        $this->sut = new DeleteComplaint();
         $this->mockRepo('Complaint', Complaint::class);
 
         parent::setUp();
@@ -53,20 +53,7 @@ class UpdateComplaintTest extends CommandHandlerTestCase
         $command = Cmd::Create(
             [
                 'id' => 99,
-                'version' => 1,
-                'case' => 24,
-                "closedDate" => null,
-                "complainantFamilyName" => "Anthony",
-                "complainantForename" => "David",
-                "complaintDate" => "2015-01-16",
-                "closeDate" => "2015-02-26",
-                "complaintType" => "ct_cov",
-                "createdBy" => null,
-                "description" => "Some major complaint about condition of vehicle",
-                "driverFamilyName" => "Driver L Smith",
-                "driverForename" => "Driver F John",
-                "status" => "cs_ack",
-                "vrm" => "VRM123T"
+                'version' => 1
             ]
         );
 
@@ -88,7 +75,7 @@ class UpdateComplaintTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
             ->andReturn($complaint)
             ->once()
-            ->shouldReceive('save')
+            ->shouldReceive('delete')
             ->with(m::type(ComplaintEntity::class))
             ->andReturnUsing(
                 function (ComplaintEntity $complaint) use (&$complaint) {
@@ -102,6 +89,6 @@ class UpdateComplaintTest extends CommandHandlerTestCase
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
-        $this->assertContains('Complaint updated', $result->getMessages());
+        $this->assertContains('Complaint deleted', $result->getMessages());
     }
 }
