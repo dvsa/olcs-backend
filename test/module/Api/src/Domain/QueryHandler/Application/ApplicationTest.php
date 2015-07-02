@@ -60,7 +60,6 @@ class ApplicationTest extends QueryHandlerTestCase
             ->with($application)
             ->andReturn($sections);
 
-
         $applicationFee = $this->getMockFee('100');
         $interimFee =  $this->getMockFee('66.70');
         $fees = [$applicationFee, $interimFee];
