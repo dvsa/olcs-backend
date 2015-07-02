@@ -30,17 +30,14 @@ class OppositionTest extends RepositoryTestCase
         $this->setUpSut(Repo::class);
     }
 
-    public function testFetchUsingCaseId()
+    public function testFetchUsingId()
     {
         $id = 99;
-        $case = 24;
         $mockResult = [0 => 'result'];
 
         $command = m::mock(QueryInterface::class);
         $command->shouldReceive('getId')
             ->andReturn($id);
-        $command->shouldReceive('getCase')
-            ->andReturn($case);
 
         /** @var Expr $expr */
         $expr = m::mock(QueryBuilder::class);
@@ -54,24 +51,16 @@ class OppositionTest extends RepositoryTestCase
         $qb->shouldReceive('expr')
             ->andReturn($expr);
 
-        $qb->shouldReceive('setParameter')
-            ->with('byCase', $case)
-            ->andReturnSelf();
-
-        $qb->shouldReceive('andWhere')
-            ->with($expr)
-            ->andReturnSelf();
-
         $this->queryBuilder->shouldReceive('modifyQuery')
             ->once()
             ->with($qb)
             ->andReturnSelf()
-            ->shouldReceive('withRefData')
+            ->shouldReceive('withRefdata')
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('with')
+            ->shouldReceive('byId')
             ->once()
-            ->with('case')
+            ->with($id)
             ->andReturnSelf()
             ->shouldReceive('with')
             ->once()
@@ -91,11 +80,7 @@ class OppositionTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('with')
             ->once()
-            ->with('lastModifiedBy')
-            ->andReturnSelf()
-            ->shouldReceive('byId')
-            ->once()
-            ->with($id);
+            ->with('lastModifiedBy');
 
         $qb->shouldReceive('getQuery->getResult')
             ->with(Query::HYDRATE_OBJECT)
@@ -111,7 +96,7 @@ class OppositionTest extends RepositoryTestCase
             ->with(Opposition::class)
             ->andReturn($repo);
 
-        $result = $this->sut->fetchUsingCaseId($command, Query::HYDRATE_OBJECT);
+        $result = $this->sut->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
         $this->assertEquals($result, $mockResult[0]);
     }
