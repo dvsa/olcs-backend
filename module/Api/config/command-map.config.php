@@ -105,6 +105,9 @@ return [
     TransferCommand\Licence\CreateVehicleListDocument::class => CommandHandler\Licence\CreateVehicleListDocument::class,
     TransferCommand\Licence\TransferVehicles::class => CommandHandler\Licence\TransferVehicles::class,
     TransferCommand\Licence\PrintLicence::class => CommandHandler\Licence\PrintLicence::class,
+    TransferCommand\Licence\CreatePeople::class => CommandHandler\Licence\CreatePeople::class,
+    TransferCommand\Licence\UpdatePeople::class => CommandHandler\Licence\UpdatePeople::class,
+    TransferCommand\Licence\DeletePeople::class => CommandHandler\Licence\DeletePeople::class,
     Command\Document\DispatchDocument::class => CommandHandler\Document\DispatchDocument::class,
     TransferCommand\Licence\Overview::class => CommandHandler\Licence\Overview::class,
 
@@ -486,4 +489,8 @@ return [
         CommandHandler\ChangeOfEntity\UpdateChangeOfEntity::class,
     TransferCommand\ChangeOfEntity\DeleteChangeOfEntity::class =>
         CommandHandler\ChangeOfEntity\DeleteChangeOfEntity::class,
+
+    // OrganisationPerson
+    TransferCommand\OrganisationPerson\PopulateFromCompaniesHouse::class =>
+        CommandHandler\OrganisationPerson\PopulateFromCompaniesHouse::class,
 ];
