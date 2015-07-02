@@ -15,6 +15,24 @@ final class Opposition extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->result($this->getRepo()->fetchUsingCaseId($query));
+        return $this->result(
+            $this->getRepo()->fetchUsingId($query),
+            [
+                'case' => [
+                    'application',
+                    'licence' => ['goodsOrPsv'],
+                ],
+                'opposer' => [
+                    'opposerType',
+                    'contactDetails' => [
+                        'address' => ['countryCode'],
+                        'person',
+                        'phoneContacts' => ['phoneContactType']
+                    ]
+                ],
+                'grounds',
+                'operatingCentres',
+            ]
+        );
     }
 }

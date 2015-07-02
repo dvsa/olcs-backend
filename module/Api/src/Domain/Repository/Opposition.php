@@ -9,11 +9,6 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition as Entity;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -24,33 +19,19 @@ class Opposition extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function fetchUsingCaseId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
+    /**
+     * @param QueryBuilder $qb
+     * @param int          $id
+     */
+    protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->createQueryBuilder();
+        parent::buildDefaultQuery($qb, $id);
 
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
-            ->with('case')
+        $this->getQueryBuilder()
             ->with('opposer', 'o')
             ->with('grounds')
-            ->withPersonContactDetails('o.contactDetails', 'c')
-            ->with('createdBy')
-            ->with('lastModifiedBy')
-            ->byId($query->getId());
-
-        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
-            ->setParameter('byCase', $query->getCase());
-
-        $result = $qb->getQuery()->getResult($hydrateMode);
-
-        if (empty($result)) {
-            throw new Exception\NotFoundException('Resource not found');
-        }
-
-        return $result[0];
+            ->withPersonContactDetails('o.contactDetails', 'c');
     }
-
 
     public function fetchByApplicationId($applicationId)
     {
