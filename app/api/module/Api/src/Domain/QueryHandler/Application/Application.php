@@ -49,7 +49,9 @@ class Application extends AbstractQueryHandler
         return $this->result(
             $application,
             [
-                'licence',
+                'licence' => [
+                    'organisation',
+                ],
                 'applicationCompletion',
             ],
             [

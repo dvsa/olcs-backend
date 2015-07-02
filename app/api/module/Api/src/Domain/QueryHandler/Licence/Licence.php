@@ -42,7 +42,9 @@ class Licence extends AbstractQueryHandler
 
         return $this->result(
             $licence,
-            [],
+            [
+                'organisation',
+            ],
             [
                 'sections' => $this->sectionAccessService->getAccessibleSectionsForLicence($licence)
             ]
