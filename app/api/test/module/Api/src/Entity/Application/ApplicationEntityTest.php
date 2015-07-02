@@ -769,4 +769,59 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertFalse($application->isRealUpgrade());
     }
+
+    public function testGetOcForInspectionRequest()
+    {
+        $oc1 = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(1)
+            ->once()
+            ->shouldReceive('getAction')
+            ->once()
+            ->andReturn('A')
+            ->shouldReceive('getOperatingCentre')
+            ->andReturn('oc1')
+            ->once()
+            ->getMock();
+
+        $oc2 = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(2)
+            ->once()
+            ->shouldReceive('getAction')
+            ->andReturn('D')
+            ->once()
+            ->getMock();
+
+        $mockApplicationOperatingCentres = [$oc1, $oc2];
+
+        $oc3 = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(3)
+            ->once()
+            ->shouldReceive('getOperatingCentre')
+            ->andReturn('oc3')
+            ->once()
+            ->getMock();
+
+        $mockLicenceOperatingCentres = [$oc3];
+
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('getOperatingCentres')
+            ->andReturn($mockApplicationOperatingCentres)
+            ->once()
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getOperatingCentres')
+                ->andReturn($mockLicenceOperatingCentres)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $result = $sut->getOcForInspectionRequest();
+        $this->assertEquals(['oc1', 'oc3'], $result);
+    }
 }

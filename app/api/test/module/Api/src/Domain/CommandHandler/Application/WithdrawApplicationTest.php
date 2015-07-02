@@ -71,7 +71,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             CeaseGoodsDiscs::class,
             [
-                'licence' => $licence->getMock(),
+                'licenceVehicles' => null,
                 'id' => null
             ],
             $discsResult

@@ -25,10 +25,7 @@ final class CeaseGoodsDiscs extends AbstractCommandHandler implements Transactio
 
     public function handleCommand(CommandInterface $command)
     {
-        /** @var \Dvsa\Olcs\Api\Entity\Licence\Licence $licence */
-        $licence = $command->getLicence();
-
-        $licenceVehicles = $licence->getLicenceVehicles();
+        $licenceVehicles = $command->getLicenceVehicles();
 
         foreach ($licenceVehicles as $licenceVehicle) {
             foreach ($licenceVehicle->getGoodsDiscs() as $disc) {
