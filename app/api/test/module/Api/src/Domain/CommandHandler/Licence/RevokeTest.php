@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
+use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
@@ -87,6 +88,15 @@ class RevokeTest extends CommandHandlerTestCase
             $removeTmResult
         );
 
+        $removeRulesResult = new Result();
+        $this->expectedSideEffect(
+            RemoveLicenceStatusRulesForLicence::class,
+            [
+                'licence' => $licence
+            ],
+            $removeRulesResult
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 revoked"], $result->getMessages());
@@ -131,6 +141,15 @@ class RevokeTest extends CommandHandlerTestCase
             DeleteTransportManagerLicence::class,
             array('licence' => $licence, 'id' => null),
             $removeTmResult
+        );
+
+        $removeRulesResult = new Result();
+        $this->expectedSideEffect(
+            RemoveLicenceStatusRulesForLicence::class,
+            [
+                'licence' => $licence
+            ],
+            $removeRulesResult
         );
 
         $result = $this->sut->handleCommand($command);
