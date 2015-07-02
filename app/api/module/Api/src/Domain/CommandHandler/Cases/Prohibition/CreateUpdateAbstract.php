@@ -58,5 +58,10 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
         if ($command->getImposedAt() !== null) {
             $entity->setImposedAt($command->getImposedAt());
         }
+
+        // String
+        if ($command->getVrm() !== null) {
+            $entity->setVrm($command->getVrm());
+        }
     }
 }
