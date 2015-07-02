@@ -38,7 +38,7 @@ final class Curtail extends AbstractCommandHandler implements TransactionedInter
             $this->handleSideEffect(
                 RemoveLicenceStatusRulesForLicence::create(
                     [
-                        'licence' => $command->getId()
+                        'licence' => $licence
                     ]
                 )
             )

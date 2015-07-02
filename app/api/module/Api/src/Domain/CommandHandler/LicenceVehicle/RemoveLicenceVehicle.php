@@ -25,9 +25,9 @@ final class RemoveLicenceVehicle extends AbstractCommandHandler implements Trans
 
     public function handleCommand(CommandInterface $command)
     {
-        $licenceVehicles = $command->getLicenceVehicles();
+        $licenceVehicles = $command->getLicenceVehicles()->toArray();
 
-        foreach ((array)$licenceVehicles as $licenceVehicle) {
+        foreach ($licenceVehicles as $licenceVehicle) {
             $licenceVehicle->setRemovalDate(new \DateTime());
 
             $this->getRepo()->save($licenceVehicle);

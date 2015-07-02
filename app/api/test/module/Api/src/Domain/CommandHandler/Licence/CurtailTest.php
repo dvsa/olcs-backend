@@ -66,7 +66,7 @@ class CurtailTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             RemoveLicenceStatusRulesForLicence::class,
             [
-                'licence' => 532
+                'licence' => $licence
             ],
             $removeRulesResult
         );
