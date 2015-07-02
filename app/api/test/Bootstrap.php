@@ -38,6 +38,7 @@ class Bootstrap
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
         $serviceManager->setService('ApplicationConfig', self::$config);
         $serviceManager->get('ModuleManager')->loadModules();
+        $serviceManager->setAllowOverride(true);
 
         return $serviceManager;
     }
