@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Service\Lva;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
@@ -76,18 +77,29 @@ class SectionAccessService implements FactoryInterface, AuthAwareInterface
     public function getAccessibleSections(Application $application)
     {
         $lva = $application->isVariation() ? 'variation' : 'application';
+
+        return $this->getAccessibleSectionsForLva($lva, $application->getLicence(), $application);
+    }
+
+    public function getAccessibleSectionsForLicence(Licence $licence)
+    {
+        return $this->getAccessibleSectionsForLva('licence', $licence, $licence);
+    }
+
+    protected function getAccessibleSectionsForLva($lva, Licence $licence, $entity)
+    {
         $location = $this->isGranted(Permission::INTERNAL_USER) ? 'internal' : 'external';
 
-        $hasConditions = $application->getLicence()->hasApprovedUnfulfilledConditions();
+        $hasConditions = $licence->hasApprovedUnfulfilledConditions();
 
         $goodsOrPsv = null;
-        if ($application->getGoodsOrPsv() !== null) {
-            $goodsOrPsv = $application->getGoodsOrPsv()->getId();
+        if ($entity->getGoodsOrPsv() !== null) {
+            $goodsOrPsv = $entity->getGoodsOrPsv()->getId();
         }
 
         $licenceType = null;
-        if ($application->getLicenceType() !== null) {
-            $licenceType = $application->getLicenceType()->getId();
+        if ($entity->getLicenceType() !== null) {
+            $licenceType = $entity->getLicenceType()->getId();
         }
 
         $access = [
@@ -99,7 +111,7 @@ class SectionAccessService implements FactoryInterface, AuthAwareInterface
         ];
 
         if ($lva === 'variation') {
-            $this->sectionConfig->setVariationCompletion($application->getApplicationCompletion());
+            $this->sectionConfig->setVariationCompletion($entity->getApplicationCompletion());
         }
 
         $sections = $this->getSections();
