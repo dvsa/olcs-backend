@@ -39,7 +39,6 @@ return [
     TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
     TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
     TransferQuery\Application\TransportManagers::class => QueryHandler\Application\TransportManagers::class,
-    TransferQuery\Application\OutstandingFees::class => QueryHandler\Application\OutstandingFees::class,
     TransferQuery\Application\GoodsVehicles::class => QueryHandler\Application\GoodsVehicles::class,
     TransferQuery\Application\VehicleDeclaration::class => QueryHandler\Application\VehicleDeclaration::class,
     TransferQuery\Application\Review::class => QueryHandler\Application\Review::class,
