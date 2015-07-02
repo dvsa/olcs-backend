@@ -78,7 +78,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
      */
     protected function checkForConfirmation(LicenceEntity $licence, Cmd $command)
     {
-        $licences = $this->getRepo('Vehicle')->fetchLicencesForVrm($command->getVrm());
+        $licences = $this->getRepo()->fetchByVrm($command->getVrm());
 
         if (empty($licences)) {
             return;
@@ -102,6 +102,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
 
             /** @var LicenceEntity $otherLicence */
             foreach ($otherLicences as $otherLicence) {
+
                 $licNo = $otherLicence->getLicNo();
 
                 if (empty($licNo)) {
