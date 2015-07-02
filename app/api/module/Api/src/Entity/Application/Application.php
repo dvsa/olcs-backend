@@ -360,7 +360,7 @@ class Application extends AbstractApplication
     public function isLicenceUpgrade()
     {
         // only a variation can be an upgrade
-        if (!$this->getIsVariation()) {
+        if (!$this->isVariation()) {
             return false;
         }
 
@@ -492,5 +492,25 @@ class Application extends AbstractApplication
         $vehicles = $this->getLicence()->getLicenceVehicles()->matching($criteria);
 
         return $this->getTotAuthVehicles() - $vehicles->count();
+    }
+
+    public function isRealUpgrade()
+    {
+        if (!$this->isVariation()) {
+            return false;
+        }
+
+        // If we have upgraded from restricted
+        if ($this->isLicenceUpgrade()) {
+            return true;
+        }
+
+        // If we have upgraded from stand nat, to stand inter
+        if ($this->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_NATIONAL
+            && $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
+            return true;
+        }
+
+        return false;
     }
 }
