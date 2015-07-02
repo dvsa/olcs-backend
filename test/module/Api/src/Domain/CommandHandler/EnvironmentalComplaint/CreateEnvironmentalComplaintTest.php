@@ -5,14 +5,13 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\EnvironmentalComplaint;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\EnvironmentalComplaint;
 
-use Doctrine\ORM\Query;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint;
+use Dvsa\Olcs\Api\Domain\CommandHandler\EnvironmentalComplaint\CreateEnvironmentalComplaint;
 use Dvsa\Olcs\Api\Domain\Repository\Complaint;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint as Cmd;
+use Dvsa\Olcs\Transfer\Command\EnvironmentalComplaint\CreateEnvironmentalComplaint as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 

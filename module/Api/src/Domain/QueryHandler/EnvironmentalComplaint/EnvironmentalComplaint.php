@@ -1,8 +1,7 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\EnvironmentalComplaint;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\EnvironmentalComplaint;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 

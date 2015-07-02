@@ -5,14 +5,14 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\EnvironmentalComplaint;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\EnvironmentalComplaint;
 
 use Doctrine\ORM\Query;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint;
+use Dvsa\Olcs\Api\Domain\CommandHandler\EnvironmentalComplaint\DeleteEnvironmentalComplaint;
 use Dvsa\Olcs\Api\Domain\Repository\Complaint;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint as Cmd;
+use Dvsa\Olcs\Transfer\Command\EnvironmentalComplaint\DeleteEnvironmentalComplaint as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
@@ -89,6 +89,6 @@ class DeleteEnvironmentalComplaintTest extends CommandHandlerTestCase
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
-        $this->assertContains('Environmental Complaint deleted', $result->getMessages());
+        $this->assertContains('Deleted', $result->getMessages());
     }
 }

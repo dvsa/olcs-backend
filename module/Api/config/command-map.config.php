@@ -198,6 +198,14 @@ return [
     TransferCommand\Complaint\DeleteComplaint::class =>
         CommandHandler\Complaint\DeleteComplaint::class,
 
+    // Transfer - Environmental Complaint
+    TransferCommand\EnvironmentalComplaint\CreateEnvironmentalComplaint::class =>
+        CommandHandler\EnvironmentalComplaint\CreateEnvironmentalComplaint::class,
+    TransferCommand\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class =>
+        CommandHandler\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class,
+    TransferCommand\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class =>
+        CommandHandler\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
+
     // Transfer - Submission
     TransferCommand\Submission\CreateSubmissionAction::class =>
         CommandHandler\Submission\CreateSubmissionAction::class,
@@ -252,14 +260,6 @@ return [
         CommandHandler\Cases\Hearing\UpdateStay::class,
     TransferCommand\Cases\Hearing\DeleteStay::class =>
         CommandHandler\Cases\Hearing\DeleteStay::class,
-
-    // Transfer - Environmental Complaint
-    TransferCommand\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class =>
-        CommandHandler\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class,
-    TransferCommand\Cases\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class =>
-        CommandHandler\Cases\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class,
-    TransferCommand\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class =>
-        CommandHandler\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
 
     // Transfer - Licence Status Rule
     TransferCommand\LicenceStatusRule\CreateLicenceStatusRule::class
