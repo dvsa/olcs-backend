@@ -450,4 +450,6 @@ return [
     TransferCommand\InspectionRequest\Update::class => CommandHandler\InspectionRequest\Update::class,
     TransferCommand\InspectionRequest\CreateFromGrant::class => CommandHandler\InspectionRequest\CreateFromGrant::class,
 
+    // Domain - InspectionRequest
+    Command\InspectionRequest\CreateFromGrant::class  => CommandHandler\InspectionRequest\CreateFromGrant::class,
 ];
