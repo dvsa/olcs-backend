@@ -110,7 +110,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             ->with(111)
             ->andReturn($licence);
 
-        $this->repoMap['Vehicle']->shouldReceive('fetchLicencesForVrm')
+        $this->repoMap['Licence']->shouldReceive('fetchByVrm')
             ->with('ABC123')
             ->andReturn($otherLicences);
 
@@ -168,7 +168,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             ->with(111)
             ->andReturn($licence);
 
-        $this->repoMap['Vehicle']->shouldReceive('fetchLicencesForVrm')
+        $this->repoMap['Licence']->shouldReceive('fetchByVrm')
             ->with('ABC123')
             ->andReturn($otherLicences);
 
@@ -201,17 +201,17 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
-            ->andReturn($licence);
+            ->andReturn($licence)
+            ->shouldReceive('fetchByVrm')
+            ->with('ABC123')
+            ->andReturn($otherLicences);
 
         /** @var Vehicle $savedVehicle */
         $savedVehicle = null;
         /** @var LicenceVehicle $savedLicenceVehicle */
         $savedLicenceVehicle = null;
 
-        $this->repoMap['Vehicle']->shouldReceive('fetchLicencesForVrm')
-            ->with('ABC123')
-            ->andReturn($otherLicences)
-            ->shouldReceive('save')
+        $this->repoMap['Vehicle']->shouldReceive('save')
             ->with(m::type(Vehicle::class))
             ->andReturnUsing(
                 function (Vehicle $vehicle) use (&$savedVehicle) {
@@ -278,17 +278,17 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
-            ->andReturn($licence);
+            ->andReturn($licence)
+            ->shouldReceive('fetchByVrm')
+            ->with('ABC123')
+            ->andReturn($otherLicences);
 
         /** @var Vehicle $savedVehicle */
         $savedVehicle = null;
         /** @var LicenceVehicle $savedLicenceVehicle */
         $savedLicenceVehicle = null;
 
-        $this->repoMap['Vehicle']->shouldReceive('fetchLicencesForVrm')
-            ->with('ABC123')
-            ->andReturn($otherLicences)
-            ->shouldReceive('save')
+        $this->repoMap['Vehicle']->shouldReceive('save')
             ->with(m::type(Vehicle::class))
             ->andReturnUsing(
                 function (Vehicle $vehicle) use (&$savedVehicle) {

@@ -19,13 +19,13 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class RemoveLicenceVehicle extends AbstractIdOnlyCommand
 {
-    protected $licence;
+    protected $licenceVehicles;
 
     /**
      * @return mixed
      */
-    public function getLicence()
+    public function getLicenceVehicles()
     {
-        return $this->licence;
+        return $this->licenceVehicles;
     }
 }

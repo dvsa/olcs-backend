@@ -338,6 +338,41 @@ class FeeTest extends RepositoryTestCase
         );
     }
 
+    public function testFetchOutstandingFeesByApplicationId()
+    {
+        $applicationId = 69;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $this->mockWhereOutstandingFee($mockQb);
+
+        $mockQb
+            ->shouldReceive('expr->eq')
+            ->with('f.application', ':application')
+            ->andReturnSelf();
+        $mockQb
+            ->shouldReceive('andWhere')
+            ->andReturnSelf();
+        $mockQb
+            ->shouldReceive('setParameter')
+            ->with('application', $applicationId)
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
+
+        $this->assertSame(
+            'result',
+            $this->sut->fetchOutstandingFeesByApplicationId($applicationId)
+        );
+    }
+
     private function mockWhereOutstandingFee($mockQb)
     {
         $where = m::mock();

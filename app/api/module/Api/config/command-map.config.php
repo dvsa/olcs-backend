@@ -47,6 +47,10 @@ return [
         => CommandHandler\Application\ReviveApplication::class,
     TransferCommand\Application\RefuseApplication::class
         => CommandHandler\Application\RefuseApplication::class,
+    TransferCommand\Application\NotTakenUpApplication::class
+        => CommandHandler\Application\NotTakenUpApplication::class,
+    TransferCommand\Application\Overview::class => CommandHandler\Application\Overview::class,
+    TransferCommand\Application\CreateSnapshot::class => CommandHandler\Application\CreateSnapshot::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -84,6 +88,7 @@ return [
     TransferCommand\Licence\TransferVehicles::class => CommandHandler\Licence\TransferVehicles::class,
     TransferCommand\Licence\PrintLicence::class => CommandHandler\Licence\PrintLicence::class,
     Command\Document\DispatchDocument::class => CommandHandler\Document\DispatchDocument::class,
+    TransferCommand\Licence\Overview::class => CommandHandler\Licence\Overview::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
@@ -91,6 +96,7 @@ return [
     Command\Licence\Withdraw::class => CommandHandler\Licence\Withdraw::class,
     Command\Licence\Grant::class => CommandHandler\Licence\Grant::class,
     Command\Licence\Refuse::class => CommandHandler\Licence\Refuse::class,
+    Command\Licence\NotTakenUp::class => CommandHandler\Licence\NotTakenUp::class,
     Command\Licence\UnderConsideration::class => CommandHandler\Licence\UnderConsideration::class,
 
     TransferCommand\Licence\CreatePsvDiscs::class => CommandHandler\Licence\CreatePsvDiscs::class,
@@ -186,12 +192,20 @@ return [
         CommandHandler\Cases\ProposeToRevoke\UpdateProposeToRevoke::class,
 
     // Transfer - Complaint
-    TransferCommand\Cases\Complaint\CreateComplaint::class =>
-        CommandHandler\Cases\Complaint\CreateComplaint::class,
-    TransferCommand\Cases\Complaint\UpdateComplaint::class =>
-        CommandHandler\Cases\Complaint\UpdateComplaint::class,
-    TransferCommand\Cases\Complaint\DeleteComplaint::class =>
-        CommandHandler\Cases\Complaint\DeleteComplaint::class,
+    TransferCommand\Complaint\CreateComplaint::class =>
+        CommandHandler\Complaint\CreateComplaint::class,
+    TransferCommand\Complaint\UpdateComplaint::class =>
+        CommandHandler\Complaint\UpdateComplaint::class,
+    TransferCommand\Complaint\DeleteComplaint::class =>
+        CommandHandler\Complaint\DeleteComplaint::class,
+
+    // Transfer - Environmental Complaint
+    TransferCommand\EnvironmentalComplaint\CreateEnvironmentalComplaint::class =>
+        CommandHandler\EnvironmentalComplaint\CreateEnvironmentalComplaint::class,
+    TransferCommand\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class =>
+        CommandHandler\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class,
+    TransferCommand\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class =>
+        CommandHandler\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
 
     // Transfer - Submission
     TransferCommand\Submission\CreateSubmissionAction::class =>
@@ -248,14 +262,6 @@ return [
     TransferCommand\Cases\Hearing\DeleteStay::class =>
         CommandHandler\Cases\Hearing\DeleteStay::class,
 
-    // Transfer - Environmental Complaint
-    TransferCommand\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class =>
-        CommandHandler\Cases\EnvironmentalComplaint\CreateEnvironmentalComplaint::class,
-    TransferCommand\Cases\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class =>
-        CommandHandler\Cases\EnvironmentalComplaint\UpdateEnvironmentalComplaint::class,
-    TransferCommand\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class =>
-        CommandHandler\Cases\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
-
     // Transfer - Licence Status Rule
     TransferCommand\LicenceStatusRule\CreateLicenceStatusRule::class
         => CommandHandler\LicenceStatusRule\CreateLicenceStatusRule::class,
@@ -283,12 +289,12 @@ return [
         CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertaking::class,
 
     // Transfer - Opposition
-    TransferCommand\Cases\Opposition\CreateOpposition::class =>
-        CommandHandler\Cases\Opposition\CreateOpposition::class,
-    TransferCommand\Cases\Opposition\UpdateOpposition::class =>
-        CommandHandler\Cases\Opposition\UpdateOpposition::class,
-    TransferCommand\Cases\Opposition\DeleteOpposition::class =>
-        CommandHandler\Cases\Opposition\DeleteOpposition::class,
+    TransferCommand\Opposition\CreateOpposition::class =>
+        CommandHandler\Opposition\CreateOpposition::class,
+    TransferCommand\Opposition\UpdateOpposition::class =>
+        CommandHandler\Opposition\UpdateOpposition::class,
+    TransferCommand\Opposition\DeleteOpposition::class =>
+        CommandHandler\Opposition\DeleteOpposition::class,
 
     // Transfer - Statement
     TransferCommand\Cases\Statement\CreateStatement::class =>
@@ -378,6 +384,8 @@ return [
         CommandHandler\CommunityLic\Application\CreateOfficeCopy::class,
     Command\CommunityLic\Licence\CreateOfficeCopy::class =>
         CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
+    Command\CommunityLic\Void::class =>
+        CommandHandler\CommunityLic\Void::class,
 
     // Domain - Document
     Command\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
@@ -437,4 +445,12 @@ return [
     Command\Vehicle\CeaseActiveDiscs::class => CommandHandler\Vehicle\CeaseActiveDiscs::class,
     TransferCommand\Vehicle\ReprintDisc::class => CommandHandler\Vehicle\ReprintDisc::class,
     Command\Vehicle\CreateGoodsDiscs::class => CommandHandler\Vehicle\CreateGoodsDiscs::class,
+
+    // Transfer - InspectionRequest
+    TransferCommand\InspectionRequest\Create::class => CommandHandler\InspectionRequest\Create::class,
+    TransferCommand\InspectionRequest\Update::class => CommandHandler\InspectionRequest\Update::class,
+    TransferCommand\InspectionRequest\CreateFromGrant::class => CommandHandler\InspectionRequest\CreateFromGrant::class,
+
+    // Domain - InspectionRequest
+    Command\InspectionRequest\CreateFromGrant::class  => CommandHandler\InspectionRequest\CreateFromGrant::class,
 ];

@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Discs\CeaseGoodsDiscs;
 
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 
-use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs as Cmd;
 
 /**
  * Class CeaseGoodsDiscsTest
@@ -38,22 +38,18 @@ class CeaseGoodsDiscsTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'licence' => m::mock()->shouldReceive('getLicenceVehicles')
-                ->andReturn(
-                    [
-                        m::mock(LicenceVehicle::class)
-                            ->shouldReceive('getGoodsDiscs')
-                            ->andReturn(
-                                [
-                                    m::mock(GoodsDisc::class)
-                                        ->shouldReceive('setCeasedDate')
-                                        ->once()
-                                        ->getMock()
-                                ]
-                            )->getMock()
-                    ]
-                )
-                ->getMock()
+            'licenceVehicles' => [
+                m::mock(LicenceVehicle::class)
+                    ->shouldReceive('getGoodsDiscs')
+                    ->andReturn(
+                        [
+                            m::mock(GoodsDisc::class)
+                                ->shouldReceive('setCeasedDate')
+                                ->once()
+                                ->getMock()
+                        ]
+                    )->getMock()
+            ]
         ];
 
         $command = Cmd::create($data);

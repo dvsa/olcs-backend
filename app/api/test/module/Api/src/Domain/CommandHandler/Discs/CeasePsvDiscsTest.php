@@ -37,13 +37,9 @@ class CeasePsvDiscsTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'licence' => m::mock()->shouldReceive('getDiscs')
-                ->andReturn(
-                    [
-                        m::mock(PsvDisc::class)->makePartial()
-                    ]
-                )
-                ->getMock()
+            'discs' => [
+                m::mock(PsvDisc::class)->makePartial()
+            ]
         ];
 
         $command = Cmd::create($data);

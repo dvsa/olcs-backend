@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\RefuseApplication as CommandHandler;
@@ -47,6 +48,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
+            ->once()
             ->andReturn(123);
 
         $application = m::mock(Application::class)->makePartial();
@@ -70,14 +72,18 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             CeaseGoodsDiscs::class,
             [
-                'licence' => $licence->getMock(),
+                'licenceVehicles' => null,
                 'id' => null
             ],
             $discsResult
         );
 
+        $result1 = new Result();
+        $result1->addMessage('Snapshot created');
+        $this->expectedSideEffect(CreateSnapshot::class, ['id' => 532, 'event' => CreateSnapshot::ON_REFUSE], $result1);
+
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(["Application 1 refused."], $result->getMessages());
+        $this->assertSame(['Snapshot created', 'Application 1 refused.'], $result->getMessages());
     }
 }

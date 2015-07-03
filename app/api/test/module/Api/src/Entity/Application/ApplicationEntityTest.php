@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Doctrine\Common\Collections\Criteria;
@@ -697,5 +698,130 @@ class ApplicationEntityTest extends EntityTester
         $application->setLicence($licence);
 
         $this->assertEquals(4, $application->getRemainingSpaces());
+    }
+
+    public function testIsRealUpgradeNewApp()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $application->setIsVariation(false);
+
+        $this->assertFalse($application->isRealUpgrade());
+    }
+
+    public function testIsRealUpgradeIsLicenceUpgrade()
+    {
+        /** @var RefData $licenceType */
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_RESTRICTED);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setIsVariation(true);
+        $application->setLicence($licence);
+        $application->setLicenceType($licenceType);
+
+        $this->assertTrue($application->isRealUpgrade());
+    }
+
+    public function testIsRealUpgrade()
+    {
+        /** @var RefData $licenceType */
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setIsVariation(true);
+        $application->setLicence($licence);
+        $application->setLicenceType($licenceType);
+
+        $this->assertTrue($application->isRealUpgrade());
+    }
+
+    public function testIsRealUpgradeFalse()
+    {
+        /** @var RefData $licenceType */
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setIsVariation(true);
+        $application->setLicence($licence);
+        $application->setLicenceType($licenceType);
+
+        $this->assertFalse($application->isRealUpgrade());
+    }
+
+    public function testGetOcForInspectionRequest()
+    {
+        $oc1 = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(1)
+            ->once()
+            ->shouldReceive('getAction')
+            ->once()
+            ->andReturn('A')
+            ->shouldReceive('getOperatingCentre')
+            ->andReturn('oc1')
+            ->once()
+            ->getMock();
+
+        $oc2 = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(2)
+            ->once()
+            ->shouldReceive('getAction')
+            ->andReturn('D')
+            ->once()
+            ->getMock();
+
+        $mockApplicationOperatingCentres = [$oc1, $oc2];
+
+        $oc3 = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(3)
+            ->once()
+            ->shouldReceive('getOperatingCentre')
+            ->andReturn('oc3')
+            ->once()
+            ->getMock();
+
+        $mockLicenceOperatingCentres = [$oc3];
+
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('getOperatingCentres')
+            ->andReturn($mockApplicationOperatingCentres)
+            ->once()
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getOperatingCentres')
+                ->andReturn($mockLicenceOperatingCentres)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $result = $sut->getOcForInspectionRequest();
+        $this->assertEquals(['oc1', 'oc3'], $result);
     }
 }
