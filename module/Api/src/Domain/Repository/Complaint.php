@@ -31,8 +31,11 @@ class Complaint extends AbstractRepository
     {
         return $this->getQueryBuilder()->modifyQuery($qb)
             ->withRefdata()
-            ->with('complainantContactDetails', 'oc')
-            ->with('oc.person')
+            ->with('complainantContactDetails', 'cd')
+            ->with('cd.person')
+            ->with('ocComplaints', 'occ')
+            ->with('occ.operatingCentre', 'oc')
+            ->with('oc.address')
             ->byId($id);
     }
 

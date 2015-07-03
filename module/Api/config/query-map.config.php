@@ -77,25 +77,17 @@ return [
 
     // Cases
     TransferQuery\Cases\Cases::class => QueryHandler\Cases\Cases::class,
+    TransferQuery\Cases\CasesWithOppositionDates::class => QueryHandler\Cases\CasesWithOppositionDates::class,
     TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
     TransferQuery\Cases\AnnualTestHistory::class => QueryHandler\Cases\AnnualTestHistory::class,
     TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
     TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
     TransferQuery\Cases\Impounding\ImpoundingList::class => QueryHandler\Cases\Impounding\ImpoundingList::class,
     TransferQuery\Cases\Impounding\Impounding::class => QueryHandler\Cases\Impounding\Impounding::class,
-    TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
-    TransferQuery\Cases\Complaint\ComplaintList::class => QueryHandler\Cases\Complaint\ComplaintList::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
-        QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
-        QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
     TransferQuery\Cases\ConditionUndertaking\ConditionUndertaking::class =>
         QueryHandler\Cases\ConditionUndertaking\ConditionUndertaking::class,
     TransferQuery\Cases\ConditionUndertaking\ConditionUndertakingList::class =>
         QueryHandler\Cases\ConditionUndertaking\ConditionUndertakingList::class,
-    TransferQuery\Cases\Opposition\Opposition::class => QueryHandler\Cases\Opposition\Opposition::class,
-    TransferQuery\Cases\Opposition\OppositionList::class =>
-        QueryHandler\Cases\Opposition\OppositionList::class,
     TransferQuery\Cases\ProposeToRevoke\ProposeToRevokeByCase::class
         => QueryHandler\Cases\ProposeToRevoke\ProposeToRevokeByCase::class,
 
@@ -219,10 +211,16 @@ return [
     TransferQuery\LicenceVehicle\LicenceVehicle::class => QueryHandler\LicenceVehicle\LicenceVehicle::class,
 
     // Opposition
-    TransferQuery\Opposition\GetList::class => QueryHandler\Opposition\GetList::class,
+    TransferQuery\Opposition\Opposition::class => QueryHandler\Opposition\Opposition::class,
+    TransferQuery\Opposition\OppositionList::class => QueryHandler\Opposition\OppositionList::class,
 
     // Complaint
-    TransferQuery\Complaint\GetList::class => QueryHandler\Complaint\GetList::class,
+    TransferQuery\Complaint\Complaint::class => QueryHandler\Complaint\Complaint::class,
+    TransferQuery\Complaint\ComplaintList::class => QueryHandler\Complaint\ComplaintList::class,
+    TransferQuery\EnvironmentalComplaint\EnvironmentalComplaint::class =>
+        QueryHandler\EnvironmentalComplaint\EnvironmentalComplaint::class,
+    TransferQuery\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
+        QueryHandler\EnvironmentalComplaint\EnvironmentalComplaintList::class,
 
     // Inspection Request
     TransferQuery\InspectionRequest\OperatingCentres::class => QueryHandler\InspectionRequest\OperatingCentres::class,
