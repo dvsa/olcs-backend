@@ -33,6 +33,7 @@ class Opposition extends AbstractRepository
             ->withRefData()
             ->with('case')
             ->with('opposer', 'o')
+            ->with('grounds')
             ->withPersonContactDetails('o.contactDetails', 'c')
             ->with('createdBy')
             ->with('lastModifiedBy')
@@ -42,6 +43,10 @@ class Opposition extends AbstractRepository
             ->setParameter('byCase', $query->getCase());
 
         $result = $qb->getQuery()->getResult($hydrateMode);
+
+        if (empty($result)) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
 
         return $result[0];
     }
@@ -86,6 +91,7 @@ class Opposition extends AbstractRepository
             $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
                 ->setParameter('byCase', $query->getCase());
         }
+
         if ($query->getLicence()) {
             $qb->andWhere($qb->expr()->eq($this->alias .'.licence', ':licence'))
                 ->setParameter('licence', $query->getLicence());
