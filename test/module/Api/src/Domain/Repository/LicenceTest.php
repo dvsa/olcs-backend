@@ -167,4 +167,23 @@ class LicenceTest extends RepositoryTestCase
 
         $this->sut->fetchByLicNo('LIC0001');
     }
+
+    public function testFetchByVrm()
+    {
+        $qb = $this->createMockQb('[QUERY]');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchByVrm('ABC123'));
+
+        $expectedQuery = '[QUERY] INNER JOIN m.licenceVehicles lv INNER JOIN lv.vehicle v'
+            . ' AND lv.removalDate IS NULL AND v.vrm = [[ABC123]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }

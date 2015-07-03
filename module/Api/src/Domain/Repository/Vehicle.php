@@ -17,28 +17,4 @@ use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle as Entity;
 class Vehicle extends AbstractRepository
 {
     protected $entity = Entity::class;
-
-    public function fetchLicencesForVrm($vrm)
-    {
-        $qb = $this->createQueryBuilder();
-
-        $qb->innerJoin('m.licenceVehicles', 'lv');
-        $qb->innerJoin('lv.licence', 'l');
-
-        $qb->andWhere(
-            $qb->expr()->isNull('lv.removalDate')
-        );
-
-        $qb->andWhere(
-            $qb->expr()->eq('m.vrm', ':vrm')
-        );
-
-        $qb->setParameter('vrm', $vrm);
-
-        $query = $qb->getQuery();
-
-        $query->execute();
-
-        return $query->getResult();
-    }
 }

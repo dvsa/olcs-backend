@@ -38,13 +38,9 @@ class RemoveLicenceVehicleTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'licence' => m::mock(Licence::class)
-                ->shouldReceive('getLicenceVehicles')
-                ->andReturn(
-                    [
-                        m::mock(LicenceVehicle::class)->makePartial()
-                    ]
-                )->getMock()
+            'licenceVehicles' => [
+                m::mock(LicenceVehicle::class)->makePartial()
+            ]
         ];
 
         $command = Cmd::create($data);
