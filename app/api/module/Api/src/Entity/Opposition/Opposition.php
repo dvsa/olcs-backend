@@ -14,12 +14,10 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  * @ORM\Entity
  * @ORM\Table(name="opposition",
  *    indexes={
- *        @ORM\Index(name="ix_opposition_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_opposition_opposer_id", columns={"opposer_id"}),
  *        @ORM\Index(name="ix_opposition_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_opposition_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_opposition_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_opposition_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_opposition_opposition_type", columns={"opposition_type"}),
  *        @ORM\Index(name="ix_opposition_is_valid", columns={"is_valid"}),
  *        @ORM\Index(name="ix_opposition_status", columns={"status"})
@@ -35,7 +33,6 @@ class Opposition extends AbstractOpposition
 
     public function __construct(
         Cases $case,
-        Licence $licence,
         Opposer $opposer,
         RefData $oppositionType,
         $isValid,
@@ -47,7 +44,6 @@ class Opposition extends AbstractOpposition
     ) {
         parent::__construct();
         $this->setCase($case);
-        $this->setLicence($licence);
         $this->setOpposer($opposer);
         $this->setOppositionType($oppositionType);
         $this->setIsValid($isValid);
