@@ -147,6 +147,24 @@ abstract class AbstractEventHistory implements BundleSerializableInterface, Json
     protected $licence;
 
     /**
+     * Olbs key
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
+     */
+    protected $olbsKey;
+
+    /**
+     * Olbs type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="olbs_type", length=45, nullable=true)
+     */
+    protected $olbsType;
+
+    /**
      * Organisation
      *
      * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
@@ -450,6 +468,52 @@ abstract class AbstractEventHistory implements BundleSerializableInterface, Json
     public function getLicence()
     {
         return $this->licence;
+    }
+
+    /**
+     * Set the olbs key
+     *
+     * @param int $olbsKey
+     * @return EventHistory
+     */
+    public function setOlbsKey($olbsKey)
+    {
+        $this->olbsKey = $olbsKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the olbs key
+     *
+     * @return int
+     */
+    public function getOlbsKey()
+    {
+        return $this->olbsKey;
+    }
+
+    /**
+     * Set the olbs type
+     *
+     * @param string $olbsType
+     * @return EventHistory
+     */
+    public function setOlbsType($olbsType)
+    {
+        $this->olbsType = $olbsType;
+
+        return $this;
+    }
+
+    /**
+     * Get the olbs type
+     *
+     * @return string
+     */
+    public function getOlbsType()
+    {
+        return $this->olbsType;
     }
 
     /**
