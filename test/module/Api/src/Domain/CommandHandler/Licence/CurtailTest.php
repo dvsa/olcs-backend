@@ -13,6 +13,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Curtail as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Curtail as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * CurtailTest
@@ -58,6 +60,15 @@ class CurtailTest extends CommandHandlerTestCase
                     $saveLicence->getCurtailedDate()->format('Y-m-d')
                 );
             }
+        );
+
+        $removeRulesResult = new Result();
+        $this->expectedSideEffect(
+            RemoveLicenceStatusRulesForLicence::class,
+            [
+                'licence' => 532
+            ],
+            $removeRulesResult
         );
 
         $result = $this->sut->handleCommand($command);

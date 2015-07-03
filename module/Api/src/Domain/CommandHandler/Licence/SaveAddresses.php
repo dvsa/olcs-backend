@@ -148,7 +148,8 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
                 }
 
             } elseif ($contact->getId() > 0) {
-                $contactDetails->getPhoneContacts()->remove($contact);
+
+                $contactDetails->getPhoneContacts()->removeElement($contact);
 
                 $this->getRepo('PhoneContact')->delete($contact);
                 $result->addMessage('Phone contact ' . $phoneType . ' deleted');

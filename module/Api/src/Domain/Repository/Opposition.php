@@ -24,13 +24,6 @@ class Opposition extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function __construct(
-        EntityManagerInterface $em,
-        QueryBuilderInterface $queryBuilder
-    ) {
-        parent::__construct($em, $queryBuilder);
-    }
-
     public function fetchUsingCaseId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
@@ -40,6 +33,7 @@ class Opposition extends AbstractRepository
             ->withRefData()
             ->with('case')
             ->with('opposer', 'o')
+            ->with('grounds')
             ->withPersonContactDetails('o.contactDetails', 'c')
             ->with('createdBy')
             ->with('lastModifiedBy')
@@ -50,12 +44,33 @@ class Opposition extends AbstractRepository
 
         $result = $qb->getQuery()->getResult($hydrateMode);
 
+        if (empty($result)) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+
         return $result[0];
+    }
+
+
+    public function fetchByApplicationId($applicationId)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('case', 'c')
+            ->order('createdOn', 'DESC');
+
+        $qb->andWhere($qb->expr()->eq('c.application', ':application'))
+            ->setParameter('application', $applicationId);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
      * Override to add additional data to the default fetchList() method
      * @param QueryBuilder $qb
+     * @inheritdoc
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
@@ -76,6 +91,7 @@ class Opposition extends AbstractRepository
             $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
                 ->setParameter('byCase', $query->getCase());
         }
+
         if ($query->getLicence()) {
             $qb->andWhere($qb->expr()->eq($this->alias .'.licence', ':licence'))
                 ->setParameter('licence', $query->getLicence());

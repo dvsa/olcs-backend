@@ -28,6 +28,8 @@ class ReviewTest extends QueryHandlerTestCase
         $this->sut = new Review();
         $this->mockRepo('Application', ApplicationRepo::class);
 
+        $this->mockedSmServices['ReviewSnapshot'] = m::mock();
+
         parent::setUp();
     }
 
@@ -37,105 +39,19 @@ class ReviewTest extends QueryHandlerTestCase
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setIsVariation(false);
-        $application->shouldReceive('isGoods')
-            ->andReturn(true)
-            ->shouldReceive('isSpecialRestricted')
-            ->andReturn(false)
-            ->shouldReceive('serialize')
-            ->once()
-            ->andReturn(['foo' => 'bar']);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($application);
 
-        $result = m::mock();
-        $result->shouldReceive('serialize')
-            ->andReturn(
-                [
-                    'sections' => [
-                        'foo' => 'fooBar',
-                        'bar' => 'barFoo',
-                        'community_licences' => 'test'
-                    ],
-                ]
-            );
-
-        $this->queryHandler->shouldReceive('handleQuery')
-            ->with(m::type(Application::class))
-            ->andReturn($result);
-
-        $result = $this->sut->handleQuery($query);
+        $this->mockedSmServices['ReviewSnapshot']->shouldReceive('generate')
+            ->with($application)
+            ->andReturn('<foo>');
 
         $expected = [
-            'foo' => 'bar',
-            'sections' => [
-                'foo',
-                'bar'
-            ],
-            'isGoods' => true,
-            'isSpecialRestricted' => false
+            'markup' => '<foo>'
         ];
 
-        $this->assertEquals($expected, $result->serialize());
-    }
-
-    public function testHandleQueryVariation()
-    {
-        $query = Qry::create(['id' => 111]);
-
-        /** @var ApplicationCompletion $appCompletion */
-        $appCompletion = m::mock(ApplicationCompletion::class)->makePartial();
-        $appCompletion->setAddressesStatus(ApplicationEntity::VARIATION_STATUS_UNCHANGED);
-        $appCompletion->setVehiclesStatus(ApplicationEntity::VARIATION_STATUS_UPDATED);
-        $appCompletion->setPeopleStatus(ApplicationEntity::VARIATION_STATUS_UPDATED);
-
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setIsVariation(true);
-        $application->setApplicationCompletion($appCompletion);
-        $application->shouldReceive('isGoods')
-            ->andReturn(true)
-            ->shouldReceive('isSpecialRestricted')
-            ->andReturn(false)
-            ->shouldReceive('serialize')
-            ->once()
-            ->andReturn(['foo' => 'bar']);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($query)
-            ->andReturn($application);
-
-        $result = m::mock();
-        $result->shouldReceive('serialize')
-            ->andReturn(
-                [
-                    'sections' => [
-                        'vehicles' => 'bar',
-                        'people' => 'foo',
-                        'community_licences' => 'test',
-                        'addresses' => 'foo',
-                    ],
-                ]
-            );
-
-        $this->queryHandler->shouldReceive('handleQuery')
-            ->with(m::type(Application::class))
-            ->andReturn($result);
-
-        $result = $this->sut->handleQuery($query);
-
-        $expected = [
-            'foo' => 'bar',
-            'sections' => [
-                'vehicles',
-                'people'
-            ],
-            'isGoods' => true,
-            'isSpecialRestricted' => false
-        ];
-
-        $this->assertEquals($expected, $result->serialize());
+        $this->assertEquals($expected, $this->sut->handleQuery($query));
     }
 }

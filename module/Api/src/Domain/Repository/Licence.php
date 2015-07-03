@@ -111,4 +111,29 @@ class Licence extends AbstractRepository
 
         return $results[0];
     }
+
+    public function fetchByVrm($vrm)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->innerJoin('m.licenceVehicles', 'lv');
+        $qb->innerJoin('lv.vehicle', 'v');
+
+
+        $qb->andWhere(
+            $qb->expr()->isNull('lv.removalDate')
+        );
+
+        $qb->andWhere(
+            $qb->expr()->eq('v.vrm', ':vrm')
+        );
+
+        $qb->setParameter('vrm', $vrm);
+
+        $query = $qb->getQuery();
+
+        $query->execute();
+
+        return $query->getResult();
+    }
 }
