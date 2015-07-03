@@ -62,18 +62,6 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
         return $result;
     }
 
-    /**
-     * Get Licence for case
-     * @param Cmd $command
-     * @return Licence
-     */
-    private function getLicenceObject(Cmd $command)
-    {
-        /** @var $case Cases */
-        $case = $this->getRepo('Cases')->fetchById($command->getCase(), Query::HYDRATE_OBJECT);
-        return $case->getLicence();
-    }
-
     private function createContactDetailsObject($command)
     {
         return ContactDetails::create(
@@ -95,13 +83,10 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
     {
         $isPublicInquiry = 'N';
 
-        $licence = $this->getLicenceObject($command);
         $case = $this->getRepo()->getReference(Cases::class, $command->getCase());
-        $application = $case->getApplication();
 
         $opposition = new Opposition(
             $case,
-            $licence,
             $opposer,
             $this->getRepo()->getRefdataReference($command->getOppositionType()),
             $this->getRepo()->getRefdataReference($command->getIsValid()),
@@ -111,10 +96,6 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
             $command->getIsWillingToAttendPi(),
             $command->getIsWithdrawn()
         );
-
-        if (!is_null($application)) {
-            $opposition->setApplication($application);
-        }
 
         if ($command->getRaisedDate() !== null) {
             $opposition->setRaisedDate(new \DateTime($command->getRaisedDate()));
@@ -174,20 +155,12 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
     private function generateOperatingCentres(Cmd $command)
     {
         $collection = new ArrayCollection();
-        if (!empty($command->getLicenceOperatingCentres() || !empty($command->getApplicationOperatingCentres()))) {
 
-            if (!empty($command->getLicenceOperatingCentres())) {
-                $operatingCentres = $command->getLicenceOperatingCentres();
-                foreach ($operatingCentres as $oc) {
-                    $collection->add($this->getRepo()->getReference(OperatingCentre::class, $oc));
-                }
-            }
+        $operatingCentres = $command->getOperatingCentres();
 
-            if (!empty($command->getApplicationOperatingCentres())) {
-                $operatingCentres = $command->getApplicationOperatingCentres();
-                foreach ($operatingCentres as $oc) {
-                    $collection->add($this->getRepo()->getReference(OperatingCentre::class, $oc));
-                }
+        if (!empty($operatingCentres)) {
+            foreach ($operatingCentres as $oc) {
+                $collection->add($this->getRepo()->getReference(OperatingCentre::class, $oc));
             }
         }
 

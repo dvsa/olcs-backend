@@ -49,14 +49,14 @@ class Opposition extends AbstractRepository
     }
 
     /**
-     * Override to add additional data to the default fetchList() method
      * @param QueryBuilder $qb
-     * @inheritdoc
+     * @param QueryInterface $query
      */
-    protected function applyListJoins(QueryBuilder $qb)
+    protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query)
     {
+        parent::buildDefaultListQuery($qb, $query);
+
         $this->getQueryBuilder()
-            ->with('application')
             ->with('case', 'ca')
             ->with('opposer', 'o')
             ->withPersonContactDetails('o.contactDetails');
@@ -74,7 +74,7 @@ class Opposition extends AbstractRepository
         }
 
         if ($query->getLicence()) {
-            $qb->andWhere($qb->expr()->eq($this->alias .'.licence', ':licence'))
+            $qb->andWhere($qb->expr()->eq('ca.licence', ':licence'))
                 ->setParameter('licence', $query->getLicence());
         }
     }

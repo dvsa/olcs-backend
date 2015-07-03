@@ -123,20 +123,12 @@ final class UpdateOpposition extends AbstractCommandHandler implements Transacti
     private function generateOperatingCentres(Cmd $command)
     {
         $collection = new ArrayCollection();
-        if (!empty($command->getLicenceOperatingCentres() || !empty($command->getApplicationOperatingCentres()))) {
 
-            if (!empty($command->getLicenceOperatingCentres())) {
-                $operatingCentres = $command->getLicenceOperatingCentres();
-                foreach ($operatingCentres as $oc) {
-                    $collection->add($this->getRepo()->getReference(OperatingCentre::class, $oc));
-                }
-            }
+        $operatingCentres = $command->getOperatingCentres();
 
-            if (!empty($command->getApplicationOperatingCentres())) {
-                $operatingCentres = $command->getApplicationOperatingCentres();
-                foreach ($operatingCentres as $oc) {
-                    $collection->add($this->getRepo()->getReference(OperatingCentre::class, $oc));
-                }
+        if (!empty($operatingCentres)) {
+            foreach ($operatingCentres as $oc) {
+                $collection->add($this->getRepo()->getReference(OperatingCentre::class, $oc));
             }
         }
 
