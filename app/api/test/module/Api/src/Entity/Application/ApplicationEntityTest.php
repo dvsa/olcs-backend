@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Doctrine\Common\Collections\Criteria;
@@ -697,6 +698,76 @@ class ApplicationEntityTest extends EntityTester
         $application->setLicence($licence);
 
         $this->assertEquals(4, $application->getRemainingSpaces());
+    }
+
+    public function testIsRealUpgradeNewApp()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $application->setIsVariation(false);
+
+        $this->assertFalse($application->isRealUpgrade());
+    }
+
+    public function testIsRealUpgradeIsLicenceUpgrade()
+    {
+        /** @var RefData $licenceType */
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_RESTRICTED);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setIsVariation(true);
+        $application->setLicence($licence);
+        $application->setLicenceType($licenceType);
+
+        $this->assertTrue($application->isRealUpgrade());
+    }
+
+    public function testIsRealUpgrade()
+    {
+        /** @var RefData $licenceType */
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setIsVariation(true);
+        $application->setLicence($licence);
+        $application->setLicenceType($licenceType);
+
+        $this->assertTrue($application->isRealUpgrade());
+    }
+
+    public function testIsRealUpgradeFalse()
+    {
+        /** @var RefData $licenceType */
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setIsVariation(true);
+        $application->setLicence($licence);
+        $application->setLicenceType($licenceType);
+
+        $this->assertFalse($application->isRealUpgrade());
     }
 
     public function testGetOcForInspectionRequest()

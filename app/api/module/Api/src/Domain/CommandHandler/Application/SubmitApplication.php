@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -37,12 +38,12 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     {
         $result = new Result();
 
-        /** @var Application $application */
+        /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $this->validate($application);
 
-        $this->snapshotApplication($application);
+        $result->merge($this->snapshotApplication($application));
 
         $this->updateStatus($application, $result);
 
@@ -53,10 +54,10 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
 
     /**
      * Update the application and licence status (if applicable)
-     * @param Application $application
+     * @param ApplicationEntity $application
      * @param Result $result
      */
-    private function updateStatus($application, $result)
+    private function updateStatus(ApplicationEntity $application, $result)
     {
         $now = new DateTime();
         $target = clone $now;
@@ -92,14 +93,13 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
         }
     }
 
-    /**
-     * @todo call code to generate snapshot, requires OLCS-9586 and possibly
-     * others to be completed first
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
     private function snapshotApplication(ApplicationEntity $application)
     {
-
+        $data = [
+            'id' => $application->getId(),
+            'event' => CreateSnapshotCmd::ON_SUBMIT
+        ];
+        return $this->handleSideEffect(CreateSnapshotCmd::create($data));
     }
 
     /**
@@ -126,7 +126,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     /**
      * @param ApplicationEntity $application
      * @return boolean
-     * @throws ValidationException
+     * @throws Exception\ValidationException
      */
     private function validate(ApplicationEntity $application)
     {
