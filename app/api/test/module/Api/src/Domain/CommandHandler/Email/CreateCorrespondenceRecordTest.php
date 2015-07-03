@@ -103,7 +103,8 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
             ->with(
                 m::type(Message::class),
                 'licensing-information-standard',
-                ['licNo' => 'AB12345678', 'url' => 'http://selfserve/correspondence']
+                ['licNo' => 'AB12345678', 'url' => 'http://selfserve/correspondence'],
+                null
             );
 
         $this->mockedSmServices[Client::class]->shouldReceive('sendEmail')
