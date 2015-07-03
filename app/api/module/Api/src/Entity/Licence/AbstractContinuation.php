@@ -16,8 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="continuation",
  *    indexes={
- *        @ORM\Index(name="ix_continuation_month", columns={"month"}),
- *        @ORM\Index(name="ix_continuation_year", columns={"year"}),
  *        @ORM\Index(name="fk_continuation_traffic_area1_idx", columns={"traffic_area_id"}),
  *        @ORM\Index(name="fk_continuation_user1_idx", columns={"created_by"}),
  *        @ORM\Index(name="ix_continuation_ta_year_month", columns={"traffic_area_id","year","month"})
