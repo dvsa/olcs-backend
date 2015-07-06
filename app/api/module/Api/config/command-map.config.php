@@ -452,4 +452,7 @@ return [
 
     // Domain - InspectionRequest
     Command\InspectionRequest\CreateFromGrant::class  => CommandHandler\InspectionRequest\CreateFromGrant::class,
+
+    // Transfer - ChangeOfEntity
+    TransferCommand\ChangeOfEntity\ChangeOfEntity::class => CommandHandler\ChangeOfEntity\ChangeOfEntity::class,
 ];
