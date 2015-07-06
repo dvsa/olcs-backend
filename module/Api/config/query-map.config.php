@@ -44,6 +44,7 @@ return [
     TransferQuery\Application\Review::class => QueryHandler\Application\Review::class,
     TransferQuery\Application\Overview::class => QueryHandler\Application\Overview::class,
     TransferQuery\Application\Grant::class => QueryHandler\Application\Grant::class,
+    TransferQuery\Application\People::class => QueryHandler\Application\People::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,

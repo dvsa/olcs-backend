@@ -70,6 +70,13 @@ return [
         => CommandHandler\Application\Grant\GrantTransportManager::class,
     Command\Application\Grant\GrantPeople::class => CommandHandler\Application\Grant\GrantPeople::class,
     Command\Application\Grant\ValidateApplication::class => CommandHandler\Application\Grant\ValidateApplication::class,
+    TransferCommand\Application\CreatePeople::class => CommandHandler\Application\CreatePeople::class,
+    TransferCommand\Application\UpdatePeople::class => CommandHandler\Application\UpdatePeople::class,
+    TransferCommand\Application\DeletePeople::class => CommandHandler\Application\DeletePeople::class,
+    TransferCommand\Application\RestorePeople::class => CommandHandler\Application\RestorePeople::class,
+    TransferCommand\Application\UpdateCompletion::class =>
+        CommandHandler\Application\UpdateApplicationCompletion::class,
+
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
     TransferCommand\Workshop\CreateWorkshop::class => CommandHandler\Workshop\CreateWorkshop::class,

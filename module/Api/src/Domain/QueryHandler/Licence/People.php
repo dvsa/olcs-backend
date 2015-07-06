@@ -10,10 +10,8 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class People extends AbstractQueryHandler implements \Dvsa\Olcs\Api\Domain\CompaniesHouseAwareInterface
+class People extends AbstractQueryHandler
 {
-    use \Dvsa\Olcs\Api\Domain\CompaniesHouseAwareTrait;
-
     protected $repoServiceName = 'Licence';
 
     protected $extraRepos = ['OrganisationPerson'];
@@ -37,7 +35,7 @@ class People extends AbstractQueryHandler implements \Dvsa\Olcs\Api\Domain\Compa
                 'isExceptionalType' => $licence->getOrganisation()->isPartnership() ||
                     $licence->getOrganisation()->isSoleTrader(),
                 'isSoleTrader' => $licence->getOrganisation()->isSoleTrader(),
-                'people' => $organisationPersons,
+                'people' => $this->resultList($organisationPersons, ['person']),
             ]
         );
     }

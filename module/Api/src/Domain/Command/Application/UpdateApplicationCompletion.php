@@ -14,19 +14,6 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateApplicationCompletion extends AbstractCommand
+final class UpdateApplicationCompletion extends \Dvsa\Olcs\Transfer\Command\Application\UpdateCompletion
 {
-    protected $id;
-
-    protected $section;
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getSection()
-    {
-        return $this->section;
-    }
 }
