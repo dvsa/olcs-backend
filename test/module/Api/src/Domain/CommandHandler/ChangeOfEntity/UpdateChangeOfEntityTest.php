@@ -5,16 +5,14 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Complaint;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ChangeOfEntity;
 
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\ChangeOfEntity\ChangeOfEntity as Sut;
+use Dvsa\Olcs\Api\Domain\CommandHandler\ChangeOfEntity\UpdateChangeOfEntity as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ChangeOfEntity as ChangeOfEntityRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\ChangeOfEntity\ChangeOfEntity as Cmd;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Transfer\Command\ChangeOfEntity\UpdateChangeOfEntity as Cmd;
 use Dvsa\Olcs\Api\Entity\Organisation\ChangeOfEntity as ChangeOfEntityEntity;
 
 /**
@@ -28,7 +26,6 @@ class UpdateChangeOfEntityTest extends CommandHandlerTestCase
     {
         $this->sut = new Sut();
         $this->mockRepo('ChangeOfEntity', ChangeOfEntityRepo::class);
-        $this->mockRepo('Application', ApplicationRepo::class);
 
         parent::setUp();
     }

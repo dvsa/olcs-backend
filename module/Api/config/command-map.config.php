@@ -454,7 +454,10 @@ return [
     Command\InspectionRequest\CreateFromGrant::class  => CommandHandler\InspectionRequest\CreateFromGrant::class,
 
     // Transfer - ChangeOfEntity
-    TransferCommand\ChangeOfEntity\ChangeOfEntity::class => CommandHandler\ChangeOfEntity\ChangeOfEntity::class,
+    TransferCommand\ChangeOfEntity\CreateChangeOfEntity::class =>
+        CommandHandler\ChangeOfEntity\CreateChangeOfEntity::class,
+    TransferCommand\ChangeOfEntity\UpdateChangeOfEntity::class =>
+        CommandHandler\ChangeOfEntity\UpdateChangeOfEntity::class,
     TransferCommand\ChangeOfEntity\DeleteChangeOfEntity::class =>
         CommandHandler\ChangeOfEntity\DeleteChangeOfEntity::class,
 ];
