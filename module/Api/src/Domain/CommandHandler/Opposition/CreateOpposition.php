@@ -8,18 +8,13 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Opposition;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposer;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
-use Dvsa\Olcs\Api\Entity\Person\Person;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
-use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Transfer\Command\Opposition\CreateOpposition as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;

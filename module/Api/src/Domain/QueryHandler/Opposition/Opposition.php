@@ -18,10 +18,6 @@ final class Opposition extends AbstractQueryHandler
         return $this->result(
             $this->getRepo()->fetchUsingId($query),
             [
-                'case' => [
-                    'application',
-                    'licence' => ['goodsOrPsv'],
-                ],
                 'opposer' => [
                     'opposerType',
                     'contactDetails' => [

@@ -11,15 +11,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition;
-use Dvsa\Olcs\Api\Entity\Opposition\Opposer;
-use Dvsa\Olcs\Api\Entity\Cases\Cases;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
-use Dvsa\Olcs\Api\Entity\Person\Person;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
-use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Transfer\Command\Opposition\UpdateOpposition as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -83,6 +76,8 @@ final class UpdateOpposition extends AbstractCommandHandler implements Transacti
     {
         $opposition = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
+        $opposition->setOppositionType($this->getRepo()->getRefdataReference($command->getOppositionType()));
+
         if ($command->getRaisedDate() !== null) {
             $opposition->setRaisedDate(new \DateTime($command->getRaisedDate()));
         }
@@ -93,6 +88,22 @@ final class UpdateOpposition extends AbstractCommandHandler implements Transacti
 
         if ($command->getValidNotes() !== null) {
             $opposition->setValidNotes($command->getValidNotes());
+        }
+
+        if ($command->getIsCopied() !== null) {
+            $opposition->setIsCopied($command->getIsCopied());
+        }
+
+        if ($command->getIsInTime() !== null) {
+            $opposition->setIsInTime($command->getIsInTime());
+        }
+
+        if ($command->getIsWillingToAttendPi() !== null) {
+            $opposition->setIsWillingToAttendPi($command->getIsWillingToAttendPi());
+        }
+
+        if ($command->getIsWithdrawn() !== null) {
+            $opposition->setIsWithdrawn($command->getIsWithdrawn());
         }
 
         if ($command->getStatus() !== null) {
