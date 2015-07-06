@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\ChangeOfEntity;
 
-use DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Organisation\ChangeOfEntity as ChangeOfEntityEntity;
