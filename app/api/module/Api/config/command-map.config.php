@@ -455,4 +455,6 @@ return [
 
     // Transfer - ChangeOfEntity
     TransferCommand\ChangeOfEntity\ChangeOfEntity::class => CommandHandler\ChangeOfEntity\ChangeOfEntity::class,
+    TransferCommand\ChangeOfEntity\DeleteChangeOfEntity::class =>
+        CommandHandler\ChangeOfEntity\DeleteChangeOfEntity::class,
 ];
