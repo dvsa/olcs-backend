@@ -28,7 +28,8 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
 {
     protected $repoServiceName = 'Opposition';
 
-    protected $extraRepos = ['ContactDetails', 'Cases'];
+    protected $extraRepos = ['ContactDetails'];
+
     /**
      * Creates opposition  and associated entities
      *

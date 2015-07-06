@@ -7,19 +7,16 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Opposition;
 
-use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Opposition\CreateOpposition;
 use Dvsa\Olcs\Api\Domain\Repository\Opposition as OppositionRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Opposition\CreateOpposition as Cmd;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition as OppositionEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * Create Opposition Test
@@ -33,7 +30,6 @@ class CreateOppositionTest extends CommandHandlerTestCase
         $this->sut = new CreateOpposition();
         $this->mockRepo('Opposition', OppositionRepo::class);
         $this->mockRepo('ContactDetails', ContactDetailsRepo::class);
-        $this->mockRepo('Cases', CasesRepo::class);
 
         parent::setUp();
     }
@@ -53,17 +49,15 @@ class CreateOppositionTest extends CommandHandlerTestCase
             "isInTime" => "Y",
             "isWithdrawn" => "N",
             "status" => "opp_ack",
-            "licenceOperatingCentres" => [
+            "operatingCentres" => [
                 "16"
             ],
-            "applicationOperatingCentres" => [],
             "grounds" => [
                 "ogf_env",
                 "ogf_parking"
             ],
             "isPublicInquiry" => "Y",
             "notes" => "Notes",
-            "operatingCentres" => null,
             "opposerContactDetails" => [
                 "emailAddress" => "bobED@jones.com",
                 "person" => [
@@ -103,17 +97,15 @@ class CreateOppositionTest extends CommandHandlerTestCase
             "isInTime" => "Y",
             "isWithdrawn" => "N",
             "status" => "opp_ack",
-            "licenceOperatingCentres" => [
+            "operatingCentres" => [
                 "16"
             ],
-            "applicationOperatingCentres" => [],
             "grounds" => [
                 "ogf_env",
                 "ogf_parking"
             ],
             "isPublicInquiry" => "Y",
             "notes" => "Notes",
-            "operatingCentres" => null,
             "opposerContactDetails" => [
                 "emailAddress" => "bobED@jones.com",
                 "description" => "CD notes",
@@ -177,17 +169,6 @@ class CreateOppositionTest extends CommandHandlerTestCase
             ->andReturn(
                 $referencedPayload['opposerContactDetails']
             );
-
-        $mockLicence = m::mock(LicenceEntity::class)->makePartial();
-
-        $mockCase = m::mock(CasesEntity::class)->makePartial();
-        $mockCase->setLicence($mockLicence);
-
-        $this->repoMap['Cases']
-            ->shouldReceive('fetchById')
-            ->with($payload['case'], m::type('integer'))
-            ->once()
-            ->andReturn($mockCase);
 
         /** @var OppositionEntity $opp */
         $opp = null;
