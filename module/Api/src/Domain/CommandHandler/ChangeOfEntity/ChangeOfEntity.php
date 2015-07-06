@@ -36,17 +36,15 @@ final class ChangeOfEntity extends AbstractCommandHandler
             $messageAction = 'Created';
         }
 
-        if ($command->getApplicationId()) {
-            $changeOfEntity
-                ->setOldLicenceNo($command->getOldLicenceNo())
-                ->setOldOrganisationName($command->getOldOrganisationName());
-        }
+        $changeOfEntity
+            ->setOldLicenceNo($command->getOldLicenceNo())
+            ->setOldOrganisationName($command->getOldOrganisationName());
 
         $this->getRepo()->save($changeOfEntity);
 
         $result = new Result();
         $result->addId("changeOfEntity", $changeOfEntity->getId());
-        $result->addMessage("ChangeOfEntity ID {$changeOfEntity->getId()} " . $messageAction);
+        $result->addMessage("ChangeOfEntity " . $messageAction);
 
         return $result;
     }

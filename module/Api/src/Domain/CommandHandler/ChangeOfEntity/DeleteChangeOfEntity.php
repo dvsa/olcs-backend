@@ -29,7 +29,7 @@ final class DeleteChangeOfEntity extends AbstractCommandHandler
 
         $result = new Result();
         $result->addId("changeOfEntity", $changeOfEntity->getId());
-        $result->addMessage("ChangeOfEntity ID {$changeOfEntity->getId()} deleted");
+        $result->addMessage("ChangeOfEntity deleted");
 
         return $result;
     }
