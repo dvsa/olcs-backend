@@ -43,7 +43,6 @@ class OrganisationEntityTest extends EntityTester
             'irfoName',
             'irfoNationality',
             'isIrfo',
-            'isMlh',
             'lastModifiedBy',
             'lastModifiedOn',
             'leadTcArea',
