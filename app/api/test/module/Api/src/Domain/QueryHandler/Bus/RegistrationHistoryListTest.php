@@ -51,8 +51,7 @@ class RegistrationHistoryListTest extends QueryHandlerTestCase
             ->andReturn($mockBusReg);
 
         $this->sut->shouldReceive('getQueryHandler->handleQuery')
-            //->with($routeNoQuery)
-                ->with(m::type(RouteNoQuery::class))
+            ->with(m::type(RouteNoQuery::class))
             ->andReturn(['foo']);
 
         $this->assertEquals(['foo'], $this->sut->handleQuery($regListQuery));
