@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Application;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -823,5 +824,30 @@ class ApplicationEntityTest extends EntityTester
 
         $result = $sut->getOcForInspectionRequest();
         $this->assertEquals(['oc1', 'oc3'], $result);
+    }
+
+    public function testGetVariationCompletionNotVariation()
+    {
+        $this->entity->setIsVariation(false);
+        $this->assertNull($this->entity->getVariationCompletion());
+    }
+
+    public function testGetVariationCompletion()
+    {
+        $completion = m::mock(ApplicationCompletionEntity::class)->makePartial();
+        $completion
+            ->setAddressesStatus(2)
+            ->setOperatingCentresStatus(1);
+
+        $this->entity
+            ->setApplicationCompletion($completion)
+            ->setIsVariation(true);
+
+        $result = $this->entity->getVariationCompletion();
+
+        $this->assertInternalType('array', $result);
+
+        $this->assertEquals(1, $result['operating_centres']);
+        $this->assertEquals(2, $result['addresses']);
     }
 }
