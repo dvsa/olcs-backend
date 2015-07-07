@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Transfer\Query\Bus\RegistrationHistoryList as QueryCmd;
-use Dvsa\Olcs\Transfer\Query\Bus\ByRouteNo;
+use Dvsa\Olcs\Transfer\Query\Bus\ByRouteNo as ByRouteNoQry;
 use Doctrine\ORM\Query;
 
 /**
@@ -35,10 +35,8 @@ class RegistrationHistoryList extends AbstractQueryHandler
             'routeNo' => $busReg->getRouteNo(),
         ];
 
-        $result = $this->getQueryHandler()->handleQuery(ByRouteNo::create($routeNoQuery));
+        $result = $this->getQueryHandler()->handleQuery(ByRouteNoQry::create($routeNoQuery));
 
         return $result;
-
-
     }
 }
