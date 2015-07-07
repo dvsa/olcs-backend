@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Email\Data\Message;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\CreateCorrespondenceRecord as CommandHandler;
@@ -68,9 +69,14 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
 
         /** @var User $user1 */
         $user1 = m::mock(User::class)->makePartial();
-        $user1->setEmailAddress('foo@bar.com');
+        $contactDetails1 = m::mock(ContactDetails::class)->makePartial();
+        $contactDetails1->setEmailAddress('foo@bar.com');
+        $user1->setContactDetails($contactDetails1);
+
         /** @var User $user2 */
         $user2 = m::mock(User::class)->makePartial();
+        $contactDetails2 = m::mock(ContactDetails::class)->makePartial();
+        $user2->setContactDetails($contactDetails2);
 
         /** @var OrganisationUser $orgUser1 */
         $orgUser1 = m::mock(OrganisationUser::class)->makePartial();

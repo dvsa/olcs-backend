@@ -77,8 +77,8 @@ final class CreateCorrespondenceRecord extends AbstractCommandHandler implements
         /** @var OrganisationUser $orgUser */
         foreach ($organisation->getAdminOrganisationUsers() as $orgUser) {
 
-            if ($orgUser->getUser()->getEmailAddress() !== null) {
-                $users[] = $orgUser->getUser()->getEmailAddress();
+            if ($orgUser->getUser()->getContactDetails()->getEmailAddress() !== null) {
+                $users[] = $orgUser->getUser()->getContactDetails()->getEmailAddress();
             }
         }
 
