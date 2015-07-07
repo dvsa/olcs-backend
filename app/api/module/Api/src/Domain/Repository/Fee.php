@@ -129,12 +129,8 @@ class Fee extends AbstractRepository
 
         $doctrineQb
             ->innerJoin('f.feeType', 'ft')
-            ->andWhere($doctrineQb->expr()->eq($this->alias . '.application', ':application'))
-            ->andWhere(
-                $doctrineQb->expr()->eq(
-                    'ft.feeType', ':feeType'
-                )
-            )
+            ->andWhere($doctrineQb->expr()->eq('f.application', ':application'))
+            ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeType'))
             ->setParameter('application', $applicationId)
             ->setParameter('feeType', RefData::FEE_TYPE_GRANT);
 

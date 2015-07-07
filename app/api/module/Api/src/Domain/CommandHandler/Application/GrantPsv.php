@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
+use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -62,10 +62,10 @@ final class GrantPsv extends AbstractCommandHandler implements TransactionedInte
     {
         $data = [
             'id' => $applicationId,
-            'event' => CreateSnapshot::ON_GRANT
+            'event' => CreateSnapshotCmd::ON_GRANT
         ];
 
-        return $this->handleSideEffect(CreateSnapshot::create($data));
+        return $this->handleSideEffect(CreateSnapshotCmd::create($data));
     }
 
     /**

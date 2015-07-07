@@ -207,7 +207,7 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
             ->andReturn([]);
 
         $this->expectedSideEffect(
-            CreateFeeCommand::class, ['id' => 627, 'feeTypeFeeType' => 'GRANTINT'], new Result()
+            CreateFeeCommand::class, ['id' => 627, 'feeTypeFeeType' => 'GRANTINT', 'task' => null], new Result()
         );
 
         $this->expectedSideEffect(

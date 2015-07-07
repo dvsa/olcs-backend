@@ -7,13 +7,12 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\CreateGrantFee;
+use Dvsa\Olcs\Api\Domain\Command\Application\CreateGrantFee as CreateGrantFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 
@@ -56,12 +55,12 @@ final class GrantGoods extends AbstractCommandHandler implements TransactionedIn
         $entity->setGrantedDate(new DateTime());
     }
 
-    protected function createGrantFee($applicationId)
+    protected function createGrantFee(ApplicationEntity $application)
     {
         $data = [
-            'id' => $applicationId
+            'id' => $application->getId()
         ];
 
-        return $this->handleSideEffect(CreateGrantFee::create($data));
+        return $this->handleSideEffect(CreateGrantFeeCmd::create($data));
     }
 }

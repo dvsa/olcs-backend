@@ -2,10 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
@@ -905,5 +908,79 @@ class ApplicationEntityTest extends EntityTester
             ['Y', 'N'],
             ['N', null],
         ];
+    }
+
+    public function testGetActiveVehicles()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getLicenceVehicles->matching')
+            ->andReturn('foo');
+
+        $this->assertEquals('foo', $application->getActiveVehicles());
+    }
+
+    public function testGetSectionsRequiringAttention()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $statuses = [
+            'businessTypeStatus' => Entity::VARIATION_STATUS_REQUIRES_ATTENTION,
+            'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED
+        ];
+
+        /** @var ApplicationCompletion $ac */
+        $ac = m::mock(ApplicationCompletion::class)->makePartial();
+        $ac->shouldReceive('serialize')
+            ->with([])
+            ->andReturn($statuses);
+
+        $application->setApplicationCompletion($ac);
+
+        $this->assertEquals(['businessType'], $application->getSectionsRequiringAttention());
+    }
+
+    public function testHasVariationChanges()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $statuses = [
+            'businessTypeStatus' => Entity::VARIATION_STATUS_REQUIRES_ATTENTION,
+            'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED
+        ];
+
+        /** @var ApplicationCompletion $ac */
+        $ac = m::mock(ApplicationCompletion::class)->makePartial();
+        $ac->shouldReceive('serialize')
+            ->with([])
+            ->andReturn($statuses);
+
+        $application->setApplicationCompletion($ac);
+
+        $this->assertTrue($application->hasVariationChanges());
+    }
+
+    public function testHasVariationChangesFalse()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $statuses = [
+            'businessTypeStatus' => Entity::VARIATION_STATUS_UNCHANGED,
+            'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED
+        ];
+
+        /** @var ApplicationCompletion $ac */
+        $ac = m::mock(ApplicationCompletion::class)->makePartial();
+        $ac->shouldReceive('serialize')
+            ->with([])
+            ->andReturn($statuses);
+
+        $application->setApplicationCompletion($ac);
+
+        $this->assertFalse($application->hasVariationChanges());
     }
 }

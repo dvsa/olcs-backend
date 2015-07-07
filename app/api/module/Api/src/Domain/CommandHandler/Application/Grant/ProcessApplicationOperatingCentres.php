@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Util\EntityCloner;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -107,17 +108,18 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
 
     protected function updateLicenceOperatingCentre(Aoc $aoc, Loc $loc)
     {
-        $loc->setS4($aoc->getS4());
-        $loc->setAdPlaced($aoc->getAdPlaced());
-        $loc->setAdPlacedDate($aoc->getAdPlacedDate());
-        $loc->setAdPlacedIn($aoc->getAdPlacedIn());
-        $loc->setIsInterim($aoc->getIsInterim());
-        $loc->setNoOfTrailersRequired($aoc->getNoOfTrailersRequired());
-        $loc->setNoOfVehiclesRequired($aoc->getNoOfVehiclesRequired());
-        $loc->setPermission($aoc->getPermission());
-        $loc->setPublicationAppropriate($aoc->getPublicationAppropriate());
-        $loc->setSufficientParking($aoc->getSufficientParking());
-        $loc->setViAction($aoc->getViAction());
+        $ignore = [
+            'id',
+            'action',
+            'version',
+            'createdOn',
+            'createdBy',
+            'modifiedOn',
+            'modifiedBy',
+            'isInterim'
+        ];
+
+        EntityCloner::cloneEntityInto($aoc, $loc, $ignore);
 
         $this->getRepo('LicenceOperatingCentre')->save($loc);
     }

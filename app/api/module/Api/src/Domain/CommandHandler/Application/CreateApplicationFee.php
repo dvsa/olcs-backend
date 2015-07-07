@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee;
+use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -83,7 +83,7 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
     /**
      * @param Cmd $command
      * @param $taskId
-     * @return CreateFee
+     * @return CreateFeeCmd
      */
     private function createCreateFeeCommand(Cmd $command, $taskId)
     {
@@ -95,7 +95,7 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
             'task' => $taskId
         ];
 
-        return CreateFee::create($data);
+        return CreateFeeCmd::create($data);
     }
 
     /**

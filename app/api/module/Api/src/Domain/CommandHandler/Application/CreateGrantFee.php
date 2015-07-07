@@ -51,7 +51,7 @@ final class CreateGrantFee extends AbstractCommandHandler implements Transaction
 
         $data = [
             'identifier' => $storedFile->getIdentifier(),
-            'side' => $storedFile->getSize(),
+            'size' => $storedFile->getSize(),
             'description' => 'Goods Grant Fee Request',
             'filename'    => 'Goods_Grant_Fee_Request.rtf',
             'application' => $application->getId(),
@@ -70,7 +70,7 @@ final class CreateGrantFee extends AbstractCommandHandler implements Transaction
     {
         $data = [
             'id' => $applicationId,
-            'feeType' => FeeType::FEE_TYPE_GRANT
+            'feeTypeFeeType' => FeeType::FEE_TYPE_GRANT
         ];
 
         return $this->handleSideEffect(CreateApplicationFeeCmd::create($data));

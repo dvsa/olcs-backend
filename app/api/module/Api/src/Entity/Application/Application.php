@@ -612,7 +612,7 @@ class Application extends AbstractApplication
             if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches)
                 && $value === self::VARIATION_STATUS_REQUIRES_ATTENTION
             ) {
-                $sections[] = $key;
+                $sections[] = $matches[1];
             }
         }
 
