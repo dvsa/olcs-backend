@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Surrender as CommandHandler;
@@ -78,7 +79,7 @@ class SurrenderTest extends CommandHandlerTestCase
         $removeVehicleResult = new Result();
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            array('licenceVehicles' => null, 'id' => null),
+            array('licenceVehicles' => new ArrayCollection(), 'id' => null),
             $removeVehicleResult
         );
 
