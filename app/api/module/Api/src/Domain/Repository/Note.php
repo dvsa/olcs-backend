@@ -24,6 +24,8 @@ class Note extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
+        /** @var \Dvsa\Olcs\Transfer\Query\Processing\NoteList $query */
+
         if ($query->getCase() !== null) {
             $qb->andWhere($this->alias . '.case = :caseId');
             $qb->setParameter('caseId', $query->getCase());
@@ -52,6 +54,11 @@ class Note extends AbstractRepository
         if ($query->getApplication() !== null) {
             $qb->andWhere($this->alias . '.application = :applicationId');
             $qb->setParameter('applicationId', $query->getApplication());
+        }
+
+        if ($query->getNoteType() !== null) {
+            $qb->andWhere($this->alias . '.noteType = :noteTypeId');
+            $qb->setParameter('noteTypeId', $query->getNoteType());
         }
 
         $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
