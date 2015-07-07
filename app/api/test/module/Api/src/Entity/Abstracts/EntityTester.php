@@ -32,11 +32,6 @@ abstract class EntityTester extends MockeryTestCase
      */
     protected $entityClass;
 
-    /**
-     * @var array
-     */
-    protected $testMethods = [];
-
     public function getClassToTestName()
     {
         return $this->entityClass;
@@ -64,7 +59,7 @@ abstract class EntityTester extends MockeryTestCase
         $classToTestName = $this->getClassToTestName();
         $entity = $this->instantiate($classToTestName);
 
-        $methodName = $this->providerGettersAndSetters()[0][0];
+        $methodName = $this->getGettersAndSetters()[0][0];
 
         $properties = ['duntExist', lcfirst($methodName)];
 
@@ -106,55 +101,58 @@ abstract class EntityTester extends MockeryTestCase
         }
     }
 
-    /**
-     * @dataProvider providerGettersAndSetters
-     */
-    public function testGettersAndSetters($methodName, $testValue)
+    public function testGettersAndSetters()
     {
-        $classToTestName = $this->getClassToTestName();
-        $entity = $this->instantiate($classToTestName);
+        foreach ($this->getGettersAndSetters() as $testCase) {
 
-        $entity->{'set' . $methodName}($testValue);
-        $this->assertSame($testValue, $entity->{'get' . $methodName}());
+            list($methodName, $testValue) = $testCase;
+
+            $classToTestName = $this->getClassToTestName();
+            $entity = $this->instantiate($classToTestName);
+
+            $entity->{'set' . $methodName}($testValue);
+            $this->assertSame($testValue, $entity->{'get' . $methodName}());
+        }
     }
 
-    /**
-     * @dataProvider providerAddMethods
-     */
-    public function testAddMethods($methodName)
+    public function testAddMethods()
     {
-        if ($methodName == null) {
-            $this->assertTrue(true); // Just mark the test as passed as there are no methods to test
-            return;
+        foreach ($this->getAddMethods() as $methodName) {
+
+            if ($methodName == null) {
+                $this->assertTrue(true); // Just mark the test as passed as there are no methods to test
+                continue;
+            }
+
+            $classToTestName = $this->getClassToTestName();
+            $entity = $this->instantiate($classToTestName);
+
+            $this->assertEquals(0, count($entity->{'get' . $methodName}()));
+
+            $entity->{'add' . $methodName}('foo');
+            $entity->{'add' . $methodName}('bar');
+            $entity->{'add' . $methodName}('cake');
+
+            $this->assertEquals(3, count($entity->{'get' . $methodName}()));
+
+            $entity->{'remove' . $methodName}('bar');
+
+            $this->assertEquals(2, count($entity->{'get' . $methodName}()));
+
+            $collection = new ArrayCollection(array('bish', 'bash', 'bosh'));
+
+            $entity->{'add' . $methodName}($collection);
+
+            $this->assertEquals(5, count($entity->{'get' . $methodName}()));
+
         }
-
-        $classToTestName = $this->getClassToTestName();
-        $entity = $this->instantiate($classToTestName);
-
-        $this->assertEquals(0, count($entity->{'get' . $methodName}()));
-
-        $entity->{'add' . $methodName}('foo');
-        $entity->{'add' . $methodName}('bar');
-        $entity->{'add' . $methodName}('cake');
-
-        $this->assertEquals(3, count($entity->{'get' . $methodName}()));
-
-        $entity->{'remove' . $methodName}('bar');
-
-        $this->assertEquals(2, count($entity->{'get' . $methodName}()));
-
-        $collection = new ArrayCollection(array('bish', 'bash', 'bosh'));
-
-        $entity->{'add' . $methodName}($collection);
-
-        $this->assertEquals(5, count($entity->{'get' . $methodName}()));
     }
 
     /**
      * @return array
      * @TODO abstract special cases, provide api to ignore certain fields
      */
-    public function providerGettersAndSetters()
+    public function getGettersAndSetters()
     {
         $classToTestName = $this->getClassToTestName();
 
@@ -168,6 +166,7 @@ abstract class EntityTester extends MockeryTestCase
         $reflection = new \ReflectionClass($classToTestName);
 
         $methods = $reflection->getMethods();
+        $testMethods = [];
         foreach ($methods as $method) {
             if (substr($method->getName(), 0, 3) == 'set') {
                 $methodName = substr($method->getName(), 3);
@@ -192,17 +191,17 @@ abstract class EntityTester extends MockeryTestCase
                         $testValue = $methodName . '_test_' . rand(10000, 200000);
                     }
 
-                    $this->testMethods[] = array($methodName, $testValue);
+                    $testMethods[] = array($methodName, $testValue);
                 }
             }
         }
-        return $this->testMethods;
+        return $testMethods;
     }
 
     /**
      * @return array
      */
-    public function providerAddMethods()
+    public function getAddMethods()
     {
         $classToTestName = $this->getClassToTestName();
 
@@ -217,15 +216,11 @@ abstract class EntityTester extends MockeryTestCase
 
         $methods = $reflection->getMethods();
 
-        $testMethods = array(
-            array(null)
-        );
+        $testMethods = array(null);
 
         foreach ($methods as $method) {
             if (substr($method->getName(), 0, 3) == 'add') {
-                $methodName = substr($method->getName(), 3);
-
-                $testMethods[] = array($methodName);
+                $testMethods[] = substr($method->getName(), 3);
             }
         }
         return $testMethods;
