@@ -7,10 +7,14 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
+use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\Complaint as ComplaintRepo;
+use Dvsa\Olcs\Api\Entity\Cases\Complaint;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * ComplaintTest
@@ -19,6 +23,52 @@ use Dvsa\Olcs\Api\Domain\Repository\Complaint as ComplaintRepo;
  */
 class ComplaintTest extends RepositoryTestCase
 {
+    public function setUp()
+    {
+        $this->setUpSut(ComplaintRepo::class);
+    }
+
+    public function testFetchById()
+    {
+        $command = m::mock(QueryInterface::class);
+        $command->shouldReceive('getId')->andReturn(111);
+        $command->shouldReceive('getIsCompliance')->andReturn(false);
+
+        $result = m::mock(Complaint::class);
+        $results = [$result];
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('expr->eq')->with('m.isCompliance', ':byIsCompliance')->once()->andReturn('EXPR');
+        $qb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('byIsCompliance', false)->once()->andReturnSelf();
+        $qb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_OBJECT)->andReturn($results);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->once()->with('complainantContactDetails', 'cd')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('cd.person')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('ocComplaints', 'occ')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('occ.operatingCentre', 'oc')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('oc.address')->andReturnSelf()
+            ->shouldReceive('byId')->once()->with(111);
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->with('m')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Complaint::class)
+            ->andReturn($repo)
+            ->shouldReceive('lock')
+            ->with($result, LockMode::OPTIMISTIC, 1);
+
+        $this->sut->fetchUsingId($command, Query::HYDRATE_OBJECT, 1);
+    }
+
     public function testApplyListJoins()
     {
         // mock SUT to allow testing the protected method
