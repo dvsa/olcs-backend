@@ -77,7 +77,7 @@ class RevokeTest extends CommandHandlerTestCase
         $removeVehicleResult = new Result();
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            array('licenceVehicles' => null, 'id' => null),
+            array('licenceVehicles' => new ArrayCollection(), 'id' => null),
             $removeVehicleResult
         );
 
@@ -132,7 +132,7 @@ class RevokeTest extends CommandHandlerTestCase
         $removeVehicleResult = new Result();
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            array('licenceVehicles' => null, 'id' => null),
+            array('licenceVehicles' => new ArrayCollection(), 'id' => null),
             $removeVehicleResult
         );
 
