@@ -10,11 +10,10 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\EnvironmentalComplaint;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Cases\Complaint;
-use Dvsa\Olcs\Api\Entity\Person\Person;
-use Dvsa\Olcs\Transfer\Command\EnvironmentalComplaint\UpdateEnvironmentalComplaint as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Update Complaint
@@ -25,6 +24,8 @@ final class UpdateEnvironmentalComplaint extends AbstractCommandHandler implemen
 {
     protected $repoServiceName = 'Complaint';
 
+    protected $extraRepos = ['ContactDetails'];
+
     /**
      * Update complaint
      * @param CommandInterface $command
@@ -32,70 +33,48 @@ final class UpdateEnvironmentalComplaint extends AbstractCommandHandler implemen
      */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         $complaint = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        $person = $complaint->getComplainantContactDetails()->getPerson();
-        $person = $this->updatePersonObject($command, $person);
-        $complaint->getComplainantContactDetails()->setPerson($person);
-        $result->addMessage('Person updated');
+        $complaint->setComplaintDate(new \DateTime($command->getComplaintDate()));
+        $complaint->setDescription($command->getDescription());
+        $complaint->setStatus($this->getRepo()->getRefdataReference($command->getStatus()));
+        $complaint->populateClosedDate();
 
-        $complaint = $this->updateComplaintObject($command, $complaint);
+        if ($command->getOcComplaints() !== null) {
+            $operatingCentres = [];
+
+            foreach ($command->getOcComplaints() as $operatingCentreId) {
+                $operatingCentres[] = $this->getRepo()->getReference(OperatingCentre::class, $operatingCentreId);
+            }
+
+            $complaint->setOcComplaints($operatingCentres);
+        }
+
+        if ($complaint->getComplainantContactDetails() instanceof ContactDetails) {
+            // update existing contact details
+            $complaint->getComplainantContactDetails()->update(
+                $this->getRepo('ContactDetails')->populateRefDataReference(
+                    $command->getComplainantContactDetails()
+                )
+            );
+        } else {
+            // create new contact details
+            $complaint->setComplainantContactDetails(
+                ContactDetails::create(
+                    $this->getRepo()->getRefdataReference(ContactDetails::CONTACT_TYPE_COMPLAINANT),
+                    $this->getRepo('ContactDetails')->populateRefDataReference(
+                        $command->getComplainantContactDetails()
+                    )
+                )
+            );
+        }
 
         $this->getRepo()->save($complaint);
+
+        $result = new Result();
+        $result->addId('environmentalComplaint', $complaint->getId());
         $result->addMessage('Environmental Complaint updated');
 
         return $result;
-    }
-
-    /**
-     * @param Cmd $command
-     * @param Complaint $complaint
-     * @return Complaint
-     */
-    private function updateComplaintObject(Cmd $command, Complaint $complaint)
-    {
-        $complaint->setComplaintType($this->getRepo()->getRefdataReference($command->getComplaintType()));
-        $complaint->setStatus($this->getRepo()->getRefdataReference($command->getStatus()));
-        $complaint->setComplaintDate(new \DateTime($command->getComplaintDate()));
-
-        if ($command->getClosedDate() !== null) {
-            $complaint->setClosedDate(new \DateTime($command->getClosedDate()));
-        }
-
-        if ($command->getDescription() !== null) {
-            $complaint->setDescription($command->getDescription());
-        }
-
-        if ($command->getDriverFamilyName() !== null) {
-            $complaint->setDriverFamilyName($command->getDriverFamilyName());
-        }
-
-        if ($command->getDriverForename() !== null) {
-            $complaint->setDriverForename($command->getDriverForename());
-        }
-
-        if ($command->getVrm() !== null) {
-            $complaint->setVrm($command->getVrm());
-        }
-
-        return $complaint;
-    }
-
-    /**
-     * @param Cmd $command
-     * @param Person $person
-     * @return Person
-     */
-    private function updatePersonObject(Cmd $command, Person $person)
-    {
-        if ($command->getComplainantForename() != $person->getForename() ||
-            $command->getComplainantFamilyName() != $person->getFamilyName()) {
-            $person->setForename($command->getComplainantForename());
-            $person->setFamilyName($command->getComplainantFamilyName());
-        }
-
-        return $person;
     }
 }

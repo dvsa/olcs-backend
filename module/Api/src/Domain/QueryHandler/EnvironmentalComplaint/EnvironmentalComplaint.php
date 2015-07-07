@@ -17,14 +17,14 @@ final class EnvironmentalComplaint extends AbstractQueryHandler
         return $this->result(
             $this->getRepo()->fetchUsingId($query),
             [
-                'case',
                 'complainantContactDetails' => [
-                    'person'
+                    'person',
+                    'address' => [
+                        'countryCode'
+                    ]
                 ],
                 'ocComplaints' => [
-                    'operatingCentre' => [
-                        'address'
-                    ]
+                    'operatingCentre'
                 ]
             ]
         );

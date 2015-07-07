@@ -7,13 +7,25 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\EnvironmentalComplaint;
 
+use Doctrine\ORM\Query;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\EnvironmentalComplaint\CreateEnvironmentalComplaint;
 use Dvsa\Olcs\Api\Domain\Repository\Complaint;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\EnvironmentalComplaint\CreateEnvironmentalComplaint as Cmd;
+use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
+use Dvsa\Olcs\Api\Domain\Repository\Cases;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
-use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Entity\User\Team;
+use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Transfer\Command\EnvironmentalComplaint\CreateEnvironmentalComplaint as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Create Environmental Complaint Test
@@ -26,6 +38,12 @@ class CreateEnvironmentalComplaintTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateEnvironmentalComplaint();
         $this->mockRepo('Complaint', Complaint::class);
+        $this->mockRepo('ContactDetails', ContactDetails::class);
+        $this->mockRepo('Cases', Cases::class);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
@@ -33,14 +51,13 @@ class CreateEnvironmentalComplaintTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            'ct_complainant',
-            'ct_cov',
-            'cs_ack'
+            ComplaintEntity::COMPLAIN_STATUS_OPEN,
+            ContactDetailsEntity::CONTACT_TYPE_COMPLAINANT,
         ];
 
         $this->references = [
-            Cases::class => [
-                24 => m::mock(Cases::class)
+            CasesEntity::class => [
+                24 => m::mock(CasesEntity::class)
             ]
         ];
 
@@ -49,22 +66,44 @@ class CreateEnvironmentalComplaintTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $command = Cmd::create(
-            [
+        $userId = 1;
+
+        /** @var Team $mockTeam */
+        $mockTeam = m::mock(Team::class)->makePartial();
+        $mockTeam->setId(2);
+
+        /** @var User $mockUser */
+        $mockUser = m::mock(User::class)->makePartial();
+        $mockUser->setId($userId);
+        $mockUser->setTeam($mockTeam);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
+
+        $data = [
             'case' => 24,
-            "closedDate" => "2015-02-16",
-            "complainantFamilyName" => "Anthony",
-            "complainantForename" => "David",
             "complaintDate" => "2015-01-16",
-            "complaintType" => "ct_cov",
-            "createdBy" => null,
             "description" => "Some major complaint about condition of vehicle",
-            "driverFamilyName" => "Driver L Smith",
-            "driverForename" => "Driver F John",
-            "status" => "cs_ack",
-            "vrm" => "VRM123T"
-            ]
-        );
+            "status" => ComplaintEntity::COMPLAIN_STATUS_OPEN,
+            'ocComplaints' => [101, 102],
+            'complainantContactDetails' => [
+                'person' => [
+                    'forename' => 'David',
+                    'familyName' => 'Anthony',
+                ],
+                'address' => [
+                    'addressLine1' => 'a12',
+                    'addressLine2' => 'a23',
+                    'addressLine3' => 'a34',
+                    'addressLine4' => 'a45',
+                    'town' => 'town',
+                    'postcode' => 'LS1 2AB',
+                    'countryCode' => m::mock(Country::class),
+                ],
+            ],
+        ];
+
+        $command = Cmd::create($data);
 
         /** @var ComplaintEntity $app */
         $comp = null;
@@ -73,12 +112,52 @@ class CreateEnvironmentalComplaintTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with(m::type(ComplaintEntity::class))
             ->andReturnUsing(
-                function (ComplaintEntity $Complaint) use (&$comp) {
-                    $comp = $Complaint;
-                    $Complaint->setId(99);
+                function (ComplaintEntity $complaint) use (&$comp) {
+                    $comp = $complaint;
+                    $complaint->setId(99);
                 }
             )
             ->once();
+
+        $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
+            ->once()
+            ->with($data['complainantContactDetails'])
+            ->andReturn($data['complainantContactDetails']);
+
+        /** @var CasesEntity $case */
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setId(999);
+        $licence->setReviewDate(new \DateTime('2015-02-10'));
+
+        /** @var CasesEntity $case */
+        $case = m::mock(CasesEntity::class)->makePartial();
+        $case->setId($command->getCase());
+        $case->setLicence($licence);
+
+        $this->repoMap['Cases']->shouldReceive('fetchById')
+            ->with($command->getCase(), Query::HYDRATE_OBJECT)
+            ->once()
+            ->andReturn($case);
+
+        $result1 = new Result();
+        $result1->addId('task', 333);
+        $taskData = [
+            'category' => Task::CATEGORY_ENVIRONMENTAL,
+            'subCategory' => Task::SUBCATEGORY_REVIEW_COMPLAINT,
+            'description' => 'Review complaint',
+            'actionDate' => new \DateTime('2015-02-10'),
+            'assignedToUser' => 1,
+            'assignedToTeam' => 2,
+            'isClosed' => false,
+            'urgent' => false,
+            'case' => 24,
+            'application' => null,
+            'licence' => null,
+            'busReg' => null,
+            'transportManager' => null,
+            'irfoOrganisation' => null,
+        ];
+        $this->expectedSideEffect(CreateTask::class, $taskData, $result1);
 
         $result = $this->sut->handleCommand($command);
 

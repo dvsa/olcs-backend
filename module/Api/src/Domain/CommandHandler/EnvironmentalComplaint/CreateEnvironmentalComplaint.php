@@ -7,24 +7,35 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\EnvironmentalComplaint;
 
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
-use Dvsa\Olcs\Api\Entity\Person\Person;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
+use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\EnvironmentalComplaint\CreateEnvironmentalComplaint as Cmd;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Create EnvironmentalComplaint
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-final class CreateEnvironmentalComplaint extends AbstractCommandHandler implements TransactionedInterface
+final class CreateEnvironmentalComplaint extends AbstractCommandHandler implements
+    AuthAwareInterface,
+    TransactionedInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'Complaint';
+
+    protected $extraRepos = ['Cases', 'ContactDetails'];
 
     /**
      * Creates complaint and associated entities
@@ -36,20 +47,16 @@ final class CreateEnvironmentalComplaint extends AbstractCommandHandler implemen
     {
         $result = new Result();
 
-        $person = $this->createPersonObject($command);
-        $result->addMessage('Person created');
-
-        $contactDetails = $this->createContactDetailsObject($person);
-        $result->addMessage('Contact details created');
-
-        $complaint = $this->createComplaintObject($command, $contactDetails);
-
+        // create and save Environmental Complaint
+        $complaint = $this->createComplaintObject($command);
         $this->getRepo()->save($complaint);
+
+        $result->addId('environmentalComplaint', $complaint->getId());
         $result->addMessage('Environmental Complaint created');
 
-        $result->addId('complaint', $complaint->getId());
-        $result->addId('person', $person->getId());
-        $result->addId('contactDetails', $contactDetails->getId());
+        // create a task
+        $taskResult = $this->getCommandHandler()->handleCommand($this->createCreateTaskCommand($command));
+        $result->merge($taskResult);
 
         return $result;
     }
@@ -58,75 +65,64 @@ final class CreateEnvironmentalComplaint extends AbstractCommandHandler implemen
      * Create the complaint object
      *
      * @param Cmd $command
-     * @param ContactDetails $contactDetails
      * @return Complaint
      */
-    private function createComplaintObject(Cmd $command, ContactDetails $contactDetails)
+    private function createComplaintObject(Cmd $command)
     {
         $isCompliance = false;
 
-        $complaint = new Complaint(
-            $this->getRepo()->getReference(Cases::class, $command->getCase()),
-            $this->getRepo()->getRefdataReference($command->getComplaintType()),
-            $this->getRepo()->getRefdataReference($command->getStatus()),
-            new \DateTime($command->getComplaintDate()),
-            $contactDetails,
-            $isCompliance
+        // create new contact details
+        $contactDetails =  ContactDetails::create(
+            $this->getRepo()->getRefdataReference(ContactDetails::CONTACT_TYPE_COMPLAINANT),
+            $this->getRepo('ContactDetails')->populateRefDataReference(
+                $command->getComplainantContactDetails()
+            )
         );
 
-        if ($command->getClosedDate() !== null) {
-            $complaint->setClosedDate(new \DateTime($command->getClosedDate()));
-        }
+        $complaint = new Complaint(
+            $this->getRepo()->getReference(Cases::class, $command->getCase()),
+            $isCompliance,
+            $this->getRepo()->getRefdataReference($command->getStatus()),
+            new \DateTime($command->getComplaintDate()),
+            $contactDetails
+        );
+        $complaint->setDescription($command->getDescription());
+        $complaint->populateClosedDate();
 
-        if ($command->getDescription() !== null) {
-            $complaint->setDescription($command->getDescription());
-        }
+        if ($command->getOcComplaints() !== null) {
+            $operatingCentres = [];
 
-        if ($command->getDriverFamilyName() !== null) {
-            $complaint->setDriverFamilyName($command->getDriverFamilyName());
-        }
+            foreach ($command->getOcComplaints() as $operatingCentreId) {
+                $operatingCentres[] = $this->getRepo()->getReference(OperatingCentre::class, $operatingCentreId);
+            }
 
-        if ($command->getDriverForename() !== null) {
-            $complaint->setDriverForename($command->getDriverForename());
-        }
-
-        if ($command->getVrm() !== null) {
-            $complaint->setVrm($command->getVrm());
+            $complaint->setOcComplaints($operatingCentres);
         }
 
         return $complaint;
     }
 
     /**
-     * Create person object
      * @param Cmd $command
-     * @return Person
+     * @return CreateTask
      */
-    private function createPersonObject(Cmd $command)
+    private function createCreateTaskCommand(Cmd $command)
     {
-        $person = new Person();
+        /** @var Cases $case */
+        $case = $this->getRepo('Cases')->fetchById($command->getCase(), Query::HYDRATE_OBJECT);
 
-        $person->setForename($command->getComplainantForename());
-        $person->setFamilyName($command->getComplainantFamilyName());
+        $currentUser = $this->getCurrentUser();
 
-        return $person;
-    }
+        $data = [
+            'category' => Task::CATEGORY_ENVIRONMENTAL,
+            'subCategory' => Task::SUBCATEGORY_REVIEW_COMPLAINT,
+            'description' => 'Review complaint',
+            'actionDate' => $case->getLicence()->getReviewDate(),
+            'assignedToUser' => $currentUser->getId(),
+            'assignedToTeam' => $currentUser->getTeam()->getId(),
+            'case' => $case->getId(),
+        ];
 
-    /**
-     * Create ContactDetails object
-     * @param Person $person
-     * @return ContactDetails
-     */
-    private function createContactDetailsObject(Person $person)
-    {
-        $contactDetails = new ContactDetails(
-            $this->getRepo()->getRefdataReference(
-                ContactDetails::CONTACT_TYPE_COMPLAINANT
-            )
-        );
-
-        $contactDetails->setPerson($person);
-
-        return $contactDetails;
+        return CreateTask::create($data);
     }
 }
