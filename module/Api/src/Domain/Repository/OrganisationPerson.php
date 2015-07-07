@@ -4,23 +4,25 @@
  * Organisation Person
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson as Entity;
-use Dvsa\Olcs\Api\Entity\Person\Person;
+use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 
 /**
  * Organisation Person
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
 class OrganisationPerson extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function fetchByOrgAndPerson(Organisation $organisation, Person $person)
+    public function fetchByOrgAndPerson(OrganisationEntity $organisation, PersonEntity $person)
     {
         $qb = $this->createQueryBuilder();
 

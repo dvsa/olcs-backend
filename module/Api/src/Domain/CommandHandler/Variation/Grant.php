@@ -15,9 +15,10 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Licence\PsvDisc;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs;
+use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs as CreatePsvDiscsCmd;
 use Dvsa\Olcs\Transfer\Command\Licence\VoidPsvDiscs;
 use Dvsa\Olcs\Transfer\Command\Variation\Grant as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -47,6 +48,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $result->merge($this->createSnapshot($command->getId()));
 
         $this->updateStatusAndDate($application, ApplicationEntity::APPLICATION_STATUS_VALID);
+        $this->getRepo()->save($application);
 
         if ($application->getLicenceType() !== $licence->getLicenceType()) {
             $this->updateExistingDiscs($application, $licence, $result);
@@ -99,8 +101,8 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $psvDiscs = $licence->getPsvDiscs()->matching($criteria);
 
         $ids = array_map(
-            function ($v) {
-                return $v['id'];
+            function (PsvDisc $v) {
+                return $v->getId();
             },
             $psvDiscs
         );
@@ -116,7 +118,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         ];
 
         $result->merge(
-            $this->handleSideEffect(CreatePsvDiscs::create($dtoData))
+            $this->handleSideEffect(CreatePsvDiscsCmd::create($dtoData))
         );
     }
 
@@ -138,6 +140,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             foreach ($vehicle->getGoodsDiscs() as $disc) {
                 if ($disc->getCeasedDate() === null) {
                     $disc->setCeasedDate($now);
+                    $this->getRepo('GoodsDisc')->save($disc);
                 }
             }
 
@@ -147,6 +150,6 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             $this->getRepo('GoodsDisc')->save($newDisc);
         }
 
-        $result->addMessage($vehicles->count() . ' Goods Disc(s) replaces');
+        $result->addMessage($vehicles->count() . ' Goods Disc(s) replaced');
     }
 }

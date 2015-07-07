@@ -30,7 +30,7 @@ final class GrantTransportManager extends AbstractCommandHandler implements Tran
 {
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['TransportManagerLicence'];
+    protected $extraRepos = ['TransportManagerLicence', 'OtherLicence'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -43,25 +43,26 @@ final class GrantTransportManager extends AbstractCommandHandler implements Tran
         if ($licence->isRestricted()) {
             $this->deleteAllTransportManagersForLicence($licence);
             $result->addMessage('All transport managers removed');
-        } else {
+            return $result;
 
-            $tmas = $application->getTransportManagers();
-
-            /** @var TransportManagerApplication $tma */
-            foreach ($tmas as $tma) {
-                switch ($tma->getAction()) {
-                    case 'A':
-                    case 'U':
-                        $this->createTransportManager($tma, $licence);
-                        break;
-                    case 'D':
-                        $this->deleteTransportManager($tma, $licence);
-                        break;
-                }
-            }
-
-            $result->addMessage('Transport managers copied to licence');
         }
+
+        $tmas = $application->getTransportManagers();
+
+        /** @var TransportManagerApplication $tma */
+        foreach ($tmas as $tma) {
+            switch ($tma->getAction()) {
+                case 'A':
+                case 'U':
+                    $this->createTransportManager($tma, $licence);
+                    break;
+                case 'D':
+                    $this->deleteTransportManager($tma->getTransportManager(), $licence);
+                    break;
+            }
+        }
+
+        $result->addMessage('Transport managers copied to licence');
 
         return $result;
     }
