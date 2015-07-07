@@ -432,7 +432,9 @@ class Application extends AbstractApplication
      */
     public function isGoods()
     {
-        return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
+        if ($this->getGoodsOrPsv()) {
+            return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
+        }
     }
 
     /**
@@ -440,7 +442,9 @@ class Application extends AbstractApplication
      */
     public function isPsv()
     {
-        return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_PSV;
+        if ($this->getGoodsOrPsv()) {
+            return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_PSV;
+        }
     }
 
     /**
@@ -448,7 +452,9 @@ class Application extends AbstractApplication
      */
     public function isSpecialRestricted()
     {
-        return $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED;
+        if ($this->getLicenceType()) {
+            return $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED;
+        }
     }
 
     /**
