@@ -85,7 +85,7 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
     {
         /** @var OrganisationUser $orgUser */
         foreach ($organisation->getAdminOrganisationUsers() as $orgUser) {
-            if ($orgUser->getUser()->getEmailAddress() !== null) {
+            if ($orgUser->getUser()->getContactDetails()->getEmailAddress() !== null) {
                 return true;
             }
         }
