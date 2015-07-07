@@ -270,4 +270,7 @@ return [
 
     // Transport Manager
     TransferQuery\Tm\TransportManager::class => QueryHandler\Tm\TransportManager::class,
+
+    // Companies House
+    TransferQuery\CompaniesHouse\AlertList::class => QueryHandler\CompaniesHouse\AlertList::class,
 ];
