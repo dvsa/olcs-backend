@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Revoke as CommandHandler;
-use Dvsa\Olcs\Api\Domain\Command\Licence\Revoke as Command;
+use Dvsa\Olcs\Transfer\Command\Licence\RevokeLicence as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
