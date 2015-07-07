@@ -34,15 +34,17 @@ final class Suspend extends AbstractCommandHandler implements TransactionedInter
 
         $result = new Result();
 
-        $result->merge(
-            $this->handleSideEffect(
-                RemoveLicenceStatusRulesForLicence::create(
-                    [
+        if ($command->getDeleteLicenceStatusRules()) {
+            $result->merge(
+                $this->handleSideEffect(
+                    RemoveLicenceStatusRulesForLicence::create(
+                        [
                         'licence' => $licence
-                    ]
+                        ]
+                    )
                 )
-            )
-        );
+            );
+        }
 
         $result->addMessage("Licence ID {$licence->getId()} suspended");
 

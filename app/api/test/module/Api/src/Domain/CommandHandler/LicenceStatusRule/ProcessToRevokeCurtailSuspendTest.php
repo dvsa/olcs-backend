@@ -106,8 +106,8 @@ class ProcessToRevokeCurtailSuspendTest extends CommandHandlerTestCase
         $this->repoMap['LicenceStatusRule']->shouldReceive('save')->with(m::type(LicenceStatusRule::class))->once();
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Licence\Suspend::class,
-            ['id' => 46],
+            \Dvsa\Olcs\Transfer\Command\Licence\SuspendLicence::class,
+            ['id' => 46, 'deleteLicenceStatusRules' => false],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
 
@@ -138,8 +138,8 @@ class ProcessToRevokeCurtailSuspendTest extends CommandHandlerTestCase
         $this->repoMap['LicenceStatusRule']->shouldReceive('save')->with(m::type(LicenceStatusRule::class))->once();
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Licence\Revoke::class,
-            ['id' => 46],
+            \Dvsa\Olcs\Transfer\Command\Licence\RevokeLicence::class,
+            ['id' => 46, 'deleteLicenceStatusRules' => false],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
 
@@ -170,8 +170,8 @@ class ProcessToRevokeCurtailSuspendTest extends CommandHandlerTestCase
         $this->repoMap['LicenceStatusRule']->shouldReceive('save')->with(m::type(LicenceStatusRule::class))->once();
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Licence\Curtail::class,
-            ['id' => 46],
+            \Dvsa\Olcs\Transfer\Command\Licence\CurtailLicence::class,
+            ['id' => 46, 'deleteLicenceStatusRules' => false],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
 
