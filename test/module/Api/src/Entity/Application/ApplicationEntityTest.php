@@ -661,6 +661,12 @@ class ApplicationEntityTest extends EntityTester
         $this->assertNull($sut->isPsv());
     }
 
+    public function testIsSpecialRestrictedLicenceTypeNull()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $this->assertNull($sut->isSpecialRestricted());
+    }
+
     /**
      * @dataProvider applicationDateProvider
      */
