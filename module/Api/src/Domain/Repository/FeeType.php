@@ -37,8 +37,8 @@ class FeeType extends AbstractRepository
     public function fetchLatest(
         RefDataEntity $feeType,
         RefDataEntity $goodsOrPsv,
-        RefDataEntity $licenceType,
-        \DateTime $date,
+        RefDataEntity $licenceType = null,
+        \DateTime $date = null,
         $trafficArea = null
     ) {
         $qb = $this->createQueryBuilder();
