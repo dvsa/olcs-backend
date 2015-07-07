@@ -23,9 +23,6 @@ return array(
     ),
     'namespaces' => include(__DIR__ . '/../../module/Api/config/namespace.config.php'),
     'organisation' => array(
-        'is_mlh' => array(
-            'type' => 'yesno'
-        ),
         'company_cert_seen' => array(
             'type' => 'yesno'
         ),

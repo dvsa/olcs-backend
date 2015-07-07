@@ -144,15 +144,6 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     protected $isIrfo = 0;
 
     /**
-     * Is mlh
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesno", name="is_mlh", nullable=false, options={"default": 0})
-     */
-    protected $isMlh = 0;
-
-    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -567,29 +558,6 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     public function getIsIrfo()
     {
         return $this->isIrfo;
-    }
-
-    /**
-     * Set the is mlh
-     *
-     * @param string $isMlh
-     * @return Organisation
-     */
-    public function setIsMlh($isMlh)
-    {
-        $this->isMlh = $isMlh;
-
-        return $this;
-    }
-
-    /**
-     * Get the is mlh
-     *
-     * @return string
-     */
-    public function getIsMlh()
-    {
-        return $this->isMlh;
     }
 
     /**

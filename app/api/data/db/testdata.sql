@@ -853,17 +853,17 @@ VALUES
   (2, 16);
 
 INSERT INTO `organisation` (`id`,`lead_tc_area_id`, `created_by`, `last_modified_by`,`contact_details_id`,
-`company_or_llp_no`, `name`,`is_mlh`, `is_irfo`, `type`, `created_on`, `last_modified_on`, `version`, `allow_email`) VALUES
-    (1,'B',1,3,  21,'12345678','John Smith Haulage Ltd.',0,0,'org_t_rc',NOW(),NOW(),1,1),
-    (30,'C',1,4,  30,'98765432','John Smith Haulage Ltd.',0,0,'org_t_rc',NOW(),NOW(),1,0),
-    (41,'D',0,4,  41,'241341234','Teddie Stobbart Group Ltd',0,0,'org_t_rc',NOW(),NOW(),1,0),
-    (54,'F',3,4,  54,'675675334','Teddie Stobbart Group Ltd',0,0,'org_t_rc',NOW(),NOW(),1,0),
-    (63,'G',1,2,  63,'353456456','Leeds bus service ltd.',0,0,'org_t_rc',NOW(),NOW(),1,0),
-    (75,'H',1,0,  75,'12345A1123','Leeds city council',0,0,'org_t_pa',NOW(),NOW(),1,0),
-    (100,'K',1,3,  100,'100100','Test partnership',0,0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2,0),
-    (101,'K',1,3,  100,'100100','Test IRFO',0,1,'org_t_ir',NOW(),NOW(),1,0),
-    (104,'M',NULL,NULL,NULL,'1234567','Company Name',0,0,'org_t_rc',NULL,NULL,1,0),
-    (105,'N',1,3,NULL,NULL,'SR Orgaisation',0,0,'org_t_rc',NOW(),NOW(),1,0);
+`company_or_llp_no`, `name`, `is_irfo`, `type`, `created_on`, `last_modified_on`, `version`, `allow_email`) VALUES
+    (1,'B',1,3,  21,'12345678','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1,1),
+    (30,'C',1,4,  30,'98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1,0),
+    (41,'D',0,4,  41,'241341234','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1,0),
+    (54,'F',3,4,  54,'675675334','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1,0),
+    (63,'G',1,2,  63,'353456456','Leeds bus service ltd.',0,'org_t_rc',NOW(),NOW(),1,0),
+    (75,'H',1,0,  75,'12345A1123','Leeds city council',0,'org_t_pa',NOW(),NOW(),1,0),
+    (100,'K',1,3,  100,'100100','Test partnership',0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2,0),
+    (101,'K',1,3,  100,'100100','Test IRFO',1,'org_t_ir',NOW(),NOW(),1,0),
+    (104,'M',NULL,NULL,NULL,'1234567','Company Name',0,'org_t_rc',NULL,NULL,1,0),
+    (105,'N',1,3,NULL,NULL,'SR Orgaisation',0,'org_t_rc',NOW(),NOW(),1,0);
 
 INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
     `person_id`, `organisation_id`) VALUES
@@ -1133,28 +1133,18 @@ INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_id`,`unfitness_reaso
   (1,'tm_unfit_inn');
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
-`last_successful_login_date`,`version`, `deleted_date`, `login_id`,`contact_details_id`,`email_address`,
+`last_successful_login_date`,`login_id`,`contact_details_id`,
 `local_authority_id`) VALUES
-    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-01-26 09:00:00',1,NULL,'loggedinuser',101,
-    'terry.valtech@gmail.com', 1),
-    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-25 23:00:00',1,NULL,'johnspellman',105,
-    'john.spellman@test9876.com', NULL),
-    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-23 15:00:00',1,NULL,'stevefox',106,
-    'stevefox@test9876.com', NULL),
-    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-19 14:00:00',1,NULL,'amywrigg',130,
-    'amywrigg@test9876.com', NULL),
-    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-05-15 17:00:00',1,NULL,'philjowitt',131,
-    'philjowitt@test9876.com', NULL),
-    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-22 11:00:00',1,NULL,'kevinrooney',132,
-    'kevinrooney@test9876.com', NULL),
-    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00',1,NULL,'sarahthompson',133,
-    'sarahthompson@test9876.com', NULL),
-    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00',1,NULL,'anotheruser',114,
-    'anotheruser@test9876.com', NULL),
-    (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00',1,NULL,'abdou.bonomi',140,
-    NULL, NULL),
-    (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00',1,NULL,'abdou.bonomi2',140,
-    NULL, NULL);
+    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-01-26 09:00:00','loggedinuser',101, 1),
+    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-25 23:00:00','johnspellman',105, NULL),
+    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-23 15:00:00','stevefox',106, NULL),
+    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-19 14:00:00','amywrigg',130, NULL),
+    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-05-15 17:00:00','philjowitt',131, NULL),
+    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-22 11:00:00','kevinrooney',132, NULL),
+    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00','sarahthompson',133, NULL),
+    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','anotheruser',114, NULL),
+    (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00','abdou.bonomi',140, NULL),
+    (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00','abdou.bonomi2',140, NULL);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator`) VALUES
     (1, 1, 1),
