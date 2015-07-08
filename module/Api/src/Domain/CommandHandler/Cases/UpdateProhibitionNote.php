@@ -21,7 +21,7 @@ final class UpdateProhibitionNote extends AbstractCommandHandler implements Tran
     protected $repoServiceName = 'Cases';
 
     /**
-     * Updates Conviction Note in case table
+     * Updates Prohibition Note in case table
      *
      * @param CommandInterface $command
      * @return Result
