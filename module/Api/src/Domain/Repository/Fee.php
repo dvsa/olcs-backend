@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -114,6 +115,33 @@ class Fee extends AbstractRepository
     }
 
     /**
+     * Fetch outstanding grant fees for an application
+     *
+     * @param int $applicationId Application ID
+     *
+     * @return array
+     */
+    public function fetchOutstandingGrantFeesByApplicationId($applicationId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $this->whereOutstandingFee($doctrineQb);
+
+        $doctrineQb
+            ->innerJoin('f.feeType', 'ft')
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.application', ':application'))
+            ->andWhere(
+                $doctrineQb->expr()->eq(
+                    'ft.feeType', ':feeType'
+                )
+            )
+            ->setParameter('application', $applicationId)
+            ->setParameter('feeType', RefData::FEE_TYPE_GRANT);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
      * Fetch outstanding fees by IDs
      *
      * @param array $ids
@@ -172,7 +200,7 @@ class Fee extends AbstractRepository
      * @param int    $applicationId  Application ID
      * @param string $feeTypeFeeType Ref data string eg \Dvsa\Olcs\Api\Entity\Fee\FeeType::FEE_TYPE_GRANTINT
      *
-     * @return Doctrine\ORM\QueryBuilder
+     * @return \Doctrine\ORM\QueryBuilder
      */
     private function getQueryByApplicationFeeTypeFeeType($applicationId, $feeTypeFeeType)
     {
@@ -192,7 +220,7 @@ class Fee extends AbstractRepository
     /**
      * Add conditions to the query builder to only select fees that are outstanding
      *
-     * @param Doctrine\ORM\QueryBuilder $doctrineQb
+     * @param \Doctrine\ORM\QueryBuilder $doctrineQb
      */
     private function whereOutstandingFee($doctrineQb)
     {
@@ -215,7 +243,7 @@ class Fee extends AbstractRepository
      *  b) an under consideration/granted application
      * for the given organisation
      *
-     * @param Doctrine\ORM\QueryBuilder $doctrineQb
+     * @param \Doctrine\ORM\QueryBuilder $doctrineQb
      * @param int $organisationId
      */
     private function whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId)

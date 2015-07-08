@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Application;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Filter\Word\UnderscoreToCamelCase;
 
 /**
  * ApplicationCompletion Entity
@@ -33,5 +34,26 @@ class ApplicationCompletion extends AbstractApplicationCompletion
     protected function getCalculatedValues()
     {
         return ['application' => null];
+    }
+
+    public function isComplete($required)
+    {
+        return count($this->getIncompleteSections($required)) < 1;
+    }
+
+    public function getIncompleteSections($required)
+    {
+        $incompleteSections = [];
+
+        $filter = new UnderscoreToCamelCase();
+
+        foreach ($required as $section) {
+            $getter = 'get' . ucfirst($filter->filter($section)) . 'Status';
+            if ($this->$getter() !== self::STATUS_COMPLETE) {
+                $incompleteSections[] = $section;
+            }
+        }
+
+        return $incompleteSections;
     }
 }
