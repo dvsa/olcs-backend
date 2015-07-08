@@ -115,7 +115,7 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
         $data = [
             'inspectionRequestId' => $inspectionRequest['id'],
             'currentUserName' => $user->getLoginId(),
-            'currentUserEmail' => $user->getEmailAddress(),
+            'currentUserEmail' => $user->getContactDetails()->getEmailAddress(),
             'inspectionRequestDateRequested' => $requestDate,
             'inspectionRequestNotes' => $inspectionRequest['requestorNotes'],
             'inspectionRequestDueDate' => $dueDate,
