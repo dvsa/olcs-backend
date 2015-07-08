@@ -28,7 +28,8 @@ class BusRegEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
-    private function getAssertionsForCanEditIsTrue() {
+    private function getAssertionsForCanEditIsTrue()
+    {
         $id = 15;
         $regNo = 12345;
 
@@ -45,7 +46,8 @@ class BusRegEntityTest extends EntityTester
         $this->entity->setIsTxcApp('N');
     }
 
-    private function getAssertionsForCanEditIsFalseDueToVariation() {
+    private function getAssertionsForCanEditIsFalseDueToVariation()
+    {
         $id = 15;
         $otherBusId = 16;
         $regNo = 12345;
@@ -88,6 +90,56 @@ class BusRegEntityTest extends EntityTester
 
         $this->assertEquals($result['licence'], null);
         $this->assertEquals($result['isLatestVariation'], true);
+    }
+
+    /**
+     * Tests calculated bundle values
+     */
+    public function testGetCalculatedBundleValues()
+    {
+        $id = 15;
+        $regNo = 12345;
+
+        //the bus reg entity which exists on the licence
+        $licenceBusReg = new Entity();
+        $licenceBusReg->setId($id);
+
+        $licenceEntityMock = m::mock(LicenceEntity::class);
+        $licenceEntityMock->shouldReceive('getLatestBusVariation')->once()->with($regNo)->andReturn($licenceBusReg);
+
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('getRegNo')->once()->andReturn($regNo);
+        $sut->shouldReceive('getId')->once()->andReturn($id);
+        $sut->shouldReceive('getLicence')->once()->andReturn($licenceEntityMock);
+
+        $result = $sut->getCalculatedBundleValues();
+
+        $this->assertEquals($result['licence'], null);
+        $this->assertEquals($result['isLatestVariation'], true);
+    }
+
+    /**
+     * Tests canDelete throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testCanDeleteThrowsException()
+    {
+        $this->getAssertionsForCanEditIsFalseDueToVariation();
+        $this->entity->canDelete();
+
+        return true;
+    }
+
+    /**
+     * Tests can delete doesn't throw exception when isVariation is true
+     */
+    public function testCanDeleteTrue()
+    {
+        $this->getAssertionsForCanEditIsTrue();
+        $this->assertEquals(true, $this->entity->canDelete());
+
+        return true;
     }
 
     /**
@@ -393,5 +445,4 @@ class BusRegEntityTest extends EntityTester
             [$notSn, $scotRules, 1, '2014-06-11', '2014-08-11']
         ];
     }
-
 }

@@ -60,6 +60,21 @@ class BusReg extends AbstractBusReg
     }
 
     /**
+     * A bus reg may only be deleted if it's the latest variation
+     *
+     * @return bool
+     * @throws ForbiddenException
+     */
+    public function canDelete()
+    {
+        if ($this->isLatestVariation()) {
+            return true;
+        }
+
+        throw new ForbiddenException('Only the latest variation may be deleted');
+    }
+
+    /**
      * Returns whether the variation is the latest one
      *
      * @return bool
@@ -85,6 +100,21 @@ class BusReg extends AbstractBusReg
      * @return array
      */
     public function getCalculatedValues()
+    {
+        return [
+            'licence' => null,
+            'parent' => null,
+            'isLatestVariation' => $this->isLatestVariation(),
+            'shortNotice' => null
+        ];
+    }
+
+    /**
+     * Gets calculated values
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
     {
         return [
             'licence' => null,

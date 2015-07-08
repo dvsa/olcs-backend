@@ -9,6 +9,8 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as Entity;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Bus
@@ -55,5 +57,32 @@ class Bus extends AbstractRepository
         }
 
         return $results[0];
+    }
+
+    /**
+     * Applies filters
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $qb->andWhere($qb->expr()->eq($this->alias . '.routeNo', ':byRouteNo'))
+            ->setParameter('byRouteNo', $query->getRouteNo());
+
+        if (method_exists($query, 'getVariationNo')) {
+            $qb->andWhere($qb->expr()->lt($this->alias . '.variationNo', ':byVariationNo'))
+                ->setParameter('byVariationNo', $query->getVariationNo());
+        }
+    }
+
+    /**
+     * Applies list joins
+     * @param QueryBuilder $qb
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('busNoticePeriod')
+            ->with('status');
     }
 }
