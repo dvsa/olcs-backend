@@ -827,14 +827,14 @@ VALUES
   (2, 'obj_t_police', 1, 1, 8, '2014-02-21 00:00:00', '2014-02-21 00:00:00', 1);
 
 INSERT INTO `opposition`
-(`id`, `opposition_type`, `licence_id`, `application_id`, `case_id`, `opposer_id`, `last_modified_by`, `created_by`, `is_copied`,
+(`id`, `opposition_type`, `case_id`, `opposer_id`, `last_modified_by`, `created_by`, `is_copied`,
  `raised_date`, `is_in_time`, `is_public_inquiry`, `is_withdrawn`, `is_valid`, `valid_notes`, `notes`, `deleted_date`, `created_on`,
  `last_modified_on`, `version`)
 VALUES
-  (1, 'otf_eob', 7, 1, 29, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 'opp_v_no', 'Valid notes', 'Notes', null,
+  (1, 'otf_eob', 29, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 'opp_v_no', 'Valid notes', 'Notes', null,
   '2014-02-20 00:00:00',
    '2014-02-20 00:00:00', 1),
-  (2, 'otf_rep', 7, 1, 29, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 'opp_v_yes', 'Valid notes', 'Notes', null,
+  (2, 'otf_rep', 29, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 'opp_v_yes', 'Valid notes', 'Notes', null,
   '2014-02-20 00:00:00',
    '2014-02-20 00:00:00', 1);
 

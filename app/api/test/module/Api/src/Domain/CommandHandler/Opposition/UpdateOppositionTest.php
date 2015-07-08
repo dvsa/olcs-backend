@@ -60,17 +60,15 @@ class UpdateOppositionTest extends CommandHandlerTestCase
             "isInTime" => "Y",
             "isWithdrawn" => "N",
             "status" => "opp_ack",
-            "licenceOperatingCentres" => [
+            "operatingCentres" => [
                 "16"
             ],
-            "applicationOperatingCentres" => [],
             "grounds" => [
                 "ogf_env",
                 "ogf_parking"
             ],
             "isPublicInquiry" => "Y",
             "notes" => "Notes",
-            "operatingCentres" => null,
             "opposerContactDetails" => [
                 "emailAddress" => "bobED@jones.com",
                 "description" => "CD notes",
@@ -112,17 +110,15 @@ class UpdateOppositionTest extends CommandHandlerTestCase
             "isInTime" => "Y",
             "isWithdrawn" => "N",
             "status" => "opp_ack",
-            "licenceOperatingCentres" => [
+            "operatingCentres" => [
                 "16"
             ],
-            "applicationOperatingCentres" => [],
             "grounds" => [
                 "ogf_env",
                 "ogf_parking"
             ],
             "isPublicInquiry" => "Y",
             "notes" => "Notes",
-            "operatingCentres" => null,
             "opposerContactDetails" => [
                 "emailAddress" => "bob@jones.com",
                 "description" => "CD notes",
