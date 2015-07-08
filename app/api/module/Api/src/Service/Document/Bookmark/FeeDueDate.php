@@ -26,7 +26,11 @@ class FeeDueDate extends DynamicBookmark implements DateHelperAwareInterface
 
     public function render()
     {
-        $dateTime = new \DateTime($this->data['invoicedDate']);
+        if (is_string($this->data['invoicedDate'])) {
+            $dateTime = new \DateTime($this->data['invoicedDate']);
+        } else {
+            $dateTime = $this->data['invoicedDate'];
+        }
 
         $dateTime = $this->getDateHelper()->calculateDate($dateTime, self::TARGET_DAYS);
 

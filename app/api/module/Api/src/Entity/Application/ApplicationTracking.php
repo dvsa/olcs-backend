@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Application;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Filter\Word\UnderscoreToCamelCase;
 
 /**
  * ApplicationTracking Entity
@@ -79,5 +80,21 @@ class ApplicationTracking extends AbstractApplicationTracking
             }
         }
         return $this;
+    }
+
+    public function isValid($sections)
+    {
+        $filter = new UnderscoreToCamelCase();
+
+        $validStatuses = [self::STATUS_ACCEPTED, self::STATUS_NOT_APPLICABLE];
+
+        foreach ($sections as $section) {
+            $getter = 'get' . ucfirst($filter->filter($section)) . 'Status';
+            if (!in_array($this->$getter(), $validStatuses)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
