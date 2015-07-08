@@ -168,6 +168,7 @@ return [
             'LicenceVehicle' => RepositoryFactory::class,
             'Vehicle' => RepositoryFactory::class,
             'VehicleHistoryView' => RepositoryFactory::class,
+            'InspectionRequest' => RepositoryFactory::class,
             'CorrespondenceInbox' => RepositoryFactory::class,
             'SubmissionAction' => RepositoryFactory::class,
             'TrafficArea' => RepositoryFactory::class,

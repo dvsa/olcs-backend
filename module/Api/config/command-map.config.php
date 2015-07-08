@@ -436,7 +436,6 @@ return [
     // Domain - PrintScheduler
     Command\PrintScheduler\Enqueue::class  => CommandHandler\PrintScheduler\Enqueue::class,
 
-
     // Transfer - Operator
     TransferCommand\Operator\Create::class => CommandHandler\Operator\SaveOperator::class,
     TransferCommand\Operator\Update::class => CommandHandler\Operator\SaveOperator::class,
@@ -455,5 +454,7 @@ return [
     TransferCommand\InspectionRequest\CreateFromGrant::class => CommandHandler\InspectionRequest\CreateFromGrant::class,
 
     // Domain - InspectionRequest
+    Command\InspectionRequest\SendInspectionRequest::class =>
+        CommandHandler\InspectionRequest\SendInspectionRequest::class,
     Command\InspectionRequest\CreateFromGrant::class  => CommandHandler\InspectionRequest\CreateFromGrant::class,
 ];
