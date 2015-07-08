@@ -111,7 +111,7 @@ final class CreateSnapshot extends AbstractCommandHandler
     protected function getDocumentCode(ApplicationEntity $application)
     {
         // All New application options
-        if ($application->isVariation()) {
+        if (!$application->isVariation()) {
             if ($application->isGoods()) {
                 return self::CODE_GV_APP;
             }
