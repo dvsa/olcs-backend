@@ -61,22 +61,24 @@ class TemplateRenderer
      * @param \Dvsa\Olcs\Email\Data\Message $message
      * @param string $template
      * @param array  $variables
-     * @param string $layout
+     * @param string|bool $layout
      */
     public function renderBody(\Dvsa\Olcs\Email\Data\Message $message, $template, $variables = [], $layout = null)
     {
-        if ($layout === null) {
-            $layout = $this->getDefaultLayout();
-        }
-
         $templateView = new \Zend\View\Model\ViewModel();
         $templateView->setTemplate($message->getLocale() .'/'. $template);
         $templateView->setVariables($variables);
 
-        $layoutView = new \Zend\View\Model\ViewModel();
-        $layoutView->setTemplate($layout);
-        $layoutView->setVariable('content', $this->getViewRenderer()->render($templateView));
-
-        $message->setBody($this->getViewRenderer()->render($layoutView));
+        if ($layout !== false) {
+            if ($layout === null) {
+                $layout = $this->getDefaultLayout();
+            }
+            $layoutView = new \Zend\View\Model\ViewModel();
+            $layoutView->setTemplate($layout);
+            $layoutView->setVariable('content', $this->getViewRenderer()->render($templateView));
+            $message->setBody($this->getViewRenderer()->render($layoutView));
+        } else {
+            $message->setBody($this->getViewRenderer()->render($templateView));
+        }
     }
 }

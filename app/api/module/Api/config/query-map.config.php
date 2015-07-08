@@ -210,6 +210,9 @@ return [
     // Licence Vehicle
     TransferQuery\LicenceVehicle\LicenceVehicle::class => QueryHandler\LicenceVehicle\LicenceVehicle::class,
 
+    // Inspection Request
+    TransferQuery\InspectionRequest\OperatingCentres::class => QueryHandler\InspectionRequest\OperatingCentres::class,
+
     // Opposition
     TransferQuery\Opposition\Opposition::class => QueryHandler\Opposition\Opposition::class,
     TransferQuery\Opposition\OppositionList::class => QueryHandler\Opposition\OppositionList::class,
