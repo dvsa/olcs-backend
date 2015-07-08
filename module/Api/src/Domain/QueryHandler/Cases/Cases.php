@@ -29,7 +29,7 @@ final class Cases extends AbstractQueryHandler
             [
                 'outcomes',
                 'categorys',
-                'appeals',
+                'appeal',
                 'stays',
                 'legacyOffences',
                 'transportManager',

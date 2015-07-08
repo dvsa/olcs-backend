@@ -137,7 +137,7 @@ class Cases extends AbstractCases
      */
     public function hasAppeal()
     {
-        return !($this->getAppeals()->isEmpty());
+        return !(empty($this->getAppeal()));
     }
 
     /**
