@@ -253,6 +253,9 @@ class Licence extends AbstractLicence
         $criteria->andWhere(
             $criteria->expr()->isNull('removalDate')
         );
+        $criteria->andWhere(
+            $criteria->expr()->neq('specifiedDate', null)
+        );
 
         return $this->getLicenceVehicles()->matching($criteria);
     }
