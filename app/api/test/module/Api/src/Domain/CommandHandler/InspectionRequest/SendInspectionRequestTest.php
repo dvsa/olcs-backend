@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Command\InspectionRequest\SendInspectionRequest as Cmd;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Email\Service\Client;
 use Dvsa\Olcs\Api\Domain\CommandHandler\InspectionRequest\SendInspectionRequest;
@@ -196,6 +197,9 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
 
     protected function mockAuthService()
     {
+        $mockContactDetails = m::mock(ContactDetails::class)->makePartial();
+        $mockContactDetails->setEmailAddress('terry@example.com');
+
         /** @var Team $mockTeam */
         $mockTeam = m::mock(Team::class)->makePartial();
         $mockTeam->setId(2);
@@ -204,8 +208,8 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
         $mockUser = m::mock(User::class)->makePartial();
         $mockUser->setId(1);
         $mockUser->setTeam($mockTeam);
-        $mockUser->setEmailAddress('terry@example.com');
         $mockUser->setLoginId('terry');
+        $mockUser->setContactDetails($mockContactDetails);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
