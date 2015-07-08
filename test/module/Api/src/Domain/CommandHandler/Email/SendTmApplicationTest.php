@@ -86,7 +86,8 @@ class SendTmApplicationTest extends CommandHandlerTestCase
                 'organisation' => 'ORGANISATION',
                 'reference' => 'LIC01/442',
                 'signInLink' => 'http://selfserve/'. $uriPart .'/442/transport-managers/details/75/edit-details/'
-            ]
+            ],
+            null
         );
 
         $this->mockedSmServices[Client::class]->shouldReceive('sendEmail')->once()->andReturnUsing(

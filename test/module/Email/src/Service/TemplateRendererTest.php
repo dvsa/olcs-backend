@@ -55,4 +55,27 @@ class TemplateRendererTest extends MockeryTestCase
 
         $this->assertSame('RENDER_LAYOUT', $message->getBody());
     }
+
+    public function testRenderBodyNoLayout()
+    {
+
+        $message = new \Dvsa\Olcs\Email\Data\Message('TO', 'SUBJECT');
+        $message->setLocale('LC');
+
+        $mockViewRenderer = m::mock(\Zend\View\Renderer\RendererInterface::class);
+        $this->assertSame($this->sut, $this->sut->setViewRenderer($mockViewRenderer));
+
+        $mockViewRenderer->shouldReceive('render')->once()->andReturnUsing(
+            function (\Zend\View\Model\ViewModel $model) {
+                $this->assertSame('LC/TEMPLATE', $model->getTemplate());
+                $this->assertSame(['var1', 'var2'], $model->getVariables()->getArrayCopy());
+
+                return 'RENDER_TEMPLATE';
+            }
+        );
+
+        $this->sut->renderBody($message, 'TEMPLATE', ['var1', 'var2'], false);
+
+        $this->assertSame('RENDER_TEMPLATE', $message->getBody());
+    }
 }
