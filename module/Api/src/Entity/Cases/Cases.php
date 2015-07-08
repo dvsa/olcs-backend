@@ -113,6 +113,32 @@ class Cases extends AbstractCases
 
         return true;
     }
+
+    /**
+     * Updates conviction note
+     *
+     * @param string $convictionNote
+     * @return bool
+     */
+    public function updateConvictionNote($convictionNote)
+    {
+        $this->setConvictionNote($convictionNote);
+
+        return true;
+    }
+
+    /**
+     * Updates prohibition note
+     *
+     * @param string $prohibitionNote
+     * @return bool
+     */
+    public function updateProhibitionNote($prohibitionNote)
+    {
+        $this->setProhibitionNote($prohibitionNote);
+
+        return true;
+    }
     
     /**
      * Checks a stay type exists
