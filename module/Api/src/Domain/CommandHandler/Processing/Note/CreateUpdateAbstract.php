@@ -60,12 +60,28 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
 
         if ($command->getCase() !== null) {
 
+            /** @var Entity\Cases\Cases $case */
             $case = $this->getRepo()->getReference(
                 Entity\Cases\Cases::class,
                 $command->getCase()
             );
 
             $entity->setCase($case);
+
+            // an additional bit of functionality required to satisfy the business rule...
+            // We must also set the licence if the case is a licence case...
+            // This is because the case notes list should include all licence notes.
+            if ($case->getLicence()) {
+                $entity->setLicence($case->getLicence());
+            }
+
+            // an additional bit of functionality required to satisfy the business rule...
+            // We must also set the licence if the case is a licence case...
+            // This is because the case notes list should include all licence notes.
+            if ($case->getTransportManager()) {
+                $entity->setTransportManager($case->getTransportManager());
+            }
+
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_CASE));
         }
 
