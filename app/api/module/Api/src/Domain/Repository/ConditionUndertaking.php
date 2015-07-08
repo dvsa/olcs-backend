@@ -63,6 +63,33 @@ class ConditionUndertaking extends AbstractRepository
     }
 
     /**
+     * Fetch a list for a licence, filtered to include only not fulfilled and not draft
+     *
+     * @param int $licenceId
+     *
+     * @return array of Entity
+     */
+    public function fetchListForLicence($licenceId)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('attachedTo')
+            ->with('conditionType')
+            ->with('operatingCentre', 'oc')
+            ->with('oc.address');
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->setParameter('licence', $licenceId);
+        $qb->andWhere($qb->expr()->eq($this->alias . '.isDraft', '0'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.isFulfilled', '0'));
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Apply List Filters
      * @param QueryBuilder $qb
      * @param QueryInterface $query

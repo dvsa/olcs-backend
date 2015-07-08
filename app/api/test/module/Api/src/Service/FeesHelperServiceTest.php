@@ -87,7 +87,6 @@ class FeesHelperServiceTest extends MockeryTestCase
 
     public function testGetOutstandingFeesForApplication()
     {
-        // $this->markTestIncomplete();
         $applicationId = 69;
         $licenceId = 7;
         $applicationFeeTypeId = 123;
@@ -168,6 +167,49 @@ class FeesHelperServiceTest extends MockeryTestCase
         $result = $this->sut->getOutstandingFeesForApplication($applicationId);
 
         $this->assertEquals($fees, $result);
+    }
+
+    public function testGetOutstandingFeesForBrandNewApplication()
+    {
+        // $this->markTestIncomplete();
+        $applicationId = 69;
+        $licenceId = 7;
+
+        // mocks
+        $appFeeTypeFeeType = $this->refData(FeeTypeEntity::FEE_TYPE_APP);
+        $interimFeeTypeFeeType = $this->refData(FeeTypeEntity::FEE_TYPE_GRANTINT);
+        $application = m::mock(ApplicationEntity::class)
+            ->makePartial()
+            ->setId($applicationId)
+            ->setGoodsOrPsv(null)
+            ->setLicenceType(null);
+        $trafficArea = m::mock(TrafficAreaEntity::class)
+            ->makePartial()
+            ->setId(TrafficAreaEntity::NORTH_EASTERN_TRAFFIC_AREA_CODE);
+        $licence = m::mock(LicenceEntity::class)
+            ->makePartial()
+            ->setId($licenceId)
+            ->setTrafficArea($trafficArea);
+        $application->setLicence($licence);
+
+        // expectations
+        $this->applicationRepo
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($applicationId)
+            ->andReturn($application);
+
+        $this->feeTypeRepo
+            ->shouldReceive('getRefdataReference')
+            ->with(FeeTypeEntity::FEE_TYPE_APP)
+            ->andReturn($appFeeTypeFeeType)
+            ->shouldReceive('getRefdataReference')
+            ->with(FeeTypeEntity::FEE_TYPE_GRANTINT)
+            ->andReturn($interimFeeTypeFeeType);
+
+        $result = $this->sut->getOutstandingFeesForApplication($applicationId);
+
+        $this->assertEquals([], $result);
     }
 
     /**

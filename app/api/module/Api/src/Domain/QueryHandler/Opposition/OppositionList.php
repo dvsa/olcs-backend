@@ -22,8 +22,9 @@ final class OppositionList extends AbstractQueryHandler
             'result' => $this->resultList(
                 $repo->fetchList($query, Query::HYDRATE_OBJECT),
                 [
-                    'application',
-                    'case',
+                    'case' => [
+                        'application'
+                    ],
                     'grounds',
                     'opposer' => [
                         'contactDetails' => [
