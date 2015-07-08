@@ -102,10 +102,10 @@ class CreateAppealTest extends CommandHandlerTestCase
             'appeal_o_dis'
         ];
 
-        $mockAppeal = m::mock(Apppeal::class);
+        $mockAppeal = m::mock(Appeal::class);
         $mockCase = m::mock(Cases::class)->makePartial();
-        $mockCase->shouldReceive('getAppeals')
-            ->andReturn(new ArrayCollection([$mockAppeal]));
+        $mockCase->shouldReceive('getAppeal')
+            ->andReturn($mockAppeal);
 
         $this->references = [
             Cases::class => [

@@ -328,11 +328,11 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Appeal
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var \Dvsa\Olcs\Api\Entity\Cases\Appeal
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Appeal", mappedBy="case")
+     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Appeal", mappedBy="case")
      */
-    protected $appeals;
+    protected $appeal;
 
     /**
      * Complaint
@@ -458,7 +458,6 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     {
         $this->outcomes = new ArrayCollection();
         $this->categorys = new ArrayCollection();
-        $this->appeals = new ArrayCollection();
         $this->complaints = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
@@ -1194,61 +1193,24 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the appeal
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $appeals
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Appeal $appeal
      * @return Cases
      */
-    public function setAppeals($appeals)
+    public function setAppeal($appeal)
     {
-        $this->appeals = $appeals;
+        $this->appeal = $appeal;
 
         return $this;
     }
 
     /**
-     * Get the appeals
+     * Get the appeal
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Dvsa\Olcs\Api\Entity\Cases\Appeal
      */
-    public function getAppeals()
+    public function getAppeal()
     {
-        return $this->appeals;
-    }
-
-    /**
-     * Add a appeals
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $appeals
-     * @return Cases
-     */
-    public function addAppeals($appeals)
-    {
-        if ($appeals instanceof ArrayCollection) {
-            $this->appeals = new ArrayCollection(
-                array_merge(
-                    $this->appeals->toArray(),
-                    $appeals->toArray()
-                )
-            );
-        } elseif (!$this->appeals->contains($appeals)) {
-            $this->appeals->add($appeals);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a appeals
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $appeals
-     * @return Cases
-     */
-    public function removeAppeals($appeals)
-    {
-        if ($this->appeals->contains($appeals)) {
-            $this->appeals->removeElement($appeals);
-        }
-
-        return $this;
+        return $this->appeal;
     }
 
     /**
