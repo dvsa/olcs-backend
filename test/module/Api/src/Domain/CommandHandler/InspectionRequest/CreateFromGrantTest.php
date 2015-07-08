@@ -5,7 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic\Licence;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\InspectionRequest;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
@@ -19,9 +19,9 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest as InspectionRequestEntity;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
 use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Domain\Command\InspectionRequest\SendInspectionRequest as SendInspectionRequestCmd;
 
 /**
  * Inspection Request / CreateFromGrant
@@ -124,6 +124,14 @@ class CreateFromGrantTest extends CommandHandlerTestCase
                     $inspectionRequest = $lic;
                 }
             );
+
+        $this->expectedSideEffect(
+            SendInspectionRequestCmd::class,
+            [
+                'id' => 111
+            ],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 

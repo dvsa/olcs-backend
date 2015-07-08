@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntit
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\InspectionRequest\SendInspectionRequest as SendInspectionRequestCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
@@ -41,6 +42,13 @@ final class CreateFromGrant extends AbstractCommandHandler implements Transactio
 
         $result->addId('inspectionRequest', $inspectionRequest->getId());
         $result->addMessage('Inspection request created successfully');
+
+        $sendInspectionRequest = SendInspectionRequestCmd::create(
+            [
+                'id' => $inspectionRequest->getId()
+            ]
+        );
+        $result->merge($this->getCommandHandler()->handleCommand($sendInspectionRequest));
 
         return $result;
     }
