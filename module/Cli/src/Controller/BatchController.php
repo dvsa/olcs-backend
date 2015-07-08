@@ -21,7 +21,7 @@ class BatchController extends AbstractConsoleController
     /**
      * Process LicenceStatusRules
      *
-     * @return void
+     * @return ConsoleModel
      */
     public function licenceStatusRulesAction()
     {
@@ -30,6 +30,20 @@ class BatchController extends AbstractConsoleController
                 [
                     \Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\ProcessToRevokeCurtailSuspend::create([]),
                     \Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\ProcessToValid::create([])
+                ]
+            )
+        );
+    }
+
+    /**
+     * @return ConsoleModel
+     */
+    public function enqueueCompaniesHouseCompareAction()
+    {
+       return $this->handleExitStatus(
+            $this->handleCommand(
+                [
+                    \Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\EnqueueOrganisations::create([]),
                 ]
             )
         );

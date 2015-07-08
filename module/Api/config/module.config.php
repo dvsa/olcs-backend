@@ -180,6 +180,7 @@ return [
             'PrivateHireLicence' => RepositoryFactory::class,
             'ContinuationDetail' => RepositoryFactory::class,
             'CompaniesHouseAlert' => RepositoryFactory::class,
+            'Queue' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

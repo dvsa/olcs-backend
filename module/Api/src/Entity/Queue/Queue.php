@@ -19,5 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Queue extends AbstractQueue
 {
-
+    // Message types
+    const TYPE_COMPANIES_HOUSE_INITIAL = 'que_typ_ch_initial';
+    const TYPE_COMPANIES_HOUSE_COMPARE = 'que_typ_ch_compare';
 }
