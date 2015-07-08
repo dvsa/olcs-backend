@@ -54,8 +54,7 @@ class Cases extends AbstractCases
         $transportManager,
         $ecmsNo,
         $description
-    )
-    {
+    ) {
         parent::__construct();
 
         $this->setOpenDate($openDate);
@@ -83,8 +82,7 @@ class Cases extends AbstractCases
         $outcomes,
         $ecmsNo,
         $description
-    )
-    {
+    ) {
         $caseTypeModifyAllowed = [self::IMPOUNDING_CASE_TYPE, self::LICENCE_CASE_TYPE];
 
         //if case type is allowed to be modified, make sure it's modified to something allowable
@@ -139,7 +137,7 @@ class Cases extends AbstractCases
 
         return true;
     }
-    
+
     /**
      * Checks a stay type exists
      * @param RefData $stayType
