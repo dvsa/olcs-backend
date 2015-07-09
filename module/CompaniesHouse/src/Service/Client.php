@@ -114,11 +114,36 @@ class Client
     }
 
     /**
-     * @return boolean
+     * @param string $companyNumber
+     * @param boolean $includeOfficers include officer_summary which was there
+     * by default in earlier versions of the api, however we now have to make a
+     * separate REST call to include it :(
+     * @link http://forum.aws.chdev.org/t/company-profile/136
+     *
+     * @return array
      */
-    public function getCompanyProfile($companyNumber)
+    public function getCompanyProfile($companyNumber, $includeOfficers = true)
     {
-        $uri = $this->getBaseUri() . '/company/' . $companyNumber;
+        // @TODO combine officer data with default response
+
+        return $this->getData('/company/' . $companyNumber);
+    }
+
+    /**
+     * @param string $companyNumber
+     * @return array
+     */
+    public function getOfficers($companyNumber)
+    {
+        return $this->getData('/company/' . $companyNumber . '/officers');
+    }
+
+    /**
+     * @param string $resourcePath to be appended to baseUri
+     * @return array
+     */
+    protected function getData($resourcePath) {
+        $uri = $this->getBaseUri() . $resourcePath;
 
         $this->getHttpClient()->getRequest()
             ->setUri($uri)
@@ -127,11 +152,7 @@ class Client
         $response = $this->getHttpClient()->send();
 
         $jsonResponse = json_decode($response->getBody(), true);
-        // if (isset($jsonResponse->errorMessage)) {
-        //     $message = $jsonResponse->errorMessage;
-        //     throw new \Exception($message);
-        // }
+
         return $jsonResponse;
     }
-
 }
