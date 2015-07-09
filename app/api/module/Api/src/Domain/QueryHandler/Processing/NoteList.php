@@ -20,14 +20,14 @@ class NoteList extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        /* @var NoteListQuery $query */
+        /* @var \Dvsa\Olcs\Transfer\Query\Processing\NoteList $query */
 
         // The case / licence business logic.
         if (null !== $query->getCase()) {
 
-            /** @var \Dvsa\Olcs\Transfer\Query\Processing\NoteList $query */
             $caseId = $query->getCase();
 
+            /* @var \Dvsa\Olcs\Api\Entity\Cases\Cases $case */
             $case = $this->getRepo('Cases')->fetchById($caseId);
 
             if ($case->getLicence() !== null) {
@@ -43,8 +43,8 @@ class NoteList extends AbstractQueryHandler
         // The bus reg business logic.
         if (null !== $query->getBusReg()) {
 
-            /** @var \Dvsa\Olcs\Transfer\Query\Processing\NoteList $query */
             $busRegId = $query->getBusReg();
+
             /* @var \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg */
             $busReg = $this->getRepo('Bus')->fetchById($busRegId);
 
