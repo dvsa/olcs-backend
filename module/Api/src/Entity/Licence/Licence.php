@@ -389,4 +389,14 @@ class Licence extends AbstractLicence
         );
 
     }
+
+    public function getOcForInspectionRequest()
+    {
+        $list = [];
+        $licenceOperatingCentres = $this->getOperatingCentres();
+        foreach ($licenceOperatingCentres as $licenceOperatingCentre) {
+            $list[] = $licenceOperatingCentre->getOperatingCentre();
+        }
+        return $list;
+    }
 }

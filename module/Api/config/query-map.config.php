@@ -44,6 +44,7 @@ return [
     TransferQuery\Application\VehicleDeclaration::class => QueryHandler\Application\VehicleDeclaration::class,
     TransferQuery\Application\Review::class => QueryHandler\Application\Review::class,
     TransferQuery\Application\Overview::class => QueryHandler\Application\Overview::class,
+    TransferQuery\Application\EnforcementArea::class => QueryHandler\Application\EnforcementArea::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -57,6 +58,7 @@ return [
     TransferQuery\Licence\OtherActiveLicences::class => QueryHandler\Licence\OtherActiveLicences::class,
     TransferQuery\Licence\LicenceDecisions::class => QueryHandler\Licence\LicenceDecisions::class,
     TransferQuery\Licence\Overview::class => QueryHandler\Licence\Overview::class,
+    TransferQuery\Licence\EnforcementArea::class => QueryHandler\Licence\EnforcementArea::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
@@ -227,4 +229,9 @@ return [
 
     // Inspection Request
     TransferQuery\InspectionRequest\OperatingCentres::class => QueryHandler\InspectionRequest\OperatingCentres::class,
+    TransferQuery\InspectionRequest\ApplicationInspectionRequestList::class =>
+        QueryHandler\InspectionRequest\ApplicationInspectionRequestList::class,
+    TransferQuery\InspectionRequest\LicenceInspectionRequestList::class =>
+        QueryHandler\InspectionRequest\LicenceInspectionRequestList::class,
+    TransferQuery\InspectionRequest\InspectionRequest::class => QueryHandler\InspectionRequest\InspectionRequest::class,
 ];

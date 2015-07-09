@@ -447,6 +447,7 @@ return [
     // Transfer - InspectionRequest
     TransferCommand\InspectionRequest\Create::class => CommandHandler\InspectionRequest\Create::class,
     TransferCommand\InspectionRequest\Update::class => CommandHandler\InspectionRequest\Update::class,
+    TransferCommand\InspectionRequest\Delete::class  => CommandHandler\InspectionRequest\Delete::class,
     TransferCommand\InspectionRequest\CreateFromGrant::class => CommandHandler\InspectionRequest\CreateFromGrant::class,
 
     // Domain - InspectionRequest
