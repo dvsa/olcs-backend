@@ -46,10 +46,8 @@ final class InitialLoad extends AbstractCommandHandler
         $apiResult = $this->api->getCompanyProfile($companyNumber, true);
         $data = $this->normaliseProfileData($apiResult);
 
-        $company = new CompanyEntity();
+        $company = new CompanyEntity($data);
         $rows = $this->getRepo()->save($company);
-
-        // @todo populate entity from array
 
         $result = new Result();
         $result
