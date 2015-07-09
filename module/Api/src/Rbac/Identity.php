@@ -36,6 +36,7 @@ class Identity implements IdentityInterface
         10 => ['partner-user'],
         11 => ['local-authority-admin'],
         12 => ['local-authority-user'],
+        13588 => ['internal-admin', 'operator-admin'],
     ];
 
     public function setUser(User $user)
@@ -56,7 +57,7 @@ class Identity implements IdentityInterface
     public function getRoles()
     {
         if ($this->roles === null) {
-            /**
+            /*
             $this->roles = [];
             $userRoles = $this->user->getUserRoles();
 

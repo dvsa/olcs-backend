@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Domain\Command;
+use Dvsa\Olcs\Transfer\Command;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
@@ -22,9 +22,9 @@ final class ProcessToRevokeCurtailSuspend extends AbstractCommandHandler impleme
     protected $repoServiceName = 'LicenceStatusRule';
 
     protected $commandMap = [
-        \Dvsa\Olcs\Api\Entity\Licence\Licence::LICENCE_STATUS_CURTAILED => Command\Licence\Curtail::class,
-        \Dvsa\Olcs\Api\Entity\Licence\Licence::LICENCE_STATUS_SUSPENDED => Command\Licence\Suspend::class,
-        \Dvsa\Olcs\Api\Entity\Licence\Licence::LICENCE_STATUS_REVOKED => Command\Licence\Revoke::class
+        \Dvsa\Olcs\Api\Entity\Licence\Licence::LICENCE_STATUS_CURTAILED => Command\Licence\CurtailLicence::class,
+        \Dvsa\Olcs\Api\Entity\Licence\Licence::LICENCE_STATUS_SUSPENDED => Command\Licence\SuspendLicence::class,
+        \Dvsa\Olcs\Api\Entity\Licence\Licence::LICENCE_STATUS_REVOKED => Command\Licence\RevokeLicence::class
     ];
 
     public function handleCommand(CommandInterface $command)
@@ -60,7 +60,12 @@ final class ProcessToRevokeCurtailSuspend extends AbstractCommandHandler impleme
             $commandClass = $this->commandMap[$licenceStatusRule->getLicenceStatus()->getId()];
             $result->merge(
                 $this->handleSideEffect(
-                    $commandClass::create(['id' => $licenceStatusRule->getLicence()->getId()])
+                    $commandClass::create(
+                        [
+                            'id' => $licenceStatusRule->getLicence()->getId(),
+                            'deleteLicenceStatusRules' => false
+                        ]
+                    )
                 )
             );
 

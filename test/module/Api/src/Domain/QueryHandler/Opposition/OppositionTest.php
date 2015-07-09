@@ -34,7 +34,7 @@ class OppositionTest extends QueryHandlerTestCase
 
         $mockResult = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
 
-        $this->repoMap['Opposition']->shouldReceive('fetchUsingCaseId')
+        $this->repoMap['Opposition']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($mockResult);
 

@@ -39,7 +39,6 @@ return [
     TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
     TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
     TransferQuery\Application\TransportManagers::class => QueryHandler\Application\TransportManagers::class,
-    TransferQuery\Application\OutstandingFees::class => QueryHandler\Application\OutstandingFees::class,
     TransferQuery\Application\GoodsVehicles::class => QueryHandler\Application\GoodsVehicles::class,
     TransferQuery\Application\VehicleDeclaration::class => QueryHandler\Application\VehicleDeclaration::class,
     TransferQuery\Application\Review::class => QueryHandler\Application\Review::class,
@@ -59,6 +58,7 @@ return [
     TransferQuery\Licence\LicenceDecisions::class => QueryHandler\Licence\LicenceDecisions::class,
     TransferQuery\Licence\Overview::class => QueryHandler\Licence\Overview::class,
     TransferQuery\Licence\EnforcementArea::class => QueryHandler\Licence\EnforcementArea::class,
+    TransferQuery\Licence\ConditionUndertaking::class => QueryHandler\Licence\ConditionUndertaking::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
@@ -140,6 +140,8 @@ return [
     // Bus
     TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
     TransferQuery\Bus\ShortNoticeByBusReg::class => QueryHandler\Bus\ShortNoticeByBusReg::class,
+    TransferQuery\Bus\RegistrationHistoryList::class => QueryHandler\Bus\RegistrationHistoryList::class,
+    TransferQuery\Bus\ByRouteNo::class => QueryHandler\Bus\ByRouteNo::class,
 
     // Trailer
     TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,

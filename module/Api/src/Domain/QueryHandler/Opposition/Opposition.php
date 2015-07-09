@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Opposition;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -15,6 +14,23 @@ final class Opposition extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->result($this->getRepo()->fetchUsingCaseId($query));
+        return $this->result(
+            $this->getRepo()->fetchUsingId($query),
+            [
+                'case' => [
+                    'application'
+                ],
+                'opposer' => [
+                    'opposerType',
+                    'contactDetails' => [
+                        'address' => ['countryCode'],
+                        'person',
+                        'phoneContacts' => ['phoneContactType']
+                    ]
+                ],
+                'grounds',
+                'operatingCentres',
+            ]
+        );
     }
 }

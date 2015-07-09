@@ -103,6 +103,8 @@ class FinancialEvidence extends AbstractQueryHandler
                 )
                 &&
                 $app->getId() !== $application->getId()
+                &&
+                !is_null($app->getGoodsOrPsv())
             ) {
                 $type = null;
                 if ($app->getLicenceType()) {

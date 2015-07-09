@@ -74,6 +74,38 @@ class CasesEntityTest extends EntityTester
         return true;
     }
 
+    /**
+     * Tests updateConvictionNote
+     */
+    public function testUpdateConvictionNote()
+    {
+        $convictionNote = 'conviction note';
+
+        $this->entity->updateConvictionNote(
+            $convictionNote
+        );
+
+        $this->assertEquals($convictionNote, $this->entity->getConvictionNote());
+
+        return true;
+    }
+
+    /**
+     * Tests updateProhibitionNote
+     */
+    public function testUpdateProhibitionNote()
+    {
+        $prohibitionNote = 'prohibition note';
+
+        $this->entity->updateProhibitionNote(
+            $prohibitionNote
+        );
+
+        $this->assertEquals($prohibitionNote, $this->entity->getProhibitionNote());
+
+        return true;
+    }
+
     public function testIsOpen()
     {
         $sut = $this->instantiate($this->entityClass);

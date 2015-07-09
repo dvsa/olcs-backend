@@ -25,6 +25,8 @@ final class Curtail extends AbstractCommandHandler implements TransactionedInter
 
     public function handleCommand(CommandInterface $command)
     {
+        /* @var $command \Dvsa\Olcs\Transfer\Command\Licence\CurtailLicence */
+
         /* @var $licence Licence */
         $licence = $this->getRepo()->fetchUsingId($command);
         $licence->setStatus($this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_CURTAILED));
@@ -34,15 +36,17 @@ final class Curtail extends AbstractCommandHandler implements TransactionedInter
 
         $result = new Result();
 
-        $result->merge(
-            $this->handleSideEffect(
-                RemoveLicenceStatusRulesForLicence::create(
-                    [
-                        'licence' => $command->getId()
-                    ]
+        if ($command->getDeleteLicenceStatusRules()) {
+            $result->merge(
+                $this->handleSideEffect(
+                    RemoveLicenceStatusRulesForLicence::create(
+                        [
+                            'licence' => $licence
+                        ]
+                    )
                 )
-            )
-        );
+            );
+        }
 
         $result->addMessage("Licence ID {$licence->getId()} curtailed");
 

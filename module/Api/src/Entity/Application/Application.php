@@ -2,11 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Entity\Application;
 
-use Doctrine\ORM\Mapping as ORM;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Zend\Filter\Word\CamelCaseToUnderscore;
 
 /**
  * Application Entity
@@ -431,7 +432,9 @@ class Application extends AbstractApplication
      */
     public function isGoods()
     {
-        return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
+        if ($this->getGoodsOrPsv()) {
+            return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
+        }
     }
 
     /**
@@ -439,7 +442,9 @@ class Application extends AbstractApplication
      */
     public function isPsv()
     {
-        return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_PSV;
+        if ($this->getGoodsOrPsv()) {
+            return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_PSV;
+        }
     }
 
     /**
@@ -447,7 +452,9 @@ class Application extends AbstractApplication
      */
     public function isSpecialRestricted()
     {
-        return $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED;
+        if ($this->getLicenceType()) {
+            return $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED;
+        }
     }
 
     /**
@@ -538,5 +545,25 @@ class Application extends AbstractApplication
         }
 
         return array_values($list);
+    }
+
+    public function getVariationCompletion()
+    {
+        if (!$this->isVariation()) {
+            return null;
+        }
+
+        $applicationCompletion = $this->getApplicationCompletion()->serialize();
+
+        $completions = [];
+        $converter = new CamelCaseToUnderscore();
+        foreach ($applicationCompletion as $key => $value) {
+            if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches)) {
+                $section = strtolower($converter->filter($matches[1]));
+                $completions[$section] = (int)$value;
+            }
+        }
+
+        return $completions;
     }
 }

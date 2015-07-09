@@ -39,7 +39,10 @@ final class CasesWithOppositionDates extends AbstractQueryHandler
                         'criteria' => $criteria,
                         'publication'
                     )
-                )
+                ),
+                'licence' => [
+                    'goodsOrPsv'
+                ]
             ],
             [
                 'oooDate' => $this->calculateOoo($case),

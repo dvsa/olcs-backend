@@ -39,7 +39,6 @@ class LicenceTest extends QueryHandlerTestCase
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->shouldReceive('serialize')
-            ->with([])
             ->andReturn(['foo' => 'bar']);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
