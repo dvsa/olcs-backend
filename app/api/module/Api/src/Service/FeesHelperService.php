@@ -121,7 +121,7 @@ class FeesHelperService implements FactoryInterface
             $application->getGoodsOrPsv(),
             $application->getLicenceType(),
             $applicationDate,
-            $application->getLicence()->getTrafficArea()
+            $application->getFeeTrafficAreaId()
         );
 
         return $this->feeRepo->fetchLatestFeeByTypeStatusesAndApplicationId(
