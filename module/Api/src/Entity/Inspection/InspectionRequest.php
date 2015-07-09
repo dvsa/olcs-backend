@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Inspection;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * InspectionRequest Entity
@@ -71,7 +72,7 @@ class InspectionRequest extends AbstractInspectionRequest
         }
         if (!$dueDate) {
             $this->setDueDate(
-                (new \DateTime())->add(new \DateInterval('P' . $duePeriod . 'M'))
+                (new DateTime())->add(new \DateInterval('P' . $duePeriod . 'M'))
             );
         }
         $this->setResultType($resultType);
