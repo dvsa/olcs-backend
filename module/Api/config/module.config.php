@@ -172,6 +172,7 @@ return [
             'SubmissionAction' => RepositoryFactory::class,
             'TrafficArea' => RepositoryFactory::class,
             'InspectionRequest' => RepositoryFactory::class,
+            'ChangeOfEntity' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

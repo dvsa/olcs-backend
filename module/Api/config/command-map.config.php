@@ -477,4 +477,12 @@ return [
     Command\InspectionRequest\SendInspectionRequest::class =>
         CommandHandler\InspectionRequest\SendInspectionRequest::class,
     Command\InspectionRequest\CreateFromGrant::class  => CommandHandler\InspectionRequest\CreateFromGrant::class,
+
+    // Transfer - ChangeOfEntity
+    TransferCommand\ChangeOfEntity\CreateChangeOfEntity::class =>
+        CommandHandler\ChangeOfEntity\CreateChangeOfEntity::class,
+    TransferCommand\ChangeOfEntity\UpdateChangeOfEntity::class =>
+        CommandHandler\ChangeOfEntity\UpdateChangeOfEntity::class,
+    TransferCommand\ChangeOfEntity\DeleteChangeOfEntity::class =>
+        CommandHandler\ChangeOfEntity\DeleteChangeOfEntity::class,
 ];
