@@ -152,7 +152,7 @@ abstract class AbstractIrfoPermitStock implements BundleSerializableInterface, J
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="void_return_date", nullable=true)
+     * @ORM\Column(type="datetime", name="void_return_date", nullable=true)
      */
     protected $voidReturnDate;
 

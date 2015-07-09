@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -195,6 +196,14 @@ class Licence extends AbstractLicence
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('isVariation', true))
+            ->andWhere(
+                Criteria::expr()->in(
+                    'status',
+                    [
+                        Application::APPLICATION_STATUS_UNDER_CONSIDERATION
+                    ]
+                )
+            )
             ->andWhere(Criteria::expr()->eq('licence', $licence));
 
         return $this->getApplications()->matching($criteria)->current();

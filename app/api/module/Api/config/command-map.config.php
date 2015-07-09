@@ -73,6 +73,7 @@ return [
     TransferCommand\Bus\UpdateTaAuthority::class => CommandHandler\Bus\UpdateTaAuthority::class,
     TransferCommand\Bus\UpdateServiceDetails::class => CommandHandler\Bus\UpdateServiceDetails::class,
     TransferCommand\Bus\UpdateShortNotice::class => CommandHandler\Bus\UpdateShortNotice::class,
+    TransferCommand\Bus\DeleteBus::class => CommandHandler\Bus\DeleteBus::class,
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
@@ -172,6 +173,10 @@ return [
     TransferCommand\Cases\CreateCase::class => CommandHandler\Cases\CreateCase::class,
     TransferCommand\Cases\UpdateCase::class => CommandHandler\Cases\UpdateCase::class,
     TransferCommand\Cases\DeleteCase::class => CommandHandler\Cases\DeleteCase::class,
+
+    //Transfer - Cases (note fields)
+    TransferCommand\Cases\UpdateConvictionNote::class => CommandHandler\Cases\UpdateConvictionNote::class,
+    TransferCommand\Cases\UpdateProhibitionNote::class => CommandHandler\Cases\UpdateProhibitionNote::class,
 
     // Transfer - Annual Test History
     TransferCommand\Cases\UpdateAnnualTestHistory::class => CommandHandler\Cases\UpdateAnnualTestHistory::class,

@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument as Cmd;
@@ -75,7 +76,9 @@ class DispatchDocumentTest extends CommandHandlerTestCase
 
         /** @var User $user */
         $user = m::mock(User::class)->makePartial();
-        $user->setEmailAddress('foo@bar.com');
+        $contactDetails = m::mock(ContactDetails::class)->makePartial();
+        $contactDetails->setEmailAddress('foo@bar.com');
+        $user->setContactDetails($contactDetails);
 
         /** @var OrganisationUser $orgUser */
         $orgUser = m::mock(OrganisationUser::class)->makePartial();
@@ -185,6 +188,8 @@ class DispatchDocumentTest extends CommandHandlerTestCase
 
         /** @var User $user */
         $user = m::mock(User::class)->makePartial();
+        $contactDetails = m::mock(ContactDetails::class)->makePartial();
+        $user->setContactDetails($contactDetails);
 
         /** @var OrganisationUser $orgUser */
         $orgUser = m::mock(OrganisationUser::class)->makePartial();

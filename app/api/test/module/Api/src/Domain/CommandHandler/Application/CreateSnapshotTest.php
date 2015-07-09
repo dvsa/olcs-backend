@@ -180,7 +180,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
     {
         return [
             [
-                'isVariation' => true,
+                'isVariation' => false,
                 'isGoods' => true,
                 'isRealUpgrade' => true,
                 'isSpecialRestricted' => false,
@@ -191,7 +191,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
                 'isExternal' => false,
             ],
             [
-                'isVariation' => true,
+                'isVariation' => false,
                 'isGoods' => false,
                 'isRealUpgrade' => true,
                 'isSpecialRestricted' => true,
@@ -202,7 +202,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
                 'isExternal' => false,
             ],
             [
-                'isVariation' => true,
+                'isVariation' => false,
                 'isGoods' => false,
                 'isRealUpgrade' => true,
                 'isSpecialRestricted' => false,
@@ -213,7 +213,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
                 'isExternal' => false,
             ],
             [
-                'isVariation' => false,
+                'isVariation' => true,
                 'isGoods' => true,
                 'isRealUpgrade' => true,
                 'isSpecialRestricted' => false,
@@ -224,7 +224,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
                 'isExternal' => false,
             ],
             [
-                'isVariation' => false,
+                'isVariation' => true,
                 'isGoods' => true,
                 'isRealUpgrade' => false,
                 'isSpecialRestricted' => false,
@@ -235,7 +235,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
                 'isExternal' => false,
             ],
             [
-                'isVariation' => false,
+                'isVariation' => true,
                 'isGoods' => false,
                 'isRealUpgrade' => true,
                 'isSpecialRestricted' => false,
@@ -246,7 +246,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
                 'isExternal' => false,
             ],
             [
-                'isVariation' => false,
+                'isVariation' => true,
                 'isGoods' => false,
                 'isRealUpgrade' => false,
                 'isSpecialRestricted' => false,
@@ -257,7 +257,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
                 'isExternal' => false,
             ],
             [
-                'isVariation' => true,
+                'isVariation' => false,
                 'isGoods' => true,
                 'isRealUpgrade' => true,
                 'isSpecialRestricted' => false,
@@ -268,7 +268,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
                 'isExternal' => true,
             ],
             [
-                'isVariation' => true,
+                'isVariation' => false,
                 'isGoods' => true,
                 'isRealUpgrade' => true,
                 'isSpecialRestricted' => false,
@@ -279,7 +279,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
                 'isExternal' => false,
             ],
             [
-                'isVariation' => true,
+                'isVariation' => false,
                 'isGoods' => true,
                 'isRealUpgrade' => true,
                 'isSpecialRestricted' => false,
@@ -290,7 +290,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
                 'isExternal' => false,
             ],
             [
-                'isVariation' => true,
+                'isVariation' => false,
                 'isGoods' => true,
                 'isRealUpgrade' => true,
                 'isSpecialRestricted' => false,

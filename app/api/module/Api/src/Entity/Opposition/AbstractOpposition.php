@@ -20,12 +20,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="opposition",
  *    indexes={
- *        @ORM\Index(name="ix_opposition_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_opposition_opposer_id", columns={"opposer_id"}),
  *        @ORM\Index(name="ix_opposition_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_opposition_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_opposition_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_opposition_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_opposition_opposition_type", columns={"opposition_type"}),
  *        @ORM\Index(name="ix_opposition_is_valid", columns={"is_valid"}),
  *        @ORM\Index(name="ix_opposition_status", columns={"status"})
@@ -38,20 +36,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 abstract class AbstractOpposition implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
-
-    /**
-     * Application
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Application\Application
-     *
-     * @ORM\ManyToOne(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\Application",
-     *     fetch="LAZY",
-     *     inversedBy="oppositions"
-     * )
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
-     */
-    protected $application;
 
     /**
      * Case
@@ -205,16 +189,6 @@ abstract class AbstractOpposition implements BundleSerializableInterface, JsonSe
     protected $lastModifiedOn;
 
     /**
-     * Licence
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
-     */
-    protected $licence;
-
-    /**
      * Notes
      *
      * @var string
@@ -346,29 +320,6 @@ abstract class AbstractOpposition implements BundleSerializableInterface, JsonSe
         $this->grounds = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
         $this->documents = new ArrayCollection();
-    }
-
-    /**
-     * Set the application
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
-     * @return Opposition
-     */
-    public function setApplication($application)
-    {
-        $this->application = $application;
-
-        return $this;
-    }
-
-    /**
-     * Get the application
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Application\Application
-     */
-    public function getApplication()
-    {
-        return $this->application;
     }
 
     /**
@@ -728,29 +679,6 @@ abstract class AbstractOpposition implements BundleSerializableInterface, JsonSe
     public function getLastModifiedOn()
     {
         return $this->lastModifiedOn;
-    }
-
-    /**
-     * Set the licence
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
-     * @return Opposition
-     */
-    public function setLicence($licence)
-    {
-        $this->licence = $licence;
-
-        return $this;
-    }
-
-    /**
-     * Get the licence
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Licence\Licence
-     */
-    public function getLicence()
-    {
-        return $this->licence;
     }
 
     /**

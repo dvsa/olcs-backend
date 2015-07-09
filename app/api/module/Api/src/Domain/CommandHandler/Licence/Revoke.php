@@ -37,13 +37,13 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
         $licence->setRevokedDate(new \DateTime());
 
         if ($licence->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE) {
-            $command = CeaseGoodsDiscs::create(
+            $commandCeaseDiscs = CeaseGoodsDiscs::create(
                 [
                     'licenceVehicles' => $licence->getLicenceVehicles()
                 ]
             );
         } else {
-            $command = CeasePsvDiscs::create(
+            $commandCeaseDiscs = CeasePsvDiscs::create(
                 [
                     'discs' => $licence->getPsvDiscs()
                 ]
@@ -51,13 +51,13 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
         }
 
         $result = new Result();
-        $result->merge($this->handleSideEffect($command));
+        $result->merge($this->handleSideEffect($commandCeaseDiscs));
 
         $result->merge(
             $this->handleSideEffect(
                 RemoveLicenceVehicle::create(
                     [
-                        'licence' => $licence->getLicenceVehicles()
+                        'licenceVehicles' => $licence->getLicenceVehicles()
                     ]
                 )
             )
@@ -73,15 +73,17 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
             )
         );
 
-        $result->merge(
-            $this->handleSideEffect(
-                RemoveLicenceStatusRulesForLicence::create(
-                    [
+        if ($command->getDeleteLicenceStatusRules()) {
+            $result->merge(
+                $this->handleSideEffect(
+                    RemoveLicenceStatusRulesForLicence::create(
+                        [
                         'licence' => $licence
-                    ]
+                        ]
+                    )
                 )
-            )
-        );
+            );
+        }
 
         $this->getRepo()->save($licence);
         $result->addMessage("Licence ID {$licence->getId()} revoked");
