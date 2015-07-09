@@ -38,23 +38,35 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
 
         if ($command->getApplication() !== null) {
 
+            /** @var Entity\Application\Application $application */
             $application = $this->getRepo()->getReference(
                 Entity\Application\Application::class,
                 $command->getApplication()
             );
 
             $entity->setApplication($application);
+
+            if ($application->getLicence() !== null) {
+                $entity->setLicence($application->getLicence());
+            }
+
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_APPLICATION));
         }
 
         if ($command->getBusReg() !== null) {
 
+            /** @var Entity\Bus\BusReg $busReg */
             $busReg = $this->getRepo()->getReference(
                 Entity\Bus\BusReg::class,
                 $command->getBusReg()
             );
 
             $entity->setBusReg($busReg);
+
+            if ($busReg->getLicence() !== null) {
+                $entity->setLicence($busReg->getLicence());
+            }
+
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_BUS));
         }
 
