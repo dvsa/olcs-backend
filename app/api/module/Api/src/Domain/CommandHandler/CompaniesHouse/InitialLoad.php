@@ -43,7 +43,7 @@ final class InitialLoad extends AbstractCommandHandler
     {
         $companyNumber = $command->getCompanyNumber();
 
-        $apiResult = $this->api->getCompanyProfile($companyNumber);
+        $apiResult = $this->api->getCompanyProfile($companyNumber, true);
         $data = $this->normaliseProfileData($apiResult);
 
         $company = new CompanyEntity();
