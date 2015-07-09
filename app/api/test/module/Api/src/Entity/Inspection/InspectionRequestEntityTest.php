@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Inspection;
 
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest as Entity;
 use Mockery as m;
@@ -48,7 +49,7 @@ class InspectionRequestEntityTest extends EntityTester
         $this->assertEquals(new \DateTime(), $sut->getRequestDate());
 
         $this->assertEquals(
-            (new \DateTime())->add(new \DateInterval('P3M')),
+            (new DateTime())->add(new \DateInterval('P3M')),
             $sut->getDueDate()
         );
         $this->assertEquals('res_type', $sut->getResultType());
