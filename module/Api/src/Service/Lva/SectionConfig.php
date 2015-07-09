@@ -287,11 +287,6 @@ class SectionConfig
                 [$this, 'isNotUnchanged']
             ];
 
-            $this->sections['vehicles_declarations']['restricted'][] = [
-                'variation',
-                [$this, 'isNotUnchanged']
-            ];
-
             // undertakings requires all sections (except itself)
             $undertakingsPreReqs = $this->getAllReferences();
             $key = array_search('undertakings', $undertakingsPreReqs);
@@ -308,7 +303,7 @@ class SectionConfig
 
         $status = $this->completion->$getter();
 
-        return ($status !== Application::VARIATION_STATUS_UNCHANGED);
+        return ($status != Application::VARIATION_STATUS_UNCHANGED);
     }
 
     public function setVariationCompletion(ApplicationCompletion $completion)
