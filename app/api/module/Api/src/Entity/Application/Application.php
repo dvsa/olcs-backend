@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 
@@ -565,5 +566,23 @@ class Application extends AbstractApplication
         }
 
         return $completions;
+    }
+
+    /**
+     * Determine the traffic area used for fee lookup.
+     */
+    public function getFeeTrafficAreaId()
+    {
+        $trafficArea = $this->getLicence()->getTrafficArea();
+
+        if (!is_null($trafficArea)) {
+            return $trafficArea->getId();
+        }
+
+        if ($this->getNiFlag() === 'Y') {
+            return TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE;
+        }
+
+        return null;
     }
 }
