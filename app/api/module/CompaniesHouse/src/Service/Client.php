@@ -20,16 +20,6 @@ class Client
     protected $baseUri;
 
     /**
-     * @var string
-     */
-    protected $username;
-
-    /**
-     * @var string
-     */
-    protected $password;
-
-    /**
      * @param \Zend\Http\Client $httpClient
      * @return $this
      */
@@ -63,54 +53,6 @@ class Client
     public function getBaseUri()
     {
         return $this->baseUri;
-    }
-
-    /**
-     * Sets the value of username.
-     *
-     * @param string $username the username
-     *
-     * @return self
-     */
-    protected function setUsername($username)
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of username.
-     *
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * Sets the value of password.
-     *
-     * @param string $password the password
-     *
-     * @return self
-     */
-    protected function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of password.
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
     }
 
     /**
