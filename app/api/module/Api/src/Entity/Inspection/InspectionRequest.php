@@ -33,6 +33,7 @@ class InspectionRequest extends AbstractInspectionRequest
     const ERROR_FIELD_IS_REQUIRED = 'IR-FR-1';
     const ERROR_DUE_DATE = 'IR-DD-2';
     const ERROR_DUE_DATE_NOT_IN_RANGE = 'IR-DD-3';
+    const ERROR_REQUEST_DATE_IN_FUTURE = 'IR-RD-1';
 
     const REPORT_TYPE_MAINTENANCE_REQUEST = 'insp_rep_t_maint';
     const RESULT_TYPE_NEW = 'insp_res_t_new';
@@ -62,25 +63,39 @@ class InspectionRequest extends AbstractInspectionRequest
         $trailersExaminedNo = null,
         $inspectorNotes = null
     ) {
-        $this->validateInspectionRequest($reportType, $requestDate, $dueDate, $duePeriod, $resultType, $requestorUser);
+        $this->validateInspectionRequest($reportType, $requestDate, $dueDate, $duePeriod, $resultType);
 
         $this->setRequestType($requestType);
 
         if (!$requestDate) {
             $this->setRequestDate(new \DateTime());
+        } else {
+            $this->setRequestDate(new \DateTime($requestDate));
+            $this->validateRequestDate($requestDate);
         }
+
         if (!$dueDate) {
             $this->setDueDate(
                 (new \DateTime())->add(new \DateInterval('P' . $duePeriod . 'M'))
             );
+        } else {
+            $this->setDueDate(new \DateTime($dueDate));
         }
         $this->setResultType($resultType);
         $this->setRequestorNotes($requestorNotes);
         $this->setReportType($reportType);
-        $this->setApplication($application);
-        $this->setLicence($licence);
-        $this->setRequestorUser($requestorUser);
-        $this->setOperatingCentre($operatingCentre);
+        if ($application) {
+            $this->setApplication($application);
+        }
+        if ($licence) {
+            $this->setLicence($licence);
+        }
+        if ($requestorUser) {
+            $this->setRequestorUser($requestorUser);
+        }
+        if ($operatingCentre) {
+            $this->setOperatingCentre($operatingCentre);
+        }
         $this->setInspectorName($inspectorName);
         if ($returnDate) {
             $this->setReturnDate(new \DateTime($returnDate));
@@ -101,8 +116,7 @@ class InspectionRequest extends AbstractInspectionRequest
         $requestDate,
         $dueDate,
         $duePeriod,
-        $resultType,
-        $requestorUser
+        $resultType
     ) {
         $errors = [];
         if (!$reportType) {
@@ -119,13 +133,6 @@ class InspectionRequest extends AbstractInspectionRequest
                 ]
             ];
         }
-        if (!$requestorUser) {
-            $errors[] = [
-                'requestorUser' => [
-                    self::ERROR_FIELD_IS_REQUIRED => 'Field is required'
-                ]
-            ];
-        }
         if (!$dueDate && !$duePeriod) {
             $errors[]['dueDate'][self::ERROR_FIELD_IS_REQUIRED] = 'Field is required';
         }
@@ -135,8 +142,22 @@ class InspectionRequest extends AbstractInspectionRequest
         if ($duePeriod && !in_array($duePeriod, $this->duePeriods)) {
             $errors[]['dueDate'][self::ERROR_DUE_DATE_NOT_IN_RANGE] = 'Due date not in range';
         }
+
         if (count($errors)) {
             throw new ValidationException($errors);
+        }
+    }
+
+    protected function validateRequestDate($requestDate)
+    {
+        if (new \DateTime($requestDate) > new \DateTime()) {
+            throw new ValidationException(
+                [
+                    'requestDate' => [
+                        self::ERROR_REQUEST_DATE_IN_FUTURE => 'Request date should not be in future'
+                    ]
+                ]
+            );
         }
     }
 }
