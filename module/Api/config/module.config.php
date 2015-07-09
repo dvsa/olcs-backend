@@ -143,8 +143,8 @@ return [
             'PiHearing' => RepositoryFactory::class,
             'Recipient' => RepositoryFactory::class,
             'Partner' => RepositoryFactory::class,
-            'TransportManagerApplication' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'TransportManagerLicence' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'TransportManagerApplication' => RepositoryFactory::class,
+            'TransportManagerLicence' => RepositoryFactory::class,
             'Person' => RepositoryFactory::class,
             'ApplicationOperatingCentre' => RepositoryFactory::class,
             'LicenceOperatingCentre' => RepositoryFactory::class,
@@ -174,6 +174,7 @@ return [
             'InspectionRequest' => RepositoryFactory::class,
             'ChangeOfEntity' => RepositoryFactory::class,
             'ApplicationOrganisationPerson' => RepositoryFactory::class,
+            'DocumentSearchView' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
