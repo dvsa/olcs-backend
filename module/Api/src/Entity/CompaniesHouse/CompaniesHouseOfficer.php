@@ -17,5 +17,29 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CompaniesHouseOfficer extends AbstractCompaniesHouseOfficer
 {
+    public function __construct(array $data)
+    {
+        $fields = [
+            'name',
+            'role',
+        ];
 
+        foreach ($fields as $field) {
+            if (isset($data[$field])) {
+                $method = 'set'.ucfirst($field);
+                $this->$method($data[$field]);
+            }
+        }
+
+        if (isset($data['dateOfBirth'])) {
+            $dob = new \DateTime();
+            $dob->setDate(
+                $data['dateOfBirth']['year'],
+                $data['dateOfBirth']['month'],
+                // day element of D.o.B. is usually suppressed
+                isset($data['dateOfBirth']['day']) ? $data['dateOfBirth']['day'] : 1
+            );
+            $this->setDateOfBirth($dob);
+        }
+    }
 }
