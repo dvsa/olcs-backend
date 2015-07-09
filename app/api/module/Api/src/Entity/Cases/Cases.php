@@ -54,8 +54,7 @@ class Cases extends AbstractCases
         $transportManager,
         $ecmsNo,
         $description
-    )
-    {
+    ) {
         parent::__construct();
 
         $this->setOpenDate($openDate);
@@ -83,8 +82,7 @@ class Cases extends AbstractCases
         $outcomes,
         $ecmsNo,
         $description
-    )
-    {
+    ) {
         $caseTypeModifyAllowed = [self::IMPOUNDING_CASE_TYPE, self::LICENCE_CASE_TYPE];
 
         //if case type is allowed to be modified, make sure it's modified to something allowable
@@ -113,7 +111,33 @@ class Cases extends AbstractCases
 
         return true;
     }
-    
+
+    /**
+     * Updates conviction note
+     *
+     * @param string $convictionNote
+     * @return bool
+     */
+    public function updateConvictionNote($convictionNote)
+    {
+        $this->setConvictionNote($convictionNote);
+
+        return true;
+    }
+
+    /**
+     * Updates prohibition note
+     *
+     * @param string $prohibitionNote
+     * @return bool
+     */
+    public function updateProhibitionNote($prohibitionNote)
+    {
+        $this->setProhibitionNote($prohibitionNote);
+
+        return true;
+    }
+
     /**
      * Checks a stay type exists
      * @param RefData $stayType
@@ -137,7 +161,7 @@ class Cases extends AbstractCases
      */
     public function hasAppeal()
     {
-        return !($this->getAppeals()->isEmpty());
+        return !(empty($this->getAppeal()));
     }
 
     /**

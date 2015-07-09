@@ -43,8 +43,8 @@ class CreateStayTest extends CommandHandlerTestCase
     {
         $mockAppeal = m::mock(AppealEntity::class);
         $mockCase = m::mock(CasesEntity::class)->makePartial();
-        $mockCase->shouldReceive('getAppeals')
-            ->andReturn(new ArrayCollection([$mockAppeal]));
+        $mockCase->shouldReceive('getAppeal')
+            ->andReturn($mockAppeal);
 
         $mockCase->shouldReceive('getStays')
             ->andReturn(new ArrayCollection([]));
@@ -95,8 +95,8 @@ class CreateStayTest extends CommandHandlerTestCase
     public function testHandleCommandNoExistingAppeal()
     {
         $mockCase = m::mock(CasesEntity::class)->makePartial();
-        $mockCase->shouldReceive('getAppeals')
-            ->andReturn(new ArrayCollection([]));
+        $mockCase->shouldReceive('getAppeal')
+            ->andReturn(null);
 
         $this->references = [
             CasesEntity::class => [
@@ -131,8 +131,8 @@ class CreateStayTest extends CommandHandlerTestCase
         $mockCase = m::mock(CasesEntity::class)->makePartial();
         $mockCase->shouldReceive('hasStayType')->andReturn(true);
 
-        $mockCase->shouldReceive('getAppeals')
-            ->andReturn(new ArrayCollection([$mockAppeal]));
+        $mockCase->shouldReceive('getAppeal')
+            ->andReturn($mockAppeal);
 
         $this->references = [
             CasesEntity::class => [
