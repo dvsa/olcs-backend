@@ -7,12 +7,12 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-
 use Dvsa\Olcs\Api\Domain\Command\Licence\NotTakenUp;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
@@ -32,6 +32,8 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
 
     public function handleCommand(CommandInterface $command)
     {
+        $result = new Result();
+
         /** @var Application $application */
         $application = $this->getRepo()->fetchById($command->getId());
 
@@ -40,7 +42,7 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
 
         $this->getRepo()->save($application);
 
-        $result = new Result();
+        $result->merge($this->createSnapshot($command->getId()));
 
         $result->merge(
             $this->handleSideEffect(
@@ -112,5 +114,11 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
         $result->addMessage('Application ' . $application->getId() . ' set to not taken up.');
 
         return $result;
+    }
+
+    protected function createSnapshot($applicationId)
+    {
+        $data = ['id' => $applicationId, 'event' => CreateSnapshotCmd::ON_NTU];
+        return $this->handleSideEffect(CreateSnapshotCmd::create($data));
     }
 }
