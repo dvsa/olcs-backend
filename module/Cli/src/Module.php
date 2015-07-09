@@ -33,6 +33,8 @@ class Module implements ConsoleUsageProviderInterface
             // Describe available commands
             'licence-status-rules [--verbose|-v]' => 'Process licence status change rules',
             'enqueue-ch-compare [--verbose|-v]' => 'Enqueue Companies House lookups for all Organisations',
+            // @TODO remove
+            'ch-initial-load [--verbose|-v]' => 'TEST action for Companies House api stuff',
             array( '--verbose|-v', '(optional) turn on verbose mode'),
         );
     }

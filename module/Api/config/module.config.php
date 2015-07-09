@@ -180,6 +180,7 @@ return [
             'PrivateHireLicence' => RepositoryFactory::class,
             'ContinuationDetail' => RepositoryFactory::class,
             'CompaniesHouseAlert' => RepositoryFactory::class,
+            'CompaniesHouseCompany' => RepositoryFactory::class,
             'Queue' => RepositoryFactory::class,
         ]
     ],

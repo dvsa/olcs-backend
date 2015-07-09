@@ -40,10 +40,25 @@ class BatchController extends AbstractConsoleController
      */
     public function enqueueCompaniesHouseCompareAction()
     {
-       return $this->handleExitStatus(
+        return $this->handleExitStatus(
             $this->handleCommand(
                 [
                     \Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\EnqueueOrganisations::create([]),
+                ]
+            )
+        );
+    }
+
+    /**
+     * @return ConsoleModel
+     */
+    public function initialLoadAction()
+    {
+        // test - @TODO make this a queue consumer
+        return $this->handleExitStatus(
+            $this->handleCommand(
+                [
+                    \Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\InitialLoad::create(['companyNumber' => '03127414']),
                 ]
             )
         );
