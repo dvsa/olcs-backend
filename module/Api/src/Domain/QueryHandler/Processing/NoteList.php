@@ -16,10 +16,12 @@ use Dvsa\Olcs\Transfer\Query\Processing\NoteList as NoteListQuery;
 class NoteList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Note';
-    protected $extraRepos = ['Cases'];
+    protected $extraRepos = ['Cases', 'Bus', 'Application'];
 
     public function handleQuery(QueryInterface $query)
     {
+        /* @var NoteListQuery $query */
+
         // The case / licence business logic.
         if (null !== $query->getCase()) {
 
@@ -34,6 +36,40 @@ class NoteList extends AbstractQueryHandler
                 $data = $query->getArrayCopy();
                 $data['licence'] = $licenceId;
                 // Replace existing
+                $query = NoteListQuery::create($data);
+            }
+        }
+
+        // The bus reg business logic.
+        if (null !== $query->getBusReg()) {
+
+            /** @var \Dvsa\Olcs\Transfer\Query\Processing\NoteList $query */
+            $busRegId = $query->getBusReg();
+            /* @var \Dvsa\Olcs\Api\Entity\Bus\BusReg $busReg */
+            $busReg = $this->getRepo('Bus')->fetchById($busRegId);
+
+            if ($busReg->getLicence() !== null) {
+
+                $data = $query->getArrayCopy();
+                $data['licence'] = $busReg->getLicence()->getId();
+
+                $query = NoteListQuery::create($data);
+            }
+        }
+
+        // The application business logic.
+        if (null !== $query->getApplication()) {
+
+            /** @var \Dvsa\Olcs\Transfer\Query\Processing\NoteList $query */
+            $applicationId = $query->getApplication();
+            /* @var \Dvsa\Olcs\Api\Entity\Application\Application $application */
+            $application = $this->getRepo('Application')->fetchById($applicationId);
+
+            if ($application->getLicence() !== null) {
+
+                $data = $query->getArrayCopy();
+                $data['licence'] = $application->getLicence()->getId();
+
                 $query = NoteListQuery::create($data);
             }
         }
