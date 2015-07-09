@@ -49,8 +49,7 @@ class ComplaintTest extends RepositoryTestCase
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->once()->with('complainantContactDetails', 'cd')->andReturnSelf()
             ->shouldReceive('with')->once()->with('cd.person')->andReturnSelf()
-            ->shouldReceive('with')->once()->with('ocComplaints', 'occ')->andReturnSelf()
-            ->shouldReceive('with')->once()->with('occ.operatingCentre', 'oc')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('operatingCentres', 'oc')->andReturnSelf()
             ->shouldReceive('with')->once()->with('oc.address')->andReturnSelf()
             ->shouldReceive('byId')->once()->with(111);
 
@@ -79,8 +78,7 @@ class ComplaintTest extends RepositoryTestCase
         $sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
         $mockQb->shouldReceive('with')->with('complainantContactDetails', 'ccd')->once()->andReturnSelf();
         $mockQb->shouldReceive('with')->with('ccd.person')->once()->andReturnSelf();
-        $mockQb->shouldReceive('with')->with('ocComplaints', 'occ')->once()->andReturnSelf();
-        $mockQb->shouldReceive('with')->with('occ.operatingCentre', 'oc')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('operatingCentres', 'oc')->once()->andReturnSelf();
         $mockQb->shouldReceive('with')->with('oc.address')->once()->andReturnSelf();
 
         $sut->applyListJoins($mockQb);

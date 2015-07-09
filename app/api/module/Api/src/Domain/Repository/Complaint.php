@@ -65,8 +65,7 @@ class Complaint extends AbstractRepository
             ->withRefdata()
             ->with('complainantContactDetails', 'cd')
             ->with('cd.person')
-            ->with('ocComplaints', 'occ')
-            ->with('occ.operatingCentre', 'oc')
+            ->with('operatingCentres', 'oc')
             ->with('oc.address')
             ->byId($id);
     }
@@ -80,8 +79,7 @@ class Complaint extends AbstractRepository
         $this->getQueryBuilder()
             ->with('complainantContactDetails', 'ccd')
             ->with('ccd.person')
-            ->with('ocComplaints', 'occ')
-            ->with('occ.operatingCentre', 'oc')
+            ->with('operatingCentres', 'oc')
             ->with('oc.address');
     }
 

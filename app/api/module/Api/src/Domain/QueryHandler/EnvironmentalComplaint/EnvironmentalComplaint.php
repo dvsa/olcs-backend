@@ -23,9 +23,7 @@ final class EnvironmentalComplaint extends AbstractQueryHandler
                         'countryCode'
                     ]
                 ],
-                'ocComplaints' => [
-                    'operatingCentre'
-                ]
+                'operatingCentres'
             ]
         );
     }
