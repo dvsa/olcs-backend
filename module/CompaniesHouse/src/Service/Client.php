@@ -67,8 +67,30 @@ class Client
     public function getCompanyProfile($companyNumber, $includeOfficers = true)
     {
         // @TODO combine officer data with default response
+        $companyProfile = $this->getData('/company/' . $companyNumber);
 
-        return $this->getData('/company/' . $companyNumber);
+        if ($includeOfficers) {
+            $officers = $this->getOfficerSummary($companyNumber);
+            $companyProfile['officer_summary']['officers'] = $officers;
+        }
+
+        return $companyProfile;
+    }
+
+    /**
+     * Return active officers in the same format as was previously included
+     * in the CompanyProfile response
+     */
+    protected function getOfficerSummary($companyNumber)
+    {
+        $officers = $this->getOfficers($companyNumber);
+
+        return array_filter(
+            $officers['items'],
+            function ($officer) {
+                return empty($officer['resigned_on']);
+            }
+        );
     }
 
     /**
