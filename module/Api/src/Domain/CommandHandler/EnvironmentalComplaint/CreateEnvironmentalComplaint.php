@@ -89,14 +89,14 @@ final class CreateEnvironmentalComplaint extends AbstractCommandHandler implemen
         $complaint->setDescription($command->getDescription());
         $complaint->populateClosedDate();
 
-        if ($command->getOcComplaints() !== null) {
+        if ($command->getOperatingCentres() !== null) {
             $operatingCentres = [];
 
-            foreach ($command->getOcComplaints() as $operatingCentreId) {
+            foreach ($command->getOperatingCentres() as $operatingCentreId) {
                 $operatingCentres[] = $this->getRepo()->getReference(OperatingCentre::class, $operatingCentreId);
             }
 
-            $complaint->setOcComplaints($operatingCentres);
+            $complaint->setOperatingCentres($operatingCentres);
         }
 
         return $complaint;

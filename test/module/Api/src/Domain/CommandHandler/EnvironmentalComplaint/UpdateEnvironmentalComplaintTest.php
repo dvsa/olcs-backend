@@ -51,7 +51,7 @@ class UpdateEnvironmentalComplaintTest extends CommandHandlerTestCase
             "complaintDate" => "2015-01-16",
             "description" => "Some major complaint about condition of vehicle",
             "status" => ComplaintEntity::COMPLAIN_STATUS_OPEN,
-            'ocComplaints' => [101, 102],
+            'operatingCentres' => [101, 102],
             'complainantContactDetails' => [
                 'person' => [
                     'forename' => 'David',
