@@ -3,13 +3,11 @@
 return [
     'companies_house' => [
         'http' => [
-            // 'options' => [
-                'sslcapath' => '/etc/ssl/certs',
-                'sslverifypeer' => false,
-            // ],
+            'sslcapath' => '/etc/ssl/certs',
+            'sslverifypeer' => false,
         ],
         'auth' => [
-            'username' => 'JAuzjQG4JIv2XNB0mz1ID8Ut6QHEzSLYR3bkzGP9',
+            'username' => 'changeme',
             'password' => '',
         ],
         'client' => [

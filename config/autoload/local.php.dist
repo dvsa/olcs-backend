@@ -47,5 +47,21 @@ return array(
             'uuid' => 'uD12345',
             'workspace' => 'olcs'
         ),
-    )
+    ),
+    'companies_house' => [
+        'http' => [
+            'sslcapath' => '/etc/ssl/certs',
+            // insecure! should be set to true in production to verify SSL cert
+            'sslverifypeer' => false,
+        ],
+        'auth' => [
+            // Companies House API key
+            // (register one at https://developer.companieshouse.gov.uk/)
+            'username' => 'changeme',
+            'password' => '',
+        ],
+        'client' => [
+            'baseuri' => 'https://api.companieshouse.gov.uk/',
+        ],
+    ],
 );
