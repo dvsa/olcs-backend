@@ -65,6 +65,7 @@
             "Dvsa\\Olcs\\Api\\": "module/Api/src",
             "Dvsa\\Olcs\\Cli\\": "module/Cli/src",
             "Dvsa\\Olcs\\Email\\": "module/Email/src",
+            "Dvsa\\Olcs\\CompaniesHouse\\": "module/CompaniesHouse/src",
             "Dvsa\\Olcs\\Snapshot\\": "module/Snapshot/src",
             "CompaniesHouse\\": "vendor/olcs/companies-house/lib"
         }
