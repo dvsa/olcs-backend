@@ -66,5 +66,13 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
         if ($command->getWitnessCount() !== null) {
             $entity->setWitnessCount($command->getWitnessCount());
         }
+
+        if ($command->getOutcome() !== null) {
+            $entity->setOutcome($command->getOutcome());
+        }
+
+        if ($command->getPresidingStaffName() !== null) {
+            $entity->setPresidingStaffName($command->getPresidingStaffName());
+        }
     }
 }
