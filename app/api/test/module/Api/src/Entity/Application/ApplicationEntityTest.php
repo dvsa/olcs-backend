@@ -20,17 +20,22 @@ use Mockery as m;
  */
 class ApplicationEntityTest extends EntityTester
 {
-    public function setUp()
-    {
-        $this->entity = $this->instantiate($this->entityClass);
-    }
-
     /**
      * Define the entity to test
      *
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    /**
+     * @var Entity
+     */
+    protected $entity;
+
+    public function setUp()
+    {
+        $this->entity = $this->instantiate($this->entityClass);
+    }
 
     public function dataProviderTestHasUpgrade()
     {
@@ -980,5 +985,34 @@ class ApplicationEntityTest extends EntityTester
         $application->setApplicationCompletion($ac);
 
         $this->assertFalse($application->hasVariationChanges());
+    }
+
+    public function testCopyInformationFromLicence()
+    {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+
+        $licenceType = m::mock(RefData::class);
+        $goodsOrPsv = m::mock(RefData::class);
+
+        $licence->setLicenceType($licenceType);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+        $licence->setTotAuthTrailers(5);
+        $licence->setTotAuthVehicles(6);
+        $licence->setTotAuthSmallVehicles(7);
+        $licence->setTotAuthMediumVehicles(8);
+        $licence->setTotAuthLargeVehicles(9);
+        $licence->setNiFlag('Y');
+
+        $this->entity->copyInformationFromLicence($licence);
+
+        $this->assertEquals($licenceType, $this->entity->getLicenceType());
+        $this->assertEquals($goodsOrPsv, $this->entity->getGoodsOrPsv());
+        $this->assertEquals(5, $this->entity->getTotAuthTrailers());
+        $this->assertEquals(6, $this->entity->getTotAuthVehicles());
+        $this->assertEquals(7, $this->entity->getTotAuthSmallVehicles());
+        $this->assertEquals(8, $this->entity->getTotAuthMediumVehicles());
+        $this->assertEquals(9, $this->entity->getTotAuthLargeVehicles());
+        $this->assertEquals('Y', $this->entity->getNiFlag());
     }
 }
