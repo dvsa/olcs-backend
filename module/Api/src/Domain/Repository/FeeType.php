@@ -29,7 +29,7 @@ class FeeType extends AbstractRepository
      * @param RefDataEntity $goodsOrPsv
      * @param RefDataEntity $licenceType
      * @param \DateTime $date
-     * @param TrafficArea $trafficArea
+     * @param TrafficArea|string $trafficArea traffic area entity or id
      *
      * @return \Dvsa\Olcs\Api\Entity\Fee\FeeType
      * @throws Exception\NotFoundException

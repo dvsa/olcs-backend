@@ -2,13 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
 
 /**
@@ -862,5 +863,47 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertEquals(1, $result['operating_centres']);
         $this->assertEquals(2, $result['addresses']);
+    }
+
+    /**
+     * @dataProvider niFlagProvider
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function testGetFeeTrafficAreaIdWithLicence($niFlag, $unused)
+    {
+        $trafficArea = m::mock(TrafficArea::class)
+            ->makePartial()
+            ->setId('Foo');
+        $licence = m::mock(Licence::class)
+            ->makePartial()
+            ->setTrafficArea($trafficArea);
+
+        $this->entity->setLicence($licence);
+
+        $this->entity->setNiFlag($niFlag);
+
+        $this->assertEquals('Foo', $this->entity->getFeeTrafficAreaId());
+    }
+
+    /**
+     * @dataProvider niFlagProvider
+     */
+    public function testGetFeeTrafficAreaIdNoLicence($niFlag, $expected)
+    {
+        $licence = m::mock(Licence::class)->makePartial();
+
+        $this->entity->setLicence($licence);
+
+        $this->entity->setNiFlag($niFlag);
+
+        $this->assertEquals($expected, $this->entity->getFeeTrafficAreaId());
+    }
+
+    public function niFlagProvider()
+    {
+        return [
+            ['Y', 'N'],
+            ['N', null],
+        ];
     }
 }
