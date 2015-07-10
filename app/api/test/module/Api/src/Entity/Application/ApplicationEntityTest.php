@@ -787,21 +787,28 @@ class ApplicationEntityTest extends EntityTester
     public function testGetOcForInspectionRequest()
     {
         $oc1 = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->once()
             ->shouldReceive('getAction')
             ->once()
             ->andReturn('A')
             ->shouldReceive('getOperatingCentre')
-            ->andReturn('oc1')
-            ->once()
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(1)
+                ->twice()
+                ->getMock()
+            )
             ->getMock();
 
         $oc2 = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(2)
-            ->once()
+            ->shouldReceive('getOperatingCentre')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(2)
+                ->once()
+                ->getMock()
+            )
             ->shouldReceive('getAction')
             ->andReturn('D')
             ->once()
@@ -810,12 +817,14 @@ class ApplicationEntityTest extends EntityTester
         $mockApplicationOperatingCentres = [$oc1, $oc2];
 
         $oc3 = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(3)
-            ->once()
             ->shouldReceive('getOperatingCentre')
-            ->andReturn('oc3')
-            ->once()
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(3)
+                ->twice()
+                ->getMock()
+            )
             ->getMock();
 
         $mockLicenceOperatingCentres = [$oc3];
@@ -836,7 +845,9 @@ class ApplicationEntityTest extends EntityTester
             ->getMock();
 
         $result = $sut->getOcForInspectionRequest();
-        $this->assertEquals(['oc1', 'oc3'], $result);
+        $this->assertEquals(count($result), 2);
+        $this->assertEquals($result[0]->getId(), 1);
+        $this->assertEquals($result[1]->getId(), 3);
     }
 
     public function testGetVariationCompletionNotVariation()

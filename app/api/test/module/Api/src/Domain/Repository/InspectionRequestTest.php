@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\InspectionRequest as InspectionRequestRepo;
@@ -22,7 +23,7 @@ class InspectionRequestTest extends RepositoryTestCase
 {
     public function setUp()
     {
-        $this->setUpSut(InspectionRequestRepo::class);
+        $this->setUpSut(InspectionRequestRepo::class, true);
     }
 
     public function testFetchForInspectionRequest()
@@ -174,5 +175,98 @@ class InspectionRequestTest extends RepositoryTestCase
 
         $result = $this->sut->fetchForInspectionRequest($inspectionRequestId);
         $this->assertEquals('RESULT', $result);
+    }
+
+    public function testFetchPage()
+    {
+        $licenceId = 1;
+
+        $query = m::mock(QueryInterface::class);
+        $query->shouldReceive('getId')
+            ->andReturn($licenceId);
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $qb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturn('licence');
+        $qb->shouldReceive('andWhere')->with('licence')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('licence', $licenceId)->once()->andReturnSelf();
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->twice()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('licence', 'l')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('application', 'a')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(InspectionRequest::class)
+            ->andReturn($repo);
+
+        $this->sut
+            ->shouldReceive('fetchPaginatedList')
+            ->with($qb)
+            ->andReturn(['foo'])
+            ->once()
+            ->shouldReceive('fetchPaginatedCount')
+            ->with($qb)
+            ->andReturn(1)
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(['result' => ['foo'], 'count' => 1], $this->sut->fetchPage($query, $licenceId));
+    }
+
+    public function testApplyListFilters()
+    {
+        $licenceId = 1;
+
+        $query = m::mock(QueryInterface::class);
+        $query->shouldReceive('getLicence')
+            ->andReturn($licenceId);
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $qb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturn('licence');
+        $qb->shouldReceive('andWhere')->with('licence')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('licence', $licenceId)->once()->andReturnSelf();
+
+        $this->assertNull($this->sut->applyListFilters($qb, $query));
+    }
+
+    public function testApplyListJoins()
+    {
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('licence', 'l')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('application', 'a')
+            ->once()
+            ->andReturnSelf();
+
+        $this->assertNull($this->sut->applyListJoins($qb));
     }
 }
