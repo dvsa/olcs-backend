@@ -6,6 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
  * Cases Entity
@@ -38,9 +42,9 @@ class Cases extends AbstractCases
      * @param RefData $caseType
      * @param ArrayCollection $categorys
      * @param ArrayCollection $outcomes
-     * @param RefData|null $application
-     * @param RefData|null $licence
-     * @param RefData|null $transportManager
+     * @param Application|null $application
+     * @param Licence|null $licence
+     * @param TransportManager|null $transportManager
      * @param string $ecmsNo
      * @param string $description
      */
@@ -56,6 +60,55 @@ class Cases extends AbstractCases
         $description
     ) {
         parent::__construct();
+
+        $this->create(
+            $openDate,
+            $caseType,
+            $categorys,
+            $outcomes,
+            $application,
+            $licence,
+            $transportManager,
+            $ecmsNo,
+            $description
+        );
+    }
+
+    /**
+     * Creates a new case entity and sets the open date
+     *
+     * @param \DateTime $openDate
+     * @param RefData $caseType
+     * @param ArrayCollection $categorys
+     * @param ArrayCollection $outcomes
+     * @param Application|null $application
+     * @param Licence|null $licence
+     * @param TransportManager|null $transportManager
+     * @param string $ecmsNo
+     * @param string $description
+     *
+     * @throws ForbiddenException
+     */
+    public function create(
+        \DateTime $openDate,
+        RefData $caseType,
+        ArrayCollection $categorys,
+        ArrayCollection $outcomes,
+        $application,
+        $licence,
+        $transportManager,
+        $ecmsNo,
+        $description
+    ) {
+        //if we have an application, make sure a case is allowed to be created, and also override the passed licence
+        //variable to ensure we always have the correct licence for the application
+        if ($application instanceof Application) {
+            if (!$application->canCreateCase()) {
+                throw new ForbiddenException('Cases can\'t be created for this application');
+            }
+
+            $licence = $application->getLicence();
+        }
 
         $this->setOpenDate($openDate);
         $this->setCaseType($caseType);

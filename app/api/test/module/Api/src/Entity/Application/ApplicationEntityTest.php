@@ -641,6 +641,40 @@ class ApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider canCreateCaseProvider
+     */
+    public function testCanCreateCase($status, $licNo, $expected)
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+
+        $sut->shouldReceive('getStatus->getId')->once()->andReturn($status);
+        $sut->shouldReceive('getLicence->getLicNo')->andReturn($licNo);
+        $this->assertEquals($expected, $sut->canCreateCase());
+    }
+
+    public function canCreateCaseProvider()
+    {
+        $licNo = 12345;
+
+        return [
+            [Entity::APPLICATION_STATUS_NOT_SUBMITTED, null, false],
+            [Entity::APPLICATION_STATUS_GRANTED, null, false],
+            [Entity::APPLICATION_STATUS_UNDER_CONSIDERATION, null, false],
+            [Entity::APPLICATION_STATUS_VALID, null, false],
+            [Entity::APPLICATION_STATUS_WITHDRAWN, null, false],
+            [Entity::APPLICATION_STATUS_REFUSED, null, false],
+            [Entity::APPLICATION_STATUS_NOT_TAKEN_UP, null, false],
+            [Entity::APPLICATION_STATUS_NOT_SUBMITTED, $licNo, false],
+            [Entity::APPLICATION_STATUS_GRANTED, $licNo, true],
+            [Entity::APPLICATION_STATUS_UNDER_CONSIDERATION, $licNo, true],
+            [Entity::APPLICATION_STATUS_VALID, $licNo, true],
+            [Entity::APPLICATION_STATUS_WITHDRAWN, $licNo, true],
+            [Entity::APPLICATION_STATUS_REFUSED, $licNo, true],
+            [Entity::APPLICATION_STATUS_NOT_TAKEN_UP, $licNo, true],
+        ];
+    }
+
+    /**
      * @dataProvider goodsOrPsvHelperProvider
      */
     public function testIsGoodsAndIsPsvHelperMethods($goodsOrPsv, $isGoods, $isPsv)
