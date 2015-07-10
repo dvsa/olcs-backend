@@ -7,7 +7,6 @@ use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest as Entity;
 use Mockery as m;
 use \Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * InspectionRequest Entity Unit Tests
