@@ -43,11 +43,6 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
 
         // Amazingly these foreign keys are optional.
 
-        if ($command->getPresidingTC() != '') {
-            $tc = $this->getRepo()->getReference(Entities\Pi\PresidingTc::class, $command->getPresidingTC());
-            $entity->setPresidingTc($tc);
-        }
-
         if ($command->getCase() !== null) {
             $case = $this->getRepo()->getReference(Entities\Cases\Cases::class, $command->getCase());
             $entity->setCase($case);
@@ -63,12 +58,13 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
             $entity->setHearingDate(new \DateTime($command->getHearingDate()));
         }
 
-        if ($command->getWitnessCount() !== null) {
+        // db expects integer and errors when sending empty string
+        if (!empty($command->getWitnessCount())) {
             $entity->setWitnessCount($command->getWitnessCount());
         }
 
         if ($command->getOutcome() !== null) {
-            $entity->setOutcome($command->getOutcome());
+            $entity->setOutcome($repo->getRefdataReference($command->getOutcome()));
         }
 
         if ($command->getPresidingStaffName() !== null) {
