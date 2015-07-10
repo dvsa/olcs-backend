@@ -420,6 +420,21 @@ class Application extends AbstractApplication
     }
 
     /**
+     * Returns true/false depending on whether a case can be created for the application
+     *
+     * @return bool
+     */
+    public function canCreateCase()
+    {
+        if ($this->getStatus()->getId() === self::APPLICATION_STATUS_NOT_SUBMITTED
+            || $this->getLicence()->getLicNo() === null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Essentially an alias of getIsVariation()
      *
      * @return @boolean
