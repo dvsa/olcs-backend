@@ -628,4 +628,16 @@ class Application extends AbstractApplication
 
         return $this->getLicenceVehicles()->matching($criteria);
     }
+
+    public function copyInformationFromLicence(Licence $licence)
+    {
+        $this->setLicenceType($licence->getLicenceType());
+        $this->setGoodsOrPsv($licence->getGoodsOrPsv());
+        $this->setTotAuthTrailers($licence->getTotAuthTrailers());
+        $this->setTotAuthVehicles($licence->getTotAuthVehicles());
+        $this->setTotAuthSmallVehicles($licence->getTotAuthSmallVehicles());
+        $this->setTotAuthMediumVehicles($licence->getTotAuthMediumVehicles());
+        $this->setTotAuthLargeVehicles($licence->getTotAuthLargeVehicles());
+        $this->setNiFlag($licence->getNiFlag());
+    }
 }
