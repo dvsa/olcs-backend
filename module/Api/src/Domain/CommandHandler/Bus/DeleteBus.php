@@ -32,7 +32,6 @@ final class DeleteBus extends AbstractCommandHandler implements TransactionedInt
     public function handleCommand(CommandInterface $command)
     {
         /* @var $command DeleteCommand For traceability */
-
         $result = new Result();
 
         /** @var Repository $repo */
