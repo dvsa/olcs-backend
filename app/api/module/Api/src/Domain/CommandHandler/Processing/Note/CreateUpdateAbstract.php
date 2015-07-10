@@ -8,6 +8,8 @@ use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepository;
 use Dvsa\Olcs\Transfer\Command\Processing\Note\Create as CreateCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Exception;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
@@ -16,17 +18,11 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 /**
  * Create Update Abstract a Note
  */
-abstract class CreateUpdateAbstract extends AbstractCommandHandler
+abstract class CreateUpdateAbstract extends AbstractCommandHandler implements AuthAwareInterface
 {
-    protected $repoServiceName = 'Note';
+    use AuthAwareTrait;
 
-    /**
-     * This user ID is hard coded. Change it.
-     *
-     * @var int
-     * @deprecated REMOVE THIS AND DO IT PROPERLY ASAP!
-     */
-    private $hardCodedUserId = '1';
+    protected $repoServiceName = 'Note';
 
     /**
      * @param CommandInterface $command
@@ -135,8 +131,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
         }
 
         $entity->setUser(
-            $this->getRepo()->getReference(Entity\User\User::class,
-                $this->hardCodedUserId)
+            $this->getCurrentUser()->getId()
         );
 
         return $entity;
