@@ -9,21 +9,10 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Doctrine\DBAL\LockMode;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\Fee\FeeList as FeeListQry;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
-use Doctrine\ORM\OptimisticLockException;
-use Dvsa\Olcs\Api\Domain\Exception\VersionConflictException;
-use Doctrine\ORM\EntityRepository;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
 /**
  * Fee test
@@ -433,5 +422,33 @@ class FeeTest extends RepositoryTestCase
 
         $this->em
             ->shouldReceive('getReference');
+    }
+
+    public function testfetchOutstandingGrantFeesByApplicationId()
+    {
+        $mockQb = $this->createMockQb('{QUERY}');
+
+        $this->mockCreateQueryBuilder($mockQb);
+
+        $this->em->shouldReceive('getReference')
+            ->andReturnUsing(
+                function ($refData, $input) {
+                    return $input;
+                }
+            );
+
+        $mockQb->shouldReceive('getQuery->getResult')
+            ->once()
+            ->andReturn('Foo');
+
+        $this->assertEquals('Foo', $this->sut->fetchOutstandingGrantFeesByApplicationId(111));
+
+        $this->assertEquals(
+            '{QUERY}'
+            // whereOutstandingFee
+            . ' AND f.feeStatus IN [[["lfs_ot","lfs_wr"]]]'
+            . ' INNER JOIN f.feeType ft AND f.application = [[111]] AND ft.feeType = [[GRANT]]',
+            $this->query
+        );
     }
 }

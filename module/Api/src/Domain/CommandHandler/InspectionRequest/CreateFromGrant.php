@@ -55,7 +55,7 @@ final class CreateFromGrant extends AbstractCommandHandler implements Transactio
 
     /**
      * @param Cmd $command
-     * @return InspectionRequest
+     * @return InspectionRequestEntity
      */
     private function createInspectionRequestObject($command)
     {

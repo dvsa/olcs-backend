@@ -22,6 +22,6 @@ class CreateApplicationFeeTest extends PHPUnit_Framework_TestCase
         $command = CreateApplicationFee::create(['id' => 111, 'foo' => 'bar']);
 
         $this->assertEquals(111, $command->getId());
-        $this->assertEquals(['id' => 111], $command->getArrayCopy());
+        $this->assertEquals(['id' => 111, 'feeTypeFeeType' => null], $command->getArrayCopy());
     }
 }

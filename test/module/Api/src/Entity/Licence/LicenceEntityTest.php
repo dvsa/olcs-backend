@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Licence;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
@@ -517,5 +518,102 @@ class LicenceEntityTest extends EntityTester
             ->getMock();
 
         $this->assertEquals(['oc'], $mockLicence->getOcForInspectionRequest());
+    }
+
+    public function testIsRestricted()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertFalse($licence->isRestricted());
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_RESTRICTED);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertTrue($licence->isRestricted());
+    }
+
+    public function testCanHaveCommunityLicencesStandardInt()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertTrue($licence->canHaveCommunityLicences());
+    }
+
+    public function testCanHaveCommunityLicencesPsvRestricted()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_PSV);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_RESTRICTED);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertTrue($licence->canHaveCommunityLicences());
+    }
+
+    public function testCanHaveCommunityLicencesSomethingElse()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_GOODS_VEHICLE);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertFalse($licence->canHaveCommunityLicences());
+    }
+
+    public function testCopyInformationFromApplication()
+    {
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+        $application->setLicenceType($licenceType);
+
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_GOODS_VEHICLE);
+        $application->setGoodsOrPsv($goodsOrPsv);
+
+        $application->setTotAuthTrailers(9);
+        $application->setTotAuthVehicles(12);
+        $application->setTotAuthSmallVehicles(4);
+        $application->setTotAuthMediumVehicles(5);
+        $application->setTotAuthLargeVehicles(3);
+        $application->setNiFlag('Y');
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $licence->copyInformationFromApplication($application);
+
+        $this->assertSame($licenceType, $licence->getLicenceType());
+        $this->assertSame($goodsOrPsv, $licence->getGoodsOrPsv());
+        $this->assertEquals(9, $licence->getTotAuthTrailers());
+        $this->assertEquals(12, $licence->getTotAuthVehicles());
+        $this->assertEquals(4, $licence->getTotAuthSmallVehicles());
+        $this->assertEquals(5, $licence->getTotAuthMediumVehicles());
+        $this->assertEquals(3, $licence->getTotAuthLargeVehicles());
+        $this->assertEquals('Y', $licence->getNiFlag());
     }
 }

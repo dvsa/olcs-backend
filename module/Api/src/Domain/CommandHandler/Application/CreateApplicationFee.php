@@ -8,23 +8,20 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
+use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as Cmd;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Domain\Repository\FeeType;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Create Application Fee
@@ -35,20 +32,9 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
 {
     use AuthAwareTrait;
 
-    /**
-     * @var FeeType
-     */
-    protected $feeTypeRepo;
-
     protected $repoServiceName = 'Application';
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->feeTypeRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('FeeType');
-
-        return parent::createService($serviceLocator);
-    }
+    protected $extraRepos = ['FeeType'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -58,13 +44,13 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
 
         if ($this->shouldCreateTask()) {
 
-            $taskResult = $this->getCommandHandler()->handleCommand($this->createCreateTaskCommand($command));
+            $taskResult = $this->handleSideEffect($this->createCreateTaskCommand($command));
             $result->merge($taskResult);
 
             $taskId = $taskResult->getId('task');
         }
 
-        $result->merge($this->getCommandHandler()->handleCommand($this->createCreateFeeCommand($command, $taskId)));
+        $result->merge($this->handleSideEffect($this->createCreateFeeCommand($command, $taskId)));
 
         return $result;
     }
@@ -97,45 +83,19 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
     /**
      * @param Cmd $command
      * @param $taskId
-     * @return CreateFee
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
+     * @return CreateFeeCmd
      */
     private function createCreateFeeCommand(Cmd $command, $taskId)
     {
-        /** @var Application $application */
-        $feeType = $this->getRepo()->getRefdataReference(FeeTypeEntity::FEE_TYPE_APP);
-        $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
-        $trafficArea = $application->getNiFlag() === 'Y'
-            ? $this->getRepo()->getReference(TrafficArea::class, TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE)
-            : null;
-
-        $date = $application->getReceivedDate() === null
-            ? $application->getCreatedOn()
-            : $application->getReceivedDate();
-
-        if (is_string($date)) {
-            $date = new \DateTime($date);
-        }
-
-        $feeType = $this->feeTypeRepo->fetchLatest(
-            $feeType,
-            $application->getGoodsOrPsv(),
-            $application->getLicenceType(),
-            $date,
-            $trafficArea
-        );
+        $feeType = $command->getFeeTypeFeeType() == null ? FeeType::FEE_TYPE_APP : $command->getFeeTypeFeeType();
 
         $data = [
-            'task' => $taskId,
-            'application' => $application->getId(),
-            'licence' => $application->getLicence()->getId(),
-            'invoicedDate' => date('Y-m-d'),
-            'description' => $feeType->getDescription() . ' for application ' . $application->getId(),
-            'feeType' => $feeType->getId(),
-            'amount' => $feeType->getFixedValue() == 0 ? $feeType->getFiveYearValue() : $feeType->getFixedValue()
+            'id' => $command->getId(),
+            'feeTypeFeeType' => $feeType,
+            'task' => $taskId
         ];
 
-        return CreateFee::create($data);
+        return CreateFeeCmd::create($data);
     }
 
     /**

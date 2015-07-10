@@ -7,7 +7,6 @@ return [
         'invokables' => [
             'ReviewSnapshot' => \Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator::class,
             'Review\VariationTypeOfLicence' => Review\VariationTypeOfLicenceReviewService::class,
-            'Review\TransportManagerPreviousLicence' => Review\TransportManagerPreviousLicenceReviewService::class,
             'Review\VariationBusinessType' => Review\VariationBusinessTypeReviewService::class,
             'Review\AbstractVariationOcTotalAuth' => Review\AbstractVariationOcTotalAuthReviewService::class,
             'Review\VariationFinancialEvidence' => Review\VariationFinancialEvidenceReviewService::class,
@@ -24,8 +23,6 @@ return [
             'Review\VariationVehiclesDeclarations' => Review\VariationVehiclesDeclarationsReviewService::class,
             'Review\ApplicationBusinessDetails' => Review\ApplicationBusinessDetailsReviewService::class,
             'Review\ApplicationTypeOfLicence' => Review\ApplicationTypeOfLicenceReviewService::class,
-            'Review\TransportManagerPreviousConviction'
-                => Review\TransportManagerPreviousConvictionReviewService::class,
             'Review\GoodsOperatingCentre' => Review\GoodsOperatingCentreReviewService::class,
             'Review\ApplicationConditionsUndertakings' => Review\ApplicationConditionsUndertakingsReviewService::class,
             'Review\ConditionsUndertakings' => Review\ConditionsUndertakingsReviewService::class,
@@ -44,7 +41,6 @@ return [
             'Review\VariationConvictionsPenalties' => Review\VariationConvictionsPenaltiesReviewService::class,
             'Review\ApplicationLicenceHistory' => Review\ApplicationLicenceHistoryReviewService::class,
             'Review\ApplicationPeople' => Review\ApplicationPeopleReviewService::class,
-            'Review\TransportManagerResponsibility' => Review\TransportManagerResponsibilityReviewService::class,
             'Review\TransportManagers' => Review\TransportManagersReviewService::class,
             'Review\TrafficArea' => Review\TrafficAreaReviewService::class,
             'Review\VariationFinancialHistory' => Review\VariationFinancialHistoryReviewService::class,
@@ -52,12 +48,10 @@ return [
             'Review\VariationVehiclesPsv' => Review\VariationVehiclesPsvReviewService::class,
             'Review\ApplicationVehicles' => Review\ApplicationVehiclesReviewService::class,
             'Review\ApplicationConvictionsPenalties' => Review\ApplicationConvictionsPenaltiesReviewService::class,
-            'Review\TransportManagerOtherEmployment' => Review\TransportManagerOtherEmploymentReviewService::class,
             'Review\ApplicationTransportManagers' => Review\ApplicationTransportManagersReviewService::class,
             'Review\VariationGoodsOcTotalAuth' => Review\VariationGoodsOcTotalAuthReviewService::class,
             'Review\People' => Review\PeopleReviewService::class,
             'Review\ApplicationVehiclesPsv' => Review\ApplicationVehiclesPsvReviewService::class,
-            'Review\TransportManagerMain' => Review\TransportManagerMainReviewService::class,
             'Review\ApplicationAddresses' => Review\ApplicationAddressesReviewService::class,
             'Review\ApplicationTaxiPhv' => Review\ApplicationTaxiPhvReviewService::class,
             'Review\VariationVehicles' => Review\VariationVehiclesReviewService::class,
@@ -65,7 +59,8 @@ return [
     ],
     'view_manager' => [
         'template_path_stack' => [
-            __DIR__ . '/../view'
+            __DIR__ . '/../view',
+            'translations' => __DIR__ . '/language/partials'
         ]
     ],
 ];

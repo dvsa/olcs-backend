@@ -51,7 +51,25 @@ return [
         => CommandHandler\Application\NotTakenUpApplication::class,
     TransferCommand\Application\Overview::class => CommandHandler\Application\Overview::class,
     TransferCommand\Application\CreateSnapshot::class => CommandHandler\Application\CreateSnapshot::class,
-
+    TransferCommand\Application\Grant::class => CommandHandler\Application\Grant::class,
+    TransferCommand\Application\UndoGrant::class => CommandHandler\Application\UndoGrant::class,
+    Command\Application\GrantGoods::class => CommandHandler\Application\GrantGoods::class,
+    Command\Application\GrantPsv::class => CommandHandler\Application\GrantPsv::class,
+    Command\Application\CreateGrantFee::class => CommandHandler\Application\CreateGrantFee::class,
+    Command\Application\Grant\CreateDiscRecords::class => CommandHandler\Application\Grant\CreateDiscRecords::class,
+    Command\Application\Grant\CopyApplicationDataToLicence::class
+        => CommandHandler\Application\Grant\CopyApplicationDataToLicence::class,
+    Command\Application\Grant\ProcessApplicationOperatingCentres::class
+        => CommandHandler\Application\Grant\ProcessApplicationOperatingCentres::class,
+    Command\Application\Grant\CommonGrant::class => CommandHandler\Application\Grant\CommonGrant::class,
+    Command\Application\Grant\GrantConditionUndertaking::class
+        => CommandHandler\Application\Grant\GrantConditionUndertaking::class,
+    Command\Application\Grant\GrantCommunityLicence::class
+        => CommandHandler\Application\Grant\GrantCommunityLicence::class,
+    Command\Application\Grant\GrantTransportManager::class
+        => CommandHandler\Application\Grant\GrantTransportManager::class,
+    Command\Application\Grant\GrantPeople::class => CommandHandler\Application\Grant\GrantPeople::class,
+    Command\Application\Grant\ValidateApplication::class => CommandHandler\Application\Grant\ValidateApplication::class,
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
     TransferCommand\Workshop\CreateWorkshop::class => CommandHandler\Workshop\CreateWorkshop::class,
@@ -111,6 +129,7 @@ return [
     TransferCommand\Variation\CreatePsvDiscs::class => CommandHandler\Variation\CreatePsvDiscs::class,
     TransferCommand\Variation\VoidPsvDiscs::class => CommandHandler\Variation\VoidPsvDiscs::class,
     TransferCommand\Variation\ReplacePsvDiscs::class => CommandHandler\Variation\ReplacePsvDiscs::class,
+    TransferCommand\Variation\Grant::class => CommandHandler\Variation\Grant::class,
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
@@ -459,4 +478,12 @@ return [
     Command\InspectionRequest\SendInspectionRequest::class =>
         CommandHandler\InspectionRequest\SendInspectionRequest::class,
     Command\InspectionRequest\CreateFromGrant::class  => CommandHandler\InspectionRequest\CreateFromGrant::class,
+
+    // Transfer - ChangeOfEntity
+    TransferCommand\ChangeOfEntity\CreateChangeOfEntity::class =>
+        CommandHandler\ChangeOfEntity\CreateChangeOfEntity::class,
+    TransferCommand\ChangeOfEntity\UpdateChangeOfEntity::class =>
+        CommandHandler\ChangeOfEntity\UpdateChangeOfEntity::class,
+    TransferCommand\ChangeOfEntity\DeleteChangeOfEntity::class =>
+        CommandHandler\ChangeOfEntity\DeleteChangeOfEntity::class,
 ];

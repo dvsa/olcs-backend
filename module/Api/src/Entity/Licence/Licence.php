@@ -253,6 +253,9 @@ class Licence extends AbstractLicence
         $criteria->andWhere(
             $criteria->expr()->isNull('removalDate')
         );
+        $criteria->andWhere(
+            $criteria->expr()->neq('specifiedDate', null)
+        );
 
         return $this->getLicenceVehicles()->matching($criteria);
     }
@@ -343,6 +346,11 @@ class Licence extends AbstractLicence
         return $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED;
     }
 
+    public function isRestricted()
+    {
+        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_RESTRICTED;
+    }
+
     /**
      * Helper method to get the first trading name from a licence
      * (Sorts trading names by createdOn date then alphabetically)
@@ -396,7 +404,31 @@ class Licence extends AbstractLicence
                 return $case->isOpen();
             }
         );
+    }
 
+    public function canHaveCommunityLicences()
+    {
+        if ($this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
+            return true;
+        }
+
+        if ($this->isPsv() && $this->getLicenceType()->getId() === self::LICENCE_TYPE_RESTRICTED) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function copyInformationFromApplication(Application $application)
+    {
+        $this->setLicenceType($application->getLicenceType());
+        $this->setGoodsOrPsv($application->getGoodsOrPsv());
+        $this->setTotAuthTrailers($application->getTotAuthTrailers());
+        $this->setTotAuthVehicles($application->getTotAuthVehicles());
+        $this->setTotAuthSmallVehicles($application->getTotAuthSmallVehicles());
+        $this->setTotAuthMediumVehicles($application->getTotAuthMediumVehicles());
+        $this->setTotAuthLargeVehicles($application->getTotAuthLargeVehicles());
+        $this->setNiFlag($application->getNiFlag());
     }
 
     public function getOcForInspectionRequest()

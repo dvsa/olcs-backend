@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Command\Fee;
 
-use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**

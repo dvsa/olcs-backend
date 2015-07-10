@@ -91,6 +91,7 @@ class FeesHelperServiceTest extends MockeryTestCase
         $licenceId = 7;
         $applicationFeeTypeId = 123;
         $interimFeeTypeId = 234;
+        $trafficAreaId = TrafficAreaEntity::NORTH_EASTERN_TRAFFIC_AREA_CODE;
 
         $applicationFee = $this->getStubFee(99, 99.99);
         $interimFee = $this->getStubFee(101, 99.99);
@@ -108,7 +109,7 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->setLicenceType($licenceType);
         $trafficArea = m::mock(TrafficAreaEntity::class)
             ->makePartial()
-            ->setId(TrafficAreaEntity::NORTH_EASTERN_TRAFFIC_AREA_CODE);
+            ->setId($trafficAreaId);
         $appFeeType = m::mock(FeeTypeEntity::class)
             ->makePartial()
             ->setId($applicationFeeTypeId);
@@ -137,11 +138,11 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->andReturn($interimFeeTypeFeeType)
             ->shouldReceive('fetchLatest')
             ->once()
-            ->with($appFeeTypeFeeType, $goodsOrPsv, $licenceType, m::type(\DateTime::class), $trafficArea)
+            ->with($appFeeTypeFeeType, $goodsOrPsv, $licenceType, m::type(\DateTime::class), $trafficAreaId)
             ->andReturn($appFeeType)
             ->shouldReceive('fetchLatest')
             ->once()
-            ->with($interimFeeTypeFeeType, $goodsOrPsv, $licenceType, m::type(\DateTime::class), $trafficArea)
+            ->with($interimFeeTypeFeeType, $goodsOrPsv, $licenceType, m::type(\DateTime::class), $trafficAreaId)
             ->andReturn($interimFeeType);
 
         $this->feeRepo
@@ -183,13 +184,9 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->setId($applicationId)
             ->setGoodsOrPsv(null)
             ->setLicenceType(null);
-        $trafficArea = m::mock(TrafficAreaEntity::class)
-            ->makePartial()
-            ->setId(TrafficAreaEntity::NORTH_EASTERN_TRAFFIC_AREA_CODE);
         $licence = m::mock(LicenceEntity::class)
             ->makePartial()
-            ->setId($licenceId)
-            ->setTrafficArea($trafficArea);
+            ->setId($licenceId);
         $application->setLicence($licence);
 
         // expectations
