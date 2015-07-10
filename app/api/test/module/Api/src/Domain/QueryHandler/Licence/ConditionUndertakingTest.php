@@ -43,7 +43,7 @@ class ConditionUndertakingTest extends QueryHandlerTestCase
             ->once()->andReturn(['CONDITION'])->getMock();
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($query)->once()->andReturn($mockLicence);
-        $this->repoMap['ConditionUndertaking']->shouldReceive('fetchListForLicence')->with(234)->once()
+        $this->repoMap['ConditionUndertaking']->shouldReceive('fetchListForLicenceReadOnly')->with(234)->once()
             ->andReturn([$mockCondUnder]);
 
         $result = $this->sut->handleQuery($query);
