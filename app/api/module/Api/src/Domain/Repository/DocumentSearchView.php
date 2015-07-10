@@ -72,9 +72,4 @@ class DocumentSearchView extends AbstractReadonlyRepository
             );
         }
     }
-
-    protected function applyListJoins(QueryBuilder $qb)
-    {
-
-    }
 }
