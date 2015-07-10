@@ -6,8 +6,10 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Zend\Filter\Word\CamelCaseToUnderscore;
+use Zend\Filter\Word\UnderscoreToCamelCase;
 
 /**
  * Application Entity
@@ -565,5 +567,65 @@ class Application extends AbstractApplication
         }
 
         return $completions;
+    }
+
+    /**
+     * Determine the traffic area used for fee lookup.
+     */
+    public function getFeeTrafficAreaId()
+    {
+        $trafficArea = $this->getLicence()->getTrafficArea();
+
+        if (!is_null($trafficArea)) {
+            return $trafficArea->getId();
+        }
+
+        if ($this->getNiFlag() === 'Y') {
+            return TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE;
+        }
+
+        return null;
+    }
+
+    public function hasVariationChanges()
+    {
+        $completion = $this->getApplicationCompletion();
+
+        $data = $completion->serialize([]);
+
+        foreach ($data as $key => $value) {
+            if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches) && $value !== self::VARIATION_STATUS_UNCHANGED) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getSectionsRequiringAttention()
+    {
+        $completion = $this->getApplicationCompletion();
+        $data = $completion->serialize([]);
+        $sections = [];
+
+        foreach ($data as $key => $value) {
+            if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches)
+                && $value === self::VARIATION_STATUS_REQUIRES_ATTENTION
+            ) {
+                $sections[] = $matches[1];
+            }
+        }
+
+        return $sections;
+    }
+
+    public function getActiveVehicles()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->isNull('removalDate')
+        );
+
+        return $this->getLicenceVehicles()->matching($criteria);
     }
 }

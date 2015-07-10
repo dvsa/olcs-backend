@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
+use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
@@ -9,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationComplet
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Mockery as m;
 
 /**
@@ -873,5 +875,121 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertEquals(1, $result['operating_centres']);
         $this->assertEquals(2, $result['addresses']);
+    }
+
+    /**
+     * @dataProvider niFlagProvider
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function testGetFeeTrafficAreaIdWithLicence($niFlag, $unused)
+    {
+        $trafficArea = m::mock(TrafficArea::class)
+            ->makePartial()
+            ->setId('Foo');
+        $licence = m::mock(Licence::class)
+            ->makePartial()
+            ->setTrafficArea($trafficArea);
+
+        $this->entity->setLicence($licence);
+
+        $this->entity->setNiFlag($niFlag);
+
+        $this->assertEquals('Foo', $this->entity->getFeeTrafficAreaId());
+    }
+
+    /**
+     * @dataProvider niFlagProvider
+     */
+    public function testGetFeeTrafficAreaIdNoLicence($niFlag, $expected)
+    {
+        $licence = m::mock(Licence::class)->makePartial();
+
+        $this->entity->setLicence($licence);
+
+        $this->entity->setNiFlag($niFlag);
+
+        $this->assertEquals($expected, $this->entity->getFeeTrafficAreaId());
+    }
+
+    public function niFlagProvider()
+    {
+        return [
+            ['Y', 'N'],
+            ['N', null],
+        ];
+    }
+
+    public function testGetActiveVehicles()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getLicenceVehicles->matching')
+            ->andReturn('foo');
+
+        $this->assertEquals('foo', $application->getActiveVehicles());
+    }
+
+    public function testGetSectionsRequiringAttention()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $statuses = [
+            'businessTypeStatus' => Entity::VARIATION_STATUS_REQUIRES_ATTENTION,
+            'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED
+        ];
+
+        /** @var ApplicationCompletion $ac */
+        $ac = m::mock(ApplicationCompletion::class)->makePartial();
+        $ac->shouldReceive('serialize')
+            ->with([])
+            ->andReturn($statuses);
+
+        $application->setApplicationCompletion($ac);
+
+        $this->assertEquals(['businessType'], $application->getSectionsRequiringAttention());
+    }
+
+    public function testHasVariationChanges()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $statuses = [
+            'businessTypeStatus' => Entity::VARIATION_STATUS_REQUIRES_ATTENTION,
+            'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED
+        ];
+
+        /** @var ApplicationCompletion $ac */
+        $ac = m::mock(ApplicationCompletion::class)->makePartial();
+        $ac->shouldReceive('serialize')
+            ->with([])
+            ->andReturn($statuses);
+
+        $application->setApplicationCompletion($ac);
+
+        $this->assertTrue($application->hasVariationChanges());
+    }
+
+    public function testHasVariationChangesFalse()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $statuses = [
+            'businessTypeStatus' => Entity::VARIATION_STATUS_UNCHANGED,
+            'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED
+        ];
+
+        /** @var ApplicationCompletion $ac */
+        $ac = m::mock(ApplicationCompletion::class)->makePartial();
+        $ac->shouldReceive('serialize')
+            ->with([])
+            ->andReturn($statuses);
+
+        $application->setApplicationCompletion($ac);
+
+        $this->assertFalse($application->hasVariationChanges());
     }
 }

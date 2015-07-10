@@ -37,13 +37,13 @@ return [
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
         ],
     ],
-    'file_uploader' => array(
+    'file_uploader' => [
         'default' => 'ContentStore',
-        'config' => array(
+        'config' => [
             'location' => 'documents',
             'defaultPath' => '[locale]/[doc_type_name]/[year]/[month]', // e.g. gb/publications/2015/03
-        )
-    ),
+        ]
+    ],
     'controller_plugins' => [
         'invokables' => [
             'response' => \Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response::class,
@@ -165,7 +165,6 @@ return [
             'BusRegSearchView' => RepositoryFactory::class,
             'ProposeToRevoke' => RepositoryFactory::class,
             'OrganisationPerson' => RepositoryFactory::class,
-            'LicenceVehicle' => RepositoryFactory::class,
             'Vehicle' => RepositoryFactory::class,
             'VehicleHistoryView' => RepositoryFactory::class,
             'InspectionRequest' => RepositoryFactory::class,
@@ -173,6 +172,7 @@ return [
             'SubmissionAction' => RepositoryFactory::class,
             'TrafficArea' => RepositoryFactory::class,
             'InspectionRequest' => RepositoryFactory::class,
+            'ChangeOfEntity' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

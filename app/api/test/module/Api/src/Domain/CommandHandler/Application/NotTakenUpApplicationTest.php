@@ -5,11 +5,12 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
+use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\NotTakenUpApplication as CommandHandler;
@@ -102,6 +103,10 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(Application::class));
 
+        $result1 = new Result();
+        $result1->addMessage('Snapshot created');
+        $this->expectedSideEffect(CreateSnapshot::class, ['id' => 532, 'event' => CreateSnapshot::ON_NTU], $result1);
+
         $this->expectedSideEffect(NotTakenUp::class, ['id' => 123], new Result());
 
         $this->expectedSideEffect(
@@ -136,6 +141,6 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(["Application 1 set to not taken up."], $result->getMessages());
+        $this->assertSame(['Snapshot created', 'Application 1 set to not taken up.'], $result->getMessages());
     }
 }

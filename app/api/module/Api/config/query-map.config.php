@@ -44,6 +44,7 @@ return [
     TransferQuery\Application\Review::class => QueryHandler\Application\Review::class,
     TransferQuery\Application\Overview::class => QueryHandler\Application\Overview::class,
     TransferQuery\Application\EnforcementArea::class => QueryHandler\Application\EnforcementArea::class,
+    TransferQuery\Application\Grant::class => QueryHandler\Application\Grant::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -236,4 +237,7 @@ return [
     TransferQuery\InspectionRequest\LicenceInspectionRequestList::class =>
         QueryHandler\InspectionRequest\LicenceInspectionRequestList::class,
     TransferQuery\InspectionRequest\InspectionRequest::class => QueryHandler\InspectionRequest\InspectionRequest::class,
+
+    // Change of Entity
+    TransferQuery\ChangeOfEntity\ChangeOfEntity::class => QueryHandler\ChangeOfEntity\ChangeOfEntity::class,
 ];

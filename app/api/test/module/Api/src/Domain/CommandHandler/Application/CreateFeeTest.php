@@ -103,6 +103,56 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
+    public function testHandleCommandWithTask()
+    {
+        $command = Cmd::create(['id' => 834, 'feeTypeFeeType' => 'FEE_TYPE', 'task' => 111]);
+
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setId(32);
+
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(834);
+        $application->setLicence($licence);
+        $application->setNiFlag('N');
+        $application->setGoodsOrPsv($this->mapRefData('GOODS_OR_PSV'));
+        $application->setLicenceType($this->mapRefData('LICENCE_TYPE'));
+        $application->setReceivedDate('2015-06-01');
+
+        $feeType = new FeeType();
+        $feeType->setId(223);
+        $feeType->setDescription('DESCRIPTION');
+        $feeType->setFixedValue(123.33);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()
+            ->andReturn($application);
+
+        $this->repoMap['FeeType']->shouldReceive('fetchLatest')->with(
+            $this->mapRefData('FEE_TYPE'),
+            $this->mapRefData('GOODS_OR_PSV'),
+            $this->mapRefData('LICENCE_TYPE'),
+            m::type('\DateTime'),
+            null
+        )->once()->andReturn($feeType);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee::class,
+            [
+                'application' => 834,
+                'licence' => 32,
+                'task' => 111,
+                'amount' => 123.33,
+                'invoicedDate' => date('Y-m-d'),
+                'feeType' => 223,
+                'description' => 'DESCRIPTION for application 834',
+                'feeStatus' => 'lfs_ot',
+                'busReg' => null
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
+        $this->sut->handleCommand($command);
+    }
+
     public function testHandleCommandReceivedDateNull()
     {
         $command = Cmd::create(['id' => 834, 'feeTypeFeeType' => 'FEE_TYPE']);

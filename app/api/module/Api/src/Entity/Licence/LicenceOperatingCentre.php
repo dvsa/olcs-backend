@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 
 /**
  * LicenceOperatingCentre Entity
@@ -23,5 +24,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LicenceOperatingCentre extends AbstractLicenceOperatingCentre
 {
-
+    public function __construct(Licence $licence, OperatingCentre $operatingCentre)
+    {
+        $this->setLicence($licence);
+        $this->setOperatingCentre($operatingCentre);
+    }
 }

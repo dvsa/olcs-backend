@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Tm;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * TransportManagerLicence Entity
@@ -23,5 +24,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TransportManagerLicence extends AbstractTransportManagerLicence
 {
+    public function __construct(Licence $licence, TransportManager $transportManager)
+    {
+        parent::__construct();
 
+        $this->setTransportManager($transportManager);
+        $this->setLicence($licence);
+    }
 }

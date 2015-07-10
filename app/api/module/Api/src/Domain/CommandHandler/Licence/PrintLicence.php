@@ -45,7 +45,7 @@ final class PrintLicence extends AbstractCommandHandler implements Transactioned
         $result->addMessage('Document generated');
 
         $data = [
-            'identifier' => $storedFile->getIdentifier(),
+            'identifier'  => $storedFile->getIdentifier(),
             'description' => $description,
             'filename'    => str_replace(' ', '_', $description) . '.rtf',
             'licence'     => $command->getId(),

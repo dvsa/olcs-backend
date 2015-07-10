@@ -74,6 +74,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->isNull')
             ->andReturnUsing([$this, 'mockExprIsNull']);
 
+        $this->qb->shouldReceive('expr->in')
+            ->andReturnUsing([$this, 'mockExprIn']);
+
         $this->qb->shouldReceive('expr->isNotNull')
             ->andReturnUsing([$this, 'mockExprIsNotNull']);
 
@@ -110,6 +113,8 @@ class RepositoryTestCase extends MockeryTestCase
 
     public function mockSetParameter($name, $value)
     {
+        $value = $this->formatValue($value);
+
         $this->query = str_replace(':' . $name, '[[' . $value . ']]', $this->query);
 
         return $this->qb;
@@ -148,7 +153,16 @@ class RepositoryTestCase extends MockeryTestCase
 
     public function mockExprEq($field, $value)
     {
+        $value = $this->formatValue($value);
+
         return $field . ' = ' . $value;
+    }
+
+    public function mockExprIn($field, $value)
+    {
+        $value = $this->formatValue($value);
+
+        return $field . ' IN ' . $value;
     }
 
     public function mockExprIsNull($field)
@@ -163,11 +177,26 @@ class RepositoryTestCase extends MockeryTestCase
 
     public function mockExprLike($field, $value)
     {
+        $value = $this->formatValue($value);
+
         return $field . ' LIKE ' . $value;
     }
 
     public function mockOrX()
     {
         return '(' . implode(' OR ', func_get_args()) . ')';
+    }
+
+    protected function formatValue($value)
+    {
+        if (is_array($value)) {
+            $value = json_encode($value);
+        }
+
+        if (is_object($value)) {
+            $value = get_class($value);
+        }
+
+        return $value;
     }
 }
