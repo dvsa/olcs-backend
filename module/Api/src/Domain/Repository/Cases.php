@@ -9,6 +9,8 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as Entity;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Cases
@@ -60,5 +62,18 @@ class Cases extends AbstractRepository
         }
 
         return $case;
+    }
+
+    /**
+     * Applies filters
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if (method_exists($query, 'getTransportManager')) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.transportManager', ':byTransportManager'))
+                ->setParameter('byTransportManager', $query->getTransportManager());
+        }
     }
 }
