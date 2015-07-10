@@ -56,7 +56,7 @@ class CreateCaseTest extends CommandHandlerTestCase
             [
                 'categorys' => ['case_cat_compl_proh'],
                 'outcomes' => ['case_o_opr'],
-                'application' => 5,
+                'application' => null,
                 'licence' => 7,
                 'transportManager' => 9,
                 'caseType' => CasesEntity::LICENCE_CASE_TYPE
@@ -66,7 +66,6 @@ class CreateCaseTest extends CommandHandlerTestCase
         $this->repoMap['Cases']->shouldReceive('save')
             ->with(m::type(CasesEntity::class))
             ->once();
-
 
         $result = $this->sut->handleCommand($command);
 
