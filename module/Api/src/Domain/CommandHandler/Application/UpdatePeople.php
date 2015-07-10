@@ -58,11 +58,12 @@ final class UpdatePeople extends AbstractCommandHandler implements Transactioned
                 $this->updatePersonFromCommand($newPerson, $command);
                 $this->getRepo('Person')->save($newPerson);
 
-                $appOrgPerson = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson();
+                $appOrgPerson = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson(
+                    $application,
+                    $application->getLicence()->getOrganisation(),
+                    $newPerson
+                );
                 $appOrgPerson->setAction('U');
-                $appOrgPerson->setOrganisation($application->getLicence()->getOrganisation());
-                $appOrgPerson->setApplication($application);
-                $appOrgPerson->setPerson($newPerson);
                 $appOrgPerson->setOriginalPerson($person);
                 $appOrgPerson->setPosition($command->getPosition());
                 $this->getRepo('ApplicationOrganisationPerson')->save($appOrgPerson);
