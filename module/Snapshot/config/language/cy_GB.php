@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'tachograph_analyser.tach_external' => 'An external contractor',
+    'tachograph_analyser.tach_internal' => 'An owner or employee of the business',
+    'tachograph_analyser.tach_na' => 'Not applicable',
+    'variation-application-type-of-licence-freetext' => 'The licence type has been changed from %s to %s',
     '1 Week' => '1 Week',
     'no.of.weeks' => '%s Weeks',
     'application-review-addresses-contact-details-title' => 'Contact details',
