@@ -67,12 +67,12 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
 
         $complaint = new Complaint(
             $this->getRepo()->getReference(Cases::class, $command->getCase()),
-            $this->getRepo()->getRefdataReference($command->getComplaintType()),
+            $isCompliance,
             $this->getRepo()->getRefdataReference($command->getStatus()),
             new \DateTime($command->getComplaintDate()),
-            $contactDetails,
-            $isCompliance
+            $contactDetails
         );
+        $complaint->setComplaintType($this->getRepo()->getRefdataReference($command->getComplaintType()));
 
         if ($command->getClosedDate() !== null) {
             $complaint->setClosedDate(new \DateTime($command->getClosedDate()));

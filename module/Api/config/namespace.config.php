@@ -88,7 +88,6 @@ return [
     'Trailer' => 'Licence',
     'Workshop' => 'Licence',
     'Note' => 'Note',
-    'OcComplaint' => 'OperatingCentre',
     'OperatingCentre' => 'OperatingCentre',
     'Opposer' => 'Opposition',
     'Opposition' => 'Opposition',

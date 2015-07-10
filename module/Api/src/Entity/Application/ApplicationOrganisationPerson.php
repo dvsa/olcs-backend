@@ -21,5 +21,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ApplicationOrganisationPerson extends AbstractApplicationOrganisationPerson
 {
-
+    public function __construct(
+        Application $application,
+        \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation,
+        \Dvsa\Olcs\Api\Entity\Person\Person $person
+    ) {
+        $this->setApplication($application);
+        $this->setOrganisation($organisation);
+        $this->setPerson($person);
+    }
 }

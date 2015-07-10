@@ -420,12 +420,12 @@ VALUES
         (113, 'ecst_open', 'ct_cov', 0, NULL, NULL, 24, '2015-01-17 10:37:10', 'Ian',
     'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1, NULL);
 
-INSERT INTO `oc_complaint` (`id`, `complaint_id`, `operating_centre_id`)
+INSERT INTO `oc_complaint` (`complaint_id`, `operating_centre_id`)
 VALUES
-    (1, 7, 16),
-    (2, 7, 21),
-    (3, 7, 37),
-    (4, 9, 39);
+    (7, 16),
+    (7, 21),
+    (7, 37),
+    (9, 39);
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `application_id`, `operating_centre_id`,
 `created_by`,`last_modified_by`, `added_via`, `attached_to`, `condition_type`, `deleted_date`, `is_draft`,
