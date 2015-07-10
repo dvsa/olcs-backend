@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Cmd;
+use Dvsa\Olcs\Transfer\Command\Application\UpdateCompletion as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateVariationCompletion as VariationCommand;
 
 /**

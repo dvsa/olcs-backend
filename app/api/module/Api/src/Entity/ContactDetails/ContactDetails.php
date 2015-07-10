@@ -86,6 +86,9 @@ class ContactDetails extends AbstractContactDetails
             case self::CONTACT_TYPE_USER:
                 $this->updateUser($contactParams);
                 break;
+            case self::CONTACT_TYPE_COMPLAINANT:
+                $this->updateComplainant($contactParams);
+                break;
         }
 
         return $this;
@@ -188,6 +191,18 @@ class ContactDetails extends AbstractContactDetails
             // populate phone contacts
             $this->populatePhoneContacts($contactParams['phoneContacts']);
         }
+    }
+
+    /**
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     */
+    private function updateComplainant(array $contactParams)
+    {
+        // populate address
+        $this->populateAddress($contactParams['address']);
+
+        // populate person
+        $this->populatePerson($contactParams['person']);
     }
 
     /**
