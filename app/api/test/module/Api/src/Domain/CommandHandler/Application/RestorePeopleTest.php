@@ -61,11 +61,18 @@ class RestorePeopleTest extends CommandHandlerTestCase
         $application = new ApplicationEntity($licence, new \Dvsa\Olcs\Api\Entity\System\RefData(), 0);
         $application->setId(52);
 
-        $appOrgPerson1 = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson();
+        $appOrgPerson1 = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson(
+            $application,
+            $organisation,
+            $person
+        );
         $appOrgPerson1->setId(79);
-        $appOrgPerson2 = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson();
+        $appOrgPerson2 = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson(
+            $application,
+            $organisation,
+            new \Dvsa\Olcs\Api\Entity\Person\Person()
+        );
         $appOrgPerson2->setId(234);
-        $appOrgPerson2->setPerson(new \Dvsa\Olcs\Api\Entity\Person\Person());
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
 

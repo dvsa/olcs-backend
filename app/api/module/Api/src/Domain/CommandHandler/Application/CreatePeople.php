@@ -42,11 +42,12 @@ final class CreatePeople extends AbstractCommandHandler implements Transactioned
         $this->getRepo('Person')->save($person);
 
         if ($application->useDeltasInPeopleSection()) {
-            $applicationPerson = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson();
+            $applicationPerson = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson(
+                $application,
+                $application->getLicence()->getOrganisation(),
+                $person
+            );
             $applicationPerson->setAction('A');
-            $applicationPerson->setOrganisation($application->getLicence()->getOrganisation());
-            $applicationPerson->setApplication($application);
-            $applicationPerson->setPerson($person);
             $applicationPerson->setPosition($command->getPosition());
 
             $this->getRepo('ApplicationOrganisationPerson')->save($applicationPerson);

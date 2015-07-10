@@ -139,7 +139,11 @@ class UpdatePeopleTest extends CommandHandlerTestCase
         $this->repoMap['Person']->shouldReceive('fetchById')->with(79, \Doctrine\ORM\Query::HYDRATE_OBJECT, 122)->once()
             ->andReturn($person);
 
-        $appOrgPerson = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson();
+        $appOrgPerson = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson(
+            $application,
+            $organisation,
+            new \Dvsa\Olcs\Api\Entity\Person\Person()
+        );
         $appOrgPerson->setId(23);
 
         $this->repoMap['ApplicationOrganisationPerson']->shouldReceive('fetchForApplicationAndPerson')
@@ -203,7 +207,11 @@ class UpdatePeopleTest extends CommandHandlerTestCase
         $this->repoMap['Person']->shouldReceive('fetchById')->with(79, \Doctrine\ORM\Query::HYDRATE_OBJECT, 122)->once()
             ->andReturn($person);
 
-        $appOrgPerson = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson();
+        $appOrgPerson = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson(
+            $application,
+            $organisation,
+            new \Dvsa\Olcs\Api\Entity\Person\Person()
+        );
         $appOrgPerson->setId(23);
 
         $this->repoMap['ApplicationOrganisationPerson']->shouldReceive('fetchForApplicationAndPerson')

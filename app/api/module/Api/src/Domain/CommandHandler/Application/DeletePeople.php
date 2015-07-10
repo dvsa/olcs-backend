@@ -66,13 +66,13 @@ final class DeletePeople extends AbstractCommandHandler implements Transactioned
             $this->getRepo('ApplicationOrganisationPerson')->delete($appOrgPerson);
             $this->getRepo('Person')->delete($appOrgPerson->getPerson());
         } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException $e) {
-            $appOrgPerson = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson();
-            $appOrgPerson->setAction('D');
-            $appOrgPerson->setOrganisation($application->getLicence()->getOrganisation());
-            $appOrgPerson->setApplication($application);
-            $appOrgPerson->setPerson(
+            $appOrgPerson = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson(
+                $application,
+                $application->getLicence()->getOrganisation(),
                 $this->getRepo()->getReference(\Dvsa\Olcs\Api\Entity\Person\Person::class, $personId)
             );
+            $appOrgPerson->setAction('D');
+
             $this->getRepo('ApplicationOrganisationPerson')->save($appOrgPerson);
 
             $result->addMessage("ApplicationOrganisationPerson ID {$appOrgPerson->getId()} delete delta created");
