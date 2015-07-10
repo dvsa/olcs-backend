@@ -173,6 +173,7 @@ return [
             'TrafficArea' => RepositoryFactory::class,
             'InspectionRequest' => RepositoryFactory::class,
             'ChangeOfEntity' => RepositoryFactory::class,
+            'ApplicationOrganisationPerson' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

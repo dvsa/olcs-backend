@@ -640,4 +640,29 @@ class Application extends AbstractApplication
         $this->setTotAuthLargeVehicles($licence->getTotAuthLargeVehicles());
         $this->setNiFlag($licence->getNiFlag());
     }
+
+    /**
+     * Should Deltas be used in the people section
+     *
+     * @return boolean
+     */
+    public function useDeltasInPeopleSection()
+    {
+        // if application/variation organisation is sole trader or partnership
+        if ($this->getLicence()->getOrganisation()->isSoleTrader() ||
+            $this->getLicence()->getOrganisation()->isPartnership()
+            ) {
+            return false;
+        }
+
+        // if is an application AND no current ApplicationOrganisationUsers AND no inforce licences
+        if (!$this->getIsVariation() &&
+            $this->getApplicationOrganisationPersons()->count() === 0 &&
+            !$this->getLicence()->getOrganisation()->hasInforceLicences()
+            ) {
+                return false;
+        }
+
+        return true;
+    }
 }
