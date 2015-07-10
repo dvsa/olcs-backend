@@ -24,7 +24,7 @@ class VehiclesPsvReviewService extends AbstractReviewService
      */
     public function getConfigFromData(array $data = array(), $mainItems = array())
     {
-        if ($data['hasEnteredReg'] == 'Y') {
+        if ($data['isVariation'] || $data['hasEnteredReg'] == 'Y') {
             $vehicles = $this->splitVehiclesUp($data['licenceVehicles']);
 
             if (!empty($vehicles[Vehicle::PSV_TYPE_SMALL])) {
