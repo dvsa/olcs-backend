@@ -11,12 +11,12 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\EnvironmentalComplaint\UpdateEnvironmentalComplaint;
 use Dvsa\Olcs\Api\Domain\Repository\Complaint;
+use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\EnvironmentalComplaint\UpdateEnvironmentalComplaint as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
-use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 
 /**
  * Update Environmental Complaint Test
@@ -29,6 +29,7 @@ class UpdateEnvironmentalComplaintTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateEnvironmentalComplaint();
         $this->mockRepo('Complaint', Complaint::class);
+        $this->mockRepo('ContactDetails', ContactDetails::class);
 
         parent::setUp();
     }
@@ -36,13 +37,7 @@ class UpdateEnvironmentalComplaintTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            'ct_complainant'
-        ];
-
-        $this->references = [
-            CasesEntity::class => [
-                24 => m::mock(CasesEntity::class)
-            ]
+            ComplaintEntity::COMPLAIN_STATUS_OPEN,
         ];
 
         parent::initReferences();
@@ -50,38 +45,43 @@ class UpdateEnvironmentalComplaintTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $command = Cmd::Create(
-            [
-                'id' => 99,
-                'version' => 1,
-                'case' => 24,
-                "closedDate" => "2015-02-16",
-                "complainantFamilyName" => "Anthony",
-                "complainantForename" => "David",
-                "complaintDate" => "2015-01-16",
-                "closeDate" => "2015-02-26",
-                "complaintType" => "ct_cov",
-                "createdBy" => null,
-                "description" => "Some major complaint about condition of vehicle",
-                "driverFamilyName" => "Driver L Smith",
-                "driverForename" => "Driver F John",
-                "status" => "cs_ack",
-                "vrm" => "VRM123T"
-            ]
-        );
+        $data = [
+            'id' => 99,
+            'version' => 1,
+            "complaintDate" => "2015-01-16",
+            "description" => "Some major complaint about condition of vehicle",
+            "status" => ComplaintEntity::COMPLAIN_STATUS_OPEN,
+            'operatingCentres' => [101, 102],
+            'complainantContactDetails' => [
+                'person' => [
+                    'forename' => 'David',
+                    'familyName' => 'Anthony',
+                ],
+                'address' => [
+                    'addressLine1' => 'a12',
+                    'addressLine2' => 'a23',
+                    'addressLine3' => 'a34',
+                    'addressLine4' => 'a45',
+                    'town' => 'town',
+                    'postcode' => 'LS1 2AB',
+                    'countryCode' => m::mock(Country::class),
+                ],
+            ],
+        ];
 
-        /** @var PersonEntity $person */
-        $person = m::mock(PersonEntity::class)->makePartial();
-        $person->setId(44);
+        $command = Cmd::create($data);
 
         /** @var ContactDetailsEntity $complainantContactDetails */
         $complainantContactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
-        $complainantContactDetails->setId(33);
-        $complainantContactDetails->setPerson($person);
+        $complainantContactDetails->shouldReceive('update')
+            ->once()
+            ->with($data['complainantContactDetails'])
+            ->andReturnSelf();
 
         /** @var ComplaintEntity $complaint */
         $complaint = m::mock(ComplaintEntity::class)->makePartial();
         $complaint->setId($command->getId());
+        $complaint->setIsCompliance(false);
         $complaint->setComplainantContactDetails($complainantContactDetails);
 
         $this->repoMap['Complaint']->shouldReceive('fetchUsingId')
@@ -96,6 +96,11 @@ class UpdateEnvironmentalComplaintTest extends CommandHandlerTestCase
                 }
             )
             ->once();
+
+        $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
+            ->once()
+            ->with($data['complainantContactDetails'])
+            ->andReturn($data['complainantContactDetails']);
 
         $result = $this->sut->handleCommand($command);
 

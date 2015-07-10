@@ -6,6 +6,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as Entity;
@@ -18,6 +19,18 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class Cases extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+    /**
+     * @param QueryBuilder $qb
+     * @param int          $id
+     */
+    protected function buildDefaultQuery(QueryBuilder $qb, $id)
+    {
+        parent::buildDefaultQuery($qb, $id);
+
+        $this->getQueryBuilder()
+            ->with('licence');
+    }
 
     /**
      * Fetch the default record by it's id
@@ -57,7 +70,7 @@ class Cases extends AbstractRepository
 
         $pi = $qb->getQuery()->getResult();
 
-        if (!empty($results) && $hydrateMode === Query::HYDRATE_ARRAY) {
+        if (!empty($pi) && $hydrateMode === Query::HYDRATE_ARRAY) {
             $case['pi'] = $pi[0];
         }
 
