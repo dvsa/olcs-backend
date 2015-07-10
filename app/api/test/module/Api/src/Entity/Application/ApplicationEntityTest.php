@@ -1015,4 +1015,51 @@ class ApplicationEntityTest extends EntityTester
         $this->assertEquals(9, $this->entity->getTotAuthLargeVehicles());
         $this->assertEquals('Y', $this->entity->getNiFlag());
     }
+    public function testUseDeltasInPeopleSectionSole()
+    {
+        $type = new RefData();
+        $type->setId('org_t_st');
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($type);
+        $licence = new Licence($organisation, new RefData());
+        $application = new Entity($licence, new RefData(), 1);
+
+        $this->assertFalse($application->useDeltasInPeopleSection());
+    }
+
+    public function testUseDeltasInPeopleSectionPartnership()
+    {
+        $type = new RefData();
+        $type->setId('org_t_p');
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($type);
+        $licence = new Licence($organisation, new RefData());
+        $application = new Entity($licence, new RefData(), 1);
+
+        $this->assertFalse($application->useDeltasInPeopleSection());
+    }
+
+    public function testUseDeltasInPeopleSectionVariationLlp()
+    {
+        $type = new RefData();
+        $type->setId('org_t_llp');
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($type);
+        $licence = new Licence($organisation, new RefData());
+        $application = new Entity($licence, new RefData(), 1);
+
+        $this->assertTrue($application->useDeltasInPeopleSection());
+    }
+
+    public function testUseDeltasInPeopleSectionApplicationRc()
+    {
+        $type = new RefData();
+        $type->setId('org_t_rc');
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($type);
+        $licence = new Licence($organisation, new RefData());
+        $application = new Entity($licence, new RefData(), 0);
+
+        $this->assertFalse($application->useDeltasInPeopleSection());
+    }
 }
