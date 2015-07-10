@@ -64,6 +64,8 @@ class InspectionRequest extends AbstractInspectionRequest
         $trailersExaminedNo = null,
         $inspectorNotes = null
     ) {
+        $vehiclesExaminedNo = ($vehiclesExaminedNo === '') ? null : $vehiclesExaminedNo;
+        $trailersExaminedNo = ($trailersExaminedNo === '') ? null : $trailersExaminedNo;
         $this->validateInspectionRequest($reportType, $requestDate, $dueDate, $duePeriod, $resultType);
 
         $this->setRequestType($requestType);
