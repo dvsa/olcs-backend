@@ -23,7 +23,15 @@ class AlertList extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         return [
-            'result' => $this->resultList($repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT)),
+            'result' => $this->resultList(
+                $repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT),
+                [
+                    'organisation',
+                    'reasons' => [
+                        'reasonType',
+                    ],
+                ]
+            ),
             'count' => $repo->fetchCount($query)
         ];
     }
