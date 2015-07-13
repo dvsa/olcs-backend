@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler as DomainAbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
 /**
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class EnqueueOrganisations extends AbstractCommandHandler implements TransactionedInterface
+final class EnqueueOrganisations extends DomainAbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Queue';
 
