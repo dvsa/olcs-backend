@@ -5,6 +5,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion as AppCompCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion as AppCompCommandHandler;
+use Dvsa\Olcs\Api\Domain\Command\Queue as QueueCommand;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Queue as QueueCommandHandler;
 
 return [
     // Transfer - Application
@@ -567,4 +569,8 @@ return [
     // Domain - CompaniesHouse
     Command\CompaniesHouse\EnqueueOrganisations::class => CommandHandler\CompaniesHouse\EnqueueOrganisations::class,
     Command\CompaniesHouse\InitialLoad::class => CommandHandler\CompaniesHouse\InitialLoad::class,
+
+    // Domain - Queue
+    QueueCommand\Complete::class => QueueCommandHandler\Complete::class,
+    QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
 ];

@@ -11,6 +11,8 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Complete as CompleteCmd;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Failed as FailedCmd;
 
 /**
  * Abstract Companies House Queue Consumer
@@ -38,14 +40,15 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
 
         $commandClass = $this->commandName;
         $command = $commandClass::create(['companyNumber' => $options['companyNumber']]);
-        $response = $this->getServiceLocator()->get('CommandHandlerManager')
-            ->handleCommand($command);
-var_dump($response); exit;
-        if (!$response->isOk()) {
-            return $this->failed($item, $response->getMessage());
+
+        try {
+            $result = $this->getServiceLocator()->get('CommandHandlerManager')
+                ->handleCommand($command);
+        } catch (\Exception $e) {
+            return $this->failed($item, $e->getMessage());
         }
 
-        return $this->success($item, $response->getMessage());
+        return $this->success($item, $result->getMessages()[0]);
     }
 
     /**
@@ -56,11 +59,12 @@ var_dump($response); exit;
      */
     protected function success(QueueEntity $item, $message = null)
     {
-        throw new \Exception('@todo success command');
-        $this->getServiceLocator()->get('Entity\Queue')->complete($item);
+        $command = CompleteCmd::create(['item' => $item]);
+        $this->getServiceLocator()->get('CommandHandlerManager')
+            ->handleCommand($command);
 
         return 'Successfully processed message: '
-            . $item['id'] . ' ' . $item['options']
+            . $item->getId() . ' ' . $item->getOptions()
             . ($message ? ' ' . $message : '');
     }
 
@@ -73,11 +77,12 @@ var_dump($response); exit;
      */
     protected function failed(QueueEntity $item, $reason = null)
     {
-        throw new \Exception('@todo failed command');
-        $this->getServiceLocator()->get('Entity\Queue')->failed($item);
+        $command = FailedCmd::create(['item' => $item]);
+        $this->getServiceLocator()->get('CommandHandlerManager')
+            ->handleCommand($command);
 
         return 'Failed to process message: '
-            . $item['id'] . ' ' . $item['options']
+            . $item->getId() . ' ' . $item->getOptions()
             . ' ' .  $reason;
     }
 }

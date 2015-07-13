@@ -112,14 +112,13 @@ class Client
             ->setUri($uri)
             ->setMethod('GET');
 
+        /** @var $response Zend\Http\Response */
         $response = $this->getHttpClient()->send();
 
-        $jsonResponse = json_decode($response->getBody(), true);
-
-        if (!empty ($jsonResponse['errors'])) {
-            throw new \Exception('Error response: '.$response->getBody());
+        if (!$response->isOk()) {
+            throw new Exception('Error response: ' . $response->getBody());
         }
 
-        return $jsonResponse;
+        return json_decode($response->getBody(), true);
     }
 }

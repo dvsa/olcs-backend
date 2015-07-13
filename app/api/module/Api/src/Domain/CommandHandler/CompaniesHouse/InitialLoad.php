@@ -39,9 +39,13 @@ final class InitialLoad extends AbstractCommandHandler
         return $this;
     }
 
+    /**
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $companyNumber = $command->getCompanyNumber();
+        $result = new Result();
 
         $apiResult = $this->api->getCompanyProfile($companyNumber, true);
         $data = $this->normaliseProfileData($apiResult);
@@ -49,7 +53,6 @@ final class InitialLoad extends AbstractCommandHandler
         $company = new CompanyEntity($data);
         $rows = $this->getRepo()->save($company);
 
-        $result = new Result();
         $result
             ->addId('companiesHouseCompany', $company->getId())
             ->addMessage('Company added');
