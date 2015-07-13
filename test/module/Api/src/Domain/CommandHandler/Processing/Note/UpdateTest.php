@@ -11,8 +11,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Processing\Note\Update as UpdateCommandH
 use Dvsa\Olcs\Transfer\Command\Processing\Note\Update as UpdateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\Note;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use ZfcRbac\Service\AuthorizationService;
 
 use Dvsa\Olcs\Api\Entity;
 
@@ -28,6 +30,17 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function setUp()
     {
+        $user = new UserEntity();
+        $user->setId(1);
+
+        $as = m::mock(AuthorizationService::class);
+        $as->shouldReceive('getIdentity')->once()->andReturnSelf();
+        $as->shouldReceive('getUser')->once()->andReturn($user);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => $as
+        ];
+
         $this->sut = new UpdateCommandHandler();
         $this->mockRepo('Note', Note::class);
 
