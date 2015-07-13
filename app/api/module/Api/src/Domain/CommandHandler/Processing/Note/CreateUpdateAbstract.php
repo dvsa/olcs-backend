@@ -131,7 +131,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Au
         }
 
         $entity->setUser(
-            $this->getCurrentUser()->getId()
+            $this->getCurrentUser()
         );
 
         return $entity;
