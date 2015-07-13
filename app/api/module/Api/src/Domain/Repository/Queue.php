@@ -87,12 +87,6 @@ SQL;
         $result = $results[0];
         $result->incrementAttempts();
         $result->setStatus($this->getRefDataReference(Entity::STATUS_PROCESSING));
-        // try {
-        //     $this->save($data);
-        //     $result['version']++;
-        // } catch (ResourceConflictException $ex) {
-        //     return null;
-        // }
         $this->save($result);
 
         return $result;
