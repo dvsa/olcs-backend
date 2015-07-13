@@ -62,12 +62,16 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
         }
 
         $completion = $application->getApplicationCompletion();
+        // always reset decalration(undertakings) section, unless that it is the section just completed
+        if ($command->getSection() !== 'undertakings') {
+            $application->setDeclarationConfirmation('N');
+        }
 
         $sectionsToUpdate = $this->getSectionsToUpdate($command, $completion);
 
         $result = new Result();
 
-        foreach ($sectionsToUpdate as $section => $currentStatus) {
+        foreach (array_keys($sectionsToUpdate) as $section) {
             $result->merge($this->getCommandHandler()->handleCommand($this->getUpdateCommand($section, $command)));
         }
 

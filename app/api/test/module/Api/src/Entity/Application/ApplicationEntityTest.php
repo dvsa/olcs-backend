@@ -641,6 +641,40 @@ class ApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider canCreateCaseProvider
+     */
+    public function testCanCreateCase($status, $licNo, $expected)
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+
+        $sut->shouldReceive('getStatus->getId')->once()->andReturn($status);
+        $sut->shouldReceive('getLicence->getLicNo')->andReturn($licNo);
+        $this->assertEquals($expected, $sut->canCreateCase());
+    }
+
+    public function canCreateCaseProvider()
+    {
+        $licNo = 12345;
+
+        return [
+            [Entity::APPLICATION_STATUS_NOT_SUBMITTED, null, false],
+            [Entity::APPLICATION_STATUS_GRANTED, null, false],
+            [Entity::APPLICATION_STATUS_UNDER_CONSIDERATION, null, false],
+            [Entity::APPLICATION_STATUS_VALID, null, false],
+            [Entity::APPLICATION_STATUS_WITHDRAWN, null, false],
+            [Entity::APPLICATION_STATUS_REFUSED, null, false],
+            [Entity::APPLICATION_STATUS_NOT_TAKEN_UP, null, false],
+            [Entity::APPLICATION_STATUS_NOT_SUBMITTED, $licNo, false],
+            [Entity::APPLICATION_STATUS_GRANTED, $licNo, true],
+            [Entity::APPLICATION_STATUS_UNDER_CONSIDERATION, $licNo, true],
+            [Entity::APPLICATION_STATUS_VALID, $licNo, true],
+            [Entity::APPLICATION_STATUS_WITHDRAWN, $licNo, true],
+            [Entity::APPLICATION_STATUS_REFUSED, $licNo, true],
+            [Entity::APPLICATION_STATUS_NOT_TAKEN_UP, $licNo, true],
+        ];
+    }
+
+    /**
      * @dataProvider goodsOrPsvHelperProvider
      */
     public function testIsGoodsAndIsPsvHelperMethods($goodsOrPsv, $isGoods, $isPsv)
@@ -794,21 +828,28 @@ class ApplicationEntityTest extends EntityTester
     public function testGetOcForInspectionRequest()
     {
         $oc1 = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->once()
             ->shouldReceive('getAction')
             ->once()
             ->andReturn('A')
             ->shouldReceive('getOperatingCentre')
-            ->andReturn('oc1')
-            ->once()
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(1)
+                ->twice()
+                ->getMock()
+            )
             ->getMock();
 
         $oc2 = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(2)
-            ->once()
+            ->shouldReceive('getOperatingCentre')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(2)
+                ->once()
+                ->getMock()
+            )
             ->shouldReceive('getAction')
             ->andReturn('D')
             ->once()
@@ -817,12 +858,14 @@ class ApplicationEntityTest extends EntityTester
         $mockApplicationOperatingCentres = [$oc1, $oc2];
 
         $oc3 = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(3)
-            ->once()
             ->shouldReceive('getOperatingCentre')
-            ->andReturn('oc3')
-            ->once()
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(3)
+                ->twice()
+                ->getMock()
+            )
             ->getMock();
 
         $mockLicenceOperatingCentres = [$oc3];
@@ -843,7 +886,9 @@ class ApplicationEntityTest extends EntityTester
             ->getMock();
 
         $result = $sut->getOcForInspectionRequest();
-        $this->assertEquals(['oc1', 'oc3'], $result);
+        $this->assertEquals(count($result), 2);
+        $this->assertEquals($result[0]->getId(), 1);
+        $this->assertEquals($result[1]->getId(), 3);
     }
 
     public function testGetVariationCompletionNotVariation()

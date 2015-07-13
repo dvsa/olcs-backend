@@ -91,7 +91,7 @@ class CreateVariationTest extends CommandHandlerTestCase
         $result1->addMessage('UpdateApplicationCompletion');
         $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result1);
 
-        $data = ['id' => 222, 'feeTypeFeeType' => FeeType::FEE_TYPE_VAR];
+        $data = ['id' => 222, 'feeTypeFeeType' => FeeType::FEE_TYPE_VAR, 'task' => null];
         $result2 = new Result();
         $result2->addMessage('CreateFee');
         $this->expectedSideEffect(CreateFee::class, $data, $result2);
