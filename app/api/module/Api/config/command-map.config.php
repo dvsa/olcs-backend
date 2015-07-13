@@ -76,6 +76,8 @@ return [
     TransferCommand\Application\RestorePeople::class => CommandHandler\Application\RestorePeople::class,
     TransferCommand\Application\UpdateCompletion::class =>
         CommandHandler\Application\UpdateApplicationCompletion::class,
+    TransferCommand\Application\GenerateOrganisationName::class =>
+        CommandHandler\Application\GenerateOrganisationName::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
