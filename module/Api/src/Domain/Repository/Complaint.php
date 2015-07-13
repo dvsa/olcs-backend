@@ -102,5 +102,10 @@ class Complaint extends AbstractRepository
             $qb->andWhere($qb->expr()->eq('ca.licence', ':licence'))
                 ->setParameter('licence', $query->getLicence());
         }
+        if ($query->getApplication() !== null) {
+            $this->getQueryBuilder()->with('case', 'ca');
+            $qb->andWhere($qb->expr()->eq('ca.application', ':application'))
+                ->setParameter('application', $query->getApplication());
+        }
     }
 }
