@@ -112,6 +112,7 @@ return [
 
     // Submission
     TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
+    TransferQuery\Submission\SubmissionSectionComment::class => QueryHandler\Submission\SubmissionSectionComment::class,
 
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
