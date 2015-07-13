@@ -32,12 +32,22 @@ return [
                         ],
                     ],
                 ],
+                'process-queue' => [
+                    'options' => [
+                        'route' => 'process-queue [<type>]',
+                        'defaults' => [
+                            'controller' => 'QueueController',
+                            'action' => 'index'
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
     'controllers' => [
         'invokables' => [
             'BatchController' => Dvsa\Olcs\Cli\Controller\BatchController::class,
+            'QueueController' => Dvsa\Olcs\Cli\Controller\QueueController::class,
         ]
     ],
     'cache' => [
@@ -45,5 +55,23 @@ return [
             // apc_cli is not currently enabled in environments therefore change it
             'name' => 'memory',
         ]
+    ],
+    'service_manager' => [
+        'invokables' => [
+            'Queue' => Dvsa\Olcs\Cli\Service\Queue\QueueProcessor::class,
+        ],
+        'factories' => [
+            'MessageConsumerManager' => Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManagerFactory::class,
+        ],
+    ],
+    'message_consumer_manager' => [
+        'invokables' => [
+            'que_typ_ch_initial' => Dvsa\Olcs\Cli\Service\Queue\CompaniesHouse\InitialDataLoad::class,
+            'que_typ_ch_compare' => Dvsa\Olcs\Cli\Service\Queue\CompaniesHouse\Compare::class,
+        ]
+    ],
+    'queue' => [
+        // 'isLongRunningProcess' => true,
+        'runFor' => 60
     ],
 ];
