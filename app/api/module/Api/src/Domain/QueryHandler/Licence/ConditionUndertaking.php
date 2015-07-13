@@ -26,7 +26,7 @@ class ConditionUndertaking extends AbstractQueryHandler
         /* @var $licence LicenceEntity */
         $licence = $this->getRepo()->fetchUsingId($query);
 
-        $conditionUndertakings = $this->getRepo('ConditionUndertaking')->fetchListForLicence($query->getId());
+        $conditionUndertakings = $this->getRepo('ConditionUndertaking')->fetchListForLicenceReadOnly($query->getId());
 
         return $this->result(
             $licence,
