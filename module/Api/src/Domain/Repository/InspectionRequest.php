@@ -9,6 +9,8 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest as Entity;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Inspection Request
@@ -56,5 +58,39 @@ class InspectionRequest extends AbstractRepository
             ->withRefData()
             ->byId($id);
         return $qb->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param InspectionRequestListDTO $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'));
+        $qb->setParameter('licence', $query->getLicence());
+    }
+
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->with('application', 'a');
+    }
+
+    public function fetchPage(QueryInterface $query, $licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+        $this->buildDefaultListQuery($qb, $query);
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'));
+        $qb->setParameter('licence', $licenceId);
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->with('application', 'a');
+
+        return [
+            'result' => $this->fetchPaginatedList($qb),
+            'count'  => $this->fetchPaginatedCount($qb)
+        ];
     }
 }

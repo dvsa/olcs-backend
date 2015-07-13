@@ -430,4 +430,14 @@ class Licence extends AbstractLicence
         $this->setTotAuthLargeVehicles($application->getTotAuthLargeVehicles());
         $this->setNiFlag($application->getNiFlag());
     }
+
+    public function getOcForInspectionRequest()
+    {
+        $list = [];
+        $licenceOperatingCentres = $this->getOperatingCentres();
+        foreach ($licenceOperatingCentres as $licenceOperatingCentre) {
+            $list[] = $licenceOperatingCentre->getOperatingCentre();
+        }
+        return $list;
+    }
 }

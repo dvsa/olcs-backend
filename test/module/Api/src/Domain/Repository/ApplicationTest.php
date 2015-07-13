@@ -310,11 +310,19 @@ class ApplicationTest extends RepositoryTestCase
             ->andReturnSelf()
             ->once()
             ->shouldReceive('with')
+            ->with('l_oc_oc.address', 'l_oc_oc_a')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
             ->with('operatingCentres', 'a_oc')
             ->andReturnSelf()
             ->once()
             ->shouldReceive('with')
             ->with('a_oc.operatingCentre', 'a_oc_oc')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('a_oc_oc.address', 'a_oc_oc_a')
             ->andReturnSelf()
             ->once()
             ->shouldReceive('byId')
@@ -335,8 +343,7 @@ class ApplicationTest extends RepositoryTestCase
         $this->assertEquals('RESULT', $result);
     }
 
-
-    public function testFetchActiveForForOrganisation()
+    public function testFetchActiveForOrganisation()
     {
         $organisationId = 123;
 
@@ -380,6 +387,42 @@ class ApplicationTest extends RepositoryTestCase
 
         $result = $this->sut->fetchActiveForOrganisation($organisationId);
 
+        $this->assertEquals('RESULT', $result);
+    }
+
+    public function testFetchWithLicence()
+    {
+        $applicationId = 1;
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $qb->shouldReceive('getQuery->getSingleResult')
+            ->andReturn('RESULT');
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('licence', 'l')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('byId')
+            ->with($applicationId)
+            ->once()
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Application::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchWithLicence($applicationId);
         $this->assertEquals('RESULT', $result);
     }
 }
