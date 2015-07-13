@@ -257,6 +257,12 @@ return [
         CommandHandler\Submission\CreateSubmissionAction::class,
     TransferCommand\Submission\UpdateSubmissionAction::class =>
         CommandHandler\Submission\UpdateSubmissionAction::class,
+    TransferCommand\Submission\CreateSubmissionSectionComment::class =>
+        CommandHandler\Submission\CreateSubmissionSectionComment::class,
+    TransferCommand\Submission\UpdateSubmissionSectionComment::class =>
+        CommandHandler\Submission\UpdateSubmissionSectionComment::class,
+    TransferCommand\Submission\DeleteSubmissionSectionComment::class =>
+        CommandHandler\Submission\DeleteSubmissionSectionComment::class,
 
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,

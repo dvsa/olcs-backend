@@ -170,6 +170,7 @@ return [
             'InspectionRequest' => RepositoryFactory::class,
             'CorrespondenceInbox' => RepositoryFactory::class,
             'SubmissionAction' => RepositoryFactory::class,
+            'SubmissionSectionComment' => RepositoryFactory::class,
             'TrafficArea' => RepositoryFactory::class,
             'ChangeOfEntity' => RepositoryFactory::class,
             'ApplicationOrganisationPerson' => RepositoryFactory::class,
