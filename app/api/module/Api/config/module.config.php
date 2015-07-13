@@ -175,6 +175,7 @@ return [
             'ChangeOfEntity' => RepositoryFactory::class,
             'ApplicationOrganisationPerson' => RepositoryFactory::class,
             'DocumentSearchView' => RepositoryFactory::class,
+            'S4' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
