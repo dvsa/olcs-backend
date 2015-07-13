@@ -76,6 +76,7 @@ return [
     TransferCommand\Application\RestorePeople::class => CommandHandler\Application\RestorePeople::class,
     TransferCommand\Application\UpdateCompletion::class =>
         CommandHandler\Application\UpdateApplicationCompletion::class,
+    TransferCommand\Application\Schedule41::class => CommandHandler\Application\Schedule41::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -348,6 +349,21 @@ return [
     Command\Application\UpdateVariationCompletion::class => CommandHandler\Application\UpdateVariationCompletion::class,
     Command\Application\CreateFee::class => CommandHandler\Application\CreateFee::class,
     Command\Application\CancelAllInterimFees::class => CommandHandler\Application\CancelAllInterimFees::class,
+
+    // Domain - Application Operating Centre
+    Command\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class
+        => CommandHandler\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class,
+
+    // Domain - Licence Operating Centre
+    Command\LicenceOperatingCentre\AssociateS4::class
+        => CommandHandler\LicenceOperatingCentre\AssociateS4::class,
+
+    // Domain - Condition Undertaking
+    Command\Cases\ConditionUndertaking\CreateConditionUndertaking::class
+        => CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
+
+    // Domain - Schedule41
+    Command\Schedule41\CreateS4::class => CommandHandler\Schedule41\CreateS4::class,
 
     // Domain - Bus
     Command\Bus\CreateBusFee::class => CommandHandler\Bus\CreateBusFee::class,
