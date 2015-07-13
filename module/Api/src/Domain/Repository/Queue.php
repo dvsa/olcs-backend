@@ -13,6 +13,8 @@ class Queue extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    protected $alias = 'q';
+
     /**
      * This custom method will enqueue a message for all active organisations.
      * There are potentially tens of thousands of records so uses an
@@ -51,46 +53,43 @@ SQL;
 
     public function getNextItem($type = null)
     {
-        // @TODO port this to dql
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->order('createdOn', 'ASC');
+
         $now = new \DateTime();
-        throw new \Exception('todo '. __METHOD__);
-        $query = [
-            'status' => Entity::STATUS_QUEUED,
-            'limit' => 1,
-            'sort' => 'createdOn',
-            'order' => 'ASC',
-            'processAfterDate' => [
-                'NULL',
-                '<=' . $now
-            ]
-        ];
+        $qb
+            ->andWhere($qb->expr()->eq($this->alias . '.status', ':statusId'))
+            // @TODO processAfterDate is null OR <= $now
+            // ->andWhere($qb->expr()->in($this->alias . '.processAfterDate', $activeStatuses))
+            ->setParameter('statusId', Entity::STATUS_QUEUED)
+            // ->andWhere($qb->expr()->eq($this->alias . '.processAfterDate', '2015'))
+            ->setMaxResults(1);
 
         if ($type !== null) {
-            $query['type'] = $type;
+            $qb
+                ->andWhere($qb->expr()->eq($this->alias . '.type', ':typeId'))
+                ->setParameter('typeId', $type);
         }
 
-        $results = $this->get($query, $this->itemBundle);
+        $results = $qb->getQuery()->execute();
 
-        if (empty($results['Results'])) {
+        if (empty($results)) {
             return null;
         }
 
-        $result = $results['Results'][0];
-        $result['attempts']++;
-
-        $data = [
-            'id' => $result['id'],
-            'version' => $result['version'],
-            'status' => self::STATUS_PROCESSING,
-            'attempts' => $result['attempts']
-        ];
-
-        try {
-            $this->save($data);
-            $result['version']++;
-        } catch (ResourceConflictException $ex) {
-            return null;
-        }
+        $result = $results[0];
+        $result->incrementAttempts();
+        $result->setStatus($this->getRefDataReference(Entity::STATUS_PROCESSING));
+        // try {
+        //     $this->save($data);
+        //     $result['version']++;
+        // } catch (ResourceConflictException $ex) {
+        //     return null;
+        // }
+        $this->save($result);
 
         return $result;
     }
