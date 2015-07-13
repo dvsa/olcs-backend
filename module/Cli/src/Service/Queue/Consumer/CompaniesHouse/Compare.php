@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse;
 
+use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\Compare as Cmd;
+
 /**
  * Companies House Compare Queue Consumer
  *
@@ -17,5 +19,5 @@ class Compare extends AbstractConsumer
     /**
      * @var string the command to handle processing
      */
-    protected $command = 'CompaniesHouseCompare';
+    protected $commandName = Cmd::class;
 }

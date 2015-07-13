@@ -66,7 +66,6 @@ class Client
      */
     public function getCompanyProfile($companyNumber, $includeOfficers = true)
     {
-        // @TODO combine officer data with default response
         $companyProfile = $this->getData('/company/' . $companyNumber);
 
         if ($includeOfficers) {
@@ -116,6 +115,10 @@ class Client
         $response = $this->getHttpClient()->send();
 
         $jsonResponse = json_decode($response->getBody(), true);
+
+        if (!empty ($jsonResponse['errors'])) {
+            throw new \Exception('Error response: '.$response->getBody());
+        }
 
         return $jsonResponse;
     }

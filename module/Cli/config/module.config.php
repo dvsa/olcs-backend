@@ -66,8 +66,8 @@ return [
     ],
     'message_consumer_manager' => [
         'invokables' => [
-            'que_typ_ch_initial' => Dvsa\Olcs\Cli\Service\Queue\CompaniesHouse\InitialDataLoad::class,
-            'que_typ_ch_compare' => Dvsa\Olcs\Cli\Service\Queue\CompaniesHouse\Compare::class,
+            'que_typ_ch_initial' => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\InitialDataLoad::class,
+            'que_typ_ch_compare' => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\Compare::class,
         ]
     ],
     'queue' => [
