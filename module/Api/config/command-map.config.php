@@ -143,6 +143,12 @@ return [
     TransferCommand\Variation\VoidPsvDiscs::class => CommandHandler\Variation\VoidPsvDiscs::class,
     TransferCommand\Variation\ReplacePsvDiscs::class => CommandHandler\Variation\ReplacePsvDiscs::class,
     TransferCommand\Variation\Grant::class => CommandHandler\Variation\Grant::class,
+    TransferCommand\Variation\DeleteListConditionUndertaking::class =>
+        CommandHandler\Variation\DeleteListConditionUndertaking::class,
+    TransferCommand\Variation\UpdateConditionUndertaking::class =>
+        CommandHandler\Variation\UpdateConditionUndertaking::class,
+    TransferCommand\Variation\RestoreListConditionUndertaking::class =>
+        CommandHandler\Variation\RestoreListConditionUndertaking::class,
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
@@ -324,6 +330,9 @@ return [
         CommandHandler\Cases\ConditionUndertaking\UpdateConditionUndertaking::class,
     TransferCommand\Cases\ConditionUndertaking\DeleteConditionUndertaking::class =>
         CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertaking::class,
+    TransferCommand\ConditionUndertaking\Create::class => CommandHandler\ConditionUndertaking\Create::class,
+    TransferCommand\ConditionUndertaking\DeleteList::class => CommandHandler\ConditionUndertaking\DeleteList::class,
+    TransferCommand\ConditionUndertaking\Update::class => CommandHandler\ConditionUndertaking\Update::class,
 
     // Transfer - Opposition
     TransferCommand\Opposition\CreateOpposition::class =>
