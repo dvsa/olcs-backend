@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
+use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+
 /**
  * Message Consumer Interface
  *
@@ -17,8 +19,8 @@ interface MessageConsumerInterface
     /**
      * Process the message item
      *
-     * @param array $item
+     * @param QueueEntity $item
      * @return boolean
      */
-    public function processMessage(array $item);
+    public function processMessage(QueueEntity $item);
 }
