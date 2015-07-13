@@ -77,5 +77,10 @@ class Opposition extends AbstractRepository
             $qb->andWhere($qb->expr()->eq('ca.licence', ':licence'))
                 ->setParameter('licence', $query->getLicence());
         }
+
+        if ($query->getApplication()) {
+            $qb->andWhere($qb->expr()->eq('ca.application', ':application'))
+                ->setParameter('application', $query->getApplication());
+        }
     }
 }
