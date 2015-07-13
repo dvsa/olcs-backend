@@ -28,6 +28,6 @@ class NextItem extends AbstractQueryHandler
             return null;
         }
 
-        return $this->result($entity);
+        return $entity;
     }
 }

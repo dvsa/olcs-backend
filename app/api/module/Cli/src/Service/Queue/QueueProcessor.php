@@ -64,19 +64,17 @@ class QueueProcessor implements ServiceLocatorAwareInterface
      * Grab the next message in the queue
      *
      * @param string $type
-     * @return array
+     * @return QueueEntity|null
      */
     protected function getNextItem($type = null)
     {
         $query = NextQueueItemQry::create(['type' => $type]);
-        $response = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($query);
-        var_dump($response);
-        return $response->getResult();
+        return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($query);
     }
 
     protected function getMessageConsumer($item)
     {
         return $this->getServiceLocator()->get('MessageConsumerManager')
-            ->get($item['type']['id']);
+            ->get($item->getType()->getId());
     }
 }
