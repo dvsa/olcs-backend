@@ -36,6 +36,9 @@ class Module implements ConsoleUsageProviderInterface
             // @TODO remove
             'ch-initial-load [--verbose|-v]' => 'TEST action for Companies House api stuff',
             array( '--verbose|-v', '(optional) turn on verbose mode'),
+
+            'process-queue' => 'Process the queue',
+            array( '--type|-t', '(optional) queue message type to process'),
         );
     }
 

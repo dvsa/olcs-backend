@@ -4,6 +4,8 @@ use Dvsa\Olcs\Transfer\Query as TransferQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark as BookmarkQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark as BookmarkQueryHandler;
+use Dvsa\Olcs\Api\Domain\Query\Queue as QueueQuery;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Queue as QueueQueryHandler;
 
 return [
     // Bookmarks
@@ -273,4 +275,8 @@ return [
 
     // Companies House
     TransferQuery\CompaniesHouse\AlertList::class => QueryHandler\CompaniesHouse\AlertList::class,
+
+    // Queue
+    QueueQuery\NextItem::class => QueueQueryHandler\NextItem::class,
+
 ];
