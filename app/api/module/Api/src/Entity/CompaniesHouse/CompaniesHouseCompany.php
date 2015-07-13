@@ -45,4 +45,30 @@ class CompaniesHouseCompany extends AbstractCompaniesHouseCompany
             }
         }
     }
+
+    public function toArray()
+    {
+        $arr = [
+            'addressLine1' => $this->getAddressLine1(),
+            'addressLine2' => $this->getAddressLine2(),
+            'companyName' => $this->getCompanyName(),
+            'companyNumber' => $this->getCompanyNumber(),
+            'companyStatus' => $this->getCompanyStatus(),
+            'country' => $this->getCountry(),
+            'locality' => $this->getLocality(),
+            'poBox' => $this->getPoBox(),
+            'postalCode' => $this->getPostalCode(),
+            'premises' => $this->getPremises(),
+            'region' => $this->getRegion(),
+            'officers' => [],
+        ];
+
+        if (!empty($this->getOfficers())) {
+            foreach ($this->getOfficers() as $officer) {
+                $arr['officers'][] = $officer->toArray();
+            }
+        }
+
+        return $arr;
+    }
 }
