@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Queue;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -16,7 +17,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 /**
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class Complete extends AbstractCommandHandler
+final class Complete extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Queue';
 

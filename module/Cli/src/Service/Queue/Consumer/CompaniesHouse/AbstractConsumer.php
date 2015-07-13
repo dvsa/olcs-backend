@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Complete as CompleteCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Failed as FailedCmd;
+use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
 
 /**
  * Abstract Companies House Queue Consumer
@@ -42,13 +43,16 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
         $command = $commandClass::create(['companyNumber' => $options['companyNumber']]);
 
         try {
-            $result = $this->getServiceLocator()->get('CommandHandlerManager')
-                ->handleCommand($command);
-        } catch (\Exception $e) {
-            return $this->failed($item, $e->getMessage());
+            $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
+        } catch (DomainException $e) {
+            return $this->failed($item, $e->getMessages()[0]);
         }
 
-        return $this->success($item, $result->getMessages()[0]);
+        $message = null;
+        if (!empty($result->getMessages())) {
+            $message = $result->getMessages()[0];
+        }
+        return $this->success($item, $message);
     }
 
     /**

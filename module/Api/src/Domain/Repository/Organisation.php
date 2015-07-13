@@ -69,4 +69,24 @@ class Organisation extends AbstractRepository
 
         return $results[0];
     }
+
+    public function getByCompanyOrLlpNo($companyNumber)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata();
+
+        $qb
+            ->andWhere($qb->expr()->eq($this->alias . '.companyOrLlpNo', ':companyNumber'))
+            ->setParameter('companyNumber', $companyNumber);
+
+        $results = $qb->getQuery()->getResult();
+
+        if (empty($results)) {
+            throw new NotFoundException('Organisation not found for company number '.$companyNumber);
+        }
+
+        return $results;
+    }
 }

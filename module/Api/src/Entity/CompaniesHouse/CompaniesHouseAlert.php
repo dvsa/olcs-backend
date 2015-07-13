@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\CompaniesHouse;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * CompaniesHouseAlert Entity
@@ -18,5 +19,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CompaniesHouseAlert extends AbstractCompaniesHouseAlert
 {
+    const REASON_STATUS_CHANGE  = 'company_status_change';
+    const REASON_NAME_CHANGE    = 'company_name_change';
+    const REASON_ADDRESS_CHANGE = 'company_address_change';
+    const REASON_PEOPLE_CHANGE  = 'company_people_change';
+    const REASON_INVALID_COMPANY_NUMBER = 'invalid_company_number';
 
+    public function addReason(RefData $reason)
+    {
+        $alertReason = new CompaniesHouseAlertReason($reason);
+        $alertReason->setCompaniesHouseAlert($this);
+        $this->getReasons()->add($alertReason);
+        return $this;
+    }
 }

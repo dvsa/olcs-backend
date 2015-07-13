@@ -42,4 +42,15 @@ class CompaniesHouseOfficer extends AbstractCompaniesHouseOfficer
             $this->setDateOfBirth($dob);
         }
     }
+
+    public function toArray()
+    {
+        $arr = [
+            'name' => $this->getName(),
+            'role' => $this->getRole(),
+            'dateOfBirth' => $this->getDateOfBirth(),
+        ];
+
+        return $arr;
+    }
 }
