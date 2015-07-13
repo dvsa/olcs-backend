@@ -20,6 +20,9 @@ final class EnqueueOrganisations extends AbstractCommandHandler implements Trans
 {
     protected $repoServiceName = 'Queue';
 
+    /**
+     * @inheritdoc
+     */
     public function handleCommand(CommandInterface $command)
     {
         $rows = $this->getRepo()->enqueueAllOrganisations(Queue::TYPE_COMPANIES_HOUSE_COMPARE);
