@@ -545,7 +545,7 @@ class Application extends AbstractApplication
 
         $applicationOperatingCentres = $this->getOperatingCentres();
         foreach ($applicationOperatingCentres as $applicationOperatingCentre) {
-            $id = $applicationOperatingCentre->getId();
+            $id = $applicationOperatingCentre->getOperatingCentre()->getId();
             if ($applicationOperatingCentre->getAction() !== 'D') {
                 $list[$id] = $applicationOperatingCentre->getOperatingCentre();
             } else {
@@ -555,7 +555,7 @@ class Application extends AbstractApplication
 
         $licenceOperatingCentres = $this->getLicence()->getOperatingCentres();
         foreach ($licenceOperatingCentres as $licenceOperatingCentre) {
-            $id = $licenceOperatingCentre->getId();
+            $id = $licenceOperatingCentre->getOperatingCentre()->getId();
             if (!in_array($id, $deleted)) {
                 $list[$id] = $licenceOperatingCentre->getOperatingCentre();
             }

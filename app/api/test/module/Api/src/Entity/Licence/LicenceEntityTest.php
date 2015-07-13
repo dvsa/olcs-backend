@@ -503,6 +503,23 @@ class LicenceEntityTest extends EntityTester
         $this->assertEquals([$case1], $licence->getOpenCases());
     }
 
+    public function testGetOcForInspectionRequest()
+    {
+        $mockOperatingCentre = m::mock()
+            ->shouldReceive('getOperatingCentre')
+            ->andReturn('oc')
+            ->once()
+            ->getMock();
+
+        $mockLicence = m::mock(Entity::class)->makePartial();
+        $mockLicence->shouldReceive('getOperatingCentres')
+            ->andReturn([$mockOperatingCentre])
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(['oc'], $mockLicence->getOcForInspectionRequest());
+    }
+
     public function testIsRestricted()
     {
         /** @var Entity $licence */
