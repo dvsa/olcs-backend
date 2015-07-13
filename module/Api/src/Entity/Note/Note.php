@@ -34,25 +34,4 @@ class Note extends AbstractNote
     const NOTE_TYPE_ORGANISATION = 'note_t_org';
     const NOTE_TYPE_PERSON = 'note_t_person';
     const NOTE_TYPE_TRANSPORT_MANAGER = 'note_t_tm';
-
-    /**
-     * Set owner user.
-     *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
-     * @return Note
-     */
-    public function setUser($user)
-    {
-        return $this->setCreatedBy($user);
-    }
-
-    /**
-     * Get owner user.
-     *
-     * @return \Dvsa\Olcs\Api\Entity\User\User
-     */
-    public function getUser($user)
-    {
-        return $this->getCreatedBy();
-    }
 }

@@ -22,14 +22,17 @@ class InspectionRequestEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
-    public function testUpdateInspectionRequest()
+    /**
+     * @dataProvider datesProvider
+     */
+    public function testUpdateInspectionRequest($dueDate, $duePeriod, $dueExpected, $requestDate, $requestDateExpected)
     {
         $sut = m::mock(Entity::class)->makePartial();
         $sut->updateInspectionRequest(
             'req_type',
-            null,
-            null,
-            3,
+            $requestDate,
+            $dueDate,
+            $duePeriod,
             'res_type',
             'requestor_notes',
             'rep_type',
@@ -46,12 +49,8 @@ class InspectionRequestEntityTest extends EntityTester
             'inspector_notes'
         );
         $this->assertEquals('req_type', $sut->getRequestType());
-        $this->assertEquals(new \DateTime(), $sut->getRequestDate());
-
-        $this->assertEquals(
-            (new DateTime())->add(new \DateInterval('P3M')),
-            $sut->getDueDate()
-        );
+        $this->assertEquals($requestDateExpected, $sut->getRequestDate());
+        $this->assertEquals($dueExpected, $sut->getDueDate());
         $this->assertEquals('res_type', $sut->getResultType());
         $this->assertEquals('requestor_notes', $sut->getRequestorNotes());
         $this->assertEquals('rep_type', $sut->getReportType());
@@ -66,6 +65,14 @@ class InspectionRequestEntityTest extends EntityTester
         $this->assertEquals(5, $sut->getVehiclesExaminedNo());
         $this->assertEquals(6, $sut->getTrailersExaminedNo());
         $this->assertEquals('inspector_notes', $sut->getInspectorNotes());
+    }
+
+    public function datesProvider()
+    {
+        return [
+            [null, 3, (new DateTime('now'))->add(new \DateInterval('P3M')), null, new DateTime('now')],
+            ['2015-01-01', null, new \DateTime('2015-01-01'), '2014-01-01', new \DateTime('2014-01-01')]
+        ];
     }
 
     public function testUpdateInspectionRequestNotValid()
@@ -138,6 +145,37 @@ class InspectionRequestEntityTest extends EntityTester
             null,
             null,
             null
+        );
+    }
+
+    public function testUpdateInspectionRequestRequestDateInFuture()
+    {
+        $this->setExpectedException(
+            ValidationException::class,
+            [
+                'requestDate' => [Entity::ERROR_REQUEST_DATE_IN_FUTURE => 'Request date should not be in future']
+            ]
+        );
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->updateInspectionRequest(
+            'req_type',
+            '2222-01-01',
+            null,
+            3,
+            'res_type',
+            'requestor_notes',
+            'rep_type',
+            1,
+            2,
+            3,
+            4,
+            'insp_name',
+            '01/01/2015',
+            '01/01/2016',
+            '01/01/2017',
+            5,
+            6,
+            'inspector_notes'
         );
     }
 }

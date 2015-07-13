@@ -251,6 +251,7 @@ return [
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
     Command\Document\CreateDocumentSpecific::class => CommandHandler\Document\CreateDocumentSpecific::class,
     TransferCommand\Document\DeleteDocument::class => CommandHandler\Document\DeleteDocument::class,
+    TransferCommand\Document\DeleteDocuments::class => CommandHandler\Document\DeleteDocuments::class,
 
     // Transfer - CommunityLic
     TransferCommand\CommunityLic\Application\Create::class => CommandHandler\CommunityLic\Application\Create::class,
@@ -483,6 +484,7 @@ return [
     // Transfer - InspectionRequest
     TransferCommand\InspectionRequest\Create::class => CommandHandler\InspectionRequest\Create::class,
     TransferCommand\InspectionRequest\Update::class => CommandHandler\InspectionRequest\Update::class,
+    TransferCommand\InspectionRequest\Delete::class  => CommandHandler\InspectionRequest\Delete::class,
     TransferCommand\InspectionRequest\CreateFromGrant::class => CommandHandler\InspectionRequest\CreateFromGrant::class,
 
     // Domain - InspectionRequest

@@ -23,7 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_hearing_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_hearing_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_hearing_presiding_tc_id", columns={"presiding_tc_id"}),
- *        @ORM\Index(name="ix_hearing_hearing_type", columns={"hearing_type"})
+ *        @ORM\Index(name="ix_hearing_hearing_type", columns={"hearing_type"}),
+ *        @ORM\Index(name="ix_hearing_outcome", columns={"outcome"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_hearing_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -149,6 +150,25 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     protected $olbsType;
 
     /**
+     * Outcome
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="outcome", referencedColumnName="id", nullable=true)
+     */
+    protected $outcome;
+
+    /**
+     * Presiding staff name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="presiding_staff_name", length=255, nullable=true)
+     */
+    protected $presidingStaffName;
+
+    /**
      * Presiding tc
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\PresidingTc
@@ -190,9 +210,9 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     /**
      * Witness count
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="witness_count", nullable=true)
+     * @ORM\Column(type="integer", name="witness_count", nullable=true)
      */
     protected $witnessCount;
 
@@ -473,6 +493,52 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     }
 
     /**
+     * Set the outcome
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $outcome
+     * @return Hearing
+     */
+    public function setOutcome($outcome)
+    {
+        $this->outcome = $outcome;
+
+        return $this;
+    }
+
+    /**
+     * Get the outcome
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getOutcome()
+    {
+        return $this->outcome;
+    }
+
+    /**
+     * Set the presiding staff name
+     *
+     * @param string $presidingStaffName
+     * @return Hearing
+     */
+    public function setPresidingStaffName($presidingStaffName)
+    {
+        $this->presidingStaffName = $presidingStaffName;
+
+        return $this;
+    }
+
+    /**
+     * Get the presiding staff name
+     *
+     * @return string
+     */
+    public function getPresidingStaffName()
+    {
+        return $this->presidingStaffName;
+    }
+
+    /**
      * Set the presiding tc
      *
      * @param \Dvsa\Olcs\Api\Entity\Pi\PresidingTc $presidingTc
@@ -567,7 +633,7 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     /**
      * Set the witness count
      *
-     * @param boolean $witnessCount
+     * @param int $witnessCount
      * @return Hearing
      */
     public function setWitnessCount($witnessCount)
@@ -580,7 +646,7 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     /**
      * Get the witness count
      *
-     * @return boolean
+     * @return int
      */
     public function getWitnessCount()
     {
