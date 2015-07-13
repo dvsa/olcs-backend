@@ -22,16 +22,6 @@ return [
                         ],
                     ],
                 ],
-                // @TODO make this a queue consumer, this is just for testing
-                'ch-initial-load' => [
-                    'options' => [
-                        'route' => 'ch-initial-load [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => 'BatchController',
-                            'action' => 'initialLoad',
-                        ],
-                    ],
-                ],
                 'process-queue' => [
                     'options' => [
                         'route' => 'process-queue [<type>]',

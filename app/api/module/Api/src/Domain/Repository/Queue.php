@@ -62,10 +62,14 @@ SQL;
         $now = new \DateTime();
         $qb
             ->andWhere($qb->expr()->eq($this->alias . '.status', ':statusId'))
-            // @TODO processAfterDate is null OR <= $now
-            // ->andWhere($qb->expr()->in($this->alias . '.processAfterDate', $activeStatuses))
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->lte($this->alias . '.processAfterDate', ':processAfter'),
+                    $qb->expr()->isNull($this->alias . '.processAfterDate')
+                )
+            )
             ->setParameter('statusId', Entity::STATUS_QUEUED)
-            // ->andWhere($qb->expr()->eq($this->alias . '.processAfterDate', '2015'))
+            ->setParameter('processAfter', $now)
             ->setMaxResults(1);
 
         if ($type !== null) {

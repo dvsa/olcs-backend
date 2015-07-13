@@ -50,21 +50,6 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
-     * @return ConsoleModel
-     */
-    public function initialLoadAction()
-    {
-        // test - @TODO make this a queue consumer
-        return $this->handleExitStatus(
-            $this->handleCommand(
-                [
-                    \Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\InitialLoad::create(['companyNumber' => '03127414']),
-                ]
-            )
-        );
-    }
-
-    /**
      * @return boolean
      */
     private function isVerbose()

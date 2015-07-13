@@ -33,7 +33,7 @@ class CompaniesHouseCompany extends AbstractRepository
         $qb
             ->andWhere($qb->expr()->eq($this->alias . '.companyNumber', ':companyNumber'))
             ->setParameter('companyNumber', $number)
-            ->setMaxResults(1);;
+            ->setMaxResults(1);
 
         $results = $qb->getQuery()->getResult();
 

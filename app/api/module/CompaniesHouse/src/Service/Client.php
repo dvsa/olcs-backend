@@ -105,7 +105,8 @@ class Client
      * @param string $resourcePath to be appended to baseUri
      * @return array
      */
-    protected function getData($resourcePath) {
+    protected function getData($resourcePath)
+    {
         $uri = $this->getBaseUri() . $resourcePath;
 
         $this->getHttpClient()->getRequest()
