@@ -95,6 +95,9 @@ return [
     TransferCommand\Cases\NonPi\Delete::class => CommandHandler\Cases\NonPi\Delete::class,
 
     // Transfer - Bus
+    TransferCommand\Bus\CreateBus::class => CommandHandler\Bus\CreateBus::class,
+    TransferCommand\Bus\CreateVariation::class => CommandHandler\Bus\CreateVariation::class,
+    TransferCommand\Bus\CreateCancellation::class => CommandHandler\Bus\CreateCancellation::class,
     TransferCommand\Bus\UpdateStops::class => CommandHandler\Bus\UpdateStops::class,
     TransferCommand\Bus\UpdateQualitySchemes::class => CommandHandler\Bus\UpdateQualitySchemes::class,
     TransferCommand\Bus\UpdateTaAuthority::class => CommandHandler\Bus\UpdateTaAuthority::class,
