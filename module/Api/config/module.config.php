@@ -171,10 +171,10 @@ return [
             'CorrespondenceInbox' => RepositoryFactory::class,
             'SubmissionAction' => RepositoryFactory::class,
             'TrafficArea' => RepositoryFactory::class,
-            'InspectionRequest' => RepositoryFactory::class,
             'ChangeOfEntity' => RepositoryFactory::class,
             'ApplicationOrganisationPerson' => RepositoryFactory::class,
             'DocumentSearchView' => RepositoryFactory::class,
+            'TaskSearchView' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

@@ -513,4 +513,10 @@ return [
     // OrganisationPerson
     TransferCommand\OrganisationPerson\PopulateFromCompaniesHouse::class =>
         CommandHandler\OrganisationPerson\PopulateFromCompaniesHouse::class,
+
+    // Task
+    TransferCommand\Task\CloseTasks::class => CommandHandler\Task\CloseTasks::class,
+    TransferCommand\Task\ReassignTasks::class => CommandHandler\Task\ReassignTasks::class,
+    TransferCommand\Task\UpdateTask::class => CommandHandler\Task\UpdateTask::class,
+    TransferCommand\Task\CreateTask::class => CommandHandler\Task\CreateTask::class,
 ];
