@@ -46,4 +46,10 @@ class ContactDetails extends AbstractRepository
 
         return $contactParams;
     }
+
+    public function updateContactDetailsWithPersonAndEmailAddress($person, $emailAddress)
+    {
+        $this->setPerson($person);
+        $this->setEmailAddress($emailAddress);
+    }
 }
