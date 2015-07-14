@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Queue;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Queue Entity
@@ -33,7 +34,12 @@ class Queue extends AbstractQueue
     public function incrementAttempts()
     {
         $curr = $this->getAttempts();
-        $this->setAttempts($curr++);
+        $this->setAttempts(++$curr);
         return $this;
+    }
+
+    public function __construct(RefData $messageType)
+    {
+        $this->setType($messageType);
     }
 }

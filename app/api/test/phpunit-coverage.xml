@@ -8,7 +8,7 @@
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../module</directory>
+            <directory suffix=".php">../module/CompaniesHouse/src/Service</directory>
             <exclude>
                 <file>../module/Olcs/Db/Module.php</file>
                 <file>../module/Api/src/Module.php</file>

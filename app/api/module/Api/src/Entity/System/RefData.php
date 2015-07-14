@@ -38,4 +38,9 @@ class RefData extends AbstractRefData
     const FEE_TYPE_IRFOGVPERMIT = 'IRFOGVPERMIT';
 
     const TASK_ACTION_DATE_TODAY = 'tdt_today';
+
+    public function __construct($id)
+    {
+        $this->setId($id);
+    }
 }
