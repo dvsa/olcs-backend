@@ -38,8 +38,10 @@ class Queue extends AbstractQueue
         return $this;
     }
 
-    public function __construct(RefData $messageType)
+    public function __construct(RefData $messageType = null)
     {
-        $this->setType($messageType);
+        if (!is_null($messageType)) {
+            $this->setType($messageType);
+        }
     }
 }
