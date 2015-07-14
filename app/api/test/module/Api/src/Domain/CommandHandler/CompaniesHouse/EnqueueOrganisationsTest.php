@@ -11,10 +11,8 @@ use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\EnqueueOrganisations as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse\EnqueueOrganisations;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as Repo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Mockery as m;
-use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
 /**
  *  Companies House Enqueue Organisations Command Handler Test

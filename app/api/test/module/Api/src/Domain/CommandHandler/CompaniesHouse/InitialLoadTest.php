@@ -15,7 +15,6 @@ use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
 use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseApi;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use OlcsTest\Bootstrap;
 
 /**
  *  Companies House Initial Load Command Handler Test
