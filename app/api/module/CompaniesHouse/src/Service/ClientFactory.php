@@ -41,7 +41,7 @@ class ClientFactory implements FactoryInterface
         $httpClient->setOptions($httpOptions);
 
         $authOptions = $this->getOptions($serviceLocator, 'auth');
-        if (!isset($authOptions['username']) || empty($authOptions['password'])) {
+        if (isset($authOptions['username']) && isset($authOptions['password'])) {
             $httpClient->setAuth($authOptions['username'], $authOptions['password']);
         }
 
