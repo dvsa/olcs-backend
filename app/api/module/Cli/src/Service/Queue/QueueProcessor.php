@@ -33,27 +33,6 @@ class QueueProcessor implements ServiceLocatorAwareInterface
         return $this->processMessage($item);
     }
 
-    /**
-     * Can be called from within a consumer to format a message's options
-     *
-     * @param string $options
-     * @return array
-     */
-    public function formatOptions($options)
-    {
-        if (empty($options)) {
-            return [];
-        }
-
-        $decodedOptions = json_decode($options, true);
-
-        if (json_last_error() === JSON_ERROR_NONE) {
-            return $decodedOptions;
-        }
-
-        return [];
-    }
-
     protected function processMessage($item)
     {
         $consumer = $this->getMessageConsumer($item);
