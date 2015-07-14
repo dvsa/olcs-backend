@@ -39,8 +39,10 @@ class RefData extends AbstractRefData
 
     const TASK_ACTION_DATE_TODAY = 'tdt_today';
 
-    public function __construct($id)
+    public function __construct($id = null)
     {
-        $this->setId($id);
+        if (!is_null($id)) {
+            $this->setId($id);
+        }
     }
 }
