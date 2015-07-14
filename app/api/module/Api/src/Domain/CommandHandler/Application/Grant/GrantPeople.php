@@ -72,11 +72,11 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
     private function createOrganisationPerson(ApplicationOrganisationPerson $aop)
     {
         $sourcePerson = $aop->getPerson();
-        $targetPerson = EntityCloner::cloneEntity($sourcePerson, ['id', 'version', 'createdOn', 'lastModifiedOn']);
+        $targetPerson = EntityCloner::cloneEntity($sourcePerson);
 
         $this->getRepo('Person')->save($targetPerson);
 
-        $ignore = ['id', 'version', 'createdOn', 'lastModifiedOn', 'action', 'originalPerson', 'person'];
+        $ignore = ['action', 'originalPerson', 'person'];
 
         /** @var OrganisationPerson $targetOp */
         $targetOp = EntityCloner::cloneEntityInto($aop, OrganisationPerson::class, $ignore);

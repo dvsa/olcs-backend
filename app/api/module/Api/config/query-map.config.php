@@ -46,6 +46,7 @@ return [
     TransferQuery\Application\EnforcementArea::class => QueryHandler\Application\EnforcementArea::class,
     TransferQuery\Application\Grant::class => QueryHandler\Application\Grant::class,
     TransferQuery\Application\People::class => QueryHandler\Application\People::class,
+    TransferQuery\Application\OperatingCentre::class => QueryHandler\Application\OperatingCentre::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -62,6 +63,7 @@ return [
     TransferQuery\Licence\EnforcementArea::class => QueryHandler\Licence\EnforcementArea::class,
     TransferQuery\Licence\ConditionUndertaking::class => QueryHandler\Licence\ConditionUndertaking::class,
     TransferQuery\Licence\People::class => QueryHandler\Licence\People::class,
+    TransferQuery\Licence\OperatingCentre::class => QueryHandler\Licence\OperatingCentre::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
@@ -245,4 +247,13 @@ return [
 
     // Change of Entity
     TransferQuery\ChangeOfEntity\ChangeOfEntity::class => QueryHandler\ChangeOfEntity\ChangeOfEntity::class,
+
+    // ConditionUndertaking
+    TransferQuery\ConditionUndertaking\GetList::class => QueryHandler\ConditionUndertaking\GetList::class,
+    TransferQuery\ConditionUndertaking\Get::class => QueryHandler\ConditionUndertaking\Get::class,
+
+    // Task
+    TransferQuery\Task\TaskList::class => QueryHandler\Task\TaskList::class,
+    TransferQuery\Task\Task::class => QueryHandler\Task\Task::class,
+    TransferQuery\Task\TaskDetails::class => QueryHandler\Task\TaskDetails::class,
 ];

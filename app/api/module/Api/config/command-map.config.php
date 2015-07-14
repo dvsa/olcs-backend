@@ -76,6 +76,8 @@ return [
     TransferCommand\Application\RestorePeople::class => CommandHandler\Application\RestorePeople::class,
     TransferCommand\Application\UpdateCompletion::class =>
         CommandHandler\Application\UpdateApplicationCompletion::class,
+    TransferCommand\Application\GenerateOrganisationName::class =>
+        CommandHandler\Application\GenerateOrganisationName::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -93,6 +95,9 @@ return [
     TransferCommand\Cases\NonPi\Delete::class => CommandHandler\Cases\NonPi\Delete::class,
 
     // Transfer - Bus
+    TransferCommand\Bus\CreateBus::class => CommandHandler\Bus\CreateBus::class,
+    TransferCommand\Bus\CreateVariation::class => CommandHandler\Bus\CreateVariation::class,
+    TransferCommand\Bus\CreateCancellation::class => CommandHandler\Bus\CreateCancellation::class,
     TransferCommand\Bus\UpdateStops::class => CommandHandler\Bus\UpdateStops::class,
     TransferCommand\Bus\UpdateQualitySchemes::class => CommandHandler\Bus\UpdateQualitySchemes::class,
     TransferCommand\Bus\UpdateTaAuthority::class => CommandHandler\Bus\UpdateTaAuthority::class,
@@ -141,6 +146,12 @@ return [
     TransferCommand\Variation\VoidPsvDiscs::class => CommandHandler\Variation\VoidPsvDiscs::class,
     TransferCommand\Variation\ReplacePsvDiscs::class => CommandHandler\Variation\ReplacePsvDiscs::class,
     TransferCommand\Variation\Grant::class => CommandHandler\Variation\Grant::class,
+    TransferCommand\Variation\DeleteListConditionUndertaking::class =>
+        CommandHandler\Variation\DeleteListConditionUndertaking::class,
+    TransferCommand\Variation\UpdateConditionUndertaking::class =>
+        CommandHandler\Variation\UpdateConditionUndertaking::class,
+    TransferCommand\Variation\RestoreListConditionUndertaking::class =>
+        CommandHandler\Variation\RestoreListConditionUndertaking::class,
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
@@ -322,6 +333,9 @@ return [
         CommandHandler\Cases\ConditionUndertaking\UpdateConditionUndertaking::class,
     TransferCommand\Cases\ConditionUndertaking\DeleteConditionUndertaking::class =>
         CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertaking::class,
+    TransferCommand\ConditionUndertaking\Create::class => CommandHandler\ConditionUndertaking\Create::class,
+    TransferCommand\ConditionUndertaking\DeleteList::class => CommandHandler\ConditionUndertaking\DeleteList::class,
+    TransferCommand\ConditionUndertaking\Update::class => CommandHandler\ConditionUndertaking\Update::class,
 
     // Transfer - Opposition
     TransferCommand\Opposition\CreateOpposition::class =>
@@ -506,4 +520,10 @@ return [
 
     // Transfer - TransportManager
     TransferCommand\Tm\Create::class => CommandHandler\Tm\Create::class,
+
+    // Task
+    TransferCommand\Task\CloseTasks::class => CommandHandler\Task\CloseTasks::class,
+    TransferCommand\Task\ReassignTasks::class => CommandHandler\Task\ReassignTasks::class,
+    TransferCommand\Task\UpdateTask::class => CommandHandler\Task\UpdateTask::class,
+    TransferCommand\Task\CreateTask::class => CommandHandler\Task\CreateTask::class,
 ];

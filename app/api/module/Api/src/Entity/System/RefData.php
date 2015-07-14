@@ -36,4 +36,6 @@ class RefData extends AbstractRefData
     const FEE_TYPE_IRFOPSVANN = 'IRFOPSVANN';
     const FEE_TYPE_IRFOPSVCOPY = 'IRFOPSVCOPY';
     const FEE_TYPE_IRFOGVPERMIT = 'IRFOGVPERMIT';
+
+    const TASK_ACTION_DATE_TODAY = 'tdt_today';
 }

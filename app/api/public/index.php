@@ -11,7 +11,7 @@ function handleFatal()
         echo json_encode(
             [
                 'messages' => [
-                    'An unexpected error occurred' => [
+                    'An unexpected fatal error occurred' => [
                         $error['message'],
                         $error['file'] . ': ' . $error['line']
                     ]

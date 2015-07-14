@@ -69,7 +69,7 @@ class ConditionUndertaking extends AbstractRepository
      *
      * @return array of Entity
      */
-    public function fetchListForLicence($licenceId)
+    public function fetchListForLicenceReadOnly($licenceId)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
@@ -129,5 +129,109 @@ class ConditionUndertaking extends AbstractRepository
             ->with('createdBy')
             ->with('lastModifiedBy');
 
+    }
+
+    /**
+     * Fetch a list of ConditionUndertaking for an Application
+     *
+     * @param int $applicationId
+     *
+     * @return array
+     */
+    public function fetchListForApplication($applicationId)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->with('attachedTo')
+            ->with('conditionType')
+            ->with('operatingCentre', 'oc')
+            ->with('oc.address', 'add')
+            ->with('add.countryCode')
+            ->with('addedVia');
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.application', ':application'))
+            ->setParameter('application', $applicationId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch a list of ConditionUndertaking for a Variation
+     *
+     * @param int $applicationId
+     * @param int $licenceId
+     *
+     * @return array
+     */
+    public function fetchListForVariation($applicationId, $licenceId)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->with('attachedTo')
+            ->with('conditionType')
+            ->with('operatingCentre', 'oc')
+            ->with('oc.address', 'add')
+            ->with('add.countryCode')
+            ->with('licConditionVariation')
+            ->with('addedVia')
+            ->order('id', 'ASC');
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.application', ':application'))
+            ->setParameter('application', $applicationId);
+        $qb->orWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->setParameter('licence', $licenceId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch a list of ConditionUndertaking for a Licence
+     *
+     * @param int $licenceId
+     *
+     * @return array
+     */
+    public function fetchListForLicence($licenceId)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->with('attachedTo')
+            ->with('conditionType')
+            ->with('operatingCentre', 'oc')
+            ->with('oc.address', 'add')
+            ->with('add.countryCode')
+            ->with('addedVia');
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->setParameter('licence', $licenceId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch a list of delta ConditionUndertakings
+     *
+     * @param int $id ConditionUndertaking ID
+     *
+     * @return array
+     */
+    public function fetchListForLicConditionVariation($id)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licConditionVariation', ':id'))
+            ->setParameter('id', $id);
+
+        return $qb->getQuery()->getResult();
     }
 }
