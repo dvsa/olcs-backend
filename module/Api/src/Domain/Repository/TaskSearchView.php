@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Entity\View\TaskSearchView as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -45,14 +45,14 @@ class TaskSearchView extends AbstractRepository
         }
 
         $actionDate = $query->getDate();
-        if (!empty($actionDate) && $actionDate === RefData::TASK_ACTION_DATE_TODAY) {
+        if (!empty($actionDate) && $actionDate === RefDataEntity::TASK_ACTION_DATE_TODAY) {
             $qb->andWhere($qb->expr()->lte('m.actionDate', ':actionDate'));
             $qb->setParameter('actionDate', date('Y-m-d'));
         }
 
         $status = $query->getStatus();
         if (!empty($status) && $status !== 'tst_all') {
-            $qb->andWhere($qb->expr()->eq('m.isClosed', $status == 'tst_closed' ? '1' : 0));
+            $qb->andWhere($qb->expr()->eq('m.isClosed', $status == 'tst_closed' ? 1 : 0));
         }
 
         $urgent = $query->getUrgent();
