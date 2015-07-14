@@ -45,7 +45,7 @@ final class Compare extends AbstractCommandHandler
             return $result;
         }
 
-        // @TODO clear cache???
+        // @todo watch for caching problems here if long-running queue process
         $stored = $this->getRepo()->getLatestByCompanyNumber($companyNumber);
 
         if (!$stored) {
@@ -127,7 +127,7 @@ final class Compare extends AbstractCommandHandler
         $result = new Result();
         $result
             ->addId('companiesHouseAlert', $alert->getId())
-            ->addMessage('Alert created');
+            ->addMessage('Alert created: ' . json_encode($reasons));
 
         return $result;
     }
@@ -238,6 +238,8 @@ final class Compare extends AbstractCommandHandler
                         $dob['month'],
                         isset($dob['day']) ? $dob['day'] : 1
                     );
+                } elseif (is_object($dob)) {
+                    $dob = $dob->format('Y-m-d');
                 }
                 return [
                     'name' => $officer['name'],
