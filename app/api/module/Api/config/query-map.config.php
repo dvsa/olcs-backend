@@ -251,4 +251,9 @@ return [
     // ConditionUndertaking
     TransferQuery\ConditionUndertaking\GetList::class => QueryHandler\ConditionUndertaking\GetList::class,
     TransferQuery\ConditionUndertaking\Get::class => QueryHandler\ConditionUndertaking\Get::class,
+
+    // Task
+    TransferQuery\Task\TaskList::class => QueryHandler\Task\TaskList::class,
+    TransferQuery\Task\Task::class => QueryHandler\Task\Task::class,
+    TransferQuery\Task\TaskDetails::class => QueryHandler\Task\TaskDetails::class,
 ];

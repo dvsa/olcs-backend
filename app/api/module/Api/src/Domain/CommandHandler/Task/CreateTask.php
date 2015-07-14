@@ -35,7 +35,7 @@ final class CreateTask extends AbstractCommandHandler
     {
         $task = $this->createTaskObject($command);
 
-        if ($task->getAssignedToUser() === null) {
+        if ($task->getAssignedToUser() === null && $task->getAssignedToTeam() === null) {
             $this->autoAssignTask($task);
         }
 
@@ -101,7 +101,7 @@ final class CreateTask extends AbstractCommandHandler
      * @param Cmd $command
      * @return Task
      */
-    private function createTaskObject(Cmd $command)
+    private function createTaskObject(CommandInterface $command)
     {
         // Required
         $category = $this->getRepo()->getCategoryReference($command->getCategory());
