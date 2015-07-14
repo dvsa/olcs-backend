@@ -4,8 +4,11 @@ namespace Dvsa\OlcsTest\Api\Entity\Bus;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as Entity;
+use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService as BusRegOtherServiceEntity;
+use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
+use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as BusShortNoticeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Mockery as m;
 
 /**
@@ -356,7 +359,7 @@ class BusRegEntityTest extends EntityTester
         $endDate = null;
         $busNoticePeriod = 2;
 
-        $busRules = new BusNoticePeriod();
+        $busRules = new BusNoticePeriodEntity();
         $busRules->setCancellationPeriod($rules['cancellationPeriod']);
         $busRules->setStandardPeriod($rules['standardPeriod']);
 
@@ -444,5 +447,136 @@ class BusRegEntityTest extends EntityTester
             [$notSn, $scotRules, 1, '2015-02-09', '2016-09-30', $parent],
             [$notSn, $scotRules, 1, '2014-06-11', '2014-08-11']
         ];
+    }
+
+    public function testCreateNew()
+    {
+        $latestBusRouteNo = 3;
+        $licNo = '123';
+
+        $licenceEntityMock = m::mock(LicenceEntity::class);
+        $licenceEntityMock->shouldReceive('getLatestBusRouteNo')->once()->andReturn($latestBusRouteNo);
+        $licenceEntityMock->shouldReceive('getLicNo')->once()->andReturn($licNo);
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_VAR);
+
+        $revertStatus = new RefDataEntity();
+        $revertStatus->setId(Entity::STATUS_VAR);
+
+        $subsidised = new RefDataEntity();
+        $subsidised->setId(Entity::SUBSIDY_NO);
+
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+
+        $busReg = Entity::createNew($licenceEntityMock, $status, $revertStatus, $subsidised, $busNoticePeriod);
+
+        // test some values from $defaultAll
+        $this->assertEquals('N', $busReg->getIsShortNotice());
+        $this->assertNull($busReg->getEndDate());
+
+        // test some database metadata
+        $this->assertNull($busReg->getId());
+        $this->assertEquals(1, $busReg->getVersion());
+
+        // test new specific values
+        $this->assertEquals($licenceEntityMock, $busReg->getLicence());
+        $this->assertEquals($status, $busReg->getStatus());
+        $this->assertEquals($revertStatus, $busReg->getRevertStatus());
+        $this->assertEquals($subsidised, $busReg->getSubsidised());
+        $this->assertEquals($busNoticePeriod, $busReg->getBusNoticePeriod());
+        $this->assertEquals($latestBusRouteNo + 1, $busReg->getRouteNo());
+        $this->assertEquals('123/4', $busReg->getRegNo());
+
+        // test some short notice values
+        $busRegSN = $busReg->getShortNotice();
+        $this->assertInstanceOf(BusShortNoticeEntity::class, $busRegSN);
+        $this->assertNull($busRegSN->getId());
+        $this->assertEquals(1, $busRegSN->getVersion());
+        $this->assertEquals(0, $busRegSN->getBankHolidayChange());
+        $this->assertNull($busRegSN->getHolidayDetail());
+        $this->assertEquals($busReg, $busRegSN->getBusReg());
+    }
+
+    public function testCreateVariation()
+    {
+        $id = 15;
+        $regNo = 12345;
+        $variationNo = 2;
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_VAR);
+
+        $revertStatus = new RefDataEntity();
+        $revertStatus->setId(Entity::STATUS_VAR);
+
+        // the bus reg entity which exists on the licence
+        $licenceBusReg = new Entity();
+        $licenceBusReg->setId($id);
+        $licenceBusReg->setVariationNo($variationNo);
+
+        $licenceEntityMock = m::mock(LicenceEntity::class);
+        $licenceEntityMock->shouldReceive('getLatestBusVariation')->once()->with($regNo, [])->andReturn($licenceBusReg);
+
+        $shortNotice = new BusShortNoticeEntity();
+        $shortNotice->setId(100);
+
+        $otherService1 = new BusRegOtherServiceEntity();
+        $otherService1->setId(201);
+        $otherService1->setServiceNo('otherService1');
+
+        $otherService2 = new BusRegOtherServiceEntity();
+        $otherService2->setId(202);
+        $otherService2->setServiceNo('otherService2');
+
+        // set up the bus reg entity based on which a variation is to be created
+        $this->entity->setId($id);
+        $this->entity->setRegNo($regNo);
+        $this->entity->setLicence($licenceEntityMock);
+        $this->entity->setVersion(10);
+        $this->entity->setIsShortNotice('Y');
+        $this->entity->setShortNotice($shortNotice);
+        $this->entity->setEndDate(new \DateTime);
+        $this->entity->addVariationReasons(new RefDataEntity());
+        $this->entity->addOtherServices($otherService1);
+        $this->entity->addOtherServices($otherService2);
+
+        $busReg = $this->entity->createVariation($status, $revertStatus);
+
+        // test some values from $defaultAll
+        $this->assertEquals('N', $busReg->getIsShortNotice());
+        $this->assertNull($busReg->getEndDate());
+
+        // test some database metadata
+        $this->assertNull($busReg->getId());
+        $this->assertNull($busReg->getVersion());
+        $this->assertNull($busReg->getVariationReasons());
+
+        // test variation specific values
+        $this->assertEquals($this->entity, $busReg->getParent());
+        $this->assertEquals($status, $busReg->getStatus());
+        $this->assertInstanceOf(\DateTime::class, $busReg->getStatusChangeDate());
+        $this->assertEquals($revertStatus, $busReg->getRevertStatus());
+        $this->assertEquals($variationNo + 1, $busReg->getVariationNo());
+
+        // test some short notice values
+        $busRegSN = $busReg->getShortNotice();
+        $this->assertInstanceOf(BusShortNoticeEntity::class, $busRegSN);
+        $this->assertNull($busRegSN->getId());
+        $this->assertEquals(1, $busRegSN->getVersion());
+        $this->assertEquals(0, $busRegSN->getBankHolidayChange());
+        $this->assertNull($busRegSN->getHolidayDetail());
+        $this->assertEquals($busReg, $busRegSN->getBusReg());
+
+        // test other services
+        $this->assertEquals(2, $busReg->getOtherServices()->count());
+        $this->assertNull($busReg->getOtherServices()->first()->getId());
+        $this->assertNull($busReg->getOtherServices()->first()->getVersion());
+        $this->assertEquals($busReg, $busReg->getOtherServices()->first()->getBusReg());
+        $this->assertEquals('otherService1', $busReg->getOtherServices()->first()->getServiceNo());
+        $this->assertEquals('otherService2', $busReg->getOtherServices()->last()->getServiceNo());
+
+        return true;
     }
 }
