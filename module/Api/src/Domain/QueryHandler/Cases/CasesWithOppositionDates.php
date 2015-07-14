@@ -94,7 +94,7 @@ final class CasesWithOppositionDates extends AbstractQueryHandler
             /** @var Publication $latestPublication */
             $latestPublication = $this->getLatestPublication($case->getApplication());
 
-            if (!empty($latestPublication->getPubDate())) {
+            if (!empty($latestPublication)) {
                 $pubDateObj = new \DateTime($latestPublication->getPubDate());
 
                 $addDays = new AddDays();
