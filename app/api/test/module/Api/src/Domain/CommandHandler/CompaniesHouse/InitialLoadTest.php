@@ -21,7 +21,7 @@ use Mockery as m;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CompaniesHouseLoadTest extends CommandHandlerTestCase
+class InitialLoadTest extends CommandHandlerTestCase
 {
     protected $mockApi;
 
@@ -66,7 +66,7 @@ class CompaniesHouseLoadTest extends CommandHandlerTestCase
                 }
             );
 
-        $result = $this->sut->handleCommand($command);
+        $this->sut->handleCommand($command);
 
         $this->assertEquals($expectedSaveData, $company->toArray());
     }
