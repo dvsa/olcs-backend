@@ -25,7 +25,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CommandHandlerTestCase extends MockeryTestCase
+abstract class CommandHandlerTestCase extends MockeryTestCase
 {
     /**
      * @var CommandHandlerInterface

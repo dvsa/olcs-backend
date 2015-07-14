@@ -1,24 +1,24 @@
 <?php
 
 /**
- * Companies House Load Business Service Test
+ * Companies House Initial Load Command Handler Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CompaniesHouse;
 
+use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\InitialLoad as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse\InitialLoad;
+use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany as Repo;
+use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
+use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseApi;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use OlcsTest\Bootstrap;
-use Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse\InitialLoad;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany as Repo;
-use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseApi;
-use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\InitialLoad as Cmd;
-use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
 
 /**
- *  Companies House Load Business Service Test
+ *  Companies House Initial Load Command Handler Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
