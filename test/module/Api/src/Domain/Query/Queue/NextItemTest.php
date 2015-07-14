@@ -6,9 +6,9 @@ use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Domain\Query\Queue\NextItem;
 
 /**
- * Application test
+ * NextItem test
  */
-class ApplicationTest extends PHPUnit_Framework_TestCase
+class NextItemTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

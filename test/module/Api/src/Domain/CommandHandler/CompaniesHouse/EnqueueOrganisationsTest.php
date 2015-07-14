@@ -43,6 +43,6 @@ class EnqueueOrganisationsTest extends CommandHandlerTestCase
             ->with(Queue::TYPE_COMPANIES_HOUSE_COMPARE)
             ->once();
 
-        $result = $this->sut->handleCommand($command);
+        $this->sut->handleCommand($command);
     }
 }
