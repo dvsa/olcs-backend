@@ -467,6 +467,7 @@ return [
 
     // Person
     TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,
+    Command\Person\Create::class => CommandHandler\Person\Create::class,
 
     // TM Employment
     TransferCommand\TmEmployment\DeleteList::class => CommandHandler\TmEmployment\DeleteList::class,
@@ -516,6 +517,9 @@ return [
     // OrganisationPerson
     TransferCommand\OrganisationPerson\PopulateFromCompaniesHouse::class =>
         CommandHandler\OrganisationPerson\PopulateFromCompaniesHouse::class,
+
+    // Transfer - TransportManager
+    TransferCommand\Tm\Create::class => CommandHandler\Tm\Create::class,
 
     // Task
     TransferCommand\Task\CloseTasks::class => CommandHandler\Task\CloseTasks::class,
