@@ -71,6 +71,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->eq')
             ->andReturnUsing([$this, 'mockExprEq']);
 
+        $this->qb->shouldReceive('expr->lte')
+            ->andReturnUsing([$this, 'mockExprLte']);
+
         $this->qb->shouldReceive('expr->isNull')
             ->andReturnUsing([$this, 'mockExprIsNull']);
 
@@ -88,6 +91,9 @@ class RepositoryTestCase extends MockeryTestCase
 
         $this->qb->shouldReceive('andWhere')
             ->andReturnUsing([$this, 'mockAndWhere']);
+
+        $this->qb->shouldReceive('orWhere')
+            ->andReturnUsing([$this, 'mockOrWhere']);
 
         $this->qb->shouldReceive('innerJoin')
             ->andReturnUsing([$this, 'mockInnerJoin']);
@@ -127,6 +133,13 @@ class RepositoryTestCase extends MockeryTestCase
         return $this->qb;
     }
 
+    public function mockOrWhere($where)
+    {
+        $this->query .= ' OR ' . $where;
+
+        return $this->qb;
+    }
+
     public function mockInnerJoin($field, $alias, $type = null, $condition = null)
     {
         $this->query .= ' INNER JOIN ' . $field . ' ' . $alias;
@@ -156,6 +169,13 @@ class RepositoryTestCase extends MockeryTestCase
         $value = $this->formatValue($value);
 
         return $field . ' = ' . $value;
+    }
+
+    public function mockExprLte($field, $value)
+    {
+        $value = $this->formatValue($value);
+
+        return $field . ' <= ' . $value;
     }
 
     public function mockExprIn($field, $value)

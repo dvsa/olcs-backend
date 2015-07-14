@@ -75,7 +75,12 @@ final class GrantTransportManager extends AbstractCommandHandler implements Tran
 
         $tml = new TransportManagerLicence($licence, $tma->getTransportManager());
 
-        $ignore = ['id', 'action', 'version', 'application', 'tmApplicationStatus', 'otherLicences'];
+        $ignore = [
+            'action',
+            'application',
+            'tmApplicationStatus',
+            'otherLicences'
+        ];
 
         EntityCloner::cloneEntityInto($tma, $tml, $ignore);
 
@@ -90,7 +95,7 @@ final class GrantTransportManager extends AbstractCommandHandler implements Tran
 
     protected function createOtherLicence(OtherLicence $otherLicence, TransportManagerLicence $tml)
     {
-        $newOtherLicence = EntityCloner::cloneEntity($otherLicence, ['id', 'version', 'transportManagerApplication']);
+        $newOtherLicence = EntityCloner::cloneEntity($otherLicence, ['transportManagerApplication']);
         $newOtherLicence->setTransportManagerLicence($tml);
 
         $this->getRepo('OtherLicence')->save($newOtherLicence);
