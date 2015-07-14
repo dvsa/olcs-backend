@@ -45,12 +45,12 @@ class QueueProcessorTest extends MockeryTestCase
         $this->expectQuery(
             $mockQueryHandlerManager,
             NextQueueItemQry::class,
-            ['type' => 'foo_bar'],
+            ['type' => $typeId],
             null
         );
 
         // Assertions
-        $this->assertNull($this->sut->processNextItem('foo_bar'));
+        $this->assertNull($this->sut->processNextItem($typeId));
     }
 
     public function testProcessNextItem()
@@ -72,7 +72,7 @@ class QueueProcessorTest extends MockeryTestCase
         $this->expectQuery(
             $mockQueryHandlerManager,
             NextQueueItemQry::class,
-            ['type' => 'foo_bar'],
+            ['type' => $typeId],
             $item
         );
 
@@ -90,9 +90,8 @@ class QueueProcessorTest extends MockeryTestCase
      * @param string $class expected Query/Command class name
      * @param array $expectedDtoData
      * @param array $result to be returned by $response->getResult()
-     * @param boolean $ok to be returned by $response->isOk()
      */
-    private function expectQuery($queryHandlerManager, $class, $expectedDtoData, $result, $ok = true)
+    private function expectQuery($queryHandlerManager, $class, $expectedDtoData, $result)
     {
         $queryHandlerManager
             ->shouldReceive('handleQuery')

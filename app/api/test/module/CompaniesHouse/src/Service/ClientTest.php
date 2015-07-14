@@ -27,7 +27,6 @@ class ClientTest extends MockeryTestCase
         $this->sut->setBaseUri('BASE_URI');
 
         $mockRequest = m::mock(\Zend\Http\Request::class);
-        $mockPost = m::mock(\Zend\Stdlib\ParametersInterface::class);
         $mockHttpClient = m::mock(\Zend\Http\Client::class);
 
         $this->sut->setHttpClient($mockHttpClient);
@@ -35,7 +34,6 @@ class ClientTest extends MockeryTestCase
         $mockHttpClient->shouldReceive('getRequest')->with()->once()->andReturn($mockRequest);
         $mockRequest->shouldReceive('setUri')->with('BASE_URI/company/03127414')->once()->andReturnSelf();
         $mockRequest->shouldReceive('setMethod')->with('GET')->once()->andReturnSelf();
-
 
         $response = new \Zend\Http\Response();
         $response->setStatusCode(200);
@@ -53,7 +51,6 @@ class ClientTest extends MockeryTestCase
         $this->sut->setBaseUri('BASE_URI');
 
         $mockRequest = m::mock(\Zend\Http\Request::class);
-        $mockPost = m::mock(\Zend\Stdlib\ParametersInterface::class);
         $mockHttpClient = m::mock(\Zend\Http\Client::class);
 
         $this->sut->setHttpClient($mockHttpClient);
@@ -96,7 +93,6 @@ class ClientTest extends MockeryTestCase
         $this->sut->setBaseUri('BASE_URI');
 
         $mockRequest = m::mock(\Zend\Http\Request::class);
-        $mockPost = m::mock(\Zend\Stdlib\ParametersInterface::class);
         $mockHttpClient = m::mock(\Zend\Http\Client::class);
 
         $this->sut->setHttpClient($mockHttpClient);
@@ -108,7 +104,6 @@ class ClientTest extends MockeryTestCase
         $companyResponse = new \Zend\Http\Response();
         $companyResponse->setStatusCode(404);
         $companyResponse->setContent('{"error":"not found"}');
-
 
         $mockHttpClient
             ->shouldReceive('send')
