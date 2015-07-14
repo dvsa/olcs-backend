@@ -21,8 +21,6 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
 {
     protected $repoServiceName = 'CompaniesHouseCompany';
 
-    protected $extraRepos = ['CompaniesHouseAlert', 'Organisation'];
-
     /**
      * @var CompaniesHouseClient
      */
