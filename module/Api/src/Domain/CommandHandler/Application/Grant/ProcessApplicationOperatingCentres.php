@@ -109,13 +109,7 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
     protected function updateLicenceOperatingCentre(Aoc $aoc, Loc $loc)
     {
         $ignore = [
-            'id',
             'action',
-            'version',
-            'createdOn',
-            'createdBy',
-            'modifiedOn',
-            'modifiedBy',
             'isInterim'
         ];
 
