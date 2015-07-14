@@ -20,6 +20,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class Compare extends AbstractCommandHandler
 {
+    protected $extraRepos = ['CompaniesHouseAlert', 'Organisation'];
+
     /**
      * Given a company number, looks up data via Companies House API and
      * checks for differences with last-stored data
