@@ -91,7 +91,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         $this->getRepo()->save($transportManager);
 
         $result->addId('transportManager', $transportManager->getId());
-        $result->addMessage('Transport Manahger created successfully');
+        $result->addMessage('Transport Manager created successfully');
         $result->merge($personResult);
 
         // need to add ids and messages manually, otherewise it will be overwritten

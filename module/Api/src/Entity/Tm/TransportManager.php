@@ -29,6 +29,7 @@ class TransportManager extends AbstractTransportManager
     const TRANSPORT_MANAGER_STATUS_DISABLED = 'tm_st_disa';
     const TRANSPORT_MANAGER_TYPE_EXTERNAL = 'tm_t_e';
     const TRANSPORT_MANAGER_TYPE_BOTH = 'tm_t_b';
+    const TRANSPORT_MANAGER_TYPE_INTERNAL = 'tm_t_i';
 
     public function updateTransportManager($type, $status, $workCd, $homeCd, $createdBy)
     {
