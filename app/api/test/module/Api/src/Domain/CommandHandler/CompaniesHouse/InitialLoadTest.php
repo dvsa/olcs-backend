@@ -38,11 +38,11 @@ class InitialLoadTest extends CommandHandlerTestCase
     }
 
     /**
-     * Test process method
+     * Test handleCommand method happy path
      *
      * @dataProvider successProvider
      */
-    public function testProcessSuccess($companyNumber, $stubResponse, $expectedSaveData)
+    public function testHandleCommandSuccess($companyNumber, $stubResponse, $expectedSaveData)
     {
         // expectations
         $this->mockApi
@@ -214,9 +214,9 @@ class InitialLoadTest extends CommandHandlerTestCase
     }
 
     /**
-     * Test process exception handling
+     * Test handleCommand exception handling
      */
-    public function testProcessException()
+    public function testHandleCommandException()
     {
         // data
         $companyNumber = '01234567';

@@ -34,9 +34,9 @@ class FailedTest extends CommandHandlerTestCase
     }
 
     /**
-     * Test process method
+     * Test handleCommand method
      */
-    public function testProcess()
+    public function testHandleCommand()
     {
         $item = new QueueEntity();
         $command = Cmd::create(['item' => $item]);

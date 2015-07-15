@@ -30,9 +30,9 @@ class EnqueueOrganisationsTest extends CommandHandlerTestCase
     }
 
     /**
-     * Test process method
+     * Test handleCommand method
      */
-    public function testProcess()
+    public function testHandleCommand()
     {
         // expectations
 
