@@ -24,5 +24,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TransportManager extends AbstractTransportManager
 {
+    const TRANSPORT_MANAGER_STATUS_CURRENT = 'tm_s_cur';
+    const TRANSPORT_MANAGER_STATUS_ACTIVE = 'tm_st_act';
+    const TRANSPORT_MANAGER_STATUS_DISABLED = 'tm_st_disa';
+    const TRANSPORT_MANAGER_TYPE_EXTERNAL = 'tm_t_e';
+    const TRANSPORT_MANAGER_TYPE_BOTH = 'tm_t_b';
+    const TRANSPORT_MANAGER_TYPE_INTERNAL = 'tm_t_i';
 
+    public function updateTransportManager($type, $status, $workCd, $homeCd, $createdBy)
+    {
+        $this->setTmType($type);
+        $this->setTmStatus($status);
+        $this->setWorkCd($workCd);
+        $this->setHomeCd($homeCd);
+        $this->setCreatedBy($createdBy);
+    }
 }

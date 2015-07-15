@@ -248,8 +248,6 @@ return [
     'review-transport-manager-email' => 'Email address',
     'review-transport-manager-updated-title' => 'Transport managers updated',
     'review-transport_managers' => 'Transport managers',
-    'review-transport_managers_delete' => 'Are you sure you want to remove the selected transport manager(s) from the
-        application?',
     'review-type_of_licence' => 'Type of licence',
     'review-undertakings' => 'Undertakings',
     'review-value-decreased' => 'has decreased from %s to %s',
