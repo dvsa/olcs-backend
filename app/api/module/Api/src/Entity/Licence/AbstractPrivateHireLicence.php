@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * PrivateHireLicence Abstract Entity
@@ -14,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="private_hire_licence",
  *    indexes={
  *        @ORM\Index(name="ix_private_hire_licence_licence_id", columns={"licence_id"}),
@@ -59,6 +61,15 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      */
     protected $createdOn;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
 
     /**
      * Identifier - Id
@@ -199,6 +210,29 @@ abstract class AbstractPrivateHireLicence implements BundleSerializableInterface
     public function getCreatedOn()
     {
         return $this->createdOn;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return PrivateHireLicence
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
     }
 
     /**
