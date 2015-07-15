@@ -83,7 +83,8 @@ class UpdateTest extends CommandHandlerTestCase
         $data = [
             'id' => $id,
             'version' => $version,
-            'comment' => 'my comment update'
+            'comment' => 'my comment update',
+            'priority' => '1'
         ];
 
         $command = UpdateCommand::create($data);
@@ -98,6 +99,10 @@ class UpdateTest extends CommandHandlerTestCase
                 m::mock(NoteEntity::class)
                     ->shouldReceive('setComment')
                     ->with($data['comment'])
+
+                    ->shouldReceive('setPriority')
+                    ->with(1)
+
                     // application note
                     ->shouldReceive('getApplication')
                     ->andReturn(

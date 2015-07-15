@@ -92,6 +92,7 @@ class OppositionTest extends RepositoryTestCase
 
         $query->shouldReceive('getCase')->with()->andReturn(746);
         $query->shouldReceive('getLicence')->with()->andReturn(null);
+        $query->shouldReceive('getApplication')->with()->andReturn(null);
 
         $qb->shouldReceive('expr->eq')->with('m.case', ':byCase')->once()->andReturn('EXPR');
         $qb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
@@ -110,10 +111,30 @@ class OppositionTest extends RepositoryTestCase
 
         $query->shouldReceive('getCase')->with()->andReturn(null);
         $query->shouldReceive('getLicence')->with()->andReturn(43);
+        $query->shouldReceive('getApplication')->with()->andReturn(null);
 
         $qb->shouldReceive('expr->eq')->with('ca.licence', ':licence')->once()->andReturn('EXPR');
         $qb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('licence', 43)->once()->andReturnSelf();
+
+        $sut->applyListFilters($qb, $query);
+    }
+
+    public function testApplyFiltersApplication()
+    {
+        // mock SUT to allow testing the protected method
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $qb = m::mock(QueryBuilder::class);
+        $query = m::mock(QueryInterface::class);
+
+        $query->shouldReceive('getCase')->with()->andReturn(null);
+        $query->shouldReceive('getLicence')->with()->andReturn(null);
+        $query->shouldReceive('getApplication')->with()->andReturn(543);
+
+        $qb->shouldReceive('expr->eq')->with('ca.application', ':application')->once()->andReturn('EXPR');
+        $qb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('application', 543)->once()->andReturnSelf();
 
         $sut->applyListFilters($qb, $query);
     }

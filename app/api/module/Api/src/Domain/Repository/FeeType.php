@@ -1,7 +1,7 @@
 <?php
 
 /**
- * FeeType
+ * Fee Type
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -10,11 +10,10 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as Entity;
 
 /**
- * FeeType
+ * Fee Type
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -29,7 +28,7 @@ class FeeType extends AbstractRepository
      * @param RefDataEntity $goodsOrPsv
      * @param RefDataEntity $licenceType
      * @param \DateTime $date
-     * @param TrafficArea|string $trafficArea traffic area entity or id
+     * @param mixed $trafficArea traffic area entity or id
      *
      * @return \Dvsa\Olcs\Api\Entity\Fee\FeeType
      * @throws Exception\NotFoundException
