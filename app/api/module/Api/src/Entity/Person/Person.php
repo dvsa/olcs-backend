@@ -31,9 +31,10 @@ class Person extends AbstractPerson
      * @param string $familyName
      * @param RefData|null $title
      * @param string|null $birthDate
+     * @param string|null $birthPlace
      * @return $this
      */
-    public function updatePerson($forename, $familyName, RefData $title = null, $birthDate = null)
+    public function updatePerson($forename, $familyName, RefData $title = null, $birthDate = null, $birthPlace = null)
     {
         $this->setForename($forename);
         $this->setFamilyName($familyName);
@@ -44,6 +45,10 @@ class Person extends AbstractPerson
 
         if ($birthDate !== null) {
             $this->setBirthDate(new \DateTime($birthDate));
+        }
+
+        if ($birthPlace !== null) {
+            $this->setBirthPlace($birthPlace);
         }
     }
 }

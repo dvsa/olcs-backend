@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\System\PublicHoliday as Entity;
 
 /**
@@ -23,7 +23,7 @@ class PublicHoliday extends AbstractRepository
      * @param \DateTime $endDate
      * @return array
      */
-    public function fetchBetweenByTa(\DateTime $startDate, \DateTime $endDate, TrafficArea $trafficArea = null)
+    public function fetchBetweenByTa(\DateTime $startDate, \DateTime $endDate, TrafficAreaEntity $trafficArea = null)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('p.publicHolidayDate')->from($this->entity, $this->alias);

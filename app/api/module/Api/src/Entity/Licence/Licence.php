@@ -99,18 +99,43 @@ class Licence extends AbstractLicence
     /**
      * Gets the latest Bus Reg variation number, based on the supplied regNo
      *
-     * @param $regNo
+     * @param string $regNo
+     * @param array $notInStatus
      * @return mixed
      */
-    public function getLatestBusVariation($regNo)
-    {
+    public function getLatestBusVariation(
+        $regNo,
+        array $notInStatus = [
+            BusReg::STATUS_REFUSED,
+            BusReg::STATUS_WITHDRAWN
+        ]
+    ) {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('regNo', $regNo))
-            ->andWhere(Criteria::expr()->notIn('status', [BusReg::STATUS_REFUSED, BusReg::STATUS_WITHDRAWN]))
             ->orderBy(array('variationNo' => Criteria::DESC))
             ->setMaxResults(1);
 
+        if (!empty($notInStatus)) {
+            $criteria->andWhere(Criteria::expr()->notIn('status', $notInStatus));
+        }
+
         return $this->getBusRegs()->matching($criteria)->current();
+    }
+
+    /**
+     * Gets the latest Bus Reg route number for the licence
+     *
+     * @return mixed
+     */
+    public function getLatestBusRouteNo()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('licence', $this))
+            ->orderBy(array('routeNo' => Criteria::DESC))
+            ->setMaxResults(1);
+
+        return !empty($this->getBusRegs()->matching($criteria)->current())
+            ? $this->getBusRegs()->matching($criteria)->current()->getRouteNo() : 0;
     }
 
     public function updateTotalCommunityLicences($totalCount)
@@ -429,5 +454,15 @@ class Licence extends AbstractLicence
         $this->setTotAuthMediumVehicles($application->getTotAuthMediumVehicles());
         $this->setTotAuthLargeVehicles($application->getTotAuthLargeVehicles());
         $this->setNiFlag($application->getNiFlag());
+    }
+
+    public function getOcForInspectionRequest()
+    {
+        $list = [];
+        $licenceOperatingCentres = $this->getOperatingCentres();
+        foreach ($licenceOperatingCentres as $licenceOperatingCentre) {
+            $list[] = $licenceOperatingCentre->getOperatingCentre();
+        }
+        return $list;
     }
 }

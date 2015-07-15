@@ -119,7 +119,6 @@ class Licence extends AbstractRepository
         $qb->innerJoin('m.licenceVehicles', 'lv');
         $qb->innerJoin('lv.vehicle', 'v');
 
-
         $qb->andWhere(
             $qb->expr()->isNull('lv.removalDate')
         );
@@ -135,5 +134,29 @@ class Licence extends AbstractRepository
         $query->execute();
 
         return $query->getResult();
+    }
+
+    public function fetchWithEnforcementArea($licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('enforcementArea')
+            ->byId($licenceId);
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
+    public function fetchWithOperatingCentres($licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('operatingCentres', 'oc')
+            ->with('oc.operatingCentre', 'oc_oc')
+            ->with('oc_oc.address', 'oc_oc_a')
+            ->byId($licenceId);
+
+        return $qb->getQuery()->getSingleResult(Query::HYDRATE_OBJECT);
     }
 }

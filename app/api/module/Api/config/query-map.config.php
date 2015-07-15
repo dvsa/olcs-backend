@@ -43,8 +43,10 @@ return [
     TransferQuery\Application\VehicleDeclaration::class => QueryHandler\Application\VehicleDeclaration::class,
     TransferQuery\Application\Review::class => QueryHandler\Application\Review::class,
     TransferQuery\Application\Overview::class => QueryHandler\Application\Overview::class,
+    TransferQuery\Application\EnforcementArea::class => QueryHandler\Application\EnforcementArea::class,
     TransferQuery\Application\Grant::class => QueryHandler\Application\Grant::class,
     TransferQuery\Application\People::class => QueryHandler\Application\People::class,
+    TransferQuery\Application\OperatingCentre::class => QueryHandler\Application\OperatingCentre::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -58,8 +60,10 @@ return [
     TransferQuery\Licence\OtherActiveLicences::class => QueryHandler\Licence\OtherActiveLicences::class,
     TransferQuery\Licence\LicenceDecisions::class => QueryHandler\Licence\LicenceDecisions::class,
     TransferQuery\Licence\Overview::class => QueryHandler\Licence\Overview::class,
+    TransferQuery\Licence\EnforcementArea::class => QueryHandler\Licence\EnforcementArea::class,
     TransferQuery\Licence\ConditionUndertaking::class => QueryHandler\Licence\ConditionUndertaking::class,
     TransferQuery\Licence\People::class => QueryHandler\Licence\People::class,
+    TransferQuery\Licence\OperatingCentre::class => QueryHandler\Licence\OperatingCentre::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
@@ -190,6 +194,8 @@ return [
 
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
+    TransferQuery\Document\Document::class => QueryHandler\Document\Document::class,
+    TransferQuery\Document\DocumentList::class => QueryHandler\Document\DocumentList::class,
 
     // Transport Manager Application
     TransferQuery\TransportManagerApplication\GetDetails::class
@@ -233,7 +239,21 @@ return [
 
     // Inspection Request
     TransferQuery\InspectionRequest\OperatingCentres::class => QueryHandler\InspectionRequest\OperatingCentres::class,
+    TransferQuery\InspectionRequest\ApplicationInspectionRequestList::class =>
+        QueryHandler\InspectionRequest\ApplicationInspectionRequestList::class,
+    TransferQuery\InspectionRequest\LicenceInspectionRequestList::class =>
+        QueryHandler\InspectionRequest\LicenceInspectionRequestList::class,
+    TransferQuery\InspectionRequest\InspectionRequest::class => QueryHandler\InspectionRequest\InspectionRequest::class,
 
     // Change of Entity
     TransferQuery\ChangeOfEntity\ChangeOfEntity::class => QueryHandler\ChangeOfEntity\ChangeOfEntity::class,
+
+    // ConditionUndertaking
+    TransferQuery\ConditionUndertaking\GetList::class => QueryHandler\ConditionUndertaking\GetList::class,
+    TransferQuery\ConditionUndertaking\Get::class => QueryHandler\ConditionUndertaking\Get::class,
+
+    // Task
+    TransferQuery\Task\TaskList::class => QueryHandler\Task\TaskList::class,
+    TransferQuery\Task\Task::class => QueryHandler\Task\Task::class,
+    TransferQuery\Task\TaskDetails::class => QueryHandler\Task\TaskDetails::class,
 ];

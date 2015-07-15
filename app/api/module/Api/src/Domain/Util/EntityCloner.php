@@ -16,6 +16,15 @@ use Doctrine\Instantiator\Instantiator;
  */
 class EntityCloner
 {
+    private static $alwaysIgnore = [
+        'id',
+        'version',
+        'createdOn',
+        'createdBy',
+        'lastModifiedOn',
+        'lastModifiedBy'
+    ];
+
     /**
      * Clones an entity and copies all properties except those in the ignored list
      *
@@ -25,6 +34,8 @@ class EntityCloner
      */
     public static function cloneEntity($sourceEntity, array $ignoredProperties = [])
     {
+        $ignoredProperties = array_merge(self::$alwaysIgnore, $ignoredProperties);
+
         $clone = clone $sourceEntity;
 
         if (empty($ignoredProperties)) {
@@ -57,6 +68,8 @@ class EntityCloner
      */
     public static function cloneEntityInto($sourceEntity, $targetEntity, array $ignoredProperties = [])
     {
+        $ignoredProperties = array_merge(self::$alwaysIgnore, $ignoredProperties);
+
         if (!is_object($targetEntity)) {
 
             if ($targetEntity == get_class($sourceEntity)) {
