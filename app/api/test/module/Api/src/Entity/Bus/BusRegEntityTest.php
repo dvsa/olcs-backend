@@ -579,4 +579,59 @@ class BusRegEntityTest extends EntityTester
 
         return true;
     }
+
+    /**
+     * Tests updateServiceRegister
+     */
+    public function testUpdateServiceRegister()
+    {
+        $timetableAcceptable = 'Y';
+        $mapSupplied = 'Y';
+        $routeDescription = 'string';
+        $trcConditionChecked = 'Y';
+        $trcNotes = 'string 2';
+        $copiedToLaPte = 'Y';
+        $laShortNote = 'Y';
+        $opNotifiedLaPte = 'Y';
+        $applicationSigned = 'Y';
+
+        $this->getAssertionsForCanEditIsTrue();
+
+        $this->entity->updateServiceRegister(
+            $timetableAcceptable,
+            $mapSupplied,
+            $routeDescription,
+            $trcConditionChecked,
+            $trcNotes,
+            $copiedToLaPte,
+            $laShortNote,
+            $opNotifiedLaPte,
+            $applicationSigned
+        );
+
+        $this->assertEquals($timetableAcceptable, $this->entity->getTimetableAcceptable());
+        $this->assertEquals($mapSupplied, $this->entity->getMapSupplied());
+        $this->assertEquals($routeDescription, $this->entity->getRouteDescription());
+        $this->assertEquals($trcConditionChecked, $this->entity->getTrcConditionChecked());
+        $this->assertEquals($trcNotes, $this->entity->getTrcNotes());
+        $this->assertEquals($copiedToLaPte, $this->entity->getCopiedToLaPte());
+        $this->assertEquals($laShortNote, $this->entity->getLaShortNote());
+        $this->assertEquals($opNotifiedLaPte, $this->entity->getOpNotifiedLaPte());
+        $this->assertEquals($applicationSigned, $this->entity->getApplicationSigned());
+
+        return true;
+    }
+
+    /**
+     * Tests updateServiceRegister throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateServiceRegisterThrowsExceptionForLatestVariation()
+    {
+        $this->getAssertionsForCanEditIsFalseDueToVariation();
+        $this->entity->updateServiceRegister(null, null, null, null, null, null, null, null, null);
+
+        return true;
+    }
 }
