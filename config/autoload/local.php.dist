@@ -53,6 +53,10 @@ return array(
             'sslcapath' => '/etc/ssl/certs',
             // insecure! should be set to true in production to verify SSL cert
             'sslverifypeer' => false,
+            // Set the following if you need to go via a proxy to get to Companies House
+            // 'adapter'    => 'Zend\Http\Client\Adapter\Proxy',
+            // 'proxy_host' => 'fp01.inf.mgt.mtpdvsa',
+            // 'proxy_port' => '3128',
         ],
         'auth' => [
             // Companies House API key
