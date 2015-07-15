@@ -40,7 +40,10 @@ class GetList extends AbstractQueryHandler
                 $results = $this->getApplicationList($application);
             }
         } else {
-            $results = $this->getLicenceList($query->getLicence());
+            $results = $this->getLicenceList(
+                $query->getLicence(),
+                $query->getConditionType()
+            );
         }
 
         return [
@@ -71,12 +74,13 @@ class GetList extends AbstractQueryHandler
      * Get a list of ConditionUndertaking for an Licence
      *
      * @param int $licenceId
+     * @param string $conditionType
      *
      * @return array
      */
-    protected function getLicenceList($licenceId)
+    protected function getLicenceList($licenceId, $conditionType = null)
     {
-        return $this->getRepo()->fetchListForLicence($licenceId);
+        return $this->getRepo()->fetchListForLicence($licenceId, $conditionType);
     }
 
     /**
