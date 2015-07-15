@@ -32,15 +32,19 @@ class CompaniesHouseOfficer extends AbstractCompaniesHouseOfficer
         }
 
         if (isset($data['dateOfBirth'])) {
-            $dob = new \DateTime();
-            $dob->setDate(
-                $data['dateOfBirth']['year'],
-                $data['dateOfBirth']['month'],
-                // day element of D.o.B. is usually suppressed
-                isset($data['dateOfBirth']['day']) ? $data['dateOfBirth']['day'] : 1
-            );
-            $dob->setTime(0, 0, 0);
-            $this->setDateOfBirth($dob);
+            if (is_array($data['dateOfBirth'])) {
+                $dob = new \DateTime();
+                $dob->setDate(
+                    $data['dateOfBirth']['year'],
+                    $data['dateOfBirth']['month'],
+                    // day element of D.o.B. is usually suppressed
+                    isset($data['dateOfBirth']['day']) ? $data['dateOfBirth']['day'] : 1
+                );
+                $dob->setTime(0, 0, 0);
+                $this->setDateOfBirth($dob);
+            } elseif ($data['dateOfBirth'] instanceof \DateTime) {
+                $this->setDateOfBirth($data['dateOfBirth']);
+            }
         }
     }
 
