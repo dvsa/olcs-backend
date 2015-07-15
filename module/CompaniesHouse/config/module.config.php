@@ -4,7 +4,7 @@ return [
     'companies_house' => [
         'http' => [
             'sslcapath' => '/etc/ssl/certs',
-            'sslverifypeer' => false,
+            'sslverifypeer' => true,
         ],
         'auth' => [
             'username' => 'changeme',
