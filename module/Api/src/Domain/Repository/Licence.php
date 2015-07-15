@@ -159,4 +159,26 @@ class Licence extends AbstractRepository
 
         return $qb->getQuery()->getSingleResult(Query::HYDRATE_OBJECT);
     }
+
+    /**
+     * Get a Licence and PrivateHireLicence data
+     *
+     * @param int $licenceId
+     *
+     * @return Entity
+     */
+    public function fetchWithPrivateHireLicence($licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('privateHireLicences', 'phl')
+            ->with('phl.contactDetails', 'cd')
+            ->with('cd.address', 'add')
+            ->with('add.countryCode')
+            ->byId($licenceId);
+
+        return $qb->getQuery()->getSingleResult(Query::HYDRATE_OBJECT);
+    }
 }

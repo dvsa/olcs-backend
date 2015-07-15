@@ -47,6 +47,7 @@ return [
     TransferQuery\Application\Grant::class => QueryHandler\Application\Grant::class,
     TransferQuery\Application\People::class => QueryHandler\Application\People::class,
     TransferQuery\Application\OperatingCentre::class => QueryHandler\Application\OperatingCentre::class,
+    TransferQuery\Application\TaxiPhv::class => QueryHandler\Application\TaxiPhv::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -64,6 +65,7 @@ return [
     TransferQuery\Licence\ConditionUndertaking::class => QueryHandler\Licence\ConditionUndertaking::class,
     TransferQuery\Licence\People::class => QueryHandler\Licence\People::class,
     TransferQuery\Licence\OperatingCentre::class => QueryHandler\Licence\OperatingCentre::class,
+    TransferQuery\Licence\TaxiPhv::class => QueryHandler\Licence\TaxiPhv::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
