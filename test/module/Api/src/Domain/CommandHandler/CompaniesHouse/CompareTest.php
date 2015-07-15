@@ -8,10 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\Compare as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\CreateAlert as CreateAlertCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse\Compare;
-use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany as Repo;
+use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany as CompanyRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
+use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseApi;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -32,7 +36,8 @@ class CompareTest extends CommandHandlerTestCase
             CompaniesHouseApi::class => $this->mockApi,
         ];
         $this->sut = new Compare();
-        $this->mockRepo('CompaniesHouseCompany', Repo::class);
+        $this->mockRepo('CompaniesHouseCompany', CompanyRepo::class);
+        $this->mockRepo('Organisation', OrganisationRepo::class);
 
         parent::setUp();
     }
@@ -51,8 +56,6 @@ class CompareTest extends CommandHandlerTestCase
             ->with($companyNumber, true)
             ->andReturn($stubResponse);
 
-        $command = Cmd::create(['companyNumber' => $companyNumber]);
-
         /** @var CompanyEntity $company */
         $company = new CompanyEntity($stubSavedData);
         $this->repoMap['CompaniesHouseCompany']
@@ -61,11 +64,61 @@ class CompareTest extends CommandHandlerTestCase
             ->with($companyNumber)
             ->andReturn($company);
 
+        // invoke
+        $command = Cmd::create(['companyNumber' => $companyNumber]);
         $result = $this->sut->handleCommand($command);
 
+        // assertions
         $this->assertEquals('No changes', $result->getMessages()[0]);
     }
 
+    /**
+     * Test process method when company not found
+     */
+    public function testProcessCompanyNotFound()
+    {
+        // data
+        $companyNumber = '01234567';
+
+        $organisation = m::mock(OrganisationEntity::class)->makePartial()->setId(69);
+
+        $expectedAlertData = [
+            'companyNumber' => $companyNumber,
+            'organisation' => $organisation,
+            'reasons' => [
+                AlertEntity::REASON_INVALID_COMPANY_NUMBER,
+            ],
+        ];
+
+        $alertResult = new Result();
+        $alertResult
+            ->addId('companiesHouseAlert', 101)
+            ->addMessage('Alert created');
+
+        // expectations
+        $this->mockApi
+            ->shouldReceive('getCompanyProfile')
+            ->once()
+            ->with($companyNumber, true)
+            ->andReturn(['not found!']);
+
+        $this->repoMap['Organisation']
+            ->shouldReceive('getByCompanyOrLlpNo')
+            ->once()
+            ->with($companyNumber)
+            ->andReturn(array($organisation));
+
+        $this->expectedSideEffect(CreateAlertCmd::class, $expectedAlertData, $alertResult);
+
+        // invoke
+        $command = Cmd::create(['companyNumber' => $companyNumber]);
+        $result = $this->sut->handleCommand($command);
+
+        // assertions
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertEquals("Alert created", $result->getMessages()[0]);
+        $this->assertEquals(['companiesHouseAlert' => 101], $result->getIds());
+    }
 
     public function noChangesProvider()
     {
