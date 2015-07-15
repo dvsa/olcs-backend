@@ -7,11 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\CreateAlert as CreateAlertCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlertReason as ReasonEntity;
+use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -115,24 +115,14 @@ final class Compare extends AbstractCommandHandler
     {
         $organisation = $this->getOrganisation($companyNumber);
 
-        $alert = new AlertEntity();
-        $alert
-            ->setCompanyOrLlpNo($companyNumber)
-            ->setOrganisation($organisation);
-
-        foreach ($reasons as $reason) {
-            $reasonRefdata = $this->getRepo()->getRefdataReference($reason);
-            $alert->addReason($reasonRefdata);
-        }
-
-        $this->getRepo('CompaniesHouseAlert')->save($alert);
-
-        $result = new Result();
-        $result
-            ->addId('companiesHouseAlert', $alert->getId())
-            ->addMessage('Alert created: ' . json_encode($reasons));
-
-        return $result;
+        $command = CreateAlertCmd::create(
+            [
+                'companyNumber' => $companyNumber,
+                'reasons' => $reasons,
+                'organisation' => $this->getOrganisation($companyNumber),
+            ]
+        );
+        return $this->handleSideEffect($command);
     }
 
     /**
