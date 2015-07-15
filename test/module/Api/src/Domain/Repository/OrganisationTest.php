@@ -241,4 +241,43 @@ class OrganisationTest extends RepositoryTestCase
 
         $this->sut->getByCompanyOrLlpNo($companyNumber);
     }
+
+    public function testGetByCompanyOrLlpNoNotFound()
+    {
+        $companyNumber = '01234567';
+
+        $results = [];
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $where = m::mock();
+        $qb->shouldReceive('expr->eq');
+        $qb
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->andReturnSelf();
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getResult')
+            ->andReturn($results);
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Organisation::class)
+            ->andReturn($repo);
+
+        $this->setExpectedException(NotFoundException::class);
+
+        $this->sut->getByCompanyOrLlpNo($companyNumber);
+    }
 }

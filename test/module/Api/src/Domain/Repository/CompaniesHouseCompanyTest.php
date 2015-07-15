@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany as CompaniesHouseCompanyRepo;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
 use Mockery as m;
@@ -75,6 +76,48 @@ class CompaniesHouseCompanyTest extends RepositoryTestCase
         $this->em->shouldReceive('getRepository')
             ->with(CompanyEntity::class)
             ->andReturn($repo);
+
+        $this->sut->getLatestByCompanyNumber($companyNumber);
+    }
+
+    public function testGetLatesByCompanyNumberNotFound()
+    {
+        $companyNumber = '01234567';
+        $results = [];
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $where = m::mock();
+        $qb->shouldReceive('expr->eq');
+        $qb
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->andReturnSelf()
+            ->shouldReceive('setMaxResults')
+            ->andReturnSelf();
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getResult')
+            ->andReturn($results);
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(CompanyEntity::class)
+            ->andReturn($repo);
+
+        $this->setExpectedException(NotFoundException::class);
 
         $this->sut->getLatestByCompanyNumber($companyNumber);
     }
