@@ -35,9 +35,8 @@ final class Compare extends AbstractCommandHandler
         $result = new Result();
 
         $apiResult = $this->api->getCompanyProfile($companyNumber, true);
-        $data = $this->normaliseProfileData($apiResult);
 
-        if (empty($data['companyNumber'])) {
+        if (empty($apiResult['company_number'])) {
             $result->merge(
                 $this->createAlert(
                     [AlertEntity::REASON_INVALID_COMPANY_NUMBER],
@@ -46,6 +45,8 @@ final class Compare extends AbstractCommandHandler
             );
             return $result;
         }
+
+        $data = $this->normaliseProfileData($apiResult);
 
         // @todo watch for caching problems here if long-running queue process
         $stored = $this->getRepo()->getLatestByCompanyNumber($companyNumber);
@@ -115,13 +116,13 @@ final class Compare extends AbstractCommandHandler
     {
         $organisation = $this->getOrganisation($companyNumber);
 
-        $command = CreateAlertCmd::create(
-            [
-                'companyNumber' => $companyNumber,
-                'reasons' => $reasons,
-                'organisation' => $this->getOrganisation($companyNumber),
-            ]
-        );
+        $alertData = [
+            'companyNumber' => $companyNumber,
+            'reasons' => $reasons,
+            'organisation' => $organisation,
+        ];
+
+        $command = CreateAlertCmd::create($alertData);
         return $this->handleSideEffect($command);
     }
 
