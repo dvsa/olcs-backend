@@ -45,7 +45,7 @@ class CompareTest extends CommandHandlerTestCase
      *
      * @dataProvider noChangesProvider
      */
-    public function testHandlerCommandNoChanges($companyNumber, $stubResponse, $stubSavedData)
+    public function testHandleCommandNoChanges($companyNumber, $stubResponse, $stubSavedData)
     {
         // expectations
         $this->mockApi
@@ -73,7 +73,7 @@ class CompareTest extends CommandHandlerTestCase
     /**
      * Test handleCommand method when company not found
      */
-    public function testHandlerCommandCompanyNotFound()
+    public function testHandleCommandCompanyNotFound()
     {
         // data
         $companyNumber = '01234567';
@@ -114,7 +114,7 @@ class CompareTest extends CommandHandlerTestCase
      *
      * @dataProvider firstTimeProvider
      */
-    public function testHandlerCommandCompanyFirstTimeFound($companyNumber, $stubResponse, $expectedSaveData)
+    public function testHandleCommandCompanyFirstTimeFound($companyNumber, $stubResponse, $expectedSaveData)
     {
         // expectations
         $this->mockApi
@@ -164,7 +164,7 @@ class CompareTest extends CommandHandlerTestCase
      * @param array $expectedAlertData
      * @param array $expectedSaveData new company data to save
      */
-    public function testHandlerCommandChanges(
+    public function testHandleCommandChanges(
         $companyNumber,
         $stubResponse,
         $stubSavedData,
@@ -210,20 +210,9 @@ class CompareTest extends CommandHandlerTestCase
 
         // invoke
         $command = Cmd::create(['companyNumber' => $companyNumber]);
-        $result = $this->sut->handleCommand($command);
+        $this->sut->handleCommand($command);
 
         $this->assertEquals($expectedSaveData, $newCompany->toArray());
-        // assertions
-        // $this->assertInstanceOf('Common\BusinessService\Response', $result);
-        // $this->assertEquals(Response::TYPE_SUCCESS, $result->getType());
-        // $this->assertEquals("Alert [123] created, company id [99] saved", $result->getMessage());
-        // $this->assertEquals(
-        //     [
-        //         'company' => $companySaveResult,
-        //         'alert' => $alertSaveResult,
-        //     ],
-        //     $result->getData()
-        // );
     }
 
     public function noChangesProvider()

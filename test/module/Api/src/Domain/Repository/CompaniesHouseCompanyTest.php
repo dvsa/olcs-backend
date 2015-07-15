@@ -88,7 +88,6 @@ class CompaniesHouseCompanyTest extends RepositoryTestCase
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
 
-        $where = m::mock();
         $qb->shouldReceive('expr->eq');
         $qb
             ->shouldReceive('andWhere')
