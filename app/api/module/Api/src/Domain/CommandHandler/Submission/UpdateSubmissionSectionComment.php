@@ -38,7 +38,10 @@ final class UpdateSubmissionSectionComment extends AbstractCommandHandler
      */
     private function createSubmissionSectionComment(Cmd $command)
     {
-        $submissionSectionComment = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        $submissionSectionComment = $this->getRepo()->fetchUsingId(
+            $command,
+            Query::HYDRATE_OBJECT, $command->getVersion()
+        );
 
         if ($command->getComment() !== null) {
             $submissionSectionComment->setComment($command->getComment());
