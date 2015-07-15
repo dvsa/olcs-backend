@@ -520,6 +520,7 @@ return [
 
     // Transfer - TransportManager
     TransferCommand\Tm\Create::class => CommandHandler\Tm\Create::class,
+    TransferCommand\Tm\Update::class => CommandHandler\Tm\Update::class,
 
     // Task
     TransferCommand\Task\CloseTasks::class => CommandHandler\Task\CloseTasks::class,

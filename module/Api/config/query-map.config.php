@@ -256,4 +256,7 @@ return [
     TransferQuery\Task\TaskList::class => QueryHandler\Task\TaskList::class,
     TransferQuery\Task\Task::class => QueryHandler\Task\Task::class,
     TransferQuery\Task\TaskDetails::class => QueryHandler\Task\TaskDetails::class,
+
+    // Transport Manager
+    TransferQuery\Tm\TransportManager::class => QueryHandler\Tm\TransportManager::class,
 ];
