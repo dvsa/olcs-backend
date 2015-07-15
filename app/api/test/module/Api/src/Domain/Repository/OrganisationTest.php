@@ -63,7 +63,7 @@ class OrganisationTest extends RepositoryTestCase
         /** @var EntityRepository $repo */
         $repo = m::mock(EntityRepository::class);
         $repo->shouldReceive('createQueryBuilder')
-            ->with('m')
+            ->with('o')
             ->andReturn($qb);
 
         $this->em->shouldReceive('getRepository')
@@ -111,7 +111,7 @@ class OrganisationTest extends RepositoryTestCase
         /** @var EntityRepository $repo */
         $repo = m::mock(EntityRepository::class);
         $repo->shouldReceive('createQueryBuilder')
-            ->with('m')
+            ->with('o')
             ->andReturn($qb);
 
         $this->em->shouldReceive('getRepository')
@@ -183,7 +183,7 @@ class OrganisationTest extends RepositoryTestCase
         /** @var EntityRepository $repo */
         $repo = m::mock(EntityRepository::class);
         $repo->shouldReceive('createQueryBuilder')
-            ->with('m')
+            ->with('o')
             ->andReturn($qb);
 
         $this->em->shouldReceive('getRepository')
@@ -193,5 +193,52 @@ class OrganisationTest extends RepositoryTestCase
         $result = $this->sut->fetchIrfoDetailsUsingId($command);
 
         $this->assertEquals(['foo' => 'bar'], $result);
+    }
+
+    public function testGetByCompanyOrLlpNo()
+    {
+        $companyNumber = '01234567';
+
+        $result = m::mock(Organisation::class);
+        $results = [$result];
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $where = m::mock();
+        $qb->shouldReceive('expr->eq')
+            ->with('o.companyOrLlpNo', ':companyNumber')
+            ->andReturn($where);
+        $qb
+            ->shouldReceive('andWhere')
+            ->with($where)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('companyNumber', $companyNumber)
+            ->once()
+            ->andReturnSelf();
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getResult')
+            ->andReturn($results);
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Organisation::class)
+            ->andReturn($repo);
+
+        $this->sut->getByCompanyOrLlpNo($companyNumber);
     }
 }

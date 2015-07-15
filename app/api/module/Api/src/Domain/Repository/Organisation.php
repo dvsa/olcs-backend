@@ -21,6 +21,8 @@ class Organisation extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    protected $alias = 'o';
+
     public function fetchBusinessDetailsUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         return $this->fetchBusinessDetailsById($query->getId(), $hydrateMode);
