@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as Entity;
 
 /**
@@ -38,7 +39,7 @@ class CompaniesHouseCompany extends AbstractRepository
         $results = $qb->getQuery()->getResult();
 
         if (empty($results)) {
-            throw new Exception\NotFoundException('Resource not found');
+            throw new NotFoundException('Company with number ' . $number . ' not found');
         }
 
         return $results[0];

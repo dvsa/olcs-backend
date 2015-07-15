@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\CreateAlert as CreateAlertCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlertReason as ReasonEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
@@ -48,16 +49,17 @@ final class Compare extends AbstractCommandHandler
 
         $data = $this->normaliseProfileData($apiResult);
 
-        // @todo watch for caching problems here if long-running queue process
-        $stored = $this->getRepo()->getLatestByCompanyNumber($companyNumber);
-
-        if (!$stored) {
+        try {
+            // @todo watch for caching problems here if long-running queue process
+            $stored = $this->getRepo()->getLatestByCompanyNumber($companyNumber);
+        } catch (NotFoundException $e) {
             // Company not previously stored, save new data and return
             $company = new CompanyEntity($data);
             $this->getRepo()->save($company);
             $result
                 ->addId('companiesHouseCompany', $company->getId())
                 ->addMessage('Saved new company');
+            return $result;
         }
 
         $reasons = $this->compare($stored->toArray(), $data);

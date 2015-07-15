@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\Compare as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\CreateAlert as CreateAlertCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse\Compare;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany as CompanyRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
@@ -69,7 +70,7 @@ class CompareTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         // assertions
-        $this->assertEquals('No changes', $result->getMessages()[0]);
+        $this->assertEquals(['No changes'], $result->getMessages());
     }
 
     /**
@@ -116,8 +117,52 @@ class CompareTest extends CommandHandlerTestCase
 
         // assertions
         $this->assertInstanceOf(Result::class, $result);
-        $this->assertEquals("Alert created", $result->getMessages()[0]);
+        $this->assertEquals(['Alert created'], $result->getMessages());
         $this->assertEquals(['companiesHouseAlert' => 101], $result->getIds());
+    }
+
+    /**
+     * Test process method when company was not previously stored
+     *
+     * @dataProvider firstTimeProvider
+     */
+    public function testProcessCompanyFirstTimeFound($companyNumber, $stubResponse, $expectedSaveData)
+    {
+        // expectations
+        $this->mockApi
+            ->shouldReceive('getCompanyProfile')
+            ->once()
+            ->with($companyNumber, true)
+            ->andReturn($stubResponse);
+
+        $this->repoMap['CompaniesHouseCompany']
+            ->shouldReceive('getLatestByCompanyNumber')
+            ->once()
+            ->with($companyNumber)
+            ->andThrow(new NotFoundException('company not found'));
+
+        // invoke
+        /** @var CompanyEntity $company */
+        $company = null;
+        $this->repoMap['CompaniesHouseCompany']
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(CompanyEntity::class))
+            ->andReturnUsing(
+                function (CompanyEntity $co) use (&$company) {
+                    $company = $co;
+                    $co->setId(69);
+                }
+            );
+
+        // invoke
+        $command = Cmd::create(['companyNumber' => $companyNumber]);
+        $result = $this->sut->handleCommand($command);
+
+        // assertions
+        $this->assertEquals($expectedSaveData, $company->toArray());
+        $this->assertEquals(['companiesHouseCompany' => 69], $result->getIds());
+        $this->assertEquals(['Saved new company'], $result->getMessages());
     }
 
     public function noChangesProvider()
@@ -230,4 +275,84 @@ class CompareTest extends CommandHandlerTestCase
                 )
             ),
         );
-    }}
+    }
+
+    public function firstTimeProvider()
+    {
+        return array(
+            array(
+                'companyNumber' => '03127414',
+                'stubResponse' => array(
+                    'registered_office_address' => array(
+                        'address_line_1' => '120 Aldersgate Street',
+                        'address_line_2' => 'London',
+                        'postal_code' => 'EC1A 4JQ',
+                    ),
+                    'company_name' => 'VALTECH LIMITED',
+                    'company_number' => '03127414',
+                    'officer_summary' => array(
+                        'resigned_count' => 17,
+                        'officers' => array(
+                            0 => array(
+                                'officer_role' => 'director',
+                                'name' => 'DILLON, Andrew',
+                                'date_of_birth' => [
+                                    'year' => '1979',
+                                    'month' => '02',
+                                ],
+                            ),
+                            1 => array(
+                                'officer_role' => 'director',
+                                'name' => 'HALL, Philip',
+                                'date_of_birth' => [
+                                    'year' => '1968',
+                                    'month' => '12',
+                                ],
+                            ),
+                            2 => array(
+                                'officer_role' => 'director',
+                                'name' => 'SKINNER, Mark James',
+                                'date_of_birth' => [
+                                    'year' => '1969',
+                                    'month' => '06',
+                                ],
+                            ),
+                        ),
+                        'active_count' => 3,
+                    ),
+                    'company_status' => 'active',
+                ),
+                'expectedSaveData' => array(
+                    'companyName' => 'VALTECH LIMITED',
+                    'companyNumber' => '03127414',
+                    'companyStatus' => 'active',
+                    'addressLine1' => '120 Aldersgate Street',
+                    'addressLine2' => 'London',
+                    'postalCode' => 'EC1A 4JQ',
+                    'officers' => array(
+                        array(
+                          'name' => 'DILLON, Andrew',
+                          'role' => 'director',
+                          'dateOfBirth' => new \DateTime('1979-02-01'),
+                        ),
+                        array(
+                          'name' => 'HALL, Philip',
+                          'role' => 'director',
+                          'dateOfBirth' => new \DateTime('1968-12-01'),
+                        ),
+                        array(
+                          'name' => 'SKINNER, Mark James',
+                          'role' => 'director',
+                          'dateOfBirth' => new \DateTime('1969-06-01'),
+                        ),
+                    ),
+                    'country' => null,
+                    'locality' => null,
+                    'poBox' => null,
+                    'premises' => null,
+                    'region' => null,
+                ),
+            ),
+        );
+    }
+}
