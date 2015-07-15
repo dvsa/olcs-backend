@@ -122,6 +122,7 @@ return [
     TransferCommand\Licence\DeletePeople::class => CommandHandler\Licence\DeletePeople::class,
     Command\Document\DispatchDocument::class => CommandHandler\Document\DispatchDocument::class,
     TransferCommand\Licence\Overview::class => CommandHandler\Licence\Overview::class,
+    TransferCommand\Licence\UpdateTrafficArea::class => CommandHandler\Licence\UpdateTrafficArea::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
@@ -526,4 +527,9 @@ return [
     TransferCommand\Task\ReassignTasks::class => CommandHandler\Task\ReassignTasks::class,
     TransferCommand\Task\UpdateTask::class => CommandHandler\Task\UpdateTask::class,
     TransferCommand\Task\CreateTask::class => CommandHandler\Task\CreateTask::class,
+
+    // PrivateHireLicence
+    TransferCommand\PrivateHireLicence\DeleteList::class => CommandHandler\PrivateHireLicence\DeleteList::class,
+    TransferCommand\PrivateHireLicence\Create::class => CommandHandler\PrivateHireLicence\Create::class,
+    TransferCommand\PrivateHireLicence\Update::class => CommandHandler\PrivateHireLicence\Update::class,
 ];
