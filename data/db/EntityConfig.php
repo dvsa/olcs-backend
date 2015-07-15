@@ -267,6 +267,12 @@ return array(
         ),
     ),
     's4' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 's4'
+            ),
+        ),
         'surrender_licence' => array(
             'type' => 'yesno'
         ),
