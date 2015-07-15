@@ -8,13 +8,15 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler as DomainAbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class CreateAlert extends AbstractCommandHandler
+final class CreateAlert extends DomainAbstractCommandHandler
 {
     protected $repoServiceName = 'CompaniesHouseAlert';
 
@@ -29,8 +31,9 @@ final class CreateAlert extends AbstractCommandHandler
         $result = new Result();
         $companyNumber = $command->getCompanyNumber();
 
-        $organisation = $this->getOrganisation($companyNumber);
-        if (!$organisation) {
+        try {
+            $organisation = $this->getOrganisation($companyNumber);
+        } catch (NotFoundException $e) {
             $result->addMessage("Organisation not found for company $companyNumber, no alert created");
             return $result;
         }
@@ -60,8 +63,6 @@ final class CreateAlert extends AbstractCommandHandler
      */
     protected function getOrganisation($companyNumber)
     {
-        $organisation = $this->getOrganisation($companyNumber);
-
         $results = $this->getRepo('Organisation')->getByCompanyOrLlpNo($companyNumber);
 
         // @note returns the first matching organisation only

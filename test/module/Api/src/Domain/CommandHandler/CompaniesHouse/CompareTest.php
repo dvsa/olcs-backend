@@ -41,11 +41,11 @@ class CompareTest extends CommandHandlerTestCase
     }
 
     /**
-     * Test process method with no changes
+     * Test handleCommand method with no changes
      *
      * @dataProvider noChangesProvider
      */
-    public function testProcessNoChanges($companyNumber, $stubResponse, $stubSavedData)
+    public function testHandlerCommandNoChanges($companyNumber, $stubResponse, $stubSavedData)
     {
         // expectations
         $this->mockApi
@@ -71,9 +71,9 @@ class CompareTest extends CommandHandlerTestCase
     }
 
     /**
-     * Test process method when company not found
+     * Test handleCommand method when company not found
      */
-    public function testProcessCompanyNotFound()
+    public function testHandlerCommandCompanyNotFound()
     {
         // data
         $companyNumber = '01234567';
@@ -110,11 +110,11 @@ class CompareTest extends CommandHandlerTestCase
     }
 
     /**
-     * Test process method when company was not previously stored
+     * Test handleCommand method when company was not previously stored
      *
      * @dataProvider firstTimeProvider
      */
-    public function testProcessCompanyFirstTimeFound($companyNumber, $stubResponse, $expectedSaveData)
+    public function testHandlerCommandCompanyFirstTimeFound($companyNumber, $stubResponse, $expectedSaveData)
     {
         // expectations
         $this->mockApi
@@ -154,7 +154,7 @@ class CompareTest extends CommandHandlerTestCase
     }
 
     /**
-     * Test process method
+     * Test handleCommand method
      *
      * @dataProvider changesProvider
      *
@@ -164,7 +164,7 @@ class CompareTest extends CommandHandlerTestCase
      * @param array $expectedAlertData
      * @param array $expectedSaveData new company data to save
      */
-    public function testProcessChanges(
+    public function testHandlerCommandChanges(
         $companyNumber,
         $stubResponse,
         $stubSavedData,
