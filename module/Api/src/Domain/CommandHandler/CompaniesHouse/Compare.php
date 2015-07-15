@@ -63,6 +63,7 @@ final class Compare extends AbstractCommandHandler
 
         if (empty($reasons)) {
             // return early if no changes detected
+            $result->addMessage('No changes');
             return $result;
         }
 
