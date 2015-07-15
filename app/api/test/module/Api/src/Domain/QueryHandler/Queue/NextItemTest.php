@@ -7,7 +7,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Queue;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Queue\NextItem;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
