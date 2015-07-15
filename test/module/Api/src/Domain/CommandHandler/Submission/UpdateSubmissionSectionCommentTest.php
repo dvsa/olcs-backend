@@ -63,11 +63,12 @@ class UpdateSubmissionSectionCommentTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(SubmissionSectionCommentEntity::class))
             ->andReturnUsing(
-                function (SubmissionSectionCommentEntity $submissionSectionComment) use (&$savedSubmissionSectionComment) {
+                function (
+                    SubmissionSectionCommentEntity $submissionSectionComment
+                ) use (&$savedSubmissionSectionComment) {
                     $savedSubmissionSectionComment = $submissionSectionComment;
                 }
             );
-
 
         $result = $this->sut->handleCommand($command);
 

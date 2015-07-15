@@ -58,7 +58,9 @@ class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(SubmissionSectionCommentEntity::class))
             ->andReturnUsing(
-                function (SubmissionSectionCommentEntity $submissionSectionComment) use (&$savedSubmissionSectionComment) {
+                function (
+                    SubmissionSectionCommentEntity $submissionSectionComment
+                ) use (&$savedSubmissionSectionComment) {
                     $submissionSectionComment->setId(111);
                     $savedSubmissionSectionComment = $submissionSectionComment;
                 }
