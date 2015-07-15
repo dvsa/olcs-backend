@@ -52,6 +52,7 @@ return [
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
     TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
+    TransferQuery\Licence\LicenceByNumber::class => QueryHandler\Licence\LicenceByNumber::class,
     TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
     TransferQuery\Licence\Safety::class => QueryHandler\Licence\Safety::class,
     TransferQuery\Licence\Addresses::class => QueryHandler\Licence\Addresses::class,
