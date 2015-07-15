@@ -186,4 +186,84 @@ class LicenceTest extends RepositoryTestCase
             . ' AND lv.removalDate IS NULL AND v.vrm = [[ABC123]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+    public function testFetchWithEnforcementArea()
+    {
+        $licenceId = 1;
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $qb->shouldReceive('getQuery->getSingleResult')
+            ->andReturn('RESULT');
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('enforcementArea')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('byId')
+            ->with($licenceId)
+            ->once()
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Licence::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchWithEnforcementArea($licenceId);
+        $this->assertEquals('RESULT', $result);
+    }
+
+    public function testFetchWithOperatingCentres()
+    {
+        $licenceId = 1;
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $qb->shouldReceive('getQuery->getSingleResult')
+            ->andReturn('RESULT');
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('operatingCentres', 'oc')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('oc.operatingCentre', 'oc_oc')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('oc_oc.address', 'oc_oc_a')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('byId')
+            ->with($licenceId)
+            ->once()
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Licence::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchWithOperatingCentres($licenceId);
+        $this->assertEquals('RESULT', $result);
+    }
 }

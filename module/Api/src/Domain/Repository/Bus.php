@@ -41,8 +41,6 @@ class Bus extends AbstractRepository
             ->with('trafficAreas')
             ->with('localAuthoritys')
             ->with('subsidised')
-            ->with('busNoticePeriod')
-            ->with('busServiceTypes')
             ->with('otherServices')
             ->byId($query->getId());
 
