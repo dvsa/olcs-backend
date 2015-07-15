@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as Entity;
 
 /**
@@ -59,7 +60,7 @@ SQL;
         $this->getQueryBuilder()->modifyQuery($qb)
             ->order('createdOn', 'ASC');
 
-        $now = new \DateTime();
+        $now = new DateTime();
         $qb
             ->andWhere($qb->expr()->eq($this->alias . '.status', ':statusId'))
             ->andWhere(
@@ -78,7 +79,7 @@ SQL;
                 ->setParameter('typeId', $type);
         }
 
-        $results = $qb->getQuery()->execute();
+        $results = $qb->getQuery()->getResult();
 
         if (empty($results)) {
             return null;
@@ -86,30 +87,9 @@ SQL;
 
         $result = $results[0];
         $result->incrementAttempts();
-        $result->setStatus($this->getRefDataReference(Entity::STATUS_PROCESSING));
+        $result->setStatus($this->getRefdataReference(Entity::STATUS_PROCESSING));
         $this->save($result);
 
         return $result;
-    }
-
-    public function retry($item)
-    {
-        $item['status'] = self::STATUS_QUEUED;
-
-        $this->save($item);
-    }
-
-    public function complete($item)
-    {
-        $item['status'] = self::STATUS_COMPLETE;
-
-        $this->save($item);
-    }
-
-    public function failed($item)
-    {
-        $item['status'] = self::STATUS_FAILED;
-
-        $this->save($item);
     }
 }
