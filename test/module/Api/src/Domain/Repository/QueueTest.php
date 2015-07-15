@@ -37,7 +37,6 @@ class QueueTest extends RepositoryTestCase
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
 
-        $where = m::mock();
         // stub out complext expression builder calls
         $qb->shouldReceive('expr->eq');
         $qb->shouldReceive('expr->orX');
