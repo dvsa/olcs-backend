@@ -116,28 +116,13 @@ final class Compare extends AbstractCommandHandler
      */
     protected function createAlert($reasons, $companyNumber)
     {
-        $organisation = $this->getOrganisation($companyNumber);
-
-        $alertData = [
-            'companyNumber' => $companyNumber,
-            'reasons' => $reasons,
-            'organisation' => $organisation,
-        ];
-
-        $command = CreateAlertCmd::create($alertData);
+        $command = CreateAlertCmd::create(
+            [
+                'companyNumber' => $companyNumber,
+                'reasons' => $reasons,
+            ]
+        );
         return $this->handleSideEffect($command);
-    }
-
-    /**
-     * @param string $companyNumber
-     * @return OrganisationEntity|false
-     */
-    protected function getOrganisation($companyNumber)
-    {
-        $results = $this->getRepo('Organisation')->getByCompanyOrLlpNo($companyNumber);
-
-        // @note returns the first matching organisation only
-        return !empty($results) ? $results[0] : false;
     }
 
     // comparison functions....
