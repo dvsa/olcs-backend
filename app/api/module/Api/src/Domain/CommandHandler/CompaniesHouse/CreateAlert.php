@@ -18,16 +18,27 @@ final class CreateAlert extends AbstractCommandHandler
 {
     protected $repoServiceName = 'CompaniesHouseAlert';
 
+    protected $extraRepos = ['Organisation'];
+
     /**
      * @param CommandInterface $command
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
+        $result = new Result();
+        $companyNumber = $command->getCompanyNumber();
+
+        $organisation = $this->getOrganisation($companyNumber);
+        if (!$organisation) {
+            $result->addMessage("Organisation not found for company $companyNumber, no alert created");
+            return $result;
+        }
+
         $alert = new AlertEntity();
         $alert
-            ->setCompanyOrLlpNo($command->getCompanyNumber())
-            ->setOrganisation($command->getOrganisation());
+            ->setCompanyOrLlpNo($companyNumber)
+            ->setOrganisation($organisation);
 
         foreach ($command->getReasons() as $reason) {
             $reasonRefdata = $this->getRepo()->getRefdataReference($reason);
@@ -36,11 +47,24 @@ final class CreateAlert extends AbstractCommandHandler
 
         $this->getRepo('CompaniesHouseAlert')->save($alert);
 
-        $result = new Result();
         $result
             ->addId('companiesHouseAlert', $alert->getId())
             ->addMessage('Alert created: ' . json_encode($command->getReasons()));
 
         return $result;
+    }
+
+    /**
+     * @param string $companyNumber
+     * @return OrganisationEntity|false
+     */
+    protected function getOrganisation($companyNumber)
+    {
+        $organisation = $this->getOrganisation($companyNumber);
+
+        $results = $this->getRepo('Organisation')->getByCompanyOrLlpNo($companyNumber);
+
+        // @note returns the first matching organisation only
+        return !empty($results) ? $results[0] : false;
     }
 }
