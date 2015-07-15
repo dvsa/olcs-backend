@@ -49,7 +49,6 @@ class NextItemTest extends QueryHandlerTestCase
     public function testHandleQueryNoItem()
     {
         $typeId = 'foo';
-        $item = m::mock(QueueEntity::class)->makePartial();
 
         $query = Qry::create(['type' => $typeId]);
 
