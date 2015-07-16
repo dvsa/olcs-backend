@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as Repo;
+use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 
 /**
  * ConditionUndertaking test
@@ -128,6 +129,37 @@ class ConditionUndertakingTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchListForLicence(95));
 
         $expectedQuery = 'BLAH AND m.licence = [[95]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchListForLicenceAndConditionType()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('with')->with('attachedTo')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('conditionType')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('operatingCentre', 'oc')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('oc.address', 'add')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('add.countryCode')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('addedVia')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->fetchListForLicence(95, ConditionUndertakingEntity::TYPE_CONDITION)
+        );
+
+        $expectedQuery
+            = 'BLAH AND m.licence = [[95]] AND m.conditionType = [['.ConditionUndertakingEntity::TYPE_CONDITION.']]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
