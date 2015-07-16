@@ -430,29 +430,38 @@ class BusReg extends AbstractBusReg
     }
 
     public function updateServiceRegister(
-        $timetableAcceptable,
-        $mapSupplied,
-        $routeDescription,
         $trcConditionChecked,
         $trcNotes,
         $copiedToLaPte,
         $laShortNote,
         $opNotifiedLaPte,
-        $applicationSigned
+        $applicationSigned,
+        $timetableAcceptable = null,
+        $mapSupplied = null,
+        $routeDescription = null
     ) {
         if (!$this->isLatestVariation()) {
             throw new ForbiddenException('No permission to edit this record');
         }
 
-        $this->timetableAcceptable = $timetableAcceptable;
-        $this->mapSupplied = $mapSupplied;
-        $this->routeDescription = $routeDescription;
         $this->trcConditionChecked = $trcConditionChecked;
         $this->trcNotes = $trcNotes;
         $this->copiedToLaPte = $copiedToLaPte;
         $this->laShortNote = $laShortNote;
         $this->opNotifiedLaPte = $opNotifiedLaPte;
         $this->applicationSigned = $applicationSigned;
+
+        if ($timetableAcceptable !== null) {
+            $this->timetableAcceptable = $timetableAcceptable;
+        }
+
+        if ($mapSupplied !== null) {
+            $this->mapSupplied = $mapSupplied;
+        }
+
+        if ($routeDescription !== null) {
+            $this->routeDescription = $routeDescription;
+        }
 
         return $this;
     }
