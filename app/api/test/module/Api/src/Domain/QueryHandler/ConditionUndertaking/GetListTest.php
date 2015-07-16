@@ -1,11 +1,12 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\ConditionUndertaking;
 
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\ConditionUndertaking\GetList as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\ConditionUndertaking\GetList as Qry;
+use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
@@ -109,7 +110,7 @@ class GetListTest extends QueryHandlerTestCase
 
     public function testHandleQueryLicence()
     {
-        $data = ['licence' => 54];
+        $data = ['licence' => 54, 'conditionType' => ConditionUndertakingEntity::TYPE_CONDITION];
         $query = Qry::create($data);
 
         $mockLicence = new LicenceEntity(
@@ -124,7 +125,10 @@ class GetListTest extends QueryHandlerTestCase
         );
         $mockConditionUndertaking->setId(324);
 
-        $this->repoMap['ConditionUndertaking']->shouldReceive('fetchListForLicence')->with(54)->once()
+        $this->repoMap['ConditionUndertaking']
+            ->shouldReceive('fetchListForLicence')
+            ->once()
+            ->with(54, ConditionUndertakingEntity::TYPE_CONDITION)
             ->andReturn([$mockConditionUndertaking]);
 
         $result = $this->sut->handleQuery($query);
