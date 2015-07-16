@@ -432,6 +432,34 @@ class BusReg extends AbstractBusReg
         return true;
     }
 
+    public function updateServiceRegister(
+        $timetableAcceptable,
+        $mapSupplied,
+        $routeDescription,
+        $trcConditionChecked,
+        $trcNotes,
+        $copiedToLaPte,
+        $laShortNote,
+        $opNotifiedLaPte,
+        $applicationSigned
+    ) {
+        if (!$this->isLatestVariation()) {
+            throw new ForbiddenException('No permission to edit this record');
+        }
+
+        $this->timetableAcceptable = $timetableAcceptable;
+        $this->mapSupplied = $mapSupplied;
+        $this->routeDescription = $routeDescription;
+        $this->trcConditionChecked = $trcConditionChecked;
+        $this->trcNotes = $trcNotes;
+        $this->copiedToLaPte = $copiedToLaPte;
+        $this->laShortNote = $laShortNote;
+        $this->opNotifiedLaPte = $opNotifiedLaPte;
+        $this->applicationSigned = $applicationSigned;
+
+        return $this;
+    }
+
     /**
      * @param \DateTime $effectiveDate
      * @param \DateTime $receivedDate
