@@ -77,6 +77,62 @@ class Cases extends AbstractRepository
     }
 
     /**
+     * Fetch the default record by it's id plus licence information
+     *
+     * @param Query|QryCmd $query
+     * @param int $hydrateMode
+     * @param null $version
+     * @return mixed
+     * @throws Exception\NotFoundException
+     * @throws Exception\VersionConflictException
+     */
+    public function fetchWithLicenceUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
+    {
+        $qb = $this->createQueryBuilder();
+
+        parent::buildDefaultQuery($qb, $query->getId());
+
+        $this->getQueryBuilder()
+            ->withRefdata()
+            ->with('licence', 'l')
+            ->with('l.operatingCentres', 'loc')
+            ->with('loc.operatingCentre', 'oc')
+            ->with('oc.address');
+
+        $results = $qb->getQuery()->getResult($hydrateMode);
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+
+        if ($hydrateMode === Query::HYDRATE_OBJECT && $version !== null) {
+            $this->lock($results[0], $version);
+        }
+
+        return $results[0];
+
+
+
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('licence');
+
+        $qb->andWhere($qb->expr()->eq('p.case', ':byId'))
+            ->setParameter('byId', $query->getId())
+            ->setMaxResults(1);
+
+        $pi = $qb->getQuery()->getResult();
+
+        if (!empty($pi) && $hydrateMode === Query::HYDRATE_ARRAY) {
+            $case['pi'] = $pi[0];
+        }
+
+        return $case;
+    }
+
+    /**
      * Applies filters
      * @param QueryBuilder $qb
      * @param QueryInterface $query
