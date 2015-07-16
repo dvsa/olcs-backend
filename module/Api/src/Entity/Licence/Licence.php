@@ -465,4 +465,17 @@ class Licence extends AbstractLicence
         }
         return $list;
     }
+
+    /**
+     * Get PSV discs that are not ceased
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPsvDiscsNotCeased()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->isNull('ceasedDate'));
+
+        return $this->getPsvDiscs()->matching($criteria);
+    }
 }

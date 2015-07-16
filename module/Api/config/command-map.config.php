@@ -533,4 +533,7 @@ return [
     TransferCommand\PrivateHireLicence\DeleteList::class => CommandHandler\PrivateHireLicence\DeleteList::class,
     TransferCommand\PrivateHireLicence\Create::class => CommandHandler\PrivateHireLicence\Create::class,
     TransferCommand\PrivateHireLicence\Update::class => CommandHandler\PrivateHireLicence\Update::class,
+
+    // ContinuationDetail
+    TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
 ];
