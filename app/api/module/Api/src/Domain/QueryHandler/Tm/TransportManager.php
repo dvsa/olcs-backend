@@ -32,11 +32,17 @@ class TransportManager extends AbstractQueryHandler
                 'tmType',
                 'tmStatus',
                 'homeCd' => [
-                    'person',
-                    'address'
+                    'person' => [
+                        'title'
+                    ],
+                    'address' => [
+                        'countryCode'
+                    ]
                 ],
                 'workCd' => [
-                    'address'
+                    'address' => [
+                        'countryCode'
+                    ]
                 ]
             ]
         );

@@ -296,9 +296,11 @@ class ContactDetails extends AbstractContactDetails
         return isset($params[$var]) ? $params[$var] : $default;
     }
 
-    public function updateContactDetailsWithPersonAndEmailAddress($person, $emailAddress)
+    public function updateContactDetailsWithPersonAndEmailAddress($person = null, $emailAddress = null)
     {
-        $this->setPerson($person);
+        if ($person !== null) {
+            $this->setPerson($person);
+        }
         $this->setEmailAddress($emailAddress);
     }
 }
