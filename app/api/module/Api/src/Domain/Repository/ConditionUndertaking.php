@@ -85,7 +85,6 @@ class ConditionUndertaking extends AbstractRepository
             ->setParameter('byCase', $query->getCase());
     }
 
-
     /**
      * Add List Joins
      * @param QueryBuilder $qb
