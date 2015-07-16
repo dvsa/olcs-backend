@@ -66,6 +66,8 @@ return [
     TransferQuery\Licence\People::class => QueryHandler\Licence\People::class,
     TransferQuery\Licence\OperatingCentre::class => QueryHandler\Licence\OperatingCentre::class,
     TransferQuery\Licence\TaxiPhv::class => QueryHandler\Licence\TaxiPhv::class,
+    TransferQuery\Licence\Markers::class => QueryHandler\Licence\Markers::class,
+    TransferQuery\Licence\ContinuationDetail::class => QueryHandler\Licence\ContinuationDetail::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
