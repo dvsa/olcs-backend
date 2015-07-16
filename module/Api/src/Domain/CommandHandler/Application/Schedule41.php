@@ -94,11 +94,9 @@ final class Schedule41 extends AbstractCommandHandler implements TransactionedIn
             );
 
             /** @var ConditionUndertaking $conditionUndertaking */
-            foreach (
-                $licenceOperatingCentre
+            foreach ($licenceOperatingCentre
                     ->getOperatingCentre()
-                    ->getConditionUndertakings() as $conditionUndertaking
-            ) {
+                    ->getConditionUndertakings() as $conditionUndertaking) {
                 $result->merge(
                     $this->handleSideEffect(
                         CreateConditionUndertaking::create(

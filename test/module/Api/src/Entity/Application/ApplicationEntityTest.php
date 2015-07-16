@@ -2,7 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
@@ -11,6 +13,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Mockery as m;
 
 /**
@@ -216,8 +219,11 @@ class ApplicationEntityTest extends EntityTester
     {
         $sut = m::mock(Entity::class)->makePartial();
 
+        $application = m::mock(Application::class)->makePartial();
+        $oc = m::mock(OperatingCentre::class)->makePartial();
+
         foreach ($operatingCenterActions as $action) {
-            $applicationOperatingCentre = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre();
+            $applicationOperatingCentre = new ApplicationOperatingCentre($application, $oc);
             $applicationOperatingCentre->setAction($action);
             $centres[] = $applicationOperatingCentre;
         }
@@ -240,7 +246,7 @@ class ApplicationEntityTest extends EntityTester
             list($id, $noOfTrailersRequired, $noOfVehiclesRequired) = $values;
             $oc = new \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre();
             $oc->setId($id);
-            $aoc = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre();
+            $aoc = new ApplicationOperatingCentre(m::mock(Application::class)->makePartial(), $oc);
             $aoc->setOperatingCentre($oc);
             $aoc->setNoOfTrailersRequired($noOfTrailersRequired);
             $aoc->setNoOfVehiclesRequired($noOfVehiclesRequired);
