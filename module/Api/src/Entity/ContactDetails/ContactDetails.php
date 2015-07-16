@@ -44,6 +44,7 @@ class ContactDetails extends AbstractContactDetails
     const CONTACT_TYPE_OBJECTOR = 'ct_obj';
     const CONTACT_TYPE_STATEMENT_REQUESTOR = 'ct_requestor';
     const CONTACT_TYPE_USER = 'ct_user';
+    const CONTACT_TYPE_HACKNEY = 'ct_hackney';
 
     public function __construct(RefData $contactType)
     {
