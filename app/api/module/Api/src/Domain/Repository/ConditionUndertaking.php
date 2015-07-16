@@ -33,33 +33,18 @@ class ConditionUndertaking extends AbstractRepository
     /**
      * Fetch the default record by it's id
      *
-     * @param Query|QryCmd $query
-     * @param int $hydrateMode
-
-     * @return mixed
-     * @throws Exception\NotFoundException
-     * @throws Exception\VersionConflictException
+     * Overridden default query to return appropriate table joins
+     * @param QueryBuilder $qb
+     * @param int $id
+     * @return \Dvsa\Olcs\Api\Domain\QueryBuilder
      */
-    public function fetchUsingCaseId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
+    protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->createQueryBuilder();
-
-        $this->applyFetchJoins($qb);
-
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->byId($query->getId());
-
-        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
-            ->setParameter('byCase', $query->getCase());
-
-        $result = $qb->getQuery()->getResult($hydrateMode);
-
-        if (empty($result)) {
-            throw new Exception\NotFoundException('Resource not found');
-        }
-
-        return $result[0];
+        return $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('operatingCentre', 'oc')
+            ->with('oc.address')
+            ->byId($id);
     }
 
     /**
@@ -113,22 +98,6 @@ class ConditionUndertaking extends AbstractRepository
             ->with('oc.address')
             ->with('createdBy')
             ->with('lastModifiedBy');
-    }
-
-    /**
-     * Add Fetch Joins
-     * @param QueryBuilder $qb
-     */
-    protected function applyFetchJoins(QueryBuilder $qb)
-    {
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata()
-            ->with('case')
-            ->with('operatingCentre', 'oc')
-            ->with('oc.address')
-            ->with('createdBy')
-            ->with('lastModifiedBy');
-
     }
 
     /**
