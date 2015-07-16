@@ -32,7 +32,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Au
     {
         $entity = $this->retrieveEntity($command);
 
-        if ($command->getApplication() !== null) {
+        if (method_exists($command, 'getApplication') && $command->getApplication() !== null) {
 
             /** @var Entity\Application\Application $application */
             $application = $this->getRepo()->getReference(
@@ -49,7 +49,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Au
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_APPLICATION));
         }
 
-        if ($command->getBusReg() !== null) {
+        if (method_exists($command, 'getApplication') && $command->getBusReg() !== null) {
 
             /** @var Entity\Bus\BusReg $busReg */
             $busReg = $this->getRepo()->getReference(
@@ -66,7 +66,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Au
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_BUS));
         }
 
-        if ($command->getCase() !== null) {
+        if (method_exists($command, 'getCase') && $command->getCase() !== null) {
 
             /** @var Entity\Cases\Cases $case */
             $case = $this->getRepo()->getReference(
@@ -93,7 +93,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Au
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_CASE));
         }
 
-        if ($command->getLicence() !== null) {
+        if (method_exists($command, 'getLicence') && $command->getLicence() !== null) {
 
             $licence = $this->getRepo()->getReference(
                 Entity\Licence\Licence::class,
@@ -104,7 +104,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Au
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_LICENCE));
         }
 
-        if ($command->getOrganisation() !== null) {
+        if (method_exists($command, 'getOrganisation') && $command->getOrganisation() !== null) {
 
             $org = $this->getRepo()->getReference(
                 Entity\Organisation\Organisation::class,
@@ -115,7 +115,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Au
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_ORGANISATION));
         }
 
-        if ($command->getTransportManager() !== null) {
+        if (method_exists($command, 'getTransportManager') && $command->getTransportManager() !== null) {
 
             $transportManager = $this->getRepo()->getReference(
                 Entity\Tm\TransportManager::class,
