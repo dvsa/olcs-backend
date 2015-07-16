@@ -103,7 +103,7 @@ class Licence extends AbstractRepository
             ->with('operatingCentres', 'ocs')
             ->with('ocs.operatingCentre', 'ocs_oc')
             ->with('ocs_oc.address', 'ocs_oc_a');
-        
+
         $dqb->where($dqb->expr()->eq($this->alias .'.licNo', ':licNo'))
             ->setParameter('licNo', $licNo);
 
