@@ -176,6 +176,7 @@ return [
             'DocumentSearchView' => RepositoryFactory::class,
             'S4' => RepositoryFactory::class,
             'TaskSearchView' => RepositoryFactory::class,
+            'PrivateHireLicence' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

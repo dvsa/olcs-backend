@@ -104,6 +104,7 @@ return [
     TransferCommand\Bus\UpdateTaAuthority::class => CommandHandler\Bus\UpdateTaAuthority::class,
     TransferCommand\Bus\UpdateServiceDetails::class => CommandHandler\Bus\UpdateServiceDetails::class,
     TransferCommand\Bus\UpdateShortNotice::class => CommandHandler\Bus\UpdateShortNotice::class,
+    TransferCommand\Bus\UpdateServiceRegister::class => CommandHandler\Bus\UpdateServiceRegister::class,
     TransferCommand\Bus\DeleteBus::class => CommandHandler\Bus\DeleteBus::class,
 
     // Transfer - Licence
@@ -123,6 +124,7 @@ return [
     TransferCommand\Licence\DeletePeople::class => CommandHandler\Licence\DeletePeople::class,
     Command\Document\DispatchDocument::class => CommandHandler\Document\DispatchDocument::class,
     TransferCommand\Licence\Overview::class => CommandHandler\Licence\Overview::class,
+    TransferCommand\Licence\UpdateTrafficArea::class => CommandHandler\Licence\UpdateTrafficArea::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
@@ -542,4 +544,9 @@ return [
     TransferCommand\Task\ReassignTasks::class => CommandHandler\Task\ReassignTasks::class,
     TransferCommand\Task\UpdateTask::class => CommandHandler\Task\UpdateTask::class,
     TransferCommand\Task\CreateTask::class => CommandHandler\Task\CreateTask::class,
+
+    // PrivateHireLicence
+    TransferCommand\PrivateHireLicence\DeleteList::class => CommandHandler\PrivateHireLicence\DeleteList::class,
+    TransferCommand\PrivateHireLicence\Create::class => CommandHandler\PrivateHireLicence\Create::class,
+    TransferCommand\PrivateHireLicence\Update::class => CommandHandler\PrivateHireLicence\Update::class,
 ];
