@@ -93,6 +93,7 @@ return [
     // Cases
     TransferQuery\Cases\Cases::class => QueryHandler\Cases\Cases::class,
     TransferQuery\Cases\CasesWithOppositionDates::class => QueryHandler\Cases\CasesWithOppositionDates::class,
+    TransferQuery\Cases\CasesWithLicence::class => QueryHandler\Cases\CasesWithLicence::class,
     TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
     TransferQuery\Cases\AnnualTestHistory::class => QueryHandler\Cases\AnnualTestHistory::class,
     TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
