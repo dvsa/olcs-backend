@@ -7,8 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Command\Discs;
 
-use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
-
 /**
  * Class CeaseDisc
  *
@@ -17,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  * @package Dvsa\Olcs\Api\Domain\Command\Discs
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-final class CeaseGoodsDiscs extends AbstractIdOnlyCommand
+final class CeaseGoodsDiscs extends \Dvsa\Olcs\Transfer\Command\AbstractCommand
 {
     protected $licenceVehicles;
 
