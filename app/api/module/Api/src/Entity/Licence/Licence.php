@@ -376,6 +376,16 @@ class Licence extends AbstractLicence
         return $this->getLicenceType()->getId() === self::LICENCE_TYPE_RESTRICTED;
     }
 
+    public function isStandardInternational()
+    {
+        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_INTERNATIONAL;
+    }
+
+    public function isStandardNational()
+    {
+        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_NATIONAL;
+    }
+
     /**
      * Helper method to get the first trading name from a licence
      * (Sorts trading names by createdOn date then alphabetically)

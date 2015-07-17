@@ -538,6 +538,42 @@ class LicenceEntityTest extends EntityTester
         $this->assertTrue($licence->isRestricted());
     }
 
+    public function testIsStandardInternational()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertFalse($licence->isStandardInternational());
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertTrue($licence->isStandardInternational());
+    }
+
+    public function testIsStandardNational()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertFalse($licence->isStandardNational());
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertTrue($licence->isStandardNational());
+    }
+
     public function testCanHaveCommunityLicencesStandardInt()
     {
         /** @var Entity $licence */

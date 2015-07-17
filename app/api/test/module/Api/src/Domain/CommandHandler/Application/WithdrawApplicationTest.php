@@ -72,7 +72,6 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             CeaseGoodsDiscs::class,
             [
                 'licenceVehicles' => null,
-                'id' => null
             ],
             $discsResult
         );
