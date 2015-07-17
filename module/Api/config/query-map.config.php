@@ -282,4 +282,8 @@ return [
     // Queue
     QueueQuery\NextItem::class => QueueQueryHandler\NextItem::class,
 
+    // TmQualification
+    TransferQuery\TmQualification\TmQualificationsList::class =>
+        QueryHandler\TmQualification\TmQualificationsList::class,
+    TransferQuery\TmQualification\TmQualification::class => QueryHandler\TmQualification\TmQualification::class,
 ];

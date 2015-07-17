@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * TmQualification
+ *
+ * @author Alex Peshkov  <alex.peshkov@valtech.co.uk>
+ */
+namespace Dvsa\Olcs\Api\Domain\Repository;
+
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Entity\Tm\TmQualification as Entity;
+
+/**
+ * TmQualification
+ *
+ * @author Alex Peshkov  <alex.peshkov@valtech.co.uk>
+ */
+class TmQualification extends AbstractRepository
+{
+    protected $entity = Entity::class;
+    protected $alias = 'tq';
+
+    /**
+     * @param QueryBuilder $qb
+     * @param TmQualificationsListDTO $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $qb->andWhere($qb->expr()->eq($this->alias . '.transportManager', ':transportManager'));
+        $qb->setParameter('transportManager', $query->getTransportManager());
+    }
+}
