@@ -298,10 +298,7 @@ class BusReg extends AbstractBusReg
     public function getCalculatedBundleValues()
     {
         return [
-            'licence' => null,
-            'parent' => null,
             'isLatestVariation' => $this->isLatestVariation(),
-            'shortNotice' => null
         ];
     }
 
