@@ -7,9 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -133,6 +131,29 @@ class Fee extends AbstractRepository
             ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeType'))
             ->setParameter('application', $applicationId)
             ->setParameter('feeType', RefData::FEE_TYPE_GRANT);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch outstanding continuation fees for a licence
+     *
+     * @param int $licenceId
+     *
+     * @return array
+     */
+    public function fetchOutstandingContinuationFeesByLicenceId($licenceId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb
+            ->innerJoin('f.feeType', 'ft')
+            ->andWhere($doctrineQb->expr()->eq('f.licence', ':licence'))
+            ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeType'))
+            ->setParameter('licence', $licenceId)
+            ->setParameter('feeType', RefData::FEE_TYPE_CONT);
+
+        $this->whereOutstandingFee($doctrineQb);
 
         return $doctrineQb->getQuery()->getResult();
     }

@@ -616,4 +616,26 @@ class LicenceEntityTest extends EntityTester
         $this->assertEquals(3, $licence->getTotAuthLargeVehicles());
         $this->assertEquals('Y', $licence->getNiFlag());
     }
+
+    public function testGetPsvDiscsNotCeased()
+    {
+        $psvDiscsCollection = m::mock(ArrayCollection::class);
+        $psvDiscsNotCeasedCollection = m::mock(ArrayCollection::class);
+
+        $psvDiscsCollection->shouldReceive('matching')->once()->with(m::type(Criteria::class))->andReturnUsing(
+            function (Criteria $criteria) use ($psvDiscsNotCeasedCollection) {
+                $expectedCriteria = Criteria::create()
+                    ->where(Criteria::expr()->isNull('ceasedDate'));
+
+                $this->assertEquals($expectedCriteria, $criteria);
+
+                return $psvDiscsNotCeasedCollection;
+            }
+        );
+
+        $licence = $this->instantiate(Entity::class);
+
+        $licence->setPsvDiscs($psvDiscsCollection);
+        $this->assertSame($psvDiscsNotCeasedCollection, $licence->getPsvDiscsNotCeased());
+    }
 }
