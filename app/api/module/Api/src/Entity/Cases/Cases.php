@@ -5,6 +5,11 @@ namespace Dvsa\Olcs\Api\Entity\Cases;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
  * Cases Entity
@@ -25,6 +30,167 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class Cases extends AbstractCases
 {
+    const LICENCE_CASE_TYPE = 'case_t_lic';
+    const IMPOUNDING_CASE_TYPE = 'case_t_imp';
+    const APP_CASE_TYPE = 'case_t_app';
+    const TM_CASE_TYPE = 'case_t_tm';
+
+    /**
+     * Creates a new case entity and sets the open date
+     *
+     * @param \DateTime $openDate
+     * @param RefData $caseType
+     * @param ArrayCollection $categorys
+     * @param ArrayCollection $outcomes
+     * @param Application|null $application
+     * @param Licence|null $licence
+     * @param TransportManager|null $transportManager
+     * @param string $ecmsNo
+     * @param string $description
+     */
+    public function __construct(
+        \DateTime $openDate,
+        RefData $caseType,
+        ArrayCollection $categorys,
+        ArrayCollection $outcomes,
+        $application,
+        $licence,
+        $transportManager,
+        $ecmsNo,
+        $description
+    ) {
+        parent::__construct();
+
+        $this->create(
+            $openDate,
+            $caseType,
+            $categorys,
+            $outcomes,
+            $application,
+            $licence,
+            $transportManager,
+            $ecmsNo,
+            $description
+        );
+    }
+
+    /**
+     * Creates a new case entity and sets the open date
+     *
+     * @param \DateTime $openDate
+     * @param RefData $caseType
+     * @param ArrayCollection $categorys
+     * @param ArrayCollection $outcomes
+     * @param Application|null $application
+     * @param Licence|null $licence
+     * @param TransportManager|null $transportManager
+     * @param string $ecmsNo
+     * @param string $description
+     *
+     * @throws ForbiddenException
+     */
+    public function create(
+        \DateTime $openDate,
+        RefData $caseType,
+        ArrayCollection $categorys,
+        ArrayCollection $outcomes,
+        $application,
+        $licence,
+        $transportManager,
+        $ecmsNo,
+        $description
+    ) {
+        //if we have an application, make sure a case is allowed to be created, and also override the passed licence
+        //variable to ensure we always have the correct licence for the application
+        if ($application instanceof Application) {
+            if (!$application->canCreateCase()) {
+                throw new ForbiddenException('Cases can\'t be created for this application');
+            }
+
+            $licence = $application->getLicence();
+        }
+
+        $this->setOpenDate($openDate);
+        $this->setCaseType($caseType);
+        $this->setCategorys($categorys);
+        $this->setOutcomes($outcomes);
+        $this->setApplication($application);
+        $this->setLicence($licence);
+        $this->setTransportManager($transportManager);
+        $this->setEcmsNo($ecmsNo);
+        $this->setDescription($description);
+    }
+
+    /**
+     * @param RefData $caseType
+     * @param ArrayCollection $categorys
+     * @param ArrayCollection $outcomes
+     * @param string $ecmsNo
+     * @param string $description
+     * @return bool
+     */
+    public function update(
+        $caseType,
+        $categorys,
+        $outcomes,
+        $ecmsNo,
+        $description
+    ) {
+        $caseTypeModifyAllowed = [self::IMPOUNDING_CASE_TYPE, self::LICENCE_CASE_TYPE];
+
+        //if case type is allowed to be modified, make sure it's modified to something allowable
+        if (in_array($this->caseType, $caseTypeModifyAllowed) && in_array($caseType, $caseTypeModifyAllowed)) {
+            $this->setCaseType($caseType);
+        }
+
+        $this->setCaseType($caseType);
+        $this->setCategorys($categorys);
+        $this->setOutcomes($outcomes);
+        $this->setEcmsNo($ecmsNo);
+        $this->setDescription($description);
+
+        return true;
+    }
+
+    /**
+     * Updates annual test history
+     *
+     * @param string $annualTestHistory
+     * @return bool
+     */
+    public function updateAnnualTestHistory($annualTestHistory)
+    {
+        $this->setAnnualTestHistory($annualTestHistory);
+
+        return true;
+    }
+
+    /**
+     * Updates conviction note
+     *
+     * @param string $convictionNote
+     * @return bool
+     */
+    public function updateConvictionNote($convictionNote)
+    {
+        $this->setConvictionNote($convictionNote);
+
+        return true;
+    }
+
+    /**
+     * Updates prohibition note
+     *
+     * @param string $prohibitionNote
+     * @return bool
+     */
+    public function updateProhibitionNote($prohibitionNote)
+    {
+        $this->setProhibitionNote($prohibitionNote);
+
+        return true;
+    }
+
     /**
      * Checks a stay type exists
      * @param RefData $stayType
@@ -48,6 +214,25 @@ class Cases extends AbstractCases
      */
     public function hasAppeal()
     {
-        return !($this->getAppeals()->isEmpty());
+        return !(empty($this->getAppeal()));
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isOpen()
+    {
+        return (
+            is_null($this->getClosedDate())
+            && is_null($this->getDeletedDate())
+        );
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasComplaints()
+    {
+        return !$this->getComplaints()->isEmpty();
     }
 }

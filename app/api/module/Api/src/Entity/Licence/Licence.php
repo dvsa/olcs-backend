@@ -2,9 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -99,18 +99,43 @@ class Licence extends AbstractLicence
     /**
      * Gets the latest Bus Reg variation number, based on the supplied regNo
      *
-     * @param $regNo
+     * @param string $regNo
+     * @param array $notInStatus
      * @return mixed
      */
-    public function getLatestBusVariation($regNo)
-    {
+    public function getLatestBusVariation(
+        $regNo,
+        array $notInStatus = [
+            BusReg::STATUS_REFUSED,
+            BusReg::STATUS_WITHDRAWN
+        ]
+    ) {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('regNo', $regNo))
-            ->andWhere(Criteria::expr()->notIn('status', [BusReg::STATUS_REFUSED, BusReg::STATUS_WITHDRAWN]))
             ->orderBy(array('variationNo' => Criteria::DESC))
             ->setMaxResults(1);
 
+        if (!empty($notInStatus)) {
+            $criteria->andWhere(Criteria::expr()->notIn('status', $notInStatus));
+        }
+
         return $this->getBusRegs()->matching($criteria)->current();
+    }
+
+    /**
+     * Gets the latest Bus Reg route number for the licence
+     *
+     * @return mixed
+     */
+    public function getLatestBusRouteNo()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('licence', $this))
+            ->orderBy(array('routeNo' => Criteria::DESC))
+            ->setMaxResults(1);
+
+        return !empty($this->getBusRegs()->matching($criteria)->current())
+            ? $this->getBusRegs()->matching($criteria)->current()->getRouteNo() : 0;
     }
 
     public function updateTotalCommunityLicences($totalCount)
@@ -125,7 +150,7 @@ class Licence extends AbstractLicence
         $tachographInsName,
         $safetyInsVaries
     ) {
-        if ($tachographIns !== null && $tachographIns !== self::TACH_NA && empty($tachographInsName)) {
+        if ($tachographIns !== null && $tachographIns == self::TACH_EXT && empty($tachographInsName)) {
             throw new ValidationException(
                 [
                     'tachographInsName' => [
@@ -196,6 +221,14 @@ class Licence extends AbstractLicence
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('isVariation', true))
+            ->andWhere(
+                Criteria::expr()->in(
+                    'status',
+                    [
+                        Application::APPLICATION_STATUS_UNDER_CONSIDERATION
+                    ]
+                )
+            )
             ->andWhere(Criteria::expr()->eq('licence', $licence));
 
         return $this->getApplications()->matching($criteria)->current();
@@ -203,20 +236,18 @@ class Licence extends AbstractLicence
 
     public function getCalculatedValues()
     {
-        $result = function () {
-            $decisionCriteria['activeComLics'] = ($this->getActiveCommunityLicences($this) !== false ? true : false);
-            $decisionCriteria['activeBusRoutes'] = ($this->getActiveBusRoutes($this) !== false ? true : false);
-            $decisionCriteria['activeVariations'] = ($this->getActiveVariations($this) !== false ? true : false);
+        $decisionCriteria['activeComLics'] = $this->getActiveCommunityLicences($this) !== false;
+        $decisionCriteria['activeBusRoutes'] = $this->getActiveBusRoutes($this) !== false;
+        $decisionCriteria['activeVariations'] = $this->getActiveVariations($this) !== false;
 
-            if (in_array(true, $decisionCriteria)) {
-                return $decisionCriteria;
-            }
+        $suitableForDecisions = true;
 
-            return true;
-        };
+        if (in_array(true, $decisionCriteria)) {
+            $suitableForDecisions = $decisionCriteria;
+        }
 
         return [
-            'suitableForDecisions' => $result()
+            'suitableForDecisions' => $suitableForDecisions
         ];
     }
 
@@ -246,6 +277,9 @@ class Licence extends AbstractLicence
         $criteria = Criteria::create();
         $criteria->andWhere(
             $criteria->expr()->isNull('removalDate')
+        );
+        $criteria->andWhere(
+            $criteria->expr()->neq('specifiedDate', null)
         );
 
         return $this->getLicenceVehicles()->matching($criteria);
@@ -307,5 +341,128 @@ class Licence extends AbstractLicence
         }
 
         return $this->getOrganisation()->getLicences()->matching($criteria);
+    }
+
+    public function hasApprovedUnfulfilledConditions()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->eq('isDraft', 0)
+        );
+        $criteria->andWhere(
+            $criteria->expr()->eq('isFulfilled', 0)
+        );
+
+        return ($this->getConditionUndertakings()->matching($criteria)->count() > 0);
+    }
+
+    public function isGoods()
+    {
+        return $this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_GOODS_VEHICLE;
+    }
+
+    public function isPsv()
+    {
+        return $this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV;
+    }
+
+    public function isSpecialRestricted()
+    {
+        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED;
+    }
+
+    public function isRestricted()
+    {
+        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_RESTRICTED;
+    }
+
+    /**
+     * Helper method to get the first trading name from a licence
+     * (Sorts trading names by createdOn date then alphabetically)
+     *
+     * @return string
+     */
+    public function getTradingName()
+    {
+        $tradingNames = (array) $this->getOrganisation()->getTradingNames()->getIterator();
+
+        if (empty($tradingNames)) {
+            return 'None';
+        }
+
+        usort(
+            $tradingNames,
+            function ($a, $b) {
+                if ($a->getCreatedOn() == $b->getCreatedOn()) {
+                    // This *should* be an extreme edge case but there is a bug
+                    // in Business Details causing trading names to have the
+                    // same createdOn date. Sort alphabetically to avoid
+                    // 'random' behaviour.
+                    return strcasecmp($a->getName(), $b->getName());
+                }
+                return strtotime($a->getCreatedOn()) < strtotime($b->getCreatedOn()) ? -1 : 1;
+            }
+        );
+
+        return array_shift($tradingNames)->getName();
+    }
+
+    public function getOpenComplaintsCount()
+    {
+        $count = 0;
+        foreach ($this->getCases() as $case) {
+            foreach ($case->getComplaints() as $complaint) {
+                if ($complaint->getIsCompliance() == 0 && $complaint->isOpen()) {
+                    $count++;
+                }
+            }
+        }
+        return $count;
+    }
+
+    public function getOpenCases()
+    {
+        $allCases = (array) $this->getCases()->getIterator();
+        return array_filter(
+            $allCases,
+            function ($case) {
+                return $case->isOpen();
+            }
+        );
+    }
+
+    public function canHaveCommunityLicences()
+    {
+        if ($this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
+            return true;
+        }
+
+        if ($this->isPsv() && $this->getLicenceType()->getId() === self::LICENCE_TYPE_RESTRICTED) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function copyInformationFromApplication(Application $application)
+    {
+        $this->setLicenceType($application->getLicenceType());
+        $this->setGoodsOrPsv($application->getGoodsOrPsv());
+        $this->setTotAuthTrailers($application->getTotAuthTrailers());
+        $this->setTotAuthVehicles($application->getTotAuthVehicles());
+        $this->setTotAuthSmallVehicles($application->getTotAuthSmallVehicles());
+        $this->setTotAuthMediumVehicles($application->getTotAuthMediumVehicles());
+        $this->setTotAuthLargeVehicles($application->getTotAuthLargeVehicles());
+        $this->setNiFlag($application->getNiFlag());
+    }
+
+    public function getOcForInspectionRequest()
+    {
+        $list = [];
+        $licenceOperatingCentres = $this->getOperatingCentres();
+        foreach ($licenceOperatingCentres as $licenceOperatingCentre) {
+            $list[] = $licenceOperatingCentre->getOperatingCentre();
+        }
+        return $list;
     }
 }

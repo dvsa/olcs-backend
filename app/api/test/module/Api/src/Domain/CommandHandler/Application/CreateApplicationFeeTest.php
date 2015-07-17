@@ -8,7 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
+use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplicationFee;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
@@ -143,15 +143,9 @@ class CreateApplicationFeeTest extends CommandHandlerTestCase
         $result2 = new Result();
         $result2->addId('fee', 555);
         $feeData = [
-            'task' => 333,
-            'application' => 111,
-            'licence' => 222,
-            'invoicedDate' => date('Y-m-d'),
-            'description' => 'DESC for application 111',
-            'feeType' => 444,
-            'amount' => 10.5,
-            'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
-            'busReg' => null
+            'id' => 111,
+            'feeTypeFeeType' => 'APP',
+            'task' => 333
         ];
         $this->expectedSideEffect(CreateFee::class, $feeData, $result2);
 

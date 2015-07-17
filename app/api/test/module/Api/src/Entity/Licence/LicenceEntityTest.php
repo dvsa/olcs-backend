@@ -5,13 +5,17 @@ namespace Dvsa\OlcsTest\Api\Entity\Licence;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Mockery as m;
 
 /**
  * Licence Entity Unit Tests
@@ -145,7 +149,7 @@ class LicenceEntityTest extends EntityTester
         $licences = m::mock(ArrayCollection::class)->makePartial();
         $licences->add($licence1);
 
-        $org = m::mock(Organisation::class)->makePartial();
+        $org = m::mock(OrganisationEntity::class)->makePartial();
         $org->setLicences($licences);
 
         $licences->shouldReceive('matching')
@@ -185,7 +189,7 @@ class LicenceEntityTest extends EntityTester
                 'tach_internal',
                 '',
                 'Y',
-                ValidationException::class
+                null
             ],
             [
                 2,
@@ -304,5 +308,312 @@ class LicenceEntityTest extends EntityTester
             );
 
         $this->assertTrue($licence->hasCommunityLicenceOfficeCopy([1]));
+    }
+
+    public function testHasApprovedUnfulfilledConditions()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getConditionUndertakings->matching->count')
+            ->andReturn(1);
+
+        $this->assertTrue($licence->hasApprovedUnfulfilledConditions());
+    }
+
+    public function testHasApprovedUnfulfilledConditionsNone()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getConditionUndertakings->matching->count')
+            ->andReturn(0);
+
+        $this->assertFalse($licence->hasApprovedUnfulfilledConditions());
+    }
+
+    public function testIsGoods()
+    {
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_GOODS_VEHICLE);
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+
+        $this->assertTrue($licence->isGoods());
+    }
+
+    public function testIsGoodsFalse()
+    {
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_PSV);
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+
+        $this->assertFalse($licence->isGoods());
+    }
+
+    public function testIsPsv()
+    {
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_PSV);
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+
+        $this->assertTrue($licence->isPsv());
+    }
+
+    public function testIsPsvFalse()
+    {
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_GOODS_VEHICLE);
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+
+        $this->assertFalse($licence->isPsv());
+    }
+
+    public function testIsSpecialRestricted()
+    {
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_SPECIAL_RESTRICTED);
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertTrue($licence->isSpecialRestricted());
+    }
+
+    public function testIsSpecialRestrictedFalse()
+    {
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertFalse($licence->isSpecialRestricted());
+    }
+
+    public function testGetTradingNameNone()
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence
+            ->shouldReceive('getOrganisation->getTradingNames->getIterator')
+            ->once()
+            ->andReturn([]);
+
+        $this->assertEquals('None', $licence->getTradingName());
+    }
+
+    public function testGetTradingNamesSorting()
+    {
+        $tradingName1 = m::mock(TradingNameEntity::class)
+            ->makePartial()
+            ->setName('Foo')
+            ->setCreatedOn('2015-06-01 00:00:00');
+        $tradingName2 = m::mock(TradingNameEntity::class)
+            ->makePartial()
+            ->setName('Bar')
+            ->setCreatedOn('2015-06-01 00:00:00');
+        $tradingName3 = m::mock(TradingNameEntity::class)
+            ->makePartial()
+            ->setName('Baz')
+            ->setCreatedOn('2015-07-01 00:00:00');
+        $tradingNames = new ArrayCollection();
+        $tradingNames->add($tradingName1);
+        $tradingNames->add($tradingName2);
+        $tradingNames->add($tradingName3);
+
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence
+            ->shouldReceive('getOrganisation->getTradingNames')
+            ->once()
+            ->andReturn($tradingNames);
+
+        $this->assertEquals('Bar', $licence->getTradingName());
+    }
+
+    public function testGetOpenComplaintsCount()
+    {
+        $case1 = m::mock(CaseEntity::class)->makePartial();
+        $case2 = m::mock(CaseEntity::class)->makePartial();
+        $cases = new ArrayCollection();
+        $cases->add($case1);
+        $cases->add($case2);
+
+        $case1
+            ->shouldReceive('getComplaints')
+            ->andReturn(
+                [
+                    m::mock(ComplaintEntity::class)
+                        ->makePartial()
+                        ->shouldReceive('getIsCompliance')
+                        ->andReturn(0)
+                        ->shouldReceive('isOpen')
+                        ->andReturn(true)
+                        ->getMock()
+                ]
+            );
+        $case2
+            ->shouldReceive('getComplaints')
+            ->andReturn(
+                [
+                    m::mock(ComplaintEntity::class)
+                        ->makePartial()
+                        ->shouldReceive('getIsCompliance')
+                        ->andReturn(1)
+                        ->shouldReceive('isOpen')
+                        ->andReturn(true)
+                        ->getMock()
+                ]
+            );
+
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setCases($cases);
+
+        $this->assertEquals(1, $licence->getOpenComplaintsCount());
+    }
+
+    public function testGetOpenCases()
+    {
+        $case1 = m::mock(CaseEntity::class)->makePartial();
+        $case2 = m::mock(CaseEntity::class)->makePartial();
+        $cases = new ArrayCollection();
+        $cases->add($case1);
+        $cases->add($case2);
+
+        $case1
+            ->shouldReceive('isOpen')
+            ->andReturn(true);
+        $case2
+            ->shouldReceive('isOpen')
+            ->andReturn(false);
+
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setCases($cases);
+
+        $this->assertEquals([$case1], $licence->getOpenCases());
+    }
+
+    public function testGetOcForInspectionRequest()
+    {
+        $mockOperatingCentre = m::mock()
+            ->shouldReceive('getOperatingCentre')
+            ->andReturn('oc')
+            ->once()
+            ->getMock();
+
+        $mockLicence = m::mock(Entity::class)->makePartial();
+        $mockLicence->shouldReceive('getOperatingCentres')
+            ->andReturn([$mockOperatingCentre])
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(['oc'], $mockLicence->getOcForInspectionRequest());
+    }
+
+    public function testIsRestricted()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertFalse($licence->isRestricted());
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_RESTRICTED);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertTrue($licence->isRestricted());
+    }
+
+    public function testCanHaveCommunityLicencesStandardInt()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertTrue($licence->canHaveCommunityLicences());
+    }
+
+    public function testCanHaveCommunityLicencesPsvRestricted()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_PSV);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_RESTRICTED);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertTrue($licence->canHaveCommunityLicences());
+    }
+
+    public function testCanHaveCommunityLicencesSomethingElse()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_GOODS_VEHICLE);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertFalse($licence->canHaveCommunityLicences());
+    }
+
+    public function testCopyInformationFromApplication()
+    {
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+        $application->setLicenceType($licenceType);
+
+        $goodsOrPsv = m::mock(RefData::class)->makePartial();
+        $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_GOODS_VEHICLE);
+        $application->setGoodsOrPsv($goodsOrPsv);
+
+        $application->setTotAuthTrailers(9);
+        $application->setTotAuthVehicles(12);
+        $application->setTotAuthSmallVehicles(4);
+        $application->setTotAuthMediumVehicles(5);
+        $application->setTotAuthLargeVehicles(3);
+        $application->setNiFlag('Y');
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $licence->copyInformationFromApplication($application);
+
+        $this->assertSame($licenceType, $licence->getLicenceType());
+        $this->assertSame($goodsOrPsv, $licence->getGoodsOrPsv());
+        $this->assertEquals(9, $licence->getTotAuthTrailers());
+        $this->assertEquals(12, $licence->getTotAuthVehicles());
+        $this->assertEquals(4, $licence->getTotAuthSmallVehicles());
+        $this->assertEquals(5, $licence->getTotAuthMediumVehicles());
+        $this->assertEquals(3, $licence->getTotAuthLargeVehicles());
+        $this->assertEquals('Y', $licence->getNiFlag());
     }
 }

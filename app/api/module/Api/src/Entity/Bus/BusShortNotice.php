@@ -21,9 +21,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BusShortNotice extends AbstractBusShortNotice
 {
-    public function getCalculatedValues()
+    public function getCalculatedBundleValues()
     {
-        return ['busReg' => null];
+        return [
+            'isLatestVariation' => $this->getBusReg()->isLatestVariation()
+        ];
     }
 
     /**
@@ -69,8 +71,7 @@ class BusShortNotice extends AbstractBusShortNotice
         $trcDetail,
         $policeChange,
         $policeDetail
-    )
-    {
+    ) {
         $this->getBusReg()->canEdit();
 
         $this->bankHolidayChange = $bankHolidayChange;

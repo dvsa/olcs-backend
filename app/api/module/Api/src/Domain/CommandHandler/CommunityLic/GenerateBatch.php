@@ -12,7 +12,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\EnqueueFile as EnqueueFileCommand;
+use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\PrintSchedulerInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
@@ -57,7 +57,8 @@ final class GenerateBatch extends AbstractCommandHandler implements
 
             $printQueue = EnqueueFileCommand::create(
                 [
-                    'fileId' => $file->getIdentifier(),
+                    'fileIdentifier' => $file->getIdentifier(),
+                    // @note not working for now, just migrated, will be implemented in future stories
                     'options' => [PrintSchedulerInterface::OPTION_DOUBLE_SIDED],
                     'jobName' => 'Community Licence'
                 ]

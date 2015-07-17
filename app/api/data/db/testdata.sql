@@ -420,12 +420,12 @@ VALUES
         (113, 'ecst_open', 'ct_cov', 0, NULL, NULL, 24, '2015-01-17 10:37:10', 'Ian',
     'McDonald', 'Revving engine early in morning', 'PRG426F', '2014-03-03', NOW(), 1, NULL);
 
-INSERT INTO `oc_complaint` (`id`, `complaint_id`, `operating_centre_id`)
+INSERT INTO `oc_complaint` (`complaint_id`, `operating_centre_id`)
 VALUES
-    (1, 7, 16),
-    (2, 7, 21),
-    (3, 7, 37),
-    (4, 9, 39);
+    (7, 16),
+    (7, 21),
+    (7, 37),
+    (9, 39);
 
 INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `application_id`, `operating_centre_id`,
 `created_by`,`last_modified_by`, `added_via`, `attached_to`, `condition_type`, `deleted_date`, `is_draft`,
@@ -459,10 +459,6 @@ VALUES
     (3,'ct_corr',109,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (8,'ct_corr',8,10,2,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (21,'ct_reg',21,NULL,0,2,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (25,'ct_def',25,NULL,4,4,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (26,'ct_def',26,NULL,0,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (27,'ct_def',27,NULL,2,4,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (29,'ct_def',29,NULL,3,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (30,'ct_reg',30,NULL,2,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (31,'ct_corr',31,NULL,0,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (37,'ct_oc',37,NULL,2,2,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
@@ -675,7 +671,7 @@ VALUES
     NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', NULL, 0),
     (100,100,'D',NULL,4,NULL,NULL,NULL,0,'lcat_psv','PD1001001','lsts_not_submitted',0,'ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
     NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),2, '2016-01-01 10:00:00', NULL, 0),
-    (110,75,'D',NULL,4,8,21,25,4,'lcat_psv','PD2737280','lsts_not_submitted',0,'ltyp_r','2010-01-12','2010-01-12',
+    (110,75,'D',NULL,4,8,21,21,4,'lcat_psv','PD2737280','lsts_not_submitted',0,'ltyp_r','2010-01-12','2010-01-12',
     '2010-01-12','',0,10,5,5,NULL,NULL,
     NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', 4, 0),
     (114,104,'B',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'OB1534567','lsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
@@ -789,24 +785,25 @@ INSERT INTO `note` (
   `comment`,
   `priority`,
   `created_on`,
-  `version`
+  `version`,
+  `user_id`
 )
 VALUES
-(1,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
-(2,  'note_t_lic',  NULL, 4, 7,   28, NULL, NULL, NULL, 'This is a licence note', 1, '2011-10-03 00:00:00', 1),
-(3,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
-(4,  'note_t_app',  NULL, 3, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
-(5,  'note_t_lic',  NULL, 5, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-03 00:00:00', 1),
-(6,  'note_t_case', NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a case note',    0, '2011-10-03 00:00:00', 1),
-(7,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1),
-(8,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2012-10-10 00:00:00', 1),
-(9,  'note_t_bus',  1,    3, 110, 75, NULL, NULL, NULL, 'This is a bus reg note', 0, '2012-10-10 00:00:00', 1),
-(10, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1),
-(11, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-13 00:00:00', 1),
-(12, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-15 00:00:00', 1),
-(13, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-12 00:00:00', 1),
-(14, 'note_t_tm',   NULL, 3,NULL,NULL,NULL, 3,    NULL, 'This is a TM note',      0, '2011-10-12 00:00:00', 1),
-(15, 'note_t_org',  NULL, 3,NULL,NULL,NULL, NULL, 101,  'This is a organisation note', 0, '2011-10-12 00:00:00', 1);
+(1,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1, 1),
+(2,  'note_t_lic',  NULL, 4, 7,   28, NULL, NULL, NULL, 'This is a licence note', 1, '2011-10-03 00:00:00', 1, 1),
+(3,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1, 1),
+(4,  'note_t_app',  NULL, 3, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1, 1),
+(5,  'note_t_lic',  NULL, 5, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-03 00:00:00', 1, 1),
+(6,  'note_t_case', NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a case note',    0, '2011-10-03 00:00:00', 1, 1),
+(7,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1, 1),
+(8,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2012-10-10 00:00:00', 1, 1),
+(9,  'note_t_bus',  1,    3, 110, 75, NULL, NULL, NULL, 'This is a bus reg note', 0, '2012-10-10 00:00:00', 1, 1),
+(10, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1, 1),
+(11, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-13 00:00:00', 1, 1),
+(12, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-15 00:00:00', 1, 1),
+(13, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-12 00:00:00', 1, 1),
+(14, 'note_t_tm',   NULL, 3,NULL,NULL,NULL, 3,    NULL, 'This is a TM note',      0, '2011-10-12 00:00:00', 1, 1),
+(15, 'note_t_org',  NULL, 3,NULL,NULL,NULL, NULL, 101,  'This is a organisation note', 0, '2011-10-12 00:00:00', 1, 1);
 
 
 INSERT INTO `operating_centre` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
@@ -827,14 +824,14 @@ VALUES
   (2, 'obj_t_police', 1, 1, 8, '2014-02-21 00:00:00', '2014-02-21 00:00:00', 1);
 
 INSERT INTO `opposition`
-(`id`, `opposition_type`, `licence_id`, `application_id`, `case_id`, `opposer_id`, `last_modified_by`, `created_by`, `is_copied`,
+(`id`, `opposition_type`, `case_id`, `opposer_id`, `last_modified_by`, `created_by`, `is_copied`,
  `raised_date`, `is_in_time`, `is_public_inquiry`, `is_withdrawn`, `is_valid`, `valid_notes`, `notes`, `deleted_date`, `created_on`,
  `last_modified_on`, `version`)
 VALUES
-  (1, 'otf_eob', 7, 1, 29, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 'opp_v_no', 'Valid notes', 'Notes', null,
+  (1, 'otf_eob', 29, 1, 1, 1, 1, '2014-02-19', 1, 1, 0, 'opp_v_no', 'Valid notes', 'Notes', null,
   '2014-02-20 00:00:00',
    '2014-02-20 00:00:00', 1),
-  (2, 'otf_rep', 7, 1, 29, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 'opp_v_yes', 'Valid notes', 'Notes', null,
+  (2, 'otf_rep', 29, 1, 1, 1, 1, '2014-02-19', 0, 0, 1, 'opp_v_yes', 'Valid notes', 'Notes', null,
   '2014-02-20 00:00:00',
    '2014-02-20 00:00:00', 1);
 
@@ -853,17 +850,17 @@ VALUES
   (2, 16);
 
 INSERT INTO `organisation` (`id`,`lead_tc_area_id`, `created_by`, `last_modified_by`,`contact_details_id`,
-`company_or_llp_no`, `name`,`is_mlh`, `is_irfo`, `type`, `created_on`, `last_modified_on`, `version`, `allow_email`) VALUES
-    (1,'B',1,3,  21,'12345678','John Smith Haulage Ltd.',0,0,'org_t_rc',NOW(),NOW(),1,1),
-    (30,'C',1,4,  30,'98765432','John Smith Haulage Ltd.',0,0,'org_t_rc',NOW(),NOW(),1,0),
-    (41,'D',0,4,  41,'241341234','Teddie Stobbart Group Ltd',0,0,'org_t_rc',NOW(),NOW(),1,0),
-    (54,'F',3,4,  54,'675675334','Teddie Stobbart Group Ltd',0,0,'org_t_rc',NOW(),NOW(),1,0),
-    (63,'G',1,2,  63,'353456456','Leeds bus service ltd.',0,0,'org_t_rc',NOW(),NOW(),1,0),
-    (75,'H',1,0,  75,'12345A1123','Leeds city council',0,0,'org_t_pa',NOW(),NOW(),1,0),
-    (100,'K',1,3,  100,'100100','Test partnership',0,0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2,0),
-    (101,'K',1,3,  100,'100100','Test IRFO',0,1,'org_t_ir',NOW(),NOW(),1,0),
-    (104,'M',NULL,NULL,NULL,'1234567','Company Name',0,0,'org_t_rc',NULL,NULL,1,0),
-    (105,'N',1,3,NULL,NULL,'SR Orgaisation',0,0,'org_t_rc',NOW(),NOW(),1,0);
+`company_or_llp_no`, `name`, `is_irfo`, `type`, `created_on`, `last_modified_on`, `version`, `allow_email`) VALUES
+    (1,'B',1,3,  21,'12345678','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1,1),
+    (30,'C',1,4,  30,'98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1,0),
+    (41,'D',0,4,  41,'241341234','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1,0),
+    (54,'F',3,4,  54,'675675334','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1,0),
+    (63,'G',1,2,  63,'353456456','Leeds bus service ltd.',0,'org_t_rc',NOW(),NOW(),1,0),
+    (75,'H',1,0,  75,'12345A1123','Leeds city council',0,'org_t_pa',NOW(),NOW(),1,0),
+    (100,'K',1,3,  100,'100100','Test partnership',0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2,0),
+    (101,'K',1,3,  100,'100100','Test IRFO',1,'org_t_ir',NOW(),NOW(),1,0),
+    (104,'M',NULL,NULL,NULL,'1234567','Company Name',0,'org_t_rc',NULL,NULL,1,0),
+    (105,'N',1,3,NULL,NULL,'SR Orgaisation',0,'org_t_rc',NOW(),NOW(),1,0);
 
 INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
     `person_id`, `organisation_id`) VALUES
@@ -1133,28 +1130,18 @@ INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_id`,`unfitness_reaso
   (1,'tm_unfit_inn');
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
-`last_successful_login_date`,`version`, `deleted_date`, `login_id`,`contact_details_id`,`email_address`,
+`last_successful_login_date`,`login_id`,`contact_details_id`,
 `local_authority_id`) VALUES
-    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-01-26 09:00:00',1,NULL,'loggedinuser',101,
-    'terry.valtech@gmail.com', 1),
-    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-25 23:00:00',1,NULL,'johnspellman',105,
-    'john.spellman@test9876.com', NULL),
-    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-23 15:00:00',1,NULL,'stevefox',106,
-    'stevefox@test9876.com', NULL),
-    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-19 14:00:00',1,NULL,'amywrigg',130,
-    'amywrigg@test9876.com', NULL),
-    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-05-15 17:00:00',1,NULL,'philjowitt',131,
-    'philjowitt@test9876.com', NULL),
-    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-22 11:00:00',1,NULL,'kevinrooney',132,
-    'kevinrooney@test9876.com', NULL),
-    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00',1,NULL,'sarahthompson',133,
-    'sarahthompson@test9876.com', NULL),
-    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00',1,NULL,'anotheruser',114,
-    'anotheruser@test9876.com', NULL),
-    (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00',1,NULL,'abdou.bonomi',140,
-    NULL, NULL),
-    (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00',1,NULL,'abdou.bonomi2',140,
-    NULL, NULL);
+    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-01-26 09:00:00','loggedinuser',101, 1),
+    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-25 23:00:00','johnspellman',105, NULL),
+    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-23 15:00:00','stevefox',106, NULL),
+    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-19 14:00:00','amywrigg',130, NULL),
+    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-05-15 17:00:00','philjowitt',131, NULL),
+    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-22 11:00:00','kevinrooney',132, NULL),
+    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00','sarahthompson',133, NULL),
+    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','anotheruser',114, NULL),
+    (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00','abdou.bonomi',140, NULL),
+    (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00','abdou.bonomi2',140, NULL);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator`) VALUES
     (1, 1, 1),
@@ -1344,11 +1331,11 @@ INSERT INTO `disc_sequence` (
     (21,'lcat_gv',1363,'RX',1051,'NX',3973,'IX','N',1,0,0);
 
 
-INSERT INTO `submission_action` (`submission_id`, `recipient_user_id`, `sender_user_id`, `last_modified_by`,
-    `created_by`, `is_decision`, `urgent`, `comment`, `created_on`, `last_modified_on`)
+INSERT INTO `submission_action` (`submission_id`, `last_modified_by`,
+    `created_by`, `is_decision`, `comment`, `created_on`, `last_modified_on`)
 VALUES
-    (12, 1, 1, 1, 1, 0, 1, 'Comment recommendaion testing lorem', NOW(), NOW()),
-    (12, 1, 1, 1, 1, 1, 1, 'Comment decision testing lorem', NOW(), NOW());
+    (12, 1, 1, 0, 'Comment recommendaion testing lorem', NOW(), NOW()),
+    (12, 1, 1, 1, 'Comment decision testing lorem', NOW(), NOW());
 
 INSERT INTO `submission_action_type` (`submission_action_id`, `action_type`)
 VALUES
@@ -1947,7 +1934,7 @@ INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, 
 INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `fao`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (128,121,'ct_est',NULL,NULL,NULL,NULL,0,'2015-03-27 12:29:38',NULL,NULL,NULL,NULL,NULL,NULL,1);
 INSERT INTO `contact_details` (`id`, `address_id`, `contact_type`, `person_id`, `created_by`, `last_modified_by`, `fao`, `written_permission_to_engage`, `created_on`, `deleted_date`, `description`, `email_address`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (129,123,'ct_work',NULL,NULL,NULL,NULL,0,'2015-03-27 12:31:05',NULL,NULL,NULL,NULL,NULL,NULL,1);
 INSERT INTO `operating_centre` (`id`, `address_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `olbs_key`, `version`, `vi_action`) VALUES (74,122,NULL,NULL,'2015-03-27 12:30:12',NULL,NULL,1,NULL);
-INSERT INTO `licence` (`id`, `correspondence_cd_id`, `enforcement_area_id`, `establishment_cd_id`, `organisation_id`, `tachograph_ins`, `transport_consultant_cd_id`, `created_by`, `goods_or_psv`, `last_modified_by`, `licence_type`, `status`, `traffic_area_id`, `fabs_reference`, `fee_date`, `psv_discs_to_be_printed_no`, `review_date`, `safety_ins`, `safety_ins_trailers`, `safety_ins_varies`, `safety_ins_vehicles`, `surrendered_date`, `tachograph_ins_name`, `trailers_in_possession`, `translate_to_welsh`, `created_on`, `deleted_date`, `expiry_date`, `granted_date`, `in_force_date`, `is_maintenance_suitable`, `last_modified_on`, `lic_no`, `ni_flag`, `olbs_key`, `tot_auth_large_vehicles`, `tot_auth_medium_vehicles`, `tot_auth_small_vehicles`, `tot_auth_trailers`, `tot_auth_vehicles`, `tot_community_licences`, `version`, `vi_action`) VALUES (212,127,NULL,127,1,'tach_internal',NULL,NULL,NULL,NULL,NULL,'lsts_consideration','N',NULL,NULL,NULL,NULL,0,1,0,1,NULL,'Dan',NULL,0,'2015-03-27 12:28:05',NULL,NULL,NULL,NULL,NULL,'2015-03-27 12:31:10','ON2',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,7,NULL);
+INSERT INTO `licence` (`id`, `correspondence_cd_id`, `enforcement_area_id`, `establishment_cd_id`, `organisation_id`, `tachograph_ins`, `transport_consultant_cd_id`, `created_by`, `goods_or_psv`, `last_modified_by`, `licence_type`, `status`, `traffic_area_id`, `fabs_reference`, `fee_date`, `psv_discs_to_be_printed_no`, `review_date`, `safety_ins`, `safety_ins_trailers`, `safety_ins_varies`, `safety_ins_vehicles`, `surrendered_date`, `tachograph_ins_name`, `trailers_in_possession`, `translate_to_welsh`, `created_on`, `deleted_date`, `expiry_date`, `granted_date`, `in_force_date`, `is_maintenance_suitable`, `last_modified_on`, `lic_no`, `ni_flag`, `olbs_key`, `tot_auth_large_vehicles`, `tot_auth_medium_vehicles`, `tot_auth_small_vehicles`, `tot_auth_trailers`, `tot_auth_vehicles`, `tot_community_licences`, `version`, `vi_action`) VALUES (212,127,'NI01',127,1,'tach_internal',NULL,NULL,NULL,NULL,NULL,'lsts_consideration','N',NULL,NULL,NULL,NULL,0,1,0,1,NULL,'Dan',NULL,0,'2015-03-27 12:28:05',NULL,NULL,NULL,NULL,NULL,'2015-03-27 12:31:10','ON2',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,7,NULL);
 INSERT INTO `licence_no_gen` (`id`, `licence_id`) VALUES (2,212);
 INSERT INTO `application` (`id`, `interim_status`, `licence_id`, `created_by`, `goods_or_psv`, `last_modified_by`, `licence_type`, `status`, `withdrawn_reason`, `administration`, `bankrupt`, `convictions_confirmation`, `declaration_confirmation`, `disqualified`, `financial_evidence_uploaded`, `has_entered_reg`, `insolvency_confirmation`, `insolvency_details`, `interim_auth_trailers`, `interim_auth_vehicles`, `interim_end`, `interim_reason`, `interim_start`, `is_variation`, `liquidation`, `override_ooo`, `prev_been_at_pi`, `prev_been_disqualified_tc`, `prev_been_refused`, `prev_been_revoked`, `prev_conviction`, `prev_had_licence`, `prev_has_licence`, `prev_purchased_assets`, `psv_limousines`, `psv_medium_vhl_confirmation`, `psv_medium_vhl_notes`, `psv_no_limousine_confirmation`, `psv_no_small_vhl_confirmation`, `psv_only_limousines_confirmation`, `psv_operate_small_vhl`, `psv_small_vhl_confirmation`, `psv_small_vhl_notes`, `receivership`, `refused_date`, `safety_confirmation`, `target_completion_date`, `created_on`, `deleted_date`, `granted_date`, `is_maintenance_suitable`, `last_modified_on`, `ni_flag`, `received_date`, `tot_auth_large_vehicles`, `tot_auth_medium_vehicles`, `tot_auth_small_vehicles`, `tot_auth_trailers`, `tot_auth_vehicles`, `tot_community_licences`, `version`, `withdrawn_date`) VALUES (8,NULL,212,NULL,'lcat_gv',NULL,'ltyp_sn','apsts_consideration',NULL,0,0,1,1,0,0,0,1,'',NULL,NULL,NULL,NULL,NULL,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,NULL,'2015-03-27 12:28:06',NULL,NULL,NULL,'2015-03-27 12:32:04',1,'2015-03-27 12:34:56',NULL,NULL,NULL,1,1,NULL,10,NULL);
 INSERT INTO `application_completion` (`id`, `application_id`, `created_by`, `last_modified_by`, `addresses_status`, `business_details_status`, `business_type_status`, `community_licences_status`, `conditions_undertakings_status`, `convictions_penalties_status`, `discs_status`, `financial_evidence_status`, `financial_history_status`, `last_section`, `licence_history_status`, `operating_centres_status`, `people_status`, `safety_status`, `taxi_phv_status`, `transport_managers_status`, `type_of_licence_status`, `undertakings_status`, `vehicles_declarations_status`, `vehicles_psv_status`, `vehicles_status`, `created_on`, `last_modified_on`, `version`) VALUES (5,8,NULL,NULL,2,2,2,NULL,NULL,2,NULL,2,2,NULL,2,2,2,2,NULL,2,2,2,NULL,NULL,2,'2015-03-27 12:28:07','2015-03-27 12:32:04',19);
@@ -2011,7 +1998,7 @@ COMMIT;
 
 INSERT INTO `inspection_request` (`id`, `report_type`, `request_type`, `requestor_user_id`, `result_type`, `application_id`,
 `case_id`, `created_by`, `last_modified_by`, `licence_id`, `operating_centre_id`, `task_id`, `deferred_date`, `due_date`, `from_date`,
-`inspector_name`, `inspector_notes`, `request_date`, `requestor_notes`, `return_date`, `to_date`, `trailors_examined_no`,
+`inspector_name`, `inspector_notes`, `request_date`, `requestor_notes`, `return_date`, `to_date`, `trailers_examined_no`,
 `vehicles_examined_no`, `created_on`, `last_modified_on`, `olbs_key`, `version`)
 VALUES
 	(1, 'insp_rep_t_maint', 'insp_req_t_coe', 2, 'insp_res_t_new', 1, NULL, NULL, NULL, 7, 16, NULL, NULL, '2015-02-01', NULL, NULL,

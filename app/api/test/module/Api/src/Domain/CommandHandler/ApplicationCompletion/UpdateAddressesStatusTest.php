@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ApplicationCompletion;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateAddressesStatus as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateAddressesStatus;
@@ -61,7 +62,9 @@ class UpdateAddressesStatusTest extends AbstractUpdateStatusTestCase
     {
         $this->applicationCompletion->setAddressesStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
+        /** @var ContactDetailsEntity $corAdd */
         $corAdd = m::mock(ContactDetailsEntity::class)->makePartial();
+        $corAdd->setPhoneContacts(new ArrayCollection());
 
         $this->licence->setCorrespondenceCd($corAdd);
 
@@ -72,9 +75,8 @@ class UpdateAddressesStatusTest extends AbstractUpdateStatusTestCase
     {
         $this->applicationCompletion->setAddressesStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
-        $phoneContacts = [
-            m::mock(PhoneContact::class)
-        ];
+        $phoneContacts = new ArrayCollection();
+        $phoneContacts->add(m::mock(PhoneContact::class));
 
         /** @var ContactDetailsEntity $corAdd */
         $corAdd = m::mock(ContactDetailsEntity::class)->makePartial();
@@ -91,9 +93,8 @@ class UpdateAddressesStatusTest extends AbstractUpdateStatusTestCase
     {
         $this->applicationCompletion->setAddressesStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
-        $phoneContacts = [
-            m::mock(PhoneContact::class)
-        ];
+        $phoneContacts = new ArrayCollection();
+        $phoneContacts->add(m::mock(PhoneContact::class));
 
         /** @var ContactDetailsEntity $corAdd */
         $corAdd = m::mock(ContactDetailsEntity::class)->makePartial();
@@ -114,9 +115,8 @@ class UpdateAddressesStatusTest extends AbstractUpdateStatusTestCase
     {
         $this->applicationCompletion->setAddressesStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
-        $phoneContacts = [
-            m::mock(PhoneContact::class)
-        ];
+        $phoneContacts = new ArrayCollection();
+        $phoneContacts->add(m::mock(PhoneContact::class));
 
         /** @var ContactDetailsEntity $corAdd */
         $corAdd = m::mock(ContactDetailsEntity::class)->makePartial();

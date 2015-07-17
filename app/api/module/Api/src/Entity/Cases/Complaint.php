@@ -24,30 +24,56 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
  */
 class Complaint extends AbstractComplaint
 {
+    const COMPLAIN_STATUS_CLOSED = 'ecst_closed';
+    const COMPLAIN_STATUS_OPEN = 'ecst_open';
+
     /**
      * Construct Complaint entity
      * @param Cases $case
-     * @param $isCompliance
-     * @param $complaintType
-     * @param $contactDetails
-     * @param $complaintDate
+     * @param bool $isCompliance
+     * @param RefData $status
+     * @param \DateTime $complaintDate
+     * @param ContactDetails $contactDetails
      */
     public function __construct(
         Cases $case,
-        RefData $complaintType,
+        $isCompliance,
         RefData $status,
         \DateTime $complaintDate,
-        ContactDetails $contactDetails,
-        $isCompliance
+        ContactDetails $contactDetails
     ) {
         parent::__construct();
 
         $this->setCase($case);
         $this->setIsCompliance($isCompliance);
-        $this->setComplaintType($complaintType);
         $this->setStatus($status);
         $this->setComplaintDate($complaintDate);
-
         $this->setComplainantContactDetails($contactDetails);
+    }
+
+    public function isOpen()
+    {
+        return ($this->getStatus()->getId() === self::COMPLAIN_STATUS_OPEN);
+    }
+
+    public function isEnvironmentalComplaint()
+    {
+        return ($this->isCompliance === false);
+    }
+
+    public function populateClosedDate()
+    {
+        if ($this->isEnvironmentalComplaint()) {
+            // set closed date based on status
+            if (!$this->isOpen()) {
+                if ($this->closedDate === null) {
+                    $this->closedDate = new \DateTime();
+                }
+            } else {
+                $this->closedDate = null;
+            }
+        }
+
+        return $this;
     }
 }

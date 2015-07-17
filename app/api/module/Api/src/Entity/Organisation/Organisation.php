@@ -47,6 +47,36 @@ class Organisation extends AbstractOrganisation
         return $this->hasInforceLicences;
     }
 
+    public function getAdminOrganisationUsers()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->eq('isAdministrator', 'Y')
+        );
+
+        return $this->getOrganisationUsers()->matching($criteria);
+    }
+
+    /**
+     * Is this organisation a sole trader
+     *
+     * @return bool
+     */
+    public function isSoleTrader()
+    {
+        return $this->getType()->getId() === self::ORG_TYPE_SOLE_TRADER;
+    }
+
+    /**
+     * Is this organisation a partnership
+     *
+     * @return bool
+     */
+    public function isPartnership()
+    {
+        return $this->getType()->getId() === self::ORG_TYPE_PARTNERSHIP;
+    }
+
     /**
      * @return array
      * @deprecated
@@ -65,5 +95,31 @@ class Organisation extends AbstractOrganisation
         return [
             'hasInforceLicences' => $this->hasInforceLicences()
         ];
+    }
+
+    public function updateOrganisation(
+        $name,
+        $companyNumber,
+        $firstName,
+        $lastName,
+        $isIrfo,
+        $businessType,
+        $natureOfBusinesses
+    ) {
+        $this->setType($businessType);
+        $this->setNatureOfBusinesses($natureOfBusinesses);
+        if ($isIrfo === 'Y' || $this->getType()->getId() === self::ORG_TYPE_IRFO) {
+            $this->isIrfo = 'Y';
+        } else {
+            $this->isIrfo = 'N';
+        }
+        if ($companyNumber) {
+            $this->companyOrLlpNo = $companyNumber;
+        }
+        if (!empty($lastName)) {
+            $this->name = trim($firstName . ' ' . $lastName);
+        } else {
+            $this->name = $name;
+        }
     }
 }

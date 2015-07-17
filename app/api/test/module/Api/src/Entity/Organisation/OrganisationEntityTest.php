@@ -43,7 +43,6 @@ class OrganisationEntityTest extends EntityTester
             'irfoName',
             'irfoNationality',
             'isIrfo',
-            'isMlh',
             'lastModifiedBy',
             'lastModifiedOn',
             'leadTcArea',
@@ -88,5 +87,94 @@ class OrganisationEntityTest extends EntityTester
             );
 
         $this->assertTrue($organisation->hasInforceLicences());
+    }
+
+    /**
+     * @dataProvider organisationDataProvider
+     */
+    public function testUpdateOrganisation($isIrfo, $lastName, $expectedName)
+    {
+         $organisation = m::mock(Entity::class)->makePartial();
+
+         $mockBusinessType = m::mock()
+             ->shouldReceive('getId')
+            ->andReturn('type')
+            ->getMock();
+
+        $organisation->updateOrganisation(
+            'name',
+            '12345678',
+            'fname',
+            $lastName,
+            $isIrfo,
+            $mockBusinessType,
+            ['nob']
+        );
+
+        $this->assertEquals($organisation->getName(), $expectedName);
+        $this->assertEquals($organisation->getCompanyOrLlpNo(), '12345678');
+        $this->assertEquals($organisation->getIsIrfo(), $isIrfo);
+        $this->assertEquals($organisation->getType()->getId(), 'type');
+        $this->assertEquals($organisation->getNatureOfBusinesses(), ['nob']);
+    }
+
+    public function organisationDataProvider()
+    {
+        return [
+            ['Y', 'lname', 'fname lname'],
+            ['N', '', 'name']
+        ];
+    }
+
+    public function testGetAdminOrganisationUsers()
+    {
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getOrganisationUsers->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturn(['foo' => 'bar']);
+
+        $this->assertEquals(['foo' => 'bar'], $organisation->getAdminOrganisationUsers());
+    }
+
+    public function dpOrgTypes()
+    {
+        return [
+            [Entity::ORG_TYPE_SOLE_TRADER],
+            [Entity::ORG_TYPE_IRFO],
+            [Entity::ORG_TYPE_LLP],
+            [Entity::ORG_TYPE_OTHER],
+            [Entity::ORG_TYPE_PARTNERSHIP],
+            [Entity::ORG_TYPE_REGISTERED_COMPANY],
+        ];
+    }
+
+    /**
+     * @dataProvider dpOrgTypes
+     *
+     * @param string $typeId
+     */
+    public function testIsSoleTrader($typeId)
+    {
+        $type = new \Dvsa\Olcs\Api\Entity\System\RefData();
+        $type->setId($typeId);
+        $organisation = new Entity();
+        $organisation->setType($type);
+
+        $this->assertSame($typeId === Entity::ORG_TYPE_SOLE_TRADER, $organisation->isSoleTrader());
+    }
+
+    /**
+     * @dataProvider dpOrgTypes
+     *
+     * @param string $typeId
+     */
+    public function testIsPartnership($typeId)
+    {
+        $type = new \Dvsa\Olcs\Api\Entity\System\RefData();
+        $type->setId($typeId);
+        $organisation = new Entity();
+        $organisation->setType($type);
+
+        $this->assertSame($typeId === Entity::ORG_TYPE_PARTNERSHIP, $organisation->isPartnership());
     }
 }

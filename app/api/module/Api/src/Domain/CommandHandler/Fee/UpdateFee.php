@@ -11,6 +11,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -18,7 +19,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class UpdateFee extends AbstractCommandHandler
+final class UpdateFee extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Fee';
 

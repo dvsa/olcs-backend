@@ -23,9 +23,6 @@ return array(
     ),
     'namespaces' => include(__DIR__ . '/../../module/Api/config/namespace.config.php'),
     'organisation' => array(
-        'is_mlh' => array(
-            'type' => 'yesno'
-        ),
         'company_cert_seen' => array(
             'type' => 'yesno'
         ),
@@ -755,20 +752,6 @@ return array(
             )
         )
     ),
-    'oc_complaint' => array(
-        'complaint_id' => array(
-            'inversedBy' => array(
-                'entity' => 'Complaint',
-                'property' => 'ocComplaint'
-            )
-        ),
-        'operating_centre_id' => array(
-            'inversedBy' => array(
-                'entity' => 'OperatingCentre',
-                'property' => 'ocComplaint'
-            )
-        ),
-    ),
     'complaint_case' => array(
         'complaint_id' => array(
             'cascade' => array(
@@ -879,9 +862,6 @@ return array(
     'submission_action' => array(
         'is_decision' => array(
             'type' => 'yesno'
-        ),
-        'urgent' => array(
-            'type' => 'yesnonull'
         ),
         'submission_id' => array(
             'inversedBy' => array(
@@ -1660,6 +1640,14 @@ return array(
                     'persist',
                 ),
             ),
+        ),
+    ),
+    'grace_period' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'gracePeriod'
+            )
         ),
     ),
 );

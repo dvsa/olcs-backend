@@ -9,14 +9,14 @@ namespace OlcsTest\Db\Utility;
 
 use Olcs\Db\Utility\PaginateQuery;
 use Mockery as m;
-use PHPUnit_Framework_TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * PaginateQuery Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class PaginateQueryTest extends PHPUnit_Framework_TestCase
+class PaginateQueryTest extends MockeryTestCase
 {
     protected $qb;
     protected $sut;
@@ -65,41 +65,6 @@ class PaginateQueryTest extends PHPUnit_Framework_TestCase
     /**
      * @group paginate_query
      */
-    public function testFilterQueryWithoutOptions()
-    {
-        $options = array();
-
-        $this->sut->setOptions($options);
-
-        $this->qb->shouldReceive('setFirstResult')->never()
-            ->shouldReceive('setMaxResults')->never()
-            ->shouldReceive('orderBy')->never();
-
-        $this->sut->filterQuery();
-    }
-
-    /**
-     * @group paginate_query
-     */
-    public function testFilterQueryWithoutFilterOptions()
-    {
-        $options = array(
-            'page' => 1,
-            'order' => 'ASC'
-        );
-
-        $this->sut->setOptions($options);
-
-        $this->qb->shouldReceive('setFirstResult')->never()
-            ->shouldReceive('setMaxResults')->never()
-            ->shouldReceive('orderBy')->never();
-
-        $this->sut->filterQuery();
-    }
-
-    /**
-     * @group paginate_query
-     */
     public function testFilterQueryWithLimitOptions()
     {
         $options = array(
@@ -115,27 +80,6 @@ class PaginateQueryTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('setMaxResults')
             ->with(10)
             ->shouldReceive('orderBy')->never();
-
-        $this->sut->filterQuery();
-    }
-
-    /**
-     * @group paginate_query
-     */
-    public function testFilterQueryWithOrderOptions()
-    {
-        $options = array(
-            'page' => 1,
-            'order' => 'ASC',
-            'sort' => 'foo'
-        );
-
-        $this->sut->setOptions($options);
-
-        $this->qb->shouldReceive('setFirstResult')->never()
-            ->shouldReceive('setMaxResults')->never()
-            ->shouldReceive('addOrderBy')
-            ->with('m.foo', 'ASC');
 
         $this->sut->filterQuery();
     }

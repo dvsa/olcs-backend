@@ -62,7 +62,8 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             'natureOfBusinesses' => null,
             'companyOrLlpNo' => null,
             'registeredAddress' => null,
-            'tradingNames' => null
+            'tradingNames' => null,
+            'partial' => null
         ];
 
         $result1 = new Result();

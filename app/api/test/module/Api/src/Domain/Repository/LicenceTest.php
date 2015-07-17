@@ -2,7 +2,7 @@
 
 /**
  * Licence test
- * 
+ *
  * @author Rob Caiger <rob@clocal.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -17,12 +17,10 @@ use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Doctrine\DBAL\LockMode;
-use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 
 /**
  * Licence test
- * 
+ *
  * @author Rob Caiger <rob@clocal.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -166,5 +164,131 @@ class LicenceTest extends RepositoryTestCase
         $this->setExpectedException(NotFoundException::class);
 
         $this->sut->fetchByLicNo('LIC0001');
+    }
+
+    public function testFetchByVrm()
+    {
+        $qb = $this->createMockQb('[QUERY]');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchByVrm('ABC123'));
+
+        $expectedQuery = '[QUERY] INNER JOIN m.licenceVehicles lv INNER JOIN lv.vehicle v'
+            . ' AND lv.removalDate IS NULL AND v.vrm = [[ABC123]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchWithEnforcementArea()
+    {
+        $licenceId = 1;
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $qb->shouldReceive('getQuery->getSingleResult')
+            ->andReturn('RESULT');
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('enforcementArea')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('byId')
+            ->with($licenceId)
+            ->once()
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Licence::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchWithEnforcementArea($licenceId);
+        $this->assertEquals('RESULT', $result);
+    }
+
+    public function testFetchWithOperatingCentres()
+    {
+        $licenceId = 1;
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $qb->shouldReceive('getQuery->getSingleResult')
+            ->andReturn('RESULT');
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('operatingCentres', 'oc')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('oc.operatingCentre', 'oc_oc')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('oc_oc.address', 'oc_oc_a')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('byId')
+            ->with($licenceId)
+            ->once()
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Licence::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchWithOperatingCentres($licenceId);
+        $this->assertEquals('RESULT', $result);
+    }
+
+    public function testFetchWithPrivateHireLicence()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
+            ->shouldReceive('with')->with('privateHireLicences', 'phl')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('phl.contactDetails', 'cd')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('cd.address', 'add')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('add.countryCode')->once()->andReturnSelf()
+            ->shouldReceive('byId')->with(21)->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getSingleResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchWithPrivateHireLicence(21));
+
+        $expectedQuery = 'BLAH';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }

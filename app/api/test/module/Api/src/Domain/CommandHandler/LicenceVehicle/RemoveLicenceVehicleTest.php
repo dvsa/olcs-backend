@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\LicenceStatusRule;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -38,13 +39,9 @@ class RemoveLicenceVehicleTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'licence' => m::mock(Licence::class)
-                ->shouldReceive('getLicenceVehicles')
-                ->andReturn(
-                    [
-                        m::mock(LicenceVehicle::class)->makePartial()
-                    ]
-                )->getMock()
+            'licenceVehicles' => new ArrayCollection([
+                m::mock(LicenceVehicle::class)->makePartial()
+            ])
         ];
 
         $command = Cmd::create($data);

@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as Cmd;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Create Task
@@ -34,7 +35,7 @@ final class CreateTask extends AbstractCommandHandler
     {
         $task = $this->createTaskObject($command);
 
-        if ($task->getAssignedToUser() === null) {
+        if ($task->getAssignedToUser() === null && $task->getAssignedToTeam() === null) {
             $this->autoAssignTask($task);
         }
 
@@ -100,7 +101,7 @@ final class CreateTask extends AbstractCommandHandler
      * @param Cmd $command
      * @return Task
      */
-    private function createTaskObject(Cmd $command)
+    private function createTaskObject(CommandInterface $command)
     {
         // Required
         $category = $this->getRepo()->getCategoryReference($command->getCategory());
@@ -160,9 +161,9 @@ final class CreateTask extends AbstractCommandHandler
         }
 
         if ($command->getActionDate() !== null) {
-            $task->setActionDate(new \DateTime($command->getActionDate()));
+            $task->setActionDate(new DateTime($command->getActionDate()));
         } else {
-            $task->setActionDate(new \DateTime());
+            $task->setActionDate(new DateTime());
         }
 
         // Task properties

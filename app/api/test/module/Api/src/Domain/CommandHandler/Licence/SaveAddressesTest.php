@@ -497,7 +497,7 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->shouldReceive('getPhoneContacts')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('remove')
+                ->shouldReceive('removeElement')
                 ->times(4)
                 ->getMock()
             )

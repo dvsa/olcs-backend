@@ -271,13 +271,13 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     protected $toDate;
 
     /**
-     * Trailors examined no
+     * Trailers examined no
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="trailors_examined_no", nullable=true)
+     * @ORM\Column(type="smallint", name="trailers_examined_no", nullable=true)
      */
-    protected $trailorsExaminedNo;
+    protected $trailersExaminedNo;
 
     /**
      * Vehicles examined no
@@ -851,26 +851,26 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
     }
 
     /**
-     * Set the trailors examined no
+     * Set the trailers examined no
      *
-     * @param int $trailorsExaminedNo
+     * @param int $trailersExaminedNo
      * @return InspectionRequest
      */
-    public function setTrailorsExaminedNo($trailorsExaminedNo)
+    public function setTrailersExaminedNo($trailersExaminedNo)
     {
-        $this->trailorsExaminedNo = $trailorsExaminedNo;
+        $this->trailersExaminedNo = $trailersExaminedNo;
 
         return $this;
     }
 
     /**
-     * Get the trailors examined no
+     * Get the trailers examined no
      *
      * @return int
      */
-    public function getTrailorsExaminedNo()
+    public function getTrailersExaminedNo()
     {
-        return $this->trailorsExaminedNo;
+        return $this->trailersExaminedNo;
     }
 
     /**

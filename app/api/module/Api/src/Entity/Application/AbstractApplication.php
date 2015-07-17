@@ -715,18 +715,6 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     protected $licenceVehicles;
 
     /**
-     * Opposition
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Opposition\Opposition",
-     *     mappedBy="application"
-     * )
-     */
-    protected $oppositions;
-
-    /**
      * Other licence
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -799,7 +787,6 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
         $this->documents = new ArrayCollection();
         $this->fees = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
-        $this->oppositions = new ArrayCollection();
         $this->otherLicences = new ArrayCollection();
         $this->previousConvictions = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
@@ -2634,66 +2621,6 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     {
         if ($this->licenceVehicles->contains($licenceVehicles)) {
             $this->licenceVehicles->removeElement($licenceVehicles);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the opposition
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
-     * @return Application
-     */
-    public function setOppositions($oppositions)
-    {
-        $this->oppositions = $oppositions;
-
-        return $this;
-    }
-
-    /**
-     * Get the oppositions
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getOppositions()
-    {
-        return $this->oppositions;
-    }
-
-    /**
-     * Add a oppositions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
-     * @return Application
-     */
-    public function addOppositions($oppositions)
-    {
-        if ($oppositions instanceof ArrayCollection) {
-            $this->oppositions = new ArrayCollection(
-                array_merge(
-                    $this->oppositions->toArray(),
-                    $oppositions->toArray()
-                )
-            );
-        } elseif (!$this->oppositions->contains($oppositions)) {
-            $this->oppositions->add($oppositions);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a oppositions
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions
-     * @return Application
-     */
-    public function removeOppositions($oppositions)
-    {
-        if ($this->oppositions->contains($oppositions)) {
-            $this->oppositions->removeElement($oppositions);
         }
 
         return $this;

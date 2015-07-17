@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Licence
@@ -21,8 +22,32 @@ class Licence extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
 
+    /**
+     * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
+     */
+    private $sectionAccessService;
+
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->sectionAccessService = $mainServiceLocator->get('SectionAccessService');
+
+        return parent::createService($serviceLocator);
+    }
+
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchUsingId($query);
+        $licence = $this->getRepo()->fetchUsingId($query);
+
+        return $this->result(
+            $licence,
+            [
+                'organisation',
+            ],
+            [
+                'sections' => $this->sectionAccessService->getAccessibleSectionsForLicence($licence)
+            ]
+        );
     }
 }

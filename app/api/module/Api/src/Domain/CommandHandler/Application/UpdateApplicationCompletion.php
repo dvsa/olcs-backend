@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Cmd;
+use Dvsa\Olcs\Transfer\Command\Application\UpdateCompletion as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateVariationCompletion as VariationCommand;
 
 /**
@@ -62,12 +62,16 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
         }
 
         $completion = $application->getApplicationCompletion();
+        // always reset decalration(undertakings) section, unless that it is the section just completed
+        if ($command->getSection() !== 'undertakings') {
+            $application->setDeclarationConfirmation('N');
+        }
 
         $sectionsToUpdate = $this->getSectionsToUpdate($command, $completion);
 
         $result = new Result();
 
-        foreach ($sectionsToUpdate as $section => $currentStatus) {
+        foreach (array_keys($sectionsToUpdate) as $section) {
             $result->merge($this->getCommandHandler()->handleCommand($this->getUpdateCommand($section, $command)));
         }
 

@@ -44,6 +44,7 @@ class ContactDetails extends AbstractContactDetails
     const CONTACT_TYPE_OBJECTOR = 'ct_obj';
     const CONTACT_TYPE_STATEMENT_REQUESTOR = 'ct_requestor';
     const CONTACT_TYPE_USER = 'ct_user';
+    const CONTACT_TYPE_HACKNEY = 'ct_hackney';
 
     public function __construct(RefData $contactType)
     {
@@ -85,6 +86,9 @@ class ContactDetails extends AbstractContactDetails
                 break;
             case self::CONTACT_TYPE_USER:
                 $this->updateUser($contactParams);
+                break;
+            case self::CONTACT_TYPE_COMPLAINANT:
+                $this->updateComplainant($contactParams);
                 break;
         }
 
@@ -179,11 +183,27 @@ class ContactDetails extends AbstractContactDetails
         // populate person
         $this->populatePerson($contactParams['person']);
 
+        if ($contactParams['address'] !== null) {
+            // populate address
+            $this->populateAddress($contactParams['address']);
+        }
+
+        if ($contactParams['phoneContacts'] !== null) {
+            // populate phone contacts
+            $this->populatePhoneContacts($contactParams['phoneContacts']);
+        }
+    }
+
+    /**
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     */
+    private function updateComplainant(array $contactParams)
+    {
         // populate address
         $this->populateAddress($contactParams['address']);
 
-        // populate phone contacts
-        $this->populatePhoneContacts($contactParams['phoneContacts']);
+        // populate person
+        $this->populatePerson($contactParams['person']);
     }
 
     /**
@@ -275,5 +295,11 @@ class ContactDetails extends AbstractContactDetails
     private function getDefaultParameter($params, $var, $default = null)
     {
         return isset($params[$var]) ? $params[$var] : $default;
+    }
+
+    public function updateContactDetailsWithPersonAndEmailAddress($person, $emailAddress)
+    {
+        $this->setPerson($person);
+        $this->setEmailAddress($emailAddress);
     }
 }
