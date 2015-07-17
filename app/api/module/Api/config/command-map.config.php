@@ -124,6 +124,8 @@ return [
     Command\Document\DispatchDocument::class => CommandHandler\Document\DispatchDocument::class,
     TransferCommand\Licence\Overview::class => CommandHandler\Licence\Overview::class,
     TransferCommand\Licence\UpdateTrafficArea::class => CommandHandler\Licence\UpdateTrafficArea::class,
+    Command\Licence\VoidAllCommunityLicences::class => CommandHandler\Licence\VoidAllCommunityLicences::class,
+    TransferCommand\Licence\ContinueLicence::class => CommandHandler\Licence\ContinueLicence::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,

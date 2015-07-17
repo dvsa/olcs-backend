@@ -59,4 +59,28 @@ EOT;
 
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+    public function testFetchOngoingForLicence()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
+            ->shouldReceive('with')->with('continuation', 'c')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getSingleResult')
+                ->andReturn('RESULT')
+                ->getMock()
+        );
+        $this->assertEquals('RESULT', $this->sut->fetchOngoingForLicence(95));
+
+        $expectedQuery = 'BLAH AND m.licence = [[95]] AND m.status = [[con_det_sts_acceptable]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }

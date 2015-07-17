@@ -88,4 +88,32 @@ class ContinuationDetail extends AbstractRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * Get ongoing continuation detail for a licence
+     *
+     * @param int $licenceId Licence ID
+     *
+     * @return Entity
+     * @throws \Doctrine\ORM\NoResultException if not found
+     */
+    public function fetchOngoingForLicence($licenceId)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata()
+            ->with('continuation', 'c');
+
+        // where licence is
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->setParameter('licence', $licenceId);
+        // and status is Acceptable
+        $qb->andWhere($qb->expr()->eq($this->alias . '.status', ':status'))
+            ->setParameter('status', Entity::STATUS_ACCEPTABLE);
+
+        return $qb->getQuery()->getSingleResult();
+    }
 }
