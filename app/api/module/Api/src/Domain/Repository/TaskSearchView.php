@@ -58,8 +58,6 @@ class TaskSearchView extends AbstractRepository
         $urgent = $query->getUrgent();
         if ($urgent !== null && $urgent) {
             $qb->andWhere($qb->expr()->eq('m.urgent', 1));
-        } else {
-            $qb->andWhere($qb->expr()->eq('m.urgent', 0));
         }
 
         $idExpressions = [];
@@ -73,7 +71,7 @@ class TaskSearchView extends AbstractRepository
 
         if ($query->getTransportManager() !== null) {
             $idExpressions[] = $qb->expr()->eq(
-                'm.tmId', ':tm'
+                'm.transportManagerId', ':tm'
             );
             $qb->setParameter('tm', $query->getTransportManager());
         }

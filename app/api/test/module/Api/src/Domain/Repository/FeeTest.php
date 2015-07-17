@@ -7,9 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\Fee\FeeList as FeeListQry;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
@@ -450,5 +448,33 @@ class FeeTest extends RepositoryTestCase
             . ' INNER JOIN f.feeType ft AND f.application = [[111]] AND ft.feeType = [[GRANT]]',
             $this->query
         );
+    }
+
+    public function testFetchOutstandingContinuationFeesByLicenceId()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->em->shouldReceive('getReference')->with(
+            \Dvsa\Olcs\Api\Entity\System\RefData::class,
+            \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_OUTSTANDING
+        )->once()->andReturn('ot');
+        $this->em->shouldReceive('getReference')->with(
+            \Dvsa\Olcs\Api\Entity\System\RefData::class,
+            \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_WAIVE_RECOMMENDED
+        )->once()->andReturn('wr');
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchOutstandingContinuationFeesByLicenceId(716));
+
+        $expectedQuery = 'BLAH INNER JOIN f.feeType ft AND f.licence = [[716]] AND '
+            . 'ft.feeType = [[CONT]] AND f.feeStatus IN [[["ot","wr"]]]';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }

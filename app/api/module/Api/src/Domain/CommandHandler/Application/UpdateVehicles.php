@@ -36,7 +36,7 @@ final class UpdateVehicles extends AbstractCommandHandler implements Transaction
 
         // If we are entering vehicles, and it is not a partial save then we need to have some active vehicles
         if ($hasEnteredReg == 'Y' && !$command->getPartial()
-            && $application->getLicence()->getActiveVehiclesCount() < 1
+            && $application->getActiveVehicles()->count() < 1
         ) {
             throw new ValidationException(
                 [
