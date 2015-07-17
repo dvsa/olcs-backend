@@ -110,6 +110,10 @@ class FeesHelperService implements FactoryInterface
      */
     protected function getLatestOutstandingFeeForApplicationByType($application, $feeTypeFeeTypeId)
     {
+        if (is_null($application->getLicenceType())) {
+            return;
+        }
+
         $applicationDate = new \DateTime($application->getApplicationDate());
 
         $feeType = $this->feeTypeRepo->fetchLatest(
@@ -117,7 +121,7 @@ class FeesHelperService implements FactoryInterface
             $application->getGoodsOrPsv(),
             $application->getLicenceType(),
             $applicationDate,
-            $application->getLicence()->getTrafficArea()
+            $application->getFeeTrafficAreaId()
         );
 
         return $this->feeRepo->fetchLatestFeeByTypeStatusesAndApplicationId(

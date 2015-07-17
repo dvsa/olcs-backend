@@ -16,8 +16,11 @@ return [
             'DocumentGenerator' => \Dvsa\Olcs\Api\Service\Document\DocumentGenerator::class,
             'DateService' => \Dvsa\Olcs\Api\Service\Date::class,
             'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
+            'RestrictionService' => \Dvsa\Olcs\Api\Service\Lva\RestrictionService::class,
+            'SectionConfig' =>  \Dvsa\Olcs\Api\Service\Lva\SectionConfig::class,
         ],
         'factories' => [
+            'SectionAccessService' => \Dvsa\Olcs\Api\Service\Lva\SectionAccessService::class,
             'ContentStore' => \Dvsa\Jackrabbit\Client\Service\ClientFactory::class,
             'IdentityProvider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
@@ -34,13 +37,13 @@ return [
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
         ],
     ],
-    'file_uploader' => array(
+    'file_uploader' => [
         'default' => 'ContentStore',
-        'config' => array(
+        'config' => [
             'location' => 'documents',
             'defaultPath' => '[locale]/[doc_type_name]/[year]/[month]', // e.g. gb/publications/2015/03
-        )
-    ),
+        ]
+    ],
     'controller_plugins' => [
         'invokables' => [
             'response' => \Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response::class,
@@ -140,8 +143,8 @@ return [
             'PiHearing' => RepositoryFactory::class,
             'Recipient' => RepositoryFactory::class,
             'Partner' => RepositoryFactory::class,
-            'TransportManagerApplication' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'TransportManagerLicence' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'TransportManagerApplication' => RepositoryFactory::class,
+            'TransportManagerLicence' => RepositoryFactory::class,
             'Person' => RepositoryFactory::class,
             'ApplicationOperatingCentre' => RepositoryFactory::class,
             'LicenceOperatingCentre' => RepositoryFactory::class,
@@ -161,9 +164,19 @@ return [
             'Scan' => RepositoryFactory::class,
             'BusRegSearchView' => RepositoryFactory::class,
             'ProposeToRevoke' => RepositoryFactory::class,
-            'LicenceVehicle' => RepositoryFactory::class,
+            'OrganisationPerson' => RepositoryFactory::class,
             'Vehicle' => RepositoryFactory::class,
             'VehicleHistoryView' => RepositoryFactory::class,
+            'InspectionRequest' => RepositoryFactory::class,
+            'CorrespondenceInbox' => RepositoryFactory::class,
+            'SubmissionAction' => RepositoryFactory::class,
+            'TrafficArea' => RepositoryFactory::class,
+            'ChangeOfEntity' => RepositoryFactory::class,
+            'ApplicationOrganisationPerson' => RepositoryFactory::class,
+            'DocumentSearchView' => RepositoryFactory::class,
+            'S4' => RepositoryFactory::class,
+            'TaskSearchView' => RepositoryFactory::class,
+            'PrivateHireLicence' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

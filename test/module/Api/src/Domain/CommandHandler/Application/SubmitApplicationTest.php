@@ -12,9 +12,11 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\SubmitApplication;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -60,6 +62,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $version       = 10;
         $licenceId     = 7;
         $taskId        = 111;
+        $now           = new DateTime();
 
         $command = Cmd::create(
             [
@@ -76,13 +79,34 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $application->setLicence($licence);
         $application->setStatus($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED));
         $application->setIsVariation($isVariation);
+        $expectedTargetCompletionDate = clone $now;
+        $expectedTargetCompletionDate->modify('+9 week');
         $application
             ->shouldReceive('setStatus')
             ->with($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION))
             ->andReturnSelf()
             ->shouldReceive('getCode')
-            ->andReturn('TEST CODE');
-            // @TODO assert dates
+            ->andReturn('TEST CODE')
+            ->shouldReceive('setReceivedDate')
+            ->once()
+            ->with(
+                m::on(
+                    function ($value) use ($now) {
+                        return $value == $now;
+                    }
+                )
+            )
+            ->andReturnSelf()
+            ->shouldReceive('setTargetCompletionDate')
+            ->once()
+            ->with(
+                m::on(
+                    function ($value) use ($expectedTargetCompletionDate) {
+                        return $value == $expectedTargetCompletionDate;
+                    }
+                )
+            )
+            ->andReturnSelf();
 
         // licence status should be updated if application is not a variation
         if ($isVariation) {
@@ -111,7 +135,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             'category' => CategoryEntity::CATEGORY_APPLICATION,
             'subCategory' => CategoryEntity::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL,
             'description' => 'TEST CODE Application',
-            'actionDate' => date('Y-m-d'), // @TODO mock date
+            'actionDate' => $now->format('Y-m-d'),
             'assignedToUser' => null,
             'assignedToTeam' => null,
             'isClosed' => false,
@@ -127,6 +151,10 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $taskResult->addId('task', $taskId);
         $taskResult->addMessage('task created');
         $this->expectedSideEffect(CreateTaskCmd::class, $expectedTaskData, $taskResult);
+
+        $result1 = new Result();
+        $result1->addMessage('Snapshot created');
+        $this->expectedSideEffect(CreateSnapshot::class, ['id' => 69, 'event' => CreateSnapshot::ON_SUBMIT], $result1);
 
         $result = $this->sut->handleCommand($command);
 
@@ -145,6 +173,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                         'task' => 111,
                     ],
                     'messages' => [
+                        'Snapshot created',
                         'Application updated',
                         'Licence updated',
                         'task created',
@@ -159,8 +188,9 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                         'task' => 111,
                     ],
                     'messages' => [
+                        'Snapshot created',
                         'Application updated',
-                        'task created',
+                        'task created'
                     ],
                 ],
             ],

@@ -419,4 +419,15 @@ class ContactDetailsEntityTest extends EntityTester
             $entity->getPhoneContacts()->last()->getPhoneNumber()
         );
     }
+
+    public function testUpdateContactDetailsWithPersonAndEmailAddress()
+    {
+        $contactType = m::mock(RefData::class);
+        $entity = new ContactDetails($contactType);
+        $person = m::mock(PersonEntity::class);
+
+        $entity->updateContactDetailsWithPersonAndEmailAddress($person, 'email@address.com');
+        $this->assertSame($person, $entity->getPerson());
+        $this->assertEquals('email@address.com', $entity->getEmailAddress());
+    }
 }

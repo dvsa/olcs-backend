@@ -99,7 +99,11 @@ class Licence extends AbstractRepository
     {
         $dqb = $this->createQueryBuilder();
 
-        $this->getQueryBuilder()->modifyQuery($dqb)->withRefdata();
+        $this->getQueryBuilder()->modifyQuery($dqb)->withRefdata()
+            ->with('operatingCentres', 'ocs')
+            ->with('ocs.operatingCentre', 'ocs_oc')
+            ->with('ocs_oc.address', 'ocs_oc_a');
+        
         $dqb->where($dqb->expr()->eq($this->alias .'.licNo', ':licNo'))
             ->setParameter('licNo', $licNo);
 
@@ -110,5 +114,75 @@ class Licence extends AbstractRepository
         }
 
         return $results[0];
+    }
+
+    public function fetchByVrm($vrm)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->innerJoin('m.licenceVehicles', 'lv');
+        $qb->innerJoin('lv.vehicle', 'v');
+
+        $qb->andWhere(
+            $qb->expr()->isNull('lv.removalDate')
+        );
+
+        $qb->andWhere(
+            $qb->expr()->eq('v.vrm', ':vrm')
+        );
+
+        $qb->setParameter('vrm', $vrm);
+
+        $query = $qb->getQuery();
+
+        $query->execute();
+
+        return $query->getResult();
+    }
+
+    public function fetchWithEnforcementArea($licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('enforcementArea')
+            ->byId($licenceId);
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
+    public function fetchWithOperatingCentres($licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('operatingCentres', 'oc')
+            ->with('oc.operatingCentre', 'oc_oc')
+            ->with('oc_oc.address', 'oc_oc_a')
+            ->byId($licenceId);
+
+        return $qb->getQuery()->getSingleResult(Query::HYDRATE_OBJECT);
+    }
+
+    /**
+     * Get a Licence and PrivateHireLicence data
+     *
+     * @param int $licenceId
+     *
+     * @return Entity
+     */
+    public function fetchWithPrivateHireLicence($licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('privateHireLicences', 'phl')
+            ->with('phl.contactDetails', 'cd')
+            ->with('cd.address', 'add')
+            ->with('add.countryCode')
+            ->byId($licenceId);
+
+        return $qb->getQuery()->getSingleResult(Query::HYDRATE_OBJECT);
     }
 }

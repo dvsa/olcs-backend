@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
+use Dvsa\Olcs\Transfer\FieldType\Traits\Identity;
 
 /**
  * Create Fee for an Application
@@ -16,11 +17,7 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class CreateFee extends AbstractCommand
 {
-    /**
-     * Application ID
-     * @var int
-     */
-    protected $id;
+    use Identity;
 
     /**
      * FeeType.FeeType ref data id
@@ -28,13 +25,18 @@ final class CreateFee extends AbstractCommand
      */
     protected $feeTypeFeeType;
 
-    public function getId()
-    {
-        return $this->id;
-    }
+    protected $task;
 
     public function getFeeTypeFeeType()
     {
         return $this->feeTypeFeeType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTask()
+    {
+        return $this->task;
     }
 }

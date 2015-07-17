@@ -52,7 +52,7 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
             $this->handleSideEffect(
                 RemoveLicenceVehicle::create(
                     [
-                        'licence' => $licence
+                        'licenceVehicles' => $licence->getLicenceVehicles()
                     ]
                 )
             )

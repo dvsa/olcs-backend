@@ -16,6 +16,7 @@ use Dvsa\Olcs\Transfer\Command\CommunityLic\Void as VoidCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as GenerateBatchCommand;
 
 /**
  * Reprint community licences
@@ -44,10 +45,12 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
         $this->handleSideEffect($voidLicencesCommand);
         $issueNumbers = $this->getIssueNumbersByIds($ids);
 
+        $licence = $this->getRepo('Licence')->fetchById($licenceId);
+
         $data = [
             'status' => $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_ACTIVE),
             'specifiedDate' => new DateTime('now'),
-            'serialNoPrefix' => $this->getRepo('Licence')->getSerialNoPrefixFromTrafficArea($licenceId),
+            'serialNoPrefix' => $licence->getSerialNoPrefixFromTrafficArea(),
             'licence' => $this->getRepo()->getReference(LicenceEntity::class, $licenceId)
         ];
         $result = new Result();
@@ -58,6 +61,15 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
             $result->addId('communityLic' . $communityLic->getId(), $communityLic->getId());
             $result->addMessage("The selected licence with issue number {$issueNumber} has been generated");
         }
+
+        $generateBatchCmd = GenerateBatchCommand::create(
+            [
+                'licence' => $licenceId,
+                'communityLicenceIds' => $ids
+            ]
+        );
+        $result->merge($this->handleSideEffect($generateBatchCmd));
+
         return $result;
     }
 

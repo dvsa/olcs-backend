@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -79,6 +80,16 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
         $this->maybeSaveRegisteredAddress($command, $organisation);
 
         $this->maybeUpdateOrganisation($command, $organisation);
+
+        if (!$command->getPartial() && $command->getNatureOfBusinesses() == null) {
+            throw new ValidationException([
+                'natureOfBusinesses' => [
+                    [
+                        'Value is required and can\'t be empty' => 'Value is required and can\'t be empty'
+                    ]
+                ]
+            ]);
+        }
 
         $this->updateNatureOfBusinesses($command->getNatureOfBusinesses(), $organisation);
 

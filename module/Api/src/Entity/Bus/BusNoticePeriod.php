@@ -17,5 +17,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BusNoticePeriod extends AbstractBusNoticePeriod
 {
-
+    const NOTICE_PERIOD_OTHER = 2;
 }

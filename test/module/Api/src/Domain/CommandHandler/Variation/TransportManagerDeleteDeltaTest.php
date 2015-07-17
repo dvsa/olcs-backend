@@ -35,7 +35,7 @@ class TransportManagerDeleteDeltaTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 863, 'transportManagerLicenceIds' => [345,7621]]);
 
-        $tml1 = new \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence();
+        $tml1 = m::mock(\Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence::class)->makePartial();
         $tml1->setLicence($this->getLicence(12));
 
         $licence = $this->getLicence(3213);
@@ -55,11 +55,11 @@ class TransportManagerDeleteDeltaTest extends CommandHandlerTestCase
 
         $licence = $this->getLicence(6542);
 
-        $tml1 = new \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence();
+        $tml1 = m::mock(\Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence::class)->makePartial();
         $tml1->setLicence($licence);
         $tml1->setTransportManager('TM-1');
 
-        $tml2 = new \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence();
+        $tml2 = m::mock(\Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence::class)->makePartial();
         $tml2->setLicence($licence);
         $tml2->setTransportManager('TM-1');
 
@@ -102,7 +102,7 @@ class TransportManagerDeleteDeltaTest extends CommandHandlerTestCase
     /**
      * @return \Dvsa\Olcs\Api\Entity\Licence\Licence
      */
-    protected function getLicence($id)
+    protected function getLicence($id = null)
     {
         $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
         $status = new \Dvsa\Olcs\Api\Entity\System\RefData();

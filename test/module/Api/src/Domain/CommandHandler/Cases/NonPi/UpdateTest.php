@@ -46,9 +46,6 @@ class UpdateTest extends CommandHandlerTestCase
             ],
             Entity\Pi\PiVenue::class => [
                 2 => m::mock(Entity\Pi\PiVenue::class)
-            ],
-            Entity\Pi\PresidingTc::class => [
-                3 => m::mock(Entity\Pi\PresidingTc::class)
             ]
         ];
 
@@ -67,10 +64,11 @@ class UpdateTest extends CommandHandlerTestCase
             "case" => "50",
             "nonPiType" => "non_pi_type_off_proc",
             "venue" => "2",
-            "presidingTc" => "3",
+            "presidingStaffName" => "Ed",
             "agreedByTcDate" => "2015-01-01 12:15",
             "hearingDate" => "2015-02-01 14:15",
-            "witnessCount" => "4"
+            "witnessCount" => "4",
+            "outcome" => "non_pio_nfa"
         ];
 
         $command = UpdateCommand::create($data);
@@ -105,8 +103,8 @@ class UpdateTest extends CommandHandlerTestCase
                     ->shouldreceive('setVenueOther')
                     ->with(null)
 
-                    ->shouldreceive('setPresidingTc')
-                    ->with(m::type(Entity\Pi\PresidingTc::class))
+                    ->shouldreceive('setPresidingStaffName')
+                    ->with('Ed')
 
                     ->shouldreceive('setAgreedByTcDate')
                     ->with(m::type(\DateTime::class))
@@ -117,6 +115,13 @@ class UpdateTest extends CommandHandlerTestCase
                     ->shouldreceive('setWitnessCount')
                     ->with("4")
 
+                    ->shouldReceive('setOutcome')
+                    ->andReturn(
+                        m::mock(Entity\System\RefData::class)
+                            ->shouldReceive('getId')
+                            ->andReturn('non_pio_nfa')
+                            ->getMock()
+                    )
                     ->getMock()
             )
             ->shouldReceive('save')

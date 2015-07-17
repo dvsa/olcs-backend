@@ -38,9 +38,11 @@ class Task extends AbstractTask
     const STATUS_CLOSED = 'tst_closed';
     const STATUS_ALL = 'tst_all';
 
+    const CATEGORY_ENVIRONMENTAL = 7;
     const CATEGORY_APPLICATION = 9;
 
     const SUBCATEGORY_FEE_DUE = 11;
+    const SUBCATEGORY_REVIEW_COMPLAINT = 61;
 
     /**
      * Ref data constants

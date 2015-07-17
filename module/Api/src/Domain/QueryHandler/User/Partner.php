@@ -19,7 +19,9 @@ class Partner extends AbstractQueryHandler
     {
         return $this->result(
             $this->getRepo()->fetchUsingId($query),
-            ['address']
+            [
+                'address' => ['countryCode']
+            ]
         );
     }
 }

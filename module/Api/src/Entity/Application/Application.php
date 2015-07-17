@@ -2,11 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Entity\Application;
 
-use Doctrine\ORM\Mapping as ORM;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Zend\Filter\Word\CamelCaseToUnderscore;
+use Zend\Filter\Word\UnderscoreToCamelCase;
 
 /**
  * Application Entity
@@ -360,7 +363,7 @@ class Application extends AbstractApplication
     public function isLicenceUpgrade()
     {
         // only a variation can be an upgrade
-        if (!$this->getIsVariation()) {
+        if (!$this->isVariation()) {
             return false;
         }
 
@@ -417,6 +420,21 @@ class Application extends AbstractApplication
     }
 
     /**
+     * Returns true/false depending on whether a case can be created for the application
+     *
+     * @return bool
+     */
+    public function canCreateCase()
+    {
+        if ($this->getStatus()->getId() === self::APPLICATION_STATUS_NOT_SUBMITTED
+            || $this->getLicence()->getLicNo() === null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Essentially an alias of getIsVariation()
      *
      * @return @boolean
@@ -431,7 +449,9 @@ class Application extends AbstractApplication
      */
     public function isGoods()
     {
-        return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
+        if ($this->getGoodsOrPsv()) {
+            return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
+        }
     }
 
     /**
@@ -439,7 +459,9 @@ class Application extends AbstractApplication
      */
     public function isPsv()
     {
-        return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_PSV;
+        if ($this->getGoodsOrPsv()) {
+            return $this->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_PSV;
+        }
     }
 
     /**
@@ -447,7 +469,9 @@ class Application extends AbstractApplication
      */
     public function isSpecialRestricted()
     {
-        return $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED;
+        if ($this->getLicenceType()) {
+            return $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED;
+        }
     }
 
     /**
@@ -492,5 +516,168 @@ class Application extends AbstractApplication
         $vehicles = $this->getLicence()->getLicenceVehicles()->matching($criteria);
 
         return $this->getTotAuthVehicles() - $vehicles->count();
+    }
+
+    public function isRealUpgrade()
+    {
+        if (!$this->isVariation()) {
+            return false;
+        }
+
+        // If we have upgraded from restricted
+        if ($this->isLicenceUpgrade()) {
+            return true;
+        }
+
+        // If we have upgraded from stand nat, to stand inter
+        if ($this->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_NATIONAL
+            && $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getOcForInspectionRequest()
+    {
+        $list = [];
+        $deleted = [];
+
+        $applicationOperatingCentres = $this->getOperatingCentres();
+        foreach ($applicationOperatingCentres as $applicationOperatingCentre) {
+            $id = $applicationOperatingCentre->getOperatingCentre()->getId();
+            if ($applicationOperatingCentre->getAction() !== 'D') {
+                $list[$id] = $applicationOperatingCentre->getOperatingCentre();
+            } else {
+                $deleted[] = $id;
+            }
+        }
+
+        $licenceOperatingCentres = $this->getLicence()->getOperatingCentres();
+        foreach ($licenceOperatingCentres as $licenceOperatingCentre) {
+            $id = $licenceOperatingCentre->getOperatingCentre()->getId();
+            if (!in_array($id, $deleted)) {
+                $list[$id] = $licenceOperatingCentre->getOperatingCentre();
+            }
+        }
+
+        return array_values($list);
+    }
+
+    public function getVariationCompletion()
+    {
+        if (!$this->isVariation()) {
+            return null;
+        }
+
+        $applicationCompletion = $this->getApplicationCompletion()->serialize();
+
+        $completions = [];
+        $converter = new CamelCaseToUnderscore();
+        foreach ($applicationCompletion as $key => $value) {
+            if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches)) {
+                $section = strtolower($converter->filter($matches[1]));
+                $completions[$section] = (int)$value;
+            }
+        }
+
+        return $completions;
+    }
+
+    /**
+     * Determine the traffic area used for fee lookup.
+     */
+    public function getFeeTrafficAreaId()
+    {
+        $trafficArea = $this->getLicence()->getTrafficArea();
+
+        if (!is_null($trafficArea)) {
+            return $trafficArea->getId();
+        }
+
+        if ($this->getNiFlag() === 'Y') {
+            return TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE;
+        }
+
+        return null;
+    }
+
+    public function hasVariationChanges()
+    {
+        $completion = $this->getApplicationCompletion();
+
+        $data = $completion->serialize([]);
+
+        foreach ($data as $key => $value) {
+            if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches) && $value !== self::VARIATION_STATUS_UNCHANGED) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getSectionsRequiringAttention()
+    {
+        $completion = $this->getApplicationCompletion();
+        $data = $completion->serialize([]);
+        $sections = [];
+
+        foreach ($data as $key => $value) {
+            if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches)
+                && $value === self::VARIATION_STATUS_REQUIRES_ATTENTION
+            ) {
+                $sections[] = $matches[1];
+            }
+        }
+
+        return $sections;
+    }
+
+    public function getActiveVehicles()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->isNull('removalDate')
+        );
+
+        return $this->getLicenceVehicles()->matching($criteria);
+    }
+
+    public function copyInformationFromLicence(Licence $licence)
+    {
+        $this->setLicenceType($licence->getLicenceType());
+        $this->setGoodsOrPsv($licence->getGoodsOrPsv());
+        $this->setTotAuthTrailers($licence->getTotAuthTrailers());
+        $this->setTotAuthVehicles($licence->getTotAuthVehicles());
+        $this->setTotAuthSmallVehicles($licence->getTotAuthSmallVehicles());
+        $this->setTotAuthMediumVehicles($licence->getTotAuthMediumVehicles());
+        $this->setTotAuthLargeVehicles($licence->getTotAuthLargeVehicles());
+        $this->setNiFlag($licence->getNiFlag());
+    }
+
+    /**
+     * Should Deltas be used in the people section
+     *
+     * @return boolean
+     */
+    public function useDeltasInPeopleSection()
+    {
+        // if application/variation organisation is sole trader or partnership
+        if ($this->getLicence()->getOrganisation()->isSoleTrader() ||
+            $this->getLicence()->getOrganisation()->isPartnership()
+            ) {
+            return false;
+        }
+
+        // if is an application AND no current ApplicationOrganisationUsers AND no inforce licences
+        if (!$this->getIsVariation() &&
+            $this->getApplicationOrganisationPersons()->count() === 0 &&
+            !$this->getLicence()->getOrganisation()->hasInforceLicences()
+            ) {
+                return false;
+        }
+
+        return true;
     }
 }

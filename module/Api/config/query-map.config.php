@@ -39,12 +39,20 @@ return [
     TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
     TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
     TransferQuery\Application\TransportManagers::class => QueryHandler\Application\TransportManagers::class,
-    TransferQuery\Application\OutstandingFees::class => QueryHandler\Application\OutstandingFees::class,
     TransferQuery\Application\GoodsVehicles::class => QueryHandler\Application\GoodsVehicles::class,
+    TransferQuery\Application\VehicleDeclaration::class => QueryHandler\Application\VehicleDeclaration::class,
+    TransferQuery\Application\Review::class => QueryHandler\Application\Review::class,
+    TransferQuery\Application\Overview::class => QueryHandler\Application\Overview::class,
+    TransferQuery\Application\EnforcementArea::class => QueryHandler\Application\EnforcementArea::class,
+    TransferQuery\Application\Grant::class => QueryHandler\Application\Grant::class,
+    TransferQuery\Application\People::class => QueryHandler\Application\People::class,
+    TransferQuery\Application\OperatingCentre::class => QueryHandler\Application\OperatingCentre::class,
+    TransferQuery\Application\TaxiPhv::class => QueryHandler\Application\TaxiPhv::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
     TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
+    TransferQuery\Licence\LicenceByNumber::class => QueryHandler\Licence\LicenceByNumber::class,
     TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
     TransferQuery\Licence\Safety::class => QueryHandler\Licence\Safety::class,
     TransferQuery\Licence\Addresses::class => QueryHandler\Licence\Addresses::class,
@@ -53,6 +61,12 @@ return [
     TransferQuery\Licence\GoodsVehicles::class => QueryHandler\Licence\GoodsVehicles::class,
     TransferQuery\Licence\OtherActiveLicences::class => QueryHandler\Licence\OtherActiveLicences::class,
     TransferQuery\Licence\LicenceDecisions::class => QueryHandler\Licence\LicenceDecisions::class,
+    TransferQuery\Licence\Overview::class => QueryHandler\Licence\Overview::class,
+    TransferQuery\Licence\EnforcementArea::class => QueryHandler\Licence\EnforcementArea::class,
+    TransferQuery\Licence\ConditionUndertaking::class => QueryHandler\Licence\ConditionUndertaking::class,
+    TransferQuery\Licence\People::class => QueryHandler\Licence\People::class,
+    TransferQuery\Licence\OperatingCentre::class => QueryHandler\Licence\OperatingCentre::class,
+    TransferQuery\Licence\TaxiPhv::class => QueryHandler\Licence\TaxiPhv::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
@@ -64,6 +78,7 @@ return [
     TransferQuery\Organisation\BusinessDetails::class => QueryHandler\Organisation\BusinessDetails::class,
     TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
     TransferQuery\Organisation\OutstandingFees::class => QueryHandler\Organisation\OutstandingFees::class,
+    TransferQuery\Organisation\Dashboard::class => QueryHandler\Organisation\Dashboard::class,
 
     // Variation
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
@@ -72,35 +87,34 @@ return [
 
     // Cases
     TransferQuery\Cases\Cases::class => QueryHandler\Cases\Cases::class,
+    TransferQuery\Cases\CasesWithOppositionDates::class => QueryHandler\Cases\CasesWithOppositionDates::class,
     TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
+    TransferQuery\Cases\AnnualTestHistory::class => QueryHandler\Cases\AnnualTestHistory::class,
     TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
     TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
     TransferQuery\Cases\Impounding\ImpoundingList::class => QueryHandler\Cases\Impounding\ImpoundingList::class,
     TransferQuery\Cases\Impounding\Impounding::class => QueryHandler\Cases\Impounding\Impounding::class,
-    TransferQuery\Cases\Complaint\Complaint::class => QueryHandler\Cases\Complaint\Complaint::class,
-    TransferQuery\Cases\Complaint\ComplaintList::class => QueryHandler\Cases\Complaint\ComplaintList::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class =>
-        QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaint::class,
-    TransferQuery\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
-        QueryHandler\Cases\EnvironmentalComplaint\EnvironmentalComplaintList::class,
     TransferQuery\Cases\ConditionUndertaking\ConditionUndertaking::class =>
         QueryHandler\Cases\ConditionUndertaking\ConditionUndertaking::class,
     TransferQuery\Cases\ConditionUndertaking\ConditionUndertakingList::class =>
         QueryHandler\Cases\ConditionUndertaking\ConditionUndertakingList::class,
-    TransferQuery\Cases\Opposition\Opposition::class => QueryHandler\Cases\Opposition\Opposition::class,
-    TransferQuery\Cases\Opposition\OppositionList::class =>
-        QueryHandler\Cases\Opposition\OppositionList::class,
     TransferQuery\Cases\ProposeToRevoke\ProposeToRevokeByCase::class
         => QueryHandler\Cases\ProposeToRevoke\ProposeToRevokeByCase::class,
 
     TransferQuery\Cases\Hearing\Appeal::class => QueryHandler\Cases\Hearing\Appeal::class,
+    TransferQuery\Cases\Hearing\AppealByCase::class => QueryHandler\Cases\Hearing\Appeal::class,
     TransferQuery\Cases\Hearing\AppealList::class => QueryHandler\Cases\Hearing\AppealList::class,
 
     TransferQuery\Cases\Hearing\Stay::class => QueryHandler\Cases\Hearing\Stay::class,
+    TransferQuery\Cases\Hearing\StayByCase::class => QueryHandler\Cases\Hearing\Stay::class,
     TransferQuery\Cases\Hearing\StayList::class => QueryHandler\Cases\Hearing\StayList::class,
 
     TransferQuery\Cases\Statement\Statement::class => QueryHandler\Cases\Statement\Statement::class,
     TransferQuery\Cases\Statement\StatementList::class => QueryHandler\Cases\Statement\StatementList::class,
+    TransferQuery\Cases\ByTransportManager::class => QueryHandler\Cases\ByTransportManager::class,
+
+    // Submission
+    TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
 
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
@@ -135,6 +149,8 @@ return [
     // Bus
     TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
     TransferQuery\Bus\ShortNoticeByBusReg::class => QueryHandler\Bus\ShortNoticeByBusReg::class,
+    TransferQuery\Bus\RegistrationHistoryList::class => QueryHandler\Bus\RegistrationHistoryList::class,
+    TransferQuery\Bus\ByRouteNo::class => QueryHandler\Bus\ByRouteNo::class,
 
     // Trailer
     TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
@@ -181,6 +197,8 @@ return [
 
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
+    TransferQuery\Document\Document::class => QueryHandler\Document\Document::class,
+    TransferQuery\Document\DocumentList::class => QueryHandler\Document\DocumentList::class,
 
     // Transport Manager Application
     TransferQuery\TransportManagerApplication\GetDetails::class
@@ -201,6 +219,44 @@ return [
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
 
+    // Operator
+    TransferQuery\Operator\BusinessDetails::class => QueryHandler\Operator\BusinessDetails::class,
+
     // Licence Vehicle
     TransferQuery\LicenceVehicle\LicenceVehicle::class => QueryHandler\LicenceVehicle\LicenceVehicle::class,
+
+    // Inspection Request
+    TransferQuery\InspectionRequest\OperatingCentres::class => QueryHandler\InspectionRequest\OperatingCentres::class,
+
+    // Opposition
+    TransferQuery\Opposition\Opposition::class => QueryHandler\Opposition\Opposition::class,
+    TransferQuery\Opposition\OppositionList::class => QueryHandler\Opposition\OppositionList::class,
+
+    // Complaint
+    TransferQuery\Complaint\Complaint::class => QueryHandler\Complaint\Complaint::class,
+    TransferQuery\Complaint\ComplaintList::class => QueryHandler\Complaint\ComplaintList::class,
+    TransferQuery\EnvironmentalComplaint\EnvironmentalComplaint::class =>
+        QueryHandler\EnvironmentalComplaint\EnvironmentalComplaint::class,
+    TransferQuery\EnvironmentalComplaint\EnvironmentalComplaintList::class =>
+        QueryHandler\EnvironmentalComplaint\EnvironmentalComplaintList::class,
+
+    // Inspection Request
+    TransferQuery\InspectionRequest\OperatingCentres::class => QueryHandler\InspectionRequest\OperatingCentres::class,
+    TransferQuery\InspectionRequest\ApplicationInspectionRequestList::class =>
+        QueryHandler\InspectionRequest\ApplicationInspectionRequestList::class,
+    TransferQuery\InspectionRequest\LicenceInspectionRequestList::class =>
+        QueryHandler\InspectionRequest\LicenceInspectionRequestList::class,
+    TransferQuery\InspectionRequest\InspectionRequest::class => QueryHandler\InspectionRequest\InspectionRequest::class,
+
+    // Change of Entity
+    TransferQuery\ChangeOfEntity\ChangeOfEntity::class => QueryHandler\ChangeOfEntity\ChangeOfEntity::class,
+
+    // ConditionUndertaking
+    TransferQuery\ConditionUndertaking\GetList::class => QueryHandler\ConditionUndertaking\GetList::class,
+    TransferQuery\ConditionUndertaking\Get::class => QueryHandler\ConditionUndertaking\Get::class,
+
+    // Task
+    TransferQuery\Task\TaskList::class => QueryHandler\Task\TaskList::class,
+    TransferQuery\Task\Task::class => QueryHandler\Task\Task::class,
+    TransferQuery\Task\TaskDetails::class => QueryHandler\Task\TaskDetails::class,
 ];

@@ -29,8 +29,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"partner_contact_details_id"}),
  *        @ORM\Index(name="ix_user_hint_question_id1", columns={"hint_question_id1"}),
  *        @ORM\Index(name="ix_user_hint_question_id2", columns={"hint_question_id2"}),
- *        @ORM\Index(name="ix_user_transport_manager_id", columns={"transport_manager_id"}),
- *        @ORM\Index(name="ix_user_organisation_id", columns={"organisation_id"})
+ *        @ORM\Index(name="ix_user_transport_manager_id", columns={"transport_manager_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="pid_UNIQUE", columns={"pid"}),
@@ -119,15 +118,6 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      * @ORM\Column(type="string", name="division_group", length=100, nullable=true)
      */
     protected $divisionGroup;
-
-    /**
-     * Email address
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="email_address", length=45, nullable=true)
-     */
-    protected $emailAddress;
 
     /**
      * Hint answer1
@@ -278,16 +268,6 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      * @ORM\Column(type="yesno", name="must_reset_password", nullable=false, options={"default": 0})
      */
     protected $mustResetPassword = 0;
-
-    /**
-     * Organisation
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
-     */
-    protected $organisation;
 
     /**
      * Partner contact details
@@ -590,29 +570,6 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     public function getDivisionGroup()
     {
         return $this->divisionGroup;
-    }
-
-    /**
-     * Set the email address
-     *
-     * @param string $emailAddress
-     * @return User
-     */
-    public function setEmailAddress($emailAddress)
-    {
-        $this->emailAddress = $emailAddress;
-
-        return $this;
-    }
-
-    /**
-     * Get the email address
-     *
-     * @return string
-     */
-    public function getEmailAddress()
-    {
-        return $this->emailAddress;
     }
 
     /**
@@ -981,29 +938,6 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     public function getMustResetPassword()
     {
         return $this->mustResetPassword;
-    }
-
-    /**
-     * Set the organisation
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
-     * @return User
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
     }
 
     /**

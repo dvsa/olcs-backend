@@ -2,11 +2,15 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
+use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Mockery as m;
 
 /**
@@ -16,17 +20,22 @@ use Mockery as m;
  */
 class ApplicationEntityTest extends EntityTester
 {
-    public function setUp()
-    {
-        $this->entity = $this->instantiate($this->entityClass);
-    }
-
     /**
      * Define the entity to test
      *
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    /**
+     * @var Entity
+     */
+    protected $entity;
+
+    public function setUp()
+    {
+        $this->entity = $this->instantiate($this->entityClass);
+    }
 
     public function dataProviderTestHasUpgrade()
     {
@@ -632,6 +641,40 @@ class ApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider canCreateCaseProvider
+     */
+    public function testCanCreateCase($status, $licNo, $expected)
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+
+        $sut->shouldReceive('getStatus->getId')->once()->andReturn($status);
+        $sut->shouldReceive('getLicence->getLicNo')->andReturn($licNo);
+        $this->assertEquals($expected, $sut->canCreateCase());
+    }
+
+    public function canCreateCaseProvider()
+    {
+        $licNo = 12345;
+
+        return [
+            [Entity::APPLICATION_STATUS_NOT_SUBMITTED, null, false],
+            [Entity::APPLICATION_STATUS_GRANTED, null, false],
+            [Entity::APPLICATION_STATUS_UNDER_CONSIDERATION, null, false],
+            [Entity::APPLICATION_STATUS_VALID, null, false],
+            [Entity::APPLICATION_STATUS_WITHDRAWN, null, false],
+            [Entity::APPLICATION_STATUS_REFUSED, null, false],
+            [Entity::APPLICATION_STATUS_NOT_TAKEN_UP, null, false],
+            [Entity::APPLICATION_STATUS_NOT_SUBMITTED, $licNo, false],
+            [Entity::APPLICATION_STATUS_GRANTED, $licNo, true],
+            [Entity::APPLICATION_STATUS_UNDER_CONSIDERATION, $licNo, true],
+            [Entity::APPLICATION_STATUS_VALID, $licNo, true],
+            [Entity::APPLICATION_STATUS_WITHDRAWN, $licNo, true],
+            [Entity::APPLICATION_STATUS_REFUSED, $licNo, true],
+            [Entity::APPLICATION_STATUS_NOT_TAKEN_UP, $licNo, true],
+        ];
+    }
+
+    /**
      * @dataProvider goodsOrPsvHelperProvider
      */
     public function testIsGoodsAndIsPsvHelperMethods($goodsOrPsv, $isGoods, $isPsv)
@@ -650,6 +693,19 @@ class ApplicationEntityTest extends EntityTester
             [Licence::LICENCE_CATEGORY_PSV, false, true],
             [Licence::LICENCE_CATEGORY_GOODS_VEHICLE, true, false],
         ];
+    }
+
+    public function testIsGoodsAndIsPsvHelperNull()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $this->assertNull($sut->isGoods());
+        $this->assertNull($sut->isPsv());
+    }
+
+    public function testIsSpecialRestrictedLicenceTypeNull()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $this->assertNull($sut->isSpecialRestricted());
     }
 
     /**
@@ -697,5 +753,358 @@ class ApplicationEntityTest extends EntityTester
         $application->setLicence($licence);
 
         $this->assertEquals(4, $application->getRemainingSpaces());
+    }
+
+    public function testIsRealUpgradeNewApp()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $application->setIsVariation(false);
+
+        $this->assertFalse($application->isRealUpgrade());
+    }
+
+    public function testIsRealUpgradeIsLicenceUpgrade()
+    {
+        /** @var RefData $licenceType */
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_RESTRICTED);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setIsVariation(true);
+        $application->setLicence($licence);
+        $application->setLicenceType($licenceType);
+
+        $this->assertTrue($application->isRealUpgrade());
+    }
+
+    public function testIsRealUpgrade()
+    {
+        /** @var RefData $licenceType */
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setIsVariation(true);
+        $application->setLicence($licence);
+        $application->setLicenceType($licenceType);
+
+        $this->assertTrue($application->isRealUpgrade());
+    }
+
+    public function testIsRealUpgradeFalse()
+    {
+        /** @var RefData $licenceType */
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setIsVariation(true);
+        $application->setLicence($licence);
+        $application->setLicenceType($licenceType);
+
+        $this->assertFalse($application->isRealUpgrade());
+    }
+
+    public function testGetOcForInspectionRequest()
+    {
+        $oc1 = m::mock()
+            ->shouldReceive('getAction')
+            ->once()
+            ->andReturn('A')
+            ->shouldReceive('getOperatingCentre')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(1)
+                ->twice()
+                ->getMock()
+            )
+            ->getMock();
+
+        $oc2 = m::mock()
+            ->shouldReceive('getOperatingCentre')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(2)
+                ->once()
+                ->getMock()
+            )
+            ->shouldReceive('getAction')
+            ->andReturn('D')
+            ->once()
+            ->getMock();
+
+        $mockApplicationOperatingCentres = [$oc1, $oc2];
+
+        $oc3 = m::mock()
+            ->shouldReceive('getOperatingCentre')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(3)
+                ->twice()
+                ->getMock()
+            )
+            ->getMock();
+
+        $mockLicenceOperatingCentres = [$oc3];
+
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('getOperatingCentres')
+            ->andReturn($mockApplicationOperatingCentres)
+            ->once()
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getOperatingCentres')
+                ->andReturn($mockLicenceOperatingCentres)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $result = $sut->getOcForInspectionRequest();
+        $this->assertEquals(count($result), 2);
+        $this->assertEquals($result[0]->getId(), 1);
+        $this->assertEquals($result[1]->getId(), 3);
+    }
+
+    public function testGetVariationCompletionNotVariation()
+    {
+        $this->entity->setIsVariation(false);
+        $this->assertNull($this->entity->getVariationCompletion());
+    }
+
+    public function testGetVariationCompletion()
+    {
+        $completion = m::mock(ApplicationCompletionEntity::class)->makePartial();
+        $completion
+            ->setAddressesStatus(2)
+            ->setOperatingCentresStatus(1);
+
+        $this->entity
+            ->setApplicationCompletion($completion)
+            ->setIsVariation(true);
+
+        $result = $this->entity->getVariationCompletion();
+
+        $this->assertInternalType('array', $result);
+
+        $this->assertEquals(1, $result['operating_centres']);
+        $this->assertEquals(2, $result['addresses']);
+    }
+
+    /**
+     * @dataProvider niFlagProvider
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function testGetFeeTrafficAreaIdWithLicence($niFlag, $unused)
+    {
+        $trafficArea = m::mock(TrafficArea::class)
+            ->makePartial()
+            ->setId('Foo');
+        $licence = m::mock(Licence::class)
+            ->makePartial()
+            ->setTrafficArea($trafficArea);
+
+        $this->entity->setLicence($licence);
+
+        $this->entity->setNiFlag($niFlag);
+
+        $this->assertEquals('Foo', $this->entity->getFeeTrafficAreaId());
+    }
+
+    /**
+     * @dataProvider niFlagProvider
+     */
+    public function testGetFeeTrafficAreaIdNoLicence($niFlag, $expected)
+    {
+        $licence = m::mock(Licence::class)->makePartial();
+
+        $this->entity->setLicence($licence);
+
+        $this->entity->setNiFlag($niFlag);
+
+        $this->assertEquals($expected, $this->entity->getFeeTrafficAreaId());
+    }
+
+    public function niFlagProvider()
+    {
+        return [
+            ['Y', 'N'],
+            ['N', null],
+        ];
+    }
+
+    public function testGetActiveVehicles()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getLicenceVehicles->matching')
+            ->andReturn('foo');
+
+        $this->assertEquals('foo', $application->getActiveVehicles());
+    }
+
+    public function testGetSectionsRequiringAttention()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $statuses = [
+            'businessTypeStatus' => Entity::VARIATION_STATUS_REQUIRES_ATTENTION,
+            'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED
+        ];
+
+        /** @var ApplicationCompletion $ac */
+        $ac = m::mock(ApplicationCompletion::class)->makePartial();
+        $ac->shouldReceive('serialize')
+            ->with([])
+            ->andReturn($statuses);
+
+        $application->setApplicationCompletion($ac);
+
+        $this->assertEquals(['businessType'], $application->getSectionsRequiringAttention());
+    }
+
+    public function testHasVariationChanges()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $statuses = [
+            'businessTypeStatus' => Entity::VARIATION_STATUS_REQUIRES_ATTENTION,
+            'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED
+        ];
+
+        /** @var ApplicationCompletion $ac */
+        $ac = m::mock(ApplicationCompletion::class)->makePartial();
+        $ac->shouldReceive('serialize')
+            ->with([])
+            ->andReturn($statuses);
+
+        $application->setApplicationCompletion($ac);
+
+        $this->assertTrue($application->hasVariationChanges());
+    }
+
+    public function testHasVariationChangesFalse()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $statuses = [
+            'businessTypeStatus' => Entity::VARIATION_STATUS_UNCHANGED,
+            'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED
+        ];
+
+        /** @var ApplicationCompletion $ac */
+        $ac = m::mock(ApplicationCompletion::class)->makePartial();
+        $ac->shouldReceive('serialize')
+            ->with([])
+            ->andReturn($statuses);
+
+        $application->setApplicationCompletion($ac);
+
+        $this->assertFalse($application->hasVariationChanges());
+    }
+
+    public function testCopyInformationFromLicence()
+    {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+
+        $licenceType = m::mock(RefData::class);
+        $goodsOrPsv = m::mock(RefData::class);
+
+        $licence->setLicenceType($licenceType);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+        $licence->setTotAuthTrailers(5);
+        $licence->setTotAuthVehicles(6);
+        $licence->setTotAuthSmallVehicles(7);
+        $licence->setTotAuthMediumVehicles(8);
+        $licence->setTotAuthLargeVehicles(9);
+        $licence->setNiFlag('Y');
+
+        $this->entity->copyInformationFromLicence($licence);
+
+        $this->assertEquals($licenceType, $this->entity->getLicenceType());
+        $this->assertEquals($goodsOrPsv, $this->entity->getGoodsOrPsv());
+        $this->assertEquals(5, $this->entity->getTotAuthTrailers());
+        $this->assertEquals(6, $this->entity->getTotAuthVehicles());
+        $this->assertEquals(7, $this->entity->getTotAuthSmallVehicles());
+        $this->assertEquals(8, $this->entity->getTotAuthMediumVehicles());
+        $this->assertEquals(9, $this->entity->getTotAuthLargeVehicles());
+        $this->assertEquals('Y', $this->entity->getNiFlag());
+    }
+    public function testUseDeltasInPeopleSectionSole()
+    {
+        $type = new RefData();
+        $type->setId('org_t_st');
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($type);
+        $licence = new Licence($organisation, new RefData());
+        $application = new Entity($licence, new RefData(), 1);
+
+        $this->assertFalse($application->useDeltasInPeopleSection());
+    }
+
+    public function testUseDeltasInPeopleSectionPartnership()
+    {
+        $type = new RefData();
+        $type->setId('org_t_p');
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($type);
+        $licence = new Licence($organisation, new RefData());
+        $application = new Entity($licence, new RefData(), 1);
+
+        $this->assertFalse($application->useDeltasInPeopleSection());
+    }
+
+    public function testUseDeltasInPeopleSectionVariationLlp()
+    {
+        $type = new RefData();
+        $type->setId('org_t_llp');
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($type);
+        $licence = new Licence($organisation, new RefData());
+        $application = new Entity($licence, new RefData(), 1);
+
+        $this->assertTrue($application->useDeltasInPeopleSection());
+    }
+
+    public function testUseDeltasInPeopleSectionApplicationRc()
+    {
+        $type = new RefData();
+        $type->setId('org_t_rc');
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($type);
+        $licence = new Licence($organisation, new RefData());
+        $application = new Entity($licence, new RefData(), 0);
+
+        $this->assertFalse($application->useDeltasInPeopleSection());
     }
 }

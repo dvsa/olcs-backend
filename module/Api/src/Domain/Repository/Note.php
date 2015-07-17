@@ -8,6 +8,8 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteHistoryEntity;
 use Dvsa\Olcs\Transfer\Query\Processing\NoteList as NoteDTO;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Repository\Cases as CaseRepository;
+use Doctrine\ORM\Query;
 
 /**
  * Note
@@ -22,6 +24,8 @@ class Note extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
+        /** @var \Dvsa\Olcs\Transfer\Query\Processing\NoteList $query */
+
         if ($query->getCase() !== null) {
             $qb->andWhere($this->alias . '.case = :caseId');
             $qb->setParameter('caseId', $query->getCase());
@@ -52,6 +56,11 @@ class Note extends AbstractRepository
             $qb->setParameter('applicationId', $query->getApplication());
         }
 
-        $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
+        if ($query->getNoteType() !== null) {
+            $qb->andWhere($this->alias . '.noteType = :noteTypeId');
+            $qb->setParameter('noteTypeId', $query->getNoteType());
+        }
+
+        $this->getQueryBuilder()->modifyQuery($qb)->withUser();
     }
 }

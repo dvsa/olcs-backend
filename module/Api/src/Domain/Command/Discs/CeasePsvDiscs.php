@@ -19,13 +19,13 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class CeasePsvDiscs extends AbstractIdOnlyCommand
 {
-    protected $licence;
+    protected $discs;
 
     /**
      * @return mixed
      */
-    public function getLicence()
+    public function getDiscs()
     {
-        return $this->licence;
+        return $this->discs;
     }
 }

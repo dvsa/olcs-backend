@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
+use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
 
 /**
  * Revoke a licence
@@ -30,29 +31,33 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
 
     public function handleCommand(CommandInterface $command)
     {
-        /* @var $licence Licence */
+        /** @var Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($command);
         $licence->setStatus($this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_REVOKED));
         $licence->setRevokedDate(new \DateTime());
 
-        $discsCommand = (
-            $licence->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE ?
-            CeaseGoodsDiscs::class : CeasePsvDiscs::class
-        );
+        if ($licence->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE) {
+            $commandCeaseDiscs = CeaseGoodsDiscs::create(
+                [
+                    'licenceVehicles' => $licence->getLicenceVehicles()
+                ]
+            );
+        } else {
+            $commandCeaseDiscs = CeasePsvDiscs::create(
+                [
+                    'discs' => $licence->getPsvDiscs()
+                ]
+            );
+        }
 
         $result = new Result();
-        $command = $discsCommand::create(
-            [
-                'licence' => $licence
-            ]
-        );
-        $result->merge($this->handleSideEffect($command));
+        $result->merge($this->handleSideEffect($commandCeaseDiscs));
 
         $result->merge(
             $this->handleSideEffect(
                 RemoveLicenceVehicle::create(
                     [
-                        'licence' => $licence
+                        'licenceVehicles' => $licence->getLicenceVehicles()
                     ]
                 )
             )
@@ -67,6 +72,18 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
                 )
             )
         );
+
+        if ($command->getDeleteLicenceStatusRules()) {
+            $result->merge(
+                $this->handleSideEffect(
+                    RemoveLicenceStatusRulesForLicence::create(
+                        [
+                        'licence' => $licence
+                        ]
+                    )
+                )
+            );
+        }
 
         $this->getRepo()->save($licence);
         $result->addMessage("Licence ID {$licence->getId()} revoked");

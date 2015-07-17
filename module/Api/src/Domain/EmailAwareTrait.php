@@ -2,31 +2,35 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
+use Dvsa\Olcs\Email\Service\Client;
+use Dvsa\Olcs\Email\Service\TemplateRenderer;
+use Dvsa\Olcs\Email\Data\Message;
+
 /**
  * Email Aware
  */
 trait EmailAwareTrait
 {
     /**
-     * @var \Dvsa\Olcs\Api\Domain\Dvsa\Olcs\Email\Service\Client
+     * @var Client
      */
     protected $emailService;
 
     /**
-     * @var \Dvsa\Olcs\Api\Domain\Dvsa\Olcs\Email\Service\Client
+     * @var TemplateRenderer
      */
     protected $templateRendererService;
 
     /**
-     * @param \Dvsa\Olcs\Api\Domain\Dvsa\Olcs\Email\Service\Client $service
+     * @param Client $service
      */
-    public function setEmailService(\Dvsa\Olcs\Email\Service\Client $service)
+    public function setEmailService(Client $service)
     {
         $this->emailService = $service;
     }
 
     /**
-     * @return \Dvsa\Olcs\Email\Service\Client
+     * @return Client
      */
     public function getEmailService()
     {
@@ -34,15 +38,15 @@ trait EmailAwareTrait
     }
 
     /**
-     * @param \Dvsa\Olcs\Email\Service\TemplateRenderer $service
+     * @param TemplateRenderer $service
      */
-    public function setTemplateRendererService(\Dvsa\Olcs\Email\Service\TemplateRenderer $service)
+    public function setTemplateRendererService(TemplateRenderer $service)
     {
         $this->templateRendererService = $service;
     }
 
     /**
-     * @return \Dvsa\Olcs\Email\Service\TemplateRenderer
+     * @return TemplateRenderer
      */
     public function getTemplateRendererService()
     {
@@ -52,12 +56,12 @@ trait EmailAwareTrait
     /**
      * Send an email
      *
-     * @param \Dvsa\Olcs\Email\Data\Message $message
+     * @param Message $message
      *
      * @return true
      * @throws \Dvsa\Olcs\Email\Exception\EmailNotSentException
      */
-    public function sendEmail(\Dvsa\Olcs\Email\Data\Message $message)
+    public function sendEmail(Message $message)
     {
         return $this->getEmailService()->sendEmail($message);
     }
@@ -65,16 +69,17 @@ trait EmailAwareTrait
     /**
      * Send an email in a HTML template
      *
-     * @param \Dvsa\Olcs\Email\Data\Message $message
+     * @param Message $message
      * @param string $template
      * @param array $variables
+     * @param string $layout
      *
      * @return true
      * @throws \Dvsa\Olcs\Email\Exception\EmailNotSentException
      */
-    public function sendEmailTemplate(\Dvsa\Olcs\Email\Data\Message $message, $template, array $variables = [])
+    public function sendEmailTemplate(Message $message, $template, array $variables = [], $layout = null)
     {
-        $this->getTemplateRendererService()->renderBody($message, $template, $variables);
+        $this->getTemplateRendererService()->renderBody($message, $template, $variables, $layout);
         return $this->sendEmail($message);
     }
 }

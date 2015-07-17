@@ -32,6 +32,7 @@ final class Create extends CreateUpdateAbstract
 
         $note = $this->getNoteEntity($command);
         $note->setComment($command->getComment());
+        $note->setPriority($command->getPriority());
 
         $this->getRepo()->save($note);
 

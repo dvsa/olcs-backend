@@ -7,7 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ValidateApplication;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
@@ -16,17 +20,48 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class PayFee extends AbstractCommandHandler
+final class PayFee extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Fee';
 
     /**
-     * @todo implement fee payment side effects
      * @see Common\Service\Listener\FeeListenerService
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function handleCommand(CommandInterface $command)
     {
-        return new Result();
+        $result = new Result();
+
+        $fee = $this->getRepo()->fetchUsingId($command);
+
+        $applicationFeeResult = $this->maybeProcessApplicationFee($fee);
+
+        if ($applicationFeeResult !== null) {
+            $result->merge($applicationFeeResult);
+        }
+
+        return $result;
+    }
+
+    protected function maybeProcessApplicationFee(Fee $fee)
+    {
+        $application = $fee->getApplication();
+
+        if ($application === null
+            || $application->isVariation()
+            || $application->getStatus()->getId() !== Application::APPLICATION_STATUS_GRANTED
+        ) {
+            return;
+        }
+
+        $outstandingGrantFees = $this->getRepo()->fetchOutstandingGrantFeesByApplicationId($application->getId());
+
+        // if there are any outstanding GRANT fees then don't continue
+        if (!empty($outstandingGrantFees)) {
+            return;
+        }
+
+        return $this->handleSideEffect(
+            ValidateApplication::create(['id' => $application->getId()])
+        );
     }
 }

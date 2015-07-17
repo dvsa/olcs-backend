@@ -10,9 +10,11 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Curtail as CommandHandler;
-use Dvsa\Olcs\Api\Domain\Command\Licence\Curtail as Command;
+use Dvsa\Olcs\Transfer\Command\Licence\CurtailLicence as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * CurtailTest
@@ -58,6 +60,15 @@ class CurtailTest extends CommandHandlerTestCase
                     $saveLicence->getCurtailedDate()->format('Y-m-d')
                 );
             }
+        );
+
+        $removeRulesResult = new Result();
+        $this->expectedSideEffect(
+            RemoveLicenceStatusRulesForLicence::class,
+            [
+                'licence' => $licence
+            ],
+            $removeRulesResult
         );
 
         $result = $this->sut->handleCommand($command);

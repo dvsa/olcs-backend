@@ -42,6 +42,19 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     protected $address;
 
     /**
+     * Complaint
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\Complaint",
+     *     mappedBy="operatingCentres",
+     *     fetch="LAZY"
+     * )
+     */
+    protected $complaints;
+
+    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -179,18 +192,6 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     protected $adDocuments;
 
     /**
-     * Oc complaint
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OcComplaint",
-     *     mappedBy="operatingCentre"
-     * )
-     */
-    protected $ocComplaints;
-
-    /**
      * Initialise the collections
      */
     public function __construct()
@@ -201,11 +202,11 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     public function initCollections()
     {
         $this->transportManagerLicences = new ArrayCollection();
-        $this->oppositions = new ArrayCollection();
         $this->transportManagerApplications = new ArrayCollection();
+        $this->complaints = new ArrayCollection();
+        $this->oppositions = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->adDocuments = new ArrayCollection();
-        $this->ocComplaints = new ArrayCollection();
     }
 
     /**
@@ -229,6 +230,66 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     public function getAddress()
     {
         return $this->address;
+    }
+
+    /**
+     * Set the complaint
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaints
+     * @return OperatingCentre
+     */
+    public function setComplaints($complaints)
+    {
+        $this->complaints = $complaints;
+
+        return $this;
+    }
+
+    /**
+     * Get the complaints
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getComplaints()
+    {
+        return $this->complaints;
+    }
+
+    /**
+     * Add a complaints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaints
+     * @return OperatingCentre
+     */
+    public function addComplaints($complaints)
+    {
+        if ($complaints instanceof ArrayCollection) {
+            $this->complaints = new ArrayCollection(
+                array_merge(
+                    $this->complaints->toArray(),
+                    $complaints->toArray()
+                )
+            );
+        } elseif (!$this->complaints->contains($complaints)) {
+            $this->complaints->add($complaints);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a complaints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $complaints
+     * @return OperatingCentre
+     */
+    public function removeComplaints($complaints)
+    {
+        if ($this->complaints->contains($complaints)) {
+            $this->complaints->removeElement($complaints);
+        }
+
+        return $this;
     }
 
     /**
@@ -710,66 +771,6 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     {
         if ($this->adDocuments->contains($adDocuments)) {
             $this->adDocuments->removeElement($adDocuments);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the oc complaint
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ocComplaints
-     * @return OperatingCentre
-     */
-    public function setOcComplaints($ocComplaints)
-    {
-        $this->ocComplaints = $ocComplaints;
-
-        return $this;
-    }
-
-    /**
-     * Get the oc complaints
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getOcComplaints()
-    {
-        return $this->ocComplaints;
-    }
-
-    /**
-     * Add a oc complaints
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ocComplaints
-     * @return OperatingCentre
-     */
-    public function addOcComplaints($ocComplaints)
-    {
-        if ($ocComplaints instanceof ArrayCollection) {
-            $this->ocComplaints = new ArrayCollection(
-                array_merge(
-                    $this->ocComplaints->toArray(),
-                    $ocComplaints->toArray()
-                )
-            );
-        } elseif (!$this->ocComplaints->contains($ocComplaints)) {
-            $this->ocComplaints->add($ocComplaints);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a oc complaints
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ocComplaints
-     * @return OperatingCentre
-     */
-    public function removeOcComplaints($ocComplaints)
-    {
-        if ($this->ocComplaints->contains($ocComplaints)) {
-            $this->ocComplaints->removeElement($ocComplaints);
         }
 
         return $this;

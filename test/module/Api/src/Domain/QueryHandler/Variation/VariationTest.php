@@ -7,10 +7,14 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Variation;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Variation\Variation;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
-use Dvsa\Olcs\Transfer\Query\Variation\Variation as Qry;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Transfer\Query\Application\Application as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Variation Test
@@ -21,20 +25,67 @@ class VariationTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new Variation();
+        $this->sut = new Application();
         $this->mockRepo('Application', ApplicationRepo::class);
+
+        $this->mockedSmServices = [
+            'FeesHelperService' => m::mock(),
+            'SectionAccessService' => m::mock(),
+        ];
 
         parent::setUp();
     }
 
     public function testHandleQuery()
     {
-        $query = Qry::create(['id' => 111]);
+        $applicationId = 111;
+        $query = Qry::create(['id' => $applicationId]);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application
+            ->setId($applicationId)
+            ->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar']);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($query)
-            ->andReturn(['foo']);
+            ->andReturn($application);
 
-        $this->assertEquals(['foo'], $this->sut->handleQuery($query));
+        $sections = ['bar', 'cake'];
+
+        $this->mockedSmServices['SectionAccessService']->shouldReceive('getAccessibleSections')
+            ->once()
+            ->with($application)
+            ->andReturn($sections);
+
+        $applicationFee = $this->getMockFee('100');
+        $fees = [$applicationFee];
+        $this->mockedSmServices['FeesHelperService']
+            ->shouldReceive('getOutstandingFeesForApplication')
+            ->with($applicationId)
+            ->once()
+            ->andReturn($fees);
+
+        $result = $this->sut->handleQuery($query);
+
+        $expected = [
+            'foo' => 'bar',
+            'sections' => ['bar', 'cake'],
+            'outstandingFeeTotal' => '100.00',
+            'variationCompletion' => null,
+        ];
+
+        $this->assertEquals($expected, $result->serialize());
+    }
+
+    protected function getMockFee($amount)
+    {
+        $mock = m::mock(FeeEntity::class)->makePartial();
+        $mock
+            ->setAmount($amount)
+            ->shouldReceive('serialize')
+            ->andReturn(['amount' => $amount]);
+        return $mock;
     }
 }

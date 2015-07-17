@@ -19,6 +19,8 @@ class Application extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    protected $alias = 'a';
+
     public function fetchWithPreviousConvictionsUsingId($query)
     {
         $qb = $this->createQueryBuilder();
@@ -44,6 +46,28 @@ class Application extends AbstractRepository
         return $qb->getQuery()->execute();
     }
 
+    public function fetchActiveForOrganisation($organisationId)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('licence', 'l');
+
+        $activeStatuses = [
+            Entity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+            Entity::APPLICATION_STATUS_GRANTED,
+        ];
+
+        $qb
+            ->andWhere($qb->expr()->eq('l.organisation', ':organisationId'))
+            ->andWhere($qb->expr()->in($this->alias . '.status', $activeStatuses))
+            ->setParameter('organisationId', $organisationId);
+
+        return $qb->getQuery()->execute();
+    }
+
     /**
      * Extend the default resource bundle to include licence
      *
@@ -53,5 +77,33 @@ class Application extends AbstractRepository
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
     {
         return $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->with('licence')->byId($id);
+    }
+
+    public function fetchWithLicenceAndOc($applicationId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->with('l.operatingCentres', 'l_oc')
+            ->with('l_oc.operatingCentre', 'l_oc_oc')
+            ->with('l_oc_oc.address', 'l_oc_oc_a')
+            ->with('operatingCentres', 'a_oc')
+            ->with('a_oc.operatingCentre', 'a_oc_oc')
+            ->with('a_oc_oc.address', 'a_oc_oc_a')
+            ->byId($applicationId);
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
+    public function fetchWithLicence($applicationId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->byId($applicationId);
+
+        return $qb->getQuery()->getSingleResult();
     }
 }

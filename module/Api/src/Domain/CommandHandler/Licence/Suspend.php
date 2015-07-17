@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
 
 /**
  * Suspend a licence
@@ -32,6 +33,19 @@ final class Suspend extends AbstractCommandHandler implements TransactionedInter
         $this->getRepo()->save($licence);
 
         $result = new Result();
+
+        if ($command->getDeleteLicenceStatusRules()) {
+            $result->merge(
+                $this->handleSideEffect(
+                    RemoveLicenceStatusRulesForLicence::create(
+                        [
+                        'licence' => $licence
+                        ]
+                    )
+                )
+            );
+        }
+
         $result->addMessage("Licence ID {$licence->getId()} suspended");
 
         return $result;
