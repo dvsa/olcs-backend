@@ -65,7 +65,7 @@ class TaskSearchViewTest extends RepositoryTestCase
             . ' AND m.urgent = 1'
             . ' AND ('
                 . 'm.licenceId = :licence'
-                . ' OR m.tmId = :tm'
+                . ' OR m.transportManagerId = :tm'
                 . ' OR m.caseId = :case'
                 . ' OR m.applicationId = :application'
                 . ' OR m.busRegId = :busReg'
