@@ -117,7 +117,6 @@ class BusRegEntityTest extends EntityTester
 
         $result = $sut->getCalculatedBundleValues();
 
-        $this->assertEquals($result['licence'], null);
         $this->assertEquals($result['isLatestVariation'], true);
     }
 
