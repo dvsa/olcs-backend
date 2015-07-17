@@ -72,7 +72,7 @@ class SurrenderTest extends CommandHandlerTestCase
         $ceaseDiscsResult = new Result();
         $this->expectedSideEffect(
             CeasePsvDiscs::class,
-            array('discs' => null, 'id' => null),
+            array('discs' => null),
             $ceaseDiscsResult
         );
 
