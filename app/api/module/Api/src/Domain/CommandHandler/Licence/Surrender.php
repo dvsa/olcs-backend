@@ -32,7 +32,14 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
     {
         /* @var $licence Licence */
         $licence = $this->getRepo()->fetchUsingId($command);
-        $licence->setStatus($this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_SURRENDERED));
+
+        if ($command->isTerminated() == true) {
+            $status = Licence::LICENCE_STATUS_TERMINATED;
+        }else{
+            $status = Licence::LICENCE_STATUS_SURRENDERED;
+        }
+
+        $licence->setStatus($this->getRepo()->getRefdataReference($status));
         $licence->setSurrenderedDate(new \DateTime($command->getSurrenderDate()));
 
         $discsCommand = (
