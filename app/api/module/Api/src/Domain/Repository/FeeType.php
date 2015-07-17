@@ -44,7 +44,11 @@ class FeeType extends AbstractRepository
 
         $this->getQueryBuilder()->withRefdata();
 
-        $effectiveFrom = $date->format(\DateTime::W3C);
+        if ($date === null) {
+            // if not set, use today
+            $date = new \DateTime();
+        }
+        $effectiveOn = $date->format(\DateTime::W3C);
 
         $qb->andWhere($qb->expr()->eq('ft.feeType', ':feeType'))
             ->andWhere($qb->expr()->eq('ft.goodsOrPsv', ':goodsOrPsv'))
@@ -54,7 +58,7 @@ class FeeType extends AbstractRepository
                     $qb->expr()->isNull('ft.licenceType')
                 )
             )
-            ->andWhere($qb->expr()->lte('ft.effectiveFrom', ':effectiveFrom'));
+            ->andWhere($qb->expr()->lte('ft.effectiveFrom', ':effectiveOn'));
 
         if ($trafficArea !== null) {
             $qb->andWhere(
@@ -75,7 +79,7 @@ class FeeType extends AbstractRepository
             ->setParameter('goodsOrPsv', $goodsOrPsv)
             ->setParameter('licenceType', $licenceType)
             ->setParameter('feeType', $feeType)
-            ->setParameter('effectiveFrom', $effectiveFrom)
+            ->setParameter('effectiveOn', $effectiveOn)
             ->setMaxResults(1);
 
         $results = $qb->getQuery()->execute();
