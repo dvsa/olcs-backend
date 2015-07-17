@@ -14,6 +14,7 @@ return array(
         'Olcs\Db',
         'Dvsa\Olcs\Api',
         'Dvsa\Olcs\Cli',
+        'Soflomo\Purifier'
     ],
     // These are various options for the listeners attached to the ModuleManager
     'module_listener_options' => array(
