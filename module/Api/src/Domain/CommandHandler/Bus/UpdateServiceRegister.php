@@ -22,15 +22,15 @@ final class UpdateServiceRegister extends AbstractCommandHandler
         $bus = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $bus->updateServiceRegister(
-            $command->getTimetableAcceptable(),
-            $command->getMapSupplied(),
-            $command->getRouteDescription(),
             $command->getTrcConditionChecked(),
             $command->getTrcNotes(),
             $command->getCopiedToLaPte(),
             $command->getLaShortNote(),
             $command->getOpNotifiedLaPte(),
-            $command->getApplicationSigned()
+            $command->getApplicationSigned(),
+            $command->getTimetableAcceptable(),
+            $command->getMapSupplied(),
+            $command->getRouteDescription()
         );
 
         $this->getRepo()->save($bus);
