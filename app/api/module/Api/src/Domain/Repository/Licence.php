@@ -99,7 +99,11 @@ class Licence extends AbstractRepository
     {
         $dqb = $this->createQueryBuilder();
 
-        $this->getQueryBuilder()->modifyQuery($dqb)->withRefdata();
+        $this->getQueryBuilder()->modifyQuery($dqb)->withRefdata()
+            ->with('operatingCentres', 'ocs')
+            ->with('ocs.operatingCentre', 'ocs_oc')
+            ->with('ocs_oc.address', 'ocs_oc_a');
+
         $dqb->where($dqb->expr()->eq($this->alias .'.licNo', ':licNo'))
             ->setParameter('licNo', $licNo);
 
