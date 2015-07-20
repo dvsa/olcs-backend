@@ -81,13 +81,15 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
         $this->maybeUpdateOrganisation($command, $organisation);
 
         if (!$command->getPartial() && $command->getNatureOfBusinesses() == null) {
-            throw new ValidationException([
-                'natureOfBusinesses' => [
-                    [
-                        'Value is required and can\'t be empty' => 'Value is required and can\'t be empty'
+            throw new ValidationException(
+                [
+                    'natureOfBusinesses' => [
+                        [
+                            'Value is required and can\'t be empty' => 'Value is required and can\'t be empty'
+                        ]
                     ]
                 ]
-            ]);
+            );
         }
 
         $this->updateNatureOfBusinesses($command->getNatureOfBusinesses(), $organisation);

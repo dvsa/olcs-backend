@@ -34,8 +34,6 @@ final class PrintInterimDocument extends AbstractCommandHandler implements Trans
      */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
@@ -56,7 +54,7 @@ final class PrintInterimDocument extends AbstractCommandHandler implements Trans
 
         $storedFile = $this->getDocumentGenerator()->generateAndStore($template, $query);
 
-        $result->addMessage('Document generated');
+        $this->result->addMessage('Document generated');
 
         $data = [
             'identifier' => $storedFile->getIdentifier(),
@@ -71,8 +69,8 @@ final class PrintInterimDocument extends AbstractCommandHandler implements Trans
             'isScan' => false
         ];
 
-        $result->merge($this->handleSideEffect(DispatchDocument::create($data)));
+        $this->result->merge($this->handleSideEffect(DispatchDocument::create($data)));
 
-        return $result;
+        return $this->result;
     }
 }

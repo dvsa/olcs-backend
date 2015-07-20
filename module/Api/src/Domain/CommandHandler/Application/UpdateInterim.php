@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee;
+use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -58,6 +58,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         if (in_array($currentStatusId, $refuseOrRevoke)) {
             $application->setInterimStatus($this->getRepo()->getRefdataReference($command->getStatus()));
             $this->getRepo()->save($application);
+            $this->result->addMessage('Interim status updated');
             return $this->result;
         }
 
@@ -103,6 +104,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
 
             $interimOcs = $command->getOperatingCentres() !== null ? $command->getOperatingCentres() : [];
             $interimVehicles = $command->getVehicles() !== null ? $command->getVehicles() : [];
+            $this->result->addMessage('Interim data updated');
         } else {
 
             $application->setInterimReason(null);
@@ -114,6 +116,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
 
             $interimOcs = [];
             $interimVehicles = [];
+            $this->result->addMessage('Interim data reset');
         }
 
         $this->saveApplictionOperatingCentresForInterim($application, $interimOcs);
@@ -240,7 +243,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
                 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT
             ];
 
-            $this->handleSideEffect(CreateApplicationFee::create($data));
+            $this->result->merge($this->handleSideEffect(CreateApplicationFeeCmd::create($data)));
         }
     }
 

@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim;
+use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim as InForceInterimCmd;
 use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -37,7 +37,7 @@ final class GrantInterim extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['Fee', 'GoodsDisc', 'CommunityLic'];
+    protected $extraRepos = ['Fee'];
 
     /**
      * @param Cmd $command
@@ -63,7 +63,7 @@ final class GrantInterim extends AbstractCommandHandler implements
 
             $this->result->addId('action', 'fee_request');
         } else {
-            $this->result->merge($this->handleSideEffect(InForceInterim::create(['id' => $application->getId()])));
+            $this->result->merge($this->handleSideEffect(InForceInterimCmd::create(['id' => $application->getId()])));
             $this->result->addId('action', 'in_force');
         }
 

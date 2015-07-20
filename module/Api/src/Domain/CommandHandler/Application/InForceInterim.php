@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
-use Dvsa\Olcs\Transfer\Command\Application\PrintInterimDocument;
+use Dvsa\Olcs\Transfer\Command\Application\PrintInterimDocument as PrintInterimDocumentCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim as Cmd;
@@ -56,7 +56,7 @@ final class InForceInterim extends AbstractCommandHandler implements Transaction
 
         $this->processCommunityLicences($application);
 
-        $this->result->merge($this->handleSideEffect(PrintInterimDocument::create(['id' => $application->getId()])));
+        $this->result->merge($this->handleSideEffect(PrintInterimDocumentCmd::create(['id' => $application->getId()])));
     }
 
     private function processLicenceVehicleSaving(ApplicationEntity $application)
@@ -66,6 +66,14 @@ final class InForceInterim extends AbstractCommandHandler implements Transaction
         /** @var LicenceVehicle $licenceVehicle */
         foreach ($application->getLicenceVehicles() as $licenceVehicle) {
 
+            /** @var GoodsDisc $disc */
+            foreach ($licenceVehicle->getGoodsDiscs() as $disc) {
+                if ($disc->getCeasedDate() == null) {
+                    $disc->setCeasedDate(new DateTime());
+                    $ceasedCount++;
+                }
+            }
+
             if ($licenceVehicle->getInterimApplication() !== null) {
                 $count++;
                 $licenceVehicle->setSpecifiedDate(new DateTime());
@@ -74,14 +82,6 @@ final class InForceInterim extends AbstractCommandHandler implements Transaction
                 $newDisc->setIsInterim('Y');
 
                 $this->getRepo('GoodsDisc')->save($newDisc);
-            }
-
-            /** @var GoodsDisc $disc */
-            foreach ($licenceVehicle->getGoodsDiscs() as $disc) {
-                if ($disc->getCeasedDate() == null) {
-                    $disc->setCeasedDate(new DateTime());
-                    $ceasedCount++;
-                }
             }
         }
 
