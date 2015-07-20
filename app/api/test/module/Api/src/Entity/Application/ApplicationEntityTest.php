@@ -1113,4 +1113,24 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertFalse($application->useDeltasInPeopleSection());
     }
+
+    public function testGetCurrentInterimStatusNull()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $this->assertNull($application->getCurrentInterimStatus());
+    }
+
+    public function testGetCurrentInterimStatus()
+    {
+        $status = m::mock(RefData::class)->makePartial();
+        $status->setId(123);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setInterimStatus($status);
+
+        $this->assertEquals(123, $application->getCurrentInterimStatus());
+    }
 }

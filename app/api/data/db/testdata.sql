@@ -1248,13 +1248,13 @@ VALUES
   (84,'case_t_tm',NULL,NULL,NULL,3,NULL,NULL,'','2014-02-11',NULL,'Case linked to an external Transport manager',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-01-11 11:11:11','2014-02-22 12:22:22',1);
 
 INSERT INTO team(id,version,name,traffic_area_id) VALUES
-    (1,1,'Marketing',''),
+    (1,1,'Marketing','B'),
     (2,1,'Development','B'),
-    (3,1,'Infrastructure',''),
-    (4,1,'Support',''),
-    (5,1,'Assisted Digital FEP',''),
-    (6,1,'Bus Reg Team',''),
-    (7,1,'Compliance Team',''),
+    (3,1,'Infrastructure','B'),
+    (4,1,'Support','B'),
+    (5,1,'Assisted Digital FEP','B'),
+    (6,1,'Bus Reg Team','B'),
+    (7,1,'Compliance Team','B'),
     (8,1,'Environmental Team',''),
     (9,1,'IRFO Team',''),
     (32,1,'Self service Operators','');
