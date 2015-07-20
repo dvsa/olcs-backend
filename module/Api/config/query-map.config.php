@@ -47,11 +47,13 @@ return [
     TransferQuery\Application\Grant::class => QueryHandler\Application\Grant::class,
     TransferQuery\Application\People::class => QueryHandler\Application\People::class,
     TransferQuery\Application\OperatingCentre::class => QueryHandler\Application\OperatingCentre::class,
+    TransferQuery\Application\Schedule41::class => QueryHandler\Application\Schedule41::class,
     TransferQuery\Application\TaxiPhv::class => QueryHandler\Application\TaxiPhv::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
     TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
+    TransferQuery\Licence\LicenceByNumber::class => QueryHandler\Licence\LicenceByNumber::class,
     TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
     TransferQuery\Licence\Safety::class => QueryHandler\Licence\Safety::class,
     TransferQuery\Licence\Addresses::class => QueryHandler\Licence\Addresses::class,
