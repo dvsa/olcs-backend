@@ -680,4 +680,10 @@ class Application extends AbstractApplication
 
         return true;
     }
+
+    public function getCurrentInterimStatus()
+    {
+        $currentStatus = $this->getInterimStatus();
+        return $currentStatus !== null ? $currentStatus->getId() : null;
+    }
 }

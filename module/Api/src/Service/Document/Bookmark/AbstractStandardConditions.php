@@ -4,7 +4,8 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as LicenceQry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle as ApplicationQry;
 
 /**
  * Standard Conditions bookmark
@@ -19,13 +20,19 @@ abstract class AbstractStandardConditions extends DynamicBookmark
      */
     const PREFORMATTED = true;
 
+    const SERVICE = 'licence';
+
     const DATA_KEY = 'licence';
 
     protected $prefix = '';
 
     public function getQuery(array $data)
     {
-        return Qry::create(['id' => $data['licence']]);
+        if (static::SERVICE == 'licence') {
+            return LicenceQry::create(['id' => $data[static::DATA_KEY]]);
+        } elseif (static::SERVICE == 'application') {
+            return ApplicationQry::create(['id' => $data[static::DATA_KEY]]);
+        }
     }
 
     public function render()
