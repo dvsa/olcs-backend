@@ -509,4 +509,23 @@ class BusReg extends AbstractBusReg
 
         return false;
     }
+
+    /**
+     * Resets status
+     *
+     * @return BusReg
+     */
+    public function resetStatus()
+    {
+        $this->canEdit();
+
+        $status = $this->getStatus();
+        $revertStatus = $this->getRevertStatus();
+
+        $this->setStatus($revertStatus);
+        $this->setRevertStatus($status);
+        $this->setStatusChangeDate(new \DateTime());
+
+        return $this;
+    }
 }
