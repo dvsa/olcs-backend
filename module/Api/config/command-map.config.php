@@ -344,14 +344,9 @@ return [
     TransferCommand\Licence\ResetToValid::class => CommandHandler\Licence\ResetToValid::class,
 
     // Transfer - ConditionUndertaking
-    TransferCommand\Cases\ConditionUndertaking\CreateConditionUndertaking::class =>
-        CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
-    TransferCommand\Cases\ConditionUndertaking\UpdateConditionUndertaking::class =>
-        CommandHandler\Cases\ConditionUndertaking\UpdateConditionUndertaking::class,
-    TransferCommand\Cases\ConditionUndertaking\DeleteConditionUndertaking::class =>
-        CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertaking::class,
     TransferCommand\ConditionUndertaking\Create::class => CommandHandler\ConditionUndertaking\Create::class,
     TransferCommand\ConditionUndertaking\DeleteList::class => CommandHandler\ConditionUndertaking\DeleteList::class,
+    TransferCommand\ConditionUndertaking\Delete::class => CommandHandler\ConditionUndertaking\Delete::class,
     TransferCommand\ConditionUndertaking\Update::class => CommandHandler\ConditionUndertaking\Update::class,
 
     // Transfer - Opposition
