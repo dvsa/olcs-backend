@@ -633,4 +633,50 @@ class BusRegEntityTest extends EntityTester
 
         return true;
     }
+
+    public function testResetStatus()
+    {
+        $this->getAssertionsForCanEditIsTrue();
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_VAR);
+
+        $revertStatus = new RefDataEntity();
+        $revertStatus->setId(Entity::STATUS_VAR);
+
+        $this->entity->setStatus($status);
+        $this->entity->setRevertStatus($revertStatus);
+
+        $this->entity->resetStatus();
+
+        $this->assertEquals($revertStatus, $this->entity->getStatus());
+        $this->assertEquals($status, $this->entity->getRevertStatus());
+        $this->assertInstanceOf(\DateTime::class, $this->entity->getStatusChangeDate());
+    }
+
+    /**
+     * Tests resetStatus throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testResetStatusThrowsCanEditExceptionForEbsr()
+    {
+        $this->entity->setIsTxcApp('Y');
+        $this->entity->resetStatus(null);
+
+        return true;
+    }
+
+    /**
+     * Tests resetStatus throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testResetStatusThrowsCanEditExceptionForLatestVariation()
+    {
+        $this->getAssertionsForCanEditIsFalseDueToVariation();
+        $this->entity->resetStatus(null);
+
+        return true;
+    }
 }
