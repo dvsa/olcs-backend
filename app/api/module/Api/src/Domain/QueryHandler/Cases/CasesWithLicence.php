@@ -20,7 +20,6 @@ final class CasesWithLicence extends AbstractQueryHandler
     {
         $case = $this->getRepo()->fetchWithLicenceUsingId($query);
 
-        // @todo look at simplifying
         return $this->result(
             $case,
             [

@@ -15,13 +15,12 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\ConditionUndertaking\Delete as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 
-
 /**
  * Delete ConditionUndertaking Test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class DeleteConditionUndertakingTest extends CommandHandlerTestCase
+class DeleteTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
