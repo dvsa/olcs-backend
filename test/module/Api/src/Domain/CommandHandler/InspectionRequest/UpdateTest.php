@@ -46,9 +46,7 @@ class UpdateTest extends CommandHandlerTestCase
 
         parent::initReferences();
     }
-    /**
-     * @group createfromapp
-     */
+
     public function testHandleCommandCreateFromApplication()
     {
         $this->mockAuthService();

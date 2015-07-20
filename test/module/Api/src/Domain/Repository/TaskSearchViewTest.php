@@ -65,7 +65,7 @@ class TaskSearchViewTest extends RepositoryTestCase
             . ' AND m.urgent = 1'
             . ' AND ('
                 . 'm.licenceId = :licence'
-                . ' OR m.tmId = :tm'
+                . ' OR m.transportManagerId = :tm'
                 . ' OR m.caseId = :case'
                 . ' OR m.applicationId = :application'
                 . ' OR m.busRegId = :busReg'
@@ -107,7 +107,6 @@ class TaskSearchViewTest extends RepositoryTestCase
             . ' AND m.category = 1'
             . ' AND m.taskSubCategory = 2'
             . ' AND m.actionDate <= [[' . date('Y-m-d') . ']]'
-            . ' AND m.urgent = 0'
             . ' AND ('
             . 'm.licenceId = :licence'
             . ' OR m.applicationId = :application'
@@ -134,7 +133,7 @@ class TaskSearchViewTest extends RepositoryTestCase
 
         $this->assertEquals(['foo' => 'bar'], $this->sut->fetchList($query));
 
-        $expected = '{QUERY} AND m.urgent = 0';
+        $expected = '{QUERY}';
 
         $this->assertEquals($expected, $this->query);
     }

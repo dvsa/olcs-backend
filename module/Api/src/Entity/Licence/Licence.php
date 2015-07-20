@@ -376,6 +376,16 @@ class Licence extends AbstractLicence
         return $this->getLicenceType()->getId() === self::LICENCE_TYPE_RESTRICTED;
     }
 
+    public function isStandardInternational()
+    {
+        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_INTERNATIONAL;
+    }
+
+    public function isStandardNational()
+    {
+        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_NATIONAL;
+    }
+
     /**
      * Helper method to get the first trading name from a licence
      * (Sorts trading names by createdOn date then alphabetically)
@@ -464,5 +474,18 @@ class Licence extends AbstractLicence
             $list[] = $licenceOperatingCentre->getOperatingCentre();
         }
         return $list;
+    }
+
+    /**
+     * Get PSV discs that are not ceased
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPsvDiscsNotCeased()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->isNull('ceasedDate'));
+
+        return $this->getPsvDiscs()->matching($criteria);
     }
 }

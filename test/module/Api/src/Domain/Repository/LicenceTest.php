@@ -2,7 +2,7 @@
 
 /**
  * Licence test
- * 
+ *
  * @author Rob Caiger <rob@clocal.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -17,12 +17,10 @@ use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Doctrine\DBAL\LockMode;
-use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 
 /**
  * Licence test
- * 
+ *
  * @author Rob Caiger <rob@clocal.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -273,5 +271,32 @@ class LicenceTest extends RepositoryTestCase
 
         $result = $this->sut->fetchWithOperatingCentres($licenceId);
         $this->assertEquals('RESULT', $result);
+    }
+
+    public function testFetchWithPrivateHireLicence()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
+            ->shouldReceive('with')->with('privateHireLicences', 'phl')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('phl.contactDetails', 'cd')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('cd.address', 'add')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('add.countryCode')->once()->andReturnSelf()
+            ->shouldReceive('byId')->with(21)->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getSingleResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchWithPrivateHireLicence(21));
+
+        $expectedQuery = 'BLAH';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }

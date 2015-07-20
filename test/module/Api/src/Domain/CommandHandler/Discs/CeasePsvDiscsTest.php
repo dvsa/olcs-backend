@@ -30,7 +30,7 @@ class CeasePsvDiscsTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new CeasePsvDiscs();
-        $this->mockRepo('PsvDiscs', DiscRepo::class);
+        $this->mockRepo('PsvDisc', DiscRepo::class);
         parent::setUp();
     }
 
@@ -44,7 +44,7 @@ class CeasePsvDiscsTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $this->repoMap['PsvDiscs']
+        $this->repoMap['PsvDisc']
             ->shouldReceive('save')
             ->once()
             ->with(m::type(PsvDisc::class));
@@ -54,7 +54,7 @@ class CeasePsvDiscsTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                'Ceased discs for licence.'
+                'Ceased 1 discs for licence.'
             ]
         ];
 
