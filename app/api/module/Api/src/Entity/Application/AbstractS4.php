@@ -41,7 +41,11 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\Application", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\Application",
+     *     fetch="LAZY",
+     *     inversedBy="s4s"
+     * )
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=true)
      */
     protected $application;

@@ -64,6 +64,7 @@ class CreateConditionUndertakingTest extends CommandHandlerTestCase
     {
         $command = Cmd::create(
             [
+            'licence' => 7,
             'case' => 24,
             'conditionType' => 'cdt_und',
             'notes' => 'Notes',
@@ -126,6 +127,7 @@ class CreateConditionUndertakingTest extends CommandHandlerTestCase
     {
         $command = Cmd::create(
             [
+                'licence' => 7,
                 'case' => 24,
                 'conditionType' => 'cdt_con',
                 'notes' => 'Notes',

@@ -7,8 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Command\Discs;
 
-use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
-
 /**
  * Class CeasePsvDiscs
  *
@@ -17,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  * @package Dvsa\Olcs\Api\Domain\Command\Discs
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-final class CeasePsvDiscs extends AbstractIdOnlyCommand
+final class CeasePsvDiscs extends \Dvsa\Olcs\Transfer\Command\AbstractCommand
 {
     protected $discs;
 

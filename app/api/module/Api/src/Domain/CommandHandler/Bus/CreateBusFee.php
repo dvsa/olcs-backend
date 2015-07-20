@@ -68,10 +68,13 @@ final class CreateBusFee extends AbstractCommandHandler
             $feeTrafficArea
         );
 
+        $invoicedDate
+            = ($busReg->getReceivedDate() instanceof \DateTime) ? $busReg->getReceivedDate()->format('Y-m-d') : null;
+
         $data = [
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),
-            'invoicedDate' => $busReg->getReceivedDate()->format('Y-m-d'),
+            'invoicedDate' => $invoicedDate,
             'description' => $feeType->getDescription() . ' ' . $busReg->getRegNo() . ' ' . $busReg->getId(),
             'feeType' => $feeType->getId(),
             'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
