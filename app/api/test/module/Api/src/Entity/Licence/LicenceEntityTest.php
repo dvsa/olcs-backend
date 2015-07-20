@@ -31,6 +31,16 @@ class LicenceEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
+    public function testCanBecomeSpecialRestrictedNull()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getGoodsOrPsv')->andReturn(null);
+        $licence->shouldReceive('getLicenceType')->andReturn(null);
+
+        $this->assertEquals(true, $licence->canBecomeSpecialRestricted());
+    }
+
     /**
      * @dataProvider licenceTypeProvider
      */
@@ -38,12 +48,8 @@ class LicenceEntityTest extends EntityTester
     {
         /** @var Entity $licence */
         $licence = m::mock(Entity::class)->makePartial();
-
-        $licence->shouldReceive('getGoodsOrPsv->getId')
-            ->andReturn($goodsOrPsv);
-
-        $licence->shouldReceive('getLicenceType->getId')
-            ->andReturn($licenceType);
+        $licence->shouldReceive('getGoodsOrPsv->getId')->andReturn($goodsOrPsv);
+        $licence->shouldReceive('getLicenceType->getId')->andReturn($licenceType);
 
         $this->assertEquals($expected, $licence->canBecomeSpecialRestricted());
     }

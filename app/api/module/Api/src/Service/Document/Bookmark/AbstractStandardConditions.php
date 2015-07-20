@@ -20,7 +20,7 @@ abstract class AbstractStandardConditions extends DynamicBookmark
      */
     const PREFORMATTED = true;
 
-    const SERVICE = 'Licence';
+    const SERVICE = 'licence';
 
     const DATA_KEY = 'licence';
 

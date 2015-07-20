@@ -63,7 +63,7 @@ final class RefuseInterim extends AbstractCommandHandler implements
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
             'description' => $fileName,
-            'filename' => $fileName . '.rtf',
+            'filename' => str_replace(' ', '_', $fileName) . '.rtf',
             'isExternal' => false,
             'isScan' => false,
             'licence' => $application->getLicence()->getId(),
