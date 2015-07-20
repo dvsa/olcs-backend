@@ -639,7 +639,7 @@ class BusRegEntityTest extends EntityTester
         $this->getAssertionsForCanEditIsTrue();
 
         $status = new RefDataEntity();
-        $status->setId(Entity::STATUS_VAR);
+        $status->setId(Entity::STATUS_REGISTERED);
 
         $revertStatus = new RefDataEntity();
         $revertStatus->setId(Entity::STATUS_VAR);
@@ -678,5 +678,96 @@ class BusRegEntityTest extends EntityTester
         $this->entity->resetStatus(null);
 
         return true;
+    }
+
+    /**
+     * @dataProvider isShortNoticeRefusedDataProvider
+     *
+     * @param string $shortNoticeRefused
+     * @param array $expected
+     */
+    public function testIsShortNoticeRefused($shortNoticeRefused, $expected)
+    {
+        $this->entity->setShortNoticeRefused($shortNoticeRefused);
+
+        $this->assertEquals($expected, $this->entity->isShortNoticeRefused());
+    }
+
+    public function isShortNoticeRefusedDataProvider()
+    {
+        return [
+            [null, false],
+            ['N', false],
+            ['Y', true],
+        ];
+    }
+
+    /**
+     * @dataProvider getDecisionDataProvider
+     *
+     * @param string $statusId
+     * @param string $shortNoticeRefused
+     * @param array $expected
+     */
+    public function testGetDecision($statusId, $shortNoticeRefused, $expected)
+    {
+        $status = new RefDataEntity();
+        $status->setId($statusId);
+        $status->setDescription('Decision');
+
+        $this->entity->setStatus($status);
+        $this->entity->setShortNoticeRefused($shortNoticeRefused);
+
+        $withdrawnReason = new RefDataEntity();
+        $withdrawnReason->setDescription('Withdrawn Reason');
+
+        $this->entity->setReasonSnRefused('Reason SN Refused');
+        $this->entity->setReasonRefused('Reason Refused');
+        $this->entity->setReasonCancelled('Reason Cancelled');
+        $this->entity->setWithdrawnReason($withdrawnReason);
+
+        $this->assertEquals($expected, $this->entity->getDecision());
+    }
+
+    public function getDecisionDataProvider()
+    {
+        return [
+            // registered
+            [
+                Entity::STATUS_REGISTERED,
+                'N',
+                null
+            ],
+            // refused - nonShortNoticeRefused
+            [
+                Entity::STATUS_REFUSED,
+                'N',
+                ['decision' => 'Decision', 'reason' => 'Reason Refused']
+            ],
+            // refused - ShortNoticeRefused
+            [
+                Entity::STATUS_REFUSED,
+                'Y',
+                ['decision' => 'Decision', 'reason' => 'Reason SN Refused']
+            ],
+            // cancelled
+            [
+                Entity::STATUS_CANCELLED,
+                'N',
+                ['decision' => 'Decision', 'reason' => 'Reason Cancelled']
+            ],
+            // admin cancelled
+            [
+                Entity::STATUS_ADMIN,
+                'N',
+                ['decision' => 'Decision', 'reason' => 'Reason Cancelled']
+            ],
+            // admin withdrawn
+            [
+                Entity::STATUS_WITHDRAWN,
+                'N',
+                ['decision' => 'Decision', 'reason' => 'Withdrawn Reason']
+            ],
+        ];
     }
 }

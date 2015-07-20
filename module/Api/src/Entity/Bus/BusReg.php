@@ -511,6 +511,42 @@ class BusReg extends AbstractBusReg
     }
 
     /**
+     * Returns whether the record is short notice refused
+     *
+     * @return bool
+     */
+    public function isShortNoticeRefused()
+    {
+        return ($this->shortNoticeRefused === 'Y' ? true : false);
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getDecision()
+    {
+        $reason = null;
+
+        switch ($this->status->getId()) {
+            case self::STATUS_REFUSED:
+                $reason = ($this->isShortNoticeRefused()) ? $this->reasonSnRefused : $this->reasonRefused;
+                break;
+            case self::STATUS_CANCELLED:
+            case self::STATUS_ADMIN:
+                $reason = $this->reasonCancelled;
+                break;
+            case self::STATUS_WITHDRAWN:
+                $reason = $this->withdrawnReason->getDescription();
+                break;
+        }
+
+        return ($reason !== null) ? [
+            'decision' => $this->status->getDescription(),
+            'reason' => $reason,
+        ] : null;
+    }
+
+    /**
      * Resets status
      *
      * @return BusReg
