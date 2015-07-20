@@ -49,6 +49,7 @@ return [
     TransferQuery\Application\OperatingCentre::class => QueryHandler\Application\OperatingCentre::class,
     TransferQuery\Application\Schedule41::class => QueryHandler\Application\Schedule41::class,
     TransferQuery\Application\TaxiPhv::class => QueryHandler\Application\TaxiPhv::class,
+    TransferQuery\Application\Interim::class => QueryHandler\Application\Interim::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,

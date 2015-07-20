@@ -79,6 +79,11 @@ return [
     TransferCommand\Application\Schedule41::class => CommandHandler\Application\Schedule41::class,
     TransferCommand\Application\GenerateOrganisationName::class =>
         CommandHandler\Application\GenerateOrganisationName::class,
+    TransferCommand\Application\PrintInterimDocument::class => CommandHandler\Application\PrintInterimDocument::class,
+    TransferCommand\Application\UpdateInterim::class => CommandHandler\Application\UpdateInterim::class,
+    TransferCommand\Application\RefuseInterim::class => CommandHandler\Application\RefuseInterim::class,
+    TransferCommand\Application\GrantInterim::class => CommandHandler\Application\GrantInterim::class,
+    Command\Application\InForceInterim::class => CommandHandler\Application\InForceInterim::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,

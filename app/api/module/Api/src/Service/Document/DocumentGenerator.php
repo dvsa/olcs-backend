@@ -63,7 +63,11 @@ class DocumentGenerator implements ServiceLocatorAwareInterface
 
         foreach ($queries as $token => $query) {
             if ($query instanceof QueryInterface) {
-                $result[$token] = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($query);
+                try {
+                    $result[$token] = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($query);
+                } catch (\Exception $ex) {
+                    throw new \Exception('Error fetching data for bookmark: ' . $token . ': ' . $ex->getMessage());
+                }
             } elseif (is_array($query)) {
                 $list = [];
                 foreach ($query as $qry) {

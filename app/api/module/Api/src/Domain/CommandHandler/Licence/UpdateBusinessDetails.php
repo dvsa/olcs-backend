@@ -41,7 +41,6 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
 
     private $isDirty = false;
     private $hasChangedOrg = false;
-    private $result;
 
     public function handleCommand(CommandInterface $command)
     {
