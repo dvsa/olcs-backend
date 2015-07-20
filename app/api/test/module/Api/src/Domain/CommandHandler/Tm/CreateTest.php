@@ -66,9 +66,6 @@ class CreateTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleCommand()
     {
         $this->mockAuthService();

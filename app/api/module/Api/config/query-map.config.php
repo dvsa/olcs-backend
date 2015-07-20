@@ -48,6 +48,7 @@ return [
     TransferQuery\Application\People::class => QueryHandler\Application\People::class,
     TransferQuery\Application\OperatingCentre::class => QueryHandler\Application\OperatingCentre::class,
     TransferQuery\Application\Schedule41::class => QueryHandler\Application\Schedule41::class,
+    TransferQuery\Application\TaxiPhv::class => QueryHandler\Application\TaxiPhv::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -66,6 +67,9 @@ return [
     TransferQuery\Licence\ConditionUndertaking::class => QueryHandler\Licence\ConditionUndertaking::class,
     TransferQuery\Licence\People::class => QueryHandler\Licence\People::class,
     TransferQuery\Licence\OperatingCentre::class => QueryHandler\Licence\OperatingCentre::class,
+    TransferQuery\Licence\TaxiPhv::class => QueryHandler\Licence\TaxiPhv::class,
+    TransferQuery\Licence\Markers::class => QueryHandler\Licence\Markers::class,
+    TransferQuery\Licence\ContinuationDetail::class => QueryHandler\Licence\ContinuationDetail::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
@@ -258,4 +262,7 @@ return [
     TransferQuery\Task\TaskList::class => QueryHandler\Task\TaskList::class,
     TransferQuery\Task\Task::class => QueryHandler\Task\Task::class,
     TransferQuery\Task\TaskDetails::class => QueryHandler\Task\TaskDetails::class,
+
+    // Transport Manager
+    TransferQuery\Tm\TransportManager::class => QueryHandler\Tm\TransportManager::class,
 ];

@@ -56,7 +56,7 @@ class UpdateVehiclesTest extends CommandHandlerTestCase
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
 
-        $application->shouldReceive('getLicence->getActiveVehiclesCount')
+        $application->shouldReceive('getActiveVehicles->count')
             ->andReturn(0);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -79,7 +79,7 @@ class UpdateVehiclesTest extends CommandHandlerTestCase
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
 
-        $application->shouldReceive('getLicence->getActiveVehiclesCount')
+        $application->shouldReceive('getActiveVehicles->count')
             ->andReturn(1);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -127,7 +127,7 @@ class UpdateVehiclesTest extends CommandHandlerTestCase
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
 
-        $application->shouldReceive('getLicence->getActiveVehiclesCount')
+        $application->shouldReceive('getActiveVehicles->count')
             ->andReturn(0);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')

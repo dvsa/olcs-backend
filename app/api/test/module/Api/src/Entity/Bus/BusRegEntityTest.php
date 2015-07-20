@@ -117,7 +117,6 @@ class BusRegEntityTest extends EntityTester
 
         $result = $sut->getCalculatedBundleValues();
 
-        $this->assertEquals($result['licence'], null);
         $this->assertEquals($result['isLatestVariation'], true);
     }
 
@@ -576,6 +575,61 @@ class BusRegEntityTest extends EntityTester
         $this->assertEquals($busReg, $busReg->getOtherServices()->first()->getBusReg());
         $this->assertEquals('otherService1', $busReg->getOtherServices()->first()->getServiceNo());
         $this->assertEquals('otherService2', $busReg->getOtherServices()->last()->getServiceNo());
+
+        return true;
+    }
+
+    /**
+     * Tests updateServiceRegister
+     */
+    public function testUpdateServiceRegister()
+    {
+        $timetableAcceptable = 'Y';
+        $mapSupplied = 'Y';
+        $routeDescription = 'string';
+        $trcConditionChecked = 'Y';
+        $trcNotes = 'string 2';
+        $copiedToLaPte = 'Y';
+        $laShortNote = 'Y';
+        $opNotifiedLaPte = 'Y';
+        $applicationSigned = 'Y';
+
+        $this->getAssertionsForCanEditIsTrue();
+
+        $this->entity->updateServiceRegister(
+            $trcConditionChecked,
+            $trcNotes,
+            $copiedToLaPte,
+            $laShortNote,
+            $opNotifiedLaPte,
+            $applicationSigned,
+            $timetableAcceptable,
+            $mapSupplied,
+            $routeDescription
+        );
+
+        $this->assertEquals($trcConditionChecked, $this->entity->getTrcConditionChecked());
+        $this->assertEquals($trcNotes, $this->entity->getTrcNotes());
+        $this->assertEquals($copiedToLaPte, $this->entity->getCopiedToLaPte());
+        $this->assertEquals($laShortNote, $this->entity->getLaShortNote());
+        $this->assertEquals($opNotifiedLaPte, $this->entity->getOpNotifiedLaPte());
+        $this->assertEquals($applicationSigned, $this->entity->getApplicationSigned());
+        $this->assertEquals($timetableAcceptable, $this->entity->getTimetableAcceptable());
+        $this->assertEquals($mapSupplied, $this->entity->getMapSupplied());
+        $this->assertEquals($routeDescription, $this->entity->getRouteDescription());
+
+        return true;
+    }
+
+    /**
+     * Tests updateServiceRegister throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateServiceRegisterThrowsExceptionForLatestVariation()
+    {
+        $this->getAssertionsForCanEditIsFalseDueToVariation();
+        $this->entity->updateServiceRegister(null, null, null, null, null, null, null, null, null);
 
         return true;
     }
