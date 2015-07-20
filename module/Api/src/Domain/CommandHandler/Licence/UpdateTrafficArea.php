@@ -32,6 +32,17 @@ final class UpdateTrafficArea extends AbstractCommandHandler
 
         $this->getRepo()->save($licence);
 
+        // if no Licence number and has an application then generate Licence Number
+        if (empty($licence->getLicNo()) && $licence->getApplications()->current()) {
+            $result->merge(
+                $this->handleSideEffect(
+                    \Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber::create(
+                        ['id' => $licence->getApplications()->current()->getId()]
+                    )
+                )
+            );
+        }
+
         $result->addMessage('Licence Traffic Area updated');
         return $result;
     }

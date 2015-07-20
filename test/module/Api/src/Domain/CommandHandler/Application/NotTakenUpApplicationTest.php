@@ -113,7 +113,6 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             CeaseGoodsDiscs::class,
             [
                 'licenceVehicles' => null,
-                'id' => null
             ],
             new Result()
         );

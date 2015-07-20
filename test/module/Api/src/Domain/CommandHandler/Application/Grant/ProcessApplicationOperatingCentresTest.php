@@ -119,12 +119,12 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
         $command = ProcessAocCmd::create($data);
 
         $oc = m::mock(OperatingCentre::class)->makePartial();
+        $application = m::mock(ApplicationEntity::class)->makePartial();
 
-        $aoc = new ApplicationOperatingCentre();
+        $aoc = new ApplicationOperatingCentre($application, $oc);
         $aoc->setAction('U');
         $aoc->setIsInterim(true);
         $aoc->setNoOfVehiclesRequired(10);
-        $aoc->setOperatingCentre($oc);
 
         $aocs = [
             $aoc
@@ -142,7 +142,6 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
             ->andReturn($locs);
 
         /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
         $application->setOperatingCentres($aocs);
 
@@ -188,11 +187,13 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
 
         $oc = m::mock(OperatingCentre::class)->makePartial();
 
-        $aoc = new ApplicationOperatingCentre();
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+
+        $aoc = new ApplicationOperatingCentre($application, $oc);
         $aoc->setAction('D');
         $aoc->setIsInterim(true);
         $aoc->setNoOfVehiclesRequired(10);
-        $aoc->setOperatingCentre($oc);
 
         $aocs = [
             $aoc
@@ -209,8 +210,6 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
         $licence->shouldReceive('getOperatingCentres->matching')
             ->andReturn($locs);
 
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
         $application->setOperatingCentres($aocs);
 
@@ -251,13 +250,15 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
 
         $command = ProcessAocCmd::create($data);
 
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+
         $oc = m::mock(OperatingCentre::class)->makePartial();
 
-        $aoc = new ApplicationOperatingCentre();
+        $aoc = new ApplicationOperatingCentre($application, $oc);
         $aoc->setAction('D');
         $aoc->setIsInterim(true);
         $aoc->setNoOfVehiclesRequired(10);
-        $aoc->setOperatingCentre($oc);
 
         $aocs = [
             $aoc
@@ -271,8 +272,6 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
         $licence->shouldReceive('getOperatingCentres->matching')
             ->andReturn($locs);
 
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
         $application->setOperatingCentres($aocs);
 
