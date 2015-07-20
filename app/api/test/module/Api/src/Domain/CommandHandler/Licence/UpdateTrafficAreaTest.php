@@ -54,6 +54,13 @@ class UpdateTrafficAreaTest extends CommandHandlerTestCase
             new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(),
             new \Dvsa\Olcs\Api\Entity\System\RefData()
         );
+        $application = new \Dvsa\Olcs\Api\Entity\Application\Application(
+            $licence,
+            new \Dvsa\Olcs\Api\Entity\System\RefData(),
+            0
+        );
+        $application->setId(34);
+        $licence->addApplications($application);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 4324)->once()->andReturn($licence);
@@ -62,6 +69,12 @@ class UpdateTrafficAreaTest extends CommandHandlerTestCase
             function (LicenceEntity $saveLicence) {
                 $this->assertSame($this->references[TrafficArea::class]['Z'], $saveLicence->getTrafficArea());
             }
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber::class,
+            ['id' => 34],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
 
         $response = $this->sut->handleCommand($command);

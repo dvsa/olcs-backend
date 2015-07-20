@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  */
 final class CeasePsvDiscs extends AbstractCommandHandler implements TransactionedInterface
 {
-    protected $repoServiceName = 'PsvDiscs';
+    protected $repoServiceName = 'PsvDisc';
 
     public function handleCommand(CommandInterface $command)
     {
@@ -34,7 +34,7 @@ final class CeasePsvDiscs extends AbstractCommandHandler implements Transactione
         }
 
         $result = new Result();
-        $result->addMessage('Ceased discs for licence.');
+        $result->addMessage('Ceased '. count($discs) .' discs for licence.');
 
         return $result;
     }

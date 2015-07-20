@@ -31,12 +31,27 @@ class TransportManager extends AbstractTransportManager
     const TRANSPORT_MANAGER_TYPE_BOTH = 'tm_t_b';
     const TRANSPORT_MANAGER_TYPE_INTERNAL = 'tm_t_i';
 
-    public function updateTransportManager($type, $status, $workCd, $homeCd, $createdBy)
-    {
+    public function updateTransportManager(
+        $type,
+        $status,
+        $workCd = null,
+        $homeCd = null,
+        $createdBy = null,
+        $modifiedBy = null
+    ) {
         $this->setTmType($type);
         $this->setTmStatus($status);
-        $this->setWorkCd($workCd);
-        $this->setHomeCd($homeCd);
-        $this->setCreatedBy($createdBy);
+        if ($workCd !== null) {
+            $this->setWorkCd($workCd);
+        }
+        if ($homeCd !== null) {
+            $this->setHomeCd($homeCd);
+        }
+        if ($createdBy !== null) {
+            $this->setCreatedBy($createdBy);
+        }
+        if ($modifiedBy !== null) {
+            $this->setLastModifiedBy($modifiedBy);
+        }
     }
 }
