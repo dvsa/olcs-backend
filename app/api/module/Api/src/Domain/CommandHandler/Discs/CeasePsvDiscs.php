@@ -28,9 +28,11 @@ final class CeasePsvDiscs extends AbstractCommandHandler implements Transactione
         /** @var \Dvsa\Olcs\Api\Entity\Licence\Licence $licence */
         $discs = $command->getDiscs();
 
-        foreach ($discs as $disc) {
-            $disc->cease(new \DateTime());
-            $this->getRepo()->save($disc);
+        if(!empty($discs)) {
+            foreach ($discs as $disc) {
+                $disc->cease(new \DateTime());
+                $this->getRepo()->save($disc);
+            }
         }
 
         $result = new Result();
