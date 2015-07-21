@@ -2,7 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication\Context;
 
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+
 interface ContextInterface
 {
-    public function provide(\ArrayObject $context);
+    public function provide(PublicationLink $publication, \ArrayObject $context);
 }
