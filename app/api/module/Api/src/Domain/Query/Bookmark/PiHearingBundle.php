@@ -14,7 +14,13 @@ class PiHearingBundle extends AbstractQuery
 {
     use Identity;
 
-    protected $bundle = [];
+    protected $bundle = [
+        'pi' => [
+            'case' => [
+                'licence'
+            ]
+        ]
+    ];
 
     /**
      * @return mixed
