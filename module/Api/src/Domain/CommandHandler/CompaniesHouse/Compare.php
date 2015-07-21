@@ -211,22 +211,25 @@ final class Compare extends AbstractCommandHandler
     {
         return array_map(
             function ($officer) {
-                $dob = $officer['dateOfBirth'];
-                if (is_array($dob)) {
-                    $dob = sprintf(
-                        '%s-%02d-%02d',
-                        $dob['year'],
-                        $dob['month'],
-                        isset($dob['day']) ? $dob['day'] : 1
-                    );
-                } elseif (is_object($dob)) {
-                    $dob = $dob->format('Y-m-d');
-                }
-                return [
+                $normalised = [
                     'name' => $officer['name'],
                     'role' => $officer['role'],
-                    'dateOfBirth' => $dob,
                 ];
+                if (isset($officer['dateOfBirth'])) {
+                    $dob = $officer['dateOfBirth'];
+                    if (is_array($dob)) {
+                        $dob = sprintf(
+                            '%s-%02d-%02d',
+                            $dob['year'],
+                            $dob['month'],
+                            isset($dob['day']) ? $dob['day'] : 1
+                        );
+                    } elseif (is_object($dob)) {
+                        $dob = $dob->format('Y-m-d');
+                    }
+                    $normalised['dateOfBirth'] = $dob;
+                }
+                return $normalised;
             },
             $data['officers']
         );
