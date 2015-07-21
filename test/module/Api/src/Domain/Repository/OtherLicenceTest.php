@@ -39,4 +39,20 @@ class OtherLicenceTest extends RepositoryTestCase
 
         $this->assertSame('RESULT', $this->sut->fetchByTransportManager(834));
     }
+
+    public function testApplyListFilters()
+    {
+        $this->setUpSut(Repo::class, true);
+
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+
+        $mockQ = m::mock(\Dvsa\Olcs\Transfer\Query\QueryInterface::class);
+        $mockQ->shouldReceive('getTransportManager')->with()->twice()->andReturn(33);
+
+        $mockQb->shouldReceive('expr->eq')->with('ol.transportManager', ':tmId')->once()->andReturn('EXPR');
+        $mockQb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('tmId', 33)->once();
+
+        $this->sut->applyListFilters($mockQb, $mockQ);
+    }
 }

@@ -174,6 +174,7 @@ return [
     TransferCommand\OtherLicence\UpdateForTma::class => CommandHandler\OtherLicence\UpdateForTma::class,
     TransferCommand\OtherLicence\CreatePreviousLicence::class
         => CommandHandler\OtherLicence\CreatePreviousLicence::class,
+    TransferCommand\OtherLicence\CreateForTm::class => CommandHandler\OtherLicence\CreateForTm::class,
 
     // Transfer - Previous Conviction
     TransferCommand\PreviousConviction\CreatePreviousConviction::class =>

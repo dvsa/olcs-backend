@@ -15,6 +15,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\PreviousConviction\CreatePreviousConviction as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\PreviousConviction;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Create Previous Conviction
@@ -29,16 +30,16 @@ final class CreatePreviousConviction extends AbstractCommandHandler implements T
     {
         $result = new Result();
 
-        $application = $this->getRepo()->getReference(Application::class, $command->getApplication());
-
-        $conviction = $this->createPreviousConvictionObject($command, $application);
+        $conviction = $this->createPreviousConvictionObject($command);
         $result->addMessage('Previous conviction created');
 
         $this->getRepo()->save($conviction);
 
         $result->addId('previousConviction', $conviction->getId());
 
-        $result->merge($this->updateApplicationCompletion($application->getId()));
+        if ($command->getApplication()) {
+            $result->merge($this->updateApplicationCompletion($command->getApplication()));
+        }
 
         return $result;
     }
@@ -54,23 +55,36 @@ final class CreatePreviousConviction extends AbstractCommandHandler implements T
      * @param Cmd $command
      * @return Application
      */
-    private function createPreviousConvictionObject(Cmd $command, Application $application)
+    private function createPreviousConvictionObject(Cmd $command)
     {
-        $title = $this->getRepo()->getRefdataReference($command->getTitle());
-
         $conviction = new PreviousConviction();
 
-        if ($command->getTransportManager()) {
-            // @TODO: as and when TM previous convictions are worked on
-            // this will need to be implemented
+        if ($command->getTitle()) {
+            $conviction->setTitle(
+                $this->getRepo()->getRefdataReference($command->getTitle())
+            );
         }
-
-        $conviction->setTitle($title);
-        $conviction->setApplication($application);
-        $conviction->setForename($command->getForename());
-        $conviction->setFamilyName($command->getFamilyName());
+        if ($command->getTransportManager()) {
+            $conviction->setTransportManager(
+                $this->getRepo()->getReference(
+                    \Dvsa\Olcs\Api\Entity\Tm\TransportManager::class,
+                    $command->getTransportManager()
+                )
+            );
+        }
+        if ($command->getApplication()) {
+            $conviction->setApplication(
+                $this->getRepo()->getReference(Application::class, $command->getApplication())
+            );
+        }
+        if ($command->getForename()) {
+            $conviction->setForename($command->getForename());
+        }
+        if ($command->getFamilyName()) {
+            $conviction->setFamilyName($command->getFamilyName());
+        }
         $conviction->setConvictionDate(
-            new \DateTime($command->getConvictionDate())
+            new DateTime($command->getConvictionDate())
         );
         $conviction->setCategoryText($command->getCategoryText());
         $conviction->setNotes($command->getNotes());
