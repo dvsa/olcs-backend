@@ -167,7 +167,7 @@ trait BundleSerializableTrait
         return $value;
     }
 
-    private function getPropertyValue($property)
+    public function getPropertyValue($property)
     {
         $value = null;
 

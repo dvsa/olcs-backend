@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as BusShortNoticeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -544,6 +545,174 @@ class BusReg extends AbstractBusReg
             'decision' => $this->status->getDescription(),
             'reason' => $reason,
         ] : null;
+    }
+
+    /**
+     * Returns whether a bus reg may be granted
+     *
+     * @param FeeEntity $fee
+     * @return bool
+     */
+    public function isGrantable($fee = null)
+    {
+        if (false === $this->isGrantableBasedOnRequiredFields()) {
+            // bus reg without all required fields which makes it non-grantable
+            return false;
+        }
+
+        if (false === $this->isGrantableBasedOnShortNotice()) {
+            // bus reg without short notice details or with one which makes it non-grantable
+            return false;
+        }
+
+        if ((false === $this->isGrantableBasedOnFee($fee))) {
+            // bus reg with a fee which makes it non-grantable
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns whether a bus reg has all required fields which makes it grantable
+     *
+     * @return bool
+     */
+    private function isGrantableBasedOnRequiredFields()
+    {
+        // mendatory fields which needs to be marked as Yes
+        $yesFields = [
+            'timetableAcceptable',
+            'mapSupplied',
+            'trcConditionChecked',
+            'copiedToLaPte',
+            'laShortNote',
+            'applicationSigned'
+        ];
+
+        if (!empty($this->busNoticePeriod)
+            && $this->busNoticePeriod->getId() == BusNoticePeriodEntity::NOTICE_PERIOD_SCOTLAND
+        ) {
+            // for Scottish registrations opNotifiedLaPte is required
+            $yesFields[] = 'opNotifiedLaPte';
+        }
+
+        foreach ($yesFields as $field) {
+            if (empty($this->$field) || $this->$field != 'Y') {
+                return false;
+            }
+        }
+
+        // mendatory fields which can't be empty
+        $nonEmptyFields = [
+            'effectiveDate',
+            'receivedDate',
+            'serviceNo',
+            'startPoint',
+            'finishPoint',
+        ];
+
+        foreach ($nonEmptyFields as $field) {
+            if (empty($this->$field)) {
+                return false;
+            }
+        }
+
+        // mendatory collections which can't be empty
+        $nonEmptyCollections = [
+            'busServiceTypes',
+            'trafficAreas',
+            'localAuthoritys',
+        ];
+
+        foreach ($nonEmptyCollections as $field) {
+            if (($this->$field === null) || $this->$field->isEmpty()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns whether a bus reg has short notice details which makes it grantable
+     *
+     * @return bool
+     */
+    private function isGrantableBasedOnShortNotice()
+    {
+        if ($this->isShortNotice !== 'Y') {
+            // not a short notice one
+            return true;
+        }
+
+        if (empty($this->shortNotice)) {
+            // no short notice details makes it non-grantable
+            return false;
+        }
+
+        $shortNoticQuestionFields = [
+            ['change' => 'bankHolidayChange'],
+            ['change' => 'connectionChange', 'detail' => 'connectionDetail'],
+            ['change' => 'holidayChange', 'detail' => 'holidayDetail'],
+            ['change' => 'notAvailableChange', 'detail' => 'notAvailableDetail'],
+            ['change' => 'policeChange', 'detail' => 'policeDetail'],
+            ['change' => 'replacementChange', 'detail' => 'replacementDetail'],
+            ['change' => 'specialOccasionChange', 'detail' => 'specialOccasionDetail'],
+            ['change' => 'timetableChange', 'detail' => 'timetableDetail'],
+            ['change' => 'trcChange', 'detail' => 'trcDetail'],
+            ['change' => 'unforseenChange', 'detail' => 'unforseenDetail'],
+        ];
+
+        $hasShortNoticeDetails = false;
+
+        // for short notice at least one question should be Yes
+        // and corresponding textarea (if there is one) should not be empty
+        foreach ($shortNoticQuestionFields as $questionField) {
+            $changeValue = $this->shortNotice->getPropertyValue($questionField['change']);
+
+            if (!empty($changeValue) && ($changeValue == 'Y')) {
+                // marked as Yes
+                if (!empty($questionField['detail'])) {
+                    // detail field exists for the question
+                    $detailValue = $this->shortNotice->getPropertyValue($questionField['detail']);
+
+                    if (!empty($detailValue)) {
+                        // value of the detail field not empty
+                        $hasShortNoticeDetails = true;
+                        break;
+                    }
+                } else {
+                    // no detail field for the question
+                    $hasShortNoticeDetails = true;
+                    break;
+                }
+            }
+        }
+
+        return $hasShortNoticeDetails;
+    }
+
+    /**
+     * Returns whether a bus reg has a fee which makes it grantable
+     *
+     * @param FeeEntity $fee
+     *
+     * @return bool
+     */
+    private function isGrantableBasedOnFee(FeeEntity $fee = null)
+    {
+        if (empty($fee)) {
+            // no fee makes it grantable
+            return true;
+        }
+
+        if (in_array($fee->getFeeStatus()->getId(), [FeeEntity::STATUS_PAID, FeeEntity::STATUS_WAIVED])) {
+            // the fee is paid or waived
+            return true;
+        }
+
+        return false;
     }
 
     /**

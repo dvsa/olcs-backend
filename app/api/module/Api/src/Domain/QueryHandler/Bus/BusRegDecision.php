@@ -15,6 +15,8 @@ class BusRegDecision extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Bus';
 
+    protected $extraRepos = ['Fee'];
+
     public function handleQuery(QueryInterface $query)
     {
         $busReg = $this->getRepo()->fetchUsingId($query);
@@ -22,7 +24,12 @@ class BusRegDecision extends AbstractQueryHandler
         return $this->result(
             $busReg,
             [],
-            ['decision' => $busReg->getDecision()]
+            [
+                'decision' => $busReg->getDecision(),
+                'isGrantable' => $busReg->isGrantable(
+                    $this->getRepo('Fee')->getLatestFeeForBusReg($query->getId())
+                )
+            ]
         );
     }
 }
