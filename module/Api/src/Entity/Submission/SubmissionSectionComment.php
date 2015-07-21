@@ -4,6 +4,9 @@ namespace Dvsa\Olcs\Api\Entity\Submission;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
+
 /**
  * SubmissionSectionComment Entity
  *
@@ -19,5 +22,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SubmissionSectionComment extends AbstractSubmissionSectionComment
 {
-
+    public function __construct(SubmissionEntity $submission, RefData $submissionSection)
+    {
+        $this->setSubmission($submission);
+        $this->setSubmissionSection($submissionSection);
+    }
 }
