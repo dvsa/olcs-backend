@@ -22,7 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_fee_type_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_fee_type_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_fee_type_ref_data1_idx", columns={"accrual_rule"}),
- *        @ORM\Index(name="fk_fee_type_ref_data2_idx", columns={"fee_type"})
+ *        @ORM\Index(name="fk_fee_type_ref_data2_idx", columns={"fee_type"}),
+ *        @ORM\Index(name="fk_irfo_fee_type_ref_data3_idx", columns={"irfo_fee_type"})
  *    }
  * )
  */
@@ -146,6 +147,16 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * Irfo fee type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="irfo_fee_type", referencedColumnName="id", nullable=true)
+     */
+    protected $irfoFeeType;
 
     /**
      * Is miscellaneous
@@ -479,6 +490,29 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the irfo fee type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $irfoFeeType
+     * @return FeeType
+     */
+    public function setIrfoFeeType($irfoFeeType)
+    {
+        $this->irfoFeeType = $irfoFeeType;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo fee type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getIrfoFeeType()
+    {
+        return $this->irfoFeeType;
     }
 
     /**
