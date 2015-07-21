@@ -2,7 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication;
 
-use Zend\Di\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 
 class PublicationGenerator
 {
@@ -15,7 +16,6 @@ class PublicationGenerator
         $this->publicationConfig = $config;
         $this->publicationContextManager = $context;
         $this->publicationProcessManager = $process;
-
     }
 
     public function createPublication($publicationConfigKey, $publication, $context)
@@ -24,18 +24,18 @@ class PublicationGenerator
             throw new \Exception('Invalid publication config');
         }
 
-        $contextObject = $this->fetchContext($this->publicationConfig[$publicationConfigKey], $context);
+        $contextObject = $this->fetchContext($this->publicationConfig[$publicationConfigKey], $publication, $context);
 
-        $this->processPublication($this->publicationConfig[$publicationConfigKey], $publication, $contextObject);
+        return $this->processPublication($this->publicationConfig[$publicationConfigKey], $publication, $contextObject);
     }
 
-    private function fetchContext($config, $existingContext)
+    private function fetchContext($config, PublicationLinkEntity $publication, $existingContext)
     {
         $context = new \ArrayObject($existingContext);
 
         if (isset($config['context'])) {
             foreach ($config['context'] as $contextClass) {
-                $this->publicationContextManager->get($contextClass)->provide($context);
+                $this->publicationContextManager->get($contextClass)->provide($publication, $context);
             }
         }
 
@@ -44,7 +44,7 @@ class PublicationGenerator
         return new ImmutableArrayObject($contextArray);
     }
 
-    private function processPublication($config, $publication, $context)
+    private function processPublication($config, PublicationLinkEntity $publication, $context)
     {
         if (!isset($config['process'])) {
             throw new \Exception('No publication processors specified');
@@ -53,5 +53,7 @@ class PublicationGenerator
         foreach ($config['process'] as $process) {
             $this->publicationProcessManager->get($process)->process($publication, $context);
         }
+
+        return $publication;
     }
 }
