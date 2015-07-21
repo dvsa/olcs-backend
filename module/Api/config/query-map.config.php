@@ -21,6 +21,8 @@ return [
     BookmarkQuery\BusRegBundle::class => BookmarkQueryHandler\BusRegBundle::class,
     BookmarkQuery\PublicationLinkBundle::class => BookmarkQueryHandler\PublicationLinkBundle::class,
     BookmarkQuery\PublicationBundle::class => BookmarkQueryHandler\PublicationBundle::class,
+    BookmarkQuery\PublicationLatestByTaAndTypeBundle::class
+        => BookmarkQueryHandler\PublicationLatestByTaAndTypeBundle::class,
     BookmarkQuery\ConditionsUndertakings::class => BookmarkQueryHandler\ConditionsUndertakings::class,
     BookmarkQuery\GoodsDiscBundle::class => BookmarkQueryHandler\GoodsDiscBundle::class,
     BookmarkQuery\PsvDiscBundle::class => BookmarkQueryHandler\PsvDiscBundle::class,
@@ -28,6 +30,9 @@ return [
         => BookmarkQueryHandler\InterimConditionsUndertakings::class,
     BookmarkQuery\FstandingAdditionalVeh::class => BookmarkQueryHandler\FstandingAdditionalVeh::class,
     BookmarkQuery\PiHearingBundle::class => BookmarkQueryHandler\PiHearingBundle::class,
+    BookmarkQuery\PiVenueBundle::class => BookmarkQueryHandler\PiVenueBundle::class,
+    BookmarkQuery\PreviousHearingBundle::class => BookmarkQueryHandler\PreviousHearing::class,
+    BookmarkQuery\PreviousPublicationForPiBundle::class => BookmarkQueryHandler\PreviousPublicationForPi::class,
     BookmarkQuery\TotalContFee::class => BookmarkQueryHandler\TotalContFee::class,
 
     // Application
