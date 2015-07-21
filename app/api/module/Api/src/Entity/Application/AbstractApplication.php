@@ -751,6 +751,15 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     protected $publicationLinks;
 
     /**
+     * S4
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Application\S4", mappedBy="application")
+     */
+    protected $s4s;
+
+    /**
      * Task
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -790,6 +799,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
         $this->otherLicences = new ArrayCollection();
         $this->previousConvictions = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
+        $this->s4s = new ArrayCollection();
         $this->tasks = new ArrayCollection();
         $this->transportManagers = new ArrayCollection();
     }
@@ -2801,6 +2811,66 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     {
         if ($this->publicationLinks->contains($publicationLinks)) {
             $this->publicationLinks->removeElement($publicationLinks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the s4
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @return Application
+     */
+    public function setS4s($s4s)
+    {
+        $this->s4s = $s4s;
+
+        return $this;
+    }
+
+    /**
+     * Get the s4s
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getS4s()
+    {
+        return $this->s4s;
+    }
+
+    /**
+     * Add a s4s
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @return Application
+     */
+    public function addS4s($s4s)
+    {
+        if ($s4s instanceof ArrayCollection) {
+            $this->s4s = new ArrayCollection(
+                array_merge(
+                    $this->s4s->toArray(),
+                    $s4s->toArray()
+                )
+            );
+        } elseif (!$this->s4s->contains($s4s)) {
+            $this->s4s->add($s4s);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a s4s
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $s4s
+     * @return Application
+     */
+    public function removeS4s($s4s)
+    {
+        if ($this->s4s->contains($s4s)) {
+            $this->s4s->removeElement($s4s);
         }
 
         return $this;

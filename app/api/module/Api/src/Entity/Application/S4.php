@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Application;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * S4 Entity
@@ -19,5 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class S4 extends AbstractS4
 {
-
+    public function __construct(Application $application, Licence $licence)
+    {
+        $this->application = $application;
+        $this->licence = $licence;
+    }
 }

@@ -194,10 +194,11 @@ class ConditionUndertaking extends AbstractRepository
      * Fetch a list of ConditionUndertaking for a Licence
      *
      * @param int $licenceId
+     * @param string $conditionType
      *
      * @return array
      */
-    public function fetchListForLicence($licenceId)
+    public function fetchListForLicence($licenceId, $conditionType = null)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
@@ -213,6 +214,11 @@ class ConditionUndertaking extends AbstractRepository
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
             ->setParameter('licence', $licenceId);
+
+        if ($conditionType !== null) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.conditionType', ':conditionType'))
+                ->setParameter('conditionType', $conditionType);
+        }
 
         return $qb->getQuery()->getResult();
     }

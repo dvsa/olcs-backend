@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Application;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 
 /**
  * ApplicationOperatingCentre Entity
@@ -26,4 +27,10 @@ class ApplicationOperatingCentre extends AbstractApplicationOperatingCentre
     const ACTION_ADD    = 'A';
     const ACTION_UPDATE = 'U';
     const ACTION_DELETE = 'D';
+
+    public function __construct(Application $application, OperatingCentre $operatingCentre)
+    {
+        $this->application = $application;
+        $this->operatingCentre = $operatingCentre;
+    }
 }

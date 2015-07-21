@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
@@ -49,8 +50,15 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
     private $repoManager;
 
+    /**
+     * @var Result
+     */
+    protected $result;
+
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $this->result = new Result();
+
         /** @var ServiceLocatorInterface $mainServiceLocator  */
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 

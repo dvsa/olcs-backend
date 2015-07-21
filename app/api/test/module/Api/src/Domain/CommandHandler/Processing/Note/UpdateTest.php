@@ -97,29 +97,10 @@ class UpdateTest extends CommandHandlerTestCase
             ->with($id, \Doctrine\Orm\Query::HYDRATE_OBJECT, $version)
             ->andReturn(
                 m::mock(NoteEntity::class)
-                    ->shouldReceive('setComment')
-                    ->with($data['comment'])
 
                     ->shouldReceive('setPriority')
                     ->with(1)
 
-                    // application note
-                    ->shouldReceive('getApplication')
-                    ->andReturn(
-                        m::mock(Application::class)
-                            ->shouldReceive('getId')
-                            ->andReturn($applicationId)
-                            ->getMock()
-                    )
-                    // note type is application
-                    ->shouldReceive('getNoteType')
-                    ->andReturn(
-                        m::mock(Entity\System\RefData::class)
-                            ->shouldReceive('getId')
-                            ->andReturn(NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER)
-                            ->getMock()
-                    )
-                    // Get ID
                     ->shouldreceive('getId')
                     ->andReturn($id)
 
