@@ -18,6 +18,6 @@ abstract class AbstractContext implements ContextInterface
 
     protected function handleQuery($query)
     {
-        return $this->queryHandler->handle($query);
+        return $this->queryHandler->handleQuery($query);
     }
 }
