@@ -56,4 +56,9 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler
 
         return $irfoGvPermit;
     }
+
+    private createFee(Cmd $command)
+    {
+
+    }
 }
