@@ -11,6 +11,10 @@ return [
         'routes' => include(__DIR__ . '/../../../vendor/olcs/olcs-transfer/config/backend-routes.config.php')
     ],
     'service_manager' => [
+        'alias' => [
+            'PublicationContextPlugin' => \Dvsa\Olcs\Api\Service\Publication\Context\PluginManager::class,
+            'PublicationProcessPlugin' => \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class
+        ],
         'invokables' => [
             'Document' => \Dvsa\Olcs\Api\Service\Document\Document::class,
             'DocumentGenerator' => \Dvsa\Olcs\Api\Service\Document\DocumentGenerator::class,
@@ -35,6 +39,12 @@ return [
             'CpmsIdentityProvider' => \Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
             'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperService::class,
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
+            \Dvsa\Olcs\Api\Service\Publication\PublicationGenerator::class =>
+                \Dvsa\Olcs\Api\Service\Publication\PublicationGeneratorFactory::class,
+            \Dvsa\Olcs\Api\Service\Publication\Context\PluginManager::class =>
+                \Dvsa\Olcs\Api\Service\Publication\Context\PluginManagerFactory::class,
+            \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class =>
+                \Dvsa\Olcs\Api\Service\Publication\Process\PluginManagerFactory::class,
         ],
     ],
     'file_uploader' => [
@@ -141,6 +151,7 @@ return [
             'GoodsDisc' => RepositoryFactory::class,
             'PsvDisc' => RepositoryFactory::class,
             'PiHearing' => RepositoryFactory::class,
+            'PiVenue' => RepositoryFactory::class,
             'Recipient' => RepositoryFactory::class,
             'Partner' => RepositoryFactory::class,
             'TransportManagerApplication' => RepositoryFactory::class,
@@ -236,4 +247,36 @@ return [
             'can-update-licence-licence-type' => \Dvsa\Olcs\Api\Assertion\Licence\UpdateLicenceType::class
         ]
     ],
+    'publication_context' => [
+        Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\AbstractFactory::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\AbstractFactory::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousPublicationNo::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\AbstractFactory::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class
+    ],
+    'publication_process' => [
+        Dvsa\Olcs\Api\Service\Publication\Process\Text1::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\Text1::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\HearingText1::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\HearingText1::class,
+    ],
+    'publications' => [
+        'HearingPublication' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousPublicationNo::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\HearingText1::class
+            ],
+        ),
+    ]
 ];
