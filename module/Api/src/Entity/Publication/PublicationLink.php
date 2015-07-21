@@ -29,4 +29,33 @@ use Doctrine\ORM\Mapping as ORM;
 class PublicationLink extends AbstractPublicationLink
 {
 
+    /**
+     * Updates publication text fields
+     *
+     * @param String $text1
+     * @param String $text2
+     * @param String $text3
+     */
+    public function updateText($text1, $text2, $text3)
+    {
+        $this->text1 = $text1;
+        $this->text2 = $text2;
+        $this->text3 = $text3;
+    }
+
+    public function updatePiHearing(
+        $licence,
+        $pi,
+        $publication,
+        $publicationSection,
+        $trafficArea,
+        $text2
+    ) {
+        $this->licence = $licence;
+        $this->pi = $pi;
+        $this->publication = $publication;
+        $this->publicationSection = $publicationSection;
+        $this->trafficArea = $trafficArea;
+        $this->text2 = $text2;
+    }
 }
