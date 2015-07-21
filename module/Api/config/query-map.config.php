@@ -77,6 +77,7 @@ return [
 
     // Other Licence
     TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
+    TransferQuery\OtherLicence\GetList::class => QueryHandler\OtherLicence\GetList::class,
 
     // Organisation
     TransferQuery\Organisation\BusinessDetails::class => QueryHandler\Organisation\BusinessDetails::class,
@@ -146,6 +147,7 @@ return [
     // Previous Conviction
     TransferQuery\PreviousConviction\PreviousConviction::class
         => QueryHandler\PreviousConviction\PreviousConviction::class,
+    TransferQuery\PreviousConviction\GetList::class => QueryHandler\PreviousConviction\GetList::class,
 
     // Company Subsidiary
     TransferQuery\CompanySubsidiary\CompanySubsidiary::class
