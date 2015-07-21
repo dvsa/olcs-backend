@@ -73,7 +73,6 @@ class RefuseApplicationTest extends CommandHandlerTestCase
             CeaseGoodsDiscs::class,
             [
                 'licenceVehicles' => null,
-                'id' => null
             ],
             $discsResult
         );

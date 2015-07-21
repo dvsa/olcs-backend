@@ -272,7 +272,7 @@ INSERT INTO `traffic_area` (`created_by`, `last_modified_by`, `id`, `txc_name`, 
     (2,2,'K','SouthEastMetropolitan','2001-06-09 11:01:21','2001-06-09 11:01:21',1,
     'London and the South East of England',7,0,0,1,0),
     (2,2,'M','Scottish','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'Scotland',8,1,0,0,0),
-    (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',9,0,0,0,1);
+    (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',8,0,0,0,1);
 
 INSERT INTO `enforcement_area` (`id`, `name`, `email_address`, `version`)
 VALUES

@@ -76,8 +76,14 @@ return [
     TransferCommand\Application\RestorePeople::class => CommandHandler\Application\RestorePeople::class,
     TransferCommand\Application\UpdateCompletion::class =>
         CommandHandler\Application\UpdateApplicationCompletion::class,
+    TransferCommand\Application\Schedule41::class => CommandHandler\Application\Schedule41::class,
     TransferCommand\Application\GenerateOrganisationName::class =>
         CommandHandler\Application\GenerateOrganisationName::class,
+    TransferCommand\Application\PrintInterimDocument::class => CommandHandler\Application\PrintInterimDocument::class,
+    TransferCommand\Application\UpdateInterim::class => CommandHandler\Application\UpdateInterim::class,
+    TransferCommand\Application\RefuseInterim::class => CommandHandler\Application\RefuseInterim::class,
+    TransferCommand\Application\GrantInterim::class => CommandHandler\Application\GrantInterim::class,
+    Command\Application\InForceInterim::class => CommandHandler\Application\InForceInterim::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -103,6 +109,7 @@ return [
     TransferCommand\Bus\UpdateTaAuthority::class => CommandHandler\Bus\UpdateTaAuthority::class,
     TransferCommand\Bus\UpdateServiceDetails::class => CommandHandler\Bus\UpdateServiceDetails::class,
     TransferCommand\Bus\UpdateShortNotice::class => CommandHandler\Bus\UpdateShortNotice::class,
+    TransferCommand\Bus\UpdateServiceRegister::class => CommandHandler\Bus\UpdateServiceRegister::class,
     TransferCommand\Bus\DeleteBus::class => CommandHandler\Bus\DeleteBus::class,
 
     // Transfer - Licence
@@ -122,6 +129,9 @@ return [
     TransferCommand\Licence\DeletePeople::class => CommandHandler\Licence\DeletePeople::class,
     Command\Document\DispatchDocument::class => CommandHandler\Document\DispatchDocument::class,
     TransferCommand\Licence\Overview::class => CommandHandler\Licence\Overview::class,
+    TransferCommand\Licence\UpdateTrafficArea::class => CommandHandler\Licence\UpdateTrafficArea::class,
+    Command\Licence\VoidAllCommunityLicences::class => CommandHandler\Licence\VoidAllCommunityLicences::class,
+    TransferCommand\Licence\ContinueLicence::class => CommandHandler\Licence\ContinueLicence::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
@@ -257,6 +267,12 @@ return [
         CommandHandler\Submission\CreateSubmissionAction::class,
     TransferCommand\Submission\UpdateSubmissionAction::class =>
         CommandHandler\Submission\UpdateSubmissionAction::class,
+    TransferCommand\Submission\CreateSubmissionSectionComment::class =>
+        CommandHandler\Submission\CreateSubmissionSectionComment::class,
+    TransferCommand\Submission\UpdateSubmissionSectionComment::class =>
+        CommandHandler\Submission\UpdateSubmissionSectionComment::class,
+    TransferCommand\Submission\DeleteSubmissionSectionComment::class =>
+        CommandHandler\Submission\DeleteSubmissionSectionComment::class,
 
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
@@ -362,6 +378,21 @@ return [
     Command\Application\UpdateVariationCompletion::class => CommandHandler\Application\UpdateVariationCompletion::class,
     Command\Application\CreateFee::class => CommandHandler\Application\CreateFee::class,
     Command\Application\CancelAllInterimFees::class => CommandHandler\Application\CancelAllInterimFees::class,
+
+    // Domain - Application Operating Centre
+    Command\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class
+        => CommandHandler\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class,
+
+    // Domain - Licence Operating Centre
+    Command\LicenceOperatingCentre\AssociateS4::class
+        => CommandHandler\LicenceOperatingCentre\AssociateS4::class,
+
+    // Domain - Condition Undertaking
+    Command\Cases\ConditionUndertaking\CreateConditionUndertaking::class
+        => CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
+
+    // Domain - Schedule41
+    Command\Schedule41\CreateS4::class => CommandHandler\Schedule41\CreateS4::class,
 
     // Domain - Bus
     Command\Bus\CreateBusFee::class => CommandHandler\Bus\CreateBusFee::class,
@@ -471,6 +502,7 @@ return [
     // Person
     TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,
     Command\Person\Create::class => CommandHandler\Person\Create::class,
+    Command\Person\UpdateFull::class => CommandHandler\Person\UpdateFull::class,
 
     // TM Employment
     TransferCommand\TmEmployment\DeleteList::class => CommandHandler\TmEmployment\DeleteList::class,
@@ -523,12 +555,21 @@ return [
 
     // Transfer - TransportManager
     TransferCommand\Tm\Create::class => CommandHandler\Tm\Create::class,
+    TransferCommand\Tm\Update::class => CommandHandler\Tm\Update::class,
 
     // Task
     TransferCommand\Task\CloseTasks::class => CommandHandler\Task\CloseTasks::class,
     TransferCommand\Task\ReassignTasks::class => CommandHandler\Task\ReassignTasks::class,
     TransferCommand\Task\UpdateTask::class => CommandHandler\Task\UpdateTask::class,
     TransferCommand\Task\CreateTask::class => CommandHandler\Task\CreateTask::class,
+
+    // PrivateHireLicence
+    TransferCommand\PrivateHireLicence\DeleteList::class => CommandHandler\PrivateHireLicence\DeleteList::class,
+    TransferCommand\PrivateHireLicence\Create::class => CommandHandler\PrivateHireLicence\Create::class,
+    TransferCommand\PrivateHireLicence\Update::class => CommandHandler\PrivateHireLicence\Update::class,
+
+    // ContinuationDetail
+    TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
 
 
     TransferCommand\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,

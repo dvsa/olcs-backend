@@ -31,6 +31,16 @@ class LicenceEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
+    public function testCanBecomeSpecialRestrictedNull()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getGoodsOrPsv')->andReturn(null);
+        $licence->shouldReceive('getLicenceType')->andReturn(null);
+
+        $this->assertEquals(true, $licence->canBecomeSpecialRestricted());
+    }
+
     /**
      * @dataProvider licenceTypeProvider
      */
@@ -38,12 +48,8 @@ class LicenceEntityTest extends EntityTester
     {
         /** @var Entity $licence */
         $licence = m::mock(Entity::class)->makePartial();
-
-        $licence->shouldReceive('getGoodsOrPsv->getId')
-            ->andReturn($goodsOrPsv);
-
-        $licence->shouldReceive('getLicenceType->getId')
-            ->andReturn($licenceType);
+        $licence->shouldReceive('getGoodsOrPsv->getId')->andReturn($goodsOrPsv);
+        $licence->shouldReceive('getLicenceType->getId')->andReturn($licenceType);
 
         $this->assertEquals($expected, $licence->canBecomeSpecialRestricted());
     }
@@ -538,6 +544,42 @@ class LicenceEntityTest extends EntityTester
         $this->assertTrue($licence->isRestricted());
     }
 
+    public function testIsStandardInternational()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertFalse($licence->isStandardInternational());
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertTrue($licence->isStandardInternational());
+    }
+
+    public function testIsStandardNational()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertFalse($licence->isStandardNational());
+
+        $licenceType = m::mock(RefData::class)->makePartial();
+        $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+        $licence->setLicenceType($licenceType);
+
+        $this->assertTrue($licence->isStandardNational());
+    }
+
     public function testCanHaveCommunityLicencesStandardInt()
     {
         /** @var Entity $licence */
@@ -615,5 +657,27 @@ class LicenceEntityTest extends EntityTester
         $this->assertEquals(5, $licence->getTotAuthMediumVehicles());
         $this->assertEquals(3, $licence->getTotAuthLargeVehicles());
         $this->assertEquals('Y', $licence->getNiFlag());
+    }
+
+    public function testGetPsvDiscsNotCeased()
+    {
+        $psvDiscsCollection = m::mock(ArrayCollection::class);
+        $psvDiscsNotCeasedCollection = m::mock(ArrayCollection::class);
+
+        $psvDiscsCollection->shouldReceive('matching')->once()->with(m::type(Criteria::class))->andReturnUsing(
+            function (Criteria $criteria) use ($psvDiscsNotCeasedCollection) {
+                $expectedCriteria = Criteria::create()
+                    ->where(Criteria::expr()->isNull('ceasedDate'));
+
+                $this->assertEquals($expectedCriteria, $criteria);
+
+                return $psvDiscsNotCeasedCollection;
+            }
+        );
+
+        $licence = $this->instantiate(Entity::class);
+
+        $licence->setPsvDiscs($psvDiscsCollection);
+        $this->assertSame($psvDiscsNotCeasedCollection, $licence->getPsvDiscsNotCeased());
     }
 }
