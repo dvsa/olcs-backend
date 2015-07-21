@@ -37,8 +37,9 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
     {
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
-        $licence->shouldReceive('jsonSerialize')
+        $licence->shouldReceive('serialize')
             ->once()
+            ->with([])
             ->andReturn(['foo' => 'bar'])
             ->shouldReceive('canBecomeSpecialRestricted')
             ->once()
@@ -67,6 +68,8 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
             'doesChangeRequireVariation' => true
         ];
 
-        $this->assertEquals($expected, $this->sut->handleQuery($query));
+        $result = $this->sut->handleQuery($query);
+
+        $this->assertEquals($expected, $result->serialize());
     }
 }

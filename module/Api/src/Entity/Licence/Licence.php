@@ -91,6 +91,10 @@ class Licence extends AbstractLicence
      */
     public function canBecomeSpecialRestricted()
     {
+        if ($this->getGoodsOrPsv() == null && $this->getLicenceType() == null) {
+            return true;
+        }
+
         return ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV
             && $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED
         );

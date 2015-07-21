@@ -9,12 +9,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ValidateApplication;
+use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Fee\PayFee;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -39,7 +41,8 @@ class PayFeeTest extends CommandHandlerTestCase
     {
         $this->refData = [
             Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
-            Application::APPLICATION_STATUS_GRANTED
+            Application::APPLICATION_STATUS_GRANTED,
+            Application::INTERIM_STATUS_GRANTED
         ];
 
         parent::initReferences();
@@ -51,7 +54,7 @@ class PayFeeTest extends CommandHandlerTestCase
 
         /** @var FeeEntity $fee */
         $fee = m::mock(FeeEntity::class)->makePartial();
-        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('NOT_CONT');
+        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('foo');
 
         $this->repoMap['Fee']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -78,7 +81,7 @@ class PayFeeTest extends CommandHandlerTestCase
         /** @var FeeEntity $fee */
         $fee = m::mock(FeeEntity::class)->makePartial();
         $fee->setApplication($application);
-        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('NOT_CONT');
+        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('foo');
 
         $this->repoMap['Fee']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -106,7 +109,7 @@ class PayFeeTest extends CommandHandlerTestCase
         /** @var FeeEntity $fee */
         $fee = m::mock(FeeEntity::class)->makePartial();
         $fee->setApplication($application);
-        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('NOT_CONT');
+        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('foo');
 
         $this->repoMap['Fee']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -135,7 +138,7 @@ class PayFeeTest extends CommandHandlerTestCase
         /** @var FeeEntity $fee */
         $fee = m::mock(FeeEntity::class)->makePartial();
         $fee->setApplication($application);
-        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('NOT_CONT');
+        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('foo');
 
         $this->repoMap['Fee']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -168,7 +171,7 @@ class PayFeeTest extends CommandHandlerTestCase
         /** @var FeeEntity $fee */
         $fee = m::mock(FeeEntity::class)->makePartial();
         $fee->setApplication($application);
-        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('NOT_CONT');
+        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('foo');
 
         $this->repoMap['Fee']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -194,7 +197,6 @@ class PayFeeTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-
     public function testHandleCommandContinuationNoContinuationDetail()
     {
         $command = PayFeeCommand::create(['id' => 111]);
@@ -216,7 +218,6 @@ class PayFeeTest extends CommandHandlerTestCase
         ];
         $this->assertEquals($expected, $result->toArray());
     }
-
 
     public function licenceStatusNotAllowed()
     {
@@ -257,6 +258,46 @@ class PayFeeTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => []
         ];
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWithoutOutstandingApplicationFeesWithGrantIntWithoutInterimStatus()
+    {
+        $command = PayFeeCommand::create(['id' => 111]);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(222);
+        $application->setIsVariation(false);
+        $application->setStatus($this->refData[Application::APPLICATION_STATUS_GRANTED]);
+
+        /** @var FeeEntity $fee */
+        $fee = m::mock(FeeEntity::class)->makePartial();
+        $fee->setApplication($application);
+        $fee->shouldReceive('getFeeType->getFeeType->getId')
+            ->andReturn(FeeType::FEE_TYPE_GRANTINT);
+
+        $this->repoMap['Fee']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($fee)
+            ->shouldReceive('fetchOutstandingGrantFeesByApplicationId')
+            ->once()
+            ->with(222)
+            ->andReturn([]);
+
+        $result1 = new Result();
+        $result1->addMessage('ValidateApplication');
+        $this->expectedSideEffect(ValidateApplication::class, ['id' => 222], $result1);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'ValidateApplication'
+            ]
+        ];
+
         $this->assertEquals($expected, $result->toArray());
     }
 
@@ -330,6 +371,53 @@ class PayFeeTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => ['XXX', '@todo Display message "licence.continued.message" to user']
         ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWithoutOutstandingApplicationFeesWithGrantInt()
+    {
+        $command = PayFeeCommand::create(['id' => 111]);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(222);
+        $application->setIsVariation(false);
+        $application->setStatus($this->refData[Application::APPLICATION_STATUS_GRANTED]);
+        $application->setInterimStatus($this->refData[Application::INTERIM_STATUS_GRANTED]);
+
+        /** @var FeeEntity $fee */
+        $fee = m::mock(FeeEntity::class)->makePartial();
+        $fee->setApplication($application);
+        $fee->shouldReceive('getFeeType->getFeeType->getId')
+            ->andReturn(FeeType::FEE_TYPE_GRANTINT);
+
+        $this->repoMap['Fee']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($fee)
+            ->shouldReceive('fetchOutstandingGrantFeesByApplicationId')
+            ->once()
+            ->with(222)
+            ->andReturn([]);
+
+        $result1 = new Result();
+        $result1->addMessage('ValidateApplication');
+        $this->expectedSideEffect(ValidateApplication::class, ['id' => 222], $result1);
+
+        $result2 = new Result();
+        $result2->addMessage('InForceInterim');
+        $this->expectedSideEffect(InForceInterim::class, ['id' => 222], $result2);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'ValidateApplication',
+                'InForceInterim'
+            ]
+        ];
+
         $this->assertEquals($expected, $result->toArray());
     }
 }
