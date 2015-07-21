@@ -287,4 +287,8 @@ return [
         QueryHandler\TmQualification\TmQualificationsList::class,
     TransferQuery\TmQualification\TmQualification::class => QueryHandler\TmQualification\TmQualification::class,
     TransferQuery\TmQualification\Documents::class => QueryHandler\TmQualification\Documents::class,
+
+    // Transport Manager
+    TransferQuery\Tm\TransportManager::class => QueryHandler\Tm\TransportManager::class,
+    TransferQuery\Tm\Documents::class => QueryHandler\Tm\Documents::class,
 ];

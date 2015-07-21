@@ -22,6 +22,8 @@ class TmQualification extends AbstractRepository
     protected $alias = 'tq';
 
     /**
+     * Add list filters
+     * 
      * @param QueryBuilder $qb
      * @param TmQualificationsListDTO $query
      */
@@ -29,5 +31,19 @@ class TmQualification extends AbstractRepository
     {
         $qb->andWhere($qb->expr()->eq($this->alias . '.transportManager', ':transportManager'));
         $qb->setParameter('transportManager', $query->getTransportManager());
+    }
+
+    /**
+     * Add joins
+     *
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     */
+    protected function applyListJoins(\Doctrine\ORM\QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()
+            ->with('countryCode', 'cc')
+            ->with('qualificationType', 'qt');
+
+        $qb->orderBy('qt.displayOrder', 'ASC');
     }
 }
