@@ -7,6 +7,8 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as Entity;
 use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService as BusRegOtherServiceEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as BusShortNoticeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Mockery as m;
@@ -769,5 +771,441 @@ class BusRegEntityTest extends EntityTester
                 ['decision' => 'Decision', 'reason' => 'Withdrawn Reason']
             ],
         ];
+    }
+
+    private function getAssertionsForIsGrantable()
+    {
+        $this->entity->setTimetableAcceptable('Y');
+        $this->entity->setMapSupplied('Y');
+        $this->entity->setTrcConditionChecked('Y');
+        $this->entity->setCopiedToLaPte('Y');
+        $this->entity->setLaShortNote('Y');
+        $this->entity->setApplicationSigned('Y');
+        $this->entity->setEffectiveDate('any value');
+        $this->entity->setReceivedDate('any value');
+        $this->entity->setServiceNo('any value');
+        $this->entity->setStartPoint('any value');
+        $this->entity->setFinishPoint('any value');
+        $this->entity->setIsShortNotice('N');
+
+        $this->entity->addBusServiceTypes('any value');
+        $this->entity->addTrafficAreas('any value');
+        $this->entity->addLocalAuthoritys('any value');
+    }
+
+    public function testIsGrantable()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // Grantable - Rule: Other - isShortNotice: N - Fee: none
+        $this->assertEquals(true, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutTimetableAcceptable()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // timetableAcceptable: N
+        $this->entity->setTimetableAcceptable('N');
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutMapSupplied()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // mapSupplied: N
+        $this->entity->setMapSupplied('N');
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutTrcConditionChecked()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // trcConditionChecked: N
+        $this->entity->setTrcConditionChecked('N');
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutCopiedToLaPte()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // copiedToLaPte: N
+        $this->entity->setCopiedToLaPte('N');
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutLaShortNote()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // laShortNote: N
+        $this->entity->setLaShortNote('N');
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutApplicationSigned()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // applicationSigned: N
+        $this->entity->setApplicationSigned('N');
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutEffectiveDate()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // effectiveDate empty
+        $this->entity->setEffectiveDate(null);
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutReceivedDate()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // receivedDate empty
+        $this->entity->setReceivedDate(null);
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutServiceNo()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // serviceNo empty
+        $this->entity->setServiceNo(null);
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutStartPoint()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // startPoint empty
+        $this->entity->setStartPoint(null);
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutFinishPoint()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // finishPoint empty
+        $this->entity->setFinishPoint(null);
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutBusServiceTypes()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // busServiceTypes empty
+        $this->entity->setBusServiceTypes(null);
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutTrafficAreas()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // trafficAreas empty
+        $this->entity->setTrafficAreas(null);
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithoutLocalAuthoritys()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
+        // localAuthoritys empty
+        $this->entity->setLocalAuthoritys(null);
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithNoticePeriodScotland()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_SCOTLAND);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
+
+        // Grantable - Rule: Scotland - isShortNotice: N - Fee: none
+        $this->entity->setOpNotifiedLaPte('Y');
+        $this->assertEquals(true, $this->entity->isGrantable());
+
+        // nonGrantable - Rule: Scotland - isShortNotice: N - Fee: none
+        // extra data required from Scotland missing
+        $this->entity->setOpNotifiedLaPte('N');
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithFeePaid()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $feeType = new FeeTypeEntity();
+
+        $status = new RefDataEntity();
+        $status->setId(FeeEntity::STATUS_PAID);
+
+        $fee = new FeeEntity($feeType, 10, $status);
+
+        // Grantable - Rule: Other - isShortNotice: N - Fee: paid
+        $this->assertEquals(true, $this->entity->isGrantable($fee));
+    }
+
+    public function testIsGrantableWithFeeWaived()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $feeType = new FeeTypeEntity();
+
+        $status = new RefDataEntity();
+        $status->setId(FeeEntity::STATUS_WAIVED);
+
+        $fee = new FeeEntity($feeType, 10, $status);
+
+        // Grantable - Rule: Other - isShortNotice: N - Fee: waived
+        $this->assertEquals(true, $this->entity->isGrantable($fee));
+    }
+
+    public function testIsGrantableWithFeeOutstanding()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $feeType = new FeeTypeEntity();
+
+        $status = new RefDataEntity();
+        $status->setId(FeeEntity::STATUS_OUTSTANDING);
+
+        $fee = new FeeEntity($feeType, 10, $status);
+
+        // nonGrantable - Rule: Other - isShortNotice: N - Fee: outstanding
+        $this->assertEquals(false, $this->entity->isGrantable($fee));
+    }
+
+    public function testIsGrantableWithoutShortNotice()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
+        // missing short notice details
+        $this->entity->setIsShortNotice('Y');
+        $this->assertEquals(false, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithShortNoticeBankHoliday()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $this->entity->setIsShortNotice('Y');
+
+        $shortNotice = new BusShortNoticeEntity();
+        $shortNotice->setBankHolidayChange('Y');
+        $this->entity->setShortNotice($shortNotice);
+
+        // Grantable - Rule: Other - isShortNotice: Y - Fee: none
+        // bankHolidayChange: Y
+        $this->assertEquals(true, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithShortNoticeConnection()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $this->entity->setIsShortNotice('Y');
+
+        $shortNotice = new BusShortNoticeEntity();
+        $shortNotice->setConnectionChange('Y');
+        $this->entity->setShortNotice($shortNotice);
+
+        // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
+        // connectionChange: Y, connectionDetail: empty
+        $this->assertEquals(false, $this->entity->isGrantable());
+
+        // Grantable - Rule: Other - isShortNotice: Y - Fee: none
+        // connectionChange: Y, connectionDetail: not empty
+        $shortNotice->setConnectionDetail('any value');
+        $this->assertEquals(true, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithShortNoticeHoliday()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $this->entity->setIsShortNotice('Y');
+
+        $shortNotice = new BusShortNoticeEntity();
+        $shortNotice->setHolidayChange('Y');
+        $this->entity->setShortNotice($shortNotice);
+
+        // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
+        // holidayChange: Y, holidayDetail: empty
+        $this->assertEquals(false, $this->entity->isGrantable());
+
+        // Grantable - Rule: Other - isShortNotice: Y - Fee: none
+        // holidayChange: Y, holidayDetail: not empty
+        $shortNotice->setHolidayDetail('any value');
+        $this->assertEquals(true, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithShortNoticeNotAvailable()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $this->entity->setIsShortNotice('Y');
+
+        $shortNotice = new BusShortNoticeEntity();
+        $shortNotice->setNotAvailableChange('Y');
+        $this->entity->setShortNotice($shortNotice);
+
+        // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
+        // notAvailableChange: Y, notAvailableDetail: empty
+        $this->assertEquals(false, $this->entity->isGrantable());
+
+        // Grantable - Rule: Other - isShortNotice: Y - Fee: none
+        // notAvailableChange: Y, notAvailableDetail: not empty
+        $shortNotice->setNotAvailableDetail('any value');
+        $this->assertEquals(true, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithShortNoticePolice()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $this->entity->setIsShortNotice('Y');
+
+        $shortNotice = new BusShortNoticeEntity();
+        $shortNotice->setPoliceChange('Y');
+        $this->entity->setShortNotice($shortNotice);
+
+        // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
+        // policeChange: Y, policeDetail: empty
+        $this->assertEquals(false, $this->entity->isGrantable());
+
+        // Grantable - Rule: Other - isShortNotice: Y - Fee: none
+        // policeChange: Y, policeDetail: not empty
+        $shortNotice->setPoliceDetail('any value');
+        $this->assertEquals(true, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithShortNoticeReplacement()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $this->entity->setIsShortNotice('Y');
+
+        $shortNotice = new BusShortNoticeEntity();
+        $shortNotice->setReplacementChange('Y');
+        $this->entity->setShortNotice($shortNotice);
+
+        // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
+        // replacementChange: Y, replacementDetail: empty
+        $this->assertEquals(false, $this->entity->isGrantable());
+
+        // Grantable - Rule: Other - isShortNotice: Y - Fee: none
+        // replacementChange: Y, replacementDetail: not empty
+        $shortNotice->setReplacementDetail('any value');
+        $this->assertEquals(true, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithShortNoticeSpecialOccasion()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $this->entity->setIsShortNotice('Y');
+
+        $shortNotice = new BusShortNoticeEntity();
+        $shortNotice->setSpecialOccasionChange('Y');
+        $this->entity->setShortNotice($shortNotice);
+
+        // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
+        // specialOccasionChange: Y, specialOccasionDetail: empty
+        $this->assertEquals(false, $this->entity->isGrantable());
+
+        // Grantable - Rule: Other - isShortNotice: Y - Fee: none
+        // specialOccasionChange: Y, specialOccasionDetail: not empty
+        $shortNotice->setSpecialOccasionDetail('any value');
+        $this->assertEquals(true, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithShortNoticeTimetable()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $this->entity->setIsShortNotice('Y');
+
+        $shortNotice = new BusShortNoticeEntity();
+        $shortNotice->setTimetableChange('Y');
+        $this->entity->setShortNotice($shortNotice);
+
+        // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
+        // timetableChange: Y, timetableDetail: empty
+        $this->assertEquals(false, $this->entity->isGrantable());
+
+        // Grantable - Rule: Other - isShortNotice: Y - Fee: none
+        // timetableChange: Y, timetableDetail: not empty
+        $shortNotice->setTimetableDetail('any value');
+        $this->assertEquals(true, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithShortNoticeTrc()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $this->entity->setIsShortNotice('Y');
+
+        $shortNotice = new BusShortNoticeEntity();
+        $shortNotice->setTrcChange('Y');
+        $this->entity->setShortNotice($shortNotice);
+
+        // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
+        // trcChange: Y, trcDetail: empty
+        $this->assertEquals(false, $this->entity->isGrantable());
+
+        // Grantable - Rule: Other - isShortNotice: Y - Fee: none
+        // trcChange: Y, trcDetail: not empty
+        $shortNotice->setTrcDetail('any value');
+        $this->assertEquals(true, $this->entity->isGrantable());
+    }
+
+    public function testIsGrantableWithShortNoticeUnforseen()
+    {
+        $this->getAssertionsForIsGrantable();
+
+        $this->entity->setIsShortNotice('Y');
+
+        $shortNotice = new BusShortNoticeEntity();
+        $shortNotice->setUnforseenChange('Y');
+        $this->entity->setShortNotice($shortNotice);
+
+        // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
+        // unforseenChange: Y, unforseenDetail: empty
+        $this->assertEquals(false, $this->entity->isGrantable());
+
+        // Grantable - Rule: Other - isShortNotice: Y - Fee: none
+        // unforseenChange: Y, unforseenDetail: not empty
+        $shortNotice->setUnforseenDetail('any value');
+        $this->assertEquals(true, $this->entity->isGrantable());
     }
 }

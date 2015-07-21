@@ -29,7 +29,7 @@ class Fee extends AbstractRepository
      * Gets the latest bus reg fee
      *
      * @param $busRegId
-     * @return array
+     * @return Fee|null
      */
     public function getLatestFeeForBusReg($busRegId)
     {
@@ -39,7 +39,9 @@ class Fee extends AbstractRepository
         $doctrineQb->setParameter('busRegId', $busRegId);
         $doctrineQb->setMaxResults(1);
 
-        return $doctrineQb->getQuery()->getResult();
+        $results = $doctrineQb->getQuery()->getResult();
+
+        return !empty($results) ? $results[0] : null;
     }
 
     /**
