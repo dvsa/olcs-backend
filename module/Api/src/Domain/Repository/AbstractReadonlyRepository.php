@@ -272,7 +272,9 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         }
 
         if ($query instanceof OrderedQueryInterface) {
-            $queryBuilderHelper->order($query->getSort(), $query->getOrder());
+            if (!empty($query->getSort())) {
+                $queryBuilderHelper->order($query->getSort(), $query->getOrder());
+            }
         }
     }
 

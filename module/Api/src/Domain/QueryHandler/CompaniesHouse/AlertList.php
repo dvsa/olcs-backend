@@ -32,7 +32,10 @@ class AlertList extends AbstractQueryHandler
                     ],
                 ]
             ),
-            'count' => $repo->fetchCount($query)
+            'count' => $repo->fetchCount($query),
+            'valueOptions' => [
+                'companiesHouseAlertReason' => $this->getRepo()->getReasonValueOptions(),
+            ]
         ];
     }
 }
