@@ -371,6 +371,9 @@ return [
     Command\Licence\UpdateTotalCommunityLicences::class => CommandHandler\Licence\UpdateTotalCommunityLicences::class,
     Command\Licence\SaveAddresses::class => CommandHandler\Licence\SaveAddresses::class,
 
+    // Domain - Publications
+    Command\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,
+
     // Domain - Discs
     Command\Discs\CeaseGoodsDiscs::class => CommandHandler\Discs\CeaseGoodsDiscs::class,
     Command\Discs\CeasePsvDiscs::class => CommandHandler\Discs\CeasePsvDiscs::class,
@@ -526,4 +529,7 @@ return [
     TransferCommand\Task\ReassignTasks::class => CommandHandler\Task\ReassignTasks::class,
     TransferCommand\Task\UpdateTask::class => CommandHandler\Task\UpdateTask::class,
     TransferCommand\Task\CreateTask::class => CommandHandler\Task\CreateTask::class,
+
+
+    TransferCommand\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,
 ];
