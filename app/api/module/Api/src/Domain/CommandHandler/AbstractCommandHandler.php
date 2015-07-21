@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\FactoryInterface;
@@ -15,6 +16,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 
 /**
  * Abstract Command Handler
@@ -58,6 +60,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         if ($this instanceof DocumentGeneratorAwareInterface) {
             $this->setDocumentGenerator($mainServiceLocator->get('DocumentGenerator'));
+        }
+
+        if ($this instanceof PublicationGeneratorAwareInterface) {
+            $this->setPublicationGenerator($mainServiceLocator->get(PublicationGenerator::class));
         }
 
         if ($this instanceof \Dvsa\Olcs\Api\Domain\EmailAwareInterface) {
