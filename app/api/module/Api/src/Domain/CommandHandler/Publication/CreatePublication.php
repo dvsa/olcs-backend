@@ -43,9 +43,9 @@ class CreatePublication extends AbstractCommandHandler implements TransactionedI
      * @param CommandInterface $command
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    private function createPublication($trafficArea, $type, CommandInterface $command)
+    private function createPublication($trafficArea, $pubType, CommandInterface $command)
     {
-        $publication = $this->getRepo()->fetchLatestForTrafficAreaAndType($trafficArea, $type);
+        $publication = $this->getRepo()->fetchLatestForTrafficAreaAndType($trafficArea, $pubType);
 
         $publicationLink = $publication->newLink();
 
