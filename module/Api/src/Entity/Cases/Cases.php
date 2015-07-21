@@ -235,4 +235,12 @@ class Cases extends AbstractCases
     {
         return !$this->getComplaints()->isEmpty();
     }
+
+    /**
+     * @return boolean
+     */
+    public function isTm()
+    {
+        return !(is_null($this->getTransportManager()));
+    }
 }
