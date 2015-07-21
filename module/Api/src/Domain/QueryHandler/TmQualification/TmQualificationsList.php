@@ -18,12 +18,15 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class TmQualificationsList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'TmQualification';
+    protected $extraRepos = ['Document'];
 
     public function handleQuery(QueryInterface $query)
     {
+        $documents = $this->getRepo('Document')->fetchListForTm($query->getTransportManager());
         return [
-            'result' => $this->getRepo()->fetchList($query),
-            'count' =>   $this->getRepo()->fetchCount($query)
+            'result'    => $this->getRepo()->fetchList($query),
+            'count'     => $this->getRepo()->fetchCount($query),
+            'documents' => $documents
         ];
     }
 }

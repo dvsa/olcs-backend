@@ -1,17 +1,17 @@
 <?php
 
 /**
- * TmQualifications Documents List
+ * Tm Qualifications Documents List
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\TmQualification;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Tm;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * TmQualifications Documents List
+ * Tm Qualifications Documents List
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -21,9 +21,10 @@ class Documents extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
+        $documents = $this->getRepo()->fetchListForTm($query->getId());
         return [
-            'result' => $this->getRepo()->fetchList($query),
-            'count' =>   $this->getRepo()->fetchCount($query)
+            'result' => $documents,
+            'count'  => count($documents)
         ];
     }
 }
