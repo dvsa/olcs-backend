@@ -55,7 +55,8 @@ class GetDetails extends AbstractQueryHandler
                                     'countryCode'
                                 ]
                             ]
-                        ]
+                        ],
+                        'organisation',
                     ],
                     'operatingCentres' => [
                         'operatingCentre' => [
