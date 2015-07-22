@@ -20,18 +20,6 @@ class Cases extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
-     * @param QueryBuilder $qb
-     * @param int          $id
-     */
-    protected function buildDefaultQuery(QueryBuilder $qb, $id)
-    {
-        parent::buildDefaultQuery($qb, $id);
-
-        $this->getQueryBuilder()
-            ->with('licence');
-    }
-
-    /**
      * Fetch the default record by it's id
      *
      * @param Query|QryCmd $query
@@ -74,6 +62,41 @@ class Cases extends AbstractRepository
         }
 
         return $case;
+    }
+
+    /**
+     * Fetch the default record by it's id plus licence information
+     *
+     * @param Query|QryCmd $query
+     * @param int $hydrateMode
+     * @param null $version
+     * @return mixed
+     * @throws Exception\NotFoundException
+     * @throws Exception\VersionConflictException
+     */
+    public function fetchWithLicenceUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
+    {
+        $qb = $this->createQueryBuilder();
+
+        parent::buildDefaultQuery($qb, $query->getId());
+
+        $this->getQueryBuilder()
+            ->with('licence', 'l')
+            ->with('l.operatingCentres', 'loc')
+            ->with('loc.operatingCentre', 'oc')
+            ->with('oc.address');
+
+        $results = $qb->getQuery()->getResult($hydrateMode);
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+
+        if ($hydrateMode === Query::HYDRATE_OBJECT && $version !== null) {
+            $this->lock($results[0], $version);
+        }
+
+        return $results[0];
     }
 
     /**
