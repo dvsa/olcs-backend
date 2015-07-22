@@ -874,6 +874,138 @@ class BusRegEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider provideCalculateNoticeDate
+     * @param array $busNoticePeriodData
+     * @param array $busRegData
+     * @param string $expectedEffectiveDate
+     */
+    public function testRefuseByShortNotice($busNoticePeriodData, $busRegData, $expectedEffectiveDate)
+    {
+        $this->getAssertionsForCanMakeDecisionIsTrue();
+
+        $shortNotice = m::mock(BusShortNoticeEntity::class)->makePartial();
+        $shortNotice->shouldReceive('reset')->once()->andReturnSelf();
+        $this->entity->setShortNotice($shortNotice);
+
+        foreach ($busRegData as $key => $value) {
+            if (in_array($key, ['receivedDate', 'effectiveDate'])) {
+                $value = (!empty($value)) ? new \DateTime($value) : null;
+            } elseif ($key === 'parent') {
+                $parent = new Entity();
+                $parent->setEffectiveDate(new \DateTime($value['effectiveDate']));
+                $value = $parent;
+            }
+            $this->entity->{'set' . ucwords($key)}($value);
+        }
+
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        foreach ($busNoticePeriodData as $key => $value) {
+            $busNoticePeriod->{'set' . ucwords($key)}($value);
+        }
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
+
+        $reason = 'testing';
+
+        $this->entity->refuseByShortNotice($reason);
+
+        $this->assertEquals('Y', $this->entity->getShortNoticeRefused());
+        $this->assertEquals($reason, $this->entity->getReasonSnRefused());
+        $this->assertEquals('N', $this->entity->getIsShortNotice());
+
+        $this->assertEquals($expectedEffectiveDate, $this->entity->getEffectiveDate());
+    }
+
+    public function provideCalculateNoticeDate()
+    {
+        $scotRules = [
+            'standardPeriod' => 56,
+            'cancellationPeriod' => 90
+        ];
+
+        $otherRules = [
+            'standardPeriod' => 56,
+            'cancellationPeriod' => 0
+        ];
+
+        $noRules = [
+            'standardPeriod' => 0,
+            'cancellationPeriod' => 0
+        ];
+
+        return [
+            [
+                $otherRules,
+                ['receivedDate' => null],
+                null
+            ],
+            [
+                $scotRules,
+                [
+                    'variationNo' => 1,
+                    'receivedDate' => '2015-02-09'
+                ],
+                null
+            ],
+            [
+                $noRules,
+                [
+                    'variationNo' => 1,
+                    'receivedDate' => '2015-02-09',
+                    'effectiveDate' => '2015-03-31'
+                ],
+                new \DateTime('2015-03-31')
+            ],
+            [
+                $otherRules,
+                [
+                    'variationNo' => 0,
+                    'receivedDate' => '2015-02-09'
+                ],
+                new \DateTime('2015-04-06')
+            ],
+            [
+                $otherRules,
+                [
+                    'variationNo' => 1,
+                    'receivedDate' => '2015-02-09'
+                ],
+                new \DateTime('2015-04-06')
+            ],
+            [
+                $scotRules,
+                [
+                    'variationNo' => 0,
+                    'receivedDate' => '2015-02-09'
+                ],
+                new \DateTime('2015-04-06')
+            ],
+            [
+                $scotRules,
+                [
+                    'variationNo' => 1,
+                    'receivedDate' => '2015-02-09',
+                    'parent' => ['effectiveDate' => '2014-06-11']
+                ],
+                new \DateTime('2014-09-09')
+            ],
+        ];
+    }
+
+    /**
+     * Tests refuseByShortNotice throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testRefuseByShortNoticeThrowsCanMakeDecisionException()
+    {
+        $this->getAssertionsForCanMakeDecisionIsFalse();
+
+        $this->entity->refuseByShortNotice(null);
+
+        return true;
+    }
+
+    /**
      * @dataProvider isShortNoticeRefusedDataProvider
      *
      * @param string $shortNoticeRefused
