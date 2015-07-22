@@ -818,6 +818,61 @@ class BusRegEntityTest extends EntityTester
         return true;
     }
 
+    public function testRefuse()
+    {
+        $this->getAssertionsForCanMakeDecisionIsTrue();
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_REGISTERED);
+        $this->entity->setStatus($status);
+
+        $newStatus = new RefDataEntity();
+        $newStatus->setId(Entity::STATUS_REFUSED);
+
+        $reason = 'testing';
+
+        $this->entity->refuse($newStatus, $reason);
+
+        $this->assertEquals($newStatus, $this->entity->getStatus());
+        $this->assertEquals($status, $this->entity->getRevertStatus());
+        $this->assertInstanceOf(\DateTime::class, $this->entity->getStatusChangeDate());
+        $this->assertEquals($reason, $this->entity->getReasonRefused());
+    }
+
+    /**
+     * Tests refuse throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testRefuseThrowsCanMakeDecisionException()
+    {
+        $this->getAssertionsForCanMakeDecisionIsFalse();
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_REFUSED);
+
+        $this->entity->refuse($status, null);
+
+        return true;
+    }
+
+    /**
+     * Tests refuse throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testRefuseThrowsIncorrectStatusException()
+    {
+        $this->getAssertionsForCanMakeDecisionIsTrue();
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_REGISTERED);
+
+        $this->entity->refuse($status, null);
+
+        return true;
+    }
+
     /**
      * @dataProvider isShortNoticeRefusedDataProvider
      *
