@@ -26,7 +26,7 @@ class CompaniesHouseCompanyTest extends RepositoryTestCase
         $this->setUpSut(CompaniesHouseCompanyRepo::class);
     }
 
-    public function testGetLatesByCompanyNumber()
+    public function testGetLatestByCompanyNumber()
     {
         $companyNumber = '01234567';
 
