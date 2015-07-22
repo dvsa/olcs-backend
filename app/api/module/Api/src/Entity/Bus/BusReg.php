@@ -780,4 +780,25 @@ class BusReg extends AbstractBusReg
 
         return $this;
     }
+
+    /**
+     * Withdraw
+     *
+     * @param RefData $status
+     * @param RefData $reason
+     * @return BusReg
+     */
+    public function withdraw(RefData $status, RefData $reason)
+    {
+        $this->canMakeDecision();
+
+        if ($status->getId() !== self::STATUS_WITHDRAWN) {
+            throw new BadRequestException('Please provide a valid status');
+        }
+
+        $this->updateStatus($status);
+        $this->setWithdrawnReason($reason);
+
+        return $this;
+    }
 }
