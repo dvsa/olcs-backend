@@ -636,9 +636,44 @@ class BusRegEntityTest extends EntityTester
         return true;
     }
 
+    private function getAssertionsForCanMakeDecisionIsTrue()
+    {
+        $id = 15;
+        $regNo = 12345;
+
+        //the bus reg entity which exists on the licence
+        $licenceBusReg = new Entity();
+        $licenceBusReg->setId($id);
+
+        $licenceEntityMock = m::mock(LicenceEntity::class);
+        $licenceEntityMock->shouldReceive('getLatestBusVariation')->once()->with($regNo)->andReturn($licenceBusReg);
+
+        $this->entity->setRegNo($regNo);
+        $this->entity->setId($id);
+        $this->entity->setLicence($licenceEntityMock);
+    }
+
+    private function getAssertionsForCanMakeDecisionIsFalse()
+    {
+        $id = 15;
+        $otherBusId = 16;
+        $regNo = 12345;
+
+        //the bus reg entity which exists on the licence
+        $licenceBusReg = new Entity();
+        $licenceBusReg->setId($otherBusId);
+
+        $licenceEntityMock = m::mock(LicenceEntity::class);
+        $licenceEntityMock->shouldReceive('getLatestBusVariation')->once()->with($regNo)->andReturn($licenceBusReg);
+
+        $this->entity->setRegNo($regNo);
+        $this->entity->setId($id);
+        $this->entity->setLicence($licenceEntityMock);
+    }
+
     public function testResetStatus()
     {
-        $this->getAssertionsForCanEditIsTrue();
+        $this->getAssertionsForCanMakeDecisionIsTrue();
 
         $status = new RefDataEntity();
         $status->setId(Entity::STATUS_REGISTERED);
@@ -661,23 +696,65 @@ class BusRegEntityTest extends EntityTester
      *
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
-    public function testResetStatusThrowsCanEditExceptionForEbsr()
+    public function testResetStatusThrowsCanMakeDecisionException()
     {
-        $this->entity->setIsTxcApp('Y');
+        $this->getAssertionsForCanMakeDecisionIsFalse();
         $this->entity->resetStatus(null);
 
         return true;
     }
 
+    public function testCancelByAdmin()
+    {
+        $this->getAssertionsForCanMakeDecisionIsTrue();
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_REGISTERED);
+        $this->entity->setStatus($status);
+
+        $newStatus = new RefDataEntity();
+        $newStatus->setId(Entity::STATUS_ADMIN);
+
+        $reason = 'testing';
+
+        $this->entity->cancelByAdmin($newStatus, $reason);
+
+        $this->assertEquals($newStatus, $this->entity->getStatus());
+        $this->assertEquals($status, $this->entity->getRevertStatus());
+        $this->assertInstanceOf(\DateTime::class, $this->entity->getStatusChangeDate());
+        $this->assertEquals($reason, $this->entity->getReasonCancelled());
+    }
+
     /**
-     * Tests resetStatus throws exception correctly
+     * Tests cancelByAdmin throws exception correctly
      *
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
-    public function testResetStatusThrowsCanEditExceptionForLatestVariation()
+    public function testCancelByAdminThrowsCanMakeDecisionException()
     {
-        $this->getAssertionsForCanEditIsFalseDueToVariation();
-        $this->entity->resetStatus(null);
+        $this->getAssertionsForCanMakeDecisionIsFalse();
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_ADMIN);
+
+        $this->entity->cancelByAdmin($status, null);
+
+        return true;
+    }
+
+    /**
+     * Tests cancelByAdmin throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testCancelByAdminThrowsIncorrectStatusException()
+    {
+        $this->getAssertionsForCanMakeDecisionIsTrue();
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_REGISTERED);
+
+        $this->entity->cancelByAdmin($status, null);
 
         return true;
     }
