@@ -759,6 +759,65 @@ class BusRegEntityTest extends EntityTester
         return true;
     }
 
+    public function testWithdraw()
+    {
+        $this->getAssertionsForCanMakeDecisionIsTrue();
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_REGISTERED);
+        $this->entity->setStatus($status);
+
+        $newStatus = new RefDataEntity();
+        $newStatus->setId(Entity::STATUS_WITHDRAWN);
+
+        $reason = new RefDataEntity();
+
+        $this->entity->withdraw($newStatus, $reason);
+
+        $this->assertEquals($newStatus, $this->entity->getStatus());
+        $this->assertEquals($status, $this->entity->getRevertStatus());
+        $this->assertInstanceOf(\DateTime::class, $this->entity->getStatusChangeDate());
+        $this->assertEquals($reason, $this->entity->getWithdrawnReason());
+    }
+
+    /**
+     * Tests withdraw throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testWithdrawThrowsCanMakeDecisionException()
+    {
+        $this->getAssertionsForCanMakeDecisionIsFalse();
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_WITHDRAWN);
+
+        $reason = new RefDataEntity();
+
+        $this->entity->withdraw($status, $reason);
+
+        return true;
+    }
+
+    /**
+     * Tests withdraw throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testWithdrawThrowsIncorrectStatusException()
+    {
+        $this->getAssertionsForCanMakeDecisionIsTrue();
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_REGISTERED);
+
+        $reason = new RefDataEntity();
+
+        $this->entity->withdraw($status, $reason);
+
+        return true;
+    }
+
     /**
      * @dataProvider isShortNoticeRefusedDataProvider
      *
