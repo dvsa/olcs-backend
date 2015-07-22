@@ -566,11 +566,12 @@ return [
     // ContinuationDetail
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
 
-    // Domain - CompaniesHouse
+    // CompaniesHouse
     Command\CompaniesHouse\EnqueueOrganisations::class => CommandHandler\CompaniesHouse\EnqueueOrganisations::class,
     Command\CompaniesHouse\InitialLoad::class => CommandHandler\CompaniesHouse\InitialLoad::class,
     Command\CompaniesHouse\Compare::class => CommandHandler\CompaniesHouse\Compare::class,
     Command\CompaniesHouse\CreateAlert::class => CommandHandler\CompaniesHouse\CreateAlert::class,
+    TransferCommand\CompaniesHouse\CloseAlerts::class => CommandHandler\CompaniesHouse\CloseAlerts::class,
 
     // Domain - Queue
     QueueCommand\Complete::class => QueueCommandHandler\Complete::class,
