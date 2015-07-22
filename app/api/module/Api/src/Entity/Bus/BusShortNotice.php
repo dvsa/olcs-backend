@@ -94,4 +94,30 @@ class BusShortNotice extends AbstractBusShortNotice
         $this->policeChange = $policeChange;
         $this->policeDetail = $policeDetail;
     }
+
+    public function reset()
+    {
+        $this->bankHolidayChange = 'N';
+        $this->unforseenChange = 'N';
+        $this->unforseenDetail = null;
+        $this->timetableChange = 'N';
+        $this->timetableDetail = null;
+        $this->replacementChange = 'N';
+        $this->replacementDetail = null;
+        $this->notAvailableChange = 'N';
+        $this->notAvailableDetail = null;
+        $this->specialOccasionChange = 'N';
+        $this->specialOccasionDetail = null;
+        $this->connectionChange = 'N';
+        $this->connectionDetail = null;
+        $this->holidayChange = 'N';
+        $this->holidayDetail = null;
+        $this->trcChange = 'N';
+        $this->trcDetail = null;
+        $this->policeChange = 'N';
+        $this->policeDetail = null;
+        $this->createdBy = null;
+        $this->lastModifiedOn = null;
+        $this->lastModifiedBy = null;
+    }
 }

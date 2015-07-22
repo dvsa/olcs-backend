@@ -822,4 +822,66 @@ class BusReg extends AbstractBusReg
 
         return $this;
     }
+
+    /**
+     * Refuse by Short Notice
+     *
+     * @param string $reason
+     * @return BusReg
+     */
+    public function refuseByShortNotice($reason)
+    {
+        $this->canMakeDecision();
+
+        $this->setShortNoticeRefused('Y');
+        $this->setReasonSnRefused($reason);
+        $this->setEffectiveDate($this->calculateNoticeDate());
+
+        // reset the short notice record
+        $this->setIsShortNotice('N');
+
+        if ($this->getShortNotice() !== null) {
+            $this->getShortNotice()->reset();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Calculates the short notice date
+     *
+     * @return null|string
+     */
+    private function calculateNoticeDate()
+    {
+        $receivedDateTime = $this->receivedDate;
+
+        if (!($receivedDateTime instanceof \DateTime)) {
+            return null;
+        }
+
+        if ($this->busNoticePeriod === null) {
+            return null;
+        }
+
+        if (($this->busNoticePeriod->getCancellationPeriod() > 0) && ($this->variationNo > 0)) {
+            if ($this->parent === null) {
+                // if we don't have a parent record, the result is undefined.
+                return null;
+            }
+
+            $lastDateTime = $this->parent->getEffectiveDate();
+            $interval = new \DateInterval('P' . $this->busNoticePeriod->getCancellationPeriod() . 'D');
+
+            return $lastDateTime->add($interval);
+        }
+
+        if ($this->busNoticePeriod->getStandardPeriod() > 0) {
+            $interval = new \DateInterval('P' . $this->busNoticePeriod->getStandardPeriod() . 'D');
+
+            return $receivedDateTime->add($interval);
+        }
+
+        return $this->effectiveDate;
+    }
 }
