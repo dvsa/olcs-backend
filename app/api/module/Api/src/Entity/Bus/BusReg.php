@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 
 /**
  * BusReg Entity
@@ -254,6 +255,21 @@ class BusReg extends AbstractBusReg
         }
 
         throw new ForbiddenException('Only the latest variation may be deleted');
+    }
+
+    /**
+     * A decision about a bus reg can be made only if it's the latest variation
+     *
+     * @return bool
+     * @throws ForbiddenException
+     */
+    public function canMakeDecision()
+    {
+        if ($this->isLatestVariation()) {
+            return true;
+        }
+
+        throw new ForbiddenException('Decision can be made on the latest variation only');
     }
 
     /**
@@ -716,20 +732,51 @@ class BusReg extends AbstractBusReg
     }
 
     /**
+     * Update status
+     *
+     * @param RefData $status
+     * @return BusReg
+     */
+    private function updateStatus(RefData $status)
+    {
+        $this->setRevertStatus($this->getStatus());
+        $this->setStatus($status);
+        $this->setStatusChangeDate(new \DateTime());
+
+        return $this;
+    }
+
+    /**
      * Resets status
      *
      * @return BusReg
      */
     public function resetStatus()
     {
-        $this->canEdit();
+        $this->canMakeDecision();
 
-        $status = $this->getStatus();
-        $revertStatus = $this->getRevertStatus();
+        $this->updateStatus($this->getRevertStatus());
 
-        $this->setStatus($revertStatus);
-        $this->setRevertStatus($status);
-        $this->setStatusChangeDate(new \DateTime());
+        return $this;
+    }
+
+    /**
+     * Admin cancel
+     *
+     * @param RefData $status
+     * @param string $reason
+     * @return BusReg
+     */
+    public function cancelByAdmin(RefData $status, $reason)
+    {
+        $this->canMakeDecision();
+
+        if ($status->getId() !== self::STATUS_ADMIN) {
+            throw new BadRequestException('Please provide a valid status');
+        }
+
+        $this->updateStatus($status);
+        $this->setReasonCancelled($reason);
 
         return $this;
     }
