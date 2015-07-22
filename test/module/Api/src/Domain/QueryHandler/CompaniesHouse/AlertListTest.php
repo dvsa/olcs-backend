@@ -45,7 +45,10 @@ class AlertListTest extends QueryHandlerTestCase
             ->andReturn($mockList)
             ->shouldReceive('fetchCount')
             ->with($query)
-            ->andReturn(2);
+            ->andReturn(2)
+            ->shouldReceive('getReasonValueOptions')
+            ->once()
+            ->andReturn(['foo' => 'bar']);
 
         $result = $this->sut->handleQuery($query);
 
@@ -55,6 +58,11 @@ class AlertListTest extends QueryHandlerTestCase
                 ['id' => 2],
             ],
             'count' => 2,
+            'valueOptions' => [
+                'companiesHouseAlertReason' => [
+                    'foo' => 'bar',
+                ],
+            ],
         ];
 
         $this->assertEquals($expected, $result);
