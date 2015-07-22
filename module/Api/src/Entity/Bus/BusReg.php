@@ -801,4 +801,25 @@ class BusReg extends AbstractBusReg
 
         return $this;
     }
+
+    /**
+     * Refuse
+     *
+     * @param RefData $status
+     * @param string $reason
+     * @return BusReg
+     */
+    public function refuse(RefData $status, $reason)
+    {
+        $this->canMakeDecision();
+
+        if ($status->getId() !== self::STATUS_REFUSED) {
+            throw new BadRequestException('Please provide a valid status');
+        }
+
+        $this->updateStatus($status);
+        $this->setReasonRefused($reason);
+
+        return $this;
+    }
 }
