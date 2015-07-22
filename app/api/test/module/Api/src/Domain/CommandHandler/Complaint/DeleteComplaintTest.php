@@ -71,8 +71,8 @@ class DeleteComplaintTest extends CommandHandlerTestCase
         $complaint->setId($command->getId());
         $complaint->setComplainantContactDetails($complainantContactDetails);
 
-        $this->repoMap['Complaint']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
+        $this->repoMap['Complaint']->shouldReceive('fetchById')
+            ->with(99)
             ->andReturn($complaint)
             ->once()
             ->shouldReceive('delete')
@@ -89,6 +89,6 @@ class DeleteComplaintTest extends CommandHandlerTestCase
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
-        $this->assertContains('Deleted', $result->getMessages());
+        $this->assertContains('Id 99 deleted', $result->getMessages());
     }
 }
