@@ -59,4 +59,34 @@ class TmEmploymentTest extends RepositoryTestCase
 
         $this->assertSame('RESULT', $this->sut->fetchByTransportManager(534));
     }
+
+    public function testApplyListJoins()
+    {
+        $this->setUpSut(Repo::class, true);
+
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+
+        $this->sut->shouldReceive('getQueryBuilder')->with()->once()->andReturn($mockQb);
+        $mockQb->shouldReceive('with')->with('contactDetails', 'cd')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('cd.address', 'add')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('add.countryCode')->once()->andReturnSelf();
+
+        $this->sut->applyListJoins($mockQb);
+    }
+
+    public function testApplyListFilters()
+    {
+        $this->setUpSut(Repo::class, true);
+
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $mockQi = m::mock(\Dvsa\Olcs\Transfer\Query\QueryInterface::class);
+
+        $mockQi->shouldReceive('getTransportManager')->with()->once()->andReturn(12);
+
+        $mockQb->shouldReceive('expr->eq')->with('te.transportManager', ':transportManager')->once()->andReturn('EXPR');
+        $mockQb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('transportManager', 12)->once();
+
+        $this->sut->applyListFilters($mockQb, $mockQi);
+    }
 }
