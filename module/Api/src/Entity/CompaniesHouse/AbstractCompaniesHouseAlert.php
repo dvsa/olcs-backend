@@ -70,9 +70,9 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Is closed
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="is_closed", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno", name="is_closed", nullable=false, options={"default": 0})
      */
     protected $isClosed = 0;
 
@@ -236,7 +236,7 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Set the is closed
      *
-     * @param boolean $isClosed
+     * @param string $isClosed
      * @return CompaniesHouseAlert
      */
     public function setIsClosed($isClosed)
@@ -249,7 +249,7 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Get the is closed
      *
-     * @return boolean
+     * @return string
      */
     public function getIsClosed()
     {
