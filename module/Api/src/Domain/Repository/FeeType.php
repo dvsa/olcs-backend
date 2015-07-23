@@ -38,8 +38,7 @@ class FeeType extends AbstractRepository
         RefDataEntity $goodsOrPsv,
         RefDataEntity $licenceType = null,
         \DateTime $date = null,
-        $trafficArea = null,
-        $irfoFeeType
+        $trafficArea = null
     ) {
         $qb = $this->createQueryBuilder();
 
@@ -74,11 +73,6 @@ class FeeType extends AbstractRepository
 
         } else {
             $qb->andWhere($qb->expr()->isNull('ft.trafficArea'));
-        }
-
-        if ($irfoFeeType !== null) {
-            $qb->andWhere($qb->expr()->eq('ft.irfoFeeType', ':irfoFeeType'))
-                ->setParameter('irfoFeeType', $irfoFeeType);
         }
 
         $qb->addOrderBy('ft.effectiveFrom', 'DESC')
