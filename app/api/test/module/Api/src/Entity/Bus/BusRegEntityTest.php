@@ -1005,6 +1005,112 @@ class BusRegEntityTest extends EntityTester
         return true;
     }
 
+    public function testGrant()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('canMakeDecision')->once()->andReturn(true);
+        $sut->shouldReceive('isGrantable')->once()->andReturn(true);
+        $sut->shouldReceive('getStatusForGrant')->once()->andReturn(Entity::STATUS_REGISTERED);
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_VAR);
+        $sut->setStatus($status);
+
+        $newStatus = new RefDataEntity();
+        $newStatus->setId(Entity::STATUS_REGISTERED);
+
+        $reasons = ['testing'];
+
+        $sut->grant($newStatus, $reasons);
+
+        $this->assertEquals($newStatus, $sut->getStatus());
+        $this->assertEquals($status, $sut->getRevertStatus());
+        $this->assertInstanceOf(\DateTime::class, $sut->getStatusChangeDate());
+        $this->assertEquals($reasons, $sut->getVariationReasons());
+
+        return true;
+    }
+
+    /**
+     * Tests grant throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testGrantThrowsCanMakeDecisionException()
+    {
+        $this->getAssertionsForCanMakeDecisionIsFalse();
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_REGISTERED);
+
+        $this->entity->grant($status, null);
+
+        return true;
+    }
+
+    /**
+     * Tests grant throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testGrantThrowsNotGrantableException()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('canMakeDecision')->once()->andReturn(true);
+        $sut->shouldReceive('isGrantable')->once()->andReturn(false);
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_REGISTERED);
+
+        $sut->grant($status, null);
+
+        return true;
+    }
+
+    /**
+     * Tests grant throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testGrantThrowsIncorrectStatusException()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('canMakeDecision')->once()->andReturn(true);
+        $sut->shouldReceive('isGrantable')->once()->andReturn(true);
+        $sut->shouldReceive('getStatusForGrant')->once()->andReturn(Entity::STATUS_CANCELLED);
+
+        $status = new RefDataEntity();
+        $status->setId(Entity::STATUS_REGISTERED);
+
+        $sut->grant($status, null);
+
+        return true;
+    }
+
+    /**
+     * @dataProvider getStatusForGrantDataProvider
+     *
+     * @param string $statusId
+     * @param array $expected
+     */
+    public function testGetStatusForGrant($statusId, $expected)
+    {
+        $status = new RefDataEntity();
+        $status->setId($statusId);
+        $this->entity->setStatus($status);
+
+        $this->assertEquals($expected, $this->entity->getStatusForGrant());
+    }
+
+    public function getStatusForGrantDataProvider()
+    {
+        return [
+            [Entity::STATUS_NEW, Entity::STATUS_REGISTERED],
+            [Entity::STATUS_VAR, Entity::STATUS_REGISTERED],
+            [Entity::STATUS_CANCEL, Entity::STATUS_CANCELLED],
+        ];
+    }
+
     /**
      * @dataProvider isShortNoticeRefusedDataProvider
      *
