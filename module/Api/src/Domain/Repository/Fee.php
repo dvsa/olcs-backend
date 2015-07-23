@@ -11,6 +11,7 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -314,8 +315,15 @@ class Fee extends AbstractRepository
         $this->getQueryBuilder()
             ->filterByLicence($query->getLicence())
             ->filterByApplication($query->getApplication())
-            ->filterByBusReg($query->getBusReg())
             ->filterByIds($query->getIds());
+
+        if ($query->getBusReg() !== null) {
+            /** @var array $busRegIds */
+            $busRegIds = $this->getBusRegIdsForRouteFromBusRegId($query->getBusReg());
+            $qb
+                ->andWhere($qb->expr()->in($this->alias . '.busReg', ':busRegIds'))
+                ->setParameter('busRegIds', $busRegIds);
+        }
 
         if ($query->getTask() !== null) {
             $qb->andWhere($this->alias . '.task = :taskId');
@@ -361,5 +369,27 @@ class Fee extends AbstractRepository
         }
 
         $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
+    }
+
+    /**
+     * Get all bus reg ids for a route no
+     *
+     * @param int $busRegId
+     * @return array
+     */
+    protected function getBusRegIdsForRouteFromBusRegId($busRegId)
+    {
+        $qb = $this->getEntityManager()
+            ->getRepository(BusRegEntity::class)
+            ->createQueryBuilder('br');
+
+        $qb
+            ->select('br2.id')
+            ->join(BusRegEntity::class, 'br2')
+            ->where('br.routeNo = br2.routeNo')
+            ->andWhere('br.id = :id')
+            ->setParameter('id', $busRegId);
+
+        return $qb->getQuery()->getArrayResult();
     }
 }
