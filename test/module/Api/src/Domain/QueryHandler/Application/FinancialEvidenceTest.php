@@ -20,6 +20,8 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Financial Evidence Test
@@ -28,13 +30,17 @@ use Doctrine\ORM\Query;
  */
 class FinancialEvidenceTest extends QueryHandlerTestCase
 {
+    protected $mockHelperService;
+
     public function setUp()
     {
         $this->sut = new FinancialEvidence();
         $this->mockRepo('Application', ApplicationRepo::class);
-        $this->mockRepo('FinancialStandingRate', RateRepo::class);
 
-        parent::setUp();
+        $this->mockHelperService = m::mock(FinancialStandingHelperService::class);
+        $this->mockedSmServices['FinancialStandingHelperService'] = $this->mockHelperService;
+
+        return parent::setUp();
     }
 
     public function testHandleQuery()
@@ -47,7 +53,7 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
         $totAuthVehicles = 3;
         $organisationLicences = $this->getMockOrganisationLicences();
         $organisationApplications = $this->getMockOrganisationApplications();
-        $rates = $this->getStubRates();
+        $totalRequired = 30400;
 
         $query = Qry::create(['id' => $applicationId]);
 
@@ -59,7 +65,6 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
 
         $mockLicenceType = m::mock()
             ->shouldReceive('getId')
-            // ->once()
             ->andReturn($licenceType)
             ->getMock();
 
@@ -120,24 +125,25 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ->once()
             ->andReturn($organisationApplications);
 
-        $this->repoMap['FinancialStandingRate']
-            ->shouldReceive('getRatesInEffect')
-            ->once()
-            ->andReturn($rates);
+        $this->mockHelperService
+            ->shouldReceive('getFinanceCalculation')
+            ->andReturn($totalRequired)
+            ->shouldReceive('getRatesForView')
+            ->with($goodsOrPsv)
+            ->andReturn(
+                [
+                    'standardFirst' => 7000,
+                    'standardAdditional' => 3900,
+                    'restrictedFirst' => 3100,
+                    'restrictedAdditional' => 1700,
+                ]
+            );
 
-        // For an operator:
-        //  * with a goods standard international application with 3 vehicles,
-        //    the finance is £7000 + (2 x £3900) = £14,800
-        //  * plus a goods restricted licence with 3 vehicles, the finance is (3 x £1700) = £5,100
-        //  * plus a psv restricted licence with 1 vehicle, the finance is £2,700
-        //  * plus another goods app with 2 vehicles (2 x 3900) = £7,800
-        //  * The total required finance is £14,800 + £5,100 + £2,700 + £7,800 = £30,400
-        $expected = 30400;
-        $result = [
+        $expectedResult = [
             'id' => $applicationId,
             'documents' => ['DOCUMENTS'],
             'financialEvidence' => [
-                'requiredFinance' => $expected,
+                'requiredFinance' => $totalRequired,
                 'vehicles' => 9,
                 'standardFirst' => 7000,
                 'standardAdditional' => 3900,
@@ -145,7 +151,8 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
                 'restrictedAdditional' => 1700,
             ]
         ];
-        $this->assertEquals($result, $this->sut->handleQuery($query));
+
+        $this->assertEquals($expectedResult, $this->sut->handleQuery($query));
     }
 
     protected function getMockOrganisationLicences()
@@ -216,34 +223,5 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             },
             $values
         );
-    }
-
-    protected function getStubRates()
-    {
-        return [
-            $this->getStubRate(7000, 3900, 'lcat_gv', 'ltyp_sn'),
-            $this->getStubRate(7000, 3900, 'lcat_gv', 'ltyp_si'),
-            $this->getStubRate(3100, 1700, 'lcat_gv', 'ltyp_r'),
-            $this->getStubRate(8000, 4900, 'lcat_psv', 'ltyp_sn'),
-            $this->getStubRate(8000, 4900, 'lcat_psv', 'ltyp_si'),
-            $this->getStubRate(4100, 2700, 'lcat_psv', 'ltyp_r'),
-        ];
-    }
-
-    protected function getStubRate($firstVehicleRate, $additionalVehicleRate, $goodsOrPsv, $licenceType)
-    {
-        $rate = new FinancialStandingRate();
-        $goodsOrPsvChild = new RefData();
-        $goodsOrPsvChild->setId($goodsOrPsv);
-        $licenceTypeChild = new RefData();
-        $licenceTypeChild->setId($licenceType);
-
-        $rate
-            ->setFirstVehicleRate($firstVehicleRate)
-            ->setAdditionalVehicleRate($additionalVehicleRate)
-            ->setGoodsOrPsv($goodsOrPsvChild)
-            ->setLicenceType($licenceTypeChild);
-
-        return $rate;
     }
 }

@@ -30,6 +30,9 @@ final class CompletePayment extends AbstractCommandHandler implements Transactio
 
     protected $extraRepos = ['Application'];
 
+    /**
+     * @var \Dvsa\Olcs\Api\Service\CpmsHelperService $cpmsHelper
+     */
     protected $cpmsHelper;
 
     public function handleCommand(CommandInterface $command)

@@ -29,6 +29,11 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
 
     protected $extraRepos = ['Fee'];
 
+    /**
+     * @var \Dvsa\Olcs\Api\Service\CpmsHelperService $cpmsHelper
+     */
+    protected $cpmsHelper;
+
     public function handleCommand(CommandInterface $command)
     {
         /* @var $payment Payment */
