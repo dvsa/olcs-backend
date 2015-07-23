@@ -38,7 +38,8 @@ class FeeType extends AbstractRepository
         RefDataEntity $goodsOrPsv,
         RefDataEntity $licenceType = null,
         \DateTime $date = null,
-        $trafficArea = null
+        $trafficArea = null,
+        $irfoFeeType
     ) {
         $qb = $this->createQueryBuilder();
 
@@ -75,11 +76,46 @@ class FeeType extends AbstractRepository
             $qb->andWhere($qb->expr()->isNull('ft.trafficArea'));
         }
 
+        if ($irfoFeeType !== null) {
+            $qb->andWhere($qb->expr()->eq('ft.irfoFeeType', ':irfoFeeType'))
+                ->setParameter('irfoFeeType', $irfoFeeType);
+        }
+
         $qb->addOrderBy('ft.effectiveFrom', 'DESC')
             ->setParameter('goodsOrPsv', $goodsOrPsv)
             ->setParameter('licenceType', $licenceType)
             ->setParameter('feeType', $feeType)
             ->setParameter('effectiveOn', $effectiveOn)
+            ->setMaxResults(1);
+
+        $results = $qb->getQuery()->execute();
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('FeeType not found');
+        }
+
+        return $results[0];
+    }
+
+    /**
+     * @param RefDataEntity $feeType
+     * @param RefDataEntity $goodsOrPsv
+     * @param RefDataEntity $licenceType
+     * @param \DateTime $date
+     * @param mixed $trafficArea traffic area entity or id
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Fee\FeeType
+     * @throws Exception\NotFoundException
+     */
+    public function fetchLatestForIrfo($irfoFeeType)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq('ft.feeType', ':feeType'));
+        $qb->andWhere($qb->expr()->eq('ft.irfoFeeType', ':irfoFeeType'));
+
+        $qb->addOrderBy('ft.effectiveFrom', 'DESC')
+            ->setParameter('feeType', 'IRFOGVPERMIT')
+            ->setParameter('irfoFeeType', $irfoFeeType)
             ->setMaxResults(1);
 
         $results = $qb->getQuery()->execute();
