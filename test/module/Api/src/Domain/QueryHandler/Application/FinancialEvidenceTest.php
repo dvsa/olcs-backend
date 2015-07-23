@@ -74,7 +74,7 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ->getMock();
 
         $mockOrganisation = m::mock()
-            ->shouldReceive('getLicences')
+            ->shouldReceive('getActiveLicences')
             ->andReturn($organisationLicences)
             ->shouldReceive('getId')
             ->andReturn($organisationId)
@@ -120,9 +120,9 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ->with(SubCategory::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL)
             ->andReturn('subCategory')
             ->once()
-            ->shouldReceive('fetchForOrganisation')
+            ->shouldReceive('fetchActiveForOrganisation')
             ->with($organisationId)
-            ->once()
+            ->atLeast(1)
             ->andReturn($organisationApplications);
 
         $this->mockHelperService
@@ -162,7 +162,6 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             [7, 'lcat_gv', 'ltyp_sn', 3, Licence::LICENCE_STATUS_VALID], // current app licence, should be ignored
             [8, 'lcat_gv', 'ltyp_r', 3, Licence::LICENCE_STATUS_VALID],
             [9, 'lcat_psv', 'ltyp_r', 1, Licence::LICENCE_STATUS_VALID],
-            [10, 'lcat_gv', 'ltyp_sn', 5, Licence::LICENCE_STATUS_NOT_SUBMITTED], // invalid status, should be ignored
         ];
 
         return array_map(
@@ -197,7 +196,6 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             // id, category, type, vehicle auth, status
             [111, 'lcat_gv', 'ltyp_sn', 3, Application::APPLICATION_STATUS_NOT_SUBMITTED], // shouldn't double-count
             [112, 'lcat_gv', 'ltyp_sn', 2, Application::APPLICATION_STATUS_UNDER_CONSIDERATION],
-            [113, 'lcat_gv', 'ltyp_sn', 5, Licence::LICENCE_STATUS_NOT_SUBMITTED], // invalid status, should be ignored
         ];
 
         return array_map(

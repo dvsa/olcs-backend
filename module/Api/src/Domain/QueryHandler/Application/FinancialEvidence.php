@@ -28,19 +28,9 @@ class FinancialEvidence extends AbstractQueryHandler
     protected $extraRepos = ['FinancialStandingRate'];
 
     /**
-     * @var \Dvsa\Olcs\Api\Service\CpmsHelperService $cpmsHelper
+     * @var \Dvsa\Olcs\Api\Service\FinancialStandingHelperService $helper
      */
     protected $helper;
-
-    /**
-     * @var array $rates
-     */
-    protected $rates;
-
-    /**
-     * @var array $otherApplications
-     */
-    protected $otherApplications;
 
     public function handleQuery(QueryInterface $query)
     {
@@ -133,51 +123,32 @@ class FinancialEvidence extends AbstractQueryHandler
     protected function getOtherLicences($application)
     {
         $organisation = $application->getLicence()->getOrganisation();
-        $licences = $organisation->getLicences();
-        $filtered = [];
-        foreach ($licences as $licence) {
-            if (
-                in_array(
-                    $licence->getStatus()->getId(),
-                    [
-                        Licence::LICENCE_STATUS_VALID,
-                        Licence::LICENCE_STATUS_SUSPENDED,
-                        Licence::LICENCE_STATUS_CURTAILED,
-                    ]
-                )
-                &&
-                $licence->getId() !== $application->getLicence()->getId()
-            ) {
-                $filtered[] = $licence;
+
+        $licences = $organisation->getActiveLicences();
+
+        return array_filter(
+            $licences,
+            function ($licence) use ($application) {
+                return $licence->getId() !== $application->getLicence()->getId();
             }
-        }
-        return $filtered;
+        );
     }
 
+    /**
+     * Get other applications, caches result to avoid multiple repo queries
+     */
     protected function getOtherApplications($application)
     {
-        if (is_null($this->otherApplications)) {
-            $organisation = $application->getLicence()->getOrganisation();
-            $applications = $this->getRepo()->fetchForOrganisation($organisation->getId());
-            $this->otherApplications = [];
-            foreach ($applications as $app) {
-                if (
-                    in_array(
-                        $app->getStatus()->getId(),
-                        [
-                            ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
-                            ApplicationEntity::APPLICATION_STATUS_GRANTED,
-                        ]
-                    )
-                    &&
-                    $app->getId() !== $application->getId()
-                ) {
-                    $this->otherApplications[] = $app;
-                }
-            }
-        }
+        $organisation = $application->getLicence()->getOrganisation();
 
-        return $this->otherApplications;
+        $applications = $this->getRepo()->fetchActiveForOrganisation($organisation->getId());
+
+        return array_filter(
+            $applications,
+            function ($app) use ($application) {
+                return $app->getId() !== $application->getId();
+            }
+        );
     }
 
     /**

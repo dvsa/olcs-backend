@@ -31,21 +31,6 @@ class Application extends AbstractRepository
         return $qb->getQuery()->getSingleResult();
     }
 
-    public function fetchForOrganisation($organisationId)
-    {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata()
-            ->with('licence', 'l');
-
-        $qb->andWhere($qb->expr()->eq('l.organisation', ':organisationId'))
-            ->setParameter('organisationId', $organisationId);
-
-        return $qb->getQuery()->execute();
-    }
-
     public function fetchActiveForOrganisation($organisationId)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
