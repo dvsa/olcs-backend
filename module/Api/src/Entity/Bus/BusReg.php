@@ -54,6 +54,15 @@ class BusReg extends AbstractBusReg
     /**
      * @var array
      */
+    private static $grantStatusMap = [
+        self::STATUS_NEW => self::STATUS_REGISTERED,
+        self::STATUS_VAR => self::STATUS_REGISTERED,
+        self::STATUS_CANCEL => self::STATUS_CANCELLED,
+    ];
+
+    /**
+     * @var array
+     */
     private static $defaultAll = [
         // Reason for action text fields should all be empty
         'reasonSnRefused' => '',
@@ -569,7 +578,7 @@ class BusReg extends AbstractBusReg
      * @param FeeEntity $fee
      * @return bool
      */
-    public function isGrantable($fee = null)
+    public function isGrantable(FeeEntity $fee = null)
     {
         if (false === $this->isGrantableBasedOnRequiredFields()) {
             // bus reg without all required fields which makes it non-grantable
@@ -883,5 +892,44 @@ class BusReg extends AbstractBusReg
         }
 
         return $this->effectiveDate;
+    }
+
+    /**
+     * Grant
+     *
+     * @param RefData $status
+     * @param array $variationReasons
+     * @return BusReg
+     */
+    public function grant(RefData $status, $variationReasons = null)
+    {
+        $this->canMakeDecision();
+
+        if ($this->isGrantable() !== true) {
+            throw new BadRequestException('The Bus Reg is not grantable');
+        }
+
+        if ($status->getId() !== $this->getStatusForGrant()) {
+            throw new BadRequestException('The Bus Reg is not grantable');
+        }
+
+        if ($this->status->getId() == self::STATUS_VAR) {
+            $this->setVariationReasons($variationReasons);
+        }
+
+        $this->updateStatus($status);
+
+        return $this;
+    }
+
+    /**
+     * Get status for grant action
+     *
+     * @return string
+     */
+    public function getStatusForGrant()
+    {
+        return (!empty(self::$grantStatusMap[$this->status->getId()]))
+            ? self::$grantStatusMap[$this->status->getId()] : null;
     }
 }
