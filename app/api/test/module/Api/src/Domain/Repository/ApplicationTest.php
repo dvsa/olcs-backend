@@ -425,4 +425,30 @@ class ApplicationTest extends RepositoryTestCase
         $result = $this->sut->fetchWithLicence($applicationId);
         $this->assertEquals('RESULT', $result);
     }
+
+    public function testApplyListJoins()
+    {
+        $this->setUpSut(ApplicationRepo::class, true);
+
+        $this->sut->shouldReceive('getQueryBuilder')->with()->once()->andReturnSelf();
+        $this->sut->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $this->sut->applyListJoins($mockQb);
+    }
+
+    public function testApplyListFilters()
+    {
+        $this->setUpSut(ApplicationRepo::class, true);
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->eq')->with('l.organisation', ':organisation')->once()->andReturn('EXPR1');
+        $mockQb->shouldReceive('setParameter')->with('organisation', 723)->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+
+        $mockQuery = m::mock(QueryInterface::class);
+        $mockQuery->shouldReceive('getOrganisation')->with()->andReturn(723);
+
+        $this->sut->applyListFilters($mockQb, $mockQuery);
+    }
 }
