@@ -50,6 +50,7 @@ return [
     TransferQuery\Application\Schedule41::class => QueryHandler\Application\Schedule41::class,
     TransferQuery\Application\TaxiPhv::class => QueryHandler\Application\TaxiPhv::class,
     TransferQuery\Application\Interim::class => QueryHandler\Application\Interim::class,
+    TransferQuery\Application\GetList::class => QueryHandler\Application\GetList::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -71,6 +72,7 @@ return [
     TransferQuery\Licence\TaxiPhv::class => QueryHandler\Licence\TaxiPhv::class,
     TransferQuery\Licence\Markers::class => QueryHandler\Licence\Markers::class,
     TransferQuery\Licence\ContinuationDetail::class => QueryHandler\Licence\ContinuationDetail::class,
+    TransferQuery\Licence\GetList::class => QueryHandler\Licence\GetList::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
