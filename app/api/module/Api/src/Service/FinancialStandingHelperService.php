@@ -47,19 +47,19 @@ class FinancialStandingHelperService implements FactoryInterface
      * array (
      *   0 =>
      *   array (
-     *     'category' => 'lcat_gv'
+     *     'category' => 'lcat_gv',
      *     'type' => 'ltyp_si',
      *     'count' => 3,
      *   ),
      *   1 =>
      *   array (
-     *     'category' => 'lcat_gv'
+     *     'category' => 'lcat_gv',
      *     'type' => 'ltyp_r',
      *     'count' => 3,
      *   ),
      *   2 =>
      *   array (
-     *     'catgegory' => 'lcat_psv'
+     *     'category' => 'lcat_psv',
      *     'type' => 'ltyp_r',
      *     'count' => 1,
      *   ),
