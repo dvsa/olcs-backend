@@ -8,8 +8,9 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * Application
@@ -134,6 +135,25 @@ class Application extends AbstractRepository
         if (is_numeric($query->getOrganisation())) {
             $qb->andWhere($qb->expr()->eq('l.organisation', ':organisation'))
                 ->setParameter('organisation', $query->getOrganisation());
+        }
+    }
+
+    /**
+     * @return array LicenceEntity[]
+     */
+    public function getOtherLicences()
+    {
+        if ($this->getLicence() && $this->getLicence()->getOrganisation()) {
+            $organisation = $this->getLicence()->getOrganisation();
+
+            $licences = $organisation->getActiveLicences();
+
+            return array_filter(
+                $licences,
+                function ($licence) {
+                    return $licence->getId() !== $this->getLicence()->getId();
+                }
+            );
         }
     }
 }

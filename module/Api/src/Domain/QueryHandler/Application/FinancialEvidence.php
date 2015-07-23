@@ -92,19 +92,7 @@ class FinancialEvidence extends AbstractQueryHandler
         // add the counts for each other application
         $applications = $this->getOtherApplications($application);
         foreach ($applications as $app) {
-            if (
-                in_array(
-                    $app->getStatus()->getId(),
-                    [
-                        ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
-                        ApplicationEntity::APPLICATION_STATUS_GRANTED,
-                    ]
-                )
-                &&
-                $app->getId() !== $application->getId()
-                &&
-                !is_null($app->getGoodsOrPsv())
-            ) {
+            if (!is_null($app->getGoodsOrPsv())) {
                 $type = null;
                 if ($app->getLicenceType()) {
                     $type = $app->getLicenceType()->getId();
@@ -120,6 +108,9 @@ class FinancialEvidence extends AbstractQueryHandler
         return $this->helper->getFinanceCalculation($auths);
     }
 
+    /**
+     * @todo move this to entity
+     */
     protected function getOtherLicences($application)
     {
         $organisation = $application->getLicence()->getOrganisation();
@@ -134,9 +125,6 @@ class FinancialEvidence extends AbstractQueryHandler
         );
     }
 
-    /**
-     * Get other applications, caches result to avoid multiple repo queries
-     */
     protected function getOtherApplications($application)
     {
         $organisation = $application->getLicence()->getOrganisation();
