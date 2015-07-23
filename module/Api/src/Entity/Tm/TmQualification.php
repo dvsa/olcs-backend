@@ -5,11 +5,13 @@ namespace Dvsa\Olcs\Api\Entity\Tm;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * TmQualification Entity
  *
  * @ORM\Entity
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_qualification",
  *    indexes={
  *        @ORM\Index(name="ix_tm_qualification_transport_manager_id", columns={"transport_manager_id"}),
