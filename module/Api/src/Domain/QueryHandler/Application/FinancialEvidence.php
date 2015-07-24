@@ -25,8 +25,6 @@ class FinancialEvidence extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['FinancialStandingRate'];
-
     /**
      * @var \Dvsa\Olcs\Api\Service\FinancialStandingHelperService $helper
      */
