@@ -45,20 +45,17 @@ class FinancialStandingHelperService implements FactoryInterface
      * returns the required finance amount
      *
      * array (
-     *   0 =>
-     *   array (
+     *   0 => array (
      *     'category' => 'lcat_gv',
      *     'type' => 'ltyp_si',
      *     'count' => 3,
      *   ),
-     *   1 =>
-     *   array (
+     *   1 => array (
      *     'category' => 'lcat_gv',
      *     'type' => 'ltyp_r',
      *     'count' => 3,
      *   ),
-     *   2 =>
-     *   array (
+     *   2 => array (
      *     'category' => 'lcat_psv',
      *     'type' => 'ltyp_r',
      *     'count' => 1,
@@ -66,10 +63,10 @@ class FinancialStandingHelperService implements FactoryInterface
      * )
      *
      * Calculation:
-     *    1 x 7000
-     * +  2 x 3900
-     * +  3 x 1700
-     * +  1 x 2700
+     *    1 x 7000  first vehicle rate GV/SI
+     * +  2 x 3900  additional vehicle rate GV/SI
+     * +  3 x 1700  additional vehicle rate GV/R
+     * +  1 x 2700  additional vehicle rate PSV/R
      * -----------
      *       22600
      *
