@@ -676,46 +676,7 @@ class BusReg extends AbstractBusReg
             return false;
         }
 
-        $shortNoticQuestionFields = [
-            ['change' => 'bankHolidayChange'],
-            ['change' => 'connectionChange', 'detail' => 'connectionDetail'],
-            ['change' => 'holidayChange', 'detail' => 'holidayDetail'],
-            ['change' => 'notAvailableChange', 'detail' => 'notAvailableDetail'],
-            ['change' => 'policeChange', 'detail' => 'policeDetail'],
-            ['change' => 'replacementChange', 'detail' => 'replacementDetail'],
-            ['change' => 'specialOccasionChange', 'detail' => 'specialOccasionDetail'],
-            ['change' => 'timetableChange', 'detail' => 'timetableDetail'],
-            ['change' => 'trcChange', 'detail' => 'trcDetail'],
-            ['change' => 'unforseenChange', 'detail' => 'unforseenDetail'],
-        ];
-
-        $hasShortNoticeDetails = false;
-
-        // for short notice at least one question should be Yes
-        // and corresponding textarea (if there is one) should not be empty
-        foreach ($shortNoticQuestionFields as $questionField) {
-            $changeValue = $this->shortNotice->getPropertyValue($questionField['change']);
-
-            if (!empty($changeValue) && ($changeValue === 'Y')) {
-                // marked as Yes
-                if (!empty($questionField['detail'])) {
-                    // detail field exists for the question
-                    $detailValue = $this->shortNotice->getPropertyValue($questionField['detail']);
-
-                    if (!empty($detailValue)) {
-                        // value of the detail field not empty
-                        $hasShortNoticeDetails = true;
-                        break;
-                    }
-                } else {
-                    // no detail field for the question
-                    $hasShortNoticeDetails = true;
-                    break;
-                }
-            }
-        }
-
-        return $hasShortNoticeDetails;
+        return $this->shortNotice->hasGrantableDetails();
     }
 
     /**
