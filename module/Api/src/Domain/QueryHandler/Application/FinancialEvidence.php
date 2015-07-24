@@ -80,8 +80,7 @@ class FinancialEvidence extends AbstractQueryHandler
         ];
 
         // add the counts for each licence
-        $licences = $this->getOtherLicences($application);
-        foreach ($licences as $licence) {
+        foreach ($application->getOtherActiveLicencesForOrganisation() as $licence) {
             $auths[] = [
                 'type' => $licence->getLicenceType()->getId(),
                 'count' => $licence->getTotAuthVehicles(),
@@ -106,23 +105,6 @@ class FinancialEvidence extends AbstractQueryHandler
         }
 
         return $this->helper->getFinanceCalculation($auths);
-    }
-
-    /**
-     * @todo move this to entity
-     */
-    protected function getOtherLicences($application)
-    {
-        $organisation = $application->getLicence()->getOrganisation();
-
-        $licences = $organisation->getActiveLicences();
-
-        return array_filter(
-            $licences,
-            function ($licence) use ($application) {
-                return $licence->getId() !== $application->getLicence()->getId();
-            }
-        );
     }
 
     protected function getOtherApplications($application)
@@ -161,8 +143,7 @@ class FinancialEvidence extends AbstractQueryHandler
 
         // get the total vehicle authorisation for other licences
         $otherLicenceVehicles = 0;
-        $licences = $this->getOtherLicences($application);
-        foreach ($licences as $licence) {
+        foreach ($application->getOtherActiveLicencesForOrganisation() as $licence) {
             $otherLicenceVehicles += (int)$licence->getTotAuthVehicles();
         }
 

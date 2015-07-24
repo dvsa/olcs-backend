@@ -10,7 +10,6 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * Application
