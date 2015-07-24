@@ -156,6 +156,7 @@ return [
 
     // Bus
     TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
+    TransferQuery\Bus\BusRegDecision::class => QueryHandler\Bus\BusRegDecision::class,
     TransferQuery\Bus\ShortNoticeByBusReg::class => QueryHandler\Bus\ShortNoticeByBusReg::class,
     TransferQuery\Bus\RegistrationHistoryList::class => QueryHandler\Bus\RegistrationHistoryList::class,
     TransferQuery\Bus\ByRouteNo::class => QueryHandler\Bus\ByRouteNo::class,
