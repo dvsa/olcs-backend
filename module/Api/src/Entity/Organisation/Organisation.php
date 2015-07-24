@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\Criteria;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
-
 /**
  * Organisation Entity
  *
@@ -140,21 +139,18 @@ class Organisation extends AbstractOrganisation
      */
     public function getActiveLicences()
     {
-        if (empty($this->getLicences())) {
-            return [];
-        }
-
-        $activeStatuses = [
-            LicenceEntity::LICENCE_STATUS_VALID,
-            LicenceEntity::LICENCE_STATUS_SUSPENDED,
-            LicenceEntity::LICENCE_STATUS_CURTAILED,
-        ];
-
-        return array_filter(
-            (array) $this->getLicences()->getIterator(),
-            function ($licence) use ($activeStatuses) {
-                return in_array($licence->getStatus()->getId(), $activeStatuses);
-            }
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->in(
+                'status',
+                [
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                ]
+            )
         );
+
+        return $this->getLicences()->matching($criteria);
     }
 }
