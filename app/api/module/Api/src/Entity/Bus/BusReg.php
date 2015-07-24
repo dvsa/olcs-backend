@@ -623,7 +623,7 @@ class BusReg extends AbstractBusReg
         }
 
         foreach ($yesFields as $field) {
-            if (empty($this->$field) || $this->$field != 'Y') {
+            if (empty($this->$field) || $this->$field !== 'Y') {
                 return false;
             }
         }
@@ -696,7 +696,7 @@ class BusReg extends AbstractBusReg
         foreach ($shortNoticQuestionFields as $questionField) {
             $changeValue = $this->shortNotice->getPropertyValue($questionField['change']);
 
-            if (!empty($changeValue) && ($changeValue == 'Y')) {
+            if (!empty($changeValue) && ($changeValue === 'Y')) {
                 // marked as Yes
                 if (!empty($questionField['detail'])) {
                     // detail field exists for the question
@@ -913,7 +913,7 @@ class BusReg extends AbstractBusReg
             throw new BadRequestException('The Bus Reg is not grantable');
         }
 
-        if ($this->status->getId() == self::STATUS_VAR) {
+        if ($this->status->getId() === self::STATUS_VAR) {
             $this->setVariationReasons($variationReasons);
         }
 
