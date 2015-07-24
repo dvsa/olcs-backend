@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Service;
 
+
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate;
@@ -105,6 +106,40 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
                 ),
                 'expected' => 30400,
             ]
+        ];
+    }
+
+    /**
+     * @dataProvider goodsOrPsvProvider
+     * @param string $goodsOrPsv
+     * @param array $expected
+     */
+    public function testGetRatesForView($goodsOrPsv, $expected)
+    {
+        $this->assertEquals($expected, $this->sut->getRatesForView($goodsOrPsv));
+    }
+
+    public function goodsOrPsvProvider()
+    {
+        return [
+            [
+                'lcat_gv',
+                [
+                    'standardFirst' => 7000,
+                    'standardAdditional' => 3900,
+                    'restrictedFirst' => 3100,
+                    'restrictedAdditional' => 1700,
+                ],
+            ],
+            [
+                'lcat_psv',
+                [
+                    'standardFirst' => 8000,
+                    'standardAdditional' => 4900,
+                    'restrictedFirst' => 4100,
+                    'restrictedAdditional' => 2700,
+                ],
+            ],
         ];
     }
 
