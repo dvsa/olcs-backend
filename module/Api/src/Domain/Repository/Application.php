@@ -116,12 +116,10 @@ class Application extends AbstractRepository
      * Override parent
      *
      * @param QueryBuilder $qb
+     * @inheritdoc
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
-        // PMD
-        unset($qb);
-
         $this->getQueryBuilder()
             ->with('licence', 'l');
     }
