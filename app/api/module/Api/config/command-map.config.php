@@ -597,6 +597,9 @@ return [
     // OrganisationPerson
     TransferCommand\OrganisationPerson\PopulateFromCompaniesHouse::class =>
         CommandHandler\OrganisationPerson\PopulateFromCompaniesHouse::class,
+    TransferCommand\OrganisationPerson\Create::class => CommandHandler\OrganisationPerson\Create::class,
+    TransferCommand\OrganisationPerson\Update::class => CommandHandler\OrganisationPerson\Update::class,
+    TransferCommand\OrganisationPerson\DeleteList::class => CommandHandler\OrganisationPerson\DeleteList::class,
 
     // Transfer - TransportManager
     TransferCommand\Tm\Create::class => CommandHandler\Tm\Create::class,
