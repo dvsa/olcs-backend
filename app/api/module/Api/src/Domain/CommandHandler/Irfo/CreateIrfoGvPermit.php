@@ -39,7 +39,7 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler
         $result->addMessage('IRFO GV Permit created successfully');
 
         // Check if is *not* fee exempt.
-        if ($irfoGvPermit->getIsFeeExempt() != 'Y') {
+        if ($irfoGvPermit->getIsFeeExempt() !== 'Y') {
             $result->merge($this->createFee($irfoGvPermit));
         }
 
@@ -73,8 +73,6 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler
     public function createFee(IrfoGvPermit $irfoGvPermit)
     {
         $irfoGvPermitFeeType = $irfoGvPermit->getIrfoGvPermitType()->getIrfoFeeType();
-
-        //die('Fee: ' . print_r($irfoGvPermit, 1));
 
         /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
         $feeTypeRepo = $this->getRepo('FeeType');
