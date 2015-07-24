@@ -31,6 +31,9 @@ class Application extends AbstractRepository
         return $qb->getQuery()->getSingleResult();
     }
 
+    /**
+     * @param int $organisationId
+     */
     public function fetchActiveForOrganisation($organisationId)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
