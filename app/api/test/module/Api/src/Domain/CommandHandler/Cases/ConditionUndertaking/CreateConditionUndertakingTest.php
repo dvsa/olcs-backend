@@ -13,12 +13,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\ConditionUndertaking\CreateConditi
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\OperatingCentre as OperatingCentreRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\ConditionUndertaking\CreateConditionUndertaking as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
 
 /**
@@ -34,6 +36,7 @@ class CreateConditionUndertakingTest extends CommandHandlerTestCase
         $this->mockRepo('ConditionUndertaking', ConditionUndertakingRepo::class);
         $this->mockRepo('Cases', CasesRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
+        $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockRepo('OperatingCentre', OperatingCentreRepo::class);
 
         parent::setUp();
@@ -65,6 +68,7 @@ class CreateConditionUndertakingTest extends CommandHandlerTestCase
         $command = Cmd::create(
             [
             'licence' => 7,
+            'application' => 8,
             'case' => 24,
             'conditionType' => 'cdt_und',
             'notes' => 'Notes',
@@ -82,6 +86,10 @@ class CreateConditionUndertakingTest extends CommandHandlerTestCase
         $licenceEntity = m::mock(LicenceEntity::class)->makePartial();
         $licenceEntity->setId(7);
 
+        /** @var ApplicationEntity $applicationEntity */
+        $applicationEntity = m::mock(ApplicationEntity::class)->makePartial();
+        $applicationEntity->setId(8);
+
         /** @var CasesEntity $caseEntity */
         $caseEntity = m::mock(CasesEntity::class)->makePartial();
         $caseEntity->setLicence($licenceEntity);
@@ -95,6 +103,11 @@ class CreateConditionUndertakingTest extends CommandHandlerTestCase
             ->shouldReceive('fetchById')
             ->with(7)
             ->andReturn($licenceEntity);
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchById')
+            ->with(8)
+            ->andReturn($applicationEntity);
 
         $this->repoMap['Cases']
             ->shouldReceive('fetchById')
@@ -128,6 +141,7 @@ class CreateConditionUndertakingTest extends CommandHandlerTestCase
         $command = Cmd::create(
             [
                 'licence' => 7,
+                'application' => 8,
                 'case' => 24,
                 'conditionType' => 'cdt_con',
                 'notes' => 'Notes',
@@ -144,6 +158,13 @@ class CreateConditionUndertakingTest extends CommandHandlerTestCase
         $licenceEntity = m::mock(LicenceEntity::class)->makePartial();
         $licenceEntity->setId(7);
 
+        /** @var ApplicationEntity $applicationEntity */
+        $applicationEntity = m::mock(ApplicationEntity::class)->makePartial();
+        $applicationEntity->setId(8);
+
+        $licenceEntity = m::mock(ApplicationEntity::class)->makePartial();
+        $licenceEntity->setId(8);
+
         /** @var CasesEntity $caseEntity */
         $caseEntity = m::mock(CasesEntity::class)->makePartial();
         $caseEntity->setLicence($licenceEntity);
@@ -157,6 +178,11 @@ class CreateConditionUndertakingTest extends CommandHandlerTestCase
             ->shouldReceive('fetchById')
             ->with(7)
             ->andReturn($licenceEntity);
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchById')
+            ->with(8)
+            ->andReturn($applicationEntity);
 
         $this->repoMap['Cases']
             ->shouldReceive('fetchById')
