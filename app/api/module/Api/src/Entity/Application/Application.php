@@ -1105,12 +1105,21 @@ class Application extends AbstractApplication
     public function getOtherActiveLicencesForOrganisation()
     {
         if ($this->getLicence() && $this->getLicence()->getOrganisation()) {
-            return array_filter(
-                $this->getLicence()->getOrganisation()->getActiveLicences(),
+
+            $licences = $this->getLicence()->getOrganisation()->getActiveLicences();
+
+            if (empty($licences)) {
+                return [];
+            }
+
+            $filtered = array_filter(
+                $licences->toArray(),
                 function ($licence) {
                     return $licence->getId() !== $this->getLicence()->getId();
                 }
             );
+
+            return array_values($filtered);
         }
     }
 }
