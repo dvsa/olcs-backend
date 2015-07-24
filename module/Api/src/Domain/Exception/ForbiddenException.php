@@ -14,5 +14,12 @@ namespace Dvsa\Olcs\Api\Domain\Exception;
  */
 class ForbiddenException extends Exception
 {
+    public function __construct($message = '')
+    {
+        if ($message === '') {
+            $message = 'No permission to access this record';
+        }
 
+        $this->messages = [$message];
+    }
 }
