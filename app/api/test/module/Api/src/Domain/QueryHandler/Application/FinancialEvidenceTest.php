@@ -105,6 +105,15 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ->andReturn($mockLicence)
             ->shouldReceive('getId')
             ->andReturn($applicationId)
+            ->shouldReceive('getOtherActiveLicencesForOrganisation')
+            ->andReturn(
+                array_filter(
+                    $organisationLicences,
+                    function ($licence) use ($applicationLicenceId) {
+                        return $licence->getId() !== $applicationLicenceId;
+                    }
+                )
+            )
             ->getMock();
 
         $this->repoMap['Application']
