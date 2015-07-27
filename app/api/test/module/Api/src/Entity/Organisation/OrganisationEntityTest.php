@@ -43,6 +43,7 @@ class OrganisationEntityTest extends EntityTester
             'irfoName',
             'irfoNationality',
             'isIrfo',
+            'isUnlicensed',
             'lastModifiedBy',
             'lastModifiedOn',
             'leadTcArea',
@@ -176,5 +177,17 @@ class OrganisationEntityTest extends EntityTester
         $organisation->setType($type);
 
         $this->assertSame($typeId === Entity::ORG_TYPE_PARTNERSHIP, $organisation->isPartnership());
+    }
+
+    public function testIsUnlicensed()
+    {
+        /** @var Entity $organisation */
+        $organisation = $this->instantiate($this->entityClass);
+
+        $this->assertFalse($organisation->isUnlicensed());
+
+        $organisation->setIsUnlicensed(true);
+
+        $this->assertTrue($organisation->isUnlicensed());
     }
 }
