@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\PreviousConviction\CreatePreviousConvict
 use Dvsa\Olcs\Transfer\Command\PreviousConviction\CreatePreviousConviction as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\PreviousConviction;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Application\PreviousConviction as PrevConvictionEntity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -42,7 +43,10 @@ class CreatePreviousConvictionTest extends CommandHandlerTestCase
         $this->references = [
             Application::class => [
                 50 => m::mock(Application::class)
-            ]
+            ],
+            TransportManager::class => [
+                150 => m::mock(TransportManager::class)
+            ],
         ];
 
         parent::initReferences();
@@ -59,7 +63,8 @@ class CreatePreviousConvictionTest extends CommandHandlerTestCase
             'notes' => 'notes',
             'courtFpn' => 'court',
             'penalty' => 'penalty',
-            'application' => 50
+            'application' => 50,
+            'transportManager' => 150,
         ];
 
         $command = Cmd::create($data);
@@ -102,5 +107,9 @@ class CreatePreviousConvictionTest extends CommandHandlerTestCase
         $this->assertEquals('notes', $previousConviction->getNotes());
         $this->assertEquals('court', $previousConviction->getCourtFpn());
         $this->assertEquals('penalty', $previousConviction->getPenalty());
+        $this->assertEquals(
+            $this->references[TransportManager::class][150],
+            $previousConviction->getTransportManager()
+        );
     }
 }

@@ -37,7 +37,7 @@ class SurrenderTest extends CommandHandlerTestCase
 
     protected function initReferences()
     {
-        $this->refData = ['lsts_surrendered', 'lcat_psv'];
+        $this->refData = ['lsts_terminated', 'lsts_surrendered', 'lcat_psv'];
 
         $this->references = [
 
@@ -46,9 +46,12 @@ class SurrenderTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider testHandleCommandProvider
+     */
+    public function testHandleCommand($status, $terminated)
     {
-        $command = Command::create(['id' => 532]);
+        $command = Command::create(['id' => 532, 'terminated' => $terminated]);
 
         $licence = new LicenceEntity(
             m::mock(\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class),
@@ -59,8 +62,8 @@ class SurrenderTest extends CommandHandlerTestCase
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($licence);
         $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
-            function (LicenceEntity $saveLicence) {
-                $this->assertSame($this->refData['lsts_surrendered'], $saveLicence->getStatus());
+            function (LicenceEntity $saveLicence) use ($status) {
+                $this->assertSame($this->refData[$status]->getId(), $saveLicence->getStatus()->getId());
                 $this->assertInstanceOf(\DateTime::class, $saveLicence->getSurrenderedDate());
                 $this->assertSame(
                     (new \DateTime())->format('Y-m-d'),
@@ -93,5 +96,19 @@ class SurrenderTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 surrendered"], $result->getMessages());
+    }
+
+    public function testHandleCommandProvider()
+    {
+        return [
+            [
+                'lsts_terminated',
+                true,
+            ],
+            [
+                'lsts_surrendered',
+                false
+            ]
+        ];
     }
 }

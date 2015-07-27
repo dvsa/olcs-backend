@@ -79,6 +79,11 @@ return [
     TransferCommand\Application\Schedule41::class => CommandHandler\Application\Schedule41::class,
     TransferCommand\Application\GenerateOrganisationName::class =>
         CommandHandler\Application\GenerateOrganisationName::class,
+    TransferCommand\Application\PrintInterimDocument::class => CommandHandler\Application\PrintInterimDocument::class,
+    TransferCommand\Application\UpdateInterim::class => CommandHandler\Application\UpdateInterim::class,
+    TransferCommand\Application\RefuseInterim::class => CommandHandler\Application\RefuseInterim::class,
+    TransferCommand\Application\GrantInterim::class => CommandHandler\Application\GrantInterim::class,
+    Command\Application\InForceInterim::class => CommandHandler\Application\InForceInterim::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -106,6 +111,12 @@ return [
     TransferCommand\Bus\UpdateShortNotice::class => CommandHandler\Bus\UpdateShortNotice::class,
     TransferCommand\Bus\UpdateServiceRegister::class => CommandHandler\Bus\UpdateServiceRegister::class,
     TransferCommand\Bus\DeleteBus::class => CommandHandler\Bus\DeleteBus::class,
+    TransferCommand\Bus\ResetBusReg::class => CommandHandler\Bus\ResetBusReg::class,
+    TransferCommand\Bus\AdminCancelBusReg::class => CommandHandler\Bus\AdminCancelBusReg::class,
+    TransferCommand\Bus\WithdrawBusReg::class => CommandHandler\Bus\WithdrawBusReg::class,
+    TransferCommand\Bus\RefuseBusReg::class => CommandHandler\Bus\RefuseBusReg::class,
+    TransferCommand\Bus\RefuseBusRegByShortNotice::class => CommandHandler\Bus\RefuseBusRegByShortNotice::class,
+    TransferCommand\Bus\GrantBusReg::class => CommandHandler\Bus\GrantBusReg::class,
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
@@ -169,6 +180,7 @@ return [
     TransferCommand\OtherLicence\UpdateForTma::class => CommandHandler\OtherLicence\UpdateForTma::class,
     TransferCommand\OtherLicence\CreatePreviousLicence::class
         => CommandHandler\OtherLicence\CreatePreviousLicence::class,
+    TransferCommand\OtherLicence\CreateForTm::class => CommandHandler\OtherLicence\CreateForTm::class,
 
     // Transfer - Previous Conviction
     TransferCommand\PreviousConviction\CreatePreviousConviction::class =>
@@ -262,6 +274,12 @@ return [
         CommandHandler\Submission\CreateSubmissionAction::class,
     TransferCommand\Submission\UpdateSubmissionAction::class =>
         CommandHandler\Submission\UpdateSubmissionAction::class,
+    TransferCommand\Submission\CreateSubmissionSectionComment::class =>
+        CommandHandler\Submission\CreateSubmissionSectionComment::class,
+    TransferCommand\Submission\UpdateSubmissionSectionComment::class =>
+        CommandHandler\Submission\UpdateSubmissionSectionComment::class,
+    TransferCommand\Submission\DeleteSubmissionSectionComment::class =>
+        CommandHandler\Submission\DeleteSubmissionSectionComment::class,
 
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
@@ -332,14 +350,9 @@ return [
     TransferCommand\Licence\ResetToValid::class => CommandHandler\Licence\ResetToValid::class,
 
     // Transfer - ConditionUndertaking
-    TransferCommand\Cases\ConditionUndertaking\CreateConditionUndertaking::class =>
-        CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
-    TransferCommand\Cases\ConditionUndertaking\UpdateConditionUndertaking::class =>
-        CommandHandler\Cases\ConditionUndertaking\UpdateConditionUndertaking::class,
-    TransferCommand\Cases\ConditionUndertaking\DeleteConditionUndertaking::class =>
-        CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertaking::class,
     TransferCommand\ConditionUndertaking\Create::class => CommandHandler\ConditionUndertaking\Create::class,
     TransferCommand\ConditionUndertaking\DeleteList::class => CommandHandler\ConditionUndertaking\DeleteList::class,
+    TransferCommand\ConditionUndertaking\Delete::class => CommandHandler\ConditionUndertaking\Delete::class,
     TransferCommand\ConditionUndertaking\Update::class => CommandHandler\ConditionUndertaking\Update::class,
 
     // Transfer - Opposition

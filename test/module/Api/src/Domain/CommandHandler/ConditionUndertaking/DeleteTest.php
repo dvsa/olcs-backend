@@ -5,29 +5,26 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\ConditionUndertaking;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ConditionUndertaking;
 
 use Doctrine\ORM\Query;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertaking;
+use Dvsa\Olcs\Api\Domain\CommandHandler\ConditionUndertaking\Delete;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\ConditionUndertaking\DeleteConditionUndertaking as Cmd;
+use Dvsa\Olcs\Transfer\Command\ConditionUndertaking\Delete as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
-use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 
 /**
  * Delete ConditionUndertaking Test
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class DeleteConditionUndertakingTest extends CommandHandlerTestCase
+class DeleteTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new DeleteConditionUndertaking();
+        $this->sut = new Delete();
         $this->mockRepo('ConditionUndertaking', ConditionUndertaking::class);
 
         parent::setUp();
@@ -73,6 +70,6 @@ class DeleteConditionUndertakingTest extends CommandHandlerTestCase
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
-        $this->assertContains('ConditionUndertaking deleted', $result->getMessages());
+        $this->assertContains('Deleted', $result->getMessages());
     }
 }

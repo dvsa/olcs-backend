@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as FeeCreateFee;
 
 /**
  * Create Irfo Gv Permit
@@ -19,6 +20,13 @@ use Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit as Cmd;
 final class CreateIrfoGvPermit extends AbstractCommandHandler
 {
     protected $repoServiceName = 'IrfoGvPermit';
+
+    /**
+     * Tell the factory which repositories to lazy load
+     */
+    protected $extraRepos = [
+        'FeeType'
+    ];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -29,6 +37,11 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler
         $result = new Result();
         $result->addId('irfoGvPermit', $irfoGvPermit->getId());
         $result->addMessage('IRFO GV Permit created successfully');
+
+        // Check if is *not* fee exempt.
+        if ($irfoGvPermit->getIsFeeExempt() !== 'Y') {
+            $result->merge($this->createFee($irfoGvPermit));
+        }
 
         return $result;
     }
@@ -55,5 +68,26 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler
         }
 
         return $irfoGvPermit;
+    }
+
+    public function createFee(IrfoGvPermit $irfoGvPermit)
+    {
+        $irfoGvPermitFeeType = $irfoGvPermit->getIrfoGvPermitType()->getIrfoFeeType();
+
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
+        $feeTypeRepo = $this->getRepo('FeeType');
+        $feeType = $feeTypeRepo->fetchLatestForIrfo($irfoGvPermitFeeType);
+
+        $feeAmount = ((float)$feeType->getFixedValue() * (int)$irfoGvPermit->getNoOfCopies());
+
+        $data = [
+            'irfoGvPermit' => $irfoGvPermit->getId(),
+            'invoicedDate' => date('Y-m-d'),
+            'description' => $feeType->getDescription() . ' for IRFO permit ' . $irfoGvPermit->getId(),
+            'feeType' => $feeType->getId(),
+            'amount' => $feeAmount
+        ];
+
+        return $this->handleSideEffect(FeeCreateFee::create($data));
     }
 }

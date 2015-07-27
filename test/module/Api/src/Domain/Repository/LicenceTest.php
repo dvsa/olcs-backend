@@ -299,4 +299,24 @@ class LicenceTest extends RepositoryTestCase
         $expectedQuery = 'BLAH';
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+    public function testApplyListFilters()
+    {
+        $this->setUpSut(LicenceRepo::class, true);
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->eq')->with('m.organisation', ':organisation')->once()->andReturn('EXPR1');
+        $mockQb->shouldReceive('setParameter')->with('organisation', 723)->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->notIn')->with('m.status', ':excludeStatuses')->once()->andReturn('EXPR2');
+        $mockQb->shouldReceive('setParameter')->with('excludeStatuses', ['status1', 'status2'])->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
+
+        $mockQuery = m::mock(QueryInterface::class);
+        $mockQuery->shouldReceive('getOrganisation')->with()->andReturn(723);
+        $mockQuery->shouldReceive('getExcludeStatuses')->with()->andReturn(['status1', 'status2']);
+
+        $this->sut->applyListFilters($mockQb, $mockQuery);
+    }
 }
