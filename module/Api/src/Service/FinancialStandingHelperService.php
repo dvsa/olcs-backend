@@ -29,11 +29,6 @@ class FinancialStandingHelperService implements FactoryInterface
      */
     protected $ratesRepo;
 
-    /**
-     * @var \Dvsa\Olcs\Api\Domain\Repository\FeeType
-     */
-    protected $feeTypeRepo;
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->ratesRepo = $serviceLocator->get('RepositoryServiceManager')->get('FinancialStandingRate');
