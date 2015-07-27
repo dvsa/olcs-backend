@@ -69,6 +69,7 @@ class Licence extends AbstractLicence
     const LICENCE_STATUS_NOT_TAKEN_UP = 'lsts_ntu';
     const LICENCE_STATUS_TERMINATED = 'lsts_terminated';
     const LICENCE_STATUS_CONTINUATION_NOT_SOUGHT = 'lsts_cns';
+    const LICENCE_STATUS_UNLICENSED = 'lsts_unlicenced'; // note, refdata misspelled
 
     const TACH_EXT = 'tach_external';
     const TACH_INT = 'tach_internal';
