@@ -28,7 +28,6 @@ class Application extends AbstractRepository
             ->with('previousConvictions');
 
         return $qb->getQuery()->getSingleResult();
-
     }
 
     public function fetchForOrganisation($organisationId)
