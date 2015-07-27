@@ -90,6 +90,9 @@ class ContactDetails extends AbstractContactDetails
             case self::CONTACT_TYPE_COMPLAINANT:
                 $this->updateComplainant($contactParams);
                 break;
+            case self::CONTACT_TYPE_CORRESPONDENCE_ADDRESS:
+                $this->updateCorrespondenceAddress($contactParams);
+                break;
         }
 
         return $this;
@@ -204,6 +207,27 @@ class ContactDetails extends AbstractContactDetails
 
         // populate person
         $this->populatePerson($contactParams['person']);
+    }
+
+    /**
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     */
+    private function updateCorrespondenceAddress(array $contactParams)
+    {
+        if ($contactParams['emailAddress'] !== null) {
+            // set email address
+            $this->setEmailAddress($contactParams['emailAddress']);
+        }
+
+        if ($contactParams['address'] !== null) {
+            // populate address
+            $this->populateAddress($contactParams['address']);
+        }
+
+        if ($contactParams['phoneContacts'] !== null) {
+            // populate phone contacts
+            $this->populatePhoneContacts($contactParams['phoneContacts']);
+        }
     }
 
     /**
