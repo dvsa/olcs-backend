@@ -106,4 +106,32 @@ class Application extends AbstractRepository
 
         return $qb->getQuery()->getSingleResult();
     }
+
+    /**
+     * Override parent
+     *
+     * @param QueryBuilder $qb
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        // PMD
+        unset($qb);
+
+        $this->getQueryBuilder()
+            ->with('licence', 'l');
+    }
+
+    /**
+     * Override parent
+     *
+     * @param QueryBuilder $qb
+     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
+    {
+        if (is_numeric($query->getOrganisation())) {
+            $qb->andWhere($qb->expr()->eq('l.organisation', ':organisation'))
+                ->setParameter('organisation', $query->getOrganisation());
+        }
+    }
 }

@@ -48,7 +48,9 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
                 'id' => $inspectionRequest->getId()
             ]
         );
-        $result->merge($this->getCommandHandler()->handleCommand($sendInspectionRequest));
+        if ($command->getReportType() === InspectionRequestEntity::REPORT_TYPE_MAINTENANCE_REQUEST) {
+            $result->merge($this->getCommandHandler()->handleCommand($sendInspectionRequest));
+        }
 
         return $result;
     }
