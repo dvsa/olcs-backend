@@ -37,6 +37,9 @@ class Licence extends AbstractQueryHandler
             $licence,
             [],
             [
+                'trafficArea' => $this->result(
+                    $licence->getTrafficArea()
+                )->serialize(),
                 'organisation' => $this->result(
                     $licence->getOrganisation(),
                     [
@@ -61,7 +64,18 @@ class Licence extends AbstractQueryHandler
                         ]
                     ]
                 )->serialize(),
-                'directors' => $this->resultList($licence->getOrganisation()->getOrganisationPersons()),
+                'partners' => $this->resultList(
+                    $licence->getOrganisation()->getOrganisationPersons(),
+                    [
+                        'person'
+                    ]
+                ),
+                'directors' => $this->resultList(
+                    $licence->getOrganisation()->getOrganisationPersons(),
+                    [
+                        'person'
+                    ]
+                ),
                 'transportManagers' => $this->resultList(
                     $licence->getTmLicences(),
                     [
@@ -77,7 +91,9 @@ class Licence extends AbstractQueryHandler
                     $licence->getOperatingCentres(),
                     [
                         'operatingCentre' => [
-                            'address'
+                            'address' => [
+                                'countryCode'
+                            ]
                         ]
                     ]
                 ),
