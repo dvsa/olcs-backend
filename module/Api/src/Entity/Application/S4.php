@@ -20,6 +20,8 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  */
 class S4 extends AbstractS4
 {
+    const S4_STS_APPROVED = 's4_sts_approved';
+
     public function __construct(Application $application, Licence $licence)
     {
         $this->application = $application;
