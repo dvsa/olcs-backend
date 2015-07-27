@@ -43,6 +43,7 @@ class Licence extends AbstractQueryHandler
                 'organisation' => $this->result(
                     $licence->getOrganisation(),
                     [
+                        'type',
                         'contactDetails' => [
                             'address' => [
                                 'countryCode'
