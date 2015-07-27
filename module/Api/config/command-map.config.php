@@ -556,6 +556,7 @@ return [
     // Transfer - Operator
     TransferCommand\Operator\Create::class => CommandHandler\Operator\SaveOperator::class,
     TransferCommand\Operator\Update::class => CommandHandler\Operator\SaveOperator::class,
+    TransferCommand\Operator\CreateUnlicensed::class => CommandHandler\Operator\CreateUnlicensed::class,
 
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
