@@ -5,6 +5,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion as AppCompCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion as AppCompCommandHandler;
+use Dvsa\Olcs\Api\Domain\Command\Queue as QueueCommand;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Queue as QueueCommandHandler;
 
 return [
     // Transfer - Application
@@ -111,6 +113,12 @@ return [
     TransferCommand\Bus\UpdateShortNotice::class => CommandHandler\Bus\UpdateShortNotice::class,
     TransferCommand\Bus\UpdateServiceRegister::class => CommandHandler\Bus\UpdateServiceRegister::class,
     TransferCommand\Bus\DeleteBus::class => CommandHandler\Bus\DeleteBus::class,
+    TransferCommand\Bus\ResetBusReg::class => CommandHandler\Bus\ResetBusReg::class,
+    TransferCommand\Bus\AdminCancelBusReg::class => CommandHandler\Bus\AdminCancelBusReg::class,
+    TransferCommand\Bus\WithdrawBusReg::class => CommandHandler\Bus\WithdrawBusReg::class,
+    TransferCommand\Bus\RefuseBusReg::class => CommandHandler\Bus\RefuseBusReg::class,
+    TransferCommand\Bus\RefuseBusRegByShortNotice::class => CommandHandler\Bus\RefuseBusRegByShortNotice::class,
+    TransferCommand\Bus\GrantBusReg::class => CommandHandler\Bus\GrantBusReg::class,
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
@@ -174,6 +182,7 @@ return [
     TransferCommand\OtherLicence\UpdateForTma::class => CommandHandler\OtherLicence\UpdateForTma::class,
     TransferCommand\OtherLicence\CreatePreviousLicence::class
         => CommandHandler\OtherLicence\CreatePreviousLicence::class,
+    TransferCommand\OtherLicence\CreateForTm::class => CommandHandler\OtherLicence\CreateForTm::class,
 
     // Transfer - Previous Conviction
     TransferCommand\PreviousConviction\CreatePreviousConviction::class =>
@@ -343,14 +352,9 @@ return [
     TransferCommand\Licence\ResetToValid::class => CommandHandler\Licence\ResetToValid::class,
 
     // Transfer - ConditionUndertaking
-    TransferCommand\Cases\ConditionUndertaking\CreateConditionUndertaking::class =>
-        CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
-    TransferCommand\Cases\ConditionUndertaking\UpdateConditionUndertaking::class =>
-        CommandHandler\Cases\ConditionUndertaking\UpdateConditionUndertaking::class,
-    TransferCommand\Cases\ConditionUndertaking\DeleteConditionUndertaking::class =>
-        CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertaking::class,
     TransferCommand\ConditionUndertaking\Create::class => CommandHandler\ConditionUndertaking\Create::class,
     TransferCommand\ConditionUndertaking\DeleteList::class => CommandHandler\ConditionUndertaking\DeleteList::class,
+    TransferCommand\ConditionUndertaking\Delete::class => CommandHandler\ConditionUndertaking\Delete::class,
     TransferCommand\ConditionUndertaking\Update::class => CommandHandler\ConditionUndertaking\Update::class,
 
     // Transfer - Opposition
@@ -570,6 +574,22 @@ return [
 
     // ContinuationDetail
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
+
+    // CompaniesHouse
+    Command\CompaniesHouse\EnqueueOrganisations::class => CommandHandler\CompaniesHouse\EnqueueOrganisations::class,
+    Command\CompaniesHouse\InitialLoad::class => CommandHandler\CompaniesHouse\InitialLoad::class,
+    Command\CompaniesHouse\Compare::class => CommandHandler\CompaniesHouse\Compare::class,
+    Command\CompaniesHouse\CreateAlert::class => CommandHandler\CompaniesHouse\CreateAlert::class,
+    TransferCommand\CompaniesHouse\CloseAlerts::class => CommandHandler\CompaniesHouse\CloseAlerts::class,
+
+    // Domain - Queue
+    QueueCommand\Complete::class => QueueCommandHandler\Complete::class,
+    QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
+    
+    // Transfer - TmQualification
+    TransferCommand\TmQualification\Create::class => CommandHandler\TmQualification\Create::class,
+    TransferCommand\TmQualification\Update::class => CommandHandler\TmQualification\Update::class,
+    TransferCommand\TmQualification\Delete::class  => CommandHandler\TmQualification\Delete::class,
 
     /** @to-do Review whether these commands are still needed once front end controllers have been migrated */
     TransferCommand\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,

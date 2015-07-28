@@ -4,6 +4,8 @@ use Dvsa\Olcs\Transfer\Query as TransferQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark as BookmarkQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark as BookmarkQueryHandler;
+use Dvsa\Olcs\Api\Domain\Query\Queue as QueueQuery;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Queue as QueueQueryHandler;
 
 return [
     // Bookmarks
@@ -63,6 +65,7 @@ return [
     TransferQuery\Application\Schedule41::class => QueryHandler\Application\Schedule41::class,
     TransferQuery\Application\TaxiPhv::class => QueryHandler\Application\TaxiPhv::class,
     TransferQuery\Application\Interim::class => QueryHandler\Application\Interim::class,
+    TransferQuery\Application\GetList::class => QueryHandler\Application\GetList::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -84,12 +87,14 @@ return [
     TransferQuery\Licence\TaxiPhv::class => QueryHandler\Licence\TaxiPhv::class,
     TransferQuery\Licence\Markers::class => QueryHandler\Licence\Markers::class,
     TransferQuery\Licence\ContinuationDetail::class => QueryHandler\Licence\ContinuationDetail::class,
+    TransferQuery\Licence\GetList::class => QueryHandler\Licence\GetList::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
 
     // Other Licence
     TransferQuery\OtherLicence\OtherLicence::class => QueryHandler\OtherLicence\OtherLicence::class,
+    TransferQuery\OtherLicence\GetList::class => QueryHandler\OtherLicence\GetList::class,
 
     // Organisation
     TransferQuery\Organisation\BusinessDetails::class => QueryHandler\Organisation\BusinessDetails::class,
@@ -105,6 +110,7 @@ return [
     // Cases
     TransferQuery\Cases\Cases::class => QueryHandler\Cases\Cases::class,
     TransferQuery\Cases\CasesWithOppositionDates::class => QueryHandler\Cases\CasesWithOppositionDates::class,
+    TransferQuery\Cases\CasesWithLicence::class => QueryHandler\Cases\CasesWithLicence::class,
     TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
     TransferQuery\Cases\AnnualTestHistory::class => QueryHandler\Cases\AnnualTestHistory::class,
     TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
@@ -159,6 +165,7 @@ return [
     // Previous Conviction
     TransferQuery\PreviousConviction\PreviousConviction::class
         => QueryHandler\PreviousConviction\PreviousConviction::class,
+    TransferQuery\PreviousConviction\GetList::class => QueryHandler\PreviousConviction\GetList::class,
 
     // Company Subsidiary
     TransferQuery\CompanySubsidiary\CompanySubsidiary::class
@@ -166,6 +173,7 @@ return [
 
     // Bus
     TransferQuery\Bus\BusReg::class => QueryHandler\Bus\Bus::class,
+    TransferQuery\Bus\BusRegDecision::class => QueryHandler\Bus\BusRegDecision::class,
     TransferQuery\Bus\ShortNoticeByBusReg::class => QueryHandler\Bus\ShortNoticeByBusReg::class,
     TransferQuery\Bus\RegistrationHistoryList::class => QueryHandler\Bus\RegistrationHistoryList::class,
     TransferQuery\Bus\ByRouteNo::class => QueryHandler\Bus\ByRouteNo::class,
@@ -280,4 +288,20 @@ return [
 
     // Transport Manager
     TransferQuery\Tm\TransportManager::class => QueryHandler\Tm\TransportManager::class,
+
+    // Companies House
+    TransferQuery\CompaniesHouse\AlertList::class => QueryHandler\CompaniesHouse\AlertList::class,
+
+    // Queue
+    QueueQuery\NextItem::class => QueueQueryHandler\NextItem::class,
+
+    // TmQualification
+    TransferQuery\TmQualification\TmQualificationsList::class =>
+        QueryHandler\TmQualification\TmQualificationsList::class,
+    TransferQuery\TmQualification\TmQualification::class => QueryHandler\TmQualification\TmQualification::class,
+    TransferQuery\TmQualification\Documents::class => QueryHandler\TmQualification\Documents::class,
+
+    // Transport Manager
+    TransferQuery\Tm\TransportManager::class => QueryHandler\Tm\TransportManager::class,
+    TransferQuery\Tm\Documents::class => QueryHandler\Tm\Documents::class,
 ];

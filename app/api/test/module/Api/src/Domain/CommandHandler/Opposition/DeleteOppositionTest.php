@@ -49,8 +49,8 @@ class DeleteOppositionTest extends CommandHandlerTestCase
         /** @var OppositionEntity $opposition */
         $opposition = null;
 
-        $this->repoMap['Opposition']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
+        $this->repoMap['Opposition']->shouldReceive('fetchById')
+            ->with($id)
             ->andReturn($oppositionEntity)
             ->shouldReceive('delete')
             ->with(m::type(OppositionEntity::class))
@@ -67,6 +67,6 @@ class DeleteOppositionTest extends CommandHandlerTestCase
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
-        $this->assertContains('Deleted', $result->getMessages());
+        $this->assertContains('Id 111 deleted', $result->getMessages());
     }
 }

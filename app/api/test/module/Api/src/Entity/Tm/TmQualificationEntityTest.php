@@ -18,4 +18,45 @@ class TmQualificationEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testUpdateTmQualification()
+    {
+        $entity = new Entity();
+
+        $entity->updateTmQualification(
+            'qtype',
+            '123',
+            '2015-01-01',
+            'GB',
+            1,
+            2,
+            3
+        );
+
+        $this->assertEquals('qtype', $entity->getQualificationType());
+        $this->assertEquals('123', $entity->getSerialNo());
+        $this->assertEquals(new \DateTime('2015-01-01'), $entity->getIssuedDate());
+        $this->assertEquals('GB', $entity->getCountryCode());
+        $this->assertEquals(1, $entity->getTransportManager());
+        $this->assertEquals(2, $entity->getCreatedBy());
+        $this->assertEquals(3, $entity->getLastModifiedBy());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testUpdateTmQualificationWithException()
+    {
+        $entity = new Entity();
+
+        $entity->updateTmQualification(
+            'qtype',
+            '123',
+            '2222-01-01',
+            'GB',
+            1,
+            2,
+            3
+        );
+    }
 }

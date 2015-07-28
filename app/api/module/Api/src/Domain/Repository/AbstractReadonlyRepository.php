@@ -97,9 +97,8 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         $qb = $this->createQueryBuilder();
 
         $this->buildDefaultListQuery($qb, $query);
-        $this->applyListFilters($qb, $query);
-
         $this->applyListJoins($qb);
+        $this->applyListFilters($qb, $query);
 
         return $this->fetchPaginatedList($qb, $hydrateMode);
     }
@@ -126,6 +125,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         $qb = $this->createQueryBuilder();
 
         $this->buildDefaultListQuery($qb, $query);
+        $this->applyListJoins($qb);
         $this->applyListFilters($qb, $query);
 
         return $this->fetchPaginatedCount($qb);
@@ -272,7 +272,9 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         }
 
         if ($query instanceof OrderedQueryInterface) {
-            $queryBuilderHelper->order($query->getSort(), $query->getOrder());
+            if (!empty($query->getSort())) {
+                $queryBuilderHelper->order($query->getSort(), $query->getOrder());
+            }
         }
     }
 

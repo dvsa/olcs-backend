@@ -4,6 +4,7 @@ return array(
     'modules' => [
         'Dvsa\Olcs\Snapshot',
         'Dvsa\Olcs\Email',
+        'Dvsa\Olcs\CompaniesHouse',
         'Dvsa\Jackrabbit\Client',
         'ZfcRbac',
         'Dvsa\Olcs\Transfer',

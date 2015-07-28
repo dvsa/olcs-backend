@@ -149,6 +149,7 @@ return [
     'TaskAlphaSplit' => 'Task',
     'TmCaseDecision' => 'Tm',
     'TmEmployment' => 'Tm',
+    'TmQualification' => 'Tm',
     'TmMerge' => 'Tm',
     'TmQualification' => 'Tm',
     'TransportManager' => 'Tm',

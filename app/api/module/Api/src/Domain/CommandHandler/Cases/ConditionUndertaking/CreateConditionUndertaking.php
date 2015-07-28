@@ -26,7 +26,7 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
 {
     protected $repoServiceName = 'ConditionUndertaking';
 
-    protected $extraRepos = ['Cases', 'Licence', 'OperatingCentre'];
+    protected $extraRepos = ['Cases', 'Licence', 'Application', 'OperatingCentre'];
 
     /**
      * Creates ConditionUndertaking
@@ -66,6 +66,9 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
             $case = $this->getRepo('Cases')->fetchById($command->getCase());
             $conditionUndertaking->setCase($case);
         }
+
+        $application = $this->getRepo('Application')->fetchById($command->getApplication());
+        $conditionUndertaking->setApplication($application);
 
         $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
         $conditionUndertaking->setLicence($licence);
