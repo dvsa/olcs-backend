@@ -27,9 +27,14 @@ class UnlicensedBusinessDetails extends AbstractQueryHandler
             [
                 'licences' => [
                     'correspondenceCd' => [
-                        'address',
-                        'phoneContacts',
+                        'address' => [
+                            'countryCode',
+                        ],
+                        'phoneContacts' => [
+                            'phoneContactType',
+                        ],
                     ],
+                    'goodsOrPsv',
                 ],
             ]
         );
