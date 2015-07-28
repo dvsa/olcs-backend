@@ -149,6 +149,7 @@ return [
             'ApplicationOperatingCentre' => RepositoryFactory::class,
             'LicenceOperatingCentre' => RepositoryFactory::class,
             'TmEmployment' => RepositoryFactory::class,
+            'TmQualification' => RepositoryFactory::class,
             'DocTemplate' => RepositoryFactory::class,
             'LicenceStatusRule' => RepositoryFactory::class,
             'LicenceVehicle' => RepositoryFactory::class,
