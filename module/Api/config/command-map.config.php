@@ -571,6 +571,8 @@ return [
     // ContinuationDetail
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
 
-
     TransferCommand\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,
+    TransferCommand\Publication\PiDecision::class => CommandHandler\Publication\PiHearing::class,
+    TransferCommand\Publication\Bus::class => CommandHandler\Publication\Bus::class,
+    TransferCommand\Publication\Application::class => CommandHandler\Publication\Application::class,
 ];
