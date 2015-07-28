@@ -212,6 +212,12 @@ return [
         => QueryHandler\TransportManagerApplication\GetDetails::class,
     TransferQuery\TransportManagerApplication\GetList::class
         => QueryHandler\TransportManagerApplication\GetList::class,
+    TransferQuery\TransportManagerApplication\GetForResponsibilities::class
+        => QueryHandler\TransportManagerApplication\GetForResponsibilities::class,
+
+    // Transport Manager Licence
+    TransferQuery\TransportManagerLicence\GetForResponsibilities::class
+        => QueryHandler\TransportManagerLicence\GetForResponsibilities::class,
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
@@ -269,4 +275,10 @@ return [
 
     // Transport Manager
     TransferQuery\Tm\TransportManager::class => QueryHandler\Tm\TransportManager::class,
+
+    // Tm Responsibilities
+    TransferQuery\TmResponsibilities\TmResponsibilitiesList::class =>
+        QueryHandler\TmResponsibilities\TmResponsibilitiesList::class,
+    TransferQuery\TmResponsibilities\GetDocumentsForResponsibilities::class =>
+        QueryHandler\TmResponsibilities\GetDocumentsForResponsibilities::class,
 ];
