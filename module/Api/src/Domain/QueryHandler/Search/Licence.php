@@ -98,7 +98,6 @@ class Licence extends AbstractQueryHandler
                     $licence->getLicenceVehicles(),
                     [
                         'vehicle'
-
                     ]
                 ),
                 'applications' => $this->resultList(
