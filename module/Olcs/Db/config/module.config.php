@@ -139,15 +139,6 @@ return [
                     ]
                 ]
             ],
-            'companies-house-queue' => [
-                'type' => 'segment',
-                'options' => [
-                    'route' => '/companies-house-queue[/]',
-                    'defaults' => [
-                        'controller' => 'companies-house-queue'
-                    ]
-                ]
-            ]
         ]
     ],
     'service_manager' => [
@@ -195,7 +186,6 @@ return [
             'ref-data' => 'Olcs\Db\Controller\RefDataController',
             'bookmark-search' => 'Olcs\Db\Controller\BookmarkSearchController',
             'continuation-detail-checklists' => 'Olcs\Db\Controller\ContinuationDetail\ChecklistsController',
-            'companies-house-queue' => 'Olcs\Db\Controller\CompaniesHouse\QueueController',
         ]
     ],
     'view_manager' => [
