@@ -6,6 +6,11 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\PreviousPublicationForPiBundle;
 use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 
+/**
+ * Class PreviousPublicationNo
+ * @package Dvsa\Olcs\Api\Service\Publication\Context\Publication
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
 class PreviousPublicationNo extends AbstractContext
 {
     private static $bundle = [];

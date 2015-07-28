@@ -20,6 +20,12 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEnt
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedBusReg as UnpublishedBusRegQry;
 
+/**
+ * Bus command handler
+ *
+ * @package Dvsa\Olcs\Api\Domain\CommandHandler\Publication
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
 class Bus extends AbstractCommandHandler implements TransactionedInterface, PublicationGeneratorAwareInterface
 {
     use PublicationGeneratorAwareTrait;
@@ -31,7 +37,8 @@ class Bus extends AbstractCommandHandler implements TransactionedInterface, Publ
 
     /**
      * @param CommandInterface $command
-     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @return Result
+     * @throws \Exception
      */
     public function handleCommand(CommandInterface $command)
     {

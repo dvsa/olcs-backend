@@ -1,11 +1,17 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Publication\Process;
+namespace Dvsa\Olcs\Api\Service\Publication\Process\BusReg;
 
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
 
-class BusRegText2 implements ProcessInterface
+/**
+ * Class Text2
+ * @package Dvsa\Olcs\Api\Service\Publication\Process\BusReg
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
+class Text2 implements ProcessInterface
 {
     protected $tradingAs = 'T/A %s';
 

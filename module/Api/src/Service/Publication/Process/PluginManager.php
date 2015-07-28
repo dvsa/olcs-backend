@@ -5,6 +5,10 @@ namespace Dvsa\Olcs\Api\Service\Publication\Process;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\Exception;
 
+/**
+ * Class PluginManager
+ * @package Dvsa\Olcs\Api\Service\Publication\Process
+ */
 class PluginManager extends AbstractPluginManager
 {
     /**

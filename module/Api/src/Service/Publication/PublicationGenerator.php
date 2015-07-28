@@ -5,6 +5,10 @@ namespace Dvsa\Olcs\Api\Service\Publication;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 
+/**
+ * Class PublicationGenerator
+ * @package Dvsa\Olcs\Api\Service\Publication
+ */
 class PublicationGenerator
 {
     private $publicationConfig;

@@ -288,26 +288,26 @@ return [
     'publication_process' => [
         Dvsa\Olcs\Api\Service\Publication\Process\Text1::class =>
             Dvsa\Olcs\Api\Service\Publication\Process\Text1::class,
-        Dvsa\Olcs\Api\Service\Publication\Process\HearingText1::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\HearingText1::class,
-        Dvsa\Olcs\Api\Service\Publication\Process\DecisionText1::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\DecisionText1::class,
-        Dvsa\Olcs\Api\Service\Publication\Process\TmHearingText1::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\TmHearingText1::class,
-        Dvsa\Olcs\Api\Service\Publication\Process\BusRegText2::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\BusRegText2::class,
-        Dvsa\Olcs\Api\Service\Publication\Process\BusRegGrantNewText3::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\BusRegGrantNewText3::class,
-        Dvsa\Olcs\Api\Service\Publication\Process\BusRegGrantVarText3::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\BusRegGrantVarText3::class,
-        Dvsa\Olcs\Api\Service\Publication\Process\BusRegGrantCancelText3::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\BusRegGrantCancelText3::class,
-        Dvsa\Olcs\Api\Service\Publication\Process\ApplicationText1::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\ApplicationText1::class,
-        Dvsa\Olcs\Api\Service\Publication\Process\ApplicationText2::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\ApplicationText2::class,
-        Dvsa\Olcs\Api\Service\Publication\Process\ApplicationText3::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\ApplicationText3::class
+        Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\HearingText1::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\HearingText1::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\DecisionText1::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\DecisionText1::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\TmHearingText1::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\TmHearingText1::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantNewText3::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantNewText3::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantVarText3::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantVarText3::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantCancelText3::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantCancelText3::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class
     ],
     'publications' => [
         'ApplicationPublication' => array(
@@ -320,9 +320,9 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
             ],
             'process' => [
-                Dvsa\Olcs\Api\Service\Publication\Process\ApplicationText1::class,
-                Dvsa\Olcs\Api\Service\Publication\Process\ApplicationText2::class,
-                Dvsa\Olcs\Api\Service\Publication\Process\ApplicationText3::class
+                Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class
             ],
         ),
         'HearingPublication' => array(
@@ -334,7 +334,7 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
             ],
             'process' => [
-                Dvsa\Olcs\Api\Service\Publication\Process\HearingText1::class
+                Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\HearingText1::class
             ],
         ),
         'HearingDecision' => array(
@@ -346,7 +346,7 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
             ],
             'process' => [
-                Dvsa\Olcs\Api\Service\Publication\Process\DecisionText1::class
+                Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\DecisionText1::class
             ],
         ),
         'TmHearingPublication' => array(
@@ -357,7 +357,7 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Context\TransportManager\TransportManagerName::class
             ],
             'process' => [
-                Dvsa\Olcs\Api\Service\Publication\Process\TmHearingText1::class
+                Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\TmHearingText1::class
             ],
         ),
         'TmHearingDecision' => array(
@@ -368,7 +368,7 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Context\TransportManager\TransportManagerName::class
             ],
             'process' => [
-                Dvsa\Olcs\Api\Service\Publication\Process\TmHearingText1::class
+                Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\TmHearingText1::class
             ],
         ),
         'BusGrantNew' => array(
@@ -378,8 +378,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceTypes::class
             ],
             'process' => [
-                Dvsa\Olcs\Api\Service\Publication\Process\BusRegText2::class,
-                Dvsa\Olcs\Api\Service\Publication\Process\BusRegGrantNewText3::class
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantNewText3::class
             ],
         ),
         'BusGrantVariation' => array(
@@ -389,8 +389,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Context\BusReg\VariationReasons::class
             ],
             'process' => [
-                Dvsa\Olcs\Api\Service\Publication\Process\BusRegText2::class,
-                Dvsa\Olcs\Api\Service\Publication\Process\BusRegGrantVarText3::class
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantVarText3::class
             ],
         ),
         'BusGrantCancel' => array(
@@ -399,8 +399,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceDesignation::class
             ],
             'process' => [
-                Dvsa\Olcs\Api\Service\Publication\Process\BusRegText2::class,
-                Dvsa\Olcs\Api\Service\Publication\Process\BusRegGrantCancelText3::class
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantCancelText3::class
             ],
         ),
     ]

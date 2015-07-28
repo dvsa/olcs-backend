@@ -20,6 +20,12 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedApplicationByApp as UnpublishedApplicationByAppQry;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedApplicationByLic as UnpublishedApplicationByLicQry;
 
+/**
+ * Application command handler
+ *
+ * @package Dvsa\Olcs\Api\Domain\CommandHandler\Publication
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
 class Application extends AbstractCommandHandler implements TransactionedInterface, PublicationGeneratorAwareInterface
 {
     use PublicationGeneratorAwareTrait;
@@ -31,7 +37,7 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
 
     /**
      * @param CommandInterface $command
-     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -43,7 +49,8 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
          */
         $application = $this->getRepo('Application')->fetchUsingId($command, Query::HYDRATE_OBJECT);
         $licence = $application->getLicence();
-        $pubType = $application->getGoodsOrPsv()->getId() === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE ? 'A&D' : 'N&P';
+        $pubType = $application->getGoodsOrPsv()->getId() === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE ?
+            'A&D' : 'N&P';
         $appStatus = $application->getStatus()->getId();
 
         $pubSection = $this->getPublicationSectionId($appStatus);

@@ -6,6 +6,11 @@ use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
 
+/**
+ * Class ConditionUndertaking
+ * @package Dvsa\Olcs\Api\Service\Publication\Context\Application
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
 class ConditionUndertaking extends AbstractContext
 {
     const ATTACHED_LIC = 'Attached to Licence.';
@@ -57,7 +62,8 @@ class ConditionUndertaking extends AbstractContext
 
                 //work out if it's a licence or an oc
                 if (!empty($operatingCentre)) {
-                    $string = ' Attached to Operating Centre: ' . $addressFilter->format($operatingCentre->getAddress());
+                    $string = ' Attached to Operating Centre: ' .
+                        $addressFilter->format($operatingCentre->getAddress());
                 } else {
                     $string .= ' Attached to Licence.';
                 }

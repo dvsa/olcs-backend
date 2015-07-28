@@ -1,13 +1,20 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Publication\Process;
+namespace Dvsa\Olcs\Api\Service\Publication\Process\Application;
 
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
+use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
+use Dvsa\Olcs\Api\Service\Publication\Process\Text1 as AbstractText1;
 
-class ApplicationText2 extends Text1 implements ProcessInterface
+/**
+ * Class Text2
+ * @package Dvsa\Olcs\Api\Service\Publication\Process\Application
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
+class Text2 extends AbstractText1 implements ProcessInterface
 {
     /**
      * @param PublicationLink $publication

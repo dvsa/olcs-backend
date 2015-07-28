@@ -1,11 +1,17 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Publication\Process;
+namespace Dvsa\Olcs\Api\Service\Publication\Process\BusReg;
 
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
 
-class BusRegGrantNewText3 implements ProcessInterface
+/**
+ * Class GrantNewText3
+ * @package Dvsa\Olcs\Api\Service\Publication\Process\BusReg
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
+class GrantNewText3 implements ProcessInterface
 {
     protected $from = 'From: %s';
     protected $to = 'To: %s';
@@ -30,7 +36,7 @@ class BusRegGrantNewText3 implements ProcessInterface
 
         $parts[] = sprintf($this->from, $busReg->getStartPoint());
         $parts[] = sprintf($this->to, $busReg->getFinishPoint());
-        $parts[] = sprintf($this->via,$busReg->getVia());
+        $parts[] = sprintf($this->via, $busReg->getVia());
         $parts[] = sprintf($this->serviceDesignation, $context->offsetGet('busServices'));
         $parts[] = sprintf($this->serviceType, $context->offsetGet('busServiceTypes'));
 

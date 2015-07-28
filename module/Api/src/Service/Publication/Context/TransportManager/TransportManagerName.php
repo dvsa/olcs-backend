@@ -5,6 +5,11 @@ namespace Dvsa\Olcs\Api\Service\Publication\Context\TransportManager;
 use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 
+/**
+ * Class TransportManagerName
+ * @package Dvsa\Olcs\Api\Service\Publication\Context\TransportManager
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
 class TransportManagerName extends AbstractContext
 {
     public function provide(PublicationLink $publication, \ArrayObject $context)

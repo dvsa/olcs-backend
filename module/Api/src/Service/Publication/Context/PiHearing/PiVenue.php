@@ -8,7 +8,11 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Pi\PiVenue as PiVenueEntity;
 use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
 
-
+/**
+ * Class PiVenue
+ * @package Dvsa\Olcs\Api\Service\Publication\Context\PiHearing
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
 class PiVenue extends AbstractContext
 {
     private static $bundle = [];
