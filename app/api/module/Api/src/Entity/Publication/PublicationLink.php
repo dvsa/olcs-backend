@@ -4,6 +4,15 @@ namespace Dvsa\Olcs\Api\Entity\Publication;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+
 /**
  * PublicationLink Entity
  *
@@ -28,30 +37,100 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PublicationLink extends AbstractPublicationLink
 {
-
     /**
-     * Updates publication text fields
+     * Updates Application Publication
      *
-     * @param String $text1
-     * @param String $text2
-     * @param String $text3
+     * @param ApplicationEntity $application
+     * @param LicenceEntity $licence
+     * @param PublicationEntity $publication
+     * @param PublicationSectionEntity $publicationSection
+     * @param TrafficAreaEntity $trafficArea
      */
-    public function updateText($text1, $text2, $text3)
-    {
-        $this->text1 = $text1;
-        $this->text2 = $text2;
-        $this->text3 = $text3;
+    public function updateApplication(
+        ApplicationEntity $application,
+        LicenceEntity $licence,
+        PublicationEntity $publication,
+        PublicationSectionEntity $publicationSection,
+        TrafficAreaEntity $trafficArea
+    ) {
+        $this->application = $application;
+        $this->licence = $licence;
+        $this->publication = $publication;
+        $this->publicationSection = $publicationSection;
+        $this->trafficArea = $trafficArea;
     }
 
+    /**
+     * Updates a Bus Registration
+     *
+     * @param BusRegEntity $busReg
+     * @param LicenceEntity $licence
+     * @param PublicationEntity $publication
+     * @param PublicationSectionEntity $publicationSection
+     * @param TrafficAreaEntity $trafficArea
+     * @param string $text1
+     */
+    public function updateBusReg(
+        BusRegEntity $busReg,
+        LicenceEntity $licence,
+        PublicationEntity $publication,
+        PublicationSectionEntity $publicationSection,
+        TrafficAreaEntity $trafficArea,
+        $text1
+    ) {
+        $this->busReg = $busReg;
+        $this->licence = $licence;
+        $this->publication = $publication;
+        $this->publicationSection = $publicationSection;
+        $this->trafficArea = $trafficArea;
+        $this->text1 = $text1;
+    }
+
+    /**
+     * Updates a Pi hearing
+     *
+     * @param LicenceEntity $licence
+     * @param PiEntity $pi
+     * @param PublicationEntity $publication
+     * @param PublicationSectionEntity $publicationSection
+     * @param TrafficAreaEntity $trafficArea
+     * @param string $text2
+     */
     public function updatePiHearing(
-        $licence,
-        $pi,
-        $publication,
-        $publicationSection,
-        $trafficArea,
+        LicenceEntity $licence,
+        PiEntity $pi,
+        PublicationEntity $publication,
+        PublicationSectionEntity $publicationSection,
+        TrafficAreaEntity $trafficArea,
         $text2
     ) {
         $this->licence = $licence;
+        $this->pi = $pi;
+        $this->publication = $publication;
+        $this->publicationSection = $publicationSection;
+        $this->trafficArea = $trafficArea;
+        $this->text2 = $text2;
+    }
+
+    /**
+     * Updates a Tm Pi Hearing
+     *
+     * @param TransportManagerEntity $transportManager
+     * @param PiEntity $pi
+     * @param PublicationEntity $publication
+     * @param PublicationSectionEntity $publicationSection
+     * @param TrafficAreaEntity $trafficArea
+     * @param $text2
+     */
+    public function updateTmPiHearing(
+        TransportManagerEntity $transportManager,
+        PiEntity $pi,
+        PublicationEntity $publication,
+        PublicationSectionEntity $publicationSection,
+        TrafficAreaEntity $trafficArea,
+        $text2
+    ) {
+        $this->transportManager = $transportManager;
         $this->pi = $pi;
         $this->publication = $publication;
         $this->publicationSection = $publicationSection;
