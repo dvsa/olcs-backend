@@ -42,4 +42,10 @@ class TrafficArea extends AbstractRepository
 
         return $valueOptions;
     }
+
+    public function fetchAll()
+    {
+        $qb = $this->createQueryBuilder();
+        return $qb->getQuery()->getResult();
+    }
 }
