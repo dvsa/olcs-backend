@@ -60,7 +60,7 @@ class Text1 implements ProcessInterface
      * @param ImmutableArrayObject $context
      * @return String
      */
-    public function getOpeningText($publication, $context)
+    public function getOpeningText(PublicationLink $publication, ImmutableArrayObject $context)
     {
         return sprintf(
             $this->pi,
@@ -84,7 +84,7 @@ class Text1 implements ProcessInterface
      * @param LicenceEntity $licence
      * @return string
      */
-    public function getLicenceInfo($licence)
+    public function getLicenceInfo(LicenceEntity $licence)
     {
         $organisation = $licence->getOrganisation();
         $tradingNames = $organisation->getTradingNames();
