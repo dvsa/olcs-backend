@@ -492,6 +492,12 @@ return [
         => CommandHandler\TransportManagerApplication\UpdateStatus::class,
     TransferCommand\TransportManagerApplication\UpdateDetails::class
         => CommandHandler\TransportManagerApplication\UpdateDetails::class,
+    TransferCommand\TransportManagerApplication\CreateForResponsibilities::class =>
+        CommandHandler\TransportManagerApplication\CreateForResponsibilities::class,
+    TransferCommand\TransportManagerApplication\UpdateForResponsibilities::class =>
+        CommandHandler\TransportManagerApplication\UpdateForResponsibilities::class,
+    TransferCommand\TransportManagerApplication\DeleteForResponsibilities::class =>
+        CommandHandler\TransportManagerApplication\DeleteForResponsibilities::class,
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
@@ -568,4 +574,10 @@ return [
 
     // ContinuationDetail
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
+
+    // Transport Manager Licence
+    TransferCommand\TransportManagerLicence\UpdateForResponsibilities::class =>
+        CommandHandler\TransportManagerLicence\UpdateForResponsibilities::class,
+    TransferCommand\TransportManagerLicence\DeleteForResponsibilities::class =>
+        CommandHandler\TransportManagerLicence\DeleteForResponsibilities::class,
 ];

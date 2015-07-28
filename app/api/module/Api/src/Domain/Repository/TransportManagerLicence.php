@@ -53,4 +53,54 @@ class TransportManagerLicence extends AbstractRepository
 
         return $dqb->getQuery()->getResult();
     }
+
+    public function fetchForTransportManager($tmId, $licenceStatuses)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->with('tmType', 'tmt')
+            ->with('licence', 'l')
+            ->with('l.organisation', 'lo')
+            ->with('l.status', 'ls')
+            ->with('transportManager', 'tm')
+            ->with('operatingCentres', 'oc');
+
+        $qb->where($qb->expr()->eq($this->alias . '.transportManager', ':transportManager'));
+        $qb->setParameter('transportManager', $tmId);
+
+        if ($licenceStatuses !== null) {
+            $statuses = explode(',', $licenceStatuses);
+            $conditions = [];
+            for ($i = 0; $i < count($statuses); $i++) {
+                $conditions[] = 'l.status = :status' . $i;
+            }
+            $orX = $qb->expr()->orX();
+            $orX->addMultiple($conditions);
+            $qb->andWhere($orX);
+            for ($i = 0; $i < count($statuses); $i++) {
+                $qb->setParameter('status' . $i, $statuses[$i]);
+            }
+        }
+        return $qb->getQuery()->getResult();
+    }
+
+    public function fetchForResponsibilities($id)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->with('l.organisation', 'lo')
+            ->with('l.status', 'lst')
+            ->with('transportManager', 'tm')
+            ->with('tm.tmType', 'tmty')
+            ->with('tmType', 'tmt')
+            ->with('operatingCentres', 'oc')
+            ->byId($id);
+
+        return $qb->getQuery()->getSingleResult();
+    }
 }
