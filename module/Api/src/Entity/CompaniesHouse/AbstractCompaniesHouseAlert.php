@@ -68,6 +68,15 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     protected $id;
 
     /**
+     * Is closed
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="is_closed", nullable=false, options={"default": 0})
+     */
+    protected $isClosed = 0;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -222,6 +231,29 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the is closed
+     *
+     * @param string $isClosed
+     * @return CompaniesHouseAlert
+     */
+    public function setIsClosed($isClosed)
+    {
+        $this->isClosed = $isClosed;
+
+        return $this;
+    }
+
+    /**
+     * Get the is closed
+     *
+     * @return string
+     */
+    public function getIsClosed()
+    {
+        return $this->isClosed;
     }
 
     /**

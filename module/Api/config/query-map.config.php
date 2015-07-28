@@ -4,6 +4,8 @@ use Dvsa\Olcs\Transfer\Query as TransferQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark as BookmarkQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark as BookmarkQueryHandler;
+use Dvsa\Olcs\Api\Domain\Query\Queue as QueueQuery;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Queue as QueueQueryHandler;
 
 return [
     // Bookmarks
@@ -285,4 +287,21 @@ return [
         QueryHandler\TmResponsibilities\TmResponsibilitiesList::class,
     TransferQuery\TmResponsibilities\GetDocumentsForResponsibilities::class =>
         QueryHandler\TmResponsibilities\GetDocumentsForResponsibilities::class,
+
+    // Companies House
+    TransferQuery\CompaniesHouse\AlertList::class => QueryHandler\CompaniesHouse\AlertList::class,
+
+    // Queue
+    QueueQuery\NextItem::class => QueueQueryHandler\NextItem::class,
+
+    // TmQualification
+    TransferQuery\TmQualification\TmQualificationsList::class =>
+        QueryHandler\TmQualification\TmQualificationsList::class,
+    TransferQuery\TmQualification\TmQualification::class => QueryHandler\TmQualification\TmQualification::class,
+    TransferQuery\TmQualification\Documents::class => QueryHandler\TmQualification\Documents::class,
+
+    // Transport Manager
+    TransferQuery\Tm\TransportManager::class => QueryHandler\Tm\TransportManager::class,
+    TransferQuery\Tm\Documents::class => QueryHandler\Tm\Documents::class,
+
 ];
