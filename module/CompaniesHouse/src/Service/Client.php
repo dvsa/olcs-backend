@@ -117,7 +117,13 @@ class Client
         $response = $this->getHttpClient()->send();
 
         if (!$response->isOk()) {
-            throw new Exception('Error response: ' . $response->getBody());
+            if ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_429) {
+                $reason = 'Rate limit exceeded';
+            } else {
+                $reason = $response->getBody();
+            }
+            $message = sprintf('Error response (%s) %s', $response->getStatusCode(), $reason);
+            throw new Exception($message);
         }
 
         return json_decode($response->getBody(), true);
