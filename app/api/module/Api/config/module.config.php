@@ -149,6 +149,7 @@ return [
             'ApplicationOperatingCentre' => RepositoryFactory::class,
             'LicenceOperatingCentre' => RepositoryFactory::class,
             'TmEmployment' => RepositoryFactory::class,
+            'TmQualification' => RepositoryFactory::class,
             'DocTemplate' => RepositoryFactory::class,
             'LicenceStatusRule' => RepositoryFactory::class,
             'LicenceVehicle' => RepositoryFactory::class,
@@ -179,6 +180,9 @@ return [
             'TaskSearchView' => RepositoryFactory::class,
             'PrivateHireLicence' => RepositoryFactory::class,
             'ContinuationDetail' => RepositoryFactory::class,
+            'CompaniesHouseAlert' => RepositoryFactory::class,
+            'CompaniesHouseCompany' => RepositoryFactory::class,
+            'Queue' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

@@ -18,6 +18,10 @@ TRUNCATE TABLE `complaint`;
 TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
+TRUNCATE TABLE `companies_house_alert_reason`;
+TRUNCATE TABLE `companies_house_alert`;
+TRUNCATE TABLE `companies_house_officer`;
+TRUNCATE TABLE `companies_house_company`;
 TRUNCATE TABLE `change_of_entity`;
 TRUNCATE TABLE `disc_sequence`;
 TRUNCATE TABLE `event_history_type`;
@@ -852,15 +856,15 @@ VALUES
 INSERT INTO `organisation` (`id`,`lead_tc_area_id`, `created_by`, `last_modified_by`,`contact_details_id`,
 `company_or_llp_no`, `name`, `is_irfo`, `type`, `created_on`, `last_modified_on`, `version`, `allow_email`) VALUES
     (1,'B',1,3,  21,'12345678','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1,1),
-    (30,'C',1,4,  30,'98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1,0),
-    (41,'D',0,4,  41,'241341234','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1,0),
-    (54,'F',3,4,  54,'675675334','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1,0),
-    (63,'G',1,2,  63,'353456456','Leeds bus service ltd.',0,'org_t_rc',NOW(),NOW(),1,0),
-    (75,'H',1,0,  75,'12345A1123','Leeds city council',0,'org_t_pa',NOW(),NOW(),1,0),
-    (100,'K',1,3,  100,'100100','Test partnership',0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2,0),
-    (101,'K',1,3,  100,'100100','Test IRFO',1,'org_t_ir',NOW(),NOW(),1,0),
+    (30,'C',1,4, 30,'98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1,0),
+    (41,'D',0,4, 41,'24134123','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1,0),
+    (54,'F',3,4, 54,'67567533','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1,0),
+    (63,'G',1,2, 63,'35345645','Leeds bus service ltd.',0,'org_t_rc',NOW(),NOW(),1,0),
+    (75,'H',1,0, 75,'12345A11','Leeds city council',0,'org_t_pa',NOW(),NOW(),1,0),
+    (100,'K',1,3,100,'100100','Test partnership',0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2,0),
+    (101,'K',1,3,100,'100100','Test IRFO',1,'org_t_ir',NOW(),NOW(),1,0),
     (104,'M',NULL,NULL,NULL,'1234567','Company Name',0,'org_t_rc',NULL,NULL,1,0),
-    (105,'N',1,3,NULL,NULL,'SR Orgaisation',0,'org_t_rc',NOW(),NOW(),1,0);
+    (105,'N',1,3,NULL,NULL,'SR Organisation',0,'org_t_rc',NOW(),NOW(),1,0);
 
 INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
     `person_id`, `organisation_id`) VALUES
@@ -2015,3 +2019,34 @@ INSERT INTO `grace_period` (`id`, `created_by`, `last_modified_by`, `licence_id`
       (2, 1, 1, 7, "Grace period description 2", '2015-09-01', '2015-06-01', '2015-05-01', '2015-06-01', NULL),
       (3, 1, 1, 7, "Grace period description 3", '2015-10-01', '2015-07-01', '2015-06-01', '2015-07-01', NULL),
       (4, 1, 1, 7, "Grace period description 4", '2015-11-01', '2015-08-01', '2015-07-01', '2015-08-01', NULL);
+
+INSERT INTO `companies_house_company` (
+    `id`,
+    `address_line_1`,
+    `address_line_2`,
+    `company_name`,
+    `company_number`,
+    `company_status`,
+    `country`,
+    `locality`,
+    `po_box`,
+    `postal_code`,
+    `premises`,
+    `region`
+)
+VALUES
+    (1,'Address line 1','Address line 2','JOHN SMITH HAULAGE LIMITED','12345678','active',NULL,'Leeds',NULL,'LS9 6NF',NULL,NULL),
+    (2,'Address line 1','Address line 2','TEDDIE STOBBART GROUP LIMITED','67567533','active',NULL,'Leeds',NULL,'LS9 6NF',NULL,NULL);
+
+INSERT INTO `companies_house_alert` (`id`, `organisation_id`, `company_or_llp_no`, `created_on`, `is_closed`)
+VALUES
+    (1, 1, '12345678', '2015-07-21 15:05:58', 0),
+    (2, 41, '67567533', '2015-07-21 15:05:59', 0),
+    (3, 41, '67567533', '2015-07-21 15:03:59', 1);
+
+INSERT INTO `companies_house_alert_reason` (`id`, `companies_house_alert_id`, `reason_type`)
+VALUES
+    (1, 1, 'company_status_change'),
+    (2, 1, 'company_people_change'),
+    (3, 2, 'company_address_change'),
+    (4, 3, 'company_name_change');

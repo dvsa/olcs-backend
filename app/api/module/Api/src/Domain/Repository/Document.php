@@ -45,4 +45,18 @@ class Document extends AbstractRepository
 
         return $qb->getQuery()->execute();
     }
+
+    public function fetchListForTm($id)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.category', ':category'))
+            ->andWhere($qb->expr()->eq($this->alias . '.subCategory', ':subCategory'))
+            ->andWhere($qb->expr()->eq($this->alias . '.transportManager', ':transportManager'))
+            ->setParameter('category', CategoryEntity::CATEGORY_TRANSPORT_MANAGER)
+            ->setParameter('subCategory', CategoryEntity::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CPC_OR_EXEMPTION)
+            ->setParameter('transportManager', $id)
+            ->orderBy($this->alias . '.id', 'DESC');
+
+        return $qb->getQuery()->execute();
+    }
 }
