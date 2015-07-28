@@ -28,10 +28,6 @@ class Licence extends AbstractQueryHandler
     {
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
-        $organisation = $licence->getOrganisation();
-
-        /** @var Organisation $organisation */
-//        $organisation = $this->getRepo('Organisation')->fetchBusinessDetailsById($organisation->getId());
 
         return $this->result(
             $licence,
@@ -107,7 +103,6 @@ class Licence extends AbstractQueryHandler
                 ),
                 'applications' => $this->resultList(
                     $licence->getApplications()
-
                 ),
                 'conditionUndertakings' => $this->resultList(
                     $licence->getConditionUndertakings()
