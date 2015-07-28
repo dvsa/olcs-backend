@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
@@ -184,5 +185,24 @@ class Licence extends AbstractRepository
             ->byId($licenceId);
 
         return $qb->getQuery()->getSingleResult(Query::HYDRATE_OBJECT);
+    }
+
+    /**
+     * Override parent
+     *
+     * @param QueryBuilder $qb
+     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
+    {
+        if (is_numeric($query->getOrganisation())) {
+            $qb->andWhere($qb->expr()->eq($this->alias .'.organisation', ':organisation'))
+                ->setParameter('organisation', $query->getOrganisation());
+        }
+
+        if (!empty($query->getExcludeStatuses())) {
+            $qb->andWhere($qb->expr()->notIn($this->alias .'.status', ':excludeStatuses'))
+                ->setParameter('excludeStatuses', $query->getExcludeStatuses());
+        }
     }
 }

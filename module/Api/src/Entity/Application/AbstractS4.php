@@ -19,7 +19,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_s4_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_s4_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_s4_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_s4_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_s4_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_s4_outcome_ref_data_id", columns={"outcome"})
  *    }
  * )
  */
@@ -121,9 +122,10 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Outcome
      *
-     * @var string
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\Column(type="string", name="outcome", length=20, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="outcome", referencedColumnName="id", nullable=true)
      */
     protected $outcome;
 
@@ -365,7 +367,7 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the outcome
      *
-     * @param string $outcome
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $outcome
      * @return S4
      */
     public function setOutcome($outcome)
@@ -378,7 +380,7 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the outcome
      *
-     * @return string
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
     public function getOutcome()
     {

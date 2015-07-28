@@ -21,6 +21,8 @@ class Organisation extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    protected $alias = 'o';
+
     public function fetchBusinessDetailsUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         return $this->fetchBusinessDetailsById($query->getId(), $hydrateMode);
@@ -68,5 +70,25 @@ class Organisation extends AbstractRepository
         }
 
         return $results[0];
+    }
+
+    public function getByCompanyOrLlpNo($companyNumber)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata();
+
+        $qb
+            ->andWhere($qb->expr()->eq($this->alias . '.companyOrLlpNo', ':companyNumber'))
+            ->setParameter('companyNumber', $companyNumber);
+
+        $results = $qb->getQuery()->getResult();
+
+        if (empty($results)) {
+            throw new NotFoundException('Organisation not found for company number '.$companyNumber);
+        }
+
+        return $results;
     }
 }

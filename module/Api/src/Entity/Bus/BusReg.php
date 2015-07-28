@@ -6,9 +6,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as BusShortNoticeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 
 /**
  * BusReg Entity
@@ -48,6 +50,15 @@ class BusReg extends AbstractBusReg
     const SUBSIDY_NO = 'bs_no';
 
     const FORBIDDEN_ERROR = 'This bus reg can\'t be edited. It must be the latest variation, and not from EBSR';
+
+    /**
+     * @var array
+     */
+    private static $grantStatusMap = [
+        self::STATUS_NEW => self::STATUS_REGISTERED,
+        self::STATUS_VAR => self::STATUS_REGISTERED,
+        self::STATUS_CANCEL => self::STATUS_CANCELLED,
+    ];
 
     /**
      * @var array
@@ -253,6 +264,21 @@ class BusReg extends AbstractBusReg
         }
 
         throw new ForbiddenException('Only the latest variation may be deleted');
+    }
+
+    /**
+     * A decision about a bus reg can be made only if it's the latest variation
+     *
+     * @return bool
+     * @throws ForbiddenException
+     */
+    public function canMakeDecision()
+    {
+        if ($this->isLatestVariation()) {
+            return true;
+        }
+
+        throw new ForbiddenException('Decision can be made on the latest variation only');
     }
 
     /**
@@ -481,9 +507,10 @@ class BusReg extends AbstractBusReg
         $standardPeriod = $busRules->getStandardPeriod();
 
         if ($standardPeriod > 0) {
+            $receivedDate = clone $receivedDate;
             $interval = new \DateInterval('P' . $standardPeriod . 'D');
 
-            if (clone $receivedDate->add($interval) >= $effectiveDate) {
+            if ($receivedDate->add($interval)->setTime(0, 0) >= $effectiveDate->setTime(0, 0)) {
                 return true;
             }
         }
@@ -499,14 +526,372 @@ class BusReg extends AbstractBusReg
                 return null;
             }
 
-            $lastDateTime = $parent->getEffectiveDate();
+            $lastDateTime = clone $parent->getEffectiveDate();
             $interval = new \DateInterval('P' . $cancellationPeriod . 'D');
 
-            if (clone $lastDateTime->add($interval) >= $effectiveDate) {
+            if ($lastDateTime->add($interval)->setTime(0, 0) >= $effectiveDate->setTime(0, 0)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Returns whether the record is short notice refused
+     *
+     * @return bool
+     */
+    public function isShortNoticeRefused()
+    {
+        return ($this->shortNoticeRefused === 'Y' ? true : false);
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getDecision()
+    {
+        $reason = null;
+
+        switch ($this->status->getId()) {
+            case self::STATUS_REFUSED:
+                $reason = ($this->isShortNoticeRefused()) ? $this->reasonSnRefused : $this->reasonRefused;
+                break;
+            case self::STATUS_CANCELLED:
+            case self::STATUS_ADMIN:
+                $reason = $this->reasonCancelled;
+                break;
+            case self::STATUS_WITHDRAWN:
+                $reason = $this->withdrawnReason->getDescription();
+                break;
+        }
+
+        return ($reason !== null) ? [
+            'decision' => $this->status->getDescription(),
+            'reason' => $reason,
+        ] : null;
+    }
+
+    /**
+     * Returns whether a bus reg may be granted
+     *
+     * @param FeeEntity $fee
+     * @return bool
+     */
+    public function isGrantable(FeeEntity $fee = null)
+    {
+        if (false === $this->isGrantableBasedOnRequiredFields()) {
+            // bus reg without all required fields which makes it non-grantable
+            return false;
+        }
+
+        if (false === $this->isGrantableBasedOnShortNotice()) {
+            // bus reg without short notice details or with one which makes it non-grantable
+            return false;
+        }
+
+        if ((false === $this->isGrantableBasedOnFee($fee))) {
+            // bus reg with a fee which makes it non-grantable
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns whether a bus reg has all required fields which makes it grantable
+     *
+     * @return bool
+     */
+    private function isGrantableBasedOnRequiredFields()
+    {
+        // mendatory fields which needs to be marked as Yes
+        $yesFields = [
+            'timetableAcceptable',
+            'mapSupplied',
+            'trcConditionChecked',
+            'copiedToLaPte',
+            'laShortNote',
+            'applicationSigned'
+        ];
+
+        if (!empty($this->busNoticePeriod)
+            && $this->busNoticePeriod->getId() == BusNoticePeriodEntity::NOTICE_PERIOD_SCOTLAND
+        ) {
+            // for Scottish registrations opNotifiedLaPte is required
+            $yesFields[] = 'opNotifiedLaPte';
+        }
+
+        foreach ($yesFields as $field) {
+            if (empty($this->$field) || $this->$field !== 'Y') {
+                return false;
+            }
+        }
+
+        // mendatory fields which can't be empty
+        $nonEmptyFields = [
+            'effectiveDate',
+            'receivedDate',
+            'serviceNo',
+            'startPoint',
+            'finishPoint',
+        ];
+
+        foreach ($nonEmptyFields as $field) {
+            if (empty($this->$field)) {
+                return false;
+            }
+        }
+
+        // mendatory collections which can't be empty
+        $nonEmptyCollections = [
+            'busServiceTypes',
+            'trafficAreas',
+            'localAuthoritys',
+        ];
+
+        foreach ($nonEmptyCollections as $field) {
+            if (($this->$field === null) || $this->$field->isEmpty()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns whether a bus reg has short notice details which makes it grantable
+     *
+     * @return bool
+     */
+    private function isGrantableBasedOnShortNotice()
+    {
+        if ($this->isShortNotice !== 'Y') {
+            // not a short notice one
+            return true;
+        }
+
+        if (empty($this->shortNotice)) {
+            // no short notice details makes it non-grantable
+            return false;
+        }
+
+        return $this->shortNotice->hasGrantableDetails();
+    }
+
+    /**
+     * Returns whether a bus reg has a fee which makes it grantable
+     *
+     * @param FeeEntity $fee
+     *
+     * @return bool
+     */
+    private function isGrantableBasedOnFee(FeeEntity $fee = null)
+    {
+        if (empty($fee)) {
+            // no fee makes it grantable
+            return true;
+        }
+
+        if (in_array($fee->getFeeStatus()->getId(), [FeeEntity::STATUS_PAID, FeeEntity::STATUS_WAIVED])) {
+            // the fee is paid or waived
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Update status
+     *
+     * @param RefData $status
+     * @return BusReg
+     */
+    private function updateStatus(RefData $status)
+    {
+        $this->setRevertStatus($this->getStatus());
+        $this->setStatus($status);
+        $this->setStatusChangeDate(new \DateTime());
+
+        return $this;
+    }
+
+    /**
+     * Resets status
+     *
+     * @return BusReg
+     */
+    public function resetStatus()
+    {
+        $this->canMakeDecision();
+
+        $this->updateStatus($this->getRevertStatus());
+
+        return $this;
+    }
+
+    /**
+     * Admin cancel
+     *
+     * @param RefData $status
+     * @param string $reason
+     * @return BusReg
+     */
+    public function cancelByAdmin(RefData $status, $reason)
+    {
+        $this->canMakeDecision();
+
+        if ($status->getId() !== self::STATUS_ADMIN) {
+            throw new BadRequestException('Please provide a valid status');
+        }
+
+        $this->updateStatus($status);
+        $this->setReasonCancelled($reason);
+
+        return $this;
+    }
+
+    /**
+     * Withdraw
+     *
+     * @param RefData $status
+     * @param RefData $reason
+     * @return BusReg
+     */
+    public function withdraw(RefData $status, RefData $reason)
+    {
+        $this->canMakeDecision();
+
+        if ($status->getId() !== self::STATUS_WITHDRAWN) {
+            throw new BadRequestException('Please provide a valid status');
+        }
+
+        $this->updateStatus($status);
+        $this->setWithdrawnReason($reason);
+
+        return $this;
+    }
+
+    /**
+     * Refuse
+     *
+     * @param RefData $status
+     * @param string $reason
+     * @return BusReg
+     */
+    public function refuse(RefData $status, $reason)
+    {
+        $this->canMakeDecision();
+
+        if ($status->getId() !== self::STATUS_REFUSED) {
+            throw new BadRequestException('Please provide a valid status');
+        }
+
+        $this->updateStatus($status);
+        $this->setReasonRefused($reason);
+
+        return $this;
+    }
+
+    /**
+     * Refuse by Short Notice
+     *
+     * @param string $reason
+     * @return BusReg
+     */
+    public function refuseByShortNotice($reason)
+    {
+        $this->canMakeDecision();
+
+        $this->setShortNoticeRefused('Y');
+        $this->setReasonSnRefused($reason);
+        $this->setEffectiveDate($this->calculateNoticeDate());
+
+        // reset the short notice record
+        $this->setIsShortNotice('N');
+
+        if ($this->getShortNotice() !== null) {
+            $this->getShortNotice()->reset();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Calculates the short notice date
+     *
+     * @return null|string
+     */
+    private function calculateNoticeDate()
+    {
+        $receivedDateTime = $this->receivedDate;
+
+        if (!($receivedDateTime instanceof \DateTime)) {
+            return null;
+        }
+
+        if ($this->busNoticePeriod === null) {
+            return null;
+        }
+
+        if (($this->busNoticePeriod->getCancellationPeriod() > 0) && ($this->variationNo > 0)) {
+            if ($this->parent === null) {
+                // if we don't have a parent record, the result is undefined.
+                return null;
+            }
+
+            $lastDateTime = $this->parent->getEffectiveDate();
+            $interval = new \DateInterval('P' . $this->busNoticePeriod->getCancellationPeriod() . 'D');
+
+            return $lastDateTime->add($interval);
+        }
+
+        if ($this->busNoticePeriod->getStandardPeriod() > 0) {
+            $interval = new \DateInterval('P' . $this->busNoticePeriod->getStandardPeriod() . 'D');
+
+            return $receivedDateTime->add($interval);
+        }
+
+        return $this->effectiveDate;
+    }
+
+    /**
+     * Grant
+     *
+     * @param RefData $status
+     * @param array $variationReasons
+     * @return BusReg
+     */
+    public function grant(RefData $status, $variationReasons = null)
+    {
+        $this->canMakeDecision();
+
+        if ($this->isGrantable() !== true) {
+            throw new BadRequestException('The Bus Reg is not grantable');
+        }
+
+        if ($status->getId() !== $this->getStatusForGrant()) {
+            throw new BadRequestException('The Bus Reg is not grantable');
+        }
+
+        if ($this->status->getId() === self::STATUS_VAR) {
+            $this->setVariationReasons($variationReasons);
+        }
+
+        $this->updateStatus($status);
+
+        return $this;
+    }
+
+    /**
+     * Get status for grant action
+     *
+     * @return string
+     */
+    public function getStatusForGrant()
+    {
+        return (!empty(self::$grantStatusMap[$this->status->getId()]))
+            ? self::$grantStatusMap[$this->status->getId()] : null;
     }
 }

@@ -47,5 +47,25 @@ return array(
             'uuid' => 'uD12345',
             'workspace' => 'olcs'
         ),
-    )
+    ),
+    'companies_house' => [
+        'http' => [
+            'sslcapath' => '/etc/ssl/certs',
+            // insecure! should be set to true in production to verify SSL cert
+            'sslverifypeer' => false,
+            // Set the following if you need to go via a proxy to get to Companies House
+            // 'adapter'    => 'Zend\Http\Client\Adapter\Proxy',
+            // 'proxy_host' => 'fp01.inf.mgt.mtpdvsa',
+            // 'proxy_port' => '3128',
+        ],
+        'auth' => [
+            // Companies House API key
+            // (register one at https://developer.companieshouse.gov.uk/)
+            'username' => 'changeme',
+            'password' => '',
+        ],
+        'client' => [
+            'baseuri' => 'https://api.companieshouse.gov.uk/',
+        ],
+    ],
 );

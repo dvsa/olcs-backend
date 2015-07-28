@@ -18,7 +18,9 @@ use Doctrine\ORM\Mapping as ORM;
  *    indexes={
  *        @ORM\Index(name="ix_irfo_gv_permit_type_irfo_country_id", columns={"irfo_country_id"}),
  *        @ORM\Index(name="ix_irfo_gv_permit_type_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_irfo_gv_permit_type_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_irfo_gv_permit_type_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_irfo_gv_permit_type_irfo_fee_type_ref_data1_idx1",
+     *     columns={"irfo_fee_type"})
  *    }
  * )
  */
@@ -74,6 +76,16 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
      * @ORM\JoinColumn(name="irfo_country_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoCountry;
+
+    /**
+     * Irfo fee type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="irfo_fee_type", referencedColumnName="id", nullable=true)
+     */
+    protected $irfoFeeType;
 
     /**
      * Last modified by
@@ -217,6 +229,29 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
     public function getIrfoCountry()
     {
         return $this->irfoCountry;
+    }
+
+    /**
+     * Set the irfo fee type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $irfoFeeType
+     * @return IrfoGvPermitType
+     */
+    public function setIrfoFeeType($irfoFeeType)
+    {
+        $this->irfoFeeType = $irfoFeeType;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo fee type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getIrfoFeeType()
+    {
+        return $this->irfoFeeType;
     }
 
     /**
