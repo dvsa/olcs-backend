@@ -1648,6 +1648,11 @@ return array(
             ),
         ),
     ),
+    'companies_house_alert' => array(
+        'is_closed' => array(
+            'type' => 'yesno'
+        ),
+    ),
     'grace_period' => array(
         'licence_id' => array(
             'inversedBy' => array(
