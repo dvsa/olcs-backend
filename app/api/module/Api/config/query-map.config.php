@@ -23,6 +23,14 @@ return [
     BookmarkQuery\PublicationBundle::class => BookmarkQueryHandler\PublicationBundle::class,
     BookmarkQuery\PublicationLatestByTaAndTypeBundle::class
         => BookmarkQueryHandler\PublicationLatestByTaAndTypeBundle::class,
+    BookmarkQuery\UnpublishedBusReg::class
+    => BookmarkQueryHandler\UnpublishedPublication::class,
+    BookmarkQuery\UnpublishedPi::class
+    => BookmarkQueryHandler\UnpublishedPublication::class,
+    BookmarkQuery\UnpublishedApplicationByApp::class
+    => BookmarkQueryHandler\UnpublishedPublication::class,
+    BookmarkQuery\UnpublishedApplicationByLic::class
+    => BookmarkQueryHandler\UnpublishedPublication::class,
     BookmarkQuery\ConditionsUndertakings::class => BookmarkQueryHandler\ConditionsUndertakings::class,
     BookmarkQuery\GoodsDiscBundle::class => BookmarkQueryHandler\GoodsDiscBundle::class,
     BookmarkQuery\PsvDiscBundle::class => BookmarkQueryHandler\PsvDiscBundle::class,
