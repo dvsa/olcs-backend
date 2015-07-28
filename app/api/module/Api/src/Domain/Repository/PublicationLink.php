@@ -32,21 +32,39 @@ class PublicationLink extends AbstractRepository
         return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
     }
 
-    public function fetchSingleUnpublished($publication, $pi, $publicationSection)
+    /**
+     * @param QueryInterface $query
+     * @return array
+     */
+    public function fetchSingleUnpublished(QueryInterface $query)
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->andWhere(
-            $qb->expr()->eq($this->alias . '.publication', ':publication')
-        )->setParameter('publication', $publication);
+        $qb->andWhere($qb->expr()->eq($this->alias . '.publication', ':byPublication'))
+            ->setParameter('byPublication', $query->getPublication());
 
-        $qb->andWhere(
-            $qb->expr()->eq($this->alias . '.pi', ':pi')
-        )->setParameter('pi', $pi);
+        $qb->andWhere($qb->expr()->eq($this->alias . '.publicationSection', ':byPublicationSection'))
+            ->setParameter('byPublicationSection', $query->getPublicationSection());
 
-        $qb->andWhere(
-            $qb->expr()->eq($this->alias . '.publicationSection', ':publicationSection')
-        )->setParameter('publicationSection', $publicationSection);
+        if (method_exists($query, 'getPi')) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.pi', ':byPi'))
+                ->setParameter('byPi', $query->getPi());
+        }
+
+        if (method_exists($query, 'getBusReg')) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.busReg', ':byBusReg'))
+                ->setParameter('byBusReg', $query->getBusReg());
+        }
+
+        if (method_exists($query, 'getApplication')) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.application', ':byApplication'))
+                ->setParameter('byApplication', $query->getApplication());
+        }
+
+        if (method_exists($query, 'getLicence')) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':byLicence'))
+                ->setParameter('byLicence', $query->getLicence());
+        }
 
         $this->getQueryBuilder()->modifyQuery($qb);
 
@@ -59,7 +77,11 @@ class PublicationLink extends AbstractRepository
         return $result[0];
     }
 
-    public function fetchPreviousPublicationNo($query)
+    /**
+     * @param QueryInterface $query
+     * @return array
+     */
+    public function fetchPreviousPublicationNo(QueryInterface $query)
     {
         $qb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($qb)
