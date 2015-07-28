@@ -11,6 +11,9 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Transfer\Query\Cases\ByTransportManager;
+use Doctrine\DBAL\LockMode;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 
 /**
  * Cases test
@@ -54,5 +57,41 @@ class CasesTest extends RepositoryTestCase
         $mockQb->shouldReceive('setParameter')->with('byTransportManager', $transportManager)->once()->andReturnSelf();
 
         $sut->applyListFilters($mockQb, $mockQuery);
+    }
+
+    public function testFetchWithLicenceUsingId()
+    {
+        $command = m::mock(QueryInterface::class);
+        $command->shouldReceive('getId')->andReturn(24);
+
+        $result = m::mock(CasesEntity::class);
+        $results = [$result];
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_OBJECT)->andReturn($results);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->once()->with('licence', 'l')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('l.operatingCentres', 'loc')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('loc.operatingCentre', 'oc')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('oc.address')->andReturnSelf()
+            ->shouldReceive('byId')->once()->with(24);
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->with('m')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(CasesEntity::class)
+            ->andReturn($repo)
+            ->shouldReceive('lock')
+            ->with($result, LockMode::OPTIMISTIC, 1);
+
+        $this->sut->fetchWithLicenceUsingId($command, Query::HYDRATE_OBJECT, 1);
     }
 }

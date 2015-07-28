@@ -225,12 +225,34 @@ class FeeTest extends RepositoryTestCase
             ->shouldReceive('filterByApplication')
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('filterByBusReg')
-            ->once()
-            ->andReturnSelf()
             ->shouldReceive('filterByIds')
             ->once()
             ->andReturnSelf();
+
+        $busRegQb = m::mock(QueryBuilder::class);
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('br')
+            ->once()
+            ->andReturn($busRegQb);
+        $busRegQb
+            ->shouldReceive('select')
+            ->andReturnSelf()
+            ->shouldReceive('join')
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->once()
+            ->with('id', 14)
+            ->andReturnSelf();
+        $busRegIds = [14, 15, 16];
+        $busRegQb
+            ->shouldReceive('getQuery->getArrayResult')
+            ->once()
+            ->andReturn($busRegIds);
 
         // we *could* assert all the conditions here, but just stub the methods for now
         $mockQb
