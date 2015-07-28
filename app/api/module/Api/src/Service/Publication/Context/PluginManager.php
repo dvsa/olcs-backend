@@ -6,6 +6,10 @@ use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
 use Zend\ServiceManager\Exception;
 
+/**
+ * Class PluginManager
+ * @package Dvsa\Olcs\Api\Service\Publication\Context
+ */
 class PluginManager extends AbstractPluginManager
 {
     public function __construct(ConfigInterface $configuration = null)

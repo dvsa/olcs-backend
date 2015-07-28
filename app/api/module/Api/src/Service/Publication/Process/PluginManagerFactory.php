@@ -8,6 +8,10 @@ use Zend\Mvc\Service\AbstractPluginManagerFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Class PluginManagerFactory
+ * @package Dvsa\Olcs\Api\Service\Publication\Process
+ */
 class PluginManagerFactory extends AbstractPluginManagerFactory
 {
     const PLUGIN_MANAGER_CLASS = PluginManager::class;

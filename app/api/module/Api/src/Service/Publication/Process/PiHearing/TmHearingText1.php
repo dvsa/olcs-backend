@@ -1,20 +1,23 @@
 <?php
 
 /**
- * Tm Decision text 1
+ * Tm Hearing text 1
  */
-namespace Dvsa\Olcs\Api\Service\Publication\Process;
+namespace Dvsa\Olcs\Api\Service\Publication\Process\PiHearing;
 
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Dvsa\Olcs\Api\Service\Publication\Process\Text1 as AbstractText1;
 
 /**
- * Tm Decision text 1
+ * Class TmHearingText1
+ * @package Dvsa\Olcs\Api\Service\Publication\Process\PiHearing
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class TmDecisionText1 extends Text1
+class TmHearingText1 extends AbstractText1
 {
-    protected $pi = 'TM Public Inquiry (Case ID: %s, Public Inquiry ID: %s) for %s held at %s,
-    on %s at %s';
+    protected $pi = 'TM Public Inquiry (Case ID: %s, Public Inquiry ID: %s) for %s to be held at %s,
+    on %s commencing at %s';
 
     /**
      * @param PublicationLink $publication
@@ -29,6 +32,11 @@ class TmDecisionText1 extends Text1
         //previous publication
         if ($context->offsetExists('previousPublication')) {
             $hearingText[] = $this->getPreviousPublication($context->offsetGet('previousPublication'));
+        }
+
+        //previous hearing, only present on hearing publication, not on decision
+        if ($context->offsetExists('previousHearing')) {
+            $hearingText[] = $this->getPreviousHearing($context->offsetGet('previousHearing'));
         }
 
         $publication->setText1(implode(' ', $hearingText));

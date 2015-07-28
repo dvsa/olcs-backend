@@ -8,6 +8,11 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre as ApplicationOperatingCentreEntity;
 use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
 
+/**
+ * Class Operating Centres
+ * @package Dvsa\Olcs\Api\Service\Publication\Context\Application
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
 class OperatingCentres extends AbstractContext
 {
     /**

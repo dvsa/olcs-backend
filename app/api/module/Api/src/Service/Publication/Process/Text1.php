@@ -10,6 +10,11 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson as OrganisationPersonEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 
+/**
+ * Class Text1
+ * @package Dvsa\Olcs\Api\Service\Publication\Process
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
 class Text1 implements ProcessInterface
 {
     protected $previousPublication = '(Previous Publication:(%s))';
@@ -90,11 +95,11 @@ class Text1 implements ProcessInterface
         $tradingNames = $organisation->getTradingNames();
 
         $licence = "\n" . sprintf(
-                '%s %s '. "\n" . '%s',
-                $licence->getLicNo(),
-                $licence->getLicenceType()->getOlbsKey(),
-                $organisation->getName()
-            );
+            '%s %s '. "\n" . '%s',
+            $licence->getLicNo(),
+            $licence->getLicenceType()->getOlbsKey(),
+            $organisation->getName()
+        );
 
         if (!empty($tradingNames)) {
             $latestTradingName = $tradingNames->last();
@@ -115,7 +120,7 @@ class Text1 implements ProcessInterface
         $persons = [];
 
         switch ($orgType) {
-            case OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY :
+            case OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY:
                 $prefix = 'Director(s): ';
                 break;
             case OrganisationEntity::ORG_TYPE_LLP:

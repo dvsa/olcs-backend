@@ -6,6 +6,11 @@ use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as TransportManagerApplicationEntity;
 
+/**
+ * Class TransportManagers
+ * @package Dvsa\Olcs\Api\Service\Publication\Context\Application
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
 class TransportManagers extends AbstractContext
 {
     /**

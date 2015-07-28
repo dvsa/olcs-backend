@@ -23,6 +23,12 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedPi as UnpublishedPiQry;
 
+/**
+ * Pi Hearing command handler
+ *
+ * @package Dvsa\Olcs\Api\Domain\CommandHandler\Publication
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
 class PiHearing extends AbstractCommandHandler implements TransactionedInterface, PublicationGeneratorAwareInterface
 {
     use PublicationGeneratorAwareTrait;
@@ -34,7 +40,7 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
 
     /**
      * @param CommandInterface $command
-     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {

@@ -5,6 +5,10 @@ namespace Dvsa\Olcs\Api\Service\Publication\Context;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Class AbstractFactory
+ * @package Dvsa\Olcs\Api\Service\Publication\Context
+ */
 class AbstractFactory implements AbstractFactoryInterface
 {
     /**

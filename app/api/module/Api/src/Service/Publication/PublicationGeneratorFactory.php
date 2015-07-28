@@ -7,6 +7,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Publication\Context\PluginManager as ContextPluginManager;
 use Dvsa\Olcs\Api\Service\Publication\Process\PluginManager as ProcessPluginManager;
 
+/**
+ * Class PublicationGeneratorFactory
+ * @package Dvsa\Olcs\Api\Service\Publication
+ */
 class PublicationGeneratorFactory implements FactoryInterface
 {
     /**

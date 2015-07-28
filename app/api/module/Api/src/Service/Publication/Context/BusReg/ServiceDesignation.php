@@ -6,6 +6,11 @@ use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService;
 
+/**
+ * Class ServiceDesignation
+ * @package Dvsa\Olcs\Api\Service\Publication\Context\Bus
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
 class ServiceDesignation extends AbstractContext
 {
     public function provide(PublicationLink $publication, \ArrayObject $context)

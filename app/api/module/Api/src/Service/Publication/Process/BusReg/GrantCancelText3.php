@@ -1,11 +1,17 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Publication\Process;
+namespace Dvsa\Olcs\Api\Service\Publication\Process\BusReg;
 
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
 
-class BusRegGrantCancelText3 implements ProcessInterface
+/**
+ * Class GrantCancelText3
+ * @package Dvsa\Olcs\Api\Service\Publication\Process\BusReg
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
+class GrantCancelText3 implements ProcessInterface
 {
     /**
      * @param PublicationLink $publication

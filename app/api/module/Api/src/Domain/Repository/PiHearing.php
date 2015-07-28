@@ -19,7 +19,8 @@ class PiHearing extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function fetchPreviousHearing($pi, $hearingDate) {
+    public function fetchPreviousHearing($pi, $hearingDate)
+    {
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere($qb->expr()->lt($this->alias . '.hearingDate', ':hearingDate'))
