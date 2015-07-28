@@ -38,7 +38,6 @@ class TransportManagersTest extends MockeryTestCase
 
         $sut = new TransportManagers(m::mock(QueryHandlerInterface::class));
 
-
         $output = [
             'transportManagers' => $forename. ' ' . $familyName
         ];
