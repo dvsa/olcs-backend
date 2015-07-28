@@ -52,8 +52,8 @@ class DeleteTest extends CommandHandlerTestCase
         /** @var $conviction ConvictionEntity */
         $conviction = null;
 
-        $this->repoMap['Conviction']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
+        $this->repoMap['Conviction']->shouldReceive('fetchById')
+            ->with($id)
             ->andReturn($noteEntity)
             ->shouldReceive('delete')
             ->with(m::type(ConvictionEntity::class))
@@ -70,6 +70,6 @@ class DeleteTest extends CommandHandlerTestCase
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
-        $this->assertContains('Deleted', $result->getMessages());
+        $this->assertContains('Id 111 deleted', $result->getMessages());
     }
 }
