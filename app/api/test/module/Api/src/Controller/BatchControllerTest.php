@@ -111,4 +111,20 @@ class BatchControllerTest extends TestCase
 
         $this->assertSame(500, $result->getErrorLevel());
     }
+
+    public function testEnqueueCompaniesHouseCompareAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+
+        $mockCommandHandler = m::mock();
+        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
+
+        $mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(\Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\EnqueueOrganisations::class))
+            ->once()
+            ->andReturn(new Result());
+
+        $this->sut->enqueueCompaniesHouseCompareAction();
+    }
 }

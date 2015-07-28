@@ -32,10 +32,16 @@ class Module implements ConsoleUsageProviderInterface
         return array(
             // Describe available commands
             'licence-status-rules [--verbose|-v]' => 'Process licence status change rules',
+            'enqueue-ch-compare [--verbose|-v]' => 'Enqueue Companies House lookups for all Organisations',
             array( '--verbose|-v', '(optional) turn on verbose mode'),
+            'process-queue' => 'Process the queue',
+            array( '--type|-t', '(optional) queue message type to process'),
         );
     }
 
+    /**
+     * @inheritdoc
+     */
     public function onBootstrap(MvcEvent $event)
     {
         // block session saving when running cli, as causes permissions errors
