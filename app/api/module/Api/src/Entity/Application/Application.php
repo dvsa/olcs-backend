@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Application Entity
@@ -67,6 +68,9 @@ class Application extends AbstractApplication
     const CODE_PSV_APP_SR = 'PSV356';
     const CODE_PSV_VAR_UPGRADE    = 'PSV431A';
     const CODE_PSV_VAR_NO_UPGRADE = 'PSV431';
+
+    const NOT_APPLICABLE = 'Not applicable';
+    const UNKNOWN = 'Unknown';
 
     public function __construct(Licence $licence, RefData $status, $isVariation)
     {
@@ -685,5 +689,151 @@ class Application extends AbstractApplication
     {
         $currentStatus = $this->getInterimStatus();
         return $currentStatus !== null ? $currentStatus->getId() : null;
+    }
+
+    /**
+     * Get the Out Of Representation Date
+     *
+     * @return DateTime|string DateTime if date can be calculated, otherwise a string const NOT_APPLCABLE or UNKNOWN
+     */
+    public function getOutOfRepresentationDate()
+    {
+        // If PSV application then
+        if ($this->isPsv()) {
+            return self::NOT_APPLICABLE;
+        }
+
+        // If a new goods application and if 0 operating centres have been added/updated then
+        if (!$this->isVariation() && $this->getOperatingCentres()->count() === 0) {
+            return self::UNKNOWN;
+        }
+
+        // if a goods variation and 0 operating centres have been added/updated then
+        if ($this->isVariation() && $this->getOperatingCentres()->count() === 0) {
+            return self::NOT_APPLICABLE;
+        }
+
+        // If a goods new/variation application and operating centres have been added/udpated:
+        /* @var $aoc \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre */
+        $maximumDate = null;
+        foreach ($this->getOperatingCentres() as $aoc) {
+            $operatingCentreOorDate = $this->calcOperatingCentreOutOfReprenentationDate($aoc);
+
+            // If 1 or more of the operating centres are 'Unknown' then the overall OOR date = 'Unknown'
+            if ($operatingCentreOorDate === self::UNKNOWN) {
+                return self::UNKNOWN;
+            }
+
+            if ($operatingCentreOorDate === self::NOT_APPLICABLE) {
+                continue;
+            }
+
+            // store the maximum (newest) date
+            $ocDate = new DateTime($operatingCentreOorDate);
+            if ($ocDate > $maximumDate) {
+                $maximumDate = $ocDate;
+            }
+        }
+
+        // If all the operating centres are 'Not applicable' then the overall OOR date = 'Not applicable'
+        if ($maximumDate === null) {
+            return self::NOT_APPLICABLE;
+        }
+
+        // Otherwise = <maximum date> = 21 days
+        return $maximumDate->modify('+21 days');
+    }
+
+    /**
+     * Calculate the Out of Representation date for an ApplicationOperatingCentre
+     * If a date can be calcuated this will return a string date (YYYY-MM-DD)
+     * If a date cannot be calculated it will return a string of either self::NOT_APPLICABLE or self::UNKNOWN
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre $aoc
+     *
+     * @return string date|self::NOT_APPLICABLE|self::UNKNOWN
+     */
+    private function calcOperatingCentreOutOfReprenentationDate(ApplicationOperatingCentre $aoc)
+    {
+        // For added operating centres that are linked to a schedule 4
+        // where there has been no increase to the vehicles as compared with the donor licence then
+        if ($aoc->getAction() === 'A' && $aoc->getS4()) {
+            $donorOperatingCentres = $aoc->getS4()->getLicence()->getOperatingCentres();
+            /* @var $donorOperatingCentre \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre */
+            foreach ($donorOperatingCentres as $donorOperatingCentre) {
+                if ($donorOperatingCentre->getOperatingCentre() === $aoc->getOperatingCentre()) {
+                    if ($aoc->getNoOfVehiclesRequired() <= $donorOperatingCentre->getNoOfVehiclesRequired()) {
+                        return self::NOT_APPLICABLE;
+                    }
+                }
+            }
+        }
+
+        // For updated operating centres, if there has been no increase to the vehicles
+        if ($aoc->getAction() === 'U') {
+            $licenceOperatingCentres = $this->getLicence()->getOperatingCentres();
+            /* @var $licenceOperatingCentre \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre */
+            foreach ($licenceOperatingCentres as $licenceOperatingCentre) {
+                if ($licenceOperatingCentre->getOperatingCentre() === $aoc->getOperatingCentre()) {
+                    if ($aoc->getNoOfVehiclesRequired() <=  $licenceOperatingCentre->getNoOfVehiclesRequired()) {
+                        return self::NOT_APPLICABLE;
+                    }
+                }
+            }
+        }
+
+        // If there is an advertisement date then
+        if ($aoc->getAdPlacedDate()) {
+            return $aoc->getAdPlacedDate();
+        }
+
+        // If the advertisement date is missing then
+        return self::UNKNOWN;
+    }
+
+    /**
+     * Get the Out Of Opposition Date
+     *
+     * @return DateTime|string DateTime if it can be calculated, otherwise const UNKNOWN
+     */
+    public function getOutOfOppositionDate()
+    {
+        $latestPublication = $this->getLatestPublication();
+
+        if (!empty($latestPublication)) {
+            $oooDate = new DateTime($latestPublication->getPubDate());
+            $oooDate->modify('+21 days');
+
+            return $oooDate;
+        }
+
+        return self::UNKNOWN;
+    }
+
+    /**
+     * Gets the latest publication for an application. (used to calculate OOO date)
+     *
+     * @return Dvsa\Olcs\Api\Entity\Publication\PublicationLink|null
+     */
+    private function getLatestPublication()
+    {
+        $latestPublication = null;
+        /* @var $publicationLink \Dvsa\Olcs\Api\Entity\Publication\PublicationLink */
+
+        foreach ($this->getPublicationLinks() as $publicationLink) {
+            if (!in_array($publicationLink->getPublicationSection()->getId(), [1, 3])) {
+                continue;
+            }
+            if ($latestPublication === null) {
+                $latestPublication = $publicationLink->getPublication();
+            } elseif (
+                new \DateTime($publicationLink->getPublication()->getPubDate()) >
+                new \DateTime($latestPublication->getPubDate())
+                ) {
+                $latestPublication = $publicationLink->getPublication();
+            }
+        }
+
+        return $latestPublication;
     }
 }
