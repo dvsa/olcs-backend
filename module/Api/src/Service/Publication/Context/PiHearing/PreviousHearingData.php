@@ -27,7 +27,6 @@ class PreviousHearingData extends AbstractContext
             $context->offsetSet('previousHearing', $previousHearing->getAdjournedDate());
         }
 
-
         return $context;
     }
 }
