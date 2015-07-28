@@ -58,9 +58,11 @@ final class CreateUnlicensed extends AbstractCommandHandler
             foreach ($licence->getCorrespondenceCd()->getPhoneContacts() as $pc) {
                 $pcIds[] = $pc->getId();
             }
-            $result
-                ->addId('phoneContact', $pcIds)
-                ->addMessage('Phone contact(s) added');
+            if (!empty($pcIds)) {
+                $result
+                    ->addId('phoneContact', $pcIds)
+                    ->addMessage('Phone contact(s) added');
+            }
         }
 
         return $result;
