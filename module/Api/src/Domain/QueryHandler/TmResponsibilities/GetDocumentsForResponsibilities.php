@@ -20,21 +20,27 @@ class GetDocumentsForResponsibilities extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Document';
 
+    protected $extraRepos = ['TransportManagerApplication', 'TransportManagerLicence'];
+
     public function handleQuery(QueryInterface $query)
     {
         $repo = $this->getRepo();
 
         if ($query->getType() == 'application') {
+            $tmApplication = $this->getRepo('TransportManagerApplication')
+                ->fetchForResponsibilities($query->getLicOrAppId());
             $documents = $this->getRepo()
                 ->fetchListForTmApplication(
                     $query->getTransportManager(),
-                    $query->getLicOrAppId()
+                    $tmApplication->getApplication()->getId()
                 );
         } else {
+            $tmLicence = $this->getRepo('TransportManagerLicence')
+                ->fetchForResponsibilities($query->getLicOrAppId());
             $documents = $this->getRepo()
                 ->fetchListForTmLicence(
                     $query->getTransportManager(),
-                    $query->getLicOrAppId()
+                    $tmLicence->getLicence()->getId()
                 );
         }
         return [
