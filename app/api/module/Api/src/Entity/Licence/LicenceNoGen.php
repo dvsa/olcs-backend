@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * LicenceNoGen Entity
@@ -19,5 +21,14 @@ class LicenceNoGen extends AbstractLicenceNoGen
     public function __construct(Licence $licence)
     {
         $this->setLicence($licence);
+    }
+
+    /**
+     * @param RefData $goodsOrPsv
+     * @return string
+     */
+    public static function getCategoryPrefix(RefData $goodsOrPsv)
+    {
+        return $goodsOrPsv->getId() === Licence::LICENCE_CATEGORY_PSV ? 'P' : 'O';
     }
 }
