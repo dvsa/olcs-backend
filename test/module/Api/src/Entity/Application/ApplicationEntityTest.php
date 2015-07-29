@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Mockery as m;
 
 /**
@@ -1132,5 +1133,587 @@ class ApplicationEntityTest extends EntityTester
         $application->setInterimStatus($status);
 
         $this->assertEquals(123, $application->getCurrentInterimStatus());
+    }
+
+    /**
+     * A new goods application with all dates provided
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario1()
+    {
+        $aoc1 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc1->setAction('A')
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc2->setAction('A')
+            ->setAdPlacedDate('2015-04-23')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals(new DateTime('2015-05-14'), $oorDate);
+    }
+
+    /**
+     * A new goods application with a date missing
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario2()
+    {
+        $aoc1 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc1->setAction('A')
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc2->setAction('A')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    /**
+     * A new goods application with two schedule 4 operating centres
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario3()
+    {
+        /* @var $licence Licence */
+        $licence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $licence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $licence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc2->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    /**
+     * A new goods application with two schedule 4 operating centres
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario3WithDates()
+    {
+        /* @var $licence Licence */
+        $licence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $licence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $licence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc2->setAction('A')
+            ->setS4($s4)
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    /**
+     * A new goods application with two schedule 4 operating centres
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario3WithDatesAndIncrease()
+    {
+        /* @var $licence Licence */
+        $licence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $licence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $licence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(5);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc2->setAction('A')
+            ->setS4($s4)
+            ->setAdPlacedDate('2015-04-22')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals(new DateTime('2015-05-11'), $oorDate);
+    }
+
+    /**
+     * A new goods application with one S4 operating centre and two other operating centres
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario4()
+    {
+        /* @var $licence Licence */
+        $licence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $licence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $licence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc2->setAction('A')
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $aoc3 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc3->setAction('A')
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc3);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals(new DateTime('2015-05-12'), $oorDate);
+    }
+
+    /**
+     * A new goods application with one S4 operating centre and two other operating centres; one with a missing date
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario5()
+    {
+        /* @var $licence Licence */
+        $licence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $licence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $licence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc2->setAction('A')
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $aoc3 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc3->setAction('A')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc3);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    /**
+     * A goods variation application with one S4 operating centre and one other operating centre with no increase
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario6()
+    {
+        /* @var $s4DonorLicence Licence */
+        $s4DonorLicence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $s4DonorLicence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $s4DonorLicence);
+
+        $appLicence = $this->instantiate(Licence::class);
+        $oc11 = new OperatingCentre();
+        $oc12 = new OperatingCentre();
+        $loc11 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc11);
+        $loc11->setNoOfVehiclesRequired(4);
+        $loc12 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc12);
+        $loc12->setNoOfVehiclesRequired(4);
+
+        $appLicence->addOperatingCentres($loc11)
+            ->addOperatingCentres($loc12);
+
+        $this->entity->setLicence($appLicence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc12);
+        $aoc2->setAction('U')
+            ->setNoOfVehiclesRequired(2);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    /**
+     * A goods variation application with one S4 operating centre and two other operating centres; one
+     * with vehicle increase
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario7()
+    {
+        /* @var $s4DonorLicence Licence */
+        $s4DonorLicence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $s4DonorLicence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $s4DonorLicence);
+
+        $appLicence = $this->instantiate(Licence::class);
+        $oc11 = new OperatingCentre();
+        $oc12 = new OperatingCentre();
+        $loc11 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc11);
+        $loc11->setNoOfVehiclesRequired(4);
+        $loc12 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc12);
+        $loc12->setNoOfVehiclesRequired(3);
+
+        $appLicence->addOperatingCentres($loc11)
+            ->addOperatingCentres($loc12);
+
+        $this->entity->setLicence($appLicence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc11);
+        $aoc2->setAction('U')
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(6);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $aoc3 = new ApplicationOperatingCentre($this->entity, $oc12);
+        $aoc3->setAction('U')
+            ->setNoOfVehiclesRequired(1);
+        $this->entity->addOperatingCentres($aoc3);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals(new DateTime('2015-05-12'), $oorDate);
+    }
+
+    /**
+     * A goods variation application with one S4 operating centre and two other operating centres with vehicle
+     * increases but with a missing advertisement date
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario8()
+    {
+        /* @var $s4DonorLicence Licence */
+        $s4DonorLicence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $s4DonorLicence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $s4DonorLicence);
+
+        $appLicence = $this->instantiate(Licence::class);
+        $oc11 = new OperatingCentre();
+        $oc12 = new OperatingCentre();
+        $loc11 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc11);
+        $loc11->setNoOfVehiclesRequired(4);
+        $loc12 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc12);
+        $loc12->setNoOfVehiclesRequired(1);
+
+        $appLicence->addOperatingCentres($loc11)
+            ->addOperatingCentres($loc12);
+
+        $this->entity->setLicence($appLicence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc11);
+        $aoc2->setAction('U')
+            ->setNoOfVehiclesRequired(6);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $aoc3 = new ApplicationOperatingCentre($this->entity, $oc12);
+        $aoc3->setAction('U')
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(3);
+        $this->entity->addOperatingCentres($aoc3);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    /**
+     * A goods variation application with one S4 operating centre and two other operating centres with
+     * vehicle increases including the S4 but with missing advertisement date
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario9()
+    {
+        /* @var $s4DonorLicence Licence */
+        $s4DonorLicence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc1);
+        $loc1->setNoOfVehiclesRequired(2);
+
+        $s4DonorLicence->addOperatingCentres($loc1);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $s4DonorLicence);
+
+        $appLicence = $this->instantiate(Licence::class);
+        $oc11 = new OperatingCentre();
+        $oc12 = new OperatingCentre();
+        $loc11 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc11);
+        $loc11->setNoOfVehiclesRequired(4);
+        $loc12 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc12);
+        $loc12->setNoOfVehiclesRequired(1);
+
+        $appLicence->addOperatingCentres($loc11)
+            ->addOperatingCentres($loc12);
+
+        $this->entity->setLicence($appLicence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(6);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc11);
+        $aoc2->setAction('U')
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(6);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $aoc3 = new ApplicationOperatingCentre($this->entity, $oc12);
+        $aoc3->setAction('U')
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(3);
+        $this->entity->addOperatingCentres($aoc3);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    /**
+     * A goods variation application with one S4 operating centre and two other operating centres with advertising dates
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario10()
+    {
+        /* @var $s4DonorLicence Licence */
+        $s4DonorLicence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc1);
+        $loc1->setNoOfVehiclesRequired(2);
+
+        $s4DonorLicence->addOperatingCentres($loc1);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $s4DonorLicence);
+
+        $appLicence = $this->instantiate(Licence::class);
+        $oc11 = new OperatingCentre();
+        $oc12 = new OperatingCentre();
+        $loc11 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc11);
+        $loc11->setNoOfVehiclesRequired(4);
+        $loc12 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc12);
+        $loc12->setNoOfVehiclesRequired(1);
+
+        $appLicence->addOperatingCentres($loc11)
+            ->addOperatingCentres($loc12);
+
+        $this->entity->setLicence($appLicence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(6);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc11);
+        $aoc2->setAction('U')
+            ->setAdPlacedDate('2015-04-19')
+            ->setNoOfVehiclesRequired(6);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $aoc3 = new ApplicationOperatingCentre($this->entity, $oc12);
+        $aoc3->setAction('U')
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(3);
+        $this->entity->addOperatingCentres($aoc3);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals(new DateTime('2015-05-12'), $oorDate);
+    }
+
+    public function testGetOutOfRepresentationDatePsv()
+    {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_PSV));
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    public function testGetOutOfRepresentationDateApplicationNoOcs()
+    {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    public function testGetOutOfRepresentationDateVariationNoOcs()
+    {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $this->entity->setIsVariation(1);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    public function testGetOutOfOppositionDateNoPublicationDate()
+    {
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    public function testGetOutOfOppositionDate()
+    {
+        $publicationSection3 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
+        $publicationSection3->setId(3);
+        $publicationSection4 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
+        $publicationSection4->setId(4);
+
+        $publication1 = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication1->setPubDate('2014-07-29');
+        $publication2 = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication2->setPubDate('2014-07-30');
+
+        $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink1->setPublicationSection($publicationSection3)
+            ->setPublication($publication1);
+        $publicationLink2 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink2->setPublicationSection($publicationSection4);
+        $publicationLink3 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink3->setPublicationSection($publicationSection3)
+            ->setPublication($publication2);
+
+        $this->entity->addPublicationLinks($publicationLink1);
+        $this->entity->addPublicationLinks($publicationLink2);
+        $this->entity->addPublicationLinks($publicationLink3);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals(new \DateTime('2014-08-20'), $oorDate);
     }
 }

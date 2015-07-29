@@ -31,7 +31,7 @@ final class Overview extends AbstractCommandHandler implements TransactionedInte
     {
         $result = new Result();
 
-        /** @var ApplicationEntity $application */
+        /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $this->setTrackingData($application, $command);
@@ -44,6 +44,8 @@ final class Overview extends AbstractCommandHandler implements TransactionedInte
         if (!is_null($command->getTargetCompletionDate())) {
             $application->setTargetCompletionDate(new \DateTime($command->getTargetCompletionDate()));
         }
+
+        $application->setOverrideOoo($command->getOverrideOppositionDate());
 
         $this->getRepo()->save($application);
 

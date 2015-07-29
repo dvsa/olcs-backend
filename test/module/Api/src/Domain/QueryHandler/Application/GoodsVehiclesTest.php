@@ -68,16 +68,14 @@ class GoodsVehiclesTest extends QueryHandlerTestCase
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setId(222);
-        $licence->shouldReceive('getActiveVehiclesCount')
-            ->andReturn(2);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setId(111);
         $application->setStatus($status);
         $application->setLicence($licence);
-        $application->shouldReceive('getRemainingSpaces')
-            ->andReturn(3);
+        $application->shouldReceive('getRemainingSpaces')->andReturn(3);
+        $application->shouldReceive('getActiveVehiclesCount')->andReturn(2);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($query)
