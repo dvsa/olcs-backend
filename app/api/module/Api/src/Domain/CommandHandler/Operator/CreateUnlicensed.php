@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -22,9 +23,11 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class CreateUnlicensed extends AbstractCommandHandler
 {
+    const LICENCE_NUMBER_PREFIX = 'U';
+
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['ContactDetails'];
+    protected $extraRepos = ['ContactDetails', 'LicenceNoGen'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -38,6 +41,9 @@ final class CreateUnlicensed extends AbstractCommandHandler
 
         // save the licence; organisation, contactDetails and subsequent children will cascade persist
         $this->getRepo()->save($licence);
+
+        // generate licence number and re-save the licence
+        $this->generateAndSaveLicenceNumber($licence);
 
         $result
             ->addId('licence', $licence->getId())
@@ -122,6 +128,31 @@ final class CreateUnlicensed extends AbstractCommandHandler
             ->setLicenceType($this->getRepo()->getRefdataReference(LicenceEntity::LICENCE_TYPE_RESTRICTED))
             ->setNiFlag($niFlag)
             ->setCorrespondenceCd($contactDetails);
+
+        return $licence;
+    }
+
+    /**
+     * We need a licence id before we generate a licence number,
+     * so we actually save the licence twice
+     * @param LicenceEntity $licence
+     * @return LicenceEntity
+     */
+    private function generateAndSaveLicenceNumber($licence)
+    {
+        $licenceNoGen = new LicenceNoGenEntity($licence);
+        $this->getRepo('LicenceNoGen')->save($licenceNoGen);
+
+        $licNo = sprintf(
+            '%s%s%s%s',
+            self::LICENCE_NUMBER_PREFIX,
+            $licence->getCategoryPrefix(),
+            $licence->getTrafficArea()->getId(),
+            $licenceNoGen->getId()
+        );
+
+        $licence->setLicNo($licNo);
+        $this->getRepo()->save($licence);
 
         return $licence;
     }
