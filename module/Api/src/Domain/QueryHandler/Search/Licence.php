@@ -29,7 +29,6 @@ class Licence extends AbstractQueryHandler
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
 
-
         return $this->result(
             $licence,
             [],
@@ -38,6 +37,7 @@ class Licence extends AbstractQueryHandler
                 'totalAuthTrailers' => $licence->getTotAuthTrailers(),
                 'totalVehiclesInPossession' => $licence->getActiveVehiclesCount(),
                 'totalPiRecords' => $licence->getPiRecordCount(),
+                'activeCommunityLicences' => count($licence->getActiveCommunityLicences($licence)),
                 'trafficArea' => $this->result(
                     $licence->getTrafficArea()
                 )->serialize(),
@@ -53,7 +53,11 @@ class Licence extends AbstractQueryHandler
                         'natureOfBusinesses',
                         'tradingNames',
                         'companySubsidiaries',
-                        'leadTcArea',
+                        'leadTcArea' => [
+                            'contactDetails' => [
+                                'person'
+                            ]
+                        ]
                     ]
                 )->serialize(),
                 'correspondenceAddress' => $this->result(
