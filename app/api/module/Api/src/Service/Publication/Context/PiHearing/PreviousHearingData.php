@@ -20,8 +20,6 @@ class PreviousHearingData extends AbstractContext
         $params = [
             'pi' => $publication->getPi()->getId(),
             'hearingDate' => $context->offsetGet('hearingDate'),
-            'isAdjourned' => 'hearingDate',
-
             'bundle' => self::$bundle
         ];
 
