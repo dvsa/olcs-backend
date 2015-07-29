@@ -21,7 +21,7 @@ class LicenceAddress extends AbstractContext implements AddressFormatterAwareInt
         $licenceAddress = $publication->getLicence()->getCorrespondenceCd();
 
         if ($licenceAddress === null) {
-            return $publication;
+            return $context;
         }
 
         $context->offsetSet('licenceAddress', $this->getAddressFormatter()->format($licenceAddress->getAddress()));
