@@ -42,7 +42,8 @@ class TransportManagerLicence extends AbstractTransportManagerLicence
         $hoursSat = null,
         $hoursSun = null,
         $additionalInformation = null,
-        $lastModifiedBy = null
+        $lastModifiedBy = null,
+        $isOwner = null
     ) {
         $this->validateTransportManagerLicence(
             $hoursMon,
@@ -63,6 +64,7 @@ class TransportManagerLicence extends AbstractTransportManagerLicence
         $this->setHoursSat($hoursSat);
         $this->setHoursSun($hoursSun);
         $this->setAdditionalInformation($additionalInformation);
+        $this->setIsOwner($isOwner);
     }
 
     protected function validateTransportManagerLicence(

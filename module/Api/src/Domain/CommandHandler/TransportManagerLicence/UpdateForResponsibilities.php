@@ -63,7 +63,8 @@ final class UpdateForResponsibilities extends AbstractCommandHandler implements
             $command->getHoursSat(),
             $command->getHoursSun(),
             $command->getAdditionalInformation(),
-            $this->getCurrentUser()
+            $this->getCurrentUser(),
+            $command->getIsOwner()
         );
         return $transportManagerLicence;
     }
