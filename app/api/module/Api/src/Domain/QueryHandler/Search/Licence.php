@@ -29,10 +29,15 @@ class Licence extends AbstractQueryHandler
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
 
+
         return $this->result(
             $licence,
             [],
             [
+                'totalAuthVehicles' => $licence->getTotAuthVehicles(),
+                'totalAuthTrailers' => $licence->getTotAuthTrailers(),
+                'totalVehiclesInPossession' => $licence->getActiveVehiclesCount(),
+                'totalPiRecords' => $licence->getPiRecordCount(),
                 'trafficArea' => $this->result(
                     $licence->getTrafficArea()
                 )->serialize(),
