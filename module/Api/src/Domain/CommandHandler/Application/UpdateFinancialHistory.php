@@ -49,6 +49,7 @@ final class UpdateFinancialHistory extends AbstractCommandHandler
             'section' => 'financialHistory'
         ];
         $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($data)));
+
         return $result;
     }
 }
