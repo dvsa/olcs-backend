@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Operator;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Operator\UnlicensedAbstract as AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
@@ -23,8 +23,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class CreateUnlicensed extends AbstractCommandHandler
 {
-    const LICENCE_NUMBER_PREFIX = 'U';
-
     protected $repoServiceName = 'Licence';
 
     protected $extraRepos = ['ContactDetails', 'LicenceNoGen'];
@@ -143,9 +141,7 @@ final class CreateUnlicensed extends AbstractCommandHandler
         $licenceNoGen = new LicenceNoGenEntity($licence);
         $this->getRepo('LicenceNoGen')->save($licenceNoGen);
 
-        $licNo = sprintf(
-            '%s%s%s%s',
-            self::LICENCE_NUMBER_PREFIX,
+        $licNo = $this->buildLicenceNumber(
             $licence->getCategoryPrefix(),
             $licence->getTrafficArea()->getId(),
             $licenceNoGen->getId()
