@@ -6,16 +6,19 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\PiVenueBundle;
 use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Pi\PiVenue as PiVenueEntity;
-use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
+use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareTrait;
+use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
 
 /**
  * Class PiVenue
  * @package Dvsa\Olcs\Api\Service\Publication\Context\PiHearing
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class PiVenue extends AbstractContext
+class PiVenue extends AbstractContext implements AddressFormatterAwareInterface
 {
     private static $bundle = [];
+
+    use AddressFormatterAwareTrait;
 
     public function provide(PublicationLink $publication, \ArrayObject $context)
     {
@@ -26,9 +29,8 @@ class PiVenue extends AbstractContext
              * @var PiVenueEntity $piVenue
              */
             $piVenue = $this->handleQuery($query);
-            $address = new FormatAddress();
 
-            $venueDetails = $piVenue->getName() . ', ' . $address->format($piVenue->getAddress());
+            $venueDetails = $piVenue->getName() . ', ' . $this->getAddressFormatter()->format($piVenue->getAddress());
 
             $context->offsetSet('piVenueOther', $venueDetails);
         }
