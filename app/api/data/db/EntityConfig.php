@@ -1477,6 +1477,9 @@ return array(
                 'entity' => 'TransportManager',
                 'property' => 'tmLicence'
             ),
+        ),
+        'is_owner' => array(
+            'type' => 'yesnonull'
         )
     ),
     'tm_qualification' => array(
