@@ -431,6 +431,15 @@ class Licence extends AbstractLicence
         return $count;
     }
 
+    public function getPiRecordCount()
+    {
+        $count = 0;
+        foreach ($this->getCases() as $case) {
+            $count += count($case->getPublicInquirys());
+        }
+        return $count;
+    }
+
     public function getOpenCases()
     {
         $allCases = (array) $this->getCases()->getIterator();
