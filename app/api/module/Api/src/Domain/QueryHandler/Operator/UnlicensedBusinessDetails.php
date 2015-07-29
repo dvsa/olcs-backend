@@ -35,6 +35,7 @@ class UnlicensedBusinessDetails extends AbstractQueryHandler
                         ],
                     ],
                     'goodsOrPsv',
+                    'trafficArea',
                 ],
             ]
         );
