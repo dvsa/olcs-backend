@@ -47,12 +47,13 @@ final class UpdateSafetyStatus extends AbstractUpdateStatus
             return false;
         }
 
-        if ($licence->getTachographIns()->getId() === Licence::TACH_EXT && empty($licence->getTachographInsName())) {
+        $tachInsName = $licence->getTachographInsName();
+        if ($licence->getTachographIns()->getId() === Licence::TACH_EXT && empty($tachInsName)) {
             return false;
         }
 
         if ($application->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE
-            && empty($licence->getSafetyInsTrailers())) {
+            && $licence->getSafetyInsTrailers() === null) {
             return false;
         }
 
