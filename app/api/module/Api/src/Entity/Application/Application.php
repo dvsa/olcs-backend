@@ -512,14 +512,19 @@ class Application extends AbstractApplication
 
     public function getRemainingSpaces()
     {
+        $vehicles = $this->getActiveLicenceVehicles();
+
+        return $this->getTotAuthVehicles() - $vehicles->count();
+    }
+
+    public function getActiveLicenceVehicles()
+    {
         $criteria = Criteria::create();
         $criteria->andWhere(
             $criteria->expr()->isNull('removalDate')
         );
 
-        $vehicles = $this->getLicence()->getLicenceVehicles()->matching($criteria);
-
-        return $this->getTotAuthVehicles() - $vehicles->count();
+        return $this->getLicence()->getLicenceVehicles()->matching($criteria);
     }
 
     public function isRealUpgrade()
@@ -835,5 +840,10 @@ class Application extends AbstractApplication
         }
 
         return $latestPublication;
+    }
+
+    public function getActiveVehiclesCount()
+    {
+        return $this->getActiveLicenceVehicles()->count();
     }
 }
