@@ -95,7 +95,7 @@ final class CreateSnapshot extends AbstractCommandHandler
         ];
 
         // merge defaults with event specific values
-        $data = array_merge($defaults, $this->getDocumentData($event, $code));
+        $data = array_merge($defaults, $this->getDocumentData($application, $event, $code));
 
         return $this->handleSideEffect(CreateDocumentSpecific::create($data));
     }
@@ -145,14 +145,15 @@ final class CreateSnapshot extends AbstractCommandHandler
     /**
      * Get Document entity data
      *
-     * @param int    $event One the of the self::ON_* constants
-     * @param string $code  Application code eg GV79
+     * @param ApplicationEntity $application The Application entity
+     * @param int               $event       One the of the self::ON_* constants
+     * @param string            $code        Application code eg GV79
      *
      * @return array Document entity data
      */
-    protected function getDocumentData($event, $code)
+    protected function getDocumentData($application, $event, $code)
     {
-        $descriptionPrefix = $code . ' Application Snapshot ';
+        $descriptionPrefix = sprintf('%s Application %d Snapshot ', $code, $application->getId());
 
         switch ((string)$event) {
             case (string)Cmd::ON_GRANT:
