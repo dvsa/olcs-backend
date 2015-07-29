@@ -557,6 +557,7 @@ return [
     TransferCommand\Operator\Create::class => CommandHandler\Operator\SaveOperator::class,
     TransferCommand\Operator\Update::class => CommandHandler\Operator\SaveOperator::class,
     TransferCommand\Operator\CreateUnlicensed::class => CommandHandler\Operator\CreateUnlicensed::class,
+    TransferCommand\Operator\UpdateUnlicensed::class => CommandHandler\Operator\UpdateUnlicensed::class,
 
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
