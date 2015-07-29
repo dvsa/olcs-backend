@@ -6,15 +6,18 @@ use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre as ApplicationOperatingCentreEntity;
-use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
+use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareTrait;
+use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
 
 /**
  * Class Operating Centres
  * @package Dvsa\Olcs\Api\Service\Publication\Context\Application
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class OperatingCentres extends AbstractContext
+class OperatingCentres extends AbstractContext implements AddressFormatterAwareInterface
 {
+    use AddressFormatterAwareTrait;
+
     /**
      * @param PublicationLink $publication
      * @param \ArrayObject $context
@@ -27,7 +30,7 @@ class OperatingCentres extends AbstractContext
         $licType = $application->getGoodsOrPsv()->getId();
         $operatingCentres = $application->getOperatingCentres();
         $authorisationText = '';
-        $addressFilter = new FormatAddress();
+        $addressFormatter = $this->getAddressFormatter();
 
         foreach ($operatingCentres as $oc) {
             /**
@@ -64,7 +67,7 @@ class OperatingCentres extends AbstractContext
                     $prefix = 'New ';
             }
 
-            $operatingCentreText = $addressFilter->format($oc->getOperatingCentre()->getAddress());
+            $operatingCentreText = $addressFormatter->format($oc->getOperatingCentre()->getAddress());
 
             $newOcData[] = trim($prefix . 'Operating Centre: ' . $operatingCentreText . ' ' . $authorisationText);
         }

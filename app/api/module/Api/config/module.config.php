@@ -22,6 +22,7 @@ return [
             'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
             'RestrictionService' => \Dvsa\Olcs\Api\Service\Lva\RestrictionService::class,
             'SectionConfig' =>  \Dvsa\Olcs\Api\Service\Lva\SectionConfig::class,
+            'AddressFormatter' => \Dvsa\Olcs\Api\Service\Helper\FormatAddress::class
         ],
         'factories' => [
             'SectionAccessService' => \Dvsa\Olcs\Api\Service\Lva\SectionAccessService::class,
