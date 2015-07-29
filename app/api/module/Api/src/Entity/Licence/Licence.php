@@ -272,15 +272,14 @@ class Licence extends AbstractLicence
         return $this->getActiveVehicles()->count();
     }
 
-    public function getActiveVehicles()
+    public function getActiveVehicles($checkSpecified = true)
     {
         $criteria = Criteria::create();
-        $criteria->andWhere(
-            $criteria->expr()->isNull('removalDate')
-        );
-        $criteria->andWhere(
-            $criteria->expr()->neq('specifiedDate', null)
-        );
+        $criteria->andWhere($criteria->expr()->isNull('removalDate'));
+
+        if ($checkSpecified) {
+            $criteria->andWhere($criteria->expr()->neq('specifiedDate', null));
+        }
 
         return $this->getLicenceVehicles()->matching($criteria);
     }
