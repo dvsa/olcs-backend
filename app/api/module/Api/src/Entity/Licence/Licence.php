@@ -172,10 +172,6 @@ class Licence extends AbstractLicence
 
         $this->setSafetyInsVehicles($safetyInsVehicles);
 
-        if (empty($safetyInsTrailers)) {
-            $safetyInsTrailers = null;
-        }
-
         $this->setSafetyInsTrailers($safetyInsTrailers);
 
         $this->setTachographIns($tachographIns);
