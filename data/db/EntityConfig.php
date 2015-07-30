@@ -349,6 +349,12 @@ return array(
                 'property' => 'case'
             )
         ),
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'case'
+            )
+        ),
         'is_impounding' => array(
             'type' => 'yesno'
         )
