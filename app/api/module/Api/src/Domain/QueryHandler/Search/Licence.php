@@ -118,7 +118,10 @@ class Licence extends AbstractQueryHandler
                     $licence->getApplications()
                 ),
                 'conditionUndertakings' => $this->resultList(
-                    $licence->getConditionUndertakings()
+                    $licence->getConditionUndertakings(),
+                    [
+                        'conditionType'
+                    ]
                 ),
                 'otherLicences' => $this->resultList($licence->getOtherActiveLicences())
             ]
