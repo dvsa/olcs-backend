@@ -33,7 +33,7 @@ class Document extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->where($qb->expr()->eq($this->alias . '.category', ':category'))
+        $qb->andWhere($qb->expr()->eq($this->alias . '.category', ':category'))
             ->andWhere($qb->expr()->eq($this->alias . '.subCategory', ':subCategory'))
             ->andWhere($qb->expr()->eq($this->alias . '.transportManager', ':transportManager'))
             ->andWhere($qb->expr()->eq($this->alias . '.' . $type, ':' . $type))
