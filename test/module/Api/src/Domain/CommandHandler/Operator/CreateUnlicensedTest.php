@@ -57,7 +57,7 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
             ],
             ContactDetailsEntity::class => [
                 1 => m::mock(ContactDetailsEntity::class)->makePartial(),
-            ]
+            ],
         ];
 
         parent::initReferences();
