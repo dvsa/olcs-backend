@@ -97,7 +97,6 @@ final class UpdateUnlicensed extends AbstractCommandHandler
      * @param ContactDetailsEntity $contactDetails
      * @param CommandInterface $command
      * @return ContactDetailsEntity
-     * @todo
      */
     private function updateContactDetails(ContactDetailsEntity $contactDetails, CommandInterface $command)
     {
