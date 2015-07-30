@@ -50,11 +50,11 @@ class DateType extends DoctrineDateType
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if (!($value instanceof \DateTime)) {
+        if ($value !== null && !($value instanceof \DateTime)) {
             $value = new DateTime($value);
         }
 
         return ($value !== null)
-            ? $value->format($platform->getDateTimeFormatString()) : null;
+            ? $value->format($platform->getDateFormatString()) : null;
     }
 }
