@@ -882,6 +882,7 @@ class Application extends AbstractApplication
         return $this->getActiveLicenceVehicles()->count();
     }
 
+    /**
      * @return array
      */
     public function getActiveS4s()
