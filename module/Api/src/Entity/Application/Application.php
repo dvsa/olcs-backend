@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Zend\Filter\Word\CamelCaseToUnderscore;
@@ -449,6 +450,16 @@ class Application extends AbstractApplication
     }
 
     /**
+     * Check if the application is for a new licence
+     *
+     * @return bool
+     */
+    public function isNew()
+    {
+        return !$this->isVariation();
+    }
+
+    /**
      * @return boolean
      */
     public function isGoods()
@@ -476,6 +487,30 @@ class Application extends AbstractApplication
         if ($this->getLicenceType()) {
             return $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED;
         }
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isRestricted()
+    {
+        if ($this->getLicenceType() !== null) {
+            return $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_RESTRICTED;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isStandardInternational()
+    {
+        if ($this->getLicenceType() !== null) {
+            return $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL;
+        }
+
+        return false;
     }
 
     /**
@@ -845,5 +880,46 @@ class Application extends AbstractApplication
     public function getActiveVehiclesCount()
     {
         return $this->getActiveLicenceVehicles()->count();
+    }
+
+     * @return array
+     */
+    public function getActiveS4s()
+    {
+        $activeS4s = [];
+
+        /** @var S4 $s4 */
+        foreach ($this->getS4s() as $s4) {
+            if ($s4->getOutcome() === null) {
+                $activeS4s[] = $s4;
+            } elseif ($s4->getOutcome()->getId() === S4::STATUS_APPROVED) {
+                $activeS4s[] = $s4;
+            }
+        }
+
+        return $activeS4s;
+    }
+
+    public function canHaveLargeVehicles()
+    {
+        $allowLargeVehicles = [
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+        ];
+
+        return $this->isPsv() && in_array($this->getLicenceType()->getId(), $allowLargeVehicles);
+    }
+
+    public function canHaveCommunityLicences()
+    {
+        return ($this->isStandardInternational() || ($this->isPsv() && $this->isRestricted()));
+    }
+
+    public function getDeltaAocByOc(OperatingCentre $oc)
+    {
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->eq('operatingCentre', $oc));
+
+        return $this->getOperatingCentres()->matching($criteria);
     }
 }

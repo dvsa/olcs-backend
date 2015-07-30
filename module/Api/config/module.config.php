@@ -20,6 +20,7 @@ return [
             'SectionConfig' =>  \Dvsa\Olcs\Api\Service\Lva\SectionConfig::class,
         ],
         'factories' => [
+            'VariationOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper::class,
             'SectionAccessService' => \Dvsa\Olcs\Api\Service\Lva\SectionAccessService::class,
             'ContentStore' => \Dvsa\Jackrabbit\Client\Service\ClientFactory::class,
             'IdentityProvider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
@@ -183,6 +184,8 @@ return [
             'CompaniesHouseAlert' => RepositoryFactory::class,
             'CompaniesHouseCompany' => RepositoryFactory::class,
             'Queue' => RepositoryFactory::class,
+            'AdminAreaTrafficArea' => RepositoryFactory::class,
+            'PostcodeEnforcementArea' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

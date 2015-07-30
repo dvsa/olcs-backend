@@ -29,36 +29,13 @@ final class UpdateOperatingCentresStatus extends AbstractUpdateStatus
             return false;
         }
 
-        if ($application->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE) {
-
-            if ($application->getTotAuthVehicles() === null) {
-                return false;
-            }
-
-            if ($application->getTotAuthTrailers() === null) {
-                return false;
-            }
-
-            return true;
-        }
-
-        $licenceType = $application->getLicenceType()->getId();
-
-        $allowLargeVehicles = array(
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
-        );
-
-        if (in_array($licenceType, $allowLargeVehicles) && $application->getTotAuthLargeVehicles() === null) {
+        if ($application->getTotAuthVehicles() === null) {
             return false;
         }
 
-        $allowCommunityLicences = array(
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            Licence::LICENCE_TYPE_RESTRICTED
-        );
-
-        if (in_array($licenceType, $allowCommunityLicences) && $application->getTotCommunityLicences() === null) {
+        if ($application->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+            && $application->getTotAuthTrailers() === null
+        ) {
             return false;
         }
 
