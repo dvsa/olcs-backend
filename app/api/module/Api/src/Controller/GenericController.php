@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Controller;
 
+use Zend\Log\Logger;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
@@ -17,8 +18,11 @@ class GenericController extends AbstractRestfulController
      */
     public function get($id)
     {
+        $this->getLogger()->debug(__FUNCTION__);
+        $dto = $this->params('dto');
+
         try {
-            $result = $this->handleQuery();
+            $result = $this->handleQuery($dto);
             return $this->response()->singleResult($result);
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
@@ -31,8 +35,11 @@ class GenericController extends AbstractRestfulController
 
     public function getList()
     {
+        $this->getLogger()->debug(__FUNCTION__);
+        $dto = $this->params('dto');
+
         try {
-            $result = $this->handleQuery();
+            $result = $this->handleQuery($dto);
 
             if ($result instanceof Result) {
                 // we sometimes still get a single result if we're not retrieving by id
@@ -59,6 +66,7 @@ class GenericController extends AbstractRestfulController
      */
     public function update($id, $data)
     {
+        $this->getLogger()->debug(__FUNCTION__);
         $dto = $this->params('dto');
 
         try {
@@ -78,6 +86,7 @@ class GenericController extends AbstractRestfulController
      */
     public function create($data)
     {
+        $this->getLogger()->debug(__FUNCTION__);
         $dto = $this->params('dto');
 
         try {
@@ -95,6 +104,7 @@ class GenericController extends AbstractRestfulController
      */
     public function delete($id)
     {
+        $this->getLogger()->debug(__FUNCTION__);
         $dto = $this->params('dto');
 
         try {
@@ -111,6 +121,7 @@ class GenericController extends AbstractRestfulController
 
     public function deleteList()
     {
+        $this->getLogger()->debug(__FUNCTION__);
         $dto = $this->params('dto');
 
         try {
@@ -128,9 +139,10 @@ class GenericController extends AbstractRestfulController
     /**
      * @return mixed
      */
-    protected function handleQuery()
+    protected function handleQuery($dto)
     {
-        $result = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($this->params('dto'));
+        $this->getLogger()->debug(get_class($dto));
+        $result = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
         return $result;
     }
 
@@ -140,7 +152,18 @@ class GenericController extends AbstractRestfulController
      */
     protected function handleCommand($dto)
     {
+        $this->getLogger()->debug(get_class($dto));
         $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
         return $result;
+    }
+
+    /**
+     * Utility method that returns an instance of the logger.
+     *
+     * @return Logger
+     */
+    public function getLogger()
+    {
+        return $this->getServiceLocator()->get('Logger');
     }
 }

@@ -24,6 +24,6 @@ final class Order implements QueryPartialInterface
 
         list($alias) = $qb->getRootAliases();
 
-        $qb->orderBy($alias . '.' . $sort, $order);
+        $qb->addOrderBy($alias . '.' . $sort, $order);
     }
 }
