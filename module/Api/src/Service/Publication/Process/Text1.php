@@ -101,7 +101,7 @@ class Text1 implements ProcessInterface
             $organisation->getName()
         );
 
-        if (!empty($tradingNames)) {
+        if ($tradingNames->count()) {
             $latestTradingName = $tradingNames->last();
             $licence .= "\n" . sprintf($this->tradingAs, $latestTradingName->getName());
         }
@@ -134,9 +134,11 @@ class Text1 implements ProcessInterface
          * @var PersonEntity $person
          * @var OrganisationPersonEntity $organisationPerson
          */
-        foreach ($organisationPersons as $organisationPerson) {
-            $person = $organisationPerson->getPerson();
-            $persons[] = strtoupper(sprintf('%s %s', $person->getForename(), $person->getFamilyName()));
+        if ($organisationPersons->count()) {
+            foreach ($organisationPersons as $organisationPerson) {
+                $person = $organisationPerson->getPerson();
+                $persons[] = strtoupper(sprintf('%s %s', $person->getForename(), $person->getFamilyName()));
+            }
         }
 
         return "\n" . $prefix . implode(', ', $persons);
@@ -148,7 +150,6 @@ class Text1 implements ProcessInterface
      */
     public function getPreviousHearing($previousHearing)
     {
-        $previousHearingDate = new \DateTime($previousHearing);
-        return sprintf($this->previousHearingAdjourned, $previousHearingDate->format('d F Y'));
+        return sprintf($this->previousHearingAdjourned, $previousHearing);
     }
 }
