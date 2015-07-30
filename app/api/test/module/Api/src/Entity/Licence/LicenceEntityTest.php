@@ -680,4 +680,56 @@ class LicenceEntityTest extends EntityTester
         $licence->setPsvDiscs($psvDiscsCollection);
         $this->assertSame($psvDiscsNotCeasedCollection, $licence->getPsvDiscsNotCeased());
     }
+
+    /**
+     * @dataProvider canHaveLargeVehicleProvider
+     */
+    public function testCanHaveLargeVehicles($isPsv, $licenceType, $expected)
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('isPsv')
+            ->andReturn($isPsv);
+
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn($licenceType);
+
+        $this->assertEquals($expected, $licence->canHaveLargeVehicles());
+    }
+
+    public function canHaveLargeVehicleProvider()
+    {
+        return [
+            'PSV SN' => [
+                true,
+                Entity::LICENCE_TYPE_STANDARD_NATIONAL,
+                true
+            ],
+            'PSV SI' => [
+                true,
+                Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                true
+            ],
+            'GV SN' => [
+                false,
+                Entity::LICENCE_TYPE_STANDARD_NATIONAL,
+                false
+            ],
+            'GV SI' => [
+                false,
+                Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                false
+            ],
+            'PSV SR' => [
+                true,
+                Entity::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                false
+            ],
+            'PSV R' => [
+                true,
+                Entity::LICENCE_TYPE_RESTRICTED,
+                false
+            ],
+        ];
+    }
 }

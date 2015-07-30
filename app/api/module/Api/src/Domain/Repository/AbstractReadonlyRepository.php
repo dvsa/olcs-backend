@@ -235,7 +235,12 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      */
     protected function createQueryBuilder()
     {
-        return $this->getEntityManager()->getRepository($this->entity)->createQueryBuilder($this->alias);
+        return $this->getRepository()->createQueryBuilder($this->alias);
+    }
+
+    protected function getRepository()
+    {
+        return $this->getEntityManager()->getRepository($this->entity);
     }
 
     /**

@@ -238,7 +238,6 @@ return [
     'review-operating-centres-traffic-area' => 'Your traffic area',
     'review-operating-centres-traffic-area-title' => 'Traffic area',
     'review-operating_centres' => 'Operating centres',
-    'review-operating_centres_delete' => 'Are you sure you wish to remove the selected operating centre(s)',
     'review-people' => 'People',
     'review-safety' => 'Safety',
     'review-taxi_phv' => 'Taxi PHV',
