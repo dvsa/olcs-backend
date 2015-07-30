@@ -16,10 +16,11 @@ use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceNoGen as LicenceNoGenRepo;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact as PhoneContactEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Command\Operator\CreateUnlicensed as CreateUnlicensedCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -49,6 +50,8 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
             LicenceEntity::LICENCE_STATUS_UNLICENSED,
             LicenceEntity::LICENCE_CATEGORY_PSV,
             OrganisationEntity::ORG_TYPE_OTHER,
+            PhoneContactEntity::TYPE_BUSINESS,
+            PhoneContactEntity::TYPE_FAX,
         ];
 
         $this->references = [
@@ -67,7 +70,7 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
     {
         $licenceNoGenId = 1234567;
 
-        $contactDetails = [
+        $contactDetailsData = [
             'emailAddress' => 'foo@bar.com',
             'address' => [
                 'addressLine1' => 'al1',
@@ -78,7 +81,14 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
                 'postcode' => 'pc',
             ],
             'phoneContacts' => [
-                //@todo
+                [
+                    'phoneNumber' => '01234567890',
+                    'phoneContactType' => 'phone_t_tel',
+                ],
+                [
+                    'phoneNumber' => '01234567891',
+                    'phoneContactType' => 'phone_t_fax',
+                ]
             ],
         ];
 
@@ -86,7 +96,7 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
             'name' => 'name',
             'operatorType' => 'lcat_psv',
             'trafficArea' => 'N',
-            'contactDetails' => $contactDetails,
+            'contactDetails' => $contactDetailsData,
         ];
 
         $expectedLicenceNo = 'UPN1234567';
@@ -105,9 +115,14 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
             )
             ->twice(); // saved twice due to licence no. generation
 
+        // map ref data references for phone contact types
+        $contactDetails = $contactDetailsData;
+        foreach ($contactDetails['phoneContacts'] as &$pc) {
+            $pc['phoneContactType'] = $this->mapRefData($pc['phoneContactType']);
+        }
         $this->repoMap['ContactDetails']
             ->shouldReceive('populateRefDataReference')
-            ->with($contactDetails)
+            ->with($contactDetailsData)
             ->andReturn($contactDetails);
 
         $savedLicenceNoGen = null;
@@ -135,6 +150,7 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
               'Organisation added',
               'ContactDetails added',
               'Address added',
+              'Phone contact(s) added',
             ],
             $result->getMessages()
         );
@@ -169,11 +185,12 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
             ],
             $savedLicence->getCorrespondenceCd()->getAddress()->toArray()
         );
-        $this->assertEquals(
-            [
-                //@todo
-            ],
-            $savedLicence->getCorrespondenceCd()->getPhoneContacts()->toArray()
-        );
+
+        $phoneContacts = $savedLicence->getCorrespondenceCd()->getPhoneContacts();
+        $this->assertEquals(2, $phoneContacts->count());
+        $this->assertEquals('01234567890', $phoneContacts->get(0)->getPhoneNumber());
+        $this->assertEquals('phone_t_tel', $phoneContacts->get(0)->getPhoneContactType()->getId());
+        $this->assertEquals('01234567891', $phoneContacts->get(1)->getPhoneNumber());
+        $this->assertEquals('phone_t_fax', $phoneContacts->get(1)->getPhoneContactType()->getId());
     }
 }
