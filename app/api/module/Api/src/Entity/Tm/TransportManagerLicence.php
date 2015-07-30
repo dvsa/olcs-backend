@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Tm;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use \Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * TransportManagerLicence Entity
@@ -24,6 +25,14 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  */
 class TransportManagerLicence extends AbstractTransportManagerLicence
 {
+    const ERROR_MON = 'err_mon';
+    const ERROR_TUE = 'err_tue';
+    const ERROR_WED = 'err_wed';
+    const ERROR_THU = 'err_thu';
+    const ERROR_FRI = 'err_fri';
+    const ERROR_SAT = 'err_sat';
+    const ERROR_SUN = 'err_sun';
+
     public function __construct(Licence $licence, TransportManager $transportManager)
     {
         parent::__construct();

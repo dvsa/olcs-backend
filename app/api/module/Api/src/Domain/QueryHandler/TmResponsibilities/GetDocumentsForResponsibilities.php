@@ -24,8 +24,6 @@ class GetDocumentsForResponsibilities extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        $repo = $this->getRepo();
-
         if ($query->getType() == 'application') {
             $tmApplication = $this->getRepo('TransportManagerApplication')
                 ->fetchForResponsibilities($query->getLicOrAppId());

@@ -36,7 +36,7 @@ final class UpdateForResponsibilities extends AbstractCommandHandler implements
         $transportManagerApplication =  $this->updateTransportManagerApplication($command);
         $this->getRepo()->save($transportManagerApplication);
 
-        $result->addMessage("Transport Manager Application updated");
+        $result->addMessage('Transport Manager Application updated');
         $result->addId('transportManagerApplication', $transportManagerApplication->getId());
 
         return $result;

@@ -33,7 +33,7 @@ class TmResponsibilitiesList extends AbstractQueryHandler
             'result' => $tmLicences,
             'count' => count($tmLicences),
             'tmApplications' => $tmApplications,
-            'tmApplciationsCount' => count($tmApplications)
+            'tmApplicationsCount' => count($tmApplications)
         ];
     }
 }
