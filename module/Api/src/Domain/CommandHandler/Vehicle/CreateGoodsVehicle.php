@@ -128,7 +128,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
      */
     protected function checkIfVrmAlreadyExistsOnLicence(LicenceEntity $licence, $vrm)
     {
-        $currentLicenceVehicles = $licence->getActiveVehicles();
+        $currentLicenceVehicles = $licence->getActiveVehicles(false);
 
         if ($currentLicenceVehicles->count() < 1) {
             return;
