@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Address\Service;
 
-use Doctrine\Common\Util\Debug;
 use Dvsa\Olcs\Api\Domain\Repository\AdminAreaTrafficArea;
 use Dvsa\Olcs\Api\Domain\Repository\PostcodeEnforcementArea;
 use Dvsa\Olcs\Api\Entity\TrafficArea\AdminAreaTrafficArea as AdminAreaTrafficAreaEntity;
@@ -56,7 +55,6 @@ class Address implements AddressInterface
         $prefix = $matches[1];
         $suffixDigit = $matches[2];
 
-
         // first try lookup by prefix + first digit of suffix
         /** @var PostcodeEnforcementAreaEntity $pea */
         $pea = $repo->fetchByPostcodeId($prefix . ' ' . $suffixDigit);
@@ -94,7 +92,6 @@ class Address implements AddressInterface
 
     public function fetchByPostcode($postcode)
     {
-        $this->client->setMethod('GET');
         $this->client->setUri('address/' . urlencode($postcode));
         $response = $this->client->send();
 

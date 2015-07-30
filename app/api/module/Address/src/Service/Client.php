@@ -21,6 +21,7 @@ class Client extends HttpClient
     public function __construct($baseUri)
     {
         $this->baseUri = rtrim($baseUri, '/');
+        parent::setMethod('GET');
     }
 
     public function setUri($uri)
@@ -28,5 +29,10 @@ class Client extends HttpClient
         $uri = $this->baseUri . '/' . ltrim($uri, '/');
 
         return parent::setUri($uri);
+    }
+
+    public function setMethod($method)
+    {
+        throw new \Exception('This is a readonly HTTP client, you cannot change the method');
     }
 }

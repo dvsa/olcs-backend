@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query\Expr\Join;
-use Dvsa\Olcs\Api\Entity\Cases\Complaint;
+use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre as Entity;
 
 /**
@@ -50,7 +50,7 @@ class LicenceOperatingCentre extends AbstractRepository
         $qb->innerJoin('oc.address', 'oca');
         $qb->leftJoin('oca.countryCode', 'ocac');
         $qb->leftJoin('oc.complaints', 'occ', Join::WITH, $qb->expr()->eq('occ.status', ':complaintStatus'));
-        $qb->setParameter('complaintStatus', Complaint::COMPLAIN_STATUS_OPEN);
+        $qb->setParameter('complaintStatus', ComplaintEntity::COMPLAIN_STATUS_OPEN);
 
         $qb->andWhere(
             $qb->expr()->eq('loc.licence', ':licence')

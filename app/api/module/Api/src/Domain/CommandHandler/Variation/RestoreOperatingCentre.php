@@ -44,6 +44,10 @@ final class RestoreOperatingCentre extends AbstractCommandHandler implements Tra
             if ($aoc->getAction() === 'D') {
                 $this->getRepo('ApplicationOperatingCentre')->delete($aoc);
                 $this->result->addMessage('Delta record removed');
+
+                $completionData = ['id' => $command->getApplication(), 'section' => 'operatingCentres'];
+                $this->result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($completionData)));
+
                 return $this->result;
             }
 
@@ -79,10 +83,6 @@ final class RestoreOperatingCentre extends AbstractCommandHandler implements Tra
     private function splitTypeAndId($ref)
     {
         $type = substr($ref, 0, 1);
-
-        if (is_numeric($type)) {
-            return array(null, $ref);
-        }
 
         $id = (int)substr($ref, 1);
 

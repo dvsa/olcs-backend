@@ -57,8 +57,8 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
 
             $this->getRepo()->save($application);
 
-            $this->result->addMessage($count . ' Updated traffic area');
-            $this->result->addMessage($count . ' Updated enforcement area');
+            $this->result->addMessage('Updated traffic area');
+            $this->result->addMessage('Updated enforcement area');
         }
 
         return $this->result;

@@ -14,7 +14,6 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficAreaEnforcementArea;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 
@@ -29,7 +28,7 @@ class OperatingCentres extends AbstractQueryHandler implements AuthAwareInterfac
 
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['ApplicationOperatingCentre', 'LicenceOperatingCentre', 'TrafficArea', 'Document'];
+    protected $extraRepos = ['ApplicationOperatingCentre', 'TrafficArea', 'Document'];
 
     /**
      * @var VariationOperatingCentreHelper
@@ -89,7 +88,7 @@ class OperatingCentres extends AbstractQueryHandler implements AuthAwareInterfac
             return false;
         }
 
-        if ($application->getGoodsOrPsv()->getId() !== LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE) {
+        if ($application->isPsv()) {
             return false;
         }
 

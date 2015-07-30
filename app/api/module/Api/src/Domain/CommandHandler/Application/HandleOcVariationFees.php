@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee;
+use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -57,7 +57,7 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
                 'feeTypeFeeType' => FeeType::FEE_TYPE_VAR
             ];
 
-            $this->result->merge($this->handleSideEffect(CreateApplicationFee::create($data)));
+            $this->result->merge($this->handleSideEffect(CreateApplicationFeeCmd::create($data)));
         }
     }
 
@@ -98,7 +98,7 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
     {
         /** @var LicenceOperatingCentre $loc */
         foreach ($licenceOcs as $loc) {
-            if ($aoc->getOperatingCentre()->getId() == $loc->getOperatingCentre()->getId()) {
+            if ($aoc->getOperatingCentre() === $loc->getOperatingCentre()) {
                 if ($aoc->getNoOfVehiclesRequired() > $loc->getNoOfVehiclesRequired()) {
                     return true;
                 }
