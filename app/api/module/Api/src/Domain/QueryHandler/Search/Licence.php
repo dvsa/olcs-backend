@@ -41,6 +41,9 @@ class Licence extends AbstractQueryHandler
                 'trafficArea' => $this->result(
                     $licence->getTrafficArea()
                 )->serialize(),
+                'companySubsidiaries' => $this->resultList(
+                    $licence->getCompanySubsidiaries()
+                ),
                 'organisation' => $this->result(
                     $licence->getOrganisation(),
                     [
@@ -48,11 +51,13 @@ class Licence extends AbstractQueryHandler
                         'contactDetails' => [
                             'address' => [
                                 'countryCode'
+                            ],
+                            'phoneContacts' => [
+                                'phoneContactType'
                             ]
                         ],
                         'natureOfBusinesses',
                         'tradingNames',
-                        'companySubsidiaries',
                         'leadTcArea' => [
                             'contactDetails' => [
                                 'person'
