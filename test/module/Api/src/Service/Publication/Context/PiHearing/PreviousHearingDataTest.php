@@ -26,6 +26,7 @@ class PreviousHearingDataTest extends MockeryTestCase
         $pi = 99;
         $hearingDate = '2014-03-16 14:30:00';
         $adjournedDate = '2014-03-18 12:45:00';
+        $formattedAdjournedDate = '18 March 2014';
 
         $input = [
             'hearingDate' => $hearingDate,
@@ -33,7 +34,7 @@ class PreviousHearingDataTest extends MockeryTestCase
 
         $output = [
             'hearingDate' => $hearingDate,
-            'previousHearing' => $adjournedDate
+            'previousHearing' => $formattedAdjournedDate
         ];
 
         $expectedOutput = new \ArrayObject($output);

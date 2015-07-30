@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Publication\Context\PiHearing;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\PreviousHearingBundle;
 use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Dvsa\Olcs\Api\Entity\Pi\PiHearing;
 
 /**
  * Class PreviousHearingData
@@ -23,11 +24,13 @@ class PreviousHearingData extends AbstractContext
             'bundle' => self::$bundle
         ];
 
+        /** @var PiHearing $previousHearing */
         $query = PreviousHearingBundle::create($params);
         $previousHearing = $this->handleQuery($query);
 
         if (!empty($previousHearing)) {
-            $context->offsetSet('previousHearing', $previousHearing->getAdjournedDate());
+            $date = new \DateTime($previousHearing->getAdjournedDate());
+            $context->offsetSet('previousHearing', $date->format('d F Y'));
         }
 
         return $context;
