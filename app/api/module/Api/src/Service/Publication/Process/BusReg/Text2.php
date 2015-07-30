@@ -37,5 +37,7 @@ class Text2 implements ProcessInterface
         }
 
         $publication->setText2(strtoupper($licence));
+
+        return $publication;
     }
 }
