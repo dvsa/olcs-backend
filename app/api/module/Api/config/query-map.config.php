@@ -279,9 +279,6 @@ return [
     TransferQuery\Task\Task::class => QueryHandler\Task\Task::class,
     TransferQuery\Task\TaskDetails::class => QueryHandler\Task\TaskDetails::class,
 
-    // Transport Manager
-    TransferQuery\Tm\TransportManager::class => QueryHandler\Tm\TransportManager::class,
-
     // Tm Responsibilities
     TransferQuery\TmResponsibilities\TmResponsibilitiesList::class =>
         QueryHandler\TmResponsibilities\TmResponsibilitiesList::class,
@@ -303,5 +300,8 @@ return [
     // Transport Manager
     TransferQuery\Tm\TransportManager::class => QueryHandler\Tm\TransportManager::class,
     TransferQuery\Tm\Documents::class => QueryHandler\Tm\Documents::class,
+
+    // Search
+    TransferQuery\Search\Licence::class => QueryHandler\Search\Licence::class,
 
 ];
