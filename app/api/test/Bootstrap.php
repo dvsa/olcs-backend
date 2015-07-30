@@ -4,6 +4,7 @@ namespace OlcsTest;
 
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
+use Mockery as m;
 
 error_reporting(E_ALL | E_STRICT);
 date_default_timezone_set('Europe/London');
@@ -35,12 +36,11 @@ class Bootstrap
 
     public static function getServiceManager()
     {
-        $serviceManager = new ServiceManager(new ServiceManagerConfig());
-        $serviceManager->setService('ApplicationConfig', self::$config);
-        $serviceManager->get('ModuleManager')->loadModules();
-        $serviceManager->setAllowOverride(true);
+        $sm = m::mock('\Zend\ServiceManager\ServiceManager')
+            ->makePartial()
+            ->setAllowOverride(true);
 
-        return $serviceManager;
+        return $sm;
     }
 
     protected static function initAutoloader()

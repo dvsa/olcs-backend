@@ -905,6 +905,7 @@ class ServiceAbstractTest extends MockeryTestCase
      */
     public function testCreateWithCascadeWithUpdate()
     {
+        $this->sm->setService('Config', ['entity_namespaces' => ['EntityStub' => '']]);
         $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
         $this->sut->setEntityNamespace('\OlcsTest\Db\Service\Stubs\\');
 
@@ -1031,6 +1032,7 @@ class ServiceAbstractTest extends MockeryTestCase
      */
     public function testUpdateWithCascade()
     {
+        $this->sm->setService('Config', ['entity_namespaces' => ['EntityStub' => '']]);
         $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
         $this->sut->setEntityNamespace('\OlcsTest\Db\Service\Stubs\\');
 
