@@ -56,7 +56,6 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         if (!empty($outstandingGrantFees)) {
             return;
         }
-
         $this->result->merge($this->handleSideEffect(ValidateApplication::create(['id' => $application->getId()])));
     }
 
