@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Application;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Api\Entity\Application\S4;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
@@ -1715,5 +1716,220 @@ class ApplicationEntityTest extends EntityTester
         $oorDate = $this->entity->getOutOfOppositionDate();
 
         $this->assertEquals(new \DateTime('2014-08-20'), $oorDate);
+    }
+
+    /**
+     * @dataProvider canHaveLargeVehicleProvider
+     */
+    public function testCanHaveLargeVehicles($isPsv, $licenceType, $expected)
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isPsv')
+            ->andReturn($isPsv);
+
+        $application->shouldReceive('getLicenceType->getId')
+            ->andReturn($licenceType);
+
+        $this->assertEquals($expected, $application->canHaveLargeVehicles());
+    }
+
+    /**
+     * @dataProvider canHaveCommunityLicencesProvider
+     */
+    public function testCanHaveCommunityLicences($isStandardInternational, $isPsv, $isRestricted, $expected)
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isPsv')
+            ->andReturn($isPsv)
+            ->shouldReceive('isStandardInternational')
+            ->andReturn($isStandardInternational)
+            ->shouldReceive('isRestricted')
+            ->andReturn($isRestricted);
+
+        $this->assertEquals($expected, $application->canHaveCommunityLicences());
+    }
+
+    public function testGetDeltaAocByOc()
+    {
+        $oc = m::mock(OperatingCentre::class)->makePartial();
+        $oc2 = m::mock(OperatingCentre::class)->makePartial();
+
+        /** @var ApplicationOperatingCentre $aoc */
+        $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setOperatingCentre($oc);
+
+        /** @var ApplicationOperatingCentre $aoc2 */
+        $aoc2 = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc2->setOperatingCentre($oc2);
+
+        $ocs = new ArrayCollection();
+        $ocs->add($aoc);
+        $ocs->add($aoc2);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setOperatingCentres($ocs);
+
+        $collection = $application->getDeltaAocByOc($oc);
+
+        $this->assertEquals(1, $collection->count());
+        $this->assertSame($aoc, $collection->first());
+    }
+
+    public function testGetActiveS4s()
+    {
+        /** @var RefData $approved */
+        $approved = m::mock(RefData::class)->makePartial();
+        $approved->setId(S4::STATUS_APPROVED);
+
+        $refused = m::mock(RefData::class)->makePartial();
+        $refused->setId(S4::STATUS_REFUSED);
+
+        /** @var S4 $s41 */
+        $s41 = m::mock(S4::class)->makePartial();
+        $s41->setOutcome(null);
+        /** @var S4 $s42 */
+        $s42 = m::mock(S4::class)->makePartial();
+        $s41->setOutcome($approved);
+        /** @var S4 $s43 */
+        $s43 = m::mock(S4::class)->makePartial();
+        $s43->setOutcome($refused);
+
+        $s4s = new ArrayCollection();
+        $s4s->add($s41);
+        $s4s->add($s42);
+        $s4s->add($s43);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $application->setS4s($s4s);
+
+        $active = $application->getActiveS4s();
+
+        $this->assertCount(2, $active);
+        $this->assertTrue(in_array($s41, $active));
+        $this->assertTrue(in_array($s42, $active));
+        $this->assertfalse(in_array($s43, $active));
+    }
+
+    public function testIsNew()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $application->setIsVariation(true);
+        $this->assertFalse($application->isNew());
+
+        $application->setIsVariation(false);
+        $this->assertTrue($application->isNew());
+    }
+
+    public function testIsRestricted()
+    {
+        $sr = m::mock(RefData::class)->makePartial();
+        $sr->setId(Licence::LICENCE_TYPE_SPECIAL_RESTRICTED);
+
+        $r = m::mock(RefData::class)->makePartial();
+        $r->setId(Licence::LICENCE_TYPE_RESTRICTED);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $this->assertFalse($application->isRestricted());
+
+        $application->setLicenceType($sr);
+        $this->assertFalse($application->isRestricted());
+
+        $application->setLicenceType($r);
+        $this->assertTrue($application->isRestricted());
+    }
+
+    public function testIsStandardInternational()
+    {
+        $sn = m::mock(RefData::class)->makePartial();
+        $sn->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        $si = m::mock(RefData::class)->makePartial();
+        $si->setId(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $this->assertFalse($application->isStandardInternational());
+
+        $application->setLicenceType($sn);
+        $this->assertFalse($application->isStandardInternational());
+
+        $application->setLicenceType($si);
+        $this->assertTrue($application->isStandardInternational());
+    }
+
+    public function canHaveCommunityLicencesProvider()
+    {
+        return [
+            'Goods SI' => [
+                true,
+                false,
+                false,
+                true
+            ],
+            'PSV SI' => [
+                true,
+                true,
+                false,
+                true
+            ],
+            'PSV R' => [
+                false,
+                true,
+                true,
+                true
+            ],
+            'PSV Non R' => [
+                false,
+                true,
+                false,
+                false
+            ]
+        ];
+    }
+
+    public function canHaveLargeVehicleProvider()
+    {
+        return [
+            'PSV SN' => [
+                true,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                true
+            ],
+            'PSV SI' => [
+                true,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                true
+            ],
+            'GV SN' => [
+                false,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                false
+            ],
+            'GV SI' => [
+                false,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                false
+            ],
+            'PSV SR' => [
+                true,
+                Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                false
+            ],
+            'PSV R' => [
+                true,
+                Licence::LICENCE_TYPE_RESTRICTED,
+                false
+            ],
+        ];
     }
 }

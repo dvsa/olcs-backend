@@ -53,10 +53,6 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
             $this->setAuthService($mainServiceLocator->get(AuthorizationService::class));
         }
 
-        if ($this->repoServiceName === null) {
-            throw new RuntimeException('The repoServiceName property must be define in a CommandHandler');
-        }
-
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
 
         $this->extraRepos[] = $this->repoServiceName;
