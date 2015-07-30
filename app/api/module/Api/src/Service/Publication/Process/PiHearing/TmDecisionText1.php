@@ -29,11 +29,6 @@ class TmDecisionText1 extends AbstractText1
         $hearingText = [];
         $hearingText[] = $this->getOpeningText($publication, $context);
 
-        //previous publication
-        if ($context->offsetExists('previousPublication')) {
-            $hearingText[] = $this->getPreviousPublication($context->offsetGet('previousPublication'));
-        }
-
         $publication->setText1(implode(' ', $hearingText));
 
         return $publication;
