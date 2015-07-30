@@ -655,7 +655,7 @@ class Application extends AbstractApplication
         $data = $completion->serialize([]);
 
         foreach ($data as $key => $value) {
-            if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches) && $value !== self::VARIATION_STATUS_UNCHANGED) {
+            if (preg_match('/^([a-zA-Z]+)Status$/', $key) && $value !== self::VARIATION_STATUS_UNCHANGED) {
                 return true;
             }
         }
@@ -759,7 +759,7 @@ class Application extends AbstractApplication
         /* @var $aoc \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre */
         $maximumDate = null;
         foreach ($this->getOperatingCentres() as $aoc) {
-            $operatingCentreOorDate = $this->calcOperatingCentreOutOfReprenentationDate($aoc);
+            $operatingCentreOorDate = $this->calcOperatingCentreOutOfRepresentationDate($aoc);
 
             // If 1 or more of the operating centres are 'Unknown' then the overall OOR date = 'Unknown'
             if ($operatingCentreOorDate === self::UNKNOWN) {
@@ -795,7 +795,7 @@ class Application extends AbstractApplication
      *
      * @return string date|self::NOT_APPLICABLE|self::UNKNOWN
      */
-    private function calcOperatingCentreOutOfReprenentationDate(ApplicationOperatingCentre $aoc)
+    private function calcOperatingCentreOutOfRepresentationDate(ApplicationOperatingCentre $aoc)
     {
         // For added operating centres that are linked to a schedule 4
         // where there has been no increase to the vehicles as compared with the donor licence then
