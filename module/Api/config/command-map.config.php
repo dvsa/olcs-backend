@@ -179,7 +179,7 @@ return [
         CommandHandler\Variation\UpdateConditionUndertaking::class,
     TransferCommand\Variation\RestoreListConditionUndertaking::class =>
         CommandHandler\Variation\RestoreListConditionUndertaking::class,
-    TransferCommand\Variation\DeleteOperatingCentre::class => CommandHandler\Variation\DeleteOperatingCentres::class,
+    TransferCommand\Variation\DeleteOperatingCentre::class => CommandHandler\Variation\DeleteOperatingCentre::class,
     TransferCommand\Variation\RestoreOperatingCentre::class => CommandHandler\Variation\RestoreOperatingCentre::class,
 
     // Transfer - Organisation
@@ -393,6 +393,8 @@ return [
     Command\Application\UpdateVariationCompletion::class => CommandHandler\Application\UpdateVariationCompletion::class,
     Command\Application\CreateFee::class => CommandHandler\Application\CreateFee::class,
     Command\Application\CancelAllInterimFees::class => CommandHandler\Application\CancelAllInterimFees::class,
+    Command\Application\SetDefaultTrafficAreaAndEnforcementArea::class
+        => CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementArea::class,
 
     // Domain - Application Operating Centre
     Command\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class

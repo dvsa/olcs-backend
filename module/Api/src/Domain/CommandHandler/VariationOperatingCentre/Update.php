@@ -84,10 +84,6 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
     {
         $type = substr($ref, 0, 1);
 
-        if (is_numeric($type)) {
-            return [null, $ref];
-        }
-
         $id = (int)substr($ref, 1);
 
         return [$type, $id];

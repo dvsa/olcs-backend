@@ -27,18 +27,16 @@ class VariationOperatingCentre extends AbstractQueryHandler
 
         if ($prefix === 'L') {
             return $this->getQueryHandler()->handleQuery(LicenceOperatingCentre::create(['id' => $id]));
+        } elseif ($prefix === 'A') {
+            return $this->getQueryHandler()->handleQuery(ApplicationOperatingCentre::create(['id' => $id]));
         }
 
-        return $this->getQueryHandler()->handleQuery(ApplicationOperatingCentre::create(['id' => $id]));
+        throw new \Exception('Couldn\'t determine identity');
     }
 
     private function splitTypeAndId($ref)
     {
         $type = substr($ref, 0, 1);
-
-        if (is_numeric($type)) {
-            return [null, $ref];
-        }
 
         $id = (int)substr($ref, 1);
 

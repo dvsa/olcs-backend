@@ -15,8 +15,10 @@
                 <file>../module/Cli/src/Module.php</file>
                 <file>../module/Email/src/Module.php</file>
                 <file>../module/Snapshot/src/Module.php</file>
+                <file>../module/Address/src/Module.php</file>
                 <directory>../module/Email/config</directory>
                 <directory>../module/Snapshot/config</directory>
+                <directory>../module/Address/config</directory>
                 <directory>../module/Olcs/Db/config</directory>
                 <directory>../module/Api/config</directory>
                 <directory>../module/Olcs/Db/src/Service/CHXmlGateway</directory>

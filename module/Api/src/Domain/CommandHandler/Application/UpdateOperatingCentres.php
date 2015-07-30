@@ -7,11 +7,12 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees;
+use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVariationFeesCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
@@ -28,19 +29,8 @@ use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
  */
 final class UpdateOperatingCentres extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERR_OC_PSV_SUM_1A = 'ERR_OC_PSV_SUM_1A'; // with large
-    const ERR_OC_PSV_SUM_1B = 'ERR_OC_PSV_SUM_1B'; // without large
     const ERR_OC_TA_1 = 'ERR_OC_TA_1'; // select-traffic-area-error
     const ERR_OC_CL_1 = 'ERR_OC_CL_1'; //community-licences-too-many
-    const ERR_OC_R_1 = 'ERR_OC_R_1'; // restricted-too-many
-    const ERR_OC_V_1 = 'ERR_OC_V_1'; // 1-operating-centre
-    const ERR_OC_V_2 = 'ERR_OC_V_2'; // too-low
-    const ERR_OC_V_3 = 'ERR_OC_V_3'; // too-high
-    const ERR_OC_V_4 = 'ERR_OC_V_4'; // no-operating-centre
-    const ERR_OC_T_1 = 'ERR_OC_T_1'; // 1-operating-centre
-    const ERR_OC_T_2 = 'ERR_OC_T_2'; // too-low
-    const ERR_OC_T_3 = 'ERR_OC_T_3'; // too-high
-    const ERR_OC_T_4 = 'ERR_OC_T_4'; // no-operating-centre
 
     protected $repoServiceName = 'Application';
 
@@ -51,6 +41,11 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
      */
     private $variationHelper;
 
+    /**
+     * @var UpdateOperatingCentreHelper
+     */
+    private $updateHelper;
+
     private $totals;
 
     private $messages = [];
@@ -58,6 +53,7 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->variationHelper = $serviceLocator->getServiceLocator()->get('VariationOperatingCentreHelper');
+        $this->updateHelper = $serviceLocator->getServiceLocator()->get('UpdateOperatingCentreHelper');
 
         return parent::createService($serviceLocator);
     }
@@ -114,7 +110,7 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
         if ($application->isVariation()) {
             $this->result->merge(
-                $this->handleSideEffect(HandleOcVariationFees::create(['id' => $application->getId()]))
+                $this->handleSideEffect(HandleOcVariationFeesCmd::create(['id' => $application->getId()]))
             );
         }
 
@@ -136,98 +132,30 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
             $trafficArea = $command->getTrafficArea();
 
             if (empty($trafficArea) && $application->getOperatingCentres()->count() >= 1) {
-                $this->addMessage('trafficArea', self::ERR_OC_TA_1);
+                $this->updateHelper->addMessage('trafficArea', self::ERR_OC_TA_1);
             }
         }
 
         if (!$command->getPartial()) {
             if ($application->isPsv()) {
-                $this->validatePsv($application, $command);
+                $this->updateHelper->validatePsv($application, $command);
             } else {
-                $this->validateTotalAuthTrailers($application, $command);
+                $this->updateHelper->validateTotalAuthTrailers($command, $this->getTotals($application));
             }
 
             if ($application->canHaveCommunityLicences()
                 && $command->getTotCommunityLicences() > $command->getTotAuthVehicles()
             ) {
-                $this->addMessage('totCommunityLicences', self::ERR_OC_CL_1);
+                $this->updateHelper->addMessage('totCommunityLicences', self::ERR_OC_CL_1);
             }
 
-            $this->validateTotalAuthVehicles($application, $command);
+            $this->updateHelper->validateTotalAuthVehicles($application, $command, $this->getTotals($application));
         }
 
-        if (!empty($this->messages)) {
-            throw new ValidationException($this->messages);
-        }
-    }
+        $messages = $this->updateHelper->getMessages();
 
-    protected function validateTotalAuthVehicles(Application $application, Cmd $command)
-    {
-        if ($application->isRestricted() && $command->getTotAuthVehicles() > 2) {
-            $this->addMessage('totAuthVehicles', self::ERR_OC_R_1);
-        }
-
-        $totals = $this->getTotals($application);
-
-        if ($totals['noOfOperatingCentres'] === 0) {
-            $this->addMessage('totAuthVehicles', self::ERR_OC_V_4);
-        }
-
-        if ($totals['noOfOperatingCentres'] === 1 && $command->getTotAuthVehicles() != $totals['minVehicleAuth']) {
-            $this->addMessage('totAuthVehicles', self::ERR_OC_V_1);
-        }
-
-        if ($totals['noOfOperatingCentres'] >= 2) {
-
-            if ($command->getTotAuthVehicles() < $totals['minVehicleAuth']) {
-                $this->addMessage('totAuthVehicles', self::ERR_OC_V_2);
-            }
-
-            if ($command->getTotAuthVehicles() > $totals['maxVehicleAuth']) {
-                $this->addMessage('totAuthVehicles', self::ERR_OC_V_3);
-            }
-        }
-    }
-
-    protected function validateTotalAuthTrailers(Application $application, Cmd $command)
-    {
-        $totals = $this->getTotals($application);
-
-        if ($totals['noOfOperatingCentres'] === 0) {
-            $this->addMessage('totAuthTrailers', self::ERR_OC_T_4);
-        }
-
-        if ($totals['noOfOperatingCentres'] === 1 && $command->getTotAuthTrailers() != $totals['minTrailerAuth']) {
-            $this->addMessage('totAuthTrailers', self::ERR_OC_T_1);
-        }
-
-        if ($totals['noOfOperatingCentres'] >= 2) {
-
-            if ($command->getTotAuthTrailers() < $totals['minTrailerAuth']) {
-                $this->addMessage('totAuthTrailers', self::ERR_OC_T_2);
-            }
-
-            if ($command->getTotAuthTrailers() > $totals['maxTrailerAuth']) {
-                $this->addMessage('totAuthTrailers', self::ERR_OC_T_3);
-            }
-        }
-
-        return [];
-    }
-
-    protected function validatePsv(Application $application, Cmd $command)
-    {
-        $sum = (int)$command->getTotAuthSmallVehicles()
-            + (int)$command->getTotAuthMediumVehicles()
-            + (int)$command->getTotAuthLargeVehicles();
-
-        if ($sum != $command->getTotAuthVehicles()) {
-            if ($application->canHaveLargeVehicles()) {
-                $message = self::ERR_OC_PSV_SUM_1A;
-            } else {
-                $message = self::ERR_OC_PSV_SUM_1B;
-            }
-            $this->addMessage('totAuthVehicles', $message);
+        if (!empty($messages)) {
+            throw new ValidationException($messages);
         }
     }
 
@@ -267,14 +195,5 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
         }
 
         return $this->totals;
-    }
-
-    protected function addMessage($field, $messageCode, $message = null)
-    {
-        if ($message === null) {
-            $message = $messageCode;
-        }
-
-        $this->messages[$field][] = [$messageCode => $message];
     }
 }

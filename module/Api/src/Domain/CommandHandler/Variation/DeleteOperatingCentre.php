@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Delete Operating Centres
+ * Delete Operating Centre
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -20,11 +20,11 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Variation\DeleteOperatingCentre as Cmd;
 
 /**
- * Delete Operating Centres
+ * Delete Operating Centre
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class DeleteOperatingCentres extends AbstractCommandHandler implements TransactionedInterface
+final class DeleteOperatingCentre extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
 
@@ -105,10 +105,6 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
     protected function splitTypeAndId($ref)
     {
         $type = substr($ref, 0, 1);
-
-        if (is_numeric($type)) {
-            return [null, $ref];
-        }
 
         $id = (int)substr($ref, 1);
 
