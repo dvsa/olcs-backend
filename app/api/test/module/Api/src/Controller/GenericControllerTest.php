@@ -10,8 +10,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response;
 use Dvsa\Olcs\Transfer\Query\Application\Application;
+use Dvsa\OlcsTest\Api\MockLoggerTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
+use Zend\Log\Logger;
 use Zend\Mvc\Controller\Plugin\Params;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\View\Model\JsonModel;
@@ -22,6 +24,8 @@ use Dvsa\Olcs\Api\Domain\Exception;
  */
 class GenericControllerTest extends TestCase
 {
+    use MockLoggerTrait;
+
     public function testGet()
     {
         $viewModel = new JsonModel();
@@ -37,7 +41,9 @@ class GenericControllerTest extends TestCase
         $mockQueryHandler = m::mock(QueryHandlerInterface::class);
         $mockQueryHandler->shouldReceive('handleQuery')->with($application)->andReturn($data);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler);
+        $mockLogger = $this->mockLogger();
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -62,7 +68,9 @@ class GenericControllerTest extends TestCase
                          ->with($application)
                          ->andThrow(new Exception\NotFoundException());
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler);
+        $mockLogger = $this->mockLogger();
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -88,7 +96,9 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler);
+        $mockLogger = $this->mockLogger();
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -115,7 +125,9 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler);
+        $mockLogger = $this->mockLogger();
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -143,7 +155,9 @@ class GenericControllerTest extends TestCase
                          ->with($application)
                          ->andReturn(['result'=>$data, 'count'=>$count, 'bar' => 'cake']);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler);
+        $mockLogger = $this->mockLogger();
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -168,7 +182,9 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow(new Exception\NotFoundException());
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler);
+        $mockLogger = $this->mockLogger();
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -194,7 +210,9 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler);
+        $mockLogger = $this->mockLogger();
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -221,7 +239,9 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler);
+        $mockLogger = $this->mockLogger();
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -247,7 +267,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andReturn($result);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -272,7 +295,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow(new Exception\NotFoundException());
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -298,7 +324,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -325,7 +354,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -351,7 +383,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andReturn($result);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -377,7 +412,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -404,7 +442,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -430,7 +471,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andReturn($result);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -455,7 +499,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow(new Exception\NotFoundException());
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -481,7 +528,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -508,7 +558,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -535,7 +588,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andReturn($result);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -560,7 +616,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow(new Exception\NotFoundException());
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -586,7 +645,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -613,7 +675,10 @@ class GenericControllerTest extends TestCase
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
 
         $sut = $this->setupSut($mockSl);
 
@@ -640,12 +705,18 @@ class GenericControllerTest extends TestCase
      * @param $mockQueryHandler
      * @return m\MockInterface
      */
-    protected function getMockSl($mockResponse, $mockParams, $mockQueryHandler, $handlerType = 'QueryHandlerManager')
-    {
+    protected function getMockSl(
+        $mockResponse,
+        $mockParams,
+        $mockQueryHandler,
+        $handlerType = 'QueryHandlerManager',
+        $mockLogger = null
+    ) {
         $mockSl = m::mock(PluginManager::class);
         $mockSl->shouldReceive('get')->with('response', null)->andReturn($mockResponse);
         $mockSl->shouldReceive('get')->with('params', null)->andReturn($mockParams);
         $mockSl->shouldReceive('get')->with($handlerType)->andReturn($mockQueryHandler);
+        $mockSl->shouldReceive('get')->with('Logger')->andReturn($mockLogger);
         $mockSl->shouldReceive('setController');
         return $mockSl;
     }

@@ -52,8 +52,8 @@ class DeleteTest extends CommandHandlerTestCase
         $conditionUndertaking = m::mock(ConditionUndertakingEntity::class)->makePartial();
         $conditionUndertaking->setId($command->getId());
 
-        $this->repoMap['ConditionUndertaking']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
+        $this->repoMap['ConditionUndertaking']->shouldReceive('fetchById')
+            ->with(99)
             ->andReturn($conditionUndertaking)
             ->once()
             ->shouldReceive('delete')
@@ -70,6 +70,6 @@ class DeleteTest extends CommandHandlerTestCase
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
-        $this->assertContains('Deleted', $result->getMessages());
+        $this->assertContains('Id 99 deleted', $result->getMessages());
     }
 }
