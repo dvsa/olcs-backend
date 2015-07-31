@@ -615,6 +615,7 @@ return [
 
     // ContinuationDetail
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
+    Command\ContinuationDetail\Process::class => CommandHandler\ContinuationDetail\Process::class,
 
     // Transport Manager Licence
     TransferCommand\TransportManagerLicence\UpdateForResponsibilities::class =>
