@@ -444,15 +444,13 @@ class ContactDetailsEntityTest extends EntityTester
                 'postcode' => 'LS1 2AB',
                 'countryCode' => m::mock(Country::class),
             ],
-            'phoneContacts' => [
-                [
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => '111',
-                ],
-                [
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => '222',
-                ]
+            'businessPhoneContact' => [
+                'phoneContactType' => m::mock(RefData::class),
+                'phoneNumber' => '111',
+            ],
+            'homePhoneContact' => [
+                'phoneContactType' => m::mock(RefData::class),
+                'phoneNumber' => '222',
             ],
         ];
 
@@ -488,20 +486,18 @@ class ContactDetailsEntityTest extends EntityTester
                 'postcode' => 'LS1 2AB',
                 'countryCode' => m::mock(Country::class),
             ],
-            'phoneContacts' => [
-                [
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => 'updated pn1',
-                ],
-                [
-                    'id' => 302,
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => 'updated pn2',
-                ],
-                [
-                    'phoneContactType' => m::mock(RefData::class),
-                    'phoneNumber' => '',
-                ],
+            'businessPhoneContact' => [
+                'phoneContactType' => m::mock(RefData::class),
+                'phoneNumber' => 'updated pn1',
+            ],
+            'homePhoneContact' => [
+                'id' => 302,
+                'phoneContactType' => m::mock(RefData::class),
+                'phoneNumber' => 'updated pn2',
+            ],
+            'faxPhoneContact' => [
+                'phoneContactType' => m::mock(RefData::class),
+                'phoneNumber' => '',
             ],
         ];
 
@@ -556,12 +552,12 @@ class ContactDetailsEntityTest extends EntityTester
         $this->assertEquals(2, count($phoneContacts));
 
         $this->assertEquals(
-            $data['phoneContacts'][0]['phoneNumber'],
+            $data['businessPhoneContact']['phoneNumber'],
             $entity->getPhoneContacts()->first()->getPhoneNumber()
         );
 
         $this->assertEquals(
-            $data['phoneContacts'][1]['phoneNumber'],
+            $data['homePhoneContact']['phoneNumber'],
             $entity->getPhoneContacts()->last()->getPhoneNumber()
         );
     }
