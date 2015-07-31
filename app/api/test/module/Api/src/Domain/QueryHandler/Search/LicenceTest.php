@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Search;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Search\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -20,6 +21,7 @@ use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle as VehicleEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as OtherLicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary as CompanySubsidiaryEntity;
 
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 
@@ -77,8 +79,6 @@ class LicenceTest extends QueryHandlerTestCase
 
         $licence->setOrganisation($organisation);
 
-
-
         /** @var TransportManagerLicenceEntity $person */
         $tmLicence = m::mock(TransportManagerLicenceEntity::class)->makePartial();
         $tmLicence->shouldReceive('serialize')
@@ -112,11 +112,36 @@ class LicenceTest extends QueryHandlerTestCase
 
         $licence->setLicenceVehicles($licenceVehicles);
 
+        $licence->shouldReceive('getActiveVehiclesCount')
+            ->andReturn(count($licenceVehicles));
+        $licence->shouldReceive('getPiRecordCount')
+            ->andReturn(2);
+        $licence->shouldReceive('getActiveCommunityLicences')
+            ->andReturn(['foo' => 'bar']);
+
+        /** @var CompanySubsidiaryEntity $companySubsidiary */
+        $companySubsidiary = m::mock(CompanySubsidiaryEntity::class)->makePartial();
+        $companySubsidiary->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar']);
+
+        $companySubsidiaries = [
+            $companySubsidiary
+        ];
+
+        $licence->setCompanySubsidiaries($companySubsidiaries);
+
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->shouldReceive('serialize')
             ->andReturn(['foo' => 'bar']);
-
+        $application->shouldReceive('getOutOfRepresentationDate')
+            ->andReturn('OOR');
+        $application->shouldReceive('determinePublicationNo')
+            ->andReturn('1234');
+        $application->shouldReceive('getOutOfOppositionDate')
+            ->andReturn('OOO');
+        $application->shouldReceive('hasOpposition')
+            ->andReturn(true);
         $applications = [
             $application
         ];
@@ -133,7 +158,7 @@ class LicenceTest extends QueryHandlerTestCase
         ];
 
         $licence->setConditionUndertakings($conditionUndertakings);
-        
+
         /** @var OtherLicenceEntity $otherLicence */
         $otherLicence = m::mock(OtherLicenceEntity::class)->makePartial();
         $otherLicence->shouldReceive('serialize')
@@ -165,6 +190,6 @@ class LicenceTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result',$result);
+        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result);
     }
 }
