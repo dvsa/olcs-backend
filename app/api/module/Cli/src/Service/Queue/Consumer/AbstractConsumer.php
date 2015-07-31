@@ -7,12 +7,13 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Complete as CompleteCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Failed as FailedCmd;
+use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
+use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * Abstract Queue Consumer
@@ -24,12 +25,41 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
     use ServiceLocatorAwareTrait;
 
     /**
+     * @var string the command to handle processing
+     */
+    protected $commandName = 'override_me';
+
+    /**
+     * @param QueueEntity $item
+     * @return array
+     */
+    abstract public function getCommandData(QueueEntity $item);
+
+    /**
      * Process the message item
      *
      * @param QueueEntity $item
      * @return string
      */
-    abstract public function processMessage(QueueEntity $item);
+    public function processMessage(QueueEntity $item)
+    {
+        $commandClass = $this->commandName;
+        $commandData = $this->getCommandData($item);
+        $command = $commandClass::create($commandData);
+
+        try {
+            $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
+        } catch (DomainException $e) {
+            $message = !empty($e->getMessages()) ? $e->getMessages()[0] : $e->getMessage();
+            return $this->failed($item, $message);
+        }
+
+        $message = null;
+        if (!empty($result->getMessages())) {
+            $message = $result->getMessages()[0];
+        }
+        return $this->success($item, $message);
+    }
 
     /**
      * Called when processing the message was successful
