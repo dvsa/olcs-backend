@@ -80,6 +80,7 @@ return [
         CommandHandler\Application\UpdateApplicationCompletion::class,
     TransferCommand\Application\Schedule41::class => CommandHandler\Application\Schedule41::class,
     TransferCommand\Application\Schedule41Approve::class => CommandHandler\Application\Schedule41Approve::class,
+    TransferCommand\Application\Schedule41Reset::class => CommandHandler\Application\Schedule41Reset::class,
     TransferCommand\Application\GenerateOrganisationName::class =>
         CommandHandler\Application\GenerateOrganisationName::class,
     TransferCommand\Application\PrintInterimDocument::class => CommandHandler\Application\PrintInterimDocument::class,
@@ -410,9 +411,12 @@ return [
         => CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
 
     // Domain - Schedule41
-    Command\Schedule41\CreateS4::class => CommandHandler\Schedule41\CreateS4::class,
+    Command\Schedule41\CreateS4::class
+        => CommandHandler\Schedule41\CreateS4::class,
     Command\Schedule41\ApproveS4::class
         => CommandHandler\Schedule41\ApproveS4::class,
+    Command\Schedule41\ResetS4::class
+        => CommandHandler\Schedule41\ResetS4::class,
 
     // Domain - Bus
     Command\Bus\CreateBusFee::class => CommandHandler\Bus\CreateBusFee::class,
