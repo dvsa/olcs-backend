@@ -440,19 +440,6 @@ class Licence extends AbstractLicence
         );
     }
 
-    public function canHaveCommunityLicences()
-    {
-        if ($this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
-            return true;
-        }
-
-        if ($this->isPsv() && $this->getLicenceType()->getId() === self::LICENCE_TYPE_RESTRICTED) {
-            return true;
-        }
-
-        return false;
-    }
-
     public function copyInformationFromApplication(Application $application)
     {
         $this->setLicenceType($application->getLicenceType());
@@ -486,5 +473,20 @@ class Licence extends AbstractLicence
             ->where(Criteria::expr()->isNull('ceasedDate'));
 
         return $this->getPsvDiscs()->matching($criteria);
+    }
+
+    public function canHaveLargeVehicles()
+    {
+        $allowLargeVehicles = [
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+        ];
+
+        return $this->isPsv() && in_array($this->getLicenceType()->getId(), $allowLargeVehicles);
+    }
+
+    public function canHaveCommunityLicences()
+    {
+        return ($this->isStandardInternational() || ($this->isPsv() && $this->isRestricted()));
     }
 }

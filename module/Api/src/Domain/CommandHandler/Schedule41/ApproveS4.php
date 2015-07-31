@@ -33,7 +33,7 @@ final class ApproveS4 extends AbstractCommandHandler
 
         $s4->setAgreedDate(new \DateTime());
         $s4->setIsTrueS4($command->getIsTrueS4());
-        $s4->setOutcome($this->getRepo()->getRefdataReference(S4::S4_STS_APPROVED));
+        $s4->setOutcome($this->getRepo()->getRefdataReference(S4::STATUS_APPROVED));
 
         $this->getRepo()->save($s4);
 

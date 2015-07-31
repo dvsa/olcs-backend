@@ -41,4 +41,34 @@ class LicenceOperatingCentreTest extends RepositoryTestCase
 
         $this->assertSame('RESULT', $this->sut->fetchByLicence(7634));
     }
+
+    public function testFetchByLicenceIdForOperatingCentres()
+    {
+        $qb = $this->createMockQb('{QUERY}');
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery->getArrayResult')
+            ->andReturn(['foo' => 'bar']);
+
+        $this->assertEquals(['foo' => 'bar'], $this->sut->fetchByLicenceIdForOperatingCentres(111));
+
+        $expected = implode(
+            ' ',
+            [
+                '{QUERY}',
+                'INNER JOIN loc.operatingCentre oc',
+                'INNER JOIN oc.address oca',
+                'LEFT JOIN oca.countryCode ocac',
+                'LEFT JOIN oc.complaints occ WITH occ.status = [[ecst_open]]',
+                'AND loc.licence = [[111]]',
+                'SELECT oc',
+                'SELECT oca',
+                'SELECT ocac',
+                'SELECT occ',
+                'ORDER BY oca.id ASC'
+            ]
+        );
+
+        $this->assertEquals($expected, $this->query);
+    }
 }
