@@ -72,6 +72,8 @@ class OperatingCentres extends AbstractContext implements AddressFormatterAwareI
             $newOcData[] = trim($prefix . 'Operating Centre: ' . $operatingCentreText . ' ' . $authorisationText);
         }
 
+        $context->offsetSet('operatingCentres', $newOcData);
+
         return $context;
     }
 }
