@@ -69,8 +69,8 @@ class ConditionUndertaking extends AbstractContext implements AddressFormatterAw
                 $operatingCentre = $conditionUndertaking->getOperatingCentre();
 
                 //work out if it's a licence or an oc
-                if (!empty($operatingCentre)) {
-                    $string = ' Attached to Operating Centre: ' .
+                if (!is_null($operatingCentre)) {
+                    $string .= ' Attached to Operating Centre: ' .
                         $addressFormatter->format($operatingCentre->getAddress());
                 } else {
                     $string .= ' Attached to Licence.';
