@@ -122,22 +122,22 @@ class TransportManagerApplication extends AbstractTransportManagerApplication
         }
         if (!is_null($hoursThu)) {
             if ((int) $hoursThu < 0 || (int) $hoursThu > 24) {
-                $errors[] = ['hoursThu' => [self::ERROR_WED => 'Thu must be between 0 and 24, inclusively']];
+                $errors[] = ['hoursThu' => [self::ERROR_THU => 'Thu must be between 0 and 24, inclusively']];
             }
         }
         if (!is_null($hoursFri)) {
             if ((int) $hoursFri < 0 || (int) $hoursFri > 24) {
-                $errors[] = ['hoursFri' => [self::ERROR_WED => 'Fri must be between 0 and 24, inclusively']];
+                $errors[] = ['hoursFri' => [self::ERROR_FRI => 'Fri must be between 0 and 24, inclusively']];
             }
         }
         if (!is_null($hoursSat)) {
             if ((int) $hoursSat < 0 || (int) $hoursSat > 24) {
-                $errors[] = ['hoursSat' => [self::ERROR_WED => 'Sat must be between 0 and 24, inclusively']];
+                $errors[] = ['hoursSat' => [self::ERROR_SAT => 'Sat must be between 0 and 24, inclusively']];
             }
         }
         if (!is_null($hoursSun)) {
             if ((int) $hoursSun < 0 || (int) $hoursSun > 24) {
-                $errors[] = ['hoursSun' => [self::ERROR_WED => 'Sun must be between 0 and 24, inclusively']];
+                $errors[] = ['hoursSun' => [self::ERROR_SUN => 'Sun must be between 0 and 24, inclusively']];
             }
         }
         if ($errors) {
