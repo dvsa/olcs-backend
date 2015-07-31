@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query\Expr\Join;
+use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre as Entity;
 
 /**
@@ -38,5 +40,30 @@ class LicenceOperatingCentre extends AbstractRepository
             ->setParameter('licenceId', $licenceId);
 
         return $dqb->getQuery()->getResult();
+    }
+
+    public function fetchByLicenceIdForOperatingCentres($licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->innerJoin('loc.operatingCentre', 'oc');
+        $qb->innerJoin('oc.address', 'oca');
+        $qb->leftJoin('oca.countryCode', 'ocac');
+        $qb->leftJoin('oc.complaints', 'occ', Join::WITH, $qb->expr()->eq('occ.status', ':complaintStatus'));
+        $qb->setParameter('complaintStatus', ComplaintEntity::COMPLAIN_STATUS_OPEN);
+
+        $qb->andWhere(
+            $qb->expr()->eq('loc.licence', ':licence')
+        );
+        $qb->setParameter('licence', $licenceId);
+
+        $qb->addSelect('oc');
+        $qb->addSelect('oca');
+        $qb->addSelect('ocac');
+        $qb->addSelect('occ');
+
+        $qb->orderBy('oca.id', 'ASC');
+
+        return $qb->getQuery()->getArrayResult();
     }
 }

@@ -89,6 +89,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->orX')
             ->andReturnUsing([$this, 'mockOrX']);
 
+        $this->qb->shouldReceive('addSelect')
+            ->andReturnUsing([$this, 'mockAddSelect']);
+
         $this->qb->shouldReceive('andWhere')
             ->andReturnUsing([$this, 'mockAndWhere']);
 
@@ -122,6 +125,13 @@ class RepositoryTestCase extends MockeryTestCase
         $value = $this->formatValue($value);
 
         $this->query = str_replace(':' . $name, '[[' . $value . ']]', $this->query);
+
+        return $this->qb;
+    }
+
+    public function mockAddSelect($select)
+    {
+        $this->query .= ' SELECT ' . $select;
 
         return $this->qb;
     }

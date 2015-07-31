@@ -186,6 +186,18 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     protected $documents;
 
     /**
+     * Traffic area enforcement area
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficAreaEnforcementArea",
+     *     mappedBy="trafficArea"
+     * )
+     */
+    protected $trafficAreaEnforcementAreas;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -198,6 +210,7 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
         $this->recipients = new ArrayCollection();
         $this->busRegs = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->trafficAreaEnforcementAreas = new ArrayCollection();
     }
 
     /**
@@ -674,6 +687,66 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the traffic area enforcement area
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreaEnforcementAreas
+     * @return TrafficArea
+     */
+    public function setTrafficAreaEnforcementAreas($trafficAreaEnforcementAreas)
+    {
+        $this->trafficAreaEnforcementAreas = $trafficAreaEnforcementAreas;
+
+        return $this;
+    }
+
+    /**
+     * Get the traffic area enforcement areas
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTrafficAreaEnforcementAreas()
+    {
+        return $this->trafficAreaEnforcementAreas;
+    }
+
+    /**
+     * Add a traffic area enforcement areas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreaEnforcementAreas
+     * @return TrafficArea
+     */
+    public function addTrafficAreaEnforcementAreas($trafficAreaEnforcementAreas)
+    {
+        if ($trafficAreaEnforcementAreas instanceof ArrayCollection) {
+            $this->trafficAreaEnforcementAreas = new ArrayCollection(
+                array_merge(
+                    $this->trafficAreaEnforcementAreas->toArray(),
+                    $trafficAreaEnforcementAreas->toArray()
+                )
+            );
+        } elseif (!$this->trafficAreaEnforcementAreas->contains($trafficAreaEnforcementAreas)) {
+            $this->trafficAreaEnforcementAreas->add($trafficAreaEnforcementAreas);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a traffic area enforcement areas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreaEnforcementAreas
+     * @return TrafficArea
+     */
+    public function removeTrafficAreaEnforcementAreas($trafficAreaEnforcementAreas)
+    {
+        if ($this->trafficAreaEnforcementAreas->contains($trafficAreaEnforcementAreas)) {
+            $this->trafficAreaEnforcementAreas->removeElement($trafficAreaEnforcementAreas);
         }
 
         return $this;

@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -47,6 +48,13 @@ final class UpdateLicenceHistory extends AbstractCommandHandler
 
         $this->getRepo()->save($application);
         $result->addMessage('Licence history section has been updated');
+
+        $data = [
+            'id' => $command->getId(),
+            'section' => 'licenceHistory'
+        ];
+        $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($data)));
+
         return $result;
     }
 
