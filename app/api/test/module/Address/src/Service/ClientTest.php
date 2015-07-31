@@ -25,12 +25,4 @@ class ClientTest extends MockeryTestCase
 
         $this->assertEquals('/foo/bar/cake/', $sut->getUri()->getPath());
     }
-
-    public function testSetMethod()
-    {
-        $this->setExpectedException(\Exception::class);
-
-        $sut = new Client('/foo/bar/');
-        $sut->setMethod('PUT');
-    }
 }
