@@ -45,7 +45,6 @@ class BusRegTest extends TestCase
 
         $this->mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
         $this->sm = Bootstrap::getServiceManager();
-        $this->sm->setAllowOverride(true);
         $this->em = $this->getMock(
             '\Doctrine\ORM\EntityManager',
             [
@@ -67,6 +66,15 @@ class BusRegTest extends TestCase
         $this->sut->setLogger($this->mockLogger);
         $this->sut->setServiceLocator($this->sm);
         $this->sut->setEntityManager($this->em);
+
+        $this->sm
+            ->shouldReceive('get')
+            ->with('Config')
+            ->andReturn(
+                [
+                    'entity_namespaces' => [],
+                ]
+            );
     }
     /**
      * @group service_abstract
