@@ -43,6 +43,9 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
             ->andReturn(['foo' => 'bar'])
             ->shouldReceive('canBecomeSpecialRestricted')
             ->once()
+            ->andReturn(true)
+            ->shouldReceive('isSpecialRestricted')
+            ->once()
             ->andReturn(true);
 
         $query = Qry::create(['id' => 111]);
@@ -64,7 +67,7 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
         $expected = [
             'foo' => 'bar',
             'canBecomeSpecialRestricted' => true,
-            'canUpdateLicenceType' => true,
+            'canUpdateLicenceType' => false,
             'doesChangeRequireVariation' => true
         ];
 

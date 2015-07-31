@@ -4,6 +4,7 @@
  * Document test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
@@ -12,11 +13,17 @@ use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 
 /**
- * Document test
+ * Document Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
 class DocumentTest extends RepositoryTestCase
 {
@@ -58,10 +65,10 @@ class DocumentTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('execute')
-                ->andReturn('result')
-                ->once()
-                ->getMock()
+                    ->shouldReceive('execute')
+                    ->andReturn('result')
+                    ->once()
+                    ->getMock()
             )
             ->once()
             ->getMock();
@@ -72,5 +79,40 @@ class DocumentTest extends RepositoryTestCase
             ->getMock();
 
         $this->assertEquals('result', $sut->fetchListForTm(1));
+    }
+
+    public function testFetchUnlinkedOcDocumentsForEntity()
+    {
+        $category = m::mock(Category::class)->makePartial();
+        $subCategory = m::mock(SubCategory::class)->makePartial();
+
+        $this->em->shouldReceive('getReference')
+            ->with(Category::class, Category::CATEGORY_APPLICATION)
+            ->andReturn($category);
+
+        $this->em->shouldReceive('getReference')
+            ->with(SubCategory::class, Category::DOC_SUB_CATEGORY_APPLICATION_ADVERT_DIGITAL)
+            ->andReturn($subCategory);
+
+        /** @var Document $doc1 */
+        $doc1 = m::mock(Document::class)->makePartial();
+
+        /** @var Document $doc2 */
+        $doc2 = m::mock(Document::class)->makePartial();
+        $doc2->setCategory($category);
+        $doc2->setSubCategory($subCategory);
+
+        $docs = new ArrayCollection();
+        $docs->add($doc1);
+        $docs->add($doc2);
+
+        /** @var Application $entity */
+        $entity = m::mock(Application::class)->makePartial();
+        $entity->setDocuments($docs);
+
+        $collection = $this->sut->fetchUnlinkedOcDocumentsForEntity($entity);
+
+        $this->assertEquals(1, $collection->count());
+        $this->assertEquals($doc2, $collection->first());
     }
 }

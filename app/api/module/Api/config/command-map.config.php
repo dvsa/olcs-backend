@@ -86,6 +86,12 @@ return [
     TransferCommand\Application\RefuseInterim::class => CommandHandler\Application\RefuseInterim::class,
     TransferCommand\Application\GrantInterim::class => CommandHandler\Application\GrantInterim::class,
     Command\Application\InForceInterim::class => CommandHandler\Application\InForceInterim::class,
+    TransferCommand\Application\UpdateOperatingCentres::class
+        => CommandHandler\Application\UpdateOperatingCentres::class,
+    TransferCommand\Application\DeleteOperatingCentres::class
+        => CommandHandler\Application\DeleteOperatingCentres::class,
+    Command\Application\HandleOcVariationFees::class => CommandHandler\Application\HandleOcVariationFees::class,
+    TransferCommand\Application\CreateOperatingCentre::class => CommandHandler\Application\CreateOperatingCentre::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -140,6 +146,9 @@ return [
     TransferCommand\Licence\UpdateTrafficArea::class => CommandHandler\Licence\UpdateTrafficArea::class,
     Command\Licence\VoidAllCommunityLicences::class => CommandHandler\Licence\VoidAllCommunityLicences::class,
     TransferCommand\Licence\ContinueLicence::class => CommandHandler\Licence\ContinueLicence::class,
+    TransferCommand\Licence\DeleteOperatingCentres::class => CommandHandler\Licence\DeleteOperatingCentres::class,
+    TransferCommand\Licence\CreateOperatingCentre::class => CommandHandler\Licence\CreateOperatingCentre::class,
+    TransferCommand\Licence\UpdateOperatingCentres::class => CommandHandler\Licence\UpdateOperatingCentres::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
@@ -170,6 +179,8 @@ return [
         CommandHandler\Variation\UpdateConditionUndertaking::class,
     TransferCommand\Variation\RestoreListConditionUndertaking::class =>
         CommandHandler\Variation\RestoreListConditionUndertaking::class,
+    TransferCommand\Variation\DeleteOperatingCentre::class => CommandHandler\Variation\DeleteOperatingCentre::class,
+    TransferCommand\Variation\RestoreOperatingCentre::class => CommandHandler\Variation\RestoreOperatingCentre::class,
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
@@ -382,6 +393,8 @@ return [
     Command\Application\UpdateVariationCompletion::class => CommandHandler\Application\UpdateVariationCompletion::class,
     Command\Application\CreateFee::class => CommandHandler\Application\CreateFee::class,
     Command\Application\CancelAllInterimFees::class => CommandHandler\Application\CancelAllInterimFees::class,
+    Command\Application\SetDefaultTrafficAreaAndEnforcementArea::class
+        => CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementArea::class,
 
     // Domain - Application Operating Centre
     Command\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class
@@ -582,9 +595,17 @@ return [
     // Domain - Queue
     QueueCommand\Complete::class => QueueCommandHandler\Complete::class,
     QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
-    
+
     // Transfer - TmQualification
     TransferCommand\TmQualification\Create::class => CommandHandler\TmQualification\Create::class,
     TransferCommand\TmQualification\Update::class => CommandHandler\TmQualification\Update::class,
     TransferCommand\TmQualification\Delete::class  => CommandHandler\TmQualification\Delete::class,
+    // Application Operating Centre
+    TransferCommand\ApplicationOperatingCentre\Update::class => CommandHandler\ApplicationOperatingCentre\Update::class,
+
+    // Variation Operating Centre
+    TransferCommand\VariationOperatingCentre\Update::class => CommandHandler\VariationOperatingCentre\Update::class,
+
+    // Licence Operating Centre
+    TransferCommand\LicenceOperatingCentre\Update::class => CommandHandler\LicenceOperatingCentre\Update::class,
 ];
