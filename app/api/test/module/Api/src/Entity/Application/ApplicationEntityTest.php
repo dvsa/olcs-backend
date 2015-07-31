@@ -1681,8 +1681,83 @@ class ApplicationEntityTest extends EntityTester
         $this->assertEquals('Not applicable', $oorDate);
     }
 
-    public function testGetOutOfOppositionDateNoPublicationDate()
+    public function testGetOutOfOppositionDatePsvVariation()
     {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_PSV));
+        $this->entity->setIsVariation('Y');
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    public function testGetOutOfOppositionDateGoodsNoAddedOperatingCentres()
+    {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $this->entity->setIsVariation('Y');
+
+        $aoc = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc->setAction('U');
+        $this->entity->addOperatingCentres($aoc);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    public function testGetOutOfOppositionDateGoodOperatingCentresUpdatedNoIncrease()
+    {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $this->entity->setIsVariation('Y');
+
+        $oc = new OperatingCentre();
+        $oc->setId(821);
+
+        $licence = new Licence(new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(), new RefData());
+        $this->entity->setLicence($licence);
+
+        $loc = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc);
+        $loc->setNoOfVehiclesRequired(23);
+        $licence->addOperatingCentres($loc);
+
+        $aoc = new ApplicationOperatingCentre($this->entity, $oc);
+        $aoc->setAction('U');
+        $aoc->setNoOfVehiclesRequired(23);
+        $this->entity->addOperatingCentres($aoc);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc2->setAction('A');
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    public function testGetOutOfOppositionDateIncreaseInVehicleNoPublicationDate()
+    {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $this->entity->setIsVariation('Y');
+
+        $oc = new OperatingCentre();
+        $oc->setId(821);
+
+        $licence = new Licence(new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(), new RefData());
+        $this->entity->setLicence($licence);
+
+        $loc = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc);
+        $loc->setNoOfVehiclesRequired(23);
+        $licence->addOperatingCentres($loc);
+
+        $aoc = new ApplicationOperatingCentre($this->entity, $oc);
+        $aoc->setAction('U');
+        $aoc->setNoOfVehiclesRequired(24);
+        $this->entity->addOperatingCentres($aoc);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc2->setAction('A');
+        $this->entity->addOperatingCentres($aoc2);
+
         $oorDate = $this->entity->getOutOfOppositionDate();
 
         $this->assertEquals('Unknown', $oorDate);
