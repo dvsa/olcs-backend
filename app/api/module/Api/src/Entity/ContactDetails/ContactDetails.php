@@ -210,7 +210,7 @@ class ContactDetails extends AbstractContactDetails
     }
 
     /**
-     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\OperatorContactDetails
      */
     private function updateCorrespondenceAddress(array $contactParams)
     {
@@ -224,10 +224,12 @@ class ContactDetails extends AbstractContactDetails
             $this->populateAddress($contactParams['address']);
         }
 
-        if ($contactParams['phoneContacts'] !== null) {
-            // populate phone contacts
-            $this->populatePhoneContacts($contactParams['phoneContacts']);
-        }
+        // populate phone contacts
+        $phoneContacts = array_intersect_key(
+            $contactParams,
+            array_flip(['mobilePhoneContact', 'businessPhoneContact', 'homePhoneContact', 'faxPhoneContact'])
+        );
+        $this->populatePhoneContacts($phoneContacts);
     }
 
     /**

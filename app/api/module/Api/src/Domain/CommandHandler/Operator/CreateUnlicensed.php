@@ -95,7 +95,7 @@ final class CreateUnlicensed extends AbstractCommandHandler
     {
         return ContactDetailsEntity::create(
             $this->getRepo()->getRefdataReference(ContactDetailsEntity::CONTACT_TYPE_CORRESPONDENCE_ADDRESS),
-            $this->getRepo('ContactDetails')->populateRefDataReference(
+            $this->getRepo('ContactDetails')->populateOperatorRefDataReferences(
                 $command->getContactDetails()
             )
         );
