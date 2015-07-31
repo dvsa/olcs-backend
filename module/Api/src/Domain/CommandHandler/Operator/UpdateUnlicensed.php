@@ -101,7 +101,7 @@ final class UpdateUnlicensed extends AbstractCommandHandler
     private function updateContactDetails(ContactDetailsEntity $contactDetails, CommandInterface $command)
     {
         $contactDetails->update(
-            $this->getRepo('ContactDetails')->populateRefDataReference(
+            $this->getRepo('ContactDetails')->populateOperatorRefDataReferences(
                 $command->getContactDetails()
             )
         );
