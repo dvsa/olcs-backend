@@ -1661,4 +1661,12 @@ return array(
             )
         ),
     ),
+    'traffic_area_enforcement_area' => array(
+        'traffic_area_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TrafficArea',
+                'property' => 'trafficAreaEnforcementArea'
+            )
+        )
+    )
 );
