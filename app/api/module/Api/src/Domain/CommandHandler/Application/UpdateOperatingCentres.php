@@ -48,8 +48,6 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
     private $totals;
 
-    private $messages = [];
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->variationHelper = $serviceLocator->getServiceLocator()->get('VariationOperatingCentreHelper');

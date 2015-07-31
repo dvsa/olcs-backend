@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Domain\Command\Application\SetDefaultTrafficAreaAndEnforcementArea as Cmd;
+use Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea;
 
 /**
  * Set Default Traffic Area And Enforcement Area
@@ -56,9 +57,7 @@ final class SetDefaultTrafficAreaAndEnforcementArea extends AbstractCommandHandl
 
         if ($application->getNiFlag() === 'Y') {
             if ($setTa) {
-                $application->getLicence()->setTrafficArea(
-                    $this->getRepo()->getReference(TrafficArea::class, TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE)
-                );
+                $this->updateTrafficArea($application, TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
             }
 
             if ($setEa) {
@@ -68,40 +67,53 @@ final class SetDefaultTrafficAreaAndEnforcementArea extends AbstractCommandHandl
                         EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE
                     )
                 );
-            }
-        } else {
 
-            if ($application->getOperatingCentres()->count() !== 1) {
-                return $this->result;
+                $this->result->addMessage('Enforcement area updated');
+                $this->getRepo()->save($application);
             }
 
-            $operatingCentre = $this->getRepo('OperatingCentre')->fetchById($command->getOperatingCentre());
+            return $this->result;
+        }
 
-            $postcode = $operatingCentre->getAddress()->getPostcode();
+        if ($application->getOperatingCentres()->count() !== 1) {
+            return $this->result;
+        }
 
-            if (!empty($postcode)) {
+        $operatingCentre = $this->getRepo('OperatingCentre')->fetchById($command->getOperatingCentre());
 
-                if ($setTa) {
-                    $trafficArea = $this->getAddressService()
-                        ->fetchTrafficAreaByPostcode($postcode, $this->getRepo('AdminAreaTrafficArea'));
+        $postcode = $operatingCentre->getAddress()->getPostcode();
 
-                    $application->getLicence()->setTrafficArea($trafficArea);
-                }
+        if (!empty($postcode)) {
 
-                if ($setEa) {
-                    $enforcementArea = $this->getAddressService()
-                        ->fetchEnforcementAreaByPostcode($postcode, $this->getRepo('PostcodeEnforcementArea'));
+            if ($setTa) {
+                $trafficArea = $this->getAddressService()
+                    ->fetchTrafficAreaByPostcode($postcode, $this->getRepo('AdminAreaTrafficArea'));
 
-                    $application->getLicence()->setEnforcementArea($enforcementArea);
-                }
+                $this->updateTrafficArea($application, $trafficArea->getId());
+            }
+
+            if ($setEa) {
+                $enforcementArea = $this->getAddressService()
+                    ->fetchEnforcementAreaByPostcode($postcode, $this->getRepo('PostcodeEnforcementArea'));
+
+                $application->getLicence()->setEnforcementArea($enforcementArea);
+
+                $this->result->addMessage('Enforcement area updated');
+                $this->getRepo()->save($application);
             }
         }
 
-        $this->getRepo()->save($application);
-
-        $this->result->addMessage('Traffic area updated');
-        $this->result->addMessage('Enforcement area updated');
-
         return $this->result;
+    }
+
+    protected function updateTrafficArea(Application $application, $trafficArea)
+    {
+        $data = [
+            'id' => $application->getLicence()->getId(),
+            'version' => $application->getLicence()->getVersion(),
+            'trafficArea' => $trafficArea
+        ];
+
+        $this->result->merge($this->handleSideEffect(UpdateTrafficArea::create($data)));
     }
 }
