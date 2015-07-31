@@ -34,4 +34,6 @@ class TransportManagerApplication extends AbstractTransportManagerApplication
     const STATUS_OPERATOR_SIGNED = 'tmap_st_operator_signed';
     const STATUS_POSTAL_APPLICATION = 'tmap_st_postal_application';
     const STATUS_RECEIVED = 'tmap_st_received';
+
+    const ERROR_TM_EXIST = 'tm_exist';
 }

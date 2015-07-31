@@ -182,4 +182,22 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(['user' => 73]);
         $sut->applyListFilters($mockDqb, $query);
     }
+
+    public function testFetchByTmAndApplication()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
+
+        $mockQb->shouldReceive('expr->eq')->with('tma.transportManager', ':tmId')->once()->andReturn('EXPR1');
+        $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('tmId', 1)->once();
+
+        $mockQb->shouldReceive('expr->eq')->with('tma.application', ':applicationId')->once()->andReturn('EXPR2');
+        $mockQb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('applicationId', 2)->once();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('RESULT');
+        $this->assertEquals('RESULT', $this->sut->fetchByTmAndApplication(1, 2));
+    }
 }

@@ -140,4 +140,16 @@ class TransportManagerApplication extends AbstractRepository
             ->with('application', 'a')
             ->with('a.licence', 'l');
     }
+
+    public function fetchByTmAndApplication($tmId, $applicationId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq($this->alias .'.transportManager', ':tmId'))
+            ->setParameter('tmId', $tmId);
+        $qb->andWhere($qb->expr()->eq($this->alias .'.application', ':applicationId'))
+            ->setParameter('applicationId', $applicationId);
+
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -78,4 +78,22 @@ class UserTest extends RepositoryTestCase
 
         $sut->buildDefaultListQuery($mockQb, $mockQi);
     }
+
+    public function testFetchForTma()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('u')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('u.contactDetails', 'cd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('cd.person', 'cdp')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('u.transportManager', 'tm')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('byId')->with(1)->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getSingleResult')->once()->andReturn('RESULT');
+
+        $this->assertSame('RESULT', $this->sut->fetchForTma(1));
+    }
 }
