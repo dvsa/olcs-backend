@@ -82,7 +82,7 @@ final class Schedule41 extends AbstractCommandHandler implements TransactionedIn
                     CreateApplicationOperatingCentre::create(
                         [
                             'application' => $application,
-                            's4' => $s4,
+                            's4' => $s4Result->getId('s4'),
                             'operatingCentre' => $licenceOperatingCentre->getOperatingCentre(),
                             'action' => 'A',
                             'adPlaced' => 'N',
@@ -110,7 +110,7 @@ final class Schedule41 extends AbstractCommandHandler implements TransactionedIn
                                 'attachedTo' => ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE,
                                 'isDraft' => 'Y',
                                 'isFulfilled' => 'N',
-                                's4' => $s4,
+                                's4' => $s4Result->getId('s4'),
                                 'notes' => $conditionUndertaking->getNotes()
                             ]
                         )
