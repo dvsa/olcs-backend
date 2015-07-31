@@ -7,8 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * Document
@@ -58,5 +61,31 @@ class Document extends AbstractRepository
             ->orderBy($this->alias . '.id', 'DESC');
 
         return $qb->getQuery()->execute();
+    }
+
+    /**
+     * @param ApplicationEntity|LicenceEntity $entity
+     * @return mixed
+     */
+    public function fetchUnlinkedOcDocumentsForEntity($entity)
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->isNull('operatingCentre')
+        );
+        $criteria->andWhere(
+            $criteria->expr()->eq(
+                'category',
+                $this->getCategoryReference(CategoryEntity::CATEGORY_APPLICATION)
+            )
+        );
+        $criteria->andWhere(
+            $criteria->expr()->eq(
+                'subCategory',
+                $this->getSubCategoryReference(CategoryEntity::DOC_SUB_CATEGORY_APPLICATION_ADVERT_DIGITAL)
+            )
+        );
+
+        return $entity->getDocuments()->matching($criteria);
     }
 }

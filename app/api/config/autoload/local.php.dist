@@ -12,6 +12,11 @@
  * credentials from accidentally being committed into version control.
  */
 return array(
+    'address' => [
+        'client' => [
+            'baseuri' => 'http://postcode.cit.olcs.mgt.mtpdvsa/'
+        ]
+    ],
     'elastic_search' => array(
         'host'=> 'scdv-db02.sc.npm',
         'port'=> '9200'
