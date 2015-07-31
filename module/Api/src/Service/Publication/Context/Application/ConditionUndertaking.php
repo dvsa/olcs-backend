@@ -4,8 +4,10 @@ namespace Dvsa\Olcs\Api\Service\Publication\Context\Application;
 
 use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareTrait;
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class ConditionUndertaking
@@ -32,11 +34,14 @@ class ConditionUndertaking extends AbstractContext implements AddressFormatterAw
     public function provide(PublicationLink $publication, \ArrayObject $context)
     {
         $data = [];
+
+        /** @var ArrayCollection $conditionUndertakings */
         $conditionUndertakings = $publication->getApplication()->getConditionUndertakings();
 
         if ($conditionUndertakings->count()) {
             $addressFormatter = $this->getAddressFormatter();
 
+            /** @var ConditionUndertakingEntity $conditionUndertaking */
             foreach ($conditionUndertakings as $conditionUndertaking) {
                 $action = $conditionUndertaking->getAction();
 
