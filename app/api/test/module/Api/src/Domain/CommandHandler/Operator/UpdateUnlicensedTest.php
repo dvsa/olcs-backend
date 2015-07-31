@@ -98,7 +98,6 @@ class UpdateUnlicensedTest extends CommandHandlerTestCase
                 'town' => 'atown',
                 'postcode' => 'pc',
             ],
-            'phoneContacts' => [],
         ];
 
         $data = [
@@ -125,7 +124,7 @@ class UpdateUnlicensedTest extends CommandHandlerTestCase
             ->once();
 
         $this->repoMap['ContactDetails']
-            ->shouldReceive('populateRefDataReference')
+            ->shouldReceive('populateOperatorRefDataReferences')
             ->with($contactDetailsData)
             ->andReturn($contactDetailsData);
 

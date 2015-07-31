@@ -80,17 +80,24 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
                 'town' => 'atown',
                 'postcode' => 'pc',
             ],
-            'phoneContacts' => [
-                [
-                    'phoneNumber' => '01234567890',
-                    'phoneContactType' => 'phone_t_tel',
-                ],
-                [
-                    'phoneNumber' => '01234567891',
-                    'phoneContactType' => 'phone_t_fax',
-                ]
+            'businessPhoneContact' => [
+                'phoneNumber' => '01234567890',
+                'phoneContactType' => 'phone_t_tel',
+            ],
+            'faxPhoneContact' => [
+                'phoneNumber' => '01234567891',
+                'phoneContactType' => 'phone_t_fax',
             ],
         ];
+
+        // map ref data references for phone contact types
+        $contactDetails = $contactDetailsData;
+        $contactDetails['businessPhoneContact']['phoneContactType'] = $this->mapRefData(
+            $contactDetails['businessPhoneContact']['phoneContactType']
+        );
+        $contactDetails['faxPhoneContact']['phoneContactType'] = $this->mapRefData(
+            $contactDetails['faxPhoneContact']['phoneContactType']
+        );
 
         $data = [
             'name' => 'name',
@@ -115,13 +122,8 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
             )
             ->twice(); // saved twice due to licence no. generation
 
-        // map ref data references for phone contact types
-        $contactDetails = $contactDetailsData;
-        foreach ($contactDetails['phoneContacts'] as &$pc) {
-            $pc['phoneContactType'] = $this->mapRefData($pc['phoneContactType']);
-        }
         $this->repoMap['ContactDetails']
-            ->shouldReceive('populateRefDataReference')
+            ->shouldReceive('populateOperatorRefDataReferences')
             ->with($contactDetailsData)
             ->andReturn($contactDetails);
 
