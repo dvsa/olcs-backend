@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 use Dvsa\Olcs\Transfer\Command\Publication\Application as ApplicationCmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -81,7 +82,7 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
                 return PublicationSectionEntity::APP_WITHDRAWN_SECTION;
         }
 
-        throw new \Exception('Could not match to a publication section');
+        throw new ForbiddenException('Could not match to a publication section');
     }
 
     /**
