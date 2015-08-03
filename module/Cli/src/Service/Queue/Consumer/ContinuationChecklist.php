@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process as Cmd;
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 
 /**
  * Continuation Checklist Queue Consumer

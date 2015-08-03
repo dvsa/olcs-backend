@@ -50,13 +50,13 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
         try {
             $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
         } catch (DomainException $e) {
-            $message = !empty($e->getMessages()) ? $e->getMessages()[0] : $e->getMessage();
+            $message = !empty($e->getMessages()) ? implode(', ', $e->getMessages()) : $e->getMessage();
             return $this->failed($item, $message);
         }
 
         $message = null;
         if (!empty($result->getMessages())) {
-            $message = $result->getMessages()[0];
+            $message = implode(', ', $result->getMessages());
         }
         return $this->success($item, $message);
     }
