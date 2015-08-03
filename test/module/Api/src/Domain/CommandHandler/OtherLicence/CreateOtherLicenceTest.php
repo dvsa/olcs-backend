@@ -16,6 +16,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\OtherLicence\CreateOtherLicence as Cmd;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as OtherLicenceEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 
 /**
  * Create Other Licence Test
@@ -72,6 +73,12 @@ class CreateOtherLicenceTest extends CommandHandlerTestCase
                     $savedOtherLicence = $otherLicence;
                 }
             );
+
+        $this->expectedSideEffect(
+            UpdateApplicationCompletionCmd::class,
+            ['id' => 1, 'section' => 'licenceHistory'],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 
