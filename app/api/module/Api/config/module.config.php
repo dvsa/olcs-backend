@@ -199,6 +199,7 @@ return [
             'Queue' => RepositoryFactory::class,
             'AdminAreaTrafficArea' => RepositoryFactory::class,
             'PostcodeEnforcementArea' => RepositoryFactory::class,
+            'PiVenue' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
