@@ -20,6 +20,8 @@ class FstandingCapitalReserves extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
 
+    protected $extraRepos = ['Organisation'];
+
     /**
      * @var \Dvsa\Olcs\Api\Service\FinancialStandingHelperService $helper
      */
@@ -40,9 +42,10 @@ class FstandingCapitalReserves extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         $auths = [];
-        $organisation = $query->getOrganisation();
 
-        $applications = $this->getRepo()->fetchActiveForOrganisation($organisation->getId());
+        $organisation = $this->getRepo('Organisation')->fetchById($query->getOrganisation());
+
+        $applications = $this->getRepo('Application')->fetchActiveForOrganisation($organisation->getId());
         if (!empty($applications)) {
             foreach ($applications as $app) {
                 // filter new apps only
@@ -50,7 +53,7 @@ class FstandingCapitalReserves extends AbstractQueryHandler
                     continue;
                 }
                 $auths[] = [
-                    'type' => $app->getTypeOfLicence()->getId(),
+                    'type' => $app->getLicenceType()->getId(),
                     'count' => $app->getTotAuthVehicles(),
                     'category' => $app->getGoodsOrPsv()->getId(),
                 ];
@@ -61,7 +64,7 @@ class FstandingCapitalReserves extends AbstractQueryHandler
         if (!empty($licences)) {
             foreach ($licences as $licence) {
                 $auths[] = [
-                    'type' => $licence->getTypeOfLicence()->getId(),
+                    'type' => $licence->getLicenceType()->getId(),
                     'count' => $licence->getTotAuthVehicles(),
                     'category' => $licence->getGoodsOrPsv()->getId(),
                 ];

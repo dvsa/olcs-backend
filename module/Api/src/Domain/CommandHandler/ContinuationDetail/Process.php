@@ -99,7 +99,7 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
             'goodsOrPsv' => $licence->getGoodsOrPsv()->getId(),
             'licenceType' => $licence->getLicenceType()->getId(),
             'niFlag' => $licence->getNiFlag(),
-            // 'organisation' => $licence->getOrganisation()->getId(),
+            'organisation' => $licence->getOrganisation()->getId(),
         ];
 
         $storedFile = $this->getDocumentGenerator()->generateAndStore($template, $query);

@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\Process as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\Document\DocumentGenerator as DocGenerator;
@@ -43,6 +44,9 @@ class ProcessTest extends CommandHandlerTestCase
         $this->references = [
             Licence::class => [
                 7 => m::mock(Licence::class)->makePartial(),
+            ],
+            Organisation::class => [
+                1 => m::mock(Organisation::class)->makePartial(),
             ],
         ];
 
@@ -83,6 +87,7 @@ class ProcessTest extends CommandHandlerTestCase
         $licenceId = 7;
         $storedFileId = 99;
         $documentId = 101;
+        $organisationId = 1;
 
         $data = [
             'id' => $id,
@@ -95,6 +100,9 @@ class ProcessTest extends CommandHandlerTestCase
             ->setId($id)
             ->setStatus($this->mapRefData(ContinuationDetail::STATUS_PRINTING))
             ->setLicence($this->mapReference(Licence::class, $licenceId));
+        $continuationDetail
+            ->getLicence()
+            ->setOrganisation($this->mapReference(Organisation::class, $organisationId));
 
         $this->repoMap['ContinuationDetail']
             ->shouldReceive('fetchUsingId')
@@ -120,7 +128,7 @@ class ProcessTest extends CommandHandlerTestCase
                     'goodsOrPsv' => Licence::LICENCE_CATEGORY_PSV,
                     'licenceType' => Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
                     'niFlag' => 'N',
-                    // 'organisation' => $licence->getOrganisation()->getId(),
+                    'organisation' => $organisationId,
                 ]
             )
             ->once()
