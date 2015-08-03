@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ContinuationDetail;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\Process as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
@@ -158,7 +157,7 @@ class ProcessTest extends CommandHandlerTestCase
             $docResult
         );
 
-        $document = m::mock(Document::class)->makePartial();
+        $document = m::mock();
         $this->repoMap['Document']
             ->shouldReceive('fetchById')
             ->with($documentId)
