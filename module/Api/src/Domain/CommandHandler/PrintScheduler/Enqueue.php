@@ -36,7 +36,7 @@ final class Enqueue extends AbstractCommandHandler
             $this->getRepo()->getSubCategoryReference(Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST)
         );
         $document->setIsExternal(false);
-        $document->setIsReadOnly(true);
+        $document->setIsReadOnly('Y');
         $document->setIssuedDate(new \Datetime());
 
         $document->setIdentifier($command->getFileIdentifier());

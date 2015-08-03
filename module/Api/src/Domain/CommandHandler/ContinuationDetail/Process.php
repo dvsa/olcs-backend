@@ -50,8 +50,10 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
             'licence' => $continuationDetail->getLicence()->getId(),
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
-            'isReadOnly'  => true,
+            'isReadOnly'  => 'Y',
             'isExternal'  => false,
+            'isScan' => false,
+            // of the three boolean flags, only isReadOnly is mapped as YesNoNull :-/
         ];
         $documentResult = $this->handleSideEffect(DispatchDocument::create($data));
         $result->merge($documentResult);
