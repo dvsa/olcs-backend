@@ -165,7 +165,6 @@ class ProcessTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($document);
 
-
         $this->repoMap['ContinuationDetail']
             ->shouldReceive('save')
             ->with($continuationDetail)
