@@ -310,11 +310,19 @@ class ApplicationTest extends RepositoryTestCase
             ->andReturnSelf()
             ->once()
             ->shouldReceive('with')
+            ->with('l_oc_oc.address', 'l_oc_oc_a')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
             ->with('operatingCentres', 'a_oc')
             ->andReturnSelf()
             ->once()
             ->shouldReceive('with')
             ->with('a_oc.operatingCentre', 'a_oc_oc')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('a_oc_oc.address', 'a_oc_oc_a')
             ->andReturnSelf()
             ->once()
             ->shouldReceive('byId')
@@ -335,8 +343,7 @@ class ApplicationTest extends RepositoryTestCase
         $this->assertEquals('RESULT', $result);
     }
 
-
-    public function testFetchActiveForForOrganisation()
+    public function testFetchActiveForOrganisation()
     {
         $organisationId = 123;
 
@@ -381,5 +388,81 @@ class ApplicationTest extends RepositoryTestCase
         $result = $this->sut->fetchActiveForOrganisation($organisationId);
 
         $this->assertEquals('RESULT', $result);
+    }
+
+    public function testFetchWithLicence()
+    {
+        $applicationId = 1;
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $qb->shouldReceive('getQuery->getSingleResult')
+            ->andReturn('RESULT');
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('licence', 'l')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('byId')
+            ->with($applicationId)
+            ->once()
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Application::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchWithLicence($applicationId);
+        $this->assertEquals('RESULT', $result);
+    }
+
+    public function testApplyListJoins()
+    {
+        $this->setUpSut(ApplicationRepo::class, true);
+
+        $this->sut->shouldReceive('getQueryBuilder')->with()->once()->andReturnSelf();
+        $this->sut->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $this->sut->applyListJoins($mockQb);
+    }
+
+    public function testApplyListFilters()
+    {
+        $this->setUpSut(ApplicationRepo::class, true);
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->eq')->with('l.organisation', ':organisation')->once()->andReturn('EXPR1');
+        $mockQb->shouldReceive('setParameter')->with('organisation', 723)->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+
+        $mockQuery = m::mock(QueryInterface::class);
+        $mockQuery->shouldReceive('getOrganisation')->with()->andReturn(723);
+
+        $this->sut->applyListFilters($mockQb, $mockQuery);
+    }
+
+    public function testFetchWithTmLicences()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('a')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.tmLicences', 'ltml')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('byId')->with(1)->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
+        $this->assertEquals(['RESULT'], $this->sut->fetchWithTmLicences(1));
     }
 }

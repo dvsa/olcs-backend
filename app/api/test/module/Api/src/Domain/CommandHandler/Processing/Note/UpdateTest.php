@@ -11,8 +11,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Processing\Note\Update as UpdateCommandH
 use Dvsa\Olcs\Transfer\Command\Processing\Note\Update as UpdateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\Note;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use ZfcRbac\Service\AuthorizationService;
 
 use Dvsa\Olcs\Api\Entity;
 
@@ -28,6 +30,17 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function setUp()
     {
+        $user = new UserEntity();
+        $user->setId(1);
+
+        $as = m::mock(AuthorizationService::class);
+        $as->shouldReceive('getIdentity')->once()->andReturnSelf();
+        $as->shouldReceive('getUser')->once()->andReturn($user);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => $as
+        ];
+
         $this->sut = new UpdateCommandHandler();
         $this->mockRepo('Note', Note::class);
 
@@ -70,7 +83,8 @@ class UpdateTest extends CommandHandlerTestCase
         $data = [
             'id' => $id,
             'version' => $version,
-            'comment' => 'my comment update'
+            'comment' => 'my comment update',
+            'priority' => '1'
         ];
 
         $command = UpdateCommand::create($data);
@@ -83,25 +97,10 @@ class UpdateTest extends CommandHandlerTestCase
             ->with($id, \Doctrine\Orm\Query::HYDRATE_OBJECT, $version)
             ->andReturn(
                 m::mock(NoteEntity::class)
-                    ->shouldReceive('setComment')
-                    ->with($data['comment'])
-                    // application note
-                    ->shouldReceive('getApplication')
-                    ->andReturn(
-                        m::mock(Application::class)
-                            ->shouldReceive('getId')
-                            ->andReturn($applicationId)
-                            ->getMock()
-                    )
-                    // note type is application
-                    ->shouldReceive('getNoteType')
-                    ->andReturn(
-                        m::mock(Entity\System\RefData::class)
-                            ->shouldReceive('getId')
-                            ->andReturn(NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER)
-                            ->getMock()
-                    )
-                    // Get ID
+
+                    ->shouldReceive('setPriority')
+                    ->with(1)
+
                     ->shouldreceive('getId')
                     ->andReturn($id)
 

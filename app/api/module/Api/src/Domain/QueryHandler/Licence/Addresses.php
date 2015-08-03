@@ -23,6 +23,19 @@ class Addresses extends AbstractQueryHandler
     {
         $licence = $this->getRepo()->fetchWithAddressesUsingId($query);
 
-        return $licence;
+        return $this->result(
+            $licence,
+            [
+                'correspondenceCd' => [
+                    'address' => [
+                        'countryCode',
+                    ],
+                    'contactType',
+                    'phoneContacts' => [
+                        'phoneContactType',
+                    ],
+                ],
+            ]
+        );
     }
 }

@@ -25,10 +25,8 @@ final class ComplaintList extends AbstractQueryHandler
                     'complainantContactDetails' => [
                         'person'
                     ],
-                    'ocComplaints' => [
-                        'operatingCentre' => [
-                            'address'
-                        ]
+                    'operatingCentres' => [
+                        'address'
                     ]
                 ]
             ),

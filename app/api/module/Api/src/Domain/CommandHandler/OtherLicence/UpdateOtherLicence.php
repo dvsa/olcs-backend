@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 
 /**
  * Update Other Licence
@@ -38,6 +39,14 @@ final class UpdateOtherLicence extends AbstractCommandHandler
 
         $this->getRepo()->save($otherLicence);
         $result->addMessage('Other licence record has been updated');
+        $application = $otherLicence->getApplication();
+        if ($application) {
+            $data = [
+                'id' => $application->getId(),
+                'section' => 'licenceHistory'
+            ];
+            $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($data)));
+        }
         return $result;
     }
 }

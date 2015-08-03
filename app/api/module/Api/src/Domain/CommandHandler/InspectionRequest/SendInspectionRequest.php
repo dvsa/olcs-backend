@@ -79,6 +79,7 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
             $translateToWelsh = $inspectionRequest['licence']['translateToWelsh'];
         }
         $message->setTranslateToWelsh($translateToWelsh);
+        $message->setHtml(false);
 
         $variables = $this->populateInspectionRequestVariables($inspectionRequest, $message->getLocale());
         $this->sendEmailTemplate(
@@ -171,7 +172,9 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
 
     protected function getLicenceType($inspectionRequest, $locale)
     {
-        if (!empty($inspectionRequest['application'])) {
+        $licenceType = '';
+        if (!empty($inspectionRequest['application']) &&
+            isset($inspectionRequest['application']['licenceType']['id'])) {
             $licenceType =  $this->licenceTypes[$locale][$inspectionRequest['application']['licenceType']['id']];
         } elseif (isset($inspectionRequest['licence']['licenceType']['id'])) {
             $licenceType =  $this->licenceTypes[$locale][$inspectionRequest['licence']['licenceType']['id']];

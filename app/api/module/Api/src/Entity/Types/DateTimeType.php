@@ -7,8 +7,10 @@
  */
 namespace Dvsa\Olcs\Api\Entity\Types;
 
+use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\DateTimeType as DoctrineDateTimeType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Custom date time type
@@ -49,5 +51,15 @@ class DateTimeType extends DoctrineDateTimeType
         }
 
         return $val;
+    }
+
+    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    {
+        if ($value !== null && !($value instanceof \DateTime)) {
+            $value = new DateTime($value);
+        }
+
+        return ($value !== null)
+            ? $value->format($platform->getDateTimeFormatString()) : null;
     }
 }

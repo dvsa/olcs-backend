@@ -2,8 +2,10 @@
 return array(
     // This should be an array of module namespaces used in the application.
     'modules' => [
+        'Dvsa\Olcs\Address',
         'Dvsa\Olcs\Snapshot',
         'Dvsa\Olcs\Email',
+        'Dvsa\Olcs\CompaniesHouse',
         'Dvsa\Jackrabbit\Client',
         'ZfcRbac',
         'Dvsa\Olcs\Transfer',
@@ -14,6 +16,7 @@ return array(
         'Olcs\Db',
         'Dvsa\Olcs\Api',
         'Dvsa\Olcs\Cli',
+        'Soflomo\Purifier'
     ],
     // These are various options for the listeners attached to the ModuleManager
     'module_listener_options' => array(

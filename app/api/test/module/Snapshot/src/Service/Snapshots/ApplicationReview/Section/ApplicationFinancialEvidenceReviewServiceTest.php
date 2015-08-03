@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 use OlcsTest\Bootstrap;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -110,6 +111,11 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
             ]
         ];
 
+        $document1 = m::mock(Document::class)->makePartial();
+        $document1->setFilename('foo.txt');
+        $document2 = m::mock(Document::class)->makePartial();
+        $document2->setFilename('bar.txt');
+
         $qhManager = m::mock();
         $qhManager->shouldReceive('handleQuery')
             ->andReturn(
@@ -119,12 +125,8 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
                         'vehicles' => 987,
                     ],
                     'documents' => [
-                        [
-                            'filename' => 'foo.txt'
-                        ],
-                        [
-                            'filename' => 'bar.txt'
-                        ]
+                        $document1,
+                        $document2
                     ]
                 ]
             );

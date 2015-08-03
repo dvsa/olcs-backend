@@ -2,6 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Api\Entity\Application\S4;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
@@ -9,6 +13,9 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationComplet
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Mockery as m;
 
 /**
@@ -18,17 +25,22 @@ use Mockery as m;
  */
 class ApplicationEntityTest extends EntityTester
 {
-    public function setUp()
-    {
-        $this->entity = $this->instantiate($this->entityClass);
-    }
-
     /**
      * Define the entity to test
      *
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    /**
+     * @var Entity
+     */
+    protected $entity;
+
+    public function setUp()
+    {
+        $this->entity = $this->instantiate($this->entityClass);
+    }
 
     public function dataProviderTestHasUpgrade()
     {
@@ -209,8 +221,11 @@ class ApplicationEntityTest extends EntityTester
     {
         $sut = m::mock(Entity::class)->makePartial();
 
+        $application = m::mock(Application::class)->makePartial();
+        $oc = m::mock(OperatingCentre::class)->makePartial();
+
         foreach ($operatingCenterActions as $action) {
-            $applicationOperatingCentre = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre();
+            $applicationOperatingCentre = new ApplicationOperatingCentre($application, $oc);
             $applicationOperatingCentre->setAction($action);
             $centres[] = $applicationOperatingCentre;
         }
@@ -233,7 +248,7 @@ class ApplicationEntityTest extends EntityTester
             list($id, $noOfTrailersRequired, $noOfVehiclesRequired) = $values;
             $oc = new \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre();
             $oc->setId($id);
-            $aoc = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre();
+            $aoc = new ApplicationOperatingCentre(m::mock(Application::class)->makePartial(), $oc);
             $aoc->setOperatingCentre($oc);
             $aoc->setNoOfTrailersRequired($noOfTrailersRequired);
             $aoc->setNoOfVehiclesRequired($noOfVehiclesRequired);
@@ -634,6 +649,40 @@ class ApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider canCreateCaseProvider
+     */
+    public function testCanCreateCase($status, $licNo, $expected)
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+
+        $sut->shouldReceive('getStatus->getId')->once()->andReturn($status);
+        $sut->shouldReceive('getLicence->getLicNo')->andReturn($licNo);
+        $this->assertEquals($expected, $sut->canCreateCase());
+    }
+
+    public function canCreateCaseProvider()
+    {
+        $licNo = 12345;
+
+        return [
+            [Entity::APPLICATION_STATUS_NOT_SUBMITTED, null, false],
+            [Entity::APPLICATION_STATUS_GRANTED, null, false],
+            [Entity::APPLICATION_STATUS_UNDER_CONSIDERATION, null, false],
+            [Entity::APPLICATION_STATUS_VALID, null, false],
+            [Entity::APPLICATION_STATUS_WITHDRAWN, null, false],
+            [Entity::APPLICATION_STATUS_REFUSED, null, false],
+            [Entity::APPLICATION_STATUS_NOT_TAKEN_UP, null, false],
+            [Entity::APPLICATION_STATUS_NOT_SUBMITTED, $licNo, false],
+            [Entity::APPLICATION_STATUS_GRANTED, $licNo, true],
+            [Entity::APPLICATION_STATUS_UNDER_CONSIDERATION, $licNo, true],
+            [Entity::APPLICATION_STATUS_VALID, $licNo, true],
+            [Entity::APPLICATION_STATUS_WITHDRAWN, $licNo, true],
+            [Entity::APPLICATION_STATUS_REFUSED, $licNo, true],
+            [Entity::APPLICATION_STATUS_NOT_TAKEN_UP, $licNo, true],
+        ];
+    }
+
+    /**
      * @dataProvider goodsOrPsvHelperProvider
      */
     public function testIsGoodsAndIsPsvHelperMethods($goodsOrPsv, $isGoods, $isPsv)
@@ -787,21 +836,28 @@ class ApplicationEntityTest extends EntityTester
     public function testGetOcForInspectionRequest()
     {
         $oc1 = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->once()
             ->shouldReceive('getAction')
             ->once()
             ->andReturn('A')
             ->shouldReceive('getOperatingCentre')
-            ->andReturn('oc1')
-            ->once()
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(1)
+                ->twice()
+                ->getMock()
+            )
             ->getMock();
 
         $oc2 = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(2)
-            ->once()
+            ->shouldReceive('getOperatingCentre')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(2)
+                ->once()
+                ->getMock()
+            )
             ->shouldReceive('getAction')
             ->andReturn('D')
             ->once()
@@ -810,12 +866,14 @@ class ApplicationEntityTest extends EntityTester
         $mockApplicationOperatingCentres = [$oc1, $oc2];
 
         $oc3 = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(3)
-            ->once()
             ->shouldReceive('getOperatingCentre')
-            ->andReturn('oc3')
-            ->once()
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(3)
+                ->twice()
+                ->getMock()
+            )
             ->getMock();
 
         $mockLicenceOperatingCentres = [$oc3];
@@ -836,7 +894,9 @@ class ApplicationEntityTest extends EntityTester
             ->getMock();
 
         $result = $sut->getOcForInspectionRequest();
-        $this->assertEquals(['oc1', 'oc3'], $result);
+        $this->assertEquals(count($result), 2);
+        $this->assertEquals($result[0]->getId(), 1);
+        $this->assertEquals($result[1]->getId(), 3);
     }
 
     public function testGetVariationCompletionNotVariation()
@@ -862,5 +922,1089 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertEquals(1, $result['operating_centres']);
         $this->assertEquals(2, $result['addresses']);
+    }
+
+    /**
+     * @dataProvider niFlagProvider
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function testGetFeeTrafficAreaIdWithLicence($niFlag, $unused)
+    {
+        $trafficArea = m::mock(TrafficArea::class)
+            ->makePartial()
+            ->setId('Foo');
+        $licence = m::mock(Licence::class)
+            ->makePartial()
+            ->setTrafficArea($trafficArea);
+
+        $this->entity->setLicence($licence);
+
+        $this->entity->setNiFlag($niFlag);
+
+        $this->assertEquals('Foo', $this->entity->getFeeTrafficAreaId());
+    }
+
+    /**
+     * @dataProvider niFlagProvider
+     */
+    public function testGetFeeTrafficAreaIdNoLicence($niFlag, $expected)
+    {
+        $licence = m::mock(Licence::class)->makePartial();
+
+        $this->entity->setLicence($licence);
+
+        $this->entity->setNiFlag($niFlag);
+
+        $this->assertEquals($expected, $this->entity->getFeeTrafficAreaId());
+    }
+
+    public function niFlagProvider()
+    {
+        return [
+            ['Y', 'N'],
+            ['N', null],
+        ];
+    }
+
+    public function testGetActiveVehicles()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getLicenceVehicles->matching')
+            ->andReturn('foo');
+
+        $this->assertEquals('foo', $application->getActiveVehicles());
+    }
+
+    public function testGetSectionsRequiringAttention()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $statuses = [
+            'businessTypeStatus' => Entity::VARIATION_STATUS_REQUIRES_ATTENTION,
+            'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED
+        ];
+
+        /** @var ApplicationCompletion $ac */
+        $ac = m::mock(ApplicationCompletion::class)->makePartial();
+        $ac->shouldReceive('serialize')
+            ->with([])
+            ->andReturn($statuses);
+
+        $application->setApplicationCompletion($ac);
+
+        $this->assertEquals(['businessType'], $application->getSectionsRequiringAttention());
+    }
+
+    public function testHasVariationChanges()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $statuses = [
+            'businessTypeStatus' => Entity::VARIATION_STATUS_REQUIRES_ATTENTION,
+            'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED
+        ];
+
+        /** @var ApplicationCompletion $ac */
+        $ac = m::mock(ApplicationCompletion::class)->makePartial();
+        $ac->shouldReceive('serialize')
+            ->with([])
+            ->andReturn($statuses);
+
+        $application->setApplicationCompletion($ac);
+
+        $this->assertTrue($application->hasVariationChanges());
+    }
+
+    public function testHasVariationChangesFalse()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $statuses = [
+            'businessTypeStatus' => Entity::VARIATION_STATUS_UNCHANGED,
+            'businessDetailsStatus' => Entity::VARIATION_STATUS_UNCHANGED
+        ];
+
+        /** @var ApplicationCompletion $ac */
+        $ac = m::mock(ApplicationCompletion::class)->makePartial();
+        $ac->shouldReceive('serialize')
+            ->with([])
+            ->andReturn($statuses);
+
+        $application->setApplicationCompletion($ac);
+
+        $this->assertFalse($application->hasVariationChanges());
+    }
+
+    public function testCopyInformationFromLicence()
+    {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+
+        $licenceType = m::mock(RefData::class);
+        $goodsOrPsv = m::mock(RefData::class);
+
+        $licence->setLicenceType($licenceType);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+        $licence->setTotAuthTrailers(5);
+        $licence->setTotAuthVehicles(6);
+        $licence->setTotAuthSmallVehicles(7);
+        $licence->setTotAuthMediumVehicles(8);
+        $licence->setTotAuthLargeVehicles(9);
+        $licence->setNiFlag('Y');
+
+        $this->entity->copyInformationFromLicence($licence);
+
+        $this->assertEquals($licenceType, $this->entity->getLicenceType());
+        $this->assertEquals($goodsOrPsv, $this->entity->getGoodsOrPsv());
+        $this->assertEquals(5, $this->entity->getTotAuthTrailers());
+        $this->assertEquals(6, $this->entity->getTotAuthVehicles());
+        $this->assertEquals(7, $this->entity->getTotAuthSmallVehicles());
+        $this->assertEquals(8, $this->entity->getTotAuthMediumVehicles());
+        $this->assertEquals(9, $this->entity->getTotAuthLargeVehicles());
+        $this->assertEquals('Y', $this->entity->getNiFlag());
+    }
+    public function testUseDeltasInPeopleSectionSole()
+    {
+        $type = new RefData();
+        $type->setId('org_t_st');
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($type);
+        $licence = new Licence($organisation, new RefData());
+        $application = new Entity($licence, new RefData(), 1);
+
+        $this->assertFalse($application->useDeltasInPeopleSection());
+    }
+
+    public function testUseDeltasInPeopleSectionPartnership()
+    {
+        $type = new RefData();
+        $type->setId('org_t_p');
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($type);
+        $licence = new Licence($organisation, new RefData());
+        $application = new Entity($licence, new RefData(), 1);
+
+        $this->assertFalse($application->useDeltasInPeopleSection());
+    }
+
+    public function testUseDeltasInPeopleSectionVariationLlp()
+    {
+        $type = new RefData();
+        $type->setId('org_t_llp');
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($type);
+        $licence = new Licence($organisation, new RefData());
+        $application = new Entity($licence, new RefData(), 1);
+
+        $this->assertTrue($application->useDeltasInPeopleSection());
+    }
+
+    public function testUseDeltasInPeopleSectionApplicationRc()
+    {
+        $type = new RefData();
+        $type->setId('org_t_rc');
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $organisation->setType($type);
+        $licence = new Licence($organisation, new RefData());
+        $application = new Entity($licence, new RefData(), 0);
+
+        $this->assertFalse($application->useDeltasInPeopleSection());
+    }
+
+    public function testGetCurrentInterimStatusNull()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $this->assertNull($application->getCurrentInterimStatus());
+    }
+
+    public function testGetCurrentInterimStatus()
+    {
+        $status = m::mock(RefData::class)->makePartial();
+        $status->setId(123);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setInterimStatus($status);
+
+        $this->assertEquals(123, $application->getCurrentInterimStatus());
+    }
+
+    /**
+     * A new goods application with all dates provided
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario1()
+    {
+        $aoc1 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc1->setAction('A')
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc2->setAction('A')
+            ->setAdPlacedDate('2015-04-23')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals(new DateTime('2015-05-14'), $oorDate);
+    }
+
+    /**
+     * A new goods application with a date missing
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario2()
+    {
+        $aoc1 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc1->setAction('A')
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc2->setAction('A')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    /**
+     * A new goods application with two schedule 4 operating centres
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario3()
+    {
+        /* @var $licence Licence */
+        $licence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $licence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $licence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc2->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    /**
+     * A new goods application with two schedule 4 operating centres
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario3WithDates()
+    {
+        /* @var $licence Licence */
+        $licence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $licence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $licence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc2->setAction('A')
+            ->setS4($s4)
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    /**
+     * A new goods application with two schedule 4 operating centres
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario3WithDatesAndIncrease()
+    {
+        /* @var $licence Licence */
+        $licence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $licence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $licence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(5);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc2->setAction('A')
+            ->setS4($s4)
+            ->setAdPlacedDate('2015-04-22')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals(new DateTime('2015-05-11'), $oorDate);
+    }
+
+    /**
+     * A new goods application with one S4 operating centre and two other operating centres
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario4()
+    {
+        /* @var $licence Licence */
+        $licence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $licence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $licence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc2->setAction('A')
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $aoc3 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc3->setAction('A')
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc3);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals(new DateTime('2015-05-12'), $oorDate);
+    }
+
+    /**
+     * A new goods application with one S4 operating centre and two other operating centres; one with a missing date
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario5()
+    {
+        /* @var $licence Licence */
+        $licence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $licence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $licence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc2->setAction('A')
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $aoc3 = new ApplicationOperatingCentre($this->entity, $oc2);
+        $aoc3->setAction('A')
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc3);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    /**
+     * A goods variation application with one S4 operating centre and one other operating centre with no increase
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario6()
+    {
+        /* @var $s4DonorLicence Licence */
+        $s4DonorLicence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $s4DonorLicence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $s4DonorLicence);
+
+        $appLicence = $this->instantiate(Licence::class);
+        $oc11 = new OperatingCentre();
+        $oc12 = new OperatingCentre();
+        $loc11 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc11);
+        $loc11->setNoOfVehiclesRequired(4);
+        $loc12 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc12);
+        $loc12->setNoOfVehiclesRequired(4);
+
+        $appLicence->addOperatingCentres($loc11)
+            ->addOperatingCentres($loc12);
+
+        $this->entity->setLicence($appLicence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc12);
+        $aoc2->setAction('U')
+            ->setNoOfVehiclesRequired(2);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    /**
+     * A goods variation application with one S4 operating centre and two other operating centres; one
+     * with vehicle increase
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario7()
+    {
+        /* @var $s4DonorLicence Licence */
+        $s4DonorLicence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $s4DonorLicence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $s4DonorLicence);
+
+        $appLicence = $this->instantiate(Licence::class);
+        $oc11 = new OperatingCentre();
+        $oc12 = new OperatingCentre();
+        $loc11 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc11);
+        $loc11->setNoOfVehiclesRequired(4);
+        $loc12 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc12);
+        $loc12->setNoOfVehiclesRequired(3);
+
+        $appLicence->addOperatingCentres($loc11)
+            ->addOperatingCentres($loc12);
+
+        $this->entity->setLicence($appLicence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc11);
+        $aoc2->setAction('U')
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(6);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $aoc3 = new ApplicationOperatingCentre($this->entity, $oc12);
+        $aoc3->setAction('U')
+            ->setNoOfVehiclesRequired(1);
+        $this->entity->addOperatingCentres($aoc3);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals(new DateTime('2015-05-12'), $oorDate);
+    }
+
+    /**
+     * A goods variation application with one S4 operating centre and two other operating centres with vehicle
+     * increases but with a missing advertisement date
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario8()
+    {
+        /* @var $s4DonorLicence Licence */
+        $s4DonorLicence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $oc2 = new OperatingCentre();
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc1);
+        $loc1->setNoOfVehiclesRequired(4);
+        $loc2 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc2);
+        $loc2->setNoOfVehiclesRequired(4);
+
+        $s4DonorLicence->addOperatingCentres($loc1)
+            ->addOperatingCentres($loc2);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $s4DonorLicence);
+
+        $appLicence = $this->instantiate(Licence::class);
+        $oc11 = new OperatingCentre();
+        $oc12 = new OperatingCentre();
+        $loc11 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc11);
+        $loc11->setNoOfVehiclesRequired(4);
+        $loc12 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc12);
+        $loc12->setNoOfVehiclesRequired(1);
+
+        $appLicence->addOperatingCentres($loc11)
+            ->addOperatingCentres($loc12);
+
+        $this->entity->setLicence($appLicence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(4);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc11);
+        $aoc2->setAction('U')
+            ->setNoOfVehiclesRequired(6);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $aoc3 = new ApplicationOperatingCentre($this->entity, $oc12);
+        $aoc3->setAction('U')
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(3);
+        $this->entity->addOperatingCentres($aoc3);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    /**
+     * A goods variation application with one S4 operating centre and two other operating centres with
+     * vehicle increases including the S4 but with missing advertisement date
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario9()
+    {
+        /* @var $s4DonorLicence Licence */
+        $s4DonorLicence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc1);
+        $loc1->setNoOfVehiclesRequired(2);
+
+        $s4DonorLicence->addOperatingCentres($loc1);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $s4DonorLicence);
+
+        $appLicence = $this->instantiate(Licence::class);
+        $oc11 = new OperatingCentre();
+        $oc12 = new OperatingCentre();
+        $loc11 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc11);
+        $loc11->setNoOfVehiclesRequired(4);
+        $loc12 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc12);
+        $loc12->setNoOfVehiclesRequired(1);
+
+        $appLicence->addOperatingCentres($loc11)
+            ->addOperatingCentres($loc12);
+
+        $this->entity->setLicence($appLicence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setNoOfVehiclesRequired(6);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc11);
+        $aoc2->setAction('U')
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(6);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $aoc3 = new ApplicationOperatingCentre($this->entity, $oc12);
+        $aoc3->setAction('U')
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(3);
+        $this->entity->addOperatingCentres($aoc3);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    /**
+     * A goods variation application with one S4 operating centre and two other operating centres with advertising dates
+     * @see https://jira.i-env.net/browse/OLCS-8520
+     */
+    public function testGetOutOfRepresentationDateScenario10()
+    {
+        /* @var $s4DonorLicence Licence */
+        $s4DonorLicence = $this->instantiate(Licence::class);
+        $oc1 = new OperatingCentre();
+        $loc1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc1);
+        $loc1->setNoOfVehiclesRequired(2);
+
+        $s4DonorLicence->addOperatingCentres($loc1);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($this->entity, $s4DonorLicence);
+
+        $appLicence = $this->instantiate(Licence::class);
+        $oc11 = new OperatingCentre();
+        $oc12 = new OperatingCentre();
+        $loc11 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc11);
+        $loc11->setNoOfVehiclesRequired(4);
+        $loc12 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($s4DonorLicence, $oc12);
+        $loc12->setNoOfVehiclesRequired(1);
+
+        $appLicence->addOperatingCentres($loc11)
+            ->addOperatingCentres($loc12);
+
+        $this->entity->setLicence($appLicence);
+
+        $aoc1 = new ApplicationOperatingCentre($this->entity, $oc1);
+        $aoc1->setAction('A')
+            ->setS4($s4)
+            ->setAdPlacedDate('2015-04-21')
+            ->setNoOfVehiclesRequired(6);
+        $this->entity->addOperatingCentres($aoc1);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, $oc11);
+        $aoc2->setAction('U')
+            ->setAdPlacedDate('2015-04-19')
+            ->setNoOfVehiclesRequired(6);
+        $this->entity->addOperatingCentres($aoc2);
+
+        $aoc3 = new ApplicationOperatingCentre($this->entity, $oc12);
+        $aoc3->setAction('U')
+            ->setAdPlacedDate('2015-04-20')
+            ->setNoOfVehiclesRequired(3);
+        $this->entity->addOperatingCentres($aoc3);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals(new DateTime('2015-05-12'), $oorDate);
+    }
+
+    public function testGetOutOfRepresentationDatePsv()
+    {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_PSV));
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    public function testGetOutOfRepresentationDateApplicationNoOcs()
+    {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    public function testGetOutOfRepresentationDateVariationNoOcs()
+    {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $this->entity->setIsVariation(1);
+
+        $oorDate = $this->entity->getOutOfRepresentationDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    public function testGetOutOfOppositionDatePsvVariation()
+    {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_PSV));
+        $this->entity->setIsVariation('Y');
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    public function testGetOutOfOppositionDateGoodsNoAddedOperatingCentres()
+    {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $this->entity->setIsVariation('Y');
+
+        $aoc = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc->setAction('U');
+        $this->entity->addOperatingCentres($aoc);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    public function testGetOutOfOppositionDateGoodOperatingCentresUpdatedNoIncrease()
+    {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $this->entity->setIsVariation('Y');
+
+        $oc = new OperatingCentre();
+        $oc->setId(821);
+
+        $licence = new Licence(new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(), new RefData());
+        $this->entity->setLicence($licence);
+
+        $loc = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc);
+        $loc->setNoOfVehiclesRequired(23);
+        $licence->addOperatingCentres($loc);
+
+        $aoc = new ApplicationOperatingCentre($this->entity, $oc);
+        $aoc->setAction('U');
+        $aoc->setNoOfVehiclesRequired(23);
+        $this->entity->addOperatingCentres($aoc);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc2->setAction('A');
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    public function testGetOutOfOppositionDateIncreaseInVehicleNoPublicationDate()
+    {
+        $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $this->entity->setIsVariation('Y');
+
+        $oc = new OperatingCentre();
+        $oc->setId(821);
+
+        $licence = new Licence(new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(), new RefData());
+        $this->entity->setLicence($licence);
+
+        $loc = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc);
+        $loc->setNoOfVehiclesRequired(23);
+        $licence->addOperatingCentres($loc);
+
+        $aoc = new ApplicationOperatingCentre($this->entity, $oc);
+        $aoc->setAction('U');
+        $aoc->setNoOfVehiclesRequired(24);
+        $this->entity->addOperatingCentres($aoc);
+
+        $aoc2 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc2->setAction('A');
+        $this->entity->addOperatingCentres($aoc2);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    public function testGetOutOfOppositionDate()
+    {
+        $publicationSection3 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
+        $publicationSection3->setId(3);
+        $publicationSection4 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
+        $publicationSection4->setId(4);
+
+        $publication1 = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication1->setPubDate('2014-07-29');
+        $publication2 = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication2->setPubDate('2014-07-30');
+
+        $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink1->setPublicationSection($publicationSection3)
+            ->setPublication($publication1);
+        $publicationLink2 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink2->setPublicationSection($publicationSection4);
+        $publicationLink3 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink3->setPublicationSection($publicationSection3)
+            ->setPublication($publication2);
+
+        $this->entity->addPublicationLinks($publicationLink1);
+        $this->entity->addPublicationLinks($publicationLink2);
+        $this->entity->addPublicationLinks($publicationLink3);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals(new \DateTime('2014-08-20'), $oorDate);
+    }
+
+    /**
+     * @dataProvider canHaveLargeVehicleProvider
+     */
+    public function testCanHaveLargeVehicles($isPsv, $licenceType, $expected)
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isPsv')
+            ->andReturn($isPsv);
+
+        $application->shouldReceive('getLicenceType->getId')
+            ->andReturn($licenceType);
+
+        $this->assertEquals($expected, $application->canHaveLargeVehicles());
+    }
+
+    /**
+     * @dataProvider canHaveCommunityLicencesProvider
+     */
+    public function testCanHaveCommunityLicences($isStandardInternational, $isPsv, $isRestricted, $expected)
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isPsv')
+            ->andReturn($isPsv)
+            ->shouldReceive('isStandardInternational')
+            ->andReturn($isStandardInternational)
+            ->shouldReceive('isRestricted')
+            ->andReturn($isRestricted);
+
+        $this->assertEquals($expected, $application->canHaveCommunityLicences());
+    }
+
+    public function testGetDeltaAocByOc()
+    {
+        $oc = m::mock(OperatingCentre::class)->makePartial();
+        $oc2 = m::mock(OperatingCentre::class)->makePartial();
+
+        /** @var ApplicationOperatingCentre $aoc */
+        $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setOperatingCentre($oc);
+
+        /** @var ApplicationOperatingCentre $aoc2 */
+        $aoc2 = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc2->setOperatingCentre($oc2);
+
+        $ocs = new ArrayCollection();
+        $ocs->add($aoc);
+        $ocs->add($aoc2);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setOperatingCentres($ocs);
+
+        $collection = $application->getDeltaAocByOc($oc);
+
+        $this->assertEquals(1, $collection->count());
+        $this->assertSame($aoc, $collection->first());
+    }
+
+    public function testGetActiveS4s()
+    {
+        /** @var RefData $approved */
+        $approved = m::mock(RefData::class)->makePartial();
+        $approved->setId(S4::STATUS_APPROVED);
+
+        $refused = m::mock(RefData::class)->makePartial();
+        $refused->setId(S4::STATUS_REFUSED);
+
+        /** @var S4 $s41 */
+        $s41 = m::mock(S4::class)->makePartial();
+        $s41->setOutcome(null);
+        /** @var S4 $s42 */
+        $s42 = m::mock(S4::class)->makePartial();
+        $s41->setOutcome($approved);
+        /** @var S4 $s43 */
+        $s43 = m::mock(S4::class)->makePartial();
+        $s43->setOutcome($refused);
+
+        $s4s = new ArrayCollection();
+        $s4s->add($s41);
+        $s4s->add($s42);
+        $s4s->add($s43);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $application->setS4s($s4s);
+
+        $active = $application->getActiveS4s();
+
+        $this->assertCount(2, $active);
+        $this->assertTrue(in_array($s41, $active));
+        $this->assertTrue(in_array($s42, $active));
+        $this->assertfalse(in_array($s43, $active));
+    }
+
+    public function testIsNew()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $application->setIsVariation(true);
+        $this->assertFalse($application->isNew());
+
+        $application->setIsVariation(false);
+        $this->assertTrue($application->isNew());
+    }
+
+    public function testIsRestricted()
+    {
+        $sr = m::mock(RefData::class)->makePartial();
+        $sr->setId(Licence::LICENCE_TYPE_SPECIAL_RESTRICTED);
+
+        $r = m::mock(RefData::class)->makePartial();
+        $r->setId(Licence::LICENCE_TYPE_RESTRICTED);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $this->assertFalse($application->isRestricted());
+
+        $application->setLicenceType($sr);
+        $this->assertFalse($application->isRestricted());
+
+        $application->setLicenceType($r);
+        $this->assertTrue($application->isRestricted());
+    }
+
+    public function testIsStandardInternational()
+    {
+        $sn = m::mock(RefData::class)->makePartial();
+        $sn->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        $si = m::mock(RefData::class)->makePartial();
+        $si->setId(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $this->assertFalse($application->isStandardInternational());
+
+        $application->setLicenceType($sn);
+        $this->assertFalse($application->isStandardInternational());
+
+        $application->setLicenceType($si);
+        $this->assertTrue($application->isStandardInternational());
+    }
+
+    public function canHaveCommunityLicencesProvider()
+    {
+        return [
+            'Goods SI' => [
+                true,
+                false,
+                false,
+                true
+            ],
+            'PSV SI' => [
+                true,
+                true,
+                false,
+                true
+            ],
+            'PSV R' => [
+                false,
+                true,
+                true,
+                true
+            ],
+            'PSV Non R' => [
+                false,
+                true,
+                false,
+                false
+            ]
+        ];
+    }
+
+    public function canHaveLargeVehicleProvider()
+    {
+        return [
+            'PSV SN' => [
+                true,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                true
+            ],
+            'PSV SI' => [
+                true,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                true
+            ],
+            'GV SN' => [
+                false,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                false
+            ],
+            'GV SI' => [
+                false,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                false
+            ],
+            'PSV SR' => [
+                true,
+                Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                false
+            ],
+            'PSV R' => [
+                true,
+                Licence::LICENCE_TYPE_RESTRICTED,
+                false
+            ],
+        ];
     }
 }

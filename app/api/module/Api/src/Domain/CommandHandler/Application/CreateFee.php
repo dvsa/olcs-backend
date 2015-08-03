@@ -1,52 +1,45 @@
 <?php
 
 /**
- * CreateFee
+ * Create Fee
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Domain\Repository\FeeType;
+use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as FeeCreateFee;
 
 /**
- * CreateFee
+ * Create Fee
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateFee extends AbstractCommandHandler
+final class CreateFee extends AbstractCommandHandler implements TransactionedInterface
 {
-    /**
-     * @var FeeType
-     */
-    protected $feeTypeRepo;
-
     protected $repoServiceName = 'Application';
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->feeTypeRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('FeeType');
-
-        return parent::createService($serviceLocator);
-    }
+    protected $extraRepos = ['FeeType'];
 
     /**
-     * @param \Dvsa\Olcs\Api\Domain\Command\Application\CreateFee $command
+     * @param Cmd $command
      *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-        $result->merge($this->getCommandHandler()->handleCommand($this->createCreateFeeCommand($command)));
+        $result->merge($this->createFee($command));
 
         return $result;
     }
@@ -54,11 +47,11 @@ final class CreateFee extends AbstractCommandHandler
     /**
      * Create the createFee command
      *
-     * @param \Dvsa\Olcs\Api\Domain\Command\Application\CreateFee $command
+     * @param Cmd $command
      *
-     * @return \Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee
+     * @return Result
      */
-    private function createCreateFeeCommand(\Dvsa\Olcs\Api\Domain\Command\Application\CreateFee $command)
+    private function createFee(Cmd $command)
     {
         /** @var Application $application */
         $application = $this->getRepo()->fetchUsingId($command);
@@ -78,7 +71,7 @@ final class CreateFee extends AbstractCommandHandler
             $date = new \DateTime($date);
         }
 
-        $feeType = $this->feeTypeRepo->fetchLatest(
+        $feeType = $this->getRepo('FeeType')->fetchLatest(
             $this->getRepo()->getRefdataReference($command->getFeeTypeFeeType()),
             $application->getGoodsOrPsv(),
             $application->getLicenceType(),
@@ -95,6 +88,10 @@ final class CreateFee extends AbstractCommandHandler
             'amount' => $feeType->getFixedValue() == 0 ? $feeType->getFiveYearValue() : $feeType->getFixedValue()
         ];
 
-        return \Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee::create($data);
+        if ($command->getTask() !== null) {
+            $data['task'] = $command->getTask();
+        }
+
+        return $this->handleSideEffect(FeeCreateFee::create($data));
     }
 }

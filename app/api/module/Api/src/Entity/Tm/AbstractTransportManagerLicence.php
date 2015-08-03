@@ -149,6 +149,15 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     protected $id;
 
     /**
+     * Is owner
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="is_owner", nullable=true)
+     */
+    protected $isOwner;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -545,6 +554,29 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the is owner
+     *
+     * @param string $isOwner
+     * @return TransportManagerLicence
+     */
+    public function setIsOwner($isOwner)
+    {
+        $this->isOwner = $isOwner;
+
+        return $this;
+    }
+
+    /**
+     * Get the is owner
+     *
+     * @return string
+     */
+    public function getIsOwner()
+    {
+        return $this->isOwner;
     }
 
     /**

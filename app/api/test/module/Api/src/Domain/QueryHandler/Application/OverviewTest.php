@@ -55,6 +55,9 @@ class OverviewTest extends QueryHandlerTestCase
         $mockApplication
             ->shouldReceive('getLicence->getId')
             ->andReturn($licenceId);
+        $mockApplication->shouldReceive('getOutOfOppositionDate')->with()->once()->andReturn('OOOD');
+        $mockApplication->shouldReceive('getOutOfRepresentationDate')->with()->once()
+            ->andReturn(new \DateTime('2015-07-27'));
 
         $this->repoMap['Application']
             ->shouldReceive('fetchUsingId')
@@ -102,6 +105,8 @@ class OverviewTest extends QueryHandlerTestCase
                         3 => 'Not applicable',
                     ],
                 ],
+                'outOfOppositionDate' => 'OOOD',
+                'outOfRepresentationDate' => '2015-07-27',
             ],
             $result->serialize()
         );

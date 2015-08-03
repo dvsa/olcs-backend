@@ -24,6 +24,8 @@ final class UpdatePeopleStatus extends AbstractUpdateStatus
 
     protected function isSectionValid(Application $application)
     {
-        return count($application->getLicence()->getOrganisation()->getOrganisationPersons()) > 0;
+        $num = count($application->getLicence()->getOrganisation()->getOrganisationPersons())
+            + count($application->getApplicationOrganisationPersons());
+        return ($num > 0);
     }
 }

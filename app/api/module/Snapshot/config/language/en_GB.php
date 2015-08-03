@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'tachograph_analyser.tach_external' => 'An external contractor',
+    'tachograph_analyser.tach_internal' => 'An owner or employee of the business',
+    'tachograph_analyser.tach_na' => 'Not applicable',
+    'variation-application-type-of-licence-freetext' => 'The licence type has been changed from %s to %s',
     '1 Week' => '1 Week',
     'no.of.weeks' => '%s Weeks',
     'application-review-addresses-contact-details-title' => 'Contact details',
@@ -234,7 +238,6 @@ return [
     'review-operating-centres-traffic-area' => 'Your traffic area',
     'review-operating-centres-traffic-area-title' => 'Traffic area',
     'review-operating_centres' => 'Operating centres',
-    'review-operating_centres_delete' => 'Are you sure you wish to remove the selected operating centre(s)',
     'review-people' => 'People',
     'review-safety' => 'Safety',
     'review-taxi_phv' => 'Taxi PHV',
@@ -244,8 +247,6 @@ return [
     'review-transport-manager-email' => 'Email address',
     'review-transport-manager-updated-title' => 'Transport managers updated',
     'review-transport_managers' => 'Transport managers',
-    'review-transport_managers_delete' => 'Are you sure you want to remove the selected transport manager(s) from the
-        application?',
     'review-type_of_licence' => 'Type of licence',
     'review-undertakings' => 'Undertakings',
     'review-value-decreased' => 'has decreased from %s to %s',

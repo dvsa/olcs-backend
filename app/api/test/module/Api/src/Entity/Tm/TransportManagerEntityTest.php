@@ -18,4 +18,18 @@ class TransportManagerEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testUpdatePerson()
+    {
+        $entity = new Entity();
+
+        $entity->updateTransportManager('tmtype', 'tmstatus', 1, 2, 3, 4);
+
+        $this->assertEquals('tmtype', $entity->getTmType());
+        $this->assertEquals('tmstatus', $entity->getTmStatus());
+        $this->assertEquals(1, $entity->getWorkCd());
+        $this->assertEquals(2, $entity->getHomeCd());
+        $this->assertEquals(3, $entity->getCreatedBy());
+        $this->assertEquals(4, $entity->getLastModifiedBy());
+    }
 }

@@ -15,6 +15,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Doctrine\ORM\EntityRepository;
+use Dvsa\Olcs\Transfer\Query\Bus\PreviousVariationByRouteNo;
 
 /**
  * Bus test
@@ -157,14 +158,6 @@ class BusTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('with')
             ->once()
-            ->with('busNoticePeriod')
-            ->andReturnSelf()
-            ->shouldReceive('with')
-            ->once()
-            ->with('busServiceTypes')
-            ->andReturnSelf()
-            ->shouldReceive('with')
-            ->once()
             ->with('otherServices')
             ->andReturnSelf()
             ->shouldReceive('byId')
@@ -172,4 +165,48 @@ class BusTest extends RepositoryTestCase
             ->with($busRegId);
     }
 
+    public function testApplyListFilters()
+    {
+        $sut = m::mock(BusRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $variationNo = 11;
+        $routeNo = 22;
+
+        $mockQuery = m::mock(PreviousVariationByRouteNo::class);
+        $mockQuery->shouldReceive('getRouteNo')
+            ->andReturn($routeNo)
+            ->once()
+            ->shouldReceive('getVariationNo')
+            ->andReturn($variationNo)
+            ->once()
+            ->getMock();
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->lt')->with('m.variationNo', ':byVariationNo')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('byVariationNo', $variationNo)->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('m.routeNo', ':byRouteNo')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('byRouteNo', $routeNo)->once()->andReturnSelf();
+
+        $sut->applyListFilters($mockQb, $mockQuery);
+    }
+
+    /**
+     * Tests applyListJoins
+     */
+    public function testApplyListJoins()
+    {
+        // mock SUT to allow testing the protected method
+        $sut = m::mock(BusRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $mockQb->shouldReceive('modifyQuery')->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('busNoticePeriod')->once()->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('status')->once()->andReturnSelf();
+        $sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
+
+        $sut->applyListJoins($mockQb);
+    }
 }

@@ -5,7 +5,7 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
@@ -72,7 +72,6 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             CeaseGoodsDiscs::class,
             [
                 'licenceVehicles' => null,
-                'id' => null
             ],
             $discsResult
         );

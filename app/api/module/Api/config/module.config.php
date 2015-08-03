@@ -18,8 +18,11 @@ return [
             'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
             'RestrictionService' => \Dvsa\Olcs\Api\Service\Lva\RestrictionService::class,
             'SectionConfig' =>  \Dvsa\Olcs\Api\Service\Lva\SectionConfig::class,
+            'OperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper::class,
+            'UpdateOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper::class,
         ],
         'factories' => [
+            'VariationOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper::class,
             'SectionAccessService' => \Dvsa\Olcs\Api\Service\Lva\SectionAccessService::class,
             'ContentStore' => \Dvsa\Jackrabbit\Client\Service\ClientFactory::class,
             'IdentityProvider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
@@ -37,13 +40,13 @@ return [
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
         ],
     ],
-    'file_uploader' => array(
+    'file_uploader' => [
         'default' => 'ContentStore',
-        'config' => array(
+        'config' => [
             'location' => 'documents',
             'defaultPath' => '[locale]/[doc_type_name]/[year]/[month]', // e.g. gb/publications/2015/03
-        )
-    ),
+        ]
+    ],
     'controller_plugins' => [
         'invokables' => [
             'response' => \Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response::class,
@@ -143,12 +146,13 @@ return [
             'PiHearing' => RepositoryFactory::class,
             'Recipient' => RepositoryFactory::class,
             'Partner' => RepositoryFactory::class,
-            'TransportManagerApplication' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
-            'TransportManagerLicence' => \Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory::class,
+            'TransportManagerApplication' => RepositoryFactory::class,
+            'TransportManagerLicence' => RepositoryFactory::class,
             'Person' => RepositoryFactory::class,
             'ApplicationOperatingCentre' => RepositoryFactory::class,
             'LicenceOperatingCentre' => RepositoryFactory::class,
             'TmEmployment' => RepositoryFactory::class,
+            'TmQualification' => RepositoryFactory::class,
             'DocTemplate' => RepositoryFactory::class,
             'LicenceStatusRule' => RepositoryFactory::class,
             'LicenceVehicle' => RepositoryFactory::class,
@@ -165,14 +169,25 @@ return [
             'BusRegSearchView' => RepositoryFactory::class,
             'ProposeToRevoke' => RepositoryFactory::class,
             'OrganisationPerson' => RepositoryFactory::class,
-            'LicenceVehicle' => RepositoryFactory::class,
             'Vehicle' => RepositoryFactory::class,
             'VehicleHistoryView' => RepositoryFactory::class,
             'InspectionRequest' => RepositoryFactory::class,
             'CorrespondenceInbox' => RepositoryFactory::class,
             'SubmissionAction' => RepositoryFactory::class,
+            'SubmissionSectionComment' => RepositoryFactory::class,
             'TrafficArea' => RepositoryFactory::class,
-            'InspectionRequest' => RepositoryFactory::class,
+            'ChangeOfEntity' => RepositoryFactory::class,
+            'ApplicationOrganisationPerson' => RepositoryFactory::class,
+            'DocumentSearchView' => RepositoryFactory::class,
+            'S4' => RepositoryFactory::class,
+            'TaskSearchView' => RepositoryFactory::class,
+            'PrivateHireLicence' => RepositoryFactory::class,
+            'ContinuationDetail' => RepositoryFactory::class,
+            'CompaniesHouseAlert' => RepositoryFactory::class,
+            'CompaniesHouseCompany' => RepositoryFactory::class,
+            'Queue' => RepositoryFactory::class,
+            'AdminAreaTrafficArea' => RepositoryFactory::class,
+            'PostcodeEnforcementArea' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

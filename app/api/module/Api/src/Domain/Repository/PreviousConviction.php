@@ -9,6 +9,8 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Application\PreviousConviction as Entity;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Previous Conviction
@@ -38,5 +40,19 @@ class PreviousConviction extends AbstractRepository
             ->setParameter('tmId', $tmId);
 
         return $dqb->getQuery()->getResult();
+    }
+
+    /**
+     * Filter list
+     *
+     * @param \Dvsa\Olcs\Api\Domain\Repository\QueryBuilder $qb
+     * @param \Dvsa\Olcs\Api\Domain\Repository\QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if ($query->getTransportManager()) {
+            $qb->andWhere($qb->expr()->eq($this->alias .'.transportManager', ':tmId'))
+                ->setParameter('tmId', $query->getTransportManager());
+        }
     }
 }

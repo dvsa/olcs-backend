@@ -7,12 +7,12 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -30,7 +30,7 @@ class Fee extends AbstractRepository
      * Gets the latest bus reg fee
      *
      * @param $busRegId
-     * @return array
+     * @return Fee|null
      */
     public function getLatestFeeForBusReg($busRegId)
     {
@@ -40,7 +40,9 @@ class Fee extends AbstractRepository
         $doctrineQb->setParameter('busRegId', $busRegId);
         $doctrineQb->setMaxResults(1);
 
-        return $doctrineQb->getQuery()->getResult();
+        $results = $doctrineQb->getQuery()->getResult();
+
+        return !empty($results) ? $results[0] : null;
     }
 
     /**
@@ -114,6 +116,52 @@ class Fee extends AbstractRepository
     }
 
     /**
+     * Fetch outstanding grant fees for an application
+     *
+     * @param int $applicationId Application ID
+     *
+     * @return array
+     */
+    public function fetchOutstandingGrantFeesByApplicationId($applicationId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $this->whereOutstandingFee($doctrineQb);
+
+        $doctrineQb
+            ->innerJoin('f.feeType', 'ft')
+            ->andWhere($doctrineQb->expr()->eq('f.application', ':application'))
+            ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeType'))
+            ->setParameter('application', $applicationId)
+            ->setParameter('feeType', RefData::FEE_TYPE_GRANT);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch outstanding continuation fees for a licence
+     *
+     * @param int $licenceId
+     *
+     * @return array
+     */
+    public function fetchOutstandingContinuationFeesByLicenceId($licenceId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb
+            ->innerJoin('f.feeType', 'ft')
+            ->andWhere($doctrineQb->expr()->eq('f.licence', ':licence'))
+            ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeType'))
+            ->setParameter('licence', $licenceId)
+            ->setParameter('feeType', RefData::FEE_TYPE_CONT);
+
+        $this->whereOutstandingFee($doctrineQb);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
      * Fetch outstanding fees by IDs
      *
      * @param array $ids
@@ -172,7 +220,7 @@ class Fee extends AbstractRepository
      * @param int    $applicationId  Application ID
      * @param string $feeTypeFeeType Ref data string eg \Dvsa\Olcs\Api\Entity\Fee\FeeType::FEE_TYPE_GRANTINT
      *
-     * @return Doctrine\ORM\QueryBuilder
+     * @return \Doctrine\ORM\QueryBuilder
      */
     private function getQueryByApplicationFeeTypeFeeType($applicationId, $feeTypeFeeType)
     {
@@ -192,7 +240,7 @@ class Fee extends AbstractRepository
     /**
      * Add conditions to the query builder to only select fees that are outstanding
      *
-     * @param Doctrine\ORM\QueryBuilder $doctrineQb
+     * @param \Doctrine\ORM\QueryBuilder $doctrineQb
      */
     private function whereOutstandingFee($doctrineQb)
     {
@@ -215,7 +263,7 @@ class Fee extends AbstractRepository
      *  b) an under consideration/granted application
      * for the given organisation
      *
-     * @param Doctrine\ORM\QueryBuilder $doctrineQb
+     * @param \Doctrine\ORM\QueryBuilder $doctrineQb
      * @param int $organisationId
      */
     private function whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId)
@@ -269,8 +317,15 @@ class Fee extends AbstractRepository
         $this->getQueryBuilder()
             ->filterByLicence($query->getLicence())
             ->filterByApplication($query->getApplication())
-            ->filterByBusReg($query->getBusReg())
             ->filterByIds($query->getIds());
+
+        if ($query->getBusReg() !== null) {
+            /** @var array $busRegIds */
+            $busRegIds = $this->getBusRegIdsForRouteFromBusRegId($query->getBusReg());
+            $qb
+                ->andWhere($qb->expr()->in($this->alias . '.busReg', ':busRegIds'))
+                ->setParameter('busRegIds', $busRegIds);
+        }
 
         if ($query->getTask() !== null) {
             $qb->andWhere($this->alias . '.task = :taskId');
@@ -316,5 +371,27 @@ class Fee extends AbstractRepository
         }
 
         $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
+    }
+
+    /**
+     * Get all bus reg ids for a route no
+     *
+     * @param int $busRegId
+     * @return array
+     */
+    protected function getBusRegIdsForRouteFromBusRegId($busRegId)
+    {
+        $qb = $this->getEntityManager()
+            ->getRepository(BusRegEntity::class)
+            ->createQueryBuilder('br');
+
+        $qb
+            ->select('br2.id')
+            ->join(BusRegEntity::class, 'br2')
+            ->where('br.routeNo = br2.routeNo')
+            ->andWhere('br.id = :id')
+            ->setParameter('id', $busRegId);
+
+        return $qb->getQuery()->getArrayResult();
     }
 }

@@ -7,23 +7,10 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Doctrine\DBAL\LockMode;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\Fee\FeeList as FeeListQry;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
-use Doctrine\ORM\OptimisticLockException;
-use Dvsa\Olcs\Api\Domain\Exception\VersionConflictException;
-use Doctrine\ORM\EntityRepository;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
 /**
  * Fee test
@@ -238,12 +225,34 @@ class FeeTest extends RepositoryTestCase
             ->shouldReceive('filterByApplication')
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('filterByBusReg')
-            ->once()
-            ->andReturnSelf()
             ->shouldReceive('filterByIds')
             ->once()
             ->andReturnSelf();
+
+        $busRegQb = m::mock(QueryBuilder::class);
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('br')
+            ->once()
+            ->andReturn($busRegQb);
+        $busRegQb
+            ->shouldReceive('select')
+            ->andReturnSelf()
+            ->shouldReceive('join')
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->once()
+            ->with('id', 14)
+            ->andReturnSelf();
+        $busRegIds = [14, 15, 16];
+        $busRegQb
+            ->shouldReceive('getQuery->getArrayResult')
+            ->once()
+            ->andReturn($busRegIds);
 
         // we *could* assert all the conditions here, but just stub the methods for now
         $mockQb
@@ -433,5 +442,61 @@ class FeeTest extends RepositoryTestCase
 
         $this->em
             ->shouldReceive('getReference');
+    }
+
+    public function testfetchOutstandingGrantFeesByApplicationId()
+    {
+        $mockQb = $this->createMockQb('{QUERY}');
+
+        $this->mockCreateQueryBuilder($mockQb);
+
+        $this->em->shouldReceive('getReference')
+            ->andReturnUsing(
+                function ($refData, $input) {
+                    return $input;
+                }
+            );
+
+        $mockQb->shouldReceive('getQuery->getResult')
+            ->once()
+            ->andReturn('Foo');
+
+        $this->assertEquals('Foo', $this->sut->fetchOutstandingGrantFeesByApplicationId(111));
+
+        $this->assertEquals(
+            '{QUERY}'
+            // whereOutstandingFee
+            . ' AND f.feeStatus IN [[["lfs_ot","lfs_wr"]]]'
+            . ' INNER JOIN f.feeType ft AND f.application = [[111]] AND ft.feeType = [[GRANT]]',
+            $this->query
+        );
+    }
+
+    public function testFetchOutstandingContinuationFeesByLicenceId()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->em->shouldReceive('getReference')->with(
+            \Dvsa\Olcs\Api\Entity\System\RefData::class,
+            \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_OUTSTANDING
+        )->once()->andReturn('ot');
+        $this->em->shouldReceive('getReference')->with(
+            \Dvsa\Olcs\Api\Entity\System\RefData::class,
+            \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_WAIVE_RECOMMENDED
+        )->once()->andReturn('wr');
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchOutstandingContinuationFeesByLicenceId(716));
+
+        $expectedQuery = 'BLAH INNER JOIN f.feeType ft AND f.licence = [[716]] AND '
+            . 'ft.feeType = [[CONT]] AND f.feeStatus IN [[["ot","wr"]]]';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }

@@ -267,6 +267,12 @@ return array(
         ),
     ),
     's4' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 's4'
+            ),
+        ),
         'surrender_licence' => array(
             'type' => 'yesno'
         ),
@@ -751,20 +757,6 @@ return array(
                 'property' => 'complaint'
             )
         )
-    ),
-    'oc_complaint' => array(
-        'complaint_id' => array(
-            'inversedBy' => array(
-                'entity' => 'Complaint',
-                'property' => 'ocComplaint'
-            )
-        ),
-        'operating_centre_id' => array(
-            'inversedBy' => array(
-                'entity' => 'OperatingCentre',
-                'property' => 'ocComplaint'
-            )
-        ),
     ),
     'complaint_case' => array(
         'complaint_id' => array(
@@ -1485,6 +1477,9 @@ return array(
                 'entity' => 'TransportManager',
                 'property' => 'tmLicence'
             ),
+        ),
+        'is_owner' => array(
+            'type' => 'yesnonull'
         )
     ),
     'tm_qualification' => array(
@@ -1656,6 +1651,11 @@ return array(
             ),
         ),
     ),
+    'companies_house_alert' => array(
+        'is_closed' => array(
+            'type' => 'yesno'
+        ),
+    ),
     'grace_period' => array(
         'licence_id' => array(
             'inversedBy' => array(
@@ -1664,4 +1664,12 @@ return array(
             )
         ),
     ),
+    'traffic_area_enforcement_area' => array(
+        'traffic_area_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TrafficArea',
+                'property' => 'trafficAreaEnforcementArea'
+            )
+        )
+    )
 );

@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Licence\Grant;
+use Dvsa\Olcs\Api\Domain\Command\Licence\Grant as GrantCmd;
 use Dvsa\Olcs\Api\Domain\Command\Licence\UnderConsideration;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -48,7 +48,7 @@ final class ReviveApplication extends AbstractCommandHandler implements Transact
                 );
                 $result->merge(
                     $this->handleSideEffect(
-                        Grant::create(
+                        GrantCmd::create(
                             [
                                 'id' => $application->getLicence()->getId()
                             ]

@@ -21,20 +21,22 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  */
 final class CeasePsvDiscs extends AbstractCommandHandler implements TransactionedInterface
 {
-    protected $repoServiceName = 'PsvDiscs';
+    protected $repoServiceName = 'PsvDisc';
 
     public function handleCommand(CommandInterface $command)
     {
         /** @var \Dvsa\Olcs\Api\Entity\Licence\Licence $licence */
         $discs = $command->getDiscs();
 
-        foreach ($discs as $disc) {
-            $disc->cease(new \DateTime());
-            $this->getRepo()->save($disc);
+        if(!empty($discs)) {
+            foreach ($discs as $disc) {
+                $disc->cease(new \DateTime());
+                $this->getRepo()->save($disc);
+            }
         }
 
         $result = new Result();
-        $result->addMessage('Ceased discs for licence.');
+        $result->addMessage('Ceased '. count($discs) .' discs for licence.');
 
         return $result;
     }

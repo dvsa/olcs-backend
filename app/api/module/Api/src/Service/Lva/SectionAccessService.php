@@ -37,6 +37,9 @@ class SectionAccessService implements FactoryInterface, AuthAwareInterface
      */
     protected $sectionConfig;
 
+    /**
+     * @var \Dvsa\Olcs\Api\Service\Lva\RestrictionService
+     */
     private $restrictionService;
 
     /**

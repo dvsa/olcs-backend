@@ -176,4 +176,52 @@ class BusShortNoticeEntityTest extends EntityTester
         $this->assertEquals($policeChange, $this->entity->getPoliceChange());
         $this->assertEquals($policeDetail, $this->entity->getPoliceDetail());
     }
+
+    /**
+     * Tests the reset function
+     */
+    public function testReset()
+    {
+        $this->entity->setBankHolidayChange('Y');
+        $this->entity->setUnforseenChange('Y');
+        $this->entity->setUnforseenDetail('unforseen detail');
+        $this->entity->setTimetableChange('Y');
+        $this->entity->setTimetableDetail('timetable detail');
+        $this->entity->setReplacementChange('Y');
+        $this->entity->setReplacementDetail('replacement detail');
+        $this->entity->setNotAvailableChange('Y');
+        $this->entity->setNotAvailableDetail('not available detail');
+        $this->entity->setSpecialOccasionChange('N');
+        $this->entity->setSpecialOccasionDetail('special occasion detail');
+        $this->entity->setConnectionChange('N');
+        $this->entity->setConnectionDetail('connection detail');
+        $this->entity->setHolidayChange('N');
+        $this->entity->setHolidayDetail('holiday detail');
+        $this->entity->setTrcChange('N');
+        $this->entity->setTrcDetail('trc detail');
+        $this->entity->setPoliceChange('N');
+        $this->entity->setPoliceDetail('police detail');
+
+        $this->entity->reset();
+
+        $this->assertEquals('N', $this->entity->getBankHolidayChange());
+        $this->assertEquals('N', $this->entity->getUnforseenChange());
+        $this->assertEquals(null, $this->entity->getUnforseenDetail());
+        $this->assertEquals('N', $this->entity->getTimetableChange());
+        $this->assertEquals(null, $this->entity->getTimetableDetail());
+        $this->assertEquals('N', $this->entity->getReplacementChange());
+        $this->assertEquals(null, $this->entity->getReplacementDetail());
+        $this->assertEquals('N', $this->entity->getNotAvailableChange());
+        $this->assertEquals(null, $this->entity->getNotAvailableDetail());
+        $this->assertEquals('N', $this->entity->getSpecialOccasionChange());
+        $this->assertEquals(null, $this->entity->getSpecialOccasionDetail());
+        $this->assertEquals('N', $this->entity->getConnectionChange());
+        $this->assertEquals(null, $this->entity->getConnectionDetail());
+        $this->assertEquals('N', $this->entity->getHolidayChange());
+        $this->assertEquals(null, $this->entity->getHolidayDetail());
+        $this->assertEquals('N', $this->entity->getTrcChange());
+        $this->assertEquals(null, $this->entity->getTrcDetail());
+        $this->assertEquals('N', $this->entity->getPoliceChange());
+        $this->assertEquals(null, $this->entity->getPoliceDetail());
+    }
 }

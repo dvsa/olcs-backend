@@ -91,6 +91,10 @@ class Licence extends AbstractLicence
      */
     public function canBecomeSpecialRestricted()
     {
+        if ($this->getGoodsOrPsv() == null && $this->getLicenceType() == null) {
+            return true;
+        }
+
         return ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV
             && $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED
         );
@@ -99,18 +103,43 @@ class Licence extends AbstractLicence
     /**
      * Gets the latest Bus Reg variation number, based on the supplied regNo
      *
-     * @param $regNo
+     * @param string $regNo
+     * @param array $notInStatus
      * @return mixed
      */
-    public function getLatestBusVariation($regNo)
-    {
+    public function getLatestBusVariation(
+        $regNo,
+        array $notInStatus = [
+            BusReg::STATUS_REFUSED,
+            BusReg::STATUS_WITHDRAWN
+        ]
+    ) {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('regNo', $regNo))
-            ->andWhere(Criteria::expr()->notIn('status', [BusReg::STATUS_REFUSED, BusReg::STATUS_WITHDRAWN]))
             ->orderBy(array('variationNo' => Criteria::DESC))
             ->setMaxResults(1);
 
+        if (!empty($notInStatus)) {
+            $criteria->andWhere(Criteria::expr()->notIn('status', $notInStatus));
+        }
+
         return $this->getBusRegs()->matching($criteria)->current();
+    }
+
+    /**
+     * Gets the latest Bus Reg route number for the licence
+     *
+     * @return mixed
+     */
+    public function getLatestBusRouteNo()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('licence', $this))
+            ->orderBy(array('routeNo' => Criteria::DESC))
+            ->setMaxResults(1);
+
+        return !empty($this->getBusRegs()->matching($criteria)->current())
+            ? $this->getBusRegs()->matching($criteria)->current()->getRouteNo() : 0;
     }
 
     public function updateTotalCommunityLicences($totalCount)
@@ -142,10 +171,6 @@ class Licence extends AbstractLicence
         }
 
         $this->setSafetyInsVehicles($safetyInsVehicles);
-
-        if (empty($safetyInsTrailers)) {
-            $safetyInsTrailers = null;
-        }
 
         $this->setSafetyInsTrailers($safetyInsTrailers);
 
@@ -247,12 +272,14 @@ class Licence extends AbstractLicence
         return $this->getActiveVehicles()->count();
     }
 
-    public function getActiveVehicles()
+    public function getActiveVehicles($checkSpecified = true)
     {
         $criteria = Criteria::create();
-        $criteria->andWhere(
-            $criteria->expr()->isNull('removalDate')
-        );
+        $criteria->andWhere($criteria->expr()->isNull('removalDate'));
+
+        if ($checkSpecified) {
+            $criteria->andWhere($criteria->expr()->neq('specifiedDate', null));
+        }
 
         return $this->getLicenceVehicles()->matching($criteria);
     }
@@ -343,6 +370,21 @@ class Licence extends AbstractLicence
         return $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED;
     }
 
+    public function isRestricted()
+    {
+        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_RESTRICTED;
+    }
+
+    public function isStandardInternational()
+    {
+        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_INTERNATIONAL;
+    }
+
+    public function isStandardNational()
+    {
+        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_NATIONAL;
+    }
+
     /**
      * Helper method to get the first trading name from a licence
      * (Sorts trading names by createdOn date then alphabetically)
@@ -396,6 +438,55 @@ class Licence extends AbstractLicence
                 return $case->isOpen();
             }
         );
+    }
 
+    public function copyInformationFromApplication(Application $application)
+    {
+        $this->setLicenceType($application->getLicenceType());
+        $this->setGoodsOrPsv($application->getGoodsOrPsv());
+        $this->setTotAuthTrailers($application->getTotAuthTrailers());
+        $this->setTotAuthVehicles($application->getTotAuthVehicles());
+        $this->setTotAuthSmallVehicles($application->getTotAuthSmallVehicles());
+        $this->setTotAuthMediumVehicles($application->getTotAuthMediumVehicles());
+        $this->setTotAuthLargeVehicles($application->getTotAuthLargeVehicles());
+        $this->setNiFlag($application->getNiFlag());
+    }
+
+    public function getOcForInspectionRequest()
+    {
+        $list = [];
+        $licenceOperatingCentres = $this->getOperatingCentres();
+        foreach ($licenceOperatingCentres as $licenceOperatingCentre) {
+            $list[] = $licenceOperatingCentre->getOperatingCentre();
+        }
+        return $list;
+    }
+
+    /**
+     * Get PSV discs that are not ceased
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPsvDiscsNotCeased()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->isNull('ceasedDate'));
+
+        return $this->getPsvDiscs()->matching($criteria);
+    }
+
+    public function canHaveLargeVehicles()
+    {
+        $allowLargeVehicles = [
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+        ];
+
+        return $this->isPsv() && in_array($this->getLicenceType()->getId(), $allowLargeVehicles);
+    }
+
+    public function canHaveCommunityLicences()
+    {
+        return ($this->isStandardInternational() || ($this->isPsv() && $this->isRestricted()));
     }
 }

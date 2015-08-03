@@ -135,4 +135,46 @@ class OrganisationEntityTest extends EntityTester
 
         $this->assertEquals(['foo' => 'bar'], $organisation->getAdminOrganisationUsers());
     }
+
+    public function dpOrgTypes()
+    {
+        return [
+            [Entity::ORG_TYPE_SOLE_TRADER],
+            [Entity::ORG_TYPE_IRFO],
+            [Entity::ORG_TYPE_LLP],
+            [Entity::ORG_TYPE_OTHER],
+            [Entity::ORG_TYPE_PARTNERSHIP],
+            [Entity::ORG_TYPE_REGISTERED_COMPANY],
+        ];
+    }
+
+    /**
+     * @dataProvider dpOrgTypes
+     *
+     * @param string $typeId
+     */
+    public function testIsSoleTrader($typeId)
+    {
+        $type = new \Dvsa\Olcs\Api\Entity\System\RefData();
+        $type->setId($typeId);
+        $organisation = new Entity();
+        $organisation->setType($type);
+
+        $this->assertSame($typeId === Entity::ORG_TYPE_SOLE_TRADER, $organisation->isSoleTrader());
+    }
+
+    /**
+     * @dataProvider dpOrgTypes
+     *
+     * @param string $typeId
+     */
+    public function testIsPartnership($typeId)
+    {
+        $type = new \Dvsa\Olcs\Api\Entity\System\RefData();
+        $type->setId($typeId);
+        $organisation = new Entity();
+        $organisation->setType($type);
+
+        $this->assertSame($typeId === Entity::ORG_TYPE_PARTNERSHIP, $organisation->isPartnership());
+    }
 }

@@ -6,11 +6,9 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Prohibition\Prohibition as Entity;
-use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface as Repository;
 use Dvsa\Olcs\Api\Entity as Entities;
-use Dvsa\Olcs\Transfer\Command\AbstractDeleteCommand as DeleteCommand;
 use Doctrine\ORM\Query;
 
 /**
@@ -28,18 +26,33 @@ abstract class AbstractDeleteCommandHandler extends AbstractCommandHandler imple
      */
     public function handleCommand(CommandInterface $command)
     {
-        /* @var $command DeleteCommand For traceability */
+        // would be better as an interface check but BC...
+        if (method_exists($command, 'getIds')) {
+            $ids = $command->getIds();
+        } elseif (method_exists($command, 'getId')) {
+            $ids = [$command->getId()];
+        } else {
+            $ids = [];
+        }
 
+        return $this->doDelete($ids);
+    }
+
+    private function doDelete(array $ids)
+    {
         $result = new Result();
+        foreach ($ids as $id) {
+            try {
+                $this->getRepo()->delete(
+                    $this->getRepo()->fetchById($id)
+                );
 
-        /** @var Repository $repo */
-        $repo = $this->getRepo();
-
-        /* @var Entity $entity */
-        $entity = $repo->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
-        $repo->delete($entity);
-
-        $result->addMessage('Deleted');
+                $result->addId('id' . $id, $id);
+                $result->addMessage(sprintf('Id %d deleted', $id));
+            } catch (NotFoundException $e) {
+                $result->addMessage(sprintf('Id %d not found', $id));
+            }
+        }
 
         return $result;
     }
