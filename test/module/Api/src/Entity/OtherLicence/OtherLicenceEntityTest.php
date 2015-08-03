@@ -115,4 +115,16 @@ class OtherLicenceEntityTest extends EntityTester
             ['foo', '123', 'holderName', 'Y', '2020-01-01', 2, '2014-01-01'],
         ];
     }
+
+    public function testUpdateOtherLicenceForTml()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->updateOtherLicenceForTml('role', 'tml', 'hpw', 'ln', 'oc', 'tav');
+        $this->assertEquals($sut->getRole(), 'role');
+        $this->assertEquals($sut->getTransportManagerLicence(), 'tml');
+        $this->assertEquals($sut->getHoursPerWeek(), 'hpw');
+        $this->assertEquals($sut->getLicNo(), 'ln');
+        $this->assertEquals($sut->getOperatingCentres(), 'oc');
+        $this->assertEquals($sut->getTotalAuthVehicles(), 'tav');
+    }
 }
