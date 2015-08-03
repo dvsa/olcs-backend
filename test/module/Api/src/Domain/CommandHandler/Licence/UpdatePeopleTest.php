@@ -41,23 +41,6 @@ class UpdatePeopleTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommandNotSoleOrPartnership()
-    {
-        $data = [
-        ];
-        $command = Command::create($data);
-
-        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
-        $organisation->setType($this->refData['org_t_llp']);
-        $licence = new LicenceEntity($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
-
-        $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($licence);
-
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
-
-        $this->sut->handleCommand($command);
-    }
-
     public function testHandleCommand()
     {
         $data = [
