@@ -17,7 +17,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  * Process ContinuationDetail
  *
  * @author Dan Eggleston <dan@stolenegg.com>
- * @author Mat Evans <mat.evans@valtech.co.uk> (original Business Service)
+ * @author Mat Evans (original Business Service) <mat.evans@valtech.co.uk>
  */
 final class Process extends AbstractCommandHandler implements TransactionedInterface, DocGenAwareInterface
 {
@@ -34,7 +34,9 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
         $continuationDetail = $this->getRepo()->fetchUsingId($command);
 
         if ($continuationDetail->getStatus()->getId() !== ContinuationDetailEntity::STATUS_PRINTING) {
-            $result->addMessage('Continuation detail no longer pending');
+            $result
+                ->addId('continuationDetail', $continuationDetail->getId())
+                ->addMessage('Continuation detail no longer pending');
             return $result;
         }
 
