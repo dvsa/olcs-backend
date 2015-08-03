@@ -11,6 +11,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark\FstandingCapitalReserves;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\FstandingCapitalReserves as Qry;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -28,6 +29,7 @@ class FstandingCapitalReservesTest extends QueryHandlerTestCase
     {
         $this->sut = new FstandingCapitalReserves();
         $this->mockRepo('Application', ApplicationRepo::class);
+        $this->mockRepo('Organisation', OrganisationRepo::class);
 
         $this->mockedSmServices['FinancialStandingHelperService'] = m::mock(FinancialStandingHelperService::class);
 
@@ -36,10 +38,10 @@ class FstandingCapitalReservesTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
-        $organisation = m::mock(OrganisationEntity::class)->makePartial()->setId(69);
+        $organisationId = 69;
         $query = Qry::create(
             [
-                'organisation' => $organisation,
+                'organisation' => $organisationId,
             ]
         );
 
@@ -50,28 +52,34 @@ class FstandingCapitalReservesTest extends QueryHandlerTestCase
 
         $application1 = m::mock(ApplicationEntity::class)->makePartial()->setId(1);
         $application1->shouldReceive('getGoodsOrPsv->getId')->andReturn('lcat_gv');
-        $application1->shouldReceive('getTypeOfLicence->getId')->andReturn('ltyp_sn');
+        $application1->shouldReceive('getLicenceType->getId')->andReturn('ltyp_sn');
         $application1->shouldReceive('getTotAuthVehicles')->andReturn(4);
 
         $application2 = m::mock(ApplicationEntity::class)->makePartial()->setId(2);
         $application2->shouldReceive('getGoodsOrPsv->getId')->andReturn('lcat_gv');
-        $application2->shouldReceive('getTypeOfLicence->getId')->andReturn('ltyp_si');
+        $application2->shouldReceive('getLicenceType->getId')->andReturn('ltyp_si');
         $application2->shouldReceive('getTotAuthVehicles')->andReturn(5);
 
         $licence1 = m::mock(LicenceEntity::class)->makePartial()->setId(1);
         $licence1->shouldReceive('getGoodsOrPsv->getId')->andReturn('lcat_psv');
-        $licence1->shouldReceive('getTypeOfLicence->getId')->andReturn('ltyp_sn');
+        $licence1->shouldReceive('getLicenceType->getId')->andReturn('ltyp_sn');
         $licence1->shouldReceive('getTotAuthVehicles')->andReturn(6);
 
         $licence2 = m::mock(LicenceEntity::class)->makePartial()->setId(2);
         $licence2->shouldReceive('getGoodsOrPsv->getId')->andReturn('lcat_psv');
-        $licence2->shouldReceive('getTypeOfLicence->getId')->andReturn('ltyp_r');
+        $licence2->shouldReceive('getLicenceType->getId')->andReturn('ltyp_r');
         $licence2->shouldReceive('getTotAuthVehicles')->andReturn(7);
 
         $this->repoMap['Application']
             ->shouldReceive('fetchActiveForOrganisation')
             ->with(69)
             ->andReturn([$application1, $application2]);
+
+        $organisation = m::mock(OrganisationEntity::class)->makePartial()->setId($organisationId);
+        $this->repoMap['Organisation']
+            ->shouldReceive('fetchById')
+            ->with($organisationId)
+            ->andReturn($organisation);
 
         $organisation
             ->shouldReceive('getActiveLicences')
