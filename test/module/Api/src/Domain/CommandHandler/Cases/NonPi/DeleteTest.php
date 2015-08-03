@@ -52,8 +52,8 @@ class DeleteTest extends CommandHandlerTestCase
         /** @var $e NonPiEntity */
         $e = null;
 
-        $this->repoMap['NonPi']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
+        $this->repoMap['NonPi']->shouldReceive('fetchById')
+            ->with($id)
             ->andReturn($noteEntity)
             ->shouldReceive('delete')
             ->with(m::type(NonPiEntity::class))
@@ -70,6 +70,6 @@ class DeleteTest extends CommandHandlerTestCase
         $this->assertInstanceOf(Result::class, $result);
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
-        $this->assertContains('Deleted', $result->getMessages());
+        $this->assertContains('Id 111 deleted', $result->getMessages());
     }
 }

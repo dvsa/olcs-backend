@@ -12,6 +12,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Transfer\Query\OtherLicence\OtherLicence as Qry;
 use Dvsa\Olcs\Api\Domain\Repository\OtherLicence as OtherLicenceRepo;
 use Doctrine\ORM\Query;
+use Mockery as m;
 
 /**
  * Other Licence Test
@@ -32,12 +33,18 @@ class OtherLicenceTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+        $mockOtherLicence = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+        $mockOtherLicence->shouldReceive('serialize')
+            ->once()
+            ->andReturn(['id' => 111])
+            ->once();
+
         $this->repoMap['OtherLicence']->shouldReceive('fetchUsingId')
             ->with($query)
-            ->andReturn('otherLicence')
+            ->andReturn($mockOtherLicence)
             ->once();
 
         $result = $this->sut->handleQuery($query);
-        $this->assertEquals($result, 'otherLicence');
+        $this->assertEquals($result->serialize(), ['id' => 111]);
     }
 }

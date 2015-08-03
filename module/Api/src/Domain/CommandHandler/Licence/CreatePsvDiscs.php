@@ -30,6 +30,7 @@ final class CreatePsvDiscs extends AbstractCommandHandler implements Transaction
         $result = new Result();
 
         $howMany = $command->getAmount();
+
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence());
 
@@ -41,7 +42,7 @@ final class CreatePsvDiscs extends AbstractCommandHandler implements Transaction
         $totalAuth = $licence->getTotAuthVehicles();
         $currentDiscs = $licence->getPsvDiscs()->matching($criteria)->count();
 
-        if (($currentDiscs + $howMany) > $totalAuth ) {
+        if (($currentDiscs + $howMany) > $totalAuth) {
             throw new ValidationException(
                 [
                     'amount' => [

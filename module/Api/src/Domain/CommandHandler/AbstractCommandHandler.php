@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
+use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -47,8 +49,15 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
     private $repoManager;
 
+    /**
+     * @var Result
+     */
+    protected $result;
+
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $this->result = new Result();
+
         /** @var ServiceLocatorInterface $mainServiceLocator  */
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
@@ -60,11 +69,20 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             $this->setDocumentGenerator($mainServiceLocator->get('DocumentGenerator'));
         }
 
+        if ($this instanceof AddressServiceAwareInterface) {
+            $this->setAddressService($mainServiceLocator->get('AddressService'));
+        }
+
         if ($this instanceof \Dvsa\Olcs\Api\Domain\EmailAwareInterface) {
             $this->setEmailService($mainServiceLocator->get(\Dvsa\Olcs\Email\Service\Client::class));
             $this->setTemplateRendererService(
                 $mainServiceLocator->get(\Dvsa\Olcs\Email\Service\TemplateRenderer::class)
             );
+        }
+
+        if ($this instanceof \Dvsa\Olcs\Api\Domain\CompaniesHouseAwareInterface) {
+            $companiesHouseService = $mainServiceLocator->get('serviceFactory')->getService('CompaniesHouse');
+            $this->setCompaniesHouseService($companiesHouseService);
         }
 
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');

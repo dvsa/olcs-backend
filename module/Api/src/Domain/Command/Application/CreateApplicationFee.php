@@ -16,5 +16,13 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class CreateApplicationFee extends AbstractIdOnlyCommand
 {
+    protected $feeTypeFeeType;
 
+    /**
+     * @return mixed
+     */
+    public function getFeeTypeFeeType()
+    {
+        return $this->feeTypeFeeType;
+    }
 }

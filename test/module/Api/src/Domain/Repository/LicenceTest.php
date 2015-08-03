@@ -2,7 +2,7 @@
 
 /**
  * Licence test
- * 
+ *
  * @author Rob Caiger <rob@clocal.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -17,12 +17,10 @@ use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Doctrine\DBAL\LockMode;
-use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 
 /**
  * Licence test
- * 
+ *
  * @author Rob Caiger <rob@clocal.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -136,6 +134,10 @@ class LicenceTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
 
+        $this->queryBuilder->shouldReceive('with')->with('operatingCentres', 'ocs')->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('ocs.operatingCentre', 'ocs_oc')->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('ocs_oc.address', 'ocs_oc_a')->andReturnSelf();
+
         $qb->shouldReceive('expr->eq')->with('m.licNo', ':licNo')->once()->andReturn('EXPR');
         $qb->shouldReceive('where')->with('EXPR')->once()->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('licNo', 'LIC0001')->once()->andReturnSelf();
@@ -156,6 +158,10 @@ class LicenceTest extends RepositoryTestCase
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+
+        $this->queryBuilder->shouldReceive('with')->with('operatingCentres', 'ocs')->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('ocs.operatingCentre', 'ocs_oc')->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('ocs_oc.address', 'ocs_oc_a')->andReturnSelf();
 
         $qb->shouldReceive('expr->eq')->with('m.licNo', ':licNo')->once()->andReturn('EXPR');
         $qb->shouldReceive('where')->with('EXPR')->once()->andReturnSelf();
@@ -185,5 +191,132 @@ class LicenceTest extends RepositoryTestCase
         $expectedQuery = '[QUERY] INNER JOIN m.licenceVehicles lv INNER JOIN lv.vehicle v'
             . ' AND lv.removalDate IS NULL AND v.vrm = [[ABC123]]';
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchWithEnforcementArea()
+    {
+        $licenceId = 1;
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $qb->shouldReceive('getQuery->getSingleResult')
+            ->andReturn('RESULT');
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('enforcementArea')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('byId')
+            ->with($licenceId)
+            ->once()
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Licence::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchWithEnforcementArea($licenceId);
+        $this->assertEquals('RESULT', $result);
+    }
+
+    public function testFetchWithOperatingCentres()
+    {
+        $licenceId = 1;
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $qb->shouldReceive('getQuery->getSingleResult')
+            ->andReturn('RESULT');
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('operatingCentres', 'oc')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('oc.operatingCentre', 'oc_oc')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('oc_oc.address', 'oc_oc_a')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('byId')
+            ->with($licenceId)
+            ->once()
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Licence::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchWithOperatingCentres($licenceId);
+        $this->assertEquals('RESULT', $result);
+    }
+
+    public function testFetchWithPrivateHireLicence()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
+            ->shouldReceive('with')->with('privateHireLicences', 'phl')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('phl.contactDetails', 'cd')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('cd.address', 'add')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('add.countryCode')->once()->andReturnSelf()
+            ->shouldReceive('byId')->with(21)->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getSingleResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchWithPrivateHireLicence(21));
+
+        $expectedQuery = 'BLAH';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testApplyListFilters()
+    {
+        $this->setUpSut(LicenceRepo::class, true);
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->eq')->with('m.organisation', ':organisation')->once()->andReturn('EXPR1');
+        $mockQb->shouldReceive('setParameter')->with('organisation', 723)->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->notIn')->with('m.status', ':excludeStatuses')->once()->andReturn('EXPR2');
+        $mockQb->shouldReceive('setParameter')->with('excludeStatuses', ['status1', 'status2'])->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
+
+        $mockQuery = m::mock(QueryInterface::class);
+        $mockQuery->shouldReceive('getOrganisation')->with()->andReturn(723);
+        $mockQuery->shouldReceive('getExcludeStatuses')->with()->andReturn(['status1', 'status2']);
+
+        $this->sut->applyListFilters($mockQb, $mockQuery);
     }
 }

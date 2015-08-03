@@ -1,7 +1,7 @@
 <?php
 
 /**
- * FeeType
+ * Fee Type
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -10,11 +10,10 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as Entity;
 
 /**
- * FeeType
+ * Fee Type
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -29,7 +28,7 @@ class FeeType extends AbstractRepository
      * @param RefDataEntity $goodsOrPsv
      * @param RefDataEntity $licenceType
      * @param \DateTime $date
-     * @param TrafficArea $trafficArea
+     * @param mixed $trafficArea traffic area entity or id
      *
      * @return \Dvsa\Olcs\Api\Entity\Fee\FeeType
      * @throws Exception\NotFoundException
@@ -45,7 +44,11 @@ class FeeType extends AbstractRepository
 
         $this->getQueryBuilder()->withRefdata();
 
-        $effectiveFrom = $date->format(\DateTime::W3C);
+        if ($date === null) {
+            // if not set, use today
+            $date = new \DateTime();
+        }
+        $effectiveOn = $date->format(\DateTime::W3C);
 
         $qb->andWhere($qb->expr()->eq('ft.feeType', ':feeType'))
             ->andWhere($qb->expr()->eq('ft.goodsOrPsv', ':goodsOrPsv'))
@@ -55,7 +58,7 @@ class FeeType extends AbstractRepository
                     $qb->expr()->isNull('ft.licenceType')
                 )
             )
-            ->andWhere($qb->expr()->lte('ft.effectiveFrom', ':effectiveFrom'));
+            ->andWhere($qb->expr()->lte('ft.effectiveFrom', ':effectiveOn'));
 
         if ($trafficArea !== null) {
             $qb->andWhere(
@@ -76,7 +79,37 @@ class FeeType extends AbstractRepository
             ->setParameter('goodsOrPsv', $goodsOrPsv)
             ->setParameter('licenceType', $licenceType)
             ->setParameter('feeType', $feeType)
-            ->setParameter('effectiveFrom', $effectiveFrom)
+            ->setParameter('effectiveOn', $effectiveOn)
+            ->setMaxResults(1);
+
+        $results = $qb->getQuery()->execute();
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('FeeType not found');
+        }
+
+        return $results[0];
+    }
+
+    /**
+     * @param RefDataEntity $feeType
+     * @param RefDataEntity $goodsOrPsv
+     * @param RefDataEntity $licenceType
+     * @param \DateTime $date
+     * @param mixed $trafficArea traffic area entity or id
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Fee\FeeType
+     * @throws Exception\NotFoundException
+     */
+    public function fetchLatestForIrfo($irfoFeeType)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq('ft.feeType', ':feeType'));
+        $qb->andWhere($qb->expr()->eq('ft.irfoFeeType', ':irfoFeeType'));
+
+        $qb->addOrderBy('ft.effectiveFrom', 'DESC')
+            ->setParameter('feeType', 'IRFOGVPERMIT')
+            ->setParameter('irfoFeeType', $irfoFeeType)
             ->setMaxResults(1);
 
         $results = $qb->getQuery()->execute();

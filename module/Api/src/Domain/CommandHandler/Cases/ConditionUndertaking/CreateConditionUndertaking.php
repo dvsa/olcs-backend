@@ -26,7 +26,7 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
 {
     protected $repoServiceName = 'ConditionUndertaking';
 
-    protected $extraRepos = ['Cases', 'Licence', 'OperatingCentre'];
+    protected $extraRepos = ['Cases', 'Licence', 'Application', 'OperatingCentre'];
 
     /**
      * Creates ConditionUndertaking
@@ -52,22 +52,30 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
      * @param Cmd $command
      * @return ConditionUndertaking
      */
-    private function createConditionUndertakingObject(Cmd $command)
+    private function createConditionUndertakingObject($command)
     {
         $isDraft = 'N';
-        $case = $this->getRepo('Cases')->fetchById($command->getCase());
-        $licence = $this->getRepo('Licence')->fetchById($case->getLicence()->getId());
 
         $conditionUndertaking = new ConditionUndertaking(
             $this->getRepo()->getRefdataReference($command->getConditionType()),
             $command->getIsFulfilled(),
             $isDraft
         );
-        $conditionUndertaking->setCase($case);
-        $conditionUndertaking->setAttachedTo($this->getRepo()->getRefdataReference($command->getAttachedTo()));
+
+        if (!is_null($command->getCase())) {
+            $case = $this->getRepo('Cases')->fetchById($command->getCase());
+            $conditionUndertaking->setCase($case);
+        }
+
+        $application = $this->getRepo('Application')->fetchById($command->getApplication());
+        $conditionUndertaking->setApplication($application);
+
+        $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
         $conditionUndertaking->setLicence($licence);
 
-        $conditionUndertaking->setAddedVia($this->getRepo()->getRefdataReference(ConditionUndertaking::ADDED_VIA_CASE));
+        $conditionUndertaking->setAttachedTo($this->getRepo()->getRefdataReference($command->getAttachedTo()));
+        $conditionUndertaking->setAddedVia($this->getRepo()->getRefdataReference($command->getAddedVia()));
+        $conditionUndertaking->setNotes($command->getNotes());
 
         $conditionUndertaking = $this->setAttachedToProperties($conditionUndertaking, $command);
 
@@ -81,7 +89,7 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
      * @param Cmd $command
      * @return ConditionUndertaking
      */
-    private function setAttachedToProperties(ConditionUndertaking $conditionUndertaking, Cmd $command)
+    private function setAttachedToProperties(ConditionUndertaking $conditionUndertaking, $command)
     {
         if ($command->getAttachedTo() == ConditionUndertaking::ATTACHED_TO_LICENCE) {
             $conditionUndertaking->setAttachedTo(

@@ -28,7 +28,6 @@ class Application extends AbstractRepository
             ->with('previousConvictions');
 
         return $qb->getQuery()->getSingleResult();
-
     }
 
     public function fetchForOrganisation($organisationId)
@@ -87,10 +86,64 @@ class Application extends AbstractRepository
             ->with('licence', 'l')
             ->with('l.operatingCentres', 'l_oc')
             ->with('l_oc.operatingCentre', 'l_oc_oc')
+            ->with('l_oc_oc.address', 'l_oc_oc_a')
             ->with('operatingCentres', 'a_oc')
             ->with('a_oc.operatingCentre', 'a_oc_oc')
+            ->with('a_oc_oc.address', 'a_oc_oc_a')
             ->byId($applicationId);
 
         return $qb->getQuery()->getSingleResult();
+    }
+
+    public function fetchWithLicence($applicationId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->byId($applicationId);
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
+    public function fetchWithTmLicences($applicationId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->with('l.tmLicences', 'ltml')
+            ->byId($applicationId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Override parent
+     *
+     * @param QueryBuilder $qb
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        // PMD
+        unset($qb);
+
+        $this->getQueryBuilder()
+            ->with('licence', 'l');
+    }
+
+    /**
+     * Override parent
+     *
+     * @param QueryBuilder $qb
+     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
+    {
+        if (is_numeric($query->getOrganisation())) {
+            $qb->andWhere($qb->expr()->eq('l.organisation', ':organisation'))
+                ->setParameter('organisation', $query->getOrganisation());
+        }
     }
 }

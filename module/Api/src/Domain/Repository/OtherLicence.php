@@ -8,6 +8,8 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as Entity;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * OtherLicence
@@ -36,5 +38,47 @@ class OtherLicence extends AbstractRepository
             ->setParameter('tmId', $tmId);
 
         return $dqb->getQuery()->getResult();
+    }
+
+    /**
+     * Filter list
+     *
+     * @param \Dvsa\Olcs\Api\Domain\Repository\QueryBuilder $qb
+     * @param \Dvsa\Olcs\Api\Domain\Repository\QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if ($query->getTransportManager()) {
+            $qb->andWhere($qb->expr()->eq($this->alias .'.transportManager', ':tmId'))
+                ->setParameter('tmId', $query->getTransportManager());
+        }
+    }
+
+    public function fetchForTransportManagerApplication($transportManagerApplicationId)
+    {
+        return $this->fetchForTransportManagerApplicationOrLicence(
+            $transportManagerApplicationId,
+            'transportManagerApplication'
+        );
+    }
+
+    public function fetchForTransportManagerLicence($transportManagerLicenceId)
+    {
+        return $this->fetchForTransportManagerApplicationOrLicence(
+            $transportManagerLicenceId,
+            'transportManagerLicence'
+        );
+    }
+
+    protected function fetchForTransportManagerApplicationOrLicence($id, $field)
+    {
+        $qb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata();
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.' . $field, ':id'))
+            ->setParameter('id', $id);
+
+        return $qb->getQuery()->getResult();
     }
 }

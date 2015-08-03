@@ -101,7 +101,11 @@ abstract class AbstractTrafficAreaEnforcementArea implements BundleSerializableI
      *
      * @var \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea",
+     *     fetch="LAZY",
+     *     inversedBy="trafficAreaEnforcementAreas"
+     * )
      * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=false)
      */
     protected $trafficArea;

@@ -58,6 +58,26 @@ class Organisation extends AbstractOrganisation
     }
 
     /**
+     * Is this organisation a sole trader
+     *
+     * @return bool
+     */
+    public function isSoleTrader()
+    {
+        return $this->getType()->getId() === self::ORG_TYPE_SOLE_TRADER;
+    }
+
+    /**
+     * Is this organisation a partnership
+     *
+     * @return bool
+     */
+    public function isPartnership()
+    {
+        return $this->getType()->getId() === self::ORG_TYPE_PARTNERSHIP;
+    }
+
+    /**
      * @return array
      * @deprecated
      */

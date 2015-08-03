@@ -94,4 +94,79 @@ class BusShortNotice extends AbstractBusShortNotice
         $this->policeChange = $policeChange;
         $this->policeDetail = $policeDetail;
     }
+
+    public function reset()
+    {
+        $this->bankHolidayChange = 'N';
+        $this->unforseenChange = 'N';
+        $this->unforseenDetail = null;
+        $this->timetableChange = 'N';
+        $this->timetableDetail = null;
+        $this->replacementChange = 'N';
+        $this->replacementDetail = null;
+        $this->notAvailableChange = 'N';
+        $this->notAvailableDetail = null;
+        $this->specialOccasionChange = 'N';
+        $this->specialOccasionDetail = null;
+        $this->connectionChange = 'N';
+        $this->connectionDetail = null;
+        $this->holidayChange = 'N';
+        $this->holidayDetail = null;
+        $this->trcChange = 'N';
+        $this->trcDetail = null;
+        $this->policeChange = 'N';
+        $this->policeDetail = null;
+        $this->createdBy = null;
+        $this->lastModifiedOn = null;
+        $this->lastModifiedBy = null;
+    }
+
+    /**
+     * Returns whether a bus reg has short notice details which makes it grantable
+     *
+     * @return bool
+     */
+    public function hasGrantableDetails()
+    {
+        $shortNoticQuestionFields = [
+            ['change' => 'bankHolidayChange'],
+            ['change' => 'connectionChange', 'detail' => 'connectionDetail'],
+            ['change' => 'holidayChange', 'detail' => 'holidayDetail'],
+            ['change' => 'notAvailableChange', 'detail' => 'notAvailableDetail'],
+            ['change' => 'policeChange', 'detail' => 'policeDetail'],
+            ['change' => 'replacementChange', 'detail' => 'replacementDetail'],
+            ['change' => 'specialOccasionChange', 'detail' => 'specialOccasionDetail'],
+            ['change' => 'timetableChange', 'detail' => 'timetableDetail'],
+            ['change' => 'trcChange', 'detail' => 'trcDetail'],
+            ['change' => 'unforseenChange', 'detail' => 'unforseenDetail'],
+        ];
+
+        $hasShortNoticeDetails = false;
+
+        // for short notice at least one question should be Yes
+        // and corresponding textarea (if there is one) should not be empty
+        foreach ($shortNoticQuestionFields as $questionField) {
+            $changeValue = $this->{$questionField['change']};
+
+            if (!empty($changeValue) && ($changeValue === 'Y')) {
+                // marked as Yes
+                if (!empty($questionField['detail'])) {
+                    // detail field exists for the question
+                    $detailValue = $this->{$questionField['detail']};
+
+                    if (!empty($detailValue)) {
+                        // value of the detail field not empty
+                        $hasShortNoticeDetails = true;
+                        break;
+                    }
+                } else {
+                    // no detail field for the question
+                    $hasShortNoticeDetails = true;
+                    break;
+                }
+            }
+        }
+
+        return $hasShortNoticeDetails;
+    }
 }

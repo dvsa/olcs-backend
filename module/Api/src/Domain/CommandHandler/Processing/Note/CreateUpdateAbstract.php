@@ -8,6 +8,8 @@ use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepository;
 use Dvsa\Olcs\Transfer\Command\Processing\Note\Create as CreateCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Exception;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
@@ -16,17 +18,11 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 /**
  * Create Update Abstract a Note
  */
-abstract class CreateUpdateAbstract extends AbstractCommandHandler
+abstract class CreateUpdateAbstract extends AbstractCommandHandler implements AuthAwareInterface
 {
-    protected $repoServiceName = 'Note';
+    use AuthAwareTrait;
 
-    /**
-     * This user ID is hard coded. Change it.
-     *
-     * @var int
-     * @deprecated REMOVE THIS AND DO IT PROPERLY ASAP!
-     */
-    private $hardCodedUserId = '1';
+    protected $repoServiceName = 'Note';
 
     /**
      * @param CommandInterface $command
@@ -36,29 +32,41 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
     {
         $entity = $this->retrieveEntity($command);
 
-        if ($command->getApplication() !== null) {
+        if (method_exists($command, 'getApplication') && $command->getApplication() !== null) {
 
+            /** @var Entity\Application\Application $application */
             $application = $this->getRepo()->getReference(
                 Entity\Application\Application::class,
                 $command->getApplication()
             );
 
             $entity->setApplication($application);
+
+            if ($application->getLicence() !== null) {
+                $entity->setLicence($application->getLicence());
+            }
+
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_APPLICATION));
         }
 
-        if ($command->getBusReg() !== null) {
+        if (method_exists($command, 'getApplication') && $command->getBusReg() !== null) {
 
+            /** @var Entity\Bus\BusReg $busReg */
             $busReg = $this->getRepo()->getReference(
                 Entity\Bus\BusReg::class,
                 $command->getBusReg()
             );
 
             $entity->setBusReg($busReg);
+
+            if ($busReg->getLicence() !== null) {
+                $entity->setLicence($busReg->getLicence());
+            }
+
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_BUS));
         }
 
-        if ($command->getCase() !== null) {
+        if (method_exists($command, 'getCase') && $command->getCase() !== null) {
 
             /** @var Entity\Cases\Cases $case */
             $case = $this->getRepo()->getReference(
@@ -85,7 +93,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_CASE));
         }
 
-        if ($command->getLicence() !== null) {
+        if (method_exists($command, 'getLicence') && $command->getLicence() !== null) {
 
             $licence = $this->getRepo()->getReference(
                 Entity\Licence\Licence::class,
@@ -96,7 +104,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_LICENCE));
         }
 
-        if ($command->getOrganisation() !== null) {
+        if (method_exists($command, 'getOrganisation') && $command->getOrganisation() !== null) {
 
             $org = $this->getRepo()->getReference(
                 Entity\Organisation\Organisation::class,
@@ -107,7 +115,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_ORGANISATION));
         }
 
-        if ($command->getTransportManager() !== null) {
+        if (method_exists($command, 'getTransportManager') && $command->getTransportManager() !== null) {
 
             $transportManager = $this->getRepo()->getReference(
                 Entity\Tm\TransportManager::class,
@@ -123,8 +131,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
         }
 
         $entity->setUser(
-            $this->getRepo()->getReference(Entity\User\User::class,
-                $this->hardCodedUserId)
+            $this->getCurrentUser()
         );
 
         return $entity;

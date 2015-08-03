@@ -38,6 +38,7 @@ class CreateTest extends CommandHandlerTestCase
     {
         $this->refData = [
             'non_pi_type_off_proc',
+            'non_pio_nfa'
         ];
 
         $this->references = [
@@ -46,10 +47,7 @@ class CreateTest extends CommandHandlerTestCase
             ],
             Entity\Pi\PiVenue::class => [
                 2 => m::mock(Entity\Pi\PiVenue::class)
-            ],
-            Entity\Pi\PresidingTc::class => [
-                2 => m::mock(Entity\Pi\PresidingTc::class)
-            ],
+            ]
         ];
 
         parent::initReferences();
@@ -63,11 +61,12 @@ class CreateTest extends CommandHandlerTestCase
             "case" => "50",
             "nonPiType" => "non_pi_type_off_proc",
             "venue" => "2",
-            "presidingTc" => "2",
+            "presidingStaffName" => "John Smith",
             "agreedByTcDate" => "2015-01-01 12:15",
             "hearingDate" => "2015-02-01 14:15",
             "venueOther" => "Some Other Venue",
-            "witnessCount" => "4"
+            "witnessCount" => "4",
+            "outcome" => "non_pio_nfa"
         ];
 
         $command = CreateCommand::create($data);

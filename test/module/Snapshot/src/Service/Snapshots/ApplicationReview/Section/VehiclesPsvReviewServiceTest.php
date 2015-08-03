@@ -58,6 +58,7 @@ class VehiclesPsvReviewServiceTest extends MockeryTestCase
                     ['foo' => 'bar']
                 ],
                 [
+                    'isVariation' => false,
                     'hasEnteredReg' => 'N'
                 ],
                 [
@@ -69,6 +70,7 @@ class VehiclesPsvReviewServiceTest extends MockeryTestCase
                     ['foo' => 'bar']
                 ],
                 [
+                    'isVariation' => false,
                     'hasEnteredReg' => 'Y',
                     'licenceVehicles' => [
                         [
@@ -193,6 +195,7 @@ class VehiclesPsvReviewServiceTest extends MockeryTestCase
                     ['foo' => 'bar']
                 ],
                 [
+                    'isVariation' => false,
                     'hasEnteredReg' => 'Y',
                     'licenceVehicles' => [
                         [
@@ -251,6 +254,7 @@ class VehiclesPsvReviewServiceTest extends MockeryTestCase
                     ['foo' => 'bar']
                 ],
                 [
+                    'isVariation' => false,
                     'hasEnteredReg' => 'Y',
                     'licenceVehicles' => [
                         [

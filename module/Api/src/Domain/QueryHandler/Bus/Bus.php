@@ -17,6 +17,19 @@ class Bus extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchUsingId($query);
+        $busReg = $this->getRepo()->fetchUsingId($query);
+
+        return $this->result(
+            $busReg,
+            [
+                'licence',
+                'busNoticePeriod',
+                'busServiceTypes',
+                'trafficAreas',
+                'localAuthoritys',
+                'subsidised',
+                'otherServices'
+            ]
+        );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking as Entity;
 use Mockery as m;
@@ -19,6 +20,15 @@ class ApplicationTrackingEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testConstruct()
+    {
+        $application = m::mock(Application::class);
+
+        $at = new Entity($application);
+
+        $this->assertSame($application, $at->getApplication());
+    }
 
     public function testGetValueOptions()
     {
@@ -82,5 +92,41 @@ class ApplicationTrackingEntityTest extends EntityTester
         $this->assertEquals(18, $sut->getVehiclesDeclarationsStatus());
         $this->assertEquals(19, $sut->getVehiclesPsvStatus());
         $this->assertEquals(20, $sut->getVehiclesStatus());
+    }
+
+    public function testIsValidEmpty()
+    {
+        $sections = [];
+
+        /** @var Entity $at */
+        $at = $this->instantiate(Entity::class);
+
+        $this->assertTrue($at->isValid($sections));
+    }
+
+    public function testIsValid()
+    {
+        $sections = [
+            'businessType'
+        ];
+
+        /** @var Entity $at */
+        $at = $this->instantiate(Entity::class);
+        $at->setBusinessTypeStatus(Entity::STATUS_NOT_ACCEPTED);
+
+        $this->assertFalse($at->isValid($sections));
+    }
+
+    public function testIsValidWhenValid()
+    {
+        $sections = [
+            'businessType'
+        ];
+
+        /** @var Entity $at */
+        $at = $this->instantiate(Entity::class);
+        $at->setBusinessTypeStatus(Entity::STATUS_ACCEPTED);
+
+        $this->assertTrue($at->isValid($sections));
     }
 }

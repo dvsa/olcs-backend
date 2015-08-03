@@ -29,11 +29,17 @@ class UpdateFeeTest extends CommandHandlerTestCase
         $this->sut = new UpdateFee();
         $this->mockRepo('Fee', FeeRepo::class);
 
+        parent::setUp();
+    }
+
+    public function initReferences()
+    {
         $this->refData = [
-            FeeEntity::STATUS_PAID
+            FeeEntity::STATUS_PAID,
+            FeeEntity::STATUS_WAIVED
         ];
 
-        parent::setUp();
+        parent::initReferences();
     }
 
     public function testHandleCommand()

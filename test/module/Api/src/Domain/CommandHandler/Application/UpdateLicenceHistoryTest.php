@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateLicenceHistory;
@@ -55,11 +56,22 @@ class UpdateLicenceHistoryTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
+        $data = [
+            'id' => 1,
+            'section' => 'licenceHistory'
+        ];
+        $result = new Result();
+        $result->addMessage('UpdateApplicationCompletion');
+        $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
-            'messages' => ['Licence history section has been updated']
+            'messages' => [
+                'Licence history section has been updated',
+                'UpdateApplicationCompletion'
+            ]
         ];
 
         $this->assertInstanceOf(Result::class, $result);
@@ -129,11 +141,22 @@ class UpdateLicenceHistoryTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
+        $data = [
+            'id' => 1,
+            'section' => 'licenceHistory'
+        ];
+        $result = new Result();
+        $result->addMessage('UpdateApplicationCompletion');
+        $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
-            'messages' => ['Licence history section has been updated']
+            'messages' => [
+                'Licence history section has been updated',
+                'UpdateApplicationCompletion'
+            ]
         ];
 
         $this->assertInstanceOf(Result::class, $result);

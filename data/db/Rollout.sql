@@ -264,15 +264,15 @@ INSERT INTO `admin_area_traffic_area`(id, traffic_area_id) VALUES
 INSERT INTO `traffic_area` (`created_by`, `last_modified_by`, `id`, `txc_name`, `created_on`, `last_modified_on`,
     `version`, `name`, `contact_details_id`, `is_scotland`, `is_wales`, `is_england`, `is_ni`) VALUES
     (2,2,'B','NorthEastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North East of England',1,0,0,1,0),
-    (2,2,'C','NorthWestern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North West of England',2,0,0,1,0),
+    (2,2,'C','NorthWestern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'North West of England',1,0,0,1,0),
     (1,1,'D','WestMidlands','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'West Midlands',3,0,0,1,0),
-    (2,2,'F','Eastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'East of England',4,0,0,1,0),
-    (1,1,'G','Welsh','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'Wales',5,0,1,0,0),
-    (2,2,'H','Western','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'West of England',6,0,0,1,0),
+    (2,2,'F','Eastern','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'East of England',3,0,0,1,0),
+    (1,1,'G','Welsh','2004-11-03 19:06:00','2004-11-03 19:06:00',1,'Wales',3,0,1,0,0),
+    (2,2,'H','Western','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'West of England',3,0,0,1,0),
     (2,2,'K','SouthEastMetropolitan','2001-06-09 11:01:21','2001-06-09 11:01:21',1,
-    'London and the South East of England',7,0,0,1,0),
+    'London and the South East of England',3,0,0,1,0),
     (2,2,'M','Scottish','2001-06-09 11:01:21','2001-06-09 11:01:21',1,'Scotland',8,1,0,0,0),
-    (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',9,0,0,0,1);
+    (1,1,'N','NorthernIreland','2012-09-14 00:00:00','2012-09-14 00:00:00',1,'Northern Ireland',8,0,0,0,1);
 
 INSERT INTO `enforcement_area` (`id`, `name`, `email_address`, `version`)
 VALUES
@@ -1505,14 +1505,6 @@ INSERT INTO `fee_type` (`id`, `accrual_rule`, `created_by`, `goods_or_psv`, `las
 (10047,'acr_immediate',NULL,'lcat_psv',NULL,NULL,NULL,0.00,'1995-01-01 00:00:00',0,'IRFOPSVCOPY',0.00,11.00,NULL,'IRFO PSV NEU Occ Serv Op (19) Copy Fee',NULL,1),
 (10048,'acr_immediate',NULL,'lcat_psv',NULL,NULL,NULL,0.00,'1995-01-01 00:00:00',0,'IRFOPSVCOPY',0.00,11.00,NULL,'IRFO PSV Shuttle Serv Op (20) Copy Fee',NULL,1),
 (10049,'acr_immediate',NULL,'lcat_psv',NULL,NULL,NULL,0.00,'1995-01-01 00:00:00',0,'IRFOPSVCOPY',0.00,0.00,NULL,'IRFO PSV Own A/C (21) Copy Fee',NULL,1),
-(10050,'acr_immediate',NULL,'lcat_gv',NULL,NULL,NULL,0.00,'1995-01-01 00:00:00',0,'IRFOGVPERMIT',0.00,121.00,NULL,'IRFO GV ECMT 100% Permit Fee',NULL,1),
-(10051,'acr_immediate',NULL,'lcat_gv',NULL,NULL,NULL,0.00,'1995-01-01 00:00:00',0,'IRFOGVPERMIT',0.00,90.00,NULL,'IRFO GV ECMT 75% Permit Fee',NULL,1),
-(10052,'acr_immediate',NULL,'lcat_gv',NULL,NULL,NULL,0.00,'1995-01-01 00:00:00',0,'IRFOGVPERMIT',0.00,60.00,NULL,'IRFO GV ECMT 50% Permit Fee',NULL,1),
-(10053,'acr_immediate',NULL,'lcat_gv',NULL,NULL,NULL,0.00,'1995-01-01 00:00:00',0,'IRFOGVPERMIT',0.00,30.00,NULL,'IRFO GV ECMT 25% Permit Fee',NULL,1),
-(10054,'acr_immediate',NULL,'lcat_gv',NULL,NULL,NULL,0.00,'1995-01-01 00:00:00',0,'IRFOGVPERMIT',0.00,16.00,NULL,'IRFO GV ECMT Community Removal Permit Fee',NULL,1),
-(10055,'acr_immediate',NULL,'lcat_gv',NULL,NULL,NULL,0.00,'1995-01-01 00:00:00',0,'IRFOGVPERMIT',0.00,7.00,NULL,'IRFO GV Single Journey to Any Country Permit Fee',NULL,1),
-(10056,'acr_immediate',NULL,'lcat_gv',NULL,NULL,NULL,0.00,'1995-01-01 00:00:00',0,'IRFOGVPERMIT',0.00,13.00,NULL,'IRFO GV Turkey - 4 Journeys Permit Fee',NULL,1),
-(10057,'acr_immediate',NULL,'lcat_gv',NULL,NULL,NULL,0.00,'1995-01-01 00:00:00',0,'IRFOGVPERMIT',0.00,46.00,NULL,'IRFO GV Morocco - 15 journeys Permit Fee',NULL,1),
 (10058,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOPSVAPP',0.00,180.00,'2008-07-15 16:49:17','IRFO PSV EU Reg Serv Op Prtnr (17) App Fee','2008-07-15 16:49:17',1),
 (10059,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOPSVAPP',0.00,180.00,'2008-07-15 16:49:17','IRFO PSV EU Reg Serv Op No Prtnr (19A) App Fee','2008-07-15 16:49:17',1),
 (10060,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOPSVAPP',0.00,180.00,'2008-07-15 16:49:17','IRFO PSV NEU Reg Serv Op Prtnr (18) App Fee','2008-07-15 16:49:17',1),
@@ -1531,14 +1523,6 @@ INSERT INTO `fee_type` (`id`, `accrual_rule`, `created_by`, `goods_or_psv`, `las
 (10073,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOPSVCOPY',0.00,13.00,'2008-07-15 16:49:17','IRFO PSV NEU Reg Serv Op No Prtnr (19) Copy Fee','2008-07-15 16:49:17',1),
 (10074,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOPSVCOPY',0.00,13.00,'2008-07-15 16:49:17','IRFO PSV NEU Occ Serv Op (19) Copy Fee','2008-07-15 16:49:17',1),
 (10075,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOPSVCOPY',0.00,13.00,'2008-07-15 16:49:17','IRFO PSV Shuttle Serv Op (20) Copy Fee','2008-07-15 16:49:17',1),
-(10076,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOGVPERMIT',0.00,133.00,'2008-07-15 16:49:17','IRFO GV ECMT 100% Permit Fee','2008-07-15 16:49:17',1),
-(10077,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOGVPERMIT',0.00,102.00,'2008-07-15 16:49:17','IRFO GV ECMT 75% Permit Fee','2008-07-15 16:49:17',1),
-(10078,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOGVPERMIT',0.00,68.00,'2008-07-15 16:49:17','IRFO GV ECMT 50% Permit Fee','2008-07-15 16:49:17',1),
-(10079,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOGVPERMIT',0.00,34.00,'2008-07-15 16:49:17','IRFO GV ECMT 25% Permit Fee','2008-07-15 16:49:17',1),
-(10080,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOGVPERMIT',0.00,18.00,'2008-07-15 16:49:17','IRFO GV ECMT Community Removal Permit Fee','2008-07-15 16:49:17',1),
-(10081,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOGVPERMIT',0.00,8.00,'2008-07-15 16:49:17','IRFO GV Single Journey to Any Country Permit Fee','2008-07-15 16:49:17',1),
-(10082,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOGVPERMIT',0.00,13.00,'2008-07-15 16:49:17','IIRFO GV Turkey - 4 Journeys Permit Fee','2008-07-15 16:49:17',1),
-(10083,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2008-07-31 23:59:59',0,'IRFOGVPERMIT',0.00,50.00,'2008-07-15 16:49:17','IRFO GV Morocco - 15 journeys Permit Fee','2008-07-15 16:49:17',1),
 (10084,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOPSVAPP',0.00,180.00,'2008-12-08 08:54:52','IRFO PSV EU Reg Serv Op Prtnr (17) App Fee','2008-12-08 08:54:52',1),
 (10085,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOPSVAPP',0.00,180.00,'2008-12-08 08:54:52','IRFO PSV EU Reg Serv Op No Prtnr (19A) App Fee','2008-12-08 08:54:52',1),
 (10086,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOPSVAPP',0.00,180.00,'2008-12-08 08:54:52','IRFO PSV NEU Reg Serv Op Prtnr (18) App Fee','2008-12-08 08:54:52',1),
@@ -1557,14 +1541,6 @@ INSERT INTO `fee_type` (`id`, `accrual_rule`, `created_by`, `goods_or_psv`, `las
 (10099,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOPSVCOPY',0.00,13.00,'2008-12-08 08:54:52','IRFO PSV NEU Reg Serv Op No Prtnr (19) Copy Fee','2008-12-08 08:54:52',1),
 (10100,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOPSVCOPY',0.00,13.00,'2008-12-08 08:54:52','IRFO PSV NEU Occ Serv Op (19) Copy Fee','2008-12-08 08:54:52',1),
 (10101,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOPSVCOPY',0.00,13.00,'2008-12-08 08:54:52','IRFO PSV Shuttle Serv Op (20) Copy Fee','2008-12-08 08:54:52',1),
-(10102,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOGVPERMIT',0.00,133.00,'2008-12-08 08:54:52','IRFO GV ECMT 100% Permit Fee','2008-12-08 08:54:52',1),
-(10103,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOGVPERMIT',0.00,102.00,'2008-12-08 08:54:52','IRFO GV ECMT 75% Permit Fee','2008-12-08 08:54:52',1),
-(10104,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOGVPERMIT',0.00,68.00,'2008-12-08 08:54:52','IRFO GV ECMT 50% Permit Fee','2008-12-08 08:54:52',1),
-(10105,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOGVPERMIT',0.00,34.00,'2008-12-08 08:54:52','IRFO GV ECMT 25% Permit Fee','2008-12-08 08:54:52',1),
-(10106,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOGVPERMIT',0.00,18.00,'2008-12-08 08:54:52','IRFO GV ECMT Community Removal Permit Fee','2008-12-08 08:54:52',1),
-(10107,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOGVPERMIT',0.00,8.00,'2008-12-08 08:54:52','IRFO GV Single Journey to Any Country Permit Fee','2008-12-08 08:54:52',1),
-(10108,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOGVPERMIT',0.00,13.00,'2008-12-08 08:54:52','IIRFO GV Turkey - 4 Journeys Permit Fee','2008-12-08 08:54:52',1),
-(10109,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'1996-01-01 23:59:59',0,'IRFOGVPERMIT',0.00,50.00,'2008-12-08 08:54:52','IRFO GV Morocco - 15 journeys Permit Fee','2008-12-08 08:54:52',1),
 (10110,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOPSVAPP',0.00,180.00,'2009-04-18 14:38:14','IRFO PSV EU Reg Serv Op Prtnr (17) App Fee','2009-04-18 14:38:14',1),
 (10111,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOPSVAPP',0.00,180.00,'2009-04-18 14:38:14','IRFO PSV EU Reg Serv Op No Prtnr (19A) App Fee','2009-04-18 14:38:14',1),
 (10112,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOPSVAPP',0.00,180.00,'2009-04-18 14:38:14','IRFO PSV NEU Reg Serv Op Prtnr (18) App Fee','2009-04-18 14:38:14',1),
@@ -1583,14 +1559,6 @@ INSERT INTO `fee_type` (`id`, `accrual_rule`, `created_by`, `goods_or_psv`, `las
 (10125,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOPSVCOPY',0.00,13.00,'2009-04-18 14:38:14','IRFO PSV NEU Reg Serv Op No Prtnr (19) Copy Fee','2009-04-18 14:38:14',1),
 (10126,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOPSVCOPY',0.00,13.00,'2009-04-18 14:38:14','IRFO PSV NEU Occ Serv Op (19) Copy Fee','2009-04-18 14:38:14',1),
 (10127,'acr_immediate',1,'lcat_psv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOPSVCOPY',0.00,13.00,'2009-04-18 14:38:14','IRFO PSV Shuttle Serv Op (20) Copy Fee','2009-04-18 14:38:14',1),
-(10128,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOGVPERMIT',0.00,133.00,'2009-04-18 14:38:14','IRFO GV ECMT 100% Permit Fee','2009-04-18 14:38:14',1),
-(10129,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOGVPERMIT',0.00,102.00,'2009-04-18 14:38:14','IRFO GV ECMT 75% Permit Fee','2009-04-18 14:38:14',1),
-(10130,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOGVPERMIT',0.00,68.00,'2009-04-18 14:38:14','IRFO GV ECMT 50% Permit Fee','2009-04-18 14:38:14',1),
-(10131,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOGVPERMIT',0.00,34.00,'2009-04-18 14:38:14','IRFO GV ECMT 25% Permit Fee','2009-04-18 14:38:14',1),
-(10132,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOGVPERMIT',0.00,18.00,'2009-04-18 14:38:14','IRFO GV ECMT Community Removal Permit Fee','2009-04-18 14:38:14',1),
-(10133,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOGVPERMIT',0.00,8.00,'2009-04-18 14:38:14','IRFO GV Single Journey to Any Country Permit Fee','2009-04-18 14:38:14',1),
-(10134,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOGVPERMIT',0.00,14.00,'2009-04-18 14:38:14','IIRFO GV Turkey - 4 Journeys Permit Fee','2009-04-18 14:38:14',1),
-(10135,'acr_immediate',1,'lcat_gv',1,NULL,NULL,0.00,'2009-05-02 23:59:00',0,'IRFOGVPERMIT',0.00,50.00,'2009-04-18 14:38:14','IRFO GV Morocco - 15 journeys Permit Fee','2009-04-18 14:38:14',1),
 (20001,'acr_immediate',1,'lcat_gv',1,'ltyp_r','N',0.00,'2012-07-01 00:00:00',0,'APP',0.00,254.30,'2012-09-14 00:00:00','NI GV/R Application Fee','2012-09-14 00:00:00',1),
 (20002,'acr_immediate',1,'lcat_gv',1,'ltyp_si','N',0.00,'2012-07-01 00:00:00',0,'APP',0.00,254.20,'2012-09-14 00:00:00','NI GV/SI Application Fee','2012-09-14 00:00:00',1),
 (20003,'acr_immediate',1,'lcat_gv',1,'ltyp_sn','N',0.00,'2012-07-01 00:00:00',0,'APP',0.00,254.10,'2012-09-14 00:00:00','NI GV/SN Application Fee','2012-09-14 00:00:00',1),
@@ -1639,6 +1607,42 @@ INSERT INTO `fee_type` (`id`, `is_miscellaneous`, `accrual_rule`, `created_by`, 
 (20051,1,'acr_immediate',NULL,NULL,NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'PHOTOCOPY',0.00,10.00,'2014-04-01 10:30:07','Photocopying charge','2014-04-01 10:30:07',1),
 (20052,1,'acr_immediate',NULL,NULL,NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'COURT',0.00,10.00,'2014-04-01 10:30:07','Court fee','2014-04-01 10:30:07',1),
 (20053,1,'acr_immediate',NULL,NULL,NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'MISC',0.00,10.00,'2014-04-01 10:30:07','Other miscellaneous','2014-04-01 10:30:07',1);
+
+INSERT INTO `fee_type` (`id`, `accrual_rule`, `created_by`, `fee_type`, `irfo_fee_type`, `description`, `goods_or_psv`, `last_modified_by`, `licence_type`, `traffic_area_id`, `annual_value`, `created_on`, `effective_from`, `expire_fee_with_licence`, `five_year_value`, `fixed_value`, `is_miscellaneous`, `last_modified_on`, `version`)
+VALUES
+	(10050, 'acr_immediate', NULL, 'IRFOGVPERMIT', 'irfo_fee_type_1', 'IRFO GV ECMT 100% Permit Fee', 'lcat_gv', NULL, NULL, NULL, 0.00, NULL, '1995-01-01 00:00:00', 0, 0.00, 121.00, 0, NULL, 1),
+	(10051, 'acr_immediate', NULL, 'IRFOGVPERMIT', 'irfo_fee_type_2', 'IRFO GV ECMT 75% Permit Fee', 'lcat_gv', NULL, NULL, NULL, 0.00, NULL, '1995-01-01 00:00:00', 0, 0.00, 90.00, 0, NULL, 1),
+	(10052, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_3', 'IRFO GV ECMT 50% Permit Fee', 'lcat_gv', NULL, NULL, NULL, 0.00, NULL, '1995-01-01 00:00:00', 0, 0.00, 60.00, 0, NULL, 1),
+	(10053, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_4', 'IRFO GV ECMT 25% Permit Fee', 'lcat_gv', NULL, NULL, NULL, 0.00, NULL, '1995-01-01 00:00:00', 0, 0.00, 30.00, 0, NULL, 1),
+	(10054, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_5', 'IRFO GV ECMT Community Removal Permit Fee', 'lcat_gv', NULL, NULL, NULL, 0.00, NULL, '1995-01-01 00:00:00', 0, 0.00, 16.00, 0, NULL, 1),
+	(10055, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_6', 'IRFO GV Single Journey to Any Country Permit Fee', 'lcat_gv', NULL, NULL, NULL, 0.00, NULL, '1995-01-01 00:00:00', 0, 0.00, 7.00, 0, NULL, 1),
+	(10056, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_7', 'IRFO GV Turkey - 4 Journeys Permit Fee', 'lcat_gv', NULL, NULL, NULL, 0.00, NULL, '1995-01-01 00:00:00', 0, 0.00, 13.00, 0, NULL, 1),
+	(10057, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_8', 'IRFO GV Morocco - 15 journeys Permit Fee', 'lcat_gv', NULL, NULL, NULL, 0.00, NULL, '1995-01-01 00:00:00', 0, 0.00, 46.00, 0, NULL, 1),
+	(10076, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_1', 'IRFO GV ECMT 100% Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-07-15 16:49:17', '2008-07-31 23:59:59', 0, 0.00, 133.00, 0, '2008-07-15 16:49:17', 1),
+	(10077, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_2', 'IRFO GV ECMT 75% Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-07-15 16:49:17', '2008-07-31 23:59:59', 0, 0.00, 102.00, 0, '2008-07-15 16:49:17', 1),
+	(10078, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_3', 'IRFO GV ECMT 50% Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-07-15 16:49:17', '2008-07-31 23:59:59', 0, 0.00, 68.00, 0, '2008-07-15 16:49:17', 1),
+	(10079, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_4', 'IRFO GV ECMT 25% Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-07-15 16:49:17', '2008-07-31 23:59:59', 0, 0.00, 34.00, 0, '2008-07-15 16:49:17', 1),
+	(10080, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_5', 'IRFO GV ECMT Community Removal Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-07-15 16:49:17', '2008-07-31 23:59:59', 0, 0.00, 18.00, 0, '2008-07-15 16:49:17', 1),
+	(10081, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_6', 'IRFO GV Single Journey to Any Country Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-07-15 16:49:17', '2008-07-31 23:59:59', 0, 0.00, 8.00, 0, '2008-07-15 16:49:17', 1),
+	(10082, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_7', 'IIRFO GV Turkey - 4 Journeys Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-07-15 16:49:17', '2008-07-31 23:59:59', 0, 0.00, 13.00, 0, '2008-07-15 16:49:17', 1),
+	(10083, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_8', 'IRFO GV Morocco - 15 journeys Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-07-15 16:49:17', '2008-07-31 23:59:59', 0, 0.00, 50.00, 0, '2008-07-15 16:49:17', 1),
+	(10102, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_1', 'IRFO GV ECMT 100% Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-12-08 08:54:52', '1996-01-01 23:59:59', 0, 0.00, 133.00, 0, '2008-12-08 08:54:52', 1),
+	(10103, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_2', 'IRFO GV ECMT 75% Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-12-08 08:54:52', '1996-01-01 23:59:59', 0, 0.00, 102.00, 0, '2008-12-08 08:54:52', 1),
+	(10104, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_3', 'IRFO GV ECMT 50% Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-12-08 08:54:52', '1996-01-01 23:59:59', 0, 0.00, 68.00, 0, '2008-12-08 08:54:52', 1),
+	(10105, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_4', 'IRFO GV ECMT 25% Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-12-08 08:54:52', '1996-01-01 23:59:59', 0, 0.00, 34.00, 0, '2008-12-08 08:54:52', 1),
+	(10106, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_5', 'IRFO GV ECMT Community Removal Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-12-08 08:54:52', '1996-01-01 23:59:59', 0, 0.00, 18.00, 0, '2008-12-08 08:54:52', 1),
+	(10107, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_6', 'IRFO GV Single Journey to Any Country Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-12-08 08:54:52', '1996-01-01 23:59:59', 0, 0.00, 8.00, 0, '2008-12-08 08:54:52', 1),
+	(10108, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_7', 'IIRFO GV Turkey - 4 Journeys Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-12-08 08:54:52', '1996-01-01 23:59:59', 0, 0.00, 13.00, 0, '2008-12-08 08:54:52', 1),
+	(10109, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_8', 'IRFO GV Morocco - 15 journeys Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2008-12-08 08:54:52', '1996-01-01 23:59:59', 0, 0.00, 50.00, 0, '2008-12-08 08:54:52', 1),
+	(10128, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_1', 'IRFO GV ECMT 100% Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2009-04-18 14:38:14', '2009-05-02 23:59:00', 0, 0.00, 133.00, 0, '2009-04-18 14:38:14', 1),
+	(10129, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_2', 'IRFO GV ECMT 75% Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2009-04-18 14:38:14', '2009-05-02 23:59:00', 0, 0.00, 102.00, 0, '2009-04-18 14:38:14', 1),
+	(10130, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_3', 'IRFO GV ECMT 50% Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2009-04-18 14:38:14', '2009-05-02 23:59:00', 0, 0.00, 68.00, 0, '2009-04-18 14:38:14', 1),
+	(10131, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_4', 'IRFO GV ECMT 25% Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2009-04-18 14:38:14', '2009-05-02 23:59:00', 0, 0.00, 34.00, 0, '2009-04-18 14:38:14', 1),
+	(10132, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_5', 'IRFO GV ECMT Community Removal Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2009-04-18 14:38:14', '2009-05-02 23:59:00', 0, 0.00, 18.00, 0, '2009-04-18 14:38:14', 1),
+	(10133, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_6', 'IRFO GV Single Journey to Any Country Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2009-04-18 14:38:14', '2009-05-02 23:59:00', 0, 0.00, 8.00, 0, '2009-04-18 14:38:14', 1),
+	(10134, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_7', 'IIRFO GV Turkey - 4 Journeys Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2009-04-18 14:38:14', '2009-05-02 23:59:00', 0, 0.00, 14.00, 0, '2009-04-18 14:38:14', 1),
+	(10135, 'acr_immediate', 1, 'IRFOGVPERMIT', 'irfo_fee_type_8', 'IRFO GV Morocco - 15 journeys Permit Fee', 'lcat_gv', 1, NULL, NULL, 0.00, '2009-04-18 14:38:14', '2009-05-02 23:59:00', 0, 0.00, 50.00, 0, '2009-04-18 14:38:14', 1);
+
 
 INSERT INTO sub_category (category_id, id, is_doc, is_task, is_scan, is_free_text, sub_category_name)
 VALUES
@@ -7907,9 +7911,6 @@ INSERT INTO `ext_translations` (`id`, `locale`, `object_class`, `field`, `foreig
 VALUES
 	(1, 'cy-gb', 'Olcs\\Db\\Entity\\RefData', 'description', 'org_t_rc', 'Welsh Version of Registered Company\n');
 
-
-SET foreign_key_checks = 1;
-
 DROP TABLE IF EXISTS task_search_view;
 DROP VIEW IF EXISTS task_search_view;
 
@@ -8075,27 +8076,27 @@ VALUES
 (14, 'Turkey 3rd Country Transit', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1),
 (15, 'Turkey 3rd Country Non-Transit', NULL, NULL, '2005-08-25 00:00:00.000000', '2005-08-25 00:00:00.000000', 1);
 
-INSERT INTO `irfo_gv_permit_type` (`id`, `description`, `irfo_country_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
+INSERT INTO `irfo_gv_permit_type` (`id`, `description`, `irfo_country_id`, `irfo_fee_type`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
-(1, 'ECMT 100% (Jan to Mar)', 1, NULL, NULL, NULL, NULL, 1),
-(2, 'ECMT 75% (Apr to Jun)', 1, NULL, NULL, NULL, NULL, 1),
-(3, 'ECMT 50% (Jul to Sep)', 1, NULL, NULL, NULL, NULL, 1),
-(4, 'ECMT 25% (Oct to Dec)', 1, NULL, NULL, NULL, NULL, 1),
-(5, 'ECMT Community Removal', NULL, NULL, NULL, NULL, NULL, 1),
-(6, 'Belarus', 2, NULL, NULL, NULL, NULL, 1),
-(7, 'Georgia', 3, NULL, NULL, NULL, NULL, 1),
-(8, 'Germany 3rd Country', 4, NULL, NULL, NULL, NULL, 1),
-(9, 'Kazakhstan', 5, NULL, NULL, NULL, NULL, 1),
-(10, 'Morocco Single Journey', 6, NULL, NULL, NULL, NULL, 1),
-(11, 'Morocco Multi Journey x 15', 12, NULL, NULL, NULL, NULL, 1),
-(12, 'Romania 3rd Country', 7, NULL, NULL, NULL, NULL, 1),
-(13, 'Russia', 8, NULL, NULL, NULL, NULL, 1),
-(14, 'Tunisia', 9, NULL, NULL, NULL, NULL, 1),
-(15, 'Turkey 3rd Country', 14, NULL, NULL, NULL, NULL, 1),
-(16, 'Turkey Multi Journey x 4', 13, NULL, NULL, NULL, NULL, 1),
-(17, 'Ukraine', 11, NULL, NULL, NULL, NULL, 1),
-(18, 'Turkey Single Journey', 10, NULL, NULL, NULL, NULL, 1),
-(19, 'Turkey 3rd Country Non-Transit', 15, NULL, NULL, NULL, NULL, 1);
+(1, 'ECMT 100% (Jan to Mar)', 1, 'irfo_fee_type_1', NULL, NULL, NULL, NULL, 1),
+(2, 'ECMT 75% (Apr to Jun)', 1, 'irfo_fee_type_2', NULL, NULL, NULL, NULL, 1),
+(3, 'ECMT 50% (Jul to Sep)', 1, 'irfo_fee_type_3', NULL, NULL, NULL, NULL, 1),
+(4, 'ECMT 25% (Oct to Dec)', 1, 'irfo_fee_type_4', NULL, NULL, NULL, NULL, 1),
+(5, 'ECMT Community Removal', 1, 'irfo_fee_type_5', NULL, NULL, NULL, NULL, 1),
+(6, 'Belarus', 2, 'irfo_fee_type_6', NULL, NULL, NULL, NULL, 1),
+(7, 'Georgia', 3, 'irfo_fee_type_6', NULL, NULL, NULL, NULL, 1),
+(8, 'Germany 3rd Country', 4, 'irfo_fee_type_6', NULL, NULL, NULL, NULL, 1),
+(9, 'Kazakhstan', 5, 'irfo_fee_type_6', NULL, NULL, NULL, NULL, 1),
+(10, 'Morocco Single Journey', 6, 'irfo_fee_type_6', NULL, NULL, NULL, NULL, 1),
+(11, 'Morocco Multi Journey x 15', 12, 'irfo_fee_type_8', NULL, NULL, NULL, NULL, 1),
+(12, 'Romania 3rd Country', 7, 'irfo_fee_type_6', NULL, NULL, NULL, NULL, 1),
+(13, 'Russia', 8, 'irfo_fee_type_6', NULL, NULL, NULL, NULL, 1),
+(14, 'Tunisia', 9, 'irfo_fee_type_6', NULL, NULL, NULL, NULL, 1),
+(15, 'Turkey 3rd Country', 14, 'irfo_fee_type_6', NULL, NULL, NULL, NULL, 1),
+(16, 'Turkey Multi Journey x 4', 13, 'irfo_fee_type_7', NULL, NULL, NULL, NULL, 1),
+(17, 'Ukraine', 11, 'irfo_fee_type_6', NULL, NULL, NULL, NULL, 1),
+(18, 'Turkey Single Journey', 10, 'irfo_fee_type_6', NULL, NULL, NULL, NULL, 1),
+(19, 'Turkey 3rd Country Non-Transit', 15, 'irfo_fee_type_6', NULL, NULL, NULL, NULL, 1);
 
 INSERT INTO `irfo_psv_auth_type` (`id`, `description`, `section_code`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 
