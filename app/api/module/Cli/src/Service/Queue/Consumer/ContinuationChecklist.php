@@ -41,12 +41,11 @@ class ContinuationChecklist extends AbstractConsumer
      */
     protected function failed(QueueEntity $item, $reason = null)
     {
-        $command = UpdateContinuationDetail::create(
-            [
-                'id' => $item->getEntityId(),
-                'status' => ContinuationDetailEntity::STATUS_ERROR,
-            ]
-        );
+        $dtoData = [
+            'id' => $item->getEntityId(),
+            'status' => ContinuationDetailEntity::STATUS_ERROR,
+        ];
+        $command = UpdateContinuationDetail::create($dtoData);
 
         try {
             $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
