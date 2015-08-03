@@ -26,6 +26,7 @@ class Overview extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
+        /* @var $application \Dvsa\Olcs\Api\Entity\Application\Application */
         $application = $this->getRepo()->fetchUsingId($query);
 
         $licenceQuery = LicenceOverviewQry::create(['id' => $application->getLicence()->getId()]);
@@ -48,6 +49,8 @@ class Overview extends AbstractQueryHandler
                 'valueOptions' => [
                     'tracking' => ApplicationTrackingEntity::getValueOptions(),
                 ],
+                'outOfOppositionDate' => $this->getDateOrString($application->getOutOfOppositionDate()),
+                'outOfRepresentationDate' => $this->getDateOrString($application->getOutOfRepresentationDate()),
             ]
         );
     }
@@ -62,5 +65,21 @@ class Overview extends AbstractQueryHandler
     {
         $oppositions = $this->getRepo('Opposition')->fetchByApplicationId($application->getId());
         return count($oppositions);
+    }
+
+    /**
+     * Conveert param into a string (ie if its a date)
+     *
+     * @param \DateTime|string $value
+     *
+     * @return string If param was a DateTime then returns a string version of the date, otherwise return param
+     */
+    protected function getDateOrString($value)
+    {
+        if ($value instanceof \DateTime) {
+            return $value->format('Y-m-d');
+        }
+
+        return $value;
     }
 }

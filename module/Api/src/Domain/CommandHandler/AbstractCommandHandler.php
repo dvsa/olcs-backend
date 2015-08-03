@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
+use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
@@ -72,6 +73,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         if ($this instanceof PublicationGeneratorAwareInterface) {
             $this->setPublicationGenerator($mainServiceLocator->get(PublicationGenerator::class));
+        }
+
+        if ($this instanceof AddressServiceAwareInterface) {
+            $this->setAddressService($mainServiceLocator->get('AddressService'));
         }
 
         if ($this instanceof \Dvsa\Olcs\Api\Domain\EmailAwareInterface) {

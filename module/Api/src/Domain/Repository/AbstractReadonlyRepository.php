@@ -235,7 +235,12 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      */
     protected function createQueryBuilder()
     {
-        return $this->getEntityManager()->getRepository($this->entity)->createQueryBuilder($this->alias);
+        return $this->getRepository()->createQueryBuilder($this->alias);
+    }
+
+    protected function getRepository()
+    {
+        return $this->getEntityManager()->getRepository($this->entity);
     }
 
     /**
@@ -273,7 +278,14 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
         if ($query instanceof OrderedQueryInterface) {
             if (!empty($query->getSort())) {
-                $queryBuilderHelper->order($query->getSort(), $query->getOrder());
+                // allow ordering by multiple columns
+                $sortColumns = explode(',', $query->getSort());
+                $orderColumns = explode(',', $query->getOrder());
+                for ($i = 0; $i < count($sortColumns); $i++) {
+                    // if multiple order value doesn'y exist then use the first one
+                    $order = isset($orderColumns[$i]) ? $orderColumns[$i] : $orderColumns[0];
+                    $queryBuilderHelper->order($sortColumns[$i], $order);
+                }
             }
         }
     }

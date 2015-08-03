@@ -62,10 +62,10 @@ return [
     TransferQuery\Application\Grant::class => QueryHandler\Application\Grant::class,
     TransferQuery\Application\People::class => QueryHandler\Application\People::class,
     TransferQuery\Application\OperatingCentre::class => QueryHandler\Application\OperatingCentre::class,
-    TransferQuery\Application\Schedule41::class => QueryHandler\Application\Schedule41::class,
     TransferQuery\Application\TaxiPhv::class => QueryHandler\Application\TaxiPhv::class,
     TransferQuery\Application\Interim::class => QueryHandler\Application\Interim::class,
     TransferQuery\Application\GetList::class => QueryHandler\Application\GetList::class,
+    TransferQuery\Application\OperatingCentres::class => QueryHandler\Application\OperatingCentres::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -88,6 +88,7 @@ return [
     TransferQuery\Licence\Markers::class => QueryHandler\Licence\Markers::class,
     TransferQuery\Licence\ContinuationDetail::class => QueryHandler\Licence\ContinuationDetail::class,
     TransferQuery\Licence\GetList::class => QueryHandler\Licence\GetList::class,
+    TransferQuery\Licence\OperatingCentres::class => QueryHandler\Licence\OperatingCentres::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
@@ -286,9 +287,6 @@ return [
     TransferQuery\Task\Task::class => QueryHandler\Task\Task::class,
     TransferQuery\Task\TaskDetails::class => QueryHandler\Task\TaskDetails::class,
 
-    // Transport Manager
-    TransferQuery\Tm\TransportManager::class => QueryHandler\Tm\TransportManager::class,
-
     // Companies House
     TransferQuery\CompaniesHouse\AlertList::class => QueryHandler\CompaniesHouse\AlertList::class,
 
@@ -304,4 +302,19 @@ return [
     // Transport Manager
     TransferQuery\Tm\TransportManager::class => QueryHandler\Tm\TransportManager::class,
     TransferQuery\Tm\Documents::class => QueryHandler\Tm\Documents::class,
+
+    // Search
+    TransferQuery\Search\Licence::class => QueryHandler\Search\Licence::class,
+
+    // Application Operating Centres
+    TransferQuery\ApplicationOperatingCentre\ApplicationOperatingCentre::class
+        => QueryHandler\ApplicationOperatingCentre\ApplicationOperatingCentre::class,
+
+    // Licence Operating Centres
+    TransferQuery\LicenceOperatingCentre\LicenceOperatingCentre::class
+        => QueryHandler\LicenceOperatingCentre\LicenceOperatingCentre::class,
+
+    // Variation Operating Centres
+    TransferQuery\VariationOperatingCentre\VariationOperatingCentre::class
+        => QueryHandler\VariationOperatingCentre\VariationOperatingCentre::class,
 ];

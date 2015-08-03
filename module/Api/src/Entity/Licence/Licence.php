@@ -172,10 +172,6 @@ class Licence extends AbstractLicence
 
         $this->setSafetyInsVehicles($safetyInsVehicles);
 
-        if (empty($safetyInsTrailers)) {
-            $safetyInsTrailers = null;
-        }
-
         $this->setSafetyInsTrailers($safetyInsTrailers);
 
         $this->setTachographIns($tachographIns);
@@ -276,15 +272,14 @@ class Licence extends AbstractLicence
         return $this->getActiveVehicles()->count();
     }
 
-    public function getActiveVehicles()
+    public function getActiveVehicles($checkSpecified = true)
     {
         $criteria = Criteria::create();
-        $criteria->andWhere(
-            $criteria->expr()->isNull('removalDate')
-        );
-        $criteria->andWhere(
-            $criteria->expr()->neq('specifiedDate', null)
-        );
+        $criteria->andWhere($criteria->expr()->isNull('removalDate'));
+
+        if ($checkSpecified) {
+            $criteria->andWhere($criteria->expr()->neq('specifiedDate', null));
+        }
 
         return $this->getLicenceVehicles()->matching($criteria);
     }
@@ -445,19 +440,6 @@ class Licence extends AbstractLicence
         );
     }
 
-    public function canHaveCommunityLicences()
-    {
-        if ($this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
-            return true;
-        }
-
-        if ($this->isPsv() && $this->getLicenceType()->getId() === self::LICENCE_TYPE_RESTRICTED) {
-            return true;
-        }
-
-        return false;
-    }
-
     public function copyInformationFromApplication(Application $application)
     {
         $this->setLicenceType($application->getLicenceType());
@@ -491,5 +473,20 @@ class Licence extends AbstractLicence
             ->where(Criteria::expr()->isNull('ceasedDate'));
 
         return $this->getPsvDiscs()->matching($criteria);
+    }
+
+    public function canHaveLargeVehicles()
+    {
+        $allowLargeVehicles = [
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+        ];
+
+        return $this->isPsv() && in_array($this->getLicenceType()->getId(), $allowLargeVehicles);
+    }
+
+    public function canHaveCommunityLicences()
+    {
+        return ($this->isStandardInternational() || ($this->isPsv() && $this->isRestricted()));
     }
 }

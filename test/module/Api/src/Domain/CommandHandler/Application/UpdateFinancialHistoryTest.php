@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateFinancialHistory;
@@ -50,11 +51,22 @@ class UpdateFinancialHistoryTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
+        $data = [
+            'id' => 1,
+            'section' => 'financialHistory'
+        ];
+        $result = new Result();
+        $result->addMessage('UpdateApplicationCompletion');
+        $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
-            'messages' => ['Financial history section has been updated']
+            'messages' => [
+                'Financial history section has been updated',
+                'UpdateApplicationCompletion'
+            ]
         ];
 
         $this->assertInstanceOf(Result::class, $result);
