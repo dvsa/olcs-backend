@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Publication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -83,7 +84,7 @@ class Bus extends AbstractCommandHandler implements TransactionedInterface, Publ
                     );
                     break;
                 default:
-                    throw new \Exception('This status can\'t be published');
+                    throw new ForbiddenException('This status can\'t be published');
             }
 
             /**
