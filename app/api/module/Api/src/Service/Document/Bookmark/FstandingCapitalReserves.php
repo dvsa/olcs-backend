@@ -27,6 +27,6 @@ class FstandingCapitalReserves extends DynamicBookmark implements DateHelperAwar
 
     public function render()
     {
-        return number_format($this->data, 2);
+        return number_format($this->data, 0);
     }
 }
