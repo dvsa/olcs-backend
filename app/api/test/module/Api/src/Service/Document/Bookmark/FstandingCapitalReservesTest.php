@@ -35,6 +35,6 @@ class FstandingCapitalReservesTest extends MockeryTestCase
     public function testRender()
     {
         $this->sut->setData('12345');
-        $this->assertEquals('£12,345.00', $this->sut->render());
+        $this->assertEquals('12,345.00', $this->sut->render());
     }
 }
