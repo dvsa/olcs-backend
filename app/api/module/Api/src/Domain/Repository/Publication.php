@@ -50,27 +50,4 @@ class Publication extends AbstractRepository
 
         return $result[0];
     }
-
-    /**
-     * Applies filters
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
-     */
-    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
-    {
-        if (method_exists($query, 'getPubStatus')) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.pubStatus', ':byPubStatus'))
-                ->setParameter('byPubStatus', $query->getPubStatus());
-        }
-
-        if (method_exists($query, 'getPubType')) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.pi', ':byPubType'))
-                ->setParameter('byPubType', $query->getPubType());
-        }
-
-        if (method_exists($query, 'getTrafficArea')) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.trafficArea', ':byTrafficArea'))
-                ->setParameter('byTrafficArea', $query->getTrafficArea());
-        }
-    }
 }
