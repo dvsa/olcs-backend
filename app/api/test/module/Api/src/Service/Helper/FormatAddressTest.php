@@ -2,8 +2,6 @@
 
 /**
  * FormatAddressTest
- *
- * @author Nick Payne <nick.payne@valtech.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Service\Helper;
 
