@@ -9,8 +9,9 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
 use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process as Cmd;
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
-use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
+use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Transfer\Command\ContinuationDetail\Update as UpdateContinuationDetail;
 
 /**
  * Continuation Checklist Queue Consumer
@@ -31,25 +32,29 @@ class ContinuationChecklist extends AbstractConsumer
     }
 
     /**
-     * @todo probably don't need this unless we override processMessage()
-     */
-    protected function skip(QueueEntity $item)
-    {
-        return $this->success($item, 'Continuation detail no longer pending');
-    }
-
-    /**
-     * Mark the message as failed and continuation detail record as errored
+     * Mark the continuation detail record as errored and then mark the queue
+     * message as failed
      *
      * @param QueueEntity $item
      * @param string $reason
      * @return string
-     * @todo port additional logic from olcs-internal consumer on failure
-     * @see Cli\Service\Queue\Consumer\ContinuationChecklist
      */
     protected function failed(QueueEntity $item, $reason = null)
     {
-        // $this->getServiceLocator()->get('Entity\ContinuationDetail')->checklistFailed($item['entityId']);
+        $command = UpdateContinuationDetail::create(
+            [
+                'id' => $item->getEntityId(),
+                'status' => ContinuationDetailEntity::STATUS_ERROR,
+            ]
+        );
+
+        try {
+            $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
+        } catch (DomainException $e) {
+            $message = !empty($e->getMessages()) ? implode(', ', $e->getMessages()) : $e->getMessage();
+            $reason .= ", " . $message;
+        }
+
         return parent::failed($item, $reason);
     }
 }

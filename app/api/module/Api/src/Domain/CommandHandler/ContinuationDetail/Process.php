@@ -34,7 +34,7 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
         $continuationDetail = $this->getRepo()->fetchUsingId($command);
 
         if ($continuationDetail->getStatus()->getId() !== ContinuationDetailEntity::STATUS_PRINTING) {
-            $result->addMessage('No op');
+            $result->addMessage('Continuation detail no longer pending');
             return $result;
         }
 
