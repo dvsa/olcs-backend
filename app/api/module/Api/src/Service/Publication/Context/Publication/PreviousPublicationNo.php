@@ -26,10 +26,12 @@ class PreviousPublicationNo extends AbstractContext
         ];
 
         $query = PreviousPublicationForPiBundle::create($params);
+
+        /** @var PublicationLink $previousPublication */
         $previousPublication = $this->handleQuery($query);
 
         if (!empty($previousPublication)) {
-            $context->offsetSet('previousPublication', $previousPublication->getPublication->getPublicationNo());
+            $context->offsetSet('previousPublication', $previousPublication->getPublication()->getPublicationNo());
         }
 
         return $context;
