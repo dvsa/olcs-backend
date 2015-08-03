@@ -94,6 +94,7 @@ return [
         => CommandHandler\Application\DeleteOperatingCentres::class,
     Command\Application\HandleOcVariationFees::class => CommandHandler\Application\HandleOcVariationFees::class,
     TransferCommand\Application\CreateOperatingCentre::class => CommandHandler\Application\CreateOperatingCentre::class,
+    Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
