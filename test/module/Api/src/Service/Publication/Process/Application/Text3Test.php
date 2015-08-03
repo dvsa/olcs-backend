@@ -45,7 +45,6 @@ class Text3Test extends MockeryTestCase
             0 => $conditionUndertaking1,
             1 => $conditionUndertaking2,
         ];
-        $busNote = 'bus note';
         $transportManagers = 'transport managers';
         $operatingCentre1 = 'operating centre 1';
         $operatingCentre2 = 'operating centre 2';
@@ -55,7 +54,6 @@ class Text3Test extends MockeryTestCase
         ];
 
         $initialData = [
-            'licType' => $licenceType,
             'licenceAddress' => $licenceAddress,
             'publicationSection' => $publicationSection,
             'busNote' => $busNote,
