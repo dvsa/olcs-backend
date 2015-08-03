@@ -44,6 +44,9 @@ class Bootstrap
         return $sm;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     protected static function initAutoloader()
     {
         require('init_autoloader.php');
