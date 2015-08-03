@@ -10,8 +10,6 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as Entity;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Publication
@@ -21,8 +19,6 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class Publication extends AbstractRepository
 {
     protected $entity = Entity::class;
-
-    const PUB_NEW_STATUS = 'pub_s_new';
 
     public function fetchLatestForTrafficAreaAndType($trafficArea, $pubType)
     {
@@ -38,7 +34,7 @@ class Publication extends AbstractRepository
 
         $qb->andWhere(
             $qb->expr()->eq($this->alias . '.pubStatus', ':pubStatus')
-        )->setParameter('pubStatus', self::PUB_NEW_STATUS);
+        )->setParameter('pubStatus', Entity::PUB_NEW_STATUS);
 
         $this->getQueryBuilder()->modifyQuery($qb);
 
