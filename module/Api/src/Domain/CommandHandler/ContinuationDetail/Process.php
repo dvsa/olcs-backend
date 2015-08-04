@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface as DocGenAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
