@@ -12,7 +12,8 @@ use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PiHearing as PiHearingRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Publication\PiHearing as Cmd;
+use Dvsa\Olcs\Transfer\Command\Publication\PiHearing as PiHearingCmd;
+use Dvsa\Olcs\Transfer\Command\Publication\PiDecision as PiDecisionCmd;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
@@ -67,8 +68,9 @@ class PiHearingTest extends CommandHandlerTestCase
      *
      * @dataProvider handleCommandProvider
      * @param Bool $isTm
+     * @param string $cmdClass
      */
-    public function testHandleCommand($isTm)
+    public function testHandleCommand($isTm, $cmdClass)
     {
         $id = 99;
         $text2 = 'text2';
@@ -82,7 +84,7 @@ class PiHearingTest extends CommandHandlerTestCase
         $piVenueOther = 'pi venue other';
         $hearingDate = '2014-03-05';
 
-        $command = Cmd::Create(
+        $command = $cmdClass::Create(
             [
                 'id' => $id,
                 'trafficAreas' => $trafficAreas,
@@ -143,8 +145,10 @@ class PiHearingTest extends CommandHandlerTestCase
     public function handleCommandProvider()
     {
         return [
-            [true],
-            [false]
+            [true, PiHearingCmd::class],
+            [false, PiHearingCmd::class],
+            [true, PiDecisionCmd::class],
+            [false, PiDecisionCmd::class]
         ];
     }
 }
