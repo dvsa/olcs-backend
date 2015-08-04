@@ -56,7 +56,6 @@ class Bus extends AbstractCommandHandler implements TransactionedInterface, Publ
         $licence = $busReg->getLicence();
         $revertStatus = $busReg->getRevertStatus()->getId();
         $trafficAreas = $busReg->getTrafficAreas();
-        $text1 = $busReg->getRegNo();
 
         $shortNotice = $busReg->getIsShortNotice();
 
@@ -97,7 +96,16 @@ class Bus extends AbstractCommandHandler implements TransactionedInterface, Publ
             $unpublishedQuery = $this->getUnpublishedBusRegQuery($publication->getId(), $busReg->getId(), $pubSection);
             $publicationLink = $this->getPublicationLink($unpublishedQuery);
 
-            $publicationLink->updateBusReg($busReg, $licence, $publication, $publicationSection, $ta, $text1);
+            if ($publicationLink->getId() === null) {
+                $publicationLink->createBusReg(
+                    $busReg,
+                    $licence,
+                    $publication,
+                    $publicationSection,
+                    $ta,
+                    $busReg->getRegNo()
+                );
+            }
 
             $result->merge($this->createPublication($handler, $publicationLink, []));
         }
