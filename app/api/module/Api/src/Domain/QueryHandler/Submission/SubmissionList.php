@@ -22,7 +22,14 @@ final class SubmissionList extends AbstractQueryHandler
 
         return [
             'result' => $this->resultList(
-                $repo->fetchList($query, Query::HYDRATE_OBJECT)
+                $repo->fetchList($query, Query::HYDRATE_OBJECT),
+                [
+                    'recipientUser' => [
+                        'contactDetails' => [
+                            'person'
+                        ]
+                    ]
+                ]
             ),
             'count' => $repo->fetchCount($query)
         ];
