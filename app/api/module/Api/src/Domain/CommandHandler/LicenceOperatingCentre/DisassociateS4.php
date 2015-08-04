@@ -32,7 +32,7 @@ final class DisassociateS4 extends AbstractCommandHandler implements Transaction
             $operatingCentre = $this->getRepo()
                 ->getReference(
                     LicenceOperatingCentre::class,
-                    $operatingCentre
+                    $operatingCentre->getId()
                 );
 
             $operatingCentre->setS4(null);
