@@ -241,6 +241,6 @@ class Cases extends AbstractCases
      */
     public function isTm()
     {
-        return !(is_null($this->getTransportManager()));
+        return $this->getTransportManager() !== null;
     }
 }
