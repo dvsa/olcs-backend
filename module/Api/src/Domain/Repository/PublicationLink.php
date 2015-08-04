@@ -71,7 +71,7 @@ class PublicationLink extends AbstractRepository
         $result = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
 
         if (empty($result)) {
-            return $result;
+            return null;
         }
 
         return $result[0];
@@ -87,24 +87,28 @@ class PublicationLink extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)
             ->with('publication', 'p');
 
+        $qb->andWhere($qb->expr()->eq($this->alias . '.trafficArea', ':byTrafficArea'))
+            ->setParameter('byTrafficArea', $query->getTrafficArea());
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.pubType', ':byPubType'))
+            ->setParameter('byPubType', $query->getPubType());
+
+        $qb->andWhere($qb->expr()->lt('p.publicationNo', ':byPublicationNo'))
+            ->setParameter('byPublicationNo', $query->getPublicationNo());
+
         if (method_exists($query, 'getPi')) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.pi', ':byPi'))
                 ->setParameter('byPi', $query->getPi());
         }
 
-        if (method_exists($query, 'getTrafficArea')) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.trafficArea', ':byTrafficArea'))
-                ->setParameter('byTrafficArea', $query->getTrafficArea());
+        if (method_exists($query, 'getApplication')) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.application', ':byApplication'))
+                ->setParameter('byApplication', $query->getApplication());
         }
 
-        if (method_exists($query, 'getPubType')) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.pi', ':byPubType'))
-                ->setParameter('byPubType', $query->getPubType());
-        }
-
-        if (method_exists($query, 'getPublicationNo')) {
-            $qb->andWhere($qb->expr()->lt('p.publicationNo', ':byPublicationNo'))
-                ->setParameter('byPublicationNo', $query->getPublicationNo());
+        if (method_exists($query, 'getLicence')) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':byLicence'))
+                ->setParameter('byLicence', $query->getLicence());
         }
 
         $qb->orderBy('p.publicationNo', 'DESC')
@@ -113,7 +117,7 @@ class PublicationLink extends AbstractRepository
         $result = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
 
         if (empty($result)) {
-            return $result;
+            return null;
         }
 
         return $result[0];
