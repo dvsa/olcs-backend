@@ -143,6 +143,8 @@ return [
     // Submission
     TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
     TransferQuery\Submission\SubmissionSectionComment::class => QueryHandler\Submission\SubmissionSectionComment::class,
+    TransferQuery\Submission\Submission::class => QueryHandler\Submission\Submission::class,
+    TransferQuery\Submission\SubmissionList::class => QueryHandler\Submission\SubmissionList::class,
 
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
