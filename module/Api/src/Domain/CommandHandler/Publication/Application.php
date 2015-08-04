@@ -18,8 +18,7 @@ use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedApplicationByApp as UnpublishedApplicationByAppQry;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedApplicationByLic as UnpublishedApplicationByLicQry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedApplication as UnpublishedApplicationQry;
 
 /**
  * Application command handler
@@ -46,6 +45,8 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
          * @var LicenceEntity $licence
          * @var ApplicationEntity $application
          * @var PublicationSectionEntity $publicationSection
+         * @var PublicationEntity $publication
+         * @var PublicationLinkEntity $publicationLink
          * @var $command ApplicationCmd
          */
         $application = $this->getRepo('Application')->fetchUsingId($command, Query::HYDRATE_OBJECT);
@@ -56,15 +57,27 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
 
         $pubSection = $this->getPublicationSectionId($appStatus);
         $trafficArea = $this->getRepo()->getReference(TrafficAreaEntity::class, $command->getTrafficArea());
+
         $publication = $this->getPublication($command->getTrafficArea(), $pubType);
         $publicationSection = $this->getPublicationSection($pubSection);
-        /**
-         * @var PublicationEntity $publication
-         * @var PublicationLinkEntity $publicationLink
-         */
-        $unpublishedQuery = $this->getUnpublishedApplicationQuery($publication->getId(), $application, $pubSection);
+
+        $unpublishedQuery = $this->getUnpublishedApplicationQuery(
+            $publication->getId(),
+            $application->getId(),
+            $pubSection
+        );
+
         $publicationLink = $this->getPublicationLink($unpublishedQuery);
-        $publicationLink->updateApplication($application, $licence, $publication, $publicationSection, $trafficArea);
+
+        if ($publicationLink->getId() === null) {
+            $publicationLink->createApplication(
+                $application,
+                $licence,
+                $publication,
+                $publicationSection,
+                $trafficArea
+            );
+        }
 
         return $this->createPublication('ApplicationPublication', $publicationLink, []);
     }
@@ -87,31 +100,18 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
 
     /**
      * @param int $publication
-     * @param ApplicationEntity $application
+     * @param int $application
      * @param int $pubSection
-     * @return UnpublishedApplicationByLicQry|UnpublishedApplicationByAppQry
+     * @return UnpublishedApplicationQry
      */
     public function getUnpublishedApplicationQuery($publication, $application, $pubSection)
     {
-        $checkByLicence = [
-            ApplicationEntity::APPLICATION_STATUS_GRANTED,
-            ApplicationEntity::APPLICATION_STATUS_REFUSED,
-            ApplicationEntity::APPLICATION_STATUS_NOT_TAKEN_UP,
-            ApplicationEntity::APPLICATION_STATUS_CURTAILED
-        ];
-
         $data =  [
             'publication' => $publication,
+            'application' => $application,
             'publicationSection' => $pubSection
         ];
 
-        //these statuses we check by licence id
-        if (in_array($application->getStatus()->getId(), $checkByLicence)) {
-            $data['licence'] = $application->getLicence()->getId();
-            return UnpublishedApplicationByLicQry::create($data);
-        }
-
-        $data['application'] = $application->getId();
-        return UnpublishedApplicationByAppQry::create($data);
+        return UnpublishedApplicationQry::create($data);
     }
 }
