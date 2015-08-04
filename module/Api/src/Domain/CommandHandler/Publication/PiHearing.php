@@ -119,14 +119,18 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
                 $publication = $this->getPublication($trafficArea->getId(), $pubType);
                 $unpublishedQuery = $this->getUnpublishedPiQuery($publication->getId(), $pi->getId(), $pubSection);
                 $publicationLink = $this->getPublicationLink($unpublishedQuery);
-                $publicationLink->updateTmPiHearing(
-                    $transportManager,
-                    $pi,
-                    $publication,
-                    $publicationSection,
-                    $trafficArea,
-                    $command->getText2()
-                );
+
+                if ($publicationLink->getId() === null) {
+                    $publicationLink->createTmPiHearing(
+                        $transportManager,
+                        $pi,
+                        $publication,
+                        $publicationSection,
+                        $trafficArea
+                    );
+                }
+
+                $publicationLink->setText2($command->getText2());
 
                 $result->merge(
                     $this->createPublication(
@@ -168,7 +172,6 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
         $pubType = ($licType == LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE ? 'A&D' : 'N&P');
         $trafficArea = $licence->getTrafficArea();
         $publicationSection = $this->getPublicationSection($pubSection);
-        $text2 = $command->getText2();
 
         /**
          * @var UnpublishedPiQry $unpublishedQuery
@@ -178,7 +181,12 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
         $publication = $this->getPublication($trafficArea->getId(), $pubType);
         $unpublishedQuery = $this->getUnpublishedPiQuery($publication->getId(), $pi->getId(), $pubSection);
         $publicationLink = $this->getPublicationLink($unpublishedQuery);
-        $publicationLink->updatePiHearing($licence, $pi, $publication, $publicationSection, $trafficArea, $text2);
+
+        if ($publicationLink->getId() === null) {
+            $publicationLink->createPiHearing($licence, $pi, $publication, $publicationSection, $trafficArea);
+        }
+
+        $publicationLink->setText2($command->getText2());
 
         return $this->createPublication($handler, $publicationLink, $this->extractHearingData($hearing));
     }
