@@ -1,25 +1,25 @@
 <?php
 
 /**
- * Previous Publication For Pi Bundle Test
+ * Previous Publication Test
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bookmark;
 
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark\PreviousPublicationForPi;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark\PreviousPublication;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as Repo;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\PreviousHearingBundle as Qry;
-use Dvsa\Olcs\Api\Entity\Pi\PiHearing as Entity;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\PreviousPublicationByPi as Qry;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as Entity;
 
 /**
- * Previous Publication For Pi Bundle Test
+ * Previous Publication Test
  */
-class PreviousPublicationForPiTest extends QueryHandlerTestCase
+class PreviousPublicationTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new PreviousPublicationForPi();
+        $this->sut = new PreviousPublication();
         $this->mockRepo('PublicationLink', Repo::class);
 
         parent::setUp();

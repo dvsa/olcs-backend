@@ -89,7 +89,7 @@ class Text1 implements ProcessInterface
      * @param LicenceEntity $licence
      * @return string
      */
-    private function getLicenceInfo(LicenceEntity $licence)
+    public function getLicenceInfo(LicenceEntity $licence)
     {
         $organisation = $licence->getOrganisation();
         $tradingNames = $organisation->getTradingNames();
