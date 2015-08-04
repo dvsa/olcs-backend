@@ -94,6 +94,7 @@ return [
         => CommandHandler\Application\DeleteOperatingCentres::class,
     Command\Application\HandleOcVariationFees::class => CommandHandler\Application\HandleOcVariationFees::class,
     TransferCommand\Application\CreateOperatingCentre::class => CommandHandler\Application\CreateOperatingCentre::class,
+    Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -196,6 +197,7 @@ return [
     TransferCommand\OtherLicence\CreatePreviousLicence::class
         => CommandHandler\OtherLicence\CreatePreviousLicence::class,
     TransferCommand\OtherLicence\CreateForTm::class => CommandHandler\OtherLicence\CreateForTm::class,
+    TransferCommand\OtherLicence\CreateForTml::class => CommandHandler\OtherLicence\CreateForTml::class,
 
     // Transfer - Previous Conviction
     TransferCommand\PreviousConviction\CreatePreviousConviction::class =>
@@ -515,6 +517,12 @@ return [
         => CommandHandler\TransportManagerApplication\UpdateStatus::class,
     TransferCommand\TransportManagerApplication\UpdateDetails::class
         => CommandHandler\TransportManagerApplication\UpdateDetails::class,
+    TransferCommand\TransportManagerApplication\CreateForResponsibilities::class =>
+        CommandHandler\TransportManagerApplication\CreateForResponsibilities::class,
+    TransferCommand\TransportManagerApplication\UpdateForResponsibilities::class =>
+        CommandHandler\TransportManagerApplication\UpdateForResponsibilities::class,
+    TransferCommand\TransportManagerApplication\DeleteForResponsibilities::class =>
+        CommandHandler\TransportManagerApplication\DeleteForResponsibilities::class,
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
@@ -592,6 +600,12 @@ return [
     // ContinuationDetail
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
 
+    // Transport Manager Licence
+    TransferCommand\TransportManagerLicence\UpdateForResponsibilities::class =>
+        CommandHandler\TransportManagerLicence\UpdateForResponsibilities::class,
+    TransferCommand\TransportManagerLicence\DeleteForResponsibilities::class =>
+        CommandHandler\TransportManagerLicence\DeleteForResponsibilities::class,
+
     // CompaniesHouse
     Command\CompaniesHouse\EnqueueOrganisations::class => CommandHandler\CompaniesHouse\EnqueueOrganisations::class,
     Command\CompaniesHouse\InitialLoad::class => CommandHandler\CompaniesHouse\InitialLoad::class,
@@ -607,6 +621,7 @@ return [
     TransferCommand\TmQualification\Create::class => CommandHandler\TmQualification\Create::class,
     TransferCommand\TmQualification\Update::class => CommandHandler\TmQualification\Update::class,
     TransferCommand\TmQualification\Delete::class  => CommandHandler\TmQualification\Delete::class,
+
     // Application Operating Centre
     TransferCommand\ApplicationOperatingCentre\Update::class => CommandHandler\ApplicationOperatingCentre\Update::class,
 
@@ -615,4 +630,5 @@ return [
 
     // Licence Operating Centre
     TransferCommand\LicenceOperatingCentre\Update::class => CommandHandler\LicenceOperatingCentre\Update::class,
+
 ];

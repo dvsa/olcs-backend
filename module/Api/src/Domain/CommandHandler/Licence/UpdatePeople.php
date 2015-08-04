@@ -31,10 +31,6 @@ final class UpdatePeople extends AbstractCommandHandler implements Transactioned
         /* @var $licence LicenceEntity */
         $licence = $this->getRepo()->fetchUsingId($command);
 
-        if (!$licence->getOrganisation()->isSoleTrader() && !$licence->getOrganisation()->isPartnership() ) {
-            throw new BadRequestException('Only sole traders and partnerships can be editied');
-        }
-
         $person = $this->getRepo('Person')->fetchById(
             $command->getPerson(),
             \Doctrine\ORM\Query::HYDRATE_OBJECT,

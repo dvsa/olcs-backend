@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository\OtherLicenceRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\OtherLicence\DeleteOtherLicence as Cmd;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as OtherLicenceEntity;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 
 /**
  * Update Other Licence Test
@@ -35,11 +36,26 @@ class DeleteOtherLicenceTest extends CommandHandlerTestCase
     {
         $command = $this->getCommand();
 
-        $otherLicence = $this->getOtherLicence();
+        $otherLicence = m::mock(OtherLicenceEntity::class)->shouldReceive('getApplication')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(1)
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $this->expectedSideEffect(
+            UpdateApplicationCompletionCmd::class,
+            ['id' => 1, 'section' => 'licenceHistory'],
+            new Result()
+        );
 
         $this->repoMap['OtherLicence']->shouldReceive('fetchById')
             ->andReturn($otherLicence)
-            ->times(3)
+            ->times(4)
             ->shouldReceive('delete')
             ->with($otherLicence)
             ->times(3)
@@ -71,10 +87,5 @@ class DeleteOtherLicenceTest extends CommandHandlerTestCase
         ];
 
         return Cmd::create($data);
-    }
-
-    protected function getOtherLicence()
-    {
-        return m::mock(OtherLicenceEntity::class)->makePartial();
     }
 }

@@ -53,4 +53,32 @@ class OtherLicence extends AbstractRepository
                 ->setParameter('tmId', $query->getTransportManager());
         }
     }
+
+    public function fetchForTransportManagerApplication($transportManagerApplicationId)
+    {
+        return $this->fetchForTransportManagerApplicationOrLicence(
+            $transportManagerApplicationId,
+            'transportManagerApplication'
+        );
+    }
+
+    public function fetchForTransportManagerLicence($transportManagerLicenceId)
+    {
+        return $this->fetchForTransportManagerApplicationOrLicence(
+            $transportManagerLicenceId,
+            'transportManagerLicence'
+        );
+    }
+
+    protected function fetchForTransportManagerApplicationOrLicence($id, $field)
+    {
+        $qb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata();
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.' . $field, ':id'))
+            ->setParameter('id', $id);
+
+        return $qb->getQuery()->getResult();
+    }
 }

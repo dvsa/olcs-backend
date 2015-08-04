@@ -42,12 +42,17 @@ class ContinuationDetailTest extends RepositoryTestCase
         );
         $this->assertEquals(['RESULTS'], $this->sut->fetchForLicence(95));
 
+        $dateTime = new \Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime();
+        $year = $dateTime->format('Y');
+        $futureYear = $year + 4;
+        $month = $dateTime->format('n');
+
         $expectedQuery = <<<EOT
 BLAH AND m.licence = [[95]]
     AND l.status IN [[["lsts_valid","lsts_curtailed","lsts_suspended"]]]
-    AND (c.month >= [[7]] AND c.year = [[2015]])
-        OR (c.year > [[2015]] AND c.year < [[2019]])
-        OR (c.month <= [[7]] AND c.year = [[2019]])
+    AND (c.month >= [[$month]] AND c.year = [[$year]])
+        OR (c.year > [[$year]] AND c.year < [[$futureYear]])
+        OR (c.month <= [[$month]] AND c.year = [[$futureYear]])
     AND m.status IN ([[["con_det_sts_printed","con_det_sts_acceptable","con_det_sts_unacceptable"]]])
         OR (m.status = 'con_det_sts_complete' AND m.received = 'N')
 EOT;
