@@ -5,7 +5,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Publication\Application;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
