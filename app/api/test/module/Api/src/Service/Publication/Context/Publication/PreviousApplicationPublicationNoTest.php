@@ -103,7 +103,7 @@ class PreviousApplicationPublicationNoTest extends MockeryTestCase
      * data provider for application status where we get previous publications by application id
      * @return array
      */
-    public function CheckByLicenceAppStatusProvider()
+    public function checkByLicenceAppStatusProvider()
     {
         return [
             [ApplicationEntity::APPLICATION_STATUS_GRANTED],
@@ -117,7 +117,7 @@ class PreviousApplicationPublicationNoTest extends MockeryTestCase
      * data provider for application status where we get previous publications by application id
      * @return array
      */
-    public function CheckByApplicationAppStatusProvider()
+    public function checkByApplicationAppStatusProvider()
     {
         return [
             [ApplicationEntity::APPLICATION_STATUS_WITHDRAWN],

@@ -48,6 +48,10 @@ class PublicationLinkTest extends RepositoryTestCase
         return $repo;
     }
 
+    /**
+     * @param QueryInterface $query
+     * @return m\MockInterface
+     */
     private function getPublicationAndSectionQb($query)
     {
         $mockQb = m::mock(QueryBuilder::class);
@@ -72,6 +76,10 @@ class PublicationLinkTest extends RepositoryTestCase
         return $mockQb;
     }
 
+    /**
+     * @param QueryInterface $query
+     * @return m\MockInterface
+     */
     private function getPublicationNoPubTypeTaQb($query)
     {
         $mockQb = m::mock(QueryBuilder::class);
@@ -115,7 +123,7 @@ class PublicationLinkTest extends RepositoryTestCase
 
     /**
      * @param $query
-     * @param UnpublishedPi $mockQb
+     * @param UnpublishedPi|PreviousPublicationByPi $mockQb
      * @return mixed
      */
     private function addPi(QueryInterface $query, $mockQb)
@@ -142,10 +150,10 @@ class PublicationLinkTest extends RepositoryTestCase
     }
 
     /**
- * @param UnpublishedApplication $query
- * @param $mockQb
- * @return mixed
- */
+     * @param UnpublishedApplication|PreviousPublicationByApplication $query
+     * @param $mockQb
+     * @return mixed
+     */
     private function addApplication(QueryInterface $query, $mockQb)
     {
         $mockQb->shouldReceive('expr->eq')->with('m.application', ':byApplication')->once()->andReturnSelf();
@@ -159,7 +167,7 @@ class PublicationLinkTest extends RepositoryTestCase
     }
 
     /**
-     * @param UnpublishedApplication $query
+     * @param PreviousPublicationByLicence $query
      * @param $mockQb
      * @return mixed
      */
