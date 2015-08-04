@@ -38,7 +38,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 class PublicationLink extends AbstractPublicationLink
 {
     /**
-     * Updates Application Publication
+     * Creates Application publication entry
      *
      * @param ApplicationEntity $application
      * @param LicenceEntity $licence
@@ -46,7 +46,7 @@ class PublicationLink extends AbstractPublicationLink
      * @param PublicationSectionEntity $publicationSection
      * @param TrafficAreaEntity $trafficArea
      */
-    public function updateApplication(
+    public function createApplication(
         ApplicationEntity $application,
         LicenceEntity $licence,
         PublicationEntity $publication,
@@ -61,7 +61,7 @@ class PublicationLink extends AbstractPublicationLink
     }
 
     /**
-     * Updates a Bus Registration
+     * Creates a Bus Registration publication entry
      *
      * @param BusRegEntity $busReg
      * @param LicenceEntity $licence
@@ -70,7 +70,7 @@ class PublicationLink extends AbstractPublicationLink
      * @param TrafficAreaEntity $trafficArea
      * @param string $text1
      */
-    public function updateBusReg(
+    public function createBusReg(
         BusRegEntity $busReg,
         LicenceEntity $licence,
         PublicationEntity $publication,
@@ -87,54 +87,48 @@ class PublicationLink extends AbstractPublicationLink
     }
 
     /**
-     * Updates a Pi hearing
+     * Creates a Pi hearing publication entry
      *
      * @param LicenceEntity $licence
      * @param PiEntity $pi
      * @param PublicationEntity $publication
      * @param PublicationSectionEntity $publicationSection
      * @param TrafficAreaEntity $trafficArea
-     * @param string $text2
      */
-    public function updatePiHearing(
+    public function createPiHearing(
         LicenceEntity $licence,
         PiEntity $pi,
         PublicationEntity $publication,
         PublicationSectionEntity $publicationSection,
-        TrafficAreaEntity $trafficArea,
-        $text2
+        TrafficAreaEntity $trafficArea
     ) {
         $this->licence = $licence;
         $this->pi = $pi;
         $this->publication = $publication;
         $this->publicationSection = $publicationSection;
         $this->trafficArea = $trafficArea;
-        $this->text2 = $text2;
     }
 
     /**
-     * Updates a Tm Pi Hearing
+     * Creates a Tm Pi Hearing publication entry
      *
      * @param TransportManagerEntity $transportManager
      * @param PiEntity $pi
      * @param PublicationEntity $publication
      * @param PublicationSectionEntity $publicationSection
      * @param TrafficAreaEntity $trafficArea
-     * @param $text2
      */
-    public function updateTmPiHearing(
+    public function createTmPiHearing(
         TransportManagerEntity $transportManager,
         PiEntity $pi,
         PublicationEntity $publication,
         PublicationSectionEntity $publicationSection,
-        TrafficAreaEntity $trafficArea,
-        $text2
+        TrafficAreaEntity $trafficArea
     ) {
         $this->transportManager = $transportManager;
         $this->pi = $pi;
         $this->publication = $publication;
         $this->publicationSection = $publicationSection;
         $this->trafficArea = $trafficArea;
-        $this->text2 = $text2;
     }
 }
