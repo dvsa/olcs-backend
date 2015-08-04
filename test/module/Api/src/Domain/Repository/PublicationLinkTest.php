@@ -83,7 +83,7 @@ class PublicationLinkTest extends RepositoryTestCase
     private function getPublicationNoPubTypeTaQb($query)
     {
         $mockQb = m::mock(QueryBuilder::class);
-        $mockQb->shouldReceive('expr->eq')->with('m.pubType', ':byPubType')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('p.pubType', ':byPubType')->once()->andReturnSelf();
         $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')
             ->with(

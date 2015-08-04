@@ -90,7 +90,7 @@ class PublicationLink extends AbstractRepository
         $qb->andWhere($qb->expr()->eq($this->alias . '.trafficArea', ':byTrafficArea'))
             ->setParameter('byTrafficArea', $query->getTrafficArea());
 
-        $qb->andWhere($qb->expr()->eq($this->alias . '.pubType', ':byPubType'))
+        $qb->andWhere($qb->expr()->eq('p.pubType', ':byPubType'))
             ->setParameter('byPubType', $query->getPubType());
 
         $qb->andWhere($qb->expr()->lt('p.publicationNo', ':byPublicationNo'))
