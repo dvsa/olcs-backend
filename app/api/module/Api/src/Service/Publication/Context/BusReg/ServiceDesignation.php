@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService;
  * @package Dvsa\Olcs\Api\Service\Publication\Context\Bus
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class ServiceDesignation extends AbstractContext
+final class ServiceDesignation extends AbstractContext
 {
     public function provide(PublicationLink $publication, \ArrayObject $context)
     {

@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
  * @package Dvsa\Olcs\Api\Service\Publication\Process\BusReg
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class GrantCancelText3 implements ProcessInterface
+final class GrantCancelText3 implements ProcessInterface
 {
     /**
      * @param PublicationLink $publication

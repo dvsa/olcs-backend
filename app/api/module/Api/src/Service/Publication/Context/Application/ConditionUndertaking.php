@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @package Dvsa\Olcs\Api\Service\Publication\Context\Application
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class ConditionUndertaking extends AbstractContext implements AddressFormatterAwareInterface
+final class ConditionUndertaking extends AbstractContext implements AddressFormatterAwareInterface
 {
     const ATTACHED_LIC = 'Attached to Licence.';
     const ATTACHED_OC = 'Attached to Operating Centre: %s';

@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
  * @package Dvsa\Olcs\Api\Service\Publication\Context\Licence
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class LicenceAddress extends AbstractContext implements AddressFormatterAwareInterface
+final class LicenceAddress extends AbstractContext implements AddressFormatterAwareInterface
 {
     use AddressFormatterAwareTrait;
 

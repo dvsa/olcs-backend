@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
  * @package Dvsa\Olcs\Api\Service\Publication\Process\BusReg
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class GrantNewText3 implements ProcessInterface
+final class GrantNewText3 implements ProcessInterface
 {
     protected $from = 'From: %s';
     protected $to = 'To: %s';

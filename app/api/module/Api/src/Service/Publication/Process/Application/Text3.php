@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
  * @package Dvsa\Olcs\Api\Service\Publication\Process\Application
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class Text3 implements ProcessInterface
+final class Text3 implements ProcessInterface
 {
     /**
      * @param PublicationLink $publication
@@ -79,7 +79,7 @@ class Text3 implements ProcessInterface
      * @param array $text
      * @return array
      */
-    public function addOcDetails(ImmutableArrayObject $context, $text)
+    private function addOcDetails(ImmutableArrayObject $context, $text)
     {
         //operating centre address
         if ($context->offsetExists('operatingCentres')) {
@@ -103,7 +103,7 @@ class Text3 implements ProcessInterface
      * @param array $text
      * @return array
      */
-    public function addConditionUndertaking(ImmutableArrayObject $context, $text)
+    private function addConditionUndertaking(ImmutableArrayObject $context, $text)
     {
         //conditions and undertakings
         $conditionUndertaking = $context->offsetGet('conditionUndertaking');
@@ -122,7 +122,7 @@ class Text3 implements ProcessInterface
      * @param array $text
      * @return array
      */
-    public function addLicenceAddress(ImmutableArrayObject $context, $text)
+    private function addLicenceAddress(ImmutableArrayObject $context, $text)
     {
         $text[] = $context->offsetGet('licenceAddress');
         return $text;
@@ -135,7 +135,7 @@ class Text3 implements ProcessInterface
      * @param array $text
      * @return array
      */
-    public function addBusNote(ImmutableArrayObject $context, $text)
+    private function addBusNote(ImmutableArrayObject $context, $text)
     {
         if ($context->offsetExists('busNote')) {
             $text[] = $context->offsetGet('busNote');

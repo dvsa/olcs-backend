@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Pi\PiHearing;
  * @package Dvsa\Olcs\Api\Service\Publication\Context\PiHearing
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class PreviousHearingData extends AbstractContext
+final class PreviousHearingData extends AbstractContext
 {
     private static $bundle = [];
 

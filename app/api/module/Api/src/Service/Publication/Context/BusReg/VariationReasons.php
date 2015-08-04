@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  * @package Dvsa\Olcs\Api\Service\Publication\Context\Bus
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class VariationReasons extends AbstractContext
+final class VariationReasons extends AbstractContext
 {
     public function provide(PublicationLink $publication, \ArrayObject $context)
     {

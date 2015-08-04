@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
  * @package Dvsa\Olcs\Api\Service\Publication\Context\Application
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class OperatingCentres extends AbstractContext implements AddressFormatterAwareInterface
+final class OperatingCentres extends AbstractContext implements AddressFormatterAwareInterface
 {
     use AddressFormatterAwareTrait;
 
