@@ -147,6 +147,7 @@ return [
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
             'Stay' => RepositoryFactory::class,
+            'Submission ' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
             'IrfoPartner' => RepositoryFactory::class,
             'Payment' => RepositoryFactory::class,
