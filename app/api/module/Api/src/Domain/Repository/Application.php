@@ -106,6 +106,19 @@ class Application extends AbstractRepository
         return $qb->getQuery()->getSingleResult();
     }
 
+    public function fetchWithTmLicences($applicationId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->with('l.tmLicences', 'ltml')
+            ->byId($applicationId);
+
+        return $qb->getQuery()->getResult();
+    }
+
     /**
      * Override parent
      *
