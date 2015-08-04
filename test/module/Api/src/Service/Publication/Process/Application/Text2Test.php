@@ -97,7 +97,7 @@ class Text2Test extends MockeryTestCase
      * @param $publicationSection
      * @return PublicationLink
      */
-    public function getProcessInput($licenceType, $publicationSection)
+    private function getProcessInput($licenceType, $publicationSection)
     {
         $licNo = 'OB1234567';
         $organisationName = 'Organisation Name';
@@ -130,7 +130,6 @@ class Text2Test extends MockeryTestCase
         $licenceMock = m::mock(LicenceEntity::class);
         $licenceMock->shouldReceive('getOrganisation')->andReturn($organisationMock);
         $licenceMock->shouldReceive('getLicNo')->andReturn($licNo);
-        //$licenceMock->shouldReceive('getLicenceType->getOlbsKey')->andReturn($licenceType);
 
         $publicationLink = m::mock(PublicationLink::class)->makePartial();
         $publicationLink->shouldReceive('getLicence')->andReturn($licenceMock);
@@ -148,7 +147,7 @@ class Text2Test extends MockeryTestCase
      * @param ImmutableArrayObject $context
      * @return PublicationLink
      */
-    public function getProcessResult(PublicationLink $publicationLink, ImmutableArrayObject $context)
+    private function getProcessResult(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
         $sut = new ApplicationText2();
         return $sut->process($publicationLink, $context);
