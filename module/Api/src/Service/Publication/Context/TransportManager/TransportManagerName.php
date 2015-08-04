@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
  * @package Dvsa\Olcs\Api\Service\Publication\Context\TransportManager
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class TransportManagerName extends AbstractContext
+final class TransportManagerName extends AbstractContext
 {
     public function provide(PublicationLink $publication, \ArrayObject $context)
     {

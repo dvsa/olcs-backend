@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEnt
  * @package Dvsa\Olcs\Api\Service\Publication\Context\Application
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class LicenceCancelled extends AbstractContext
+final class LicenceCancelled extends AbstractContext
 {
     const LIC_TERMINATED = 'Licence terminated WEF ';
     const LIC_SURRENDERED = 'Licence surrendered WEF ';
@@ -20,7 +20,7 @@ class LicenceCancelled extends AbstractContext
     /**
      * @var string $date
      */
-    protected $date;
+    private $date;
 
     /**
      * @param PublicationLink $publication
@@ -48,31 +48,14 @@ class LicenceCancelled extends AbstractContext
 
     /**
      * Allows easier unit testing
-     *
-     * @param string $date
      */
-    public function setDate($date)
-    {
-        $this->date = $date;
-    }
-
-    /**
-     * Gets the date
-     *
-     * @return string
-     */
-    public function getDate()
-    {
-        return $this->date;
-    }
-
     public function createDate()
     {
-        if ($this->getDate() === null) {
+        if ($this->date === null) {
             $dateTime = new \DateTime();
-            $this->setDate($dateTime->format('j F Y'));
+            $this->date = $dateTime->format('j F Y');
         }
 
-        return $this->getDate();
+        return $this->date;
     }
 }

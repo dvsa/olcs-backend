@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
  * @package Dvsa\Olcs\Api\Service\Publication\Context\Publication
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class PreviousPublicationNo extends AbstractContext
+final class PreviousPublicationNo extends AbstractContext
 {
     private static $bundle = [];
 

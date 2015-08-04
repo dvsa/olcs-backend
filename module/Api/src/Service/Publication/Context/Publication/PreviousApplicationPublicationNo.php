@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  * @package Dvsa\Olcs\Api\Service\Publication\Context\Publication
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class PreviousApplicationPublicationNo extends AbstractContext
+final class PreviousApplicationPublicationNo extends AbstractContext
 {
     private static $bundle = [];
 

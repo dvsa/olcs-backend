@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
  * @package Dvsa\Olcs\Api\Service\Publication\Process\Application
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class Text1 implements ProcessInterface
+final class Text1 implements ProcessInterface
 {
     protected $previousPublication = '(Previous Publication:(%s))';
 

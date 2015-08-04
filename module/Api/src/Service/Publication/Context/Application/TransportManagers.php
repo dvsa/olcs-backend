@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as TransportManagerAppli
  * @package Dvsa\Olcs\Api\Service\Publication\Context\Application
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class TransportManagers extends AbstractContext
+final class TransportManagers extends AbstractContext
 {
     /**
      * @param PublicationLink $publication

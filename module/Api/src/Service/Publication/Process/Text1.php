@@ -65,7 +65,7 @@ class Text1 implements ProcessInterface
      * @param ImmutableArrayObject $context
      * @return String
      */
-    public function getOpeningText(PublicationLink $publication, ImmutableArrayObject $context)
+    private function getOpeningText(PublicationLink $publication, ImmutableArrayObject $context)
     {
         return sprintf(
             $this->pi,
@@ -80,7 +80,7 @@ class Text1 implements ProcessInterface
      * @param String $previousPublication
      * @return String
      */
-    public function getPreviousPublication($previousPublication)
+    protected function getPreviousPublication($previousPublication)
     {
         return sprintf($this->previousPublication, $previousPublication);
     }
@@ -89,7 +89,7 @@ class Text1 implements ProcessInterface
      * @param LicenceEntity $licence
      * @return string
      */
-    public function getLicenceInfo(LicenceEntity $licence)
+    private function getLicenceInfo(LicenceEntity $licence)
     {
         $organisation = $licence->getOrganisation();
         $tradingNames = $organisation->getTradingNames();
@@ -113,7 +113,7 @@ class Text1 implements ProcessInterface
      * @param OrganisationEntity $organisation
      * @return string
      */
-    public function getPersonInfo($organisation)
+    protected function getPersonInfo($organisation)
     {
         $organisationPersons = $organisation->getOrganisationPersons();
         $orgType = $organisation->getType()->getId();
@@ -148,7 +148,7 @@ class Text1 implements ProcessInterface
      * @param String $previousHearing
      * @return string
      */
-    public function getPreviousHearing($previousHearing)
+    protected function getPreviousHearing($previousHearing)
     {
         return sprintf($this->previousHearingAdjourned, $previousHearing);
     }

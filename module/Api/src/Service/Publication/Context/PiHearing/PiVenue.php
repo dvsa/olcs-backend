@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
  * @package Dvsa\Olcs\Api\Service\Publication\Context\PiHearing
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class PiVenue extends AbstractContext implements AddressFormatterAwareInterface
+final class PiVenue extends AbstractContext implements AddressFormatterAwareInterface
 {
     private static $bundle = [];
 

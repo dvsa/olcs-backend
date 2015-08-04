@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Service\Publication\Process\Text1 as AbstractText1;
  * @package Dvsa\Olcs\Api\Service\Publication\Process\Application
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class Text2 extends AbstractText1 implements ProcessInterface
+final class Text2 extends AbstractText1 implements ProcessInterface
 {
     /**
      * @param PublicationLink $publication
@@ -105,7 +105,7 @@ class Text2 extends AbstractText1 implements ProcessInterface
      * @param LicenceEntity $licence
      * @return string
      */
-    public function getLicenceInfo(LicenceEntity $licence)
+    private function getLicenceInfo(LicenceEntity $licence)
     {
         $organisation = $licence->getOrganisation();
         $tradingNames = $organisation->getTradingNames();

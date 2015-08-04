@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Service\Publication\Process\Text1 as AbstractText1;
  * @package Dvsa\Olcs\Api\Service\Publication\Process\PiHearing
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class TmDecisionText1 extends AbstractText1
+final class TmDecisionText1 extends AbstractText1
 {
     protected $pi = 'TM Public Inquiry (Case ID: %s, Public Inquiry ID: %s) for %s held at %s,
     on %s at %s';
@@ -39,7 +39,7 @@ class TmDecisionText1 extends AbstractText1
      * @param ImmutableArrayObject $context
      * @return String
      */
-    public function getOpeningText(PublicationLink $publication, ImmutableArrayObject $context)
+    private function getOpeningText(PublicationLink $publication, ImmutableArrayObject $context)
     {
         return sprintf(
             $this->pi,

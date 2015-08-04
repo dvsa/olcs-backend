@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
  * @package Dvsa\Olcs\Api\Service\Publication\Context\PiHearing
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class HearingDate extends AbstractContext
+final class HearingDate extends AbstractContext
 {
     public function provide(PublicationLink $publication, \ArrayObject $context)
     {
