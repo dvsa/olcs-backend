@@ -226,6 +226,12 @@ return [
         => QueryHandler\TransportManagerApplication\GetDetails::class,
     TransferQuery\TransportManagerApplication\GetList::class
         => QueryHandler\TransportManagerApplication\GetList::class,
+    TransferQuery\TransportManagerApplication\GetForResponsibilities::class
+        => QueryHandler\TransportManagerApplication\GetForResponsibilities::class,
+
+    // Transport Manager Licence
+    TransferQuery\TransportManagerLicence\GetForResponsibilities::class
+        => QueryHandler\TransportManagerLicence\GetForResponsibilities::class,
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
@@ -281,6 +287,12 @@ return [
     TransferQuery\Task\Task::class => QueryHandler\Task\Task::class,
     TransferQuery\Task\TaskDetails::class => QueryHandler\Task\TaskDetails::class,
 
+    // Tm Responsibilities
+    TransferQuery\TmResponsibilities\TmResponsibilitiesList::class =>
+        QueryHandler\TmResponsibilities\TmResponsibilitiesList::class,
+    TransferQuery\TmResponsibilities\GetDocumentsForResponsibilities::class =>
+        QueryHandler\TmResponsibilities\GetDocumentsForResponsibilities::class,
+
     // Companies House
     TransferQuery\CompaniesHouse\AlertList::class => QueryHandler\CompaniesHouse\AlertList::class,
 
@@ -311,4 +323,5 @@ return [
     // Variation Operating Centres
     TransferQuery\VariationOperatingCentre\VariationOperatingCentre::class
         => QueryHandler\VariationOperatingCentre\VariationOperatingCentre::class,
+
 ];

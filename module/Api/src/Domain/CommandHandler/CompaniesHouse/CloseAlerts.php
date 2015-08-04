@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler as AbstractCommandHandlerCh;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class CloseAlerts extends AbstractCommandHandler implements TransactionedInterface
+final class CloseAlerts extends AbstractCommandHandlerCh implements TransactionedInterface
 {
     protected $repoServiceName = 'CompaniesHouseAlert';
 

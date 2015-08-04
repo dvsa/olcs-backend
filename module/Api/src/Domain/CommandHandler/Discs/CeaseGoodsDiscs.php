@@ -27,10 +27,15 @@ final class CeaseGoodsDiscs extends AbstractCommandHandler implements Transactio
     {
         $licenceVehicles = $command->getLicenceVehicles();
 
-        foreach ($licenceVehicles as $licenceVehicle) {
-            foreach ($licenceVehicle->getGoodsDiscs() as $disc) {
-                $disc->setCeasedDate(new \DateTime());
-                $this->getRepo()->save($disc);
+        if(!empty($licenceVehicles)) {
+            foreach ($licenceVehicles as $licenceVehicle) {
+                $goodsDiscs = $licenceVehicle->getGoodsDiscs();
+                if (!empty($goodsDiscs)) {
+                    foreach ($goodsDiscs as $disc) {
+                        $disc->setCeasedDate(new \DateTime());
+                        $this->getRepo()->save($disc);
+                    }
+                }
             }
         }
 

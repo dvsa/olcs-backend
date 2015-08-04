@@ -79,6 +79,8 @@ return [
     TransferCommand\Application\UpdateCompletion::class =>
         CommandHandler\Application\UpdateApplicationCompletion::class,
     TransferCommand\Application\Schedule41::class => CommandHandler\Application\Schedule41::class,
+    TransferCommand\Application\Schedule41Approve::class => CommandHandler\Application\Schedule41Approve::class,
+    TransferCommand\Application\Schedule41Reset::class => CommandHandler\Application\Schedule41Reset::class,
     TransferCommand\Application\GenerateOrganisationName::class =>
         CommandHandler\Application\GenerateOrganisationName::class,
     TransferCommand\Application\PrintInterimDocument::class => CommandHandler\Application\PrintInterimDocument::class,
@@ -92,6 +94,7 @@ return [
         => CommandHandler\Application\DeleteOperatingCentres::class,
     Command\Application\HandleOcVariationFees::class => CommandHandler\Application\HandleOcVariationFees::class,
     TransferCommand\Application\CreateOperatingCentre::class => CommandHandler\Application\CreateOperatingCentre::class,
+    Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -194,6 +197,7 @@ return [
     TransferCommand\OtherLicence\CreatePreviousLicence::class
         => CommandHandler\OtherLicence\CreatePreviousLicence::class,
     TransferCommand\OtherLicence\CreateForTm::class => CommandHandler\OtherLicence\CreateForTm::class,
+    TransferCommand\OtherLicence\CreateForTml::class => CommandHandler\OtherLicence\CreateForTml::class,
 
     // Transfer - Previous Conviction
     TransferCommand\PreviousConviction\CreatePreviousConviction::class =>
@@ -409,7 +413,12 @@ return [
         => CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
 
     // Domain - Schedule41
-    Command\Schedule41\CreateS4::class => CommandHandler\Schedule41\CreateS4::class,
+    Command\Schedule41\CreateS4::class
+        => CommandHandler\Schedule41\CreateS4::class,
+    Command\Schedule41\ApproveS4::class
+        => CommandHandler\Schedule41\ApproveS4::class,
+    Command\Schedule41\ResetS4::class
+        => CommandHandler\Schedule41\ResetS4::class,
 
     // Domain - Bus
     Command\Bus\CreateBusFee::class => CommandHandler\Bus\CreateBusFee::class,
@@ -588,6 +597,12 @@ return [
     // ContinuationDetail
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
 
+    // Transport Manager Licence
+    TransferCommand\TransportManagerLicence\UpdateForResponsibilities::class =>
+        CommandHandler\TransportManagerLicence\UpdateForResponsibilities::class,
+    TransferCommand\TransportManagerLicence\DeleteForResponsibilities::class =>
+        CommandHandler\TransportManagerLicence\DeleteForResponsibilities::class,
+
     // CompaniesHouse
     Command\CompaniesHouse\EnqueueOrganisations::class => CommandHandler\CompaniesHouse\EnqueueOrganisations::class,
     Command\CompaniesHouse\InitialLoad::class => CommandHandler\CompaniesHouse\InitialLoad::class,
@@ -603,6 +618,7 @@ return [
     TransferCommand\TmQualification\Create::class => CommandHandler\TmQualification\Create::class,
     TransferCommand\TmQualification\Update::class => CommandHandler\TmQualification\Update::class,
     TransferCommand\TmQualification\Delete::class  => CommandHandler\TmQualification\Delete::class,
+
     // Application Operating Centre
     TransferCommand\ApplicationOperatingCentre\Update::class => CommandHandler\ApplicationOperatingCentre\Update::class,
 
