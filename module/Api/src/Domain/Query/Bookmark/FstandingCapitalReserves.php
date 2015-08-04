@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Domain\Query\Bookmark;
 
 use Dvsa\Olcs\Transfer\Query\AbstractQuery;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * FstandingCapitalReserves
@@ -13,14 +12,14 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 class FstandingCapitalReserves extends AbstractQuery
 {
     /**
-     * @var Organisation $organisation
+     * @var int $organisation
      */
     protected $organisation;
 
     /**
      * Gets the value of organisation.
      *
-     * @return Organisation
+     * @return int
      */
     public function getOrganisation()
     {
