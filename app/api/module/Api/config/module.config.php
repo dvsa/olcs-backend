@@ -270,6 +270,8 @@ return [
             Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
         Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousPublicationNo::class =>
             Dvsa\Olcs\Api\Service\Publication\Context\AbstractFactory::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousApplicationPublicationNo::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\AbstractFactory::class,
         Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class =>
             Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
         Dvsa\Olcs\Api\Service\Publication\Context\TransportManager\TransportManagerName::class =>
@@ -319,6 +321,7 @@ return [
         'ApplicationPublication' => array(
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\BusNote::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousApplicationPublicationNo::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\ConditionUndertaking::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\LicenceCancelled::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\OperatingCentres::class,
