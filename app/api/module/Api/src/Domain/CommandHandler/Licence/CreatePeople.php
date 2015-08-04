@@ -31,10 +31,6 @@ final class CreatePeople extends AbstractCommandHandler implements Transactioned
         /* @var $licence LicenceEntity */
         $licence = $this->getRepo()->fetchUsingId($command);
 
-        if (!$licence->getOrganisation()->isSoleTrader() && !$licence->getOrganisation()->isPartnership() ) {
-            throw new BadRequestException('Only sole traders and partnerships can be editied');
-        }
-
         $person = new \Dvsa\Olcs\Api\Entity\Person\Person();
         $person->updatePerson(
             $command->getForename(),
