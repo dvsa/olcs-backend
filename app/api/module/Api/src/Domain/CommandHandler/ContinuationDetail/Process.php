@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface as DocGenAwareInterface
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
-use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -22,7 +21,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  * Process ContinuationDetail
  *
  * @author Dan Eggleston <dan@stolenegg.com>
- * @author Mat Evans (original Business Service) <mat.evans@valtech.co.uk>
+ * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
 final class Process extends AbstractCommandHandler implements TransactionedInterface, DocGenAwareInterface
 {
@@ -153,11 +153,8 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
 
             $amount = ($feeType->getFixedValue() != 0 ? $feeType->getFixedValue() : $feeType->getFiveYearValue());
 
-            $status = FeeEntity::STATUS_OUTSTANDING;
-
             $data = [
                 'feeType' => $feeType->getId(),
-                'status' => $status,
                 'amount' => $amount,
                 'invoicedDate' => $now->format('Y-m-d'),
                 'licence' => $licence->getId(),

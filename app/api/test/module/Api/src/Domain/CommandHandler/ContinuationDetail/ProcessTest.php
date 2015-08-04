@@ -2,15 +2,19 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ContinuationDetail;
 
+use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process as Command;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\Process as CommandHandler;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Service\Document\DocumentGenerator as DocGenerator;
-use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -26,6 +30,8 @@ class ProcessTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
         $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
         $this->mockRepo('Document', \Dvsa\Olcs\Api\Domain\Repository\Document::class);
+        $this->mockRepo('Fee', \Dvsa\Olcs\Api\Domain\Repository\Fee::class);
+        $this->mockRepo('FeeType', \Dvsa\Olcs\Api\Domain\Repository\FeeType::class);
 
         $this->mockedSmServices['DocumentGenerator'] = m::mock(DocGenerator::class);
 
@@ -39,6 +45,7 @@ class ProcessTest extends CommandHandlerTestCase
             ContinuationDetail::STATUS_PRINTING,
             Licence::LICENCE_CATEGORY_PSV,
             Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+            FeeType::FEE_TYPE_CONT,
         ];
 
         $this->references = [
@@ -47,6 +54,12 @@ class ProcessTest extends CommandHandlerTestCase
             ],
             Organisation::class => [
                 1 => m::mock(Organisation::class)->makePartial(),
+            ],
+            FeeType::class => [
+                999 => m::mock(FeeType::class)->makePartial(),
+            ],
+            TrafficArea::class => [
+                'B' => m::mock(TrafficArea::class)->makePartial(),
             ],
         ];
 
@@ -88,6 +101,9 @@ class ProcessTest extends CommandHandlerTestCase
         $storedFileId = 99;
         $documentId = 101;
         $organisationId = 1;
+        $licNo = 'OB1234567';
+        $feeId = 102;
+        $feeTypeId = 999;
 
         $data = [
             'id' => $id,
@@ -100,20 +116,20 @@ class ProcessTest extends CommandHandlerTestCase
             ->setId($id)
             ->setStatus($this->mapRefData(ContinuationDetail::STATUS_PRINTING))
             ->setLicence($this->mapReference(Licence::class, $licenceId));
-        $continuationDetail
-            ->getLicence()
-            ->setOrganisation($this->mapReference(Organisation::class, $organisationId));
+
+        $continuationDetail->getLicence()
+            ->setGoodsOrPsv($this->mapRefData(Licence::LICENCE_CATEGORY_PSV))
+            ->setLicenceType($this->mapRefData(Licence::LICENCE_TYPE_SPECIAL_RESTRICTED))
+            ->setNiFlag('N')
+            ->setOrganisation($this->mapReference(Organisation::class, $organisationId))
+            ->setTrafficArea($this->mapReference(TrafficArea::class, 'B'))
+            ->setLicNo($licNo);
 
         $this->repoMap['ContinuationDetail']
             ->shouldReceive('fetchUsingId')
             ->with($command)
             ->once()
             ->andReturn($continuationDetail);
-
-        $continuationDetail->getLicence()
-            ->setGoodsOrPsv($this->mapRefData(Licence::LICENCE_CATEGORY_PSV))
-            ->setLicenceType($this->mapRefData(Licence::LICENCE_TYPE_SPECIAL_RESTRICTED))
-            ->setNiFlag('N');
 
         $storedFile = m::mock(\Dvsa\Olcs\Api\Service\File\File::class)->makePartial();
         $storedFile
@@ -177,6 +193,55 @@ class ProcessTest extends CommandHandlerTestCase
             ->with($continuationDetail)
             ->once();
 
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingContinuationFeesByLicenceId')
+            ->once()
+            ->with($licenceId)
+            ->andReturn([]);
+
+        $now = new DateTime();
+        $this->repoMap['FeeType']
+            ->shouldReceive('fetchLatest')
+            ->once()
+            ->with(
+                $this->mapRefData(FeeType::FEE_TYPE_CONT),
+                $this->mapRefData(Licence::LICENCE_CATEGORY_PSV),
+                $this->mapRefData(Licence::LICENCE_TYPE_SPECIAL_RESTRICTED),
+                m::on(
+                    // compare date objects
+                    function ($arg) use ($now) {
+                        return $arg == $now;
+                    }
+                ),
+                $this->mapReference(TrafficArea::class, 'B')
+            )
+            ->andReturn($this->mapReference(FeeType::class, $feeTypeId));
+
+        $this->mapReference(FeeType::class, $feeTypeId)
+            ->shouldReceive('getFixedValue')
+            ->andReturn('123.45')
+            ->shouldReceive('getDescription')
+            ->andReturn('Test continuation fee');
+        $feeResult = new Result();
+        $feeResult
+            ->addId('fee', $feeId)
+            ->addMessage('Fee created');
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee::class,
+            [
+                'feeType' => $feeTypeId,
+                'feeStatus' => Fee::STATUS_OUTSTANDING,
+                'amount' => '123.45',
+                'invoicedDate' => $now->format('Y-m-d'),
+                'licence' => $licenceId,
+                'description' => 'Test continuation fee for licence OB1234567',
+                'application' => null,
+                'busReg' => null,
+                'task' => null,
+            ],
+            $feeResult
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame($document, $continuationDetail->getChecklistDocument());
@@ -185,6 +250,7 @@ class ProcessTest extends CommandHandlerTestCase
             [
                 'Document dispatched',
                 'ContinuationDetail updated',
+                'Fee created'
             ],
             $result->getMessages()
         );
@@ -192,6 +258,7 @@ class ProcessTest extends CommandHandlerTestCase
             [
                 'continuationDetail' => $id,
                 'document' => $documentId,
+                'fee' => $feeId,
             ],
             $result->getIds()
         );
