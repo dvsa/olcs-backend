@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication\Context\Publication;
 
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\PreviousPublicationForPiBundle;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\PreviousPublicationByPi;
 use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 
@@ -25,7 +25,7 @@ class PreviousPublicationNo extends AbstractContext
             'bundle' => self::$bundle
         ];
 
-        $query = PreviousPublicationForPiBundle::create($params);
+        $query = PreviousPublicationByPi::create($params);
 
         /** @var PublicationLink $previousPublication */
         $previousPublication = $this->handleQuery($query);
