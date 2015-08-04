@@ -18,7 +18,7 @@ return array(
         ]
     ],
     'elastic_search' => array(
-        'host'=> 'scdv-db02.sc.npm',
+        'host'=> 'elasticsearch-dev.olcs.mgt.mtpdvsa',
         'port'=> '9200'
     ),
     'doctrine' => array(
