@@ -839,6 +839,24 @@ class Application extends AbstractApplication
      */
     public function getOutOfOppositionDate()
     {
+        // It is a PSV variation;
+        if ($this->isPsv() && $this->isVariation()) {
+            return self::NOT_APPLICABLE;
+        }
+
+        if ($this->isGoods() && $this->isVariation()) {
+            // It is a goods variation and 0 operating centres have been added;
+            if ($this->getOperatingCentresAdded()->count() === 0) {
+                return self::NOT_APPLICABLE;
+            }
+
+            // It is a goods variation and 0 operating centres have been updated with an increase
+            // of vehicles or trailers
+            if (!$this->hasIncreaseInOperatingCentre()) {
+                return self::NOT_APPLICABLE;
+            }
+        }
+
         $latestPublication = $this->getLatestPublication();
 
         if (!empty($latestPublication)) {
@@ -849,6 +867,19 @@ class Application extends AbstractApplication
         }
 
         return self::UNKNOWN;
+    }
+
+    /**
+     * Get a collection of Application Operating Centres that have been added
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOperatingCentresAdded()
+    {
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->eq('action', 'A'));
+
+        return $this->getOperatingCentres()->matching($criteria);
     }
 
     /**

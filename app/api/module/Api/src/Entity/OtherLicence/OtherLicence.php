@@ -208,4 +208,20 @@ class OtherLicence extends AbstractOtherLicence
             throw new ValidationException($errors);
         }
     }
+
+    public function updateOtherLicenceForTml(
+        $role,
+        $transportManagerLicence,
+        $hoursPerWeek,
+        $licNo,
+        $operatingCentres,
+        $totalAuthVehicles
+    ) {
+        $this->setRole($role);
+        $this->setTransportManagerLicence($transportManagerLicence);
+        $this->setHoursPerWeek($hoursPerWeek);
+        $this->setLicNo($licNo);
+        $this->setOperatingCentres($operatingCentres);
+        $this->setTotalAuthVehicles($totalAuthVehicles);
+    }
 }

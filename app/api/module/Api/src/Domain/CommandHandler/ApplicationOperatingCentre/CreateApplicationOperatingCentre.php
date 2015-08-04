@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\Application\S4;
 
 /**
  * Class CreateApplicationOperatingCentre
@@ -27,7 +28,11 @@ final class CreateApplicationOperatingCentre extends AbstractCommandHandler impl
         $applicationOperatingCentre->setAdPlaced('N');
         $applicationOperatingCentre->setNoOfVehiclesRequired($command->getNoOfVehiclesRequired());
         $applicationOperatingCentre->setNoOfTrailersRequired($command->getNoOfTrailersRequired());
-        $applicationOperatingCentre->getS4($command->getS4());
+        $applicationOperatingCentre->setS4(
+            $this->getRepo()->getReference(
+                S4::class, $command->getS4()
+            )
+        );
 
         $this->getRepo()->save($applicationOperatingCentre);
 

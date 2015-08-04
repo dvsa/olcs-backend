@@ -28,7 +28,6 @@ class Application extends AbstractRepository
             ->with('previousConvictions');
 
         return $qb->getQuery()->getSingleResult();
-
     }
 
     public function fetchForOrganisation($organisationId)
@@ -105,6 +104,19 @@ class Application extends AbstractRepository
             ->byId($applicationId);
 
         return $qb->getQuery()->getSingleResult();
+    }
+
+    public function fetchWithTmLicences($applicationId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->with('l.tmLicences', 'ltml')
+            ->byId($applicationId);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
