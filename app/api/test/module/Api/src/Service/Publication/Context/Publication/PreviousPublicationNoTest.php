@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousPublicationNo;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 
 /**
