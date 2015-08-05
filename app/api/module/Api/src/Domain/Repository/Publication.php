@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as Entity;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
 /**
  * Publication
@@ -18,4 +19,31 @@ use Dvsa\Olcs\Api\Entity\Publication\Publication as Entity;
 class Publication extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+    public function fetchLatestForTrafficAreaAndType($trafficArea, $pubType)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere(
+            $qb->expr()->eq($this->alias . '.trafficArea', ':trafficArea')
+        )->setParameter('trafficArea', $trafficArea);
+
+        $qb->andWhere(
+            $qb->expr()->eq($this->alias . '.pubType', ':pubType')
+        )->setParameter('pubType', $pubType);
+
+        $qb->andWhere(
+            $qb->expr()->eq($this->alias . '.pubStatus', ':pubStatus')
+        )->setParameter('pubStatus', Entity::PUB_NEW_STATUS);
+
+        $this->getQueryBuilder()->modifyQuery($qb);
+
+        $result = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+
+        if (empty($result)) {
+            throw new NotFoundException('Resource not found');
+        }
+
+        return $result[0];
+    }
 }
