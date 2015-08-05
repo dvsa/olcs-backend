@@ -48,6 +48,7 @@ class ApplicationTest extends QueryHandlerTestCase
             ->setId($applicationId)
             ->shouldReceive('serialize')
             ->andReturn(['foo' => 'bar']);
+        $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($query)
@@ -76,6 +77,7 @@ class ApplicationTest extends QueryHandlerTestCase
             'sections' => ['bar', 'cake'],
             'outstandingFeeTotal' => '166.70',
             'variationCompletion' => null,
+            'canCreateCase' => false
         ];
 
         $this->assertEquals($expected, $result->serialize());
