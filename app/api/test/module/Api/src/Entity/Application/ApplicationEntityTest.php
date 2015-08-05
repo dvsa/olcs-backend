@@ -2007,4 +2007,27 @@ class ApplicationEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @param string $categoryId 'lcat_psv'|'lcat_gv'
+     * @param string $expected 'O'|'P'
+     * @dataProvider categoryPrefixDp
+     */
+    public function testGetCategoryPrefix($categoryId, $expected)
+    {
+        $category = new RefData($categoryId);
+
+        $application = $this->instantiate(Entity::class);
+        $application->setGoodsOrPsv($category);
+
+        $this->assertEquals($expected, $application->getCategoryPrefix());
+    }
+
+    public function categoryPrefixDp()
+    {
+        return [
+            [Licence::LICENCE_CATEGORY_PSV, 'P'],
+            [Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'O'],
+        ];
+    }
 }

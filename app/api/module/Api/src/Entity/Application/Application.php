@@ -5,13 +5,14 @@ namespace Dvsa\Olcs\Api\Entity\Application;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Application Entity
@@ -654,7 +655,7 @@ class Application extends AbstractApplication
         $data = $completion->serialize([]);
 
         foreach ($data as $key => $value) {
-            if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches) && $value !== self::VARIATION_STATUS_UNCHANGED) {
+            if (preg_match('/^([a-zA-Z]+)Status$/', $key) && $value !== self::VARIATION_STATUS_UNCHANGED) {
                 return true;
             }
         }
@@ -758,7 +759,7 @@ class Application extends AbstractApplication
         /* @var $aoc \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre */
         $maximumDate = null;
         foreach ($this->getOperatingCentres() as $aoc) {
-            $operatingCentreOorDate = $this->calcOperatingCentreOutOfReprenentationDate($aoc);
+            $operatingCentreOorDate = $this->calcOperatingCentreOutOfRepresentationDate($aoc);
 
             // If 1 or more of the operating centres are 'Unknown' then the overall OOR date = 'Unknown'
             if ($operatingCentreOorDate === self::UNKNOWN) {
@@ -794,7 +795,7 @@ class Application extends AbstractApplication
      *
      * @return string date|self::NOT_APPLICABLE|self::UNKNOWN
      */
-    private function calcOperatingCentreOutOfReprenentationDate(ApplicationOperatingCentre $aoc)
+    private function calcOperatingCentreOutOfRepresentationDate(ApplicationOperatingCentre $aoc)
     {
         // For added operating centres that are linked to a schedule 4
         // where there has been no increase to the vehicles as compared with the donor licence then
@@ -954,5 +955,10 @@ class Application extends AbstractApplication
         $criteria->where($criteria->expr()->eq('operatingCentre', $oc));
 
         return $this->getOperatingCentres()->matching($criteria);
+    }
+
+    public function getCategoryPrefix()
+    {
+        return LicenceNoGen::getCategoryPrefix($this->getGoodsOrPsv());
     }
 }
