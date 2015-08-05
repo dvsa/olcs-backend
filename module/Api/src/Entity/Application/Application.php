@@ -6,11 +6,13 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\Repository\Publication;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 
@@ -74,6 +76,31 @@ class Application extends AbstractApplication
 
     const NOT_APPLICABLE = 'Not applicable';
     const UNKNOWN = 'Unknown';
+
+    /**
+     * Publication No
+     *
+     * @var integer
+     */
+    protected $publicationNo;
+
+    /**
+     * Out of objection date
+     * @var string
+     */
+    protected $oooDate;
+
+    /**
+     * Out of representation date
+     * @var string
+     */
+    protected $oorDate;
+
+    /**
+     * isOpposed
+     * @var bool
+     */
+    protected $isOpposed;
 
     public function __construct(Licence $licence, RefData $status, $isVariation)
     {
@@ -886,7 +913,7 @@ class Application extends AbstractApplication
     /**
      * Gets the latest publication for an application. (used to calculate OOO date)
      *
-     * @return Dvsa\Olcs\Api\Entity\Publication\PublicationLink|null
+     * @return \Dvsa\Olcs\Api\Entity\Publication\PublicationLink|null
      */
     private function getLatestPublication()
     {
@@ -960,5 +987,102 @@ class Application extends AbstractApplication
     public function getCategoryPrefix()
     {
         return LicenceNoGen::getCategoryPrefix($this->getGoodsOrPsv());
+    }
+
+    /**
+     * @return int
+     */
+    public function getPublicationNo()
+    {
+        return $this->publicationNo;
+    }
+
+    /**
+     * @param int $publicationNo
+     */
+    public function setPublicationNo($publicationNo)
+    {
+        $this->publicationNo = $publicationNo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOooDate()
+    {
+        return $this->oooDate;
+    }
+
+    /**
+     * @param string $oooDate
+     */
+    public function setOooDate($oooDate)
+    {
+        $this->oooDate = $oooDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOorDate()
+    {
+        return $this->oorDate;
+    }
+
+    /**
+     * @param string $oorDate
+     */
+    public function setOorDate($oorDate)
+    {
+        $this->oorDate = $oorDate;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsOpposed()
+    {
+        return $this->isOpposed;
+    }
+
+    /**
+     * @param boolean $isOpposed
+     */
+    public function setIsOpposed($isOpposed)
+    {
+        $this->isOpposed = $isOpposed;
+    }
+
+    /**
+     * Determine and set the latest publication number
+     * @return mixed
+     */
+    public function determinePublicationNo()
+    {
+        /** @var Publication $latestPublication */
+        $latestPublication = $this->getLatestPublication();
+
+        if ($latestPublication instanceof Publication) {
+
+            return $latestPublication->getPublicationNo();
+        }
+
+        return null;
+    }
+
+    /**
+     * Has this application received any opposition
+     * @return bool
+     */
+    public function hasOpposition()
+    {
+        /** @var CasesEntity $case */
+        foreach ($this->getCases() as $case) {
+            if (count($case->getOppositions()) > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

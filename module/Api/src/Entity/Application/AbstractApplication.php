@@ -669,6 +669,15 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     protected $applicationTracking;
 
     /**
+     * Case
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", mappedBy="application")
+     */
+    protected $cases;
+
+    /**
      * Condition undertaking
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -792,6 +801,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     {
         $this->operatingCentres = new ArrayCollection();
         $this->applicationOrganisationPersons = new ArrayCollection();
+        $this->cases = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->fees = new ArrayCollection();
@@ -2394,6 +2404,66 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getApplicationTracking()
     {
         return $this->applicationTracking;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return Application
+     */
+    public function setCases($cases)
+    {
+        $this->cases = $cases;
+
+        return $this;
+    }
+
+    /**
+     * Get the cases
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCases()
+    {
+        return $this->cases;
+    }
+
+    /**
+     * Add a cases
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return Application
+     */
+    public function addCases($cases)
+    {
+        if ($cases instanceof ArrayCollection) {
+            $this->cases = new ArrayCollection(
+                array_merge(
+                    $this->cases->toArray(),
+                    $cases->toArray()
+                )
+            );
+        } elseif (!$this->cases->contains($cases)) {
+            $this->cases->add($cases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a cases
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return Application
+     */
+    public function removeCases($cases)
+    {
+        if ($this->cases->contains($cases)) {
+            $this->cases->removeElement($cases);
+        }
+
+        return $this;
     }
 
     /**
