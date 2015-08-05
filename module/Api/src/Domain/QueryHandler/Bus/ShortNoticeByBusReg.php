@@ -23,7 +23,9 @@ class ShortNoticeByBusReg extends AbstractQueryHandler
             'result' => $this->resultList(
                 $shortNotice,
                 [
-                    'busReg'
+                    'busReg' => [
+                        'status'
+                    ]
                 ]
             )
         ];
