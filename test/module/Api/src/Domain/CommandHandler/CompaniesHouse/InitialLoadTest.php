@@ -230,8 +230,11 @@ class InitialLoadTest extends CommandHandlerTestCase
 
         $command = Cmd::create(['companyNumber' => $companyNumber]);
 
-        $result = $this->sut->handleCommand($command);
+        $this->setExpectedException(
+            \Dvsa\Olcs\Api\Domain\Exception\Exception::class,
+            'Failure from Companies House API: company not found'
+        );
 
-        $this->assertEquals('company not found', $result->getMessages()[0]);
+        $result = $this->sut->handleCommand($command);
     }
 }
