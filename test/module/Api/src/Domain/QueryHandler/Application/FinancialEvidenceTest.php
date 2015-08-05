@@ -30,15 +30,11 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class FinancialEvidenceTest extends QueryHandlerTestCase
 {
-    protected $mockHelperService;
-
     public function setUp()
     {
         $this->sut = new FinancialEvidence();
         $this->mockRepo('Application', ApplicationRepo::class);
-
-        $this->mockHelperService = m::mock(FinancialStandingHelperService::class);
-        $this->mockedSmServices['FinancialStandingHelperService'] = $this->mockHelperService;
+        $this->mockedSmServices['FinancialStandingHelperService'] = m::mock(FinancialStandingHelperService::class);
 
         return parent::setUp();
     }
@@ -134,7 +130,7 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ->atLeast(1)
             ->andReturn($organisationApplications);
 
-        $this->mockHelperService
+        $this->mockedSmServices['FinancialStandingHelperService']
             ->shouldReceive('getFinanceCalculation')
             ->andReturn($totalRequired)
             ->shouldReceive('getRatesForView')
