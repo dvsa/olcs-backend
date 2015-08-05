@@ -4,6 +4,15 @@ namespace Dvsa\Olcs\Api\Entity\Publication;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+
 /**
  * PublicationLink Entity
  *
@@ -28,5 +37,98 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PublicationLink extends AbstractPublicationLink
 {
+    /**
+     * Creates Application publication entry
+     *
+     * @param ApplicationEntity $application
+     * @param LicenceEntity $licence
+     * @param PublicationEntity $publication
+     * @param PublicationSectionEntity $publicationSection
+     * @param TrafficAreaEntity $trafficArea
+     */
+    public function createApplication(
+        ApplicationEntity $application,
+        LicenceEntity $licence,
+        PublicationEntity $publication,
+        PublicationSectionEntity $publicationSection,
+        TrafficAreaEntity $trafficArea
+    ) {
+        $this->application = $application;
+        $this->licence = $licence;
+        $this->publication = $publication;
+        $this->publicationSection = $publicationSection;
+        $this->trafficArea = $trafficArea;
+    }
 
+    /**
+     * Creates a Bus Registration publication entry
+     *
+     * @param BusRegEntity $busReg
+     * @param LicenceEntity $licence
+     * @param PublicationEntity $publication
+     * @param PublicationSectionEntity $publicationSection
+     * @param TrafficAreaEntity $trafficArea
+     * @param string $text1
+     */
+    public function createBusReg(
+        BusRegEntity $busReg,
+        LicenceEntity $licence,
+        PublicationEntity $publication,
+        PublicationSectionEntity $publicationSection,
+        TrafficAreaEntity $trafficArea,
+        $text1
+    ) {
+        $this->busReg = $busReg;
+        $this->licence = $licence;
+        $this->publication = $publication;
+        $this->publicationSection = $publicationSection;
+        $this->trafficArea = $trafficArea;
+        $this->text1 = $text1;
+    }
+
+    /**
+     * Creates a Pi hearing publication entry
+     *
+     * @param LicenceEntity $licence
+     * @param PiEntity $pi
+     * @param PublicationEntity $publication
+     * @param PublicationSectionEntity $publicationSection
+     * @param TrafficAreaEntity $trafficArea
+     */
+    public function createPiHearing(
+        LicenceEntity $licence,
+        PiEntity $pi,
+        PublicationEntity $publication,
+        PublicationSectionEntity $publicationSection,
+        TrafficAreaEntity $trafficArea
+    ) {
+        $this->licence = $licence;
+        $this->pi = $pi;
+        $this->publication = $publication;
+        $this->publicationSection = $publicationSection;
+        $this->trafficArea = $trafficArea;
+    }
+
+    /**
+     * Creates a Tm Pi Hearing publication entry
+     *
+     * @param TransportManagerEntity $transportManager
+     * @param PiEntity $pi
+     * @param PublicationEntity $publication
+     * @param PublicationSectionEntity $publicationSection
+     * @param TrafficAreaEntity $trafficArea
+     */
+    public function createTmPiHearing(
+        TransportManagerEntity $transportManager,
+        PiEntity $pi,
+        PublicationEntity $publication,
+        PublicationSectionEntity $publicationSection,
+        TrafficAreaEntity $trafficArea
+    ) {
+        $this->transportManager = $transportManager;
+        $this->pi = $pi;
+        $this->publication = $publication;
+        $this->publicationSection = $publicationSection;
+        $this->trafficArea = $trafficArea;
+    }
 }
