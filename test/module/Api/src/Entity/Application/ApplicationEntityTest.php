@@ -1666,6 +1666,10 @@ class ApplicationEntityTest extends EntityTester
     {
         $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
 
+        $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setAction('D');
+        $this->entity->addOperatingCentres($aoc);
+
         $oorDate = $this->entity->getOutOfRepresentationDate();
 
         $this->assertEquals('Unknown', $oorDate);
@@ -1675,6 +1679,10 @@ class ApplicationEntityTest extends EntityTester
     {
         $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
         $this->entity->setIsVariation(1);
+
+        $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setAction('D');
+        $this->entity->addOperatingCentres($aoc);
 
         $oorDate = $this->entity->getOutOfRepresentationDate();
 
