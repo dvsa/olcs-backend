@@ -32,6 +32,8 @@ class GrantTest extends CommandHandlerTestCase
         $this->sut = new Grant();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
 
+        $this->mockedSmServices['ApplicationGrantValidationService'] = m::mock();
+
         parent::setUp();
     }
 
@@ -49,6 +51,31 @@ class GrantTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
+    public function testHandleCommandWithFailedValidation()
+    {
+        $data = [
+            'shouldCreateInspectionRequest' => 'N',
+            'dueDate' => null
+        ];
+        $command = Cmd::create($data);
+
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application);
+
+        $this->mockedSmServices['ApplicationGrantValidationService']->shouldReceive('validate')->with($application)
+            ->andReturn(['MESSAGE1', 'MESSAGE2']);
+
+        try {
+            $this->sut->handleCommand($command);
+
+            $this->fail('Exception should have been thrown');
+        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
+            $this->assertSame(['MESSAGE1', 'MESSAGE2'], $e->getMessages());
+        }
+    }
+
     public function testHandleCommandGoods()
     {
         $data = [
@@ -64,12 +91,13 @@ class GrantTest extends CommandHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->shouldReceive('isGoods')
             ->andReturn(true);
-        $application->shouldReceive('getS4s')->andReturn(new \Doctrine\Common\Collections\ArrayCollection());
-        $application->shouldReceive('getOverrideOoo')->andReturn('Y');
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
             ->andReturn($application);
+
+        $this->mockedSmServices['ApplicationGrantValidationService']->shouldReceive('validate')->with($application)
+            ->andReturn([]);
 
         $result1 = new Result();
         $result1->addMessage('GrantGoods');
@@ -102,12 +130,13 @@ class GrantTest extends CommandHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->shouldReceive('isGoods')
             ->andReturn(false);
-        $application->shouldReceive('getS4s')->andReturn(new \Doctrine\Common\Collections\ArrayCollection());
-        $application->shouldReceive('getOverrideOoo')->andReturn('Y');
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
             ->andReturn($application);
+
+        $this->mockedSmServices['ApplicationGrantValidationService']->shouldReceive('validate')->with($application)
+            ->andReturn([]);
 
         $result1 = new Result();
         $result1->addMessage('GrantPsv');
@@ -141,12 +170,13 @@ class GrantTest extends CommandHandlerTestCase
         $application->setId(111);
         $application->shouldReceive('isGoods')
             ->andReturn(false);
-        $application->shouldReceive('getS4s')->andReturn(new \Doctrine\Common\Collections\ArrayCollection());
-        $application->shouldReceive('getOverrideOoo')->andReturn('Y');
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
             ->andReturn($application);
+
+        $this->mockedSmServices['ApplicationGrantValidationService']->shouldReceive('validate')->with($application)
+            ->andReturn([]);
 
         $result1 = new Result();
         $result1->addMessage('GrantPsv');
@@ -172,84 +202,5 @@ class GrantTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
-    }
-
-    public function testHandleCommandS4Validation()
-    {
-        $data = ['id' => 111];
-
-        $command = Cmd::create($data);
-
-        $s4 = m::mock(\Dvsa\Olcs\Api\Entity\Application\S4::class)->makePartial();
-
-        /* @var $application ApplicationEntity */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setId(111);
-        $application->setS4s(new \Doctrine\Common\Collections\ArrayCollection());
-        $application->addS4s($s4);
-        $application->shouldReceive('getOverrideOoo')->andReturn('Y');
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->andReturn($application);
-
-        try {
-            $this->sut->handleCommand($command);
-        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
-            $this->assertArrayNotHasKey('oood', $e->getMessages());
-            $this->assertArrayNotHasKey('oord', $e->getMessages());
-            $this->assertArrayHasKey('s4', $e->getMessages());
-            $this->assertArrayHasKey('APP-GRA-S4-EMPTY', $e->getMessages()['s4']);
-        }
-    }
-
-    public function testHandleCommandOppositionUnknown()
-    {
-        $data = ['id' => 111];
-
-        $command = Cmd::create($data);
-
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setId(111);
-        $application->shouldReceive('getS4s')->andReturn(new \Doctrine\Common\Collections\ArrayCollection());
-        $application->shouldReceive('getOutOfOppositionDate')->andReturn(ApplicationEntity::UNKNOWN);
-        $application->shouldReceive('getOutOfRepresentationDate')->andReturn(ApplicationEntity::UNKNOWN);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->andReturn($application);
-
-        try {
-            $this->sut->handleCommand($command);
-        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
-            $this->assertArrayNotHasKey('s4', $e->getMessages());
-            $this->assertArrayHasKey('oood', $e->getMessages());
-            $this->assertArrayHasKey('APP-GRA-OOOD-UNKNOWN', $e->getMessages()['oood']);
-            $this->assertArrayHasKey('oord', $e->getMessages());
-            $this->assertArrayHasKey('APP-GRA-OORD-UNKNOWN', $e->getMessages()['oord']);
-        }
-    }
-
-    public function testHandleCommandOppositionNotPassed()
-    {
-        $data = ['id' => 111];
-
-        $command = Cmd::create($data);
-
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setId(111);
-        $application->shouldReceive('getS4s')->andReturn(new \Doctrine\Common\Collections\ArrayCollection());
-        $application->shouldReceive('getOutOfOppositionDate')->andReturn(new \DateTime('2093-12-02'));
-        $application->shouldReceive('getOutOfRepresentationDate')->andReturn(new \DateTime('2056-03-23'));
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->andReturn($application);
-
-        try {
-            $this->sut->handleCommand($command);
-        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
-            $this->assertArrayNotHasKey('s4', $e->getMessages());
-            $this->assertArrayHasKey('oood', $e->getMessages());
-            $this->assertArrayHasKey('APP-GRA-OOOD-NOT-PASSED', $e->getMessages()['oood']);
-            $this->assertArrayHasKey('oord', $e->getMessages());
-            $this->assertArrayHasKey('APP-GRA-OORD-NOT-PASSED', $e->getMessages()['oord']);
-        }
     }
 }
