@@ -122,4 +122,14 @@ class Organisation extends AbstractOrganisation
             $this->name = $name;
         }
     }
+
+    /**
+     * Is this organisation an unlicensed operator
+     *
+     * @return bool
+     */
+    public function isUnlicensed()
+    {
+        return (boolean)$this->getIsUnlicensed();
+    }
 }

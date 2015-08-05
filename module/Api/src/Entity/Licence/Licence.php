@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
 
 /**
  * Licence Entity
@@ -69,6 +70,7 @@ class Licence extends AbstractLicence
     const LICENCE_STATUS_NOT_TAKEN_UP = 'lsts_ntu';
     const LICENCE_STATUS_TERMINATED = 'lsts_terminated';
     const LICENCE_STATUS_CONTINUATION_NOT_SOUGHT = 'lsts_cns';
+    const LICENCE_STATUS_UNLICENSED = 'lsts_unlicenced'; // note, refdata misspelled
 
     const TACH_EXT = 'tach_external';
     const TACH_INT = 'tach_internal';
@@ -488,5 +490,10 @@ class Licence extends AbstractLicence
     public function canHaveCommunityLicences()
     {
         return ($this->isStandardInternational() || ($this->isPsv() && $this->isRestricted()));
+    }
+
+    public function getCategoryPrefix()
+    {
+        return LicenceNoGenEntity::getCategoryPrefix($this->getGoodsOrPsv());
     }
 }
