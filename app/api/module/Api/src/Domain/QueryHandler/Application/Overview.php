@@ -41,6 +41,7 @@ class Overview extends AbstractQueryHandler
                 'interimStatus',
                 'licenceType',
                 'goodsOrPsv',
+                'licenceVehicles',
             ],
             [
                 'licence' => $licence->serialize(),
@@ -51,6 +52,7 @@ class Overview extends AbstractQueryHandler
                 ],
                 'outOfOppositionDate' => $this->getDateOrString($application->getOutOfOppositionDate()),
                 'outOfRepresentationDate' => $this->getDateOrString($application->getOutOfRepresentationDate()),
+                'operatingCentresNetDelta' => $application->getOperatingCentresNetDelta(),
             ]
         );
     }
