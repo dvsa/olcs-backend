@@ -81,6 +81,7 @@ return [
     TransferCommand\Application\Schedule41::class => CommandHandler\Application\Schedule41::class,
     TransferCommand\Application\Schedule41Approve::class => CommandHandler\Application\Schedule41Approve::class,
     TransferCommand\Application\Schedule41Reset::class => CommandHandler\Application\Schedule41Reset::class,
+    TransferCommand\Application\Schedule41Refuse::class => CommandHandler\Application\Schedule41Refuse::class,
     TransferCommand\Application\GenerateOrganisationName::class =>
         CommandHandler\Application\GenerateOrganisationName::class,
     TransferCommand\Application\PrintInterimDocument::class => CommandHandler\Application\PrintInterimDocument::class,
@@ -403,14 +404,20 @@ return [
     // Domain - Application Operating Centre
     Command\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class
         => CommandHandler\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class,
+    Command\ApplicationOperatingCentre\DeleteApplicationOperatingCentre::class
+        => CommandHandler\ApplicationOperatingCentre\DeleteApplicationOperatingCentre::class,
 
     // Domain - Licence Operating Centre
     Command\LicenceOperatingCentre\AssociateS4::class
         => CommandHandler\LicenceOperatingCentre\AssociateS4::class,
+    Command\LicenceOperatingCentre\DisassociateS4::class
+        => CommandHandler\LicenceOperatingCentre\DisassociateS4::class,
 
     // Domain - Condition Undertaking
     Command\Cases\ConditionUndertaking\CreateConditionUndertaking::class
         => CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
+    Command\Cases\ConditionUndertaking\DeleteConditionUndertakingS4::class
+        => CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertakingS4::class,
 
     // Domain - Schedule41
     Command\Schedule41\CreateS4::class
@@ -419,6 +426,8 @@ return [
         => CommandHandler\Schedule41\ApproveS4::class,
     Command\Schedule41\ResetS4::class
         => CommandHandler\Schedule41\ResetS4::class,
+    Command\Schedule41\RefuseS4::class
+        => CommandHandler\Schedule41\RefuseS4::class,
 
     // Domain - Bus
     Command\Bus\CreateBusFee::class => CommandHandler\Bus\CreateBusFee::class,
@@ -427,6 +436,9 @@ return [
     Command\Licence\CancelLicenceFees::class => CommandHandler\Licence\CancelLicenceFees::class,
     Command\Licence\UpdateTotalCommunityLicences::class => CommandHandler\Licence\UpdateTotalCommunityLicences::class,
     Command\Licence\SaveAddresses::class => CommandHandler\Licence\SaveAddresses::class,
+
+    // Domain - Publications
+    Command\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,
 
     // Domain - Discs
     Command\Discs\CeaseGoodsDiscs::class => CommandHandler\Discs\CeaseGoodsDiscs::class,
@@ -517,12 +529,6 @@ return [
         => CommandHandler\TransportManagerApplication\UpdateStatus::class,
     TransferCommand\TransportManagerApplication\UpdateDetails::class
         => CommandHandler\TransportManagerApplication\UpdateDetails::class,
-    TransferCommand\TransportManagerApplication\CreateForResponsibilities::class =>
-        CommandHandler\TransportManagerApplication\CreateForResponsibilities::class,
-    TransferCommand\TransportManagerApplication\UpdateForResponsibilities::class =>
-        CommandHandler\TransportManagerApplication\UpdateForResponsibilities::class,
-    TransferCommand\TransportManagerApplication\DeleteForResponsibilities::class =>
-        CommandHandler\TransportManagerApplication\DeleteForResponsibilities::class,
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
@@ -550,6 +556,8 @@ return [
     // Transfer - Operator
     TransferCommand\Operator\Create::class => CommandHandler\Operator\SaveOperator::class,
     TransferCommand\Operator\Update::class => CommandHandler\Operator\SaveOperator::class,
+    TransferCommand\Operator\CreateUnlicensed::class => CommandHandler\Operator\CreateUnlicensed::class,
+    TransferCommand\Operator\UpdateUnlicensed::class => CommandHandler\Operator\UpdateUnlicensed::class,
 
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
@@ -631,4 +639,9 @@ return [
     // Licence Operating Centre
     TransferCommand\LicenceOperatingCentre\Update::class => CommandHandler\LicenceOperatingCentre\Update::class,
 
+    /** @to-do Review whether these commands are still needed once front end controllers have been migrated */
+    TransferCommand\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,
+    TransferCommand\Publication\PiDecision::class => CommandHandler\Publication\PiHearing::class,
+    TransferCommand\Publication\Bus::class => CommandHandler\Publication\Bus::class,
+    TransferCommand\Publication\Application::class => CommandHandler\Publication\Application::class,
 ];

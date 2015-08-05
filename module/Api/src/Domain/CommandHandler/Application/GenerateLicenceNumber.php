@@ -50,15 +50,9 @@ final class GenerateLicenceNumber extends AbstractCommandHandler
 
         if ($licence->getLicNo() === null) {
 
-            $licenceNoGen = new LicenceNoGen($licence);
-            $this->licNoGenRepo->save($licenceNoGen);
+            $newLicNo = $this->getNewLicNo($licence, $application);
 
-            $categoryPrefix = $application->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_PSV
-                ? 'P' : 'O';
-
-            $licence->setLicNo(
-                sprintf('%s%s%s', $categoryPrefix, $licence->getTrafficArea()->getId(), $licenceNoGen->getId())
-            );
+            $licence->setLicNo($newLicNo);
 
             $this->getRepo()->save($application);
             $result->addId('licenceNumber', $licence->getLicNo());
@@ -86,5 +80,18 @@ final class GenerateLicenceNumber extends AbstractCommandHandler
 
         $result->addMessage('Licence number is unchanged');
         return $result;
+    }
+
+    private function getNewLicNo($licence, $application)
+    {
+        $licenceNoGen = new LicenceNoGen($licence);
+        $this->licNoGenRepo->save($licenceNoGen);
+
+        return sprintf(
+            '%s%s%s',
+            $application->getCategoryPrefix(),
+            $licence->getTrafficArea()->getId(),
+            $licenceNoGen->getId()
+        );
     }
 }

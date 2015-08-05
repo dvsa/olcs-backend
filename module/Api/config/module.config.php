@@ -11,6 +11,10 @@ return [
         'routes' => include(__DIR__ . '/../../../vendor/olcs/olcs-transfer/config/backend-routes.config.php')
     ],
     'service_manager' => [
+        'alias' => [
+            'PublicationContextPlugin' => \Dvsa\Olcs\Api\Service\Publication\Context\PluginManager::class,
+            'PublicationProcessPlugin' => \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class
+        ],
         'invokables' => [
             'Document' => \Dvsa\Olcs\Api\Service\Document\Document::class,
             'DocumentGenerator' => \Dvsa\Olcs\Api\Service\Document\DocumentGenerator::class,
@@ -20,10 +24,12 @@ return [
             'SectionConfig' =>  \Dvsa\Olcs\Api\Service\Lva\SectionConfig::class,
             'OperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper::class,
             'UpdateOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper::class,
+            'AddressFormatter' => \Dvsa\Olcs\Api\Service\Helper\FormatAddress::class
         ],
         'factories' => [
             'VariationOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper::class,
             'SectionAccessService' => \Dvsa\Olcs\Api\Service\Lva\SectionAccessService::class,
+            'ApplicationGrantValidationService' => \Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService::class,
             'ContentStore' => \Dvsa\Jackrabbit\Client\Service\ClientFactory::class,
             'IdentityProvider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
@@ -38,6 +44,12 @@ return [
             'CpmsIdentityProvider' => \Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
             'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperService::class,
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
+            \Dvsa\Olcs\Api\Service\Publication\PublicationGenerator::class =>
+                \Dvsa\Olcs\Api\Service\Publication\PublicationGeneratorFactory::class,
+            \Dvsa\Olcs\Api\Service\Publication\Context\PluginManager::class =>
+                \Dvsa\Olcs\Api\Service\Publication\Context\PluginManagerFactory::class,
+            \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class =>
+                \Dvsa\Olcs\Api\Service\Publication\Process\PluginManagerFactory::class,
         ],
     ],
     'file_uploader' => [
@@ -188,6 +200,7 @@ return [
             'Queue' => RepositoryFactory::class,
             'AdminAreaTrafficArea' => RepositoryFactory::class,
             'PostcodeEnforcementArea' => RepositoryFactory::class,
+            'PiVenue' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
@@ -249,4 +262,156 @@ return [
             'can-update-licence-licence-type' => \Dvsa\Olcs\Api\Assertion\Licence\UpdateLicenceType::class
         ]
     ],
+    'publication_context' => [
+        Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\AbstractFactory::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\AbstractFactory::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousPublicationNo::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\AbstractFactory::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousApplicationPublicationNo::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\AbstractFactory::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\TransportManager\TransportManagerName::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\TransportManager\TransportManagerName::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceTypes::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceTypes::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceDesignation::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceDesignation::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\BusReg\VariationReasons::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\BusReg\VariationReasons::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\Application\BusNote::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\Application\BusNote::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\Application\ConditionUndertaking::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\Application\ConditionUndertaking::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\Application\LicenceCancelled::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\Application\LicenceCancelled::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\Application\OperatingCentres::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\Application\OperatingCentres::class,
+        Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers::class =>
+            Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers::class,
+    ],
+    'publication_process' => [
+        Dvsa\Olcs\Api\Service\Publication\Process\Text1::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\Text1::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\HearingText1::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\HearingText1::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\DecisionText1::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\DecisionText1::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\TmHearingText1::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\TmHearingText1::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantNewText3::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantNewText3::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantVarText3::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantVarText3::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantCancelText3::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantCancelText3::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class
+    ],
+    'publications' => [
+        'ApplicationPublication' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\BusNote::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousApplicationPublicationNo::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\ConditionUndertaking::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\LicenceCancelled::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\OperatingCentres::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class
+            ],
+        ),
+        'HearingPublication' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousPublicationNo::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\HearingText1::class
+            ],
+        ),
+        'HearingDecision' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousPublicationNo::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\DecisionText1::class
+            ],
+        ),
+        'TmHearingPublication' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousPublicationNo::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\TransportManager\TransportManagerName::class
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\TmHearingText1::class
+            ],
+        ),
+        'TmHearingDecision' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PiVenue::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousPublicationNo::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\TransportManager\TransportManagerName::class
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\TmHearingText1::class
+            ],
+        ),
+        'BusGrantNew' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceDesignation::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceTypes::class
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantNewText3::class
+            ],
+        ),
+        'BusGrantVariation' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceDesignation::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\BusReg\VariationReasons::class
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantVarText3::class
+            ],
+        ),
+        'BusGrantCancel' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceDesignation::class
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantCancelText3::class
+            ],
+        ),
+    ]
 ];
