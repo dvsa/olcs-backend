@@ -2226,4 +2226,30 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertEquals([$licence2], $application->getOtherActiveLicencesForOrganisation());
     }
+
+    public function testGetOperatingCentresNetDelta()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $aocs = new ArrayCollection();
+        $application->setOperatingCentres($aocs);
+
+        $this->assertEquals(0, $application->getOperatingCentresNetDelta());
+
+        $application->getOperatingCentres()->add(
+            m::mock(ApplicationOperatingCentre::class)->makePartial()->setAction('A')
+        );
+        $this->assertEquals(1, $application->getOperatingCentresNetDelta());
+
+        $application->getOperatingCentres()->add(
+            m::mock(ApplicationOperatingCentre::class)->makePartial()->setAction('A')
+        );
+        $this->assertEquals(2, $application->getOperatingCentresNetDelta());
+
+        $application->getOperatingCentres()->add(
+            m::mock(ApplicationOperatingCentre::class)->makePartial()->setAction('D')
+        );
+        $this->assertEquals(1, $application->getOperatingCentresNetDelta());
+    }
 }
