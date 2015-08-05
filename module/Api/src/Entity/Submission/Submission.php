@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Submission;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Submission Entity
@@ -19,5 +21,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Submission extends AbstractSubmission
 {
+    public function __construct(CasesEntity $case, RefData $submissionType, $dataSnapshot = '')
+    {
+        parent::__construct();
 
+        $this->setCase($case);
+        $this->setSubmissionType($submissionType);
+        $this->setDataSnapshot($dataSnapshot);
+    }
 }
