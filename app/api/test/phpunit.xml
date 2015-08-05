@@ -2,8 +2,30 @@
 
 <phpunit bootstrap="test_bootstrap.php" colors="true" stopOnError="false">
     <testsuites>
-        <testsuite name="BE Application">
-            <directory>./</directory>
+        <testsuite name="Address">
+            <directory>./module/Address</directory>
+        </testsuite>
+        <testsuite name="Cli">
+            <directory>./module/Cli</directory>
+        </testsuite>
+        <testsuite name="CompaniesHouse">
+            <directory>./module/CompaniesHouse</directory>
+        </testsuite>
+        <testsuite name="Email">
+            <directory>./module/Email</directory>
+        </testsuite>
+        <testsuite name="Olcs">
+            <directory>./module/Olcs</directory>
+        </testsuite>
+        <testsuite name="Snapshot">
+            <directory>./module/Snapshot</directory>
+        </testsuite>
+        <testsuite name="Api">
+            <directory>./module/Api</directory>
+            <exclude>./module/Api/src/Entity</exclude>
+        </testsuite>
+        <testsuite name="Entity">
+            <directory>./module/Api/src/Entity</directory>
         </testsuite>
     </testsuites>
     <filter>
