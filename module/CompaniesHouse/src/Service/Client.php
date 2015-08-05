@@ -2,6 +2,9 @@
 
 namespace Dvsa\Olcs\CompaniesHouse\Service;
 
+use Dvsa\Olcs\CompaniesHouse\Service\Exception as ServiceException;
+use Dvsa\Olcs\CompaniesHouse\Service\Exception\RateLimitException;
+use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException;
 use Zend\Http\Client as HttpClient;
 
 /**
@@ -117,7 +120,21 @@ class Client
         $response = $this->getHttpClient()->send();
 
         if (!$response->isOk()) {
-            throw new Exception('Error response: ' . $response->getBody());
+
+            if ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_429) {
+                $reason = 'Rate limit exceeded';
+                $exceptionClass = RateLimitException::class;
+            } elseif ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_404) {
+                $reason = 'Company not found';
+                $exceptionClass = NotFoundException::class;
+            } else {
+                $reason = $response->getBody();
+                $exceptionClass = ServiceException::class;
+            }
+
+            $message = sprintf('Error response (%s) %s', $response->getStatusCode(), $reason);
+
+            throw new $exceptionClass($message);
         }
 
         return json_decode($response->getBody(), true);
