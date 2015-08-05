@@ -1666,6 +1666,10 @@ class ApplicationEntityTest extends EntityTester
     {
         $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
 
+        $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setAction('D');
+        $this->entity->addOperatingCentres($aoc);
+
         $oorDate = $this->entity->getOutOfRepresentationDate();
 
         $this->assertEquals('Unknown', $oorDate);
@@ -1675,6 +1679,10 @@ class ApplicationEntityTest extends EntityTester
     {
         $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
         $this->entity->setIsVariation(1);
+
+        $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setAction('D');
+        $this->entity->addOperatingCentres($aoc);
 
         $oorDate = $this->entity->getOutOfRepresentationDate();
 
@@ -2005,6 +2013,29 @@ class ApplicationEntityTest extends EntityTester
                 Licence::LICENCE_TYPE_RESTRICTED,
                 false
             ],
+        ];
+    }
+
+    /**
+     * @param string $categoryId 'lcat_psv'|'lcat_gv'
+     * @param string $expected 'O'|'P'
+     * @dataProvider categoryPrefixDp
+     */
+    public function testGetCategoryPrefix($categoryId, $expected)
+    {
+        $category = new RefData($categoryId);
+
+        $application = $this->instantiate(Entity::class);
+        $application->setGoodsOrPsv($category);
+
+        $this->assertEquals($expected, $application->getCategoryPrefix());
+    }
+
+    public function categoryPrefixDp()
+    {
+        return [
+            [Licence::LICENCE_CATEGORY_PSV, 'P'],
+            [Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'O'],
         ];
     }
 }

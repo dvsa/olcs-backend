@@ -73,6 +73,7 @@ final class DeletePeople extends AbstractCommandHandler implements Transactioned
             );
             $appOrgPerson->setAction('D');
 
+            $application->addApplicationOrganisationPersons($appOrgPerson);
             $this->getRepo('ApplicationOrganisationPerson')->save($appOrgPerson);
 
             $result->addMessage("ApplicationOrganisationPerson ID {$appOrgPerson->getId()} delete delta created");

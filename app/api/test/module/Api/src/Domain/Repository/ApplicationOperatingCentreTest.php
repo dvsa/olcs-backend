@@ -42,6 +42,24 @@ class ApplicationOperatingCentreTest extends RepositoryTestCase
         $this->assertSame('RESULT', $this->sut->fetchByApplication(12));
     }
 
+    public function testFetchByS4()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('aoc')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('aoc.s4', ':s4Id')->once()->andReturn('EXPR');
+        $mockQb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('s4Id', 12)->once();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('RESULT');
+
+        $this->assertSame('RESULT', $this->sut->fetchByS4(12));
+    }
+
     public function testFetchByApplicationIdForOperatingCentres()
     {
         $qb = $this->createMockQb('{QUERY}');

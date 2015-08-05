@@ -149,8 +149,16 @@ return array(
         'organisation_id' => array(
             'inversedBy' => array(
                 'entity' => 'Organisation',
-                'property' => 'licence'
-            )
+                'property' => 'licence',
+            ),
+            'cascade' => array(
+                'persist',
+            ),
+        ),
+        'correspondence_cd_id' => array(
+            'cascade' => array(
+                'persist',
+            ),
         ),
         'safety_ins' => array(
             'type' => 'yesno'
@@ -338,6 +346,12 @@ return array(
         'licence_id' => array(
             'inversedBy' => array(
                 'entity' => 'Licence',
+                'property' => 'case'
+            )
+        ),
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
                 'property' => 'case'
             )
         ),

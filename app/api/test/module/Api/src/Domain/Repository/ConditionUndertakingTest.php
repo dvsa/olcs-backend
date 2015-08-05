@@ -132,6 +132,24 @@ class ConditionUndertakingTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
+    public function testFetchListForS4()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchListForS4(95));
+
+        $expectedQuery = 'BLAH AND m.s4 = [[95]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
     public function testFetchListForLicenceAndConditionType()
     {
         $qb = $this->createMockQb('BLAH');

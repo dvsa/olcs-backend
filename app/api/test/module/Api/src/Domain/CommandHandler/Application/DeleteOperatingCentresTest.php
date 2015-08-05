@@ -64,6 +64,7 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
 
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
+        $application->setId(111);
         $application->setOperatingCentres($aocs);
 
         $this->repoMap['Application']->shouldReceive('fetchById')
@@ -74,12 +75,22 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
             ->once()
             ->with($aoc1);
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class,
+            [
+                'id' => 111,
+                'section' => 'operatingCentres'
+            ],
+            (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('UPDATE_APPLICATION_COMPLETION')
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                '1 Operating Centre(s) removed'
+                '1 Operating Centre(s) removed',
+                'UPDATE_APPLICATION_COMPLETION'
             ]
         ];
 
@@ -114,6 +125,7 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
 
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
+        $application->setId(111);
         $application->setOperatingCentres($aocs);
         $application->setLicence($licence);
 
@@ -128,6 +140,15 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
             ->once()
             ->with($aoc1);
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class,
+            [
+                'id' => 111,
+                'section' => 'operatingCentres'
+            ],
+            (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('UPDATE_APPLICATION_COMPLETION')
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -136,6 +157,7 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
                 '1 Operating Centre(s) removed',
                 'Updated traffic area',
                 'Updated enforcement area',
+                'UPDATE_APPLICATION_COMPLETION',
             ]
         ];
 
