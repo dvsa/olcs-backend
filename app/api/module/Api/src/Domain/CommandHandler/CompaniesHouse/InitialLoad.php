@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception as ApiException;
+use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
 
 /**
  * @author Dan Eggleston <dan@stolenegg.com>
@@ -28,8 +29,12 @@ final class InitialLoad extends AbstractCommandHandler
         try {
             $apiResult = $this->api->getCompanyProfile($companyNumber, true);
         } catch (ApiException $e) {
-            $result->addMessage($e->getMessage());
-            return $result;
+            // rethrow client exception as domain exception
+            throw new DomainException(
+                'Failure from Companies House API: ' . $e->getMessage(),
+                0,
+                $e
+            );
         }
 
         $data = $this->normaliseProfileData($apiResult);

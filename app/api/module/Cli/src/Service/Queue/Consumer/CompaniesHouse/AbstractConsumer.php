@@ -47,6 +47,8 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
         } catch (DomainException $e) {
             $message = !empty($e->getMessages()) ? $e->getMessages()[0] : $e->getMessage();
             return $this->failed($item, $message);
+        } catch (\Exception $e) {
+            return $this->failed($item, $e->getMessage());
         }
 
         $message = null;

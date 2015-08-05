@@ -43,4 +43,17 @@ class Address extends AbstractAddress
             $this->setCountryCode($countryCode);
         }
     }
+
+    public function toArray()
+    {
+        return [
+            'addressLine1' => $this->getAddressLine1(),
+            'addressLine2' => $this->getAddressLine2(),
+            'addressLine3' => $this->getAddressLine3(),
+            'addressLine4' => $this->getAddressLine4(),
+            'town' => $this->getTown(),
+            'postcode' => $this->getPostcode(),
+            'countryCode' => $this->getCountryCode() ? $this->getCountryCode()->getId() : null,
+        ];
+    }
 }

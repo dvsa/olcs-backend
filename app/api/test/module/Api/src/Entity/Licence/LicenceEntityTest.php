@@ -767,4 +767,27 @@ class LicenceEntityTest extends EntityTester
             ]
         ];
     }
+
+    /**
+     * @param string $categoryId 'lcat_psv'|'lcat_gv'
+     * @param string $expected 'O'|'P'
+     * @dataProvider categoryPrefixDp
+     */
+    public function testGetCategoryPrefix($categoryId, $expected)
+    {
+        $category = new RefData($categoryId);
+
+        $licence = $this->instantiate(Entity::class);
+        $licence->setGoodsOrPsv($category);
+
+        $this->assertEquals($expected, $licence->getCategoryPrefix());
+    }
+
+    public function categoryPrefixDp()
+    {
+        return [
+            [Entity::LICENCE_CATEGORY_PSV, 'P'],
+            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, 'O'],
+        ];
+    }
 }

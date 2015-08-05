@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany as CompanyRepo;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
 use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseApi;
+use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException as ChNotFoundException;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -95,7 +96,7 @@ class CompareTest extends CommandHandlerTestCase
             ->shouldReceive('getCompanyProfile')
             ->once()
             ->with($companyNumber, true)
-            ->andReturn(['not found!']);
+            ->andThrow(new ChNotFoundException('not found!'));
 
         $this->expectedSideEffect(CreateAlertCmd::class, $expectedAlertData, $alertResult);
 
