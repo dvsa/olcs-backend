@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
+use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
  * Application
@@ -104,7 +105,11 @@ class Application extends AbstractRepository
             ->with('licence', 'l')
             ->byId($applicationId);
 
-        return $qb->getQuery()->getSingleResult();
+        $res = $qb->getQuery()->getResult();
+        if (!$res) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+        return $res[0];
     }
 
     /**
