@@ -75,7 +75,7 @@ final class CreateBusFee extends AbstractCommandHandler
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),
             'invoicedDate' => $invoicedDate,
-            'description' => $feeType->getDescription() . ' ' . $busReg->getRegNo() . ' ' . $busReg->getId(),
+            'description' => $feeType->getDescription() . ' ' . $busReg->getRegNo() . ' V' . $busReg->getVariationNo(),
             'feeType' => $feeType->getId(),
             'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
             'amount' => $feeType->getFixedValue()
