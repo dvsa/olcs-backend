@@ -772,13 +772,20 @@ class Application extends AbstractApplication
             return self::NOT_APPLICABLE;
         }
 
+        $updatedAddedOperatingCentres = 0;
+        foreach ($this->getOperatingCentres() as $aoc) {
+            if ($aoc->getAction() === 'A' || $aoc->getAction() === 'U') {
+                $updatedAddedOperatingCentres++;
+            }
+        }
+
         // If a new goods application and if 0 operating centres have been added/updated then
-        if (!$this->isVariation() && $this->getOperatingCentres()->count() === 0) {
+        if (!$this->isVariation() && $updatedAddedOperatingCentres === 0) {
             return self::UNKNOWN;
         }
 
         // if a goods variation and 0 operating centres have been added/updated then
-        if ($this->isVariation() && $this->getOperatingCentres()->count() === 0) {
+        if ($this->isVariation() && $updatedAddedOperatingCentres === 0) {
             return self::NOT_APPLICABLE;
         }
 
