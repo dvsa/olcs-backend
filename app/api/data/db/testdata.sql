@@ -459,7 +459,7 @@ INSERT INTO `contact_details` (`id`,`contact_type`,`address_id`,`person_id`,
    `last_modified_by`,`created_by`,`fao`,`written_permission_to_engage`,`email_address`,
    `description`,`deleted_date`,`created_on`,`last_modified_on`,`version`)
 VALUES
-    (1,'ct_ta',26,NULL,2,0,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (1,'ct_ta',26,10,2,0,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (3,'ct_corr',109,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (8,'ct_corr',8,10,2,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (21,'ct_reg',21,NULL,0,2,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
