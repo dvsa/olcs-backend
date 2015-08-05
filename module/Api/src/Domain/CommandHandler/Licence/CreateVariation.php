@@ -14,12 +14,14 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVariation as Cmd;
 
@@ -44,7 +46,12 @@ final class CreateVariation extends AbstractCommandHandler implements AuthAwareI
         $result = new Result();
         $shouldUpdateApplicationCompletion = false;
 
+        /** @var Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($command);
+
+        if ($licence->canHaveVariation() === false) {
+            throw new ForbiddenException('Unable to create variation due to the licence status.');
+        }
 
         if ($this->isGranted(Permission::INTERNAL_USER)) {
             $status = $this->getRepo()->getRefdataReference(Application::APPLICATION_STATUS_UNDER_CONSIDERATION);

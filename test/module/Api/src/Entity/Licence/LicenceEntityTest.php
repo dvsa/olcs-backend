@@ -732,4 +732,39 @@ class LicenceEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @dataProvider testCanHaveVariationProvider
+     */
+    public function testCanHaveVariation($status, $expected)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+
+        $licence->shouldReceive('getStatus->getId')
+            ->andReturn($status);
+
+        $this->assertEquals($licence->canHaveVariation(), $expected);
+    }
+
+    public function testCanHaveVariationProvider()
+    {
+        return [
+            [
+                Entity::LICENCE_STATUS_VALID,
+                true
+            ],
+            [
+                Entity::LICENCE_STATUS_SURRENDERED,
+                false
+            ],
+            [
+                Entity::LICENCE_STATUS_REVOKED,
+                false
+            ],
+            [
+                Entity::LICENCE_STATUS_TERMINATED,
+                false
+            ]
+        ];
+    }
 }
