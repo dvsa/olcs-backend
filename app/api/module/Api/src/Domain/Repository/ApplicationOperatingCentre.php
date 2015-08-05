@@ -42,6 +42,25 @@ class ApplicationOperatingCentre extends AbstractRepository
         return $dqb->getQuery()->getResult();
     }
 
+    /**
+     * Fetch a list Application Operating Centres by S4
+     *
+     * @param int $s4Id
+     *
+     * @return array
+     */
+    public function fetchByS4($s4Id)
+    {
+        $dqb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($dqb)
+            ->withRefdata();
+
+        $dqb->andWhere($dqb->expr()->eq('aoc.s4', ':s4Id'))
+            ->setParameter('s4Id', $s4Id);
+
+        return $dqb->getQuery()->getResult();
+    }
+
     public function fetchByApplicationIdForOperatingCentres($applicationId)
     {
         $qb = $this->createQueryBuilder();

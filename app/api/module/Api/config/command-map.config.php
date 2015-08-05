@@ -81,6 +81,7 @@ return [
     TransferCommand\Application\Schedule41::class => CommandHandler\Application\Schedule41::class,
     TransferCommand\Application\Schedule41Approve::class => CommandHandler\Application\Schedule41Approve::class,
     TransferCommand\Application\Schedule41Reset::class => CommandHandler\Application\Schedule41Reset::class,
+    TransferCommand\Application\Schedule41Refuse::class => CommandHandler\Application\Schedule41Refuse::class,
     TransferCommand\Application\GenerateOrganisationName::class =>
         CommandHandler\Application\GenerateOrganisationName::class,
     TransferCommand\Application\PrintInterimDocument::class => CommandHandler\Application\PrintInterimDocument::class,
@@ -403,14 +404,20 @@ return [
     // Domain - Application Operating Centre
     Command\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class
         => CommandHandler\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class,
+    Command\ApplicationOperatingCentre\DeleteApplicationOperatingCentre::class
+        => CommandHandler\ApplicationOperatingCentre\DeleteApplicationOperatingCentre::class,
 
     // Domain - Licence Operating Centre
     Command\LicenceOperatingCentre\AssociateS4::class
         => CommandHandler\LicenceOperatingCentre\AssociateS4::class,
+    Command\LicenceOperatingCentre\DisassociateS4::class
+        => CommandHandler\LicenceOperatingCentre\DisassociateS4::class,
 
     // Domain - Condition Undertaking
     Command\Cases\ConditionUndertaking\CreateConditionUndertaking::class
         => CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
+    Command\Cases\ConditionUndertaking\DeleteConditionUndertakingS4::class
+        => CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertakingS4::class,
 
     // Domain - Schedule41
     Command\Schedule41\CreateS4::class
@@ -419,6 +426,8 @@ return [
         => CommandHandler\Schedule41\ApproveS4::class,
     Command\Schedule41\ResetS4::class
         => CommandHandler\Schedule41\ResetS4::class,
+    Command\Schedule41\RefuseS4::class
+        => CommandHandler\Schedule41\RefuseS4::class,
 
     // Domain - Bus
     Command\Bus\CreateBusFee::class => CommandHandler\Bus\CreateBusFee::class,
