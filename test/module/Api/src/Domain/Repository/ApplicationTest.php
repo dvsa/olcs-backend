@@ -397,8 +397,46 @@ class ApplicationTest extends RepositoryTestCase
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
 
-        $qb->shouldReceive('getQuery->getSingleResult')
-            ->andReturn('RESULT');
+        $qb->shouldReceive('getQuery->getResult')
+            ->andReturn(['RESULT']);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('licence', 'l')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('byId')
+            ->with($applicationId)
+            ->once()
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Application::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchWithLicence($applicationId);
+        $this->assertEquals('RESULT', $result);
+    }
+
+    public function testFetchWithLicenceNotFound()
+    {
+        $applicationId = 1;
+
+        $this->setExpectedException(NotFoundException::class);
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $qb->shouldReceive('getQuery->getResult')
+            ->andReturn([]);
 
         $this->queryBuilder->shouldReceive('modifyQuery')
             ->once()
