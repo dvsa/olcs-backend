@@ -85,7 +85,8 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
 
         $data = [
             'id' => 111,
-            'feeTypeFeeType' => FeeType::FEE_TYPE_VAR
+            'feeTypeFeeType' => FeeType::FEE_TYPE_VAR,
+            'description' => null
         ];
         $result = new Result();
         $result->addMessage('CreateApplicationFee');
@@ -196,7 +197,8 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
 
         $data = [
             'id' => 111,
-            'feeTypeFeeType' => FeeType::FEE_TYPE_VAR
+            'feeTypeFeeType' => FeeType::FEE_TYPE_VAR,
+            'description' => null
         ];
         $result = new Result();
         $result->addMessage('CreateApplicationFee');
@@ -261,7 +263,8 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
 
         $data = [
             'id' => 111,
-            'feeTypeFeeType' => FeeType::FEE_TYPE_VAR
+            'feeTypeFeeType' => FeeType::FEE_TYPE_VAR,
+            'description' => null
         ];
         $result = new Result();
         $result->addMessage('CreateApplicationFee');

@@ -138,7 +138,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('CreateApplicationFee');
-        $data = ['id' => 111, 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT];
+        $data = ['id' => 111, 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT, 'description' => null];
         $this->expectedSideEffect(CreateApplicationFee::class, $data, $result1);
 
         $result = $this->sut->handleCommand($command);
