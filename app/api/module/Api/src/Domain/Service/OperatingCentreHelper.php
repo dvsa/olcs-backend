@@ -7,13 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Service;
 
+use Dvsa\Olcs\Address\Service\Address;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Repository\AdminAreaTrafficArea;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -22,6 +23,10 @@ use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Domain\Repository\OperatingCentre as OcRepo;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 
 /**
  * Operating Centre Helper
@@ -30,21 +35,48 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class OperatingCentreHelper
+class OperatingCentreHelper implements FactoryInterface
 {
     const ERR_OC_AD_IN_1 = 'ERR_OC_AD_IN_1';
     const ERR_OC_AD_DT_1 = 'ERR_OC_AD_DT_1';
     const ERR_OC_VR_1A = 'ERR_OC_VR_1A'; // with trailers
     const ERR_OC_VR_1B = 'ERR_OC_VR_1B'; // without trailers
+    const ERR_OR_R_TOO_MANY = 'ERR_OR_R_TOO_MANY';
+    const ERR_OC_PC_TA_NI = 'ERR_OC_PC_TA_NI';
+    const ERR_OC_PC_TA_GB = 'ERR_OC_PC_TA_GB';
 
     protected $messages = [];
 
     /**
-     * @param $entity
+     * @var Address
+     */
+    protected $addressService;
+
+    /**
+     * @var AdminAreaTrafficArea
+     */
+    protected $adminAreaTrafficAreaRepo;
+
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->addressService = $serviceLocator->get('AddressService');
+        $this->adminAreaTrafficAreaRepo = $serviceLocator->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
+
+        return $this;
+    }
+
+    /**
+     * @param Application|Licence $entity
      * @param $command
      */
     public function validate($entity, $command)
     {
+        $this->validateTrafficArea($entity, $command);
+
+        if ($entity->isPsv() && $entity->isRestricted() && (int)$command->getNoOfVehiclesRequired() > 2) {
+            $this->addMessage('noOfVehiclesRequired', self::ERR_OR_R_TOO_MANY);
+        }
+
         if ($entity->isPsv() && (int)$command->getNoOfVehiclesRequired() < 1) {
             $this->addMessage('noOfVehiclesRequired', self::ERR_OC_VR_1B);
         }
@@ -70,6 +102,68 @@ class OperatingCentreHelper
         if (!empty($this->messages)) {
             throw new ValidationException($this->messages);
         }
+    }
+
+    /**
+     * @param Application|Licence $entity
+     * @param $command
+     */
+    protected function validateTrafficArea($entity, $command)
+    {
+        $address = $command->getAddress();
+
+        // If we have no postcode, then we can skip this validation
+        if (empty($address['postcode'])) {
+            return;
+        }
+
+        // If we are GB and don't have a TA then we can skip
+        if ($entity->getNiFlag() === 'N' && $entity->getTrafficArea() === null) {
+            return;
+        }
+
+        $trafficArea = $this->fetchTrafficAreaByPostcode($address['postcode']);
+
+        // If we can't match the postcode to a TA, then we can skip
+        if ($trafficArea === null) {
+            return;
+        }
+
+        // If we are NI, then we must match the NI TA
+        if ($entity->getNiFlag() === 'Y') {
+
+            if ($trafficArea->getId() !== TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE) {
+                $this->addMessage('postcode', self::ERR_OC_PC_TA_NI);
+            }
+            return;
+        }
+
+        $currentTa = $entity->getTrafficArea();
+
+        if ($trafficArea !== $currentTa) {
+            $this->addMessage(
+                'postcode',
+                self::ERR_OC_PC_TA_GB,
+                json_encode(
+                    [
+                        'current' => $currentTa->getName(),
+                        'oc' => $trafficArea->getName()
+                    ]
+                )
+            );
+        }
+    }
+
+    /**
+     * @param $postcode
+     * @return \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
+     */
+    private function fetchTrafficAreaByPostcode($postcode)
+    {
+        return $this->addressService->fetchTrafficAreaByPostcode(
+            $postcode,
+            $this->adminAreaTrafficAreaRepo
+        );
     }
 
     /**
@@ -111,7 +205,7 @@ class OperatingCentreHelper
         $operatingCentre = new OperatingCentre();
 
         $operatingCentre->setAddress(
-            $ocRepo->getReference(Address::class, $result->getId('address'))
+            $ocRepo->getReference(AddressEntity::class, $result->getId('address'))
         );
 
         $ocRepo->save($operatingCentre);

@@ -76,21 +76,7 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
 
     protected function findCorrespondingLoc(Aoc $aoc, Licence $licence)
     {
-        $criteria = Criteria::create();
-        $criteria->andWhere(
-            $criteria->expr()->eq(
-                'operatingCentre',
-                $aoc->getOperatingCentre()
-            )
-        );
-
-        $locs = $licence->getOperatingCentres()->matching($criteria);
-
-        if ($locs->count() !== 1) {
-            throw new \Exception('Expected 1 matching licence operating centre record, found: ' . $locs->count());
-        }
-
-        return $locs->first();
+        return $this->getRepo('ApplicationOperatingCentre')->findCorrespondingLoc($aoc, $licence);
     }
 
     protected function addLicenceOperatingCentre(Aoc $aoc, Licence $licence)

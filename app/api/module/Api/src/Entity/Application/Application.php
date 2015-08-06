@@ -1122,4 +1122,9 @@ class Application extends AbstractApplication
             return array_values($filtered);
         }
     }
+
+    public function getTrafficArea()
+    {
+        return $this->getLicence()->getTrafficArea();
+    }
 }
