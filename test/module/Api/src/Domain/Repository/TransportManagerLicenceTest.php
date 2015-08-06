@@ -94,4 +94,22 @@ class TransportManagerLicenceTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getSingleResult')->once()->andReturn(['RESULT']);
         $this->assertEquals(['RESULT'], $this->sut->fetchForResponsibilities(1));
     }
+
+    public function testFetchByTmAndLicence()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tml')->once()->andReturn($mockQb);
+
+        $mockQb->shouldReceive('expr->eq')->with('tml.transportManager', ':tmId')->once()->andReturn('EXPR1');
+        $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('tmId', 1)->once();
+
+        $mockQb->shouldReceive('expr->eq')->with('tml.licence', ':licenceId')->once()->andReturn('EXPR2');
+        $mockQb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('licenceId', 2)->once();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('RESULT');
+        $this->assertEquals('RESULT', $this->sut->fetchByTmAndLicence(1, 2));
+    }
 }
