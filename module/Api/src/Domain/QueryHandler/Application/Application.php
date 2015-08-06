@@ -53,11 +53,13 @@ class Application extends AbstractQueryHandler
                     'organisation',
                 ],
                 'applicationCompletion',
+                's4s'
             ],
             [
                 'sections' => $this->sectionAccessService->getAccessibleSections($application),
                 'outstandingFeeTotal' => $this->getOutstandingFeeTotal($application),
                 'variationCompletion' => $application->getVariationCompletion(),
+                'canCreateCase' => $application->canCreateCase(),
             ]
         );
     }

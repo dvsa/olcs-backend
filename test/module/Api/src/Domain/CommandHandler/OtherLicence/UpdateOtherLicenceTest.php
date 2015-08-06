@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository\OtherLicenceRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\OtherLicence\UpdateOtherLicence as Cmd;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as OtherLicenceEntity;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 
 /**
  * Update Other Licence Test
@@ -39,6 +40,15 @@ class UpdateOtherLicenceTest extends CommandHandlerTestCase
             ->shouldReceive('updateOtherLicence')
             ->with('123', 'foo', 'Y', '01/01/2015', '2', '01/01/2014')
             ->once()
+            ->shouldReceive('getApplication')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(1)
+                ->once()
+                ->getMock()
+            )
+            ->once()
             ->getMock();
 
         $this->repoMap['OtherLicence']->shouldReceive('fetchUsingId')
@@ -49,6 +59,12 @@ class UpdateOtherLicenceTest extends CommandHandlerTestCase
             ->with($otherLicence)
             ->once()
             ->getMock();
+
+        $this->expectedSideEffect(
+            UpdateApplicationCompletionCmd::class,
+            ['id' => 1, 'section' => 'licenceHistory'],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 

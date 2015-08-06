@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse;
 use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\CreateAlert as CreateAlertCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException as ChNotFoundException;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlertReason as ReasonEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
@@ -35,9 +36,9 @@ final class Compare extends AbstractCommandHandler
         $companyNumber = $command->getCompanyNumber();
         $result = new Result();
 
-        $apiResult = $this->api->getCompanyProfile($companyNumber, true);
-
-        if (empty($apiResult['company_number'])) {
+        try {
+            $apiResult = $this->api->getCompanyProfile($companyNumber, true);
+        } catch (ChNotFoundException $e) {
             $result->merge(
                 $this->createAlert(
                     [AlertEntity::REASON_INVALID_COMPANY_NUMBER],

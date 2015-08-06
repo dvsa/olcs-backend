@@ -21,5 +21,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Publication extends AbstractPublication
 {
-
+    const PUB_NEW_STATUS = 'pub_s_new';
 }

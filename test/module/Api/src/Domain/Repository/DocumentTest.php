@@ -81,6 +81,77 @@ class DocumentTest extends RepositoryTestCase
         $this->assertEquals('result', $sut->fetchListForTm(1));
     }
 
+    /**
+     * @dataProvider tmProvider
+     */
+    public function testFetchListForTmApplication($type)
+    {
+        $sut = m::mock(DocumentRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $mockQb->shouldReceive('expr->eq')->with('m.category', ':category')->once()->andReturn('category');
+        $mockQb->shouldReceive('andWhere')->with('category')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('category', CategoryEntity::CATEGORY_TRANSPORT_MANAGER)
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('m.subCategory', ':subCategory')->once()->andReturn('subCategory');
+        $mockQb->shouldReceive('andWhere')->with('subCategory')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('subCategory', CategoryEntity::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_TM1_ASSISTED_DIGITAL)
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('m.transportManager', ':transportManager')->once()->andReturn('tm');
+        $mockQb->shouldReceive('andWhere')->with('tm')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('transportManager', 1)
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('m.' . $type, ':' . $type)->once()->andReturn('tm');
+        $mockQb->shouldReceive('andWhere')->with('tm')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with($type, 2)
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('orderBy')->with('m.id', 'DESC')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('execute')
+                ->andReturn('result')
+                ->once()
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $sut->shouldReceive('createQueryBuilder')
+            ->andReturn($mockQb)
+            ->once()
+            ->getMock();
+
+        if ($type == 'licence') {
+            $this->assertEquals('result', $sut->fetchListForTmLicence(1, 2));
+        } else {
+            $this->assertEquals('result', $sut->fetchListForTmApplication(1, 2));
+        }
+    }
+
+    public function tmProvider()
+    {
+        return [
+            ['licence'],
+            ['application'],
+        ];
+    }
+
     public function testFetchUnlinkedOcDocumentsForEntity()
     {
         $category = m::mock(Category::class)->makePartial();
