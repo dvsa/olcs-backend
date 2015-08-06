@@ -21,12 +21,11 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class Submission extends AbstractSubmission
 {
-    public function __construct(CasesEntity $case, RefData $submissionType, $dataSnapshot = '')
+    public function __construct(CasesEntity $case, RefData $submissionType)
     {
         parent::__construct();
 
         $this->setCase($case);
         $this->setSubmissionType($submissionType);
-        $this->setDataSnapshot($dataSnapshot);
     }
 }
