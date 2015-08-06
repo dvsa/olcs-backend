@@ -116,7 +116,7 @@ class Application extends AbstractRepository
             ->with('l.tmLicences', 'ltml')
             ->byId($applicationId);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getSingleResult();
     }
 
     /**

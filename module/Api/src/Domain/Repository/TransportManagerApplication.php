@@ -142,7 +142,7 @@ class TransportManagerApplication extends AbstractRepository
             ->with('a.licence', 'l');
     }
 
-    public function fetchForTransportManager($tmId, $applicationStatuses)
+    public function fetchForTransportManager($tmId, $applicationStatuses, $includeDeleted = false)
     {
         $qb = $this->createQueryBuilder();
 
@@ -160,8 +160,10 @@ class TransportManagerApplication extends AbstractRepository
         $qb->where($qb->expr()->eq($this->alias . '.transportManager', ':transportManager'));
         $qb->setParameter('transportManager', $tmId);
 
-        $qb->andWhere($qb->expr()->neq($this->alias . '.action', ':action'));
-        $qb->setParameter('action', 'D');
+        if (!$includeDeleted) {
+            $qb->andWhere($qb->expr()->neq($this->alias . '.action', ':action'));
+            $qb->setParameter('action', 'D');
+        }
 
         if ($applicationStatuses !== null) {
             $statuses = explode(',', $applicationStatuses);
