@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /Users/rob/Development/Valtech/OLCS/olcs-backend/module/Api/src/Service/Document</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../../css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../../../css/nv.d3.min.css" rel="stylesheet">
+  <link href="../../../../css/style.css" rel="stylesheet">
+  <!--[if lt IE 9]>
+  <script src="../../../../js/html5shiv.min.js"></script>
+  <script src="../../../../js/respond.min.js"></script>
+  <![endif]-->
+ </head>
+ <body>
+  <header>
+   <div class="container">
+    <div class="row">
+     <div class="col-md-12">
+      <ol class="breadcrumb">
+        <li><a href="../../../../index.html">/Users/rob/Development/Valtech/OLCS/olcs-backend/module</a></li>
+        <li><a href="../../../index.html">Api</a></li>
+        <li><a href="../../index.html">src</a></li>
+        <li><a href="../index.html">Service</a></li>
+        <li><a href="index.html">Document</a></li>
+        <li class="active">(Dashboard)</li>
+
+      </ol>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Bookmark/AbstractPublicationLinkSection.php.html#17">AbstractPublicationLinkSection</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/ObjDeadline.php.html#10">ObjDeadline</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/Base/AbstractBookmark.php.html#10">AbstractBookmark</a></td><td class="text-right">50%</td></tr>
+       <tr><td><a href="Bookmark/Base/ImageBookmark.php.html#13">ImageBookmark</a></td><td class="text-right">63%</td></tr>
+       <tr><td><a href="Bookmark/StatementContactType.php.html#18">StatementContactType</a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Bookmark/AbstractStandardConditions.php.html#15">AbstractStandardConditions</a></td><td class="text-right">84%</td></tr>
+       <tr><td><a href="Bookmark/FeeDueDate.php.html#16">FeeDueDate</a></td><td class="text-right">85%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Bookmark/AbstractPublicationLinkSection.php.html#17">AbstractPublicationLinkSection</a></td><td class="text-right">210</td></tr>
+       <tr><td><a href="Bookmark/Base/AbstractBookmark.php.html#10">AbstractBookmark</a></td><td class="text-right">16</td></tr>
+       <tr><td><a href="Bookmark/Base/ImageBookmark.php.html#13">ImageBookmark</a></td><td class="text-right">11</td></tr>
+       <tr><td><a href="Bookmark/AbstractStandardConditions.php.html#15">AbstractStandardConditions</a></td><td class="text-right">7</td></tr>
+       <tr><td><a href="Bookmark/StatementContactType.php.html#18">StatementContactType</a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Bookmark/FeeDueDate.php.html#16">FeeDueDate</a></td><td class="text-right">3</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Bookmark/AbstractPublicationLinkSection.php.html#66"><abbr title="AbstractPublicationLinkSection::getPubTypeSection">getPubTypeSection</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Document.php.html#180"><abbr title="Document::getUploader">getUploader</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Document.php.html#170"><abbr title="Document::formatFilename">formatFilename</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/ObjDeadline.php.html#12"><abbr title="ObjDeadline::render">render</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Document.php.html#149"><abbr title="Document::getMetadataKey">getMetadataKey</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Document.php.html#159"><abbr title="Document::getTimestampFormat">getTimestampFormat</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Document.php.html#139"><abbr title="Document::download">download</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/Base/AbstractBookmark.php.html#38"><abbr title="AbstractBookmark::getSnippet">getSnippet</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/AbstractPublicationLinkSection.php.html#87"><abbr title="AbstractPublicationLinkSection::getBookmarkSnippetsByClass">getBookmarkSnippetsByClass</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/AbstractPublicationLinkSection.php.html#76"><abbr title="AbstractPublicationLinkSection::getBookmarkSnippets">getBookmarkSnippets</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/AbstractPublicationLinkSection.php.html#113"><abbr title="AbstractPublicationLinkSection::getQuery">getQuery</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/AbstractPublicationLinkSection.php.html#128"><abbr title="AbstractPublicationLinkSection::render">render</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/AbstractPublicationLinkSection.php.html#162"><abbr title="AbstractPublicationLinkSection::renderSnippets">renderSnippets</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/AbstractStandardConditions.php.html#29"><abbr title="AbstractStandardConditions::getQuery">getQuery</a></a></td><td class="text-right">40%</td></tr>
+       <tr><td><a href="Bookmark/Base/ImageBookmark.php.html#38"><abbr title="ImageBookmark::getImage">getImage</a></a></td><td class="text-right">56%</td></tr>
+       <tr><td><a href="Bookmark/StatementContactType.php.html#20"><abbr title="StatementContactType::getQuery">getQuery</a></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Bookmark/CaseworkerDetails.php.html#85"><abbr title="CaseworkerDetails::fetchDirectDial">fetchDirectDial</a></a></td><td class="text-right">71%</td></tr>
+       <tr><td><a href="Bookmark/FeeDueDate.php.html#27"><abbr title="FeeDueDate::render">render</a></a></td><td class="text-right">83%</td></tr>
+       <tr><td><a href="Bookmark/StatementNameBodyAddress.php.html#17"><abbr title="StatementNameBodyAddress::getQuery">getQuery</a></a></td><td class="text-right">83%</td></tr>
+       <tr><td><a href="Bookmark/BookmarkFactory.php.html#32"><abbr title="BookmarkFactory::getInstance">getInstance</a></a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Bookmark/TotalContFee.php.html#21"><abbr title="TotalContFee::getQuery">getQuery</a></a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Bookmark/AbstractPublicationLinkSection.php.html#128"><abbr title="AbstractPublicationLinkSection::render">render</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Bookmark/AbstractPublicationLinkSection.php.html#162"><abbr title="AbstractPublicationLinkSection::renderSnippets">renderSnippets</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Bookmark/AbstractPublicationLinkSection.php.html#87"><abbr title="AbstractPublicationLinkSection::getBookmarkSnippetsByClass">getBookmarkSnippetsByClass</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Bookmark/Base/ImageBookmark.php.html#38"><abbr title="ImageBookmark::getImage">getImage</abbr></a></td><td class="text-right">9</td></tr>
+       <tr><td><a href="Bookmark/Base/AbstractBookmark.php.html#38"><abbr title="AbstractBookmark::getSnippet">getSnippet</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Bookmark/AbstractStandardConditions.php.html#29"><abbr title="AbstractStandardConditions::getQuery">getQuery</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Bookmark/CaseworkerDetails.php.html#85"><abbr title="CaseworkerDetails::fetchDirectDial">fetchDirectDial</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Bookmark/BookmarkFactory.php.html#32"><abbr title="BookmarkFactory::getInstance">getInstance</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Bookmark/StatementContactType.php.html#20"><abbr title="StatementContactType::getQuery">getQuery</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Bookmark/FeeDueDate.php.html#27"><abbr title="FeeDueDate::render">render</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Bookmark/StatementNameBodyAddress.php.html#17"><abbr title="StatementNameBodyAddress::getQuery">getQuery</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Bookmark/TotalContFee.php.html#21"><abbr title="TotalContFee::getQuery">getQuery</abbr></a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="http://github.com/sebastianbergmann/php-code-coverage" target="_top">PHP_CodeCoverage 2.1.9</a> using <a href="http://php.net/" target="_top">PHP 5.5.24</a> and <a href="http://phpunit.de/">PHPUnit 4.7.7</a> at Thu Aug 6 10:16:50 BST 2015.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../../../../js/jquery.min.js" type="text/javascript"></script>
+  <script src="../../../../js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="../../../../js/holder.min.js" type="text/javascript"></script>
+  <script src="../../../../js/d3.min.js" type="text/javascript"></script>
+  <script src="../../../../js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([2,0,0,0,0,0,1,1,1,2,6,187], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([13,0,0,0,0,1,1,1,1,4,1,199], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(key, y, e, graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[100,3,"<a href=\"Bookmark\/AbstractConditionsUndertakings.php.html#14\">AbstractConditionsUndertakings<\/a>"],[100,6,"<a href=\"Bookmark\/AbstractDiscList.php.html#12\">AbstractDiscList<\/a>"],[100,10,"<a href=\"Bookmark\/AbstractInterimConditionsUndertakings.php.html#14\">AbstractInterimConditionsUndertakings<\/a>"],[100,2,"<a href=\"Bookmark\/AbstractLicenceType.php.html#17\">AbstractLicenceType<\/a>"],[0,14,"<a href=\"Bookmark\/AbstractPublicationLinkSection.php.html#17\">AbstractPublicationLinkSection<\/a>"],[84.210526315789,7,"<a href=\"Bookmark\/AbstractStandardConditions.php.html#15\">AbstractStandardConditions<\/a>"],[100,3,"<a href=\"Bookmark\/AddressOfEstablishment.php.html#13\">AddressOfEstablishment<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/CaseworkerName1.php.html#12\">CaseworkerName1<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/ContinuationDate1.php.html#12\">ContinuationDate1<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/ContinuationDate2.php.html#12\">ContinuationDate2<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/ContinuationDate3.php.html#12\">ContinuationDate3<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/ContinuationDate4.php.html#12\">ContinuationDate4<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/ContinuationDate6.php.html#12\">ContinuationDate6<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/FooterLicenceNumber.php.html#12\">FooterLicenceNumber<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/FstandingProvedDate.php.html#12\">FstandingProvedDate<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicAddress.php.html#12\">LicAddress<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicMailAddress.php.html#12\">LicMailAddress<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicMailName.php.html#12\">LicMailName<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicenceNumber01.php.html#12\">LicenceNumber01<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicenceNumber1.php.html#12\">LicenceNumber1<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicenceNumber3.php.html#12\">LicenceNumber3<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicenceNumber4.php.html#12\">LicenceNumber4<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicenceNumber5.php.html#12\">LicenceNumber5<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicenceNumber6.php.html#12\">LicenceNumber6<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicenceNumber7.php.html#12\">LicenceNumber7<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicenceNumber8.php.html#12\">LicenceNumber8<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicenceNumberRepeat.php.html#10\">LicenceNumberRepeat<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicenceReviewDate.php.html#10\">LicenceReviewDate<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/LicenceTitle.php.html#12\">LicenceTitle<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/OperatorName.php.html#12\">OperatorName<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/SpecificLicenceConditions.php.html#12\">SpecificLicenceConditions<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/SpecificLicenceUndertakings.php.html#12\">SpecificLicenceUndertakings<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/SubjectOperatingCentreAddress.php.html#10\">SubjectOperatingCentreAddress<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/TodayDateSentence.php.html#12\">TodayDateSentence<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/ValidDate.php.html#12\">ValidDate<\/a>"],[100,0,"<a href=\"Bookmark\/Alias\/Vehicles.php.html#12\">Vehicles<\/a>"],[100,4,"<a href=\"Bookmark\/ApplicantName.php.html#11\">ApplicantName<\/a>"],[100,0,"<a href=\"Bookmark\/AuthorisedVehicles.php.html#12\">AuthorisedVehicles<\/a>"],[50,8,"<a href=\"Bookmark\/Base\/AbstractBookmark.php.html#10\">AbstractBookmark<\/a>"],[100,1,"<a href=\"Bookmark\/Base\/DateDelta.php.html#10\">DateDelta<\/a>"],[100,2,"<a href=\"Bookmark\/Base\/DynamicBookmark.php.html#14\">DynamicBookmark<\/a>"],[63.157894736842,8,"<a href=\"Bookmark\/Base\/ImageBookmark.php.html#13\">ImageBookmark<\/a>"],[100,0,"<a href=\"Bookmark\/Base\/StaticBookmark.php.html#10\">StaticBookmark<\/a>"],[92.857142857143,4,"<a href=\"Bookmark\/BookmarkFactory.php.html#12\">BookmarkFactory<\/a>"],[100,4,"<a href=\"Bookmark\/BrCouncilsNotified.php.html#17\">BrCouncilsNotified<\/a>"],[100,0,"<a href=\"Bookmark\/BrDateReceived.php.html#16\">BrDateReceived<\/a>"],[100,0,"<a href=\"Bookmark\/BrEffectiveDate.php.html#16\">BrEffectiveDate<\/a>"],[100,0,"<a href=\"Bookmark\/BrFinishPoint.php.html#17\">BrFinishPoint<\/a>"],[100,5,"<a href=\"Bookmark\/BrLogo.php.html#17\">BrLogo<\/a>"],[100,5,"<a href=\"Bookmark\/BrNPNo.php.html#17\">BrNPNo<\/a>"],[100,0,"<a href=\"Bookmark\/BrOpAddress.php.html#10\">BrOpAddress<\/a>"],[100,3,"<a href=\"Bookmark\/BrReasonForVar.php.html#18\">BrReasonForVar<\/a>"],[100,0,"<a href=\"Bookmark\/BrRegNo.php.html#16\">BrRegNo<\/a>"],[100,0,"<a href=\"Bookmark\/BrRegNoOurRef.php.html#14\">BrRegNoOurRef<\/a>"],[100,0,"<a href=\"Bookmark\/BrRouteNo.php.html#17\">BrRouteNo<\/a>"],[100,6,"<a href=\"Bookmark\/BrRouteNum.php.html#17\">BrRouteNum<\/a>"],[100,0,"<a href=\"Bookmark\/BrStartPoint.php.html#17\">BrStartPoint<\/a>"],[100,0,"<a href=\"Bookmark\/BusRegFlatAbstract.php.html#14\">BusRegFlatAbstract<\/a>"],[94.736842105263,9,"<a href=\"Bookmark\/CaseworkerDetails.php.html#13\">CaseworkerDetails<\/a>"],[100,2,"<a href=\"Bookmark\/CaseworkerName.php.html#13\">CaseworkerName<\/a>"],[100,3,"<a href=\"Bookmark\/CompanyTradingName.php.html#13\">CompanyTradingName<\/a>"],[100,0,"<a href=\"Bookmark\/Conditions.php.html#12\">Conditions<\/a>"],[100,3,"<a href=\"Bookmark\/ContNextExpDate.php.html#13\">ContNextExpDate<\/a>"],[100,0,"<a href=\"Bookmark\/ContinuationDate.php.html#12\">ContinuationDate<\/a>"],[100,6,"<a href=\"Bookmark\/DateFrom.php.html#15\">DateFrom<\/a>"],[100,6,"<a href=\"Bookmark\/DateTo.php.html#15\">DateTo<\/a>"],[100,18,"<a href=\"Bookmark\/DiscList.php.html#12\">DiscList<\/a>"],[100,3,"<a href=\"Bookmark\/DiscsIssued.php.html#13\">DiscsIssued<\/a>"],[100,2,"<a href=\"Bookmark\/EuropeanLicenceNumber.php.html#13\">EuropeanLicenceNumber<\/a>"],[85.714285714286,3,"<a href=\"Bookmark\/FeeDueDate.php.html#16\">FeeDueDate<\/a>"],[100,2,"<a href=\"Bookmark\/FeeReqGrantNumber.php.html#13\">FeeReqGrantNumber<\/a>"],[100,5,"<a href=\"Bookmark\/Formatter\/Address.php.html#10\">Address<\/a>"],[100,4,"<a href=\"Bookmark\/Formatter\/ConditionsUndertakings.php.html#12\">ConditionsUndertakings<\/a>"],[100,1,"<a href=\"Bookmark\/Formatter\/Date.php.html#10\">Date<\/a>"],[100,1,"<a href=\"Bookmark\/Formatter\/Name.php.html#10\">Name<\/a>"],[100,8,"<a href=\"Bookmark\/Formatter\/OrganisationName.php.html#8\">OrganisationName<\/a>"],[100,1,"<a href=\"Bookmark\/Formatter\/Time.php.html#10\">Time<\/a>"],[100,3,"<a href=\"Bookmark\/FstandingAdditionalVeh.php.html#15\">FstandingAdditionalVeh<\/a>"],[100,3,"<a href=\"Bookmark\/FstandingFirstVeh.php.html#15\">FstandingFirstVeh<\/a>"],[100,0,"<a href=\"Bookmark\/GvLicFee2.php.html#12\">GvLicFee2<\/a>"],[100,3,"<a href=\"Bookmark\/InsMoreFreqNo.php.html#13\">InsMoreFreqNo<\/a>"],[100,3,"<a href=\"Bookmark\/InsMoreFreqYes.php.html#13\">InsMoreFreqYes<\/a>"],[100,0,"<a href=\"Bookmark\/InsNoTrailers.php.html#12\">InsNoTrailers<\/a>"],[100,0,"<a href=\"Bookmark\/InsNoVhls.php.html#12\">InsNoVhls<\/a>"],[100,3,"<a href=\"Bookmark\/IntLicFee.php.html#13\">IntLicFee<\/a>"],[100,0,"<a href=\"Bookmark\/InterimLicenceType.php.html#12\">InterimLicenceType<\/a>"],[100,20,"<a href=\"Bookmark\/InterimOperatingCentres.php.html#15\">InterimOperatingCentres<\/a>"],[100,0,"<a href=\"Bookmark\/InterimSpecificLicenceConditions.php.html#12\">InterimSpecificLicenceConditions<\/a>"],[100,0,"<a href=\"Bookmark\/InterimSpecificLicenceUndertakings.php.html#12\">InterimSpecificLicenceUndertakings<\/a>"],[100,0,"<a href=\"Bookmark\/InterimStandardConditions.php.html#10\">InterimStandardConditions<\/a>"],[100,0,"<a href=\"Bookmark\/InterimTrailers.php.html#12\">InterimTrailers<\/a>"],[100,5,"<a href=\"Bookmark\/InterimUnlinkedTm.php.html#14\">InterimUnlinkedTm<\/a>"],[100,0,"<a href=\"Bookmark\/InterimValidDate.php.html#12\">InterimValidDate<\/a>"],[100,0,"<a href=\"Bookmark\/InterimVehicles.php.html#12\">InterimVehicles<\/a>"],[100,0,"<a href=\"Bookmark\/IssueDate.php.html#12\">IssueDate<\/a>"],[100,0,"<a href=\"Bookmark\/LetterDateAdd10Days.php.html#10\">LetterDateAdd10Days<\/a>"],[100,0,"<a href=\"Bookmark\/LetterDateAdd14Days.php.html#12\">LetterDateAdd14Days<\/a>"],[100,0,"<a href=\"Bookmark\/LetterDateAdd21Days.php.html#10\">LetterDateAdd21Days<\/a>"],[100,0,"<a href=\"Bookmark\/LetterDateAdd28Days.php.html#10\">LetterDateAdd28Days<\/a>"],[100,0,"<a href=\"Bookmark\/LicenceExpiryDate.php.html#12\">LicenceExpiryDate<\/a>"],[100,3,"<a href=\"Bookmark\/LicenceHolderAddress.php.html#13\">LicenceHolderAddress<\/a>"],[100,2,"<a href=\"Bookmark\/LicenceHolderName.php.html#13\">LicenceHolderName<\/a>"],[100,0,"<a href=\"Bookmark\/LicenceNumber.php.html#12\">LicenceNumber<\/a>"],[100,12,"<a href=\"Bookmark\/LicenceOperatingCentres.php.html#14\">LicenceOperatingCentres<\/a>"],[100,5,"<a href=\"Bookmark\/LicencePartners.php.html#13\">LicencePartners<\/a>"],[100,0,"<a href=\"Bookmark\/LicenceTrailerLimit.php.html#12\">LicenceTrailerLimit<\/a>"],[100,0,"<a href=\"Bookmark\/LicenceType.php.html#10\">LicenceType<\/a>"],[100,0,"<a href=\"Bookmark\/LicenceVehicleLimit.php.html#12\">LicenceVehicleLimit<\/a>"],[100,2,"<a href=\"Bookmark\/NoDiscsPrinted.php.html#12\">NoDiscsPrinted<\/a>"],[0,1,"<a href=\"Bookmark\/ObjDeadline.php.html#10\">ObjDeadline<\/a>"],[100,0,"<a href=\"Bookmark\/OpAddress.php.html#10\">OpAddress<\/a>"],[100,4,"<a href=\"Bookmark\/OpDetails.php.html#18\">OpDetails<\/a>"],[100,2,"<a href=\"Bookmark\/OpFaoName.php.html#13\">OpFaoName<\/a>"],[100,4,"<a href=\"Bookmark\/OpName.php.html#19\">OpName<\/a>"],[100,3,"<a href=\"Bookmark\/OpNameOnly.php.html#13\">OpNameOnly<\/a>"],[100,17,"<a href=\"Bookmark\/OperatingCentres.php.html#15\">OperatingCentres<\/a>"],[100,3,"<a href=\"Bookmark\/OriginalCopy.php.html#13\">OriginalCopy<\/a>"],[100,12,"<a href=\"Bookmark\/PhoneNumbers.php.html#13\">PhoneNumbers<\/a>"],[100,0,"<a href=\"Bookmark\/PiHearingDate.php.html#12\">PiHearingDate<\/a>"],[100,0,"<a href=\"Bookmark\/PiHearingTime.php.html#12\">PiHearingTime<\/a>"],[100,5,"<a href=\"Bookmark\/PiHearingVenue.php.html#13\">PiHearingVenue<\/a>"],[100,12,"<a href=\"Bookmark\/PsvDiscPage.php.html#13\">PsvDiscPage<\/a>"],[100,0,"<a href=\"Bookmark\/PsvStandardConditions.php.html#10\">PsvStandardConditions<\/a>"],[100,0,"<a href=\"Bookmark\/PublicationDate.php.html#10\">PublicationDate<\/a>"],[100,0,"<a href=\"Bookmark\/PublicationFlatAbstract.php.html#17\">PublicationFlatAbstract<\/a>"],[100,0,"<a href=\"Bookmark\/PublicationNumber.php.html#10\">PublicationNumber<\/a>"],[100,3,"<a href=\"Bookmark\/RegisteredNumber.php.html#13\">RegisteredNumber<\/a>"],[100,0,"<a href=\"Bookmark\/ReviewDate.php.html#12\">ReviewDate<\/a>"],[100,3,"<a href=\"Bookmark\/ReviewDateAdd2Months.php.html#13\">ReviewDateAdd2Months<\/a>"],[100,0,"<a href=\"Bookmark\/S43AuthorisedDecision.php.html#10\">S43AuthorisedDecision<\/a>"],[100,0,"<a href=\"Bookmark\/S43RequestDate.php.html#9\">S43RequestDate<\/a>"],[100,0,"<a href=\"Bookmark\/S43RequestMode.php.html#9\">S43RequestMode<\/a>"],[100,0,"<a href=\"Bookmark\/S43RequestorNameBodyAddress.php.html#9\">S43RequestorNameBodyAddress<\/a>"],[100,0,"<a href=\"Bookmark\/S9AuthorisedDecision.php.html#10\">S9AuthorisedDecision<\/a>"],[100,1,"<a href=\"Bookmark\/S9AuthorisorsAge.php.html#16\">S9AuthorisorsAge<\/a>"],[100,0,"<a href=\"Bookmark\/S9RequestDate.php.html#9\">S9RequestDate<\/a>"],[100,0,"<a href=\"Bookmark\/S9RequestMode.php.html#9\">S9RequestMode<\/a>"],[100,0,"<a href=\"Bookmark\/S9RequestorNameBodyAddress.php.html#9\">S9RequestorNameBodyAddress<\/a>"],[100,13,"<a href=\"Bookmark\/SafetyAddresses.php.html#13\">SafetyAddresses<\/a>"],[100,0,"<a href=\"Bookmark\/Section11.php.html#10\">Section11<\/a>"],[100,0,"<a href=\"Bookmark\/Section12.php.html#10\">Section12<\/a>"],[100,0,"<a href=\"Bookmark\/Section21.php.html#10\">Section21<\/a>"],[100,0,"<a href=\"Bookmark\/Section22.php.html#10\">Section22<\/a>"],[100,0,"<a href=\"Bookmark\/Section23.php.html#10\">Section23<\/a>"],[100,0,"<a href=\"Bookmark\/Section24.php.html#10\">Section24<\/a>"],[100,0,"<a href=\"Bookmark\/Section25.php.html#10\">Section25<\/a>"],[100,0,"<a href=\"Bookmark\/Section26.php.html#10\">Section26<\/a>"],[100,0,"<a href=\"Bookmark\/Section27.php.html#10\">Section27<\/a>"],[100,0,"<a href=\"Bookmark\/Section29.php.html#10\">Section29<\/a>"],[100,0,"<a href=\"Bookmark\/Section31.php.html#10\">Section31<\/a>"],[100,0,"<a href=\"Bookmark\/Section32.php.html#10\">Section32<\/a>"],[100,0,"<a href=\"Bookmark\/Section33.php.html#10\">Section33<\/a>"],[100,0,"<a href=\"Bookmark\/Section34.php.html#10\">Section34<\/a>"],[100,0,"<a href=\"Bookmark\/Section35.php.html#10\">Section35<\/a>"],[100,0,"<a href=\"Bookmark\/Section36.php.html#10\">Section36<\/a>"],[100,0,"<a href=\"Bookmark\/Section41.php.html#10\">Section41<\/a>"],[100,0,"<a href=\"Bookmark\/Section42.php.html#10\">Section42<\/a>"],[100,0,"<a href=\"Bookmark\/Section51.php.html#10\">Section51<\/a>"],[100,0,"<a href=\"Bookmark\/Section52.php.html#10\">Section52<\/a>"],[100,0,"<a href=\"Bookmark\/Section53.php.html#10\">Section53<\/a>"],[100,0,"<a href=\"Bookmark\/Section54.php.html#10\">Section54<\/a>"],[100,0,"<a href=\"Bookmark\/Section61.php.html#10\">Section61<\/a>"],[100,0,"<a href=\"Bookmark\/Section71.php.html#10\">Section71<\/a>"],[100,0,"<a href=\"Bookmark\/Section72.php.html#10\">Section72<\/a>"],[100,0,"<a href=\"Bookmark\/Section81.php.html#10\">Section81<\/a>"],[100,2,"<a href=\"Bookmark\/SerialNoPrefix.php.html#13\">SerialNoPrefix<\/a>"],[100,1,"<a href=\"Bookmark\/SerialNum.php.html#22\">SerialNum<\/a>"],[100,8,"<a href=\"Bookmark\/SingleValueAbstract.php.html#17\">SingleValueAbstract<\/a>"],[100,2,"<a href=\"Bookmark\/StandardConditions.php.html#10\">StandardConditions<\/a>"],[75,4,"<a href=\"Bookmark\/StatementContactType.php.html#18\">StatementContactType<\/a>"],[100,0,"<a href=\"Bookmark\/StatementFlatAbstract.php.html#18\">StatementFlatAbstract<\/a>"],[95,4,"<a href=\"Bookmark\/StatementNameBodyAddress.php.html#15\">StatementNameBodyAddress<\/a>"],[100,0,"<a href=\"Bookmark\/StatementRequestDate.php.html#10\">StatementRequestDate<\/a>"],[100,4,"<a href=\"Bookmark\/SubjectAddress.php.html#11\">SubjectAddress<\/a>"],[100,3,"<a href=\"Bookmark\/TaAddress.php.html#13\">TaAddress<\/a>"],[100,7,"<a href=\"Bookmark\/TaAddressPhone.php.html#14\">TaAddressPhone<\/a>"],[100,2,"<a href=\"Bookmark\/TaName.php.html#13\">TaName<\/a>"],[100,1,"<a href=\"Bookmark\/TaNameUppercase.php.html#9\">TaNameUppercase<\/a>"],[100,7,"<a href=\"Bookmark\/TachographDetails.php.html#14\">TachographDetails<\/a>"],[100,2,"<a href=\"Bookmark\/TcSignature.php.html#14\">TcSignature<\/a>"],[100,6,"<a href=\"Bookmark\/TextBlock.php.html#13\">TextBlock<\/a>"],[100,2,"<a href=\"Bookmark\/TmAddress.php.html#13\">TmAddress<\/a>"],[100,0,"<a href=\"Bookmark\/TmId.php.html#12\">TmId<\/a>"],[100,2,"<a href=\"Bookmark\/TmName.php.html#13\">TmName<\/a>"],[100,0,"<a href=\"Bookmark\/TodaysDate.php.html#12\">TodaysDate<\/a>"],[100,0,"<a href=\"Bookmark\/TodaysDateSentence.php.html#12\">TodaysDateSentence<\/a>"],[92.857142857143,5,"<a href=\"Bookmark\/TotalContFee.php.html#17\">TotalContFee<\/a>"],[100,4,"<a href=\"Bookmark\/TradingNames.php.html#13\">TradingNames<\/a>"],[100,0,"<a href=\"Bookmark\/Trailers.php.html#12\">Trailers<\/a>"],[100,10,"<a href=\"Bookmark\/TransportManagers.php.html#13\">TransportManagers<\/a>"],[100,3,"<a href=\"Bookmark\/TwoWeeksBefore.php.html#13\">TwoWeeksBefore<\/a>"],[100,0,"<a href=\"Bookmark\/Undertakings.php.html#12\">Undertakings<\/a>"],[100,4,"<a href=\"Bookmark\/UnlinkedTm.php.html#18\">UnlinkedTm<\/a>"],[100,6,"<a href=\"Bookmark\/VehicleRow.php.html#13\">VehicleRow<\/a>"],[100,13,"<a href=\"Bookmark\/VehiclesSpecified.php.html#15\">VehiclesSpecified<\/a>"],[91.525423728814,19,"<a href=\"Document.php.html#16\">Document<\/a>"],[97.959183673469,18,"<a href=\"DocumentGenerator.php.html#25\">DocumentGenerator<\/a>"],[100,4,"<a href=\"Parser\/ParserFactory.php.html#10\">ParserFactory<\/a>"],[100,11,"<a href=\"Parser\/RtfParser.php.html#10\">RtfParser<\/a>"],[100,2,"<a href=\"Bookmark\/Traits\/DateHelperAwareTrait.php.html#12\">DateHelperAwareTrait<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(key, y, e, graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[100,1,"<a href=\"Bookmark\/AbstractConditionsUndertakings.php.html#18\">AbstractConditionsUndertakings::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/AbstractConditionsUndertakings.php.html#29\">AbstractConditionsUndertakings::render<\/a>"],[100,1,"<a href=\"Bookmark\/AbstractConditionsUndertakings.php.html#34\">AbstractConditionsUndertakings::anonymous function<\/a>"],[100,2,"<a href=\"Bookmark\/AbstractDiscList.php.html#39\">AbstractDiscList::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/AbstractDiscList.php.html#55\">AbstractDiscList::splitString<\/a>"],[100,1,"<a href=\"Bookmark\/AbstractDiscList.php.html#63\">AbstractDiscList::getPrefix<\/a>"],[100,2,"<a href=\"Bookmark\/AbstractDiscList.php.html#69\">AbstractDiscList::renderSnippets<\/a>"],[100,1,"<a href=\"Bookmark\/AbstractInterimConditionsUndertakings.php.html#18\">AbstractInterimConditionsUndertakings::getQuery<\/a>"],[100,6,"<a href=\"Bookmark\/AbstractInterimConditionsUndertakings.php.html#29\">AbstractInterimConditionsUndertakings::render<\/a>"],[100,3,"<a href=\"Bookmark\/AbstractInterimConditionsUndertakings.php.html#51\">AbstractInterimConditionsUndertakings::getIndexedData<\/a>"],[100,1,"<a href=\"Bookmark\/AbstractLicenceType.php.html#29\">AbstractLicenceType::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/AbstractLicenceType.php.html#41\">AbstractLicenceType::render<\/a>"],[0,1,"<a href=\"Bookmark\/AbstractPublicationLinkSection.php.html#66\">AbstractPublicationLinkSection::getPubTypeSection<\/a>"],[0,1,"<a href=\"Bookmark\/AbstractPublicationLinkSection.php.html#76\">AbstractPublicationLinkSection::getBookmarkSnippets<\/a>"],[0,3,"<a href=\"Bookmark\/AbstractPublicationLinkSection.php.html#87\">AbstractPublicationLinkSection::getBookmarkSnippetsByClass<\/a>"],[0,1,"<a href=\"Bookmark\/AbstractPublicationLinkSection.php.html#113\">AbstractPublicationLinkSection::getQuery<\/a>"],[0,5,"<a href=\"Bookmark\/AbstractPublicationLinkSection.php.html#128\">AbstractPublicationLinkSection::render<\/a>"],[0,3,"<a href=\"Bookmark\/AbstractPublicationLinkSection.php.html#162\">AbstractPublicationLinkSection::renderSnippets<\/a>"],[40,3,"<a href=\"Bookmark\/AbstractStandardConditions.php.html#29\">AbstractStandardConditions::getQuery<\/a>"],[100,4,"<a href=\"Bookmark\/AbstractStandardConditions.php.html#38\">AbstractStandardConditions::render<\/a>"],[100,1,"<a href=\"Bookmark\/AddressOfEstablishment.php.html#15\">AddressOfEstablishment::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/AddressOfEstablishment.php.html#25\">AddressOfEstablishment::render<\/a>"],[100,2,"<a href=\"Bookmark\/ApplicantName.php.html#13\">ApplicantName::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/ApplicantName.php.html#29\">ApplicantName::render<\/a>"],[100,1,"<a href=\"Bookmark\/Base\/AbstractBookmark.php.html#23\">AbstractBookmark::setToken<\/a>"],[100,1,"<a href=\"Bookmark\/Base\/AbstractBookmark.php.html#28\">AbstractBookmark::isStatic<\/a>"],[100,1,"<a href=\"Bookmark\/Base\/AbstractBookmark.php.html#33\">AbstractBookmark::isPreformatted<\/a>"],[0,2,"<a href=\"Bookmark\/Base\/AbstractBookmark.php.html#38\">AbstractBookmark::getSnippet<\/a>"],[100,1,"<a href=\"Bookmark\/Base\/AbstractBookmark.php.html#51\">AbstractBookmark::setParser<\/a>"],[100,1,"<a href=\"Bookmark\/Base\/AbstractBookmark.php.html#56\">AbstractBookmark::getParser<\/a>"],[100,1,"<a href=\"Bookmark\/Base\/AbstractBookmark.php.html#61\">AbstractBookmark::render<\/a>"],[100,1,"<a href=\"Bookmark\/Base\/DateDelta.php.html#15\">DateDelta::render<\/a>"],[100,1,"<a href=\"Bookmark\/Base\/DynamicBookmark.php.html#22\">DynamicBookmark::setData<\/a>"],[100,1,"<a href=\"Bookmark\/Base\/DynamicBookmark.php.html#27\">DynamicBookmark::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/Base\/ImageBookmark.php.html#22\">ImageBookmark::setFileStore<\/a>"],[100,1,"<a href=\"Bookmark\/Base\/ImageBookmark.php.html#27\">ImageBookmark::getFileStore<\/a>"],[56.25,6,"<a href=\"Bookmark\/Base\/ImageBookmark.php.html#38\">ImageBookmark::getImage<\/a>"],[100,1,"<a href=\"Bookmark\/BookmarkFactory.php.html#14\">BookmarkFactory::locate<\/a>"],[85.714285714286,3,"<a href=\"Bookmark\/BookmarkFactory.php.html#32\">BookmarkFactory::getInstance<\/a>"],[100,2,"<a href=\"Bookmark\/BrCouncilsNotified.php.html#19\">BrCouncilsNotified::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/BrCouncilsNotified.php.html#28\">BrCouncilsNotified::render<\/a>"],[100,1,"<a href=\"Bookmark\/BrCouncilsNotified.php.html#33\">BrCouncilsNotified::anonymous function<\/a>"],[100,2,"<a href=\"Bookmark\/BrLogo.php.html#24\">BrLogo::getQuery<\/a>"],[100,3,"<a href=\"Bookmark\/BrLogo.php.html#38\">BrLogo::render<\/a>"],[100,2,"<a href=\"Bookmark\/BrNPNo.php.html#19\">BrNPNo::getQuery<\/a>"],[100,3,"<a href=\"Bookmark\/BrNPNo.php.html#28\">BrNPNo::render<\/a>"],[100,1,"<a href=\"Bookmark\/BrReasonForVar.php.html#20\">BrReasonForVar::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/BrReasonForVar.php.html#25\">BrReasonForVar::render<\/a>"],[100,1,"<a href=\"Bookmark\/BrReasonForVar.php.html#30\">BrReasonForVar::anonymous function<\/a>"],[100,2,"<a href=\"Bookmark\/BrRouteNum.php.html#19\">BrRouteNum::getQuery<\/a>"],[100,4,"<a href=\"Bookmark\/BrRouteNum.php.html#28\">BrRouteNum::render<\/a>"],[100,1,"<a href=\"Bookmark\/CaseworkerDetails.php.html#18\">CaseworkerDetails::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/CaseworkerDetails.php.html#45\">CaseworkerDetails::render<\/a>"],[100,2,"<a href=\"Bookmark\/CaseworkerDetails.php.html#74\">CaseworkerDetails::fetchBestAddress<\/a>"],[71.428571428571,4,"<a href=\"Bookmark\/CaseworkerDetails.php.html#85\">CaseworkerDetails::fetchDirectDial<\/a>"],[100,1,"<a href=\"Bookmark\/CaseworkerName.php.html#15\">CaseworkerName::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/CaseworkerName.php.html#25\">CaseworkerName::render<\/a>"],[100,1,"<a href=\"Bookmark\/CompanyTradingName.php.html#15\">CompanyTradingName::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/CompanyTradingName.php.html#28\">CompanyTradingName::render<\/a>"],[100,1,"<a href=\"Bookmark\/ContNextExpDate.php.html#15\">ContNextExpDate::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/ContNextExpDate.php.html#20\">ContNextExpDate::render<\/a>"],[100,1,"<a href=\"Bookmark\/DateFrom.php.html#17\">DateFrom::getQuery<\/a>"],[100,5,"<a href=\"Bookmark\/DateFrom.php.html#27\">DateFrom::render<\/a>"],[100,1,"<a href=\"Bookmark\/DateTo.php.html#17\">DateTo::getQuery<\/a>"],[100,5,"<a href=\"Bookmark\/DateTo.php.html#27\">DateTo::render<\/a>"],[100,14,"<a href=\"Bookmark\/DiscList.php.html#48\">DiscList::render<\/a>"],[100,1,"<a href=\"Bookmark\/DiscList.php.html#135\">DiscList::implodeNames<\/a>"],[100,1,"<a href=\"Bookmark\/DiscList.php.html#140\">DiscList::anonymous function<\/a>"],[100,2,"<a href=\"Bookmark\/DiscList.php.html#151\">DiscList::getRowHeight<\/a>"],[100,1,"<a href=\"Bookmark\/DiscsIssued.php.html#15\">DiscsIssued::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/DiscsIssued.php.html#20\">DiscsIssued::render<\/a>"],[100,1,"<a href=\"Bookmark\/DiscsIssued.php.html#24\">DiscsIssued::anonymous function<\/a>"],[100,1,"<a href=\"Bookmark\/EuropeanLicenceNumber.php.html#17\">EuropeanLicenceNumber::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/EuropeanLicenceNumber.php.html#22\">EuropeanLicenceNumber::render<\/a>"],[100,1,"<a href=\"Bookmark\/FeeDueDate.php.html#22\">FeeDueDate::getQuery<\/a>"],[83.333333333333,2,"<a href=\"Bookmark\/FeeDueDate.php.html#27\">FeeDueDate::render<\/a>"],[100,1,"<a href=\"Bookmark\/FeeReqGrantNumber.php.html#15\">FeeReqGrantNumber::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/FeeReqGrantNumber.php.html#20\">FeeReqGrantNumber::render<\/a>"],[100,3,"<a href=\"Bookmark\/Formatter\/Address.php.html#14\">Address::format<\/a>"],[100,1,"<a href=\"Bookmark\/Formatter\/Address.php.html#40\">Address::setSeparator<\/a>"],[100,1,"<a href=\"Bookmark\/Formatter\/Address.php.html#48\">Address::getSeparator<\/a>"],[100,4,"<a href=\"Bookmark\/Formatter\/ConditionsUndertakings.php.html#14\">ConditionsUndertakings::format<\/a>"],[100,1,"<a href=\"Bookmark\/Formatter\/Date.php.html#12\">Date::format<\/a>"],[100,1,"<a href=\"Bookmark\/Formatter\/Name.php.html#12\">Name::format<\/a>"],[100,2,"<a href=\"Bookmark\/Formatter\/OrganisationName.php.html#12\">OrganisationName::format<\/a>"],[100,4,"<a href=\"Bookmark\/Formatter\/OrganisationName.php.html#25\">OrganisationName::getFirstTradingName<\/a>"],[100,1,"<a href=\"Bookmark\/Formatter\/OrganisationName.php.html#47\">OrganisationName::setSeparator<\/a>"],[100,1,"<a href=\"Bookmark\/Formatter\/OrganisationName.php.html#55\">OrganisationName::getSeparator<\/a>"],[100,1,"<a href=\"Bookmark\/Formatter\/Time.php.html#12\">Time::format<\/a>"],[100,1,"<a href=\"Bookmark\/FstandingAdditionalVeh.php.html#19\">FstandingAdditionalVeh::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/FstandingAdditionalVeh.php.html#30\">FstandingAdditionalVeh::render<\/a>"],[100,1,"<a href=\"Bookmark\/FstandingFirstVeh.php.html#19\">FstandingFirstVeh::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/FstandingFirstVeh.php.html#30\">FstandingFirstVeh::render<\/a>"],[100,1,"<a href=\"Bookmark\/InsMoreFreqNo.php.html#15\">InsMoreFreqNo::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/InsMoreFreqNo.php.html#20\">InsMoreFreqNo::render<\/a>"],[100,1,"<a href=\"Bookmark\/InsMoreFreqYes.php.html#15\">InsMoreFreqYes::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/InsMoreFreqYes.php.html#20\">InsMoreFreqYes::render<\/a>"],[100,1,"<a href=\"Bookmark\/IntLicFee.php.html#15\">IntLicFee::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/IntLicFee.php.html#20\">IntLicFee::render<\/a>"],[100,1,"<a href=\"Bookmark\/InterimOperatingCentres.php.html#23\">InterimOperatingCentres::getQuery<\/a>"],[100,6,"<a href=\"Bookmark\/InterimOperatingCentres.php.html#28\">InterimOperatingCentres::render<\/a>"],[100,9,"<a href=\"Bookmark\/InterimOperatingCentres.php.html#67\">InterimOperatingCentres::filterConditionsUndertakings<\/a>"],[100,4,"<a href=\"Bookmark\/InterimOperatingCentres.php.html#101\">InterimOperatingCentres::getIndexedData<\/a>"],[100,1,"<a href=\"Bookmark\/InterimUnlinkedTm.php.html#23\">InterimUnlinkedTm::getQuery<\/a>"],[100,4,"<a href=\"Bookmark\/InterimUnlinkedTm.php.html#33\">InterimUnlinkedTm::render<\/a>"],[100,1,"<a href=\"Bookmark\/LicenceHolderAddress.php.html#15\">LicenceHolderAddress::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/LicenceHolderAddress.php.html#25\">LicenceHolderAddress::render<\/a>"],[100,1,"<a href=\"Bookmark\/LicenceHolderName.php.html#15\">LicenceHolderName::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/LicenceHolderName.php.html#20\">LicenceHolderName::render<\/a>"],[100,1,"<a href=\"Bookmark\/LicenceOperatingCentres.php.html#16\">LicenceOperatingCentres::getQuery<\/a>"],[100,8,"<a href=\"Bookmark\/LicenceOperatingCentres.php.html#29\">LicenceOperatingCentres::render<\/a>"],[100,3,"<a href=\"Bookmark\/LicenceOperatingCentres.php.html#62\">LicenceOperatingCentres::anonymous function<\/a>"],[100,1,"<a href=\"Bookmark\/LicencePartners.php.html#15\">LicencePartners::getQuery<\/a>"],[100,4,"<a href=\"Bookmark\/LicencePartners.php.html#28\">LicencePartners::render<\/a>"],[100,1,"<a href=\"Bookmark\/NoDiscsPrinted.php.html#14\">NoDiscsPrinted::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/NoDiscsPrinted.php.html#24\">NoDiscsPrinted::render<\/a>"],[0,1,"<a href=\"Bookmark\/ObjDeadline.php.html#12\">ObjDeadline::render<\/a>"],[100,1,"<a href=\"Bookmark\/OpDetails.php.html#27\">OpDetails::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/OpDetails.php.html#45\">OpDetails::render<\/a>"],[100,1,"<a href=\"Bookmark\/OpDetails.php.html#53\">OpDetails::anonymous function<\/a>"],[100,1,"<a href=\"Bookmark\/OpFaoName.php.html#15\">OpFaoName::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/OpFaoName.php.html#20\">OpFaoName::render<\/a>"],[100,1,"<a href=\"Bookmark\/OpName.php.html#28\">OpName::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/OpName.php.html#43\">OpName::render<\/a>"],[100,1,"<a href=\"Bookmark\/OpName.php.html#49\">OpName::anonymous function<\/a>"],[100,1,"<a href=\"Bookmark\/OpNameOnly.php.html#15\">OpNameOnly::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/OpNameOnly.php.html#20\">OpNameOnly::render<\/a>"],[100,1,"<a href=\"Bookmark\/OperatingCentres.php.html#23\">OperatingCentres::getQuery<\/a>"],[100,6,"<a href=\"Bookmark\/OperatingCentres.php.html#41\">OperatingCentres::render<\/a>"],[100,5,"<a href=\"Bookmark\/OperatingCentres.php.html#76\">OperatingCentres::filterConditionsUndertakings<\/a>"],[100,5,"<a href=\"Bookmark\/OperatingCentres.php.html#80\">OperatingCentres::anonymous function<\/a>"],[100,1,"<a href=\"Bookmark\/OriginalCopy.php.html#15\">OriginalCopy::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/OriginalCopy.php.html#20\">OriginalCopy::render<\/a>"],[100,1,"<a href=\"Bookmark\/PhoneNumbers.php.html#15\">PhoneNumbers::getQuery<\/a>"],[100,8,"<a href=\"Bookmark\/PhoneNumbers.php.html#27\">PhoneNumbers::render<\/a>"],[100,3,"<a href=\"Bookmark\/PhoneNumbers.php.html#54\">PhoneNumbers::anonymous function<\/a>"],[100,2,"<a href=\"Bookmark\/PiHearingVenue.php.html#15\">PiHearingVenue::getQuery<\/a>"],[100,3,"<a href=\"Bookmark\/PiHearingVenue.php.html#24\">PiHearingVenue::render<\/a>"],[100,12,"<a href=\"Bookmark\/PsvDiscPage.php.html#39\">PsvDiscPage::render<\/a>"],[100,1,"<a href=\"Bookmark\/RegisteredNumber.php.html#15\">RegisteredNumber::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/RegisteredNumber.php.html#20\">RegisteredNumber::render<\/a>"],[100,1,"<a href=\"Bookmark\/ReviewDateAdd2Months.php.html#15\">ReviewDateAdd2Months::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/ReviewDateAdd2Months.php.html#20\">ReviewDateAdd2Months::render<\/a>"],[100,1,"<a href=\"Bookmark\/S9AuthorisorsAge.php.html#18\">S9AuthorisorsAge::render<\/a>"],[100,1,"<a href=\"Bookmark\/SafetyAddresses.php.html#15\">SafetyAddresses::getQuery<\/a>"],[100,6,"<a href=\"Bookmark\/SafetyAddresses.php.html#28\">SafetyAddresses::render<\/a>"],[100,3,"<a href=\"Bookmark\/SafetyAddresses.php.html#60\">SafetyAddresses::sortSafetyAddresses<\/a>"],[100,3,"<a href=\"Bookmark\/SafetyAddresses.php.html#64\">SafetyAddresses::anonymous function<\/a>"],[100,1,"<a href=\"Bookmark\/SerialNoPrefix.php.html#15\">SerialNoPrefix::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/SerialNoPrefix.php.html#20\">SerialNoPrefix::render<\/a>"],[100,1,"<a href=\"Bookmark\/SerialNum.php.html#31\">SerialNum::render<\/a>"],[100,2,"<a href=\"Bookmark\/SingleValueAbstract.php.html#27\">SingleValueAbstract::getQuery<\/a>"],[100,6,"<a href=\"Bookmark\/SingleValueAbstract.php.html#38\">SingleValueAbstract::render<\/a>"],[100,2,"<a href=\"Bookmark\/StandardConditions.php.html#12\">StandardConditions::render<\/a>"],[66.666666666667,2,"<a href=\"Bookmark\/StatementContactType.php.html#20\">StatementContactType::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/StatementContactType.php.html#29\">StatementContactType::render<\/a>"],[83.333333333333,2,"<a href=\"Bookmark\/StatementNameBodyAddress.php.html#17\">StatementNameBodyAddress::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/StatementNameBodyAddress.php.html#32\">StatementNameBodyAddress::render<\/a>"],[100,2,"<a href=\"Bookmark\/SubjectAddress.php.html#13\">SubjectAddress::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/SubjectAddress.php.html#30\">SubjectAddress::render<\/a>"],[100,1,"<a href=\"Bookmark\/TaAddress.php.html#15\">TaAddress::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/TaAddress.php.html#27\">TaAddress::render<\/a>"],[100,1,"<a href=\"Bookmark\/TaAddressPhone.php.html#16\">TaAddressPhone::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/TaAddressPhone.php.html#31\">TaAddressPhone::render<\/a>"],[100,4,"<a href=\"Bookmark\/TaAddressPhone.php.html#49\">TaAddressPhone::fetchTelephone<\/a>"],[100,1,"<a href=\"Bookmark\/TaName.php.html#15\">TaName::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/TaName.php.html#20\">TaName::render<\/a>"],[100,1,"<a href=\"Bookmark\/TaNameUppercase.php.html#11\">TaNameUppercase::render<\/a>"],[100,1,"<a href=\"Bookmark\/TachographDetails.php.html#16\">TachographDetails::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/TachographDetails.php.html#21\">TachographDetails::render<\/a>"],[100,4,"<a href=\"Bookmark\/TachographDetails.php.html#41\">TachographDetails::getCheckboxesBookmarks<\/a>"],[100,1,"<a href=\"Bookmark\/TcSignature.php.html#43\">TcSignature::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/TcSignature.php.html#52\">TcSignature::render<\/a>"],[100,3,"<a href=\"Bookmark\/TextBlock.php.html#15\">TextBlock::getQuery<\/a>"],[100,3,"<a href=\"Bookmark\/TextBlock.php.html#35\">TextBlock::render<\/a>"],[100,1,"<a href=\"Bookmark\/TmAddress.php.html#15\">TmAddress::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/TmAddress.php.html#26\">TmAddress::render<\/a>"],[100,1,"<a href=\"Bookmark\/TmName.php.html#15\">TmName::getQuery<\/a>"],[100,1,"<a href=\"Bookmark\/TmName.php.html#25\">TmName::render<\/a>"],[88.888888888889,2,"<a href=\"Bookmark\/TotalContFee.php.html#21\">TotalContFee::getQuery<\/a>"],[100,3,"<a href=\"Bookmark\/TotalContFee.php.html#36\">TotalContFee::render<\/a>"],[100,1,"<a href=\"Bookmark\/TradingNames.php.html#15\">TradingNames::getQuery<\/a>"],[100,3,"<a href=\"Bookmark\/TradingNames.php.html#26\">TradingNames::render<\/a>"],[100,1,"<a href=\"Bookmark\/TransportManagers.php.html#15\">TransportManagers::getQuery<\/a>"],[100,6,"<a href=\"Bookmark\/TransportManagers.php.html#29\">TransportManagers::render<\/a>"],[100,3,"<a href=\"Bookmark\/TransportManagers.php.html#50\">TransportManagers::anonymous function<\/a>"],[100,1,"<a href=\"Bookmark\/TwoWeeksBefore.php.html#15\">TwoWeeksBefore::getQuery<\/a>"],[100,2,"<a href=\"Bookmark\/TwoWeeksBefore.php.html#20\">TwoWeeksBefore::render<\/a>"],[100,1,"<a href=\"Bookmark\/UnlinkedTm.php.html#28\">UnlinkedTm::getQuery<\/a>"],[100,3,"<a href=\"Bookmark\/UnlinkedTm.php.html#48\">UnlinkedTm::render<\/a>"],[100,1,"<a href=\"Bookmark\/VehicleRow.php.html#21\">VehicleRow::getQuery<\/a>"],[100,5,"<a href=\"Bookmark\/VehicleRow.php.html#31\">VehicleRow::render<\/a>"],[100,1,"<a href=\"Bookmark\/VehiclesSpecified.php.html#17\">VehiclesSpecified::getQuery<\/a>"],[100,6,"<a href=\"Bookmark\/VehiclesSpecified.php.html#29\">VehiclesSpecified::render<\/a>"],[100,3,"<a href=\"Bookmark\/VehiclesSpecified.php.html#73\">VehiclesSpecified::sortVehicles<\/a>"],[100,3,"<a href=\"Bookmark\/VehiclesSpecified.php.html#77\">VehiclesSpecified::anonymous function<\/a>"],[100,4,"<a href=\"Document.php.html#23\">Document::getBookmarkQueries<\/a>"],[100,5,"<a href=\"Document.php.html#53\">Document::populateBookmarks<\/a>"],[100,1,"<a href=\"Document.php.html#101\">Document::getParser<\/a>"],[100,4,"<a href=\"Document.php.html#107\">Document::getBookmarks<\/a>"],[0,1,"<a href=\"Document.php.html#139\">Document::download<\/a>"],[0,1,"<a href=\"Document.php.html#149\">Document::getMetadataKey<\/a>"],[0,1,"<a href=\"Document.php.html#159\">Document::getTimestampFormat<\/a>"],[0,1,"<a href=\"Document.php.html#170\">Document::formatFilename<\/a>"],[0,1,"<a href=\"Document.php.html#180\">Document::getUploader<\/a>"],[100,1,"<a href=\"DocumentGenerator.php.html#46\">DocumentGenerator::generateFromTemplate<\/a>"],[94.736842105263,6,"<a href=\"DocumentGenerator.php.html#53\">DocumentGenerator::generateFromTemplateIdentifier<\/a>"],[100,2,"<a href=\"DocumentGenerator.php.html#85\">DocumentGenerator::uploadGeneratedContent<\/a>"],[100,1,"<a href=\"DocumentGenerator.php.html#111\">DocumentGenerator::generateAndStore<\/a>"],[100,4,"<a href=\"DocumentGenerator.php.html#120\">DocumentGenerator::addTemplatePrefix<\/a>"],[100,2,"<a href=\"DocumentGenerator.php.html#141\">DocumentGenerator::getPrefix<\/a>"],[100,2,"<a href=\"DocumentGenerator.php.html#146\">DocumentGenerator::getTemplate<\/a>"],[100,4,"<a href=\"Parser\/ParserFactory.php.html#12\">ParserFactory::getParser<\/a>"],[100,1,"<a href=\"Parser\/RtfParser.php.html#14\">RtfParser::getFileExtension<\/a>"],[100,2,"<a href=\"Parser\/RtfParser.php.html#19\">RtfParser::extractTokens<\/a>"],[100,4,"<a href=\"Parser\/RtfParser.php.html#29\">RtfParser::replace<\/a>"],[100,1,"<a href=\"Parser\/RtfParser.php.html#61\">RtfParser::renderImage<\/a>"],[100,1,"<a href=\"Parser\/RtfParser.php.html#74\">RtfParser::getMatches<\/a>"],[100,2,"<a href=\"Parser\/RtfParser.php.html#84\">RtfParser::format<\/a>"],[100,1,"<a href=\"Bookmark\/Traits\/DateHelperAwareTrait.php.html#16\">DateHelperAwareTrait::setDateHelper<\/a>"],[100,1,"<a href=\"Bookmark\/Traits\/DateHelperAwareTrait.php.html#21\">DateHelperAwareTrait::getDateHelper<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

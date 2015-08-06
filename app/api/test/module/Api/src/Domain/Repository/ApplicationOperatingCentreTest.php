@@ -7,7 +7,9 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre as Repo;
+use Dvsa\Olcs\Api\Entity;
 use Mockery as m;
 
 /**
@@ -88,5 +90,54 @@ class ApplicationOperatingCentreTest extends RepositoryTestCase
         );
 
         $this->assertEquals($expected, $this->query);
+    }
+
+    public function testFindCorrespondingLoc()
+    {
+        /** @var Entity\OperatingCentre\OperatingCentre $oc */
+        $oc = m::mock(Entity\OperatingCentre\OperatingCentre::class)->makePartial();
+
+        /** @var Entity\Application\ApplicationOperatingCentre $aoc */
+        $aoc = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setOperatingCentre($oc);
+
+        /** @var Entity\Licence\LicenceOperatingCentre $loc */
+        $loc = m::mock(Entity\Licence\LicenceOperatingCentre::class)->makePartial();
+        $loc->setOperatingCentre($oc);
+
+        $locs = new ArrayCollection();
+        $locs->add($loc);
+
+        /** @var Entity\Licence\Licence $licence */
+        $licence = m::mock(Entity\Licence\Licence::class)->makePartial();
+        $licence->setOperatingCentres($locs);
+
+        $foundLoc = $this->sut->findCorrespondingLoc($aoc, $licence);
+
+        $this->assertSame($loc, $foundLoc);
+    }
+
+    public function testFindCorrespondingLocWithoutMatch()
+    {
+        /** @var Entity\OperatingCentre\OperatingCentre $oc */
+        $oc = m::mock(Entity\OperatingCentre\OperatingCentre::class)->makePartial();
+
+        /** @var Entity\Application\ApplicationOperatingCentre $aoc */
+        $aoc = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setOperatingCentre($oc);
+
+        /** @var Entity\Licence\LicenceOperatingCentre $loc */
+        $loc = m::mock(Entity\Licence\LicenceOperatingCentre::class)->makePartial();
+
+        $locs = new ArrayCollection();
+        $locs->add($loc);
+
+        /** @var Entity\Licence\Licence $licence */
+        $licence = m::mock(Entity\Licence\Licence::class)->makePartial();
+        $licence->setOperatingCentres($locs);
+
+        $this->setExpectedException(\Exception::class);
+
+        $this->sut->findCorrespondingLoc($aoc, $licence);
     }
 }
