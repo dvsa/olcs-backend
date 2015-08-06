@@ -501,6 +501,24 @@ class Licence extends AbstractLicence
         return ($this->isStandardInternational() || ($this->isPsv() && $this->isRestricted()));
     }
 
+    /**
+     * Can the licence have a variation.
+     *
+     * @return bool
+     */
+    public function canHaveVariation()
+    {
+        return !in_array(
+            $this->getStatus()->getId(),
+            [
+                self::LICENCE_STATUS_REVOKED,
+                self::LICENCE_STATUS_SURRENDERED,
+                self::LICENCE_STATUS_TERMINATED,
+                self::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT
+            ]
+        );
+    }
+
     public function getCategoryPrefix()
     {
         return LicenceNoGenEntity::getCategoryPrefix($this->getGoodsOrPsv());
