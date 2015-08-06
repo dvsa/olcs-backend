@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /Users/rob/Development/Valtech/OLCS/olcs-backend/module/Api/src/Entity/Doc</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../../css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../../../css/nv.d3.min.css" rel="stylesheet">
+  <link href="../../../../css/style.css" rel="stylesheet">
+  <!--[if lt IE 9]>
+  <script src="../../../../js/html5shiv.min.js"></script>
+  <script src="../../../../js/respond.min.js"></script>
+  <![endif]-->
+ </head>
+ <body>
+  <header>
+   <div class="container">
+    <div class="row">
+     <div class="col-md-12">
+      <ol class="breadcrumb">
+        <li><a href="../../../../index.html">/Users/rob/Development/Valtech/OLCS/olcs-backend/module</a></li>
+        <li><a href="../../../index.html">Api</a></li>
+        <li><a href="../../index.html">src</a></li>
+        <li><a href="../index.html">Entity</a></li>
+        <li><a href="index.html">Doc</a></li>
+        <li class="active">(Dashboard)</li>
+
+      </ol>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="AbstractDocTemplate.php.html#168"><abbr title="AbstractDocTemplate::__construct">__construct</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="AbstractDocBookmark.php.html#122"><abbr title="AbstractDocBookmark::__construct">__construct</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="AbstractDocTemplateBookmark.php.html#326"><abbr title="AbstractDocTemplateBookmark::clearProperties">clearProperties</a></a></td><td class="text-right">77%</td></tr>
+       <tr><td><a href="AbstractDocParagraphBookmark.php.html#326"><abbr title="AbstractDocParagraphBookmark::clearProperties">clearProperties</a></a></td><td class="text-right">77%</td></tr>
+       <tr><td><a href="AbstractDocParagraph.php.html#314"><abbr title="AbstractDocParagraph::clearProperties">clearProperties</a></a></td><td class="text-right">77%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="AbstractDocTemplateBookmark.php.html#326"><abbr title="AbstractDocTemplateBookmark::clearProperties">clearProperties</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="AbstractDocParagraphBookmark.php.html#326"><abbr title="AbstractDocParagraphBookmark::clearProperties">clearProperties</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="AbstractDocParagraph.php.html#314"><abbr title="AbstractDocParagraph::clearProperties">clearProperties</abbr></a></td><td class="text-right">4</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="http://github.com/sebastianbergmann/php-code-coverage" target="_top">PHP_CodeCoverage 2.1.9</a> using <a href="http://php.net/" target="_top">PHP 5.5.24</a> and <a href="http://phpunit.de/">PHPUnit 4.7.7</a> at Thu Aug 6 10:16:50 BST 2015.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../../../../js/jquery.min.js" type="text/javascript"></script>
+  <script src="../../../../js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="../../../../js/holder.min.js" type="text/javascript"></script>
+  <script src="../../../../js/d3.min.js" type="text/javascript"></script>
+  <script src="../../../../js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([0,0,0,0,0,0,0,0,0,0,5,7], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([2,0,0,0,0,0,0,0,3,0,0,184], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(key, y, e, graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[96.610169491525,31,"<a href=\"AbstractDocBookmark.php.html#26\">AbstractDocBookmark<\/a>"],[94.594594594595,22,"<a href=\"AbstractDocParagraph.php.html#24\">AbstractDocParagraph<\/a>"],[94.594594594595,22,"<a href=\"AbstractDocParagraphBookmark.php.html#30\">AbstractDocParagraphBookmark<\/a>"],[97.183098591549,39,"<a href=\"AbstractDocTemplate.php.html#29\">AbstractDocTemplate<\/a>"],[94.594594594595,22,"<a href=\"AbstractDocTemplateBookmark.php.html#30\">AbstractDocTemplateBookmark<\/a>"],[100,80,"<a href=\"AbstractDocument.php.html#43\">AbstractDocument<\/a>"],[100,0,"<a href=\"DocBookmark.php.html#18\">DocBookmark<\/a>"],[100,0,"<a href=\"DocParagraph.php.html#18\">DocParagraph<\/a>"],[100,0,"<a href=\"DocParagraphBookmark.php.html#23\">DocParagraphBookmark<\/a>"],[100,0,"<a href=\"DocTemplate.php.html#21\">DocTemplate<\/a>"],[100,0,"<a href=\"DocTemplateBookmark.php.html#23\">DocTemplateBookmark<\/a>"],[100,4,"<a href=\"Document.php.html#32\">Document<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(key, y, e, graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,1,"<a href=\"AbstractDocBookmark.php.html#122\">AbstractDocBookmark::__construct<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#127\">AbstractDocBookmark::initCollections<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#138\">AbstractDocBookmark::setCreatedBy<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#150\">AbstractDocBookmark::getCreatedBy<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#161\">AbstractDocBookmark::setCreatedOn<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#173\">AbstractDocBookmark::getCreatedOn<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#184\">AbstractDocBookmark::setDescription<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#196\">AbstractDocBookmark::getDescription<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#207\">AbstractDocBookmark::setId<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#219\">AbstractDocBookmark::getId<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#230\">AbstractDocBookmark::setLastModifiedBy<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#242\">AbstractDocBookmark::getLastModifiedBy<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#253\">AbstractDocBookmark::setLastModifiedOn<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#265\">AbstractDocBookmark::getLastModifiedOn<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#276\">AbstractDocBookmark::setName<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#288\">AbstractDocBookmark::getName<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#299\">AbstractDocBookmark::setVersion<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#311\">AbstractDocBookmark::getVersion<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#322\">AbstractDocBookmark::setDocParagraphBookmarks<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#334\">AbstractDocBookmark::getDocParagraphBookmarks<\/a>"],[100,3,"<a href=\"AbstractDocBookmark.php.html#345\">AbstractDocBookmark::addDocParagraphBookmarks<\/a>"],[100,2,"<a href=\"AbstractDocBookmark.php.html#367\">AbstractDocBookmark::removeDocParagraphBookmarks<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#381\">AbstractDocBookmark::setCreatedOnBeforePersist<\/a>"],[100,1,"<a href=\"AbstractDocBookmark.php.html#391\">AbstractDocBookmark::setLastModifiedOnBeforeUpdate<\/a>"],[100,4,"<a href=\"AbstractDocBookmark.php.html#401\">AbstractDocBookmark::clearProperties<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#111\">AbstractDocParagraph::setCreatedBy<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#123\">AbstractDocParagraph::getCreatedBy<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#134\">AbstractDocParagraph::setCreatedOn<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#146\">AbstractDocParagraph::getCreatedOn<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#157\">AbstractDocParagraph::setId<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#169\">AbstractDocParagraph::getId<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#180\">AbstractDocParagraph::setLastModifiedBy<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#192\">AbstractDocParagraph::getLastModifiedBy<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#203\">AbstractDocParagraph::setLastModifiedOn<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#215\">AbstractDocParagraph::getLastModifiedOn<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#226\">AbstractDocParagraph::setParaText<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#238\">AbstractDocParagraph::getParaText<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#249\">AbstractDocParagraph::setParaTitle<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#261\">AbstractDocParagraph::getParaTitle<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#272\">AbstractDocParagraph::setVersion<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#284\">AbstractDocParagraph::getVersion<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#294\">AbstractDocParagraph::setCreatedOnBeforePersist<\/a>"],[100,1,"<a href=\"AbstractDocParagraph.php.html#304\">AbstractDocParagraph::setLastModifiedOnBeforeUpdate<\/a>"],[77.777777777778,4,"<a href=\"AbstractDocParagraph.php.html#314\">AbstractDocParagraph::clearProperties<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#123\">AbstractDocParagraphBookmark::setCreatedBy<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#135\">AbstractDocParagraphBookmark::getCreatedBy<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#146\">AbstractDocParagraphBookmark::setCreatedOn<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#158\">AbstractDocParagraphBookmark::getCreatedOn<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#169\">AbstractDocParagraphBookmark::setDocBookmark<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#181\">AbstractDocParagraphBookmark::getDocBookmark<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#192\">AbstractDocParagraphBookmark::setDocParagraph<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#204\">AbstractDocParagraphBookmark::getDocParagraph<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#215\">AbstractDocParagraphBookmark::setId<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#227\">AbstractDocParagraphBookmark::getId<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#238\">AbstractDocParagraphBookmark::setLastModifiedBy<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#250\">AbstractDocParagraphBookmark::getLastModifiedBy<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#261\">AbstractDocParagraphBookmark::setLastModifiedOn<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#273\">AbstractDocParagraphBookmark::getLastModifiedOn<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#284\">AbstractDocParagraphBookmark::setVersion<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#296\">AbstractDocParagraphBookmark::getVersion<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#306\">AbstractDocParagraphBookmark::setCreatedOnBeforePersist<\/a>"],[100,1,"<a href=\"AbstractDocParagraphBookmark.php.html#316\">AbstractDocParagraphBookmark::setLastModifiedOnBeforeUpdate<\/a>"],[77.777777777778,4,"<a href=\"AbstractDocParagraphBookmark.php.html#326\">AbstractDocParagraphBookmark::clearProperties<\/a>"],[0,1,"<a href=\"AbstractDocTemplate.php.html#168\">AbstractDocTemplate::__construct<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#173\">AbstractDocTemplate::initCollections<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#184\">AbstractDocTemplate::setCategory<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#196\">AbstractDocTemplate::getCategory<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#207\">AbstractDocTemplate::setCreatedBy<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#219\">AbstractDocTemplate::getCreatedBy<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#230\">AbstractDocTemplate::setCreatedOn<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#242\">AbstractDocTemplate::getCreatedOn<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#253\">AbstractDocTemplate::setDescription<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#265\">AbstractDocTemplate::getDescription<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#276\">AbstractDocTemplate::setDocument<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#288\">AbstractDocTemplate::getDocument<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#299\">AbstractDocTemplate::setId<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#311\">AbstractDocTemplate::getId<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#322\">AbstractDocTemplate::setIsNi<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#334\">AbstractDocTemplate::getIsNi<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#345\">AbstractDocTemplate::setLastModifiedBy<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#357\">AbstractDocTemplate::getLastModifiedBy<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#368\">AbstractDocTemplate::setLastModifiedOn<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#380\">AbstractDocTemplate::getLastModifiedOn<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#391\">AbstractDocTemplate::setSubCategory<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#403\">AbstractDocTemplate::getSubCategory<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#414\">AbstractDocTemplate::setSuppressFromOp<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#426\">AbstractDocTemplate::getSuppressFromOp<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#437\">AbstractDocTemplate::setVersion<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#449\">AbstractDocTemplate::getVersion<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#460\">AbstractDocTemplate::setDocTemplateBookmarks<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#472\">AbstractDocTemplate::getDocTemplateBookmarks<\/a>"],[100,3,"<a href=\"AbstractDocTemplate.php.html#483\">AbstractDocTemplate::addDocTemplateBookmarks<\/a>"],[100,2,"<a href=\"AbstractDocTemplate.php.html#505\">AbstractDocTemplate::removeDocTemplateBookmarks<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#519\">AbstractDocTemplate::setCreatedOnBeforePersist<\/a>"],[100,1,"<a href=\"AbstractDocTemplate.php.html#529\">AbstractDocTemplate::setLastModifiedOnBeforeUpdate<\/a>"],[100,4,"<a href=\"AbstractDocTemplate.php.html#539\">AbstractDocTemplate::clearProperties<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#123\">AbstractDocTemplateBookmark::setCreatedBy<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#135\">AbstractDocTemplateBookmark::getCreatedBy<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#146\">AbstractDocTemplateBookmark::setCreatedOn<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#158\">AbstractDocTemplateBookmark::getCreatedOn<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#169\">AbstractDocTemplateBookmark::setDocBookmark<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#181\">AbstractDocTemplateBookmark::getDocBookmark<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#192\">AbstractDocTemplateBookmark::setDocTemplate<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#204\">AbstractDocTemplateBookmark::getDocTemplate<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#215\">AbstractDocTemplateBookmark::setId<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#227\">AbstractDocTemplateBookmark::getId<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#238\">AbstractDocTemplateBookmark::setLastModifiedBy<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#250\">AbstractDocTemplateBookmark::getLastModifiedBy<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#261\">AbstractDocTemplateBookmark::setLastModifiedOn<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#273\">AbstractDocTemplateBookmark::getLastModifiedOn<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#284\">AbstractDocTemplateBookmark::setVersion<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#296\">AbstractDocTemplateBookmark::getVersion<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#306\">AbstractDocTemplateBookmark::setCreatedOnBeforePersist<\/a>"],[100,1,"<a href=\"AbstractDocTemplateBookmark.php.html#316\">AbstractDocTemplateBookmark::setLastModifiedOnBeforeUpdate<\/a>"],[77.777777777778,4,"<a href=\"AbstractDocTemplateBookmark.php.html#326\">AbstractDocTemplateBookmark::clearProperties<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#385\">AbstractDocument::__construct<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#390\">AbstractDocument::initCollections<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#402\">AbstractDocument::setApplication<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#414\">AbstractDocument::getApplication<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#425\">AbstractDocument::setBusReg<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#437\">AbstractDocument::getBusReg<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#448\">AbstractDocument::setCase<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#460\">AbstractDocument::getCase<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#471\">AbstractDocument::setCategory<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#483\">AbstractDocument::getCategory<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#494\">AbstractDocument::setCreatedBy<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#506\">AbstractDocument::getCreatedBy<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#517\">AbstractDocument::setCreatedOn<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#529\">AbstractDocument::getCreatedOn<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#540\">AbstractDocument::setDeletedDate<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#552\">AbstractDocument::getDeletedDate<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#563\">AbstractDocument::setDescription<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#575\">AbstractDocument::getDescription<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#586\">AbstractDocument::setFilename<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#598\">AbstractDocument::getFilename<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#609\">AbstractDocument::setId<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#621\">AbstractDocument::getId<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#632\">AbstractDocument::setIdentifier<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#644\">AbstractDocument::getIdentifier<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#655\">AbstractDocument::setIrfoOrganisation<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#667\">AbstractDocument::getIrfoOrganisation<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#678\">AbstractDocument::setIsExternal<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#690\">AbstractDocument::getIsExternal<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#701\">AbstractDocument::setIsReadOnly<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#713\">AbstractDocument::getIsReadOnly<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#724\">AbstractDocument::setIsScan<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#736\">AbstractDocument::getIsScan<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#747\">AbstractDocument::setIssuedDate<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#759\">AbstractDocument::getIssuedDate<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#770\">AbstractDocument::setLastModifiedBy<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#782\">AbstractDocument::getLastModifiedBy<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#793\">AbstractDocument::setLastModifiedOn<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#805\">AbstractDocument::getLastModifiedOn<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#816\">AbstractDocument::setLicence<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#828\">AbstractDocument::getLicence<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#839\">AbstractDocument::setOlbsKey<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#851\">AbstractDocument::getOlbsKey<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#862\">AbstractDocument::setOlbsType<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#874\">AbstractDocument::getOlbsType<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#885\">AbstractDocument::setOperatingCentre<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#897\">AbstractDocument::getOperatingCentre<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#908\">AbstractDocument::setOpposition<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#920\">AbstractDocument::getOpposition<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#931\">AbstractDocument::setSize<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#943\">AbstractDocument::getSize<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#954\">AbstractDocument::setSubCategory<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#966\">AbstractDocument::getSubCategory<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#977\">AbstractDocument::setSubmission<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#989\">AbstractDocument::getSubmission<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#1000\">AbstractDocument::setTrafficArea<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#1012\">AbstractDocument::getTrafficArea<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#1023\">AbstractDocument::setTransportManager<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#1035\">AbstractDocument::getTransportManager<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#1046\">AbstractDocument::setVersion<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#1058\">AbstractDocument::getVersion<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#1069\">AbstractDocument::setContinuationDetails<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#1081\">AbstractDocument::getContinuationDetails<\/a>"],[100,3,"<a href=\"AbstractDocument.php.html#1092\">AbstractDocument::addContinuationDetails<\/a>"],[100,2,"<a href=\"AbstractDocument.php.html#1114\">AbstractDocument::removeContinuationDetails<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#1129\">AbstractDocument::setTemplates<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#1141\">AbstractDocument::getTemplates<\/a>"],[100,3,"<a href=\"AbstractDocument.php.html#1152\">AbstractDocument::addTemplates<\/a>"],[100,2,"<a href=\"AbstractDocument.php.html#1174\">AbstractDocument::removeTemplates<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#1188\">AbstractDocument::setCreatedOnBeforePersist<\/a>"],[100,1,"<a href=\"AbstractDocument.php.html#1198\">AbstractDocument::setLastModifiedOnBeforeUpdate<\/a>"],[100,4,"<a href=\"AbstractDocument.php.html#1208\">AbstractDocument::clearProperties<\/a>"],[100,1,"<a href=\"Document.php.html#34\">Document::updateDocument<\/a>"],[100,1,"<a href=\"Document.php.html#58\">Document::__construct<\/a>"],[100,2,"<a href=\"Document.php.html#70\">Document::setCreatedOnBeforePersist<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

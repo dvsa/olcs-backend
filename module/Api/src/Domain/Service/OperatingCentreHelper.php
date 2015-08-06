@@ -108,7 +108,7 @@ class OperatingCentreHelper implements FactoryInterface
      * @param Application|Licence $entity
      * @param $command
      */
-    protected function validateTrafficArea($entity, $command)
+    public function validateTrafficArea($entity, $command)
     {
         $address = $command->getAddress();
 
@@ -152,18 +152,6 @@ class OperatingCentreHelper implements FactoryInterface
                 )
             );
         }
-    }
-
-    /**
-     * @param $postcode
-     * @return \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
-     */
-    private function fetchTrafficAreaByPostcode($postcode)
-    {
-        return $this->addressService->fetchTrafficAreaByPostcode(
-            $postcode,
-            $this->adminAreaTrafficAreaRepo
-        );
     }
 
     /**
@@ -244,6 +232,11 @@ class OperatingCentreHelper implements FactoryInterface
         $repo->save($ocLink);
     }
 
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
     private function addMessage($field, $messageCode, $message = null)
     {
         if ($message === null) {
@@ -251,5 +244,17 @@ class OperatingCentreHelper implements FactoryInterface
         }
 
         $this->messages[$field][] = [$messageCode => $message];
+    }
+
+    /**
+     * @param $postcode
+     * @return \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
+     */
+    private function fetchTrafficAreaByPostcode($postcode)
+    {
+        return $this->addressService->fetchTrafficAreaByPostcode(
+            $postcode,
+            $this->adminAreaTrafficAreaRepo
+        );
     }
 }

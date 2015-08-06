@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /Users/rob/Development/Valtech/OLCS/olcs-backend/module/Api/src/Domain/Query</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../../css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../../../css/nv.d3.min.css" rel="stylesheet">
+  <link href="../../../../css/style.css" rel="stylesheet">
+  <!--[if lt IE 9]>
+  <script src="../../../../js/html5shiv.min.js"></script>
+  <script src="../../../../js/respond.min.js"></script>
+  <![endif]-->
+ </head>
+ <body>
+  <header>
+   <div class="container">
+    <div class="row">
+     <div class="col-md-12">
+      <ol class="breadcrumb">
+        <li><a href="../../../../index.html">/Users/rob/Development/Valtech/OLCS/olcs-backend/module</a></li>
+        <li><a href="../../../index.html">Api</a></li>
+        <li><a href="../../index.html">src</a></li>
+        <li><a href="../index.html">Domain</a></li>
+        <li><a href="index.html">Query</a></li>
+        <li class="active">(Dashboard)</li>
+
+      </ol>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Bookmark/PublicationBundle.php.html#13">PublicationBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/PsvDiscBundle.php.html#13">PsvDiscBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/PublicationLatestByTaAndTypeBundle.php.html#10">PublicationLatestByTaAndTypeBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/StatementBundle.php.html#13">StatementBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/UserBundle.php.html#13">UserBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/TransportManagerBundle.php.html#13">TransportManagerBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/BusRegBundle.php.html#13">BusRegBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/PiVenueBundle.php.html#11">PiVenueBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/FeeBundle.php.html#13">FeeBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/DocParagraphBundle.php.html#13">DocParagraphBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/CommunityLicBundle.php.html#13">CommunityLicBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/GoodsDiscBundle.php.html#13">GoodsDiscBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/LicenceBundle.php.html#13">LicenceBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/PiHearingBundle.php.html#13">PiHearingBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/OppositionBundle.php.html#13">OppositionBundle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/PreviousHearingBundle.php.html#10">PreviousHearingBundle</a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Bookmark/PreviousPublication.php.html#10">PreviousPublication</a></td><td class="text-right">75%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Bookmark/PublicationLatestByTaAndTypeBundle.php.html#19"><abbr title="PublicationLatestByTaAndTypeBundle::getPubType">getPubType</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/PublicationBundle.php.html#22"><abbr title="PublicationBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/PsvDiscBundle.php.html#22"><abbr title="PsvDiscBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/PublicationLatestByTaAndTypeBundle.php.html#27"><abbr title="PublicationLatestByTaAndTypeBundle::getTrafficArea">getTrafficArea</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/PublicationLatestByTaAndTypeBundle.php.html#35"><abbr title="PublicationLatestByTaAndTypeBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/UserBundle.php.html#22"><abbr title="UserBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/TransportManagerBundle.php.html#22"><abbr title="TransportManagerBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/StatementBundle.php.html#22"><abbr title="StatementBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/PreviousPublication.php.html#44"><abbr title="PreviousPublication::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/PreviousHearingBundle.php.html#35"><abbr title="PreviousHearingBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/FeeBundle.php.html#22"><abbr title="FeeBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/DocParagraphBundle.php.html#22"><abbr title="DocParagraphBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/CommunityLicBundle.php.html#22"><abbr title="CommunityLicBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/GoodsDiscBundle.php.html#22"><abbr title="GoodsDiscBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/LicenceBundle.php.html#22"><abbr title="LicenceBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/PiVenueBundle.php.html#20"><abbr title="PiVenueBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/PiHearingBundle.php.html#22"><abbr title="PiHearingBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/OppositionBundle.php.html#22"><abbr title="OppositionBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Bookmark/BusRegBundle.php.html#22"><abbr title="BusRegBundle::getBundle">getBundle</a></a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="http://github.com/sebastianbergmann/php-code-coverage" target="_top">PHP_CodeCoverage 2.1.9</a> using <a href="http://php.net/" target="_top">PHP 5.5.24</a> and <a href="http://phpunit.de/">PHPUnit 4.7.7</a> at Thu Aug 6 10:16:50 BST 2015.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../../../../js/jquery.min.js" type="text/javascript"></script>
+  <script src="../../../../js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="../../../../js/holder.min.js" type="text/javascript"></script>
+  <script src="../../../../js/d3.min.js" type="text/javascript"></script>
+  <script src="../../../../js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([15,0,0,0,0,0,0,1,1,0,0,16], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([19,0,0,0,0,0,0,0,0,0,0,28], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(key, y, e, graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[100,1,"<a href=\"Bookmark\/ApplicationBundle.php.html#13\">ApplicationBundle<\/a>"],[0,1,"<a href=\"Bookmark\/BusRegBundle.php.html#13\">BusRegBundle<\/a>"],[0,1,"<a href=\"Bookmark\/CommunityLicBundle.php.html#13\">CommunityLicBundle<\/a>"],[100,2,"<a href=\"Bookmark\/ConditionsUndertakings.php.html#13\">ConditionsUndertakings<\/a>"],[0,1,"<a href=\"Bookmark\/DocParagraphBundle.php.html#13\">DocParagraphBundle<\/a>"],[0,1,"<a href=\"Bookmark\/FeeBundle.php.html#13\">FeeBundle<\/a>"],[100,3,"<a href=\"Bookmark\/FstandingAdditionalVeh.php.html#12\">FstandingAdditionalVeh<\/a>"],[0,1,"<a href=\"Bookmark\/GoodsDiscBundle.php.html#13\">GoodsDiscBundle<\/a>"],[100,2,"<a href=\"Bookmark\/InterimConditionsUndertakings.php.html#13\">InterimConditionsUndertakings<\/a>"],[100,0,"<a href=\"Bookmark\/InterimOperatingCentres.php.html#13\">InterimOperatingCentres<\/a>"],[100,0,"<a href=\"Bookmark\/InterimUnlinkedTm.php.html#13\">InterimUnlinkedTm<\/a>"],[0,1,"<a href=\"Bookmark\/LicenceBundle.php.html#13\">LicenceBundle<\/a>"],[0,1,"<a href=\"Bookmark\/OppositionBundle.php.html#13\">OppositionBundle<\/a>"],[0,1,"<a href=\"Bookmark\/PiHearingBundle.php.html#13\">PiHearingBundle<\/a>"],[0,1,"<a href=\"Bookmark\/PiVenueBundle.php.html#11\">PiVenueBundle<\/a>"],[66.666666666667,3,"<a href=\"Bookmark\/PreviousHearingBundle.php.html#10\">PreviousHearingBundle<\/a>"],[75,4,"<a href=\"Bookmark\/PreviousPublication.php.html#10\">PreviousPublication<\/a>"],[100,1,"<a href=\"Bookmark\/PreviousPublicationByApplication.php.html#8\">PreviousPublicationByApplication<\/a>"],[100,1,"<a href=\"Bookmark\/PreviousPublicationByLicence.php.html#8\">PreviousPublicationByLicence<\/a>"],[100,1,"<a href=\"Bookmark\/PreviousPublicationByPi.php.html#8\">PreviousPublicationByPi<\/a>"],[0,1,"<a href=\"Bookmark\/PsvDiscBundle.php.html#13\">PsvDiscBundle<\/a>"],[0,1,"<a href=\"Bookmark\/PublicationBundle.php.html#13\">PublicationBundle<\/a>"],[0,3,"<a href=\"Bookmark\/PublicationLatestByTaAndTypeBundle.php.html#10\">PublicationLatestByTaAndTypeBundle<\/a>"],[100,2,"<a href=\"Bookmark\/PublicationLinkBundle.php.html#12\">PublicationLinkBundle<\/a>"],[0,1,"<a href=\"Bookmark\/StatementBundle.php.html#13\">StatementBundle<\/a>"],[100,4,"<a href=\"Bookmark\/TotalContFee.php.html#12\">TotalContFee<\/a>"],[0,1,"<a href=\"Bookmark\/TransportManagerBundle.php.html#13\">TransportManagerBundle<\/a>"],[100,2,"<a href=\"Bookmark\/Unpublished.php.html#10\">Unpublished<\/a>"],[100,1,"<a href=\"Bookmark\/UnpublishedApplication.php.html#8\">UnpublishedApplication<\/a>"],[100,1,"<a href=\"Bookmark\/UnpublishedBusReg.php.html#8\">UnpublishedBusReg<\/a>"],[100,1,"<a href=\"Bookmark\/UnpublishedPi.php.html#8\">UnpublishedPi<\/a>"],[0,1,"<a href=\"Bookmark\/UserBundle.php.html#13\">UserBundle<\/a>"],[100,1,"<a href=\"Queue\/NextItem.php.html#12\">NextItem<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(key, y, e, graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[100,1,"<a href=\"Bookmark\/ApplicationBundle.php.html#22\">ApplicationBundle::getBundle<\/a>"],[0,1,"<a href=\"Bookmark\/BusRegBundle.php.html#22\">BusRegBundle::getBundle<\/a>"],[0,1,"<a href=\"Bookmark\/CommunityLicBundle.php.html#22\">CommunityLicBundle::getBundle<\/a>"],[100,1,"<a href=\"Bookmark\/ConditionsUndertakings.php.html#24\">ConditionsUndertakings::getAttachedTo<\/a>"],[100,1,"<a href=\"Bookmark\/ConditionsUndertakings.php.html#32\">ConditionsUndertakings::getConditionType<\/a>"],[0,1,"<a href=\"Bookmark\/DocParagraphBundle.php.html#22\">DocParagraphBundle::getBundle<\/a>"],[0,1,"<a href=\"Bookmark\/FeeBundle.php.html#22\">FeeBundle::getBundle<\/a>"],[100,1,"<a href=\"Bookmark\/FstandingAdditionalVeh.php.html#23\">FstandingAdditionalVeh::getGoodsOrPsv<\/a>"],[100,1,"<a href=\"Bookmark\/FstandingAdditionalVeh.php.html#31\">FstandingAdditionalVeh::getLicenceType<\/a>"],[100,1,"<a href=\"Bookmark\/FstandingAdditionalVeh.php.html#39\">FstandingAdditionalVeh::getEffectiveFrom<\/a>"],[0,1,"<a href=\"Bookmark\/GoodsDiscBundle.php.html#22\">GoodsDiscBundle::getBundle<\/a>"],[100,1,"<a href=\"Bookmark\/InterimConditionsUndertakings.php.html#24\">InterimConditionsUndertakings::getAttachedTo<\/a>"],[100,1,"<a href=\"Bookmark\/InterimConditionsUndertakings.php.html#32\">InterimConditionsUndertakings::getConditionType<\/a>"],[0,1,"<a href=\"Bookmark\/LicenceBundle.php.html#22\">LicenceBundle::getBundle<\/a>"],[0,1,"<a href=\"Bookmark\/OppositionBundle.php.html#22\">OppositionBundle::getBundle<\/a>"],[0,1,"<a href=\"Bookmark\/PiHearingBundle.php.html#22\">PiHearingBundle::getBundle<\/a>"],[0,1,"<a href=\"Bookmark\/PiVenueBundle.php.html#20\">PiVenueBundle::getBundle<\/a>"],[100,1,"<a href=\"Bookmark\/PreviousHearingBundle.php.html#19\">PreviousHearingBundle::getHearingDate<\/a>"],[100,1,"<a href=\"Bookmark\/PreviousHearingBundle.php.html#27\">PreviousHearingBundle::getPi<\/a>"],[0,1,"<a href=\"Bookmark\/PreviousHearingBundle.php.html#35\">PreviousHearingBundle::getBundle<\/a>"],[100,1,"<a href=\"Bookmark\/PreviousPublication.php.html#20\">PreviousPublication::getTrafficArea<\/a>"],[100,1,"<a href=\"Bookmark\/PreviousPublication.php.html#28\">PreviousPublication::getPubType<\/a>"],[100,1,"<a href=\"Bookmark\/PreviousPublication.php.html#36\">PreviousPublication::getPublicationNo<\/a>"],[0,1,"<a href=\"Bookmark\/PreviousPublication.php.html#44\">PreviousPublication::getBundle<\/a>"],[100,1,"<a href=\"Bookmark\/PreviousPublicationByApplication.php.html#15\">PreviousPublicationByApplication::getApplication<\/a>"],[100,1,"<a href=\"Bookmark\/PreviousPublicationByLicence.php.html#15\">PreviousPublicationByLicence::getLicence<\/a>"],[100,1,"<a href=\"Bookmark\/PreviousPublicationByPi.php.html#15\">PreviousPublicationByPi::getPi<\/a>"],[0,1,"<a href=\"Bookmark\/PsvDiscBundle.php.html#22\">PsvDiscBundle::getBundle<\/a>"],[0,1,"<a href=\"Bookmark\/PublicationBundle.php.html#22\">PublicationBundle::getBundle<\/a>"],[0,1,"<a href=\"Bookmark\/PublicationLatestByTaAndTypeBundle.php.html#19\">PublicationLatestByTaAndTypeBundle::getPubType<\/a>"],[0,1,"<a href=\"Bookmark\/PublicationLatestByTaAndTypeBundle.php.html#27\">PublicationLatestByTaAndTypeBundle::getTrafficArea<\/a>"],[0,1,"<a href=\"Bookmark\/PublicationLatestByTaAndTypeBundle.php.html#35\">PublicationLatestByTaAndTypeBundle::getBundle<\/a>"],[100,1,"<a href=\"Bookmark\/PublicationLinkBundle.php.html#21\">PublicationLinkBundle::getBusReg<\/a>"],[100,1,"<a href=\"Bookmark\/PublicationLinkBundle.php.html#29\">PublicationLinkBundle::getBundle<\/a>"],[0,1,"<a href=\"Bookmark\/StatementBundle.php.html#22\">StatementBundle::getBundle<\/a>"],[100,1,"<a href=\"Bookmark\/TotalContFee.php.html#25\">TotalContFee::getGoodsOrPsv<\/a>"],[100,1,"<a href=\"Bookmark\/TotalContFee.php.html#33\">TotalContFee::getLicenceType<\/a>"],[100,1,"<a href=\"Bookmark\/TotalContFee.php.html#41\">TotalContFee::getTrafficArea<\/a>"],[100,1,"<a href=\"Bookmark\/TotalContFee.php.html#49\">TotalContFee::getEffectiveFrom<\/a>"],[0,1,"<a href=\"Bookmark\/TransportManagerBundle.php.html#22\">TransportManagerBundle::getBundle<\/a>"],[100,1,"<a href=\"Bookmark\/Unpublished.php.html#18\">Unpublished::getPublicationSection<\/a>"],[100,1,"<a href=\"Bookmark\/Unpublished.php.html#26\">Unpublished::getPublication<\/a>"],[100,1,"<a href=\"Bookmark\/UnpublishedApplication.php.html#15\">UnpublishedApplication::getApplication<\/a>"],[100,1,"<a href=\"Bookmark\/UnpublishedBusReg.php.html#15\">UnpublishedBusReg::getBusReg<\/a>"],[100,1,"<a href=\"Bookmark\/UnpublishedPi.php.html#15\">UnpublishedPi::getPi<\/a>"],[0,1,"<a href=\"Bookmark\/UserBundle.php.html#22\">UserBundle::getBundle<\/a>"],[100,1,"<a href=\"Queue\/NextItem.php.html#19\">NextItem::getType<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

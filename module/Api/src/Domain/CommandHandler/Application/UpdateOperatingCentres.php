@@ -138,9 +138,7 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
             }
         }
 
-        if ($application->isVariation()) {
-            $this->updateHelper->validateEnforcementArea($application, $command);
-        }
+        $this->updateHelper->validateEnforcementArea($application, $command);
 
         if (!$command->getPartial()) {
             if ($application->isPsv()) {

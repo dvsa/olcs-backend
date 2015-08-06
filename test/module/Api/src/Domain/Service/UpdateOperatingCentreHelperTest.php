@@ -70,14 +70,50 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
     /**
      * @dataProvider validatePsvProvider
      */
-    public function testValidatePsv($canHaveLargeVehicles, $data, $expected)
+    public function testValidatePsv($canHaveLargeVehicles, $isRestricted, $data, $expected)
     {
         $entity = m::mock();
         $entity->shouldReceive('canHaveLargeVehicles')->andReturn($canHaveLargeVehicles);
+        $entity->shouldReceive('isRestricted')->andReturn($isRestricted);
 
         $this->sut->validatePsv($entity, UpdateOperatingCentres::create($data));
 
         $this->assertEquals($expected, $this->sut->getMessages());
+    }
+
+    public function testValidateEnforcementAreaValid()
+    {
+        $data = [
+            'enforcementArea' => null
+        ];
+
+        $entity = m::mock();
+        $entity->shouldReceive('getTrafficArea')
+            ->andReturn(null);
+
+        $command = UpdateOperatingCentres::create($data);
+
+        $this->sut->validateEnforcementArea($entity, $command);
+
+        $this->assertEquals([], $this->sut->getMessages());
+    }
+
+    public function testValidateEnforcementArea()
+    {
+        $data = [
+            'enforcementArea' => null
+        ];
+
+        $entity = m::mock();
+        $entity->shouldReceive('getTrafficArea')->andReturn('anything');
+
+        $command = UpdateOperatingCentres::create($data);
+
+        $this->sut->validateEnforcementArea($entity, $command);
+
+        $messages = ['enforcementArea' => [['ERR_OC_EA_EMPTY' => 'ERR_OC_EA_EMPTY']]];
+
+        $this->assertEquals($messages, $this->sut->getMessages());
     }
 
     public function validateTotalAuthVehiclesProvider()
@@ -91,21 +127,6 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
                 ],
                 [
                     'totAuthVehicles' => [
-                        ['ERR_OC_V_4' => 'ERR_OC_V_4'],
-                    ]
-                ]
-            ],
-            'Restricted, too many vehicles, No OCs' => [
-                true,
-                [
-                    'totAuthVehicles' => 3
-                ],
-                [
-                    'noOfOperatingCentres' => 0
-                ],
-                [
-                    'totAuthVehicles' => [
-                        ['ERR_OC_R_1' => 'ERR_OC_R_1'],
                         ['ERR_OC_V_4' => 'ERR_OC_V_4'],
                     ]
                 ]
@@ -299,6 +320,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
         return [
             'Valid Sum' => [
                 false,
+                false,
                 [
                     'totAuthSmallVehicles' => 3,
                     'totAuthMediumVehicles' => 3,
@@ -309,6 +331,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
             ],
             'Can have large, incorrect sum' => [
                 true,
+                false,
                 [
                     'totAuthSmallVehicles' => 3,
                     'totAuthMediumVehicles' => 3,
@@ -321,7 +344,23 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
                     ]
                 ]
             ],
+            'Restricted too many' => [
+                true,
+                true,
+                [
+                    'totAuthSmallVehicles' => 3,
+                    'totAuthMediumVehicles' => 3,
+                    'totAuthLargeVehicles' => 3,
+                    'totAuthVehicles' => 9,
+                ],
+                [
+                    'totAuthVehicles' => [
+                        ['ERR_OC_R_1' => 'ERR_OC_R_1']
+                    ]
+                ]
+            ],
             'Cant have large, incorrect sum' => [
+                false,
                 false,
                 [
                     'totAuthSmallVehicles' => 3,

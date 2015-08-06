@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /Users/rob/Development/Valtech/OLCS/olcs-backend/module/Olcs/Db/src</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../../css/nv.d3.min.css" rel="stylesheet">
+  <link href="../../../css/style.css" rel="stylesheet">
+  <!--[if lt IE 9]>
+  <script src="../../../js/html5shiv.min.js"></script>
+  <script src="../../../js/respond.min.js"></script>
+  <![endif]-->
+ </head>
+ <body>
+  <header>
+   <div class="container">
+    <div class="row">
+     <div class="col-md-12">
+      <ol class="breadcrumb">
+        <li><a href="../../../index.html">/Users/rob/Development/Valtech/OLCS/olcs-backend/module</a></li>
+        <li><a href="../../index.html">Olcs</a></li>
+        <li><a href="../index.html">Db</a></li>
+        <li><a href="index.html">src</a></li>
+        <li class="active">(Dashboard)</li>
+
+      </ol>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Service/EntityManager/EntityManagerHelperFactory.php.html#18">EntityManagerHelperFactory</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Operator.php.html#16">Operator</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Person.php.html#16">Person</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#38">Paginator</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#22">Checklists</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/EntityManager/EntityManagerHelper.php.html#17">EntityManagerHelper</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/ContinuationDetail/ChecklistsController.php.html#18">ChecklistsController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContactDetails/PhoneContactsManager.php.html#14">PhoneContactsManager</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/OrganisationSearchController.php.html#18">OrganisationSearchController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContactDetails.php.html#14">ContactDetails</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Search/Search.php.html#16">Search</a></td><td class="text-right">37%</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#27">ServiceAbstract</a></td><td class="text-right">60%</td></tr>
+       <tr><td><a href="Service/Search/ClientFactory.php.html#15">ClientFactory</a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#23">AbstractBasicRestServerController</a></td><td class="text-right">68%</td></tr>
+       <tr><td><a href="Controller/SearchController.php.html#11">SearchController</a></td><td class="text-right">75%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Utility/Paginator.php.html#38">Paginator</a></td><td class="text-right">650</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#27">ServiceAbstract</a></td><td class="text-right">638</td></tr>
+       <tr><td><a href="Service/Person.php.html#16">Person</a></td><td class="text-right">462</td></tr>
+       <tr><td><a href="Service/Operator.php.html#16">Operator</a></td><td class="text-right">462</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#22">Checklists</a></td><td class="text-right">380</td></tr>
+       <tr><td><a href="Service/Search/Search.php.html#16">Search</a></td><td class="text-right">264</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#23">AbstractBasicRestServerController</a></td><td class="text-right">130</td></tr>
+       <tr><td><a href="Service/ContactDetails/PhoneContactsManager.php.html#14">PhoneContactsManager</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Controller/ContinuationDetail/ChecklistsController.php.html#18">ChecklistsController</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Service/ContactDetails.php.html#14">ContactDetails</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controller/SearchController.php.html#11">SearchController</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controller/OrganisationSearchController.php.html#18">OrganisationSearchController</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/Search/ClientFactory.php.html#15">ClientFactory</a></td><td class="text-right">3</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Service/Search/Search.php.html#203"><abbr title="Search::processFilters">processFilters</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Search/Search.php.html#183"><abbr title="Search::processResults">processResults</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Search/Search.php.html#56"><abbr title="Search::search">search</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#187"><abbr title="ServiceAbstract::getList">getList</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#229"><abbr title="ServiceAbstract::getRefDataValues">getRefDataValues</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#312"><abbr title="ServiceAbstract::replaceValues">replaceValues</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#250"><abbr title="ServiceAbstract::getStackedValues">getStackedValues</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Person.php.html#172"><abbr title="Person::formatConditionsFromOptions">formatConditionsFromOptions</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Person.php.html#155"><abbr title="Person::anonymous function">anonymous function</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Person.php.html#78"><abbr title="Person::getSortOrder">getSortOrder</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Person.php.html#25"><abbr title="Person::findPersons">findPersons</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Operator.php.html#133"><abbr title="Operator::anonymous function">anonymous function</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Person.php.html#93"><abbr title="Person::getOrderBy">getOrderBy</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Person.php.html#108"><abbr title="Person::formatOrderByClause">formatOrderByClause</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Person.php.html#140"><abbr title="Person::formatValue">formatValue</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Person.php.html#124"><abbr title="Person::formatWhereClause">formatWhereClause</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#322"><abbr title="ServiceAbstract::camelCaseMetaFields">camelCaseMetaFields</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#344"><abbr title="ServiceAbstract::isList">isList</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#138"><abbr title="Paginator::getIterator">getIterator</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#122"><abbr title="Paginator::count">count</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#113"><abbr title="Paginator::setUseOutputWalkers">setUseOutputWalkers</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#191"><abbr title="Paginator::cloneQuery">cloneQuery</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#212"><abbr title="Paginator::useOutputWalker">useOutputWalker</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#244"><abbr title="Paginator::getCountQuery">getCountQuery</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#227"><abbr title="Paginator::appendTreeWalker">appendTreeWalker</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#101"><abbr title="Paginator::getUseOutputWalkers">getUseOutputWalkers</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#91"><abbr title="Paginator::getFetchJoinCollection">getFetchJoinCollection</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#606"><abbr title="ServiceAbstract::pickValidKeys">pickValidKeys</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#426"><abbr title="ServiceAbstract::deleteList">deleteList</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#672"><abbr title="ServiceAbstract::getValidSearchFields">getValidSearchFields</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Utility/BundleQuery.php.html#48"><abbr title="BundleQuery::getRefDataReplacements">getRefDataReplacements</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#81"><abbr title="Paginator::getQuery">getQuery</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#66"><abbr title="Paginator::__construct">__construct</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Operator.php.html#125"><abbr title="Operator::formatValue">formatValue</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Operator.php.html#150"><abbr title="Operator::formatConditionsFromOptions">formatConditionsFromOptions</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContactDetails/PhoneContactsManager.php.html#32"><abbr title="PhoneContactsManager::getDataService">getDataService</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContactDetails/PhoneContactsManager.php.html#24"><abbr title="PhoneContactsManager::setDataService">setDataService</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContactDetails/PhoneContactsManager.php.html#43"><abbr title="PhoneContactsManager::createService">createService</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Operator.php.html#109"><abbr title="Operator::formatWhereClause">formatWhereClause</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContactDetails/PhoneContactsManager.php.html#81"><abbr title="PhoneContactsManager::anonymous function">anonymous function</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContactDetails/PhoneContactsManager.php.html#79"><abbr title="PhoneContactsManager::extractIds">extractIds</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContactDetails.php.html#16"><abbr title="ContactDetails::doUpdate">doUpdate</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/CompaniesHouse.php.html#387"><abbr title="CompaniesHouse::setProxy">setProxy</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#330"><abbr title="AbstractBasicRestServerController::findEntityClass">findEntityClass</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#258"><abbr title="AbstractBasicRestServerController::deleteList">deleteList</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/ContinuationDetail/ChecklistsController.php.html#20"><abbr title="ChecklistsController::create">create</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/ContinuationDetail/ChecklistsController.php.html#41"><abbr title="ChecklistsController::update">update</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/OrganisationSearchController.php.html#22"><abbr title="OrganisationSearchController::getList">getList</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#50"><abbr title="Checklists::generate">generate</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContactDetails/PhoneContactsManager.php.html#51"><abbr title="PhoneContactsManager::processPhoneContacts">processPhoneContacts</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/EntityManager/EntityManagerHelper.php.html#21"><abbr title="EntityManagerHelper::findByIds">findByIds</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Operator.php.html#25"><abbr title="Operator::findAllByLicence">findAllByLicence</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/EntityManager/EntityManagerHelper.php.html#32"><abbr title="EntityManagerHelper::getRefDataReference">getRefDataReference</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/EntityManager/EntityManagerHelperFactory.php.html#26"><abbr title="EntityManagerHelperFactory::createService">createService</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Operator.php.html#93"><abbr title="Operator::formatOrderByClause">formatOrderByClause</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#263"><abbr title="Checklists::getEntityManager">getEntityManager</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#238"><abbr title="Checklists::processResults">processResults</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#80"><abbr title="Checklists::update">update</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#159"><abbr title="Checklists::getLatestFeeType">getLatestFeeType</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#209"><abbr title="Checklists::shouldCreateFee">shouldCreateFee</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Operator.php.html#63"><abbr title="Operator::getSortOrder">getSortOrder</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Operator.php.html#78"><abbr title="Operator::getOrderBy">getOrderBy</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#358"><abbr title="ServiceAbstract::processReplacements">processReplacements</a></a></td><td class="text-right">8%</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#178"><abbr title="AbstractBasicRestServerController::updateOrPatch">updateOrPatch</a></a></td><td class="text-right">53%</td></tr>
+       <tr><td><a href="Service/Search/ClientFactory.php.html#24"><abbr title="ClientFactory::createService">createService</a></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#284"><abbr title="AbstractBasicRestServerController::getService">getService</a></a></td><td class="text-right">68%</td></tr>
+       <tr><td><a href="Service/CompaniesHouse.php.html#211"><abbr title="CompaniesHouse::setCredentials">setCredentials</a></a></td><td class="text-right">71%</td></tr>
+       <tr><td><a href="Service/CompaniesHouse.php.html#104"><abbr title="CompaniesHouse::getNewGateway">getNewGateway</a></a></td><td class="text-right">71%</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#316"><abbr title="AbstractBasicRestServerController::getLanguageFromHeader">getLanguageFromHeader</a></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Utility/ExpressionBuilder.php.html#154"><abbr title="ExpressionBuilder::isFieldForeignKey">isFieldForeignKey</a></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Controller/SearchController.php.html#13"><abbr title="SearchController::getList">getList</a></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Service/Search/Search.php.html#268"><abbr title="Search::setDateRanges">setDateRanges</a></a></td><td class="text-right">83%</td></tr>
+       <tr><td><a href="Controller/AbstractController.php.html#107"><abbr title="AbstractController::unknownError">unknownError</a></a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Utility/BundleQuery.php.html#62"><abbr title="BundleQuery::build">build</a></a></td><td class="text-right">86%</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#45"><abbr title="AbstractBasicRestServerController::create">create</a></a></td><td class="text-right">86%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Service/ServiceAbstract.php.html#250"><abbr title="ServiceAbstract::getStackedValues">getStackedValues</abbr></a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Service/Search/Search.php.html#56"><abbr title="Search::search">search</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#244"><abbr title="Paginator::getCountQuery">getCountQuery</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#80"><abbr title="Checklists::update">update</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Service/ContactDetails/PhoneContactsManager.php.html#51"><abbr title="PhoneContactsManager::processPhoneContacts">processPhoneContacts</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#178"><abbr title="AbstractBasicRestServerController::updateOrPatch">updateOrPatch</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#322"><abbr title="ServiceAbstract::camelCaseMetaFields">camelCaseMetaFields</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#50"><abbr title="Checklists::generate">generate</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Service/Person.php.html#140"><abbr title="Person::formatValue">formatValue</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#606"><abbr title="ServiceAbstract::pickValidKeys">pickValidKeys</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#138"><abbr title="Paginator::getIterator">getIterator</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Service/Operator.php.html#125"><abbr title="Operator::formatValue">formatValue</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#330"><abbr title="AbstractBasicRestServerController::findEntityClass">findEntityClass</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#358"><abbr title="ServiceAbstract::processReplacements">processReplacements</abbr></a></td><td class="text-right">16</td></tr>
+       <tr><td><a href="Utility/BundleQuery.php.html#62"><abbr title="BundleQuery::build">build</abbr></a></td><td class="text-right">14</td></tr>
+       <tr><td><a href="Service/Operator.php.html#150"><abbr title="Operator::formatConditionsFromOptions">formatConditionsFromOptions</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/Person.php.html#93"><abbr title="Person::getOrderBy">getOrderBy</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/Person.php.html#124"><abbr title="Person::formatWhereClause">formatWhereClause</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#229"><abbr title="ServiceAbstract::getRefDataValues">getRefDataValues</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#122"><abbr title="Paginator::count">count</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#426"><abbr title="ServiceAbstract::deleteList">deleteList</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/Operator.php.html#109"><abbr title="Operator::formatWhereClause">formatWhereClause</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/Search/Search.php.html#183"><abbr title="Search::processResults">processResults</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/Person.php.html#172"><abbr title="Person::formatConditionsFromOptions">formatConditionsFromOptions</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/Person.php.html#78"><abbr title="Person::getSortOrder">getSortOrder</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controller/ContinuationDetail/ChecklistsController.php.html#41"><abbr title="ChecklistsController::update">update</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controller/ContinuationDetail/ChecklistsController.php.html#20"><abbr title="ChecklistsController::create">create</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/Operator.php.html#63"><abbr title="Operator::getSortOrder">getSortOrder</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/ContactDetails.php.html#16"><abbr title="ContactDetails::doUpdate">doUpdate</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#258"><abbr title="AbstractBasicRestServerController::deleteList">deleteList</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/Operator.php.html#78"><abbr title="Operator::getOrderBy">getOrderBy</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#209"><abbr title="Checklists::shouldCreateFee">shouldCreateFee</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#45"><abbr title="AbstractBasicRestServerController::create">create</abbr></a></td><td class="text-right">10</td></tr>
+       <tr><td><a href="Controller/SearchController.php.html#13"><abbr title="SearchController::getList">getList</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/Search/Search.php.html#268"><abbr title="Search::setDateRanges">setDateRanges</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controller/OrganisationSearchController.php.html#22"><abbr title="OrganisationSearchController::getList">getList</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#672"><abbr title="ServiceAbstract::getValidSearchFields">getValidSearchFields</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#191"><abbr title="Paginator::cloneQuery">cloneQuery</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#66"><abbr title="Paginator::__construct">__construct</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#212"><abbr title="Paginator::useOutputWalker">useOutputWalker</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Utility/Paginator.php.html#227"><abbr title="Paginator::appendTreeWalker">appendTreeWalker</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/ServiceAbstract.php.html#312"><abbr title="ServiceAbstract::replaceValues">replaceValues</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/Search/Search.php.html#203"><abbr title="Search::processFilters">processFilters</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#263"><abbr title="Checklists::getEntityManager">getEntityManager</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/Person.php.html#108"><abbr title="Person::formatOrderByClause">formatOrderByClause</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/Operator.php.html#133"><abbr title="Operator::anonymous function">anonymous function</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#238"><abbr title="Checklists::processResults">processResults</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/Person.php.html#155"><abbr title="Person::anonymous function">anonymous function</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/ContinuationDetail/Checklists.php.html#159"><abbr title="Checklists::getLatestFeeType">getLatestFeeType</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/Operator.php.html#93"><abbr title="Operator::formatOrderByClause">formatOrderByClause</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#284"><abbr title="AbstractBasicRestServerController::getService">getService</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Service/Search/ClientFactory.php.html#24"><abbr title="ClientFactory::createService">createService</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Service/CompaniesHouse.php.html#211"><abbr title="CompaniesHouse::setCredentials">setCredentials</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Service/CompaniesHouse.php.html#104"><abbr title="CompaniesHouse::getNewGateway">getNewGateway</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Utility/ExpressionBuilder.php.html#154"><abbr title="ExpressionBuilder::isFieldForeignKey">isFieldForeignKey</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Controller/AbstractBasicRestServerController.php.html#316"><abbr title="AbstractBasicRestServerController::getLanguageFromHeader">getLanguageFromHeader</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Controller/AbstractController.php.html#107"><abbr title="AbstractController::unknownError">unknownError</abbr></a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="http://github.com/sebastianbergmann/php-code-coverage" target="_top">PHP_CodeCoverage 2.1.9</a> using <a href="http://php.net/" target="_top">PHP 5.5.24</a> and <a href="http://phpunit.de/">PHPUnit 4.7.7</a> at Thu Aug 6 10:16:50 BST 2015.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../../../js/jquery.min.js" type="text/javascript"></script>
+  <script src="../../../js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="../../../js/holder.min.js" type="text/javascript"></script>
+  <script src="../../../js/d3.min.js" type="text/javascript"></script>
+  <script src="../../../js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([10,0,0,0,1,0,0,3,1,0,4,25], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([62,1,0,0,0,0,1,2,5,4,1,139], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(key, y, e, graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[68.702290076336,51,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#23\">AbstractBasicRestServerController<\/a>"],[96,13,"<a href=\"Controller\/AbstractController.php.html#18\">AbstractController<\/a>"],[100,13,"<a href=\"Controller\/BookmarkSearchController.php.html#19\">BookmarkSearchController<\/a>"],[0,6,"<a href=\"Controller\/ContinuationDetail\/ChecklistsController.php.html#18\">ChecklistsController<\/a>"],[100,2,"<a href=\"Controller\/DefendantSearchController.php.html#18\">DefendantSearchController<\/a>"],[100,2,"<a href=\"Controller\/GenericController.php.html#20\">GenericController<\/a>"],[100,2,"<a href=\"Controller\/OperatorSearchController.php.html#19\">OperatorSearchController<\/a>"],[0,2,"<a href=\"Controller\/OrganisationSearchController.php.html#18\">OrganisationSearchController<\/a>"],[100,2,"<a href=\"Controller\/PersonLicenceSearchController.php.html#19\">PersonLicenceSearchController<\/a>"],[100,2,"<a href=\"Controller\/PersonSearchController.php.html#18\">PersonSearchController<\/a>"],[100,3,"<a href=\"Controller\/RefDataController.php.html#11\">RefDataController<\/a>"],[75,6,"<a href=\"Controller\/SearchController.php.html#11\">SearchController<\/a>"],[100,10,"<a href=\"Controller\/TradingNamesController.php.html#20\">TradingNamesController<\/a>"],[100,0,"<a href=\"Exceptions\/EntityNotFoundException.php.html#15\">EntityNotFoundException<\/a>"],[100,0,"<a href=\"Exceptions\/EntityTypeNotFoundException.php.html#15\">EntityTypeNotFoundException<\/a>"],[100,0,"<a href=\"Exceptions\/NoVersionException.php.html#15\">NoVersionException<\/a>"],[100,0,"<a href=\"Exceptions\/PaginationException.php.html#15\">PaginationException<\/a>"],[100,0,"<a href=\"Exceptions\/RestResponseException.php.html#15\">RestResponseException<\/a>"],[100,3,"<a href=\"Service\/BusReg.php.html#14\">BusReg<\/a>"],[100,10,"<a href=\"Service\/BusReg\/OtherServicesManager.php.html#14\">OtherServicesManager<\/a>"],[94.782608695652,46,"<a href=\"Service\/CompaniesHouse.php.html#24\">CompaniesHouse<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse\/Queue.php.html#18\">Queue<\/a>"],[0,3,"<a href=\"Service\/ContactDetails.php.html#14\">ContactDetails<\/a>"],[0,10,"<a href=\"Service\/ContactDetails\/PhoneContactsManager.php.html#14\">PhoneContactsManager<\/a>"],[0,19,"<a href=\"Service\/ContinuationDetail\/Checklists.php.html#22\">Checklists<\/a>"],[0,2,"<a href=\"Service\/EntityManager\/EntityManagerHelper.php.html#17\">EntityManagerHelper<\/a>"],[0,1,"<a href=\"Service\/EntityManager\/EntityManagerHelperFactory.php.html#18\">EntityManagerHelperFactory<\/a>"],[100,5,"<a href=\"Service\/Factory.php.html#18\">Factory<\/a>"],[100,0,"<a href=\"Service\/Generic.php.html#18\">Generic<\/a>"],[100,34,"<a href=\"Service\/Licence.php.html#17\">Licence<\/a>"],[0,21,"<a href=\"Service\/Operator.php.html#16\">Operator<\/a>"],[0,21,"<a href=\"Service\/Person.php.html#16\">Person<\/a>"],[66.666666666667,3,"<a href=\"Service\/Search\/ClientFactory.php.html#15\">ClientFactory<\/a>"],[37.614678899083,31,"<a href=\"Service\/Search\/Search.php.html#16\">Search<\/a>"],[100,1,"<a href=\"Service\/Search\/SearchFactory.php.html#12\">SearchFactory<\/a>"],[60.197368421053,93,"<a href=\"Service\/ServiceAbstract.php.html#27\">ServiceAbstract<\/a>"],[91.139240506329,27,"<a href=\"Utility\/BundleQuery.php.html#20\">BundleQuery<\/a>"],[98.717948717949,32,"<a href=\"Utility\/ExpressionBuilder.php.html#18\">ExpressionBuilder<\/a>"],[100,14,"<a href=\"Utility\/PaginateQuery.php.html#17\">PaginateQuery<\/a>"],[0,25,"<a href=\"Utility\/Paginator.php.html#38\">Paginator<\/a>"],[100,8,"<a href=\"Traits\/EntityManagerAwareTrait.php.html#16\">EntityManagerAwareTrait<\/a>"],[100,2,"<a href=\"Traits\/LanguageAwareTrait.php.html#14\">LanguageAwareTrait<\/a>"],[100,4,"<a href=\"Traits\/LoggerAwareTrait.php.html#18\">LoggerAwareTrait<\/a>"],[100,2,"<a href=\"Traits\/RestResponseTrait.php.html#17\">RestResponseTrait<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(key, y, e, graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[86.363636363636,10,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#45\">AbstractBasicRestServerController::create<\/a>"],[100,3,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#94\">AbstractBasicRestServerController::get<\/a>"],[100,3,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#121\">AbstractBasicRestServerController::getList<\/a>"],[100,1,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#149\">AbstractBasicRestServerController::update<\/a>"],[100,1,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#163\">AbstractBasicRestServerController::patch<\/a>"],[53.571428571429,10,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#178\">AbstractBasicRestServerController::updateOrPatch<\/a>"],[100,3,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#236\">AbstractBasicRestServerController::delete<\/a>"],[0,3,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#258\">AbstractBasicRestServerController::deleteList<\/a>"],[68.75,4,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#284\">AbstractBasicRestServerController::getService<\/a>"],[75,2,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#316\">AbstractBasicRestServerController::getLanguageFromHeader<\/a>"],[0,4,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#330\">AbstractBasicRestServerController::findEntityClass<\/a>"],[100,1,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#360\">AbstractBasicRestServerController::serviceExists<\/a>"],[100,1,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#372\">AbstractBasicRestServerController::setServiceName<\/a>"],[100,1,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#382\">AbstractBasicRestServerController::getDataFromQuery<\/a>"],[100,3,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#396\">AbstractBasicRestServerController::checkMethod<\/a>"],[100,1,"<a href=\"Controller\/AbstractBasicRestServerController.php.html#415\">AbstractBasicRestServerController::setAllowedMethods<\/a>"],[100,1,"<a href=\"Controller\/AbstractController.php.html#30\">AbstractController::onDispatch<\/a>"],[100,2,"<a href=\"Controller\/AbstractController.php.html#35\">AbstractController::doDispatch<\/a>"],[100,1,"<a href=\"Controller\/AbstractController.php.html#52\">AbstractController::notFoundAction<\/a>"],[100,1,"<a href=\"Controller\/AbstractController.php.html#62\">AbstractController::getControllerName<\/a>"],[100,1,"<a href=\"Controller\/AbstractController.php.html#71\">AbstractController::formatControllerName<\/a>"],[100,5,"<a href=\"Controller\/AbstractController.php.html#81\">AbstractController::formatDataFromJson<\/a>"],[85.714285714286,2,"<a href=\"Controller\/AbstractController.php.html#107\">AbstractController::unknownError<\/a>"],[100,4,"<a href=\"Controller\/BookmarkSearchController.php.html#23\">BookmarkSearchController::getList<\/a>"],[100,3,"<a href=\"Controller\/BookmarkSearchController.php.html#50\">BookmarkSearchController::getResultFromQuery<\/a>"],[100,4,"<a href=\"Controller\/BookmarkSearchController.php.html#68\">BookmarkSearchController::processQuery<\/a>"],[100,2,"<a href=\"Controller\/BookmarkSearchController.php.html#89\">BookmarkSearchController::getResult<\/a>"],[0,3,"<a href=\"Controller\/ContinuationDetail\/ChecklistsController.php.html#20\">ChecklistsController::create<\/a>"],[0,3,"<a href=\"Controller\/ContinuationDetail\/ChecklistsController.php.html#41\">ChecklistsController::update<\/a>"],[100,2,"<a href=\"Controller\/DefendantSearchController.php.html#28\">DefendantSearchController::getList<\/a>"],[100,1,"<a href=\"Controller\/GenericController.php.html#28\">GenericController::onDispatch<\/a>"],[100,1,"<a href=\"Controller\/GenericController.php.html#42\">GenericController::getDashToCamelCaseFilter<\/a>"],[100,2,"<a href=\"Controller\/OperatorSearchController.php.html#25\">OperatorSearchController::getList<\/a>"],[0,2,"<a href=\"Controller\/OrganisationSearchController.php.html#22\">OrganisationSearchController::getList<\/a>"],[100,2,"<a href=\"Controller\/PersonLicenceSearchController.php.html#23\">PersonLicenceSearchController::getList<\/a>"],[100,2,"<a href=\"Controller\/PersonSearchController.php.html#22\">PersonSearchController::getList<\/a>"],[100,1,"<a href=\"Controller\/RefDataController.php.html#13\">RefDataController::getLanguage<\/a>"],[100,1,"<a href=\"Controller\/RefDataController.php.html#18\">RefDataController::get<\/a>"],[100,1,"<a href=\"Controller\/RefDataController.php.html#30\">RefDataController::getList<\/a>"],[75,6,"<a href=\"Controller\/SearchController.php.html#13\">SearchController::getList<\/a>"],[100,10,"<a href=\"Controller\/TradingNamesController.php.html#30\">TradingNamesController::create<\/a>"],[100,3,"<a href=\"Service\/BusReg.php.html#16\">BusReg::doUpdate<\/a>"],[100,1,"<a href=\"Service\/BusReg\/OtherServicesManager.php.html#24\">OtherServicesManager::setDataService<\/a>"],[100,1,"<a href=\"Service\/BusReg\/OtherServicesManager.php.html#32\">OtherServicesManager::getDataService<\/a>"],[100,1,"<a href=\"Service\/BusReg\/OtherServicesManager.php.html#43\">OtherServicesManager::createService<\/a>"],[100,5,"<a href=\"Service\/BusReg\/OtherServicesManager.php.html#51\">OtherServicesManager::processOtherServiceNumbers<\/a>"],[100,1,"<a href=\"Service\/BusReg\/OtherServicesManager.php.html#79\">OtherServicesManager::extractIds<\/a>"],[100,1,"<a href=\"Service\/BusReg\/OtherServicesManager.php.html#81\">OtherServicesManager::anonymous function<\/a>"],[100,4,"<a href=\"Service\/CompaniesHouse.php.html#64\">CompaniesHouse::getList<\/a>"],[71.428571428571,2,"<a href=\"Service\/CompaniesHouse.php.html#104\">CompaniesHouse::getNewGateway<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse.php.html#125\">CompaniesHouse::nameSearch<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse.php.html#140\">CompaniesHouse::numberSearch<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse.php.html#154\">CompaniesHouse::companyDetails<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse.php.html#169\">CompaniesHouse::currentCompanyOfficers<\/a>"],[100,2,"<a href=\"Service\/CompaniesHouse.php.html#186\">CompaniesHouse::detectError<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse.php.html#201\">CompaniesHouse::setRequestRows<\/a>"],[71.428571428571,2,"<a href=\"Service\/CompaniesHouse.php.html#211\">CompaniesHouse::setCredentials<\/a>"],[100,13,"<a href=\"Service\/CompaniesHouse.php.html#230\">CompaniesHouse::getFinalResult<\/a>"],[100,3,"<a href=\"Service\/CompaniesHouse.php.html#280\">CompaniesHouse::getRequestType<\/a>"],[100,6,"<a href=\"Service\/CompaniesHouse.php.html#305\">CompaniesHouse::handleResponse<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse.php.html#337\">CompaniesHouse::getTransactionId<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse.php.html#347\">CompaniesHouse::setTransactionId<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse.php.html#357\">CompaniesHouse::getPassword<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse.php.html#367\">CompaniesHouse::setPassword<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse.php.html#377\">CompaniesHouse::getProxy<\/a>"],[0,1,"<a href=\"Service\/CompaniesHouse.php.html#387\">CompaniesHouse::setProxy<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse.php.html#396\">CompaniesHouse::getUserId<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse.php.html#406\">CompaniesHouse::setUserId<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse.php.html#414\">CompaniesHouse::generateTransactionId<\/a>"],[100,1,"<a href=\"Service\/CompaniesHouse\/Queue.php.html#29\">Queue::enqueueActiveOrganisations<\/a>"],[0,3,"<a href=\"Service\/ContactDetails.php.html#16\">ContactDetails::doUpdate<\/a>"],[0,1,"<a href=\"Service\/ContactDetails\/PhoneContactsManager.php.html#24\">PhoneContactsManager::setDataService<\/a>"],[0,1,"<a href=\"Service\/ContactDetails\/PhoneContactsManager.php.html#32\">PhoneContactsManager::getDataService<\/a>"],[0,1,"<a href=\"Service\/ContactDetails\/PhoneContactsManager.php.html#43\">PhoneContactsManager::createService<\/a>"],[0,5,"<a href=\"Service\/ContactDetails\/PhoneContactsManager.php.html#51\">PhoneContactsManager::processPhoneContacts<\/a>"],[0,1,"<a href=\"Service\/ContactDetails\/PhoneContactsManager.php.html#79\">PhoneContactsManager::extractIds<\/a>"],[0,1,"<a href=\"Service\/ContactDetails\/PhoneContactsManager.php.html#81\">PhoneContactsManager::anonymous function<\/a>"],[0,4,"<a href=\"Service\/ContinuationDetail\/Checklists.php.html#50\">Checklists::generate<\/a>"],[0,6,"<a href=\"Service\/ContinuationDetail\/Checklists.php.html#80\">Checklists::update<\/a>"],[0,2,"<a href=\"Service\/ContinuationDetail\/Checklists.php.html#159\">Checklists::getLatestFeeType<\/a>"],[0,3,"<a href=\"Service\/ContinuationDetail\/Checklists.php.html#209\">Checklists::shouldCreateFee<\/a>"],[0,2,"<a href=\"Service\/ContinuationDetail\/Checklists.php.html#238\">Checklists::processResults<\/a>"],[0,2,"<a href=\"Service\/ContinuationDetail\/Checklists.php.html#263\">Checklists::getEntityManager<\/a>"],[0,1,"<a href=\"Service\/EntityManager\/EntityManagerHelper.php.html#21\">EntityManagerHelper::findByIds<\/a>"],[0,1,"<a href=\"Service\/EntityManager\/EntityManagerHelper.php.html#32\">EntityManagerHelper::getRefDataReference<\/a>"],[0,1,"<a href=\"Service\/EntityManager\/EntityManagerHelperFactory.php.html#26\">EntityManagerHelperFactory::createService<\/a>"],[100,1,"<a href=\"Service\/Factory.php.html#22\">Factory::createService<\/a>"],[100,3,"<a href=\"Service\/Factory.php.html#29\">Factory::getService<\/a>"],[100,1,"<a href=\"Service\/Factory.php.html#55\">Factory::getServiceClassName<\/a>"],[100,1,"<a href=\"Service\/Licence.php.html#26\">Licence::findLicences<\/a>"],[100,1,"<a href=\"Service\/Licence.php.html#131\">Licence::findAllPersons<\/a>"],[100,1,"<a href=\"Service\/Licence.php.html#180\">Licence::findPersonsAndLicences<\/a>"],[100,3,"<a href=\"Service\/Licence.php.html#249\">Licence::getSortOrder<\/a>"],[100,3,"<a href=\"Service\/Licence.php.html#264\">Licence::getOrderBy<\/a>"],[100,4,"<a href=\"Service\/Licence.php.html#278\">Licence::getLimit<\/a>"],[100,4,"<a href=\"Service\/Licence.php.html#292\">Licence::getPageNumber<\/a>"],[100,2,"<a href=\"Service\/Licence.php.html#305\">Licence::formatOrderByClause<\/a>"],[100,2,"<a href=\"Service\/Licence.php.html#320\">Licence::formatLimitClause<\/a>"],[100,3,"<a href=\"Service\/Licence.php.html#335\">Licence::formatWhereClause<\/a>"],[100,4,"<a href=\"Service\/Licence.php.html#351\">Licence::formatValue<\/a>"],[100,2,"<a href=\"Service\/Licence.php.html#366\">Licence::anonymous function<\/a>"],[100,3,"<a href=\"Service\/Licence.php.html#383\">Licence::formatConditionsFromOptions<\/a>"],[100,1,"<a href=\"Service\/Licence.php.html#408\">Licence::getOffset<\/a>"],[0,1,"<a href=\"Service\/Operator.php.html#25\">Operator::findAllByLicence<\/a>"],[0,3,"<a href=\"Service\/Operator.php.html#63\">Operator::getSortOrder<\/a>"],[0,3,"<a href=\"Service\/Operator.php.html#78\">Operator::getOrderBy<\/a>"],[0,2,"<a href=\"Service\/Operator.php.html#93\">Operator::formatOrderByClause<\/a>"],[0,3,"<a href=\"Service\/Operator.php.html#109\">Operator::formatWhereClause<\/a>"],[0,4,"<a href=\"Service\/Operator.php.html#125\">Operator::formatValue<\/a>"],[0,2,"<a href=\"Service\/Operator.php.html#133\">Operator::anonymous function<\/a>"],[0,3,"<a href=\"Service\/Operator.php.html#150\">Operator::formatConditionsFromOptions<\/a>"],[0,1,"<a href=\"Service\/Person.php.html#25\">Person::findPersons<\/a>"],[0,3,"<a href=\"Service\/Person.php.html#78\">Person::getSortOrder<\/a>"],[0,3,"<a href=\"Service\/Person.php.html#93\">Person::getOrderBy<\/a>"],[0,2,"<a href=\"Service\/Person.php.html#108\">Person::formatOrderByClause<\/a>"],[0,3,"<a href=\"Service\/Person.php.html#124\">Person::formatWhereClause<\/a>"],[0,4,"<a href=\"Service\/Person.php.html#140\">Person::formatValue<\/a>"],[0,2,"<a href=\"Service\/Person.php.html#155\">Person::anonymous function<\/a>"],[0,3,"<a href=\"Service\/Person.php.html#172\">Person::formatConditionsFromOptions<\/a>"],[66.666666666667,3,"<a href=\"Service\/Search\/ClientFactory.php.html#24\">ClientFactory::createService<\/a>"],[100,1,"<a href=\"Service\/Search\/Search.php.html#36\">Search::setClient<\/a>"],[100,1,"<a href=\"Service\/Search\/Search.php.html#44\">Search::getClient<\/a>"],[0,7,"<a href=\"Service\/Search\/Search.php.html#56\">Search::search<\/a>"],[100,6,"<a href=\"Service\/Search\/Search.php.html#145\">Search::processDateRanges<\/a>"],[0,3,"<a href=\"Service\/Search\/Search.php.html#183\">Search::processResults<\/a>"],[0,2,"<a href=\"Service\/Search\/Search.php.html#203\">Search::processFilters<\/a>"],[100,1,"<a href=\"Service\/Search\/Search.php.html#219\">Search::getFilters<\/a>"],[100,2,"<a href=\"Service\/Search\/Search.php.html#231\">Search::setFilters<\/a>"],[100,1,"<a href=\"Service\/Search\/Search.php.html#248\">Search::getFilterNames<\/a>"],[100,1,"<a href=\"Service\/Search\/Search.php.html#256\">Search::getDateRanges<\/a>"],[83.333333333333,6,"<a href=\"Service\/Search\/Search.php.html#268\">Search::setDateRanges<\/a>"],[100,1,"<a href=\"Service\/Search\/SearchFactory.php.html#20\">SearchFactory::createService<\/a>"],[100,1,"<a href=\"Service\/ServiceAbstract.php.html#80\">ServiceAbstract::setEntityNamespace<\/a>"],[100,1,"<a href=\"Service\/ServiceAbstract.php.html#90\">ServiceAbstract::setEntityName<\/a>"],[100,2,"<a href=\"Service\/ServiceAbstract.php.html#102\">ServiceAbstract::getEntityName<\/a>"],[100,2,"<a href=\"Service\/ServiceAbstract.php.html#121\">ServiceAbstract::create<\/a>"],[100,3,"<a href=\"Service\/ServiceAbstract.php.html#150\">ServiceAbstract::get<\/a>"],[0,1,"<a href=\"Service\/ServiceAbstract.php.html#187\">ServiceAbstract::getList<\/a>"],[0,3,"<a href=\"Service\/ServiceAbstract.php.html#229\">ServiceAbstract::getRefDataValues<\/a>"],[0,10,"<a href=\"Service\/ServiceAbstract.php.html#250\">ServiceAbstract::getStackedValues<\/a>"],[0,2,"<a href=\"Service\/ServiceAbstract.php.html#312\">ServiceAbstract::replaceValues<\/a>"],[0,4,"<a href=\"Service\/ServiceAbstract.php.html#322\">ServiceAbstract::camelCaseMetaFields<\/a>"],[0,1,"<a href=\"Service\/ServiceAbstract.php.html#344\">ServiceAbstract::isList<\/a>"],[8.695652173913,4,"<a href=\"Service\/ServiceAbstract.php.html#358\">ServiceAbstract::processReplacements<\/a>"],[100,2,"<a href=\"Service\/ServiceAbstract.php.html#405\">ServiceAbstract::delete<\/a>"],[0,3,"<a href=\"Service\/ServiceAbstract.php.html#426\">ServiceAbstract::deleteList<\/a>"],[100,1,"<a href=\"Service\/ServiceAbstract.php.html#455\">ServiceAbstract::update<\/a>"],[100,1,"<a href=\"Service\/ServiceAbstract.php.html#470\">ServiceAbstract::patch<\/a>"],[100,3,"<a href=\"Service\/ServiceAbstract.php.html#484\">ServiceAbstract::getBundleQuery<\/a>"],[100,3,"<a href=\"Service\/ServiceAbstract.php.html#521\">ServiceAbstract::getBundleConfig<\/a>"],[91.666666666667,8,"<a href=\"Service\/ServiceAbstract.php.html#543\">ServiceAbstract::doUpdate<\/a>"],[100,1,"<a href=\"Service\/ServiceAbstract.php.html#591\">ServiceAbstract::getDoctrineHydrator<\/a>"],[0,4,"<a href=\"Service\/ServiceAbstract.php.html#606\">ServiceAbstract::pickValidKeys<\/a>"],[100,1,"<a href=\"Service\/ServiceAbstract.php.html#622\">ServiceAbstract::getNewEntity<\/a>"],[100,1,"<a href=\"Service\/ServiceAbstract.php.html#636\">ServiceAbstract::getEntityById<\/a>"],[100,2,"<a href=\"Service\/ServiceAbstract.php.html#641\">ServiceAbstract::getEntityByTypeAndId<\/a>"],[100,2,"<a href=\"Service\/ServiceAbstract.php.html#654\">ServiceAbstract::getService<\/a>"],[0,2,"<a href=\"Service\/ServiceAbstract.php.html#672\">ServiceAbstract::getValidSearchFields<\/a>"],[100,1,"<a href=\"Service\/ServiceAbstract.php.html#686\">ServiceAbstract::getReflectedEntity<\/a>"],[100,2,"<a href=\"Service\/ServiceAbstract.php.html#696\">ServiceAbstract::getEntityPropertyNames<\/a>"],[100,1,"<a href=\"Service\/ServiceAbstract.php.html#700\">ServiceAbstract::anonymous function<\/a>"],[100,7,"<a href=\"Service\/ServiceAbstract.php.html#717\">ServiceAbstract::processAddressEntity<\/a>"],[100,2,"<a href=\"Service\/ServiceAbstract.php.html#746\">ServiceAbstract::formatEntityName<\/a>"],[100,3,"<a href=\"Service\/ServiceAbstract.php.html#757\">ServiceAbstract::processCascades<\/a>"],[100,3,"<a href=\"Service\/ServiceAbstract.php.html#772\">ServiceAbstract::processCascadeList<\/a>"],[100,2,"<a href=\"Service\/ServiceAbstract.php.html#794\">ServiceAbstract::processCascadeSingle<\/a>"],[100,4,"<a href=\"Service\/ServiceAbstract.php.html#810\">ServiceAbstract::generateCascadeEntity<\/a>"],[100,1,"<a href=\"Utility\/BundleQuery.php.html#37\">BundleQuery::setQueryBuilder<\/a>"],[100,1,"<a href=\"Utility\/BundleQuery.php.html#42\">BundleQuery::getParams<\/a>"],[0,1,"<a href=\"Utility\/BundleQuery.php.html#48\">BundleQuery::getRefDataReplacements<\/a>"],[86.363636363636,14,"<a href=\"Utility\/BundleQuery.php.html#62\">BundleQuery::build<\/a>"],[100,1,"<a href=\"Utility\/BundleQuery.php.html#147\">BundleQuery::getChildClass<\/a>"],[100,3,"<a href=\"Utility\/BundleQuery.php.html#160\">BundleQuery::isRefData<\/a>"],[100,2,"<a href=\"Utility\/BundleQuery.php.html#169\">BundleQuery::addJoin<\/a>"],[100,1,"<a href=\"Utility\/BundleQuery.php.html#182\">BundleQuery::buildCriteria<\/a>"],[100,2,"<a href=\"Utility\/BundleQuery.php.html#197\">BundleQuery::getSelectAlias<\/a>"],[100,1,"<a href=\"Utility\/BundleQuery.php.html#212\">BundleQuery::addSelect<\/a>"],[100,1,"<a href=\"Utility\/ExpressionBuilder.php.html#28\">ExpressionBuilder::setQueryBuilder<\/a>"],[100,1,"<a href=\"Utility\/ExpressionBuilder.php.html#33\">ExpressionBuilder::setEntityManager<\/a>"],[100,1,"<a href=\"Utility\/ExpressionBuilder.php.html#38\">ExpressionBuilder::setEntity<\/a>"],[100,1,"<a href=\"Utility\/ExpressionBuilder.php.html#43\">ExpressionBuilder::setParams<\/a>"],[100,1,"<a href=\"Utility\/ExpressionBuilder.php.html#48\">ExpressionBuilder::getParams<\/a>"],[100,3,"<a href=\"Utility\/ExpressionBuilder.php.html#53\">ExpressionBuilder::buildWhereExpression<\/a>"],[100,19,"<a href=\"Utility\/ExpressionBuilder.php.html#71\">ExpressionBuilder::buildExpression<\/a>"],[100,1,"<a href=\"Utility\/ExpressionBuilder.php.html#149\">ExpressionBuilder::getNextParamIndex<\/a>"],[75,2,"<a href=\"Utility\/ExpressionBuilder.php.html#154\">ExpressionBuilder::isFieldForeignKey<\/a>"],[100,2,"<a href=\"Utility\/ExpressionBuilder.php.html#165\">ExpressionBuilder::getOperator<\/a>"],[100,1,"<a href=\"Utility\/PaginateQuery.php.html#25\">PaginateQuery::setQueryBuilder<\/a>"],[100,9,"<a href=\"Utility\/PaginateQuery.php.html#30\">PaginateQuery::setOptions<\/a>"],[100,3,"<a href=\"Utility\/PaginateQuery.php.html#66\">PaginateQuery::filterQuery<\/a>"],[100,1,"<a href=\"Utility\/PaginateQuery.php.html#85\">PaginateQuery::getOffset<\/a>"],[0,2,"<a href=\"Utility\/Paginator.php.html#66\">Paginator::__construct<\/a>"],[0,1,"<a href=\"Utility\/Paginator.php.html#81\">Paginator::getQuery<\/a>"],[0,1,"<a href=\"Utility\/Paginator.php.html#91\">Paginator::getFetchJoinCollection<\/a>"],[0,1,"<a href=\"Utility\/Paginator.php.html#101\">Paginator::getUseOutputWalkers<\/a>"],[0,1,"<a href=\"Utility\/Paginator.php.html#113\">Paginator::setUseOutputWalkers<\/a>"],[0,3,"<a href=\"Utility\/Paginator.php.html#122\">Paginator::count<\/a>"],[0,4,"<a href=\"Utility\/Paginator.php.html#138\">Paginator::getIterator<\/a>"],[0,2,"<a href=\"Utility\/Paginator.php.html#191\">Paginator::cloneQuery<\/a>"],[0,2,"<a href=\"Utility\/Paginator.php.html#212\">Paginator::useOutputWalker<\/a>"],[0,2,"<a href=\"Utility\/Paginator.php.html#227\">Paginator::appendTreeWalker<\/a>"],[0,6,"<a href=\"Utility\/Paginator.php.html#244\">Paginator::getCountQuery<\/a>"],[100,2,"<a href=\"Traits\/EntityManagerAwareTrait.php.html#30\">EntityManagerAwareTrait::getEntityManager<\/a>"],[100,1,"<a href=\"Traits\/EntityManagerAwareTrait.php.html#45\">EntityManagerAwareTrait::setEntityManager<\/a>"],[100,1,"<a href=\"Traits\/EntityManagerAwareTrait.php.html#59\">EntityManagerAwareTrait::dbPersist<\/a>"],[100,1,"<a href=\"Traits\/EntityManagerAwareTrait.php.html#72\">EntityManagerAwareTrait::dbStartTransaction<\/a>"],[100,1,"<a href=\"Traits\/EntityManagerAwareTrait.php.html#85\">EntityManagerAwareTrait::dbCommit<\/a>"],[100,1,"<a href=\"Traits\/EntityManagerAwareTrait.php.html#98\">EntityManagerAwareTrait::dbFlush<\/a>"],[100,1,"<a href=\"Traits\/EntityManagerAwareTrait.php.html#111\">EntityManagerAwareTrait::dbRollback<\/a>"],[100,1,"<a href=\"Traits\/LanguageAwareTrait.php.html#24\">LanguageAwareTrait::getLanguage<\/a>"],[100,1,"<a href=\"Traits\/LanguageAwareTrait.php.html#32\">LanguageAwareTrait::setLanguage<\/a>"],[100,3,"<a href=\"Traits\/LoggerAwareTrait.php.html#28\">LoggerAwareTrait::getLogger<\/a>"],[100,1,"<a href=\"Traits\/LoggerAwareTrait.php.html#51\">LoggerAwareTrait::log<\/a>"],[100,1,"<a href=\"Traits\/RestResponseTrait.php.html#24\">RestResponseTrait::getNewResponse<\/a>"],[100,1,"<a href=\"Traits\/RestResponseTrait.php.html#37\">RestResponseTrait::respond<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>
