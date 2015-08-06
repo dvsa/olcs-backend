@@ -234,8 +234,12 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $mockQb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('applicationId', 2)->once();
 
+        $mockQb->shouldReceive('expr->neq')->with('tma.action', ':action')->once()->andReturn('EXPR3');
+        $mockQb->shouldReceive('andWhere')->with('EXPR3')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('action', 'D')->once();
+
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('RESULT');
-        $this->assertEquals('RESULT', $this->sut->fetchByTmAndApplication(1, 2));
+        $this->assertEquals('RESULT', $this->sut->fetchByTmAndApplication(1, 2, true));
     }
 
 
