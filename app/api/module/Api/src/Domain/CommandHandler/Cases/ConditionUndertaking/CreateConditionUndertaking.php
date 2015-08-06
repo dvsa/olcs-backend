@@ -7,11 +7,9 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\ConditionUndertaking;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Transfer\Command\Cases\ConditionUndertaking\CreateConditionUndertaking as Cmd;
@@ -75,6 +73,7 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
 
         $conditionUndertaking->setAttachedTo($this->getRepo()->getRefdataReference($command->getAttachedTo()));
         $conditionUndertaking->setAddedVia($this->getRepo()->getRefdataReference($command->getAddedVia()));
+        $conditionUndertaking->setNotes($command->getNotes());
 
         $conditionUndertaking = $this->setAttachedToProperties($conditionUndertaking, $command);
 

@@ -183,6 +183,43 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $sut->applyListFilters($mockDqb, $query);
     }
 
+    public function testFetchForTransportManager()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tmType', 'tmt')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('application', 'a')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('a.licence', 'al')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('al.organisation', 'alo')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('a.status', 'ast')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('transportManager', 'tm')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('operatingCentres', 'oc')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tmApplicationStatus', 'tmast')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('tma.transportManager', ':transportManager')->once()->andReturn('tm');
+        $mockQb->shouldReceive('where')->with('tm')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('transportManager', 1)->once();
+
+        $mockQb->shouldReceive('expr->neq')->with('tma.action', ':action')->once()->andReturn('ac');
+        $mockQb->shouldReceive('andWhere')->with('ac')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('action', 'D')->once();
+
+        $conditions = [
+            'a.status = :status0',
+            'a.status = :status1'
+        ];
+        $mockQb->shouldReceive('expr->orX->addMultiple')->with($conditions)->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('status0', 'a')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('status1', 'b')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
+
+        $this->assertEquals(['RESULT'], $this->sut->fetchForTransportManager(1, 'a,b'));
+    }
+
     public function testFetchByTmAndApplication()
     {
         $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
@@ -199,5 +236,27 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('RESULT');
         $this->assertEquals('RESULT', $this->sut->fetchByTmAndApplication(1, 2));
+    }
+
+
+    public function testFetchForResponsibilities()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('application', 'a')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tmType', 'tmty')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('a.licence', 'al')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('al.organisation', 'alo')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('a.status', 'ast')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('transportManager', 'tm')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tm.tmType', 'tmt')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('operatingCentres', 'oc')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('tmApplicationStatus', 'tmast')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('byId')->with(1)->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getSingleResult')->once()->andReturn(['RESULT']);
+        $this->assertEquals(['RESULT'], $this->sut->fetchForResponsibilities(1));
     }
 }

@@ -192,6 +192,24 @@ class ConditionUndertaking extends AbstractRepository
     }
 
     /**
+     * Fetch a list of ConditionUndertaking for an s4.
+     *
+     * @param int $s4Id
+     *
+     * @return array
+     */
+    public function fetchListForS4($s4Id)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.s4', ':s4Id'))
+            ->setParameter('s4Id', $s4Id);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Fetch a list of delta ConditionUndertakings
      *
      * @param int $id ConditionUndertaking ID

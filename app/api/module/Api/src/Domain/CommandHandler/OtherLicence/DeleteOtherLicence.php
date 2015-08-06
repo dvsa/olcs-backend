@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 
 /**
  * Delete Other Licence
@@ -26,13 +27,25 @@ final class DeleteOtherLicence extends AbstractCommandHandler implements Transac
     {
         $result = new Result();
 
+        $application = null;
         foreach ($command->getIds() as $otherLicence) {
+            if (!$application) {
+                $ol = $this->getRepo()->fetchById($otherLicence);
+                $application = $ol->getApplication();
+            }
             $this->getRepo()->delete(
                 $this->getRepo()->fetchById($otherLicence)
             );
 
             $result->addId('otherLicence' . $otherLicence, $otherLicence);
             $result->addMessage('Other licence removed');
+        }
+        if ($application) {
+            $data = [
+                'id' => $application->getId(),
+                'section' => 'licenceHistory'
+            ];
+            $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($data)));
         }
 
         return $result;

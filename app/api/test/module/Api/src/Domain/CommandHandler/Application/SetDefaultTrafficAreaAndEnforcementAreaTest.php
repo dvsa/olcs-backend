@@ -8,11 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementArea as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Application\SetDefaultTrafficAreaAndEnforcementArea as Cmd;
@@ -94,6 +96,8 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends CommandHandlerTestCase
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
+        $licence->setId(123);
+        $licence->setVersion(1);
 
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
@@ -106,6 +110,15 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->once()
             ->with($application);
+
+        $result = new Result();
+        $result->addMessage('Traffic area updated');
+        $data = [
+            'id' => 123,
+            'version' => 1,
+            'trafficArea' => TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
+        ];
+        $this->expectedSideEffect(UpdateTrafficArea::class, $data, $result);
 
         $result = $this->sut->handleCommand($command);
 
@@ -122,11 +135,6 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends CommandHandlerTestCase
         $this->assertSame(
             $this->references[EnforcementArea::class][EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE],
             $licence->getEnforcementArea()
-        );
-
-        $this->assertSame(
-            $this->references[TrafficArea::class][TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE],
-            $licence->getTrafficArea()
         );
     }
 
@@ -170,6 +178,8 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends CommandHandlerTestCase
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
+        $licence->setId(123);
+        $licence->setVersion(1);
 
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
@@ -204,6 +214,15 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends CommandHandlerTestCase
                 $this->references[EnforcementArea::class][EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE]
             );
 
+        $result = new Result();
+        $result->addMessage('Traffic area updated');
+        $data = [
+            'id' => 123,
+            'version' => 1,
+            'trafficArea' => TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE
+        ];
+        $this->expectedSideEffect(UpdateTrafficArea::class, $data, $result);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -219,11 +238,6 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends CommandHandlerTestCase
         $this->assertSame(
             $this->references[EnforcementArea::class][EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE],
             $licence->getEnforcementArea()
-        );
-
-        $this->assertSame(
-            $this->references[TrafficArea::class][TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE],
-            $licence->getTrafficArea()
         );
     }
 }

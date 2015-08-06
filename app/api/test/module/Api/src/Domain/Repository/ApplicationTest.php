@@ -451,4 +451,18 @@ class ApplicationTest extends RepositoryTestCase
 
         $this->sut->applyListFilters($mockQb, $mockQuery);
     }
+
+    public function testFetchWithTmLicences()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('a')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.tmLicences', 'ltml')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('byId')->with(1)->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
+        $this->assertEquals(['RESULT'], $this->sut->fetchWithTmLicences(1));
+    }
 }

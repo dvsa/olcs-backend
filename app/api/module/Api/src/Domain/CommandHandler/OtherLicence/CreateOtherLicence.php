@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
 use Dvsa\Olcs\Transfer\Command\OtherLicence\CreateOtherLicence as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 
 /**
  * Create Other Licence
@@ -32,6 +33,13 @@ final class CreateOtherLicence extends AbstractCommandHandler
         $result = new Result();
         $result->addId('otherLicence', $otherLicence->getId());
         $result->addMessage('Other licence created successfully');
+
+        $applicationId = $otherLicence->getApplication()->getId();
+        $data = [
+            'id' => $applicationId,
+            'section' => 'licenceHistory'
+        ];
+        $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($data)));
 
         return $result;
     }

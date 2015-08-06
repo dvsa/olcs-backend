@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Search;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -29,13 +30,43 @@ class Licence extends AbstractQueryHandler
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
 
-        return $this->result(
+        $applications = $licence->getApplications();
+
+        $applicationsArray = [];
+
+        /** @var Application $application */
+        foreach ($applications as $application) {
+            $application->setPublicationNo(
+                $application->determinePublicationNo()
+            );
+            $application->setOooDate(
+                $application->getOutOfOppositionDate()
+            );
+            $application->setOorDate(
+                $application->getOutOfRepresentationDate()
+            );
+            $application->setIsOpposed(
+                $application->hasOpposition()
+            );
+
+            $applicationsArray[$application->getId()] = $application;
+        }
+
+        $result = $this->result(
             $licence,
             [],
             [
+                'totalAuthVehicles' => $licence->getTotAuthVehicles(),
+                'totalAuthTrailers' => $licence->getTotAuthTrailers(),
+                'totalVehiclesInPossession' => $licence->getActiveVehiclesCount(),
+                'totalPiRecords' => $licence->getPiRecordCount(),
+                'activeCommunityLicences' => count($licence->getActiveCommunityLicences($licence)),
                 'trafficArea' => $this->result(
                     $licence->getTrafficArea()
                 )->serialize(),
+                'companySubsidiaries' => $this->resultList(
+                    $licence->getCompanySubsidiaries()
+                ),
                 'organisation' => $this->result(
                     $licence->getOrganisation(),
                     [
@@ -43,12 +74,18 @@ class Licence extends AbstractQueryHandler
                         'contactDetails' => [
                             'address' => [
                                 'countryCode'
+                            ],
+                            'phoneContacts' => [
+                                'phoneContactType'
                             ]
                         ],
                         'natureOfBusinesses',
                         'tradingNames',
-                        'companySubsidiaries',
-                        'leadTcArea',
+                        'leadTcArea' => [
+                            'contactDetails' => [
+                                'person'
+                            ]
+                        ]
                     ]
                 )->serialize(),
                 'correspondenceAddress' => $this->result(
@@ -101,13 +138,18 @@ class Licence extends AbstractQueryHandler
                     ]
                 ),
                 'applications' => $this->resultList(
-                    $licence->getApplications()
+                    $applicationsArray
                 ),
                 'conditionUndertakings' => $this->resultList(
-                    $licence->getConditionUndertakings()
+                    $licence->getConditionUndertakings(),
+                    [
+                        'conditionType'
+                    ]
                 ),
                 'otherLicences' => $this->resultList($licence->getOtherActiveLicences())
             ]
         );
+
+        return $result;
     }
 }

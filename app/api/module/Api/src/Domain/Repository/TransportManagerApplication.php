@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as Entity;
+use Doctrine\ORM\Query;
 
 /**
  * Transport Manager Application Repository
@@ -141,6 +142,43 @@ class TransportManagerApplication extends AbstractRepository
             ->with('a.licence', 'l');
     }
 
+    public function fetchForTransportManager($tmId, $applicationStatuses)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->with('tmType', 'tmt')
+            ->with('application', 'a')
+            ->with('a.licence', 'al')
+            ->with('al.organisation', 'alo')
+            ->with('a.status', 'ast')
+            ->with('transportManager', 'tm')
+            ->with('operatingCentres', 'oc')
+            ->with('tmApplicationStatus', 'tmast');
+
+        $qb->where($qb->expr()->eq($this->alias . '.transportManager', ':transportManager'));
+        $qb->setParameter('transportManager', $tmId);
+
+        $qb->andWhere($qb->expr()->neq($this->alias . '.action', ':action'));
+        $qb->setParameter('action', 'D');
+
+        if ($applicationStatuses !== null) {
+            $statuses = explode(',', $applicationStatuses);
+            $conditions = [];
+            for ($i = 0; $i < count($statuses); $i++) {
+                $conditions[] = 'a.status = :status' . $i;
+            }
+            $orX = $qb->expr()->orX();
+            $orX->addMultiple($conditions);
+            $qb->andWhere($orX);
+            for ($i = 0; $i < count($statuses); $i++) {
+                $qb->setParameter('status' . $i, $statuses[$i]);
+            }
+        }
+        return $qb->getQuery()->getResult();
+    }
+
     public function fetchByTmAndApplication($tmId, $applicationId)
     {
         $qb = $this->createQueryBuilder();
@@ -151,5 +189,25 @@ class TransportManagerApplication extends AbstractRepository
             ->setParameter('applicationId', $applicationId);
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function fetchForResponsibilities($id)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->with('application', 'a')
+            ->with('tmType', 'tmty')
+            ->with('a.licence', 'al')
+            ->with('al.organisation', 'alo')
+            ->with('a.status', 'ast')
+            ->with('transportManager', 'tm')
+            ->with('tm.tmType', 'tmt')
+            ->with('operatingCentres', 'oc')
+            ->with('tmApplicationStatus', 'tmast')
+            ->byId($id);
+
+        return $qb->getQuery()->getSingleResult();
     }
 }

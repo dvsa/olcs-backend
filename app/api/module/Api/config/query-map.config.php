@@ -23,6 +23,8 @@ return [
     BookmarkQuery\BusRegBundle::class => BookmarkQueryHandler\BusRegBundle::class,
     BookmarkQuery\PublicationLinkBundle::class => BookmarkQueryHandler\PublicationLinkBundle::class,
     BookmarkQuery\PublicationBundle::class => BookmarkQueryHandler\PublicationBundle::class,
+    BookmarkQuery\PublicationLatestByTaAndTypeBundle::class
+        => BookmarkQueryHandler\PublicationLatestByTaAndTypeBundle::class,
     BookmarkQuery\ConditionsUndertakings::class => BookmarkQueryHandler\ConditionsUndertakings::class,
     BookmarkQuery\GoodsDiscBundle::class => BookmarkQueryHandler\GoodsDiscBundle::class,
     BookmarkQuery\PsvDiscBundle::class => BookmarkQueryHandler\PsvDiscBundle::class,
@@ -30,6 +32,11 @@ return [
         => BookmarkQueryHandler\InterimConditionsUndertakings::class,
     BookmarkQuery\FstandingAdditionalVeh::class => BookmarkQueryHandler\FstandingAdditionalVeh::class,
     BookmarkQuery\PiHearingBundle::class => BookmarkQueryHandler\PiHearingBundle::class,
+    BookmarkQuery\PiVenueBundle::class => BookmarkQueryHandler\PiVenueBundle::class,
+    BookmarkQuery\PreviousHearingBundle::class => BookmarkQueryHandler\PreviousHearing::class,
+    BookmarkQuery\PreviousPublicationByPi::class => BookmarkQueryHandler\PreviousPublication::class,
+    BookmarkQuery\PreviousPublicationByApplication::class => BookmarkQueryHandler\PreviousPublication::class,
+    BookmarkQuery\PreviousPublicationByLicence::class => BookmarkQueryHandler\PreviousPublication::class,
     BookmarkQuery\TotalContFee::class => BookmarkQueryHandler\TotalContFee::class,
 
     // Application
@@ -219,6 +226,12 @@ return [
         => QueryHandler\TransportManagerApplication\GetDetails::class,
     TransferQuery\TransportManagerApplication\GetList::class
         => QueryHandler\TransportManagerApplication\GetList::class,
+    TransferQuery\TransportManagerApplication\GetForResponsibilities::class
+        => QueryHandler\TransportManagerApplication\GetForResponsibilities::class,
+
+    // Transport Manager Licence
+    TransferQuery\TransportManagerLicence\GetForResponsibilities::class
+        => QueryHandler\TransportManagerLicence\GetForResponsibilities::class,
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
@@ -235,6 +248,7 @@ return [
 
     // Operator
     TransferQuery\Operator\BusinessDetails::class => QueryHandler\Operator\BusinessDetails::class,
+    TransferQuery\Operator\UnlicensedBusinessDetails::class => QueryHandler\Operator\UnlicensedBusinessDetails::class,
 
     // Licence Vehicle
     TransferQuery\LicenceVehicle\LicenceVehicle::class => QueryHandler\LicenceVehicle\LicenceVehicle::class,
@@ -274,6 +288,12 @@ return [
     TransferQuery\Task\Task::class => QueryHandler\Task\Task::class,
     TransferQuery\Task\TaskDetails::class => QueryHandler\Task\TaskDetails::class,
 
+    // Tm Responsibilities
+    TransferQuery\TmResponsibilities\TmResponsibilitiesList::class =>
+        QueryHandler\TmResponsibilities\TmResponsibilitiesList::class,
+    TransferQuery\TmResponsibilities\GetDocumentsForResponsibilities::class =>
+        QueryHandler\TmResponsibilities\GetDocumentsForResponsibilities::class,
+
     // Companies House
     TransferQuery\CompaniesHouse\AlertList::class => QueryHandler\CompaniesHouse\AlertList::class,
 
@@ -304,4 +324,5 @@ return [
     // Variation Operating Centres
     TransferQuery\VariationOperatingCentre\VariationOperatingCentre::class
         => QueryHandler\VariationOperatingCentre\VariationOperatingCentre::class,
+
 ];

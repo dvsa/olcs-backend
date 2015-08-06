@@ -37,6 +37,7 @@ class UpdatePeopleStatusTest extends AbstractUpdateStatusTestCase
 
         $this->organisation = m::mock(Organisation::class)->makePartial();
         $this->licence->setOrganisation($this->organisation);
+        $this->application->setApplicationOrganisationPersons(new \Doctrine\Common\Collections\ArrayCollection());
     }
 
     public function testHandleCommandWithChange()
@@ -53,11 +54,34 @@ class UpdatePeopleStatusTest extends AbstractUpdateStatusTestCase
         $this->expectStatusUnchanged(ApplicationCompletionEntity::STATUS_INCOMPLETE);
     }
 
+    public function testHandleCommandDeletedAop()
+    {
+        $this->applicationCompletion->setPeopleStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
+
+        $this->organisation->setOrganisationPersons(['foo']);
+
+        $aop1 = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
+        $aop1->setAction('D');
+        $this->application->setApplicationOrganisationPersons(
+            new \Doctrine\Common\Collections\ArrayCollection([$aop1])
+        );
+
+        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
+    }
+
     public function testHandleCommand()
     {
         $this->applicationCompletion->setPeopleStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->organisation->setOrganisationPersons(['foo']);
+
+        $aop1 = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
+        $aop1->setAction('D');
+        $aop2 = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
+        $aop2->setAction('A');
+        $this->application->setApplicationOrganisationPersons(
+            new \Doctrine\Common\Collections\ArrayCollection([$aop1, $aop2])
+        );
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
     }

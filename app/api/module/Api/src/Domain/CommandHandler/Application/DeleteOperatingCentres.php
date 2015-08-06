@@ -61,6 +61,17 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
             $this->result->addMessage('Updated enforcement area');
         }
 
+        $this->result->merge(
+            $this->handleSideEffect(
+                \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::create(
+                    [
+                        'id' => $application->getId(),
+                        'section' => 'operatingCentres'
+                    ]
+                )
+            )
+        );
+
         return $this->result;
     }
 }
