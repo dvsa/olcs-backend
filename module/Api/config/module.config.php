@@ -13,7 +13,9 @@ return [
     'service_manager' => [
         'alias' => [
             'PublicationContextPlugin' => \Dvsa\Olcs\Api\Service\Publication\Context\PluginManager::class,
-            'PublicationProcessPlugin' => \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class
+            'PublicationProcessPlugin' => \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class,
+            'SubmissionContextPlugin' => \Dvsa\Olcs\Api\Service\Submission\Context\PluginManager::class,
+            'SubmissionProcessPlugin' => \Dvsa\Olcs\Api\Service\Submission\Process\PluginManager::class
         ],
         'invokables' => [
             'Document' => \Dvsa\Olcs\Api\Service\Document\Document::class,
@@ -52,6 +54,12 @@ return [
             \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Publication\Process\PluginManagerFactory::class,
             'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
+            \Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator::class =>
+                \Dvsa\Olcs\Api\Service\Submission\SubmissionGeneratorFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Context\PluginManager::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Context\PluginManagerFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Process\PluginManager::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Process\PluginManagerFactory::class,
         ],
     ],
     'file_uploader' => [
@@ -418,5 +426,6 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantCancelText3::class
             ],
         ),
-    ]
+    ],
+    'submissions' => require(__DIR__ . '/submissions.config.php')
 ];

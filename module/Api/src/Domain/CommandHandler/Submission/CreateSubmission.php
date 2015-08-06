@@ -11,23 +11,30 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmission as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareTrait;
+use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 
 /**
  * Create Submission
  */
-final class CreateSubmission extends AbstractCommandHandler
+final class CreateSubmission extends AbstractCommandHandler implements SubmissionGeneratorAwareInterface
 {
+    use SubmissionGeneratorAwareTrait;
+
     protected $repoServiceName = 'Submission';
 
     public function handleCommand(CommandInterface $command)
     {
-        $submission = $this->createSubmission($command);
+        /** @var SubmissionEntity $submissionEntity */
+        $submissionEntity = $this->createSubmission($command);
 
-        $this->getRepo()->save($submission);
+        $submissionEntity->setDataSnapshot(
+            $this->getSubmissionGenerator()->generateSubmissionData($command)
+        );
+        //$this->getRepo()->save($submission);
 
         $result = new Result();
-        $result->addId('submission', $submission->getId());
+        $result->addId('submission', $submissionEntity->getId());
         $result->addMessage('Submission created successfully');
 
         return $result;
@@ -39,15 +46,12 @@ final class CreateSubmission extends AbstractCommandHandler
      */
     private function createSubmission(Cmd $command)
     {
-        $dataSnapshot = $this->generateDataSnapshot($command);
-
-        $submission = new SubmissionEntity(
+        $submissionEntity = new SubmissionEntity(
             $this->getRepo()->getReference(CasesEntity::class, $command->getCase()),
-            $this->getRepo()->getRefdataReference($command->getSubmissionType()),
-            $dataSnapshot
+            $this->getRepo()->getRefdataReference($command->getSubmissionType())
         );
 
-        return $submission;
+        return $submissionEntity;
     }
 
     private function generateDataSnapshot($command)

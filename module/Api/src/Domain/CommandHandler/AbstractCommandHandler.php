@@ -11,6 +11,7 @@ use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\FactoryInterface;
@@ -19,6 +20,7 @@ use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
+use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 
 /**
  * Abstract Command Handler
@@ -73,6 +75,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         if ($this instanceof PublicationGeneratorAwareInterface) {
             $this->setPublicationGenerator($mainServiceLocator->get(PublicationGenerator::class));
+        }
+
+        if ($this instanceof SubmissionGeneratorAwareInterface) {
+            $this->setSubmissionGenerator($mainServiceLocator->get(SubmissionGenerator::class));
         }
 
         if ($this instanceof AddressServiceAwareInterface) {

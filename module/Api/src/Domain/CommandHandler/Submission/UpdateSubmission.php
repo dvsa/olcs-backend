@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Transfer\Command\Submission\UpdateSubmission as Cmd;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Doctrine\ORM\Query;
 
 /**
  * Update Submission
@@ -67,6 +68,6 @@ final class UpdateSubmission extends AbstractCommandHandler
 
     private function generateDataSnapshot($command)
     {
-        return 'THIS IS A TEST';
+        return 'THIS IS AN UPDATED TEST';
     }
 }
