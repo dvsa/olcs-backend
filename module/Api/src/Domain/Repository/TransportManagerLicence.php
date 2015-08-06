@@ -103,4 +103,16 @@ class TransportManagerLicence extends AbstractRepository
 
         return $qb->getQuery()->getSingleResult();
     }
+
+    public function fetchByTmAndLicence($tmId, $licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq($this->alias .'.transportManager', ':tmId'))
+            ->setParameter('tmId', $tmId);
+        $qb->andWhere($qb->expr()->eq($this->alias .'.licence', ':licenceId'))
+            ->setParameter('licenceId', $licenceId);
+
+        return $qb->getQuery()->getResult();
+    }
 }
