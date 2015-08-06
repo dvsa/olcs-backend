@@ -95,6 +95,10 @@ return [
         => CommandHandler\Application\DeleteOperatingCentres::class,
     Command\Application\HandleOcVariationFees::class => CommandHandler\Application\HandleOcVariationFees::class,
     TransferCommand\Application\CreateOperatingCentre::class => CommandHandler\Application\CreateOperatingCentre::class,
+    TransferCommand\Application\CreateTaxiPhv::class => CommandHandler\Application\CreateTaxiPhv::class,
+    TransferCommand\Application\UpdateTaxiPhv::class => CommandHandler\Application\UpdateTaxiPhv::class,
+    TransferCommand\Application\DeleteTaxiPhv::class => CommandHandler\Application\DeleteTaxiPhv::class,
+
     Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
 
     // Transfer - Workshop
