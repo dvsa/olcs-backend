@@ -183,11 +183,10 @@ class TransportManagerApplication extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->where($qb->expr()->eq($this->alias . '.transportManager', ':transportManager'));
-        $qb->setParameter('transportManager', $tmId);
-
-        $qb->andWhere($qb->expr()->eq($this->alias . '.application', ':application'));
-        $qb->setParameter('application', $applicationId);
+        $qb->andWhere($qb->expr()->eq($this->alias .'.transportManager', ':tmId'))
+            ->setParameter('tmId', $tmId);
+        $qb->andWhere($qb->expr()->eq($this->alias .'.application', ':applicationId'))
+            ->setParameter('applicationId', $applicationId);
 
         return $qb->getQuery()->getResult();
     }
