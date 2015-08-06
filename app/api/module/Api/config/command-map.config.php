@@ -531,6 +531,12 @@ return [
         => CommandHandler\TransportManagerApplication\UpdateStatus::class,
     TransferCommand\TransportManagerApplication\UpdateDetails::class
         => CommandHandler\TransportManagerApplication\UpdateDetails::class,
+   TransferCommand\TransportManagerApplication\CreateForResponsibilities::class =>
+        CommandHandler\TransportManagerApplication\CreateForResponsibilities::class,
+    TransferCommand\TransportManagerApplication\UpdateForResponsibilities::class =>
+        CommandHandler\TransportManagerApplication\UpdateForResponsibilities::class,
+    TransferCommand\TransportManagerApplication\DeleteForResponsibilities::class =>
+        CommandHandler\TransportManagerApplication\DeleteForResponsibilities::class,
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
