@@ -39,9 +39,9 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements
     {
         $result = new Result();
 
-        $this->validateTransportManagerApplication($command);
+        $application = $this->validateTransportManagerApplication($command);
 
-        $tmApplication = $this->createTransportManagerApplicationObject($command);
+        $tmApplication = $this->createTransportManagerApplicationObject($command, $application->getLicence()->getId());
 
         $this->getRepo()->save($tmApplication);
 
@@ -79,18 +79,20 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements
                 ]
             );
         }
+        return $application;
     }
 
     /**
      * @param Cmd $command
+     * @param int $licenceId
      * @return TransportManagerApplicationEntity
      */
-    private function createTransportManagerApplicationObject($command)
+    private function createTransportManagerApplicationObject($command, $licenceId)
     {
         $tmApplication = new TransportManagerApplicationEntity();
 
         $tmLicences = $this->getRepo('TransportManagerLicence')
-            ->fetchForTransportManager($command->getTransportManager());
+            ->fetchByTmAndLicence($command->getTransportManager(), $licenceId);
 
         $tmApplication->updateTransportManagerApplication(
             $this->getRepo()->getReference(ApplicationEntity::class, $command->getApplication()),
