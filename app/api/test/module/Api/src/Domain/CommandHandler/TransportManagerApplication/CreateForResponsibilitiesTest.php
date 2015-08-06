@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\CreateForResponsibilities as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportManagerLicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\CreateForResponsibilities as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -33,6 +34,7 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('TransportManagerApplication', TransportManagerApplicationRepo::class);
+        $this->mockRepo('TransportManagerLicence', TransportManagerLicenceRepo::class);
         $this->mockRepo('Application', ApplicationRepo::class);
 
         $this->mockedSmServices = [
@@ -70,19 +72,13 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
         );
 
         $mockApplication = m::mock()
-            ->shouldReceive('getLicence')
+            ->shouldReceive('getLicenceType')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getLicenceType')
-                ->andReturn(
-                    m::mock()
                     ->shouldReceive('getId')
                     ->andReturn(LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL)
                     ->once()
                     ->getMock()
-                )
-                ->once()
-                ->getMock()
             )
             ->once()
             ->getMock();
@@ -92,15 +88,19 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
             ->with(1)
             ->andReturn($mockApplication)
             ->once()
-            ->shouldReceive('fetchWithTmLicences')
-            ->with(1)
-            ->andReturn([])
             ->getMock();
 
         $this->repoMap['TransportManagerApplication']
             ->shouldReceive('fetchByTmAndApplication')
             ->with(2, 1)
             ->andReturn(null)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['TransportManagerLicence']
+            ->shouldReceive('fetchForTransportManager')
+            ->with(2)
+            ->andReturn(['tml1'])
             ->once()
             ->getMock();
 
@@ -148,19 +148,13 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
         );
 
         $mockApplication = m::mock()
-            ->shouldReceive('getLicence')
+            ->shouldReceive('getLicenceType')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getLicenceType')
-                ->andReturn(
-                    m::mock()
                     ->shouldReceive('getId')
                     ->andReturn(LicenceEntity::LICENCE_TYPE_RESTRICTED)
                     ->once()
                     ->getMock()
-                )
-                ->once()
-                ->getMock()
             )
             ->once()
             ->getMock();
@@ -218,19 +212,13 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
         );
 
         $mockApplication = m::mock()
-            ->shouldReceive('getLicence')
+            ->shouldReceive('getLicenceType')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getLicenceType')
-                ->andReturn(
-                    m::mock()
                     ->shouldReceive('getId')
                     ->andReturn(LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL)
                     ->once()
                     ->getMock()
-                )
-                ->once()
-                ->getMock()
             )
             ->once()
             ->getMock();
