@@ -274,6 +274,16 @@ class Licence extends AbstractLicence
         return $this->getActiveVehicles()->count();
     }
 
+    public function getRemainingSpacesPsv()
+    {
+        return $this->getTotAuthVehicles() - $this->getPsvDiscsNotCeasedCount();
+    }
+
+    public function getPsvDiscsNotCeasedCount()
+    {
+        return $this->getPsvDiscsNotCeased()->count();
+    }
+
     public function getActiveVehicles($checkSpecified = true)
     {
         $criteria = Criteria::create();
