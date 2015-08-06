@@ -58,4 +58,18 @@ class User extends AbstractRepository
             $qb->setParameter('organisation', $query->getOrganisation());
         }
     }
+
+    public function fetchForTma($userId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with($this->alias .'.contactDetails', 'cd')
+            ->with('cd.person', 'cdp')
+            ->with($this->alias .'.transportManager', 'tm')
+            ->byId($userId);
+
+        return $qb->getQuery()->getSingleResult();
+    }
 }

@@ -36,6 +36,8 @@ class TransportManagerApplication extends AbstractTransportManagerApplication
     const STATUS_POSTAL_APPLICATION = 'tmap_st_postal_application';
     const STATUS_RECEIVED = 'tmap_st_received';
 
+    const ERROR_TM_EXIST = 'tm_exist';
+
     const ERROR_MON = 'err_mon';
     const ERROR_TUE = 'err_tue';
     const ERROR_WED = 'err_wed';
