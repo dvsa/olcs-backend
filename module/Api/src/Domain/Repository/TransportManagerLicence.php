@@ -54,7 +54,7 @@ class TransportManagerLicence extends AbstractRepository
         return $dqb->getQuery()->getResult();
     }
 
-    public function fetchForTransportManager($tmId, $licenceStatuses)
+    public function fetchForTransportManager($tmId, $licenceStatuses = null)
     {
         $qb = $this->createQueryBuilder();
 

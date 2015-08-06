@@ -33,7 +33,7 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'TransportManagerApplication';
 
-    protected $extraRepos = ['Application'];
+    protected $extraRepos = ['Application', 'TransportManagerLicence'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -61,7 +61,7 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements
                 ]
             );
         }
-        $licenceType = $application->getLicence()->getLicenceType()->getId();
+        $licenceType = $application->getLicenceType()->getId();
         if ($licenceType === LicenceEntity::LICENCE_TYPE_RESTRICTED ||
             $licenceType === LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED) {
             throw new ValidationException(
@@ -89,13 +89,13 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements
     {
         $tmApplication = new TransportManagerApplicationEntity();
 
-        $application = $this->getRepo('Application')
-            ->fetchWithTmLicences($command->getApplication());
+        $tmLicences = $this->getRepo('TransportManagerLicence')
+            ->fetchForTransportManager($command->getTransportManager());
 
         $tmApplication->updateTransportManagerApplication(
             $this->getRepo()->getReference(ApplicationEntity::class, $command->getApplication()),
             $this->getRepo()->getReference(TransportManagerEntity::class, $command->getTransportManager()),
-            isset($application['licence']['tmLicences']) && count($application['licence']['tmLicences']) ? 'U' : 'A',
+            count($tmLicences) ? 'U' : 'A',
             $this->getRepo()->getRefdataReference(TransportManagerApplicationEntity::STATUS_POSTAL_APPLICATION),
             $this->getCurrentUser()
         );

@@ -500,7 +500,7 @@ class ApplicationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('l.tmLicences', 'ltml')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('byId')->with(1)->once()->andReturnSelf();
 
-        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
+        $mockQb->shouldReceive('getQuery->getSingleResult')->once()->andReturn(['RESULT']);
         $this->assertEquals(['RESULT'], $this->sut->fetchWithTmLicences(1));
     }
 }
