@@ -117,7 +117,7 @@ class CreateBusFeeTest extends CommandHandlerTestCase
             'application' => null,
             'licence' => 222,
             'invoicedDate' => $receivedDate->format('Y-m-d'),
-            'description' => 'Fee description ' . $regNo . ' ' . $busRegId,
+            'description' => 'Fee description ' . $regNo . ' V' . $variationNumber,
             'feeType' => 444,
             'amount' => 10.5,
             'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
