@@ -52,11 +52,12 @@ class OrganisationEntityTest extends EntityTester
             'type',
             'version',
             'viAction',
+            'disqualifications',
             'irfoPartners',
             'licences',
             'organisationPersons',
             'organisationUsers',
-            'tradingNames'
+            'tradingNames',
         ];
 
         $this->assertEquals($expectedKeys, array_keys($values));
