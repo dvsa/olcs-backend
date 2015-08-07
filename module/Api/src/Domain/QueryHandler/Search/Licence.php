@@ -39,6 +39,10 @@ class Licence extends AbstractQueryHandler
             $application->setPublicationNo(
                 $application->determinePublicationNo()
             );
+            $application->setPublishedDate(
+                $application->determinePublishedDate()
+            );
+
             $application->setOooDate(
                 $application->getOutOfOppositionDate()
             );
@@ -134,7 +138,8 @@ class Licence extends AbstractQueryHandler
                 'vehicles' => $this->resultList(
                     $licence->getLicenceVehicles(),
                     [
-                        'vehicle'
+                        'vehicle',
+                        'interimApplication'
                     ]
                 ),
                 'applications' => $this->resultList(
