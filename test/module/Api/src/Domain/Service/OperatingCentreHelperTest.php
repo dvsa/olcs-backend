@@ -7,6 +7,9 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Service;
 
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
@@ -20,6 +23,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\CreateOperatingCentre;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Operating Centre Helper Test
@@ -33,22 +37,40 @@ class OperatingCentreHelperTest extends MockeryTestCase
      */
     protected $sut;
 
+    protected $addressService;
+
+    protected $adminAreaTrafficAreaRepo;
+
     public function setUp()
     {
+        $this->addressService = m::mock();
+        $this->adminAreaTrafficAreaRepo = m::mock();
+
+        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm->shouldReceive('get')
+            ->with('AddressService')
+            ->andReturn($this->addressService);
+
+        $sm->shouldReceive('get')
+            ->with('RepositoryServiceManager')
+            ->andReturnSelf()
+            ->shouldReceive('get')
+            ->with('AdminAreaTrafficArea')
+            ->andReturn($this->adminAreaTrafficAreaRepo);
+
         $this->sut = new OperatingCentreHelper();
+        $this->sut->createService($sm);
     }
 
     /**
      * @dataProvider validateWithErrors
      */
-    public function testValidateWithErrors($isPsv, $commandData, $expected)
+    public function testValidateWithErrors($isPsv, $isRestricted, $commandData, $expected)
     {
         $entity = m::mock();
-        $entity->shouldReceive('isPsv')
-            ->andReturn($isPsv);
-
-        $entity->shouldReceive('isGoods')
-            ->andReturn(!$isPsv);
+        $entity->shouldReceive('isPsv')->andReturn($isPsv);
+        $entity->shouldReceive('isRestricted')->andReturn($isRestricted);
+        $entity->shouldReceive('isGoods')->andReturn(!$isPsv);
 
         $command = CreateOperatingCentre::create($commandData);
 
@@ -66,6 +88,216 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
             $this->assertEquals($expected, $ex->getMessages());
         }
+    }
+
+    public function testValidateTrafficAreaWithoutPostcode()
+    {
+        $commandData = [
+            'address' => [
+                'postcode' => null
+            ]
+        ];
+
+        $entity = m::mock();
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $this->sut->validateTrafficArea($entity, $command);
+
+        $this->assertEquals([], $this->sut->getMessages());
+    }
+
+    public function testValidateTrafficAreaWithPostcodeGbWithoutTa()
+    {
+        $commandData = [
+            'address' => [
+                'postcode' => 'AA11AAA'
+            ]
+        ];
+
+        /** @var Application $entity */
+        $entity = m::mock(Application::class)->makePartial();
+        $entity->setNiFlag('N');
+        $entity->shouldReceive('getTrafficArea')->andReturn(null);
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $this->sut->validateTrafficArea($entity, $command);
+
+        $this->assertEquals([], $this->sut->getMessages());
+    }
+
+    public function testValidateTrafficAreaWithPostcodeGbWithTaWithoutMatchingPostcode()
+    {
+        $commandData = [
+            'address' => [
+                'postcode' => 'AA11AAA'
+            ]
+        ];
+
+        $ta = m::mock();
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+            ->andReturn(null);
+
+        /** @var Application $entity */
+        $entity = m::mock(Application::class)->makePartial();
+        $entity->setNiFlag('N');
+        $entity->shouldReceive('getTrafficArea')->once()->andReturn($ta);
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $this->sut->validateTrafficArea($entity, $command);
+
+        $this->assertEquals([], $this->sut->getMessages());
+    }
+
+    public function testValidateTrafficAreaWithPostcodeGbWithTaWithMatchingPostcodeWithWrongTa()
+    {
+        $commandData = [
+            'address' => [
+                'postcode' => 'AA11AAA'
+            ]
+        ];
+
+        $ta = m::mock(TrafficArea::class)->makePartial();
+        $ta->setName('Foo');
+
+        $wrongTa = m::mock(TrafficArea::class)->makePartial();
+        $wrongTa->setName('Bar');
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+            ->andReturn($wrongTa);
+
+        /** @var Application $entity */
+        $entity = m::mock(Application::class)->makePartial();
+        $entity->setNiFlag('N');
+        $entity->shouldReceive('getTrafficArea')->andReturn($ta);
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $this->sut->validateTrafficArea($entity, $command);
+
+        $messages = [
+            'postcode' => [
+                [
+                    'ERR_OC_PC_TA_GB' => '{"current":"Foo","oc":"Bar"}'
+                ]
+            ]
+        ];
+
+        $this->assertEquals($messages, $this->sut->getMessages());
+    }
+
+    public function testValidateTrafficAreaWithPostcodeGbWithTaWithMatchingPostcodeWithMatchingTa()
+    {
+        $commandData = [
+            'address' => [
+                'postcode' => 'AA11AAA'
+            ]
+        ];
+
+        $ta = m::mock(TrafficArea::class)->makePartial();
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+            ->andReturn($ta);
+
+        /** @var Application $entity */
+        $entity = m::mock(Application::class)->makePartial();
+        $entity->setNiFlag('N');
+        $entity->shouldReceive('getTrafficArea')->andReturn($ta);
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $this->sut->validateTrafficArea($entity, $command);
+
+        $this->assertEquals([], $this->sut->getMessages());
+    }
+
+    public function testValidateTrafficAreaWithPostcodeNiWithoutMatchingPostcode()
+    {
+        $commandData = [
+            'address' => [
+                'postcode' => 'AA11AAA'
+            ]
+        ];
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+            ->andReturn(null);
+
+        /** @var Application $entity */
+        $entity = m::mock(Application::class)->makePartial();
+        $entity->setNiFlag('Y');
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $this->sut->validateTrafficArea($entity, $command);
+
+        $this->assertEquals([], $this->sut->getMessages());
+    }
+
+    public function testValidateTrafficAreaWithPostcodeNiWithMatchingPostcodeWithNiTa()
+    {
+        $commandData = [
+            'address' => [
+                'postcode' => 'AA11AAA'
+            ]
+        ];
+
+        $ta = m::mock(TrafficArea::class)->makePartial();
+        $ta->setId(TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+            ->andReturn($ta);
+
+        /** @var Application $entity */
+        $entity = m::mock(Application::class)->makePartial();
+        $entity->setNiFlag('Y');
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $this->sut->validateTrafficArea($entity, $command);
+
+        $this->assertEquals([], $this->sut->getMessages());
+    }
+
+    public function testValidateTrafficAreaWithPostcodeNiWithMatchingPostcodeWithoutNiTa()
+    {
+        $commandData = [
+            'address' => [
+                'postcode' => 'AA11AAA'
+            ]
+        ];
+
+        $ta = m::mock(TrafficArea::class)->makePartial();
+        $ta->setId(TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE);
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+            ->andReturn($ta);
+
+        /** @var Application $entity */
+        $entity = m::mock(Application::class)->makePartial();
+        $entity->setNiFlag('Y');
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $this->sut->validateTrafficArea($entity, $command);
+
+        $messages = [
+            'postcode' => [
+                [
+                    'ERR_OC_PC_TA_NI' => 'ERR_OC_PC_TA_NI'
+                ]
+            ]
+        ];
+
+        $this->assertEquals($messages, $this->sut->getMessages());
     }
 
     public function testSaveDocuments()
@@ -204,6 +436,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
         return [
             [
                 true,
+                false,
                 [
                     'noOfVehiclesRequired' => 0
                 ],
@@ -216,6 +449,21 @@ class OperatingCentreHelperTest extends MockeryTestCase
                 ]
             ],
             [
+                true,
+                true,
+                [
+                    'noOfVehiclesRequired' => 3
+                ],
+                [
+                    'noOfVehiclesRequired' => [
+                        [
+                            'ERR_OR_R_TOO_MANY' => 'ERR_OR_R_TOO_MANY'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                false,
                 false,
                 [
                     'noOfVehiclesRequired' => 0,
@@ -236,6 +484,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
                 ]
             ],
             [
+                false,
                 false,
                 [
                     'noOfVehiclesRequired' => 0,
@@ -258,6 +507,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
                 ]
             ],
             [
+                false,
                 false,
                 [
                     'noOfVehiclesRequired' => 0,

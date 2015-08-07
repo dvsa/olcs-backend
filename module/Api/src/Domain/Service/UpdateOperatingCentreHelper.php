@@ -27,18 +27,24 @@ class UpdateOperatingCentreHelper
     const ERR_OC_T_2 = 'ERR_OC_T_2'; // too-low
     const ERR_OC_T_3 = 'ERR_OC_T_3'; // too-high
     const ERR_OC_T_4 = 'ERR_OC_T_4'; // no-operating-centre
+    const ERR_OC_EA_EMPTY = 'ERR_OC_EA_EMPTY';
 
     public function getMessages()
     {
         return $this->messages;
     }
 
+    public function validateEnforcementArea($entity, $command)
+    {
+        $ea = $command->getEnforcementArea();
+
+        if ($entity->getTrafficArea() !== null && empty($ea)) {
+            $this->addMessage('enforcementArea', self::ERR_OC_EA_EMPTY);
+        }
+    }
+
     public function validateTotalAuthVehicles($entity, $command, $totals)
     {
-        if ($entity->isRestricted() && $command->getTotAuthVehicles() > 2) {
-            $this->addMessage('totAuthVehicles', self::ERR_OC_R_1);
-        }
-
         if ($totals['noOfOperatingCentres'] === 0) {
             $this->addMessage('totAuthVehicles', self::ERR_OC_V_4);
         }
@@ -83,6 +89,10 @@ class UpdateOperatingCentreHelper
 
     public function validatePsv($entity, $command)
     {
+        if ($entity->isRestricted() && $command->getTotAuthVehicles() > 2) {
+            $this->addMessage('totAuthVehicles', self::ERR_OC_R_1);
+        }
+
         $sum = (int)$command->getTotAuthSmallVehicles()
             + (int)$command->getTotAuthMediumVehicles()
             + (int)$command->getTotAuthLargeVehicles();
