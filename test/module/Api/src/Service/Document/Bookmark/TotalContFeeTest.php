@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 
 /**
- * FstandingAdditionalVeh bookmark test
+ * TotalContFeeTest bookmark test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */

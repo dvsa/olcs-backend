@@ -1,23 +1,23 @@
 <?php
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\FstandingCapitalReserves;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\FStandingCapitalReserves;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
- * FstandingCapitalReserves bookmark test
+ * FStandingCapitalReserves bookmark test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class FstandingCapitalReservesTest extends MockeryTestCase
+class FStandingCapitalReservesTest extends MockeryTestCase
 {
     protected $sut;
 
     public function setUp()
     {
-        $this->sut = new FstandingCapitalReserves();
+        $this->sut = new FStandingCapitalReserves();
     }
 
     public function testGetQuery()
