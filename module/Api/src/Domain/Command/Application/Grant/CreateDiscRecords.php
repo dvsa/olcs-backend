@@ -18,4 +18,14 @@ use Dvsa\Olcs\Transfer\FieldType\Traits\Identity;
 final class CreateDiscRecords extends AbstractCommand
 {
     use Identity;
+
+    protected $currentTotAuth;
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentTotAuth()
+    {
+        return $this->currentTotAuth;
+    }
 }
