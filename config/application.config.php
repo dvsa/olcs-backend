@@ -6,7 +6,7 @@ return array(
         'Dvsa\Olcs\Snapshot',
         'Dvsa\Olcs\Email',
         'Dvsa\Olcs\CompaniesHouse',
-        'Dvsa\Jackrabbit\Client',
+        'Dvsa\Olcs\DocumentShare\Client',
         'ZfcRbac',
         'Dvsa\Olcs\Transfer',
         'Olcs\Logging',

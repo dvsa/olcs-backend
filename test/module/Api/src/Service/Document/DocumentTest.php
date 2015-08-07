@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Service\Document\Document;
-use Dvsa\Jackrabbit\Client\Data\Object\File;
+use Dvsa\Olcs\DocumentShare\Client\Data\Object\File;
 
 /**
  * Document service test
@@ -20,7 +20,6 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     public function testGetBookmarkQueriesForNoBookmarks()
     {
         $file = new File();
-        $file->setMimeType('application/rtf');
         $file->setContent('');
 
         $queryData = $this->service->getBookmarkQueries($file, []);
@@ -34,7 +33,6 @@ Bookmark 1: {\*\bkmkstart letter_date_add_14_days} {\*\bkmkend letter_date_add_1
 Boomkark 2: {\*\bkmkstart todays_date}{\*\bkmkend todays_date}
 TXT;
         $file = new File();
-        $file->setMimeType('application/rtf');
         $file->setContent($content);
 
         $queryData = $this->service->getBookmarkQueries($file, []);
@@ -48,7 +46,6 @@ Bookmark 1: {\*\bkmkstart caseworker_name} {\*\bkmkend caseworker_name}
 Bookmark 2: {\*\bkmkstart licence_number} {\*\bkmkend licence_number}
 TXT;
         $file = new File();
-        $file->setMimeType('application/rtf');
         $file->setContent($content);
 
         $queryData = $this->service->getBookmarkQueries(
@@ -71,7 +68,6 @@ Bookmark 2: {\*\bkmkstart para_two} {\*\bkmkend para_two}
 Bookmark 3: {\*\bkmkstart para_three} {\*\bkmkend para_three}
 TXT;
         $file = new File();
-        $file->setMimeType('application/rtf');
         $file->setContent($content);
 
         $queryData = $this->service->getBookmarkQueries(
@@ -97,7 +93,6 @@ TXT;
         $content = "Bookmark 1: {\*\bkmkstart todays_date} {\*\bkmkend todays_date}.";
 
         $file = new File();
-        $file->setMimeType('application/rtf');
         $file->setContent($content);
 
         $replaced = $this->service->populateBookmarks(
@@ -120,7 +115,6 @@ TXT;
         $content = "Bookmark 1: {\*\bkmkstart licence_number} {\*\bkmkend licence_number}.";
 
         $file = new File();
-        $file->setMimeType('application/rtf');
         $file->setContent($content);
 
         $replaced = $this->service->populateBookmarks(
@@ -143,7 +137,6 @@ TXT;
         $content = "Bookmark 1: {\*\bkmkstart licence_number} {\*\bkmkend licence_number}.";
 
         $file = new File();
-        $file->setMimeType('application/rtf');
         $file->setContent($content);
 
         $replaced = $this->service->populateBookmarks(
@@ -162,7 +155,6 @@ TXT;
         $content = "Bookmark 1: {\*\bkmkstart Serial_Num} {\*\bkmkend Serial_Num}.";
 
         $file = new File();
-        $file->setMimeType('application/rtf');
         $file->setContent($content);
 
         $helperMock = $this->getMock('Dvsa\Olcs\Api\Service\Date');
@@ -186,7 +178,6 @@ TXT;
         $content = "Bookmark 1: {\*\bkmkstart TC_SIGNATURE} {\*\bkmkend TC_SIGNATURE}.";
 
         $file = new File();
-        $file->setMimeType('application/rtf');
         $file->setContent($content);
 
         $helperMock = $this->getMock('\stdClass');
