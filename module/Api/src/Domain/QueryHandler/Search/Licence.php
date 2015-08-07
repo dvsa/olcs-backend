@@ -92,7 +92,7 @@ class Licence extends AbstractQueryHandler
                         ]
                     ]
                 )->serialize(),
-                'correspondenceAddress' => $this->result(
+                'correspondenceAddress' => !empty($licence->getCorrespondenceCd()) ? $this->result(
                     $licence->getCorrespondenceCd(),
                     [
                         'person',
@@ -101,7 +101,7 @@ class Licence extends AbstractQueryHandler
                             'countryCode'
                         ]
                     ]
-                )->serialize(),
+                )->serialize() : null,
                 'partners' => $this->resultList(
                     $licence->getOrganisation()->getOrganisationPersons(),
                     [
