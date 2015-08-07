@@ -72,6 +72,15 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
                     break;
                 case self::CASES:
                     $params['case'] = $command->getTargetId();
+                    if ($entity->getLicence()) {
+                        $params['licence'] = $entity->getLicence()->getId();
+                    }
+                    if ($entity->getApplication()) {
+                        $params['application'] = $entity->getApplication()->getId();
+                    }
+                    if ($entity->getTransportManager()) {
+                        $params['transportManager'] = $entity->getTransportManager()->getId();
+                    }
                     break;
                 case self::IRFO:
                     $params['irfoOrganisation'] = $command->getTargetId();
@@ -109,7 +118,7 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
                     $entity = $this->getRepo('BusRegSearchView')->fetchByRegNo($entityId);
                     break;
                 case self::CASES:
-                    $entity = $this->getRepo('Cases')->fetchById($entityId);
+                    $entity = $this->getRepo('Cases')->fetchExtended($entityId);
                     break;
                 case self::IRFO:
                     $entity = $this->getRepo('Organisation')->fetchById($entityId);
@@ -121,7 +130,7 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
                     throw new ValidationException(['type' => 'Unknown entity']);
             }
         } catch (NotFoundException $ex) {
-            throw new ValidationException(['targetId' => 'Entity ' . $labels[$type] . ' is invalid']);
+            throw new ValidationException(['targetId' => $labels[$type] . ' is invalid']);
         }
         return $entity;
     }
