@@ -23,7 +23,7 @@ return array(
             ),
         )
     ),
-    'jackrabbit' => array(
+    'document_share' => array(
         'http' => array(
             'adapter' => 'Zend\Http\Client\Adapter\Curl'
         ),

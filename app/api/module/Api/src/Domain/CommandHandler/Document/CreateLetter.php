@@ -7,13 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocumentSpecificCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Doc\DocTemplate as Entity;
+use Dvsa\Olcs\Transfer\Command\Document\CreateLetter as Cmd;
 
 /**
  * Create Application
@@ -26,15 +27,13 @@ final class CreateLetter extends AbstractCommandHandler implements
 {
     use DocumentGeneratorAwareTrait;
 
-    const TMP_STORAGE_PATH = 'tmp';
-    const METADATA_KEY = 'data';
-
     protected $repoServiceName = 'DocTemplate';
 
+    /**
+     * @param Cmd $command
+     */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         $queryData = $command->getData();
 
         /** @var Entity $template */
@@ -46,16 +45,29 @@ final class CreateLetter extends AbstractCommandHandler implements
         $identifier = str_replace(' ', '_', $docId);
 
         $content = $this->getDocumentGenerator()->generateFromTemplateIdentifier($identifier, $queryData);
+        $fileName = date('YmdHis') . '_' . $this->formatFilename($template->getDescription()) . '.rtf';
+        $file = $this->getDocumentGenerator()->uploadGeneratedContent($content, null, $fileName);
 
-        $storedFile = $this->getDocumentGenerator()->uploadGeneratedContent(
-            $content,
-            self::TMP_STORAGE_PATH,
-            [self::METADATA_KEY => $command->getMeta()]
-        );
+        $data = [
+            'identifier' => $file->getIdentifier(),
+            'description' => $template->getDescription(),
+            'filename' => $fileName,
+            'category' => $queryData['details']['category'],
+            'subCategory' => $queryData['details']['documentSubCategory'],
+            'isExternal' => false,
+            'isScan' => false,
+            'metadata' => $command->getMeta(),
+            'size' => $file->getSize()
+        ];
 
-        $result->addId('file', $storedFile->getIdentifier());
-        $result->addMessage('File created');
+        $this->result->merge($this->handleSideEffect(CreateDocumentSpecificCmd::create($data)));
+        $this->result->addMessage('File created');
 
-        return $result;
+        return $this->result;
+    }
+
+    private function formatFilename($input)
+    {
+        return str_replace([' ', '/'], '_', $input);
     }
 }

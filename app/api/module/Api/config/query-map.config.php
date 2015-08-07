@@ -224,6 +224,7 @@ return [
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
     TransferQuery\Document\Document::class => QueryHandler\Document\Document::class,
+    TransferQuery\Document\Letter::class => QueryHandler\Document\Letter::class,
     TransferQuery\Document\DocumentList::class => QueryHandler\Document\DocumentList::class,
 
     // Transport Manager Application
