@@ -46,8 +46,15 @@ final class GrantPsv extends AbstractCommandHandler implements TransactionedInte
 
         $this->getRepo()->save($application);
 
+        // Get licence totAuthVehicles before we update
+        $currentTotAuth = $application->getLicence()->getTotAuthVehicles();
+
         $result->merge($this->proxyCommand($command, CopyApplicationDataToLicence::class));
-        $result->merge($this->proxyCommand($command, CreateDiscRecords::class));
+
+        $data = $command->getArrayCopy();
+        $data['currentTotAuth'] = $currentTotAuth;
+
+        $result->merge($this->handleSideEffect(CreateDiscRecords::create($data)));
 
         if (!$application->isSpecialRestricted()) {
             $result->merge($this->proxyCommand($command, ProcessApplicationOperatingCentres::class));

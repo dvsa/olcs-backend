@@ -682,7 +682,7 @@ class Application extends AbstractApplication
         $data = $completion->serialize([]);
 
         foreach ($data as $key => $value) {
-            if (preg_match('/^([a-zA-Z]+)Status$/', $key) && $value !== self::VARIATION_STATUS_UNCHANGED) {
+            if (preg_match('/^([a-zA-Z]+)Status$/', $key) && (int)$value !== self::VARIATION_STATUS_UNCHANGED) {
                 return true;
             }
         }
@@ -698,7 +698,7 @@ class Application extends AbstractApplication
 
         foreach ($data as $key => $value) {
             if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches)
-                && $value === self::VARIATION_STATUS_REQUIRES_ATTENTION
+                && (int)$value === self::VARIATION_STATUS_REQUIRES_ATTENTION
             ) {
                 $sections[] = $matches[1];
             }

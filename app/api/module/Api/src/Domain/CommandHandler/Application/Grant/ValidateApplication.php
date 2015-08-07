@@ -41,10 +41,16 @@ final class ValidateApplication extends AbstractCommandHandler implements Transa
         );
         $this->getRepo()->save($application);
 
+        $currentTotAuth = $application->getLicence()->getTotAuthVehicles();
+
         $result->merge($this->proxyCommand($command, CopyApplicationDataToLicenceCmd::class));
         $result->merge($this->proxyCommand($command, ProcessAocCmd::class));
         $result->merge($this->proxyCommand($command, CommonGrantCmd::class));
-        $result->merge($this->proxyCommand($command, CreateDiscRecordsCmd::class));
+
+        $data = $command->getArrayCopy();
+        $data['currentTotAuth'] = $currentTotAuth;
+
+        $result->merge($this->handleSideEffect(CreateDiscRecords::create($data)));
 
         return $result;
     }
