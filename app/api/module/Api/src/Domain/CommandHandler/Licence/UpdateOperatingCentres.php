@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
@@ -66,6 +67,12 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
         $licence->setTotAuthVehicles($command->getTotAuthVehicles());
 
+        if ($licence->getTrafficArea() !== null) {
+            $licence->setEnforcementArea(
+                $this->getRepo()->getReference(EnforcementArea::class, $command->getEnforcementArea())
+            );
+        }
+
         $this->getRepo()->save($licence);
         $this->result->addMessage('Licence record updated');
 
@@ -83,6 +90,8 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
             $this->updateHelper->validateTotalAuthVehicles($licence, $command, $this->getTotals($licence));
         }
+
+        $this->updateHelper->validateEnforcementArea($licence, $command);
 
         $messages = $this->updateHelper->getMessages();
 
