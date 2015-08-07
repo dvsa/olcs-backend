@@ -50,7 +50,7 @@ final class ValidateApplication extends AbstractCommandHandler implements Transa
         $data = $command->getArrayCopy();
         $data['currentTotAuth'] = $currentTotAuth;
 
-        $result->merge($this->handleSideEffect(CreateDiscRecords::create($data)));
+        $result->merge($this->handleSideEffect(CreateDiscRecordsCmd::create($data)));
 
         return $result;
     }
