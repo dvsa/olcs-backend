@@ -12,30 +12,42 @@ use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 class SubmissionGenerator
 {
     private $submissionConfig;
-    private $submissionContextManager;
-    private $submissionProcessManager;
+    private $submissionSectionManager;
 
-    public function __construct($config, ServiceLocatorInterface $context, ServiceLocatorInterface $process)
+    public function __construct($config)
     {
         $this->submissionConfig = $config;
-        $this->submissionContextManager = $context;
-        $this->submissionProcessManager = $process;
     }
 
-    public function generateSubmissionData(SubmissionEntity $submissionEntity, $sections)
+    public function generateSubmission(SubmissionEntity $submissionEntity, $sections)
     {
+        $sectionTypeId = $submissionEntity->getSubmissionType()->getId();
 
-        if (!isset($this->submissionConfig[$submissionEntity->getSubmissionType()->getId()])) {
+        if (!isset($this->submissionConfig['section-types'][$sectionTypeId])) {
             throw new \Exception('Invalid submission type');
         }
 
-        /** @var \ArrayObject $contextObject object representing mandatory sections for the type plus those selected */
-        $contextObject = $this->fetchContext(
-            $submissionEntity,
-            $sections
-        );
+        $requiredSections = $this->getRequiredSections($sectionTypeId, $sections);
+
+        // foreach section
+        foreach ($requiredSections as $sectionId) {
+            $data = $this->submissionSectionManager
+                ->get($sectionId)
+                ->generateSection(
+                    $submissionEntity->getCase()
+                );
+
+            $submissionEntity->setSectionData($sectionId, $data);
+        }
+
 
         return $this->processSubmission($this->submissionConfig[$submissionTypeKey], $submissionEntity, $contextObject);
+    }
+
+    private function getRequiredSections($sectionTypeId, $postedSections)
+    {
+        $submissionTypeSections = $this->submissionConfig['section-types'][$sectionTypeId];
+        return array_unique(array_merge($submissionTypeSections, $postedSections));
     }
 
     /**
@@ -47,16 +59,16 @@ class SubmissionGenerator
      */
     private function fetchContext(SubmissionEntity $submissionEntity, $sections)
     {
-        $submissionTypeSections = $this->submissionConfig[$submissionEntity->getSubmissionType()->getId()];
+        $sectionTypeId = $submissionEntity->getSubmissionType()->getId();
+        $submissionTypeSections = $this->submissionConfig['section-types'][$sectionTypeId];
 
-        $requiredSections = array_merge($submissionTypeSections, $sections);
-        var_dump($requiredSections);exit;
+        $requiredSections = array_unique(array_merge($submissionTypeSections, $sections));
+
         $context = new \ArrayObject($requiredSections);
 
-        if (isset($config['context'])) {
-            foreach ($config['context'] as $contextClass) {
-                $this->submissionContextManager->get($contextClass)->provide($submission, $context);
-            }
+        foreach ($requiredSections as $sectionId) {
+            $contextClass = $this->submissionConfig['sections'][$sectionId]['context'];
+            $this->submissionContextManager->get($contextClass)->provide($submissionEntity, $context);
         }
 
         $contextArray = $context->getArrayCopy();

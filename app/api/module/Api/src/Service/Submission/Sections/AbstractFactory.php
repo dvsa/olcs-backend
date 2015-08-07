@@ -1,13 +1,13 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Submission\Context;
+namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class AbstractFactory
- * @package Dvsa\Olcs\Api\Service\Submission\Context
+ * @package Dvsa\Olcs\Api\Service\Submission\Sections
  */
 class AbstractFactory implements AbstractFactoryInterface
 {
@@ -21,7 +21,7 @@ class AbstractFactory implements AbstractFactoryInterface
      */
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        return in_array(AbstractContext::class, class_parents($requestedName), true);
+        return in_array(AbstractSection::class, class_parents($requestedName), true);
     }
 
     /**

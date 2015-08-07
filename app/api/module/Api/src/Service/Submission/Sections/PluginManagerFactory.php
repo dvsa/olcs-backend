@@ -1,7 +1,6 @@
 <?php
 
-
-namespace Dvsa\Olcs\Api\Service\Submission\Context;
+namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Zend\Mvc\Service\AbstractPluginManagerFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
@@ -9,7 +8,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class PluginManagerFactory
- * @package Dvsa\Olcs\Api\Service\Submission\Context
+ * @package Dvsa\Olcs\Api\Service\Submission\Sections
  */
 class PluginManagerFactory extends AbstractPluginManagerFactory
 {
@@ -19,8 +18,9 @@ class PluginManagerFactory extends AbstractPluginManagerFactory
     {
         $service = parent::createService($serviceLocator);
 
-        $handlers = $serviceLocator->get('Config')['submissions']['context'];
-        $config = new ServiceManagerConfig($handlers);
+        $sectionConfig = $serviceLocator->get('Config')['submissions']['sections'];
+
+        $config = new ServiceManagerConfig($sectionConfig);
         $config->configureServiceManager($service);
 
         return $service;
