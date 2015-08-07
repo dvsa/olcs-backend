@@ -25,9 +25,10 @@ class FinancialEvidence extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
 
-    protected $rates;
-
-    protected $otherApplications;
+    /**
+     * @var \Dvsa\Olcs\Api\Service\FinancialStandingHelperService $helper
+     */
+    protected $helper;
 
     public function handleQuery(QueryInterface $query)
     {
@@ -46,7 +47,7 @@ class FinancialEvidence extends AbstractQueryHandler
                 'requiredFinance' => $this->getRequiredFinance($application),
                 'vehicles' => $this->getTotalNumberOfAuthorisedVehicles($application),
             ],
-            $this->getRatesForView($application)
+            $this->helper->getRatesForView($application->getGoodsOrPsv()->getId())
         );
 
         $data = $application->jsonSerialize();
@@ -59,13 +60,9 @@ class FinancialEvidence extends AbstractQueryHandler
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         parent::createService($serviceLocator);
-
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->ratesRepo = $mainServiceLocator->get('RepositoryServiceManager')->get('FinancialStandingRate');
-
+        $this->helper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');
         return $this;
     }
-
 
     protected function getRequiredFinance($application)
     {
@@ -81,8 +78,7 @@ class FinancialEvidence extends AbstractQueryHandler
         ];
 
         // add the counts for each licence
-        $licences = $this->getOtherLicences($application);
-        foreach ($licences as $licence) {
+        foreach ($application->getOtherActiveLicencesForOrganisation() as $licence) {
             $auths[] = [
                 'type' => $licence->getLicenceType()->getId(),
                 'count' => $licence->getTotAuthVehicles(),
@@ -93,19 +89,7 @@ class FinancialEvidence extends AbstractQueryHandler
         // add the counts for each other application
         $applications = $this->getOtherApplications($application);
         foreach ($applications as $app) {
-            if (
-                in_array(
-                    $app->getStatus()->getId(),
-                    [
-                        ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
-                        ApplicationEntity::APPLICATION_STATUS_GRANTED,
-                    ]
-                )
-                &&
-                $app->getId() !== $application->getId()
-                &&
-                !is_null($app->getGoodsOrPsv())
-            ) {
+            if (!is_null($app->getGoodsOrPsv())) {
                 $type = null;
                 if ($app->getLicenceType()) {
                     $type = $app->getLicenceType()->getId();
@@ -118,210 +102,21 @@ class FinancialEvidence extends AbstractQueryHandler
             }
         }
 
-        return $this->getFinanceCalculation($auths);
-
-    }
-
-    protected function getOtherLicences($application)
-    {
-        $organisation = $application->getLicence()->getOrganisation();
-        $licences = $organisation->getLicences();
-        $filtered = [];
-        foreach ($licences as $licence) {
-            if (
-                in_array(
-                    $licence->getStatus()->getId(),
-                    [
-                        Licence::LICENCE_STATUS_VALID,
-                        Licence::LICENCE_STATUS_SUSPENDED,
-                        Licence::LICENCE_STATUS_CURTAILED,
-                    ]
-                )
-                &&
-                $licence->getId() !== $application->getLicence()->getId()
-            ) {
-                $filtered[] = $licence;
-            }
-        }
-        return $filtered;
+        return $this->helper->getFinanceCalculation($auths);
     }
 
     protected function getOtherApplications($application)
     {
-        if (is_null($this->otherApplications)) {
-            $organisation = $application->getLicence()->getOrganisation();
-            $applications = $this->getRepo()->fetchForOrganisation($organisation->getId());
-            $this->otherApplications = [];
-            foreach ($applications as $app) {
-                if (
-                    in_array(
-                        $app->getStatus()->getId(),
-                        [
-                            ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
-                            ApplicationEntity::APPLICATION_STATUS_GRANTED,
-                        ]
-                    )
-                    &&
-                    $app->getId() !== $application->getId()
-                ) {
-                    $this->otherApplications[] = $app;
-                }
-            }
-        }
+        $organisation = $application->getLicence()->getOrganisation();
 
-        return $this->otherApplications;
-    }
+        $applications = $this->getRepo()->fetchActiveForOrganisation($organisation->getId());
 
-    /**
-     * Takes an array of vehicle authorisations (example below) and
-     * returns the required finance amount
-     *
-     * array (
-     *   0 =>
-     *   array (
-     *     'category' => 'lcat_gv'
-     *     'type' => 'ltyp_si',
-     *     'count' => 3,
-     *   ),
-     *   1 =>
-     *   array (
-     *     'category' => 'lcat_gv'
-     *     'type' => 'ltyp_r',
-     *     'count' => 3,
-     *   ),
-     *   2 =>
-     *   array (
-     *     'catgegory' => 'lcat_psv'
-     *     'type' => 'ltyp_r',
-     *     'count' => 1,
-     *   ),
-     * )
-     *
-     * Calculation:
-     *    1 x 7000
-     * +  2 x 3900
-     * +  3 x 1700
-     * +  1 x 2700
-     * -----------
-     *       22600
-     *
-     * @param array $auths
-     * @return int
-     */
-    protected function getFinanceCalculation(array $auths)
-    {
-        $firstVehicleCharge      = 0;
-        $additionalVehicleCharge = 0;
-        $foundHigher             = false;
-        $higherChargeTypes       = [
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-        ];
-
-        // 1. Sort the array so the correct (higher) 'first vehicle' charge is
-        // applied (i.e. ensure any PSV apps/licences are handled first)
-        usort(
-            $auths,
-            function ($a, $b) {
-                unset($b); // not used in comparison
-                return $a['category'] === Licence::LICENCE_CATEGORY_PSV ? -1 : 1;
+        return array_filter(
+            $applications,
+            function ($app) use ($application) {
+                return $app->getId() !== $application->getId();
             }
         );
-
-        // 2. Get first vehicle charge
-        foreach ($auths as $key => $auth) {
-            if (!$foundHigher && $auth['count']>0) {
-                $firstVehicleCharge = $this->getFirstVehicleRate($auth['type'], $auth['category']);
-                $firstVehicleKey = $key;
-            }
-            if (in_array($auth['type'], $higherChargeTypes)) {
-                $foundHigher = true;
-            }
-        }
-
-        // 3. Ensure we don't double-count the first vehicle
-        $auths[$firstVehicleKey]['count']--;
-
-        // 4. Get the additional vehicle charges
-        foreach ($auths as $key => $auth) {
-            $rate = $this->getAdditionalVehicleRate($auth['type'], $auth['category']);
-            $additionalVehicleCharge += ($auth['count'] * $rate);
-        }
-
-        // 5. Return the total required finance
-        return $firstVehicleCharge + $additionalVehicleCharge;
-    }
-
-    /**
-     * @param string $licenceType
-     * @param string $goodsOrPsv
-     * @return float
-     */
-    public function getFirstVehicleRate($licenceType, $goodsOrPsv)
-    {
-        foreach ($this->getRates() as $rate) {
-            if ($rate->getGoodsOrPsv()->getId() == $goodsOrPsv && $rate->getLicenceType()->getId() == $licenceType) {
-                return (float) $rate->getFirstVehicleRate();
-            }
-        }
-    }
-
-    /**
-     * @param string $licenceType
-     * @param string $goodsOrPsv
-     * @return float
-     */
-    public function getAdditionalVehicleRate($licenceType, $goodsOrPsv)
-    {
-        foreach ($this->getRates() as $rate) {
-            if ($rate->getGoodsOrPsv()->getId() == $goodsOrPsv && $rate->getLicenceType()->getId() == $licenceType) {
-                return (float) $rate->getAdditionalVehicleRate();
-            }
-        }
-    }
-
-    protected function getRates()
-    {
-        // we only make one call to look up standing rates
-        if (is_null($this->rates)) {
-            $date = new \DateTime();
-            $this->rates = $this->ratesRepo->getRatesInEffect($date);
-        }
-        return $this->rates;
-    }
-
-    /**
-     * Gets the vehicle rates to display in the help section of the page. Note
-     * that currently we only display the rates according to the current
-     * application category (Goods or PSV) - if the operator holds another
-     * category of licence those figures will be used for the calculation but
-     * are not shown.
-     *
-     * @param int $applicationId
-     * @return array
-     */
-    public function getRatesForView($application)
-    {
-        $goodsOrPsv = $application->getGoodsOrPsv()->getId();
-
-        return [
-            'standardFirst' => $this->getFirstVehicleRate(
-                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                $goodsOrPsv
-            ),
-            'standardAdditional' => $this->getAdditionalVehicleRate(
-                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                $goodsOrPsv
-            ),
-            'restrictedFirst' => $this->getFirstVehicleRate(
-                Licence::LICENCE_TYPE_RESTRICTED,
-                $goodsOrPsv
-            ),
-            'restrictedAdditional' => $this->getAdditionalVehicleRate(
-                Licence::LICENCE_TYPE_RESTRICTED,
-                $goodsOrPsv
-            ),
-        ];
     }
 
     /**
@@ -346,8 +141,7 @@ class FinancialEvidence extends AbstractQueryHandler
 
         // get the total vehicle authorisation for other licences
         $otherLicenceVehicles = 0;
-        $licences = $this->getOtherLicences($application);
-        foreach ($licences as $licence) {
+        foreach ($application->getOtherActiveLicencesForOrganisation() as $licence) {
             $otherLicenceVehicles += (int)$licence->getTotAuthVehicles();
         }
 

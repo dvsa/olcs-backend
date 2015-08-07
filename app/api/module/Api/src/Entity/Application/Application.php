@@ -5,14 +5,14 @@ namespace Dvsa\Olcs\Api\Entity\Application;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Repository\Publication;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 
@@ -1091,5 +1091,35 @@ class Application extends AbstractApplication
         }
 
         return false;
+    }
+
+    /**
+     * For an application, get the organisation's other licences (explicity
+     * excludes the current application's licence)
+     *
+     * @note different from AbstractApplication::getOtherLicences() which is,
+     * erm, something else entirely
+     *
+     * @return array Licence[]
+     */
+    public function getOtherActiveLicencesForOrganisation()
+    {
+        if ($this->getLicence() && $this->getLicence()->getOrganisation()) {
+
+            $licences = $this->getLicence()->getOrganisation()->getActiveLicences();
+
+            if (empty($licences)) {
+                return [];
+            }
+
+            $filtered = array_filter(
+                $licences->toArray(),
+                function ($licence) {
+                    return $licence->getId() !== $this->getLicence()->getId();
+                }
+            );
+
+            return array_values($filtered);
+        }
     }
 }
