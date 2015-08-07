@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Fstanding Capital Reserves Bookmark
+ * FStanding Capital Reserves Bookmark
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
@@ -12,11 +12,11 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Fstanding Capital Reserves Bookmark
+ * FStanding Capital Reserves Bookmark
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class FstandingCapitalReserves extends AbstractQueryHandler
+class FStandingCapitalReserves extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
 

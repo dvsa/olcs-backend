@@ -5,11 +5,11 @@ namespace Dvsa\Olcs\Api\Domain\Query\Bookmark;
 use Dvsa\Olcs\Transfer\Query\AbstractQuery;
 
 /**
- * FstandingCapitalReserves
+ * FStandingCapitalReserves
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class FstandingCapitalReserves extends AbstractQuery
+class FStandingCapitalReserves extends AbstractQuery
 {
     /**
      * @var int $organisation
