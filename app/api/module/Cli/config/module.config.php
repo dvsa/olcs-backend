@@ -24,7 +24,7 @@ return [
                 ],
                 'process-queue' => [
                     'options' => [
-                        'route' => 'process-queue [<type>]',
+                        'route' => 'process-queue [--type=]',
                         'defaults' => [
                             'controller' => 'QueueController',
                             'action' => 'index'
