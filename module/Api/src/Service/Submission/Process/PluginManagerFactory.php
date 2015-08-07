@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Dvsa\Olcs\Api\Service\Submission\Process;
-
 
 use Zend\Mvc\Service\AbstractPluginManagerFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
@@ -20,7 +18,7 @@ class PluginManagerFactory extends AbstractPluginManagerFactory
     {
         $service = parent::createService($serviceLocator);
 
-        $handlers = $serviceLocator->get('Config')['submission_process'];
+        $handlers = $serviceLocator->get('Config')['submissions']['process'];
         $config = new ServiceManagerConfig($handlers);
         $config->configureServiceManager($service);
 

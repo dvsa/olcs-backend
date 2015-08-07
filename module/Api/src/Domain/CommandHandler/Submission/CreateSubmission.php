@@ -23,13 +23,17 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
 
     protected $repoServiceName = 'Submission';
 
+    /**
+     * @param CommandInterface $command
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         /** @var SubmissionEntity $submissionEntity */
         $submissionEntity = $this->createSubmission($command);
 
         $submissionEntity->setDataSnapshot(
-            $this->getSubmissionGenerator()->generateSubmissionData($command)
+            $this->getSubmissionGenerator()->generateSubmissionData($submissionEntity, $command->getSections())
         );
         //$this->getRepo()->save($submission);
 

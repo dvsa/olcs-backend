@@ -47,17 +47,23 @@ return [
             'CpmsIdentityProvider' => \Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
             'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperService::class,
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
+            'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
+
             \Dvsa\Olcs\Api\Service\Publication\PublicationGenerator::class =>
                 \Dvsa\Olcs\Api\Service\Publication\PublicationGeneratorFactory::class,
+
             \Dvsa\Olcs\Api\Service\Publication\Context\PluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Publication\Context\PluginManagerFactory::class,
+
             \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Publication\Process\PluginManagerFactory::class,
-            'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
+
             \Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator::class =>
                 \Dvsa\Olcs\Api\Service\Submission\SubmissionGeneratorFactory::class,
+
             \Dvsa\Olcs\Api\Service\Submission\Context\PluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Context\PluginManagerFactory::class,
+
             \Dvsa\Olcs\Api\Service\Submission\Process\PluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Process\PluginManagerFactory::class,
         ],

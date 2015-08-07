@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Submission\Context;
+namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
@@ -9,9 +9,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class PluginManager
- * @package Dvsa\Olcs\Api\Service\Submission\Context
+ * @package Dvsa\Olcs\Api\Service\Submission\Sections
  */
-class PluginManager extends AbstractPluginManager
+class SectionGeneratorPluginManager extends AbstractPluginManager
 {
     public function __construct(ConfigInterface $configuration = null)
     {
@@ -31,8 +31,8 @@ class PluginManager extends AbstractPluginManager
      */
     public function validatePlugin($plugin)
     {
-        if (!($plugin instanceof ContextInterface)) {
-            throw new Exception\RuntimeException(get_class($plugin) . ' should implement: ' . ContextInterface::class);
+        if (!($plugin instanceof SectionGeneratorInterface)) {
+            throw new Exception\RuntimeException(get_class($plugin) . ' should implement: ' . SectionGeneratorInterface::class);
         }
     }
 }
