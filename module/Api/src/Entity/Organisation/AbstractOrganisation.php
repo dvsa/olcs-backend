@@ -21,6 +21,7 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_organisation_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_organisation_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_organisation_type", columns={"type"}),
+ *        @ORM\Index(name="ix_organisation_cpid", columns={"cpid"}),
  *        @ORM\Index(name="ix_organisation_lead_tc_area_id", columns={"lead_tc_area_id"}),
  *        @ORM\Index(name="ix_organisation_name", columns={"name"}),
  *        @ORM\Index(name="ix_organisation_contact_details_id", columns={"contact_details_id"}),
@@ -70,6 +71,16 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
      * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=true)
      */
     protected $contactDetails;
+
+    /**
+     * Cpid
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="cpid", referencedColumnName="id", nullable=true)
+     */
+    protected $cpid;
 
     /**
      * Created by
@@ -406,6 +417,29 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     public function getContactDetails()
     {
         return $this->contactDetails;
+    }
+
+    /**
+     * Set the cpid
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $cpid
+     * @return Organisation
+     */
+    public function setCpid($cpid)
+    {
+        $this->cpid = $cpid;
+
+        return $this;
+    }
+
+    /**
+     * Get the cpid
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getCpid()
+    {
+        return $this->cpid;
     }
 
     /**
