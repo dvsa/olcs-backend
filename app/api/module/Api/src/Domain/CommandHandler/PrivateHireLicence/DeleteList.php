@@ -29,15 +29,8 @@ final class DeleteList extends AbstractCommandHandler implements TransactionedIn
         foreach ($command->getIds() as $tmeId) {
             /* @var $phl \Dvsa\Olcs\Api\Entity\Licence\PrivateHireLicence */
             $phl = $this->getRepo()->fetchById($tmeId);
-            $licence = $phl->getLicence();
             $this->getRepo()->delete($phl);
             $result->addMessage("PrivateHireLicence ID {$tmeId} deleted");
-        }
-
-        if ($licence->getPrivateHireLicences()->count() === 0) {
-            $licence->setTrafficArea(null);
-            $this->getRepo('Licence')->save($licence);
-            $result->addMessage("Licence Traffic Area set to null");
         }
 
         return $result;
