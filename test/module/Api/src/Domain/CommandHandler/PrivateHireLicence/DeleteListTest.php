@@ -46,18 +46,12 @@ class DeleteListTest extends CommandHandlerTestCase
         $this->repoMap['PrivateHireLicence']->shouldReceive('fetchById')->with(12373)->once()->andReturn($phl2);
         $this->repoMap['PrivateHireLicence']->shouldReceive('delete')->with($phl2)->once()->andReturn();
 
-        $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
-            function (\Dvsa\Olcs\Api\Entity\Licence\Licence $saveLicence) {
-                $this->assertNull($saveLicence->getTrafficArea());
-            }
-        );
         $response = $this->sut->handleCommand($command);
 
         $this->assertSame(
             [
                 'PrivateHireLicence ID 4323 deleted',
                 'PrivateHireLicence ID 12373 deleted',
-                'Licence Traffic Area set to null'
             ],
             $response->getMessages()
         );
