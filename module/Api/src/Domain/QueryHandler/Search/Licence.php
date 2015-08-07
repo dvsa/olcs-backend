@@ -151,7 +151,8 @@ class Licence extends AbstractQueryHandler
                         'conditionType'
                     ]
                 ),
-                'otherLicences' => $this->resultList($licence->getOtherActiveLicences())
+                'otherLicences' => $this->resultList($licence->getOtherActiveLicences()),
+                'disqualificationStatus' => $licence->getOrganisation()->getDisqualificationStatus(),
             ]
         );
 

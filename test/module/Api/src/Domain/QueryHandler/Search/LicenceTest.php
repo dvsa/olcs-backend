@@ -190,6 +190,8 @@ class LicenceTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($licence);
 
+        $organisation->shouldReceive('getDisqualificationStatus')->with()->once()->andReturn('DIS_STATUS');
+
         $result = $this->sut->handleQuery($query);
 
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result);
