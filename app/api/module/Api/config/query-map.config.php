@@ -30,8 +30,8 @@ return [
     BookmarkQuery\PsvDiscBundle::class => BookmarkQueryHandler\PsvDiscBundle::class,
     BookmarkQuery\InterimConditionsUndertakings::class
         => BookmarkQueryHandler\InterimConditionsUndertakings::class,
-    BookmarkQuery\FstandingAdditionalVeh::class => BookmarkQueryHandler\FstandingAdditionalVeh::class,
-    BookmarkQuery\FstandingCapitalReserves::class => BookmarkQueryHandler\FstandingCapitalReserves::class,
+    BookmarkQuery\FStandingAdditionalVeh::class => BookmarkQueryHandler\FStandingAdditionalVeh::class,
+    BookmarkQuery\FStandingCapitalReserves::class => BookmarkQueryHandler\FStandingCapitalReserves::class,
     BookmarkQuery\PiHearingBundle::class => BookmarkQueryHandler\PiHearingBundle::class,
     BookmarkQuery\PiVenueBundle::class => BookmarkQueryHandler\PiVenueBundle::class,
     BookmarkQuery\PreviousHearingBundle::class => BookmarkQueryHandler\PreviousHearing::class,
