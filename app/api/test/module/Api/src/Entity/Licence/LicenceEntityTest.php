@@ -790,4 +790,18 @@ class LicenceEntityTest extends EntityTester
             [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, 'O'],
         ];
     }
+
+    public function testGetRemainingSpacesPsv()
+    {
+        $licence = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getTotAuthVehicles')
+            ->andReturn(2)
+            ->once()
+            ->shouldReceive('getPsvDiscsNotCeased')
+            ->andReturn(new \ArrayObject([1, 2, 3]))
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(-1, $licence->getRemainingSpacesPsv());
+    }
 }

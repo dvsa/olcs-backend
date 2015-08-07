@@ -38,14 +38,17 @@ class PsvDiscsTest extends QueryHandlerTestCase
         $licence->shouldReceive('serialize')
             ->once()
             ->with(['psvDiscs'])
-            ->andReturn(['foo' => 'bar']);
+            ->andReturn(['foo' => 'bar', 'remainingSpacesPsv' => 10])
+            ->shouldReceive('getRemainingSpacesPsv')
+            ->andReturn(10)
+            ->once();
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($licence);
 
         $result = $this->sut->handleQuery($query);
-        $this->assertEquals(['foo' => 'bar'], $result->serialize());
+        $this->assertEquals(['foo' => 'bar', 'remainingSpacesPsv' => 10], $result->serialize());
     }
 
     public function testHandleQueryWithoutCeased()
@@ -62,13 +65,16 @@ class PsvDiscsTest extends QueryHandlerTestCase
 
                     return ['foo' => 'bar'];
                 }
-            );
+            )
+            ->shouldReceive('getRemainingSpacesPsv')
+            ->andReturn(10)
+            ->once();
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($licence);
 
         $result = $this->sut->handleQuery($query);
-        $this->assertEquals(['foo' => 'bar'], $result->serialize());
+        $this->assertEquals(['foo' => 'bar', 'remainingSpacesPsv' => 10], $result->serialize());
     }
 }

@@ -29,7 +29,8 @@ class PsvDiscs extends AbstractQueryHandler
         if ($query->getIncludeCeased()) {
             return $this->result(
                 $licence,
-                ['psvDiscs']
+                ['psvDiscs'],
+                ['remainingSpacesPsv' => $licence->getRemainingSpacesPsv()]
             );
         }
 
@@ -40,7 +41,8 @@ class PsvDiscs extends AbstractQueryHandler
 
         return $this->result(
             $licence,
-            ['psvDiscs' => ['criteria' => $criteria]]
+            ['psvDiscs' => ['criteria' => $criteria]],
+            ['remainingSpacesPsv' => $licence->getRemainingSpacesPsv()]
         );
     }
 }
