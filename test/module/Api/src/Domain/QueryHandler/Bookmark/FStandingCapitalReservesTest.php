@@ -1,33 +1,33 @@
 <?php
 
 /**
- * FstandingCapitalReserves Test
+ * FStandingCapitalReserves Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bookmark;
 
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark\FstandingCapitalReserves;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark\FStandingCapitalReserves;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\FstandingCapitalReserves as Qry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\FStandingCapitalReserves as Qry;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 
 /**
- * FstandingCapitalReserves Test
+ * FStandingCapitalReserves Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class FstandingCapitalReservesTest extends QueryHandlerTestCase
+class FStandingCapitalReservesTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new FstandingCapitalReserves();
+        $this->sut = new FStandingCapitalReserves();
         $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockRepo('Organisation', OrganisationRepo::class);
 

@@ -1,26 +1,26 @@
 <?php
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\FstandingAdditionalVeh;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\FStandingFirstVeh;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
- * FstandingAdditionalVeh bookmark test
+ * FStandingFirstVeh bookmark test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class FstandingAdditionalVehTest extends MockeryTestCase
+class FStandingFirstVehTest extends MockeryTestCase
 {
     protected $sut;
 
     public function setUp()
     {
-        $this->sut = new FstandingAdditionalVeh();
+        $this->sut = new FStandingFirstVeh();
     }
 
-    public function testGetQuer()
+    public function testGetQuery()
     {
         $mockDateHelper = m::mock('Dvsa\Olcs\Api\Service\Date')
             ->shouldReceive('getDate')
@@ -39,26 +39,26 @@ class FstandingAdditionalVehTest extends MockeryTestCase
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
     }
 
-    public function testRenderWithNoAdditionalVehicleFee()
+    public function testRenderWithNoFirstVehicleFee()
     {
         $this->sut->setData([]);
         $this->assertEquals('', $this->sut->render());
     }
 
-    public function testRenderWithAdditionalVehicleFee()
+    public function testRenderWithFirstVehicleFee()
     {
         $this->sut->setData(
             [
                 'Count' => 2,
                 'Results' => [
                     [
-                        'additionalVehicleRate' => '123456',
+                        'firstVehicleRate' => '123456',
                         'effectiveFrom' => '2015-01-01'
                     ],
                     [
-                        'additionalVehicleRate' => '789012',
-                        'effectiveFrom' => '2014-01-01'
-                    ],
+                        'firstVehicleRate' => '023444',
+                        'effectiveFrom' => '2013-01-01'
+                    ]
                 ]
             ]
         );
