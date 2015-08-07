@@ -50,6 +50,7 @@ return [
                 \Dvsa\Olcs\Api\Service\Publication\Context\PluginManagerFactory::class,
             \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Publication\Process\PluginManagerFactory::class,
+            'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
         ],
     ],
     'file_uploader' => [

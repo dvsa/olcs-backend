@@ -77,7 +77,9 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         $results = $qb->getQuery()->getResult($hydrateMode);
 
         if (empty($results)) {
-            throw new Exception\NotFoundException('Resource not found');
+            throw new Exception\NotFoundException(
+                sprintf('Resource not found (%s id %s)', $this->entity, $id)
+            );
         }
 
         if ($hydrateMode === Query::HYDRATE_OBJECT && $version !== null) {
