@@ -155,4 +155,33 @@ class Organisation extends AbstractOrganisation
 
         return $this->getLicences()->matching($criteria);
     }
+
+    /*
+     * Get the disqualification linked to this organisation
+     * NB DB schema is 1 to many, but it is only possible to have one disqualification record per organisation
+     *
+     * @return null|Disqualification
+     */
+    public function getDisqualification()
+    {
+        if ($this->getDisqualifications()->isEmpty()) {
+            return null;
+        }
+
+        return $this->getDisqualifications()->first();
+    }
+
+    /**
+     * Get the disqualification status
+     *
+     * @return string Disqualification constant STATUS_NONE, STATUS_ACTIVE or STATUS_INACTIVE
+     */
+    public function getDisqualificationStatus()
+    {
+        if ($this->getDisqualification() === null) {
+            return Disqualification::STATUS_NONE;
+        }
+
+        return $this->getDisqualification()->getStatus();
+    }
 }

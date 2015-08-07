@@ -6,6 +6,7 @@ use Mockery as m;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
 use Doctrine\Common\Collections\Criteria;
 
 /**
@@ -231,5 +232,47 @@ class OrganisationEntityTest extends EntityTester
             ['active licences'],
             $organisation->getActiveLicences()->toArray()
         );
+    }
+
+    public function testGetDisqualificationNull()
+    {
+        /* @var $organisation Entity */
+        $organisation = $this->instantiate($this->entityClass);
+        $organisation->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection());
+
+        $this->assertSame(null, $organisation->getDisqualification());
+    }
+
+    public function testGetDisqualification()
+    {
+        $disqualification = new Disqualification();
+
+        /* @var $organisation Entity */
+        $organisation = $this->instantiate($this->entityClass);
+        $organisation->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection([$disqualification]));
+
+        $this->assertSame($disqualification, $organisation->getDisqualification());
+    }
+
+    public function testGetDisqualificationStatusNone()
+    {
+        /* @var $organisation Entity */
+        $organisation = $this->instantiate($this->entityClass);
+        $organisation->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection());
+
+        $this->assertSame(Disqualification::STATUS_NONE, $organisation->getDisqualificationStatus());
+    }
+
+    public function testGetDisqualificationStatusActive()
+    {
+        $disqualification = new Disqualification();
+        $disqualification->setIsDisqualified('Y');
+        $disqualification->setStartDate('2015-01-01');
+
+        /* @var $organisation Entity */
+        $organisation = $this->instantiate($this->entityClass);
+        $organisation->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection([$disqualification]));
+
+        $this->assertSame(Disqualification::STATUS_ACTIVE, $organisation->getDisqualificationStatus());
     }
 }
