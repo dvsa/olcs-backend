@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -92,16 +93,21 @@ final class Schedule41 extends AbstractCommandHandler implements TransactionedIn
                     )
                 )
             );
+            $conditionUndertakings = $licenceOperatingCentre
+                ->getOperatingCentre()
+                ->getConditionUndertakings();
 
             /** @var ConditionUndertaking $conditionUndertaking */
-            foreach ($licenceOperatingCentre
-                    ->getOperatingCentre()
-                    ->getConditionUndertakings() as $conditionUndertaking) {
+            foreach ($conditionUndertakings as $conditionUndertaking) {
+                if (is_null($conditionUndertaking->getLicence())) {
+                    continue;
+                }
+
                 $result->merge(
                     $this->handleSideEffect(
                         CreateConditionUndertaking::create(
                             [
-                                'licence' => $licence->getId(),
+                                'licence' => null,
                                 'application' => $application,
                                 'operatingCentre' => $licenceOperatingCentre->getOperatingCentre()->getId(),
                                 'conditionType' => $conditionUndertaking->getConditionType()->getId(),

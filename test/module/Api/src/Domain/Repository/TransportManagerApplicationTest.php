@@ -223,20 +223,25 @@ class TransportManagerApplicationTest extends RepositoryTestCase
     public function testFetchByTmAndApplication()
     {
         $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
 
-        $mockQb->shouldReceive('expr->eq')->with('tma.transportManager', ':transportManager')->once()->andReturn('tm');
-        $mockQb->shouldReceive('where')->with('tm')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('transportManager', 1)->once();
+        $mockQb->shouldReceive('expr->eq')->with('tma.transportManager', ':tmId')->once()->andReturn('EXPR1');
+        $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('tmId', 1)->once();
 
-        $mockQb->shouldReceive('expr->eq')->with('tma.application', ':application')->once()->andReturn('app');
-        $mockQb->shouldReceive('andWhere')->with('app')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('application', 2)->once();
+        $mockQb->shouldReceive('expr->eq')->with('tma.application', ':applicationId')->once()->andReturn('EXPR2');
+        $mockQb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('applicationId', 2)->once();
 
-        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
+        $mockQb->shouldReceive('expr->neq')->with('tma.action', ':action')->once()->andReturn('EXPR3');
+        $mockQb->shouldReceive('andWhere')->with('EXPR3')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('action', 'D')->once();
 
-        $this->assertEquals(['RESULT'], $this->sut->fetchByTmAndApplication(1, 2));
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('RESULT');
+        $this->assertEquals('RESULT', $this->sut->fetchByTmAndApplication(1, 2, true));
     }
+
 
     public function testFetchForResponsibilities()
     {

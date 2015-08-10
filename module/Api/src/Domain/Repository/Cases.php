@@ -111,4 +111,21 @@ class Cases extends AbstractRepository
                 ->setParameter('byTransportManager', $query->getTransportManager());
         }
     }
+
+    public function fetchExtended($caseId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->with('application', 'a')
+            ->with('transportManager', 'tm')
+            ->byId($caseId);
+
+        $res = $qb->getQuery()->getResult();
+        if (!$res) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+        return $res[0];
+    }
 }

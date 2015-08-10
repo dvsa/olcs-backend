@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Create a Transport Manager Application
@@ -51,7 +52,8 @@ final class Create extends AbstractCommandHandler implements
         $result = new Result();
 
         /* @var $user \Dvsa\Olcs\Api\Entity\User\User */
-        $user = $this->userRepo->fetchById($command->getUser());
+        $user = $this->userRepo->fetchForTma($command->getUser());
+        $this->validateTransportManagerApplication($command->getApplication(), $user);
 
         if (!$user->getTransportManager()) {
             // create a Transport Manager
@@ -96,5 +98,27 @@ final class Create extends AbstractCommandHandler implements
         $result->addMessage('Transport Manager successfully created.');
 
         return $result;
+    }
+
+    protected function validateTransportManagerApplication($applicationId, $user)
+    {
+        if (!$user->getTransportManager()) {
+            return;
+        }
+        $tmId = $user->getTransportManager()->getId();
+        $tmApps = $this->getRepo()->fetchByTmAndApplication($tmId, $applicationId, true);
+
+        if ($tmApps) {
+            throw new ValidationException(
+                [
+                    'registeredUser' => [
+                        TransportManagerApplication::ERROR_TM_EXIST =>
+                            $user->getContactDetails()->getPerson()->getForename() . ' ' .
+                            $user->getContactDetails()->getPerson()->getFamilyname() .
+                            ' has already been added to this application'
+                    ]
+                ]
+            );
+        }
     }
 }

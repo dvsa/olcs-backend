@@ -26,7 +26,13 @@ class VariationOperatingCentre extends AbstractQueryHandler
         list($prefix, $id) = $this->splitTypeAndId($id);
 
         if ($prefix === 'L') {
-            return $this->getQueryHandler()->handleQuery(LicenceOperatingCentre::create(['id' => $id]));
+            return $this->getQueryHandler()->handleQuery(
+                LicenceOperatingCentre::create(
+                    [
+                        'id' => $id, 'isVariation' => true
+                    ]
+                )
+            );
         } elseif ($prefix === 'A') {
             return $this->getQueryHandler()->handleQuery(ApplicationOperatingCentre::create(['id' => $id]));
         }

@@ -1256,6 +1256,12 @@ return array(
     'disqualification' => array(
         'is_disqualified' => array(
             'type' => 'yesnonull'
+        ),
+        'organisation_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Organisation',
+                'property' => 'disqualification'
+            )
         )
     ),
     'legacy_offence' => array(

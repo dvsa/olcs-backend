@@ -56,6 +56,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         $operatingCentre = $loc->getOperatingCentre();
 
         $data = $command->getAddress();
+
         $this->result->merge($this->handleSideEffect(SaveAddress::create($data)));
 
         // Link, unlinked documents to the OC

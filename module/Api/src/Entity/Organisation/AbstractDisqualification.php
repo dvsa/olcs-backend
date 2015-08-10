@@ -121,7 +121,11 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
      *
      * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation",
+     *     fetch="LAZY",
+     *     inversedBy="disqualifications"
+     * )
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
      */
     protected $organisation;
@@ -131,7 +135,7 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="period", nullable=false)
+     * @ORM\Column(type="smallint", name="period", nullable=true)
      */
     protected $period;
 

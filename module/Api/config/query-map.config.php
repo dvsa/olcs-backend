@@ -30,7 +30,8 @@ return [
     BookmarkQuery\PsvDiscBundle::class => BookmarkQueryHandler\PsvDiscBundle::class,
     BookmarkQuery\InterimConditionsUndertakings::class
         => BookmarkQueryHandler\InterimConditionsUndertakings::class,
-    BookmarkQuery\FstandingAdditionalVeh::class => BookmarkQueryHandler\FstandingAdditionalVeh::class,
+    BookmarkQuery\FStandingAdditionalVeh::class => BookmarkQueryHandler\FStandingAdditionalVeh::class,
+    BookmarkQuery\FStandingCapitalReserves::class => BookmarkQueryHandler\FStandingCapitalReserves::class,
     BookmarkQuery\PiHearingBundle::class => BookmarkQueryHandler\PiHearingBundle::class,
     BookmarkQuery\PiVenueBundle::class => BookmarkQueryHandler\PiVenueBundle::class,
     BookmarkQuery\PreviousHearingBundle::class => BookmarkQueryHandler\PreviousHearing::class,
@@ -96,6 +97,7 @@ return [
     TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
     TransferQuery\Organisation\OutstandingFees::class => QueryHandler\Organisation\OutstandingFees::class,
     TransferQuery\Organisation\Dashboard::class => QueryHandler\Organisation\Dashboard::class,
+    TransferQuery\Organisation\People::class => QueryHandler\Organisation\People::class,
 
     // Variation
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
@@ -325,4 +327,6 @@ return [
     TransferQuery\VariationOperatingCentre\VariationOperatingCentre::class
         => QueryHandler\VariationOperatingCentre\VariationOperatingCentre::class,
 
+    // Organisation Person
+   TransferQuery\OrganisationPerson\GetSingle::class => QueryHandler\OrganisationPerson\GetSingle::class,
 ];
