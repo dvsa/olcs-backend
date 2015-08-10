@@ -581,7 +581,7 @@ return [
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
     TransferCommand\Vehicle\UpdateGoodsVehicle::class => CommandHandler\Vehicle\UpdateGoodsVehicle::class,
-    TransferCommand\Vehicle\DeleteGoodsVehicle::class => CommandHandler\Vehicle\DeleteGoodsVehicle::class,
+    TransferCommand\Vehicle\DeleteLicenceVehicle::class => CommandHandler\Vehicle\DeleteLicenceVehicle::class,
     Command\Vehicle\CeaseActiveDiscs::class => CommandHandler\Vehicle\CeaseActiveDiscs::class,
     TransferCommand\Vehicle\ReprintDisc::class => CommandHandler\Vehicle\ReprintDisc::class,
     Command\Vehicle\CreateGoodsDiscs::class => CommandHandler\Vehicle\CreateGoodsDiscs::class,
