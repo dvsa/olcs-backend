@@ -61,6 +61,7 @@ return [
     TransferQuery\Application\Interim::class => QueryHandler\Application\Interim::class,
     TransferQuery\Application\GetList::class => QueryHandler\Application\GetList::class,
     TransferQuery\Application\OperatingCentres::class => QueryHandler\Application\OperatingCentres::class,
+    TransferQuery\Application\PsvVehicles::class => QueryHandler\Application\PsvVehicles::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -84,6 +85,7 @@ return [
     TransferQuery\Licence\ContinuationDetail::class => QueryHandler\Licence\ContinuationDetail::class,
     TransferQuery\Licence\GetList::class => QueryHandler\Licence\GetList::class,
     TransferQuery\Licence\OperatingCentres::class => QueryHandler\Licence\OperatingCentres::class,
+    TransferQuery\Licence\PsvVehicles::class => QueryHandler\Licence\PsvVehicles::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
@@ -103,6 +105,7 @@ return [
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
     TransferQuery\Variation\TypeOfLicence::class => QueryHandler\Variation\TypeOfLicence::class,
     TransferQuery\Variation\GoodsVehicles::class => QueryHandler\Variation\GoodsVehicles::class,
+    TransferQuery\Variation\PsvVehicles::class => QueryHandler\Variation\PsvVehicles::class,
 
     // Cases
     TransferQuery\Cases\Cases::class => QueryHandler\Cases\Cases::class,
@@ -237,6 +240,7 @@ return [
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
+    TransferQuery\TmEmployment\GetList::class => QueryHandler\TmEmployment\GetList::class,
 
     // Bus Reg History View
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
@@ -254,6 +258,7 @@ return [
 
     // Licence Vehicle
     TransferQuery\LicenceVehicle\LicenceVehicle::class => QueryHandler\LicenceVehicle\LicenceVehicle::class,
+    TransferQuery\LicenceVehicle\PsvLicenceVehicle::class => QueryHandler\LicenceVehicle\PsvLicenceVehicle::class,
 
     // Inspection Request
     TransferQuery\InspectionRequest\OperatingCentres::class => QueryHandler\InspectionRequest\OperatingCentres::class,

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Delete Goods Vehicle Test
+ * Delete Psv Vehicle Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -10,22 +10,22 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Application\DeleteGoodsVehicle;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Application\DeletePsvVehicle;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
-use Dvsa\Olcs\Transfer\Command\Application\DeleteGoodsVehicle as Cmd;
+use Dvsa\Olcs\Transfer\Command\Application\DeletePsvVehicle as Cmd;
 use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteLicenceVehicle as VehicleCmd;
 
 /**
- * Delete Goods Vehicle Test
+ * Delete Psv Vehicle Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DeleteGoodsVehicleTest extends CommandHandlerTestCase
+class DeletePsvVehicleTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new DeleteGoodsVehicle();
+        $this->sut = new DeletePsvVehicle();
         $this->mockRepo('Application', ApplicationRepo::class);
 
         parent::setUp();
@@ -51,12 +51,12 @@ class DeleteGoodsVehicleTest extends CommandHandlerTestCase
             'ids' => [123, 456]
         ];
         $result1 = new Result();
-        $result1->addMessage('Goods Vehicle Deleted');
+        $result1->addMessage('Psv Vehicle Deleted');
         $this->expectedSideEffect(VehicleCmd::class, $data, $result1);
 
         $data = [
             'id' => 111,
-            'section' => 'vehicles'
+            'section' => 'vehiclesPsv'
         ];
         $result2 = new Result();
         $result2->addMessage('Section Updated');
@@ -69,7 +69,7 @@ class DeleteGoodsVehicleTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                'Goods Vehicle Deleted',
+                'Psv Vehicle Deleted',
                 'Section Updated'
             ]
         ];
