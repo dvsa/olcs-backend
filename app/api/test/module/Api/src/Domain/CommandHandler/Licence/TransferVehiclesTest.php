@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\TransferVehicles;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Transfer\Command\Licence\TransferVehicles as Cmd;
-use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteGoodsVehicle;
+use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteLicenceVehicle;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
@@ -238,7 +238,7 @@ class TransferVehiclesTest extends CommandHandlerTestCase
         $data = ['ids' => [123, 321]];
         $result1 = new Result();
         $result1->addMessage('Vehicles deleted');
-        $this->expectedSideEffect(DeleteGoodsVehicle::class, $data, $result1);
+        $this->expectedSideEffect(DeleteLicenceVehicle::class, $data, $result1);
 
         $savedLicenceVehicles = [];
 

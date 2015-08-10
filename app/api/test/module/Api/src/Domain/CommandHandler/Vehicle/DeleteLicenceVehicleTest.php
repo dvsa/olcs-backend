@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Delete Goods Vehicle Test
+ * Delete Licence Vehicle Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -10,22 +10,22 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Vehicle;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CeaseActiveDiscs;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\DeleteGoodsVehicle;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\DeleteLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
-use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteGoodsVehicle as Cmd;
+use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteLicenceVehicle as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
 
 /**
- * Delete Goods Vehicle Test
+ * Delete Licence Vehicle Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DeleteGoodsVehicleTest extends CommandHandlerTestCase
+class DeleteLicenceVehicleTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new DeleteGoodsVehicle();
+        $this->sut = new DeleteLicenceVehicle();
         $this->mockRepo('LicenceVehicle', LicenceVehicleRepo::class);
 
         parent::setUp();
