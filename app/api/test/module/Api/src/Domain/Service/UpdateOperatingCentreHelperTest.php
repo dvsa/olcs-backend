@@ -7,10 +7,13 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Service;
 
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Update Operating Centre Helper Test
@@ -24,9 +27,20 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
      */
     protected $sut;
 
+    protected $authService;
+
     public function setUp()
     {
         $this->sut = new UpdateOperatingCentreHelper();
+
+        $this->authService = m::mock();
+
+        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm->shouldReceive('get')
+            ->with(AuthorizationService::class)
+            ->andReturn($this->authService);
+
+        $this->sut->createService($sm);
     }
 
     public function testAddMessages()
@@ -87,6 +101,10 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
             'enforcementArea' => null
         ];
 
+        $this->authService->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER)
+            ->andReturn(true);
+
         $entity = m::mock();
         $entity->shouldReceive('getTrafficArea')
             ->andReturn(null);
@@ -103,6 +121,10 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
         $data = [
             'enforcementArea' => null
         ];
+
+        $this->authService->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER)
+            ->andReturn(true);
 
         $entity = m::mock();
         $entity->shouldReceive('getTrafficArea')->andReturn('anything');

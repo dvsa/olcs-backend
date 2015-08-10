@@ -93,9 +93,6 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->mockedSmServices['UpdateOperatingCentreHelper']->shouldReceive('addMessage')
             ->once()
             ->with('trafficArea', 'ERR_OC_TA_1')
-            ->shouldReceive('validateEnforcementArea')
-            ->once()
-            ->with($application, $command)
             ->shouldReceive('getMessages')
             ->once()
             ->andReturn(['foo' => 'bar']);
@@ -121,6 +118,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
 
+        $aocs = new ArrayCollection();
+        $aocs->add('foo');
+
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
         $application->setId(111);
@@ -128,6 +128,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $application->setLicence($licence);
         $application->shouldReceive('isPsv')->andReturn(true);
         $application->shouldReceive('canHaveCommunityLicences')->andReturn(true);
+        $application->setOperatingCentres($aocs);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -192,6 +193,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
 
+        $aocs = new ArrayCollection();
+        $aocs->add('foo');
+
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
         $application->setId(111);
@@ -199,6 +203,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $application->setLicence($licence);
         $application->shouldReceive('isPsv')->andReturn(false);
         $application->shouldReceive('canHaveCommunityLicences')->andReturn(true);
+        $application->setOperatingCentres($aocs);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -265,6 +270,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $licence->setId(222);
         $licence->setVersion(1);
 
+        $aocs = new ArrayCollection();
+        $aocs->add('foo');
+
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
         $application->setId(111);
@@ -272,6 +280,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $application->setLicence($licence);
         $application->shouldReceive('isPsv')->andReturn(false);
         $application->shouldReceive('canHaveCommunityLicences')->andReturn(true);
+        $application->setOperatingCentres($aocs);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -367,6 +376,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $licence->setId(222);
         $licence->setVersion(1);
 
+        $aocs = new ArrayCollection();
+        $aocs->add('foo');
+
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
         $application->setId(111);
@@ -375,6 +387,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $application->shouldReceive('isPsv')->andReturn(true);
         $application->shouldReceive('canHaveCommunityLicences')->andReturn(true);
         $application->shouldReceive('canHaveLargeVehicles')->andReturn(true);
+        $application->setOperatingCentres($aocs);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -468,6 +481,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $licence->setId(222);
         $licence->setVersion(1);
 
+        $aocs = new ArrayCollection();
+        $aocs->add('foo');
+
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
         $application->setId(111);
@@ -477,6 +493,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $application->shouldReceive('canHaveCommunityLicences')->andReturn(true);
         $application->shouldReceive('canHaveLargeVehicles')->andReturn(true);
         $application->shouldReceive('getTrafficArea')->andReturn('anything');
+        $application->setOperatingCentres($aocs);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
