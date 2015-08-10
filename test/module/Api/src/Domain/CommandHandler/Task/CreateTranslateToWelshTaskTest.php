@@ -47,18 +47,6 @@ class CreateTranslateToWelshTaskTest extends CommandHandlerTestCase
     {
         $command = Cmd::create(['licence' => 111, 'description' => 'foo']);
 
-        /** @var Team $team */
-        $team = m::mock(Team::class)->makePartial();
-        $team->setId(321);
-
-        /** @var User $user */
-        $user = m::mock(User::class)->makePartial();
-        $user->setId(123);
-        $user->setTeam($team);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($user);
-
         $result = new Result();
 
         $data = [
@@ -67,8 +55,8 @@ class CreateTranslateToWelshTaskTest extends CommandHandlerTestCase
             'description' => 'Welsh translation required: foo',
             'urgent' => 'Y',
             'licence' => 111,
-            'assignedToUser' => 123,
-            'assignedToTeam' => 321,
+            'assignedToUser' => null,
+            'assignedToTeam' => null,
             'actionDate' => null,
             'isClosed' => false,
             'application' => null,

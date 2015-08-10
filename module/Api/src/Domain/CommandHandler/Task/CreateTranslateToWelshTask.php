@@ -32,8 +32,6 @@ final class CreateTranslateToWelshTask extends AbstractCommandHandler implements
             'description' => 'Welsh translation required: ' . $command->getDescription(),
             'urgent' => 'Y',
             'licence' => $command->getLicence(),
-            'assignedToUser' => $this->getUser()->getId(),
-            'assignedToTeam' => $this->getUser()->getTeam()->getId()
         ];
 
         return $this->handleSideEffect(CreateTaskCmd::create($data));
