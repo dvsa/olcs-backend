@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Entity\Application;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Repository\Publication;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -13,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 
@@ -101,6 +101,12 @@ class Application extends AbstractApplication
      * @var bool
      */
     protected $isOpposed;
+
+    /**
+     * publishedDate
+     * @var string
+     */
+    protected $publishedDate;
 
     public function __construct(Licence $licence, RefData $status, $isVariation)
     {
@@ -892,6 +898,7 @@ class Application extends AbstractApplication
             }
         }
 
+        /** @var PublicationEntity $latestPublication */
         $latestPublication = $this->getLatestPublication();
 
         if (!empty($latestPublication)) {
@@ -920,7 +927,7 @@ class Application extends AbstractApplication
     /**
      * Gets the latest publication for an application. (used to calculate OOO date)
      *
-     * @return \Dvsa\Olcs\Api\Entity\Publication\PublicationLink|null
+     * @return PublicationEntity|null
      */
     private function getLatestPublication()
     {
@@ -931,6 +938,7 @@ class Application extends AbstractApplication
             if (!in_array($publicationLink->getPublicationSection()->getId(), [1, 3])) {
                 continue;
             }
+            /** @var PublicationEntity $latestPublication */
             if ($latestPublication === null) {
                 $latestPublication = $publicationLink->getPublication();
             } elseif (
@@ -1061,17 +1069,49 @@ class Application extends AbstractApplication
     }
 
     /**
+     * @return string
+     */
+    public function getPublishedDate()
+    {
+        return $this->publishedDate;
+    }
+
+    /**
+     * @param string $publishedDate
+     */
+    public function setPublishedDate($publishedDate)
+    {
+        $this->publishedDate = $publishedDate;
+    }
+
+    /**
      * Determine and set the latest publication number
      * @return mixed
      */
     public function determinePublicationNo()
     {
-        /** @var Publication $latestPublication */
+        /** @var PublicationEntity $latestPublication */
         $latestPublication = $this->getLatestPublication();
 
-        if ($latestPublication instanceof Publication) {
+        if ($latestPublication instanceof PublicationEntity) {
 
             return $latestPublication->getPublicationNo();
+        }
+
+        return null;
+    }
+
+    /**
+     * Determine and set the latest publication number
+     * @return mixed
+     */
+    public function determinePublishedDate()
+    {
+        /** @var PublicationEntity $latestPublication */
+        $latestPublication = $this->getLatestPublication();
+
+        if ($latestPublication instanceof PublicationEntity) {
+            return $latestPublication->getPubDate();
         }
 
         return null;
