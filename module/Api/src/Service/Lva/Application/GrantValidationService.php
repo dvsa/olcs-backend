@@ -149,7 +149,7 @@ class GrantValidationService implements \Zend\ServiceManager\FactoryInterface
 
         /** @var Fee $fee */
         foreach ($fees as $fee) {
-            if ($fee->getFeeType()->getFeeType()->getId() !== RefData::FEE_TYPE_GRANTINT) {
+            if (!in_array($fee->getFeeType()->getFeeType()->getId(), [RefData::FEE_TYPE_VAR, RefData::FEE_TYPE_APP])) {
                 $fees->removeElement($fee);
             }
         }

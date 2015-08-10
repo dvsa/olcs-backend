@@ -54,9 +54,14 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             $this->updateExistingDiscs($application, $licence, $result);
         }
 
-        $result->merge($this->proxyCommand($command, CreateDiscRecords::class));
+        $currentTotAuth = $licence->getTotAuthVehicles();
 
         $licence->copyInformationFromApplication($application);
+
+        $data = $command->getArrayCopy();
+        $data['currentTotAuth'] = $currentTotAuth;
+
+        $result->merge($this->handleSideEffect(CreateDiscRecords::create($data)));
 
         $result->merge($this->proxyCommand($command, ProcessApplicationOperatingCentres::class));
         $result->merge($this->proxyCommand($command, CommonGrant::class));

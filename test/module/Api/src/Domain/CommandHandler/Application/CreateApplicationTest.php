@@ -150,7 +150,8 @@ class CreateApplicationTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addId('fee', 44);
-        $this->expectedSideEffect(CreateApplicationFee::class, ['id' => 22, 'feeTypeFeeType' => null], $result1);
+        $data = ['id' => 22, 'feeTypeFeeType' => null, 'description' => null];
+        $this->expectedSideEffect(CreateApplicationFee::class, $data, $result1);
 
         $result2 = new Result();
         $result2->addMessage('Section updated');

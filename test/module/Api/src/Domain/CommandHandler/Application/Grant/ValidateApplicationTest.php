@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessApplicationOperatingCe
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\ValidateApplication;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -42,8 +43,13 @@ class ValidateApplicationTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setTotAuthVehicles(10);
+
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setLicence($licence);
         $application->setId(111);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -71,7 +77,9 @@ class ValidateApplicationTest extends CommandHandlerTestCase
 
         $result5 = new Result();
         $result5->addMessage('CreateDiscRecords');
-        $this->expectedSideEffect(CreateDiscRecords::class, $data, $result5);
+        $discData = $data;
+        $discData['currentTotAuth'] = 10;
+        $this->expectedSideEffect(CreateDiscRecords::class, $discData, $result5);
 
         $result = $this->sut->handleCommand($command);
 

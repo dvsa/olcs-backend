@@ -66,10 +66,16 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
 
         $currentUser = $this->getCurrentUser();
 
+        $description = 'Application Fee Due';
+
+        if ($command->getDescription() !== null) {
+            $description = $command->getDescription();
+        }
+
         $data = [
             'category' => Task::CATEGORY_APPLICATION,
             'subCategory' => Task::SUBCATEGORY_FEE_DUE,
-            'description' => 'Application Fee Due',
+            'description' => $description,
             'actionDate' => date('Y-m-d'),
             'assignedToUser' => $currentUser->getId(),
             'assignedToTeam' => $currentUser->getTeam()->getId(),
