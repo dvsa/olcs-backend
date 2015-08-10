@@ -135,7 +135,7 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="period", nullable=false)
+     * @ORM\Column(type="smallint", name="period", nullable=true)
      */
     protected $period;
 
