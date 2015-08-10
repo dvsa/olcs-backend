@@ -1,26 +1,26 @@
 <?php
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\FstandingFirstVeh;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\FStandingAdditionalVeh;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
- * FstandingFirstVeh bookmark test
+ * FStandingAdditionalVeh bookmark test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class FstandingFirstVehTest extends MockeryTestCase
+class FStandingAdditionalVehTest extends MockeryTestCase
 {
     protected $sut;
 
     public function setUp()
     {
-        $this->sut = new FstandingFirstVeh();
+        $this->sut = new FStandingAdditionalVeh();
     }
 
-    public function testGetQuery()
+    public function testGetQuer()
     {
         $mockDateHelper = m::mock('Dvsa\Olcs\Api\Service\Date')
             ->shouldReceive('getDate')
@@ -39,26 +39,26 @@ class FstandingFirstVehTest extends MockeryTestCase
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
     }
 
-    public function testRenderWithNoFirstVehicleFee()
+    public function testRenderWithNoAdditionalVehicleFee()
     {
         $this->sut->setData([]);
         $this->assertEquals('', $this->sut->render());
     }
 
-    public function testRenderWithFirstVehicleFee()
+    public function testRenderWithAdditionalVehicleFee()
     {
         $this->sut->setData(
             [
                 'Count' => 2,
                 'Results' => [
                     [
-                        'firstVehicleRate' => '123456',
+                        'additionalVehicleRate' => '123456',
                         'effectiveFrom' => '2015-01-01'
                     ],
                     [
-                        'firstVehicleRate' => '023444',
-                        'effectiveFrom' => '2013-01-01'
-                    ]
+                        'additionalVehicleRate' => '789012',
+                        'effectiveFrom' => '2014-01-01'
+                    ],
                 ]
             ]
         );

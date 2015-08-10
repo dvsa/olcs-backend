@@ -19,8 +19,18 @@ class Organisation extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Organisation';
 
+
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchUsingId($query);
+        /* @var $organisation \Dvsa\Olcs\Api\Entity\Organisation\Organisation */
+        $organisation = $this->getRepo()->fetchUsingId($query);
+
+        return $this->result(
+            $organisation,
+            [],
+            [
+                'isDisqualified' => $organisation->getDisqualifications()->count() > 0,
+            ]
+        );
     }
 }

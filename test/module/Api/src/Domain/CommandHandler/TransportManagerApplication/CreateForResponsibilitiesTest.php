@@ -81,6 +81,15 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
                     ->getMock()
             )
             ->once()
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(3)
+                ->once()
+                ->getMock()
+            )
+            ->once()
             ->getMock();
 
         $this->repoMap['Application']
@@ -98,8 +107,8 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
             ->getMock();
 
         $this->repoMap['TransportManagerLicence']
-            ->shouldReceive('fetchForTransportManager')
-            ->with(2)
+            ->shouldReceive('fetchByTmAndLicence')
+            ->with(2, 3)
             ->andReturn(['tml1'])
             ->once()
             ->getMock();

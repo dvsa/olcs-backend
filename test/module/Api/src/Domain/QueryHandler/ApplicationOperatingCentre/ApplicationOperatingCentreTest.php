@@ -8,6 +8,8 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\ApplicationOperatingCentre;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\ApplicationOperatingCentre\ApplicationOperatingCentre;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -43,8 +45,12 @@ class ApplicationOperatingCentreTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
+        $application->setLicence($licence);
         $application->shouldReceive('isPsv')
             ->andReturn(true)
             ->shouldReceive('isNew')
@@ -55,6 +61,7 @@ class ApplicationOperatingCentreTest extends QueryHandlerTestCase
         /** @var ApplicationOperatingCentreEntity $aoc */
         $aoc = m::mock(ApplicationOperatingCentreEntity::class)->makePartial();
         $aoc->setApplication($application);
+        $aoc->setAction('D');
 
         $aoc->shouldReceive('serialize')
             ->with($this->expectedBundle)
@@ -70,7 +77,61 @@ class ApplicationOperatingCentreTest extends QueryHandlerTestCase
             'foo' => 'bar',
             'isPsv' => true,
             'canUpdateAddress' => true,
-            'wouldIncreaseRequireAdditionalAdvertisement' => false
+            'wouldIncreaseRequireAdditionalAdvertisement' => false,
+            'currentVehiclesRequired' => null,
+            'currentTrailersRequired' => null
+        ];
+
+        $this->assertEquals($expected, $result->serialize());
+    }
+
+    public function testHandleQueryWithUpdated()
+    {
+        $query = Qry::create(['id' => 111]);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setLicence($licence);
+        $application->shouldReceive('isPsv')
+            ->andReturn(true)
+            ->shouldReceive('isNew')
+            ->andReturn(true)
+            ->shouldReceive('isVariation')
+            ->andReturn(false);
+
+        /** @var ApplicationOperatingCentreEntity $aoc */
+        $aoc = m::mock(ApplicationOperatingCentreEntity::class)->makePartial();
+        $aoc->setApplication($application);
+        $aoc->setAction('U');
+
+        $aoc->shouldReceive('serialize')
+            ->with($this->expectedBundle)
+            ->andReturn(['foo' => 'bar']);
+
+        /** @var LicenceOperatingCentre $loc */
+        $loc = m::mock(LicenceOperatingCentre::class)->makePartial();
+        $loc->setNoOfVehiclesRequired(10);
+        $loc->setNoOfTrailersRequired(9);
+
+        $this->repoMap['ApplicationOperatingCentre']->shouldReceive('fetchUsingId')
+            ->with($query)
+            ->andReturn($aoc)
+            ->shouldReceive('findCorrespondingLoc')
+            ->with($aoc, $licence)
+            ->andReturn($loc);
+
+        $result = $this->sut->handleQuery($query);
+
+        $expected = [
+            'foo' => 'bar',
+            'isPsv' => true,
+            'canUpdateAddress' => true,
+            'wouldIncreaseRequireAdditionalAdvertisement' => false,
+            'currentVehiclesRequired' => 10,
+            'currentTrailersRequired' => 9
         ];
 
         $this->assertEquals($expected, $result->serialize());

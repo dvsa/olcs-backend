@@ -32,7 +32,8 @@ class LicenceByNumber extends AbstractQueryHandler
                     'operatingCentre' => [
                         'address',
                         'conditionUndertakings' => [
-                            'conditionType'
+                            'conditionType',
+                            'licence'
                         ]
                     ]
                 ]

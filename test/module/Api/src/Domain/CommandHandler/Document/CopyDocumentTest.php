@@ -257,10 +257,38 @@ class CopyDocumentTest extends CommandHandlerTestCase
         ];
         $command = Cmd::create($data);
 
-        $mockEntity = m::mock();
+        $mockEntity = m::mock()
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(33)
+                ->once()
+                ->getMock()
+            )
+            ->twice()
+            ->shouldReceive('getApplication')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(44)
+                    ->once()
+                    ->getMock()
+            )
+            ->twice()
+            ->shouldReceive('getTransportManager')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(55)
+                    ->once()
+                    ->getMock()
+            )
+            ->twice()
+            ->getMock();
 
         $this->repoMap['Cases']
-            ->shouldReceive('fetchById')
+            ->shouldReceive('fetchExtended')
             ->with(1)
             ->andReturn($mockEntity)
             ->once()
@@ -289,15 +317,15 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'isScan' => 'Y',
             'isExternal' => 'Y',
             'isReadOnly' => 'Y',
-            'application' => null,
-            'licence' => null,
+            'application' => 44,
+            'licence' => 33,
             'size' => null,
             'busReg' => null,
             'case' => 1,
             'irfoOrganisation' => null,
             'submission' => null,
             'trafficArea' => null,
-            'transportManager' => null,
+            'transportManager' => 55,
             'operatingCentre' => null,
             'opposition' => null
         ];

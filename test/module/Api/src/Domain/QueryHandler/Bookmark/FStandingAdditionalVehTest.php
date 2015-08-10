@@ -1,29 +1,29 @@
 <?php
 
 /**
- * FstandingAdditionalVeh Test
+ * FStandingAdditionalVeh Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bookmark;
 
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark\FstandingAdditionalVeh;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark\FStandingAdditionalVeh;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\FinancialStandingRate as Repo;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\FstandingAdditionalVeh as Qry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\FStandingAdditionalVeh as Qry;
 use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate as Entity;
 
 /**
- * FstandingAdditionalVeh Test
+ * FStandingAdditionalVeh Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class FstandingAdditionalVehTest extends QueryHandlerTestCase
+class FStandingAdditionalVehTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new FstandingAdditionalVeh();
+        $this->sut = new FStandingAdditionalVeh();
         $this->mockRepo('FinancialStandingRate', Repo::class);
 
         parent::setUp();

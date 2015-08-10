@@ -22,15 +22,15 @@ class FinancialStandingRate extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->andWhere($qb->expr()->eq('m.goodsOrPsv', ':goodsOrPsv'));
-        $qb->andWhere($qb->expr()->eq('m.licenceType', ':licenceType'));
-        $qb->andWhere($qb->expr()->lte('m.effectiveFrom', ':date'));
+        $qb->andWhere($qb->expr()->eq($this->alias.'.goodsOrPsv', ':goodsOrPsv'));
+        $qb->andWhere($qb->expr()->eq($this->alias.'.licenceType', ':licenceType'));
+        $qb->andWhere($qb->expr()->lte($this->alias.'.effectiveFrom', ':date'));
 
         $qb->setParameter('goodsOrPsv', $goodsOrPsv);
         $qb->setParameter('licenceType', $licenceType);
         $qb->setParameter('date', $date);
 
-        $qb->orderBy('m.effectiveFrom', 'DESC');
+        $qb->orderBy($this->alias.'.effectiveFrom', 'DESC');
         $qb->setMaxResults(1);
 
         return $qb->getQuery()->getResult();

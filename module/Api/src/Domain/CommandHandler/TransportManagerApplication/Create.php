@@ -106,7 +106,7 @@ final class Create extends AbstractCommandHandler implements
             return;
         }
         $tmId = $user->getTransportManager()->getId();
-        $tmApps = $this->getRepo()->fetchByTmAndApplication($tmId, $applicationId);
+        $tmApps = $this->getRepo()->fetchByTmAndApplication($tmId, $applicationId, true);
 
         if ($tmApps) {
             throw new ValidationException(

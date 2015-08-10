@@ -101,4 +101,15 @@ class FileTest extends \PHPUnit_Framework_TestCase
             $file->getRealType()
         );
     }
+
+    public function testFluentInterface()
+    {
+        $file = new File();
+
+        $this->assertSame($file, $file->setIdentifier('foo'));
+        $this->assertSame($file, $file->setType('foo'));
+        $this->assertSame($file, $file->setPath('foo'));
+        $this->assertSame($file, $file->setSize('foo'));
+        $this->assertSame($file, $file->setMeta('foo'));
+    }
 }

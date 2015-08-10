@@ -6,10 +6,6 @@ use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
 use Mockery as m;
 
-error_reporting(E_ALL | E_STRICT);
-date_default_timezone_set('Europe/London');
-chdir(dirname(__DIR__));
-
 /**
  * Test bootstrap, for setting up autoloading
  */
@@ -25,6 +21,7 @@ class Bootstrap
 
         $loader->addPsr4('OlcsTest\\Db\\', __DIR__ . '/module/Olcs/Db/src/');
         $loader->addPsr4('Dvsa\\OlcsTest\\Api\\', __DIR__ . '/module/Api/src/');
+        $loader->addPsr4('Dvsa\\OlcsTest\\Cli\\', __DIR__ . '/module/Cli/src/');
 
         // Grab the application config
         $config = include dirname(__DIR__) . '/config/application.config.php';
@@ -43,6 +40,9 @@ class Bootstrap
         return $sm;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     protected static function initAutoloader()
     {
         require('init_autoloader.php');
@@ -50,5 +50,3 @@ class Bootstrap
         return $loader;
     }
 }
-
-Bootstrap::init();
