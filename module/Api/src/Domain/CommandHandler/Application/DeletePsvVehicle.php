@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Delete Goods Vehicle
+ * Delete Psv Vehicle
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -15,11 +15,11 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteLicenceVehicle as VehicleCmd;
 
 /**
- * Delete Goods Vehicle
+ * Delete Psv Vehicle
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class DeleteGoodsVehicle extends AbstractCommandHandler implements TransactionedInterface
+final class DeletePsvVehicle extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
 
@@ -29,7 +29,7 @@ final class DeleteGoodsVehicle extends AbstractCommandHandler implements Transac
 
         $result->merge($this->proxyCommand($command, VehicleCmd::class));
 
-        $dtoData = ['id' => $command->getApplication(), 'section' => 'vehicles'];
+        $dtoData = ['id' => $command->getApplication(), 'section' => 'vehiclesPsv'];
         $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($dtoData)));
 
         return $result;
