@@ -19,14 +19,18 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as Cmd;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Create Task
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateTask extends AbstractCommandHandler
+final class CreateTask extends AbstractCommandHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'Task';
 
     protected $extraRepos = ['TaskAllocationRule', 'SystemParameter'];
@@ -170,6 +174,10 @@ final class CreateTask extends AbstractCommandHandler
         $task->setDescription($command->getDescription());
         $task->setIsClosed($command->getIsClosed());
         $task->setUrgent($command->getUrgent());
+
+        $task->setCreatedBy($this->getCurrentUser());
+        $task->setLastModifiedBy($this->getCurrentUser());
+        $task->setLastModifiedOn(new DateTime());
 
         return $task;
     }
