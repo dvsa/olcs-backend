@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -70,6 +71,10 @@ final class CreateFee extends AbstractCommandHandler
 
         if ($command->getInvoicedDate() !== null) {
             $fee->setInvoicedDate(new \DateTime($command->getInvoicedDate()));
+        }
+
+        if ($command->getIrfoGvPermit() !== null) {
+            $fee->setIrfoGvPermit($this->getRepo()->getReference(IrfoGvPermit::class, $command->getIrfoGvPermit()));
         }
 
         $fee->setDescription($command->getDescription());

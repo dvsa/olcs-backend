@@ -88,7 +88,8 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler
             'invoicedDate' => date('Y-m-d'),
             'description' => $feeType->getDescription() . ' for IRFO permit ' . $irfoGvPermit->getId(),
             'feeType' => $feeType->getId(),
-            'amount' => $feeAmount
+            'amount' => $feeAmount,
+            'feeStatus' => Fee::STATUS_OUTSTANDING,
         ];
 
         return $this->handleSideEffect(FeeCreateFee::create($data));
