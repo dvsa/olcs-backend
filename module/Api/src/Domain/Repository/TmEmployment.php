@@ -54,4 +54,18 @@ class TmEmployment extends AbstractRepository
 
         return $dqb->getQuery()->getResult();
     }
+
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()
+            ->with('contactDetails', 'cd')
+            ->with('cd.address', 'add')
+            ->with('add.countryCode');
+    }
+
+    protected function applyListFilters(QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
+    {
+        $qb->andWhere($qb->expr()->eq($this->alias .'.transportManager', ':transportManager'))
+            ->setParameter('transportManager', $query->getTransportManager());
+    }
 }

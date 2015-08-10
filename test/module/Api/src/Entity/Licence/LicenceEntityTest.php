@@ -147,6 +147,7 @@ class LicenceEntityTest extends EntityTester
 
     public function testGetOtherActiveLicences()
     {
+        /** @var RefData $goodsOrPsv */
         $goodsOrPsv = m::mock(RefData::class)->makePartial();
         $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_PSV);
 
@@ -155,19 +156,41 @@ class LicenceEntityTest extends EntityTester
         $licences = m::mock(ArrayCollection::class)->makePartial();
         $licences->add($licence1);
 
+        /** @var OrganisationEntity $org */
         $org = m::mock(OrganisationEntity::class)->makePartial();
         $org->setLicences($licences);
 
+        /** @var RefData $type1 */
+        $type1 = m::mock(RefData::class)->makePartial();
+        $type1->setId(Entity::LICENCE_TYPE_SPECIAL_RESTRICTED);
+
+        /** @var RefData $type2 */
+        $type2 = m::mock(RefData::class)->makePartial();
+        $type2->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        /** @var Entity $otherLicence1 */
+        $otherLicence1 = m::mock(Entity::class)->makePartial();
+        $otherLicence1->setLicenceType($type1);
+
+        $otherLicence2 = m::mock(Entity::class)->makePartial();
+        $otherLicence2->setLicenceType($type2);
+
+        $otherActiveLicences = m::mock(ArrayCollection::class)->makePartial();
+        $otherActiveLicences->add($otherLicence1);
+        $otherActiveLicences->add($otherLicence2);
+
         $licences->shouldReceive('matching')
             ->with(m::type(Criteria::class))
-            ->andReturn(['RETURN']);
+            ->andReturn($otherActiveLicences);
 
         $licence = $this->instantiate(Entity::class);
         $licence->setId(111);
         $licence->setGoodsOrPsv($goodsOrPsv);
         $licence->setOrganisation($org);
 
-        $this->assertEquals(['RETURN'], $licence->getOtherActiveLicences());
+        $this->assertSame($otherActiveLicences, $licence->getOtherActiveLicences());
+        $this->assertFalse($otherActiveLicences->contains($otherLicence1));
+        $this->assertTrue($otherActiveLicences->contains($otherLicence2));
     }
 
     public function updateSafetyDetails()
@@ -695,6 +718,163 @@ class LicenceEntityTest extends EntityTester
             ->andReturn($licenceType);
 
         $this->assertEquals($expected, $licence->canHaveLargeVehicles());
+    }
+
+    public function testGetAvailableSmallSpaces()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setTotAuthSmallVehicles(10);
+
+        $this->assertEquals(5, $licence->getAvailableSmallSpaces(5));
+        $this->assertEquals(10, $licence->getAvailableSmallSpaces(0));
+        $this->assertEquals(0, $licence->getAvailableSmallSpaces(10));
+    }
+
+    public function testGetAvailableMediumSpaces()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setTotAuthMediumVehicles(10);
+
+        $this->assertEquals(5, $licence->getAvailableMediumSpaces(5));
+        $this->assertEquals(10, $licence->getAvailableMediumSpaces(0));
+        $this->assertEquals(0, $licence->getAvailableMediumSpaces(10));
+    }
+
+    public function testGetAvailableLargeSpaces()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setTotAuthLargeVehicles(10);
+
+        $this->assertEquals(5, $licence->getAvailableLargeSpaces(5));
+        $this->assertEquals(10, $licence->getAvailableLargeSpaces(0));
+        $this->assertEquals(0, $licence->getAvailableLargeSpaces(10));
+    }
+
+    public function testIsSmallAuthExceeded()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setTotAuthSmallVehicles(10);
+
+        $this->assertFalse($licence->isSmallAuthExceeded(5));
+        $this->assertFalse($licence->isSmallAuthExceeded(10));
+        $this->assertTrue($licence->isSmallAuthExceeded(11));
+    }
+
+    public function testIsMediumAuthExceeded()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setTotAuthMediumVehicles(10);
+
+        $this->assertFalse($licence->isMediumAuthExceeded(5));
+        $this->assertFalse($licence->isMediumAuthExceeded(10));
+        $this->assertTrue($licence->isMediumAuthExceeded(11));
+    }
+
+    public function testIsLargeAuthExceeded()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setTotAuthLargeVehicles(10);
+
+        $this->assertFalse($licence->isLargeAuthExceeded(5));
+        $this->assertFalse($licence->isLargeAuthExceeded(10));
+        $this->assertTrue($licence->isLargeAuthExceeded(11));
+    }
+
+    public function testHasPsvBreakdown()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+
+        $this->assertFalse($licence->hasPsvBreakdown());
+
+        $licence->setTotAuthSmallVehicles(10);
+        $this->assertTrue($licence->hasPsvBreakdown());
+    }
+
+    public function testShouldShowTablesWithoutBreakdown()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('isPsv')
+            ->andReturn(true);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        $this->assertTrue($licence->shouldShowSmallTable(1));
+        $this->assertTrue($licence->shouldShowMediumTable(1));
+        $this->assertTrue($licence->shouldShowLargeTable(1));
+    }
+
+    public function testShouldShowTablesWithoutLarge()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('isPsv')
+            ->andReturn(true);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity::LICENCE_TYPE_RESTRICTED);
+
+        $this->assertFalse($licence->shouldShowLargeTable(1));
+    }
+
+    public function testShouldShowTablesWithBreakdownWithAuth()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('isPsv')
+            ->andReturn(true);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        $licence->setTotAuthSmallVehicles(3);
+        $licence->setTotAuthMediumVehicles(3);
+        $licence->setTotAuthLargeVehicles(3);
+
+        $this->assertTrue($licence->shouldShowSmallTable(1));
+        $this->assertTrue($licence->shouldShowMediumTable(1));
+        $this->assertTrue($licence->shouldShowLargeTable(1));
+    }
+
+    public function testShouldShowTablesWithBreakdownWithoutAuth()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('isPsv')
+            ->andReturn(true);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        $licence->setTotAuthSmallVehicles(3);
+        $licence->setTotAuthMediumVehicles(0);
+        $licence->setTotAuthLargeVehicles(0);
+
+        $this->assertTrue($licence->shouldShowSmallTable(1));
+        $this->assertFalse($licence->shouldShowMediumTable(0));
+        $this->assertFalse($licence->shouldShowLargeTable(0));
+    }
+
+    public function testShouldShowTablesWithBreakdownWithoutAuthWithVehicle()
+    {
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('isPsv')
+            ->andReturn(true);
+        $licence->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        $licence->setTotAuthSmallVehicles(3);
+        $licence->setTotAuthMediumVehicles(0);
+        $licence->setTotAuthLargeVehicles(0);
+
+        $this->assertTrue($licence->shouldShowSmallTable(1));
+        $this->assertTrue($licence->shouldShowMediumTable(1));
+        $this->assertTrue($licence->shouldShowLargeTable(1));
     }
 
     public function canHaveLargeVehicleProvider()

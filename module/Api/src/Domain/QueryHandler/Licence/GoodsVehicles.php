@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
