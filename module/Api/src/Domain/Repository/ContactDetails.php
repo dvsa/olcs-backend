@@ -46,4 +46,32 @@ class ContactDetails extends AbstractRepository
 
         return $contactParams;
     }
+
+    /**
+     * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\OperatorContactDetails
+     * @return array
+     */
+    public function populateOperatorRefDataReferences(array $contactParams)
+    {
+        if (!empty($contactParams['address']['countryCode'])) {
+            $contactParams['address']['countryCode'] = $this->getReference(
+                Country::class, $contactParams['address']['countryCode']
+            );
+        }
+
+        $phoneContacts = [
+            'businessPhoneContact',
+            'homePhoneContact',
+            'mobilePhoneContact',
+            'faxPhoneContact',
+        ];
+        foreach ($phoneContacts as $property) {
+            if (!empty($contactParams[$property])) {
+                $contactParams[$property]['phoneContactType']
+                    = $this->getRefdataReference($contactParams[$property]['phoneContactType']);
+            }
+        }
+
+        return $contactParams;
+    }
 }

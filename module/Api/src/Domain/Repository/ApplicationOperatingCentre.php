@@ -7,9 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query\Expr\Join;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre as Entity;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * ApplicationOperatingCentre
@@ -84,5 +86,24 @@ class ApplicationOperatingCentre extends AbstractRepository
         $qb->orderBy('oca.id', 'ASC');
 
         return $qb->getQuery()->getArrayResult();
+    }
+
+    public function findCorrespondingLoc(Entity $aoc, LicenceEntity $licence)
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->eq(
+                'operatingCentre',
+                $aoc->getOperatingCentre()
+            )
+        );
+
+        $locs = $licence->getOperatingCentres()->matching($criteria);
+
+        if ($locs->count() !== 1) {
+            throw new \Exception('Expected 1 matching licence operating centre record, found: ' . $locs->count());
+        }
+
+        return $locs->first();
     }
 }

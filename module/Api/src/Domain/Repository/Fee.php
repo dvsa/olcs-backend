@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -133,7 +133,7 @@ class Fee extends AbstractRepository
             ->andWhere($doctrineQb->expr()->eq('f.application', ':application'))
             ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeType'))
             ->setParameter('application', $applicationId)
-            ->setParameter('feeType', RefData::FEE_TYPE_GRANT);
+            ->setParameter('feeType', RefDataEntity::FEE_TYPE_GRANT);
 
         return $doctrineQb->getQuery()->getResult();
     }
@@ -154,7 +154,7 @@ class Fee extends AbstractRepository
             ->andWhere($doctrineQb->expr()->eq('f.licence', ':licence'))
             ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeType'))
             ->setParameter('licence', $licenceId)
-            ->setParameter('feeType', RefData::FEE_TYPE_CONT);
+            ->setParameter('feeType', RefDataEntity::FEE_TYPE_CONT);
 
         $this->whereOutstandingFee($doctrineQb);
 

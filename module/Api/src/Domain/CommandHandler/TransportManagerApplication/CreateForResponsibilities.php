@@ -33,15 +33,15 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'TransportManagerApplication';
 
-    protected $extraRepos = ['Application'];
+    protected $extraRepos = ['Application', 'TransportManagerLicence'];
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
 
-        $this->validateTransportManagerApplication($command);
+        $application = $this->validateTransportManagerApplication($command);
 
-        $tmApplication = $this->createTransportManagerApplicationObject($command);
+        $tmApplication = $this->createTransportManagerApplicationObject($command, $application->getLicence()->getId());
 
         $this->getRepo()->save($tmApplication);
 
@@ -61,7 +61,7 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements
                 ]
             );
         }
-        $licenceType = $application->getLicence()->getLicenceType()->getId();
+        $licenceType = $application->getLicenceType()->getId();
         if ($licenceType === LicenceEntity::LICENCE_TYPE_RESTRICTED ||
             $licenceType === LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED) {
             throw new ValidationException(
@@ -79,23 +79,25 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements
                 ]
             );
         }
+        return $application;
     }
 
     /**
      * @param Cmd $command
+     * @param int $licenceId
      * @return TransportManagerApplicationEntity
      */
-    private function createTransportManagerApplicationObject($command)
+    private function createTransportManagerApplicationObject($command, $licenceId)
     {
         $tmApplication = new TransportManagerApplicationEntity();
 
-        $application = $this->getRepo('Application')
-            ->fetchWithTmLicences($command->getApplication());
+        $tmLicences = $this->getRepo('TransportManagerLicence')
+            ->fetchByTmAndLicence($command->getTransportManager(), $licenceId);
 
         $tmApplication->updateTransportManagerApplication(
             $this->getRepo()->getReference(ApplicationEntity::class, $command->getApplication()),
             $this->getRepo()->getReference(TransportManagerEntity::class, $command->getTransportManager()),
-            isset($application['licence']['tmLicences']) && count($application['licence']['tmLicences']) ? 'U' : 'A',
+            count($tmLicences) ? 'U' : 'A',
             $this->getRepo()->getRefdataReference(TransportManagerApplicationEntity::STATUS_POSTAL_APPLICATION),
             $this->getCurrentUser()
         );

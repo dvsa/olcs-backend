@@ -93,6 +93,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->mockedSmServices['UpdateOperatingCentreHelper']->shouldReceive('addMessage')
             ->once()
             ->with('trafficArea', 'ERR_OC_TA_1')
+            ->shouldReceive('validateEnforcementArea')
+            ->once()
+            ->with($application, $command)
             ->shouldReceive('getMessages')
             ->once()
             ->andReturn(['foo' => 'bar']);
@@ -148,6 +151,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->shouldReceive('validateTotalAuthVehicles')
             ->once()
             ->with($application, $command, $expectedTotals)
+            ->shouldReceive('validateEnforcementArea')
+            ->once()
+            ->with($application, $command)
             ->shouldReceive('getMessages')
             ->once()
             ->andReturn(['foo' => 'bar']);
@@ -213,6 +219,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->shouldReceive('validateTotalAuthVehicles')
             ->once()
             ->with($application, $command, $expectedTotals)
+            ->shouldReceive('validateEnforcementArea')
+            ->once()
+            ->with($application, $command)
             ->shouldReceive('getMessages')
             ->once()
             ->andReturn(['foo' => 'bar']);
@@ -283,6 +292,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->shouldReceive('validateTotalAuthVehicles')
             ->once()
             ->with($application, $command, $expectedTotals)
+            ->shouldReceive('validateEnforcementArea')
+            ->once()
+            ->with($application, $command)
             ->shouldReceive('getMessages')
             ->once()
             ->andReturn([]);
@@ -383,6 +395,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->shouldReceive('validateTotalAuthVehicles')
             ->once()
             ->with($application, $command, $expectedTotals)
+            ->shouldReceive('validateEnforcementArea')
+            ->once()
+            ->with($application, $command)
             ->shouldReceive('getMessages')
             ->once()
             ->andReturn([]);
@@ -429,5 +444,109 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandPsvValidVariationWithTa()
+    {
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'partial' => false,
+            'trafficArea' => 'A',
+            'enforcementArea' => 'A111',
+            'totCommunityLicences' => 10,
+            'totAuthSmallVehicles' => 4,
+            'totAuthMediumVehicles' => 3,
+            'totAuthLargeVehicles' => 3,
+            'totAuthVehicles' => 10,
+            'totAuthTrailers' => 10,
+        ];
+        $command = Cmd::create($data);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setId(222);
+        $licence->setVersion(1);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(111);
+        $application->setIsVariation(true);
+        $application->setLicence($licence);
+        $application->shouldReceive('isPsv')->andReturn(true);
+        $application->shouldReceive('canHaveCommunityLicences')->andReturn(true);
+        $application->shouldReceive('canHaveLargeVehicles')->andReturn(true);
+        $application->shouldReceive('getTrafficArea')->andReturn('anything');
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($application);
+
+        $expectedTotals = [
+            'noOfOperatingCentres' => 1,
+            'minVehicleAuth' => 10,
+            'minTrailerAuth' => 10,
+            'maxVehicleAuth' => 10,
+            'maxTrailerAuth' => 10
+        ];
+
+        $this->mockedSmServices['UpdateOperatingCentreHelper']->shouldReceive('validatePsv')
+            ->once()
+            ->with($application, $command)
+            ->shouldReceive('validateTotalAuthVehicles')
+            ->once()
+            ->with($application, $command, $expectedTotals)
+            ->shouldReceive('validateEnforcementArea')
+            ->once()
+            ->with($application, $command)
+            ->shouldReceive('getMessages')
+            ->once()
+            ->andReturn([]);
+
+        $aocs = [
+            [
+                'action' => 'A',
+                'noOfVehiclesRequired' => 10,
+                'noOfTrailersRequired' => 10,
+            ]
+        ];
+
+        $this->mockedSmServices['VariationOperatingCentreHelper']->shouldReceive('getListDataForApplication')
+            ->with($application)
+            ->andReturn($aocs);
+
+        $this->repoMap['Application']->shouldReceive('save')
+            ->with($application);
+
+        $data = [
+            'id' => 111,
+            'section' => 'operatingCentres'
+        ];
+        $result = new Result();
+        $result->addMessage('UpdateApplicationCompletion');
+        $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result);
+
+        $data = [
+            'id' => 111
+        ];
+        $result = new Result();
+        $result->addMessage('HandleOcVariationFees');
+        $this->expectedSideEffect(HandleOcVariationFees::class, $data, $result);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Application record updated',
+                'HandleOcVariationFees',
+                'UpdateApplicationCompletion'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertSame($this->references[EnforcementArea::class]['A111'], $licence->getEnforcementArea());
     }
 }

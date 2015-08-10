@@ -39,8 +39,10 @@ class LicenceOperatingCentre extends AbstractQueryHandler
             ],
             [
                 'isPsv' => $licence->isPsv(),
-                'canUpdateAddress' => false,
-                'wouldIncreaseRequireAdditionalAdvertisement' => false
+                'canUpdateAddress' => true,
+                'wouldIncreaseRequireAdditionalAdvertisement' => $query->getIsVariation(),
+                'currentVehiclesRequired' => $loc->getNoOfVehiclesRequired(),
+                'currentTrailersRequired' => $loc->getNoOfTrailersRequired()
             ]
         );
     }

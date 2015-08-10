@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Organisation;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Doctrine\Common\Collections\Criteria;
 
 /**
@@ -43,6 +44,7 @@ class OrganisationEntityTest extends EntityTester
             'irfoName',
             'irfoNationality',
             'isIrfo',
+            'isUnlicensed',
             'lastModifiedBy',
             'lastModifiedOn',
             'leadTcArea',
@@ -51,11 +53,12 @@ class OrganisationEntityTest extends EntityTester
             'type',
             'version',
             'viAction',
+            'disqualifications',
             'irfoPartners',
             'licences',
             'organisationPersons',
             'organisationUsers',
-            'tradingNames'
+            'tradingNames',
         ];
 
         $this->assertEquals($expectedKeys, array_keys($values));
@@ -176,5 +179,54 @@ class OrganisationEntityTest extends EntityTester
         $organisation->setType($type);
 
         $this->assertSame($typeId === Entity::ORG_TYPE_PARTNERSHIP, $organisation->isPartnership());
+    }
+
+    public function testIsUnlicensed()
+    {
+        /** @var Entity $organisation */
+        $organisation = $this->instantiate($this->entityClass);
+
+        $this->assertFalse($organisation->isUnlicensed());
+
+        $organisation->setIsUnlicensed(true);
+
+        $this->assertTrue($organisation->isUnlicensed());
+    }
+
+    public function testGetActiveLicences()
+    {
+        /** @var Entity $organisation */
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturnUsing(
+                function (Criteria $criteria) {
+
+                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
+                    $expr = $criteria->getWhereExpression();
+
+                    $this->assertEquals('status', $expr->getField());
+                    $this->assertEquals('IN', $expr->getOperator());
+                    $this->assertEquals(
+                        [
+                            LicenceEntity::LICENCE_STATUS_VALID,
+                            LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                            LicenceEntity::LICENCE_STATUS_CURTAILED,
+                        ],
+                        $expr->getValue()->getValue()
+                    );
+
+                    $collection = m::mock();
+                    $collection->shouldReceive('toArray')
+                        ->andReturn(['active licences']);
+
+                    return $collection;
+                }
+            );
+
+        $this->assertEquals(
+            ['active licences'],
+            $organisation->getActiveLicences()->toArray()
+        );
     }
 }

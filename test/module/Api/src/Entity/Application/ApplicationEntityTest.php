@@ -2,20 +2,19 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
-use Dvsa\Olcs\Api\Entity\Application\S4;
-use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
-use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
+use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
+use Dvsa\Olcs\Api\Entity\Application\S4;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
 
 /**
@@ -221,7 +220,7 @@ class ApplicationEntityTest extends EntityTester
     {
         $sut = m::mock(Entity::class)->makePartial();
 
-        $application = m::mock(Application::class)->makePartial();
+        $application = m::mock(Entity::class)->makePartial();
         $oc = m::mock(OperatingCentre::class)->makePartial();
 
         foreach ($operatingCenterActions as $action) {
@@ -248,7 +247,7 @@ class ApplicationEntityTest extends EntityTester
             list($id, $noOfTrailersRequired, $noOfVehiclesRequired) = $values;
             $oc = new \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre();
             $oc->setId($id);
-            $aoc = new ApplicationOperatingCentre(m::mock(Application::class)->makePartial(), $oc);
+            $aoc = new ApplicationOperatingCentre(m::mock(Entity::class)->makePartial(), $oc);
             $aoc->setOperatingCentre($oc);
             $aoc->setNoOfTrailersRequired($noOfTrailersRequired);
             $aoc->setNoOfVehiclesRequired($noOfVehiclesRequired);
@@ -907,7 +906,7 @@ class ApplicationEntityTest extends EntityTester
 
     public function testGetVariationCompletion()
     {
-        $completion = m::mock(ApplicationCompletionEntity::class)->makePartial();
+        $completion = m::mock(ApplicationCompletion::class)->makePartial();
         $completion
             ->setAddressesStatus(2)
             ->setOperatingCentresStatus(1);
@@ -1666,6 +1665,10 @@ class ApplicationEntityTest extends EntityTester
     {
         $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
 
+        $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setAction('D');
+        $this->entity->addOperatingCentres($aoc);
+
         $oorDate = $this->entity->getOutOfRepresentationDate();
 
         $this->assertEquals('Unknown', $oorDate);
@@ -1675,6 +1678,10 @@ class ApplicationEntityTest extends EntityTester
     {
         $this->entity->setGoodsOrPsv((new RefData())->setId(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
         $this->entity->setIsVariation(1);
+
+        $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setAction('D');
+        $this->entity->addOperatingCentres($aoc);
 
         $oorDate = $this->entity->getOutOfRepresentationDate();
 
@@ -2006,5 +2013,49 @@ class ApplicationEntityTest extends EntityTester
                 false
             ],
         ];
+    }
+
+    /**
+     * @param string $categoryId 'lcat_psv'|'lcat_gv'
+     * @param string $expected 'O'|'P'
+     * @dataProvider categoryPrefixDp
+     */
+    public function testGetCategoryPrefix($categoryId, $expected)
+    {
+        $category = new RefData($categoryId);
+
+        $application = $this->instantiate(Entity::class);
+        $application->setGoodsOrPsv($category);
+
+        $this->assertEquals($expected, $application->getCategoryPrefix());
+    }
+
+    public function categoryPrefixDp()
+    {
+        return [
+            [Licence::LICENCE_CATEGORY_PSV, 'P'],
+            [Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'O'],
+        ];
+    }
+
+    public function testGetOtherActiveLicencesForOrganisation()
+    {
+        $licence1 = m::mock(Licence::class)->makePartial()->setId(7);
+        $licence2 = m::mock(Licence::class)->makePartial()->setId(8);
+        $organisationLicences = m::mock(ArrayCollection::class)
+            ->shouldReceive('toArray')
+            ->once()
+            ->andReturn([$licence1, $licence2])
+            ->getMock();
+        $licence1
+            ->shouldReceive('getOrganisation->getActiveLicences')
+            ->once()
+            ->andReturn($organisationLicences);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setLicence($licence1);
+
+        $this->assertEquals([$licence2], $application->getOtherActiveLicencesForOrganisation());
     }
 }

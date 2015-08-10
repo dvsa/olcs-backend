@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\ConditionUndertaking;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Entity\Application\S4;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
@@ -52,12 +53,10 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
      */
     private function createConditionUndertakingObject($command)
     {
-        $isDraft = 'N';
-
         $conditionUndertaking = new ConditionUndertaking(
             $this->getRepo()->getRefdataReference($command->getConditionType()),
             $command->getIsFulfilled(),
-            $isDraft
+            (method_exists($command, 'getIsDraft') ? $command->getIsDraft() : "N")
         );
 
         if (!is_null($command->getCase())) {
@@ -68,8 +67,15 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
         $application = $this->getRepo('Application')->fetchById($command->getApplication());
         $conditionUndertaking->setApplication($application);
 
-        $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
-        $conditionUndertaking->setLicence($licence);
+        if (!is_null($command->getLicence())) {
+            $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
+            $conditionUndertaking->setLicence($licence);
+        }
+
+        if (method_exists($command, 'getS4')) {
+            $s4 = $this->getRepo()->getReference(S4::class, $command->getS4());
+            $conditionUndertaking->setS4($s4);
+        }
 
         $conditionUndertaking->setAttachedTo($this->getRepo()->getRefdataReference($command->getAttachedTo()));
         $conditionUndertaking->setAddedVia($this->getRepo()->getRefdataReference($command->getAddedVia()));

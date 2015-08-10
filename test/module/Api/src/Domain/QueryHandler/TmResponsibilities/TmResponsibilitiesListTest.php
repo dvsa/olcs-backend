@@ -48,7 +48,7 @@ class TmResponsibilitiesListTest extends QueryHandlerTestCase
 
         $this->repoMap['TransportManagerApplication']
             ->shouldReceive('fetchForTransportManager')
-            ->with(1, 'a,b')
+            ->with(1, 'a,b', true)
             ->once()
             ->andReturn(['applications'])
             ->getMock();

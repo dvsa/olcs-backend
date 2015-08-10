@@ -5,14 +5,14 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Interfaces\DateHelperAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Traits\DateHelperAwareTrait;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\FstandingAdditionalVeh as Qry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\FStandingAdditionalVeh as Qry;
 
 /**
- * F_Standing_FirstVeh bookmark
+ * F_Standing_AdditionalVeh bookmark
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class FstandingFirstVeh extends DynamicBookmark implements DateHelperAwareInterface
+class FStandingAdditionalVeh extends DynamicBookmark implements DateHelperAwareInterface
 {
     use DateHelperAwareTrait;
 
@@ -29,8 +29,8 @@ class FstandingFirstVeh extends DynamicBookmark implements DateHelperAwareInterf
 
     public function render()
     {
-        if (isset($this->data['Results'][0]['firstVehicleRate'])) {
-            return number_format($this->data['Results'][0]['firstVehicleRate']);
+        if (isset($this->data['Results'][0]['additionalVehicleRate'])) {
+            return number_format($this->data['Results'][0]['additionalVehicleRate']);
         }
         return '';
     }

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\LicenceExpiryDate;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class FstandingProvedDate extends LicenceExpiryDate
+class FStandingProvedDate extends LicenceExpiryDate
 {
     //
 }
