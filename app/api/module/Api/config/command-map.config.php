@@ -667,4 +667,8 @@ return [
     TransferCommand\Publication\PiDecision::class => CommandHandler\Publication\PiHearing::class,
     TransferCommand\Publication\Bus::class => CommandHandler\Publication\Bus::class,
     TransferCommand\Publication\Application::class => CommandHandler\Publication\Application::class,
+
+    // Disqualification
+    TransferCommand\Disqualification\Create::class => CommandHandler\Disqualification\Create::class,
+    TransferCommand\Disqualification\Update::class => CommandHandler\Disqualification\Update::class,
 ];
