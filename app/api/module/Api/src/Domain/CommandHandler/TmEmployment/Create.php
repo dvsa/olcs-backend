@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Tm\TmEmployment;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\TmEmployment\Create as CreateCommand;
 
@@ -36,9 +37,20 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         $tmEmployment->setPosition($command->getPosition());
         $tmEmployment->setHoursPerWeek($command->getHoursPerWeek());
         $tmEmployment->setEmployerName($command->getEmployerName());
-        /* @var $tma TransportManagerApplication */
-        $tma = $this->getRepo('TransportManagerApplication')->fetchById($command->getTmaId());
-        $tmEmployment->setTransportManager($tma->getTransportManager());
+
+        if (is_numeric($command->getTmaId())) {
+            /* @var $tma TransportManagerApplication */
+            $tma = $this->getRepo('TransportManagerApplication')->fetchById($command->getTmaId());
+            $tmEmployment->setTransportManager($tma->getTransportManager());
+        } elseif (is_numeric($command->geTransportManager())) {
+            $tmEmployment->setTransportManager(
+                $this->getRepo()->getReference(TransportManager::class, $command->geTransportManager())
+            );
+        } else {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
+                ['TransportManagerApplication ID or TransportManager ID must be specified']
+            );
+        }
 
         $createContactResult = $this->createContactDetails($command);
         $tmEmployment->setContactDetails(

@@ -240,6 +240,7 @@ return [
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
+    TransferQuery\TmEmployment\GetList::class => QueryHandler\TmEmployment\GetList::class,
 
     // Bus Reg History View
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
