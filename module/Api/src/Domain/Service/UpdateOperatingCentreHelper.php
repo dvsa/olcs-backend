@@ -7,12 +7,17 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Service;
 
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Service\AuthorizationService;
+
 /**
  * Update Operating Centre Helper
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateOperatingCentreHelper
+class UpdateOperatingCentreHelper implements FactoryInterface
 {
     protected $messages = [];
 
@@ -29,6 +34,18 @@ class UpdateOperatingCentreHelper
     const ERR_OC_T_4 = 'ERR_OC_T_4'; // no-operating-centre
     const ERR_OC_EA_EMPTY = 'ERR_OC_EA_EMPTY';
 
+    /**
+     * @var AuthorizationService
+     */
+    protected $authService;
+
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->authService = $serviceLocator->get(AuthorizationService::class);
+
+        return $this;
+    }
+
     public function getMessages()
     {
         return $this->messages;
@@ -38,7 +55,10 @@ class UpdateOperatingCentreHelper
     {
         $ea = $command->getEnforcementArea();
 
-        if ($entity->getTrafficArea() !== null && empty($ea)) {
+        if ($this->authService->isGranted(Permission::INTERNAL_USER)
+            && $entity->getTrafficArea() !== null
+            && empty($ea)
+        ) {
             $this->addMessage('enforcementArea', self::ERR_OC_EA_EMPTY);
         }
     }

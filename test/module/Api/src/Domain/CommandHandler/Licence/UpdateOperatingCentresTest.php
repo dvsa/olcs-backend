@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
@@ -65,7 +66,8 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $loc->setNoOfVehiclesRequired(10);
         $loc->setNoOfTrailersRequired(10);
 
-        $locs = [$loc];
+        $locs = new ArrayCollection();
+        $locs->add($loc);
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
@@ -116,7 +118,8 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $loc->setNoOfVehiclesRequired(10);
         $loc->setNoOfTrailersRequired(10);
 
-        $locs = [$loc];
+        $locs = new ArrayCollection();
+        $locs->add($loc);
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
@@ -172,7 +175,8 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $loc->setNoOfVehiclesRequired(10);
         $loc->setNoOfTrailersRequired(10);
 
-        $locs = [$loc];
+        $locs = new ArrayCollection();
+        $locs->add($loc);
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
@@ -236,7 +240,8 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $loc->setNoOfVehiclesRequired(10);
         $loc->setNoOfTrailersRequired(10);
 
-        $locs = [$loc];
+        $locs = new ArrayCollection();
+        $locs->add($loc);
 
         $ta = m::mock(TrafficArea::class)->makePartial();
 

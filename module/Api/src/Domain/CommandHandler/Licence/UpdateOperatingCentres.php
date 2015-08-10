@@ -82,6 +82,10 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
     protected function validate(Licence $licence, Cmd $command)
     {
         if (!$command->getPartial()) {
+            if (!$licence->getOperatingCentres()->isEmpty()) {
+                $this->updateHelper->validateEnforcementArea($licence, $command);
+            }
+
             if ($licence->isPsv()) {
                 $this->updateHelper->validatePsv($licence, $command);
             } else {
@@ -90,8 +94,6 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
             $this->updateHelper->validateTotalAuthVehicles($licence, $command, $this->getTotals($licence));
         }
-
-        $this->updateHelper->validateEnforcementArea($licence, $command);
 
         $messages = $this->updateHelper->getMessages();
 
