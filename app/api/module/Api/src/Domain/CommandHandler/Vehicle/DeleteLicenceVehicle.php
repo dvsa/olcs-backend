@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class DeleteGoodsVehicle extends AbstractCommandHandler implements TransactionedInterface
+final class DeleteLicenceVehicle extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'LicenceVehicle';
 
