@@ -84,8 +84,6 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
         /** Application */
         $targetOp->setPerson($targetPerson);
 
-        $targetOp->setAddedDate(new DateTime());
-
         $this->getRepo('OrganisationPerson')->save($targetOp);
     }
 
