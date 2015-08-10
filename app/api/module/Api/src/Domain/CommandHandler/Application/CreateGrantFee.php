@@ -70,7 +70,8 @@ final class CreateGrantFee extends AbstractCommandHandler implements Transaction
     {
         $data = [
             'id' => $applicationId,
-            'feeTypeFeeType' => FeeType::FEE_TYPE_GRANT
+            'feeTypeFeeType' => FeeType::FEE_TYPE_GRANT,
+            'description' => 'Grant fee due'
         ];
 
         return $this->handleSideEffect(CreateApplicationFeeCmd::create($data));

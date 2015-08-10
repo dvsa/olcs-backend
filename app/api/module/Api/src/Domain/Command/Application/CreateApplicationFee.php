@@ -18,11 +18,21 @@ final class CreateApplicationFee extends AbstractIdOnlyCommand
 {
     protected $feeTypeFeeType;
 
+    protected $description;
+
     /**
      * @return mixed
      */
     public function getFeeTypeFeeType()
     {
         return $this->feeTypeFeeType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

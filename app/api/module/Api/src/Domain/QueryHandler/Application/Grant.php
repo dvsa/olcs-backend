@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService;
 
 /**
  * Grant
@@ -22,7 +23,7 @@ class Grant extends AbstractQueryHandler
     protected $repoServiceName = 'Application';
 
     /**
-     * @var \Dvsa\Olcs\Api\Service\Lva\GrantValidationService
+     * @var GrantValidationService
      */
     private $grantValidationService;
 

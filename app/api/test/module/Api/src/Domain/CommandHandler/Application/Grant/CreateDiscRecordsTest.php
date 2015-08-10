@@ -48,7 +48,8 @@ class CreateDiscRecordsTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'id' => 111
+            'id' => 111,
+            'currentTotAuth' => 5
         ];
 
         $command = CreateDiscRecordsCmd::create($data);
@@ -64,7 +65,6 @@ class CreateDiscRecordsTest extends CommandHandlerTestCase
         $application->setLicence($licence);
 
         $application->setTotAuthVehicles(10);
-        $licence->setTotAuthVehicles(5);
 
         $application->shouldReceive('isPsv')
             ->andReturn(true)
@@ -94,7 +94,8 @@ class CreateDiscRecordsTest extends CommandHandlerTestCase
     public function testHandleCommandWithLicenceVehicles()
     {
         $data = [
-            'id' => 111
+            'id' => 111,
+            'currentTotAuth' => 5
         ];
 
         $command = CreateDiscRecordsCmd::create($data);
@@ -118,7 +119,6 @@ class CreateDiscRecordsTest extends CommandHandlerTestCase
         $application->setLicence($licence);
 
         $application->setTotAuthVehicles(10);
-        $licence->setTotAuthVehicles(5);
 
         $application->shouldReceive('isPsv')
             ->andReturn(true)
@@ -158,7 +158,8 @@ class CreateDiscRecordsTest extends CommandHandlerTestCase
     public function testHandleCommandWithLicenceVehiclesGoods()
     {
         $data = [
-            'id' => 111
+            'id' => 111,
+            'currentTotAuth' => 5
         ];
 
         $command = CreateDiscRecordsCmd::create($data);
@@ -184,7 +185,6 @@ class CreateDiscRecordsTest extends CommandHandlerTestCase
         $application->setLicence($licence);
 
         $application->setTotAuthVehicles(10);
-        $licence->setTotAuthVehicles(5);
 
         $application->shouldReceive('isPsv')
             ->andReturn(false)

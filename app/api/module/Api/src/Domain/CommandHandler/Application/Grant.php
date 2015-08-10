@@ -30,7 +30,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     protected $repoServiceName = 'Application';
 
     /**
-     * @var \Dvsa\Olcs\Api\Service\Lva\GrantValidationService
+     * @var \Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService
      */
     private $grantValidationService;
 

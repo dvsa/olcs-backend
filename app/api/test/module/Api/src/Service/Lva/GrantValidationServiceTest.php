@@ -47,7 +47,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         /** @var Fee $fee1 */
         $fee1 = m::mock(Fee::class)->makePartial();
         $fee1->shouldReceive('getFeeType->getFeeType->getId')
-            ->andReturn(RefData::FEE_TYPE_GRANTINT);
+            ->andReturn(RefData::FEE_TYPE_VAR);
 
         /** @var Fee $fee2 */
         $fee2 = m::mock(Fee::class)->makePartial();
@@ -113,7 +113,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         /** @var Fee $fee1 */
         $fee1 = m::mock(Fee::class)->makePartial();
         $fee1->shouldReceive('getFeeType->getFeeType->getId')
-            ->andReturn(RefData::FEE_TYPE_GRANTINT);
+            ->andReturn(RefData::FEE_TYPE_VAR);
 
         /** @var Fee $fee2 */
         $fee2 = m::mock(Fee::class)->makePartial();
@@ -220,7 +220,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         /** @var Fee $fee1 */
         $fee1 = m::mock(Fee::class)->makePartial();
         $fee1->shouldReceive('getFeeType->getFeeType->getId')
-            ->andReturn(RefData::FEE_TYPE_GRANTINT);
+            ->andReturn(RefData::FEE_TYPE_VAR);
 
         /** @var Fee $fee2 */
         $fee2 = m::mock(Fee::class)->makePartial();
@@ -277,7 +277,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         /** @var Fee $fee1 */
         $fee1 = m::mock(Fee::class)->makePartial();
         $fee1->shouldReceive('getFeeType->getFeeType->getId')
-            ->andReturn(RefData::FEE_TYPE_GRANTINT);
+            ->andReturn(RefData::FEE_TYPE_VAR);
 
         /** @var Fee $fee2 */
         $fee2 = m::mock(Fee::class)->makePartial();

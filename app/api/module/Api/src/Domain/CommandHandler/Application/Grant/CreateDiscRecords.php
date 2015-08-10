@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -30,17 +29,14 @@ final class CreateDiscRecords extends AbstractCommandHandler implements Transact
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
         if ($application->isPsv()) {
-
-            $difference = $application->getTotAuthVehicles() - $application->getLicence()->getTotAuthVehicles();
+            $difference = $application->getTotAuthVehicles() - $command->getCurrentTotAuth();
 
             if ($difference > 0) {
-                $result->merge($this->createPsvDiscs($application->getLicence(), $difference));
+                $this->result->merge($this->createPsvDiscs($application->getLicence(), $difference));
             }
         }
 
@@ -48,14 +44,14 @@ final class CreateDiscRecords extends AbstractCommandHandler implements Transact
 
         if ($licenceVehicles->count() > 0) {
             if ($application->isGoods()) {
-                $result->merge($this->createGoodsDiscs($licenceVehicles));
+                $this->result->merge($this->createGoodsDiscs($licenceVehicles));
             }
 
             $this->specifyVehicles($licenceVehicles);
             $this->getRepo()->save($application);
         }
 
-        return $result;
+        return $this->result;
     }
 
     /**

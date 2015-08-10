@@ -28,9 +28,11 @@ class OrganisationPersonTest extends RepositoryTestCase
     {
         /** @var Organisation $organisation */
         $organisation = m::mock(Organisation::class)->makePartial();
+        $organisation->setId(123);
 
         /** @var Person $person */
         $person = m::mock(Person::class)->makePartial();
+        $person->setId(321);
 
         $mockQb = $this->createMockQb('{QUERY}');
 
@@ -49,10 +51,7 @@ class OrganisationPersonTest extends RepositoryTestCase
 
         $this->assertEquals('Foo', $this->sut->fetchByOrgAndPerson($organisation, $person));
 
-        $this->assertEquals(
-            '{QUERY} AND m.organisation = ' . get_class($organisation) . ' AND m.person = ' . get_class($person),
-            $this->query
-        );
+        $this->assertEquals('{QUERY} AND m.organisation = 123 AND m.person = 321', $this->query);
     }
 
     public function testFetchListForOrganisation()
