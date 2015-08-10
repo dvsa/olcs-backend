@@ -8,8 +8,8 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 
 /**
  * Application
@@ -31,21 +31,9 @@ class Application extends AbstractRepository
         return $qb->getQuery()->getSingleResult();
     }
 
-    public function fetchForOrganisation($organisationId)
-    {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata()
-            ->with('licence', 'l');
-
-        $qb->andWhere($qb->expr()->eq('l.organisation', ':organisationId'))
-            ->setParameter('organisationId', $organisationId);
-
-        return $qb->getQuery()->execute();
-    }
-
+    /**
+     * @param int $organisationId
+     */
     public function fetchActiveForOrganisation($organisationId)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
@@ -128,12 +116,10 @@ class Application extends AbstractRepository
      * Override parent
      *
      * @param QueryBuilder $qb
+     * @inheritdoc
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
-        // PMD
-        unset($qb);
-
         $this->getQueryBuilder()
             ->with('licence', 'l');
     }

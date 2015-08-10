@@ -181,7 +181,7 @@ class TransportManagerApplication extends AbstractRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function fetchByTmAndApplication($tmId, $applicationId)
+    public function fetchByTmAndApplication($tmId, $applicationId, $ignoreDeleted = false)
     {
         $qb = $this->createQueryBuilder();
 
@@ -189,6 +189,10 @@ class TransportManagerApplication extends AbstractRepository
             ->setParameter('tmId', $tmId);
         $qb->andWhere($qb->expr()->eq($this->alias .'.application', ':applicationId'))
             ->setParameter('applicationId', $applicationId);
+        if ($ignoreDeleted) {
+            $qb->andWhere($qb->expr()->neq($this->alias .'.action', ':action'))
+                ->setParameter('action', 'D');
+        }
 
         return $qb->getQuery()->getResult();
     }

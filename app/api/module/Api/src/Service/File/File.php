@@ -71,6 +71,8 @@ class File
     public function setIdentifier($identifier)
     {
         $this->identifier = $identifier;
+
+        return $this;
     }
 
     /**
@@ -91,6 +93,8 @@ class File
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -111,6 +115,8 @@ class File
     public function setType($type)
     {
         $this->type = $type;
+
+        return $this;
     }
 
     /**
@@ -131,6 +137,8 @@ class File
     public function setPath($path)
     {
         $this->path = $path;
+
+        return $this;
     }
 
     /**
@@ -151,6 +159,8 @@ class File
     public function setSize($size)
     {
         $this->size = $size;
+
+        return $this;
     }
 
     /**
@@ -171,6 +181,8 @@ class File
     public function setContent($content)
     {
         $this->content = $content;
+
+        return $this;
     }
 
     /**
@@ -191,6 +203,8 @@ class File
     public function setMeta($meta)
     {
         $this->meta = $meta;
+
+        return $this;
     }
 
     /**

@@ -151,9 +151,9 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Is owner
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="is_owner", nullable=true)
+     * @ORM\Column(type="yesnonull", name="is_owner", nullable=true)
      */
     protected $isOwner;
 
@@ -559,7 +559,7 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the is owner
      *
-     * @param boolean $isOwner
+     * @param string $isOwner
      * @return TransportManagerLicence
      */
     public function setIsOwner($isOwner)
@@ -572,7 +572,7 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Get the is owner
      *
-     * @return boolean
+     * @return string
      */
     public function getIsOwner()
     {

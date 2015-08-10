@@ -84,7 +84,7 @@ class CreateTest extends CommandHandlerTestCase
             }
         )
         ->shouldReceive('fetchByTmAndApplication')
-        ->with(21, 863)
+        ->with(21, 863, true)
         ->once()
         ->andReturn(null);
 
@@ -201,7 +201,7 @@ class CreateTest extends CommandHandlerTestCase
 
         $this->repoMap['TransportManagerApplication']
             ->shouldReceive('fetchByTmAndApplication')
-            ->with(21, 863)
+            ->with(21, 863, true)
             ->once()
             ->andReturn(['foo']);
 

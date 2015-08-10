@@ -274,6 +274,16 @@ class Licence extends AbstractLicence
         return $this->getActiveVehicles()->count();
     }
 
+    public function getRemainingSpacesPsv()
+    {
+        return $this->getTotAuthVehicles() - $this->getPsvDiscsNotCeasedCount();
+    }
+
+    public function getPsvDiscsNotCeasedCount()
+    {
+        return $this->getPsvDiscsNotCeased()->count();
+    }
+
     public function getActiveVehicles($checkSpecified = true)
     {
         $criteria = Criteria::create();
@@ -499,6 +509,24 @@ class Licence extends AbstractLicence
     public function canHaveCommunityLicences()
     {
         return ($this->isStandardInternational() || ($this->isPsv() && $this->isRestricted()));
+    }
+
+    /**
+     * Can the licence have a variation.
+     *
+     * @return bool
+     */
+    public function canHaveVariation()
+    {
+        return !in_array(
+            $this->getStatus()->getId(),
+            [
+                self::LICENCE_STATUS_REVOKED,
+                self::LICENCE_STATUS_SURRENDERED,
+                self::LICENCE_STATUS_TERMINATED,
+                self::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT
+            ]
+        );
     }
 
     public function getCategoryPrefix()

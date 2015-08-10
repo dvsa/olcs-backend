@@ -102,7 +102,6 @@ class DocumentGenerator implements ServiceLocatorAwareInterface
      * Generate and store a document
      *
      * @param string $template    Document template name
-     * @param string $description Not used
      * @param array  $queryData
      * @param array  $knownValues
      *
