@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
 
 /**
  * Licence Entity
@@ -69,6 +70,7 @@ class Licence extends AbstractLicence
     const LICENCE_STATUS_NOT_TAKEN_UP = 'lsts_ntu';
     const LICENCE_STATUS_TERMINATED = 'lsts_terminated';
     const LICENCE_STATUS_CONTINUATION_NOT_SOUGHT = 'lsts_cns';
+    const LICENCE_STATUS_UNLICENSED = 'lsts_unlicenced'; // note, refdata misspelled
 
     const TACH_EXT = 'tach_external';
     const TACH_INT = 'tach_internal';
@@ -272,6 +274,16 @@ class Licence extends AbstractLicence
         return $this->getActiveVehicles()->count();
     }
 
+    public function getRemainingSpacesPsv()
+    {
+        return $this->getTotAuthVehicles() - $this->getPsvDiscsNotCeasedCount();
+    }
+
+    public function getPsvDiscsNotCeasedCount()
+    {
+        return $this->getPsvDiscsNotCeased()->count();
+    }
+
     public function getActiveVehicles($checkSpecified = true)
     {
         $criteria = Criteria::create();
@@ -429,6 +441,15 @@ class Licence extends AbstractLicence
         return $count;
     }
 
+    public function getPiRecordCount()
+    {
+        $count = 0;
+        foreach ($this->getCases() as $case) {
+            $count += count($case->getPublicInquirys());
+        }
+        return $count;
+    }
+
     public function getOpenCases()
     {
         $allCases = (array) $this->getCases()->getIterator();
@@ -488,5 +509,28 @@ class Licence extends AbstractLicence
     public function canHaveCommunityLicences()
     {
         return ($this->isStandardInternational() || ($this->isPsv() && $this->isRestricted()));
+    }
+
+    /**
+     * Can the licence have a variation.
+     *
+     * @return bool
+     */
+    public function canHaveVariation()
+    {
+        return !in_array(
+            $this->getStatus()->getId(),
+            [
+                self::LICENCE_STATUS_REVOKED,
+                self::LICENCE_STATUS_SURRENDERED,
+                self::LICENCE_STATUS_TERMINATED,
+                self::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT
+            ]
+        );
+    }
+
+    public function getCategoryPrefix()
+    {
+        return LicenceNoGenEntity::getCategoryPrefix($this->getGoodsOrPsv());
     }
 }

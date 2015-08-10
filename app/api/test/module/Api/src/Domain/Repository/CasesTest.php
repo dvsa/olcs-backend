@@ -14,6 +14,7 @@ use Dvsa\Olcs\Transfer\Query\Cases\ByTransportManager;
 use Doctrine\DBAL\LockMode;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
  * Cases test
@@ -93,5 +94,100 @@ class CasesTest extends RepositoryTestCase
             ->with($result, LockMode::OPTIMISTIC, 1);
 
         $this->sut->fetchWithLicenceUsingId($command, Query::HYDRATE_OBJECT, 1);
+    }
+
+    public function testFetchWithLicence()
+    {
+        $caseId = 1;
+
+        $result = m::mock(CasesEntity::class);
+        $results = [$result];
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('getQuery->getResult')->andReturn($results);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('licence', 'l')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('application', 'a')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('transportManager', 'tm')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('byId')
+            ->with($caseId)
+            ->once()
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->with('m')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(CasesEntity::class)
+            ->andReturn($repo)
+            ->shouldReceive('lock')
+            ->with($result, LockMode::OPTIMISTIC, 1);
+
+        $this->sut->fetchExtended($caseId);
+    }
+
+    /**
+     * @group test123
+     */
+    public function testFetchWithLicenceNotFound()
+    {
+        $caseId = 1;
+
+        $results = null;
+
+        $this->setExpectedException(Exception\NotFoundException::class);
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('getQuery->getResult')->andReturn($results);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('licence', 'l')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('application', 'a')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('with')
+            ->with('transportManager', 'tm')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('byId')
+            ->with($caseId)
+            ->once()
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->with('m')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(CasesEntity::class)
+            ->andReturn($repo);
+
+        $this->sut->fetchExtended($caseId);
     }
 }

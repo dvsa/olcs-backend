@@ -5,13 +5,16 @@ namespace Dvsa\Olcs\Api\Entity\Application;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Repository\Publication;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Application Entity
@@ -73,6 +76,31 @@ class Application extends AbstractApplication
 
     const NOT_APPLICABLE = 'Not applicable';
     const UNKNOWN = 'Unknown';
+
+    /**
+     * Publication No
+     *
+     * @var integer
+     */
+    protected $publicationNo;
+
+    /**
+     * Out of objection date
+     * @var string
+     */
+    protected $oooDate;
+
+    /**
+     * Out of representation date
+     * @var string
+     */
+    protected $oorDate;
+
+    /**
+     * isOpposed
+     * @var bool
+     */
+    protected $isOpposed;
 
     public function __construct(Licence $licence, RefData $status, $isVariation)
     {
@@ -654,7 +682,7 @@ class Application extends AbstractApplication
         $data = $completion->serialize([]);
 
         foreach ($data as $key => $value) {
-            if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches) && $value !== self::VARIATION_STATUS_UNCHANGED) {
+            if (preg_match('/^([a-zA-Z]+)Status$/', $key) && $value !== self::VARIATION_STATUS_UNCHANGED) {
                 return true;
             }
         }
@@ -744,13 +772,20 @@ class Application extends AbstractApplication
             return self::NOT_APPLICABLE;
         }
 
+        $updatedAddedOperatingCentres = 0;
+        foreach ($this->getOperatingCentres() as $aoc) {
+            if ($aoc->getAction() === 'A' || $aoc->getAction() === 'U') {
+                $updatedAddedOperatingCentres++;
+            }
+        }
+
         // If a new goods application and if 0 operating centres have been added/updated then
-        if (!$this->isVariation() && $this->getOperatingCentres()->count() === 0) {
+        if (!$this->isVariation() && $updatedAddedOperatingCentres === 0) {
             return self::UNKNOWN;
         }
 
         // if a goods variation and 0 operating centres have been added/updated then
-        if ($this->isVariation() && $this->getOperatingCentres()->count() === 0) {
+        if ($this->isVariation() && $updatedAddedOperatingCentres === 0) {
             return self::NOT_APPLICABLE;
         }
 
@@ -758,7 +793,7 @@ class Application extends AbstractApplication
         /* @var $aoc \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre */
         $maximumDate = null;
         foreach ($this->getOperatingCentres() as $aoc) {
-            $operatingCentreOorDate = $this->calcOperatingCentreOutOfReprenentationDate($aoc);
+            $operatingCentreOorDate = $this->calcOperatingCentreOutOfRepresentationDate($aoc);
 
             // If 1 or more of the operating centres are 'Unknown' then the overall OOR date = 'Unknown'
             if ($operatingCentreOorDate === self::UNKNOWN) {
@@ -794,7 +829,7 @@ class Application extends AbstractApplication
      *
      * @return string date|self::NOT_APPLICABLE|self::UNKNOWN
      */
-    private function calcOperatingCentreOutOfReprenentationDate(ApplicationOperatingCentre $aoc)
+    private function calcOperatingCentreOutOfRepresentationDate(ApplicationOperatingCentre $aoc)
     {
         // For added operating centres that are linked to a schedule 4
         // where there has been no increase to the vehicles as compared with the donor licence then
@@ -885,7 +920,7 @@ class Application extends AbstractApplication
     /**
      * Gets the latest publication for an application. (used to calculate OOO date)
      *
-     * @return Dvsa\Olcs\Api\Entity\Publication\PublicationLink|null
+     * @return \Dvsa\Olcs\Api\Entity\Publication\PublicationLink|null
      */
     private function getLatestPublication()
     {
@@ -954,5 +989,142 @@ class Application extends AbstractApplication
         $criteria->where($criteria->expr()->eq('operatingCentre', $oc));
 
         return $this->getOperatingCentres()->matching($criteria);
+    }
+
+    public function getCategoryPrefix()
+    {
+        return LicenceNoGen::getCategoryPrefix($this->getGoodsOrPsv());
+    }
+
+    /**
+     * @return int
+     */
+    public function getPublicationNo()
+    {
+        return $this->publicationNo;
+    }
+
+    /**
+     * @param int $publicationNo
+     */
+    public function setPublicationNo($publicationNo)
+    {
+        $this->publicationNo = $publicationNo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOooDate()
+    {
+        return $this->oooDate;
+    }
+
+    /**
+     * @param string $oooDate
+     */
+    public function setOooDate($oooDate)
+    {
+        $this->oooDate = $oooDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOorDate()
+    {
+        return $this->oorDate;
+    }
+
+    /**
+     * @param string $oorDate
+     */
+    public function setOorDate($oorDate)
+    {
+        $this->oorDate = $oorDate;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsOpposed()
+    {
+        return $this->isOpposed;
+    }
+
+    /**
+     * @param boolean $isOpposed
+     */
+    public function setIsOpposed($isOpposed)
+    {
+        $this->isOpposed = $isOpposed;
+    }
+
+    /**
+     * Determine and set the latest publication number
+     * @return mixed
+     */
+    public function determinePublicationNo()
+    {
+        /** @var Publication $latestPublication */
+        $latestPublication = $this->getLatestPublication();
+
+        if ($latestPublication instanceof Publication) {
+
+            return $latestPublication->getPublicationNo();
+        }
+
+        return null;
+    }
+
+    /**
+     * Has this application received any opposition
+     * @return bool
+     */
+    public function hasOpposition()
+    {
+        /** @var CasesEntity $case */
+        foreach ($this->getCases() as $case) {
+            if (count($case->getOppositions()) > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * For an application, get the organisation's other licences (explicity
+     * excludes the current application's licence)
+     *
+     * @note different from AbstractApplication::getOtherLicences() which is,
+     * erm, something else entirely
+     *
+     * @return array Licence[]
+     */
+    public function getOtherActiveLicencesForOrganisation()
+    {
+        if ($this->getLicence() && $this->getLicence()->getOrganisation()) {
+
+            $licences = $this->getLicence()->getOrganisation()->getActiveLicences();
+
+            if (empty($licences)) {
+                return [];
+            }
+
+            $filtered = array_filter(
+                $licences->toArray(),
+                function ($licence) {
+                    return $licence->getId() !== $this->getLicence()->getId();
+                }
+            );
+
+            return array_values($filtered);
+        }
+    }
+
+    public function getTrafficArea()
+    {
+        return $this->getLicence()->getTrafficArea();
     }
 }

@@ -95,6 +95,10 @@ return [
         => CommandHandler\Application\DeleteOperatingCentres::class,
     Command\Application\HandleOcVariationFees::class => CommandHandler\Application\HandleOcVariationFees::class,
     TransferCommand\Application\CreateOperatingCentre::class => CommandHandler\Application\CreateOperatingCentre::class,
+    TransferCommand\Application\CreateTaxiPhv::class => CommandHandler\Application\CreateTaxiPhv::class,
+    TransferCommand\Application\UpdateTaxiPhv::class => CommandHandler\Application\UpdateTaxiPhv::class,
+    TransferCommand\Application\DeleteTaxiPhv::class => CommandHandler\Application\DeleteTaxiPhv::class,
+
     Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
 
     // Transfer - Workshop
@@ -304,6 +308,8 @@ return [
     Command\Document\CreateDocumentSpecific::class => CommandHandler\Document\CreateDocumentSpecific::class,
     TransferCommand\Document\DeleteDocument::class => CommandHandler\Document\DeleteDocument::class,
     TransferCommand\Document\DeleteDocuments::class => CommandHandler\Document\DeleteDocuments::class,
+    TransferCommand\Document\CopyDocument::class => CommandHandler\Document\CopyDocument::class,
+    TransferCommand\Document\MoveDocument::class => CommandHandler\Document\MoveDocument::class,
 
     // Transfer - CommunityLic
     TransferCommand\CommunityLic\Application\Create::class => CommandHandler\CommunityLic\Application\Create::class,
@@ -529,6 +535,12 @@ return [
         => CommandHandler\TransportManagerApplication\UpdateStatus::class,
     TransferCommand\TransportManagerApplication\UpdateDetails::class
         => CommandHandler\TransportManagerApplication\UpdateDetails::class,
+   TransferCommand\TransportManagerApplication\CreateForResponsibilities::class =>
+        CommandHandler\TransportManagerApplication\CreateForResponsibilities::class,
+    TransferCommand\TransportManagerApplication\UpdateForResponsibilities::class =>
+        CommandHandler\TransportManagerApplication\UpdateForResponsibilities::class,
+    TransferCommand\TransportManagerApplication\DeleteForResponsibilities::class =>
+        CommandHandler\TransportManagerApplication\DeleteForResponsibilities::class,
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
@@ -556,6 +568,8 @@ return [
     // Transfer - Operator
     TransferCommand\Operator\Create::class => CommandHandler\Operator\SaveOperator::class,
     TransferCommand\Operator\Update::class => CommandHandler\Operator\SaveOperator::class,
+    TransferCommand\Operator\CreateUnlicensed::class => CommandHandler\Operator\CreateUnlicensed::class,
+    TransferCommand\Operator\UpdateUnlicensed::class => CommandHandler\Operator\UpdateUnlicensed::class,
 
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
@@ -587,6 +601,9 @@ return [
     // OrganisationPerson
     TransferCommand\OrganisationPerson\PopulateFromCompaniesHouse::class =>
         CommandHandler\OrganisationPerson\PopulateFromCompaniesHouse::class,
+    TransferCommand\OrganisationPerson\Create::class => CommandHandler\OrganisationPerson\Create::class,
+    TransferCommand\OrganisationPerson\Update::class => CommandHandler\OrganisationPerson\Update::class,
+    TransferCommand\OrganisationPerson\DeleteList::class => CommandHandler\OrganisationPerson\DeleteList::class,
 
     // Transfer - TransportManager
     TransferCommand\Tm\Create::class => CommandHandler\Tm\Create::class,
@@ -605,6 +622,7 @@ return [
 
     // ContinuationDetail
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
+    Command\ContinuationDetail\Process::class => CommandHandler\ContinuationDetail\Process::class,
 
     // Transport Manager Licence
     TransferCommand\TransportManagerLicence\UpdateForResponsibilities::class =>

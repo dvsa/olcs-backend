@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateVariation;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -44,7 +45,8 @@ class CreateVariationTest extends CommandHandlerTestCase
             ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
             ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED,
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
-            LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
+            LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            LicenceEntity::LICENCE_STATUS_VALID
         ];
 
         parent::initReferences();
@@ -65,9 +67,10 @@ class CreateVariationTest extends CommandHandlerTestCase
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
-        /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
+
+        $licence->shouldReceive('canHaveVariation')->andReturn(true);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -131,6 +134,8 @@ class CreateVariationTest extends CommandHandlerTestCase
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
 
+        $licence->shouldReceive('canHaveVariation')->andReturn(true);
+
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command)
             ->andReturn($licence);
@@ -186,6 +191,8 @@ class CreateVariationTest extends CommandHandlerTestCase
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
 
+        $licence->shouldReceive('canHaveVariation')->andReturn(true);
+
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command)
             ->andReturn($licence);
@@ -233,6 +240,8 @@ class CreateVariationTest extends CommandHandlerTestCase
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
+
+        $licence->shouldReceive('canHaveVariation')->andReturn(true);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -282,6 +291,8 @@ class CreateVariationTest extends CommandHandlerTestCase
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
 
+        $licence->shouldReceive('canHaveVariation')->andReturn(true);
+
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command)
             ->andReturn($licence);
@@ -311,5 +322,33 @@ class CreateVariationTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandVariationException()
+    {
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
+        $data = [
+            'id' => 111,
+            'feeRequired' => 'N'
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn(false);
+
+        $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
+
+        /** @var LicenceEntity $licence */
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
+
+        $licence->shouldReceive('canHaveVariation')->andReturn(false);
+
+        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($licence);
+
+        $this->sut->handleCommand($command);
     }
 }

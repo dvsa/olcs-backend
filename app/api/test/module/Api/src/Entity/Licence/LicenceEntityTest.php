@@ -732,4 +732,76 @@ class LicenceEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @dataProvider testCanHaveVariationProvider
+     */
+    public function testCanHaveVariation($status, $expected)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+
+        $licence->shouldReceive('getStatus->getId')
+            ->andReturn($status);
+
+        $this->assertEquals($licence->canHaveVariation(), $expected);
+    }
+
+    public function testCanHaveVariationProvider()
+    {
+        return [
+            [
+                Entity::LICENCE_STATUS_VALID,
+                true
+            ],
+            [
+                Entity::LICENCE_STATUS_SURRENDERED,
+                false
+            ],
+            [
+                Entity::LICENCE_STATUS_REVOKED,
+                false
+            ],
+            [
+                Entity::LICENCE_STATUS_TERMINATED,
+                false
+            ]
+        ];
+    }
+
+    /**
+     * @param string $categoryId 'lcat_psv'|'lcat_gv'
+     * @param string $expected 'O'|'P'
+     * @dataProvider categoryPrefixDp
+     */
+    public function testGetCategoryPrefix($categoryId, $expected)
+    {
+        $category = new RefData($categoryId);
+
+        $licence = $this->instantiate(Entity::class);
+        $licence->setGoodsOrPsv($category);
+
+        $this->assertEquals($expected, $licence->getCategoryPrefix());
+    }
+
+    public function categoryPrefixDp()
+    {
+        return [
+            [Entity::LICENCE_CATEGORY_PSV, 'P'],
+            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, 'O'],
+        ];
+    }
+
+    public function testGetRemainingSpacesPsv()
+    {
+        $licence = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getTotAuthVehicles')
+            ->andReturn(2)
+            ->once()
+            ->shouldReceive('getPsvDiscsNotCeased')
+            ->andReturn(new \ArrayObject([1, 2, 3]))
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(-1, $licence->getRemainingSpacesPsv());
+    }
 }

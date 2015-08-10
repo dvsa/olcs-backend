@@ -64,8 +64,10 @@ class LicenceOperatingCentreTest extends QueryHandlerTestCase
         $expected = [
             'foo' => 'bar',
             'isPsv' => true,
-            'canUpdateAddress' => false,
-            'wouldIncreaseRequireAdditionalAdvertisement' => false
+            'canUpdateAddress' => true,
+            'wouldIncreaseRequireAdditionalAdvertisement' => false,
+            'currentVehiclesRequired' => null,
+            'currentTrailersRequired' => null
         ];
 
         $this->assertEquals($expected, $result->serialize());

@@ -45,11 +45,31 @@ class UpdateTaxiPhvStatusTest extends AbstractUpdateStatusTestCase
         $this->expectStatusUnchanged(ApplicationCompletionEntity::STATUS_INCOMPLETE);
     }
 
+    public function testHandleCommandNoTrafficArea()
+    {
+        $this->applicationCompletion->setTaxiPhvStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
+
+        $this->licence->setPrivateHireLicences(['foo']);
+
+        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
+    }
+
+    public function testHandleCommandNoPhl()
+    {
+        $this->applicationCompletion->setTaxiPhvStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
+
+        $this->licence->setPrivateHireLicences(new \Doctrine\Common\Collections\ArrayCollection());
+        $this->licence->setTrafficArea('bar');
+
+        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
+    }
+
     public function testHandleCommand()
     {
         $this->applicationCompletion->setTaxiPhvStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->licence->setPrivateHireLicences(['foo']);
+        $this->licence->setTrafficArea('bar');
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
     }

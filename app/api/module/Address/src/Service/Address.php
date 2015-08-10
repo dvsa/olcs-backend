@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Repository\AdminAreaTrafficArea;
 use Dvsa\Olcs\Api\Domain\Repository\PostcodeEnforcementArea;
 use Dvsa\Olcs\Api\Entity\TrafficArea\AdminAreaTrafficArea as AdminAreaTrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\EnforcementArea\PostcodeEnforcementArea as PostcodeEnforcementAreaEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 
 /**
  * Address
@@ -24,24 +25,37 @@ class Address implements AddressInterface
      */
     private $client;
 
+    private $taCache = [];
+
     public function __construct(Client $client)
     {
         $this->client = $client;
     }
 
+    /**
+     * @param $postcode
+     * @param AdminAreaTrafficArea $repo
+     * @return TrafficArea
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
+     */
     public function fetchTrafficAreaByPostcode($postcode, AdminAreaTrafficArea $repo)
     {
-        $adminArea = $this->fetchAdminAreaByPostcode($postcode);
+        if (!array_key_exists($postcode, $this->taCache)) {
 
-        if ($adminArea) {
+            $adminArea = $this->fetchAdminAreaByPostcode($postcode);
 
-            /** @var AdminAreaTrafficAreaEntity $record */
-            $record = $repo->fetchById($adminArea);
+            if ($adminArea) {
 
-            return $record->getTrafficArea();
+                /** @var AdminAreaTrafficAreaEntity $record */
+                $record = $repo->fetchById($adminArea);
+
+                $this->taCache[$postcode] = $record->getTrafficArea();
+            } else {
+                $this->taCache[$postcode] = null;
+            }
         }
 
-        return null;
+        return $this->taCache[$postcode];
     }
 
     public function fetchEnforcementAreaByPostcode($postcode, PostcodeEnforcementArea $repo)

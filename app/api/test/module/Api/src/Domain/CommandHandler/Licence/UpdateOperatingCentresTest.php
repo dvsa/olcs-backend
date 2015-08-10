@@ -10,8 +10,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
+use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateOperatingCentres as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as Cmd;
@@ -39,6 +41,12 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [];
+
+        $this->references = [
+            EnforcementArea::class => [
+                'A111' => m::mock(EnforcementArea::class)
+            ]
+        ];
 
         parent::initReferences();
     }
@@ -82,6 +90,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->shouldReceive('validateTotalAuthVehicles')
             ->once()
             ->with($licence, $command, $expectedTotals)
+            ->shouldReceive('validateEnforcementArea')
+            ->once()
+            ->with($licence, $command)
             ->shouldReceive('getMessages')
             ->once()
             ->andReturn(['foo' => 'bar']);
@@ -130,6 +141,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->shouldReceive('validateTotalAuthVehicles')
             ->once()
             ->with($licence, $command, $expectedTotals)
+            ->shouldReceive('validateEnforcementArea')
+            ->once()
+            ->with($licence, $command)
             ->shouldReceive('getMessages')
             ->once()
             ->andReturn(['foo' => 'bar']);
@@ -184,6 +198,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->shouldReceive('validateTotalAuthVehicles')
             ->once()
             ->with($licence, $command, $expectedTotals)
+            ->shouldReceive('validateEnforcementArea')
+            ->once()
+            ->with($licence, $command)
             ->shouldReceive('getMessages')
             ->once()
             ->andReturn([]);
@@ -209,7 +226,8 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             'version' => 1,
             'partial' => false,
             'totAuthVehicles' => 10,
-            'totAuthTrailers' => 10
+            'totAuthTrailers' => 10,
+            'enforcementArea' => 'A111'
         ];
         $command = Cmd::create($data);
 
@@ -220,10 +238,13 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
         $locs = [$loc];
 
+        $ta = m::mock(TrafficArea::class)->makePartial();
+
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
         $licence->shouldReceive('isPsv')->andReturn(false);
         $licence->setOperatingCentres($locs);
+        $licence->setTrafficArea($ta);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
@@ -243,6 +264,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->shouldReceive('validateTotalAuthVehicles')
             ->once()
             ->with($licence, $command, $expectedTotals)
+            ->shouldReceive('validateEnforcementArea')
+            ->once()
+            ->with($licence, $command)
             ->shouldReceive('getMessages')
             ->once()
             ->andReturn([]);
@@ -259,5 +283,6 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+        $this->assertSame($this->references[EnforcementArea::class]['A111'], $licence->getEnforcementArea());
     }
 }

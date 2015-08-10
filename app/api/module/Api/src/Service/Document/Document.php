@@ -64,7 +64,7 @@ class Document implements ServiceLocatorAwareInterface
         foreach ($bookmarks as $token => $bookmark) {
 
             /**
-             * Let the bookmark now what parser is currently active;
+             * Let the bookmark know what parser is currently active;
              * some may use this for sub-bookmark processing
              */
             $bookmark->setParser($parser);

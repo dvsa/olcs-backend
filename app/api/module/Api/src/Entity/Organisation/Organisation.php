@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Organisation;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * Organisation Entity
@@ -121,5 +122,35 @@ class Organisation extends AbstractOrganisation
         } else {
             $this->name = $name;
         }
+    }
+
+    /**
+     * Is this organisation an unlicensed operator
+     *
+     * @return bool
+     */
+    public function isUnlicensed()
+    {
+        return (boolean)$this->getIsUnlicensed();
+    }
+
+    /**
+     * @return array LicenceEntity[]
+     */
+    public function getActiveLicences()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->in(
+                'status',
+                [
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                ]
+            )
+        );
+
+        return $this->getLicences()->matching($criteria);
     }
 }

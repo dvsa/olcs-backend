@@ -159,7 +159,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
         ];
     }
 
-    public function testHanldeCommandCreateRcOrLlp()
+    public function testHandleCommandCreateRcOrLlp()
     {
         $data = [
             'businessType' => OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY,
@@ -212,7 +212,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
         $this->assertEquals('Organisation created successfully', $result->getMessages()[0]);
     }
 
-    public function testHanldeCommandUpdatePartnershipOrOther()
+    public function testHandleCommandUpdatePartnershipOrOther()
     {
         $data = [
             'businessType' => OrganisationEntity::ORG_TYPE_PARTNERSHIP,
@@ -246,7 +246,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
 
     }
 
-    public function testHanldeCommandUpdateSoleTrader()
+    public function testHandleCommandUpdateSoleTrader()
     {
         $data = [
             'businessType' => OrganisationEntity::ORG_TYPE_SOLE_TRADER,
@@ -290,7 +290,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
 
     }
 
-    public function testHanldeCommandCreateSoleTrader()
+    public function testHandleCommandCreateSoleTrader()
     {
         $data = [
             'businessType' => OrganisationEntity::ORG_TYPE_SOLE_TRADER,
@@ -334,7 +334,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
         $this->assertEquals('Organisation updated successfully', $result->getMessages()[0]);
     }
 
-    public function testHanldeCommandUpdateIrfo()
+    public function testHandleCommandUpdateIrfo()
     {
         $data = [
             'businessType' => OrganisationEntity::ORG_TYPE_IRFO,

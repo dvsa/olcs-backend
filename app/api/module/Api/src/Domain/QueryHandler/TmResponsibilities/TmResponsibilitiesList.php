@@ -28,7 +28,7 @@ class TmResponsibilitiesList extends AbstractQueryHandler
 
         $tmLicences = $repo->fetchForTransportManager($query->getTransportManager(), $query->getLicenceStatuses());
         $tmApplications = $this->getRepo('TransportManagerApplication')
-            ->fetchForTransportManager($query->getTransportManager(), $query->getApplicationStatuses());
+            ->fetchForTransportManager($query->getTransportManager(), $query->getApplicationStatuses(), true);
         return [
             'result' => $tmLicences,
             'count' => count($tmLicences),

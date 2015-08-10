@@ -5,11 +5,11 @@ namespace Dvsa\Olcs\Api\Domain\Query\Bookmark;
 use Dvsa\Olcs\Transfer\Query\AbstractQuery;
 
 /**
- * FstandingAdditionalVeh
+ * FStandingAdditionalVeh
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class FstandingAdditionalVeh extends AbstractQuery
+class FStandingAdditionalVeh extends AbstractQuery
 {
     protected $goodsOrPsv;
 

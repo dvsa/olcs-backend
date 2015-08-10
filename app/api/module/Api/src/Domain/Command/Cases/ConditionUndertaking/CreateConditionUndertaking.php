@@ -34,7 +34,7 @@ class CreateConditionUndertaking extends AbstractCommand
 
     protected $attachedTo;
 
-    protected $isDraft;
+    protected $isDraft = 'N';
 
     protected $isFulfilled;
 
