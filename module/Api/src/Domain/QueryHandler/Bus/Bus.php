@@ -28,7 +28,8 @@ class Bus extends AbstractQueryHandler
                 'trafficAreas',
                 'localAuthoritys',
                 'subsidised',
-                'otherServices'
+                'otherServices',
+                'variationReasons',
             ]
         );
     }
