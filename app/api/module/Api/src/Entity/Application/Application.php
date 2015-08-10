@@ -1197,4 +1197,24 @@ class Application extends AbstractApplication
 
         return (int)$this->getTotAuthLargeVehicles() > 0 || $count > 0;
     }
+
+    public function getOperatingCentresNetDelta()
+    {
+        $delta = 0;
+
+        if (!empty($this->getOperatingCentres())) {
+            foreach ($this->getOperatingCentres() as $aoc) {
+                switch ($aoc->getAction()) {
+                    case 'A':
+                        $delta++;
+                        break;
+                    case 'D':
+                        $delta--;
+                        break;
+                }
+            }
+        }
+
+        return $delta;
+    }
 }
