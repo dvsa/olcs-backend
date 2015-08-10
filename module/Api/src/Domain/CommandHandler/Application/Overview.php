@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking as ApplicationTrackingE
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteGoodsVehicle as VehicleCmd;
+use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteLicenceVehicle as VehicleCmd;
 
 /**
  * Overview

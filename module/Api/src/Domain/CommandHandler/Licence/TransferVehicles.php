@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteGoodsVehicle as DeleteGoodsVehicleCmd;
+use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteLicenceVehicle as DeleteLicenceVehicleCmd;
 
 /**
  * Transfer Vehicles
@@ -50,7 +50,7 @@ final class TransferVehicles extends AbstractCommandHandler implements Transacti
         $this->checkForOverlappingVehicles($targetLicence, $vehicles);
 
         // Remove the old licence vehicles (and discs)
-        $result->merge($this->handleSideEffect(DeleteGoodsVehicleCmd::create(['ids' => $licenceVehicleIds])));
+        $result->merge($this->handleSideEffect(DeleteLicenceVehicleCmd::create(['ids' => $licenceVehicleIds])));
 
         // Create new licence vehicles (and discs)
         $this->createNewLicenceVehicles($targetLicence, $vehicles, $result);
