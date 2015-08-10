@@ -238,6 +238,7 @@ class ProcessTest extends CommandHandlerTestCase
                 'application' => null,
                 'busReg' => null,
                 'task' => null,
+                'irfoGvPermit' => null,
             ],
             $feeResult
         );
