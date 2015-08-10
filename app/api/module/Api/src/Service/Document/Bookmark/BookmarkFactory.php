@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
+use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 
 /**
@@ -11,16 +12,26 @@ use Zend\Filter\Word\UnderscoreToCamelCase;
  */
 class BookmarkFactory
 {
+    public function getClassNameFromToken($token)
+    {
+        $c2u = new CamelCaseToUnderscore();
+        $u2c = new UnderscoreToCamelCase();
+
+        // 1) SomethingLike_This -> Something_Like_This
+        $className = $c2u->filter($token);
+        // 2) SOMETHING__Like_This -> something__like_this
+        $className = strtolower($className);
+        // 3) something__like_this -> Something_LikeThis
+        $className = $u2c->filter($className);
+        // 4) Something_LikeThis -> SomethingLikeThis
+        $className = str_replace("_", "", $className);
+
+        return $className;
+    }
+
     public function locate($token)
     {
-        $filter = new UnderscoreToCamelCase();
-
-        // 1) SOMETHING__Like_This -> something__like_this
-        $className = strtolower($token);
-        // 2) something__like_this -> Something_LikeThis
-        $className = $filter->filter($className);
-        // 3) Something_LikeThis -> SomethingLikeThis
-        $className = str_replace("_", "", $className);
+        $className = $this->getClassNameFromToken($token);
 
         $instance = $this->getInstance($className);
 

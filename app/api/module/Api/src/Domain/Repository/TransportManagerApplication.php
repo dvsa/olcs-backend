@@ -142,7 +142,7 @@ class TransportManagerApplication extends AbstractRepository
             ->with('a.licence', 'l');
     }
 
-    public function fetchForTransportManager($tmId, $applicationStatuses)
+    public function fetchForTransportManager($tmId, $applicationStatuses, $includeDeleted = false)
     {
         $qb = $this->createQueryBuilder();
 
@@ -160,8 +160,10 @@ class TransportManagerApplication extends AbstractRepository
         $qb->where($qb->expr()->eq($this->alias . '.transportManager', ':transportManager'));
         $qb->setParameter('transportManager', $tmId);
 
-        $qb->andWhere($qb->expr()->neq($this->alias . '.action', ':action'));
-        $qb->setParameter('action', 'D');
+        if (!$includeDeleted) {
+            $qb->andWhere($qb->expr()->neq($this->alias . '.action', ':action'));
+            $qb->setParameter('action', 'D');
+        }
 
         if ($applicationStatuses !== null) {
             $statuses = explode(',', $applicationStatuses);
@@ -179,15 +181,18 @@ class TransportManagerApplication extends AbstractRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function fetchByTmAndApplication($tmId, $applicationId)
+    public function fetchByTmAndApplication($tmId, $applicationId, $ignoreDeleted = false)
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->where($qb->expr()->eq($this->alias . '.transportManager', ':transportManager'));
-        $qb->setParameter('transportManager', $tmId);
-
-        $qb->andWhere($qb->expr()->eq($this->alias . '.application', ':application'));
-        $qb->setParameter('application', $applicationId);
+        $qb->andWhere($qb->expr()->eq($this->alias .'.transportManager', ':tmId'))
+            ->setParameter('tmId', $tmId);
+        $qb->andWhere($qb->expr()->eq($this->alias .'.application', ':applicationId'))
+            ->setParameter('applicationId', $applicationId);
+        if ($ignoreDeleted) {
+            $qb->andWhere($qb->expr()->neq($this->alias .'.action', ':action'))
+                ->setParameter('action', 'D');
+        }
 
         return $qb->getQuery()->getResult();
     }

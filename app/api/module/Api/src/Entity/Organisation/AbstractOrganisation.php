@@ -241,6 +241,18 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     protected $viAction;
 
     /**
+     * Disqualification
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Disqualification",
+     *     mappedBy="organisation"
+     * )
+     */
+    protected $disqualifications;
+
+    /**
      * Irfo partner
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -309,6 +321,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     public function initCollections()
     {
         $this->natureOfBusinesses = new ArrayCollection();
+        $this->disqualifications = new ArrayCollection();
         $this->irfoPartners = new ArrayCollection();
         $this->licences = new ArrayCollection();
         $this->organisationPersons = new ArrayCollection();
@@ -811,6 +824,66 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     public function getViAction()
     {
         return $this->viAction;
+    }
+
+    /**
+     * Set the disqualification
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications
+     * @return Organisation
+     */
+    public function setDisqualifications($disqualifications)
+    {
+        $this->disqualifications = $disqualifications;
+
+        return $this;
+    }
+
+    /**
+     * Get the disqualifications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getDisqualifications()
+    {
+        return $this->disqualifications;
+    }
+
+    /**
+     * Add a disqualifications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications
+     * @return Organisation
+     */
+    public function addDisqualifications($disqualifications)
+    {
+        if ($disqualifications instanceof ArrayCollection) {
+            $this->disqualifications = new ArrayCollection(
+                array_merge(
+                    $this->disqualifications->toArray(),
+                    $disqualifications->toArray()
+                )
+            );
+        } elseif (!$this->disqualifications->contains($disqualifications)) {
+            $this->disqualifications->add($disqualifications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a disqualifications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications
+     * @return Organisation
+     */
+    public function removeDisqualifications($disqualifications)
+    {
+        if ($this->disqualifications->contains($disqualifications)) {
+            $this->disqualifications->removeElement($disqualifications);
+        }
+
+        return $this;
     }
 
     /**

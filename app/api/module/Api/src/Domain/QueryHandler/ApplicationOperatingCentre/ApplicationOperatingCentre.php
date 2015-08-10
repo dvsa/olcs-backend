@@ -9,7 +9,9 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\ApplicationOperatingCentre;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre as ApplicationOperatingCentreEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 
 /**
  * Application Operating Centre
@@ -40,8 +42,32 @@ class ApplicationOperatingCentre extends AbstractQueryHandler
             [
                 'isPsv' => $application->isPsv(),
                 'canUpdateAddress' => $application->isNew(),
-                'wouldIncreaseRequireAdditionalAdvertisement' => $application->isVariation()
+                'wouldIncreaseRequireAdditionalAdvertisement' => $application->isVariation(),
+                'currentVehiclesRequired' => $this->getNoOfVehiclesRequired($aoc, $application->getLicence()),
+                'currentTrailersRequired' => $this->getNoOfTrailersRequired($aoc, $application->getLicence())
             ]
         );
+    }
+
+    protected function getNoOfVehiclesRequired(ApplicationOperatingCentreEntity $aoc, Licence $licence)
+    {
+        if ($aoc->getAction() !== 'U') {
+            return null;
+        }
+
+        /** @var LicenceOperatingCentre $loc */
+        $loc = $this->getRepo('ApplicationOperatingCentre')->findCorrespondingLoc($aoc, $licence);
+        return $loc->getNoOfVehiclesRequired();
+    }
+
+    protected function getNoOfTrailersRequired(ApplicationOperatingCentreEntity $aoc, Licence $licence)
+    {
+        if ($aoc->getAction() !== 'U') {
+            return null;
+        }
+
+        /** @var LicenceOperatingCentre $loc */
+        $loc = $this->getRepo('ApplicationOperatingCentre')->findCorrespondingLoc($aoc, $licence);
+        return $loc->getNoOfTrailersRequired();
     }
 }

@@ -12,7 +12,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as Entity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -46,7 +46,7 @@ class CompaniesHouseAlert extends AbstractRepository
 
     public function getReasonValueOptions()
     {
-        $qb = $this->getEntityManager()->getRepository(RefData::class)->createQueryBuilder('r');
+        $qb = $this->getEntityManager()->getRepository(RefDataEntity::class)->createQueryBuilder('r');
         $qb
             ->where($qb->expr()->eq('r.refDataCategoryId', ':categoryId'))
             ->setParameter('categoryId', 'ch_alert_reason');
