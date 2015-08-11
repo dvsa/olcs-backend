@@ -37,8 +37,10 @@ class SafetyAddresses extends DynamicBookmark
         foreach ($this->data['workshops'] as $workshop) {
             $address = $workshop['contactDetails']['address'];
             $rows[] = [
-                'Address' => $workshop['contactDetails']['fao'] . ', ' .
-                    $addressFormatter->format($address, ', '),
+                'Address' => trim(
+                    $workshop['contactDetails']['fao'] . ', ' .  $addressFormatter->format($address, ', '),
+                    ', '
+                ),
                 'checkbox1' => $workshop['isExternal'] !== 'Y' ? 'X' : '',
                 'checkbox2' => $workshop['isExternal'] === 'Y' ? 'X' : ''
             ];
