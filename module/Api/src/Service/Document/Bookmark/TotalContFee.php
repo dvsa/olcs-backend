@@ -35,9 +35,9 @@ class TotalContFee extends DynamicBookmark implements DateHelperAwareInterface
 
     public function render()
     {
-        if (isset($this->data['Results'][0])) {
-            $value = (int) $this->data['Results'][0]['fixedValue'] ? $this->data['Results'][0]['fixedValue'] :
-                $this->data['Results'][0]['fiveYearValue'];
+        if (isset($this->data)) {
+            $value = (int) $this->data['fixedValue'] ? $this->data['fixedValue'] :
+                $this->data['fiveYearValue'];
             return number_format($value);
         }
         return '';
