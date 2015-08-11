@@ -105,8 +105,10 @@ class Organisation extends AbstractOrganisation
         $lastName,
         $isIrfo,
         $businessType,
-        $natureOfBusinesses
+        $natureOfBusinesses,
+        $cpid
     ) {
+        $this->setCpid($cpid);
         $this->setType($businessType);
         $this->setNatureOfBusinesses($natureOfBusinesses);
         if ($isIrfo === 'Y' || $this->getType()->getId() === self::ORG_TYPE_IRFO) {
