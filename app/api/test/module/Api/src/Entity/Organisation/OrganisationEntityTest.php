@@ -37,6 +37,7 @@ class OrganisationEntityTest extends EntityTester
             'companyCertSeen',
             'companyOrLlpNo',
             'contactDetails',
+            'cpid',
             'createdBy',
             'createdOn',
             'id',
@@ -111,9 +112,11 @@ class OrganisationEntityTest extends EntityTester
             $lastName,
             $isIrfo,
             $mockBusinessType,
-            ['nob']
+            ['nob'],
+            ['cpid']
         );
 
+        $this->assertEquals($organisation->getCpid(), ['cpid']);
         $this->assertEquals($organisation->getName(), $expectedName);
         $this->assertEquals($organisation->getCompanyOrLlpNo(), '12345678');
         $this->assertEquals($organisation->getIsIrfo(), $isIrfo);
