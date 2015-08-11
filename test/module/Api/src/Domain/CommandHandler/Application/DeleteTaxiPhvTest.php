@@ -32,7 +32,9 @@ class DeleteTaxiPhvTest extends CommandHandlerTestCase
     {
         $params =[
             'id' => 323,
-            'ids' => [472, 123, 186]
+            'ids' => [472, 123, 186],
+            'licence' => 1,
+            'lva' => 'application'
         ];
         $command = Command::create($params);
 
@@ -51,6 +53,8 @@ class DeleteTaxiPhvTest extends CommandHandlerTestCase
             \Dvsa\Olcs\Transfer\Command\PrivateHireLicence\DeleteList::class,
             [
                 'ids' => $params['ids'],
+                'licence' => 1,
+                'lva' => 'application'
             ],
             (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('DELETE')
         );

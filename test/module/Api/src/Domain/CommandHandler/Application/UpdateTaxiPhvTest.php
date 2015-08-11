@@ -43,7 +43,9 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
                 'town' => 'TOWN',
                 'postcode' => 'S1 4QT',
                 'countryCode' => 'CC',
-            ]
+            ],
+            'licence' => 1,
+            'lva' => 'application'
         ];
         $command = Command::create($params);
 
@@ -61,6 +63,8 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
                 'privateHireLicenceNo' => $params['privateHireLicenceNo'],
                 'councilName' => $params['councilName'],
                 'address' => $params['address'],
+                'licence' => 1,
+                'lva' => 'application'
             ],
             (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('UPDATE')
         );

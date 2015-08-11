@@ -50,6 +50,8 @@ final class UpdateTaxiPhv extends AbstractCommandHandler implements Transactione
             'privateHireLicenceNo' => $command->getPrivateHireLicenceNo(),
             'councilName' => $command->getCouncilName(),
             'address' => $command->getAddress(),
+            'licence' => $command->getLicence(),
+            'lva' => $command->getLva()
         ];
 
         return $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\PrivateHireLicence\Update::create($data));

@@ -46,6 +46,7 @@ final class CreateTaxiPhv extends AbstractCommandHandler implements Transactione
     {
         $data = [
             'licence' => $application->getLicence()->getId(),
+            'lva' => $command->getLva(),
             'privateHireLicenceNo' => $command->getPrivateHireLicenceNo(),
             'councilName' => $command->getCouncilName(),
             'address' => $command->getAddress(),
