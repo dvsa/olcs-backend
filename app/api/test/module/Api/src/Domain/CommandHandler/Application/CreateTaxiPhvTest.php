@@ -41,7 +41,8 @@ class CreateTaxiPhvTest extends CommandHandlerTestCase
                 'town' => 'TOWN',
                 'postcode' => 'S1 4QT',
                 'countryCode' => 'CC',
-            ]
+            ],
+            'lva' => 'application'
         ];
         $command = Command::create($params);
 
@@ -59,6 +60,7 @@ class CreateTaxiPhvTest extends CommandHandlerTestCase
                 'privateHireLicenceNo' => $params['privateHireLicenceNo'],
                 'councilName' => $params['councilName'],
                 'address' => $params['address'],
+                'lva' => 'application'
             ],
             (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('CREATE')
         );

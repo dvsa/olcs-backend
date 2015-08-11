@@ -56,6 +56,8 @@ final class DeleteTaxiPhv extends AbstractCommandHandler implements Transactione
     {
         $data = [
             'ids' => $command->getIds(),
+            'licence' => $command->getLicence(),
+            'lva' => $command->getLva()
         ];
 
         return $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\PrivateHireLicence\DeleteList::create($data));
