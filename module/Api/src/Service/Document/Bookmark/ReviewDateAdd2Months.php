@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\AddMonthsRoundingDown;
 
 /**
  * ReviewDateAdd2Month bookmark
@@ -20,8 +21,8 @@ class ReviewDateAdd2Months extends DynamicBookmark
     public function render()
     {
         if (isset($this->data['reviewDate'])) {
-            $target = new \DateTime($this->data['reviewDate']);
-            $target->add(new \DateInterval('P2M'));
+            $addMonths = new AddMonthsRoundingDown();
+            $target = $addMonths->calculateDate(new \DateTime($this->data['reviewDate']), 2);
             return $target->format('d/m/Y');
         }
         return '';

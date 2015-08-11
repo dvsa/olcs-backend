@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * VehiclesSpecified bookmark
@@ -16,11 +17,14 @@ class VehiclesSpecified extends DynamicBookmark
 {
     public function getQuery(array $data)
     {
+        $criteria = Criteria::create();
+        $criteria->andWhere($criteria->expr()->eq('removalDate', null));
         $bundle = [
             'licenceVehicles' => [
                 'vehicle' => [
                     'psvType'
-                ]
+                ],
+                'criteria' => $criteria
             ]
         ];
         return Qry::create(['id' => $data['licence'], 'bundle' => $bundle]);
