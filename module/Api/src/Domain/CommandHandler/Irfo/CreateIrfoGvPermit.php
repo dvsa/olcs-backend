@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as FeeCreateFee;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 
 /**
  * Create Irfo Gv Permit
@@ -41,6 +42,8 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler
         // Check if is *not* fee exempt.
         if ($irfoGvPermit->getIsFeeExempt() !== 'Y') {
             $result->merge($this->createFee($irfoGvPermit));
+        } else {
+            $result->merge($this->createExemptFee($irfoGvPermit));
         }
 
         return $result;
@@ -85,7 +88,28 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler
             'invoicedDate' => date('Y-m-d'),
             'description' => $feeType->getDescription() . ' for IRFO permit ' . $irfoGvPermit->getId(),
             'feeType' => $feeType->getId(),
-            'amount' => $feeAmount
+            'amount' => $feeAmount,
+            'feeStatus' => Fee::STATUS_OUTSTANDING,
+        ];
+
+        return $this->handleSideEffect(FeeCreateFee::create($data));
+    }
+
+    public function createExemptFee(IrfoGvPermit $irfoGvPermit)
+    {
+        $irfoGvPermitFeeType = $irfoGvPermit->getIrfoGvPermitType()->getIrfoFeeType();
+
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
+        $feeTypeRepo = $this->getRepo('FeeType');
+        $feeType = $feeTypeRepo->fetchLatestForIrfo($irfoGvPermitFeeType);
+
+        $data = [
+            'irfoGvPermit' => $irfoGvPermit->getId(),
+            'invoicedDate' => date('Y-m-d'),
+            'description' => $feeType->getDescription() . ' for IRFO permit ' . $irfoGvPermit->getId(),
+            'feeType' => $feeType->getId(),
+            'amount' => 0,
+            'feeStatus' => Fee::STATUS_PAID,
         ];
 
         return $this->handleSideEffect(FeeCreateFee::create($data));
