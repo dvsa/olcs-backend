@@ -59,6 +59,17 @@ class OverviewTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('getOutOfRepresentationDate')->with()->once()
             ->andReturn(new \DateTime('2015-07-27'));
         $mockApplication->shouldReceive('getOperatingCentresNetDelta')->once()->andReturn(9);
+        $mockApplication
+            ->shouldReceive('getActiveVehicles')
+            ->once()
+            ->andReturn(
+                [
+                    m::mock()
+                        ->shouldReceive('serialize')
+                        ->andReturn(['vehicle1'])
+                        ->getMock()
+                ]
+            );
 
         $this->repoMap['Application']
             ->shouldReceive('fetchUsingId')
@@ -109,6 +120,9 @@ class OverviewTest extends QueryHandlerTestCase
                 'outOfOppositionDate' => 'OOOD',
                 'outOfRepresentationDate' => '2015-07-27',
                 'operatingCentresNetDelta' => 9,
+                'licenceVehicles' => [
+                    ['vehicle1'],
+                ],
             ],
             $result->serialize()
         );
