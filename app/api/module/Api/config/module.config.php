@@ -202,6 +202,7 @@ return [
             'AdminAreaTrafficArea' => RepositoryFactory::class,
             'PostcodeEnforcementArea' => RepositoryFactory::class,
             'PiVenue' => RepositoryFactory::class,
+            'Disqualification' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

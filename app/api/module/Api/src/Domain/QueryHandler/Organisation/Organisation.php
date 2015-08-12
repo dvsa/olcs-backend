@@ -27,7 +27,9 @@ class Organisation extends AbstractQueryHandler
 
         return $this->result(
             $organisation,
-            [],
+            [
+                'disqualifications'
+            ],
             [
                 'isDisqualified' => $organisation->getDisqualifications()->count() > 0,
             ]
