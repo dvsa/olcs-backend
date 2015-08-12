@@ -28,6 +28,64 @@ class Disqualification extends AbstractDisqualification
     const STATUS_INACTIVE = 'Inactive';
 
     /**
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $officerCd
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function __construct(
+        Organisation $organisation = null,
+        \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $officerCd = null
+    ) {
+
+        if ($organisation === null && $officerCd === null) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
+                ['DISQ_MISSING_ORG_OFFICER' => 'Organisation or OfficerCd must be specified']
+            );
+        }
+
+        if ($organisation !== null && $officerCd !== null) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
+                ['DISQ_BOTH_ORG_OFFICER' => 'You cannot specify both Organisation and OfficerCd']
+            );
+        }
+
+        $this->setOrganisation($organisation);
+        $this->setOfficerCd($officerCd);
+    }
+
+    /**
+     * Update and validate entity
+     *
+     * @param string    $isDisqualified Y or N
+     * @param \DateTime $startDate
+     * @param string    $notes
+     * @param int       $period
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function update(
+        $isDisqualified,
+        \DateTime $startDate = null,
+        $notes = null,
+        $period = null
+    ) {
+
+        if ($isDisqualified == 'Y' && empty($startDate)) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
+                ['DISQ_START_DATE_MISSING' => 'Start date must be specified if isDisqualified']
+            );
+        }
+
+        $this->setIsDisqualified($isDisqualified)
+            ->setStartDate($startDate)
+            ->setNotes($notes)
+            ->setPeriod($period);
+    }
+
+
+    /**
      * Get the current status of this Disqualification
      *
      * @return string self::STATUS_ACTIVE or self::STATUS_INACTIVE

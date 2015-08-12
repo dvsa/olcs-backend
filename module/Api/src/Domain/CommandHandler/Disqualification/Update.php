@@ -29,16 +29,13 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
     {
         /* @var $command Command */
 
-        $errors = $this->validate($command);
-        if (!empty($errors)) {
-            throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException($errors);
-        }
-
         $disqualification = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
-        $disqualification->setIsDisqualified($command->getIsDisqualified());
-        $disqualification->setNotes($command->getNotes());
-        $disqualification->setStartDate(new \DateTime($command->getStartDate()));
-        $disqualification->setPeriod($command->getPeriod() ?: null);
+        $disqualification->update(
+            $command->getIsDisqualified(),
+            $command->getStartDate() ? new \DateTime($command->getStartDate()) : null,
+            $command->getNotes(),
+            $command->getPeriod() ?: null
+        );
 
         $this->getRepo()->save($disqualification);
 
@@ -47,22 +44,5 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         $result->addMessage('Disqualification updated');
 
         return $result;
-    }
-
-    /**
-     * Validate the command params
-     *
-     * @param Command $command
-     *
-     * @return array of error messages
-     */
-    private function validate(Command $command)
-    {
-        $errors = [];
-        if ($command->getIsDisqualified() === 'Y' && empty($command->getStartDate())) {
-            $errors['DISQ_START_DATE_MISSING'] = 'Start date must be specified if isDisqualified';
-        }
-
-        return $errors;
     }
 }

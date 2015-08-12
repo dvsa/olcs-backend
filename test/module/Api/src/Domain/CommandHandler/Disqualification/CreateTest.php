@@ -41,40 +41,6 @@ class CreateTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommandValidationMissing()
-    {
-        $data = [
-            'isDisqualified' => 'Y',
-        ];
-        $command = Command::create($data);
-
-        try {
-            $this->sut->handleCommand($command);
-        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
-            $this->assertArrayHasKey('DISQ_START_DATE_MISSING', $e->getMessages());
-            $this->assertArrayHasKey('DISQ_MISSING_ORG_OFFICER', $e->getMessages());
-            $this->assertArrayNotHasKey('DISQ_BOTH_ORG_OFFICER', $e->getMessages());
-        }
-    }
-
-    public function testHandleCommandValidationBothOrgAndOfficer()
-    {
-        $data = [
-            'isDisqualified' => 'Y',
-            'organisation' => 23,
-            'officerCd' => 234,
-        ];
-        $command = Command::create($data);
-
-        try {
-            $this->sut->handleCommand($command);
-        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
-            $this->assertArrayHasKey('DISQ_START_DATE_MISSING', $e->getMessages());
-            $this->assertArrayNotHasKey('DISQ_MISSING_ORG_OFFICER', $e->getMessages());
-            $this->assertArrayHasKey('DISQ_BOTH_ORG_OFFICER', $e->getMessages());
-        }
-    }
-
     public function testHandleCommandOrganisation()
     {
         $data = [
