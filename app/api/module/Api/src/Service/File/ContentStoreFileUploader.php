@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Service\File;
 
 use Zend\Http\Response;
-use Dvsa\Olcs\DocumentShare\Client\Data\Object\File as ContentStoreFile;
+use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 
 /**
  * Content store file uploader

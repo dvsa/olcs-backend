@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Service\Document\Document;
-use Dvsa\Olcs\DocumentShare\Client\Data\Object\File;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
 
 /**
  * Document service test
