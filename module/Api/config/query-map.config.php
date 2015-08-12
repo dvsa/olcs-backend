@@ -334,4 +334,7 @@ return [
 
     // Organisation Person
    TransferQuery\OrganisationPerson\GetSingle::class => QueryHandler\OrganisationPerson\GetSingle::class,
+
+    // Person
+    TransferQuery\Person\Person::class => QueryHandler\Person\Person::class,
 ];
