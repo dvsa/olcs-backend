@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
@@ -90,5 +91,58 @@ class Organisation extends AbstractRepository
         }
 
         return $results;
+    }
+
+    public function fetchByStatusPaginated($query)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata();
+
+        $status = $this->getRefdataReference($query->getCpid());
+
+        if ($query->getCpid() !== Entity::OPERATOR_CPID_ALL) {
+            if (is_null($query->getCpid())) {
+                $qb->where($qb->expr()->isNull($this->alias . '.cpid'));
+            } else {
+                $qb->where($qb->expr()->eq($this->alias . '.cpid', ':cpid'));
+                $qb->setParameter(
+                    'cpid', $status
+                );
+            }
+        }
+
+        $qb->setFirstResult(($query->getLimit() * $query->getPage()) - $query->getLimit());
+        $qb->setMaxResults($query->getLimit());
+        $qb->addOrderBy($this->alias . '.name', 'ASC');
+
+        return [
+            'result' => $this->fetchPaginatedList($qb, Query::HYDRATE_OBJECT),
+            'count' => $this->fetchPaginatedCount($qb)
+        ];
+    }
+
+    public function fetchAllByStatusForCpidExport($status = null)
+    {
+        $qb = $this->createQueryBuilder();
+
+        if ($status !== Entity::OPERATOR_CPID_ALL) {
+            if (is_null($status)) {
+                $where = $qb->expr()->isNull($this->alias . '.cpid');
+            } else {
+                $where = $qb->expr()->eq($this->alias . '.cpid', ':cpid');
+                $qb->setParameter('cpid', $status);
+            }
+        }
+
+        $qb->select(
+            $this->alias . '.id',
+            $this->alias . '.name'
+        )->where($where);
+
+        $query = $qb->getQuery();
+
+        return $query->iterate(null, Query::HYDRATE_ARRAY);
     }
 }
