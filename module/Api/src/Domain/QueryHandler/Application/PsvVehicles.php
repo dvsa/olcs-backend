@@ -27,14 +27,13 @@ class PsvVehicles extends AbstractQueryHandler
         /** @var Entity\Application\Application $application */
         $application = $this->getRepo()->fetchUsingId($query);
 
-        $small = $this->getSmallVehicles($application);
-        $medium = $this->getMediumVehicles($application);
-        $large = $this->getLargeVehicles($application);
+        $small = $this->getSmallVehicles($application, $query->getIncludeRemoved());
+        $medium = $this->getMediumVehicles($application, $query->getIncludeRemoved());
+        $large = $this->getLargeVehicles($application, $query->getIncludeRemoved());
 
         $smallCount = count($small);
         $mediumCount = count($medium);
         $largeCount = count($large);
-
         return $this->result(
             $application,
             [],
@@ -63,23 +62,25 @@ class PsvVehicles extends AbstractQueryHandler
         return false;
     }
 
-    private function getSmallVehicles(Entity\Application\Application $application)
+    private function getSmallVehicles(Entity\Application\Application $application, $includeRemoved)
     {
         return $this->getVehicles(
             $application,
-            Entity\Vehicle\Vehicle::PSV_TYPE_SMALL
+            Entity\Vehicle\Vehicle::PSV_TYPE_SMALL,
+            $includeRemoved
         );
     }
 
-    private function getMediumVehicles(Entity\Application\Application $application)
+    private function getMediumVehicles(Entity\Application\Application $application, $includeRemoved)
     {
         return $this->getVehicles(
             $application,
-            Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM
+            Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM,
+            $includeRemoved
         );
     }
 
-    private function getLargeVehicles(Entity\Application\Application $application)
+    private function getLargeVehicles(Entity\Application\Application $application, $includeRemoved)
     {
         if (!$application->canHaveLargeVehicles()) {
             return [];
@@ -87,16 +88,18 @@ class PsvVehicles extends AbstractQueryHandler
 
         return $this->getVehicles(
             $application,
-            Entity\Vehicle\Vehicle::PSV_TYPE_LARGE
+            Entity\Vehicle\Vehicle::PSV_TYPE_LARGE,
+            $includeRemoved
         );
     }
 
-    private function getVehicles(Entity\Application\Application $application, $type)
+    private function getVehicles(Entity\Application\Application $application, $type, $includeRemoved)
     {
         return $this->resultList(
             $this->getRepo('LicenceVehicle')->getPsvVehiclesByType(
                 $application,
-                $type
+                $type,
+                $includeRemoved
             ),
             ['vehicle']
         );
