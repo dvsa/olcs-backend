@@ -28,9 +28,9 @@ class PsvVehicles extends AbstractQueryHandler
         /** @var Entity\Licence\Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
 
-        $small = $this->getSmallVehicles($licence);
-        $medium = $this->getMediumVehicles($licence);
-        $large = $this->getLargeVehicles($licence);
+        $small = $this->getSmallVehicles($licence, $query->getIncludeRemoved());
+        $medium = $this->getMediumVehicles($licence, $query->getIncludeRemoved());
+        $large = $this->getLargeVehicles($licence, $query->getIncludeRemoved());
 
         $smallCount = count($small);
         $mediumCount = count($medium);
@@ -81,23 +81,25 @@ class PsvVehicles extends AbstractQueryHandler
         return $this->getActiveVehiclesCount($licence, Entity\Vehicle\Vehicle::PSV_TYPE_LARGE);
     }
 
-    private function getSmallVehicles(Entity\Licence\Licence $licence)
+    private function getSmallVehicles(Entity\Licence\Licence $licence, $includeRemoved)
     {
         return $this->getVehicles(
             $licence,
-            Entity\Vehicle\Vehicle::PSV_TYPE_SMALL
+            Entity\Vehicle\Vehicle::PSV_TYPE_SMALL,
+            $includeRemoved
         );
     }
 
-    private function getMediumVehicles(Entity\Licence\Licence $licence)
+    private function getMediumVehicles(Entity\Licence\Licence $licence, $includeRemoved)
     {
         return $this->getVehicles(
             $licence,
-            Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM
+            Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM,
+            $includeRemoved
         );
     }
 
-    private function getLargeVehicles(Entity\Licence\Licence $licence)
+    private function getLargeVehicles(Entity\Licence\Licence $licence, $includeRemoved)
     {
         if (!$licence->canHaveLargeVehicles()) {
             return [];
@@ -105,17 +107,18 @@ class PsvVehicles extends AbstractQueryHandler
 
         return $this->getVehicles(
             $licence,
-            Entity\Vehicle\Vehicle::PSV_TYPE_LARGE
+            Entity\Vehicle\Vehicle::PSV_TYPE_LARGE,
+            $includeRemoved
         );
     }
 
-    private function getVehicles(Entity\Licence\Licence $licence, $type)
+    private function getVehicles(Entity\Licence\Licence $licence, $type, $includeRemoved)
     {
         return $this->resultList(
             $this->getRepo('LicenceVehicle')->getPsvVehiclesByType(
                 $licence,
                 $type,
-                true
+                $includeRemoved
             ),
             ['vehicle']
         );
