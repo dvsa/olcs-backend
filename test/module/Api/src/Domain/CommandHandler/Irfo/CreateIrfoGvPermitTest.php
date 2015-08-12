@@ -147,4 +147,15 @@ class CreateIrfoGvPermitTest extends CommandHandlerTestCase
         $this->assertEquals('Y', $savedIrfoGvPermit->getIsFeeExempt());
         $this->assertEquals(1, $savedIrfoGvPermit->getNoOfCopies());
     }
+
+    public function testGetIrfoFeeId()
+    {
+        $organisation = m::mock(Organisation::class);
+        $organisation->shouldReceive('getId')
+            ->once()
+            ->withNoArgs()
+            ->andReturn('TEST12');
+
+        $this->assertEquals('IR0TEST12', $this->sut->getIrfoFeeId($organisation));
+    }
 }
