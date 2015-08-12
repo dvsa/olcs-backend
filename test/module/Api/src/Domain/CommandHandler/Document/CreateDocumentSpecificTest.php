@@ -7,10 +7,11 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Document;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CreateDocumentSpecific;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -37,11 +38,7 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
     {
         $this->refData = [];
 
-        $this->references = [
-            Application::class => [
-                123 => m::mock(Application::class)
-            ]
-        ];
+        $this->references = [];
 
         $this->categoryReferences = [
             1 => m::mock(Category::class),
@@ -77,12 +74,14 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertEquals(1024, $document->getSize());
                     $this->assertSame($this->categoryReferences[1], $document->getCategory());
                     $this->assertSame($this->categoryReferences[2], $document->getSubCategory());
-                    $this->assertSame($this->references[Application::class][123], $document->getApplication());
                     $this->assertNull($document->getLicence());
                     $this->assertInstanceOf('\DateTime', $document->getIssuedDate());
                     $this->assertEquals('2015-01-01', $document->getIssuedDate()->format('Y-m-d'));
                 }
             );
+
+        $result = new Result();
+        $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
 
         $result = $this->sut->handleCommand($command);
 
@@ -123,10 +122,12 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertEquals(1024, $document->getSize());
                     $this->assertSame($this->categoryReferences[1], $document->getCategory());
                     $this->assertSame($this->categoryReferences[2], $document->getSubCategory());
-                    $this->assertSame($this->references[Application::class][123], $document->getApplication());
                     $this->assertNull($document->getLicence());
                 }
             );
+
+        $result = new Result();
+        $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
 
         $result = $this->sut->handleCommand($command);
 
@@ -168,10 +169,12 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertEquals(1024, $document->getSize());
                     $this->assertSame($this->categoryReferences[1], $document->getCategory());
                     $this->assertSame($this->categoryReferences[2], $document->getSubCategory());
-                    $this->assertSame($this->references[Application::class][123], $document->getApplication());
                     $this->assertNull($document->getLicence());
                 }
             );
+
+        $result = new Result();
+        $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
 
         $result = $this->sut->handleCommand($command);
 

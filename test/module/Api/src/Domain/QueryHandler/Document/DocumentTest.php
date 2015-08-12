@@ -35,12 +35,7 @@ class DocumentTest extends QueryHandlerTestCase
 
         $document = m::mock(\Dvsa\Olcs\Api\Entity\Doc\Document::class)->makePartial();
         $document->shouldReceive('serialize')
-            ->with(
-                [
-                    'category',
-                    'subCategory'
-                ]
-            )
+            ->with([])
             ->andReturn(['foo' => 'bar']);
 
         $this->repoMap['Document']->shouldReceive('fetchUsingId')
