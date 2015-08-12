@@ -57,7 +57,8 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
             'category' => 1,
             'subCategory' => 2,
             'application' => 123,
-            'issuedDate' => '2015-01-01'
+            'issuedDate' => '2015-01-01',
+            'metadata' => 'foo'
         ];
 
         $command = Cmd::create($data);
@@ -77,6 +78,7 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertNull($document->getLicence());
                     $this->assertInstanceOf('\DateTime', $document->getIssuedDate());
                     $this->assertEquals('2015-01-01', $document->getIssuedDate()->format('Y-m-d'));
+                    $this->assertEquals('foo', $document->getMetadata());
                 }
             );
 
