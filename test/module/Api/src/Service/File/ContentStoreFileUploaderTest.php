@@ -48,7 +48,7 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
 
     public function testDownloadWithValidFile()
     {
-        $file = new \Dvsa\Olcs\DocumentShare\Client\Data\Object\File();
+        $file = new \Dvsa\Olcs\DocumentShare\Data\Object\File();
         $file->setContent('dummy content');
 
         $this->contentStoreMock->expects($this->once())
@@ -70,7 +70,7 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
 
     public function testDownloadWithValidHtmlFile()
     {
-        $file = new \Dvsa\Olcs\DocumentShare\Client\Data\Object\File();
+        $file = new \Dvsa\Olcs\DocumentShare\Data\Object\File();
         $file->setContent('dummy content');
 
         $this->contentStoreMock->expects($this->once())
@@ -91,7 +91,7 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
 
     public function testDownloadWithValidFileAndNamespace()
     {
-        $file = new \Dvsa\Olcs\DocumentShare\Client\Data\Object\File();
+        $file = new \Dvsa\Olcs\DocumentShare\Data\Object\File();
         $file->setContent('dummy content');
 
         $this->contentStoreMock->expects($this->once())
