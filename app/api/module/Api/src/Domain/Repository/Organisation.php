@@ -128,11 +128,13 @@ class Organisation extends AbstractRepository
             $qb->setParameter('cpid', $status);
         }
 
-        $qb->select($this->alias . '.id')
-            ->where($where);
+        $qb->select(
+            $this->alias . '.id',
+            $this->alias . '.name'
+        )->where($where);
 
         $query = $qb->getQuery();
 
-        return $query->getResult();
+        return $query->iterate(null, Query::HYDRATE_ARRAY);
     }
 }
