@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Doc\DocTemplate as Entity;
 use Dvsa\Olcs\Transfer\Command\Document\CreateLetter as Cmd;
@@ -44,8 +45,10 @@ final class CreateLetter extends AbstractCommandHandler implements
         // Swap spaces for underscores
         $identifier = str_replace(' ', '_', $docId);
 
+        $date = new DateTime();
+
         $content = $this->getDocumentGenerator()->generateFromTemplateIdentifier($identifier, $queryData);
-        $fileName = date('YmdHis') . '_' . $this->formatFilename($template->getDescription()) . '.rtf';
+        $fileName = $date->format('YmdHis') . '_' . $this->formatFilename($template->getDescription()) . '.rtf';
         $file = $this->getDocumentGenerator()->uploadGeneratedContent($content, null, $fileName);
 
         $data = [
