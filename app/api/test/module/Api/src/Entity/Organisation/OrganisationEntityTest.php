@@ -245,7 +245,7 @@ class OrganisationEntityTest extends EntityTester
 
     public function testGetDisqualification()
     {
-        $disqualification = new Disqualification();
+        $disqualification = new Disqualification(m::mock(Entity::class));
 
         /* @var $organisation Entity */
         $organisation = $this->instantiate($this->entityClass);
@@ -265,7 +265,7 @@ class OrganisationEntityTest extends EntityTester
 
     public function testGetDisqualificationStatusActive()
     {
-        $disqualification = new Disqualification();
+        $disqualification = new Disqualification(m::mock(Entity::class));
         $disqualification->setIsDisqualified('Y');
         $disqualification->setStartDate('2015-01-01');
 

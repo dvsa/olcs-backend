@@ -31,26 +31,13 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     {
         /* @var $command Command */
 
-        $errors = $this->validate($command);
-        if (!empty($errors)) {
-            throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException($errors);
-        }
-
-        $disqualification = new Disqualification();
-        $disqualification->setIsDisqualified($command->getIsDisqualified());
-        $disqualification->setNotes($command->getNotes());
-        if ($command->getOfficerCd()) {
-            $disqualification->setOfficerCd(
-                $this->getRepo()->getReference(ContactDetails::class, $command->getOfficerCd())
-            );
-        }
-        if ($command->getOrganisation()) {
-            $disqualification->setOrganisation(
-                $this->getRepo()->getReference(Organisation::class, $command->getOrganisation())
-            );
-        }
-        $disqualification->setStartDate(new \DateTime($command->getStartDate()));
-        $disqualification->setPeriod($command->getPeriod() ?: null);
+        $disqualification = new Disqualification($this->getOrganisation($command), $this->getOfficerCd($command));
+        $disqualification->update(
+            $command->getIsDisqualified(),
+            $command->getStartDate() ? new \DateTime($command->getStartDate()) : null,
+            $command->getNotes(),
+            $command->getPeriod() ?: null
+        );
 
         $this->getRepo()->save($disqualification);
 
@@ -63,27 +50,30 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     }
 
     /**
-     * Validate the command params
+     * Get a refernece to the Organisation entity
      *
      * @param Command $command
      *
-     * @return array of error messages
+     * @return Organisation|null
      */
-    private function validate(Command $command)
+    private function getOrganisation(Command $command)
     {
-        $errors = [];
-        if ($command->getIsDisqualified() === 'Y' && empty($command->getStartDate())) {
-            $errors['DISQ_START_DATE_MISSING'] = 'Start date must be specified if isDisqualified';
-        }
+        return $command->getOrganisation() ?
+            $this->getRepo()->getReference(Organisation::class, $command->getOrganisation()) :
+            null;
+    }
 
-        if (empty($command->getOrganisation()) && empty($command->getOfficerCd())) {
-            $errors['DISQ_MISSING_ORG_OFFICER'] = 'Organisation or OfficerCd must be specified';
-        }
-
-        if (!empty($command->getOrganisation()) && !empty($command->getOfficerCd())) {
-            $errors['DISQ_BOTH_ORG_OFFICER'] = 'You cannot specify both Organisation and OfficerCd';
-        }
-
-        return $errors;
+    /**
+     * Get a refernece to the Officer ContactDetails entity
+     *
+     * @param Command $command
+     *
+     * @return ContactDetails|null
+     */
+    private function getOfficerCd(Command $command)
+    {
+        return $command->getOfficerCd() ?
+            $this->getRepo()->getReference(ContactDetails::class, $command->getOfficerCd()) :
+            null;
     }
 }

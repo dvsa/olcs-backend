@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Disqualification;
 
+use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Disqualification\Update as CommandHandler;
@@ -32,20 +33,6 @@ class UpdateTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommandValidation()
-    {
-        $data = [
-            'isDisqualified' => 'Y',
-        ];
-        $command = Command::create($data);
-
-        try {
-            $this->sut->handleCommand($command);
-        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
-            $this->assertArrayHasKey('DISQ_START_DATE_MISSING', $e->getMessages());
-        }
-    }
-
     public function testHandleCommand()
     {
         $data = [
@@ -58,7 +45,7 @@ class UpdateTest extends CommandHandlerTestCase
         ];
         $command = Command::create($data);
 
-        $disqualification = new Disqualification();
+        $disqualification = new Disqualification(m::mock(\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class));
         $disqualification->setId(154);
 
         $this->repoMap['Disqualification']->shouldReceive('fetchUsingId')->with($command, Query::HYDRATE_OBJECT, 43)
