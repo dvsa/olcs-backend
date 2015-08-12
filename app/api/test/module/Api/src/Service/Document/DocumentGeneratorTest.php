@@ -119,7 +119,7 @@ class DocumentGeneratorTest extends MockeryTestCase
                 ->shouldReceive('setFile')
                 ->with(['content' => 'foo'])
                 ->shouldReceive('upload')
-                ->with('docs')
+                ->with('docs', 'bar')
                 ->andReturn('result')
                 ->getMock()
             )
@@ -128,7 +128,7 @@ class DocumentGeneratorTest extends MockeryTestCase
         $helper = new DocumentGenerator();
         $helper->setServiceLocator($sm);
 
-        $helper->uploadGeneratedContent('foo', 'docs');
+        $helper->uploadGeneratedContent('foo', 'docs', 'bar');
     }
 
     public function testGenerateAndStore()
