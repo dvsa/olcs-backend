@@ -66,11 +66,18 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler
         $irfoGvPermit->setExemptionDetails($command->getExemptionDetails());
         $irfoGvPermit->setNoOfCopies($command->getNoOfCopies());
 
+        $irfoGvPermit->setIrfoFeeId($this->getIrfoFeeId($organisation));
+
         if ($command->getInForceDate() !== null) {
             $irfoGvPermit->setInForceDate(new \DateTime($command->getInForceDate()));
         }
 
         return $irfoGvPermit;
+    }
+
+    public function getIrfoFeeId(Organisation $organisation)
+    {
+        return 'IR' . str_pad($organisation->getId(), 7, '0', STR_PAD_LEFT);
     }
 
     public function createFee(IrfoGvPermit $irfoGvPermit)
