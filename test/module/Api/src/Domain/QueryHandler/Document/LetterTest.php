@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DocumentTest extends QueryHandlerTestCase
+class LetterTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
