@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class CpidOrganisationExport
+ * @author Josh Curtis <josh@josh-curtis.co.uk>
+ */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
@@ -9,6 +13,11 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
 
+/**
+ * Class CpidOrganisationExport
+ * @package Dvsa\Olcs\Cli\Service\Queue\Consumer
+ * @author Josh Curtis <josh@josh-curtis.co.uk>
+ */
 class CpidOrganisationExport implements MessageConsumerInterface, ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
