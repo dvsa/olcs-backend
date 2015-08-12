@@ -100,16 +100,22 @@ class Organisation extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)
             ->withRefdata();
 
-        if (is_null($query->getCpid())) {
-            $qb->where($qb->expr()->isNull($this->alias . '.cpid'));
-        } else {
-            $qb->where($qb->expr()->eq($this->alias . '.cpid', ':cpid'));
-            $qb->setParameter(
-                'cpid', $this->getRefdataReference($query->getCpid())
-            );
+        $status = $this->getRefdataReference($query->getCpid());
+
+        if ($query->getCpid() !== Entity::OPERATOR_CPID_ALL) {
+            if (is_null($query->getCpid())) {
+                $qb->where($qb->expr()->isNull($this->alias . '.cpid'));
+            } else {
+                $qb->where($qb->expr()->eq($this->alias . '.cpid', ':cpid'));
+                $qb->setParameter(
+                    'cpid', $status
+                );
+            }
         }
 
+        $qb->setFirstResult(($query->getLimit() * $query->getPage()) - $query->getLimit());
         $qb->setMaxResults($query->getLimit());
+        $qb->addOrderBy($this->alias . '.name', 'ASC');
 
         return [
             'result' => $this->fetchPaginatedList($qb, Query::HYDRATE_OBJECT),
@@ -121,11 +127,13 @@ class Organisation extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        if (is_null($status)) {
-            $where = $qb->expr()->isNull($this->alias . '.cpid');
-        } else {
-            $where = $qb->expr()->eq($this->alias . '.cpid', ':cpid');
-            $qb->setParameter('cpid', $status);
+        if ($status !== Entity::OPERATOR_CPID_ALL) {
+            if (is_null($status)) {
+                $where = $qb->expr()->isNull($this->alias . '.cpid');
+            } else {
+                $where = $qb->expr()->eq($this->alias . '.cpid', ':cpid');
+                $qb->setParameter('cpid', $status);
+            }
         }
 
         $qb->select(
