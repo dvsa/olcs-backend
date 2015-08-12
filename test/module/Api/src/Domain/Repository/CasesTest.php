@@ -10,6 +10,7 @@ use Doctrine\ORM\QueryBuilder;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Doctrine\ORM\EntityRepository;
+use Dvsa\Olcs\Transfer\Query\Cases\ByLicence;
 use Dvsa\Olcs\Transfer\Query\Cases\ByTransportManager;
 use Doctrine\DBAL\LockMode;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -40,7 +41,7 @@ class CasesTest extends RepositoryTestCase
         return $repo;
     }
 
-    public function testApplyListFilters()
+    public function testApplyListFiltersTm()
     {
         $sut = m::mock(CasesRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -56,6 +57,26 @@ class CasesTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->eq')->with('m.transportManager', ':byTransportManager')->once()->andReturnSelf();
         $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('byTransportManager', $transportManager)->once()->andReturnSelf();
+
+        $sut->applyListFilters($mockQb, $mockQuery);
+    }
+
+    public function testApplyListFiltersLicence()
+    {
+        $sut = m::mock(CasesRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $licence = 7;
+
+        $mockQuery = m::mock(ByLicence::class);
+        $mockQuery->shouldReceive('getLicence')
+            ->once()
+            ->andReturn($licence)
+            ->getMock();
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->eq')->with('m.licence', ':byLicence')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('byLicence', $licence)->once()->andReturnSelf();
 
         $sut->applyListFilters($mockQb, $mockQuery);
     }
