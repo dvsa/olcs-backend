@@ -56,6 +56,7 @@ class PsvVehicles extends AbstractQueryHandler
                 'small' => $small,
                 'medium' => $medium,
                 'large' => $large,
+                'total' => $smallCount + $mediumCount + $largeCount,
                 'canTransfer' => !$licence->getOtherActiveLicences()->isEmpty(),
                 'hasBreakdown' => $licence->hasPsvBreakdown()
             ]
