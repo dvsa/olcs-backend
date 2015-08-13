@@ -28,6 +28,8 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 {
     public $repoServiceName = 'Application';
 
+    public $extraRepos = ['LicenceVehicle'];
+
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -59,11 +61,12 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
             $this->handleSideEffect(
                 CeaseGoodsDiscs::create(
                     [
-                        'licence' => $application->getLicence()
+                        'licenceVehicles' => $application->getLicence()->getLicenceVehicles()
                     ]
                 )
             )
         );
+        $this->clearLicenceVehicleSpecifiedDates($application->getLicence()->getLicenceVehicles());
 
         $result->addMessage('Application ' . $application->getId() . ' withdrawn.');
 
@@ -74,5 +77,13 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
     {
         $data = ['id' => $applicationId, 'event' => CreateSnapshotCmd::ON_WITHDRAW];
         return $this->handleSideEffect(CreateSnapshotCmd::create($data));
+    }
+
+    protected function clearLicenceVehicleSpecifiedDates($licenceVehilces)
+    {
+        foreach ($licenceVehilces as $licenceVehilce) {
+            $licenceVehilce->setSpecifiedDate(null);
+            $this->getRepo('LicenceVehicle')->save($licenceVehilce);
+        }
     }
 }
