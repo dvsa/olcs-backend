@@ -35,7 +35,8 @@ class PsvVehiclesTest extends QueryHandlerTestCase
     {
         $query = Qry::create(
             [
-                'id' => 111
+                'id' => 111,
+                'includeRemoved' => true
             ]
         );
 
@@ -158,7 +159,8 @@ class PsvVehiclesTest extends QueryHandlerTestCase
     {
         $query = Qry::create(
             [
-                'id' => 111
+                'id' => 111,
+                'includeRemoved' => false
             ]
         );
 
@@ -226,10 +228,10 @@ class PsvVehiclesTest extends QueryHandlerTestCase
             ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM)
             ->andReturn($mediumVehicles)
             ->shouldReceive('getPsvVehiclesByType')
-            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_SMALL, true)
+            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_SMALL, false)
             ->andReturn($smallVehicles)
             ->shouldReceive('getPsvVehiclesByType')
-            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM, true)
+            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM, false)
             ->andReturn($mediumVehicles);
 
         $result = $this->sut->handleQuery($query);

@@ -35,7 +35,8 @@ class PsvVehiclesTest extends QueryHandlerTestCase
     {
         $query = Qry::create(
             [
-                'id' => 111
+                'id' => 111,
+                'includeRemoved' => true
             ]
         );
 
@@ -103,13 +104,13 @@ class PsvVehiclesTest extends QueryHandlerTestCase
         $largeVehicles->add($largeVehicle);
 
         $this->repoMap['LicenceVehicle']->shouldReceive('getPsvVehiclesByType')
-            ->with($application, Entity\Vehicle\Vehicle::PSV_TYPE_SMALL)
+            ->with($application, Entity\Vehicle\Vehicle::PSV_TYPE_SMALL, true)
             ->andReturn($smallVehicles)
             ->shouldReceive('getPsvVehiclesByType')
-            ->with($application, Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM)
+            ->with($application, Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM, true)
             ->andReturn($mediumVehicles)
             ->shouldReceive('getPsvVehiclesByType')
-            ->with($application, Entity\Vehicle\Vehicle::PSV_TYPE_LARGE)
+            ->with($application, Entity\Vehicle\Vehicle::PSV_TYPE_LARGE, true)
             ->andReturn($largeVehicles);
 
         $result = $this->sut->handleQuery($query);
@@ -147,7 +148,8 @@ class PsvVehiclesTest extends QueryHandlerTestCase
     {
         $query = Qry::create(
             [
-                'id' => 111
+                'id' => 111,
+                'includeRemoved' => false
             ]
         );
 
@@ -207,10 +209,10 @@ class PsvVehiclesTest extends QueryHandlerTestCase
         $mediumVehicles->add($mediumVehicle);
 
         $this->repoMap['LicenceVehicle']->shouldReceive('getPsvVehiclesByType')
-            ->with($application, Entity\Vehicle\Vehicle::PSV_TYPE_SMALL)
+            ->with($application, Entity\Vehicle\Vehicle::PSV_TYPE_SMALL, false)
             ->andReturn($smallVehicles)
             ->shouldReceive('getPsvVehiclesByType')
-            ->with($application, Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM)
+            ->with($application, Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM, false)
             ->andReturn($mediumVehicles);
 
         $result = $this->sut->handleQuery($query);
