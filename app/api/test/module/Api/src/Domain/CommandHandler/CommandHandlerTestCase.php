@@ -197,7 +197,14 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         foreach ($this->commands as $command) {
             list($cmd, $data) = $command;
 
-            $this->assertEquals($data, $cmd->getArrayCopy(), get_class($cmd) . ' has unexpected data');
+            $cmdData = $cmd->getArrayCopy();
+            $cmdDataToMatch = [];
+
+            foreach ($data as $key => $value) {
+                $cmdDataToMatch[$key] = isset($cmdData[$key]) ? $cmdData[$key] : null;
+            }
+
+            $this->assertEquals($data, $cmdDataToMatch, get_class($cmd) . ' has unexpected data');
         }
     }
 }
