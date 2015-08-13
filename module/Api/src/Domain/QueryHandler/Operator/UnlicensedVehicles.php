@@ -31,7 +31,7 @@ class UnlicensedVehicles extends AbstractQueryHandler implements AuthAwareInterf
     public function handleQuery(QueryInterface $query)
     {
         /** @var OrganisationEntity $organisation */
-        $organisation = $this->getRepo()->fetchUsingId($query);
+        $organisation = $this->getRepo()->fetchById($query->getOrganisation());
 
         $licence = $organisation->getLicences()->first();
 
@@ -40,20 +40,14 @@ class UnlicensedVehicles extends AbstractQueryHandler implements AuthAwareInterf
             $licence->getId()
         );
 
-        return $this->result(
-            $organisation,
-            [],
-            [
-                'licenceVehicles' => [
-                    'results' => $this->resultList(
-                        $this->getRepo('LicenceVehicle')->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
-                        [
-                            'vehicle',
-                        ]
-                    ),
-                    'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
-                ],
-            ]
-        );
+        return [
+            'result' => $this->resultList(
+                $this->getRepo('LicenceVehicle')->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
+                [
+                    'vehicle',
+                ]
+            ),
+            'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
+        ];
     }
 }
