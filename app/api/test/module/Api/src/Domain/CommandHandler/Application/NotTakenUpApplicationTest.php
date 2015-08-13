@@ -22,6 +22,8 @@ use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Delete;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\Void;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 
 /**
  * Class WithdrawApplicationTest
@@ -34,7 +36,8 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new CommandHandler();
-        $this->mockRepo('Application', Application::class);
+        $this->mockRepo('Application', ApplicationRepo::class);
+        $this->mockRepo('LicenceVehicle', LicenceVehicleRepo::class);
 
         parent::setUp();
     }
@@ -48,19 +51,26 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
+    /**
+     * @group test123
+     */
     public function testHandleCommand()
     {
         $command = Command::create(['id' => 532]);
+
+        $mockLicenceVehicle = m::mock()->shouldReceive('setSpecifiedDate')->with(null)->once()->getMock();
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
             ->andReturn(123)
             ->shouldReceive('getLicenceVehicles')
-            ->twice();
+            ->andReturn([$mockLicenceVehicle])
+            ->times(3)
+            ->getMock();
 
         $application = m::mock(Application::class)->makePartial();
         $application->setId(1);
-        $application->setLicence($licence->getMock());
+        $application->setLicence($licence);
 
         $application->shouldReceive('getTransportManagers->toArray')
             ->once()
@@ -103,6 +113,11 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(Application::class));
 
+        $this->repoMap['LicenceVehicle']->shouldReceive('save')
+            ->with($mockLicenceVehicle)
+            ->once()
+            ->getMock();
+
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
         $this->expectedSideEffect(CreateSnapshot::class, ['id' => 532, 'event' => CreateSnapshot::ON_NTU], $result1);
@@ -112,7 +127,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             CeaseGoodsDiscs::class,
             [
-                'licenceVehicles' => null,
+                'licenceVehicles' => [$mockLicenceVehicle],
             ],
             new Result()
         );
@@ -120,7 +135,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
             [
-                'licenceVehicles' => null,
+                'licenceVehicles' => [$mockLicenceVehicle],
                 'id' => null
             ],
             new Result()
@@ -131,7 +146,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             Void::class,
             [
-                'licence' => $licence->getMock(),
+                'licence' => $licence,
                 'communityLicenceIds' => null,
                 'checkOfficeCopy' => false
             ],

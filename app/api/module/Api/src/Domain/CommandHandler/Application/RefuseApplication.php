@@ -27,6 +27,8 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
 {
     public $repoServiceName = 'Application';
 
+    public $extraRepos = ['LicenceVehicle'];
+
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -57,11 +59,12 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
             $this->handleSideEffect(
                 CeaseGoodsDiscs::create(
                     [
-                        'licence' => $application->getLicence()
+                        'licenceVehicles' => $application->getLicence()->getLicenceVehicles()
                     ]
                 )
             )
         );
+        $this->clearLicenceVehicleSpecifiedDates($application->getLicence()->getLicenceVehicles());
 
         $result->addMessage('Application ' . $application->getId() . ' refused.');
 
@@ -72,5 +75,13 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
     {
         $data = ['id' => $applicationId, 'event' => CreateSnapshotCmd::ON_REFUSE];
         return $this->handleSideEffect(CreateSnapshotCmd::create($data));
+    }
+
+    protected function clearLicenceVehicleSpecifiedDates($licenceVehilces)
+    {
+        foreach ($licenceVehilces as $licenceVehilce) {
+            $licenceVehilce->setSpecifiedDate(null);
+            $this->getRepo('LicenceVehicle')->save($licenceVehilce);
+        }
     }
 }
