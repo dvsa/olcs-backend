@@ -28,7 +28,7 @@ final class GrantCommunityLicence extends AbstractCommandHandler implements Tran
 {
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['CommunityLic'];
+    protected $extraRepos = ['CommunityLic', 'Licence'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -42,6 +42,8 @@ final class GrantCommunityLicence extends AbstractCommandHandler implements Tran
             $this->grant($licence, $result);
         } else {
             $count = $this->voidActivePending($licence);
+            $this->clearCommunityLicencesCount($licence);
+            $result->addMessage('Total community licence(s) count cleared');
             $result->addMessage($count . ' community licence(s) voided');
         }
 
@@ -102,5 +104,11 @@ final class GrantCommunityLicence extends AbstractCommandHandler implements Tran
         }
 
         return $activePendingLicences->count();
+    }
+
+    protected function clearCommunityLicencesCount($licence)
+    {
+        $licence->setTotCommunityLicences(0);
+        $this->getRepo('Licence')->save($licence);
     }
 }
