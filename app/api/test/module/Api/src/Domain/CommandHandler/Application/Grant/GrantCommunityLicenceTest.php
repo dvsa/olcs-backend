@@ -31,6 +31,7 @@ class GrantCommunityLicenceTest extends CommandHandlerTestCase
         $this->sut = new GrantCommunityLicence();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
         $this->mockRepo('CommunityLic', \Dvsa\Olcs\Api\Domain\Repository\CommunityLic::class);
+        $this->mockRepo('Licence', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);
 
         parent::setUp();
     }
@@ -135,6 +136,10 @@ class GrantCommunityLicenceTest extends CommandHandlerTestCase
             ->with(m::type(Criteria::class))
             ->andReturn($pendingRecords);
 
+        $licence->shouldReceive('setTotCommunityLicences')
+            ->with(0)
+            ->once();
+
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
@@ -147,11 +152,16 @@ class GrantCommunityLicenceTest extends CommandHandlerTestCase
             ->once()
             ->with($pendingRecord);
 
+        $this->repoMap['Licence']->shouldReceive('save')
+            ->once()
+            ->with($licence);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
+                'Total community licence(s) count cleared',
                 '1 community licence(s) voided'
             ]
         ];
