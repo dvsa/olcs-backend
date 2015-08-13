@@ -242,6 +242,15 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     protected $licence;
 
     /**
+     * Metadata
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="metadata", length=4000, nullable=true)
+     */
+    protected $metadata;
+
+    /**
      * Olbs key
      *
      * @var int
@@ -828,6 +837,29 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getLicence()
     {
         return $this->licence;
+    }
+
+    /**
+     * Set the metadata
+     *
+     * @param string $metadata
+     * @return Document
+     */
+    public function setMetadata($metadata)
+    {
+        $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    /**
+     * Get the metadata
+     *
+     * @return string
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
     }
 
     /**

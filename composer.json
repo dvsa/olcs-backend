@@ -31,7 +31,7 @@
         },
         {
             "type": "vcs",
-            "url": "git@gitlab.inf.mgt.mtpdvsa:sc/jackrabbit.git"
+            "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-document-share.git"
         }
     ],
     "require": {
@@ -48,7 +48,7 @@
         "olcs/autoload": "dev-develop",
         "zf-commons/zfc-rbac": "~2.4.0",
         "cpms/client": "0.1.x-dev",
-        "dvsa/jackrabbit": "~2.1.0",
+        "olcs/dvsa/document-share": "dev-develop",
         "soflomo/purifier": "~0.1.0"
     },
     "require-dev": {

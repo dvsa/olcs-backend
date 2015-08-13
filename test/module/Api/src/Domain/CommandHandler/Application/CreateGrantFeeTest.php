@@ -101,7 +101,8 @@ class CreateGrantFeeTest extends CommandHandlerTestCase
             'opposition' => null,
             'isReadOnly' => null,
             'isScan' => 0,
-            'issuedDate' => null
+            'issuedDate' => null,
+            'metadata' => null
         ];
         $result2 = new Result();
         $result2->addMessage('DispatchDocument');

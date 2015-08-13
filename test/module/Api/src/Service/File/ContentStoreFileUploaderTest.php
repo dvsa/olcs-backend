@@ -48,9 +48,8 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
 
     public function testDownloadWithValidFile()
     {
-        $file = new \Dvsa\Jackrabbit\Client\Data\Object\File();
+        $file = new \Dvsa\Olcs\DocumentShare\Data\Object\File();
         $file->setContent('dummy content');
-        $file->setMimeType('application/rtf');
 
         $this->contentStoreMock->expects($this->once())
             ->method('read')
@@ -61,7 +60,6 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
 
         $headers = [
             'Content-Disposition' => 'attachment; filename="file.txt"',
-            'Content-Type' => 'application/rtf',
             'Content-Length' => '13'
         ];
 
@@ -72,9 +70,8 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
 
     public function testDownloadWithValidHtmlFile()
     {
-        $file = new \Dvsa\Jackrabbit\Client\Data\Object\File();
+        $file = new \Dvsa\Olcs\DocumentShare\Data\Object\File();
         $file->setContent('dummy content');
-        $file->setMimeType('text/html');
 
         $this->contentStoreMock->expects($this->once())
             ->method('read')
@@ -84,7 +81,6 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
         $response = $this->uploader->download('identifier', 'file.html');
 
         $headers = [
-            'Content-Type' => 'text/html',
             'Content-Length' => '13'
         ];
 
@@ -95,9 +91,8 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
 
     public function testDownloadWithValidFileAndNamespace()
     {
-        $file = new \Dvsa\Jackrabbit\Client\Data\Object\File();
+        $file = new \Dvsa\Olcs\DocumentShare\Data\Object\File();
         $file->setContent('dummy content');
-        $file->setMimeType('application/rtf');
 
         $this->contentStoreMock->expects($this->once())
             ->method('read')
