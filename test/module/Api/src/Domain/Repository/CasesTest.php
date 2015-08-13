@@ -143,9 +143,6 @@ class CasesTest extends RepositoryTestCase
         $this->sut->fetchExtended($caseId);
     }
 
-    /**
-     * @group test123
-     */
     public function testFetchWithLicenceNotFound()
     {
         $caseId = 1;
