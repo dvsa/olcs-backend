@@ -89,7 +89,9 @@ final class SetDefaultTrafficAreaAndEnforcementArea extends AbstractCommandHandl
                 $trafficArea = $this->getAddressService()
                     ->fetchTrafficAreaByPostcode($postcode, $this->getRepo('AdminAreaTrafficArea'));
 
-                $this->updateTrafficArea($application, $trafficArea->getId());
+                if ($trafficArea !== null) {
+                    $this->updateTrafficArea($application, $trafficArea->getId());
+                }
             }
 
             if ($setEa) {

@@ -140,7 +140,7 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
         if (!$command->getPartial()) {
 
-            if (!$application->getOperatingCentres()->isEmpty()) {
+            if ($this->shouldValidateEnforcementArea($application)) {
                 $this->updateHelper->validateEnforcementArea($application, $command);
             }
 
@@ -164,6 +164,16 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
         if (!empty($messages)) {
             throw new ValidationException($messages);
         }
+    }
+
+    protected function shouldValidateEnforcementArea(Application $application)
+    {
+        if ($application->isVariation()) {
+            return !$application->getOperatingCentres()->isEmpty()
+                || !$application->getLicence()->getOperatingCentres()->isEmpty();
+        }
+
+        return !$application->getOperatingCentres()->isEmpty();
     }
 
     protected function getTotals(Application $application)

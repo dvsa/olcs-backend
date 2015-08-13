@@ -8,11 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\LicenceOperatingCentre;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\LicenceOperatingCentre\LicenceOperatingCentre;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Transfer\Query\LicenceOperatingCentre\LicenceOperatingCentre as Qry;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre as LicenceOperatingCentreEntity;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Licence Operating Centre Test
@@ -34,6 +36,8 @@ class LicenceOperatingCentreTest extends QueryHandlerTestCase
     {
         $this->sut = new LicenceOperatingCentre();
         $this->mockRepo('LicenceOperatingCentre', \Dvsa\Olcs\Api\Domain\Repository\LicenceOperatingCentre::class);
+
+        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
 
         parent::setUp();
     }
@@ -58,6 +62,10 @@ class LicenceOperatingCentreTest extends QueryHandlerTestCase
         $this->repoMap['LicenceOperatingCentre']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($loc);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn(true);
 
         $result = $this->sut->handleQuery($query);
 
