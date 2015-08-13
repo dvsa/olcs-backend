@@ -22,7 +22,7 @@ use Mockery as m;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class OrganisationTest extends QueryHandlerTestCase
+class UnlicensedCasesTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
@@ -62,7 +62,7 @@ class OrganisationTest extends QueryHandlerTestCase
         $this->repoMap['Cases']->shouldReceive('fetchList')
             ->with(
                 m::on(
-                    function($query) use ($licenceId) {
+                    function ($query) use ($licenceId) {
                         $this->assertEquals($licenceId, $query->getLicence());
                         $this->assertEquals(1, $query->getPage());
                         $this->assertEquals(10, $query->getLimit());
