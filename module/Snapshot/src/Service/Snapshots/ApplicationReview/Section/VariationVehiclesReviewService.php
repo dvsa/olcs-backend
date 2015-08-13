@@ -32,7 +32,7 @@ class VariationVehiclesReviewService extends AbstractReviewService
                 ],
                 [
                     'label' => 'application-review-vehicles-weight',
-                    'value' => $this->formatNumber($vehicle['vehicle']['platedWeight']) . ' Kg'
+                    'value' => $this->formatNumber($vehicle['vehicle']['platedWeight']) . ' kg'
                 ]
             ];
         }
