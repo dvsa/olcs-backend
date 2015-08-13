@@ -25,6 +25,7 @@ return [
             'AddressFormatter' => \Dvsa\Olcs\Api\Service\Helper\FormatAddress::class
         ],
         'factories' => [
+            'PsvVehiclesQueryHelper' => \Dvsa\Olcs\Api\Domain\Service\PsvVehicles\PsvVehiclesQueryHelper::class,
             'UpdateOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper::class,
             'OperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper::class,
             'VariationOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper::class,
