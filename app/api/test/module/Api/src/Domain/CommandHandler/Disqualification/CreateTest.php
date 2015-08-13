@@ -9,6 +9,8 @@ use Dvsa\Olcs\Transfer\Command\Disqualification\Create as Command;
 use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\Person\Person;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * CreateTest
@@ -21,13 +23,15 @@ class CreateTest extends CommandHandlerTestCase
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Disqualification', \Dvsa\Olcs\Api\Domain\Repository\Disqualification::class);
+        $this->mockRepo('Person', \Dvsa\Olcs\Api\Domain\Repository\Person::class);
+        $this->mockRepo('ContactDetails', \Dvsa\Olcs\Api\Domain\Repository\ContactDetails::class);
 
         parent::setUp();
     }
 
     protected function initReferences()
     {
-        $this->refData = [];
+        $this->refData = [ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS];
 
         $this->references = [
             Organisation::class => [
@@ -71,10 +75,10 @@ class CreateTest extends CommandHandlerTestCase
         $this->assertEquals(['disqualification' => 154], $result->getIds());
     }
 
-    public function testHandleCommandOfficer()
+    public function testHandleCommandOfficerWithContactDetails()
     {
         $data = [
-            'officerCd' => 43,
+            'person' => 43,
             'notes' => 'NOTES',
             'startDate' => '2015-08-07',
             'isDisqualified' => 'Y',
@@ -82,10 +86,53 @@ class CreateTest extends CommandHandlerTestCase
         ];
         $command = Command::create($data);
 
+        $person = new Person();
+        $contactDetails = new ContactDetails(new RefData());
+        $person->addContactDetails($contactDetails);
+
+        $this->repoMap['Person']->shouldReceive('fetchById')->with(43)->once()->andReturn($person);
+
         $this->repoMap['Disqualification']->shouldReceive('save')->once()->andReturnUsing(
-            function (Disqualification $saveDisqualification) use ($data) {
+            function (Disqualification $saveDisqualification) use ($data, $contactDetails) {
                 $saveDisqualification->setId(154);
-                $this->assertSame($this->references[ContactDetails::class][43], $saveDisqualification->getOfficerCd());
+                $this->assertSame($contactDetails, $saveDisqualification->getOfficerCd());
+                $this->assertSame($data['notes'], $saveDisqualification->getNotes());
+                $this->assertEquals(new \DateTime($data['startDate']), $saveDisqualification->getStartDate());
+                $this->assertSame($data['isDisqualified'], $saveDisqualification->getIsDisqualified());
+                $this->assertSame($data['period'], $saveDisqualification->getPeriod());
+            }
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals(['Disqualification created'], $result->getMessages());
+        $this->assertEquals(['disqualification' => 154], $result->getIds());
+    }
+
+    public function testHandleCommandOfficerWithoutContactDetails()
+    {
+        $data = [
+            'person' => 43,
+            'notes' => 'NOTES',
+            'startDate' => '2015-08-07',
+            'isDisqualified' => 'Y',
+            'period' => 12,
+        ];
+        $command = Command::create($data);
+
+        $person = new Person();
+
+        $this->repoMap['Person']->shouldReceive('fetchById')->with(43)->once()->andReturn($person);
+        $this->repoMap['ContactDetails']->shouldReceive('save')->once()->andReturnUsing(
+            function (ContactDetails $saveContactDetails) use ($person) {
+                $this->assertSame($person, $saveContactDetails->getPerson());
+            }
+        );
+
+        $this->repoMap['Disqualification']->shouldReceive('save')->once()->andReturnUsing(
+            function (Disqualification $saveDisqualification) use ($data, $person) {
+                $saveDisqualification->setId(154);
+                $this->assertSame($person->getContactDetail(), $saveDisqualification->getOfficerCd());
                 $this->assertSame($data['notes'], $saveDisqualification->getNotes());
                 $this->assertEquals(new \DateTime($data['startDate']), $saveDisqualification->getStartDate());
                 $this->assertSame($data['isDisqualified'], $saveDisqualification->getIsDisqualified());
