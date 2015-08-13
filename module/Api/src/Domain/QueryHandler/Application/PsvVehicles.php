@@ -50,6 +50,7 @@ class PsvVehicles extends AbstractQueryHandler
                 'small' => $small,
                 'medium' => $medium,
                 'large' => $large,
+                'total' => $smallCount + $mediumCount + $largeCount,
                 'canTransfer' => false,
                 // We have to have a (~nervous~) breakdown before we can get to application version
                 'hasBreakdown' => $this->hasBreakdown($application),
