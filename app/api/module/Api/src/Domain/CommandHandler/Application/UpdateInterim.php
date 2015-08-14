@@ -45,11 +45,18 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
 
         $currentStatusId = $application->getCurrentInterimStatus();
 
-        if ($currentStatusId === null || $currentStatusId === ApplicationEntity::INTERIM_STATUS_REQUESTED) {
+        $requestedOrGranted = [
+            ApplicationEntity::INTERIM_STATUS_GRANTED,
+            ApplicationEntity::INTERIM_STATUS_REQUESTED
+        ];
+
+        // If Requested
+        if ($currentStatusId === null || in_array($currentStatusId, $requestedOrGranted)) {
             $this->processStatusRequested($application, $command);
             return $this->result;
         }
 
+        // If Refused or Revoked, can only update status
         $refuseOrRevoke = [
             ApplicationEntity::INTERIM_STATUS_REFUSED,
             ApplicationEntity::INTERIM_STATUS_REVOKED
@@ -63,7 +70,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         }
 
         if ($currentStatusId === ApplicationEntity::INTERIM_STATUS_INFORCE) {
-            $this->saveInterimData($application, $command);
+            $this->saveInterimData($application, $command, true);
             return $this->result;
         }
 
@@ -72,35 +79,48 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
 
     protected function processStatusRequested(ApplicationEntity $application, Cmd $command)
     {
+        // Create fee if selecting Y and doesn't currently have a statue
+        // Need to do this before calling saveInterimData, as that method updates the status
+        $shouldCreateFee = $command->getRequested() === 'Y' && $application->getInterimStatus() === null;
+        $shouldRemoveFee = $command->getRequested() !== 'Y';
+
         $this->saveInterimData($application, $command);
 
-        if ($command->getRequested() === 'Y') {
+        if ($shouldCreateFee) {
             $this->maybeCreateInterimFee($application);
-        } else {
+        } elseif ($shouldRemoveFee){
             $this->maybeCancelInterimFee($application);
         }
     }
 
-    protected function saveInterimData(ApplicationEntity $application, Cmd $command)
+    protected function saveInterimData(ApplicationEntity $application, Cmd $command, $ignoreRequested = false)
     {
         $this->validateDate($command);
 
-        if ($application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE) {
-            $status = $command->getStatus();
-            $processInForce = true;
-        } else {
-            $status = ApplicationEntity::INTERIM_STATUS_REQUESTED;
-            $processInForce = false;
+        $status = null;
+
+        // If we are attempting to set the status
+        if ($command->getStatus() !== null) {
+            $status = $this->getRepo()->getRefdataReference($command->getStatus());
         }
 
-        if ($command->getRequested() == 'Y') {
+        $processInForce = ($application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE);
+
+        if ($ignoreRequested || $command->getRequested() == 'Y') {
+
+            if ($status === null && $application->getCurrentInterimStatus() === null) {
+                $status = $this->getRepo()->getRefdataReference(ApplicationEntity::INTERIM_STATUS_REQUESTED);
+            }
 
             $application->setInterimReason($command->getReason());
             $application->setInterimStart(new DateTime($command->getStartDate()));
             $application->setInterimEnd(new DateTime($command->getEndDate()));
             $application->setInterimAuthVehicles($command->getAuthVehicles());
             $application->setInterimAuthTrailers($command->getAuthTrailers());
-            $application->setInterimStatus($this->getRepo()->getRefdataReference($status));
+
+            if ($status !== null) {
+                $application->setInterimStatus($status);
+            }
 
             $interimOcs = $command->getOperatingCentres() !== null ? $command->getOperatingCentres() : [];
             $interimVehicles = $command->getVehicles() !== null ? $command->getVehicles() : [];
