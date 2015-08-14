@@ -44,10 +44,13 @@ class UnlicensedVehicles extends AbstractQueryHandler implements AuthAwareInterf
             'result' => $this->resultList(
                 $this->getRepo('LicenceVehicle')->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
                 [
-                    'vehicle',
+                    'vehicle' => [
+                        'psvType',
+                    ],
                 ]
             ),
-            'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery)
+            'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery),
+            'goodsOrPsv' => $licence->getGoodsOrPsv(),
         ];
     }
 }
