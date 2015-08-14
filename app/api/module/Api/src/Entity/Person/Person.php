@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Person;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
 
 /**
  * Person Entity
@@ -50,5 +51,40 @@ class Person extends AbstractPerson
         if ($birthPlace !== null) {
             $this->setBirthPlace($birthPlace);
         }
+    }
+
+    /**
+     * Get the Disqualifiaction status for this person
+     *
+     * @return string Disqualification::STATUS_... constant
+     */
+    public function getDisqualificationStatus()
+    {
+        if ($this->getContactDetail()) {
+            return $this->getContactDetail()->getDisqualificationStatus();
+        }
+
+        return Disqualification::STATUS_NONE;
+    }
+
+    /**
+     * Get the ContactDetail entity for this person
+     * NB The DB schema does allow multiple contactDetails per person, if this is the case we always take the first;
+     *
+     * @return false|\Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails
+     */
+    public function getContactDetail()
+    {
+        return parent::getContactDetails()->first();
+    }
+
+    /**
+     * Get calculated values when serialized
+     *
+     * @return array
+     */
+    protected function getCalculatedBundleValues()
+    {
+        return ['disqualificationStatus' => $this->getDisqualificationStatus()];
     }
 }
