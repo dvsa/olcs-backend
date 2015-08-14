@@ -9,7 +9,6 @@
 namespace Dvsa\Olcs\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\Bookmark;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -141,7 +140,6 @@ class DocumentGenerator implements ServiceLocatorAwareInterface
     private function getTemplate($template)
     {
         if (!isset($this->templateCache[$template])) {
-
             $this->templateCache[$template] = $this->getServiceLocator()
                 ->get('ContentStore')
                 ->read($template);
