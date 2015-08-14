@@ -135,6 +135,7 @@ return [
     TransferQuery\Cases\Statement\Statement::class => QueryHandler\Cases\Statement\Statement::class,
     TransferQuery\Cases\Statement\StatementList::class => QueryHandler\Cases\Statement\StatementList::class,
     TransferQuery\Cases\ByTransportManager::class => QueryHandler\Cases\ByTransportManager::class,
+    TransferQuery\Cases\ByLicence::class => QueryHandler\Cases\ByLicence::class,
 
     // Submission
     TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
