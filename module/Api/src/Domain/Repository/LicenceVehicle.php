@@ -68,6 +68,7 @@ class LicenceVehicle extends AbstractRepository
 
         $qb->andWhere($qb->expr()->eq('m.licence', ':licence'));
         $qb->setParameter('licence', $licenceId);
+        $qb->orderBy('m.createdOn', 'ASC');
 
         return $qb;
     }
