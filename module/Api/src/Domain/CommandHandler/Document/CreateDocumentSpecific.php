@@ -9,19 +9,10 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Bus\BusReg;
-use Dvsa\Olcs\Api\Entity\Cases\Cases;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Dvsa\Olcs\Api\Entity\Opposition\Opposition;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Submission\Submission;
-use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as Cmd;
+use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks;
 
 /**
  * Create Document
@@ -40,6 +31,11 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
 
         $this->getRepo()->save($document);
 
+        $data = $command->getArrayCopy();
+        $data['id'] = $document->getId();
+
+        $this->handleSideEffect(UpdateDocumentLinks::create($data));
+
         $result->addId('document', $document->getId());
         $result->addMessage('Document created');
 
@@ -55,7 +51,6 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
         $document = new Document($command->getIdentifier());
 
         $this->categoriseDocument($document, $command);
-        $this->linkDocument($document, $command);
         $this->setDocumentDetails($document, $command);
         $this->setDocumentFlags($document, $command);
 
@@ -78,31 +73,9 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
         if ($command->getIssuedDate() !== null) {
             $document->setIssuedDate(new \DateTime($command->getIssuedDate()));
         }
-    }
 
-    private function linkDocument(Document $document, Cmd $command)
-    {
-        $this->maybeLinkDocument($document, $command, Application::class, 'Application');
-        $this->maybeLinkDocument($document, $command, BusReg::class, 'BusReg');
-        $this->maybeLinkDocument($document, $command, Cases::class, 'Case');
-        $this->maybeLinkDocument($document, $command, Organisation::class, 'IrfoOrganisation');
-        $this->maybeLinkDocument($document, $command, Submission::class, 'Submission');
-        $this->maybeLinkDocument($document, $command, TrafficArea::class, 'TrafficArea');
-        $this->maybeLinkDocument($document, $command, TransportManager::class, 'TransportManager');
-        $this->maybeLinkDocument($document, $command, Licence::class, 'Licence');
-        $this->maybeLinkDocument($document, $command, OperatingCentre::class, 'OperatingCentre');
-        $this->maybeLinkDocument($document, $command, Opposition::class, 'Opposition');
-    }
-
-    private function maybeLinkDocument(Document $document, Cmd $command, $entity, $suffix)
-    {
-        $getter = 'get' . $suffix;
-        $setter = 'set' . $suffix;
-        $value = $command->{$getter}();
-
-        if ($value !== null) {
-            $reference = $this->getRepo()->getReference($entity, $value);
-            $document->{$setter}($reference);
+        if ($command->getMetadata() !== null) {
+            $document->setMetadata($command->getMetadata());
         }
     }
 

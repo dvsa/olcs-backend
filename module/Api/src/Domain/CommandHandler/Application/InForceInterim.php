@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\Olcs\Transfer\Command\Application\PrintInterimDocument as PrintInterimDocumentCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -39,11 +40,13 @@ final class InForceInterim extends AbstractCommandHandler implements Transaction
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
-        $this->grantInterim($application);
-
+        // @NOTE This needs to be done before processing Community licences
         $application->setInterimStatus(
             $this->getRepo()->getRefdataReference(ApplicationEntity::INTERIM_STATUS_INFORCE)
         );
+
+        $this->grantInterim($application);
+
         $this->result->addMessage('Interim status updated');
         $this->getRepo()->save($application);
 

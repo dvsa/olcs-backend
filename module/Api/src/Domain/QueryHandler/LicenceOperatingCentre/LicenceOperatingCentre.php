@@ -7,8 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\LicenceOperatingCentre;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre as LicenceOperatingCentreEntity;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -16,8 +19,10 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class LicenceOperatingCentre extends AbstractQueryHandler
+class LicenceOperatingCentre extends AbstractQueryHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'LicenceOperatingCentre';
 
     public function handleQuery(QueryInterface $query)
@@ -39,11 +44,20 @@ class LicenceOperatingCentre extends AbstractQueryHandler
             ],
             [
                 'isPsv' => $licence->isPsv(),
-                'canUpdateAddress' => true,
+                'canUpdateAddress' => $this->canUpdateAddress($query),
                 'wouldIncreaseRequireAdditionalAdvertisement' => $query->getIsVariation(),
                 'currentVehiclesRequired' => $loc->getNoOfVehiclesRequired(),
                 'currentTrailersRequired' => $loc->getNoOfTrailersRequired()
             ]
         );
+    }
+
+    protected function canUpdateAddress($query)
+    {
+        if ($this->isGranted(Permission::INTERNAL_USER)) {
+            return true;
+        }
+
+        return !$query->getIsVariation();
     }
 }

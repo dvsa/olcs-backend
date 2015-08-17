@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
@@ -30,22 +31,34 @@ final class GenerateBatch extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'CommunityLic';
 
-    protected $extraRepos = ['Licence'];
+    protected $extraRepos = ['Licence', 'Application'];
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
 
-        $licenceId = $command->getLicence();
-        $licence = $this->getRepo('Licence')->fetchById($licenceId);
+        /**
+         * @NOTE This check allows us to pass Application whenever possible, but otherwise Licence should be sufficient
+         */
+        if ($command->getIdentifier() !== null) {
+            /** @var Entity\Application\Application $application */
+            $application = $this->getRepo('Application')->fetchById($command->getIdentifier());
+            $licence = $application->getLicence();
+            $identifier = $application->getId();
+            $template = $this->getTemplateForLicence($application);
+        } else {
+            $licenceId = $command->getLicence();
+            $licence = $this->getRepo('Licence')->fetchById($licenceId);
+            $template = $this->getTemplateForLicence($licence);
+            $identifier = null;
+        }
+
         $communityLicenceIds = $command->getCommunityLicenceIds();
-        $identifier = $command->getIdentifier();
 
         foreach ($communityLicenceIds as $id) {
-            $template = $this->getTemplateForLicence($licence);
 
             $query = [
-                'licence' => $licenceId,
+                'licence' => $licence->getId(),
                 'communityLic' => $id,
                 'application' => $identifier
             ];
@@ -72,13 +85,15 @@ final class GenerateBatch extends AbstractCommandHandler implements
         return $result;
     }
 
-    private function getTemplateForLicence($licence)
+    /**
+     * @param Entity\Application\Application|Entity\Licence\Licence $entity
+     * @return string
+     */
+    private function getTemplateForLicence($entity)
     {
-        $prefix = '';
-
-        if ($licence->getGoodsOrPsv()->getId() === LicenceEntity::LICENCE_CATEGORY_PSV) {
+        if ($entity->isPsv()) {
             $prefix = 'PSV';
-        } elseif ($licence->getNiFlag() === 'Y') {
+        } elseif ($entity->getNiFlag() === 'Y') {
             $prefix = 'GV_NI';
         } else {
             $prefix = 'GV_GB';

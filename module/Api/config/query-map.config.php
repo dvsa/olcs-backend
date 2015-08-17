@@ -102,6 +102,7 @@ return [
     TransferQuery\Organisation\People::class => QueryHandler\Organisation\People::class,
     TransferQuery\Organisation\CpidOrganisation::class
         => QueryHandler\Organisation\CpidOrganisation::class,
+    TransferQuery\Organisation\UnlicensedCases::class => QueryHandler\Organisation\UnlicensedCases::class,
 
     // Variation
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
@@ -137,6 +138,7 @@ return [
     TransferQuery\Cases\Statement\Statement::class => QueryHandler\Cases\Statement\Statement::class,
     TransferQuery\Cases\Statement\StatementList::class => QueryHandler\Cases\Statement\StatementList::class,
     TransferQuery\Cases\ByTransportManager::class => QueryHandler\Cases\ByTransportManager::class,
+    TransferQuery\Cases\ByLicence::class => QueryHandler\Cases\ByLicence::class,
 
     // Submission
     TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
@@ -226,6 +228,7 @@ return [
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
     TransferQuery\Document\Document::class => QueryHandler\Document\Document::class,
+    TransferQuery\Document\Letter::class => QueryHandler\Document\Letter::class,
     TransferQuery\Document\DocumentList::class => QueryHandler\Document\DocumentList::class,
 
     // Transport Manager Application
@@ -336,4 +339,7 @@ return [
 
     // Organisation Person
    TransferQuery\OrganisationPerson\GetSingle::class => QueryHandler\OrganisationPerson\GetSingle::class,
+
+    // Person
+    TransferQuery\Person\Person::class => QueryHandler\Person\Person::class,
 ];

@@ -29,7 +29,8 @@ class VariationOperatingCentre extends AbstractQueryHandler
             return $this->getQueryHandler()->handleQuery(
                 LicenceOperatingCentre::create(
                     [
-                        'id' => $id, 'isVariation' => true
+                        'id' => $id,
+                        'isVariation' => true
                     ]
                 )
             );

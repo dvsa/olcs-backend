@@ -20,21 +20,17 @@ class FileTest extends \PHPUnit_Framework_TestCase
     {
         $data = array(
             'name' => 'Bob',
-            'type' => 'image/png',
             'tmp_name' => '/sdflkajdsf/asdfjasldf',
             'size' => 45646,
-            'content' => 'foo',
-            'meta' => [1]
+            'content' => 'foo'
         );
 
         $expected = array(
             'identifier' => null,
             'name' => 'Bob',
-            'type' => 'image/png',
             'path' => '/sdflkajdsf/asdfjasldf',
             'size' => 45646,
-            'content' => 'foo',
-            'meta' => [1]
+            'content' => 'foo'
         );
 
         $file = new File();
@@ -46,7 +42,6 @@ class FileTest extends \PHPUnit_Framework_TestCase
     {
         $data = array(
             'name' => 'Bob',
-            'type' => 'image/png',
             'tmp_name' => '/sdflkajdsf/asdfjasldf',
             'size' => 45646
         );
@@ -54,11 +49,9 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $expected = array(
             'identifier' => 'dfghjkl',
             'name' => 'Bob',
-            'type' => 'image/png',
             'path' => '/sdflkajdsf/asdfjasldf',
             'size' => 45646,
-            'content' => null,
-            'meta' => []
+            'content' => null
         );
 
         $file = new File();
@@ -107,9 +100,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $file = new File();
 
         $this->assertSame($file, $file->setIdentifier('foo'));
-        $this->assertSame($file, $file->setType('foo'));
         $this->assertSame($file, $file->setPath('foo'));
         $this->assertSame($file, $file->setSize('foo'));
-        $this->assertSame($file, $file->setMeta('foo'));
     }
 }
