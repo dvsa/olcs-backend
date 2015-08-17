@@ -7,12 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber as GenerateLicenceNumberCmd;
 
 /**
  * UpdateTrafficArea
@@ -32,16 +34,14 @@ final class UpdateTrafficArea extends AbstractCommandHandler
 
         $this->getRepo()->save($licence);
 
-        // if no Licence number and has an application then generate Licence Number
-        if (empty($licence->getLicNo())) {
-            $result->merge(
-                $this->handleSideEffect(
-                    \Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber::create(
-                        ['id' => $licence->getApplications()->current()->getId()]
-                    )
-                )
-            );
-        }
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->eq('isVariation', 0)
+        );
+
+        $appId = $licence->getApplications()->matching($criteria)->first()->getId();
+
+        $result->merge($this->handleSideEffect(GenerateLicenceNumberCmd::create(['id' => $appId])));
 
         $result->addMessage('Licence Traffic Area updated');
         return $result;

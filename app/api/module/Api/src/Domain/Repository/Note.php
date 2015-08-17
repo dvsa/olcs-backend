@@ -61,6 +61,6 @@ class Note extends AbstractRepository
             $qb->setParameter('noteTypeId', $query->getNoteType());
         }
 
-        $this->getQueryBuilder()->modifyQuery($qb)->withUser();
+        $this->getQueryBuilder()->modifyQuery($qb)->withUser()->withBusReg();
     }
 }

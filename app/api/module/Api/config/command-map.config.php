@@ -315,6 +315,7 @@ return [
     TransferCommand\Document\DeleteDocuments::class => CommandHandler\Document\DeleteDocuments::class,
     TransferCommand\Document\CopyDocument::class => CommandHandler\Document\CopyDocument::class,
     TransferCommand\Document\MoveDocument::class => CommandHandler\Document\MoveDocument::class,
+    TransferCommand\Document\UpdateDocumentLinks::class => CommandHandler\Document\UpdateDocumentLinks::class,
 
     // Transfer - CommunityLic
     TransferCommand\CommunityLic\Application\Create::class => CommandHandler\CommunityLic\Application\Create::class,
@@ -323,7 +324,6 @@ return [
     TransferCommand\CommunityLic\Licence\Create::class => CommandHandler\CommunityLic\Licence\Create::class,
     TransferCommand\CommunityLic\Licence\CreateOfficeCopy::class =>
         CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
-    TransferCommand\CommunityLic\GenerateBatch::class => CommandHandler\CommunityLic\GenerateBatch::class,
     TransferCommand\CommunityLic\Void::class => CommandHandler\CommunityLic\Void::class,
     TransferCommand\CommunityLic\Restore::class => CommandHandler\CommunityLic\Restore::class,
     TransferCommand\CommunityLic\Stop::class => CommandHandler\CommunityLic\Stop::class,

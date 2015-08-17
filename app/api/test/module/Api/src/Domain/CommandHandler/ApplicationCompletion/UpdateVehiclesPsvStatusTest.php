@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ApplicationCompletion;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateVehiclesPsvStatus as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateVehiclesPsvStatus;
@@ -121,9 +122,8 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
         $licenceVehicle1 = m::mock(LicenceVehicle::class)->makePartial();
         $licenceVehicle1->setVehicle($vehicle1);
 
-        $licenceVehicles = [
-            $licenceVehicle1
-        ];
+        $licenceVehicles = new ArrayCollection();
+        $licenceVehicles->add($licenceVehicle1);
 
         $this->application->setHasEnteredReg('Y');
         $this->licence->setLicenceVehicles($licenceVehicles);
@@ -147,9 +147,8 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
         $licenceVehicle1 = m::mock(LicenceVehicle::class)->makePartial();
         $licenceVehicle1->setVehicle($vehicle1);
 
-        $licenceVehicles = [
-            $licenceVehicle1
-        ];
+        $licenceVehicles = new ArrayCollection();
+        $licenceVehicles->add($licenceVehicle1);
 
         $this->application->setHasEnteredReg('Y');
         $this->licence->setLicenceVehicles($licenceVehicles);
@@ -173,9 +172,8 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
         $licenceVehicle1 = m::mock(LicenceVehicle::class)->makePartial();
         $licenceVehicle1->setVehicle($vehicle1);
 
-        $licenceVehicles = [
-            $licenceVehicle1
-        ];
+        $licenceVehicles = new ArrayCollection();
+        $licenceVehicles->add($licenceVehicle1);
 
         $this->application->setHasEnteredReg('Y');
         $this->licence->setLicenceVehicles($licenceVehicles);
@@ -199,9 +197,8 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
         $licenceVehicle1 = m::mock(LicenceVehicle::class)->makePartial();
         $licenceVehicle1->setVehicle($vehicle1);
 
-        $licenceVehicles = [
-            $licenceVehicle1
-        ];
+        $licenceVehicles = new ArrayCollection();
+        $licenceVehicles->add($licenceVehicle1);
 
         $this->application->setHasEnteredReg('Y');
         $this->licence->setLicenceVehicles($licenceVehicles);
@@ -225,9 +222,8 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
         $licenceVehicle1 = m::mock(LicenceVehicle::class)->makePartial();
         $licenceVehicle1->setVehicle($vehicle1);
 
-        $licenceVehicles = [
-            $licenceVehicle1
-        ];
+        $licenceVehicles = new ArrayCollection();
+        $licenceVehicles->add($licenceVehicle1);
 
         $this->application->setHasEnteredReg('Y');
         $this->licence->setLicenceVehicles($licenceVehicles);

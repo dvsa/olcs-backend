@@ -51,6 +51,8 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $issuedDate;
 
+    protected $metadata;
+
     /**
      * @return mixed
      */
@@ -209,5 +211,13 @@ class CreateDocumentSpecific extends AbstractCommand
     public function getIssuedDate()
     {
         return $this->issuedDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
     }
 }
