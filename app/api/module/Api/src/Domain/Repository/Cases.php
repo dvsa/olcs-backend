@@ -20,51 +20,6 @@ class Cases extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
-     * Fetch the default record by it's id
-     *
-     * @param Query|QryCmd $query
-     * @param int $hydrateMode
-     * @param null $version
-     * @return mixed
-     * @throws Exception\NotFoundException
-     * @throws Exception\VersionConflictException
-     */
-    public function fetchWithPiUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_ARRAY, $version = null)
-    {
-        $qb = $this->createQueryBuilder();
-
-        $case = $this->fetchUsingId($query, $hydrateMode, $version);
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->getEntityManager()->getRepository('\Dvsa\Olcs\Api\Entity\Pi\Pi')->createQueryBuilder('p');
-        $this->getQueryBuilder()->modifyQuery($qb)
-             ->withRefdata()
-             ->with('agreedByTc')
-             ->with('assignedTo')
-             ->with('decidedByTc')
-             ->with('reasons')
-             ->with('decisions')
-             ->with('piHearings');
-
-        //reasons
-        //hearings
-        // -> presidingTc
-        // -> presided by role (refdata)
-        //decisions
-
-        $qb->andWhere($qb->expr()->eq('p.case', ':byId'))
-            ->setParameter('byId', $query->getId())
-            ->setMaxResults(1);
-
-        $pi = $qb->getQuery()->getResult();
-
-        if (!empty($pi) && $hydrateMode === Query::HYDRATE_ARRAY) {
-            $case['pi'] = $pi[0];
-        }
-
-        return $case;
-    }
-
-    /**
      * Fetch the default record by it's id plus licence information
      *
      * @param Query|QryCmd $query
