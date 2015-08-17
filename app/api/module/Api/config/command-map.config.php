@@ -112,6 +112,13 @@ return [
     TransferCommand\Cases\NonPi\Update::class => CommandHandler\Cases\NonPi\Update::class,
     TransferCommand\Cases\NonPi\Delete::class => CommandHandler\Cases\NonPi\Delete::class,
 
+    // Pi
+    TransferCommand\Cases\Pi\CreateAgreedAndLegislation::class =>
+        CommandHandler\Cases\Pi\CreateAgreedAndLegislation::class,
+    TransferCommand\Cases\Pi\UpdateAgreedAndLegislation::class =>
+        CommandHandler\Cases\Pi\AgreedAndLegislationUpdate::class,
+    TransferCommand\Cases\Pi\UpdateDecision::class => CommandHandler\Cases\Pi\UpdateDecision::class,
+
     // Transfer - Bus
     TransferCommand\Bus\CreateBus::class => CommandHandler\Bus\CreateBus::class,
     TransferCommand\Bus\CreateVariation::class => CommandHandler\Bus\CreateVariation::class,
@@ -441,6 +448,7 @@ return [
 
     // Domain - Publications
     Command\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,
+    Command\Publication\PiDecision::class => CommandHandler\Publication\PiHearing::class,
 
     // Domain - Discs
     Command\Discs\CeaseGoodsDiscs::class => CommandHandler\Discs\CeaseGoodsDiscs::class,
