@@ -15,13 +15,14 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as GenerateBatchCommand;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
  * Create Office Copy / Licence Version
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class CreateOfficeCopy extends AbstractCommandHandler
+final class CreateOfficeCopy extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'CommunityLic';
     protected $extraRepos = ['Licence'];
