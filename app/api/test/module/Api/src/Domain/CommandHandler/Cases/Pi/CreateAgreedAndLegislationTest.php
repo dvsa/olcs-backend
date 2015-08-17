@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Update Decision Test
+ * Create Agreed And Legislation Test
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Pi;
 
@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Reason as ReasonEntity;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Create Agreed And Legislation Test
