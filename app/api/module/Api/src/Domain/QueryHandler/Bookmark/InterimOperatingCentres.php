@@ -28,7 +28,7 @@ class InterimOperatingCentres extends AbstractQueryHandler
 
         $criteria = Criteria::create();
         $criteria->where(
-            $criteria->expr()->eq('isInterim', 1)
+            $criteria->expr()->eq('isInterim', 'Y')
         );
 
         $ocs = $application->getOperatingCentres()->matching($criteria);

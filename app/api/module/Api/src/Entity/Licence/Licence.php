@@ -347,7 +347,10 @@ class Licence extends AbstractLicence
 
         $otherActiveLicences = $this->getOrganisation()->getLicences()->matching($criteria);
 
-        if ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV) {
+        // goods_or_psv can be null
+        if (!empty($this->getGoodsOrPsv()) &&
+            ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV)
+        ) {
 
             /** @var Licence $otherActiveLicence */
             foreach ($otherActiveLicences as $otherActiveLicence) {

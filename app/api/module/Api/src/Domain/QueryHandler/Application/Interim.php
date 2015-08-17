@@ -25,7 +25,8 @@ class Interim extends AbstractQueryHandler
     protected $canSetStatusMap = [
         ApplicationEntity::INTERIM_STATUS_INFORCE,
         ApplicationEntity::INTERIM_STATUS_REFUSED,
-        ApplicationEntity::INTERIM_STATUS_REVOKED
+        ApplicationEntity::INTERIM_STATUS_REVOKED,
+        ApplicationEntity::INTERIM_STATUS_GRANTED
     ];
 
     protected $restrictedUpdateMap = [

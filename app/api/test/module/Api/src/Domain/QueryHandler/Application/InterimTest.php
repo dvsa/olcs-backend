@@ -94,7 +94,7 @@ class InterimTest extends QueryHandlerTestCase
                 ApplicationEntity::INTERIM_STATUS_GRANTED,
                 false,
                 false,
-                false,
+                true,
                 true
             ]
         ];

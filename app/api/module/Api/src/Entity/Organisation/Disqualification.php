@@ -84,7 +84,6 @@ class Disqualification extends AbstractDisqualification
             ->setPeriod($period);
     }
 
-
     /**
      * Get the current status of this Disqualification
      *

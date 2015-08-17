@@ -19,6 +19,7 @@ use Dvsa\Olcs\Transfer\Command\Disqualification\Create as Command;
 final class Create extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Disqualification';
+    protected $extraRepos = ['Person', 'ContactDetails'];
 
     /**
      * Creates a Disqualification
@@ -72,8 +73,23 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
      */
     private function getOfficerCd(Command $command)
     {
-        return $command->getOfficerCd() ?
-            $this->getRepo()->getReference(ContactDetails::class, $command->getOfficerCd()) :
-            null;
+        if (empty($command->getPerson())) {
+            return null;
+        }
+
+        /* @var $person \Dvsa\Olcs\Api\Entity\Person\Person */
+        $person = $this->getRepo('Person')->fetchById($command->getPerson());
+
+        // if contact details don't exists then create them
+        if (!$person->getContactDetail()) {
+            $contactDetails = new ContactDetails(
+                $this->getRepo()->getRefdataReference(ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS)
+            );
+            $contactDetails->setPerson($person);
+            $this->getRepo('ContactDetails')->save($contactDetails);
+            $person->addContactDetails($contactDetails);
+        }
+
+        return $person->getContactDetail();
     }
 }
