@@ -3,6 +3,11 @@
 namespace Dvsa\Olcs\Api\Entity\Pi;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Pi Entity
@@ -28,5 +33,131 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Pi extends AbstractPi
 {
+    const STATUS_REGISTERED = 'pi_s_reg';
 
+    /**
+     * @param CasesEntity $case
+     * @param PresidingTc $agreedByTc
+     * @param RefData $agreedByTcRole
+     * @param ArrayCollection $piTypes
+     * @param ArrayCollection $reasons
+     * @param \DateTime $agreedDate
+     * @param RefData $piStatus
+     * @param String $comment
+     */
+    public function __construct(
+        CasesEntity $case,
+        PresidingTcEntity $agreedByTc,
+        RefData $agreedByTcRole,
+        ArrayCollection $piTypes,
+        ArrayCollection $reasons,
+        \DateTime $agreedDate,
+        RefData $piStatus,
+        $comment
+    ) {
+        parent::__construct();
+
+        $this->create($case, $agreedByTc, $agreedByTcRole, $piTypes, $reasons, $agreedDate, $piStatus, $comment);
+    }
+
+    /**
+     * @param CasesEntity $case
+     * @param PresidingTc $agreedByTc
+     * @param RefData $agreedByTcRole
+     * @param ArrayCollection $piTypes
+     * @param ArrayCollection $reasons
+     * @param \DateTime $agreedDate
+     * @param RefData $piStatus
+     * @param String $comment
+     */
+    private function create(
+        CasesEntity $case,
+        PresidingTcEntity $agreedByTc,
+        RefData $agreedByTcRole,
+        ArrayCollection $piTypes,
+        ArrayCollection $reasons,
+        \DateTime $agreedDate,
+        RefData $piStatus,
+        $comment
+    ) {
+        $this->case = $case;
+        $this->agreedByTc = $agreedByTc;
+        $this->agreedByTcRole = $agreedByTcRole;
+        $this->piTypes = $piTypes;
+        $this->reasons = $reasons;
+        $this->agreedDate = $agreedDate;
+        $this->piStatus = $piStatus;
+        $this->comment = $comment;
+    }
+
+    /**
+     * @param PresidingTc $agreedByTc
+     * @param RefData $agreedByTcRole
+     * @param ArrayCollection $piTypes
+     * @param ArrayCollection $reasons
+     * @param \DateTime $agreedDate
+     * @param String $comment
+     */
+    public function updateAgreedAndLegislation(
+        PresidingTcEntity $agreedByTc,
+        RefData $agreedByTcRole,
+        ArrayCollection $piTypes,
+        ArrayCollection $reasons,
+        \DateTime $agreedDate,
+        $comment
+    ) {
+        $this->agreedByTc = $agreedByTc;
+        $this->agreedByTcRole = $agreedByTcRole;
+        $this->piTypes = $piTypes;
+        $this->reasons = $reasons;
+        $this->agreedDate = $agreedDate;
+        $this->comment = $comment;
+    }
+
+    /**
+     * @param PresidingTcEntity $decidedByTc
+     * @param RefData $decidedByTcRole
+     * @param ArrayCollection $decisions
+     * @param $licenceRevokedAtPi
+     * @param $licenceSuspendedAtPi
+     * @param $licenceCurtailedAtPi
+     * @param $witnesses
+     * @param $decisionDate
+     * @param $notificationDate
+     * @param $decisionNotes
+     */
+    public function updatePiWithDecision(
+        $decidedByTc,
+        RefData $decidedByTcRole,
+        ArrayCollection $decisions,
+        $licenceRevokedAtPi,
+        $licenceSuspendedAtPi,
+        $licenceCurtailedAtPi,
+        $witnesses,
+        $decisionDate,
+        $notificationDate,
+        $decisionNotes
+    ) {
+        $this->setDecidedByTc($decidedByTc);
+        $this->decidedByTcRole = $decidedByTcRole;
+        $this->decisions = $decisions;
+        $this->licenceRevokedAtPi = $licenceRevokedAtPi;
+        $this->licenceSuspendedAtPi = $licenceSuspendedAtPi;
+        $this->licenceCurtailedAtPi = $licenceCurtailedAtPi;
+        $this->witnesses = $witnesses;
+        $this->decisionNotes = $decisionNotes;
+        $this->decisionDate = $decisionDate;
+        $this->notificationDate = $notificationDate;
+
+        $decisionDateTime = \DateTime::createFromFormat('Y-m-d', $decisionDate);
+        $notificationDateTime = \DateTime::createFromFormat('Y-m-d', $notificationDate);
+
+        if (!$decisionDateTime instanceof \DateTime) {
+            $decisionDateTime = null;
+        }
+
+        if (!$notificationDateTime instanceof \DateTime) {
+            $notificationDateTime = null;
+        }
+    }
 }
