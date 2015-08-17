@@ -88,7 +88,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
 
         if ($shouldCreateFee) {
             $this->maybeCreateInterimFee($application);
-        } elseif ($shouldRemoveFee){
+        } elseif ($shouldRemoveFee) {
             $this->maybeCancelInterimFee($application);
         }
     }
