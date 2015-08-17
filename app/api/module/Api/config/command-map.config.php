@@ -656,8 +656,6 @@ return [
     TransferCommand\LicenceOperatingCentre\Update::class => CommandHandler\LicenceOperatingCentre\Update::class,
 
     /** @to-do Review whether these commands are still needed once front end controllers have been migrated */
-    TransferCommand\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,
-    TransferCommand\Publication\PiDecision::class => CommandHandler\Publication\PiHearing::class,
     TransferCommand\Publication\Bus::class => CommandHandler\Publication\Bus::class,
     TransferCommand\Publication\Application::class => CommandHandler\Publication\Application::class,
 ];
