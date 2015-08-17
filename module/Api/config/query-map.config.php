@@ -335,4 +335,7 @@ return [
 
     // Organisation Person
    TransferQuery\OrganisationPerson\GetSingle::class => QueryHandler\OrganisationPerson\GetSingle::class,
+
+    // Disc Printing
+    TransferQuery\DiscSequence\DiscPrefix::class => QueryHandler\DiscSequence\DiscPrefix::class,
 ];

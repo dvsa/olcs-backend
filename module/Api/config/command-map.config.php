@@ -672,4 +672,8 @@ return [
     // Disqualification
     TransferCommand\Disqualification\Create::class => CommandHandler\Disqualification\Create::class,
     TransferCommand\Disqualification\Update::class => CommandHandler\Disqualification\Update::class,
+
+    // Disc Printing
+    TransferCommand\GoodsDisc\PrintDiscs::class => CommandHandler\GoodsDisc\PrintDiscs::class,
+    TransferCommand\PsvDisc\PrintDiscs::class => CommandHandler\PsvDisc\PrintDiscs::class,
 ];
