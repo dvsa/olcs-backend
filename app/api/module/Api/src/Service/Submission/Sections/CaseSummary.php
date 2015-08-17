@@ -12,14 +12,12 @@ use Dvsa\Olcs\Api\Service\Submission\Sections\AbstractSection;
  */
 final class CaseSummary extends AbstractSection
 {
-    public function generateSection(CasesEntity $case, \ArrayObject $context)
+    public function generateSection(CasesEntity $case, \ArrayObject $context = null)
     {
         $data = [
             'caseType' => $case->getCaseType()->getDescription()
         ];
 
-        $context->offsetSet('case-summary', $data);
-
-        return $context;
+        return $data;
     }
 }

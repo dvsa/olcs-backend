@@ -33,7 +33,7 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
         $submissionEntity = $this->createSubmission($command);
 
         $submissionEntity->setDataSnapshot(
-            $this->getSubmissionGenerator()->generateSubmissionData($submissionEntity, $command->getSections())
+            $this->getSubmissionGenerator()->generateSubmission($submissionEntity, $command->getSections())
         );
         //$this->getRepo()->save($submission);
 
