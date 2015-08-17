@@ -31,6 +31,10 @@ final class Pi extends AbstractQueryHandler
 
         $this->extractHearingDate($pi);
 
+        $pi['canClose'] = $this->canClose($pi);
+        $pi['isClosed'] = $this->isClosed($pi);
+        $pi['canReopen'] = $this->canReopen($pi);
+
         /** @TODO change me to use queries */
         if (!empty($pi['case']['transportManager'])) {
             //no licence for TM cases so using English TA
@@ -64,6 +68,57 @@ final class Pi extends AbstractQueryHandler
         }
 
         return $pi;
+    }
+
+    protected function canClose($data)
+    {
+        if (isset($data['piHearings'][0])) {
+            if (!empty($data['piHearings'][0]['cancelledDate'])) {
+                return !$this->isClosed($data);
+            }
+        }
+
+        if (isset($data['writtenOutcome']['id'])) {
+            switch($data['writtenOutcome']['id']) {
+                case 'piwo_none':
+                    return !$this->isClosed($data);
+                case 'piwo_reason':
+                    if (empty($data['tcWrittenReasonDate']) ||
+                        empty($data['writtenReasonLetterDate'])
+                    ) {
+                        return false;
+                    }
+                    return !$this->isClosed($data);
+                case 'piwo_decision':
+                    if (empty($data['tcWrittenDecisionDate']) ||
+                        empty($data['decisionLetterSentDate'])
+                    ) {
+                        return false;
+                    }
+                    return !$this->isClosed($data);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Is this entity closed
+     * @param array $data
+     * @return bool
+     */
+    public function isClosed($data)
+    {
+        return (bool) isset($data['closedDate']);
+    }
+
+    /**
+     * Can this entity be reopened
+     * @param array $data
+     * @return bool
+     */
+    public function canReopen($data)
+    {
+        return $this->isClosed($data);
     }
 
     /**
