@@ -45,6 +45,8 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      */
     private $queryBuilder;
 
+    private $references = [];
+
     public function __construct(EntityManagerInterface $em, QueryBuilderInterface $queryBuilder)
     {
         $this->em = $em;
@@ -68,6 +70,13 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
     public function fetchById($id, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
     {
+        // If we are not locking and requesting an object, check the cache first
+        $cache = ($version === null && $hydrateMode === Query::HYDRATE_OBJECT);
+        if ($cache && isset($this->references[$id])) {
+
+            return $this->references[$id];
+        }
+
         $qb = $this->createQueryBuilder();
 
         $this->buildDefaultQuery($qb, $id);
@@ -84,6 +93,10 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
         if ($hydrateMode === Query::HYDRATE_OBJECT && $version !== null) {
             $this->lock($results[0], $version);
+        }
+
+        if ($cache) {
+            $this->references[$id] = $results[0];
         }
 
         return $results[0];

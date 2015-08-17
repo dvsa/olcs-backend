@@ -100,6 +100,7 @@ return [
     TransferQuery\Organisation\OutstandingFees::class => QueryHandler\Organisation\OutstandingFees::class,
     TransferQuery\Organisation\Dashboard::class => QueryHandler\Organisation\Dashboard::class,
     TransferQuery\Organisation\People::class => QueryHandler\Organisation\People::class,
+    TransferQuery\Organisation\UnlicensedCases::class => QueryHandler\Organisation\UnlicensedCases::class,
 
     // Variation
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
@@ -135,6 +136,7 @@ return [
     TransferQuery\Cases\Statement\Statement::class => QueryHandler\Cases\Statement\Statement::class,
     TransferQuery\Cases\Statement\StatementList::class => QueryHandler\Cases\Statement\StatementList::class,
     TransferQuery\Cases\ByTransportManager::class => QueryHandler\Cases\ByTransportManager::class,
+    TransferQuery\Cases\ByLicence::class => QueryHandler\Cases\ByLicence::class,
 
     // Submission
     TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
@@ -338,4 +340,7 @@ return [
 
     // Disc Printing
     TransferQuery\DiscSequence\DiscPrefix::class => QueryHandler\DiscSequence\DiscPrefix::class,
+
+    // Person
+    TransferQuery\Person\Person::class => QueryHandler\Person\Person::class,
 ];
