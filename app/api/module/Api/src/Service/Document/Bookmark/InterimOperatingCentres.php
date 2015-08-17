@@ -114,7 +114,7 @@ class InterimOperatingCentres extends DynamicBookmark
             } else {
                 $key = $condition['id'];
             }
-            $final["index:" . $key] = $condition;
+            $final['index:' . $key] = $condition;
         }
         return $final;
     }
