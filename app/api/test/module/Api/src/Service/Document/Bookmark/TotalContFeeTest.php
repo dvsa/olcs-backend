@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 
 /**
- * FstandingAdditionalVeh bookmark test
+ * TotalContFeeTest bookmark test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
@@ -45,7 +45,7 @@ class TotalContFeeTest extends MockeryTestCase
 
     public function testRenderWithNoTotalContFee()
     {
-        $this->sut->setData(['Results' => []]);
+        $this->sut->setData(null);
         $this->assertEquals('', $this->sut->render());
     }
 
@@ -54,12 +54,7 @@ class TotalContFeeTest extends MockeryTestCase
      */
     public function testRenderWithTotalContFee($results)
     {
-        $this->sut->setData(
-            [
-                'Count' => 2,
-                'Results' => $results
-            ]
-        );
+        $this->sut->setData($results);
         $this->assertEquals(
             '123,456',
             $this->sut->render()
@@ -71,29 +66,16 @@ class TotalContFeeTest extends MockeryTestCase
         return [
             [
                 [
-                    [
-                        'fixedValue' => '123456',
-                        'effectiveFrom' => '2015-01-01'
-                    ],
-                    [
-                        'fixedValue' => '789012',
-                        'effectiveFrom' => '2014-01-01'
-                    ]
-                ]
+                    'fixedValue' => '123456',
+                    'effectiveFrom' => '2015-01-01'
+                ],
             ],
             [
                 [
-                    [
-                        'fixedValue' => '0',
-                        'fiveYearValue' => '123456',
-                        'effectiveFrom' => '2015-01-01'
-                    ],
-                    [
-                        'fixedValue' => '0',
-                        'fiveYearValue' => '789012',
-                        'effectiveFrom' => '2014-01-01'
-                    ]
-                ]
+                    'fixedValue' => '0',
+                    'fiveYearValue' => '123456',
+                    'effectiveFrom' => '2015-01-01'
+                ],
             ]
         ];
     }

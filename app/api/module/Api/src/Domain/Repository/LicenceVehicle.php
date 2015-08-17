@@ -7,11 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 
 /**
  * Licence Vehicle
@@ -55,6 +58,58 @@ class LicenceVehicle extends AbstractRepository
         $qb->setParameter('licence', $licenceId);
 
         return $qb;
+    }
+
+    /**
+     * @param ApplicationEntity|LicenceEntity $entity
+     * @param $psvType
+     * @return mixed
+     */
+    public function getPsvVehiclesByType($entity, $psvType, $includeRemoved = false)
+    {
+        $licenceVehicles = $this->getAllPsvVehicles($entity, $includeRemoved);
+
+        $type = $this->getRefdataReference($psvType);
+
+        /** @var Entity $licenceVehicle */
+        foreach ($licenceVehicles as $licenceVehicle) {
+            if ($licenceVehicle->getVehicle()->getPsvType() !== $type) {
+                $licenceVehicles->removeElement($licenceVehicle);
+            }
+        }
+
+        return $licenceVehicles;
+    }
+
+    /**
+     * @param ApplicationEntity|LicenceEntity $entity
+     */
+    public function getAllPsvVehicles($entity, $includeRemoved = false)
+    {
+        $criteria = Criteria::create();
+        if ($includeRemoved === false) {
+            $criteria->andWhere(
+                $criteria->expr()->isNull('removalDate')
+            );
+        }
+
+        if ($entity instanceof ApplicationEntity) {
+            $criteria->andWhere(
+                $criteria->expr()->orX(
+                    $criteria->expr()->eq('application', $entity),
+                    $criteria->expr()->neq('specifiedDate', null)
+                )
+            );
+            $entity = $entity->getLicence();
+        } else {
+            $criteria->andWhere(
+                $criteria->expr()->neq('specifiedDate', null)
+            );
+        }
+
+        $criteria->orderBy(['specifiedDate' => 'ASC']);
+
+        return $entity->getLicenceVehicles()->matching($criteria);
     }
 
     /**

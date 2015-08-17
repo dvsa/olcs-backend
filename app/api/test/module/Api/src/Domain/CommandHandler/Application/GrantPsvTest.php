@@ -7,7 +7,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\CreateGrantFee;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CommonGrant;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CopyApplicationDataToLicence;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreateDiscRecords;
@@ -57,6 +56,7 @@ class GrantPsvTest extends CommandHandlerTestCase
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
+        $licence->setTotAuthVehicles(10);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
@@ -82,7 +82,9 @@ class GrantPsvTest extends CommandHandlerTestCase
 
         $result3 = new Result();
         $result3->addMessage('CreateDiscRecords');
-        $this->expectedSideEffect(CreateDiscRecords::class, $data, $result3);
+        $discData = $data;
+        $discData['currentTotAuth'] = 10;
+        $this->expectedSideEffect(CreateDiscRecords::class, $discData, $result3);
 
         $result4 = new Result();
         $result4->addMessage('ProcessApplicationOperatingCentres');

@@ -75,7 +75,7 @@ class CreateGrantFeeTest extends CommandHandlerTestCase
             ->with('FEE_REQ_GRANT_GV', $params)
             ->andReturn($file);
 
-        $dtoData = ['id' => 111, 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANT];
+        $dtoData = ['id' => 111, 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANT, 'description' => 'Grant fee due'];
         $result1 = new Result();
         $result1->addId('fee', 123);
         $result1->addMessage('CreateApplicationFee');
@@ -101,7 +101,8 @@ class CreateGrantFeeTest extends CommandHandlerTestCase
             'opposition' => null,
             'isReadOnly' => null,
             'isScan' => 0,
-            'issuedDate' => null
+            'issuedDate' => null,
+            'metadata' => null
         ];
         $result2 = new Result();
         $result2->addMessage('DispatchDocument');

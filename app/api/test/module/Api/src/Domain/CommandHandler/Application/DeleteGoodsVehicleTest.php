@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Application\DeleteGoodsVehicle;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Transfer\Command\Application\DeleteGoodsVehicle as Cmd;
-use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteGoodsVehicle as VehicleCmd;
+use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteLicenceVehicle as VehicleCmd;
 
 /**
  * Delete Goods Vehicle Test

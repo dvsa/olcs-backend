@@ -9,10 +9,16 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\CreateIrfoGvPermit;
 use Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoGvPermit;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
+use Dvsa\Olcs\Api\Domain\Repository\FeeTypeRepository;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as FeeCreateFee;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * Create Irfo Gv Permit Test
@@ -23,6 +29,7 @@ class CreateIrfoGvPermitTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateIrfoGvPermit();
         $this->mockRepo('IrfoGvPermit', IrfoGvPermit::class);
+        $this->mockRepo('FeeType', FeeTypeRepository::class);
 
         parent::setUp();
     }
@@ -39,6 +46,9 @@ class CreateIrfoGvPermitTest extends CommandHandlerTestCase
             ],
             IrfoGvPermitType::class => [
                 22 => m::mock(IrfoGvPermitType::class)
+            ],
+            FeeTypeEntity::class => [
+                1 => m::mock(FeeTypeEntity::class)
             ],
         ];
 
@@ -58,12 +68,20 @@ class CreateIrfoGvPermitTest extends CommandHandlerTestCase
         ];
 
         /** @var IrfoGvPermitEntity $savedIrfoGvPermit */
-        $savedIrfoGvPermit = null;
+        $savedIrfoGvPermit = new IrfoGvPermitEntity(
+            $this->references[Organisation::class][11],
+            $this->references[IrfoGvPermitType::class][22],
+            m::mock(RefDataEntity::class)
+                ->shouldReceive('getId')
+                ->andReturn(IrfoGvPermitEntity::STATUS_PENDING)->getMock()
+        );
+
+        //$savedIrfoGvPermit = null;
 
         $command = Cmd::create($data);
 
         $this->repoMap['IrfoGvPermit']->shouldReceive('save')
-            ->once()
+            //->once()
             ->with(m::type(IrfoGvPermitEntity::class))
             ->andReturnUsing(
                 function (IrfoGvPermitEntity $irfoGvPermit) use (&$savedIrfoGvPermit) {
@@ -72,6 +90,38 @@ class CreateIrfoGvPermitTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->references[FeeTypeEntity::class][1]->shouldReceive('getId')
+            ->andReturn(1);
+
+        $this->references[IrfoGvPermitType::class][22]->shouldReceive('getIrfoFeeType')
+            //->once()
+            ->with()
+            ->andReturn('fee-type-ref-data');
+
+        $this->repoMap['FeeType']->shouldReceive('fetchLatestForIrfo')
+            //->once()
+            ->with('fee-type-ref-data')
+            ->andReturn($this->references[FeeTypeEntity::class][1]);
+
+        $result1 = new Result();
+        $result1->addMessage('IRFO GV Permit side affect');
+        $this->expectedSideEffect(
+            FeeCreateFee::class,
+            [
+                'irfoGvPermit' => 111,
+                'invoicedDate' => date('Y-m-d'),
+                'description' => ' for IRFO permit ' . 111,
+                'feeType' => 1,
+                'amount' => 0,
+                'feeStatus' => FeeEntity::STATUS_PAID,
+                'application' => null,
+                'busReg' => null,
+                'licence' => null,
+                'task' => null
+            ],
+            $result1
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -79,7 +129,8 @@ class CreateIrfoGvPermitTest extends CommandHandlerTestCase
                 'irfoGvPermit' => 111,
             ],
             'messages' => [
-                'IRFO GV Permit created successfully'
+                'IRFO GV Permit created successfully',
+                'IRFO GV Permit side affect'
             ]
         ];
 
@@ -95,5 +146,16 @@ class CreateIrfoGvPermitTest extends CommandHandlerTestCase
         $this->assertEquals('2015-01-01', $savedIrfoGvPermit->getInForceDate()->format('Y-m-d'));
         $this->assertEquals('Y', $savedIrfoGvPermit->getIsFeeExempt());
         $this->assertEquals(1, $savedIrfoGvPermit->getNoOfCopies());
+    }
+
+    public function testGetIrfoFeeId()
+    {
+        $organisation = m::mock(Organisation::class);
+        $organisation->shouldReceive('getId')
+            ->once()
+            ->withNoArgs()
+            ->andReturn('TEST12');
+
+        $this->assertEquals('IR0TEST12', $this->sut->getIrfoFeeId($organisation));
     }
 }

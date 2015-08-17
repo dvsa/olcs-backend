@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -24,11 +25,13 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAwareInterface
+final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
     protected $repoServiceName = 'Licence';
+
+    protected $extraRepos = ['TransportManagerLicence', 'ContactDetails'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -62,6 +65,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
         // Internally we don't need a variation
         if ($this->isGranted(Permission::INTERNAL_USER)) {
 
+            $result->merge($this->handleLicenceTypeChangeEffects($licence, $command->getLicenceType()));
             $licence->setLicenceType($this->getRepo()->getRefdataReference($command->getLicenceType()));
 
             $this->getRepo()->save($licence);
@@ -73,5 +77,169 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
             'Updating the type of licence section requires a variation',
             Licence::ERROR_REQUIRES_VARIATION
         );
+    }
+
+    /**
+     * Handle the side effects of change licence type
+     *
+     * @param Licence $licence
+     * @param string $newLicenceType New licence type RefData constant
+     *
+     * @return Result
+     */
+    private function handleLicenceTypeChangeEffects(Licence $licence, $newLicenceType)
+    {
+        $result = new Result();
+        if ($licence->isStandardNational() && $newLicenceType === Licence::LICENCE_TYPE_RESTRICTED) {
+            // -Delink Transport Managers
+            $this->delinkTransportManagers($licence);
+
+            // -Remove Establishment address
+            $this->removeEstablishmentAddress($licence);
+
+            // -Set large vehicle authority to 0 (PSV only)
+            if ($licence->isPsv()) {
+                $licence->setTotAuthLargeVehicles(0);
+            }
+        }
+
+        if ($licence->isStandardInternational() && $newLicenceType === Licence::LICENCE_TYPE_RESTRICTED) {
+            // -Delink Transport Managers
+            $this->delinkTransportManagers($licence);
+
+            // -Remove Establishment address
+            $this->removeEstablishmentAddress($licence);
+
+            // -Set large vehicle authority to 0 (PSV only)
+            if ($licence->isPsv()) {
+                $licence->setTotAuthLargeVehicles(0);
+            }
+            if ($licence->isGoods()) {
+                // -Anull community licences (Goods only)
+                // -Set community licence figure to 0 (Goods only)
+                $result->merge($this->returnCommumityLicences($licence));
+            }
+        }
+
+        if ($licence->isStandardInternational() && $newLicenceType === Licence::LICENCE_TYPE_STANDARD_NATIONAL) {
+            // -Anull community licences
+            // -Set community licence figure to 0
+            $result->merge($this->returnCommumityLicences($licence));
+        }
+
+        // -Remove/reissue Discs
+        if ($licence->isGoods()) {
+            $result->merge($this->reissueGoodsDiscs($licence));
+        } else {
+            $result->merge($this->reissuePsvDiscs($licence));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Delink Transport Managers
+     *
+     * @param Licence $licence
+     */
+    private function delinkTransportManagers(Licence $licence)
+    {
+        foreach ($licence->getTmLicences() as $tml) {
+            $this->getRepo('TransportManagerLicence')->delete($tml);
+        }
+        $licence->getTmLicences()->clear();
+    }
+
+    /**
+     * Remove the Establishment address from a licence
+     *
+     * @param Licence $licence
+     */
+    private function removeEstablishmentAddress(Licence $licence)
+    {
+        if ($licence->getEstablishmentCd()) {
+            $this->getRepo('ContactDetails')->delete($licence->getEstablishmentCd());
+            $licence->setEstablishmentCd(null);
+        }
+    }
+
+    /**
+     * Return All Community Licences
+     *
+     * @param Licence $licence
+     *
+     * @return Result
+     */
+    private function returnCommumityLicences(Licence $licence)
+    {
+        return $this->handleSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences::create(['id' => $licence->getId()])
+        );
+    }
+
+    /**
+     * Reissue Goods Discs
+     *
+     * @param Licence $licence
+     *
+     * @return Result
+     */
+    private function reissueGoodsDiscs(Licence $licence)
+    {
+        $licenceVehicleIds = [];
+        $licenceVehicleIdsToCreate = [];
+
+        /* @var $licenceVehicle \Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle */
+        foreach ($licence->getLicenceVehicles() as $licenceVehicle) {
+            $licenceVehicleIds[] = $licenceVehicle->getId();
+            if ($licenceVehicle->getSpecifiedDate() !== null && $licenceVehicle->getRemovalDate() === null) {
+                $licenceVehicleIdsToCreate[] = $licenceVehicle->getId();
+            }
+        }
+
+        $result = $this->handleSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Vehicle\CeaseActiveDiscs::create(['ids' => $licenceVehicleIds])
+        );
+
+        $result->merge(
+            $this->handleSideEffect(
+                \Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs::create(['ids' => $licenceVehicleIdsToCreate])
+            )
+        );
+
+        return $result;
+    }
+
+    /**
+     * Reissue PSV discs
+     *
+     * @param Licence $licence
+     *
+     * @return Result
+     */
+    private function reissuePsvDiscs(Licence $licence)
+    {
+        $amount = $licence->getPsvDiscsNotCeased()->count();
+        $psvDiscIds = [];
+
+        foreach ($licence->getPsvDiscsNotCeased() as $psvDisc) {
+            $psvDiscIds[] = $psvDisc->getId();
+        }
+
+        $result = $this->handleSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Licence\VoidPsvDiscs::create(
+                ['licence' => $licence->getId(), 'ids' => $psvDiscIds]
+            )
+        );
+
+        $result->merge(
+            $this->handleSideEffect(
+                \Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs::create(
+                    ['licence' => $licence->getId(), 'amount' => $amount]
+                )
+            )
+        );
+
+        return $result;
     }
 }

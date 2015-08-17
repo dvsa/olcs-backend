@@ -28,11 +28,11 @@ class OrganisationPerson extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere(
-            $qb->expr()->eq('m.organisation', $organisation)
+            $qb->expr()->eq('m.organisation', $organisation->getId())
         );
 
         $qb->andWhere(
-            $qb->expr()->eq('m.person', $person)
+            $qb->expr()->eq('m.person', $person->getId())
         );
 
         $query = $qb->getQuery();

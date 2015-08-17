@@ -114,7 +114,8 @@ class CreateSnapshotTest extends CommandHandlerTestCase
             'isExternal' => $isExternal,
             'isReadOnly' => null,
             'isScan' => false,
-            'issuedDate' => null
+            'issuedDate' => null,
+            'metadata' => null
         ];
         $result1 = new Result();
         $result1->addMessage('Document created');

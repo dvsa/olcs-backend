@@ -22,15 +22,16 @@ return [
             'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
             'RestrictionService' => \Dvsa\Olcs\Api\Service\Lva\RestrictionService::class,
             'SectionConfig' =>  \Dvsa\Olcs\Api\Service\Lva\SectionConfig::class,
-            'OperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper::class,
-            'UpdateOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper::class,
             'AddressFormatter' => \Dvsa\Olcs\Api\Service\Helper\FormatAddress::class
         ],
         'factories' => [
+            'PsvVehiclesQueryHelper' => \Dvsa\Olcs\Api\Domain\Service\PsvVehicles\PsvVehiclesQueryHelper::class,
+            'UpdateOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper::class,
+            'OperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper::class,
             'VariationOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper::class,
             'SectionAccessService' => \Dvsa\Olcs\Api\Service\Lva\SectionAccessService::class,
             'ApplicationGrantValidationService' => \Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService::class,
-            'ContentStore' => \Dvsa\Jackrabbit\Client\Service\ClientFactory::class,
+            'ContentStore' => \Dvsa\Olcs\DocumentShare\Service\ClientFactory::class,
             'IdentityProvider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
             'CommandHandlerManager' => \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::class,
@@ -50,6 +51,7 @@ return [
                 \Dvsa\Olcs\Api\Service\Publication\Context\PluginManagerFactory::class,
             \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Publication\Process\PluginManagerFactory::class,
+            'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
         ],
     ],
     'file_uploader' => [
@@ -77,6 +79,7 @@ return [
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
+            'withBusReg' => QueryPartial\WithBusRegFactory::class,
             'withContactDetails' => QueryPartial\WithContactDetailsFactory::class,
             'withCase' => QueryPartial\WithCaseFactory::class,
             'withCreatedBy'      => QueryPartial\WithCreatedByFactory::class,
@@ -201,6 +204,7 @@ return [
             'AdminAreaTrafficArea' => RepositoryFactory::class,
             'PostcodeEnforcementArea' => RepositoryFactory::class,
             'PiVenue' => RepositoryFactory::class,
+            'Disqualification' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

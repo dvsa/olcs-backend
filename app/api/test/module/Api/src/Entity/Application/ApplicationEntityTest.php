@@ -2,20 +2,19 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
-use Dvsa\Olcs\Api\Entity\Application\S4;
-use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
-use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
+use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
+use Dvsa\Olcs\Api\Entity\Application\S4;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
 
 /**
@@ -221,7 +220,7 @@ class ApplicationEntityTest extends EntityTester
     {
         $sut = m::mock(Entity::class)->makePartial();
 
-        $application = m::mock(Application::class)->makePartial();
+        $application = m::mock(Entity::class)->makePartial();
         $oc = m::mock(OperatingCentre::class)->makePartial();
 
         foreach ($operatingCenterActions as $action) {
@@ -248,7 +247,7 @@ class ApplicationEntityTest extends EntityTester
             list($id, $noOfTrailersRequired, $noOfVehiclesRequired) = $values;
             $oc = new \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre();
             $oc->setId($id);
-            $aoc = new ApplicationOperatingCentre(m::mock(Application::class)->makePartial(), $oc);
+            $aoc = new ApplicationOperatingCentre(m::mock(Entity::class)->makePartial(), $oc);
             $aoc->setOperatingCentre($oc);
             $aoc->setNoOfTrailersRequired($noOfTrailersRequired);
             $aoc->setNoOfVehiclesRequired($noOfVehiclesRequired);
@@ -907,7 +906,7 @@ class ApplicationEntityTest extends EntityTester
 
     public function testGetVariationCompletion()
     {
-        $completion = m::mock(ApplicationCompletionEntity::class)->makePartial();
+        $completion = m::mock(ApplicationCompletion::class)->makePartial();
         $completion
             ->setAddressesStatus(2)
             ->setOperatingCentresStatus(1);
@@ -1950,6 +1949,174 @@ class ApplicationEntityTest extends EntityTester
         $this->assertTrue($application->isStandardInternational());
     }
 
+    public function testGetAvailableSmallSpaces()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setTotAuthSmallVehicles(10);
+
+        $this->assertEquals(5, $application->getAvailableSmallSpaces(5));
+        $this->assertEquals(10, $application->getAvailableSmallSpaces(0));
+        $this->assertEquals(0, $application->getAvailableSmallSpaces(10));
+    }
+
+    public function testGetAvailableMediumSpaces()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setTotAuthMediumVehicles(10);
+
+        $this->assertEquals(5, $application->getAvailableMediumSpaces(5));
+        $this->assertEquals(10, $application->getAvailableMediumSpaces(0));
+        $this->assertEquals(0, $application->getAvailableMediumSpaces(10));
+    }
+
+    public function testGetAvailableLargeSpaces()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setTotAuthLargeVehicles(10);
+
+        $this->assertEquals(5, $application->getAvailableLargeSpaces(5));
+        $this->assertEquals(10, $application->getAvailableLargeSpaces(0));
+        $this->assertEquals(0, $application->getAvailableLargeSpaces(10));
+    }
+
+    public function testIsSmallAuthExceeded()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setTotAuthSmallVehicles(10);
+
+        $this->assertFalse($application->isSmallAuthExceeded(5));
+        $this->assertFalse($application->isSmallAuthExceeded(10));
+        $this->assertTrue($application->isSmallAuthExceeded(11));
+    }
+
+    public function testIsMediumAuthExceeded()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setTotAuthMediumVehicles(10);
+
+        $this->assertFalse($application->isMediumAuthExceeded(5));
+        $this->assertFalse($application->isMediumAuthExceeded(10));
+        $this->assertTrue($application->isMediumAuthExceeded(11));
+    }
+
+    public function testIsLargeAuthExceeded()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setTotAuthLargeVehicles(10);
+
+        $this->assertFalse($application->isLargeAuthExceeded(5));
+        $this->assertFalse($application->isLargeAuthExceeded(10));
+        $this->assertTrue($application->isLargeAuthExceeded(11));
+    }
+
+    public function testHasPsvBreakdown()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+
+        $this->assertFalse($application->hasPsvBreakdown());
+
+        $application->setTotAuthSmallVehicles(10);
+        $this->assertTrue($application->hasPsvBreakdown());
+    }
+
+    public function testShouldShowTablesWithoutBreakdown()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isPsv')
+            ->andReturn(true);
+        $application->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        $this->assertTrue($application->shouldShowSmallTable(1));
+        $this->assertTrue($application->shouldShowMediumTable(1));
+        $this->assertTrue($application->shouldShowLargeTable(1));
+    }
+
+    public function testShouldShowTablesWithoutLarge()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isPsv')
+            ->andReturn(true);
+        $application->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_RESTRICTED);
+
+        $this->assertFalse($application->shouldShowLargeTable(1));
+    }
+
+    public function testShouldShowTablesWithBreakdownWithAuth()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isPsv')
+            ->andReturn(true);
+        $application->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        $application->setTotAuthSmallVehicles(3);
+        $application->setTotAuthMediumVehicles(3);
+        $application->setTotAuthLargeVehicles(3);
+
+        $this->assertTrue($application->shouldShowSmallTable(1));
+        $this->assertTrue($application->shouldShowMediumTable(1));
+        $this->assertTrue($application->shouldShowLargeTable(1));
+    }
+
+    public function testShouldShowTablesWithBreakdownWithoutAuth()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isPsv')
+            ->andReturn(true);
+        $application->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        $application->setTotAuthSmallVehicles(3);
+        $application->setTotAuthMediumVehicles(0);
+        $application->setTotAuthLargeVehicles(0);
+
+        $this->assertTrue($application->shouldShowSmallTable(1));
+        $this->assertFalse($application->shouldShowMediumTable(0));
+        $this->assertFalse($application->shouldShowLargeTable(0));
+    }
+
+    public function testShouldShowTablesWithBreakdownWithoutAuthWithVehicle()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isPsv')
+            ->andReturn(true);
+        $application->shouldReceive('getLicenceType->getId')
+            ->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+
+        $application->setTotAuthSmallVehicles(3);
+        $application->setTotAuthMediumVehicles(0);
+        $application->setTotAuthLargeVehicles(0);
+
+        $this->assertTrue($application->shouldShowSmallTable(1));
+        $this->assertTrue($application->shouldShowMediumTable(1));
+        $this->assertTrue($application->shouldShowLargeTable(1));
+    }
+
+    public function testGetActiveVehiclesCount()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getActiveLicenceVehicles->count')
+            ->andReturn(10);
+
+        $this->assertEquals(10, $application->getActiveVehiclesCount());
+    }
+
     public function canHaveCommunityLicencesProvider()
     {
         return [
@@ -2037,5 +2204,52 @@ class ApplicationEntityTest extends EntityTester
             [Licence::LICENCE_CATEGORY_PSV, 'P'],
             [Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'O'],
         ];
+    }
+
+    public function testGetOtherActiveLicencesForOrganisation()
+    {
+        $licence1 = m::mock(Licence::class)->makePartial()->setId(7);
+        $licence2 = m::mock(Licence::class)->makePartial()->setId(8);
+        $organisationLicences = m::mock(ArrayCollection::class)
+            ->shouldReceive('toArray')
+            ->once()
+            ->andReturn([$licence1, $licence2])
+            ->getMock();
+        $licence1
+            ->shouldReceive('getOrganisation->getActiveLicences')
+            ->once()
+            ->andReturn($organisationLicences);
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setLicence($licence1);
+
+        $this->assertEquals([$licence2], $application->getOtherActiveLicencesForOrganisation());
+    }
+
+    public function testGetOperatingCentresNetDelta()
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $aocs = new ArrayCollection();
+        $application->setOperatingCentres($aocs);
+
+        $this->assertEquals(0, $application->getOperatingCentresNetDelta());
+
+        $application->getOperatingCentres()->add(
+            m::mock(ApplicationOperatingCentre::class)->makePartial()->setAction('A')
+        );
+        $this->assertEquals(1, $application->getOperatingCentresNetDelta());
+
+        $application->getOperatingCentres()->add(
+            m::mock(ApplicationOperatingCentre::class)->makePartial()->setAction('A')
+        );
+        $this->assertEquals(2, $application->getOperatingCentresNetDelta());
+
+        $application->getOperatingCentres()->add(
+            m::mock(ApplicationOperatingCentre::class)->makePartial()->setAction('D')
+        );
+        $this->assertEquals(1, $application->getOperatingCentresNetDelta());
     }
 }

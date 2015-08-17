@@ -7,10 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Util\EntityCloner;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Person\Person;
@@ -33,15 +31,13 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
         $applicationOrgPeople = $application->getApplicationOrganisationPersons();
 
         if ($applicationOrgPeople->count() < 1) {
-            return $result;
+            return $this->result;
         }
 
         /** @var ApplicationOrganisationPerson $applicationOrgPerson */
@@ -59,9 +55,9 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
             }
         }
 
-        $result->addMessage('Organisation person records have been copied');
+        $this->result->addMessage('Organisation person records have been copied');
 
-        return $result;
+        return $this->result;
     }
 
     /**
@@ -83,8 +79,6 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
 
         /** Application */
         $targetOp->setPerson($targetPerson);
-
-        $targetOp->setAddedDate(new DateTime());
 
         $this->getRepo('OrganisationPerson')->save($targetOp);
     }

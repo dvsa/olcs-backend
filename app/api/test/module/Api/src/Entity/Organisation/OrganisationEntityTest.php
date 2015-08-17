@@ -5,6 +5,8 @@ namespace Dvsa\OlcsTest\Api\Entity\Organisation;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
 use Doctrine\Common\Collections\Criteria;
 
 /**
@@ -36,6 +38,7 @@ class OrganisationEntityTest extends EntityTester
             'companyCertSeen',
             'companyOrLlpNo',
             'contactDetails',
+            'cpid',
             'createdBy',
             'createdOn',
             'id',
@@ -52,11 +55,12 @@ class OrganisationEntityTest extends EntityTester
             'type',
             'version',
             'viAction',
+            'disqualifications',
             'irfoPartners',
             'licences',
             'organisationPersons',
             'organisationUsers',
-            'tradingNames'
+            'tradingNames',
         ];
 
         $this->assertEquals($expectedKeys, array_keys($values));
@@ -109,9 +113,11 @@ class OrganisationEntityTest extends EntityTester
             $lastName,
             $isIrfo,
             $mockBusinessType,
-            ['nob']
+            ['nob'],
+            ['cpid']
         );
 
+        $this->assertEquals($organisation->getCpid(), ['cpid']);
         $this->assertEquals($organisation->getName(), $expectedName);
         $this->assertEquals($organisation->getCompanyOrLlpNo(), '12345678');
         $this->assertEquals($organisation->getIsIrfo(), $isIrfo);
@@ -189,5 +195,84 @@ class OrganisationEntityTest extends EntityTester
         $organisation->setIsUnlicensed(true);
 
         $this->assertTrue($organisation->isUnlicensed());
+    }
+
+    public function testGetActiveLicences()
+    {
+        /** @var Entity $organisation */
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturnUsing(
+                function (Criteria $criteria) {
+
+                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
+                    $expr = $criteria->getWhereExpression();
+
+                    $this->assertEquals('status', $expr->getField());
+                    $this->assertEquals('IN', $expr->getOperator());
+                    $this->assertEquals(
+                        [
+                            LicenceEntity::LICENCE_STATUS_VALID,
+                            LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                            LicenceEntity::LICENCE_STATUS_CURTAILED,
+                        ],
+                        $expr->getValue()->getValue()
+                    );
+
+                    $collection = m::mock();
+                    $collection->shouldReceive('toArray')
+                        ->andReturn(['active licences']);
+
+                    return $collection;
+                }
+            );
+
+        $this->assertEquals(
+            ['active licences'],
+            $organisation->getActiveLicences()->toArray()
+        );
+    }
+
+    public function testGetDisqualificationNull()
+    {
+        /* @var $organisation Entity */
+        $organisation = $this->instantiate($this->entityClass);
+        $organisation->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection());
+
+        $this->assertSame(null, $organisation->getDisqualification());
+    }
+
+    public function testGetDisqualification()
+    {
+        $disqualification = new Disqualification(m::mock(Entity::class));
+
+        /* @var $organisation Entity */
+        $organisation = $this->instantiate($this->entityClass);
+        $organisation->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection([$disqualification]));
+
+        $this->assertSame($disqualification, $organisation->getDisqualification());
+    }
+
+    public function testGetDisqualificationStatusNone()
+    {
+        /* @var $organisation Entity */
+        $organisation = $this->instantiate($this->entityClass);
+        $organisation->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection());
+
+        $this->assertSame(Disqualification::STATUS_NONE, $organisation->getDisqualificationStatus());
+    }
+
+    public function testGetDisqualificationStatusActive()
+    {
+        $disqualification = new Disqualification(m::mock(Entity::class));
+        $disqualification->setIsDisqualified('Y');
+        $disqualification->setStartDate('2015-01-01');
+
+        /* @var $organisation Entity */
+        $organisation = $this->instantiate($this->entityClass);
+        $organisation->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection([$disqualification]));
+
+        $this->assertSame(Disqualification::STATUS_ACTIVE, $organisation->getDisqualificationStatus());
     }
 }

@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Interfaces\DateHelperAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Interfaces\FileStoreAwareInterface;
-use Dvsa\Jackrabbit\Client\Data\Object\File as ContentStoreFile;
+use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
@@ -18,13 +18,15 @@ class Document implements ServiceLocatorAwareInterface
     use ServiceLocatorAwareTrait;
 
     const DOCUMENT_TIMESTAMP_FORMAT = 'YmdHi';
-    const METADATA_KEY = 'data';
 
     public function getBookmarkQueries(ContentStoreFile $file, $data)
     {
         $queryData = [];
 
-        $tokens = $this->getParser($file->getMimeType())
+        /**
+         * @NOTE We no longer store MIME Type, at the moment it is safe to assum RTF, however this could change
+         */
+        $tokens = $this->getParser('application/rtf')
             ->extractTokens($file->getContent());
 
         $bookmarks = $this->getBookmarks($tokens);
@@ -56,7 +58,10 @@ class Document implements ServiceLocatorAwareInterface
 
         $content = $file->getContent();
 
-        $parser = $this->getParser($file->getMimeType());
+        /**
+         * @NOTE We no longer store MIME Type, at the moment it is safe to assum RTF, however this could change
+         */
+        $parser = $this->getParser('application/rtf');
         $tokens = $parser->extractTokens($content);
 
         $bookmarks = $this->getBookmarks($tokens);
@@ -64,7 +69,7 @@ class Document implements ServiceLocatorAwareInterface
         foreach ($bookmarks as $token => $bookmark) {
 
             /**
-             * Let the bookmark now what parser is currently active;
+             * Let the bookmark know what parser is currently active;
              * some may use this for sub-bookmark processing
              */
             $bookmark->setParser($parser);
@@ -139,16 +144,6 @@ class Document implements ServiceLocatorAwareInterface
     public function download($id, $filename, $path)
     {
         return $this->getUploader()->download($id, $filename, $path);
-    }
-
-    /**
-     * Returns the METADATA_KEY constant
-     *
-     * @return string
-     */
-    public function getMetadataKey()
-    {
-        return self::METADATA_KEY;
     }
 
     /**

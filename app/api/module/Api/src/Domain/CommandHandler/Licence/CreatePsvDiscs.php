@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -34,13 +33,8 @@ final class CreatePsvDiscs extends AbstractCommandHandler implements Transaction
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence());
 
-        $criteria = Criteria::create();
-        $criteria->andWhere(
-            $criteria->expr()->isNull('ceasedDate')
-        );
-
         $totalAuth = $licence->getTotAuthVehicles();
-        $currentDiscs = $licence->getPsvDiscs()->matching($criteria)->count();
+        $currentDiscs = $licence->getPsvDiscsNotCeased()->count();
 
         if (($currentDiscs + $howMany) > $totalAuth) {
             throw new ValidationException(

@@ -10,17 +10,18 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocumentSpecificCmd;
+use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\CreateCorrespondenceRecord;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTranslateToWelshTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument as Cmd;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Dispatch Document
@@ -55,16 +56,35 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
             return $this->attemptPrint($command->getIdentifier(), $command->getDescription(), $result);
         }
 
-        $result->merge($this->sendMessage($licence, $documentResult->getId('document')));
+        $result->merge(
+            $this->sendMessage(
+                $licence,
+                $documentResult->getId('document'),
+                $command->getSubCategory()
+            )
+        );
 
         return $result;
     }
 
-    protected function sendMessage(LicenceEntity $licence, $documentId)
+    /**
+     * @param LicenceEntity $licence
+     * @param int $documentId
+     * @param int $subCategoryId
+     * @return Result
+     */
+    protected function sendMessage(LicenceEntity $licence, $documentId, $subCategoryId)
     {
+        if ($subCategoryId === Category::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE) {
+            $type = CreateCorrespondenceRecord::TYPE_CONTINUATION;
+        } else {
+            $type = CreateCorrespondenceRecord::TYPE_STANDARD;
+        }
+
         $dtoData = [
             'licence' => $licence->getId(),
-            'document' => $documentId
+            'document' => $documentId,
+            'type' => $type,
         ];
 
         return $this->handleSideEffect(CreateCorrespondenceRecord::create($dtoData));

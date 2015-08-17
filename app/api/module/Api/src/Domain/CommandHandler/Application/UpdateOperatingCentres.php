@@ -101,6 +101,10 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
                     $this->getRepo()->getReference(EnforcementArea::class, $command->getEnforcementArea())
                 );
             }
+        } elseif ($application->getTrafficArea() !== null) {
+            $application->getLicence()->setEnforcementArea(
+                $this->getRepo()->getReference(EnforcementArea::class, $command->getEnforcementArea())
+            );
         }
 
         $this->getRepo()->save($application);
@@ -135,6 +139,11 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
         }
 
         if (!$command->getPartial()) {
+
+            if ($this->shouldValidateEnforcementArea($application)) {
+                $this->updateHelper->validateEnforcementArea($application, $command);
+            }
+
             if ($application->isPsv()) {
                 $this->updateHelper->validatePsv($application, $command);
             } else {
@@ -155,6 +164,16 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
         if (!empty($messages)) {
             throw new ValidationException($messages);
         }
+    }
+
+    protected function shouldValidateEnforcementArea(Application $application)
+    {
+        if ($application->isVariation()) {
+            return !$application->getOperatingCentres()->isEmpty()
+                || !$application->getLicence()->getOperatingCentres()->isEmpty();
+        }
+
+        return !$application->getOperatingCentres()->isEmpty();
     }
 
     protected function getTotals(Application $application)

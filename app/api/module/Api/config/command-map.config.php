@@ -39,6 +39,7 @@ return [
     TransferCommand\Application\CreateGoodsVehicle::class => CommandHandler\Application\CreateGoodsVehicle::class,
     TransferCommand\Application\UpdateGoodsVehicle::class => CommandHandler\Application\UpdateGoodsVehicle::class,
     TransferCommand\Application\DeleteGoodsVehicle::class => CommandHandler\Application\DeleteGoodsVehicle::class,
+    TransferCommand\Application\DeletePsvVehicle::class => CommandHandler\Application\DeletePsvVehicle::class,
     TransferCommand\Application\CreateVehicleListDocument::class
         => CommandHandler\Application\CreateVehicleListDocument::class,
     TransferCommand\Application\UpdateVehicleDeclaration::class =>
@@ -95,7 +96,13 @@ return [
         => CommandHandler\Application\DeleteOperatingCentres::class,
     Command\Application\HandleOcVariationFees::class => CommandHandler\Application\HandleOcVariationFees::class,
     TransferCommand\Application\CreateOperatingCentre::class => CommandHandler\Application\CreateOperatingCentre::class,
+    TransferCommand\Application\CreateTaxiPhv::class => CommandHandler\Application\CreateTaxiPhv::class,
+    TransferCommand\Application\UpdateTaxiPhv::class => CommandHandler\Application\UpdateTaxiPhv::class,
+    TransferCommand\Application\DeleteTaxiPhv::class => CommandHandler\Application\DeleteTaxiPhv::class,
+
     Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
+    TransferCommand\Application\UpdatePsvVehicles::class => CommandHandler\Application\UpdatePsvVehicles::class,
+    TransferCommand\Application\CreatePsvVehicle::class => CommandHandler\Application\CreatePsvVehicle::class,
 
     // Transfer - Workshop
     TransferCommand\Workshop\DeleteWorkshop::class => CommandHandler\Workshop\DeleteWorkshop::class,
@@ -160,6 +167,8 @@ return [
     TransferCommand\Licence\DeleteOperatingCentres::class => CommandHandler\Licence\DeleteOperatingCentres::class,
     TransferCommand\Licence\CreateOperatingCentre::class => CommandHandler\Licence\CreateOperatingCentre::class,
     TransferCommand\Licence\UpdateOperatingCentres::class => CommandHandler\Licence\UpdateOperatingCentres::class,
+    TransferCommand\Licence\CreatePsvVehicle::class => CommandHandler\Licence\CreatePsvVehicle::class,
+    Command\Licence\ReturnAllCommunityLicences::class => CommandHandler\Licence\ReturnAllCommunityLicences::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
@@ -313,6 +322,7 @@ return [
     TransferCommand\Document\DeleteDocuments::class => CommandHandler\Document\DeleteDocuments::class,
     TransferCommand\Document\CopyDocument::class => CommandHandler\Document\CopyDocument::class,
     TransferCommand\Document\MoveDocument::class => CommandHandler\Document\MoveDocument::class,
+    TransferCommand\Document\UpdateDocumentLinks::class => CommandHandler\Document\UpdateDocumentLinks::class,
 
     // Transfer - CommunityLic
     TransferCommand\CommunityLic\Application\Create::class => CommandHandler\CommunityLic\Application\Create::class,
@@ -321,7 +331,6 @@ return [
     TransferCommand\CommunityLic\Licence\Create::class => CommandHandler\CommunityLic\Licence\Create::class,
     TransferCommand\CommunityLic\Licence\CreateOfficeCopy::class =>
         CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
-    TransferCommand\CommunityLic\GenerateBatch::class => CommandHandler\CommunityLic\GenerateBatch::class,
     TransferCommand\CommunityLic\Void::class => CommandHandler\CommunityLic\Void::class,
     TransferCommand\CommunityLic\Restore::class => CommandHandler\CommunityLic\Restore::class,
     TransferCommand\CommunityLic\Stop::class => CommandHandler\CommunityLic\Stop::class,
@@ -456,6 +465,8 @@ return [
 
     // Domain - Licence Vehicles
     Command\LicenceVehicle\RemoveLicenceVehicle::class => CommandHandler\LicenceVehicle\RemoveLicenceVehicle::class,
+    TransferCommand\LicenceVehicle\UpdatePsvLicenceVehicle::class
+        => CommandHandler\LicenceVehicle\UpdatePsvLicenceVehicle::class,
 
     // Domain - Transport Managers
     Command\Tm\DeleteTransportManagerLicence::class => CommandHandler\Tm\DeleteTransportManagerLicence::class,
@@ -578,7 +589,7 @@ return [
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
     TransferCommand\Vehicle\UpdateGoodsVehicle::class => CommandHandler\Vehicle\UpdateGoodsVehicle::class,
-    TransferCommand\Vehicle\DeleteGoodsVehicle::class => CommandHandler\Vehicle\DeleteGoodsVehicle::class,
+    TransferCommand\Vehicle\DeleteLicenceVehicle::class => CommandHandler\Vehicle\DeleteLicenceVehicle::class,
     Command\Vehicle\CeaseActiveDiscs::class => CommandHandler\Vehicle\CeaseActiveDiscs::class,
     TransferCommand\Vehicle\ReprintDisc::class => CommandHandler\Vehicle\ReprintDisc::class,
     Command\Vehicle\CreateGoodsDiscs::class => CommandHandler\Vehicle\CreateGoodsDiscs::class,
@@ -605,6 +616,9 @@ return [
     // OrganisationPerson
     TransferCommand\OrganisationPerson\PopulateFromCompaniesHouse::class =>
         CommandHandler\OrganisationPerson\PopulateFromCompaniesHouse::class,
+    TransferCommand\OrganisationPerson\Create::class => CommandHandler\OrganisationPerson\Create::class,
+    TransferCommand\OrganisationPerson\Update::class => CommandHandler\OrganisationPerson\Update::class,
+    TransferCommand\OrganisationPerson\DeleteList::class => CommandHandler\OrganisationPerson\DeleteList::class,
 
     // Transfer - TransportManager
     TransferCommand\Tm\Create::class => CommandHandler\Tm\Create::class,
@@ -623,6 +637,7 @@ return [
 
     // ContinuationDetail
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
+    Command\ContinuationDetail\Process::class => CommandHandler\ContinuationDetail\Process::class,
 
     // Transport Manager Licence
     TransferCommand\TransportManagerLicence\UpdateForResponsibilities::class =>
@@ -658,4 +673,8 @@ return [
     /** @to-do Review whether these commands are still needed once front end controllers have been migrated */
     TransferCommand\Publication\Bus::class => CommandHandler\Publication\Bus::class,
     TransferCommand\Publication\Application::class => CommandHandler\Publication\Application::class,
+
+    // Disqualification
+    TransferCommand\Disqualification\Create::class => CommandHandler\Disqualification\Create::class,
+    TransferCommand\Disqualification\Update::class => CommandHandler\Disqualification\Update::class,
 ];

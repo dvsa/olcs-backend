@@ -17,6 +17,8 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Withdraw;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 
 /**
  * Withdraw Application Test
@@ -28,7 +30,8 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new CommandHandler();
-        $this->mockRepo('Application', Application::class);
+        $this->mockRepo('Application', ApplicationRepo::class);
+        $this->mockRepo('LicenceVehicle', LicenceVehicleRepo::class);
 
         parent::setUp();
     }
@@ -46,35 +49,35 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 532, 'reason' => 'withdrawn']);
 
+        $mockLicenceVehicle = m::mock()->shouldReceive('setSpecifiedDate')->with(null)->once()->getMock();
+
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
-            ->andReturn(123);
+            ->andReturn(123)
+            ->shouldReceive('getLicenceVehicles')
+            ->andReturn([$mockLicenceVehicle])
+            ->twice()
+            ->getMock();
 
         $application = m::mock(Application::class)->makePartial();
         $application->setId(1);
-        $application->setLicence($licence->getMock());
-
+        $application->setLicence($licence);
         $application->shouldReceive('getIsVariation')->andReturn(false);
 
         $this->repoMap['Application']->shouldReceive('fetchById')
             ->with(532)
-            ->andReturn($application);
-
-        $this->repoMap['Application']->shouldReceive('save')
+            ->andReturn($application)
+            ->shouldReceive('save')
             ->once()
             ->with(m::type(Application::class));
 
-        $withdrawResult = new Result();
-        $this->expectedSideEffect(Withdraw::class, ['id' => 123], $withdrawResult);
+        $this->repoMap['LicenceVehicle']->shouldReceive('save')
+            ->with($mockLicenceVehicle)
+            ->once()
+            ->getMock();
 
-        $discsResult = new Result();
-        $this->expectedSideEffect(
-            CeaseGoodsDiscs::class,
-            [
-                'licenceVehicles' => null,
-            ],
-            $discsResult
-        );
+        $this->expectedSideEffect(Withdraw::class, ['id' => 123], new Result());
+        $this->expectedSideEffect(CeaseGoodsDiscs::class, ['licenceVehicles' => [$mockLicenceVehicle]], new Result());
 
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
