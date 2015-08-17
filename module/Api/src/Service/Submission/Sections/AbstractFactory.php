@@ -3,27 +3,15 @@
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Zend\ServiceManager\AbstractFactoryInterface;
+use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class AbstractFactory
  * @package Dvsa\Olcs\Api\Service\Submission\Sections
  */
-class AbstractFactory implements AbstractFactoryInterface
+class AbstractFactory implements FactoryInterface
 {
-    /**
-     * Determine if we can create a service with name
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return bool
-     */
-    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
-    {
-        return in_array(AbstractSection::class, class_parents($requestedName), true);
-    }
-
     /**
      * Create service with name
      *
@@ -32,9 +20,11 @@ class AbstractFactory implements AbstractFactoryInterface
      * @param $requestedName
      * @return mixed
      */
-    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainSl = $serviceLocator->getServiceLocator();
-        return new $requestedName($mainSl->get('QueryHandlerManager'));
+        $config = $mainSl->get('Config')['submissions']['sections']['aliases'];
+        $className = $config[$requestedName];
+        return new $className($mainSl->get('QueryHandlerManager'));
     }
 }

@@ -7,12 +7,12 @@ use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class PluginManagerFactory
+ * Class SectionGeneratorPluginManagerFactory
  * @package Dvsa\Olcs\Api\Service\Submission\Sections
  */
-class PluginManagerFactory extends AbstractPluginManagerFactory
+class SectionGeneratorPluginManagerFactory extends AbstractPluginManagerFactory
 {
-    const PLUGIN_MANAGER_CLASS = PluginManager::class;
+    const PLUGIN_MANAGER_CLASS = SectionGeneratorPluginManager::class;
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {

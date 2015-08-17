@@ -12,11 +12,12 @@ use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 class SubmissionGenerator
 {
     private $submissionConfig;
-    private $submissionSectionManager;
+    private $sectionGeneratorPluginManager;
 
-    public function __construct($config)
+    public function __construct($config, $sectionGeneratorPluginManager)
     {
         $this->submissionConfig = $config;
+        $this->sectionGeneratorPluginManager = $sectionGeneratorPluginManager;
     }
 
     public function generateSubmission(SubmissionEntity $submissionEntity, $sections)
@@ -31,7 +32,7 @@ class SubmissionGenerator
 
         // foreach section
         foreach ($requiredSections as $sectionId) {
-            $data = $this->submissionSectionManager
+            $data = $this->sectionGeneratorPluginManager
                 ->get($sectionId)
                 ->generateSection(
                     $submissionEntity->getCase()
@@ -40,6 +41,7 @@ class SubmissionGenerator
             $submissionEntity->setSectionData($sectionId, $data);
         }
 
+        \Doctrine\Common\Util\Debug::dump($submissionEntity,4);exit;
 
         return $this->processSubmission($this->submissionConfig[$submissionTypeKey], $submissionEntity, $contextObject);
     }

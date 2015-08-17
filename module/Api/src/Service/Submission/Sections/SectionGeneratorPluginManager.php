@@ -16,7 +16,7 @@ class SectionGeneratorPluginManager extends AbstractPluginManager
     public function __construct(ConfigInterface $configuration = null)
     {
         parent::__construct($configuration);
-        $this->addAbstractFactory(new AbstractFactory());
+        //$this->addAbstractFactory(new AbstractFactory());
     }
 
     /**
