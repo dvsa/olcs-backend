@@ -186,4 +186,41 @@ class Organisation extends AbstractOrganisation
 
         return $this->getDisqualification()->getStatus();
     }
+
+    /**
+     * Determine is an organisation isMlh (has at least one valid licence)
+     *
+     * @param $id
+     * @return bool
+     */
+    public function isMlh()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->in(
+                'status',
+                [
+                    LicenceEntity::LICENCE_STATUS_VALID
+                ]
+            )
+        );
+
+        return (bool) count($this->getLicences()->matching($criteria));
+    }
+
+    /**
+     * Get nature of business as a string
+     *
+     * @params array $natureOfBusiness
+     * @return string
+     */
+    public function getNatureOfBusinessString()
+    {
+        $nob = $this->getNatureOfBusinesses();
+        $result = [];
+        foreach ($nob as $element) {
+            $result[] = $element->getDescription();
+        }
+        return implode(', ', $result);
+    }
 }
