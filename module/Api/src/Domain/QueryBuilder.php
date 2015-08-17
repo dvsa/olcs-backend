@@ -15,6 +15,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  *
+ * @method QueryBuilder withBusReg()
  * @method QueryBuilder withRefdata($entity = null, $alias = null)
  * @method QueryBuilder byId($id)
  * @method QueryBuilder with($property, $alias = null)
