@@ -30,6 +30,7 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
             'feeType' => 444,
             'description' => 'Some fee',
             'busReg' => 555,
+            'irfoGvPermit' => 1,
         ];
 
         $command = CreateFee::create($data);
@@ -43,6 +44,7 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Some fee', $command->getDescription());
         $this->assertEquals(Fee::STATUS_OUTSTANDING, $command->getFeeStatus());
         $this->assertEquals(555, $command->getBusReg());
+        $this->assertEquals(1, $command->getIrfoGvPermit());
 
         $this->assertEquals(
             [
@@ -54,7 +56,8 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
                 'feeType' => 444,
                 'description' => 'Some fee',
                 'feeStatus' => Fee::STATUS_OUTSTANDING,
-                'busReg' => 555
+                'busReg' => 555,
+                'irfoGvPermit' => 1,
             ],
             $command->getArrayCopy()
         );

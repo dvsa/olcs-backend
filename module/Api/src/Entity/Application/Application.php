@@ -6,13 +6,13 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Domain\Repository\Publication;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 
@@ -101,6 +101,12 @@ class Application extends AbstractApplication
      * @var bool
      */
     protected $isOpposed;
+
+    /**
+     * publishedDate
+     * @var string
+     */
+    protected $publishedDate;
 
     public function __construct(Licence $licence, RefData $status, $isVariation)
     {
@@ -682,7 +688,7 @@ class Application extends AbstractApplication
         $data = $completion->serialize([]);
 
         foreach ($data as $key => $value) {
-            if (preg_match('/^([a-zA-Z]+)Status$/', $key) && $value !== self::VARIATION_STATUS_UNCHANGED) {
+            if (preg_match('/^([a-zA-Z]+)Status$/', $key) && (int)$value !== self::VARIATION_STATUS_UNCHANGED) {
                 return true;
             }
         }
@@ -698,7 +704,7 @@ class Application extends AbstractApplication
 
         foreach ($data as $key => $value) {
             if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches)
-                && $value === self::VARIATION_STATUS_REQUIRES_ATTENTION
+                && (int)$value === self::VARIATION_STATUS_REQUIRES_ATTENTION
             ) {
                 $sections[] = $matches[1];
             }
@@ -892,6 +898,7 @@ class Application extends AbstractApplication
             }
         }
 
+        /** @var PublicationEntity $latestPublication */
         $latestPublication = $this->getLatestPublication();
 
         if (!empty($latestPublication)) {
@@ -920,7 +927,7 @@ class Application extends AbstractApplication
     /**
      * Gets the latest publication for an application. (used to calculate OOO date)
      *
-     * @return \Dvsa\Olcs\Api\Entity\Publication\PublicationLink|null
+     * @return PublicationEntity|null
      */
     private function getLatestPublication()
     {
@@ -931,6 +938,7 @@ class Application extends AbstractApplication
             if (!in_array($publicationLink->getPublicationSection()->getId(), [1, 3])) {
                 continue;
             }
+            /** @var PublicationEntity $latestPublication */
             if ($latestPublication === null) {
                 $latestPublication = $publicationLink->getPublication();
             } elseif (
@@ -1061,17 +1069,49 @@ class Application extends AbstractApplication
     }
 
     /**
+     * @return string
+     */
+    public function getPublishedDate()
+    {
+        return $this->publishedDate;
+    }
+
+    /**
+     * @param string $publishedDate
+     */
+    public function setPublishedDate($publishedDate)
+    {
+        $this->publishedDate = $publishedDate;
+    }
+
+    /**
      * Determine and set the latest publication number
      * @return mixed
      */
     public function determinePublicationNo()
     {
-        /** @var Publication $latestPublication */
+        /** @var PublicationEntity $latestPublication */
         $latestPublication = $this->getLatestPublication();
 
-        if ($latestPublication instanceof Publication) {
+        if ($latestPublication instanceof PublicationEntity) {
 
             return $latestPublication->getPublicationNo();
+        }
+
+        return null;
+    }
+
+    /**
+     * Determine and set the latest publication number
+     * @return mixed
+     */
+    public function determinePublishedDate()
+    {
+        /** @var PublicationEntity $latestPublication */
+        $latestPublication = $this->getLatestPublication();
+
+        if ($latestPublication instanceof PublicationEntity) {
+            return $latestPublication->getPubDate();
         }
 
         return null;
@@ -1091,5 +1131,130 @@ class Application extends AbstractApplication
         }
 
         return false;
+    }
+
+    /**
+     * For an application, get the organisation's other licences (explicity
+     * excludes the current application's licence)
+     *
+     * @note different from AbstractApplication::getOtherLicences() which is,
+     * erm, something else entirely
+     *
+     * @return array Licence[]
+     */
+    public function getOtherActiveLicencesForOrganisation()
+    {
+        if ($this->getLicence() && $this->getLicence()->getOrganisation()) {
+
+            $licences = $this->getLicence()->getOrganisation()->getActiveLicences();
+
+            if (empty($licences)) {
+                return [];
+            }
+
+            $filtered = array_filter(
+                $licences->toArray(),
+                function ($licence) {
+                    return $licence->getId() !== $this->getLicence()->getId();
+                }
+            );
+
+            return array_values($filtered);
+        }
+    }
+
+    public function getTrafficArea()
+    {
+        return $this->getLicence()->getTrafficArea();
+    }
+
+    public function getAvailableSmallSpaces($count)
+    {
+        return (int)$this->getTotAuthSmallVehicles() - $count;
+    }
+
+    public function getAvailableMediumSpaces($count)
+    {
+        return (int)$this->getTotAuthMediumVehicles() - $count;
+    }
+
+    public function getAvailableLargeSpaces($count)
+    {
+        return (int)$this->getTotAuthLargeVehicles() - $count;
+    }
+
+    public function isSmallAuthExceeded($count)
+    {
+        return $this->getAvailableSmallSpaces($count) < 0;
+    }
+
+    public function isMediumAuthExceeded($count)
+    {
+        return $this->getAvailableMediumSpaces($count) < 0;
+    }
+
+    public function isLargeAuthExceeded($count)
+    {
+        return $this->getAvailableLargeSpaces($count) < 0;
+    }
+
+    public function hasPsvBreakdown()
+    {
+        $sum = ((int)$this->getTotAuthSmallVehicles()
+            + (int)$this->getTotAuthMediumVehicles()
+            + (int)$this->getTotAuthLargeVehicles());
+
+        return $sum > 0;
+    }
+
+    public function shouldShowSmallTable($count)
+    {
+        if (!$this->hasPsvBreakdown()) {
+            return true;
+        }
+
+        return (int)$this->getTotAuthSmallVehicles() > 0 || $count > 0;
+    }
+
+    public function shouldShowMediumTable($count)
+    {
+        if (!$this->hasPsvBreakdown()) {
+            return true;
+        }
+
+        return (int)$this->getTotAuthMediumVehicles() > 0 || $count > 0;
+    }
+
+    public function shouldShowLargeTable($count)
+    {
+        if (!$this->canHaveLargeVehicles()) {
+            return false;
+        }
+
+        if (!$this->hasPsvBreakdown()) {
+            return true;
+        }
+
+        return (int)$this->getTotAuthLargeVehicles() > 0 || $count > 0;
+    }
+
+    public function getOperatingCentresNetDelta()
+    {
+        $delta = 0;
+
+        if (!empty($this->getOperatingCentres())) {
+            foreach ($this->getOperatingCentres() as $aoc) {
+                switch ($aoc->getAction()) {
+                    case 'A':
+                        $delta++;
+                        break;
+                    case 'D':
+                        $delta--;
+                        break;
+                }
+            }
+        }
+
+        return $delta;
     }
 }

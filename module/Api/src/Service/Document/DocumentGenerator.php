@@ -9,7 +9,6 @@
 namespace Dvsa\Olcs\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle;
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\Bookmark;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -82,27 +81,22 @@ class DocumentGenerator implements ServiceLocatorAwareInterface
         return $documentService->populateBookmarks($file, $result);
     }
 
-    public function uploadGeneratedContent($content, $folder = null, $meta = null)
+    public function uploadGeneratedContent($content, $folder = null, $fileName = null)
     {
         /** @var ContentStoreFileUploader $uploader */
         $uploader = $this->getServiceLocator()->get('FileUploader');
 
         $file = ['content' => $content];
 
-        if ($meta !== null) {
-            $file['meta'] = $meta;
-        }
-
         $uploader->setFile($file);
 
-        return $uploader->upload($folder);
+        return $uploader->upload($folder, $fileName);
     }
 
     /**
      * Generate and store a document
      *
      * @param string $template    Document template name
-     * @param string $description Not used
      * @param array  $queryData
      * @param array  $knownValues
      *
@@ -146,7 +140,6 @@ class DocumentGenerator implements ServiceLocatorAwareInterface
     private function getTemplate($template)
     {
         if (!isset($this->templateCache[$template])) {
-
             $this->templateCache[$template] = $this->getServiceLocator()
                 ->get('ContentStore')
                 ->read($template);

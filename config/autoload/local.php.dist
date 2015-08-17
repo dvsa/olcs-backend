@@ -18,7 +18,7 @@ return array(
         ]
     ],
     'elastic_search' => array(
-        'host'=> 'scdv-db02.sc.npm',
+        'host'=> 'elasticsearch-dev.olcs.mgt.mtpdvsa',
         'port'=> '9200'
     ),
     'doctrine' => array(
@@ -43,12 +43,12 @@ return array(
     // 'companies_house_connection' => array(
     //    'proxy'      => 'proxy.gw.npm:80'
     // ),
-    'jackrabbit' => array(
+    'document_share' => array(
         'http' => array(
             'adapter' => 'Zend\Http\Client\Adapter\Curl'
         ),
         'client' => array(
-            'baseuri' => 'http://scdv-ap05.sc.npm:8080/hcs',
+            'baseuri' => 'http://fs01.olcs.mgt.mtpdvsa:8080/hfs/',
             'uuid' => 'uD12345',
             'workspace' => 'olcs'
         ),

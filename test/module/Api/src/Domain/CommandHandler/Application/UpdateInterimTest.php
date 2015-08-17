@@ -138,7 +138,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('CreateApplicationFee');
-        $data = ['id' => 111, 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT];
+        $data = ['id' => 111, 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT, 'description' => null];
         $this->expectedSideEffect(CreateApplicationFee::class, $data, $result1);
 
         $result = $this->sut->handleCommand($command);
@@ -300,100 +300,6 @@ class UpdateInterimTest extends CommandHandlerTestCase
         );
     }
 
-    public function testHandleCommandRequestedNoInforce()
-    {
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-
-        $data = [
-            'id' => 111,
-            'version' => 1,
-            'requested' => 'N',
-            'reason' => 'Foo',
-            'startDate' => '2015-01-01',
-            'endDate' => '2015-01-01',
-            'authVehicles' => 10,
-            'authTrailers' => 12,
-            'operatingCentres' => [11],
-            'vehicles' => [22],
-            'status' => ApplicationEntity::INTERIM_STATUS_REQUESTED
-        ];
-        $command = Cmd::create($data);
-
-        /** @var ApplicationEntity $application */
-        $application->setId(111);
-
-        /** @var ApplicationOperatingCentre $oc1 */
-        $oc1 = m::mock(ApplicationOperatingCentre::class)->makePartial();
-        $oc1->setIsInterim('Y');
-        $oc1->setId(99);
-        /** @var ApplicationOperatingCentre $oc2 */
-        $oc2 = m::mock(ApplicationOperatingCentre::class)->makePartial();
-        $oc2->setIsInterim('N');
-        $oc2->setId(11);
-
-        $ocs = [
-            $oc1,
-            $oc2
-        ];
-
-        /** @var GoodsDisc $gd */
-        $gd = m::mock(GoodsDisc::class)->makePartial();
-
-        $gds = [
-            $gd
-        ];
-
-        /** @var LicenceVehicle $lv1 */
-        $lv1 = m::mock(LicenceVehicle::class)->makePartial();
-        $lv1->setInterimApplication($application);
-        $lv1->setId(88);
-        $lv1->setGoodsDiscs($gds);
-        /** @var LicenceVehicle $lv2 */
-        $lv2 = m::mock(LicenceVehicle::class)->makePartial();
-        $lv2->setId(22);
-
-        $lvs = [
-            $lv1,
-            $lv2
-        ];
-
-        $application->setOperatingCentres($ocs);
-        $application->setLicenceVehicles($lvs);
-        $application->setInterimStatus($this->refData[ApplicationEntity::INTERIM_STATUS_INFORCE]);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($application)
-            ->shouldReceive('save')
-            ->with($application);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [],
-            'messages' => [
-                'Interim data reset'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-
-        $this->assertEquals('N', $oc1->getIsInterim());
-        $this->assertEquals('N', $oc2->getIsInterim());
-        $this->assertNull($lv1->getInterimApplication());
-        $this->assertNull($lv2->getInterimApplication());
-
-        $this->assertNull($lv1->getSpecifiedDate());
-
-        $this->assertNull($application->getInterimReason());
-        $this->assertNull($application->getInterimStart());
-        $this->assertNull($application->getInterimEnd());
-        $this->assertNull($application->getInterimAuthVehicles());
-        $this->assertNull($application->getInterimAuthTrailers());
-
-        $this->assertNotNull($gd->getCeasedDate());
-    }
-
     public function testHandleCommandRequestedYesInforce()
     {
         $application = m::mock(ApplicationEntity::class)->makePartial();
@@ -497,25 +403,96 @@ class UpdateInterimTest extends CommandHandlerTestCase
 
         $data = [
             'id' => 111,
-            'version' => 1
+            'version' => 1,
+            'requested' => 'N',
+            'reason' => 'Foo',
+            'startDate' => '2015-01-01',
+            'endDate' => '2015-01-01',
+            'authVehicles' => 10,
+            'authTrailers' => 12,
+            'operatingCentres' => [11],
+            'vehicles' => [22]
         ];
         $command = Cmd::create($data);
 
         /** @var ApplicationEntity $application */
         $application->setId(111);
+
+        /** @var ApplicationOperatingCentre $oc1 */
+        $oc1 = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $oc1->setIsInterim('Y');
+        $oc1->setId(99);
+        /** @var ApplicationOperatingCentre $oc2 */
+        $oc2 = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $oc2->setIsInterim('N');
+        $oc2->setId(11);
+
+        $ocs = [
+            $oc1,
+            $oc2
+        ];
+
+        /** @var LicenceVehicle $lv1 */
+        $lv1 = m::mock(LicenceVehicle::class)->makePartial();
+        $lv1->setInterimApplication($application);
+        $lv1->setId(88);
+        /** @var LicenceVehicle $lv2 */
+        $lv2 = m::mock(LicenceVehicle::class)->makePartial();
+        $lv2->setId(22);
+
+        $lvs = [
+            $lv1,
+            $lv2
+        ];
+
+        /** @var ApplicationEntity $application */
+        $application->setId(111);
+        $application->setOperatingCentres($ocs);
+        $application->setLicenceVehicles($lvs);
         $application->setInterimStatus($this->refData[ApplicationEntity::INTERIM_STATUS_GRANTED]);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($application);
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->with($application);
+
+        /** @var Fee $fee */
+        $fee = m::mock(Fee::class)->makePartial();
+
+        $fees = [
+            $fee
+        ];
+
+        $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')
+            ->with(111, true)
+            ->andReturn($fees)
+            ->shouldReceive('save')
+            ->once()
+            ->with($fee);
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
-            'messages' => []
+            'messages' => [
+                'Interim data reset'
+            ]
         ];
 
         $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals('N', $oc1->getIsInterim());
+        $this->assertEquals('N', $oc2->getIsInterim());
+        $this->assertNull($lv1->getInterimApplication());
+        $this->assertNull($lv2->getInterimApplication());
+
+        $this->assertSame($this->refData[Fee::STATUS_CANCELLED], $fee->getFeeStatus());
+
+        $this->assertNull($application->getInterimReason());
+        $this->assertNull($application->getInterimStart());
+        $this->assertNull($application->getInterimEnd());
+        $this->assertNull($application->getInterimAuthVehicles());
+        $this->assertNull($application->getInterimAuthTrailers());
     }
 }

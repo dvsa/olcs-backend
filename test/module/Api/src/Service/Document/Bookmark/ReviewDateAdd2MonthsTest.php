@@ -38,12 +38,12 @@ class ReviewDateAdd2MonthsTest extends \PHPUnit_Framework_TestCase
         $bookmark = new ReviewDateAdd2Months();
         $bookmark->setData(
             [
-                'reviewDate' => '2014-02-01'
+                'reviewDate' => '2015-12-31'
             ]
         );
 
         $this->assertEquals(
-            '01/04/2014',
+            '29/02/2016',
             $bookmark->render()
         );
     }

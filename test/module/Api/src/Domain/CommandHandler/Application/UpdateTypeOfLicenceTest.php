@@ -132,7 +132,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $result1->addId('fee', 222);
         $this->expectedSideEffect(
             CreateApplicationFeeCommand::class,
-            ['id' => 111, 'feeTypeFeeType' => null],
+            ['id' => 111, 'feeTypeFeeType' => null, 'description' => null],
             $result1
         );
 
@@ -210,7 +210,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $result2->addId('fee', 222);
         $this->expectedSideEffect(
             CreateApplicationFeeCommand::class,
-            ['id' => 111, 'feeTypeFeeType' => null],
+            ['id' => 111, 'feeTypeFeeType' => null, 'description' => null],
             $result2
         );
 

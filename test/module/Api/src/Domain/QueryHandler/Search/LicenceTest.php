@@ -136,6 +136,8 @@ class LicenceTest extends QueryHandlerTestCase
             ->andReturn(['foo' => 'bar']);
         $application->shouldReceive('getOutOfRepresentationDate')
             ->andReturn('OOR');
+        $application->shouldReceive('determinePublishedDate')
+            ->andReturn('23/09/2000');
         $application->shouldReceive('determinePublicationNo')
             ->andReturn('1234');
         $application->shouldReceive('getOutOfOppositionDate')
@@ -187,6 +189,8 @@ class LicenceTest extends QueryHandlerTestCase
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($licence);
+
+        $organisation->shouldReceive('getDisqualificationStatus')->with()->once()->andReturn('DIS_STATUS');
 
         $result = $this->sut->handleQuery($query);
 

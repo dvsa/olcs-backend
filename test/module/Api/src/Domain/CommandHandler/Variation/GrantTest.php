@@ -64,6 +64,7 @@ class GrantTest extends CommandHandlerTestCase
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $licence->setTotAuthVehicles(10);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
@@ -87,7 +88,9 @@ class GrantTest extends CommandHandlerTestCase
 
         $result2 = new Result();
         $result2->addMessage('CreateDiscRecords');
-        $this->expectedSideEffect(CreateDiscRecords::class, $data, $result2);
+        $discData = $data;
+        $discData['currentTotAuth'] = 10;
+        $this->expectedSideEffect(CreateDiscRecords::class, $discData, $result2);
 
         $result3 = new Result();
         $result3->addMessage('ProcessApplicationOperatingCentres');
@@ -125,6 +128,7 @@ class GrantTest extends CommandHandlerTestCase
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $licence->setTotAuthVehicles(10);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
@@ -180,7 +184,9 @@ class GrantTest extends CommandHandlerTestCase
 
         $result2 = new Result();
         $result2->addMessage('CreateDiscRecords');
-        $this->expectedSideEffect(CreateDiscRecords::class, $data, $result2);
+        $discData = $data;
+        $discData['currentTotAuth'] = 10;
+        $this->expectedSideEffect(CreateDiscRecords::class, $discData, $result2);
 
         $result3 = new Result();
         $result3->addMessage('ProcessApplicationOperatingCentres');
@@ -222,6 +228,7 @@ class GrantTest extends CommandHandlerTestCase
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setId(222);
         $licence->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $licence->setTotAuthVehicles(10);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
@@ -255,7 +262,9 @@ class GrantTest extends CommandHandlerTestCase
 
         $result2 = new Result();
         $result2->addMessage('CreateDiscRecords');
-        $this->expectedSideEffect(CreateDiscRecords::class, $data, $result2);
+        $discData = $data;
+        $discData['currentTotAuth'] = 10;
+        $this->expectedSideEffect(CreateDiscRecords::class, $discData, $result2);
 
         $result3 = new Result();
         $result3->addMessage('ProcessApplicationOperatingCentres');

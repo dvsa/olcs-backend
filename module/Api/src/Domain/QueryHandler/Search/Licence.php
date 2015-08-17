@@ -39,6 +39,10 @@ class Licence extends AbstractQueryHandler
             $application->setPublicationNo(
                 $application->determinePublicationNo()
             );
+            $application->setPublishedDate(
+                $application->determinePublishedDate()
+            );
+
             $application->setOooDate(
                 $application->getOutOfOppositionDate()
             );
@@ -88,7 +92,7 @@ class Licence extends AbstractQueryHandler
                         ]
                     ]
                 )->serialize(),
-                'correspondenceAddress' => $this->result(
+                'correspondenceAddress' => !empty($licence->getCorrespondenceCd()) ? $this->result(
                     $licence->getCorrespondenceCd(),
                     [
                         'person',
@@ -97,7 +101,7 @@ class Licence extends AbstractQueryHandler
                             'countryCode'
                         ]
                     ]
-                )->serialize(),
+                )->serialize() : null,
                 'partners' => $this->resultList(
                     $licence->getOrganisation()->getOrganisationPersons(),
                     [
@@ -134,7 +138,8 @@ class Licence extends AbstractQueryHandler
                 'vehicles' => $this->resultList(
                     $licence->getLicenceVehicles(),
                     [
-                        'vehicle'
+                        'vehicle',
+                        'interimApplication'
                     ]
                 ),
                 'applications' => $this->resultList(
@@ -146,7 +151,8 @@ class Licence extends AbstractQueryHandler
                         'conditionType'
                     ]
                 ),
-                'otherLicences' => $this->resultList($licence->getOtherActiveLicences())
+                'otherLicences' => $this->resultList($licence->getOtherActiveLicences()),
+                'disqualificationStatus' => $licence->getOrganisation()->getDisqualificationStatus(),
             ]
         );
 

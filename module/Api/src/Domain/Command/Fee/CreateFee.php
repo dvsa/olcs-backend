@@ -35,6 +35,8 @@ final class CreateFee extends AbstractCommand
 
     protected $feeStatus = Fee::STATUS_OUTSTANDING;
 
+    protected $irfoGvPermit;
+
     /**
      * @return mixed
      */
@@ -105,5 +107,13 @@ final class CreateFee extends AbstractCommand
     public function getFeeStatus()
     {
         return $this->feeStatus;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIrfoGvPermit()
+    {
+        return $this->irfoGvPermit;
     }
 }

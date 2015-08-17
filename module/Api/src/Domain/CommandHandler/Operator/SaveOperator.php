@@ -39,9 +39,11 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
         $type = $command->getBusinessType();
 
         if ($command instanceof \Dvsa\Olcs\Transfer\Command\Operator\Update) {
+            /** @var OrganisationEntity $organisation */
             $organisation = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
             $message = 'Organisation updated successfully';
         } else {
+            /** @var OrganisationEntity $organisation */
             $organisation = new OrganisationEntity();
             $message = 'Organisation created successfully';
         }
@@ -115,7 +117,7 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
 
     /**
      * @param $command
-     * @param Organisation
+     * @param $organisation OrganisationEntity
      * @return Organisation
      */
     private function updateOrganisation($command, $organisation)
@@ -129,6 +131,9 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
                 $references[] = $this->getRepo()->getRefdataReference($natureOfBusiness);
             }
         }
+
+        $cpid = $this->getRepo()->getRefdataReference($command->getCpid());
+
         $organisation->updateOrganisation(
             $command->getName(),
             $command->getCompanyNumber(),
@@ -136,7 +141,8 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
             $command->getLastName(),
             $command->getIsIrfo(),
             $businessType,
-            $references
+            $references,
+            $cpid
         );
         return $organisation;
     }

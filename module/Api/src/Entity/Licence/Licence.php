@@ -274,6 +274,16 @@ class Licence extends AbstractLicence
         return $this->getActiveVehicles()->count();
     }
 
+    public function getRemainingSpacesPsv()
+    {
+        return $this->getTotAuthVehicles() - $this->getPsvDiscsNotCeasedCount();
+    }
+
+    public function getPsvDiscsNotCeasedCount()
+    {
+        return $this->getPsvDiscsNotCeased()->count();
+    }
+
     public function getActiveVehicles($checkSpecified = true)
     {
         $criteria = Criteria::create();
@@ -335,13 +345,23 @@ class Licence extends AbstractLicence
             $criteria->expr()->neq('id', $this->getId())
         );
 
-        if ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV) {
-            $criteria->andWhere(
-                $criteria->expr()->neq('licenceType', self::LICENCE_TYPE_SPECIAL_RESTRICTED)
-            );
+        $otherActiveLicences = $this->getOrganisation()->getLicences()->matching($criteria);
+
+        // goods_or_psv can be null
+        if (!empty($this->getGoodsOrPsv()) &&
+            ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV)
+        ) {
+
+            /** @var Licence $otherActiveLicence */
+            foreach ($otherActiveLicences as $otherActiveLicence) {
+                $licenceType = $otherActiveLicence->getLicenceType();
+                if ($licenceType !== null && $licenceType->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED) {
+                    $otherActiveLicences->removeElement($otherActiveLicence);
+                }
+            }
         }
 
-        return $this->getOrganisation()->getLicences()->matching($criteria);
+        return $otherActiveLicences;
     }
 
     public function hasApprovedUnfulfilledConditions()
@@ -522,5 +542,75 @@ class Licence extends AbstractLicence
     public function getCategoryPrefix()
     {
         return LicenceNoGenEntity::getCategoryPrefix($this->getGoodsOrPsv());
+    }
+
+    public function getAvailableSmallSpaces($count)
+    {
+        return (int)$this->getTotAuthSmallVehicles() - $count;
+    }
+
+    public function getAvailableMediumSpaces($count)
+    {
+        return (int)$this->getTotAuthMediumVehicles() - $count;
+    }
+
+    public function getAvailableLargeSpaces($count)
+    {
+        return (int)$this->getTotAuthLargeVehicles() - $count;
+    }
+
+    public function isSmallAuthExceeded($count)
+    {
+        return $this->getAvailableSmallSpaces($count) < 0;
+    }
+
+    public function isMediumAuthExceeded($count)
+    {
+        return $this->getAvailableMediumSpaces($count) < 0;
+    }
+
+    public function isLargeAuthExceeded($count)
+    {
+        return $this->getAvailableLargeSpaces($count) < 0;
+    }
+
+    public function hasPsvBreakdown()
+    {
+        $sum = ((int)$this->getTotAuthSmallVehicles()
+            + (int)$this->getTotAuthMediumVehicles()
+            + (int)$this->getTotAuthLargeVehicles());
+
+        return $sum > 0;
+    }
+
+    public function shouldShowSmallTable($count)
+    {
+        if (!$this->hasPsvBreakdown()) {
+            return true;
+        }
+
+        return (int)$this->getTotAuthSmallVehicles() > 0 || $count > 0;
+    }
+
+    public function shouldShowMediumTable($count)
+    {
+        if (!$this->hasPsvBreakdown()) {
+            return true;
+        }
+
+        return (int)$this->getTotAuthMediumVehicles() > 0 || $count > 0;
+    }
+
+    public function shouldShowLargeTable($count)
+    {
+        if (!$this->canHaveLargeVehicles()) {
+            return false;
+        }
+
+        if (!$this->hasPsvBreakdown()) {
+            return true;
+        }
+
+        return (int)$this->getTotAuthLargeVehicles() > 0 || $count > 0;
     }
 }

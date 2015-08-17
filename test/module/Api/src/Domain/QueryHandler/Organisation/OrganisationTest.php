@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Organisation;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Transfer\Query\Organisation\Organisation as Qry;
+use Mockery as m;
 
 /**
  * Organisation Test
@@ -27,14 +28,33 @@ class OrganisationTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    public function testHandleQueryDisqualified()
     {
         $query = Qry::create(['id' => 111]);
 
+        $mockOrganisation = m::mock(\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class)->makePartial();
+        $mockOrganisation->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
+        $mockOrganisation->shouldReceive('getDisqualifications->count')->andReturn(2);
+
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')
             ->with($query)
-            ->andReturn(['id' => 111, 'hasInforceLicences' => true]);
+            ->andReturn($mockOrganisation);
 
-        $this->assertEquals(['id' => 111, 'hasInforceLicences' => true], $this->sut->handleQuery($query));
+        $this->assertEquals(['foo' => 'bar', 'isDisqualified' => true], $this->sut->handleQuery($query)->serialize());
+    }
+
+    public function testHandleQueryNotDisqualified()
+    {
+        $query = Qry::create(['id' => 111]);
+
+        $mockOrganisation = m::mock(\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class)->makePartial();
+        $mockOrganisation->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
+        $mockOrganisation->shouldReceive('getDisqualifications->count')->andReturn(0);
+
+        $this->repoMap['Organisation']->shouldReceive('fetchUsingId')
+            ->with($query)
+            ->andReturn($mockOrganisation);
+
+        $this->assertEquals(['foo' => 'bar', 'isDisqualified' => false], $this->sut->handleQuery($query)->serialize());
     }
 }

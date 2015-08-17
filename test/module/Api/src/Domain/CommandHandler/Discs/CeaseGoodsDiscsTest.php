@@ -44,7 +44,13 @@ class CeaseGoodsDiscsTest extends CommandHandlerTestCase
                     ->andReturn(
                         [
                             m::mock(GoodsDisc::class)
+                                ->shouldReceive('getCeasedDate')
+                                ->andReturn(null)
+                                ->once()
                                 ->shouldReceive('setCeasedDate')
+                                ->once()
+                                ->shouldReceive('setIsInterim')
+                                ->with(false)
                                 ->once()
                                 ->getMock()
                         ]

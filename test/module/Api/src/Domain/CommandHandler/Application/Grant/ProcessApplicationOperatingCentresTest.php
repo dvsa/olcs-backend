@@ -8,7 +8,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\ProcessApplicationOperatingCentres;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
@@ -135,12 +134,6 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
 
         $loc = new LicenceOperatingCentre($licence, $oc);
 
-        $locs = new ArrayCollection();
-        $locs->add($loc);
-
-        $licence->shouldReceive('getOperatingCentres->matching')
-            ->andReturn($locs);
-
         /** @var ApplicationEntity $application */
         $application->setLicence($licence);
         $application->setOperatingCentres($aocs);
@@ -150,7 +143,11 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
             ->andReturn($application);
 
         $this->repoMap['ApplicationOperatingCentre']->shouldReceive('save')
-            ->with($aoc);
+            ->with($aoc)
+            ->shouldReceive('findCorrespondingLoc')
+            ->once()
+            ->with($aoc, $licence)
+            ->andReturn($loc);
 
         $this->repoMap['LicenceOperatingCentre']->shouldReceive('save')
             ->once()
@@ -204,12 +201,6 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
 
         $loc = new LicenceOperatingCentre($licence, $oc);
 
-        $locs = new ArrayCollection();
-        $locs->add($loc);
-
-        $licence->shouldReceive('getOperatingCentres->matching')
-            ->andReturn($locs);
-
         $application->setLicence($licence);
         $application->setOperatingCentres($aocs);
 
@@ -218,7 +209,11 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
             ->andReturn($application);
 
         $this->repoMap['ApplicationOperatingCentre']->shouldReceive('save')
-            ->with($aoc);
+            ->with($aoc)
+            ->shouldReceive('findCorrespondingLoc')
+            ->once()
+            ->with($aoc, $licence)
+            ->andReturn($loc);
 
         $this->repoMap['LicenceOperatingCentre']->shouldReceive('delete')
             ->once()
@@ -267,11 +262,6 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
 
-        $locs = new ArrayCollection();
-
-        $licence->shouldReceive('getOperatingCentres->matching')
-            ->andReturn($locs);
-
         $application->setLicence($licence);
         $application->setOperatingCentres($aocs);
 
@@ -280,7 +270,11 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
             ->andReturn($application);
 
         $this->repoMap['ApplicationOperatingCentre']->shouldReceive('save')
-            ->with($aoc);
+            ->with($aoc)
+            ->shouldReceive('findCorrespondingLoc')
+            ->once()
+            ->with($aoc, $licence)
+            ->andReturn(null);
 
         $this->sut->handleCommand($command);
     }

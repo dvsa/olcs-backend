@@ -26,6 +26,8 @@ use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
+use  Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Create Task Test
@@ -40,6 +42,10 @@ class CreateTaskTest extends CommandHandlerTestCase
         $this->mockRepo('Task', Task::class);
         $this->mockRepo('TaskAllocationRule', TaskAllocationRule::class);
         $this->mockRepo('SystemParameter', SystemParameter::class);
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
+        $this->mockAuthService();
 
         parent::setUp();
     }
@@ -134,6 +140,10 @@ class CreateTaskTest extends CommandHandlerTestCase
                     $this->assertEquals('Some task', $task->getDescription());
                     $this->assertEquals(false, $task->getIsClosed());
                     $this->assertEquals(false, $task->getUrgent());
+
+                    $this->assertEquals(1, $task->getCreatedBy()->getId());
+                    $this->assertEquals(1, $task->getLastModifiedBy()->getId());
+                    $this->assertEquals(new DateTime('now'), $task->getLastModifiedOn());
                 }
             );
 
@@ -278,5 +288,15 @@ class CreateTaskTest extends CommandHandlerTestCase
                 ]
             ]
         ];
+    }
+
+    protected function mockAuthService()
+    {
+        /** @var User $mockUser */
+        $mockUser = m::mock(User::class)->makePartial();
+        $mockUser->setId(1);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
     }
 }

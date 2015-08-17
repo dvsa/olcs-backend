@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Content store (jackrabbit) file uploader
+ * Content store file uploader
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Service\File;
 
 use Zend\Http\Response;
-use Dvsa\Jackrabbit\Client\Data\Object\File as ContentStoreFile;
+use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 
 /**
- * Content store (jackrabbit) file uploader
+ * Content store file uploader
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
@@ -37,9 +37,7 @@ class ContentStoreFileUploader extends AbstractFileUploader
         }
 
         $storeFile = new ContentStoreFile();
-        $storeFile->setContent($file->getContent())
-            ->setMimeType($file->getRealType())
-            ->setMetaData(new \ArrayObject($file->getMeta()));
+        $storeFile->setContent($file->getContent());
 
         $response = $this->getServiceLocator()->get('ContentStore')->write($path, $storeFile);
 
@@ -93,7 +91,6 @@ class ContentStoreFileUploader extends AbstractFileUploader
             $headers = ['Content-Disposition: attachment; filename="' . $name . '"'];
         }
 
-        $headers['Content-Type'] = $file->getMimeType();
         $headers['Content-Length'] = strlen($fileData);
 
         $response->setStatusCode(200);

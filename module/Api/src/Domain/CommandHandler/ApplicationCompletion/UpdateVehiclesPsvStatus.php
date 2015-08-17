@@ -60,7 +60,7 @@ final class UpdateVehiclesPsvStatus extends AbstractUpdateStatus
         $small = $medium = $large = 0;
 
         /** @var LicenceVehicle $licenceVehicle */
-        foreach ($application->getLicence()->getLicenceVehicles() as $licenceVehicle) {
+        foreach ($application->getLicence()->getActiveVehicles(false) as $licenceVehicle) {
             if ($licenceVehicle->getVehicle()->getPsvType() !== null) {
                 $psvType = array_search($licenceVehicle->getVehicle()->getPsvType()->getId(), $psvTypes);
                 ${$psvType}++;

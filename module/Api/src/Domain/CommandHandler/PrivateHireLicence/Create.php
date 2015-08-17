@@ -14,14 +14,21 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\PrivateHireLicence\Create as Command;
 use Dvsa\Olcs\Api\Entity\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Create PrivateHireLicence
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class Create extends AbstractCommandHandler implements TransactionedInterface
+final class Create extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'PrivateHireLicence';
     protected $extraRepos = ['ContactDetails'];
 
@@ -59,6 +66,19 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         $result->addId('contactDetails', $cd->getId());
         $result->addId('privateHireLicence', $phl->getId());
         $result->addMessage('PrivateHireLicence created');
+
+        if ($this->isGranted(Permission::SELFSERVE_USER) &&
+            ($command->getLva() === 'licence')) {
+            $data = [
+                'licence' => $command->getLicence(),
+                'category' => CategoryEntity::CATEGORY_APPLICATION,
+                'subCategory' => CategoryEntity::TASK_SUB_CATEGORY_CHANGE_TO_TAXI_PHV_DIGITAL,
+                'description' => 'Taxi licence added - ' . $phl->getPrivateHireLicenceNo(),
+                'isClosed' => 0,
+                'urgent' => 0
+            ];
+            $result->merge($this->handleSideEffect(CreateTaskCmd::create($data)));
+        }
 
         return $result;
     }

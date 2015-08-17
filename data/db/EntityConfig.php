@@ -1256,7 +1256,19 @@ return array(
     'disqualification' => array(
         'is_disqualified' => array(
             'type' => 'yesnonull'
-        )
+        ),
+        'officer_cd_id' => array(
+            'inversedBy' => array(
+                'entity' => 'ContactDetails',
+                'property' => 'disqualification'
+            )
+        ),
+        'organisation_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Organisation',
+                'property' => 'disqualification'
+            )
+        ),
     ),
     'legacy_offence' => array(
         'is_trailer' => array(

@@ -35,7 +35,11 @@ trait AuthAwareTrait
      */
     public function getCurrentUser()
     {
-        return $this->authService->getIdentity()->getUser();
+        $identity = $this->authService->getIdentity();
+
+        if ($identity) {
+            return $identity->getUser();
+        }
     }
 
     /**
