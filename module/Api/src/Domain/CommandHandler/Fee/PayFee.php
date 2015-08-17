@@ -121,9 +121,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
 
         $application = $fee->getApplication();
 
-        if ($application->getInterimStatus() == null
-            || $application->getInterimStatus()->getId() !== ApplicationEntity::INTERIM_STATUS_GRANTED
-        ) {
+        if ($application->getCurrentInterimStatus() !== ApplicationEntity::INTERIM_STATUS_GRANTED) {
             return;
         }
 
