@@ -204,6 +204,7 @@ return [
             'PostcodeEnforcementArea' => RepositoryFactory::class,
             'PiVenue' => RepositoryFactory::class,
             'Disqualification' => RepositoryFactory::class,
+            'DiscSequence' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
