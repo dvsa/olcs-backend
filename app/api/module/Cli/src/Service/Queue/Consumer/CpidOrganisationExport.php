@@ -46,11 +46,11 @@ class CpidOrganisationExport implements MessageConsumerInterface, ServiceLocator
             ->handleCommand(
                 CreateDocumentSpecific::create(
                     [
-                        'filename' => 'testing123',
-                        'identifier' => 123, //$file->getIdentifier()
-                        'category' => Category::CATEGORY_APPLICATION, // Change me
-                        'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_ASSISTED_DIGITAL, // Change me
-                        'description' => 'Test description.',
+                        'filename' => 'cpid-classification-' . $filename . '.csv',
+                        'identifier' => $file->getIdentifier(),
+                        'category' => Category::CATEGORY_LICENSING,
+                        'subCategory' => Category::DOC_SUB_CATEGORY_CPID,
+                        'description' => 'CPID Classifications',
                         'isExternal' => false,
                         'isScan' => false
                     ]

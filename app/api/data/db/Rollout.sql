@@ -1736,6 +1736,7 @@ VALUES
  ,( 1,  89, 1, 1, 1, 0, 'Complaint')
  ,( 1,  90, 1, 0, 0, 0, 'Refunds')
  ,( 1,  91, 1, 0, 0, 0, 'Vehicle List')
+ ,( 1,  167, 1, 0, 0, 0, 'CPID')
  ,( 4,  92, 1, 1, 1, 1, 'Other Documents')
  ,( 4,  93, 1, 1, 1, 0, 'Application')
  ,( 4,  94, 1, 1, 0, 0, 'Fee Due')
