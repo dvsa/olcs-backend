@@ -35,16 +35,12 @@ final class UpdateUnlicensedOperatorLicenceVehicle extends AbstractCommandHandle
         $licenceVehicle = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         if ($command->getPsvType() !== null) {
-            $licenceVehicle->getVehicle()->setPsvType($command->getPsvType());
+            $licenceVehicle->getVehicle()->setPsvType($this->getRepo()->getRefdataReference($command->getPsvType()));
         }
 
-        if ($command->getPlatedWeight() !== null) {
-            $licenceVehicle->getVehicle()->setPlatedWeight($command->getPlatedWeight());
-        }
+        $licenceVehicle->getVehicle()->setPlatedWeight($command->getPlatedWeight() ?: null);
 
-        if ($command->getVrm() !== null) {
-            $licenceVehicle->getVehicle()->setVrm($command->getVrm());
-        }
+        $licenceVehicle->getVehicle()->setVrm($command->getVrm());
 
         $this->getRepo()->save($licenceVehicle);
 
