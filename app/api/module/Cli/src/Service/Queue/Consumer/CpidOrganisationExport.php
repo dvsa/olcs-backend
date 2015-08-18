@@ -6,6 +6,9 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\LockHandler;
+
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
@@ -31,22 +34,27 @@ class CpidOrganisationExport implements MessageConsumerInterface, ServiceLocator
             ->get('Organisation')
             ->fetchAllByStatusForCpidExport($options['status']);
 
-        $filename = md5(microtime());
-        $handle = fopen("/tmp/{$filename}", 'w');
+        $path = $this->getServiceLocator()
+                ->get('config')['file-system']['path'];
+
+        $filename = $this->createTmpFile($path);
+
+        $handle = fopen($filename, 'w');
         while (($row = $iterableResult->next()) !== false) {
             fputcsv($handle, $row[key($row)]);
         }
+        fclose($handle);
 
-        $file = $this->uploadFile(file_get_contents("/tmp/{$filename}"));
+        $file = $this->uploadFile(file_get_contents($filename));
 
-        unlink("/tmp/{$filename}");
+        unlink($filename);
 
         $this->getServiceLocator()
             ->get('CommandHandlerManager')
             ->handleCommand(
                 CreateDocumentSpecific::create(
                     [
-                        'filename' => 'cpid-classification-' . $filename . '.csv',
+                        'filename' => 'cpid-classification.csv',
                         'identifier' => $file->getIdentifier(),
                         'category' => Category::CATEGORY_LICENSING,
                         'subCategory' => Category::DOC_SUB_CATEGORY_CPID,
@@ -71,5 +79,23 @@ class CpidOrganisationExport implements MessageConsumerInterface, ServiceLocator
         );
 
         return $uploader->upload();
+    }
+
+    private function createTmpFile($path, $prefix = '')
+    {
+        $fileSystem = new Filesystem();
+
+        $lock = new LockHandler(hash('sha256', $path));
+        $lock->lock(true);
+
+        do {
+            $filename = $path . DIRECTORY_SEPARATOR . uniqid($prefix);
+        } while ($fileSystem->exists($filename));
+
+        $fileSystem->touch($filename);
+
+        $lock->release();
+
+        return $filename;
     }
 }
