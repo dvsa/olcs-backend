@@ -61,7 +61,7 @@ final class Cases extends AbstractQueryHandler
                         'publication'
                     )
                 ),
-                'tmDecisions'
+                'tmDecision'
             ]
         );
     }
