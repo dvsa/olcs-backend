@@ -581,6 +581,8 @@ return [
         => CommandHandler\LicenceVehicle\UpdateUnlicensedOperatorLicenceVehicle::class,
     TransferCommand\LicenceVehicle\DeleteUnlicensedOperatorLicenceVehicle::class
         => CommandHandler\LicenceVehicle\DeleteUnlicensedOperatorLicenceVehicle::class,
+    TransferCommand\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class
+        => CommandHandler\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class,
 
 
     // Vehicle
