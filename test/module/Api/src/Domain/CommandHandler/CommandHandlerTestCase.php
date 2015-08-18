@@ -205,6 +205,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             $cmdDataToMatch = [];
 
             foreach ($data as $key => $value) {
+                unset($value);
                 $cmdDataToMatch[$key] = isset($cmdData[$key]) ? $cmdData[$key] : null;
             }
 
