@@ -109,7 +109,6 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements
         ];
 
         $this->result->merge($this->handleSideEffect(CreateDocumentSpecific::create($data)));
-        $this->result->addMessage('File created');
 
         $this->result->merge(
             $this->handleSideEffect(
