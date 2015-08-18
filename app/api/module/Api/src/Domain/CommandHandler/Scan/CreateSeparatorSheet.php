@@ -1,11 +1,21 @@
 <?php
 
+/**
+ * Create Separator Sheet
+ *
+ * @author Mat Evans <mat.evans@valtech.co.uk>
+ */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Scan;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
+use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\PrintScan\Scan;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -14,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 
 /**
- * CreateSeperatorSheet
+ * Create Separator Sheet
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
@@ -22,7 +32,7 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements
     TransactionedInterface,
     DocumentGeneratorAwareInterface
 {
-    use \Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
+    use DocumentGeneratorAwareTrait;
 
     protected $repoServiceName = 'Scan';
 
@@ -36,11 +46,11 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements
         'SubCategoryDescription'
     ];
 
-
+    /**
+     * @param \Dvsa\Olcs\Transfer\Command\Scan\CreateSeparatorSheet $command
+     */
     public function handleCommand(CommandInterface $command)
     {
-        /* @var $command \Dvsa\Olcs\Transfer\Command\Scan\CreateSeparatorSheet */
-
         if (empty($command->getDescription()) && empty($command->getDescriptionId())) {
             throw new ValidationException(['description or descriptionId must be specified']);
         }
@@ -55,7 +65,7 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements
             $descriptionName = $command->getDescription();
         }
 
-        $scan = new \Dvsa\Olcs\Api\Entity\PrintScan\Scan();
+        $scan = new Scan();
         $scan->setCategory($this->getRepo()->getCategoryReference($command->getCategoryId()));
         $scan->setSubCategory($this->getRepo()->getSubCategoryReference($command->getSubCategoryId()));
         $scan->setDescription($descriptionName);
@@ -80,14 +90,30 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements
             'DOC_DESCRIPTION_NAME_SCAN'  => $descriptionName,
         ];
 
+        $date = new DateTime();
+        $fileName = $date->format('YmdHis') . '_Scanning_Separator.rtf';
+
         $docService = $this->getDocumentGenerator();
         $content = $docService->generateFromTemplate('Scanning_SeparatorSheet', [], $knownValues);
-        $storedFile = $docService->uploadGeneratedContent($content, 'documents');
+        $storedFile = $docService->uploadGeneratedContent($content, 'documents', $fileName);
 
-        $result = new Result();
-        $result->merge(
+        $data = [
+            'identifier' => $storedFile->getIdentifier(),
+            'description' => 'Scanning separator',
+            'filename' => $fileName,
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => SubCategory::DOC_SUB_CATEGORY_SCANNING_SEPARATOR,
+            'isExternal' => false,
+            'isScan' => false,
+            'size' => $storedFile->getSize()
+        ];
+
+        $this->result->merge($this->handleSideEffect(CreateDocumentSpecific::create($data)));
+        $this->result->addMessage('File created');
+
+        $this->result->merge(
             $this->handleSideEffect(
-                \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::create(
+                Enqueue::create(
                     [
                         'fileIdentifier' => $storedFile->getIdentifier(),
                         'jobName' => 'Scanning Separator Sheet',
@@ -96,14 +122,14 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements
             )
         );
 
-        $result->addId('scan', $scan->getId());
-        $result->addMessage("Scan ID {$scan->getId()} created");
+        $this->result->addId('scan', $scan->getId());
+        $this->result->addMessage('Scan ID ' . $scan->getId() . ' created');
 
-        return $result;
+        return $this->result;
     }
 
     /**
-     * Set the applicabale scan properties for a category
+     * Set the applicable scan properties for a category
      *
      * @param int $categoryId
      * @param \Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan
@@ -150,27 +176,20 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements
             case Category::CATEGORY_APPLICATION:
             case Category::CATEGORY_LICENSING:
             case Category::CATEGORY_ENVIRONMENTAL:
-                $entity = $this->getRepo('Licence')->fetchByLicNo($entityIdentifier);
-                break;
+                return $this->getRepo('Licence')->fetchByLicNo($entityIdentifier);
             case Category::CATEGORY_COMPLIANCE:
-                $entity = $this->getRepo('Cases')->fetchById($entityIdentifier);
-                break;
+                return $this->getRepo('Cases')->fetchById($entityIdentifier);
             case Category::CATEGORY_IRFO:
-                $entity = $this->getRepo()->getReference(Organisation::class, $entityIdentifier);
-                break;
+                return $this->getRepo()->getReference(Organisation::class, $entityIdentifier);
             case Category::CATEGORY_TRANSPORT_MANAGER:
-                $entity = $this->getRepo()->getReference(TransportManager::class, $entityIdentifier);
-                break;
+                return $this->getRepo()->getReference(TransportManager::class, $entityIdentifier);
             case Category::CATEGORY_BUS_REGISTRATION:
                 /* @var $busRegSearch \Dvsa\Olcs\Api\Entity\View\BusRegSearchView */
                 $busRegSearch = $this->getRepo('BusRegSearchView')->fetchByRegNo($entityIdentifier);
-                $entity = $this->getRepo('Bus')->fetchById($busRegSearch->getId());
-                break;
+                return $this->getRepo('Bus')->fetchById($busRegSearch->getId());
             default:
-                throw new RuntimeException("Cannot get an entity for category Id {$categoryId}");
+                throw new RuntimeException('Cannot get an entity for category Id ' . $categoryId);
         }
-
-        return $entity;
     }
 
     /**
@@ -194,14 +213,14 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements
         ];
 
         if (!isset($names[$categoryId])) {
-            throw new RuntimeException("Entity name is not setup for category Id {$categoryId}");
+            throw new RuntimeException('Entity name is not setup for category Id ' . $categoryId);
         }
 
         return $names[$categoryId];
     }
 
     /**
-     * Get the Lic No associated with the entity 0r "Unknown" of no Lic No is associated
+     * Get the Lic No associated with the entity or "Unknown" if no Lic No is associated
      *
      * @param $entity
      *
