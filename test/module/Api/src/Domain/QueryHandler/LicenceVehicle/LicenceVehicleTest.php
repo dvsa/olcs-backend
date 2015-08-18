@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\LicenceVehicle;
 
+
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
@@ -71,7 +72,6 @@ class LicenceVehicleTest extends QueryHandlerTestCase
 
         $licenceVehicle->shouldReceive('serialize')
             ->once()
-            ->with(['vehicle', 'goodsDiscs'])
             ->andReturn(['foo' => 'cake']);
 
         $expected = [
