@@ -6,7 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
+use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -159,5 +161,99 @@ class Pi extends AbstractPi
         if (!$notificationDateTime instanceof \DateTime) {
             $notificationDateTime = null;
         }
+    }
+
+    /**
+     * Can the Pi be closed?
+     *
+     * @return bool
+     */
+    protected function canClose()
+    {
+        if ($this->piHearings->count()) {
+            if ($this->piHearings->first()->getCancelledDate() !== null) {
+                return !$this->isClosed();
+            }
+        }
+
+        if ($this->writtenOutcome !== null) {
+            $writtenOutcomeId = $this->writtenOutcome->getId();
+
+            switch($writtenOutcomeId) {
+                case SlaEntity::WRITTEN_OUTCOME_NONE:
+                    return !$this->isClosed();
+                case SlaEntity::WRITTEN_OUTCOME_REASON:
+                    if ($this->tcWrittenReasonDate === null || $this->writtenReasonLetterDate === null) {
+                        return false;
+                    }
+                    return !$this->isClosed();
+                case SlaEntity::WRITTEN_OUTCOME_DECISION:
+                    if ($this->tcWrittenDecisionDate === null || $this->decisionLetterSentDate === null) {
+                        return false;
+                    }
+                    return !$this->isClosed();
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Is this a Transport Manager Pi?
+     */
+    public function isTm() {
+        return $this->case->isTm();
+    }
+
+    /**
+     * Is the Pi closed?
+     *
+     * return bool
+     */
+    public function isClosed()
+    {
+        return (bool) $this->closedDate != null;
+    }
+
+    /**
+     * Can the Pi be reopened?
+     *
+     * @return bool
+     */
+    public function canReopen()
+    {
+        return $this->isClosed();
+    }
+
+    /**
+     * Gets the upcoming hearing date
+     */
+    public function getHearingDate()
+    {
+        if ($this->piHearings->count()) {
+            /** @var PiHearingEntity $hearing */
+            $hearing = $this->piHearings->last();
+
+            if ($hearing->getIsAdjourned() !== 'Y' && $hearing->getIsCancelled() !== 'Y') {
+                return $hearing->getHearingDate();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Calculated values to be added to a bundle
+     *
+     * @return array
+     */
+    protected function getCalculatedBundleValues()
+    {
+        return [
+            'isClosed' => $this->isClosed(),
+            'canReopen' => $this->canReopen(),
+            'hearingDate' => $this->getHearingDate(),
+            'isTm' => $this->isTm()
+        ];
     }
 }

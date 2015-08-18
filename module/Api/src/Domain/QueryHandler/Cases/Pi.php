@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -27,115 +28,64 @@ final class Pi extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        $pi = $this->getRepo()->fetchUsingCase($query, Query::HYDRATE_ARRAY);
+        /** @var PiEntity $result */
+        $result = $this->getRepo()->fetchUsingCase($query, Query::HYDRATE_OBJECT);
+        $slaValues = [];
 
-        $this->extractHearingDate($pi);
-
-        $pi['canClose'] = $this->canClose($pi);
-        $pi['isClosed'] = $this->isClosed($pi);
-        $pi['canReopen'] = $this->canReopen($pi);
-
-        /** @TODO change me to use queries */
-        if (!empty($pi['case']['transportManager'])) {
+        //we need a traffic area so we can calculate slas
+        if ($result->isTm()) {
             //no licence for TM cases so using English TA
             $trafficArea = $this->getRepo()->getReference(
                 TrafficAreaEntity::class,
                 TrafficAreaEntity::SE_MET_TRAFFIC_AREA_CODE
             );
         } else {
-            /** @var LicenceEntity $licence */
-            $licence = $this->getRepo('Licence')->fetchByCaseId($query->getId(), Query::HYDRATE_OBJECT);
-            $trafficArea = $licence->getTrafficArea();
+            $trafficArea = $result->getCase()->getLicence()->getTrafficArea();
         }
 
         $slas = $this->getRepo('Sla')->fetchByCategory('pi', Query::HYDRATE_OBJECT);
 
         foreach ($slas as $sla) {
             /** @var SlaEntity $sla*/
-            if (isset($pi[$sla->getCompareTo()]) && !empty($pi[$sla->getCompareTo()])) {
+            $getMethod = 'get' . ucfirst($sla->getCompareTo());
 
-                $dateTime = date_create($pi[$sla->getCompareTo()]);
+            if ($result->$getMethod() !== null) {
+                $dateTime = date_create($result->$getMethod());
 
-                if ($dateTime && $sla->appliesTo($dateTime)) {
+                if ($sla->appliesTo($dateTime)) {
                     $targetDate = $this->slaService->applySla($dateTime, $sla, $trafficArea);
-                    $pi[$sla->getField() . 'Target'] = $targetDate->format('Y-m-d');
+                    $slaValues[$sla->getField() . 'Target'] = $targetDate->format('Y-m-d');
                 }
             }
 
-            if (!isset($pi[$sla->getField() . 'Target'])) {
-                $pi[$sla->getField() . 'Target'] = '';
+            if (!isset($slaValues[$sla->getField() . 'Target'])) {
+                $slaValues[$sla->getField() . 'Target'] = '';
             }
         }
+
+        $pi = $this->result(
+            $result,
+            [
+                'piStatus' => [],
+                'piTypes' => [],
+                'reasons' => [],
+                'piHearings' => [
+                        'presidingTc' => [],
+                        'presidedByRole' => [],
+                ],
+                'writtenOutcome' => [],
+                'decidedByTc' => [],
+                'agreedByTc' => [],
+                'decidedByTcRole' => [],
+                'agreedByTcRole' => [],
+                'decisions' => [],
+                'assignedTo' => [],
+                'case' => [],
+            ],
+            $slaValues
+        );
 
         return $pi;
-    }
-
-    protected function canClose($data)
-    {
-        if (isset($data['piHearings'][0])) {
-            if (!empty($data['piHearings'][0]['cancelledDate'])) {
-                return !$this->isClosed($data);
-            }
-        }
-
-        if (isset($data['writtenOutcome']['id'])) {
-            switch($data['writtenOutcome']['id']) {
-                case 'piwo_none':
-                    return !$this->isClosed($data);
-                case 'piwo_reason':
-                    if (empty($data['tcWrittenReasonDate']) ||
-                        empty($data['writtenReasonLetterDate'])
-                    ) {
-                        return false;
-                    }
-                    return !$this->isClosed($data);
-                case 'piwo_decision':
-                    if (empty($data['tcWrittenDecisionDate']) ||
-                        empty($data['decisionLetterSentDate'])
-                    ) {
-                        return false;
-                    }
-                    return !$this->isClosed($data);
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Is this entity closed
-     * @param array $data
-     * @return bool
-     */
-    public function isClosed($data)
-    {
-        return (bool) isset($data['closedDate']);
-    }
-
-    /**
-     * Can this entity be reopened
-     * @param array $data
-     * @return bool
-     */
-    public function canReopen($data)
-    {
-        return $this->isClosed($data);
-    }
-
-    /**
-     * @param $data
-     * @return mixed
-     */
-    protected function extractHearingDate(&$data)
-    {
-        if (isset($data['piHearings']) && is_array($data['piHearings']) && count($data['piHearings']) > 0) {
-            $hearing = end($data['piHearings']);
-            if ($hearing['isAdjourned'] != 'Y' && $hearing['isCancelled'] != 'Y') {
-                $data['hearingDate'] = $hearing['hearingDate'];
-            }
-        }
-        if (!isset($data['hearingDate'])) {
-            $data['hearingDate'] = '';
-        }
     }
 
     public function createService(ServiceLocatorInterface $serviceLocator)
