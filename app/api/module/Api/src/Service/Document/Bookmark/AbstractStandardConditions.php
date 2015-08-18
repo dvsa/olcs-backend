@@ -28,9 +28,9 @@ abstract class AbstractStandardConditions extends DynamicBookmark
 
     public function getQuery(array $data)
     {
-        if (static::SERVICE == 'licence') {
+        if (static::SERVICE === 'licence') {
             return LicenceQry::create(['id' => $data[static::DATA_KEY]]);
-        } elseif (static::SERVICE == 'application') {
+        } elseif (static::SERVICE === 'application') {
             return ApplicationQry::create(['id' => $data[static::DATA_KEY]]);
         }
     }
