@@ -104,7 +104,7 @@ class UserListSelfserveTest extends QueryHandlerTestCase
         $organisationUser->setOrganisation($organisation);
 
         /** @var UserEntity $currentUser */
-        $currentUser = new UserEntity(UserEntity::USER_TYPE_OPERATOR);
+        $currentUser = new UserEntity('pid', UserEntity::USER_TYPE_OPERATOR);
         $currentUser->setId(222);
         $currentUser->getOrganisationUsers()->add($organisationUser);
 

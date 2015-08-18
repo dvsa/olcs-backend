@@ -10,6 +10,7 @@ return [
     QueryHandler\MyAccount\MyAccount::class                         => NoValidationRequired::class,
     QueryHandler\User\Partner::class                                => IsInternalUser::class,
     QueryHandler\User\PartnerList::class                            => IsInternalUser::class,
+    QueryHandler\User\RoleList::class                               => NoValidationRequired::class,
 
     // Commands
     CommandHandler\User\CreatePartner::class                        => IsInternalUser::class,

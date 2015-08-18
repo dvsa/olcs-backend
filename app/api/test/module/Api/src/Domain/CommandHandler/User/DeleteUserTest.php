@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\DeleteUser as Sut;
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Transfer\Command\User\DeleteUser as Cmd;
 use ZfcRbac\Service\AuthorizationService;
 
@@ -27,7 +28,8 @@ class DeleteUserTest extends CommandHandlerTestCase
         $this->mockRepo('Task', TaskRepo::class);
 
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            UserInterface::class => m::mock(UserInterface::class)
         ];
 
         parent::setUp();
@@ -49,8 +51,13 @@ class DeleteUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')
+            ->once()
+            ->with('login_id');
+
         $userEntity = m::mock(UserEntity::class)->makePartial();
         $userEntity->setId(1);
+        $userEntity->setLoginId('login_id');
 
         $this->repoMap['User']
             ->shouldReceive('fetchUsingId')
@@ -101,8 +108,12 @@ class DeleteUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')
+            ->never();
+
         $userEntity = m::mock(UserEntity::class)->makePartial();
         $userEntity->setId(1);
+        $userEntity->setLoginId('login_id');
 
         $this->repoMap['User']
             ->shouldReceive('fetchUsingId')
@@ -134,6 +145,9 @@ class DeleteUserTest extends CommandHandlerTestCase
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(false);
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')
+            ->never();
 
         $this->repoMap['User']
             ->shouldReceive('fetchUsingId')

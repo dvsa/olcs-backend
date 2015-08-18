@@ -56,7 +56,7 @@ class SendTmApplicationTest extends CommandHandlerTestCase
         $tm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
         $tm->setHomeCd($hcd);
 
-        $user = new \Dvsa\Olcs\Api\Entity\User\User('TYPE');
+        $user = new \Dvsa\Olcs\Api\Entity\User\User('pid', 'TYPE');
         $user->setLoginId('username1');
         $tm->addUsers($user);
 

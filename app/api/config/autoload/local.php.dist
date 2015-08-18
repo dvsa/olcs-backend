@@ -160,4 +160,13 @@ return array(
         ),
     ),
 
+    'openam' => [
+        'username' => 'olcs_app',
+        'password' => 'password',
+        'uri' => 'http://olcs-openam.olcs.gov.uk:18080',
+        'pid_header' => 'X-Pid'
+    ],
+    'zfc_rbac' => [
+        'identity_provider' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class,
+    ]
 );

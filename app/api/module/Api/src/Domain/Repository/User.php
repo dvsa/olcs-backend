@@ -181,4 +181,14 @@ class User extends AbstractRepository
 
         return $qb->getQuery()->getSingleScalarResult();
     }
+
+    public function fetchByPid($pid)
+    {
+        $qb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
+
+        $qb->where($this->alias . '.pid = :pid')->setParameter('pid', $pid);
+
+        return $qb->getQuery()->getSingleResult();
+    }
 }

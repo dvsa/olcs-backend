@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
@@ -20,9 +22,13 @@ use Doctrine\ORM\Query;
 /**
  * Update User Selfserve
  */
-final class UpdateUserSelfserve extends AbstractUserCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
+    AuthAwareInterface,
+    TransactionedInterface,
+    OpenAmUserAwareInterface
 {
-    use AuthAwareTrait;
+    use AuthAwareTrait,
+        OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
 
@@ -68,6 +74,11 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements Au
         }
 
         $this->getRepo()->save($user);
+
+        $this->getOpenAmUser()->updateUser(
+            $user->getLoginId(),
+            $command->getContactDetails()['emailAddress']
+        );
 
         $result = new Result();
         $result->addId('user', $user->getId());

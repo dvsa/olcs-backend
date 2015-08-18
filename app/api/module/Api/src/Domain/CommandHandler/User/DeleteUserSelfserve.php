@@ -12,15 +12,21 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Delete User Selfserve
  */
-final class DeleteUserSelfserve extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class DeleteUserSelfserve extends AbstractCommandHandler implements
+    AuthAwareInterface,
+    TransactionedInterface,
+    OpenAmUserAwareInterface
 {
-    use AuthAwareTrait;
+    use AuthAwareTrait,
+        OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
 
@@ -40,6 +46,10 @@ final class DeleteUserSelfserve extends AbstractCommandHandler implements AuthAw
         }
 
         $this->getRepo()->delete($user);
+
+        $this->getOpenAmUser()->disableUser(
+            $user->getLoginId()
+        );
 
         $result = new Result();
         $result->addId('user', $user->getId());

@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserRegistered as SendUserRegisteredDto;
@@ -37,6 +38,10 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $this->mockRepo('ContactDetails', ContactDetails::class);
         $this->mockRepo('Licence', Licence::class);
         $this->mockRepo('Organisation', Organisation::class);
+
+        $this->mockedSmServices = [
+            UserInterface::class => m::mock(UserInterface::class)
+        ];
 
         parent::setUp();
     }
@@ -75,6 +80,19 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
             ->once()
             ->with($data['loginId'])
             ->andReturn([]);
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
+            ->with('login_id', 'test1@test.me', 'selfserve', m::type('callable'))
+            ->andReturnUsing(
+                function ($loginId, $emailAddress, $realm, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
 
         /** @var OrganisationEntity $savedOrg */
         $savedOrg = null;
@@ -182,6 +200,19 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
             ->with($data['loginId'])
             ->andReturn([]);
 
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
+            ->with('login_id', 'test1@test.me', 'selfserve', m::type('callable'))
+            ->andReturnUsing(
+                function ($loginId, $emailAddress, $realm, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
+
         $org = m::mock(OrganisationEntity::class);
 
         $licence = m::mock(LicenceEntity::class);
@@ -228,7 +259,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
                     'licence' => $licId
                 ],
                 'knownValues' => [
-                    'SELF_SERVICE_PASSWORD' => 'GENERATED_PASSWORD_HERE'
+                    'SELF_SERVICE_PASSWORD' => 'GENERATED_PASSWORD'
                 ],
                 'description' => 'Self service new password letter',
                 'category' => CategoryEntity::CATEGORY_APPLICATION,

@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\MyAccount;
 
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\MyAccount\UpdateMyAccount;
@@ -31,7 +32,8 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         $this->mockRepo('ContactDetails', ContactDetails::class);
 
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            UserInterface::class => m::mock(UserInterface::class)
         ];
 
         parent::setUp();
@@ -107,6 +109,9 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($user);
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
+            ->with('login_id', 'test1@test.me');
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -199,6 +204,9 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
+            ->with('login_id', 'test1@test.me');
 
         $command = Cmd::create($data);
 
