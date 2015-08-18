@@ -160,4 +160,9 @@ return array(
         ),
     ),
 
+    'openam' => [
+        'username' => 'olcs_app',
+        'password' => 'password',
+        'uri' => 'olcs-openam.olcs.gov.uk'
+    ]
 );

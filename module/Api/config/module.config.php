@@ -63,6 +63,8 @@ return [
 
             \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Publication\Process\PluginManagerFactory::class,
+            'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
+            \Dvsa\Olcs\Api\Service\OpenAm\ClientInterface::class => \Dvsa\Olcs\Api\Service\OpenAm\ClientFactory::class,
 
             \Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator::class =>
                 \Dvsa\Olcs\Api\Service\Submission\SubmissionGeneratorFactory::class,
