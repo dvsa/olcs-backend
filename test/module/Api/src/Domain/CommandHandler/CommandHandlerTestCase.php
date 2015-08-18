@@ -43,6 +43,9 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
      */
     protected $repoManager;
 
+    /**
+     * @var \Mockery\MockInterface[]
+     */
     protected $repoMap = [];
 
     protected $sideEffects = [];
@@ -59,6 +62,9 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
     private $initRefdata = false;
 
+    /**
+     * @var \Mockery\MockInterface[]
+     */
     protected $mockedSmServices = [];
 
     protected $queryHandler;
@@ -114,7 +120,6 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     {
         if (!$this->initRefdata) {
             foreach ($this->refData as $id => $mock) {
-
                 if (is_numeric($id) && is_string($mock)) {
                     $this->refData[$mock] = m::mock(RefData::class)->makePartial()->setId($mock);
                 } else {

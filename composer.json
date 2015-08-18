@@ -47,7 +47,7 @@
         "gedmo/doctrine-extensions": "~2.3.9",
         "ruflin/Elastica": "v1.4.3.0",
         "olcs/companies-house": "dev-develop",
-        "olcs/olcs-transfer": "dev-develop",
+        "olcs/olcs-transfer": "dev-auth",
         "olcs/olcs-utils": "dev-develop",
         "olcs/olcs-logging": "dev-develop",
         "olcs/autoload": "dev-develop",
@@ -56,7 +56,8 @@
         "soflomo/purifier": "~0.1.0",
         "symfony/Filesystem": "~2.6.0",
         "symfony/Finder": "~2.6.0",
-        "olcs/olcs-xmltools": "^1.0.0"
+        "olcs/olcs-xmltools": "^1.0.0",
+        "ircmaxell/random-lib": "^1.1"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.8",

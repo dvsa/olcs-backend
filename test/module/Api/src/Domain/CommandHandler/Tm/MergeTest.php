@@ -451,7 +451,7 @@ class MergeTest extends CommandHandlerTestCase
         $mockRecipientTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
         $mockRecipientTm->setId(9);
 
-        $user = new UserEntity(UserEntity::USER_TYPE_INTERNAL);
+        $user = new UserEntity('', UserEntity::USER_TYPE_INTERNAL);
         $user->setId(115);
         $mockDonorTm->addUsers($user);
 

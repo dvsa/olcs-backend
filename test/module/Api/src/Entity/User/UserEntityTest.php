@@ -79,7 +79,7 @@ class UserEntityTest extends EntityTester
             ],
         ];
 
-        $entity = Entity::create(Entity::USER_TYPE_INTERNAL, $data);
+        $entity = Entity::create('pid', Entity::USER_TYPE_INTERNAL, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
@@ -115,6 +115,7 @@ class UserEntityTest extends EntityTester
 
         // create an object of different type first
         $entity = Entity::create(
+            'pid',
             Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
@@ -163,7 +164,7 @@ class UserEntityTest extends EntityTester
             ],
         ];
 
-        $entity = Entity::create(Entity::USER_TYPE_TRANSPORT_MANAGER, $data);
+        $entity = Entity::create('pid', Entity::USER_TYPE_TRANSPORT_MANAGER, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
@@ -200,6 +201,7 @@ class UserEntityTest extends EntityTester
 
         // create an object of different type first
         $entity = Entity::create(
+            'pid',
             Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
@@ -249,7 +251,7 @@ class UserEntityTest extends EntityTester
             ],
         ];
 
-        $entity = Entity::create(Entity::USER_TYPE_PARTNER, $data);
+        $entity = Entity::create('pid', Entity::USER_TYPE_PARTNER, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
@@ -285,6 +287,7 @@ class UserEntityTest extends EntityTester
 
         // create an object of different type first
         $entity = Entity::create(
+            'pid',
             Entity::USER_TYPE_LOCAL_AUTHORITY,
             [
                 'loginId' => 'currentLoginId',
@@ -333,7 +336,7 @@ class UserEntityTest extends EntityTester
             ],
         ];
 
-        $entity = Entity::create(Entity::USER_TYPE_LOCAL_AUTHORITY, $data);
+        $entity = Entity::create('pid', Entity::USER_TYPE_LOCAL_AUTHORITY, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
@@ -369,6 +372,7 @@ class UserEntityTest extends EntityTester
 
         // create an object of different type first
         $entity = Entity::create(
+            'pid',
             Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
@@ -417,7 +421,7 @@ class UserEntityTest extends EntityTester
             ],
         ];
 
-        $entity = Entity::create(Entity::USER_TYPE_OPERATOR, $data);
+        $entity = Entity::create('pid', Entity::USER_TYPE_OPERATOR, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
@@ -454,6 +458,7 @@ class UserEntityTest extends EntityTester
 
         // create an object of different type first
         $entity = Entity::create(
+            'pid',
             Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
@@ -500,6 +505,7 @@ class UserEntityTest extends EntityTester
         ];
 
         $entity = Entity::create(
+            'pid',
             Entity::USER_TYPE_OPERATOR,
             [
                 'loginId' => 'currentLoginId',
@@ -542,7 +548,7 @@ class UserEntityTest extends EntityTester
             ],
         ];
 
-        Entity::create(Entity::USER_TYPE_OPERATOR, $data);
+        Entity::create('pid', Entity::USER_TYPE_OPERATOR, $data);
     }
 
     /**
@@ -569,6 +575,7 @@ class UserEntityTest extends EntityTester
 
         // create an object of different type first
         $entity = Entity::create(
+            'pid',
             Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
@@ -614,7 +621,7 @@ class UserEntityTest extends EntityTester
             ],
         ];
 
-        $entity = Entity::create($userType, $data);
+        $entity = Entity::create('pid', $userType, $data);
 
         $this->assertEquals($expected, $entity->getPermission());
     }
@@ -689,5 +696,25 @@ class UserEntityTest extends EntityTester
                 null
             ],
         ];
+    }
+
+    public function testAnon()
+    {
+        $user = Entity::anon();
+
+        $role = $user->getRoles()->current();
+
+        $this->assertEquals(1, $user->getRoles()->count());
+        $this->assertInstanceOf(RoleEntity::class, $role);
+        $this->assertEquals(RoleEntity::ROLE_ANON, $role->getId());
+        $this->assertEquals('anon', $user->getLoginId());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testAnonUsernameReserved()
+    {
+        Entity::create('123456', Entity::USER_TYPE_INTERNAL, ['loginId' => 'anon']);
     }
 }

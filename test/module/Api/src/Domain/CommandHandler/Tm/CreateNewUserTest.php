@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\User\Role;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -45,6 +46,8 @@ class CreateNewUserTest extends CommandHandlerTestCase
         $this->mockRepo('TransportManagerApplication', Repository\TransportManagerApplication::class);
         $this->mockRepo('Address', Repository\Address::class);
         $this->mockRepo('Role', Repository\Role::class);
+
+        $this->mockedSmServices[UserInterface::class] = m::mock(UserInterface::class);
 
         parent::setUp();
     }
@@ -188,6 +191,11 @@ class CreateNewUserTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $mockApplication = m::mock(Application::class);
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
+            ->with('Foo', 'foo@bar.com', 'selfserve');
 
         $this->repoMap['User']->shouldReceive('fetchByLoginId')
             ->with('Foo')

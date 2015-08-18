@@ -12,17 +12,24 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Service\OpenAm\Client;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Create User Selfserve
  */
-final class CreateUserSelfserve extends AbstractUserCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class CreateUserSelfserve extends AbstractUserCommandHandler implements
+    AuthAwareInterface,
+    TransactionedInterface,
+    OpenAmUserAwareInterface
 {
-    use AuthAwareTrait;
+    use AuthAwareTrait,
+        OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
 
@@ -67,6 +74,7 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements Au
         $data['roles'] = User::getRolesByUserType($data['userType'], $data['permission']);
 
         $user = User::create(
+            $this->getOpenAmUser()->reservePid(),
             $data['userType'],
             $this->getRepo()->populateRefDataReference($data)
         );
@@ -82,6 +90,12 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements Au
         );
 
         $this->getRepo()->save($user);
+
+        $this->getOpenAmUser()->registerUser(
+            $command->getLoginId(),
+            $command->getContactDetails()['emailAddress'],
+            Client::REALM_SELFSERVE
+        );
 
         $result = new Result();
         $result->addId('user', $user->getId());
