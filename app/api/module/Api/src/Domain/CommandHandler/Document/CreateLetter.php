@@ -71,6 +71,9 @@ final class CreateLetter extends AbstractCommandHandler implements
 
     private function formatFilename($input)
     {
-        return str_replace([' ', '/'], '_', $input);
+        $input = str_replace([' ', '/'], '_', $input);
+
+        // Only allow alpha-num plus "_()"
+        return preg_replace('/[^a-zA-Z0-9_\(\)\-]/', '', $input);
     }
 }
