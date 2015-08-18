@@ -579,6 +579,8 @@ return [
     TransferCommand\Operator\UpdateUnlicensed::class => CommandHandler\Operator\UpdateUnlicensed::class,
     TransferCommand\LicenceVehicle\UpdateUnlicensedOperatorLicenceVehicle::class
         => CommandHandler\LicenceVehicle\UpdateUnlicensedOperatorLicenceVehicle::class,
+    TransferCommand\LicenceVehicle\DeleteUnlicensedOperatorLicenceVehicle::class
+        => CommandHandler\LicenceVehicle\DeleteUnlicensedOperatorLicenceVehicle::class,
 
 
     // Vehicle
