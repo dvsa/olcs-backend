@@ -34,11 +34,14 @@ final class Cases extends AbstractQueryHandler
                 'legacyOffences',
                 'transportManager',
                 'licence' => array(
+                    'licenceType',
+                    'status',
                     'trafficArea',
                     'establishmentCd' => array(
                         'address'
                     ),
                     'organisation' => array(
+                        'type',
                         'tradingNames',
                         'organisationPersons' => array(
                             'person' => array(
