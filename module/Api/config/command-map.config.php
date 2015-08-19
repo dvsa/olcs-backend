@@ -316,6 +316,7 @@ return [
     TransferCommand\Document\CopyDocument::class => CommandHandler\Document\CopyDocument::class,
     TransferCommand\Document\MoveDocument::class => CommandHandler\Document\MoveDocument::class,
     TransferCommand\Document\UpdateDocumentLinks::class => CommandHandler\Document\UpdateDocumentLinks::class,
+    TransferCommand\Document\PrintLetter::class => CommandHandler\Document\PrintLetter::class,
 
     // Transfer - CommunityLic
     TransferCommand\CommunityLic\Application\Create::class => CommandHandler\CommunityLic\Application\Create::class,
