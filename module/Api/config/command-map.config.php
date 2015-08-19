@@ -666,6 +666,9 @@ return [
     QueueCommand\Complete::class => QueueCommandHandler\Complete::class,
     QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
 
+    // Transfer - TmCaseDecision
+    TransferCommand\TmCaseDecision\Delete::class  => CommandHandler\TmCaseDecision\Delete::class,
+
     // Transfer - TmQualification
     TransferCommand\TmQualification\Create::class => CommandHandler\TmQualification\Create::class,
     TransferCommand\TmQualification\Update::class => CommandHandler\TmQualification\Update::class,
