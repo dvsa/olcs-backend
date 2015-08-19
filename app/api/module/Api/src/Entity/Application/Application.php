@@ -1279,6 +1279,7 @@ class Application extends AbstractApplication
             $this->getStatus()->getId(),
             [
                 self::APPLICATION_STATUS_REFUSED,
+                self::APPLICATION_STATUS_WITHDRAWN,
                 self::APPLICATION_STATUS_NOT_TAKEN_UP,
             ]
         )) {
