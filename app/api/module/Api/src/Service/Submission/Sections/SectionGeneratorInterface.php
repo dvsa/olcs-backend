@@ -10,5 +10,5 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
  */
 interface SectionGeneratorInterface
 {
-    public function generateSection(CasesEntity $casesEntity);
+    public function generateSection(CasesEntity $casesEntity, \ArrayObject $context = null);
 }

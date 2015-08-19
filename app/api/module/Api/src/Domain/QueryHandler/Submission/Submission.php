@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Submission;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 
 /**
  * Submission
@@ -15,11 +16,50 @@ final class Submission extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
+        $submission = $this->getRepo()->fetchUsingId($query);
+
         return $this->result(
-            $this->getRepo()->fetchUsingId($query),
+            $submission,
             [
-                'case'
+                'case',
+                'recipientUser' => [
+                    'contactDetails' => [
+                        'person'
+                    ]
+                ],
+                'senderUser' => [
+                    'contactDetails' => [
+                        'person'
+                    ]
+                ],
+                'documents' => [
+                    'category',
+                    'subCategory'
+                ],
+                'submissionSectionComments' => [
+                    'submissionSection'
+                ],
+                'submissionActions' => [
+                    'actionTypes',
+                    'reasons'
+                ]
+            ],
+            [
+                'submissionTypeTitle' => $this->getSubmissionTypeTitle($submission)
             ]
         );
+    }
+
+    /**
+     * Method that takes the submission type and looks up the ref data title for that submission type
+     *
+     * @param SubmissionEntity $submission
+     * @return string
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function getSubmissionTypeTitle(SubmissionEntity $submission)
+    {
+        $titleId = str_replace('_o_', '_t_', $submission->getSubmissionType()->getId());
+        return $this->getRepo()->getRefdataReference($titleId);
     }
 }
