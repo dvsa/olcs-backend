@@ -62,6 +62,7 @@ class Application extends AbstractQueryHandler
                 'outstandingFeeTotal' => $this->getOutstandingFeeTotal($application),
                 'variationCompletion' => $application->getVariationCompletion(),
                 'canCreateCase' => $application->canCreateCase(),
+                'allowFeePayments' => $application->allowFeePayments(),
             ]
         );
     }

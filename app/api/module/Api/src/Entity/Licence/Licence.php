@@ -613,4 +613,21 @@ class Licence extends AbstractLicence
 
         return (int)$this->getTotAuthLargeVehicles() > 0 || $count > 0;
     }
+
+    public function allowFeePayments()
+    {
+        if (in_array(
+            $this->getStatus()->getId(),
+            [
+                self::LICENCE_STATUS_REVOKED,
+                self::LICENCE_STATUS_TERMINATED,
+                self::LICENCE_STATUS_SURRENDERED,
+                self::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT,
+            ]
+        )) {
+            return false;
+        }
+
+        return true;
+    }
 }

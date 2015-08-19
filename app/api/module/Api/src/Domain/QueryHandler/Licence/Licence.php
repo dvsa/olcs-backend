@@ -46,7 +46,8 @@ class Licence extends AbstractQueryHandler
                 'organisation',
             ],
             [
-                'sections' => $this->sectionAccessService->getAccessibleSectionsForLicence($licence)
+                'sections' => $this->sectionAccessService->getAccessibleSectionsForLicence($licence),
+                'allowFeePayments' => $licence->allowFeePayments(),
             ]
         );
     }
