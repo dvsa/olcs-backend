@@ -37,8 +37,10 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
             return $this->sendEmail($document);
         }
 
-        if ($this->isOn($this->getLicenceFromDocument($document)->getTranslateToWelsh())) {
-            return $this->createTranslationTask($document, $document->getDescription());
+        $licence = $this->getLicenceFromDocument($document);
+
+        if ($licence !== null && $this->isOn($licence->getTranslateToWelsh())) {
+            return $this->createTranslationTask($document);
         }
 
         return $this->attemptPrint($document);
@@ -172,15 +174,14 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
     /**
      * Create translation task
      *
-     * @param Entity\Licence\Licence $licence
-     * @param $description
+     * @param Entity\Doc\Document $document
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
-    protected function createTranslationTask(Entity\Licence\Licence $licence, $description)
+    protected function createTranslationTask(Entity\Doc\Document $document)
     {
         $data = [
-            'description' => $description,
-            'licence' => $licence->getId()
+            'description' => $document->getDescription(),
+            'licence' => $this->getLicenceFromDocument($document)->getId()
         ];
 
         return $this->handleSideEffect(CreateTranslateToWelshTask::create($data));
