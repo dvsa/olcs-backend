@@ -41,7 +41,9 @@ final class CreateUnlicensedOperatorLicenceVehicle extends AbstractCommandHandle
 
         $this->result
             ->addId('licenceVehicle', $licenceVehicle->getId())
-            ->addMessage('Created Vehicle');
+            ->addMessage('LicenceVehicle created')
+            ->addId('vehicle', $licenceVehicle->getVehicle()->getId())
+            ->addMessage('Vehicle created');
 
         return $this->result;
     }
