@@ -7,11 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic;
 
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\PrintSchedulerInterface;
@@ -35,8 +35,6 @@ final class GenerateBatch extends AbstractCommandHandler implements
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /**
          * @NOTE This check allows us to pass Application whenever possible, but otherwise Licence should be sufficient
          */
@@ -65,8 +63,30 @@ final class GenerateBatch extends AbstractCommandHandler implements
 
             $documentGenerator = $this->getDocumentGenerator();
 
+            $date = new DateTime();
+            $fileName = sprintf(
+                '%s_%s-%s-%s_Community_licence.rtf',
+                $date->format('YmdHis'),
+                $identifier === null ? '0' : $identifier,
+                $licence->getId(),
+                $id
+            );
+
             $document = $documentGenerator->generateFromTemplate($template, $query);
-            $file = $documentGenerator->uploadGeneratedContent($document, 'documents');
+            $file = $documentGenerator->uploadGeneratedContent($document, 'documents', $fileName);
+
+            $data = [
+                'identifier' => $file->getIdentifier(),
+                'description' => 'Community licence',
+                'filename' => $fileName,
+                'category' => Entity\System\Category::CATEGORY_LICENSING,
+                'subCategory' => Entity\System\SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+                'isExternal' => false,
+                'isScan' => false,
+                'size' => $file->getSize()
+            ];
+
+            $this->result->merge($this->handleSideEffect(CreateDocumentSpecific::create($data)));
 
             $printQueue = EnqueueFileCommand::create(
                 [
@@ -76,13 +96,12 @@ final class GenerateBatch extends AbstractCommandHandler implements
                     'jobName' => 'Community Licence'
                 ]
             );
-            $printQueueResult = $this->handleSideEffect($printQueue);
-            $result->merge($printQueueResult);
+            $this->result->merge($this->handleSideEffect($printQueue));
 
-            $result->addMessage("Community Licence {$id} processed");
+            $this->result->addMessage("Community Licence {$id} processed");
         }
 
-        return $result;
+        return $this->result;
     }
 
     /**
