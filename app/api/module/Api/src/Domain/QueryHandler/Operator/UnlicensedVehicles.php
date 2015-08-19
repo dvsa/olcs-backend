@@ -8,8 +8,6 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Operator;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -20,10 +18,8 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class UnlicensedVehicles extends AbstractQueryHandler implements AuthAwareInterface
+class UnlicensedVehicles extends AbstractQueryHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'Organisation';
 
     protected $extraRepos = ['LicenceVehicle'];
@@ -50,7 +46,7 @@ class UnlicensedVehicles extends AbstractQueryHandler implements AuthAwareInterf
                 ]
             ),
             'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery),
-            'goodsOrPsv' => $licence->getGoodsOrPsv(),
+            'goodsOrPsv' => $licence->getGoodsOrPsv()->serialize(),
         ];
     }
 }
