@@ -80,8 +80,13 @@ class CreateUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with(m::type(LicenceVehicleEntity::class))
             ->andReturnUsing(
-                function (LicenceVehicleEntity $licenceVehicle) use
-                    (&$savedLicenceVehicle, $vehicleId, $licenceVehicleId) {
+                function (
+                    LicenceVehicleEntity $licenceVehicle
+                ) use (
+                    &$savedLicenceVehicle,
+                    $vehicleId,
+                    $licenceVehicleId
+                ) {
                     $savedLicenceVehicle = $licenceVehicle;
                     $this->assertEquals('ABC1234', $licenceVehicle->getVehicle()->getVrm());
                     $this->assertEquals(895, $licenceVehicle->getVehicle()->getPlatedWeight());
@@ -144,8 +149,13 @@ class CreateUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with(m::type(LicenceVehicleEntity::class))
             ->andReturnUsing(
-                function (LicenceVehicleEntity $licenceVehicle) use
-                    (&$savedLicenceVehicle, $vehicleId, $licenceVehicleId) {
+                function (
+                    LicenceVehicleEntity $licenceVehicle
+                ) use (
+                    &$savedLicenceVehicle,
+                    $vehicleId,
+                    $licenceVehicleId
+                ) {
                     $savedLicenceVehicle = $licenceVehicle;
                     $this->assertEquals('ABC1234', $licenceVehicle->getVehicle()->getVrm());
                     $this->assertEquals('vhl_t_a', $licenceVehicle->getVehicle()->getPsvType()->getId());
