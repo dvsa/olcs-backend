@@ -168,7 +168,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
     /**
      * Mock SUT so that can just test the protected method
      */
-    public function testApplyListFilters()
+    public function testApplyListFiltersUser()
     {
         $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -180,6 +180,39 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $mockDqb->shouldReceive('setParameter')->with('user', 73)->once();
 
         $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(['user' => 73]);
+        $sut->applyListFilters($mockDqb, $query);
+    }
+
+    /**
+     * Mock SUT so that can just test the protected method
+     */
+    public function testApplyListFiltersApplication()
+    {
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $mockDqb->shouldReceive('expr->eq')->with('tma.application', ':application')->once()->andReturn('EXPR');
+        $mockDqb->shouldReceive('where')->with('EXPR')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('setParameter')->with('application', 73)->once();
+
+        $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(['application' => 73]);
+        $sut->applyListFilters($mockDqb, $query);
+    }
+
+    /**
+     * Mock SUT so that can just test the protected method
+     */
+    public function testApplyListFiltersTransportManager()
+    {
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $mockDqb->shouldReceive('expr->eq')->with('tma.transportManager', ':transportManager')->once()
+            ->andReturn('EXPR');
+        $mockDqb->shouldReceive('where')->with('EXPR')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('setParameter')->with('transportManager', 73)->once();
+
+        $query = \Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList::create(['transportManager' => 73]);
         $sut->applyListFilters($mockDqb, $query);
     }
 

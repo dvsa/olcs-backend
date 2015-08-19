@@ -1,10 +1,10 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TransportManagerApplication;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TransportManagerLicence;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\TransportManagerApplication\GetList as QueryHandler;
-use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as Repo;
-use Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetList as Query;
+use Dvsa\Olcs\Api\Domain\QueryHandler\TransportManagerLicence\GetList as QueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as Repo;
+use Dvsa\Olcs\Transfer\Query\TransportManagerLicence\GetList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
@@ -18,7 +18,7 @@ class GetListTest extends QueryHandlerTestCase
     public function setUp()
     {
         $this->sut = new QueryHandler();
-        $this->mockRepo('TransportManagerApplication', Repo::class);
+        $this->mockRepo('TransportManagerLicence', Repo::class);
 
         parent::setUp();
     }
@@ -29,15 +29,15 @@ class GetListTest extends QueryHandlerTestCase
 
         $mockTma = m::mock();
 
-        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchList')
+        $this->repoMap['TransportManagerLicence']->shouldReceive('fetchList')
             ->with($query, \Doctrine\ORM\Query::HYDRATE_OBJECT)->once()->andReturn([$mockTma]);
-        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchCount')->with($query)->once();
+        $this->repoMap['TransportManagerLicence']->shouldReceive('fetchCount')->with($query)->once();
 
         $mockTma->shouldReceive('serialize')->with(
             [
-                'application' => [
+                'licence' => [
                     'status',
-                    'licenceType'
+                    'licenceType',
                 ],
                 'transportManager' => [
                     'homeCd' => [
