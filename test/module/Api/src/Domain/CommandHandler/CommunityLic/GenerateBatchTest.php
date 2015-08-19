@@ -7,8 +7,12 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic;
 
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\GenerateBatch;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -76,22 +80,39 @@ class GenerateBatchTest extends CommandHandlerTestCase
 
         ];
 
+        $date = new DateTime();
+
         $this->mockedSmServices['DocumentGenerator']
             ->shouldReceive('generateFromTemplate')
             ->with($template, $generateAndUploadData['data'])
             ->andReturn('document')
             ->once()
             ->shouldReceive('uploadGeneratedContent')
-            ->with('document', 'documents')
+            ->with('document', 'documents', $date->format('YmdHis') . '_0-1-10_Community_licence.rtf')
             ->andReturn(
                 m::mock()
                 ->shouldReceive('getIdentifier')
                 ->andReturn(1)
-                ->once()
+                ->shouldReceive('getSize')
+                ->andReturn(100)
                 ->getMock()
             )
             ->once()
             ->getMock();
+
+        $docResult = new Result();
+        $docResult->addMessage('Create Document');
+        $data = [
+            'identifier' => 1,
+            'description' => 'Community licence',
+            'filename' => $date->format('YmdHis') . '_0-1-10_Community_licence.rtf',
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+            'isExternal' => false,
+            'isScan' => false,
+            'size' => 100
+        ];
+        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $docResult);
 
         $printResult = new Result();
         $printResult->addMessage('File printed');
@@ -112,6 +133,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 'file' => 1
             ],
             'messages' => [
+                'Create Document',
                 'File printed',
                 'Community Licence 10 processed'
             ]
@@ -168,22 +190,39 @@ class GenerateBatchTest extends CommandHandlerTestCase
             'fileName' => 'Community Licence'
         ];
 
+        $date = new DateTime();
+
         $this->mockedSmServices['DocumentGenerator']
             ->shouldReceive('generateFromTemplate')
             ->with($template, $generateAndUploadData['data'])
             ->andReturn('document')
             ->once()
             ->shouldReceive('uploadGeneratedContent')
-            ->with('document', 'documents')
+            ->with('document', 'documents', $date->format('YmdHis') . '_2-1-10_Community_licence.rtf')
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getIdentifier')
                     ->andReturn(1)
-                    ->once()
+                    ->shouldReceive('getSize')
+                    ->andReturn(100)
                     ->getMock()
             )
             ->once()
             ->getMock();
+
+        $docResult = new Result();
+        $docResult->addMessage('Create Document');
+        $data = [
+            'identifier' => 1,
+            'description' => 'Community licence',
+            'filename' => $date->format('YmdHis') . '_2-1-10_Community_licence.rtf',
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+            'isExternal' => false,
+            'isScan' => false,
+            'size' => 100
+        ];
+        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $docResult);
 
         $printResult = new Result();
         $printResult->addMessage('File printed');
@@ -204,6 +243,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 'file' => 1
             ],
             'messages' => [
+                'Create Document',
                 'File printed',
                 'Community Licence 10 processed'
             ]
