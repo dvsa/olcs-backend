@@ -41,13 +41,14 @@ class SubmissionGenerator
             $submissionEntity->setSectionData($sectionId, $data);
         }
 
-        \Doctrine\Common\Util\Debug::dump($submissionEntity,4);exit;
+        $submissionEntity->setSubmissionDataSnapshot();
 
-        return $this->processSubmission($this->submissionConfig[$submissionTypeKey], $submissionEntity, $contextObject);
+        return $submissionEntity;
     }
 
     private function getRequiredSections($sectionTypeId, $postedSections)
     {
+        return ['case-summary'];
         $submissionTypeSections = $this->submissionConfig['section-types'][$sectionTypeId];
         return array_unique(array_merge($submissionTypeSections, $postedSections));
     }
@@ -74,7 +75,6 @@ class SubmissionGenerator
         }
 
         $contextArray = $context->getArrayCopy();
-var_dump($contextArray);exit;
         return new ImmutableArrayObject($contextArray);
     }
 

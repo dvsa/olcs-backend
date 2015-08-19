@@ -47,6 +47,6 @@ final class CaseSummary extends AbstractSection
         // application data
         $data['serviceStandardDate'] = !empty($application) ? $application->getTargetCompletionDate() : '';
 
-        return $data;
+        return ['data' => ['overview' => $data]];
     }
 }

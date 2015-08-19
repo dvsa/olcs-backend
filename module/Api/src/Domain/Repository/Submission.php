@@ -27,6 +27,15 @@ class Submission extends AbstractRepository
             ->with('recipientUser', 'r')
             ->with('r.contactDetails', 'rcd')
             ->with('rcd.person')
+            ->with('senderUser', 's')
+            ->with('s.contactDetails', 'scd')
+            ->with('scd.person')
+            ->with('documents', 'd')
+            ->with('submissionSectionComments', 'ssc')
+            ->with('ssc.submissionSection', 'sc')
+            ->with('submissionActions', 'sa')
+            ->with('sa.actionTypes')
+            ->with('sa.reasons')
             ->byId($id);
     }
 
@@ -39,6 +48,9 @@ class Submission extends AbstractRepository
         $this->getQueryBuilder()
             ->with('recipientUser', 'r')
             ->with('r.contactDetails', 'rcd')
-            ->with('rcd.person');
+            ->with('rcd.person')
+            ->with('senderUser', 's')
+            ->with('s.contactDetails', 'scd')
+            ->with('scd.person');
     }
 }

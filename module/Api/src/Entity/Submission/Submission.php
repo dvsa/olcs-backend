@@ -34,6 +34,13 @@ class Submission extends AbstractSubmission
     public function setSectionData($section, $data)
     {
         $this->sectionData[$section] = $data;
+
         return $this;
+    }
+
+    public function setSubmissionDataSnapshot()
+    {
+        $this->setDataSnapshot(json_encode($this->sectionData));
+        unset($this->sectionData);
     }
 }
