@@ -315,6 +315,10 @@ return [
     // Queue
     QueueQuery\NextItem::class => QueueQueryHandler\NextItem::class,
 
+    // TmCaseDecision
+    TransferQuery\TmCaseDecision\GetByCase::class =>
+        QueryHandler\TmCaseDecision\GetByCase::class,
+
     // TmQualification
     TransferQuery\TmQualification\TmQualificationsList::class =>
         QueryHandler\TmQualification\TmQualificationsList::class,
