@@ -2252,4 +2252,77 @@ class ApplicationEntityTest extends EntityTester
         );
         $this->assertEquals(1, $application->getOperatingCentresNetDelta());
     }
+
+    /**
+     * @dataProvider allowFeePaymentsProvider
+     */
+    public function testAllowFeePayments($statusId, $licenceStatusId, $expected)
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $organisation = m::mock(Organisation::class);
+
+        $status = m::mock(RefData::class)
+            ->shouldReceive('getId')
+            ->andReturn($statusId)
+            ->getMock();
+        $licenceStatus = m::mock(RefData::class)
+            ->shouldReceive('getId')
+            ->andReturn($licenceStatusId)
+            ->getMock();
+
+        $licence = new Licence($organisation, $licenceStatus);
+
+        $application->setStatus($status);
+        $application->setLicence($licence);
+
+        $this->assertEquals($expected, $application->allowFeePayments());
+    }
+
+    public function allowFeePaymentsProvider()
+    {
+        return [
+            'refused' => [
+                Entity::APPLICATION_STATUS_REFUSED,
+                Licence::LICENCE_STATUS_REFUSED,
+                false,
+            ],
+            'withdrawn' => [
+                Entity::APPLICATION_STATUS_WITHDRAWN,
+                Licence::LICENCE_STATUS_WITHDRAWN,
+                false,
+            ],
+            'ntu' => [
+                Entity::APPLICATION_STATUS_NOT_TAKEN_UP,
+                Licence::LICENCE_STATUS_NOT_TAKEN_UP,
+                false,
+            ],
+            'licence surrendered' => [
+                Entity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                Licence::LICENCE_STATUS_SURRENDERED,
+                false,
+            ],
+            'licence terminated' => [
+                Entity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                Licence::LICENCE_STATUS_TERMINATED,
+                false,
+            ],
+            'licence revoked' => [
+                Entity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                Licence::LICENCE_STATUS_REVOKED,
+                false,
+            ],
+            'licence cns' => [
+                Entity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                Licence::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT,
+                false,
+            ],
+            'under consideration' => [
+                Entity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                Licence::LICENCE_STATUS_UNDER_CONSIDERATION,
+                true,
+            ],
+        ];
+    }
 }
