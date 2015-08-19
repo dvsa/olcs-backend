@@ -44,7 +44,9 @@ final class UpdateUnlicensedOperatorLicenceVehicle extends AbstractCommandHandle
 
         $this->getRepo()->save($licenceVehicle);
 
-        $this->result->addMessage('Updated Vehicle');
+        $this->result
+            ->addId('licenceVehicle', $licenceVehicle->getId())
+            ->addMessage('LicenceVehicle updated');
 
         return $this->result;
     }
