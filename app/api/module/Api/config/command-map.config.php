@@ -667,7 +667,11 @@ return [
     QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
 
     // Transfer - TmCaseDecision
-    TransferCommand\TmCaseDecision\Delete::class  => CommandHandler\TmCaseDecision\Delete::class,
+    TransferCommand\TmCaseDecision\CreateReputeNotLost::class
+        => CommandHandler\TmCaseDecision\CreateReputeNotLost::class,
+    TransferCommand\TmCaseDecision\UpdateReputeNotLost::class
+        => CommandHandler\TmCaseDecision\UpdateReputeNotLost::class,
+    TransferCommand\TmCaseDecision\Delete::class => CommandHandler\TmCaseDecision\Delete::class,
 
     // Transfer - TmQualification
     TransferCommand\TmQualification\Create::class => CommandHandler\TmQualification\Create::class,
