@@ -9,7 +9,6 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Operator;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-// use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Operator\UnlicensedVehicles as VehiclesQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
