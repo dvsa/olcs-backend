@@ -41,8 +41,8 @@ class RepositoryTestCase extends MockeryTestCase
 
     public function setUpSut($class = null, $mockSut = false)
     {
-        $this->em = m::mock(EntityManager::class)->makePartial();
-        $this->queryBuilder = m::mock(QueryBuilderInterface::class)->makePartial();
+        $this->em = m::mock(EntityManager::class);
+        $this->queryBuilder = m::mock(QueryBuilderInterface::class);
 
         if ($mockSut) {
             $this->sut = m::mock($class, [$this->em, $this->queryBuilder])
