@@ -112,4 +112,38 @@ class TransportManagerLicenceTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('RESULT');
         $this->assertEquals('RESULT', $this->sut->fetchByTmAndLicence(1, 2));
     }
+
+    /**
+     * Mock SUT so that can just test the protected method
+     */
+    public function testApplyListFiltersLicence()
+    {
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $mockDqb->shouldReceive('expr->eq')->with('tml.licence', ':licence')->once()
+            ->andReturn('EXPR');
+        $mockDqb->shouldReceive('where')->with('EXPR')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('setParameter')->with('licence', 73)->once();
+
+        $query = \Dvsa\Olcs\Transfer\Query\TransportManagerLicence\GetList::create(['licence' => 73]);
+        $sut->applyListFilters($mockDqb, $query);
+    }
+
+    /**
+     * Mock SUT so that can just test the protected method
+     */
+    public function testApplyListFiltersTransportManager()
+    {
+        $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $mockDqb->shouldReceive('expr->eq')->with('tml.transportManager', ':transportManager')->once()
+            ->andReturn('EXPR');
+        $mockDqb->shouldReceive('where')->with('EXPR')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('setParameter')->with('transportManager', 73)->once();
+
+        $query = \Dvsa\Olcs\Transfer\Query\TransportManagerLicence\GetList::create(['transportManager' => 73]);
+        $sut->applyListFilters($mockDqb, $query);
+    }
 }

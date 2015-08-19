@@ -115,4 +115,17 @@ class TransportManagerLicence extends AbstractRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    protected function applyListFilters(\Doctrine\ORM\QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
+    {
+        if ($query->getLicence()) {
+            $qb->where($qb->expr()->eq('tml.licence', ':licence'))
+                ->setParameter('licence', $query->getLicence());
+        }
+
+        if ($query->getTransportManager()) {
+            $qb->where($qb->expr()->eq('tml.transportManager', ':transportManager'))
+                ->setParameter('transportManager', $query->getTransportManager());
+        }
+    }
 }
