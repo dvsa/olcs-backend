@@ -58,9 +58,4 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
 
         return $submissionEntity;
     }
-
-    private function generateDataSnapshot($command)
-    {
-        return 'THIS IS A TEST';
-    }
 }
