@@ -60,8 +60,6 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     private function updateStatus(ApplicationEntity $application, $result)
     {
         $now = new DateTime();
-        $target = clone $now;
-        $target->modify('+9 week');
 
         $newStatus = ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION;
         $status = $this->getRepo()->getRefdataReference($newStatus);
@@ -69,8 +67,9 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
 
         $application
             ->setStatus($status)
-            ->setReceivedDate($now)
-            ->setTargetCompletionDate($target);
+            ->setReceivedDate($now);
+
+        $application->setTargetCompletionDateFromReceivedDate();
 
         if (!$application->isVariation()) {
             // update licence status for new apps only, will cascade persist on save
