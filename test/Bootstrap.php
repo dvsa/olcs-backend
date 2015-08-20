@@ -2,8 +2,7 @@
 
 namespace OlcsTest;
 
-use Zend\Mvc\Service\ServiceManagerConfig;
-use Zend\ServiceManager\ServiceManager;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Mockery as m;
 
 /**
@@ -27,15 +26,20 @@ class Bootstrap
         $config = include dirname(__DIR__) . '/config/application.config.php';
 
         self::$config = $config;
-
-        self::getServiceManager();
     }
 
     public static function getServiceManager()
     {
-        $sm = m::mock('\Zend\ServiceManager\ServiceManager')
-            ->makePartial()
-            ->setAllowOverride(true);
+        $sm = m::mock(ServiceLocatorInterface::class);
+
+        $sm->shouldReceive('setService')
+            ->andReturnUsing(
+                function ($alias, $service) use ($sm) {
+                    $sm->shouldReceive('get')->with($alias)->andReturn($service);
+                    $sm->shouldReceive('has')->with($alias)->andReturn(true);
+                    return $sm;
+                }
+            );
 
         return $sm;
     }

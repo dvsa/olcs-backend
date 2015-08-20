@@ -7,7 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Operator;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Operator\UnlicensedBusinessDetails as BusinessDetailsQueryHanlder;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Operator\UnlicensedBusinessDetails as BusinessDetailsQueryHandler;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Transfer\Query\Operator\BusinessDetails as Qry;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
@@ -22,7 +22,7 @@ class UnlicensedBusinessDetailsTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = m::mock(BusinessDetailsQueryHanlder::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->sut = m::mock(BusinessDetailsQueryHandler::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->mockRepo('Organisation', OrganisationRepo::class);
 
         parent::setUp();
@@ -60,6 +60,7 @@ class UnlicensedBusinessDetailsTest extends QueryHandlerTestCase
             ->getMock();
 
         $result = $this->sut->handleQuery($query);
-        $this->assertEquals($result, 'result');
+
+        $this->assertEquals('result', $result);
     }
 }

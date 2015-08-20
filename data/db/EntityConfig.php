@@ -628,7 +628,10 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Vehicle',
                 'property' => 'licenceVehicle'
-            )
+            ),
+            'cascade' => array(
+                'persist'
+            ),
         ),
         'removal' => array(
             'type' => 'yesnonull'

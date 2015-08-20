@@ -323,6 +323,7 @@ return [
     TransferCommand\Document\CopyDocument::class => CommandHandler\Document\CopyDocument::class,
     TransferCommand\Document\MoveDocument::class => CommandHandler\Document\MoveDocument::class,
     TransferCommand\Document\UpdateDocumentLinks::class => CommandHandler\Document\UpdateDocumentLinks::class,
+    TransferCommand\Document\PrintLetter::class => CommandHandler\Document\PrintLetter::class,
 
     // Transfer - CommunityLic
     TransferCommand\CommunityLic\Application\Create::class => CommandHandler\CommunityLic\Application\Create::class,
@@ -585,6 +586,13 @@ return [
     TransferCommand\Operator\Update::class => CommandHandler\Operator\SaveOperator::class,
     TransferCommand\Operator\CreateUnlicensed::class => CommandHandler\Operator\CreateUnlicensed::class,
     TransferCommand\Operator\UpdateUnlicensed::class => CommandHandler\Operator\UpdateUnlicensed::class,
+    TransferCommand\LicenceVehicle\UpdateUnlicensedOperatorLicenceVehicle::class
+        => CommandHandler\LicenceVehicle\UpdateUnlicensedOperatorLicenceVehicle::class,
+    TransferCommand\LicenceVehicle\DeleteUnlicensedOperatorLicenceVehicle::class
+        => CommandHandler\LicenceVehicle\DeleteUnlicensedOperatorLicenceVehicle::class,
+    TransferCommand\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class
+        => CommandHandler\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class,
+
 
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
