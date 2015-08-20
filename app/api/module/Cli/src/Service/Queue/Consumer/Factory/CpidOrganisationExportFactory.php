@@ -6,12 +6,10 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory;
 
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\LockHandler;
-
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport;
 
 /**
@@ -30,16 +28,12 @@ class CpidOrganisationExportFactory implements FactoryInterface
         $fileUploader = $sl->get('FileUploader');
         $fileSystem = new Filesystem();
 
-        $lock = new LockHandler(hash('sha256', $path));
-        $lock->lock(true);
-
         return new CpidOrganisationExport(
             $path,
             $repo,
             $commandHandler,
             $fileUploader,
-            $fileSystem,
-            $lock
+            $fileSystem
         );
     }
 }

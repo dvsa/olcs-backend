@@ -6,13 +6,12 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\LockHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Complete as CompleteCmd;
@@ -43,15 +42,13 @@ class CpidOrganisationExport implements MessageConsumerInterface
         Organisation $organisation,
         CommandHandlerInterface $commandHandler,
         FileUploaderInterface $fileUploader,
-        Filesystem $fileSystem,
-        LockHandler $lockHandler
+        Filesystem $fileSystem
     ) {
         $this->path = $path;
         $this->organisationRepo = $organisation;
         $this->commandHandler = $commandHandler;
         $this->fileUploader = $fileUploader;
         $this->fileSystem = $fileSystem;
-        $this->lockHandler = $lockHandler;
     }
 
     public function processMessage(QueueEntity $item)
@@ -61,7 +58,7 @@ class CpidOrganisationExport implements MessageConsumerInterface
         $iterableResult = $this->organisationRepo
             ->fetchAllByStatusForCpidExport($options['status']);
 
-        $filename = $this->createTmpFile($this->path);
+        $filename = $this->fileSystem->createTmpFile($this->path);
 
         $handle = fopen($filename, 'w');
         while (($row = $iterableResult->next()) !== false) {
@@ -103,19 +100,6 @@ class CpidOrganisationExport implements MessageConsumerInterface
                     'content' => $contents
                 ]
             )->upload();
-    }
-
-    private function createTmpFile($path, $prefix = '')
-    {
-        do {
-            $filename = $path . DIRECTORY_SEPARATOR . uniqid($prefix);
-        } while ($this->fileSystem->exists($filename));
-
-        $this->fileSystem->touch($filename);
-
-        $this->lockHandler->release();
-
-        return $filename;
     }
 
     protected function success(QueueEntity $item, $message = null)
