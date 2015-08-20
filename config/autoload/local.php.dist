@@ -33,7 +33,20 @@ return array(
                     'dbname' => 'olcs_be',
                 )
             )
-        )
+        ),
+        'driver' => array(
+            'EntityDriver' => array(
+                'cache' => 'apc'
+            ),
+            'translatable_metadata_driver' => array(
+                'cache' => 'apc',
+            )
+        ),
+        'configuration' => array(
+            'orm_default' => array(
+                'metadata_cache' => 'apc'
+            )
+        ),
     ),
     'companies_house_credentials' => array(
         'password'   => 'XMLGatewayTestPassword',
@@ -55,13 +68,11 @@ return array(
     ),
     'companies_house' => [
         'http' => [
-            'sslcapath' => '/etc/ssl/certs',
-            // insecure! should be set to true in production to verify SSL cert
-            'sslverifypeer' => false,
             // Set the following if you need to go via a proxy to get to Companies House
-            // 'adapter'    => 'Zend\Http\Client\Adapter\Proxy',
-            // 'proxy_host' => 'fp01.inf.mgt.mtpdvsa',
-            // 'proxy_port' => '3128',
+            // 'curloptions' => [
+            //     CURLOPT_PROXY => 'http://fp01.inf.mgt.mtpdvsa:3128',
+            //     CURLOPT_PROXYPORT => 3128,
+            // ],
         ],
         'auth' => [
             // Companies House API key
