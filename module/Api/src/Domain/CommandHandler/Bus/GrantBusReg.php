@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\Publication\Bus as PublishDto;
 
 /**
  * Grant BusReg
@@ -51,12 +52,28 @@ final class GrantBusReg extends AbstractCommandHandler
 
         $this->getRepo()->save($busReg);
 
-        // TODO - OLCS-9919 - publish BusReg goes here
+        // publish the bus reg
+        $this->publish($busReg);
 
         $result = new Result();
         $result->addId('bus', $busReg->getId());
         $result->addMessage('Bus Reg granted successfully');
 
         return $result;
+    }
+
+    /**
+     * @param BusRegEntity $busReg
+     * @return Result
+     */
+    private function publish(BusRegEntity $busReg)
+    {
+        return $this->getCommandHandler()->handleCommand(
+            PublishDto::create(
+                [
+                    'id' => $busReg->getId(),
+                ]
+            )
+        );
     }
 }

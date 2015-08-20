@@ -5,11 +5,11 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
-use Dvsa\Olcs\Api\Entity\System\Sla;
+use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Domain\Repository\Licence;
-use Dvsa\Olcs\Api\Domain\Repository\Sla as SlaRepo;
 
 /**
  * PI
@@ -18,50 +18,107 @@ final class Pi extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Pi';
 
+    protected $extraRepos = ['Licence', 'Sla'];
+
     /**
      * @var SlaCalculatorInterface
      */
     private $slaService;
 
-    /**
-     * @var Licence
-     */
-    private $licenceRepo;
-
-    /**
-     * @var SlaRepo
-     */
-    private $slaRepo;
-
     public function handleQuery(QueryInterface $query)
     {
-        $case = $this->getRepo()->fetchUsingId($query, Query::HYDRATE_ARRAY);
+        $pi = $this->getRepo()->fetchUsingCase($query, Query::HYDRATE_ARRAY);
 
-        $this->extractHearingDate($case['pi']);
+        $this->extractHearingDate($pi);
 
-        /** @TODO change me to use queries*/
-        $licence = $this->licenceRepo->fetchByCaseId($query->getId(), Query::HYDRATE_OBJECT);
+        $pi['canClose'] = $this->canClose($pi);
+        $pi['isClosed'] = $this->isClosed($pi);
+        $pi['canReopen'] = $this->canReopen($pi);
 
-        $slas = $this->slaRepo->fetchByCategory('pi', Query::HYDRATE_OBJECT);
+        /** @TODO change me to use queries */
+        if (!empty($pi['case']['transportManager'])) {
+            //no licence for TM cases so using English TA
+            $trafficArea = $this->getRepo()->getReference(
+                TrafficAreaEntity::class,
+                TrafficAreaEntity::SE_MET_TRAFFIC_AREA_CODE
+            );
+        } else {
+            /** @var LicenceEntity $licence */
+            $licence = $this->getRepo('Licence')->fetchByCaseId($query->getId(), Query::HYDRATE_OBJECT);
+            $trafficArea = $licence->getTrafficArea();
+        }
+
+        $slas = $this->getRepo('Sla')->fetchByCategory('pi', Query::HYDRATE_OBJECT);
 
         foreach ($slas as $sla) {
-            /** @var Sla $sla*/
-            if (isset($case['pi'][$sla->getCompareTo()]) && !empty($case['pi'][$sla->getCompareTo()])) {
+            /** @var SlaEntity $sla*/
+            if (isset($pi[$sla->getCompareTo()]) && !empty($pi[$sla->getCompareTo()])) {
 
-                $dateTime = date_create($case['pi'][$sla->getCompareTo()]);
+                $dateTime = date_create($pi[$sla->getCompareTo()]);
 
                 if ($dateTime && $sla->appliesTo($dateTime)) {
-                    $targetDate = $this->slaService->applySla($dateTime, $sla, $licence->getTrafficArea());
-                    $case['pi'][$sla->getField() . 'Target'] = $targetDate->format('Y-m-d');
+                    $targetDate = $this->slaService->applySla($dateTime, $sla, $trafficArea);
+                    $pi[$sla->getField() . 'Target'] = $targetDate->format('Y-m-d');
                 }
             }
 
-            if (!isset($case['pi'][$sla->getField() . 'Target'])) {
-                $case['pi'][$sla->getField() . 'Target'] = '';
+            if (!isset($pi[$sla->getField() . 'Target'])) {
+                $pi[$sla->getField() . 'Target'] = '';
             }
         }
 
-        return $case;
+        return $pi;
+    }
+
+    protected function canClose($data)
+    {
+        if (isset($data['piHearings'][0])) {
+            if (!empty($data['piHearings'][0]['cancelledDate'])) {
+                return !$this->isClosed($data);
+            }
+        }
+
+        if (isset($data['writtenOutcome']['id'])) {
+            switch($data['writtenOutcome']['id']) {
+                case 'piwo_none':
+                    return !$this->isClosed($data);
+                case 'piwo_reason':
+                    if (empty($data['tcWrittenReasonDate']) ||
+                        empty($data['writtenReasonLetterDate'])
+                    ) {
+                        return false;
+                    }
+                    return !$this->isClosed($data);
+                case 'piwo_decision':
+                    if (empty($data['tcWrittenDecisionDate']) ||
+                        empty($data['decisionLetterSentDate'])
+                    ) {
+                        return false;
+                    }
+                    return !$this->isClosed($data);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Is this entity closed
+     * @param array $data
+     * @return bool
+     */
+    public function isClosed($data)
+    {
+        return (bool) isset($data['closedDate']);
+    }
+
+    /**
+     * Can this entity be reopened
+     * @param array $data
+     * @return bool
+     */
+    public function canReopen($data)
+    {
+        return $this->isClosed($data);
     }
 
     /**
@@ -87,8 +144,6 @@ final class Pi extends AbstractQueryHandler
         $serviceLocator = $serviceLocator->getServiceLocator();
 
         $this->slaService = $serviceLocator->get(SlaCalculatorInterface::class);
-        $this->slaRepo = $serviceLocator->get('RepositoryServiceManager')->get('Sla');
-        $this->licenceRepo = $serviceLocator->get('RepositoryServiceManager')->get('Licence');
 
         return $this;
     }

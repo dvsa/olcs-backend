@@ -26,7 +26,7 @@ class PublicationLink extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere(
-            $qb->expr()->eq('busReg', ':busReg')
+            $qb->expr()->eq($this->alias . '.busReg', ':busReg')
         )->setParameter('busReg', $busRegId);
 
         return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);

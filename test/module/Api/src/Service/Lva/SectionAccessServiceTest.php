@@ -52,7 +52,6 @@ class SectionAccessServiceTest extends MockeryTestCase
         $this->authService = m::mock(AuthorizationService::class);
 
         $this->serviceLocator = Bootstrap::getServiceManager();
-        $this->serviceLocator->setAllowOverride(true);
         $this->serviceLocator->setService('RestrictionService', $this->mockRestrictionHelper);
         $this->serviceLocator->setService('SectionConfig', $this->sectionConfig);
         $this->serviceLocator->setService(AuthorizationService::class, $this->authService);

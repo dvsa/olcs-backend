@@ -176,7 +176,7 @@ return [
     'application-review-vehicles-psv-medium-title' => '9 - 16 passenger seat vehicles',
     'application-review-vehicles-psv-small-title' => 'Small vehicles',
     'application-review-vehicles-vrm' => 'VRM',
-    'application-review-vehicles-weight' => 'Gross plated weight (Kg)',
+    'application-review-vehicles-weight' => 'Gross plated weight (kg)',
     'variation-review-addresses-change' => 'Thank you for updating your addresses',
     'variation-review-business-details-change' => 'Thank you for updating your business details',
     'variation-review-business-type-change' => 'Thank you for updating your business type',

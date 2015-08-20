@@ -1902,9 +1902,6 @@ INSERT INTO `hint_question` (`id`,`created_by`,`last_modified_by`,`category_no`,
     (2,1,1,1,'What is your Mother\'s maiden name?', '2015-03-27 00:00:00',null,1),
     (3,1,1,1,'What is your memorable date?', '2015-03-27 00:00:00',null,1);
 
-
-SET foreign_key_checks = 1;
-
 -- Start: Application 7 - new Goods Vehicle Standard National application ready to submit
 BEGIN;
 INSERT INTO `address` (`id`, `admin_area`, `country_code`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`, `paon_end`, `paon_start`, `postcode`, `saon_end`, `saon_start`, `town`, `uprn`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (116,NULL,'GB',NULL,NULL,'DVSA','','','',NULL,NULL,'LS9 6NF',NULL,NULL,'Leeds',NULL,'2015-03-27 12:29:38',NULL,NULL,NULL,1);
@@ -2049,3 +2046,41 @@ VALUES
     (2, 1, 'company_people_change'),
     (3, 2, 'company_address_change'),
     (4, 3, 'company_name_change');
+
+-- organisation, licence and contact details for some unlicensed operators --
+INSERT INTO `organisation` (`id`,`lead_tc_area_id`,`name`,`type`,`is_unlicensed`) VALUES
+    (106,'B','Test Unlicensed Goods Operator','org_t_pa',1),
+    (107,'B','Test Unlicensed PSV Operator','org_t_pa',1);
+INSERT INTO `licence` (`id`,`correspondence_cd_id`,`organisation_id`,`goods_or_psv`,`licence_type`,`status`,`lic_no`) VALUES
+    (701,145,106,'lcat_gv','ltyp_r','lsts_unlicenced','UOB3'),
+    (702,145,107,'lcat_psv','ltyp_r','lsts_unlicenced','UOB4');
+INSERT INTO `contact_details` (`id`,`address_id`,`contact_type`,`email_address`) VALUES
+    (145,124,'ct_corr','unlicensed@foo.bar'),
+    (146,125,'ct_corr','unlicensed@foo.bar');
+INSERT INTO `address` (`id`,`saon_desc`,`paon_desc`,`street`,`locality`,`town`,`postcode`,`country_code`) VALUES
+    (124,'Address Line 1','Address Line 2','Address Line 3','Address Line 4','Address Line 5','LS9 6NF','GB'),
+    (125,'Address Line 1','Address Line 2','Address Line 3','Address Line 4','Address Line 5','LS9 6NF','GB');
+INSERT INTO `phone_contact` (`id`,`contact_details_id`,`phone_contact_type`,`phone_number`) VALUES
+    (13,145,'phone_t_tel','012345'),
+    (14,145,'phone_t_home','012346'),
+    (15,145,'phone_t_mobile','012347'),
+    (16,145,'phone_t_fax','012348'),
+    (17,146,'phone_t_tel','012345'),
+    (18,146,'phone_t_home','012346'),
+    (19,146,'phone_t_mobile','012347'),
+    (20,146,'phone_t_fax','012348');
+-- vehicles for unlicensed operators
+INSERT INTO `vehicle` (`id`,`vrm`,`plated_weight`,`psv_type`,`created_on`) VALUES
+    (9,'ABC123','750',NULL,'2015-07-16'),
+    (10,'ABC124','895',NULL,'2015-07-17'),
+    (11,'ABC125',NULL,'vhl_t_a','2015-07-16'),
+    (12,'ABC126',NULL,'vhl_t_b','2015-07-17'),
+    (13,'ABC127',NULL,'vhl_t_c','2015-07-18');
+INSERT INTO `licence_vehicle` (`licence_id`,`vehicle_id`) VALUES
+    (701, 9),
+    (701, 10),
+    (702, 11),
+    (702, 12),
+    (702, 13);
+
+SET foreign_key_checks = 1;
