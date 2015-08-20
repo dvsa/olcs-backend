@@ -119,7 +119,7 @@ return [
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
             'Cases' => RepositoryFactory::class,
-            'Pi' => \Dvsa\Olcs\Api\Domain\Repository\PiFactory::class,
+            'Pi' => RepositoryFactory::class,
             'NonPi' => RepositoryFactory::class,
             'EventHistory' => RepositoryFactory::class,
             'PublicHoliday' => RepositoryFactory::class,
