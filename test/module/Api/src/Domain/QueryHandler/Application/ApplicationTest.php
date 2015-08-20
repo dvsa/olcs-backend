@@ -77,7 +77,7 @@ class ApplicationTest extends QueryHandlerTestCase
             'sections' => ['bar', 'cake'],
             'outstandingFeeTotal' => '166.70',
             'variationCompletion' => null,
-            'canCreateCase' => false,
+            'canCreateCase' => false
         ];
 
         $this->assertEquals($expected, $result->serialize());

@@ -56,7 +56,7 @@ class LicenceTest extends QueryHandlerTestCase
 
         $expected = [
             'foo' => 'bar',
-            'sections' => ['bar', 'cake'],
+            'sections' => ['bar', 'cake']
         ];
 
         $this->assertEquals($expected, $result->serialize());

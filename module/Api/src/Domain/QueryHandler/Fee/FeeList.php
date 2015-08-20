@@ -38,7 +38,7 @@ class FeeList extends AbstractQueryHandler
             return $licence->allowFeePayments();
         }
 
-        if (is_null($query->getApplication())) {
+        if (!is_null($query->getApplication())) {
             $application = $this->getRepo('Application')->fetchById($query->getApplication());
             return $application->allowFeePayments();
         }
