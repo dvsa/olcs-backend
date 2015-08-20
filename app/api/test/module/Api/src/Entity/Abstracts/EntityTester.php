@@ -9,14 +9,14 @@ namespace Dvsa\OlcsTest\Api\Entity\Abstracts;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Instantiator\Instantiator;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Abstract entity tester
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class EntityTester extends MockeryTestCase
+abstract class EntityTester extends PHPUnit_Framework_TestCase
 {
     /**
      * Holds the entity
@@ -35,6 +35,11 @@ abstract class EntityTester extends MockeryTestCase
     public function getClassToTestName()
     {
         return $this->entityClass;
+    }
+
+    public function tearDown()
+    {
+        unset($this->entity);
     }
 
     protected function instantiate($entityName)
