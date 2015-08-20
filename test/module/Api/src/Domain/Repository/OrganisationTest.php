@@ -291,14 +291,14 @@ class OrganisationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('modifyQuery')
             ->andReturnSelf()
             ->shouldReceive('withRefdata')
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->andReturnSelf()
+            ->shouldReceive('paginate')
             ->andReturnSelf();
 
         $qb->shouldReceive('where');
         $qb->shouldReceive('expr->isNull');
-
-        $qb->shouldReceive('setFirstResult');
-        $qb->shouldReceive('setMaxResults');
-        $qb->shouldReceive('addOrderBy');
 
         $this->sut->shouldReceive('fetchPaginatedList');
         $this->sut->shouldReceive('fetchPaginatedCount');
@@ -327,6 +327,10 @@ class OrganisationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('modifyQuery')
             ->andReturnSelf()
             ->shouldReceive('withRefdata')
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->andReturnSelf()
+            ->shouldReceive('paginate')
             ->andReturnSelf();
 
         $this->sut->shouldReceive('getRefdataReference');
@@ -335,10 +339,6 @@ class OrganisationTest extends RepositoryTestCase
         $qb->shouldReceive('expr->eq');
 
         $qb->shouldReceive('setParameter');
-
-        $qb->shouldReceive('setFirstResult');
-        $qb->shouldReceive('setMaxResults');
-        $qb->shouldReceive('addOrderBy');
 
         $this->sut->shouldReceive('fetchPaginatedList');
         $this->sut->shouldReceive('fetchPaginatedCount');

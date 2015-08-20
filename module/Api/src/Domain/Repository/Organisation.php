@@ -98,7 +98,9 @@ class Organisation extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata();
+            ->withRefdata()
+            ->order('name', 'asc')
+            ->paginate($query->getPage(), $query->getLimit());
 
         if ($query->getCpid() !== Entity::OPERATOR_CPID_ALL) {
             if (is_null($query->getCpid())) {
@@ -111,10 +113,6 @@ class Organisation extends AbstractRepository
                 );
             }
         }
-
-        $qb->setFirstResult(($query->getLimit() * $query->getPage()) - $query->getLimit());
-        $qb->setMaxResults($query->getLimit());
-        $qb->addOrderBy($this->alias . '.name', 'ASC');
 
         return [
             'result' => $this->fetchPaginatedList($qb, Query::HYDRATE_OBJECT),
