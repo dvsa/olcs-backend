@@ -125,6 +125,7 @@ return [
     TransferCommand\Cases\Pi\UpdateAgreedAndLegislation::class =>
         CommandHandler\Cases\Pi\AgreedAndLegislationUpdate::class,
     TransferCommand\Cases\Pi\UpdateDecision::class => CommandHandler\Cases\Pi\UpdateDecision::class,
+    TransferCommand\Cases\Pi\UpdateSla::class => CommandHandler\Cases\Pi\UpdateSla::class,
 
     // Transfer - Bus
     TransferCommand\Bus\CreateBus::class => CommandHandler\Bus\CreateBus::class,
