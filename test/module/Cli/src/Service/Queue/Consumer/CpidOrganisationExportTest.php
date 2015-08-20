@@ -9,8 +9,8 @@ namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
 use Mockery as m;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\LockHandler;
+use org\bovigo\vfs\vfsStream;
+use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation;
@@ -41,7 +41,8 @@ class CpidOrganisationExportTest extends m\Adapter\Phpunit\MockeryTestCase
      */
     public function testProcessMessageSuccess($response, $message)
     {
-        $path = '/tmp';
+        $path = vfsStream::setup()->url();
+
         $organisation = m::mock(Organisation::class)
             ->shouldReceive('fetchAllByStatusForCpidExport')
             ->with(null)
@@ -54,8 +55,14 @@ class CpidOrganisationExportTest extends m\Adapter\Phpunit\MockeryTestCase
                     ->getMock()
             )
             ->getMock();
+
         $fileUploader = m::mock(FileUploaderInterface::class)
             ->shouldReceive('setFile')
+            ->with(
+                array(
+                    'content' => "1,2,3\n"
+                )
+            )
             ->andReturnSelf()
             ->shouldReceive('upload')
             ->andReturn(
@@ -64,20 +71,23 @@ class CpidOrganisationExportTest extends m\Adapter\Phpunit\MockeryTestCase
                     ->getMock()
             )
             ->getMock();
+
         $commandHandlerManager = m::mock(CommandHandlerManager::class)
             ->shouldReceive('handleCommand')
             ->andReturn($response)
             ->getMock();
-        $fileSystem = m::mock(Filesystem::class)->makePartial();
-        $lockHandler = m::mock(LockHandler::class)->makePartial();
+
+        $fileSystem = m::mock(Filesystem::class)
+            ->shouldReceive('createTmpFile')
+            ->andReturn($path . "/filename")
+            ->getMock();
 
         $cpidOrganisationExport = new CpidOrganisationExport(
             $path,
             $organisation,
             $commandHandlerManager,
             $fileUploader,
-            $fileSystem,
-            $lockHandler
+            $fileSystem
         );
 
         $this->queueEntity->setStatus(Queue::STATUS_QUEUED);
