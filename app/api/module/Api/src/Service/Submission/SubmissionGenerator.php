@@ -48,7 +48,6 @@ class SubmissionGenerator
 
     private function getRequiredSections($sectionTypeId, $postedSections)
     {
-        return ['case-summary'];
         $submissionTypeSections = $this->submissionConfig['section-types'][$sectionTypeId];
         return array_unique(array_merge($submissionTypeSections, $postedSections));
     }
