@@ -24,7 +24,7 @@ class CpidOrganisationExportFactory implements FactoryInterface
     {
         $sl = $serviceLocator->getServiceLocator();
 
-        $path = $sl->get('config')['file-system']['path'];
+        $path = $sl->get('Config')['file-system']['path'];
         $repo = $sl->get('RepositoryServiceManager')->get('Organisation');
         $commandHandler = $sl->get('CommandHandlerManager');
         $fileUploader = $sl->get('FileUploader');
