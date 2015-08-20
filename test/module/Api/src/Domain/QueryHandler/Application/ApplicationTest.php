@@ -50,8 +50,6 @@ class ApplicationTest extends QueryHandlerTestCase
             ->andReturn(['foo' => 'bar']);
         $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
 
-        $application->shouldReceive('getLicence->allowFeePayments')->andReturn(true);
-
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($application);
@@ -80,7 +78,6 @@ class ApplicationTest extends QueryHandlerTestCase
             'outstandingFeeTotal' => '166.70',
             'variationCompletion' => null,
             'canCreateCase' => false,
-            'allowFeePayments' => true,
         ];
 
         $this->assertEquals($expected, $result->serialize());

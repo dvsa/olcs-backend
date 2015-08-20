@@ -40,7 +40,6 @@ class LicenceTest extends QueryHandlerTestCase
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->shouldReceive('serialize')
             ->andReturn(['foo' => 'bar']);
-        $licence->shouldReceive('allowFeePayments')->andReturn(true);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($query)
@@ -58,7 +57,6 @@ class LicenceTest extends QueryHandlerTestCase
         $expected = [
             'foo' => 'bar',
             'sections' => ['bar', 'cake'],
-            'allowFeePayments' => true,
         ];
 
         $this->assertEquals($expected, $result->serialize());
