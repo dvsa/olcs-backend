@@ -2,8 +2,6 @@
 
 namespace OlcsTest;
 
-use Zend\Mvc\Service\ServiceManagerConfig;
-use Zend\ServiceManager\ServiceManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Mockery as m;
 
@@ -28,8 +26,6 @@ class Bootstrap
         $config = include dirname(__DIR__) . '/config/application.config.php';
 
         self::$config = $config;
-
-        self::getServiceManager();
     }
 
     public static function getServiceManager()

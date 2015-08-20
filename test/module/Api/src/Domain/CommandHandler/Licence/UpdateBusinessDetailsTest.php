@@ -430,8 +430,8 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
 
         // Create task
         $expectedData = [
-            'category' => Category::CATEGORY_APPLICATION,
-            'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SUBSIDIARY_DIGITAL,
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::TASK_SUB_CATEGORY_BUSINESS_DETAILS_CHANGE,
             'description' => 'Change to business details',
             'licence' => 222,
             'actionDate' => null,
@@ -558,8 +558,8 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
 
         // Create task
         $expectedData = [
-            'category' => Category::CATEGORY_APPLICATION,
-            'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SUBSIDIARY_DIGITAL,
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::TASK_SUB_CATEGORY_BUSINESS_DETAILS_CHANGE,
             'description' => 'Change to business details',
             'licence' => 222,
             'actionDate' => null,
