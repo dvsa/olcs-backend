@@ -671,6 +671,10 @@ return [
         => CommandHandler\TmCaseDecision\CreateReputeNotLost::class,
     TransferCommand\TmCaseDecision\UpdateReputeNotLost::class
         => CommandHandler\TmCaseDecision\UpdateReputeNotLost::class,
+    TransferCommand\TmCaseDecision\CreateNoFurtherAction::class
+        => CommandHandler\TmCaseDecision\CreateNoFurtherAction::class,
+    TransferCommand\TmCaseDecision\UpdateNoFurtherAction::class
+        => CommandHandler\TmCaseDecision\UpdateNoFurtherAction::class,
     TransferCommand\TmCaseDecision\Delete::class => CommandHandler\TmCaseDecision\Delete::class,
 
     // Transfer - TmQualification

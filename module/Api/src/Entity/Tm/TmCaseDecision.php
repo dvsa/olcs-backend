@@ -63,6 +63,9 @@ class TmCaseDecision extends AbstractTmCaseDecision
             case self::DECISION_REPUTE_NOT_LOST:
                 $this->updateReputeNotLost($data);
                 break;
+            case self::DECISION_NO_FURTHER_ACTION:
+                $this->updateNoFurtherAction($data);
+                break;
         }
 
         return $this;
@@ -79,6 +82,20 @@ class TmCaseDecision extends AbstractTmCaseDecision
 
         if ($data['reputeNotLostReason'] !== null) {
             $this->setReputeNotLostReason($data['reputeNotLostReason']);
+        }
+    }
+
+    /**
+     * @param array $data Array of data
+     */
+    private function updateNoFurtherAction(array $data)
+    {
+        if ($data['notifiedDate'] !== null) {
+            $this->setNotifiedDate(new \DateTime($data['notifiedDate']));
+        }
+
+        if ($data['noFurtherActionReason'] !== null) {
+            $this->setNoFurtherActionReason($data['noFurtherActionReason']);
         }
     }
 }
