@@ -444,16 +444,7 @@ INSERT INTO `condition_undertaking` (`id`, `case_id`, `licence_id`, `application
     (8,24,NULL,NULL,37,NULL,NULL,'cav_case','cat_oc','cdt_und',NULL,0,1,'Some invoice_notes 8','D',NOW(),NULL,1),
     (9,24,7,NULL,NULL,NULL,NULL,'cav_lic','cat_lic','cdt_con',NULL,0,0,'Some notes 9','D',NOW(),NULL,1),
     (10,24,7,NULL,NULL,NULL,NULL,'cav_lic','cat_lic','cdt_con',NULL,0,0,'Some notes 10','A',NOW(),NULL,1),
-    (11,24,NULL,1,16,NULL,NULL,'cav_app','cat_lic','cdt_con',NULL,0,0,'Some notes 11','A',NOW(),NULL,1),
-    (12,75,110,NULL,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 12','U',NOW(),NULL,1),
-    (13,75,110,NULL,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 13','A',NOW(),NULL,1),
-    (14,75,110,NULL,NULL,NULL,NULL,'cav_case','cat_lic','cdt_con',NULL,0,0,'Some notes 14','U',NOW(),NULL,1),
-    (15,75,110,NULL,NULL,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 15','A',NOW(),NULL,1),
-    (16,75,110,NULL,48,NULL,NULL,'cav_case','cat_oc','cdt_con',NULL,0,0,'Some notes 16','U',NOW(),NULL,1),
-    (17,24,NULL,8,16,NULL,NULL,'cav_app','cat_oc','cdt_con',NULL,0,0,'Some notes 17','A',NOW(),NULL,1),
-    (18,24,NULL,8,21,NULL,NULL,'cav_app','cat_oc','cdt_und',NULL,0,0,'Some notes 18','D',NOW(),NULL,1),
-    (19,24,NULL,8,48,NULL,NULL,'cav_app','cat_oc','cdt_und',NULL,0,0,'Some notes 19','U',NOW(),NULL,1),
-    (20,24,NULL,8,NULL,NULL,NULL,'cav_app','cat_lic','cdt_und',NULL,0,0,'Some notes 20','U',NOW(),NULL,1);
+    (11,24,NULL,1,16,NULL,NULL,'cav_app','cat_lic','cdt_con',NULL,0,0,'Some notes 11','A',NOW(),NULL,1);
 
 INSERT INTO `contact_details` (`id`,`contact_type`,`address_id`,`person_id`,
    `last_modified_by`,`created_by`,`fao`,`written_permission_to_engage`,`email_address`,
