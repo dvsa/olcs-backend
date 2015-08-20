@@ -20,7 +20,7 @@ final class People extends AbstractSection
         $persons = !empty($organisation) ? $organisation->getOrganisationPersons() : [];
 
         $data = [];
-        for ($i=0;$i<count($persons);$i++) {
+        for ($i=0; $i<count($persons); $i++) {
             /** @var PersonEntity $personEntity */
             $personEntity = $persons->current()->getPerson();
 
