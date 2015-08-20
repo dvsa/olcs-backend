@@ -100,12 +100,11 @@ class Organisation extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)
             ->withRefdata();
 
-        $status = $this->getRefdataReference($query->getCpid());
-
         if ($query->getCpid() !== Entity::OPERATOR_CPID_ALL) {
             if (is_null($query->getCpid())) {
                 $qb->where($qb->expr()->isNull($this->alias . '.cpid'));
             } else {
+                $status = $this->getRefdataReference($query->getCpid());
                 $qb->where($qb->expr()->eq($this->alias . '.cpid', ':cpid'));
                 $qb->setParameter(
                     'cpid', $status
@@ -125,21 +124,25 @@ class Organisation extends AbstractRepository
 
     public function fetchAllByStatusForCpidExport($status = null)
     {
-        $qb = $this->createQueryBuilder();
+        $qb = $this->createQueryBuilder('o');
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('cpid', 'r');
 
         if ($status !== Entity::OPERATOR_CPID_ALL) {
             if (is_null($status)) {
-                $where = $qb->expr()->isNull($this->alias . '.cpid');
+                $qb->where($qb->expr()->isNull($this->alias . '.cpid'));
             } else {
-                $where = $qb->expr()->eq($this->alias . '.cpid', ':cpid');
+                $qb->where($qb->expr()->eq($this->alias . '.cpid', ':cpid'));
                 $qb->setParameter('cpid', $status);
             }
         }
 
         $qb->select(
             $this->alias . '.id',
-            $this->alias . '.name'
-        )->where($where);
+            $this->alias . '.name',
+            'r.id AS cpid'
+        );
 
         $query = $qb->getQuery();
 

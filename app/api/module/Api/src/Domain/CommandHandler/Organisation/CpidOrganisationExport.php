@@ -20,11 +20,11 @@ class CpidOrganisationExport extends AbstractCommandHandler
 {
     protected $repoServiceName = 'Queue';
 
-    public function handleCommand(CommandInterface $query)
+    public function handleCommand(CommandInterface $command)
     {
         $queueItem = new Queue($this->getRepo()->getRefdataReference(Queue::TYPE_CPID_EXPORT_CSV));
         $queueItem->setStatus($this->getRepo()->getRefdataReference(Queue::STATUS_QUEUED));
-        $queueItem->setOptions(json_encode(['status' => $query->getCpid()]));
+        $queueItem->setOptions(json_encode(['status' => $command->getCpid()]));
 
         $this->getRepo()->save($queueItem);
     }
