@@ -150,4 +150,91 @@ class TmCaseDecisionEntityTest extends EntityTester
         $this->assertEquals($data['notifiedDate'], $entity->getNotifiedDate()->format('Y-m-d'));
         $this->assertEquals($data['noFurtherActionReason'], $entity->getNoFurtherActionReason());
     }
+
+    public function testCreateForDeclareUnfit()
+    {
+        $unfitnessReason = m::mock(RefData::class)->makePartial();
+        $unfitnessReason->setId('unfit');
+
+        $rehabMeasure = m::mock(RefData::class)->makePartial();
+        $rehabMeasure->setId('rehab');
+
+        $data = [
+            'case' => 11,
+            'isMsi' => 'Y',
+            'decisionDate' => '2016-01-01',
+            'notifiedDate' => '2016-01-01',
+            'unfitnessStartDate' => '2016-02-01',
+            'unfitnessEndDate' => '2016-02-01',
+            'unfitnessReasons' => [$unfitnessReason],
+            'rehabMeasures' => [$rehabMeasure],
+        ];
+
+        $case = m::mock(CasesEntity::class);
+
+        $decision = m::mock(RefData::class)->makePartial();
+        $decision->setId(Entity::DECISION_DECLARE_UNFIT);
+
+        $entity = Entity::create($case, $decision, $data);
+
+        $this->assertSame($case, $entity->getCase());
+        $this->assertSame($decision, $entity->getDecision());
+        $this->assertEquals($data['isMsi'], $entity->getIsMsi());
+        $this->assertInstanceOf(\DateTime::class, $entity->getDecisionDate());
+        $this->assertEquals($data['decisionDate'], $entity->getDecisionDate()->format('Y-m-d'));
+        $this->assertInstanceOf(\DateTime::class, $entity->getNotifiedDate());
+        $this->assertEquals($data['notifiedDate'], $entity->getNotifiedDate()->format('Y-m-d'));
+        $this->assertInstanceOf(\DateTime::class, $entity->getUnfitnessStartDate());
+        $this->assertEquals($data['unfitnessStartDate'], $entity->getUnfitnessStartDate()->format('Y-m-d'));
+        $this->assertInstanceOf(\DateTime::class, $entity->getUnfitnessEndDate());
+        $this->assertEquals($data['unfitnessEndDate'], $entity->getUnfitnessEndDate()->format('Y-m-d'));
+        $this->assertEquals($data['unfitnessReasons'], $entity->getUnfitnessReasons());
+        $this->assertEquals($data['rehabMeasures'], $entity->getRehabMeasures());
+    }
+
+    public function testUpdateForDeclareUnfit()
+    {
+        $unfitnessReason = m::mock(RefData::class)->makePartial();
+        $unfitnessReason->setId('unfit');
+
+        $rehabMeasure = m::mock(RefData::class)->makePartial();
+        $rehabMeasure->setId('rehab');
+
+        $data = [
+            'isMsi' => 'Y',
+            'decisionDate' => '2016-01-01',
+            'notifiedDate' => '2016-01-01',
+            'unfitnessStartDate' => '2016-02-01',
+            'unfitnessEndDate' => '2016-02-01',
+            'unfitnessReasons' => [$unfitnessReason],
+            'rehabMeasures' => [$rehabMeasure],
+        ];
+
+        $case = m::mock(CasesEntity::class);
+
+        $decision = m::mock(RefData::class)->makePartial();
+        $decision->setId(Entity::DECISION_DECLARE_UNFIT);
+
+        $entity = new Entity($case, $decision);
+
+        // set existing data on the entity before update
+        $entity->setIsMsi('N');
+        $entity->setDecisionDate(new \DateTime('2015-10-12'));
+
+        $entity->update($data);
+
+        $this->assertSame($case, $entity->getCase());
+        $this->assertSame($decision, $entity->getDecision());
+        $this->assertEquals($data['isMsi'], $entity->getIsMsi());
+        $this->assertInstanceOf(\DateTime::class, $entity->getDecisionDate());
+        $this->assertEquals($data['decisionDate'], $entity->getDecisionDate()->format('Y-m-d'));
+        $this->assertInstanceOf(\DateTime::class, $entity->getNotifiedDate());
+        $this->assertEquals($data['notifiedDate'], $entity->getNotifiedDate()->format('Y-m-d'));
+        $this->assertInstanceOf(\DateTime::class, $entity->getUnfitnessStartDate());
+        $this->assertEquals($data['unfitnessStartDate'], $entity->getUnfitnessStartDate()->format('Y-m-d'));
+        $this->assertInstanceOf(\DateTime::class, $entity->getUnfitnessEndDate());
+        $this->assertEquals($data['unfitnessEndDate'], $entity->getUnfitnessEndDate()->format('Y-m-d'));
+        $this->assertEquals($data['unfitnessReasons'], $entity->getUnfitnessReasons());
+        $this->assertEquals($data['rehabMeasures'], $entity->getRehabMeasures());
+    }
 }

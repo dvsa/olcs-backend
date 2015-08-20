@@ -58,6 +58,10 @@ class TmCaseDecision extends AbstractTmCaseDecision
         $this->setIsMsi($data['isMsi']);
         $this->setDecisionDate(new \DateTime($data['decisionDate']));
 
+        if ($data['notifiedDate'] !== null) {
+            $this->setNotifiedDate(new \DateTime($data['notifiedDate']));
+        }
+
         // each decision may have different update
         switch($this->getDecision()->getId()) {
             case self::DECISION_REPUTE_NOT_LOST:
@@ -65,6 +69,9 @@ class TmCaseDecision extends AbstractTmCaseDecision
                 break;
             case self::DECISION_NO_FURTHER_ACTION:
                 $this->updateNoFurtherAction($data);
+                break;
+            case self::DECISION_DECLARE_UNFIT:
+                $this->updateDeclareUnfit($data);
                 break;
         }
 
@@ -76,10 +83,6 @@ class TmCaseDecision extends AbstractTmCaseDecision
      */
     private function updateReputeNotLost(array $data)
     {
-        if ($data['notifiedDate'] !== null) {
-            $this->setNotifiedDate(new \DateTime($data['notifiedDate']));
-        }
-
         if ($data['reputeNotLostReason'] !== null) {
             $this->setReputeNotLostReason($data['reputeNotLostReason']);
         }
@@ -90,12 +93,26 @@ class TmCaseDecision extends AbstractTmCaseDecision
      */
     private function updateNoFurtherAction(array $data)
     {
-        if ($data['notifiedDate'] !== null) {
-            $this->setNotifiedDate(new \DateTime($data['notifiedDate']));
-        }
-
         if ($data['noFurtherActionReason'] !== null) {
             $this->setNoFurtherActionReason($data['noFurtherActionReason']);
+        }
+    }
+
+    /**
+     * @param array $data Array of data
+     */
+    private function updateDeclareUnfit(array $data)
+    {
+        $this->setUnfitnessStartDate(new \DateTime($data['unfitnessStartDate']));
+
+        if ($data['unfitnessEndDate'] !== null) {
+            $this->setUnfitnessEndDate(new \DateTime($data['unfitnessEndDate']));
+        }
+
+        $this->setUnfitnessReasons($data['unfitnessReasons']);
+
+        if ($data['rehabMeasures'] !== null) {
+            $this->setRehabMeasures($data['rehabMeasures']);
         }
     }
 }

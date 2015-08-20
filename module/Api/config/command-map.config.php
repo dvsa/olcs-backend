@@ -675,6 +675,10 @@ return [
         => CommandHandler\TmCaseDecision\CreateNoFurtherAction::class,
     TransferCommand\TmCaseDecision\UpdateNoFurtherAction::class
         => CommandHandler\TmCaseDecision\UpdateNoFurtherAction::class,
+    TransferCommand\TmCaseDecision\CreateDeclareUnfit::class
+        => CommandHandler\TmCaseDecision\CreateDeclareUnfit::class,
+    TransferCommand\TmCaseDecision\UpdateDeclareUnfit::class
+        => CommandHandler\TmCaseDecision\UpdateDeclareUnfit::class,
     TransferCommand\TmCaseDecision\Delete::class => CommandHandler\TmCaseDecision\Delete::class,
 
     // Transfer - TmQualification
