@@ -67,6 +67,7 @@ class ApplicationOperatingCentre extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
+        $qb->leftJoin('aoc.s4', 's4');
         $qb->innerJoin('aoc.operatingCentre', 'oc');
         $qb->innerJoin('oc.address', 'oca');
         $qb->leftJoin('oca.countryCode', 'ocac');
@@ -78,6 +79,7 @@ class ApplicationOperatingCentre extends AbstractRepository
         );
         $qb->setParameter('application', $applicationId);
 
+        $qb->addSelect('s4');
         $qb->addSelect('oc');
         $qb->addSelect('oca');
         $qb->addSelect('ocac');
