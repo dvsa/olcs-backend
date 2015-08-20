@@ -49,8 +49,6 @@ class VariationTest extends QueryHandlerTestCase
             ->andReturn(['foo' => 'bar']);
         $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
 
-        $application->shouldReceive('getLicence->allowFeePayments')->andReturn(true);
-
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($application);
@@ -77,8 +75,7 @@ class VariationTest extends QueryHandlerTestCase
             'sections' => ['bar', 'cake'],
             'outstandingFeeTotal' => '100.00',
             'variationCompletion' => null,
-            'canCreateCase' => false,
-            'allowFeePayments' => true,
+            'canCreateCase' => false
         ];
 
         $this->assertEquals($expected, $result->serialize());
