@@ -97,6 +97,43 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    public function testHandleCommandCannotDelete()
+    {
+        $data = [
+            'application' => 111,
+            'ids' => [
+                123
+            ]
+        ];
+        $command = Cmd::create($data);
+
+        /** @var ApplicationOperatingCentre $aoc1 */
+        $aoc1 = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc1->setId(123);
+        $aoc1->shouldReceive('checkCanDelete')->with()->once()->andReturn(['ERROR' => 'Foo']);
+
+        /** @var ApplicationOperatingCentre $aoc2 */
+        $aoc2 = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc2->setId(321);
+
+        $aocs = new ArrayCollection();
+        $aocs->add($aoc1);
+        $aocs->add($aoc2);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(111);
+        $application->setOperatingCentres($aocs);
+
+        $this->repoMap['Application']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($application);
+
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
+        $this->sut->handleCommand($command);
+    }
+
     public function testHandleCommandRemovingAllOcs()
     {
         $data = [

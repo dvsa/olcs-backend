@@ -33,4 +33,22 @@ class ApplicationOperatingCentre extends AbstractApplicationOperatingCentre
         $this->application = $application;
         $this->operatingCentre = $operatingCentre;
     }
+
+    /**
+     * Can this AOC be deleted
+     *
+     * @return array empty array means it can be deleted
+     */
+    public function checkCanDelete()
+    {
+        $messages = [];
+        if ($this->getS4() !== null) {
+            // if has an S4 and outcome is empty or outcome is refused, then CANNOT delete
+            if ($this->getS4()->getOutcome() === null || $this->getS4()->getOutcome()->getId() !== S4::STATUS_REFUSED) {
+                $messages['OC_CANNOT_DELETE_HAS_S4'] = 'Cannot be deleted as it is linked to an S4 record';
+            }
+        }
+
+        return $messages;
+    }
 }
