@@ -623,6 +623,9 @@ class Licence extends AbstractLicence
                 self::LICENCE_STATUS_TERMINATED,
                 self::LICENCE_STATUS_SURRENDERED,
                 self::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT,
+                self::LICENCE_STATUS_REFUSED,
+                self::LICENCE_STATUS_WITHDRAWN,
+                self::LICENCE_STATUS_NOT_TAKEN_UP,
             ]
         )) {
             return false;
