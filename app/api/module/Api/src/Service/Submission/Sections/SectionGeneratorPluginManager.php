@@ -16,7 +16,6 @@ class SectionGeneratorPluginManager extends AbstractPluginManager
     public function __construct(ConfigInterface $configuration = null)
     {
         parent::__construct($configuration);
-        //$this->addAbstractFactory(new AbstractFactory());
     }
 
     /**
@@ -32,7 +31,9 @@ class SectionGeneratorPluginManager extends AbstractPluginManager
     public function validatePlugin($plugin)
     {
         if (!($plugin instanceof SectionGeneratorInterface)) {
-            throw new Exception\RuntimeException(get_class($plugin) . ' should implement: ' . SectionGeneratorInterface::class);
+            throw new Exception\RuntimeException(
+                get_class($plugin) . ' should implement: ' . SectionGeneratorInterface::class
+            );
         }
     }
 }

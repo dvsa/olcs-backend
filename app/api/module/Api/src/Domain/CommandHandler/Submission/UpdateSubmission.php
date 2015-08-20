@@ -48,7 +48,9 @@ final class UpdateSubmission extends AbstractCommandHandler
         }
 
         if ($command->getRecipientUser() !== null) {
-            $submission->setRecipientUser($this->getRepo()->getReference(UserEntity::class, $command->getRecipientUser()));
+            $submission->setRecipientUser(
+                $this->getRepo()->getReference(UserEntity::class, $command->getRecipientUser())
+            );
         }
 
         if ($command->getSenderUser() !== null) {
