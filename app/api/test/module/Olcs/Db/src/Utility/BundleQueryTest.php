@@ -33,7 +33,6 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->andReturn($this->em);
 
         $this->sm = Bootstrap::getServiceManager();
-        $this->sm->setAllowOverride(true);
 
         $this->sut = new BundleQuery();
         $this->sut->setQueryBuilder($this->qb);

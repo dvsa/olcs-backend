@@ -60,6 +60,19 @@ class LicenceVehicle extends AbstractRepository
         return $qb;
     }
 
+    public function createPaginatedVehiclesDataForUnlicensedOperatorQuery(QueryInterface $query, $licenceId)
+    {
+        $qb = $this->createDefaultListQuery($query);
+
+        $qb->innerJoin('m.vehicle', 'v');
+
+        $qb->andWhere($qb->expr()->eq('m.licence', ':licence'));
+        $qb->setParameter('licence', $licenceId);
+        $qb->orderBy('m.createdOn', 'ASC');
+
+        return $qb;
+    }
+
     /**
      * @param ApplicationEntity|LicenceEntity $entity
      * @param $psvType

@@ -186,6 +186,7 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
      * @ORM\ManyToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Vehicle\Vehicle",
      *     fetch="LAZY",
+     *     cascade={"persist"},
      *     inversedBy="licenceVehicles"
      * )
      * @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id", nullable=false)
