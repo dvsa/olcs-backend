@@ -301,7 +301,8 @@ class Pi extends AbstractPi
     /**
      * Is this a Transport Manager Pi?
      */
-    public function isTm() {
+    public function isTm()
+    {
         return $this->case->isTm();
     }
 
