@@ -95,7 +95,7 @@ class ApplicationVehiclesReviewServiceTest extends MockeryTestCase
                                             ],
                                             [
                                                 'label' => 'application-review-vehicles-weight',
-                                                'value' => '1,000 Kg'
+                                                'value' => '1,000 kg'
                                             ]
                                         ],
                                         [
@@ -105,7 +105,7 @@ class ApplicationVehiclesReviewServiceTest extends MockeryTestCase
                                             ],
                                             [
                                                 'label' => 'application-review-vehicles-weight',
-                                                'value' => '10,000 Kg'
+                                                'value' => '10,000 kg'
                                             ]
                                         ]
                                     ]
