@@ -6,7 +6,6 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -20,6 +19,24 @@ final class Pi extends AbstractQueryHandler
     protected $repoServiceName = 'Pi';
 
     protected $extraRepos = ['Licence', 'Sla'];
+
+    protected $bundle = [
+        'piStatus' => [],
+        'piTypes' => [],
+        'reasons' => [],
+        'piHearings' => [
+            'presidingTc' => [],
+            'presidedByRole' => [],
+        ],
+        'writtenOutcome' => [],
+        'decidedByTc' => [],
+        'agreedByTc' => [],
+        'decidedByTcRole' => [],
+        'agreedByTcRole' => [],
+        'decisions' => [],
+        'assignedTo' => [],
+        'case' => [],
+    ];
 
     /**
      * @var SlaCalculatorInterface
@@ -65,23 +82,7 @@ final class Pi extends AbstractQueryHandler
 
         $pi = $this->result(
             $result,
-            [
-                'piStatus' => [],
-                'piTypes' => [],
-                'reasons' => [],
-                'piHearings' => [
-                        'presidingTc' => [],
-                        'presidedByRole' => [],
-                ],
-                'writtenOutcome' => [],
-                'decidedByTc' => [],
-                'agreedByTc' => [],
-                'decidedByTcRole' => [],
-                'agreedByTcRole' => [],
-                'decisions' => [],
-                'assignedTo' => [],
-                'case' => [],
-            ],
+            $this->bundle,
             $slaValues
         );
 
