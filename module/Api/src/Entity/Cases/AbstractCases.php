@@ -444,11 +444,11 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Tm decision
      *
-     * @var \Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision", mappedBy="case")
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision", mappedBy="case")
      */
-    protected $tmDecision;
+    protected $tmDecisions;
 
     /**
      * Initialise the collections
@@ -473,6 +473,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
         $this->seriousInfringements = new ArrayCollection();
         $this->statements = new ArrayCollection();
         $this->stays = new ArrayCollection();
+        $this->tmDecisions = new ArrayCollection();
     }
 
     /**
@@ -1879,24 +1880,61 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the tm decision
      *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision $tmDecision
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions
      * @return Cases
      */
-    public function setTmDecision($tmDecision)
+    public function setTmDecisions($tmDecisions)
     {
-        $this->tmDecision = $tmDecision;
+        $this->tmDecisions = $tmDecisions;
 
         return $this;
     }
 
     /**
-     * Get the tm decision
+     * Get the tm decisions
      *
-     * @return \Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getTmDecision()
+    public function getTmDecisions()
     {
-        return $this->tmDecision;
+        return $this->tmDecisions;
+    }
+
+    /**
+     * Add a tm decisions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions
+     * @return Cases
+     */
+    public function addTmDecisions($tmDecisions)
+    {
+        if ($tmDecisions instanceof ArrayCollection) {
+            $this->tmDecisions = new ArrayCollection(
+                array_merge(
+                    $this->tmDecisions->toArray(),
+                    $tmDecisions->toArray()
+                )
+            );
+        } elseif (!$this->tmDecisions->contains($tmDecisions)) {
+            $this->tmDecisions->add($tmDecisions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tm decisions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions
+     * @return Cases
+     */
+    public function removeTmDecisions($tmDecisions)
+    {
+        if ($this->tmDecisions->contains($tmDecisions)) {
+            $this->tmDecisions->removeElement($tmDecisions);
+        }
+
+        return $this;
     }
 
     /**
