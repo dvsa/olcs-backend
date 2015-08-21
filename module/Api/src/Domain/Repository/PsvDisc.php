@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Psv Disc
@@ -56,5 +57,35 @@ class PsvDisc extends AbstractRepository
         $qb->setParameter('licenceType', $licenceType);
         $qb->setParameter('licenceTrafficAreaId', TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
         $qb->setParameter('goodsOrPsv', LicenceEntity::LICENCE_CATEGORY_PSV);
+    }
+
+    public function setIsPrintingOn($discs)
+    {
+        $this->setIsPrinting('Y', $discs);
+    }
+
+    public function setIsPrintingOff($discs)
+    {
+        $this->setIsPrinting('N', $discs);
+    }
+
+    protected function setIsPrinting($type, $discs)
+    {
+        foreach ($discs as $disc) {
+            $fetched = $this->fetchById($disc->getId());
+            $fetched->setIsPrinting($type);
+            $this->save($fetched);
+        }
+    }
+
+    public function setIsPrintingOffAndAssignNumbers($discs, $startNumber)
+    {
+        foreach ($discs as $disc) {
+            $fetched = $this->fetchById($disc->getId());
+            $fetched->setIsPrinting('N');
+            $fetched->setDiscNo($startNumber++);
+            $fetched->setIssuedDate(new DateTime('now'));
+            $this->save($fetched);
+        }
     }
 }

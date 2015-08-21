@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Create Vehicle List Document
+ * Create PSV Vehicle List Document for discs
  *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Discs;
 
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -17,13 +17,14 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\CreateDocument;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Create Vehicle List Document
+ * Create PSV Vehicle List Document for discs
  *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class CreateVehicleListDocument extends AbstractCommandHandler implements
+final class CreatePsvVehicleListForDiscs extends AbstractCommandHandler implements
     TransactionedInterface,
     DocumentGeneratorAwareInterface,
     AuthAwareInterface
@@ -37,21 +38,22 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements
     public function handleCommand(CommandInterface $command)
     {
         $content = $this->getDocumentGenerator()->generateFromTemplate(
-            'GVVehiclesList',
+            'PSVVehiclesList',
             [
                 'licence' => $command->getId(),
                 'user' => $this->getCurrentUser()
-            ]
+            ],
+            $command->getKnownValues()
         );
 
         $file = $this->getDocumentGenerator()->uploadGeneratedContent($content);
 
-        $fileName = date('YmdHi') . '_Goods_Vehicle_List.rtf';
+        $fileName = date('YmdHi') . '_Psv_Vehicle_List.rtf';
 
         $data = [
             'licence'       => $command->getId(),
             'identifier'    => $file->getIdentifier(),
-            'description'   => 'Goods Vehicle List',
+            'description'   => 'PSV Vehicle List',
             'filename'      => $fileName,
             'category'      => Category::CATEGORY_LICENSING,
             'subCategory'   => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
@@ -60,7 +62,7 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements
             'size'          => $file->getSize()
         ];
 
-        $printData = ['fileIdentifier' => $file->getIdentifier(), 'jobName' => 'Goods Vehicle List'];
+        $printData = ['fileIdentifier' => $file->getIdentifier(), 'jobName' => 'PSV Vehicle List'];
         $this->handleSideEffect(Enqueue::create($printData));
 
         return $this->handleSideEffect(CreateDocument::create($data));
