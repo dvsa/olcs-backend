@@ -35,7 +35,6 @@ class BusinessDetailsTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $expectedBundle = [
-            'natureOfBusinesses',
             'contactDetails' => [
                 'address' => [
                     'countryCode'
