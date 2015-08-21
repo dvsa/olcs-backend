@@ -34,7 +34,16 @@ class MarkersTest extends QueryHandlerTestCase
         $query = Query::create(['id' => 716]);
 
         $mockLicence = m::mock(Licence::class)->makePartial()
-            ->shouldReceive('serialize')->with([])->once()->andReturn(['LICENCE'])
+            ->shouldReceive('serialize')->with(
+                [
+                    'licenceStatusRules' => ['licenceStatus'],
+                    'organisation' => ['disqualifications'],
+                    'cases' => [
+                        'appeal' => ['outcome'],
+                        'stays' => ['outcome', 'stayType']
+                    ],
+                ]
+            )->once()->andReturn(['LICENCE'])
             ->shouldReceive('getId')->with()->once()->andReturn(716)
             ->getMock();
         $mockContinuationDetail = m::mock(\Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail::class)
@@ -54,7 +63,16 @@ class MarkersTest extends QueryHandlerTestCase
         $query = Query::create(['id' => 716]);
 
         $mockLicence = m::mock(Licence::class)->makePartial()
-            ->shouldReceive('serialize')->with([])->once()->andReturn(['LICENCE'])
+            ->shouldReceive('serialize')->with(
+                [
+                    'licenceStatusRules' => ['licenceStatus'],
+                    'organisation' => ['disqualifications'],
+                    'cases' => [
+                        'appeal' => ['outcome'],
+                        'stays' => ['outcome', 'stayType']
+                    ],
+                ]
+            )->once()->andReturn(['LICENCE'])
             ->shouldReceive('getId')->with()->once()->andReturn(716)
             ->getMock();
 
