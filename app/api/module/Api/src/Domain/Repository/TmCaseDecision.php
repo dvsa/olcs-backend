@@ -28,8 +28,7 @@ class TmCaseDecision extends AbstractRepository
             ->setParameter('byCase', $query->getCase());
 
         // there should be only one active but just in case order by id to get the latest
-        $qb->orderBy($this->alias . '.id', 'DESC')
-            ->setMaxResults(1);
+        $qb->orderBy($this->alias . '.id', 'DESC');
 
         $results = $qb->getQuery()->getResult($hydrateMode);
 
