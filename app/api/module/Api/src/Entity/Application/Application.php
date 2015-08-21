@@ -1272,4 +1272,20 @@ class Application extends AbstractApplication
         $this->setTargetCompletionDate($target);
         return $this;
     }
+
+    public function allowFeePayments()
+    {
+        if (in_array(
+            $this->getStatus()->getId(),
+            [
+                self::APPLICATION_STATUS_REFUSED,
+                self::APPLICATION_STATUS_WITHDRAWN,
+                self::APPLICATION_STATUS_NOT_TAKEN_UP,
+            ]
+        )) {
+            return false;
+        }
+
+        return $this->getLicence()->allowFeePayments();
+    }
 }
