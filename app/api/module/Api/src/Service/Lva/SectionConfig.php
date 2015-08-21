@@ -79,12 +79,18 @@ class SectionConfig
             ]
         ],
         'transport_managers' => [
+            'prerequisite' => [
+                'operating_centres'
+            ],
             'restricted' => [
                 Licence::LICENCE_TYPE_STANDARD_NATIONAL,
                 Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
             ]
         ],
         'vehicles' => [
+            'prerequisite' => [
+                'operating_centres'
+            ],
             'restricted' => [
                 [
                     Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
