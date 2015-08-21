@@ -55,10 +55,6 @@ class TmCaseDecisionTest extends RepositoryTestCase
 
         $qb->shouldReceive('orderBy')
             ->with(m::type('string'), 'DESC')
-            ->andReturnSelf()
-            ->shouldReceive('setMaxResults')
-            ->with('1')
-            ->once()
             ->andReturnSelf();
 
         $this->queryBuilder->shouldReceive('modifyQuery')
