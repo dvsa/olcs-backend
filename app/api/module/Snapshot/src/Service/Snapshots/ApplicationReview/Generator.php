@@ -109,7 +109,6 @@ class Generator implements ServiceLocatorAwareInterface
                 'companySubsidiaries',
                 'organisation' => [
                     'type',
-                    'natureOfBusinesses',
                     'contactDetails' => [
                         'address'
                     ]
