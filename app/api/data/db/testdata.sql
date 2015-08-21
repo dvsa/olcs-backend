@@ -844,17 +844,18 @@ VALUES
   (2, 16);
 
 INSERT INTO `organisation` (`id`,`lead_tc_area_id`, `created_by`, `last_modified_by`,`contact_details_id`,
-  `cpid`, `company_or_llp_no`, `name`, `is_irfo`, `type`, `created_on`, `last_modified_on`, `version`, `allow_email`) VALUES
-    (1,'B',1,3,  21, NULL, '12345678','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1,1),
-    (30,'C',1,4, 30, NULL, '98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1,0),
-    (41,'D',0,4, 41, NULL, '24134123','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1,0),
-    (54,'F',3,4, 54, NULL, '67567533','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1,0),
-    (63,'G',1,2, 63, NULL, '35345645','Leeds bus service ltd.',0,'org_t_rc',NOW(),NOW(),1,0),
-    (75,'H',1,0, 75, NULL, '12345A11','Leeds city council',0,'org_t_pa',NOW(),NOW(),1,0),
-    (100,'K',1,3,100, NULL, '100100','Test partnership',0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2,0),
-    (101,'K',1,3,100, NULL, '100100','Test IRFO',1,'org_t_ir',NOW(),NOW(),1,0),
-    (104,'M',NULL,NULL,NULL, NULL, '1234567','Company Name',0,'org_t_rc',NULL,NULL,1,0),
-    (105,'N',1,3,NULL, NULL, NULL,'SR Organisation',0,'org_t_rc',NOW(),NOW(),1,0);
+  `cpid`, `company_or_llp_no`, `name`, `is_irfo`, `type`, `created_on`, `last_modified_on`, `version`, `allow_email`,
+  `nature_of_business`) VALUES
+    (1,'B',1,3,  21, NULL, '12345678','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1,1,'Haulage'),
+    (30,'C',1,4, 30, NULL, '98765432','John Smith Haulage Ltd.',0,'org_t_rc',NOW(),NOW(),1,0,NULL),
+    (41,'D',0,4, 41, NULL, '24134123','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1,0,NULL),
+    (54,'F',3,4, 54, NULL, '67567533','Teddie Stobbart Group Ltd',0,'org_t_rc',NOW(),NOW(),1,0,NULL),
+    (63,'G',1,2, 63, NULL, '35345645','Leeds bus service ltd.',0,'org_t_rc',NOW(),NOW(),1,0,NULL),
+    (75,'H',1,0, 75, NULL, '12345A11','Leeds city council',0,'org_t_pa',NOW(),NOW(),1,0,NULL),
+    (100,'K',1,3,100, NULL, '100100','Test partnership',0,'org_t_p','2014-01-28 16:25:35','2014-01-28 16:25:35',2,0,NULL),
+    (101,'K',1,3,100, NULL, '100100','Test IRFO',1,'org_t_ir',NOW(),NOW(),1,0,NULL),
+    (104,'M',NULL,NULL,NULL, NULL, '1234567','Company Name',0,'org_t_rc',NULL,NULL,1,0,NULL),
+    (105,'N',1,3,NULL, NULL, NULL,'SR Organisation',0,'org_t_rc',NOW(),NOW(),1,0,NULL);
 
 INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
     `person_id`, `organisation_id`) VALUES
