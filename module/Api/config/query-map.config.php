@@ -242,6 +242,8 @@ return [
     // Transport Manager Licence
     TransferQuery\TransportManagerLicence\GetForResponsibilities::class
         => QueryHandler\TransportManagerLicence\GetForResponsibilities::class,
+    TransferQuery\TransportManagerLicence\GetList::class
+        => QueryHandler\TransportManagerLicence\GetList::class,
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
