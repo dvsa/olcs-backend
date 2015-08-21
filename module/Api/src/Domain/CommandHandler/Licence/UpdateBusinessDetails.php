@@ -80,19 +80,10 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
 
         $this->maybeUpdateOrganisation($command, $organisation);
 
-        if (!$command->getPartial() && $command->getNatureOfBusinesses() == null) {
-            throw new ValidationException(
-                [
-                    'natureOfBusinesses' => [
-                        [
-                            'Value is required and can\'t be empty' => 'Value is required and can\'t be empty'
-                        ]
-                    ]
-                ]
-            );
+        if ($organisation->getNatureOfBusiness() !== $command->getNatureOfBusiness()) {
+            $organisation->setNatureOfBusiness($command->getNatureOfBusiness());
+            $this->hasChangedOrg = true;
         }
-
-        $this->updateNatureOfBusinesses($command->getNatureOfBusinesses(), $organisation);
 
         if ($this->hasChangedOrg) {
             $this->isDirty = true;
@@ -116,50 +107,6 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
         $this->result->setFlag('hasChanged', $this->isDirty);
 
         return $this->result;
-    }
-
-    private function updateNatureOfBusinesses(array $nobList, Organisation $organisation)
-    {
-        $nobObjects = [];
-
-        foreach ($nobList as $nob) {
-            $nobObjects[] = $this->getRepo()->getRefdataReference($nob);
-        }
-
-        $current = $organisation->getNatureOfBusinesses();
-
-        $added = 0;
-        $removed = 0;
-        $initial = $current->count();
-
-        foreach ($nobObjects as $nob) {
-            // If we need to add a new one
-            if (!$current->contains($nob)) {
-                $added++;
-                $this->isDirty = true;
-                $this->hasChangedOrg = true;
-                $current->add($nob);
-                continue;
-            }
-        }
-
-        $list = $current->getIterator();
-
-        foreach ($list as $nob) {
-            if (!in_array($nob, $nobObjects)) {
-                $removed++;
-                $this->isDirty = true;
-                $this->hasChangedOrg = true;
-                $current->removeElement($nob);
-                continue;
-            }
-        }
-
-        $unchanged = $initial - $removed;
-
-        $this->result->addMessage($added . ' new nature(s) of business');
-        $this->result->addMessage($unchanged . ' unchanged nature(s) of business');
-        $this->result->addMessage($removed . ' nature(s) of business removed');
     }
 
     private function canUpdateOrganisation($organisation)
