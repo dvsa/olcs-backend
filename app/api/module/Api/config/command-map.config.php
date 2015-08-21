@@ -675,4 +675,9 @@ return [
     // Disc Printing
     TransferCommand\GoodsDisc\PrintDiscs::class => CommandHandler\GoodsDisc\PrintDiscs::class,
     TransferCommand\PsvDisc\PrintDiscs::class => CommandHandler\PsvDisc\PrintDiscs::class,
+    TransferCommand\GoodsDisc\ConfirmPrinting::class => CommandHandler\GoodsDisc\ConfirmPrinting::class,
+    TransferCommand\PsvDisc\ConfirmPrinting::class => CommandHandler\PsvDisc\ConfirmPrinting::class,
+    Command\Discs\PrintDiscs::class => CommandHandler\Discs\PrintDiscs::class,
+    Command\Discs\CreatePsvVehicleListForDiscs::class => CommandHandler\Discs\CreatePsvVehicleListForDiscs::class,
+
 ];
