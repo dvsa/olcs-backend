@@ -47,7 +47,6 @@ TRUNCATE TABLE `opposition_grounds`;
 TRUNCATE TABLE `operating_centre_opposition`;
 TRUNCATE TABLE `organisation`;
 TRUNCATE TABLE `other_licence`;
-TRUNCATE TABLE `organisation_nature_of_business`;
 TRUNCATE TABLE `organisation_person`;
 TRUNCATE TABLE `person`;
 TRUNCATE TABLE `disqualification`;
@@ -1595,19 +1594,6 @@ INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`created_by`,`
     (4,2,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:02:19','Winnard','Keith',NULL,1),
     (5,3,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
     (6,3,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
-
-INSERT INTO `organisation_nature_of_business` (`organisation_id`, `ref_data_id`)
-VALUES
-	(1, '01120'),
-	(1, '01150'),
-	(30, '01150'),
-	(41, '01150'),
-	(54, '01150'),
-	(63, '01150'),
-	(75, '01150'),
-	(100, '01150'),
-	(104, '01150'),
-	(105, '01150');
 
 INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`, `in_force_date`, `created_on`)
 VALUES
