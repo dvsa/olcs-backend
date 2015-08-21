@@ -77,6 +77,8 @@ class Application extends AbstractApplication
     const NOT_APPLICABLE = 'Not applicable';
     const UNKNOWN = 'Unknown';
 
+    const TARGET_COMPLETION_TIME = '+9 week';
+
     /**
      * Publication No
      *
@@ -1256,5 +1258,18 @@ class Application extends AbstractApplication
         }
 
         return $delta;
+    }
+
+    /**
+     * Set the target completion date to +9 weeks from received date
+     * @return this
+     */
+    public function setTargetCompletionDateFromReceivedDate()
+    {
+        $received = $this->getReceivedDate();
+        $target = clone $received;
+        $target->modify(self::TARGET_COMPLETION_TIME);
+        $this->setTargetCompletionDate($target);
+        return $this;
     }
 }

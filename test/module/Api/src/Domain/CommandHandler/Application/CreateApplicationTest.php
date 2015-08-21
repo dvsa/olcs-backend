@@ -190,6 +190,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
 
         $this->assertInstanceOf('\DateTime', $app->getReceivedDate());
         $this->assertEquals('2015-01-01', $app->getReceivedDate()->format('Y-m-d'));
+        $this->assertEquals('2015-03-05', $app->getTargetCompletionDate()->format('Y-m-d')); // +9 weeks
         $this->assertEquals('Y', $app->getNiFlag());
         $this->assertSame($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL], $app->getLicenceType());
         $this->assertSame($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE], $app->getGoodsOrPsv());

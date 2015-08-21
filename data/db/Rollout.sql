@@ -1812,6 +1812,10 @@ VALUES
  ,(10, 163, 0, 0, 0, 0, 'Other employment')
  ,(10, 164, 0, 0, 0, 0, 'Previous history')
  ,(9,  165, 0, 0, 0, 0, 'Change to taxi/phv digital')
+ ,(1,  166, 0, 0, 0, 0, 'Discs')
+ ,(1,  167, 0, 0, 0, 0, 'Community licence')
+ ,(1,  168, 0, 0, 0, 0, 'Scanning separator')
+ ,(1,  169, 0, 1, 0, 0, 'Business details change')
  ,( 999999, 999999, 1, 1, 1, 0, 'Not yet implemented (remove before go live)');
 
 

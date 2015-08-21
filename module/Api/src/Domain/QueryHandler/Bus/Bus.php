@@ -22,7 +22,11 @@ class Bus extends AbstractQueryHandler
         return $this->result(
             $busReg,
             [
-                'licence',
+                'licence' => [
+                    'organisation',
+                    'licenceType',
+                    'status',
+                ],
                 'busNoticePeriod',
                 'busServiceTypes',
                 'trafficAreas',

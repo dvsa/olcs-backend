@@ -22,6 +22,7 @@ class QueueController extends AbstractConsoleController
 {
     protected $startTime;
     protected $endTime;
+    protected $sleepFor = 1000000; // microseconds
 
     public function indexAction()
     {
@@ -34,8 +35,12 @@ class QueueController extends AbstractConsoleController
 
         // Then we need to run for a given length of time
         if (empty($config['isLongRunningProcess'])) {
-            $this->startTime = time();
+            $this->startTime = microtime(true);
             $this->endTime = $this->startTime + $config['runFor'];
+        }
+
+        if (isset($config['sleepFor'])) {
+            $this->sleepFor = $config['sleepFor'];
         }
 
         while ($this->shouldRunAgain()) {
@@ -44,7 +49,7 @@ class QueueController extends AbstractConsoleController
 
             if ($response === null) {
                 $this->getConsole()->writeLine('No items queued, waiting for items');
-                sleep(1);
+                usleep($this->sleepFor);
             } else {
                 $this->getConsole()->writeLine($response);
             }
@@ -59,7 +64,7 @@ class QueueController extends AbstractConsoleController
     protected function shouldRunAgain()
     {
         if (isset($this->endTime)) {
-            return time() < $this->endTime;
+            return microtime(true) < $this->endTime;
         }
 
         return true;

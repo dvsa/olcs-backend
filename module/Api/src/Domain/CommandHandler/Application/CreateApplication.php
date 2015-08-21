@@ -141,6 +141,7 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
 
         if ($command->getReceivedDate() !== null) {
             $application->setReceivedDate(new \DateTime($command->getReceivedDate()));
+            $application->setTargetCompletionDateFromReceivedDate();
         }
 
         return $application;

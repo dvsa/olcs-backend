@@ -86,27 +86,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->with($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION))
             ->andReturnSelf()
             ->shouldReceive('getCode')
-            ->andReturn('TEST CODE')
-            ->shouldReceive('setReceivedDate')
-            ->once()
-            ->with(
-                m::on(
-                    function ($value) use ($now) {
-                        return $value == $now;
-                    }
-                )
-            )
-            ->andReturnSelf()
-            ->shouldReceive('setTargetCompletionDate')
-            ->once()
-            ->with(
-                m::on(
-                    function ($value) use ($expectedTargetCompletionDate) {
-                        return $value == $expectedTargetCompletionDate;
-                    }
-                )
-            )
-            ->andReturnSelf();
+            ->andReturn('TEST CODE');
 
         // licence status should be updated if application is not a variation
         if ($isVariation) {
@@ -157,6 +137,9 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(CreateSnapshot::class, ['id' => 69, 'event' => CreateSnapshot::ON_SUBMIT], $result1);
 
         $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals($expectedTargetCompletionDate, $application->getTargetCompletionDate());
+        $this->assertEquals($now, $application->getReceivedDate());
 
         $this->assertEquals($expected, $result->toArray());
     }

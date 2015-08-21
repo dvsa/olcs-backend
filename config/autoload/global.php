@@ -32,5 +32,10 @@ return array(
         'http' => array(
             'adapter' => 'Zend\Http\Client\Adapter\Curl'
         ),
-    )
+    ),
+    'companies_house' => array(
+        'http' => array(
+            'adapter' => 'Zend\Http\Client\Adapter\Curl',
+        ),
+    ),
 );
