@@ -52,6 +52,7 @@ class GetList extends AbstractQueryHandler
                 [
                     'operatingCentre' => ['address'],
                     'licConditionVariation',
+                    's4',
                 ]
             ),
             'count' => count($results)
