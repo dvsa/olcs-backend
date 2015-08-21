@@ -26,7 +26,6 @@ class BusinessDetails extends AbstractQueryHandler
             $organisation,
             [
                 'organisationPersons' => ['person'],
-                'natureOfBusinesses',
                 'contactDetails' => ['address']
             ]
         );
