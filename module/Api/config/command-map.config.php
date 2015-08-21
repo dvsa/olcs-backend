@@ -480,6 +480,8 @@ return [
 
     // Domain - Organisation
     Command\Organisation\UpdateTradingNames::class => CommandHandler\Organisation\UpdateTradingNames::class,
+    TransferCommand\Organisation\CpidOrganisationExport::class
+        => CommandHandler\Organisation\CpidOrganisationExport::class,
 
     // Domain - Fee
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,

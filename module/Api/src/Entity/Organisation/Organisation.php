@@ -32,6 +32,8 @@ class Organisation extends AbstractOrganisation
     const ORG_TYPE_SOLE_TRADER = 'org_t_st';
     const ORG_TYPE_IRFO = 'org_t_ir';
 
+    const OPERATOR_CPID_ALL = 'op_cpid_all';
+
     protected $hasInforceLicences;
 
     public function hasInforceLicences()

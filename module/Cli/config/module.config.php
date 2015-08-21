@@ -59,10 +59,17 @@ return [
             'que_typ_ch_initial' => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\InitialDataLoad::class,
             'que_typ_ch_compare' => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\Compare::class,
             'que_typ_cont_checklist' => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklist::class,
+        ],
+        'factories' => [
+            'que_typ_cpid_export_csv'
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
         ]
     ],
     'queue' => [
-        // 'isLongRunningProcess' => true,
-        'runFor' => 60
+        'isLongRunningProcess' => true,
+        //'runFor' => 60
     ],
+    'file-system' => [
+        'path' => '/tmp'
+    ]
 ];
