@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\LicenceVehicle;
 
+
 use Dvsa\Olcs\Api\Domain\QueryHandler\LicenceVehicle\PsvLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
@@ -41,7 +42,6 @@ class PsvLicenceVehicleTest extends QueryHandlerTestCase
         $licenceVehicle = m::mock(Entity\Licence\LicenceVehicle::class)->makePartial();
         $licenceVehicle->shouldReceive('serialize')
             ->once()
-            ->with(['vehicle'])
             ->andReturn(['foo' => 'bar']);
 
         $this->repoMap['LicenceVehicle']->shouldReceive('fetchUsingId')

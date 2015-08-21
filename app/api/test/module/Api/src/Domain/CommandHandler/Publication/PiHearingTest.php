@@ -12,8 +12,8 @@ use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PiHearing as PiHearingRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Publication\PiHearing as PiHearingCmd;
-use Dvsa\Olcs\Transfer\Command\Publication\PiDecision as PiDecisionCmd;
+use Dvsa\Olcs\Api\Domain\Command\Publication\PiHearing as PiHearingCmd;
+use Dvsa\Olcs\Api\Domain\Command\Publication\PiDecision as PiDecisionCmd;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
@@ -88,7 +88,7 @@ class PiHearingTest extends CommandHandlerTestCase
             [
                 'id' => $id,
                 'trafficAreas' => $trafficAreas,
-                'pubTypes' => $pubTypes,
+                'pubType' => $pubTypes,
                 'text2' => $text2
             ]
         );

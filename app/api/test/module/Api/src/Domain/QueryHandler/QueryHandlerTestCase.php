@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
-use Zend\ServiceManager\ServiceManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -43,21 +42,26 @@ class QueryHandlerTestCase extends MockeryTestCase
 
     public function setUp()
     {
-        $this->repoManager = m::mock(RepositoryServiceManager::class)->makePartial();
+        $this->repoManager = m::mock(RepositoryServiceManager::class);
 
         foreach ($this->repoMap as $alias => $service) {
-            $this->repoManager->setService($alias, $service);
+            $this->repoManager
+                ->shouldReceive('get')
+                ->with($alias)
+                ->andReturn($service);
         }
 
-        $sm = m::mock(ServiceManager::class)->makePartial();
-        $sm->setService('RepositoryServiceManager', $this->repoManager);
+        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
 
         foreach ($this->mockedSmServices as $serviceName => $service) {
-            $sm->setService($serviceName, $service);
+            $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
         }
 
-        $this->queryHandler = m::mock(QueryHandlerManager::class)->makePartial();
-        $this->queryHandler->setServiceLocator($sm);
+        $this->queryHandler = m::mock(QueryHandlerManager::class);
+        $this->queryHandler
+            ->shouldReceive('getServiceLocator')
+            ->andReturn($sm);
 
         $this->sut = $this->sut->createService($this->queryHandler);
     }

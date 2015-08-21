@@ -41,7 +41,6 @@ class ServiceAbstractTest extends MockeryTestCase
 
         $this->mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
         $this->sm = Bootstrap::getServiceManager();
-        $this->sm->setAllowOverride(true);
         $this->em = $this->getMock(
             '\Doctrine\ORM\EntityManager',
             [
