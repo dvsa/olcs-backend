@@ -202,25 +202,13 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     protected $name;
 
     /**
-     * Nature of businesse
+     * Nature of business
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var string
      *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
-     *     inversedBy="organisations",
-     *     fetch="LAZY"
-     * )
-     * @ORM\JoinTable(name="organisation_nature_of_business",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="ref_data_id", referencedColumnName="id")
-     *     }
-     * )
+     * @ORM\Column(type="string", name="nature_of_business", length=255, nullable=true)
      */
-    protected $natureOfBusinesses;
+    protected $natureOfBusiness;
 
     /**
      * Type
@@ -331,7 +319,6 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
 
     public function initCollections()
     {
-        $this->natureOfBusinesses = new ArrayCollection();
         $this->disqualifications = new ArrayCollection();
         $this->irfoPartners = new ArrayCollection();
         $this->licences = new ArrayCollection();
@@ -732,63 +719,26 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the nature of businesse
+     * Set the nature of business
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesses
+     * @param string $natureOfBusiness
      * @return Organisation
      */
-    public function setNatureOfBusinesses($natureOfBusinesses)
+    public function setNatureOfBusiness($natureOfBusiness)
     {
-        $this->natureOfBusinesses = $natureOfBusinesses;
+        $this->natureOfBusiness = $natureOfBusiness;
 
         return $this;
     }
 
     /**
-     * Get the nature of businesses
+     * Get the nature of business
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return string
      */
-    public function getNatureOfBusinesses()
+    public function getNatureOfBusiness()
     {
-        return $this->natureOfBusinesses;
-    }
-
-    /**
-     * Add a nature of businesses
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesses
-     * @return Organisation
-     */
-    public function addNatureOfBusinesses($natureOfBusinesses)
-    {
-        if ($natureOfBusinesses instanceof ArrayCollection) {
-            $this->natureOfBusinesses = new ArrayCollection(
-                array_merge(
-                    $this->natureOfBusinesses->toArray(),
-                    $natureOfBusinesses->toArray()
-                )
-            );
-        } elseif (!$this->natureOfBusinesses->contains($natureOfBusinesses)) {
-            $this->natureOfBusinesses->add($natureOfBusinesses);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a nature of businesses
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesses
-     * @return Organisation
-     */
-    public function removeNatureOfBusinesses($natureOfBusinesses)
-    {
-        if ($this->natureOfBusinesses->contains($natureOfBusinesses)) {
-            $this->natureOfBusinesses->removeElement($natureOfBusinesses);
-        }
-
-        return $this;
+        return $this->natureOfBusiness;
     }
 
     /**
