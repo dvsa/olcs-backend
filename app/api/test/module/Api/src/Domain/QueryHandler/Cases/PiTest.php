@@ -42,7 +42,11 @@ class PiTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQueryNotTm()
+    /**
+     * @dataProvider slaAppliesToProvider
+     * @param $slaAppliesTo
+     */
+    public function testHandleQueryNotTm($slaAppliesTo)
     {
         $slaCompareTo = 'tcWrittenReasonDate';
         $slaField = 'writtenReasonLetterDate';
@@ -56,7 +60,7 @@ class PiTest extends QueryHandlerTestCase
         $sla = m::mock(SlaEntity::class);
         $sla->shouldReceive('getCompareTo')->andReturn($slaCompareTo);
         $sla->shouldReceive('getField')->andReturn($slaField);
-        $sla->shouldReceive('appliesTo')->andReturn(true);
+        $sla->shouldReceive('appliesTo')->andReturn($slaAppliesTo);
 
         $slas = [
             0 => $sla
@@ -69,7 +73,6 @@ class PiTest extends QueryHandlerTestCase
 
         $this->mockedSmServices[SlaCalculatorInterface::class]
             ->shouldReceive('applySla')
-            //->with($tcWrittenReasonDateTime, $sla, $trafficArea)
             ->andReturn($tcWrittenReasonDateTime);
 
         $this->repoMap['Pi']->shouldReceive('fetchUsingCase')
@@ -83,7 +86,11 @@ class PiTest extends QueryHandlerTestCase
         $this->assertInstanceOf(Result::class, $this->sut->handleQuery($query));
     }
 
-    public function testHandleQueryTm()
+    /**
+     * @dataProvider slaAppliesToProvider
+     * @param $slaAppliesTo
+     */
+    public function testHandleQueryTm($slaAppliesTo)
     {
         $slaCompareTo = 'tcWrittenReasonDate';
         $slaField = 'writtenReasonLetterDate';
@@ -97,7 +104,7 @@ class PiTest extends QueryHandlerTestCase
         $sla = m::mock(SlaEntity::class);
         $sla->shouldReceive('getCompareTo')->andReturn($slaCompareTo);
         $sla->shouldReceive('getField')->andReturn($slaField);
-        $sla->shouldReceive('appliesTo')->andReturn(true);
+        $sla->shouldReceive('appliesTo')->andReturn($slaAppliesTo);
 
         $slas = [
             0 => $sla
@@ -123,5 +130,16 @@ class PiTest extends QueryHandlerTestCase
             ->andReturn($slas);
 
         $this->assertInstanceOf(Result::class, $this->sut->handleQuery($query));
+    }
+
+    /**
+     * Provides the possible responses to $sla->appliesTo()
+     */
+    public function slaAppliesToProvider()
+    {
+        return [
+            [true],
+            [false]
+        ];
     }
 }
