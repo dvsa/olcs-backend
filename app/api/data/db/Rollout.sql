@@ -1736,7 +1736,6 @@ VALUES
  ,( 1,  89, 1, 1, 1, 0, 'Complaint')
  ,( 1,  90, 1, 0, 0, 0, 'Refunds')
  ,( 1,  91, 1, 0, 0, 0, 'Vehicle List')
- ,( 1,  167, 1, 0, 0, 0, 'CPID')
  ,( 4,  92, 1, 1, 1, 1, 'Other Documents')
  ,( 4,  93, 1, 1, 1, 0, 'Application')
  ,( 4,  94, 1, 1, 0, 0, 'Fee Due')
@@ -1817,6 +1816,7 @@ VALUES
  ,(1,  167, 0, 0, 0, 0, 'Community licence')
  ,(1,  168, 0, 0, 0, 0, 'Scanning separator')
  ,(1,  169, 0, 1, 0, 0, 'Business details change')
+ ,( 1, 170, 1, 0, 0, 0, 'CPID')
  ,( 999999, 999999, 1, 1, 1, 0, 'Not yet implemented (remove before go live)');
 
 
