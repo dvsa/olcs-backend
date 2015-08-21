@@ -49,7 +49,7 @@ class DeleteStatementTest extends CommandHandlerTestCase
         $statementEntity->setId($command->getId());
 
         $this->repoMap['Statement']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
+            ->with($command, Query::HYDRATE_OBJECT)
             ->andReturn($statementEntity)
             ->shouldReceive('delete')
             ->with(m::type(StatementEntity::class))

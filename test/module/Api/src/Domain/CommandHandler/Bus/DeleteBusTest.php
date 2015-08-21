@@ -60,7 +60,7 @@ class DeleteBusTest extends CommandHandlerTestCase
         $mockFetchList->shouldReceive('current')->andReturn($mockPreviousBusReg);
 
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
+            ->with($command, Query::HYDRATE_OBJECT)
             ->andReturn($busReg)
             ->shouldReceive('fetchList')
             ->once()
