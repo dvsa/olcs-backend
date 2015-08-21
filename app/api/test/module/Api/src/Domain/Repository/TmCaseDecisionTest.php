@@ -24,7 +24,7 @@ class TmCaseDecisionTest extends RepositoryTestCase
         $this->setUpSut(Repo::class);
     }
 
-    public function testFetchUsingCase()
+    public function testFetchLatestUsingCase()
     {
         $case = 24;
         $mockResult = [0 => 'result'];
@@ -53,6 +53,14 @@ class TmCaseDecisionTest extends RepositoryTestCase
             ->with($expr)
             ->andReturnSelf();
 
+        $qb->shouldReceive('orderBy')
+            ->with(m::type('string'), 'DESC')
+            ->andReturnSelf()
+            ->shouldReceive('setMaxResults')
+            ->with('1')
+            ->once()
+            ->andReturnSelf();
+
         $this->queryBuilder->shouldReceive('modifyQuery')
             ->once()
             ->with($qb)
@@ -75,7 +83,7 @@ class TmCaseDecisionTest extends RepositoryTestCase
             ->with(TmCaseDecision::class)
             ->andReturn($repo);
 
-        $result = $this->sut->fetchUsingCase($command, Query::HYDRATE_OBJECT);
+        $result = $this->sut->fetchLatestUsingCase($command, Query::HYDRATE_OBJECT);
 
         $this->assertEquals($result, $mockResult[0]);
     }

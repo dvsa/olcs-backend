@@ -29,7 +29,7 @@ class GetByCaseTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['case' => 1]);
 
-        $this->repoMap['TmCaseDecision']->shouldReceive('fetchUsingCase')
+        $this->repoMap['TmCaseDecision']->shouldReceive('fetchLatestUsingCase')
             ->with($query)
             ->andReturn(
                 m::mock(BundleSerializableInterface::class)

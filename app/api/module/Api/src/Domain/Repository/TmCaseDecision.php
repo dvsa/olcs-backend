@@ -17,7 +17,7 @@ class TmCaseDecision extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function fetchUsingCase(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
+    public function fetchLatestUsingCase(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
@@ -26,6 +26,10 @@ class TmCaseDecision extends AbstractRepository
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
+
+        // there should be only one active but just in case order by id to get the latest
+        $qb->orderBy($this->alias . '.id', 'DESC')
+            ->setMaxResults(1);
 
         $results = $qb->getQuery()->getResult($hydrateMode);
 

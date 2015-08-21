@@ -15,7 +15,7 @@ final class GetByCase extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         return $this->result(
-            $this->getRepo()->fetchUsingCase($query),
+            $this->getRepo()->fetchLatestUsingCase($query),
             ['rehabMeasures', 'unfitnessReasons']
         );
     }
