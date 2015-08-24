@@ -27,10 +27,7 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
 {
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = [
-        'LicenceOperatingCentre',
-        'ConditionUndertaking',
-    ];
+    protected $extraRepos = ['LicenceOperatingCentre'];
 
     /**
      * @param Cmd $command
