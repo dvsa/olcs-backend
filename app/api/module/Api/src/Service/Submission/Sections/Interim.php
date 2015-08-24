@@ -5,14 +5,14 @@ namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 
 /**
- * Class CaseOutline
+ * Class Interim
  * @package Dvsa\Olcs\Api\Service\Submission\Sections
  * @author Shaun Lizzio <shaun.lizzio@valtech.co.uk>
  */
-final class CaseOutline extends AbstractSection
+final class Interim extends AbstractSection
 {
     public function generateSection(CasesEntity $case)
     {
-        return ['data' => ['text' => $case->getDescription()]];
+        return ['data' => []];
     }
 }

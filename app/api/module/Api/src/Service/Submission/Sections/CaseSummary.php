@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
  */
 final class CaseSummary extends AbstractSection
 {
-    public function generateSection(CasesEntity $case, \ArrayObject $context = null)
+    public function generateSection(CasesEntity $case)
     {
         $licence = $case->getLicence();
         $organisation = !empty($licence) ? $licence->getOrganisation() : '';

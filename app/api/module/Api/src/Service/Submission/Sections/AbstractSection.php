@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
-use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorInterface;
 
 /**
  * Class AbstractSection
