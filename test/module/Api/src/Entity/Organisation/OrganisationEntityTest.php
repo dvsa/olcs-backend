@@ -41,6 +41,7 @@ class OrganisationEntityTest extends EntityTester
             'cpid',
             'createdBy',
             'createdOn',
+            'deletedDate',
             'id',
             'irfoContactDetails',
             'irfoName',
