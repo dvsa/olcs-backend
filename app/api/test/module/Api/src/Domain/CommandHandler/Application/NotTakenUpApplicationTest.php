@@ -51,9 +51,6 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleCommand()
     {
         $command = Command::create(['id' => 532]);
