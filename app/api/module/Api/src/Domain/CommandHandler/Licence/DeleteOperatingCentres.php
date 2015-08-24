@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -23,7 +25,7 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
 {
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['LicenceOperatingCentre'];
+    protected $extraRepos = ['LicenceOperatingCentre', 'ConditionUndertaking'];
 
     /**
      * @param Cmd $command
@@ -48,11 +50,44 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
 
                 $count++;
                 $this->getRepo('LicenceOperatingCentre')->delete($loc);
+                $this->result->merge($this->deleteConditionUndertakings($loc));
             }
         }
 
         $this->result->addMessage($count . ' Operating Centre(s) removed');
 
         return $this->result;
+    }
+
+    /**
+     * @param LicenceOperatingCentre $loc
+     * @return Result
+     */
+    private function deleteConditionUndertakings($loc)
+    {
+        $result = new Result();
+
+        $oc = $loc->getOperatingCentre();
+
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->eq('licence', $loc->getLicence()));
+
+        $conditionUndertakings = $oc->getConditionUndertakings()->matching($criteria);
+        if (!is_null($conditionUndertakings)) {
+            $count = 0;
+            foreach ($conditionUndertakings as $cu) {
+                $this->getRepo('ConditionUndertaking')->delete($cu);
+                $count++;
+            }
+            $result->addMessage(
+                sprintf(
+                    "%d Condition/Undertaking(s) removed for Operating Centre %d",
+                    $count,
+                    $oc->getId()
+                )
+            );
+        }
+
+        return $result;
     }
 }
