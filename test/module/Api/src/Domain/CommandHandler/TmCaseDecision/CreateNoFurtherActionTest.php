@@ -75,22 +75,4 @@ class CreateNoFurtherActionTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
-
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
-    public function testHandleCommandThrowsIncorrectNotifiedDateException()
-    {
-        $data = [
-            'case' => 11,
-            'isMsi' => 'Y',
-            'decisionDate' => '2016-01-02',
-            'notifiedDate' => '2016-01-01',
-            'noFurtherActionReason' => 'testing',
-        ];
-
-        $command = Cmd::create($data);
-
-        $this->sut->handleCommand($command);
-    }
 }

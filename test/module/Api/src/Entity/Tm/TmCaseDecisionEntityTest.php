@@ -237,4 +237,54 @@ class TmCaseDecisionEntityTest extends EntityTester
         $this->assertEquals($data['unfitnessReasons'], $entity->getUnfitnessReasons());
         $this->assertEquals($data['rehabMeasures'], $entity->getRehabMeasures());
     }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testUpdateForDeclareUnfitThrowsIncorrectNotifiedDateException()
+    {
+        $data = [
+            'case' => 11,
+            'isMsi' => 'Y',
+            'decisionDate' => '2016-01-02',
+            'notifiedDate' => '2016-01-01',
+            'unfitnessStartDate' => '2016-02-01',
+            'unfitnessEndDate' => '2016-02-01',
+            'unfitnessReasons' => ['unfitnessReason'],
+            'rehabMeasures' => ['rehabMeasure'],
+        ];
+
+        $case = m::mock(CasesEntity::class);
+
+        $decision = m::mock(RefData::class)->makePartial();
+        $decision->setId(Entity::DECISION_DECLARE_UNFIT);
+
+        $entity = new Entity($case, $decision);
+        $entity->update($data);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testUpdateForDeclareUnfitThrowsIncorrectUnfitnessEndDateException()
+    {
+        $data = [
+            'case' => 11,
+            'isMsi' => 'Y',
+            'decisionDate' => '2016-01-01',
+            'notifiedDate' => '2016-01-01',
+            'unfitnessStartDate' => '2016-02-02',
+            'unfitnessEndDate' => '2016-02-01',
+            'unfitnessReasons' => ['unfitnessReason'],
+            'rehabMeasures' => ['rehabMeasure'],
+        ];
+
+        $case = m::mock(CasesEntity::class);
+
+        $decision = m::mock(RefData::class)->makePartial();
+        $decision->setId(Entity::DECISION_DECLARE_UNFIT);
+
+        $entity = new Entity($case, $decision);
+        $entity->update($data);
+    }
 }

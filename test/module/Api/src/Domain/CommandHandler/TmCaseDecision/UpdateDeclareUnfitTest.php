@@ -88,49 +88,6 @@ class UpdateDeclareUnfitTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
-    public function testHandleCommandThrowsIncorrectNotifiedDateException()
-    {
-        $data = [
-            'id' => 111,
-            'version' => 1,
-            'isMsi' => 'Y',
-            'decisionDate' => '2016-01-02',
-            'notifiedDate' => '2016-01-01',
-            'unfitnessStartDate' => '2016-02-01',
-            'unfitnessEndDate' => '2016-02-01',
-            'unfitnessReasons' => ['unfitnessReason'],
-            'rehabMeasures' => ['rehabMeasure'],
-        ];
-
-        $command = Cmd::create($data);
-
-        $this->sut->handleCommand($command);
-    }
-
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
-    public function testHandleCommandThrowsIncorrectUnfitnessEndDateException()
-    {
-        $data = [
-            'case' => 11,
-            'isMsi' => 'Y',
-            'decisionDate' => '2016-01-01',
-            'notifiedDate' => '2016-01-01',
-            'unfitnessStartDate' => '2016-02-02',
-            'unfitnessEndDate' => '2016-02-01',
-            'unfitnessReasons' => ['unfitnessReason'],
-            'rehabMeasures' => ['rehabMeasure'],
-        ];
-
-        $command = Cmd::create($data);
-
-        $this->sut->handleCommand($command);
-    }
-
-    /**
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testHandleCommandThrowsIncorrectActionException()

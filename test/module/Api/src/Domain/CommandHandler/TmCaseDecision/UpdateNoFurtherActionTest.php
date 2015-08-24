@@ -76,25 +76,6 @@ class UpdateNoFurtherActionTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
-    public function testHandleCommandThrowsIncorrectNotifiedDateException()
-    {
-        $data = [
-            'id' => 111,
-            'version' => 1,
-            'isMsi' => 'Y',
-            'decisionDate' => '2016-01-02',
-            'notifiedDate' => '2016-01-01',
-            'noFurtherActionReason' => 'testing',
-        ];
-
-        $command = Cmd::create($data);
-
-        $this->sut->handleCommand($command);
-    }
-
-    /**
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testHandleCommandThrowsIncorrectActionException()
