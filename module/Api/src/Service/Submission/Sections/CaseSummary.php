@@ -29,7 +29,7 @@ final class CaseSummary extends AbstractSection
         $data['isMlh'] = !empty($organisation) ? $organisation->isMlh() : '';
         $data['organisationType'] = !empty($organisation) ? $organisation->getType()->getDescription() : '';
 
-        $data['businessType'] = $organisation->getNatureOfBusinessString();
+        $data['businessType'] = $organisation->getNatureOfBusiness();
 
         // licence data
         $data['licNo'] = !empty($licence) ? $licence->getLicNo() : '';

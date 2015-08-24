@@ -19,7 +19,7 @@ class CaseSummaryTest extends SubmissionSectionTest
         'organisationName' => 'Org name',
         'isMlh' => false,
         'organisationType' => 'org_type-desc',
-        'businessType' => 'nob1-desc',
+        'businessType' => 'nob1',
         'licNo' => 'OB12345',
         'licenceStartDate' => '2012-01-01 15:00:00',
         'licenceType' => 'lic_type-desc',
