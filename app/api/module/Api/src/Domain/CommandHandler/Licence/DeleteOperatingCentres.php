@@ -25,7 +25,13 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
 {
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['LicenceOperatingCentre', 'ConditionUndertaking'];
+    protected $extraRepos = [
+        'LicenceOperatingCentre',
+        'ConditionUndertaking',
+        'TransportManagerLicence',
+        'TransportManagerApplication',
+        'ApplicationOperatingCentre',
+    ];
 
     /**
      * @param Cmd $command
@@ -51,6 +57,8 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
                 $count++;
                 $this->getRepo('LicenceOperatingCentre')->delete($loc);
                 $this->result->merge($this->deleteConditionUndertakings($loc));
+                $this->result->merge($this->deleteTransportManagerLinks($loc));
+                $this->result->merge($this->deleteFromOtherApplications($loc));
             }
         }
 
@@ -87,6 +95,49 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
                 )
             );
         }
+
+        return $result;
+    }
+
+    private function deleteTransportManagerLinks($loc)
+    {
+        $result = new Result();
+        $operatingCentre = $loc->getOperatingCentre();
+
+        foreach ($operatingCentre->getTransportManagerLicences() as $tmLicence) {
+            $tmLicence->getOperatingCentres()->removeElement($operatingCentre);
+            $this->getRepo('TransportManagerLicence')->save($tmLicence);
+        }
+
+        foreach ($operatingCentre->getTransportManagerApplications() as $tmApplication) {
+            if ($tmApplication->getApplication()->isUnderConsideration()) {
+                $tmApplication->getOperatingCentres()->removeElement($operatingCentre);
+                $this->getRepo('TransportManagerApplication')->save($tmApplication);
+            }
+        }
+
+        $result->addMessage('Delinked TransportManagerLicence and TransportManagerApplication records '
+            . 'from Operating Centre ' . $operatingCentre->getId());
+
+        return $result;
+    }
+
+    private function deleteFromOtherApplications($loc)
+    {
+        $result = new Result();
+        $operatingCentre = $loc->getOperatingCentre();
+
+        $count = 0;
+        if ($operatingCentre->getApplications()) {
+            foreach ($operatingCentre->getApplications() as $aoc) {
+                if ($aoc->getApplication()->isUnderConsideration()) {
+                    $this->getRepo('ApplicationOperatingCentre')->delete($aoc);
+                    $count++;
+                }
+            }
+        }
+
+        $result->addMessage('Delinked Operating Centre from ' . $count . ' other Application(s)');
 
         return $result;
     }
