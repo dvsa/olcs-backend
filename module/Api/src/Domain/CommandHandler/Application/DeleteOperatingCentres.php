@@ -7,12 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Application\DeleteOperatingCentres as Cmd;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Delete Operating Centres
@@ -23,7 +25,7 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
 {
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['ApplicationOperatingCentre'];
+    protected $extraRepos = ['ApplicationOperatingCentre', 'ConditionUndertaking'];
 
     /**
      * @param Cmd $command
@@ -47,6 +49,7 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
                 }
                 $count++;
                 $this->getRepo('ApplicationOperatingCentre')->delete($aoc);
+                $this->result->merge($this->deleteConditionUndertakings($aoc));
                 $aocs->removeElement($aoc);
             }
         }
@@ -77,5 +80,43 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
         );
 
         return $this->result;
+    }
+
+    /**
+     * @param ApplicationOperatingCentre $laoc
+     * @return Result
+     */
+    private function deleteConditionUndertakings($aoc)
+    {
+        $result = new Result();
+
+        // we only want to delete where application.status = Under consideration
+        if ($aoc->getApplication()->getStatus()->getId()
+            !== ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION) {
+            return $result;
+        }
+
+        $oc = $aoc->getOperatingCentre();
+
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->eq('application', $aoc->getApplication()));
+
+        $conditionUndertakings = $oc->getConditionUndertakings()->matching($criteria);
+        if (!is_null($conditionUndertakings)) {
+            $count = 0;
+            foreach ($conditionUndertakings as $cu) {
+                $this->getRepo('ConditionUndertaking')->delete($cu);
+                $count++;
+            }
+            $result->addMessage(
+                sprintf(
+                    "%d Condition/Undertaking(s) removed for Operating Centre %d",
+                    $count,
+                    $oc->getId()
+                )
+            );
+        }
+
+        return $result;
     }
 }
