@@ -61,14 +61,7 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                             'type' => [
                                 'id' => Organisation::ORG_TYPE_SOLE_TRADER
                             ],
-                            'natureOfBusinesses' => [
-                                [
-                                    'description' => 'Foobar'
-                                ],
-                                [
-                                    'description' => 'Barfoo'
-                                ]
-                            ]
+                            'natureOfBusiness' => 'Foobar',
                         ]
                     ]
                 ],
@@ -90,11 +83,6 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                                                 'label' => 'application-review-business-details-nature-of-business',
                                                 'value' => 'Foobar'
                                             ],
-                                            [
-                                                // Only the first NoB has a label
-                                                'label' => '',
-                                                'value' => 'Barfoo'
-                                            ]
                                         ]
                                     ]
                                 ]
@@ -119,14 +107,7 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                             'type' => [
                                 'id' => Organisation::ORG_TYPE_SOLE_TRADER
                             ],
-                            'natureOfBusinesses' => [
-                                [
-                                    'description' => 'Foobar'
-                                ],
-                                [
-                                    'description' => 'Barfoo'
-                                ]
-                            ]
+                            'natureOfBusiness' => 'Foobar',
                         ]
                     ]
                 ],
@@ -153,11 +134,6 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                                                 'label' => 'application-review-business-details-nature-of-business',
                                                 'value' => 'Foobar'
                                             ],
-                                            [
-                                                // Only the first NoB has a label
-                                                'label' => '',
-                                                'value' => 'Barfoo'
-                                            ]
                                         ]
                                     ]
                                 ]
@@ -176,14 +152,7 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                                 'id' => Organisation::ORG_TYPE_PARTNERSHIP
                             ],
                             'name' => 'Our company',
-                            'natureOfBusinesses' => [
-                                [
-                                    'description' => 'Foobar'
-                                ],
-                                [
-                                    'description' => 'Barfoo'
-                                ]
-                            ]
+                            'natureOfBusiness' => 'Foobar',
                         ]
                     ]
                 ],
@@ -209,11 +178,6 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                                             [
                                                 'label' => 'application-review-business-details-nature-of-business',
                                                 'value' => 'Foobar'
-                                            ],
-                                            [
-                                                // Only the first NoB has a label
-                                                'label' => '',
-                                                'value' => 'Barfoo'
                                             ]
                                         ]
                                     ]
@@ -240,14 +204,7 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                                 'id' => Organisation::ORG_TYPE_PARTNERSHIP
                             ],
                             'name' => 'Our company',
-                            'natureOfBusinesses' => [
-                                [
-                                    'description' => 'Foobar'
-                                ],
-                                [
-                                    'description' => 'Barfoo'
-                                ]
-                            ]
+                            'natureOfBusiness' => 'Foobar',
                         ]
                     ]
                 ],
@@ -278,11 +235,6 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                                             [
                                                 'label' => 'application-review-business-details-nature-of-business',
                                                 'value' => 'Foobar'
-                                            ],
-                                            [
-                                                // Only the first NoB has a label
-                                                'label' => '',
-                                                'value' => 'Barfoo'
                                             ]
                                         ]
                                     ]
@@ -303,14 +255,7 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                             ],
                             'companyOrLlpNo' => '12345678',
                             'name' => 'Foo Ltd',
-                            'natureOfBusinesses' => [
-                                [
-                                    'description' => 'Foobar'
-                                ],
-                                [
-                                    'description' => 'Barfoo'
-                                ]
-                            ],
+                            'natureOfBusiness' => 'Foobar',
                             'contactDetails' => [
                                 'address' => [
                                     'addressLine1' => '123',
@@ -347,11 +292,6 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                                             [
                                                 'label' => 'application-review-business-details-nature-of-business',
                                                 'value' => 'Foobar'
-                                            ],
-                                            [
-                                                // Only the first NoB has a label
-                                                'label' => '',
-                                                'value' => 'Barfoo'
                                             ]
                                         ],
                                         [
@@ -398,14 +338,7 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                             ],
                             'companyOrLlpNo' => '12345678',
                             'name' => 'Foo Ltd',
-                            'natureOfBusinesses' => [
-                                [
-                                    'description' => 'Foobar'
-                                ],
-                                [
-                                    'description' => 'Barfoo'
-                                ]
-                            ],
+                            'natureOfBusiness' => 'Foobar',
                             'contactDetails' => [
                                 'address' => [
                                     'addressLine1' => '123',
@@ -447,11 +380,6 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                                             [
                                                 'label' => 'application-review-business-details-nature-of-business',
                                                 'value' => 'Foobar'
-                                            ],
-                                            [
-                                                // Only the first NoB has a label
-                                                'label' => '',
-                                                'value' => 'Barfoo'
                                             ]
                                         ],
                                         [
@@ -506,14 +434,7 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                             ],
                             'companyOrLlpNo' => '12345678',
                             'name' => 'Foo Ltd',
-                            'natureOfBusinesses' => [
-                                [
-                                    'description' => 'Foobar'
-                                ],
-                                [
-                                    'description' => 'Barfoo'
-                                ]
-                            ],
+                            'natureOfBusiness' => 'Foobar',
                             'contactDetails' => [
                                 'address' => [
                                     'addressLine1' => '123',
@@ -550,11 +471,6 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                                             [
                                                 'label' => 'application-review-business-details-nature-of-business',
                                                 'value' => 'Foobar'
-                                            ],
-                                            [
-                                                // Only the first NoB has a label
-                                                'label' => '',
-                                                'value' => 'Barfoo'
                                             ]
                                         ],
                                         [
@@ -601,14 +517,7 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                             ],
                             'companyOrLlpNo' => '12345678',
                             'name' => 'Foo Ltd',
-                            'natureOfBusinesses' => [
-                                [
-                                    'description' => 'Foobar'
-                                ],
-                                [
-                                    'description' => 'Barfoo'
-                                ]
-                            ],
+                            'natureOfBusiness' => 'Foobar',
                             'contactDetails' => [
                                 'address' => [
                                     'addressLine1' => '123',
@@ -650,11 +559,6 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                                             [
                                                 'label' => 'application-review-business-details-nature-of-business',
                                                 'value' => 'Foobar'
-                                            ],
-                                            [
-                                                // Only the first NoB has a label
-                                                'label' => '',
-                                                'value' => 'Barfoo'
                                             ]
                                         ],
                                         [
@@ -707,14 +611,7 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                                 'id' => Organisation::ORG_TYPE_OTHER
                             ],
                             'name' => 'My other business',
-                            'natureOfBusinesses' => [
-                                [
-                                    'description' => 'Foobar'
-                                ],
-                                [
-                                    'description' => 'Barfoo'
-                                ]
-                            ]
+                            'natureOfBusiness' => 'Foobar',
                         ]
                     ]
                 ],
@@ -735,11 +632,6 @@ class ApplicationBusinessDetailsReviewServiceTest extends MockeryTestCase
                                             [
                                                 'label' => 'application-review-business-details-nature-of-business',
                                                 'value' => 'Foobar'
-                                            ],
-                                            [
-                                                // Only the first NoB has a label
-                                                'label' => '',
-                                                'value' => 'Barfoo'
                                             ]
                                         ]
                                     ]
