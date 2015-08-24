@@ -126,7 +126,8 @@ return [
             'outstanding-applications' => \Dvsa\Olcs\Api\Service\Submission\Sections\OutstandingApplications::class,
             'people' => \Dvsa\Olcs\Api\Service\Submission\Sections\People::class,
             'operating-centres' => \Dvsa\Olcs\Api\Service\Submission\Sections\OperatingCentres::class,
-            'conditions-and-undertakings' => \Dvsa\Olcs\Api\Service\Submission\Sections\ConditionsAndUndertakings::class,
+            'conditions-and-undertakings' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\ConditionsAndUndertakings::class,
         ]
     ]
 ];

@@ -72,15 +72,17 @@ final class OperatingCentres extends AbstractSection
         $sorted = [];
         if (!empty($licence->getOperatingCentres())) {
             $iterator = $licence->getOperatingCentres()->getIterator();
-            $iterator->uasort(function ($a, $b) {
-                if (null !== $a->getOperatingCentre()->getAddress()->getPostcode() &&
-                    null !== $b->getOperatingCentre()->getAddress()->getPostcode()) {
-                    return strcmp(
-                        $a->getOperatingCentre()->getAddress()->getPostcode(),
-                        $b->getOperatingCentre()->getAddress()->getPostcode()
-                    );
+            $iterator->uasort(
+                function ($a, $b) {
+                    if (null !== $a->getOperatingCentre()->getAddress()->getPostcode() &&
+                        null !== $b->getOperatingCentre()->getAddress()->getPostcode()) {
+                        return strcmp(
+                            $a->getOperatingCentre()->getAddress()->getPostcode(),
+                            $b->getOperatingCentre()->getAddress()->getPostcode()
+                        );
+                    }
                 }
-            });
+            );
             $sorted = iterator_to_array($iterator);
         }
 
