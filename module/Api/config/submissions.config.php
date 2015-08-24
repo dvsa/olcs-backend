@@ -116,6 +116,12 @@ return [
             \Dvsa\Olcs\Api\Service\Submission\Sections\OperatingCentres::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\ConditionsAndUndertakings::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\IntelligenceUnitCheck::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\Interim::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\LinkedLicences::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class
         ],
         'aliases' => [
@@ -128,6 +134,12 @@ return [
             'operating-centres' => \Dvsa\Olcs\Api\Service\Submission\Sections\OperatingCentres::class,
             'conditions-and-undertakings' =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\ConditionsAndUndertakings::class,
+            'intelligence-unit-check' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\IntelligenceUnitCheck::class,
+            'interim' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\Interim::class,
+            'linked-licences-app-numbers' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\LinkedLicences::class,
         ]
     ]
 ];

@@ -6,10 +6,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * Class ConditionsAndUndertakings
+ * @to-do unit test for section
+ *
  * @package Dvsa\Olcs\Api\Service\Submission\Sections
  * @author Shaun Lizzio <shaun.lizzio@valtech.co.uk>
  */
@@ -22,7 +23,7 @@ final class ConditionsAndUndertakings extends AbstractSection
      * @param \ArrayObject|null $context
      * @return array
      */
-    public function generateSection(CasesEntity $case, \ArrayObject $context = null)
+    public function generateSection(CasesEntity $case)
     {
         $tables = [];
 

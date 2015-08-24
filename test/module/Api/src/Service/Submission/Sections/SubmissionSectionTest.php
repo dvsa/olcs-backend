@@ -2,7 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 use Dvsa\Olcs\Api\Entity\Person\Person;
@@ -135,6 +137,8 @@ class SubmissionSectionTest extends MockeryTestCase
 
         $licence->setLicenceVehicles($this->generateLicenceVehicles($licence));
 
+        $licence->setOperatingCentres($this->generateOperatingCentres($licence));
+
         return $licence;
     }
 
@@ -152,4 +156,38 @@ class SubmissionSectionTest extends MockeryTestCase
 
         return $licenceVehicles;
     }
+
+    protected function generateOperatingCentres($licence)
+    {
+        $operatingCentres = new ArrayCollection();
+
+        for ($i=1; $i < 2; $i++) {
+            $operatingCentre = new OperatingCentre();
+            $operatingCentre->setId($i);
+            $operatingCentre->setVersion($i);
+            $loc = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $operatingCentre);
+            $loc->setNoOfVehiclesRequired(6);
+            $loc->setNoOfTrailersRequired(4);
+
+            $address = $this->generateAddress($i);
+            $operatingCentre->setAddress($address);
+            $operatingCentres->add($loc);
+        }
+
+        return $operatingCentres;
+    }
+
+    protected function generateAddress($id)
+    {
+        $address = new Address($id);
+        $address->setId($id);
+        $address->setAddressLine1($id . '_a1');
+        $address->setAddressLine2($id . '_a2');
+        $address->setAddressLine3($id . '_a3');
+        $address->setTown($id . 't');
+        $address->setPostcode('pc' . $id . '1PC');
+
+        return $address;
+    }
+
 }

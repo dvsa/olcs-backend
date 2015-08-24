@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Api\Service\Submission\Sections\AbstractSection;
 
 /**
  * Class Introduction
@@ -12,7 +11,7 @@ use Dvsa\Olcs\Api\Service\Submission\Sections\AbstractSection;
  */
 final class Introduction extends AbstractSection
 {
-    public function generateSection(CasesEntity $case, \ArrayObject $context = null)
+    public function generateSection(CasesEntity $case)
     {
         return ['data' => []];
     }
