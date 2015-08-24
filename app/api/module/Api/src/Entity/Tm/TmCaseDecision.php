@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Tm;
 
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\ORM\Mapping as ORM;
@@ -54,6 +55,13 @@ class TmCaseDecision extends AbstractTmCaseDecision
      */
     public function update(array $data)
     {
+        // validate
+        if (($data['notifiedDate'] !== null)
+            && (new \DateTime($data['notifiedDate']) < new \DateTime($data['decisionDate']))
+        ) {
+            throw new ValidationException(['Date of notification must be after or the same as date of decision']);
+        }
+
         // update common properties
         $this->setIsMsi($data['isMsi']);
         $this->setDecisionDate(new \DateTime($data['decisionDate']));
@@ -103,6 +111,14 @@ class TmCaseDecision extends AbstractTmCaseDecision
      */
     private function updateDeclareUnfit(array $data)
     {
+        // validate
+        if (($data['unfitnessEndDate'] !== null)
+            && (new \DateTime($data['unfitnessEndDate']) < new \DateTime($data['unfitnessStartDate']))
+        ) {
+            throw new ValidationException(['Unfitness end date must be after or the same as unfitness start date']);
+        }
+
+        // update
         $this->setUnfitnessStartDate(new \DateTime($data['unfitnessStartDate']));
 
         if ($data['unfitnessEndDate'] !== null) {
