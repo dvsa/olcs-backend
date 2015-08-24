@@ -8,6 +8,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteApplicationLinks;
+use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteTmLinks;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -101,44 +103,15 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
 
     private function deleteTransportManagerLinks($loc)
     {
-        $result = new Result();
-        $operatingCentre = $loc->getOperatingCentre();
-
-        foreach ($operatingCentre->getTransportManagerLicences() as $tmLicence) {
-            $tmLicence->getOperatingCentres()->removeElement($operatingCentre);
-            $this->getRepo('TransportManagerLicence')->save($tmLicence);
-        }
-
-        foreach ($operatingCentre->getTransportManagerApplications() as $tmApplication) {
-            if ($tmApplication->getApplication()->isUnderConsideration()) {
-                $tmApplication->getOperatingCentres()->removeElement($operatingCentre);
-                $this->getRepo('TransportManagerApplication')->save($tmApplication);
-            }
-        }
-
-        $result->addMessage('Delinked TransportManagerLicence and TransportManagerApplication records '
-            . 'from Operating Centre ' . $operatingCentre->getId());
-
-        return $result;
+        return $this->handleSideEffect(
+            DeleteTmLinks::create(['operatingCentre' => $loc->getOperatingCentre()])
+        );
     }
 
     private function deleteFromOtherApplications($loc)
     {
-        $result = new Result();
-        $operatingCentre = $loc->getOperatingCentre();
-
-        $count = 0;
-        if ($operatingCentre->getApplications()) {
-            foreach ($operatingCentre->getApplications() as $aoc) {
-                if ($aoc->getApplication()->isUnderConsideration()) {
-                    $this->getRepo('ApplicationOperatingCentre')->delete($aoc);
-                    $count++;
-                }
-            }
-        }
-
-        $result->addMessage('Delinked Operating Centre from ' . $count . ' other Application(s)');
-
-        return $result;
+        return $this->handleSideEffect(
+            DeleteApplicationLinks::create(['operatingCentre' => $loc->getOperatingCentre()])
+        );
     }
 }
