@@ -171,6 +171,18 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     protected $viAction;
 
     /**
+     * Application
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre",
+     *     mappedBy="operatingCentre"
+     * )
+     */
+    protected $applications;
+
+    /**
      * Condition undertaking
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -205,6 +217,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
         $this->transportManagerApplications = new ArrayCollection();
         $this->complaints = new ArrayCollection();
         $this->oppositions = new ArrayCollection();
+        $this->applications = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->adDocuments = new ArrayCollection();
     }
@@ -654,6 +667,66 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     public function getViAction()
     {
         return $this->viAction;
+    }
+
+    /**
+     * Set the application
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applications
+     * @return OperatingCentre
+     */
+    public function setApplications($applications)
+    {
+        $this->applications = $applications;
+
+        return $this;
+    }
+
+    /**
+     * Get the applications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
+
+    /**
+     * Add a applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applications
+     * @return OperatingCentre
+     */
+    public function addApplications($applications)
+    {
+        if ($applications instanceof ArrayCollection) {
+            $this->applications = new ArrayCollection(
+                array_merge(
+                    $this->applications->toArray(),
+                    $applications->toArray()
+                )
+            );
+        } elseif (!$this->applications->contains($applications)) {
+            $this->applications->add($applications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applications
+     * @return OperatingCentre
+     */
+    public function removeApplications($applications)
+    {
+        if ($this->applications->contains($applications)) {
+            $this->applications->removeElement($applications);
+        }
+
+        return $this;
     }
 
     /**
