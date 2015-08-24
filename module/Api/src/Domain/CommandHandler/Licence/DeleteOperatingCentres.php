@@ -7,8 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteApplicationLinks;
+use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteConditionUndertakings;
 use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteTmLinks;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -72,28 +72,14 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
      */
     private function deleteConditionUndertakings($loc)
     {
-        $result = new Result();
-
-        $oc = $loc->getOperatingCentre();
-
-        $criteria = Criteria::create();
-        $criteria->where($criteria->expr()->eq('licence', $loc->getLicence()));
-
-        $count = 0;
-        foreach ($oc->getConditionUndertakings()->matching($criteria) as $cu) {
-            $this->getRepo('ConditionUndertaking')->delete($cu);
-            $count++;
-        }
-
-        $result->addMessage(
-            sprintf(
-                "%d Condition/Undertaking(s) removed for Operating Centre %d",
-                $count,
-                $oc->getId()
+        return $this->handleSideEffect(
+            DeleteConditionUndertakings::create(
+                [
+                    'operatingCentre' => $loc->getOperatingCentre(),
+                    'licence' => $loc->getLicence(),
+                ]
             )
         );
-
-        return $result;
     }
 
     private function deleteTransportManagerLinks($loc)

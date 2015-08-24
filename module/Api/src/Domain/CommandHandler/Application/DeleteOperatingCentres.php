@@ -7,8 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteApplicationLinks;
+use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteConditionUndertakings;
 use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteTmLinks;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -94,33 +94,20 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
      */
     private function deleteConditionUndertakings($aoc)
     {
-        $result = new Result();
 
         // we only want to delete where application.status = Under consideration
         if (!$aoc->getApplication()->isUnderConsideration()) {
-            return $result;
+            return new Result();
         }
 
-        $oc = $aoc->getOperatingCentre();
-
-        $criteria = Criteria::create();
-        $criteria->where($criteria->expr()->eq('application', $aoc->getApplication()));
-
-        $count = 0;
-        foreach ($oc->getConditionUndertakings()->matching($criteria) as $cu) {
-            $this->getRepo('ConditionUndertaking')->delete($cu);
-            $count++;
-        }
-
-        $result->addMessage(
-            sprintf(
-                "%d Condition/Undertaking(s) removed for Operating Centre %d",
-                $count,
-                $oc->getId()
+        return $this->handleSideEffect(
+            DeleteConditionUndertakings::create(
+                [
+                    'operatingCentre' => $aoc->getOperatingCentre(),
+                    'application' => $aoc->getApplication(),
+                ]
             )
         );
-
-        return $result;
     }
 
     private function deleteTransportManagerLinks($aoc)

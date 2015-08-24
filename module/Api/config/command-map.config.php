@@ -445,8 +445,9 @@ return [
         => CommandHandler\LicenceOperatingCentre\DisassociateS4::class,
 
     // Domain - Operating Centre
-    Command\OperatingCentre\DeleteTmLinks::class => CommandHandler\OperatingCentre\DeleteTmLinks::class,
     Command\OperatingCentre\DeleteApplicationLinks::class => CommandHandler\OperatingCentre\DeleteApplicationLinks::class,
+    Command\OperatingCentre\DeleteConditionUndertakings::class => CommandHandler\OperatingCentre\DeleteConditionUndertakings::class,
+    Command\OperatingCentre\DeleteTmLinks::class => CommandHandler\OperatingCentre\DeleteTmLinks::class,
 
     // Domain - Condition Undertaking
     Command\Cases\ConditionUndertaking\CreateConditionUndertaking::class
