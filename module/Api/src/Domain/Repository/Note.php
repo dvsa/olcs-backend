@@ -63,4 +63,21 @@ class Note extends AbstractRepository
 
         $this->getQueryBuilder()->modifyQuery($qb)->withUser()->withBusReg();
     }
+
+    /**
+     * Fetch a list for an organisation
+     *
+     * @param int|Organisation $organisation
+     *
+     * @return array
+     */
+    public function fetchByOrganisation($organisation)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.organisation', ':organisaion'))
+            ->setParameter('organisaion', $organisation);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
 }

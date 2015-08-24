@@ -1,35 +1,30 @@
 <?php
 
-/**
- * Task
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Task\Task as Entity;
+use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as Entity;
 
 /**
- * Task
+ * TxcInbox
  *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class Task extends AbstractRepository
+class TxcInbox extends AbstractRepository
 {
     protected $entity = Entity::class;
 
     /**
-     * Fetch a list for an irfo organisation
+     * Fetch a list for an organisation
      *
      * @param int|\Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
      *
      * @return array
      */
-    public function fetchByIrfoOrganisation($organisation)
+    public function fetchByOrganisation($organisation)
     {
         $doctrineQb = $this->createQueryBuilder();
 
-        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.irfoOrganisation', ':organisaion'))
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.organisation', ':organisaion'))
             ->setParameter('organisaion', $organisation);
 
         return $doctrineQb->getQuery()->getResult();
