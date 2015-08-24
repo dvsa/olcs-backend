@@ -27,10 +27,7 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
 {
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = [
-        'ApplicationOperatingCentre',
-        'ConditionUndertaking',
-    ];
+    protected $extraRepos = ['ApplicationOperatingCentre'];
 
     /**
      * @param Cmd $command
@@ -56,6 +53,7 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
                 $this->getRepo('ApplicationOperatingCentre')->delete($aoc);
                 $aocs->removeElement($aoc);
                 $this->result->merge($this->deleteConditionUndertakings($aoc));
+                $this->result->merge($this->deleteTransportManagerLinks($aoc));
                 $this->result->merge($this->deleteFromOtherApplications($aoc));
             }
         }
@@ -94,12 +92,6 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
      */
     private function deleteConditionUndertakings($aoc)
     {
-
-        // we only want to delete where application.status = Under consideration
-        if (!$aoc->getApplication()->isUnderConsideration()) {
-            return new Result();
-        }
-
         return $this->handleSideEffect(
             DeleteConditionUndertakings::create(
                 [

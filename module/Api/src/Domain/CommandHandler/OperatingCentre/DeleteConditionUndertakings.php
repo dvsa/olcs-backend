@@ -36,7 +36,14 @@ final class DeleteConditionUndertakings extends AbstractCommandHandler implement
         $criteria = Criteria::create();
 
         if ($command->getApplication()) {
+
+            if (!$command->getApplication()->isUnderConsideration()) {
+                // return early, we only want to delete where application.status = Under consideration
+                return $this->result;
+            }
+
             $criteria->where($criteria->expr()->eq('application', $command->getApplication()));
+
         } elseif ($command->getLicence()) {
             $criteria->where($criteria->expr()->eq('licence', $command->getLicence()));
         }
