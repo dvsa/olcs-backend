@@ -83,7 +83,6 @@ class Licence extends AbstractQueryHandler
                                 'phoneContactType'
                             ]
                         ],
-                        'natureOfBusinesses',
                         'tradingNames',
                         'leadTcArea' => [
                             'contactDetails' => [
