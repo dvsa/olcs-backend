@@ -32,7 +32,9 @@ final class ConfirmPrinting extends AbstractCommandHandler implements Transactio
         );
         if ($command->getIsSuccessfull()) {
             $this->getRepo()->setIsPrintingOffAndAssignNumbers($discs, $command->getStartNumber());
-            $this->setNewStartNumber($command->getLicenceType(), $command->getDiscSequence(), $command->getEndNumber() + 1);
+            $this->setNewStartNumber(
+                $command->getLicenceType(), $command->getDiscSequence(), $command->getEndNumber() + 1
+            );
             $result->addMessage('Printing flag is now off and numbers assigned to discs');
         } else {
             $this->getRepo()->setIsPrintingOff($discs);

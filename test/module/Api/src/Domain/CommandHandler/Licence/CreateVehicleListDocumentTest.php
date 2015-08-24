@@ -18,6 +18,9 @@ use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as Cmd;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as LicenceCmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
+use ZfcRbac\Service\AuthorizationService;
+//use Dvsa\Olcs\Api\Entity\User\Team;
+use Dvsa\Olcs\Api\Entity\User\User;
 
 /**
  * Create Goods Vehicle Test
@@ -31,7 +34,10 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
         $this->sut = new CreateVehicleListDocument();
         $this->mockRepo('Licence', LicenceRepo::class);
 
-        $this->mockedSmServices['DocumentGenerator'] = m::mock(DocumentGenerator::class);
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            'DocumentGenerator' => m::mock(DocumentGenerator::class)
+        ];
 
         parent::setUp();
     }
@@ -51,6 +57,11 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
         ];
         $command = Cmd::create($data);
 
+        $mockUser = m::mock(User::class)->makePartial();
+        $mockUser->setId(1);
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
+
         $file = m::mock();
         $file->shouldReceive('getIdentifier')
             ->andReturn(123)
@@ -58,7 +69,7 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
             ->andReturn(1500);
 
         $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateFromTemplate')
-            ->with('GVVehiclesList', ['licence' => 111])
+            ->with('GVVehiclesList', ['licence' => 111, 'user' => $mockUser])
             ->andReturn('CONTENT')
             ->shouldReceive('uploadGeneratedContent')
             ->with('CONTENT')

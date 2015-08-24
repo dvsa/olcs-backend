@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CreatePsvVehicleListForDiscs as CreatePsv
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc as PsvDiscEntity;
 use Dvsa\Olcs\Api\Entity\System\DiscSequence as DiscSequenceEntity;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Print PSV discs

@@ -18,6 +18,7 @@ use Dvsa\Olcs\Transfer\Command\Document\CreateDocument;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Create PSV Vehicle List Document for discs
@@ -48,7 +49,7 @@ final class CreatePsvVehicleListForDiscs extends AbstractCommandHandler implemen
 
         $file = $this->getDocumentGenerator()->uploadGeneratedContent($content);
 
-        $fileName = date('YmdHi') . '_Psv_Vehicle_List.rtf';
+        $fileName = (new DateTime())->format('YmdHi') . '_Psv_Vehicle_List.rtf';
 
         $data = [
             'licence'       => $command->getId(),
