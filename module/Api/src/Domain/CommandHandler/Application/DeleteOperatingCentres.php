@@ -25,7 +25,12 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
 {
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['ApplicationOperatingCentre', 'ConditionUndertaking'];
+    protected $extraRepos = [
+        'ApplicationOperatingCentre',
+        'ConditionUndertaking',
+        'TransportManagerApplication',
+        'TransportManagerLicence',
+    ];
 
     /**
      * @param Cmd $command
@@ -49,8 +54,9 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
                 }
                 $count++;
                 $this->getRepo('ApplicationOperatingCentre')->delete($aoc);
-                $this->result->merge($this->deleteConditionUndertakings($aoc));
                 $aocs->removeElement($aoc);
+                $this->result->merge($this->deleteConditionUndertakings($aoc));
+                $this->result->merge($this->deleteFromOtherApplications($aoc));
             }
         }
 
@@ -91,8 +97,7 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
         $result = new Result();
 
         // we only want to delete where application.status = Under consideration
-        if ($aoc->getApplication()->getStatus()->getId()
-            !== ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION) {
+        if (!$aoc->getApplication()->isUnderConsideration()) {
             return $result;
         }
 
@@ -116,6 +121,51 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
                 )
             );
         }
+
+        return $result;
+    }
+
+    private function deleteTransportManagerLinks($loc)
+    {
+        $result = new Result();
+        $operatingCentre = $loc->getOperatingCentre();
+
+        // @todo move to separate command
+        foreach ($operatingCentre->getTransportManagerLicences() as $tmLicence) {
+            $tmLicence->getOperatingCentres()->removeElement($operatingCentre);
+            $this->getRepo('TransportManagerLicence')->save($tmLicence);
+        }
+
+        foreach ($operatingCentre->getTransportManagerApplications() as $tmApplication) {
+            if ($tmApplication->getApplication()->isUnderConsideration()) {
+                $tmApplication->getOperatingCentres()->removeElement($operatingCentre);
+                $this->getRepo('TransportManagerApplication')->save($tmApplication);
+            }
+        }
+
+        $result->addMessage('Delinked TransportManagerLicence and TransportManagerApplication records '
+            . 'from Operating Centre ' . $operatingCentre->getId());
+
+        return $result;
+    }
+
+    private function deleteFromOtherApplications($aoc)
+    {
+        $result = new Result();
+        $operatingCentre = $aoc->getOperatingCentre();
+
+        // @todo move to separate command
+        $count = 0;
+        if ($operatingCentre->getApplications()) {
+            foreach ($operatingCentre->getApplications() as $aoc) {
+                if ($aoc->getApplication()->isUnderConsideration()) {
+                    $this->getRepo('ApplicationOperatingCentre')->delete($aoc);
+                    $count++;
+                }
+            }
+        }
+
+        $result->addMessage('Delinked Operating Centre from ' . $count . ' other Application(s)');
 
         return $result;
     }
