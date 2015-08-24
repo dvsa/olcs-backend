@@ -8,7 +8,6 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -28,12 +27,11 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Tran
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
+        $updateResult = $this->updateBusinessDetails($command);
+        $this->result->merge($updateResult);
+        $this->result->merge($this->updateApplicationCompletion($command, $updateResult->getFlag('hasChanged')));
 
-        $result->merge($this->updateBusinessDetails($command));
-        $result->merge($this->updateApplicationCompletion($command));
-
-        return $result;
+        return $this->result;
     }
 
     private function updateBusinessDetails(Cmd $command)
@@ -42,13 +40,21 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Tran
 
         $data['id'] = $data['licence'];
 
-        return $this->getCommandHandler()->handleCommand(LicenceCmd::create($data));
+        return $this->handleSideEffect(LicenceCmd::create($data));
     }
 
-    private function updateApplicationCompletion(Cmd $command)
+    private function updateApplicationCompletion(Cmd $command, $hasChanged)
     {
-        return $this->getCommandHandler()->handleCommand(
-            UpdateApplicationCompletionCommand::create(['id' => $command->getId(), 'section' => 'businessDetails'])
+        return $this->handleSideEffect(
+            UpdateApplicationCompletionCommand::create(
+                [
+                    'id' => $command->getId(),
+                    'section' => 'businessDetails',
+                    'data' => [
+                        'hasChanged' => $hasChanged
+                    ]
+                ]
+            )
         );
     }
 }

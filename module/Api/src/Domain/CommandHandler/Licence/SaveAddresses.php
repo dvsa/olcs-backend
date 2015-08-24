@@ -9,12 +9,10 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -42,8 +40,6 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
     {
         /** @var Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($command);
-
-        $this->result = new Result();
 
         $this->result->setFlag('isDirty', false);
 
@@ -101,7 +97,7 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
 
     private function updateCorrespondencePhoneContacts(Cmd $command, Licence $licence)
     {
-        return $this->updatePhoneContacts(
+        $this->updatePhoneContacts(
             $command->getContact(),
             $licence->getCorrespondenceCd()
         );
@@ -166,9 +162,7 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
 
         $address = $command->getEstablishmentAddress();
         $address['contactType'] = ContactDetails::CONTACT_TYPE_ESTABLISHMENT_ADDRESS;
-        $result = $this->getCommandHandler()->handleCommand(
-            SaveAddress::create($address)
-        );
+        $result = $this->handleSideEffect(SaveAddress::create($address));
 
         if ($result->getId('contactDetails') !== null) {
             $licence->setEstablishmentCd(
@@ -194,9 +188,7 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
         if ($params['add-transport-consultant'] === 'Y') {
             $address = $params['address'];
             $address['contactType'] = ContactDetails::CONTACT_TYPE_TRANSPORT_CONSULTANT;
-            $result = $this->getCommandHandler()->handleCommand(
-                SaveAddress::create($address)
-            );
+            $result = $this->handleSideEffect(SaveAddress::create($address));
 
             $this->handleSideEffectResult($result);
 

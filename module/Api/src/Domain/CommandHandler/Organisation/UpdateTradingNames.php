@@ -8,7 +8,6 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Organisation;
 
 use Doctrine\Common\Collections\Criteria;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -47,11 +46,9 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
             $current = $organisation->getTradingNames()->matching($criteria);
         }
 
-        $result = new Result();
-
         if ($this->haveTradingNamesChanged($current, $command->getTradingNames())) {
 
-            $result->setFlag('hasChanged', true);
+            $this->result->setFlag('hasChanged', true);
 
             list($newCount, $unchangedCount, $removedCount) = $this->updateTradingNames(
                 $current,
@@ -60,16 +57,16 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
                 $licence
             );
 
-            $result->addMessage($newCount . ' new trading name(s)');
-            $result->addMessage($unchangedCount . ' unchanged trading name(s)');
-            $result->addMessage($removedCount . ' trading name(s) removed');
+            $this->result->addMessage($newCount . ' new trading name(s)');
+            $this->result->addMessage($unchangedCount . ' unchanged trading name(s)');
+            $this->result->addMessage($removedCount . ' trading name(s) removed');
 
         } else {
-            $result->setFlag('hasChanged', false);
-            $result->addMessage('Trading names are unchanged');
+            $this->result->setFlag('hasChanged', false);
+            $this->result->addMessage('Trading names are unchanged');
         }
 
-        return $result;
+        return $this->result;
     }
 
     private function updateTradingNames(

@@ -54,7 +54,13 @@ final class UpdateSafety extends AbstractCommandHandler implements Transactioned
 
         $result->merge($this->handleSideEffect(LicenceUpdateSafety::create($command->getLicence())));
 
-        $data = ['id' => $command->getId(), 'section' => 'safety'];
+        $data = [
+            'id' => $command->getId(),
+            'section' => 'safety',
+            'data' => [
+                'hasChanged' => $application->getVersion() != $command->getVersion()
+            ]
+        ];
 
         $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($data)));
 

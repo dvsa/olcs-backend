@@ -420,6 +420,22 @@ class Application extends AbstractApplication
         );
     }
 
+    public function isPsvDowngrade()
+    {
+        // Ignore goods
+        if ($this->isGoods()) {
+            return false;
+        }
+
+        // Ignore where application is not restricted
+        if ($this->getLicenceType()->getId() !== Licence::LICENCE_TYPE_RESTRICTED) {
+            return false;
+        }
+
+        // If licence was not restricted before, then we have a downgrade
+        return ($this->getLicence()->getLicenceType()->getId() !== Licence::LICENCE_TYPE_RESTRICTED);
+    }
+
     public function updateLicenceHistory(
         $prevHasLicence,
         $prevHadLicence,
@@ -1287,5 +1303,28 @@ class Application extends AbstractApplication
         }
 
         return $this->getLicence()->allowFeePayments();
+    }
+
+    public function hasAuthChanged()
+    {
+        if ($this->isNew()) {
+            return false;
+        }
+
+        $comparisons = [
+            'TotAuthVehicles',
+            'TotAuthTrailers',
+            'TotAuthSmallVehicles',
+            'TotAuthMediumVehicles',
+            'TotAuthLargeVehicles'
+        ];
+
+        foreach ($comparisons as $comparison) {
+            if ((int)$this->{'get' . $comparison}() !== (int)$this->getLicence()->{'get' . $comparison}()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
