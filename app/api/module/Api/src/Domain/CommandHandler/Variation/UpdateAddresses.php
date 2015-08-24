@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -20,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 
 /**
  * Variation Update Addresses
@@ -34,6 +34,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
 
     public function handleCommand(CommandInterface $command)
     {
+        /** @var Application $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
         $licence = $application->getLicence();
@@ -41,14 +42,18 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
         $params = $command->getArrayCopy();
         $params['id'] = $licence->getId();
 
-        $result = $this->getCommandHandler()->handleCommand(
-            SaveAddresses::create($params)
-        );
+        $result = $this->handleSideEffect(SaveAddresses::create($params));
 
         $result->merge(
-            $this->getCommandHandler()->handleCommand(
+            $this->handleSideEffect(
                 UpdateApplicationCompletionCommand::create(
-                    ['id' => $application->getId(), 'section' => 'addresses']
+                    [
+                        'id' => $application->getId(),
+                        'section' => 'addresses',
+                        'data' => [
+                            'hasChanged' => $result->getFlag('isDirty')
+                        ]
+                    ]
                 )
             )
         );
@@ -63,7 +68,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
                 'actionDate' => (new DateTime)->format('Y-m-d H:i:s'),
             ];
 
-            $result->merge($this->getCommandHandler()->handleCommand(CreateTask::create($taskParams)));
+            $result->merge($this->handleSideEffect(CreateTask::create($taskParams)));
         }
 
         $result->setFlag('hasChanged', $result->getFlag('isDirty'));

@@ -35,6 +35,21 @@ class Addresses extends AbstractQueryHandler
                         'phoneContactType',
                     ],
                 ],
+                'establishmentCd' => [
+                    'address' => [
+                        'countryCode',
+                    ],
+                    'contactType'
+                ],
+                'transportConsultantCd' => [
+                    'address' => [
+                        'countryCode',
+                    ],
+                    'contactType',
+                    'phoneContacts' => [
+                        'phoneContactType',
+                    ],
+                ],
             ]
         );
     }
