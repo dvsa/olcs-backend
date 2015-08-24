@@ -30,9 +30,6 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
     protected $extraRepos = [
         'LicenceOperatingCentre',
         'ConditionUndertaking',
-        'TransportManagerLicence',
-        'TransportManagerApplication',
-        'ApplicationOperatingCentre',
     ];
 
     /**
@@ -82,21 +79,19 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
         $criteria = Criteria::create();
         $criteria->where($criteria->expr()->eq('licence', $loc->getLicence()));
 
-        $conditionUndertakings = $oc->getConditionUndertakings()->matching($criteria);
-        if (!is_null($conditionUndertakings)) {
-            $count = 0;
-            foreach ($conditionUndertakings as $cu) {
-                $this->getRepo('ConditionUndertaking')->delete($cu);
-                $count++;
-            }
-            $result->addMessage(
-                sprintf(
-                    "%d Condition/Undertaking(s) removed for Operating Centre %d",
-                    $count,
-                    $oc->getId()
-                )
-            );
+        $count = 0;
+        foreach ($oc->getConditionUndertakings()->matching($criteria) as $cu) {
+            $this->getRepo('ConditionUndertaking')->delete($cu);
+            $count++;
         }
+
+        $result->addMessage(
+            sprintf(
+                "%d Condition/Undertaking(s) removed for Operating Centre %d",
+                $count,
+                $oc->getId()
+            )
+        );
 
         return $result;
     }
