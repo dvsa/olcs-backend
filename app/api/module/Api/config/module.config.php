@@ -166,6 +166,7 @@ return [
             'Person' => RepositoryFactory::class,
             'ApplicationOperatingCentre' => RepositoryFactory::class,
             'LicenceOperatingCentre' => RepositoryFactory::class,
+            'TmCaseDecision' => RepositoryFactory::class,
             'TmEmployment' => RepositoryFactory::class,
             'TmQualification' => RepositoryFactory::class,
             'DocTemplate' => RepositoryFactory::class,
