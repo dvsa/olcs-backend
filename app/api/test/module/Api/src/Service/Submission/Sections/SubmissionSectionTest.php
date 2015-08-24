@@ -33,7 +33,6 @@ class SubmissionSectionTest extends MockeryTestCase
      *
      * @param $section
      * @param $expectedString
-     *
      */
     public function testGenerateSection($input = null, $expectedResult = null)
     {
@@ -109,13 +108,7 @@ class SubmissionSectionTest extends MockeryTestCase
         $organisationType = $this->generateRefDataEntity($this->organisationType);
         $organisation->setType($organisationType);
         $organisation->setName('Org name');
-        $organisation->setNatureOfBusinesses(
-            new ArrayCollection(
-                [
-                    $this->generateRefDataEntity($this->natureOfBusiness)
-                ]
-            )
-        );
+        $organisation->setNatureOfBusiness($this->natureOfBusiness);
 
         $organisationPersons = new ArrayCollection();
 
