@@ -36,6 +36,7 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
             $submissionEntity,
             $command->getSections()
         );
+
         $this->getRepo()->save($submissionEntity);
 
         $result = new Result();

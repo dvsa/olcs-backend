@@ -112,6 +112,10 @@ return [
             \Dvsa\Olcs\Api\Service\Submission\Sections\OutstandingApplications::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\People::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\OperatingCentres::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\ConditionsAndUndertakings::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class
         ],
         'aliases' => [
@@ -121,6 +125,8 @@ return [
             'most-serious-infringement' => \Dvsa\Olcs\Api\Service\Submission\Sections\MostSeriousInfringement::class,
             'outstanding-applications' => \Dvsa\Olcs\Api\Service\Submission\Sections\OutstandingApplications::class,
             'people' => \Dvsa\Olcs\Api\Service\Submission\Sections\People::class,
+            'operating-centres' => \Dvsa\Olcs\Api\Service\Submission\Sections\OperatingCentres::class,
+            'conditions-and-undertakings' => \Dvsa\Olcs\Api\Service\Submission\Sections\ConditionsAndUndertakings::class,
         ]
     ]
 ];

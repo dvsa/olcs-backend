@@ -41,4 +41,34 @@ final class OutstandingApplications extends AbstractSection
             ]
         ];
     }
+
+    /**
+     * Filter provider
+     *
+     * @return array
+     */
+    public function sectionTestProvider()
+    {
+        $case = $this->getCase();
+
+        $expectedResult = [
+            'data' => [
+                'tables' => [
+                    'people' => [
+                        0 => [
+                            'id' => 1,
+                            'title' => 'title-desc',
+                            'forename' => 'fn1',
+                            'familyName' => 'sn1',
+                            'birthDate' => new \DateTime('1977-01-1')
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        return [
+            [$case, $expectedResult],
+        ];
+    }
 }

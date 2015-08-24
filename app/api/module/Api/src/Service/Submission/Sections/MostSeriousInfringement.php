@@ -25,14 +25,14 @@ final class MostSeriousInfringement extends AbstractSection
         $data['id'] = !empty($mostSeriousInfringement) ? $mostSeriousInfringement->getId() : '';
         $data['notificationNumber'] = !empty($mostSeriousInfringement) ?
             $mostSeriousInfringement->getNotificationNumber() : '';
-        $data['siCategory'] = !empty($mostSeriousInfringement->getSiCategory()) ?
+        $data['siCategory'] = !empty($mostSeriousInfringement) ?
             $mostSeriousInfringement->getSiCategory()->getDescription() : '';
-        $data['siCategoryType'] = !empty($mostSeriousInfringement->getSiCategoryType()) ?
+        $data['siCategoryType'] = !empty($mostSeriousInfringement) ?
             $mostSeriousInfringement->getSiCategoryType()->getDescription() : '';
         $data['infringementDate'] = !empty($mostSeriousInfringement) ?
             $mostSeriousInfringement->getInfringementDate() : '';
         $data['checkDate'] = !empty($mostSeriousInfringement) ? $mostSeriousInfringement->getCheckDate() : '';
-        $data['isMemberState'] = !empty($mostSeriousInfringement->getMemberStateCode()) ?
+        $data['isMemberState'] = !empty($mostSeriousInfringement) ?
             $mostSeriousInfringement->getMemberStateCode()->getIsMemberState() : '';
 
         return ['data' => ['overview' => $data]];
