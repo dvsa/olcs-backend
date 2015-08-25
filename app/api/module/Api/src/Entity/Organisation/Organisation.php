@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Organisation;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ArrayCollection;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
@@ -185,5 +186,60 @@ class Organisation extends AbstractOrganisation
         }
 
         return $this->getDisqualification()->getStatus();
+    }
+
+    /**
+     * Determine is an organisation isMlh (has at least one valid licence)
+     *
+     * @param $id
+     * @return bool
+     */
+    public function isMlh()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->in(
+                'status',
+                [
+                    LicenceEntity::LICENCE_STATUS_VALID
+                ]
+            )
+        );
+
+        return (bool) count($this->getLicences()->matching($criteria));
+    }
+
+    /**
+     * Get nature of business as a string
+     *
+     * @params array $natureOfBusiness
+     * @return string
+     */
+    public function getNatureOfBusinessString()
+    {
+        $nob = $this->getNatureOfBusinesses();
+        $result = [];
+        foreach ($nob as $element) {
+            $result[] = $element->getDescription();
+        }
+        return implode(', ', $result);
+    }
+
+    /**
+     * Get All Outstanding applications for all licences
+     * Status "under consideration" or "granted"
+     *
+     * @return \Doctrine\Common\Collections\Collection|static
+     */
+    public function getOutstandingApplications()
+    {
+        $applications = [];
+
+        $licences = $this->getLicences();
+        foreach ($licences as $licence) {
+            $outstandingApplications = $licence->getOutstandingApplications()->toArray();
+            $applications += $outstandingApplications;
+        }
+        return new ArrayCollection($applications);
     }
 }

@@ -633,4 +633,25 @@ class Licence extends AbstractLicence
 
         return true;
     }
+
+    /**
+     * Get Outstanding applications of status "under consideration" or "granted"
+     *
+     * @return \Doctrine\Common\Collections\Collection|static
+     */
+    public function getOutstandingApplications()
+    {
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->in(
+                    'status',
+                    [
+                        Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                        Application::APPLICATION_STATUS_GRANTED
+                    ]
+                )
+            );
+
+        return $this->getApplications()->matching($criteria);
+    }
 }
