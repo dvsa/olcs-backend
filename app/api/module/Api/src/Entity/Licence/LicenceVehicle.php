@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
+use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 
 /**
  * LicenceVehicle Entity
@@ -31,5 +32,25 @@ class LicenceVehicle extends AbstractLicenceVehicle
 
         $this->setLicence($licence);
         $this->setVehicle($vehicle);
+    }
+
+    /**
+     * @return GoodsDisc|null
+     */
+    public function getActiveDisc()
+    {
+        $goodsDiscs = $this->getGoodsDiscs();
+
+        if ($goodsDiscs->isEmpty()) {
+            return null;
+        }
+
+        $activeDisc = $goodsDiscs->first();
+
+        if ($activeDisc->getCeasedDate() === null) {
+            return $activeDisc;
+        }
+
+        return null;
     }
 }

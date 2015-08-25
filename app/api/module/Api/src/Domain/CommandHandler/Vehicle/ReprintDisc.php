@@ -7,12 +7,12 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs as CreateGoodsDiscsCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CeaseActiveDiscs as CeaseCmd;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 
 /**
  * Reprint Disc
@@ -21,19 +21,35 @@ use Dvsa\Olcs\Api\Domain\Command\Vehicle\CeaseActiveDiscs as CeaseCmd;
  */
 final class ReprintDisc extends AbstractCommandHandler implements TransactionedInterface
 {
-    protected $repoServiceName = 'GoodsDisc';
+    protected $repoServiceName = 'LicenceVehicle';
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
+        $ids = [];
 
-        $result->merge($this->proxyCommand($command, CeaseCmd::class));
+        foreach ($command->getIds() as $id) {
+            /** @var LicenceVehicle $licenceVehicle */
+            $licenceVehicle = $this->getRepo()->fetchById($id);
 
-        $dtoData = $command->getArrayCopy();
-        $dtoData['isCopy'] = 'Y';
+            $activeDisc = $licenceVehicle->getActiveDisc();
 
-        $result->merge($this->handleSideEffect(CreateGoodsDiscsCmd::create($dtoData)));
+            if ($activeDisc !== null && $activeDisc->getDiscNo() !== null) {
+                $ids[] = $id;
+            }
+        }
 
-        return $result;
+        if (!empty($ids)) {
+            $dtoData = $command->getArrayCopy();
+            $dtoData['ids'] = $ids;
+
+            $this->result->merge($this->handleSideEffect(CeaseCmd::create($dtoData)));
+
+            $dtoData['isCopy'] = 'Y';
+
+            $this->result->merge($this->handleSideEffect(CreateGoodsDiscsCmd::create($dtoData)));
+        }
+
+
+        return $this->result;
     }
 }
