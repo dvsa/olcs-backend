@@ -5,18 +5,18 @@ namespace Dvsa\Olcs\Api\Entity\Fee;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Payment Entity
+ * Transaction Entity
  *
  * @ORM\Entity
- * @ORM\Table(name="payment",
+ * @ORM\Table(name="transaction",
  *    indexes={
- *        @ORM\Index(name="ix_payment_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_payment_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_payment_payment_status", columns={"status"})
+ *        @ORM\Index(name="ix_transaction_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_transaction_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_transaction_transaction_status", columns={"status"})
  *    }
  * )
  */
-class Payment extends AbstractPayment
+class Transaction extends AbstractTransaction
 {
     const STATUS_OUTSTANDING = 'pay_s_os';
     const STATUS_CANCELLED = 'pay_s_cn';
