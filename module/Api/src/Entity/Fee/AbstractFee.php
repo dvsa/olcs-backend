@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Fee Abstract Entity
@@ -253,6 +255,32 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Fee transaction
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\FeeTransaction",
+     *     mappedBy="fee",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $feeTransactions;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
+        $this->feeTransactions = new ArrayCollection();
+    }
 
     /**
      * Set the amount
@@ -758,6 +786,66 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the fee transaction
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions
+     * @return Fee
+     */
+    public function setFeeTransactions($feeTransactions)
+    {
+        $this->feeTransactions = $feeTransactions;
+
+        return $this;
+    }
+
+    /**
+     * Get the fee transactions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getFeeTransactions()
+    {
+        return $this->feeTransactions;
+    }
+
+    /**
+     * Add a fee transactions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions
+     * @return Fee
+     */
+    public function addFeeTransactions($feeTransactions)
+    {
+        if ($feeTransactions instanceof ArrayCollection) {
+            $this->feeTransactions = new ArrayCollection(
+                array_merge(
+                    $this->feeTransactions->toArray(),
+                    $feeTransactions->toArray()
+                )
+            );
+        } elseif (!$this->feeTransactions->contains($feeTransactions)) {
+            $this->feeTransactions->add($feeTransactions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a fee transactions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions
+     * @return Fee
+     */
+    public function removeFeeTransactions($feeTransactions)
+    {
+        if ($this->feeTransactions->contains($feeTransactions)) {
+            $this->feeTransactions->removeElement($feeTransactions);
+        }
+
+        return $this;
     }
 
     /**

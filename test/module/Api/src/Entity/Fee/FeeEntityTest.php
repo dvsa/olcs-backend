@@ -32,14 +32,14 @@ class FeeEntityTest extends EntityTester
     }
 
     /**
-     * @param array $feePayments
+     * @param array $feeTransactions
      * @param boolean $expected
      *
      * @dataProvider outstandingPaymentProvider
      */
-    public function testHadOutstandingPayment($feePayments, $expected)
+    public function testHadOutstandingPayment($feeTransactions, $expected)
     {
-        $this->sut->setFeePayments($feePayments);
+        $this->sut->setFeeTransactions($feeTransactions);
 
         $this->assertEquals($expected, $this->sut->hasOutstandingPayment());
     }
@@ -54,7 +54,7 @@ class FeeEntityTest extends EntityTester
             'one outstanding' => [
                 [
                     m::mock()
-                        ->shouldReceive('getPayment')
+                        ->shouldReceive('getTransaction')
                         ->andReturn(
                             m::mock()
                                 ->shouldReceive('isOutstanding')
