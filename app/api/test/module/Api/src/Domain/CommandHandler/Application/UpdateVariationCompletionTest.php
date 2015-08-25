@@ -27,7 +27,6 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->markTestSkipped();
         $this->sut = new UpdateVariationCompletion();
         $this->mockRepo('Application', Application::class);
 
@@ -56,11 +55,13 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         LicenceEntity $licence,
         array $previousStatuses = [],
         array $expectedStatuses = [],
-        $expectedDeclarationConfirmation = ''
+        $expectedDeclarationConfirmation = '',
+        array $commandData = []
     ) {
         $data = [
             'id' => 111,
-            'section' => $section
+            'section' => $section,
+            'data' => $commandData
         ];
         $command = Cmd::create($data);
 
@@ -124,7 +125,11 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
      */
     private function newApplication()
     {
-        return m::mock(ApplicationEntity::class)->makePartial();
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setIsVariation(true);
+
+        return $application;
     }
 
     private function getApplicationState1()
@@ -156,6 +161,13 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $application->setBankrupt('Y');
 
         $application->setConvictionsConfirmation('Y');
+
+        $aop = new ArrayCollection();
+        $aop->add('foo');
+        $application->setApplicationOrganisationPersons($aop);
+
+        $application->shouldReceive('getActiveVehicles->count')->andReturn(3);
+        $application->setTotAuthVehicles(10);
 
         return $application;
     }
@@ -233,6 +245,11 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
         $licence->setTotAuthVehicles(5);
 
+        $licence->shouldReceive('getPsvDiscsNotCeasedCount')->andReturn(6);
+        $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
+
+        $licence->shouldReceive('getOrganisation->getType->getId')->andReturn('bar');
+
         return $licence;
     }
 
@@ -306,7 +323,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'TypeOfLicence' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ],
             'Unchanged Type Of Licence' => [
                 'typeOfLicence',
@@ -320,7 +338,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'TypeOfLicence' => UpdateVariationCompletion::STATUS_UNCHANGED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED
                 ],
-                'Y'
+                'Y',
+                []
             ],
             'Changed Transport Managers' => [
                 'transportManagers',
@@ -334,7 +353,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'TransportManagers' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ],
             'Unchanged Transport Managers' => [
                 'transportManagers',
@@ -348,7 +368,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'TransportManagers' => UpdateVariationCompletion::STATUS_UNCHANGED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED
                 ],
-                'Y'
+                'Y',
+                []
             ],
             'Changed Vehicles' => [
                 'vehicles',
@@ -362,7 +383,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'Vehicles' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ],
             'Unchanged Vehicles' => [
                 'vehicles',
@@ -376,7 +398,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'Vehicles' => UpdateVariationCompletion::STATUS_UNCHANGED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED
                 ],
-                'Y'
+                'Y',
+                []
             ],
             'Changed Conditions Undertakings' => [
                 'conditionsUndertakings',
@@ -390,7 +413,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'ConditionsUndertakings' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ],
             'Unchanged Conditions Undertakings' => [
                 'conditionsUndertakings',
@@ -404,7 +428,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'ConditionsUndertakings' => UpdateVariationCompletion::STATUS_UNCHANGED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED
                 ],
-                'Y'
+                'Y',
+                []
             ],
             'Changed Undertakings' => [
                 'undertakings',
@@ -416,7 +441,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 [
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED
                 ],
-                'Y'
+                'Y',
+                []
             ],
             'Unchanged Undertakings' => [
                 'undertakings',
@@ -428,7 +454,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 [
                     'Undertakings' => UpdateVariationCompletion::STATUS_UNCHANGED
                 ],
-                'N'
+                'N',
+                []
             ],
             'Changed Business Type' => [
                 'businessType',
@@ -442,7 +469,10 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'BusinessType' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                [
+                    'type' => 'foo'
+                ]
             ],
             'Changed Business Details' => [
                 'businessDetails',
@@ -456,7 +486,10 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'BusinessDetails' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                [
+                    'hasChanged' => true
+                ]
             ],
             'Changed Addresses' => [
                 'addresses',
@@ -470,7 +503,10 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'Addresses' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                [
+                    'hasChanged' => true
+                ]
             ],
             'Changed People' => [
                 'people',
@@ -484,7 +520,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'People' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ],
             'Changed Financial Evidence' => [
                 'financialEvidence',
@@ -498,7 +535,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'FinancialEvidence' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ],
             'Changed Discs' => [
                 'discs',
@@ -512,7 +550,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'Discs' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ],
             'Changed Community Licences' => [
                 'communityLicences',
@@ -526,7 +565,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'CommunityLicences' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ],
             'Changed Safety' => [
                 'safety',
@@ -540,7 +580,10 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'Safety' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                [
+                    'hasChanged' => true
+                ]
             ],
             'Changed Operating Centres 1' => [
                 'operatingCentres',
@@ -554,9 +597,10 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 [
                     'OperatingCentres' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
-                    'Vehicles' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
+                    'Vehicles' => UpdateVariationCompletion::STATUS_UNCHANGED,
                 ],
-                'N'
+                'N',
+                []
             ],
             'Changed Operating Centres 2' => [
                 'operatingCentres',
@@ -572,7 +616,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'FinancialEvidence' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ],
             'Changed Operating Centres 3' => [
                 'operatingCentres',
@@ -590,7 +635,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'VehiclesDeclarations' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'Discs' =>  UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                 ],
-                'N'
+                'N',
+                []
             ],
             'Changed Operating Centres 4' => [
                 'operatingCentres',
@@ -604,9 +650,10 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 [
                     'OperatingCentres' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
-                    'VehiclesDeclarations' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                    'Vehicles' => UpdateVariationCompletion::STATUS_UNCHANGED,
                 ],
-                'N'
+                'N',
+                []
             ],
             'Unchanged Operating Centres' => [
                 'operatingCentres',
@@ -620,7 +667,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'OperatingCentres' => UpdateVariationCompletion::STATUS_UNCHANGED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED
                 ],
-                'Y'
+                'Y',
+                []
             ],
             'Changed Vehicles Declarations' => [
                 'vehiclesDeclarations',
@@ -634,7 +682,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'VehiclesDeclarations' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ],
             'Unchanged Vehicles Declarations' => [
                 'vehiclesDeclarations',
@@ -648,7 +697,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'VehiclesDeclarations' => UpdateVariationCompletion::STATUS_UNCHANGED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED
                 ],
-                'Y'
+                'Y',
+                []
             ],
             'Changed Financial History' => [
                 'financialHistory',
@@ -662,7 +712,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'FinancialHistory' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ],
             'Unchanged Financial History' => [
                 'financialHistory',
@@ -676,7 +727,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'FinancialHistory' => UpdateVariationCompletion::STATUS_UNCHANGED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED
                 ],
-                'Y'
+                'Y',
+                []
             ],
             'Changed Convictions Penalties 1' => [
                 'convictionsPenalties',
@@ -690,7 +742,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'ConvictionsPenalties' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ],
             'Changed Convictions Penalties 2' => [
                 'convictionsPenalties',
@@ -704,7 +757,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'ConvictionsPenalties' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ],
             'Unchanged Convictions Penalties' => [
                 'convictionsPenalties',
@@ -718,7 +772,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'ConvictionsPenalties' => UpdateVariationCompletion::STATUS_UNCHANGED,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED
                 ],
-                'N'
+                'N',
+                []
             ],
             'Licence Upgrade' => [
                 'typeOfLicence',
@@ -730,6 +785,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'Addresses' => UpdateVariationCompletion::STATUS_UNCHANGED,
                     'TransportManagers' => UpdateVariationCompletion::STATUS_UNCHANGED,
                     'FinancialHistory' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                    'FinancialEvidence' => UpdateVariationCompletion::STATUS_UNCHANGED,
                     'ConvictionsPenalties' => UpdateVariationCompletion::STATUS_UNCHANGED,
                 ],
                 [
@@ -738,9 +794,11 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'Addresses' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'TransportManagers' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'FinancialHistory' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
+                    'FinancialEvidence' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'ConvictionsPenalties' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
-                'N'
+                'N',
+                []
             ]
         ];
     }
