@@ -128,6 +128,8 @@ return [
             \Dvsa\Olcs\Api\Service\Submission\Sections\CurrentSubmissions::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\AuthRequestedAppliedFor::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\TransportManagers::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class
         ],
         'aliases' => [
@@ -152,6 +154,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\Sections\CurrentSubmissions::class,
             'auth-requested-applied-for' =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AuthRequestedAppliedFor::class,
+            'transport-managers' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\TransportManagers::class,
 
         ]
     ]
