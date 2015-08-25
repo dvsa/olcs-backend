@@ -37,7 +37,15 @@ class MarkersTest extends QueryHandlerTestCase
             ->shouldReceive('serialize')->with(
                 [
                     'licenceStatusRules' => ['licenceStatus'],
-                    'organisation' => ['disqualifications'],
+                    'organisation' => [
+                        'type',
+                        'disqualifications',
+                        'organisationPersons' => [
+                            'person' => [
+                                'contactDetails' => ['disqualifications']
+                            ]
+                        ]
+                    ],
                     'cases' => [
                         'appeal' => ['outcome'],
                         'stays' => ['outcome', 'stayType']
@@ -66,7 +74,15 @@ class MarkersTest extends QueryHandlerTestCase
             ->shouldReceive('serialize')->with(
                 [
                     'licenceStatusRules' => ['licenceStatus'],
-                    'organisation' => ['disqualifications'],
+                    'organisation' => [
+                        'type',
+                        'disqualifications',
+                        'organisationPersons' => [
+                            'person' => [
+                                'contactDetails' => ['disqualifications']
+                            ]
+                        ]
+                    ],
                     'cases' => [
                         'appeal' => ['outcome'],
                         'stays' => ['outcome', 'stayType']
