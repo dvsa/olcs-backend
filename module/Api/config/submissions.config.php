@@ -121,6 +121,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\Interim::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\Advertisement::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\LinkedLicences::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\LeadTcArea::class =>
@@ -146,6 +148,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\Sections\IntelligenceUnitCheck::class,
             'interim' =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\Interim::class,
+            'advertisement' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\Advertisement::class,
             'linked-licences-app-numbers' =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\LinkedLicences::class,
             'lead-tc-area' =>
