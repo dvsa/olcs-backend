@@ -29,8 +29,8 @@ final class Cases extends AbstractQueryHandler
             [
                 'outcomes',
                 'categorys',
-                'appeal',
-                'stays',
+                'appeal' => ['outcome'],
+                'stays' => ['outcome', 'stayType'],
                 'legacyOffences',
                 'transportManager',
                 'licence' => array(
@@ -42,6 +42,7 @@ final class Cases extends AbstractQueryHandler
                     ),
                     'organisation' => array(
                         'type',
+                        'disqualifications',
                         'tradingNames',
                         'organisationPersons' => array(
                             'person' => array(

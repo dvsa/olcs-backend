@@ -6,7 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
+use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -146,18 +148,213 @@ class Pi extends AbstractPi
         $this->licenceCurtailedAtPi = $licenceCurtailedAtPi;
         $this->witnesses = $witnesses;
         $this->decisionNotes = $decisionNotes;
-        $this->decisionDate = $decisionDate;
-        $this->notificationDate = $notificationDate;
+        $this->decisionDate = $this->processDate($decisionDate);
+        $this->notificationDate = $this->processDate($notificationDate);
+    }
 
-        $decisionDateTime = \DateTime::createFromFormat('Y-m-d', $decisionDate);
-        $notificationDateTime = \DateTime::createFromFormat('Y-m-d', $notificationDate);
+    /**
+     * @param RefData|null $writtenOutcome
+     * @param string $callUpLetterDate
+     * @param string $briefToTcDate
+     */
+    public function updateWrittenOutcomeNone($writtenOutcome, $callUpLetterDate, $briefToTcDate)
+    {
+        $this->updateSla(
+            $writtenOutcome,
+            $this->processDate($callUpLetterDate),
+            $this->processDate($briefToTcDate),
+            null,
+            null,
+            null,
+            null
+        );
+    }
 
-        if (!$decisionDateTime instanceof \DateTime) {
-            $decisionDateTime = null;
+    /**
+     * @param RefData $writtenOutcome
+     * @param string $callUpLetterDate
+     * @param string $briefToTcDate
+     * @param string $tcWrittenDecisionDate
+     * @param string $decisionLetterSentDate
+     */
+    public function updateWrittenOutcomeDecision(
+        RefData $writtenOutcome,
+        $callUpLetterDate,
+        $briefToTcDate,
+        $tcWrittenDecisionDate,
+        $decisionLetterSentDate
+    ) {
+        $this->updateSla(
+            $writtenOutcome,
+            $this->processDate($callUpLetterDate),
+            $this->processDate($briefToTcDate),
+            null,
+            null,
+            $this->processDate($tcWrittenDecisionDate),
+            $this->processDate($decisionLetterSentDate)
+        );
+    }
+
+    /**
+     * @param RefData $writtenOutcome
+     * @param string $callUpLetterDate
+     * @param string $briefToTcDate
+     * @param string $tcWrittenReasonDate
+     * @param string $writtenReasonLetterDate
+     */
+    public function updateWrittenOutcomeReason(
+        RefData $writtenOutcome,
+        $callUpLetterDate,
+        $briefToTcDate,
+        $tcWrittenReasonDate,
+        $writtenReasonLetterDate
+    ) {
+        $this->updateSla(
+            $writtenOutcome,
+            $this->processDate($callUpLetterDate),
+            $this->processDate($briefToTcDate),
+            $this->processDate($tcWrittenReasonDate),
+            $this->processDate($writtenReasonLetterDate),
+            null,
+            null
+        );
+    }
+
+    /**
+     * @param RefData|null $writtenOutcome
+     * @param \DateTime|null $callUpLetterDate
+     * @param \DateTime|null $briefToTcDate
+     * @param \DateTime|null $tcWrittenReasonDate
+     * @param \DateTime|null $writtenReasonLetterDate
+     * @param \DateTime|null $tcWrittenDecisionDate
+     * @param \DateTime|null $decisionLetterSentDate
+     */
+    private function updateSla(
+        $writtenOutcome,
+        $callUpLetterDate,
+        $briefToTcDate,
+        $tcWrittenReasonDate,
+        $writtenReasonLetterDate,
+        $tcWrittenDecisionDate,
+        $decisionLetterSentDate
+    ) {
+        $this->writtenOutcome = $writtenOutcome;
+        $this->callUpLetterDate = $callUpLetterDate;
+        $this->briefToTcDate = $briefToTcDate;
+        $this->tcWrittenReasonDate = $tcWrittenReasonDate;
+        $this->writtenReasonLetterDate = $writtenReasonLetterDate;
+        $this->tcWrittenDecisionDate = $tcWrittenDecisionDate;
+        $this->decisionLetterSentDate = $decisionLetterSentDate;
+    }
+
+    /**
+     * Can the Pi be closed?
+     *
+     * @return bool
+     */
+    public function canClose()
+    {
+        if ($this->piHearings->count() > 0) {
+            if ($this->piHearings->first()->getCancelledDate() !== null) {
+                return !$this->isClosed();
+            }
         }
 
-        if (!$notificationDateTime instanceof \DateTime) {
-            $notificationDateTime = null;
+        if ($this->writtenOutcome !== null) {
+            $writtenOutcomeId = $this->writtenOutcome->getId();
+
+            switch($writtenOutcomeId) {
+                case SlaEntity::WRITTEN_OUTCOME_NONE:
+                    return !$this->isClosed();
+                case SlaEntity::WRITTEN_OUTCOME_REASON:
+                    if ($this->tcWrittenReasonDate === null || $this->writtenReasonLetterDate === null) {
+                        return false;
+                    }
+                    return !$this->isClosed();
+                case SlaEntity::WRITTEN_OUTCOME_DECISION:
+                    if ($this->tcWrittenDecisionDate === null || $this->decisionLetterSentDate === null) {
+                        return false;
+                    }
+                    return !$this->isClosed();
+            }
         }
+
+        return false;
+    }
+
+    /**
+     * @param string $date
+     * @return \DateTime|null
+     */
+    public function processDate($date)
+    {
+        $dateTime = \DateTime::createFromFormat('Y-m-d', $date);
+
+        if (!$dateTime instanceof \DateTime) {
+            return null;
+        }
+
+        $dateTime->setTime(0, 0, 0);
+        return $dateTime;
+    }
+
+    /**
+     * Is this a Transport Manager Pi?
+     */
+    public function isTm()
+    {
+        return $this->case->isTm();
+    }
+
+    /**
+     * Is the Pi closed?
+     *
+     * return bool
+     */
+    public function isClosed()
+    {
+        return $this->canReopen();
+    }
+
+    /**
+     * Can the Pi be reopened?
+     *
+     * @return bool
+     */
+    public function canReopen()
+    {
+        return (bool) $this->closedDate != null;
+    }
+
+    /**
+     * Gets the upcoming hearing date
+     */
+    public function getHearingDate()
+    {
+        if ($this->piHearings->count() > 0) {
+            /** @var PiHearingEntity $hearing */
+            $hearing = $this->piHearings->last();
+
+            if ($hearing->getIsAdjourned() !== 'Y' && $hearing->getIsCancelled() !== 'Y') {
+                return $hearing->getHearingDate();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Calculated values to be added to a bundle
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'isClosed' => $this->isClosed(),
+            'canReopen' => $this->canReopen(),
+            'hearingDate' => $this->getHearingDate(),
+            'isTm' => $this->isTm()
+        ];
     }
 }

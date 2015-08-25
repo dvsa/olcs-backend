@@ -128,6 +128,16 @@ class TransportManagerApplication extends AbstractRepository
             $qb->where($qb->expr()->eq('u.id', ':user'))
                 ->setParameter('user', $query->getUser());
         }
+
+        if ($query->getApplication()) {
+            $qb->where($qb->expr()->eq('tma.application', ':application'))
+                ->setParameter('application', $query->getApplication());
+        }
+
+        if ($query->getTransportManager()) {
+            $qb->where($qb->expr()->eq('tma.transportManager', ':transportManager'))
+                ->setParameter('transportManager', $query->getTransportManager());
+        }
     }
 
     /**

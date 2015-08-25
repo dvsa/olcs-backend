@@ -166,6 +166,7 @@ return [
             'Person' => RepositoryFactory::class,
             'ApplicationOperatingCentre' => RepositoryFactory::class,
             'LicenceOperatingCentre' => RepositoryFactory::class,
+            'TmCaseDecision' => RepositoryFactory::class,
             'TmEmployment' => RepositoryFactory::class,
             'TmQualification' => RepositoryFactory::class,
             'DocTemplate' => RepositoryFactory::class,
@@ -206,6 +207,9 @@ return [
             'PiVenue' => RepositoryFactory::class,
             'Disqualification' => RepositoryFactory::class,
             'DiscSequence' => RepositoryFactory::class,
+            'EbsrSubmission' => RepositoryFactory::class,
+            'TxcInbox' => RepositoryFactory::class,
+            'OrganisationUser' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

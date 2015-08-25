@@ -32,7 +32,21 @@ class GetListTest extends QueryHandlerTestCase
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchList')
             ->with($query, \Doctrine\ORM\Query::HYDRATE_OBJECT)->once()->andReturn([$mockTma]);
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchCount')->with($query)->once();
-        $mockTma->shouldReceive('serialize')->with(['application' => ['licence']])->once()->andReturn('RESULT');
+
+        $mockTma->shouldReceive('serialize')->with(
+            [
+                'application' => [
+                    'status',
+                    'licenceType'
+                ],
+                'transportManager' => [
+                    'homeCd' => [
+                        'person',
+                    ],
+                    'tmType',
+                ]
+            ]
+        )->once()->andReturn('RESULT');
 
         $this->sut->handleQuery($query);
     }
