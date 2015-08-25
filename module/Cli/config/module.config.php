@@ -66,8 +66,8 @@ return [
         ]
     ],
     'queue' => [
-        'isLongRunningProcess' => true,
-        //'runFor' => 60
+        //'isLongRunningProcess' => true,
+        'runFor' => 60
     ],
     'file-system' => [
         'path' => '/tmp'
