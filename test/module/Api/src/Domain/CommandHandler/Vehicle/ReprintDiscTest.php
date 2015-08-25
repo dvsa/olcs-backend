@@ -80,13 +80,13 @@ class ReprintDiscTest extends CommandHandlerTestCase
             ->with(333)
             ->andReturn($licenceVehicle3);
 
-        $data['ids'] = [111, 333];
+        $data['ids'] = [333];
         $result1 = new Result();
-        $result1->addMessage('2 Disc(s) Ceased');
+        $result1->addMessage('1 Disc(s) Ceased');
         $this->expectedSideEffect(CeaseActiveDiscs::class, $data, $result1);
 
         $result2 = new Result();
-        $result2->addMessage('2 Disc(s) Created');
+        $result2->addMessage('1 Disc(s) Created');
         $data['isCopy'] = 'Y';
         $this->expectedSideEffect(CreateGoodsDiscs::class, $data, $result2);
 
@@ -95,8 +95,8 @@ class ReprintDiscTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                '2 Disc(s) Ceased',
-                '2 Disc(s) Created'
+                '1 Disc(s) Ceased',
+                '1 Disc(s) Created'
             ]
         ];
 
