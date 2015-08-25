@@ -422,18 +422,11 @@ class Application extends AbstractApplication
 
     public function isPsvDowngrade()
     {
-        // Ignore goods
-        if ($this->isGoods()) {
+        if ($this->isGoods() || $this->isRestricted() === false) {
             return false;
         }
 
-        // Ignore where application is not restricted
-        if ($this->getLicenceType()->getId() !== Licence::LICENCE_TYPE_RESTRICTED) {
-            return false;
-        }
-
-        // If licence was not restricted before, then we have a downgrade
-        return ($this->getLicence()->getLicenceType()->getId() !== Licence::LICENCE_TYPE_RESTRICTED);
+        return $this->getLicence()->isRestricted() === false;
     }
 
     public function updateLicenceHistory(
