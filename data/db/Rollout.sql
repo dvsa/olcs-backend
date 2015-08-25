@@ -1816,6 +1816,7 @@ VALUES
  ,(1,  167, 0, 0, 0, 0, 'Community licence')
  ,(1,  168, 0, 0, 0, 0, 'Scanning separator')
  ,(1,  169, 0, 1, 0, 0, 'Business details change')
+ ,( 1, 170, 1, 0, 0, 0, 'CPID')
  ,( 999999, 999999, 1, 1, 1, 0, 'Not yet implemented (remove before go live)');
 
 

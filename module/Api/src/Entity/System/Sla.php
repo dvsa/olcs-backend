@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sla extends AbstractSla
 {
+    const WRITTEN_OUTCOME_NONE = 'piwo_none';
+    const WRITTEN_OUTCOME_DECISION = 'piwo_decision';
+    const WRITTEN_OUTCOME_REASON = 'piwo_reason';
+
     public function appliesTo(\DateTime $date)
     {
         if ($this->effectiveFrom !== null && $this->effectiveFrom > $date) {

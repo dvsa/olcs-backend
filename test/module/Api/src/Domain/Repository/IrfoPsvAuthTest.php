@@ -71,4 +71,23 @@ class IrfoPsvAuthTest extends RepositoryTestCase
 
         $this->assertEquals($result, $mockResult[0]);
     }
+
+    public function testFetchByOrganisation()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchByOrganisation('ORG1'));
+
+        $expectedQuery = 'BLAH AND m.organisation = [[ORG1]]';
+        $this->assertEquals($expectedQuery, $this->query);
+
+    }
 }

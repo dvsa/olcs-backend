@@ -125,6 +125,7 @@ return [
     TransferCommand\Cases\Pi\UpdateAgreedAndLegislation::class =>
         CommandHandler\Cases\Pi\AgreedAndLegislationUpdate::class,
     TransferCommand\Cases\Pi\UpdateDecision::class => CommandHandler\Cases\Pi\UpdateDecision::class,
+    TransferCommand\Cases\Pi\UpdateSla::class => CommandHandler\Cases\Pi\UpdateSla::class,
 
     // Transfer - Bus
     TransferCommand\Bus\CreateBus::class => CommandHandler\Bus\CreateBus::class,
@@ -204,6 +205,7 @@ return [
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
+    TransferCommand\Organisation\TransferTo::class => CommandHandler\Organisation\TransferTo::class,
 
     // Transfer - OtherLicence
     TransferCommand\OtherLicence\UpdateOtherLicence::class => CommandHandler\OtherLicence\UpdateOtherLicence::class,
@@ -480,6 +482,8 @@ return [
 
     // Domain - Organisation
     Command\Organisation\UpdateTradingNames::class => CommandHandler\Organisation\UpdateTradingNames::class,
+    TransferCommand\Organisation\CpidOrganisationExport::class
+        => CommandHandler\Organisation\CpidOrganisationExport::class,
 
     // Domain - Fee
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
@@ -663,6 +667,21 @@ return [
     // Domain - Queue
     QueueCommand\Complete::class => QueueCommandHandler\Complete::class,
     QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
+
+    // Transfer - TmCaseDecision
+    TransferCommand\TmCaseDecision\CreateReputeNotLost::class
+        => CommandHandler\TmCaseDecision\CreateReputeNotLost::class,
+    TransferCommand\TmCaseDecision\UpdateReputeNotLost::class
+        => CommandHandler\TmCaseDecision\UpdateReputeNotLost::class,
+    TransferCommand\TmCaseDecision\CreateNoFurtherAction::class
+        => CommandHandler\TmCaseDecision\CreateNoFurtherAction::class,
+    TransferCommand\TmCaseDecision\UpdateNoFurtherAction::class
+        => CommandHandler\TmCaseDecision\UpdateNoFurtherAction::class,
+    TransferCommand\TmCaseDecision\CreateDeclareUnfit::class
+        => CommandHandler\TmCaseDecision\CreateDeclareUnfit::class,
+    TransferCommand\TmCaseDecision\UpdateDeclareUnfit::class
+        => CommandHandler\TmCaseDecision\UpdateDeclareUnfit::class,
+    TransferCommand\TmCaseDecision\Delete::class => CommandHandler\TmCaseDecision\Delete::class,
 
     // Transfer - TmQualification
     TransferCommand\TmQualification\Create::class => CommandHandler\TmQualification\Create::class,

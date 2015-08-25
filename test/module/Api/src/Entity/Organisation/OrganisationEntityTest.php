@@ -41,6 +41,7 @@ class OrganisationEntityTest extends EntityTester
             'cpid',
             'createdBy',
             'createdOn',
+            'deletedDate',
             'id',
             'irfoContactDetails',
             'irfoName',
@@ -51,7 +52,7 @@ class OrganisationEntityTest extends EntityTester
             'lastModifiedOn',
             'leadTcArea',
             'name',
-            'natureOfBusinesses',
+            'natureOfBusiness',
             'type',
             'version',
             'viAction',
@@ -113,7 +114,7 @@ class OrganisationEntityTest extends EntityTester
             $lastName,
             $isIrfo,
             $mockBusinessType,
-            ['nob'],
+            'nob',
             ['cpid']
         );
 
@@ -122,7 +123,7 @@ class OrganisationEntityTest extends EntityTester
         $this->assertEquals($organisation->getCompanyOrLlpNo(), '12345678');
         $this->assertEquals($organisation->getIsIrfo(), $isIrfo);
         $this->assertEquals($organisation->getType()->getId(), 'type');
-        $this->assertEquals($organisation->getNatureOfBusinesses(), ['nob']);
+        $this->assertEquals($organisation->getNatureOfBusiness(), 'nob');
     }
 
     public function organisationDataProvider()

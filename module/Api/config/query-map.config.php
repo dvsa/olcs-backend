@@ -100,6 +100,8 @@ return [
     TransferQuery\Organisation\OutstandingFees::class => QueryHandler\Organisation\OutstandingFees::class,
     TransferQuery\Organisation\Dashboard::class => QueryHandler\Organisation\Dashboard::class,
     TransferQuery\Organisation\People::class => QueryHandler\Organisation\People::class,
+    TransferQuery\Organisation\CpidOrganisation::class
+        => QueryHandler\Organisation\CpidOrganisation::class,
     TransferQuery\Organisation\UnlicensedCases::class => QueryHandler\Organisation\UnlicensedCases::class,
 
     // Variation
@@ -240,6 +242,8 @@ return [
     // Transport Manager Licence
     TransferQuery\TransportManagerLicence\GetForResponsibilities::class
         => QueryHandler\TransportManagerLicence\GetForResponsibilities::class,
+    TransferQuery\TransportManagerLicence\GetList::class
+        => QueryHandler\TransportManagerLicence\GetList::class,
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
@@ -310,6 +314,10 @@ return [
 
     // Queue
     QueueQuery\NextItem::class => QueueQueryHandler\NextItem::class,
+
+    // TmCaseDecision
+    TransferQuery\TmCaseDecision\GetByCase::class =>
+        QueryHandler\TmCaseDecision\GetByCase::class,
 
     // TmQualification
     TransferQuery\TmQualification\TmQualificationsList::class =>

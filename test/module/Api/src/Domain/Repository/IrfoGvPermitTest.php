@@ -6,13 +6,11 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
-use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoGvPermit as Repo;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * IrfoGvPermit Repo test
@@ -64,5 +62,24 @@ class IrfoGvPermitTest extends RepositoryTestCase
         $result = $this->sut->fetchById($id);
 
         $this->assertEquals($result, $mockResult[0]);
+    }
+
+    public function testFetchByOrganisation()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchByOrganisation('ORG1'));
+
+        $expectedQuery = 'BLAH AND m.organisation = [[ORG1]]';
+        $this->assertEquals($expectedQuery, $this->query);
+
     }
 }

@@ -24,7 +24,19 @@ class GetList extends AbstractQueryHandler
 
         return [
             'result' => $this->resultList(
-                $repo->fetchList($query, Query::HYDRATE_OBJECT), ['application' => ['licence']]
+                $repo->fetchList($query, Query::HYDRATE_OBJECT),
+                [
+                    'application' => [
+                        'status',
+                        'licenceType'
+                    ],
+                    'transportManager' => [
+                        'homeCd' => [
+                            'person',
+                        ],
+                        'tmType',
+                    ]
+                ]
             ),
             'count' => $repo->fetchCount($query)
         ];

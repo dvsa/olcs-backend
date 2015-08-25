@@ -38,7 +38,7 @@ final class DeleteBus extends AbstractCommandHandler implements TransactionedInt
         $repo = $this->getRepo();
 
         /* @var BusReg $busReg */
-        $busReg = $repo->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        $busReg = $repo->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
         $busReg->canDelete();
 
