@@ -41,6 +41,10 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
         /** @var ApplicationOperatingCentre $aoc */
         foreach ($aocs as $aoc) {
             if (in_array($aoc->getId(), $command->getIds())) {
+                $message = $aoc->checkCanDelete();
+                if ($message) {
+                    throw new \Dvsa\Olcs\Api\Domain\Exception\BadRequestException(key($message));
+                }
                 $count++;
                 $this->getRepo('ApplicationOperatingCentre')->delete($aoc);
                 $aocs->removeElement($aoc);
