@@ -20,7 +20,8 @@ use Zend\Filter\Word\UnderscoreToCamelCase;
 /**
  * Update Variation Completion
  *
- * @NOTE After additional changes to the rules, this might be better re-written
+ * @NOTE If there are future changes to these rules, it might be worth slightly changing how this works, as it is
+ * getting a little messy
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
