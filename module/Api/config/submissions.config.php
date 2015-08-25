@@ -122,6 +122,12 @@ return [
             \Dvsa\Olcs\Api\Service\Submission\Sections\Interim::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\LinkedLicences::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\LeadTcArea::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\CurrentSubmissions::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\AuthRequestedAppliedFor::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class
         ],
         'aliases' => [
@@ -140,6 +146,13 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\Sections\Interim::class,
             'linked-licences-app-numbers' =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\LinkedLicences::class,
+            'lead-tc-area' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\LeadTcArea::class,
+            'current-submissions' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\CurrentSubmissions::class,
+            'auth-requested-applied-for' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AuthRequestedAppliedFor::class,
+
         ]
     ]
 ];
