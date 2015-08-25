@@ -220,8 +220,11 @@ class Organisation extends AbstractOrganisation
         $applications = [];
 
         $licences = $this->getLicences();
+
+        /** @var LicenceEntity $licence */
         foreach ($licences as $licence) {
             $outstandingApplications = $licence->getOutstandingApplications()->toArray();
+
             $applications += $outstandingApplications;
         }
         return new ArrayCollection($applications);
@@ -247,6 +250,6 @@ class Organisation extends AbstractOrganisation
             )
         );
 
-        return $this->getLicences();//->matching($criteria);
+        return $this->getLicences()->matching($criteria);
     }
 }

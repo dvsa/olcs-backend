@@ -25,7 +25,7 @@ final class ConditionsAndUndertakings extends AbstractSection
      */
     public function generateSection(CasesEntity $case)
     {
-        $tables = [];
+        $tables = ['undertakings' => [], 'conditions' => []];
 
         // CUs attached to the case
         $caseConditionsAndUndertakings = $case->getConditionUndertakings();
@@ -38,6 +38,7 @@ final class ConditionsAndUndertakings extends AbstractSection
 
         // CUs attached to the any other applications for this licence
         $applications = $case->getLicence()->getApplications();
+
         if (!empty($applications)) {
             /** @var Application $application */
             foreach ($applications as $application) {
@@ -89,7 +90,7 @@ final class ConditionsAndUndertakings extends AbstractSection
         $thisEntity = array();
         $thisEntity['id'] = $entity->getId();
         $thisEntity['version'] = $entity->getVersion();
-        $thisEntity['createdOn'] = $entity->getCreatedOn();
+        $thisEntity['createdOn'] = $entity->getCreatedOn()->format('d/m/Y');
         $thisEntity['parentId'] = $parentId;
         $thisEntity['addedVia'] = $entity->getAddedVia()->getDescription();
         $thisEntity['isFulfilled'] = $entity->getIsFulfilled();

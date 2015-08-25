@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
@@ -15,7 +17,6 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use OlcsEntities\Entity\LicenceVehicle;
 
 /**
  * Class SubmissionSectionTest
@@ -66,7 +67,8 @@ class SubmissionSectionTest extends MockeryTestCase
         $categorys = new ArrayCollection(['cat1', 'cat2']);
         $outcomes = new ArrayCollection(['out1']);
 
-        $licence = $this->generateLicence();
+        $organisation = $this->generateOrganisation();
+        $licence = $this->generateLicence($organisation, 7);
 
         $application = null;
 
@@ -113,23 +115,40 @@ class SubmissionSectionTest extends MockeryTestCase
         $organisation->setNatureOfBusiness($this->natureOfBusiness);
 
         $organisationPersons = new ArrayCollection();
-
         $organisationPerson = new OrganisationPerson();
-
         $organisationPerson->setPerson($this->generatePerson(1));
         $organisationPersons->add($organisationPerson);
-
         $organisation->setOrganisationPersons($organisationPersons);
+
+        $organisationLicences = new ArrayCollection();
+        $applications = new ArrayCollection();
+
+        for ($i=1; $i < 3; $i++) {
+            $licence = $this->generateLicence($organisation, $i);
+            $applications->add(
+                $this->generateApplication($i, $licence, Application::APPLICATION_STATUS_GRANTED)
+            );
+            $applications->add(
+                $this->generateApplication((100+$i), $licence, Application::APPLICATION_STATUS_UNDER_CONSIDERATION)
+            );
+
+            $licence->setApplications($applications);
+
+            $organisationLicences->add($licence);
+        }
+        $organisation->setLicences($organisationLicences);
 
         return $organisation;
     }
 
-    protected function generateLicence()
+    protected function generateLicence(Organisation $organisation, $id = null)
     {
         $licence = new Licence(
-            $this->generateOrganisation(),
+            $organisation,
             $this->generateRefDataEntity($this->licenceStatus)
         );
+        $licence->setId($id);
+        $licence->setVersion($id);
         $licence->setLicenceType($this->generateRefDataEntity($this->licenceType));
         $licence->setGoodsOrPsv($this->generateRefDataEntity($this->goodsOrPsv));
         $licence->setLicNo('OB12345');
@@ -138,6 +157,16 @@ class SubmissionSectionTest extends MockeryTestCase
         $licence->setLicenceVehicles($this->generateLicenceVehicles($licence));
 
         $licence->setOperatingCentres($this->generateOperatingCentres($licence));
+
+        $licence->setApplications($this->generateApplications($licence));
+
+        $licence->setConditionUndertakings(
+            $this->generateConditionsUndertakings(
+                $licence,
+                ConditionUndertaking::TYPE_CONDITION,
+                58
+            )
+        );
 
         return $licence;
     }
@@ -157,24 +186,59 @@ class SubmissionSectionTest extends MockeryTestCase
         return $licenceVehicles;
     }
 
+    protected function generateConditionsUndertakings($parentEntity, $conditionType, $id = 1)
+    {
+        $conditionUndertakings = new ArrayCollection();
+
+        $cu = new ConditionUndertaking(
+            $this->generateRefDataEntity($conditionType),
+            'Y',
+            'N'
+        );
+        if ($parentEntity instanceof Licence) {
+            $cu->setAddedVia($this->generateRefDataEntity(ConditionUndertaking::ADDED_VIA_LICENCE));
+            $cu->setAttachedTo($this->generateRefDataEntity(ConditionUndertaking::ATTACHED_TO_LICENCE));
+        } elseif ($parentEntity instanceof Application) {
+            $cu->setAddedVia($this->generateRefDataEntity(ConditionUndertaking::ADDED_VIA_APPLICATION));
+            $cu->setAttachedTo($this->generateRefDataEntity(ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE));
+            $cu->setOperatingCentre($this->generateOperatingCentre());
+        }
+
+        $cu->setId($id);
+        $cu->setVersion((100+$id));
+        $cu->setCreatedOn(new \DateTime('2011-01-23'));
+        $cu->setAddedVia($this->generateRefDataEntity(ConditionUndertaking::ADDED_VIA_LICENCE));
+        $cu->setAttachedTo($this->generateRefDataEntity(ConditionUndertaking::ATTACHED_TO_LICENCE));
+
+        $conditionUndertakings->add($cu);
+
+        return $conditionUndertakings;
+    }
+
     protected function generateOperatingCentres($licence)
     {
         $operatingCentres = new ArrayCollection();
 
         for ($i=1; $i < 2; $i++) {
-            $operatingCentre = new OperatingCentre();
-            $operatingCentre->setId($i);
-            $operatingCentre->setVersion($i);
+            $operatingCentre = $this->generateOperatingCentre($i);
             $loc = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $operatingCentre);
             $loc->setNoOfVehiclesRequired(6);
             $loc->setNoOfTrailersRequired(4);
-
-            $address = $this->generateAddress($i);
-            $operatingCentre->setAddress($address);
             $operatingCentres->add($loc);
         }
 
         return $operatingCentres;
+    }
+
+    protected function generateOperatingCentre($i = 1)
+    {
+        $operatingCentre = new OperatingCentre();
+        $operatingCentre->setId($i);
+        $operatingCentre->setVersion($i);
+
+        $address = $this->generateAddress($i);
+        $operatingCentre->setAddress($address);
+        return $operatingCentre;
     }
 
     protected function generateAddress($id)
@@ -190,4 +254,50 @@ class SubmissionSectionTest extends MockeryTestCase
         return $address;
     }
 
+    protected function generateApplications(Licence $licence)
+    {
+        $applications = new ArrayCollection();
+        $grantedApp = $this->generateApplication(63, $licence, Application::APPLICATION_STATUS_GRANTED);
+
+        $grantedApp->setConditionUndertakings(
+            $this->generateConditionsUndertakings(
+                $grantedApp,
+                ConditionUndertaking::TYPE_UNDERTAKING,
+                88
+            )
+        );
+        $applications->add($grantedApp);
+
+        $applications->add(
+            $this->generateApplication(75, $licence, Application::APPLICATION_STATUS_NOT_SUBMITTED)
+        );
+
+        $applications->add(
+            $this->generateApplication(75, $licence, Application::APPLICATION_STATUS_REFUSED)
+        );
+
+        return $applications;
+    }
+
+    protected function generateApplication($id, Licence $licence, $status, $isVariation = false)
+    {
+        $application = new Application(
+            $licence,
+            $this->generateRefDataEntity($status),
+            $isVariation
+        );
+        $application->setId($id);
+        $application->setVersion(($id*2));
+        $application->setReceivedDate(new \DateTime('2014-05-05'));
+
+        $application->setConditionUndertakings(
+            $this->generateConditionsUndertakings(
+                $application,
+                ConditionUndertaking::TYPE_UNDERTAKING,
+                34
+            )
+        );
+
+        return $application;
+    }
 }
