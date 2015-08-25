@@ -68,7 +68,6 @@ class CreatePsvVehicleListForDiscsTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-
         $fileName = (new DateTime())->format('YmdHi') . '_Psv_Vehicle_List.rtf';
 
         $printData = [

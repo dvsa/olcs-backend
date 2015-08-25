@@ -53,7 +53,8 @@ class DiscSequenceTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->isNotNull')->with('ta.id')->once()->andReturn('condition1');
         $mockQb->shouldReceive('expr->neq')->with('ta.id', ':taId')->once()->andReturn('condition2');
         $mockQb->shouldReceive('expr->eq')->with('gp.id', ':operatorType')->once()->andReturn('condition3');
-        $mockQb->shouldReceive('expr->andX')->with('condition1', 'condition2', 'condition3')->once()->andReturn('conditionAnd');
+        $mockQb->shouldReceive('expr->andX')
+            ->with('condition1', 'condition2', 'condition3')->once()->andReturn('conditionAnd');
         $mockQb->shouldReceive('andWhere')->with('conditionAnd')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')
             ->with('taId', TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE)
