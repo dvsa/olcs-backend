@@ -49,7 +49,6 @@ final class ReprintDisc extends AbstractCommandHandler implements TransactionedI
             $this->result->merge($this->handleSideEffect(CreateGoodsDiscsCmd::create($dtoData)));
         }
 
-
         return $this->result;
     }
 }
