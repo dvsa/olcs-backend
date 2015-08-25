@@ -103,6 +103,24 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
+     * Fetch by ids
+     *
+     * @param array $ids
+     * @param int $hydrateMode
+     * @return mixed
+     */
+    public function fetchByIds(array $ids, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->filterByIds($ids);
+
+        return $qb->getQuery()->getResult($hydrateMode);
+    }
+
+    /**
      * @param QueryInterface $query
      * @param int $hydrateMode
      * @return array
