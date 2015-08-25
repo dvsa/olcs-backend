@@ -55,11 +55,12 @@ class Fee extends AbstractFee
 
     /**
      * Loop through a fee's payment records and check if any are outstanding
+     * @todo check this
      */
     public function hasOutstandingPayment()
     {
-        foreach ($this->getFeePayments() as $fp) {
-            if ($fp->getPayment()->isOutstanding()) {
+        foreach ($this->getFeeTransactions() as $fp) {
+            if ($fp->getTransaction()->isOutstanding()) {
                 return true;
             }
         }
