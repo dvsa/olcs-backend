@@ -444,6 +444,13 @@ return [
     Command\LicenceOperatingCentre\DisassociateS4::class
         => CommandHandler\LicenceOperatingCentre\DisassociateS4::class,
 
+    // Domain - Operating Centre
+    Command\OperatingCentre\DeleteApplicationLinks::class =>
+        CommandHandler\OperatingCentre\DeleteApplicationLinks::class,
+    Command\OperatingCentre\DeleteConditionUndertakings::class =>
+        CommandHandler\OperatingCentre\DeleteConditionUndertakings::class,
+    Command\OperatingCentre\DeleteTmLinks::class => CommandHandler\OperatingCentre\DeleteTmLinks::class,
+
     // Domain - Condition Undertaking
     Command\Cases\ConditionUndertaking\CreateConditionUndertaking::class
         => CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,

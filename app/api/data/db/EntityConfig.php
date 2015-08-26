@@ -316,9 +316,15 @@ return array(
         'application_id' => array(
             'inversedBy' => array(
                 'entity' => 'Application',
-                'property' => 'operatingCentre'
+                'property' => 'operatingCentre',
             )
-        )
+        ),
+        'operating_centre_id' => array(
+            'inversedBy' => array(
+                'entity' => 'OperatingCentre',
+                'property' => 'application',
+            )
+        ),
     ),
     'document_sub_category' => array(
         'is_scanned' => array(
