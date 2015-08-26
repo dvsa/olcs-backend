@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
@@ -56,9 +57,6 @@ final class UpdateFee extends AbstractCommandHandler implements TransactionedInt
             );
         }
 
-        $result->addId('fee', $fee->getId());
-        $result->addMessage('Fee updated');
-
         return $result;
     }
 
@@ -71,6 +69,7 @@ final class UpdateFee extends AbstractCommandHandler implements TransactionedInt
     {
         $now = new DateTime();
         $result = new Result();
+
         $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_WAIVE_RECOMMENDED));
 
         $transaction = new TransactionEntity();
@@ -92,18 +91,70 @@ final class UpdateFee extends AbstractCommandHandler implements TransactionedInt
         $this->getRepo()->save($fee);
 
         $result
+            ->addId('fee', $fee->getId())
+            ->addMessage('Fee updated')
             ->addId('transaction', $transaction->getId())
             ->addMessage('Waive transaction created');
 
         return $result;
     }
 
-    private function approveWaive($fee)
+    private function approveWaive($fee, $reason)
     {
-        $fee->setFeeStatus($this->getRepo()->getRefdataReference($command->getStatus()));
+        $now = new DateTime();
+        $result = new Result();
 
-        if (!is_null($command->getWaiveReason())) {
-            $fee->setWaiveReason($command->getWaiveReason());
+        $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_WAIVED));
+
+        $transaction = $fee->getOutstandingWaiveTransaction();
+
+        if (!$transaction) {
+            throw new ValidationException(['pending waive transaction not found']);
         }
+
+        $transaction
+            ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_PAID)) // @todo change to COMPLETE?
+            ->setComment($reason)
+            ->setCompletedDate($now)
+            ->setProcessedByUser($this->getCurrentUser());
+
+        $this->getRepo()->save($fee);
+
+        $result
+            ->addId('fee', $fee->getId())
+            ->addMessage('Fee updated')
+            ->addId('transaction', $transaction->getId())
+            ->addMessage('Waive transaction updated');
+
+        return $result;
+    }
+
+    private function cancelWaive($fee)
+    {
+        $now = new DateTime();
+        $result = new Result();
+
+        $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_OUTSTANDING));
+
+        $transaction = $fee->getOutstandingWaiveTransaction();
+
+        if (!$transaction) {
+             throw new ValidationException(['pending waive transaction not found']);
+        }
+
+        $transaction
+            ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_CANCELLED))
+            ->setCompletedDate($now)
+            ->setProcessedByUser($this->getCurrentUser());
+
+        $this->getRepo()->save($fee);
+
+        $result
+            ->addId('fee', $fee->getId())
+            ->addMessage('Fee updated')
+            ->addId('transaction', $transaction->getId())
+            ->addMessage('Waive transaction cancelled');
+
+        return $result;
     }
 }
