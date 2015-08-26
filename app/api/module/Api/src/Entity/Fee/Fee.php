@@ -153,12 +153,10 @@ class Fee extends AbstractFee
 
     public function getProcessedBy()
     {
-        // @todo
-        return '';
-        // $ft = $this->getFeeTransactions()->last();
-        // if ($ft) {
-        //     return $ft->getTransaction()->getProcessedByUser()->getName();
-        // }
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getProcessedByUser()->getLoginId();
+        }
     }
 
     public function getPayer()
@@ -182,6 +180,14 @@ class Fee extends AbstractFee
         $ft = $this->getFeeTransactions()->last();
         if ($ft) {
             return $ft->getTransaction()->getChequePoNumber();
+        }
+    }
+
+    public function getWaiveReason()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getComment();
         }
     }
 }

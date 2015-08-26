@@ -50,6 +50,7 @@ class Fee extends AbstractQueryHandler
             'payer' => $fee->getPayer(),
             'slipNo' => $fee->getSlipNo(),
             'chequePoNumber' => $fee->getChequePoNumber(),
+            'waiveReason' => $fee->getWaiveReason(),
         ];
     }
 }
