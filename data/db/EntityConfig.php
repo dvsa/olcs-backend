@@ -1465,6 +1465,9 @@ return array(
                     'persist'
                 ),
             ),
+            'cascade' => array(
+                'persist'
+            ),
         ),
         'transaction_id' => array(
             'inversedBy' => array(
@@ -1473,6 +1476,9 @@ return array(
                 'cascade' => array(
                     'persist'
                 ),
+            ),
+            'cascade' => array(
+                'persist'
             ),
         ),
     ),
