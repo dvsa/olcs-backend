@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Fee;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Fee Entity
@@ -189,5 +190,24 @@ class Fee extends AbstractFee
         if ($ft) {
             return $ft->getTransaction()->getComment();
         }
+    }
+
+    /**
+     * @return Transaction
+     */
+    public function getOutstandingWaiveTransaction()
+    {
+        $ft = $this->getFeeTransactions()->filter(
+            function ($ft) {
+                $transaction = $ft->getTransaction();
+                return (
+                    $transaction->getType()->getId() === Transaction::TYPE_WAIVE
+                    &&
+                    $transaction->getStatus()->getId() === Transaction::STATUS_OUTSTANDING
+                );
+            }
+        )->first(); // there should only ever be one!
+
+        return $ft ? $ft->getTransaction() : null;
     }
 }
