@@ -518,7 +518,7 @@ return [
 
     // Domain - Transaction (formerly 'Payment')
     TransferCommand\Transaction\PayOutstandingFees::class => CommandHandler\Transaction\PayOutstandingFees::class,
-    TransferCommand\Transaction\CompletePayment::class => CommandHandler\Transaction\CompletePayment::class,
+    TransferCommand\Transaction\CompleteTransaction::class => CommandHandler\Transaction\CompleteTransaction::class,
     Command\Transaction\ResolvePayment::class => CommandHandler\Transaction\ResolvePayment::class,
 
     // Domain - ApplicationCompletion
