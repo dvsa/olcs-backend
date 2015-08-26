@@ -69,6 +69,7 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
      * @ORM\ManyToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee",
      *     fetch="LAZY",
+     *     cascade={"persist"},
      *     inversedBy="feeTransactions"
      * )
      * @ORM\JoinColumn(name="fee_id", referencedColumnName="id", nullable=false)
@@ -123,6 +124,7 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
      * @ORM\ManyToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\Transaction",
      *     fetch="LAZY",
+     *     cascade={"persist"},
      *     inversedBy="feeTransactions"
      * )
      * @ORM\JoinColumn(name="transaction_id", referencedColumnName="id", nullable=false)
