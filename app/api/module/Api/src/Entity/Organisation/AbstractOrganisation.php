@@ -29,7 +29,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_organisation_contact_details_id", columns={"contact_details_id"}),
  *        @ORM\Index(name="ix_organisation_irfo_contact_details_id",
      *     columns={"irfo_contact_details_id"}),
- *        @ORM\Index(name="ix_organisation_irfo_nationality", columns={"irfo_nationality"})
+ *        @ORM\Index(name="ix_organisation_irfo_nationality", columns={"irfo_nationality"}),
+ *        @ORM\Index(name="ix_organisation_cpid_name", columns={"cpid","name"})
  *    }
  * )
  */
