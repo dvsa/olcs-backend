@@ -29,15 +29,13 @@ final class CreateCompanySubsidiary extends AbstractCommandHandler implements Tr
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /** @var Application $application */
         $application = $this->getRepo()->fetchById($command->getApplication());
 
-        $result->merge($this->createCompanySubsidiary($command, $application->getLicence()));
-        $result->merge($this->updateApplicationCompletion($command));
+        $this->result->merge($this->createCompanySubsidiary($command, $application->getLicence()));
+        $this->result->merge($this->updateApplicationCompletion($command));
 
-        return $result;
+        return $this->result;
     }
 
     private function createCompanySubsidiary(Cmd $command, Licence $licence)
@@ -52,7 +50,13 @@ final class CreateCompanySubsidiary extends AbstractCommandHandler implements Tr
     {
         return $this->getCommandHandler()->handleCommand(
             UpdateApplicationCompletionCommand::create(
-                ['id' => $command->getApplication(), 'section' => 'businessDetails']
+                [
+                    'id' => $command->getApplication(),
+                    'section' => 'businessDetails',
+                    'data' => [
+                        'hasChanged' => true
+                    ]
+                ]
             )
         );
     }

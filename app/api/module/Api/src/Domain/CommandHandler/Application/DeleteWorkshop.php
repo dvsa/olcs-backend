@@ -8,7 +8,6 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -25,14 +24,18 @@ final class DeleteWorkshop extends AbstractCommandHandler implements Transaction
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
+        $this->result->merge($this->handleSideEffect(WorkshopDeleteWorkshop::create(['ids' => $command->getIds()])));
 
-        $result->merge($this->handleSideEffect(WorkshopDeleteWorkshop::create(['ids' => $command->getIds()])));
+        $data = [
+            'id' => $command->getApplication(),
+            'section' => 'safety',
+            'data' => [
+                'hasChanged' => true
+            ]
+        ];
 
-        $data = ['id' => $command->getApplication(), 'section' => 'safety'];
+        $this->result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($data)));
 
-        $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($data)));
-
-        return $result;
+        return $this->result;
     }
 }

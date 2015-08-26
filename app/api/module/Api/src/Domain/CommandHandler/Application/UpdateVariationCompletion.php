@@ -20,6 +20,9 @@ use Zend\Filter\Word\UnderscoreToCamelCase;
 /**
  * Update Variation Completion
  *
+ * @NOTE If there are future changes to these rules, it might be worth slightly changing how this works, as it is
+ * getting a little messy
+ *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 final class UpdateVariationCompletion extends AbstractCommandHandler implements TransactionedInterface
@@ -52,17 +55,21 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
         'community_licences' => [],
         'safety' => [],
         'conditions_undertakings' => [],
-        'financial_history' => [],
-        'convictions_penalties' => [],
+        'financial_history' => [
+            'people'
+        ],
+        'convictions_penalties' => [
+            'people'
+        ],
         //'undertakings' => [] We don't want this as there is bespoke rules around setting this status
     ];
 
     private $sectionUpdatedCheckMap = [
         'type_of_licence' => 'hasUpdatedTypeOfLicence',
-        'business_type' => 'hasSavedSection',
-        'business_details' => 'hasSavedSection',
-        'addresses' => 'hasSavedSection',
-        'people' => 'hasSavedSection',
+        'business_type' => 'hasUpdatedBusinessType',
+        'business_details' => 'hasUpdatedBusinessDetails',
+        'addresses' => 'hasUpdatedAddresses',
+        'people' => 'hasUpdatedPeople',
         'operating_centres' => 'hasUpdatedOperatingCentres',
         'financial_evidence' => 'hasSavedSection',
         'transport_managers' => 'hasUpdatedTransportManagers',
@@ -71,7 +78,7 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
         'vehicles_declarations' => 'hasUpdatedVehicleDeclarations',
         'discs' => 'hasSavedSection',
         'community_licences' => 'hasSavedSection',
-        'safety' => 'hasSavedSection',
+        'safety' => 'hasUpdatedSafetySection',
         'conditions_undertakings' => 'hasUpdatedConditionsUndertakings',
         'financial_history' => 'hasUpdatedFinancialHistory',
         // @NOTE Not sure if we need this just yet
@@ -82,7 +89,13 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
 
     protected $bespokeRulesMap = [
         'type_of_licence' => 'updateRelatedTypeOfLicenceSections',
-        'operating_centres' => 'updateRelatedOperatingCentreSections'
+        'operating_centres' => 'updateRelatedOperatingCentreSections',
+        'people' => 'updateRelatedPeopleSections',
+        'transport_managers' => 'updateRelatedTmSections',
+        'vehicles' => 'updateRelatedVehiclesSections',
+        'vehicles_psv' => 'updateRelatedVehiclesSections',
+        'discs' => 'updateRelatedDiscSections',
+        'community_licences' => 'updateRelatedCommunityLicencesSections'
     ];
 
     /**
@@ -100,11 +113,15 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
      */
     private $suffixes = [];
 
-    private $isPsv;
+    /**
+     * @var array
+     */
+    private $data = [];
 
     public function handleCommand(CommandInterface $command)
     {
         $section = $command->getSection();
+        $this->data = $command->getData();
 
         $filter = new CamelCaseToUnderscore();
         $section = strtolower($filter->filter($section));
@@ -154,6 +171,61 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
         return $this->application->getLicenceType() !== $this->licence->getLicenceType();
     }
 
+    protected function hasUpdatedBusinessType()
+    {
+        return ($this->data['type'] !== $this->licence->getOrganisation()->getType()->getId());
+    }
+
+    protected function hasUpdatedBusinessDetails()
+    {
+        // If requires attention or already updated, then we mark the section as updated
+        if (!$this->isUnchanged('business_details')) {
+            return true;
+        }
+
+        // Otherwise we check for an actual change
+        if ($this->data['hasChanged']) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function hasUpdatedAddresses()
+    {
+        // If requires attention or already updated, then we mark the section as updated
+        if (!$this->isUnchanged('addresses')) {
+            return true;
+        }
+
+        // Otherwise we check for an actual change
+        if ($this->data['hasChanged']) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function hasUpdatedPeople()
+    {
+        // If requires attention or already updated, then we mark the section as updated
+        if (!$this->isUnchanged('people')) {
+            return true;
+        }
+
+        return !$this->application->getApplicationOrganisationPersons()->isEmpty();
+    }
+
+    protected function hasUpdatedSafetySection()
+    {
+        // Otherwise we check for an actual change
+        if ($this->data['hasChanged']) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * A generic callback that marks a section as complete
      *
@@ -171,25 +243,15 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
      */
     protected function hasUpdatedOperatingCentres()
     {
+        if (!$this->isUnchanged('operating_centres')) {
+            return true;
+        }
+
         if ($this->application->getOperatingCentres()->count() > 0) {
             return true;
         }
 
-        $comparisons = [
-            'TotAuthVehicles',
-            'TotAuthTrailers',
-            'TotAuthSmallVehicles',
-            'TotAuthMediumVehicles',
-            'TotAuthLargeVehicles'
-        ];
-
-        foreach ($comparisons as $comparison) {
-            if ($this->application->{'get' . $comparison}() != $this->licence->{'get' . $comparison}()) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->application->hasAuthChanged();
     }
 
     /**
@@ -375,6 +437,17 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
     }
 
     /**
+     * Check if the section requires attention
+     *
+     * @param string $section
+     * @return string
+     */
+    protected function doesRequireAttention($section)
+    {
+        return $this->isStatus($section, self::STATUS_REQUIRES_ATTENTION);
+    }
+
+    /**
      * Shared logic to check a sections status
      *
      * @param string $section
@@ -385,7 +458,7 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
     {
         $getter = 'get' . $this->getSectionAsSuffix($section) . 'Status';
 
-        return $this->application->getApplicationCompletion()->$getter() === $status;
+        return (int)$this->application->getApplicationCompletion()->$getter() == (int)$status;
     }
 
     protected function getSectionAsSuffix($section)
@@ -417,12 +490,15 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
     {
         foreach ($this->requireAttentionMap as $section => $triggers) {
 
+            // Skip the current section, or updated sections
             if ($section === $currentSection || $this->isUpdated($section)) {
                 continue;
             }
 
+            // Mark each section as unchanged
             $this->markSectionUnchanged($section);
 
+            // Unless the related sections have been updated
             foreach ($triggers as $trigger) {
                 if ($this->isUpdated($trigger)) {
                     $this->markSectionRequired($section);
@@ -449,10 +525,11 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
     protected function updateRelatedTypeOfLicenceSections()
     {
         // If the old licence type was restricted and it is being upgraded
-        if ($this->isLicenceUpgrade()) {
+        if ($this->application->isLicenceUpgrade()) {
 
             $relatedSections = [
                 'addresses',
+                'financial_evidence',
                 'transport_managers',
                 'financial_history',
                 'convictions_penalties'
@@ -464,25 +541,10 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
                 }
             }
         }
-    }
 
-    /**
-     * If the application involves a licence upgrade
-     *
-     * @param int $applicationId
-     * @return boolean
-     */
-    protected function isLicenceUpgrade()
-    {
-        $restrictedUpgrades = [
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
-        ];
-
-        return (
-            $this->licence->getLicenceType()->getId() === Licence::LICENCE_TYPE_RESTRICTED
-            && in_array($this->application->getLicenceType()->getId(), $restrictedUpgrades)
-        );
+        if ($this->application->isPsvDowngrade() && $this->isUnchanged('operating_centres')) {
+            $this->markSectionRequired('operating_centres');
+        }
     }
 
     /**
@@ -511,10 +573,84 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
             }
 
             // If the vehicles declaration section is unchanged and any of the tot auth vehicle columns has increased
-            if ($this->isUnchanged('vehicles_declarations') && $this->hasAnyTotAuthIncreased()) {
+            if ($this->isUnchanged('vehicles_declarations') && $this->application->hasAuthChanged()) {
                 $this->markSectionRequired('vehicles_declarations');
             }
         }
+
+        // If auth hasn't changed, and we are not downgrading
+        if ($this->application->hasAuthChanged() === false && $this->application->isPsvDowngrade() === false) {
+            $this->markSectionUnchanged('operating_centres');
+        }
+    }
+
+    protected function updateRelatedPeopleSections()
+    {
+        // Don't change if we require attention
+        if ($this->doesRequireAttention('people')) {
+            return;
+        }
+
+        if ($this->application->getApplicationOrganisationPersons()->isEmpty()) {
+            $this->markSectionUnchanged('people');
+            return;
+        }
+
+        $this->markSectionUpdated('people');
+    }
+
+    protected function updateRelatedTmSections()
+    {
+        if (!$this->hasUpdatedTransportManagers()) {
+            if ($this->application->isLicenceUpgrade()) {
+                $this->markSectionRequired('transport_managers');
+            } else {
+                $this->markSectionUnchanged('transport_managers');
+            }
+        }
+    }
+
+    protected function updateRelatedVehiclesSections()
+    {
+        $licenceVehicles = $this->licence->getActiveVehiclesCount();
+        $applicationVehicles = $this->application->getActiveVehicles()->count();
+
+        $totalVehicles = $licenceVehicles + $applicationVehicles;
+
+        if ($totalVehicles > (int)$this->application->getTotAuthVehicles()) {
+            $this->markSectionRequired($this->getRelevantVehicleSection());
+            return;
+        }
+
+        if ($applicationVehicles < 1) {
+            $this->markSectionUnchanged($this->getRelevantVehicleSection());
+            return;
+        }
+
+        $this->markSectionUpdated($this->getRelevantVehicleSection());
+    }
+
+    protected function updateRelatedDiscSections()
+    {
+        if ((int)$this->application->getTotAuthVehicles() < (int)$this->licence->getPsvDiscsNotCeasedCount()) {
+            $this->markSectionRequired('discs');
+            return;
+        }
+
+        $this->markSectionUpdated('discs');
+    }
+
+    protected function updateRelatedCommunityLicencesSections()
+    {
+        $activeComLics = (int)$this->licence->getActiveCommunityLicences()->count();
+        $totAuth = (int)$this->application->getTotAuthVehicles();
+
+        if ($totAuth < $activeComLics) {
+            $this->markSectionRequired('community_licences');
+            return;
+        }
+
+        $this->markSectionUpdated('community_licences');
     }
 
     /**
@@ -554,11 +690,7 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
      */
     protected function isPsv()
     {
-        if ($this->isPsv === null) {
-            $this->isPsv = $this->application->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_PSV;
-        }
-
-        return $this->isPsv;
+        return $this->application->isPsv();
     }
 
     /**
@@ -585,6 +717,7 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
     {
         $totAuthVehicles = $this->getTotAuthVehicles($this->application);
 
+        // @todo Should this just be counting vehicles linked to the licence?
         $totVehicles = $this->countVehicles($this->licence->getLicenceVehicles());
 
         return $totAuthVehicles < $totVehicles;
@@ -610,30 +743,6 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
         $totDiscs = $this->licence->getPsvDiscs()->count();
 
         return $totAuthVehicles < $totDiscs;
-    }
-
-    /**
-     * Check if any of the auth fields have increased
-     *
-     * @param array $data
-     * @return boolean
-     */
-    protected function hasAnyTotAuthIncreased()
-    {
-        $allAuths = [
-            'TotAuthVehicles',
-            'TotAuthSmallVehicles',
-            'TotAuthMediumVehicles',
-            'TotAuthLargeVehicles'
-        ];
-
-        foreach ($allAuths as $authKey) {
-            if ($this->application->{'get' . $authKey}() > $this->licence->{'get' . $authKey}()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /** Not sure if this is needed yet
