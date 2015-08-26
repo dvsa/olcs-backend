@@ -221,9 +221,9 @@ return [
     TransferQuery\Correspondence\Correspondence::class => QueryHandler\Correspondence\Correspondence::class,
     TransferQuery\Correspondence\Correspondences::class => QueryHandler\Correspondence\Correspondences::class,
 
-    // Payment
-    TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
-    TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
+    // Transaction (formerly 'Payment')
+    TransferQuery\Transaction\Transaction::class => QueryHandler\Transaction\Transaction::class,
+    TransferQuery\Transaction\TransactionByReference::class => QueryHandler\Transaction\TransactionByReference::class,
 
     // CommunityLic
     TransferQuery\CommunityLic\CommunityLic::class => QueryHandler\CommunityLic\CommunityLic::class,

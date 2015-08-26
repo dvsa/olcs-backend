@@ -84,9 +84,9 @@ class Fee extends AbstractRepository
             ->withRefdata()
             ->with('licence')
             ->with('application')
-            ->with('feePayments', 'fp')
-            ->with('fp.payment', 'p')
-            ->with('p.status')
+            ->with('feeTransactions', 'ft')
+            ->with('ft.transaction', 't')
+            ->with('t.status')
             ->order('invoicedDate', 'ASC');
 
         $this->whereOutstandingFee($doctrineQb);
@@ -177,9 +177,9 @@ class Fee extends AbstractRepository
             ->withRefdata()
             ->with('licence')
             ->with('application')
-            ->with('feePayments', 'fp')
-            ->with('fp.payment', 'p')
-            ->with('p.status')
+            ->with('feeTransactions', 'ft')
+            ->with('ft.transaction', 't')
+            ->with('t.status')
             ->order('invoicedDate', 'ASC');
 
         $this->whereOutstandingFee($doctrineQb);
