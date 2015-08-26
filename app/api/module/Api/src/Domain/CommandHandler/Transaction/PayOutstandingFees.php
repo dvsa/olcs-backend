@@ -8,13 +8,15 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
-use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
@@ -27,8 +29,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class PayOutstandingFees extends AbstractCommandHandler implements TransactionedInterface
+final class PayOutstandingFees extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     /**
      * @var \Dvsa\Olcs\Api\Service\FeesHelperService
      */
@@ -156,21 +160,33 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
         }
 
         $receiptDate = new \DateTime($command->getReceiptDate());
-        $feeStatusRef = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID);
-        $paymentMethodRef = $this->getRepo()->getRefdataReference(FeeEntity::METHOD_CASH);
 
-        // update fee records as paid
+        // create transaction
+        $transaction = new TransactionEntity();
+        $transaction
+            ->setReference($response['receipt_reference'])
+            ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_PAID))
+            ->setType($this->getRepo()->getRefdataReference(TransactionEntity::TYPE_PAYMENT))
+            ->setPaymentMethod($this->getRepo()->getRefdataReference(FeeEntity::METHOD_CASH))
+            ->setCompletedDate($receiptDate) // @todo do we set this to receiptDate or now?
+            ->setPayerName($command->getPayer())
+            ->setPayingInSlipNumber($command->getSlipNo())
+            ->setProcessedByUser($this->getCurrentUser());;
+
+        // create feeTransaction record(s)
+        $feeTransactions = new ArrayCollection();
+        $transaction->setFeeTransactions($feeTransactions);
         foreach ($fees as $fee) {
-            $fee
-                ->setFeeStatus($feeStatusRef)
-                ->setReceivedDate($receiptDate)
-                ->setReceiptNo($response['receipt_reference'])
-                ->setPaymentMethod($paymentMethodRef)
-                ->setPayerName($command->getPayer())
-                ->setPayingInSlipNumber($command->getSlipNo())
-                ->setReceivedAmount($fee->getAmount());
+            $feeTransaction = new FeeTransactionEntity();
+            $feeTransaction
+                ->setFee($fee)
+                ->setAmount($fee->getAmount())
+                ->setTransaction($transaction); // needed for cascade persist to work
+            $feeTransactions->add($feeTransaction);
 
-            $this->getRepo('Fee')->save($fee);
+            // update fee status
+            $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID));
+            $this->getRepo('Fee')->save($fee); // @todo check we don't need this
 
             // trigger side effects
             $result->merge(
@@ -178,7 +194,13 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             );
         }
 
-        $result->addMessage('Fee(s) updated as Paid by cash');
+        // persist
+        $this->getRepo()->save($transaction);
+
+        $result
+            ->addId('transaction', $transaction->getId())
+            ->addMessage('Transaction record created')
+            ->addMessage('Fee(s) updated as Paid by cash');
 
         return $result;
     }
