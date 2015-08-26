@@ -658,6 +658,8 @@ VALUES
 (92,189,'lfs_ot',NULL,1,9,110,NULL,60.00,NULL,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 2',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
 (93,189,'lfs_ot',NULL,1,10,110,NULL,60.00,NULL,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 3',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
 (94,189,'lfs_ot',NULL,1,11,110,NULL,60.00,NULL,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 4',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
+-- (95,338,'lfs_ot',NULL,7,NULL,211,NULL,254.40,NULL,'2015-03-27 00:00:00','GV/SN Application Fee for application 7',NULL,NULL,NULL,NULL,NULL,NULL,'2015-03-27 12:28:08',NULL,1),
+-- (96,338,'lfs_w',NULL,8,NULL,212,NULL,254.40,NULL,'2015-03-27 00:00:00','GV/SN Application Fee for application 7',NULL,NULL,NULL,NULL,NULL,NULL,'2015-03-27 12:28:08',NULL,1),
 (97,20051,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,NULL,'2015-04-01 12:34:56','Photocopying charge',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
 (98,20052,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,NULL,'2015-04-01 12:34:56','Court fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1);
 
@@ -1950,9 +1952,9 @@ INSERT INTO `application_completion` (`id`, `application_id`, `created_by`, `las
 INSERT INTO `application_operating_centre` (`id`, `application_id`, `created_by`, `last_modified_by`, `operating_centre_id`, `s4_id`, `ad_placed`, `publication_appropriate`, `sufficient_parking`, `action`, `ad_placed_date`, `ad_placed_in`, `created_on`, `deleted_date`, `is_interim`, `last_modified_on`, `no_of_trailers_required`, `no_of_vehicles_required`, `olbs_key`, `permission`, `version`, `vi_action`) VALUES (4,7,NULL,NULL,73,NULL,0,0,1,'A',NULL,'','2015-03-27 12:30:12',NULL,0,NULL,1,1,NULL,1,1,NULL);
 INSERT INTO `application_tracking` (`id`, `application_id`, `created_by`, `last_modified_by`, `addresses_status`, `business_details_status`, `business_type_status`, `community_licences_status`, `conditions_undertakings_status`, `convictions_penalties_status`, `discs_status`, `financial_evidence_status`, `financial_history_status`, `licence_history_status`, `operating_centres_status`, `people_status`, `safety_status`, `taxi_phv_status`, `transport_managers_status`, `type_of_licence_status`, `undertakings_status`, `vehicles_declarations_status`, `vehicles_psv_status`, `vehicles_status`, `created_on`, `last_modified_on`, `version`) VALUES (4,7,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2015-03-27 12:28:07',NULL,1);
 INSERT INTO `fee`
-    (`id`,`fee_status`,`fee_type_id`,`application_id`,`licence_id`,`amount`,`created_on`,`description`)
+    (`id`,`fee_status`,`fee_type_id`,`application_id`,`licence_id`,`amount`,`invoiced_date`,`description`)
     VALUES
-    (95,'lfs_ot',338,7,211,254.40,'2015-03-27 12:28:08','GV/SN Application Fee for application 7');
+    (95,'lfs_ot',338,7,211,254.40,'2015-03-27 00:00:00','GV/SN Application Fee for application 7');
 INSERT INTO `phone_contact` (`id`, `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (11,124,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
 INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, `last_modified_by`, `is_external`, `maintenance`, `safety_inspection`, `created_on`, `last_modified_on`, `olbs_key`, `removed_date`, `version`) VALUES (1,211,126,NULL,NULL,0,0,0,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
 COMMIT;
@@ -2022,9 +2024,9 @@ VALUES (
 );
 
 INSERT INTO `fee`
-    (`id`,`fee_status`,`fee_type_id`,`application_id`,`licence_id`,`amount`,`created_on`,`description`)
+    (`id`,`fee_status`,`fee_type_id`,`application_id`,`licence_id`,`amount`,`invoiced_date`,`description`)
     VALUES
-    (96,'lfs_w',338,8,212,254.40,'2015-03-27 12:28:08','GV/SN Application Fee for application 8');
+    (96,'lfs_w',338,8,212,254.40,'2015-03-27 00:00:00','GV/SN Application Fee for application 8');
 INSERT INTO `phone_contact` (`id`,    `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (12,127,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
 INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, `last_modified_by`, `is_external`, `maintenance`, `safety_inspection`, `created_on`, `last_modified_on`, `olbs_key`, `removed_date`, `version`) VALUES (2,212,129,NULL,NULL,0,0,0,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
 

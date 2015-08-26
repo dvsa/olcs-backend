@@ -110,4 +110,78 @@ class Fee extends AbstractFee
             ]
         );
     }
+
+    public function getReceiptNo()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getReference();
+        }
+    }
+
+    /**
+     * @todo OLCS-10407 this currently assumes only one transaction against a fee,
+     * needs updating
+     */
+    public function getReceivedAmount()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getAmount();
+        }
+    }
+
+    /**
+     * @todo  OLCS-10407 may be able to get rid of this if frontend once frontend fee
+     * screens are finalised
+     */
+    public function getReceivedDate()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getCompletedDate();
+        }
+    }
+
+    public function getPaymentMethod()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getPaymentMethod()->getDescription();
+        }
+    }
+
+    public function getProcessedBy()
+    {
+        // @todo
+        return '';
+        // $ft = $this->getFeeTransactions()->last();
+        // if ($ft) {
+        //     return $ft->getTransaction()->getProcessedByUser()->getName();
+        // }
+    }
+
+    public function getPayer()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getPayerName();
+        }
+    }
+
+    public function getSlipNo()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getPayingInSlipNumber();
+        }
+    }
+
+    public function getChequePoNumber()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getChequePoNumber();
+        }
+    }
 }
