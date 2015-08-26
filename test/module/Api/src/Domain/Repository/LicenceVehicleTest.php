@@ -441,10 +441,10 @@ class LicenceVehicleTest extends RepositoryTestCase
             . ' AND v.vrm = [[AB11ABC]]'
             . ' AND m.specifiedDate IS NOT NULL'
             . ' AND m.removalDate IS NULL'
-            . ' AND m.warningLetterSeedDate IS NULL'
             . ' AND l.id != [[111]]'
             . ' AND l.goodsOrPsv = [[lcat_gv]]'
-            . ' AND l.status IN ["lsts_curtailed","lsts_valid","lsts_suspended"]',
+            . ' AND l.status IN ["lsts_curtailed","lsts_valid","lsts_suspended"]'
+            . ' AND m.warningLetterSeedDate IS NULL',
             $this->query
         );
     }
