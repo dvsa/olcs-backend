@@ -16,23 +16,28 @@ final class MostSeriousInfringement extends AbstractSection
     {
         $seriousInfringements = $case->getSeriousInfringements();
         $mostSeriousInfringement = [];
-        if (isset($seriousInfringements[0])) {
+        if (isset($seriousInfringements[0]) && $seriousInfringements[0] instanceof SeriousInfringmentEntity) {
             /** @var SeriousInfringmentEntity $mostSeriousInfringement */
             $mostSeriousInfringement = $seriousInfringements[0];
+            $data['id'] = $mostSeriousInfringement->getId();
+            $data['notificationNumber'] = $mostSeriousInfringement->getNotificationNumber();
+            $data['siCategory'] = !empty($mostSeriousInfringement->getSiCategory()) ?
+                $mostSeriousInfringement->getSiCategory()->getDescription() : '';
+            $data['siCategoryType'] = !empty($mostSeriousInfringement->getSiCategoryType()) ?
+                $mostSeriousInfringement->getSiCategoryType()->getDescription() : '';
+            $data['infringementDate'] = $mostSeriousInfringement->getInfringementDate();
+            $data['checkDate'] =  $mostSeriousInfringement->getCheckDate();
+            $data['isMemberState'] = !empty($mostSeriousInfringement->getMemberStateCode()) ?
+                $mostSeriousInfringement->getMemberStateCode()->getIsMemberState() : '';
+        } else {
+            $data['id'] = '';
+            $data['notificationNumber'] = '';
+            $data['siCategory'] = '';
+            $data['siCategoryType'] = '';
+            $data['infringementDate'] = '';
+            $data['checkDate'] = '';
+            $data['isMemberState'] = '';
         }
-
-        $data['id'] = !empty($mostSeriousInfringement) ? $mostSeriousInfringement->getId() : '';
-        $data['notificationNumber'] = !empty($mostSeriousInfringement) ?
-            $mostSeriousInfringement->getNotificationNumber() : '';
-        $data['siCategory'] = !empty($mostSeriousInfringement) ?
-            $mostSeriousInfringement->getSiCategory()->getDescription() : '';
-        $data['siCategoryType'] = !empty($mostSeriousInfringement) ?
-            $mostSeriousInfringement->getSiCategoryType()->getDescription() : '';
-        $data['infringementDate'] = !empty($mostSeriousInfringement) ?
-            $mostSeriousInfringement->getInfringementDate() : '';
-        $data['checkDate'] = !empty($mostSeriousInfringement) ? $mostSeriousInfringement->getCheckDate() : '';
-        $data['isMemberState'] = !empty($mostSeriousInfringement) ?
-            $mostSeriousInfringement->getMemberStateCode()->getIsMemberState() : '';
 
         return ['data' => ['overview' => $data]];
     }
