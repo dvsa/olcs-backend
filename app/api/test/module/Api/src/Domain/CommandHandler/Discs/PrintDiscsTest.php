@@ -28,8 +28,6 @@ class PrintDiscsTest extends CommandHandlerTestCase
         $this->sut = new PrintDiscs();
 
         $this->mockedSmServices = [
-            'Document' => m::mock(),
-            'ContentStore' => m::mock(),
             'DocumentGenerator' => m::mock(DocGenerator::class)
         ];
 
@@ -44,43 +42,13 @@ class PrintDiscsTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $template = '/templates/GVDiscTemplate.rtf';
+        $template = 'GVDiscTemplate';
         $data = [
             'type' => 'Goods',
             'discs' => [$mockDisc],
             'startNumber' => 1
         ];
         $command = Cmd::create($data);
-
-        $this->mockedSmServices['ContentStore']
-            ->shouldReceive('read')
-            ->with($template)
-            ->andReturn('file')
-            ->once()
-            ->getMock();
-
-        $qry = m::mock('\Dvsa\Olcs\Transfer\Query\QueryInterface');
-        $queries = [
-            'Disc_List' => [
-                $qry
-            ]
-        ];
-        $this->mockedSmServices['Document']
-            ->shouldReceive('getBookmarkQueries')
-            ->with('file', [1])
-            ->andReturn($queries)
-            ->once()
-            ->shouldReceive('populateBookmarks')
-            ->with('file', ['Disc_List' => [['discNo' => 1]]])
-            ->andReturn('document')
-            ->once()
-            ->getMock();
-
-        $this->queryHandler
-            ->shouldReceive('handleQuery')
-            ->andReturn(['discNo' => ''])
-            ->once()
-            ->getMock();
 
         $mockStoredFile = m::mock()
             ->shouldReceive('getIdentifier')
@@ -89,6 +57,9 @@ class PrintDiscsTest extends CommandHandlerTestCase
             ->getMock();
 
         $this->mockedSmServices['DocumentGenerator']
+            ->shouldReceive('generateFromTemplate')
+            ->with($template, [0 => 1], ['Disc_List' => [['discNo' => '1']]])
+            ->andReturn('document')
             ->shouldReceive('uploadGeneratedContent')
             ->with('document', 'documents', 'GVDiscTemplate.rtf')
             ->andReturn($mockStoredFile)
@@ -108,51 +79,5 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
         $this->assertEquals($expected, $result->toArray());
-    }
-
-    public function testHandleCommandWithException()
-    {
-        $this->setExpectedException(\Exception::class);
-        $mockDisc = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->once()
-            ->getMock();
-
-        $template = '/templates/GVDiscTemplate.rtf';
-        $data = [
-            'type' => 'Goods',
-            'discs' => [$mockDisc],
-            'startNumber' => 1
-        ];
-        $command = Cmd::create($data);
-
-        $this->mockedSmServices['ContentStore']
-            ->shouldReceive('read')
-            ->with($template)
-            ->andReturn('file')
-            ->once()
-            ->getMock();
-
-        $qry = m::mock('\Dvsa\Olcs\Transfer\Query\QueryInterface');
-        $queries = [
-            'Disc_List' => [
-                $qry
-            ]
-        ];
-        $this->mockedSmServices['Document']
-            ->shouldReceive('getBookmarkQueries')
-            ->with('file', [1])
-            ->andReturn($queries)
-            ->once()
-            ->getMock();
-
-        $this->queryHandler
-            ->shouldReceive('handleQuery')
-            ->andThrow(\Exception::class)
-            ->once()
-            ->getMock();
-
-        $this->sut->handleCommand($command);
     }
 }
