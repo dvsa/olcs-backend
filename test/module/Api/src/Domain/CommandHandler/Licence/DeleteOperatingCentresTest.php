@@ -79,4 +79,35 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
+
+    public function testHandleCommandCannotDelete()
+    {
+        $data = [
+            'licence' => 111,
+            'ids' => [
+                123
+            ]
+        ];
+        $command = Cmd::create($data);
+
+        /** @var LicenceOperatingCentre $loc1 */
+        $loc1 = m::mock(LicenceOperatingCentre::class)->makePartial();
+        $loc1->setId(123);
+        $loc1->shouldReceive('checkCanDelete')->with()->once()->andReturn(['ERROR' => 'Fooo']);
+
+        $locs = new ArrayCollection();
+        $locs->add($loc1);
+
+        /** @var Licence $application */
+        $application = m::mock(Licence::class)->makePartial();
+        $application->setOperatingCentres($locs);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($application);
+
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
+        $this->sut->handleCommand($command);
+    }
 }

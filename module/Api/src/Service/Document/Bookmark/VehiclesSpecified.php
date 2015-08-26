@@ -19,6 +19,7 @@ class VehiclesSpecified extends DynamicBookmark
     {
         $criteria = Criteria::create();
         $criteria->andWhere($criteria->expr()->eq('removalDate', null));
+        $criteria->andWhere($criteria->expr()->neq('specifiedDate', null));
         $bundle = [
             'licenceVehicles' => [
                 'vehicle' => [
