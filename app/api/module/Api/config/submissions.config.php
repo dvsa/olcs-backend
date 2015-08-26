@@ -132,6 +132,26 @@ return [
             \Dvsa\Olcs\Api\Service\Submission\Sections\AuthRequestedAppliedFor::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\TransportManagers::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\ContinuousAndEffectiveControl::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\FitnessAndRepute::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\PreviousHistory::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\BusRegAppDetails::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\TransportAuthorityComments::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\TotalBusRegistrations::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\LocalLicenceHistory::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\LinkedMlhHistory::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\RegistrationDetails::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\MaintenanceTachographsHours::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class
         ],
         'aliases' => [
@@ -160,6 +180,26 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AuthRequestedAppliedFor::class,
             'transport-managers' =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\TransportManagers::class,
+            'continuous-effective-control' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\ContinuousAndEffectiveControl::class,
+            'fitness-and-repute' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\FitnessAndRepute::class,
+            'previous-history' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\PreviousHistory::class,
+            'bus-reg-app-details' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\BusRegAppDetails::class,
+            'transport-authority-comments' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\TransportAuthorityComments::class,
+            'total-bus-registrations' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\TotalBusRegistrations::class,
+            'local-licence-history' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\LocalLicenceHistory::class,
+            'linked-mlh-history' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\LinkedMlhHistory::class,
+            'registration-details' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\RegistrationDetails::class,
+            'maintenance-tachographs-hours' =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\MaintenanceTachographsHours::class,
 
         ]
     ]
