@@ -5,11 +5,15 @@ namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
+use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
 use Dvsa\Olcs\Api\Entity\Person\Person;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -162,6 +166,7 @@ class SubmissionSectionTest extends MockeryTestCase
         $licence->setOperatingCentres($this->generateOperatingCentres($licence));
 
         $licence->setApplications($this->generateApplications($licence));
+        $licence->setTmLicences($this->generateTmLicences($licence));
 
         $licence->setConditionUndertakings(
             $this->generateConditionsUndertakings(
@@ -188,6 +193,25 @@ class SubmissionSectionTest extends MockeryTestCase
 
         return $licenceVehicles;
     }
+
+    protected function generateTmLicences(Licence $licence)
+    {
+        $licenceTms = new ArrayCollection();
+
+        $tm = new TransportManager();
+        $tm->setTmType($this->generateRefDataEntity('tm_type1'));
+        $tm->setId(153);
+        $tm->setVersion(306);
+        $tm->setHomeCd($this->generateContactDetails(83));
+
+        $tm->setOtherLicences([]);
+        $tml = new TransportManagerLicence($licence, $tm);
+
+        $licenceTms->add($tml);
+
+        return $licenceTms;
+    }
+
 
     protected function generateConditionsUndertakings($parentEntity, $conditionType, $id = 1)
     {
@@ -316,5 +340,14 @@ class SubmissionSectionTest extends MockeryTestCase
         $ta->setName('FOO');
 
         return $ta;
+    }
+
+    protected function generateContactDetails($id, $type = 'cd_type')
+    {
+        $cd = new ContactDetails($this->generateRefDataEntity($type));
+        $cd->setAddress($this->generateAddress($id));
+        $cd->setPerson($this->generatePerson(22));
+
+        return $cd;
     }
 }
