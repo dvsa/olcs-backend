@@ -206,6 +206,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     }
 
     /**
+     * @todo
      * @param string $customerReference
      * @param CommandInterface $command
      * @param array $fees
@@ -265,6 +266,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     }
 
     /**
+     * @todo
      * @param string $customerReference
      * @param CommandInterface $command
      * @param array $fees
