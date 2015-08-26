@@ -12,22 +12,30 @@ use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Transfer\Command\Submission\UpdateSubmission as Cmd;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Doctrine\ORM\Query;
-
+use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareTrait;
+use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 /**
  * Update Submission
  */
-final class UpdateSubmission extends AbstractCommandHandler
+final class UpdateSubmission extends AbstractCommandHandler implements SubmissionGeneratorAwareInterface
 {
+    use SubmissionGeneratorAwareTrait;
+
     protected $repoServiceName = 'Submission';
 
     public function handleCommand(CommandInterface $command)
     {
-        $submission = $this->updateSubmission($command);
+        $submissionEntity = $this->updateSubmission($command);
 
-        $this->getRepo()->save($submission);
+        $submissionEntity = $this->getSubmissionGenerator()->generateSubmission(
+            $submissionEntity,
+            $command->getSections()
+        );
+
+        $this->getRepo()->save($submissionEntity);
 
         $result = new Result();
-        $result->addId('submission', $submission->getId());
+        $result->addId('submission', $submissionEntity->getId());
         $result->addMessage('Submission updated successfully');
 
         return $result;
@@ -40,8 +48,6 @@ final class UpdateSubmission extends AbstractCommandHandler
     private function updateSubmission(Cmd $command)
     {
         $submission = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
-
-        $dataSnapshot = $this->generateDataSnapshot($command);
 
         if ($command->getSubmissionType() !== null) {
             $submission->setSubmissionType($this->getRepo()->getRefdataReference($command->getSubmissionType()));
@@ -66,10 +72,5 @@ final class UpdateSubmission extends AbstractCommandHandler
         }
 
         return $submission;
-    }
-
-    private function generateDataSnapshot($command)
-    {
-        return 'THIS IS AN UPDATED TEST';
     }
 }

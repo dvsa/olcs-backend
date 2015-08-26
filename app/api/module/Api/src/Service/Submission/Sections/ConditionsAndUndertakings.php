@@ -90,7 +90,8 @@ final class ConditionsAndUndertakings extends AbstractSection
         $thisEntity = array();
         $thisEntity['id'] = $entity->getId();
         $thisEntity['version'] = $entity->getVersion();
-        $thisEntity['createdOn'] = $entity->getCreatedOn()->format('d/m/Y');
+        $thisEntity['createdOn'] = $entity->getCreatedOn() instanceof \DateTime ?
+                $entity->getCreatedOn()->format('d/m/Y') : '';
         $thisEntity['parentId'] = $parentId;
         $thisEntity['addedVia'] = $entity->getAddedVia()->getDescription();
         $thisEntity['isFulfilled'] = $entity->getIsFulfilled();
