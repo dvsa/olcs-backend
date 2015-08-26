@@ -149,7 +149,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $licenceVehicles->add($licenceVehicle);
 
         $this->repoMap['LicenceVehicle']->shouldReceive('fetchDuplicates')
-            ->with($licence, 'ABC123',  false)
+            ->with($licence, 'ABC123', false)
             ->andReturn($licenceVehicles);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
@@ -276,7 +276,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $licenceVehicles->add($licenceVehicle2);
 
         $this->repoMap['LicenceVehicle']->shouldReceive('fetchDuplicates')
-            ->with($licence, 'ABC123',  false)
+            ->with($licence, 'ABC123', false)
             ->andReturn($licenceVehicles);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
@@ -401,7 +401,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             );
 
         $this->repoMap['LicenceVehicle']->shouldReceive('fetchDuplicates')
-            ->with($licence, 'ABC123',  false)
+            ->with($licence, 'ABC123', false)
             ->andReturn([])
             ->shouldReceive('save')
             ->with(m::type(LicenceVehicle::class))
@@ -561,7 +561,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $licenceVehicles->add($licenceVehicle);
 
         $this->repoMap['LicenceVehicle']->shouldReceive('fetchDuplicates')
-            ->with($licence, 'ABC123',  false)
+            ->with($licence, 'ABC123', false)
             ->andReturn($licenceVehicles)
             ->shouldReceive('save')
             ->with($licenceVehicle)
