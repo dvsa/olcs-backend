@@ -18,7 +18,7 @@ class LinkedLicencesTest extends SubmissionSectionTest
     protected $expectedResult = [
         'data' => [
             'tables' => [
-                'linked-licences' => [
+                'linked-licences-app-numbers' => [
 
                 ]
             ]
