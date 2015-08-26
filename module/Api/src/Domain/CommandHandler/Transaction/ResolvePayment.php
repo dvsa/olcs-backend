@@ -22,6 +22,7 @@ use Dvsa\Olcs\Api\Service\CpmsHelperService as Cpms;
  * Resolve Payment
  *
  * @author Dan Eggleston <dan@stolenegg.com>
+ * @todo rename this?
  */
 final class ResolvePayment extends AbstractCommandHandler implements TransactionedInterface
 {
