@@ -162,7 +162,7 @@ return [
             'Submission ' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
             'IrfoPartner' => RepositoryFactory::class,
-            'Payment' => RepositoryFactory::class,
+            'Transaction' => RepositoryFactory::class,
             'TransportManager' => RepositoryFactory::class,
             'DocParagraph' => RepositoryFactory::class,
             'Opposition' => RepositoryFactory::class,
