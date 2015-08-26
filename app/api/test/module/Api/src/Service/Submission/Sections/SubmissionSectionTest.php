@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 use Dvsa\Olcs\Api\Entity\Person\Person;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
@@ -137,6 +138,8 @@ class SubmissionSectionTest extends MockeryTestCase
             $organisationLicences->add($licence);
         }
         $organisation->setLicences($organisationLicences);
+
+        $organisation->setLeadTcArea($this->generateTrafficArea('B'));
 
         return $organisation;
     }
@@ -276,6 +279,10 @@ class SubmissionSectionTest extends MockeryTestCase
             $this->generateApplication(75, $licence, Application::APPLICATION_STATUS_REFUSED)
         );
 
+        $applications->add(
+            $this->generateApplication(75, $licence, Application::APPLICATION_STATUS_GRANTED, true)
+        );
+
         return $applications;
     }
 
@@ -299,5 +306,15 @@ class SubmissionSectionTest extends MockeryTestCase
         );
 
         return $application;
+    }
+
+    protected function generateTrafficArea($id)
+    {
+        $ta = new TrafficArea();
+
+        $ta->setId($id);
+        $ta->setName('FOO');
+
+        return $ta;
     }
 }

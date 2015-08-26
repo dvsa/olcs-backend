@@ -78,6 +78,25 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
                             ]
                         ],
                         2 => [
+                            'id' => 34,
+                            'version' => 134,
+                            'createdOn' => '23/01/2011',
+                            'parentId' => 75,
+                            'addedVia' => 'cav_lic-desc',
+                            'isFulfilled' => 'Y',
+                            'isDraft' => 'N',
+                            'attachedTo' => 'cat_lic-desc',
+                            'OcAddress' => [
+                                'addressLine1' => '1_a1',
+                                'addressLine2' => '1_a2',
+                                'addressLine3' => '1_a3',
+                                'addressLine4' => null,
+                                'town' => '1t',
+                                'postcode' => 'pc11PC',
+                                'countryCode' => null
+                            ]
+                        ],
+                        3 => [
                             'id' => 88,
                             'version' => 188,
                             'createdOn' => '23/01/2011',
