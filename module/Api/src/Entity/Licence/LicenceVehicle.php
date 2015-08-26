@@ -58,5 +58,13 @@ class LicenceVehicle extends AbstractLicenceVehicle
     public function markAsDuplicate()
     {
         $this->setWarningLetterSeedDate(new DateTime());
+        $this->setWarningLetterSentDate(null);
+    }
+
+    public function updateDuplicateMark()
+    {
+        if ($this->getWarningLetterSeedDate() === null || $this->getWarningLetterSentDate() !== null) {
+            $this->markAsDuplicate();
+        }
     }
 }
