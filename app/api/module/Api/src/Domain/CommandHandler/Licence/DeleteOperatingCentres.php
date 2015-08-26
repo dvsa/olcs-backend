@@ -41,6 +41,11 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
         /** @var LicenceOperatingCentre $loc */
         foreach ($locs as $loc) {
             if (in_array($loc->getId(), $command->getIds())) {
+                $message = $loc->checkCanDelete();
+                if ($message) {
+                    throw new \Dvsa\Olcs\Api\Domain\Exception\BadRequestException(key($message));
+                }
+
                 $count++;
                 $this->getRepo('LicenceOperatingCentre')->delete($loc);
             }

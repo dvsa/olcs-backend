@@ -152,6 +152,30 @@ class DeleteOperatingCentreTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    public function testHandleCommandAppCannotDelete()
+    {
+        $data = [
+            'id' => 'A22',
+            'application' => 111
+        ];
+        $command = Cmd::create($data);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(111);
+
+        $this->repoMap['Application']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($application);
+
+        $this->references[ApplicationOperatingCentre::class][22]->setAction('A');
+        $this->references[ApplicationOperatingCentre::class][22]->shouldReceive('checkCanDelete')->with()->once()
+            ->andReturn(['ERROR' => 'Foo']);
+
+        $this->setExpectedException(BadRequestException::class);
+        $this->sut->handleCommand($command);
+    }
+
     public function testHandleCommandLicValid()
     {
         $data = [
@@ -200,5 +224,37 @@ class DeleteOperatingCentreTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandCannotDelete()
+    {
+        $data = [
+            'id' => 'L22',
+            'application' => 111
+        ];
+        $command = Cmd::create($data);
+
+        $aocs = new ArrayCollection();
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(111);
+        $application->shouldReceive('getOperatingCentres->matching')
+            ->andReturn($aocs);
+
+        $this->repoMap['Application']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($application);
+
+        /** @var OperatingCentre $oc */
+        $oc = m::mock(OperatingCentre::class)->makePartial();
+
+        $this->references[LicenceOperatingCentre::class][22]->setOperatingCentre($oc);
+        $this->references[LicenceOperatingCentre::class][22]->shouldReceive('checkCanDelete')->with()->once()
+            ->andReturn(['ERROR' => 'Foo']);
+
+        $this->setExpectedException(BadRequestException::class);
+
+        $this->sut->handleCommand($command);
     }
 }
