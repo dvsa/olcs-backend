@@ -33,17 +33,26 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
         /** @var Entity\Doc\Document $document */
         $document = $this->getRepo()->fetchUsingId($command);
 
-        if ($this->shouldEmail($document, $command)) {
-            return $this->sendEmail($document);
-        }
-
         $licence = $this->getLicenceFromDocument($document);
 
+        $translated = false;
+
+        // We always want a translation task if the translateToWelsh flag is on
         if ($licence !== null && $this->isOn($licence->getTranslateToWelsh())) {
-            return $this->createTranslationTask($document);
+            $translated = true;
+            $this->createTranslationTask($document);
         }
 
-        return $this->attemptPrint($document);
+        // If we can, and should send email -> Email
+        // Otherwise, if we are not translating to welsh -> Print
+        if ($this->shouldEmail($document, $command)) {
+            // Send the email
+            $this->sendEmail($document);
+        } elseif (!$translated) {
+            $this->attemptPrint($document);
+        }
+
+        return $this->result;
     }
 
     /**
@@ -162,20 +171,18 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
      * Attempt to print
      *
      * @param Entity\Doc\Document $document
-     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     protected function attemptPrint(Entity\Doc\Document $document)
     {
         $dtoData = ['fileIdentifier' => $document->getIdentifier(), 'jobName' => $document->getDescription()];
 
-        return $this->handleSideEffect(Enqueue::create($dtoData));
+        $this->result->merge($this->handleSideEffect(Enqueue::create($dtoData)));
     }
 
     /**
      * Create translation task
      *
      * @param Entity\Doc\Document $document
-     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     protected function createTranslationTask(Entity\Doc\Document $document)
     {
@@ -184,14 +191,13 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
             'licence' => $this->getLicenceFromDocument($document)->getId()
         ];
 
-        return $this->handleSideEffect(CreateTranslateToWelshTask::create($data));
+        $this->result->merge($this->handleSideEffect(CreateTranslateToWelshTask::create($data)));
     }
 
     /**
      * Send email
      *
      * @param Entity\Doc\Document $document
-     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     protected function sendEmail(Entity\Doc\Document $document)
     {
@@ -203,6 +209,6 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
             'type' => CreateCorrespondenceRecord::TYPE_STANDARD,
         ];
 
-        return $this->handleSideEffect(CreateCorrespondenceRecord::create($dtoData));
+        $this->result->merge($this->handleSideEffect(CreateCorrespondenceRecord::create($dtoData)));
     }
 }
