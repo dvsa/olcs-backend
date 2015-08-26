@@ -14,8 +14,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateWorkshop;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateWorkshop as Cmd;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Workshop\UpdateWorkshop as WorkshopUpdateWorkshop;
 
 /**
@@ -61,12 +59,16 @@ class UpdateWorkshopTest extends CommandHandlerTestCase
         ];
         $result1 = new Result();
         $result1->addMessage('Updated workshop');
+        $result1->setFlag('hasChanged', true);
 
         $this->expectedSideEffect(WorkshopUpdateWorkshop::class, $expectedData, $result1);
 
         $expectedData = [
             'id' => 111,
-            'section' => 'safety'
+            'section' => 'safety',
+            'data' => [
+                'hasChanged' => true
+            ]
         ];
         $result2 = new Result();
         $result2->addMessage('Section updated');

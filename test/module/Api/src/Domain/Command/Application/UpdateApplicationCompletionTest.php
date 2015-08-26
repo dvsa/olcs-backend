@@ -23,6 +23,6 @@ class UpdateApplicationCompletionTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(111, $command->getId());
         $this->assertEquals('foo_section', $command->getSection());
-        $this->assertEquals(['id' => 111, 'section' => 'foo_section'], $command->getArrayCopy());
+        $this->assertEquals(['id' => 111, 'section' => 'foo_section', 'data' => []], $command->getArrayCopy());
     }
 }

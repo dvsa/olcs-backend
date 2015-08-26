@@ -20,6 +20,8 @@ final class UpdateVariationCompletion extends AbstractCommand
 
     protected $section;
 
+    protected $data = [];
+
     public function getId()
     {
         return $this->id;
@@ -28,5 +30,13 @@ final class UpdateVariationCompletion extends AbstractCommand
     public function getSection()
     {
         return $this->section;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 }

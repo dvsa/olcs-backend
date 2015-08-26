@@ -2280,6 +2280,76 @@ class ApplicationEntityTest extends EntityTester
         $this->assertEquals($expected, $application->allowFeePayments());
     }
 
+    public function testIsPsvDowngradeGoods()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isGoods')
+            ->andReturn(true);
+
+        $this->assertFalse($application->isPsvDowngrade());
+    }
+
+    public function testIsPsvDowngradeNotRestricted()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isGoods')->andReturn(false);
+        $application->shouldReceive('isRestricted')->andReturn(false);
+
+        $this->assertFalse($application->isPsvDowngrade());
+    }
+
+    public function testIsPsvDowngrade()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isGoods')->andReturn(false);
+        $application->shouldReceive('isRestricted')->andReturn(true);
+        $application->shouldReceive('getLicence->isRestricted')->andReturn(false);
+
+        $this->assertTrue($application->isPsvDowngrade());
+    }
+
+    public function testHasAuthChangedNew()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isNew')->andReturn(true);
+
+        $this->assertFalse($application->hasAuthChanged());
+    }
+
+    public function testHasAuthChanged()
+    {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setTotAuthVehicles(9);
+
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isNew')->andReturn(false);
+        $application->setTotAuthVehicles(10);
+        $application->setLicence($licence);
+
+        $this->assertTrue($application->hasAuthChanged());
+    }
+
+    public function testHasAuthChangedWithoutChange()
+    {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setTotAuthVehicles(10);
+
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isNew')->andReturn(false);
+        $application->setTotAuthVehicles(10);
+        $application->setLicence($licence);
+
+        $this->assertFalse($application->hasAuthChanged());
+    }
+
     public function allowFeePaymentsProvider()
     {
         return [

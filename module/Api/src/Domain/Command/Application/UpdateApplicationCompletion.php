@@ -16,4 +16,13 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class UpdateApplicationCompletion extends \Dvsa\Olcs\Transfer\Command\Application\UpdateCompletion
 {
+    protected $data = [];
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
 }

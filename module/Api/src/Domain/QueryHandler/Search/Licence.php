@@ -64,7 +64,7 @@ class Licence extends AbstractQueryHandler
                 'totalAuthTrailers' => $licence->getTotAuthTrailers(),
                 'totalVehiclesInPossession' => $licence->getActiveVehiclesCount(),
                 'totalPiRecords' => $licence->getPiRecordCount(),
-                'activeCommunityLicences' => count($licence->getActiveCommunityLicences($licence)),
+                'activeCommunityLicences' => count($licence->getActiveCommunityLicences()),
                 'trafficArea' => $this->result(
                     $licence->getTrafficArea()
                 )->serialize(),
