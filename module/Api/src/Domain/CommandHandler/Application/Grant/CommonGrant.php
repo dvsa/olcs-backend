@@ -19,6 +19,7 @@ use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Licence\PrintLicence;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\Schedule41 as GrantSchedule41;
 
 /**
  * Common Grant
@@ -33,7 +34,7 @@ final class CommonGrant extends AbstractCommandHandler implements TransactionedI
     {
         $result = new Result();
 
-        /** @var ApplicationEntity $application */
+        /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($command);
 
         $result->merge($this->proxyCommand($command, CancelAllInterimFees::class));
@@ -42,6 +43,12 @@ final class CommonGrant extends AbstractCommandHandler implements TransactionedI
         $result->merge($this->proxyCommand($command, GrantTransportManagerCmd::class));
         $result->merge($this->proxyCommand($command, GrantPeopleCmd::class));
         $result->merge($this->handleSideEffect(PrintLicence::create(['id' => $application->getLicence()->getId()])));
+
+        if ($application->isGoods()) {
+            $result->merge(
+                $this->handleSideEffect(GrantSchedule41::create(['id' => $application->getId()]))
+            );
+        }
 
         return $result;
     }
