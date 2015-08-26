@@ -156,7 +156,10 @@ class Fee extends AbstractFee
     {
         $ft = $this->getFeeTransactions()->last();
         if ($ft) {
-            return $ft->getTransaction()->getProcessedByUser()->getLoginId();
+            $user = $ft->getTransaction()->getProcessedByUser();
+            if ($user) {
+                return $user->getLoginId();
+            }
         }
     }
 
