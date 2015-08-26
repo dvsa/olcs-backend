@@ -5,19 +5,19 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Payment;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
-use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
+use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -34,7 +34,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
      */
     protected $feesHelper;
 
-    protected $repoServiceName = 'Payment';
+    protected $repoServiceName = 'Transaction';
 
     protected $extraRepos = ['Fee'];
 
@@ -99,32 +99,32 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $feesToPay
         );
 
-        // create payment
-        $payment = new PaymentEntity();
-        $payment->setGuid($response['receipt_reference']);
-        $payment->setGatewayUrl($response['gateway_url']);
-        $payment->setStatus($this->getRepo()->getRefdataReference(PaymentEntity::STATUS_OUTSTANDING));
+        // create transaction
+        $transaction = new TransactionEntity();
+        $transaction
+            ->setReference($response['receipt_reference'])
+            ->setGatewayUrl($response['gateway_url'])
+            ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_OUTSTANDING))
+            ->setType($this->getRepo()->getRefdataReference(TransactionEntity::TYPE_PAYMENT))
+            ->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()));
 
-        // create feePayment records
-        $feePayments = new ArrayCollection();
-        $payment->setFeePayments($feePayments);
+        // create feeTransaction record(s)
+        $feeTransactions = new ArrayCollection();
+        $transaction->setFeeTransactions($feeTransactions);
         foreach ($feesToPay as $fee) {
-            $feePayment = new FeePaymentEntity();
-            $feePayment
+            $feeTransaction = new FeeTransactionEntity();
+            $feeTransaction
                 ->setFee($fee)
-                ->setFeeValue($fee->getAmount())
-                ->setPayment($payment); // needed for cascade persist to work
-            $feePayments->add($feePayment);
-
-            // update payment method on fee records
-            $fee->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()));
+                ->setAmount($fee->getAmount())
+                ->setTransaction($transaction); // needed for cascade persist to work
+            $feeTransactions->add($feeTransaction);
         }
 
         // persist
-        $this->getRepo()->save($payment);
+        $this->getRepo()->save($transaction);
 
-        $result->addId('payment', $payment->getId());
-        $result->addMessage('Payment record created');
+        $result->addId('transaction', $transaction->getId());
+        $result->addMessage('Transaction record created');
 
         return $result;
     }
@@ -330,27 +330,27 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     {
         $paid = false;
 
-        foreach ($fee->getFeePayments() as $fp) {
-            if ($fp->getPayment()->isOutstanding()) {
+        foreach ($fee->getFeeTransactions() as $ft) {
+            if ($ft->getTransaction()->isOutstanding()) {
 
-                $paymentId = $fp->getPayment()->getId();
+                $transactionId = $ft->getTransaction()->getId();
 
                 // resolve outstanding payment
                 $dto = ResolvePaymentCommand::create(
                     [
-                    'id' => $paymentId,
-                    'paymentMethod' => $fee->getPaymentMethod()->getId(),
+                        'id' => $transactionId,
+                        'paymentMethod' => $ft->getTransaction()->getPaymentMethod()->getId(),
                     ]
                 );
                 $this->getCommandHandler()->handleCommand($dto);
 
                 // check payment status
-                $payment = $this->getRepo()->fetchById($paymentId);
+                $transaction = $this->getRepo()->fetchById($transactionId);
                 $result->addMessage(
-                    sprintf('payment %d resolved as %s', $paymentId, $payment->getStatus()->getDescription())
+                    sprintf('transaction %d resolved as %s', $transactionId, $transaction->getStatus()->getDescription())
                 );
 
-                if ($payment->isPaid()) {
+                if ($transaction->isPaid()) {
                     $paid = true;
                 }
             }

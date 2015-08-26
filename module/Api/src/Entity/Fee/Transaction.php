@@ -25,6 +25,7 @@ class Transaction extends AbstractTransaction
     const STATUS_PAID = 'pay_s_pd';
 
     const TYPE_WAIVE = 'trt_waive';
+    const TYPE_PAYMENT = 'trt_payment';
 
     /**
      * @return boolean

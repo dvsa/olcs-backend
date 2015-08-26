@@ -516,11 +516,10 @@ return [
     TransferCommand\Fee\UpdateFee::class => CommandHandler\Fee\UpdateFee::class,
     TransferCommand\Fee\CreateMiscellaneousFee::class => CommandHandler\Fee\CreateMiscellaneousFee::class,
 
-    // Domain - Payment
-    Command\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
-    TransferCommand\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
-    TransferCommand\Payment\CompletePayment::class => CommandHandler\Payment\CompletePayment::class,
-    Command\Payment\ResolvePayment::class => CommandHandler\Payment\ResolvePayment::class,
+    // Domain - Transaction (formerly 'Payment')
+    TransferCommand\Transaction\PayOutstandingFees::class => CommandHandler\Transaction\PayOutstandingFees::class,
+    TransferCommand\Transaction\CompletePayment::class => CommandHandler\Transaction\CompletePayment::class,
+    Command\Transaction\ResolvePayment::class => CommandHandler\Transaction\ResolvePayment::class,
 
     // Domain - ApplicationCompletion
     AppCompCommand\UpdateTypeOfLicenceStatus::class => AppCompCommandHandler\UpdateTypeOfLicenceStatus::class,
