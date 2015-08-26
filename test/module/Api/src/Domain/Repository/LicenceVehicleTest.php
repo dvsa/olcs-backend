@@ -445,7 +445,6 @@ class LicenceVehicleTest extends RepositoryTestCase
             . ' AND l.id != [[111]]'
             . ' AND l.goodsOrPsv = [[lcat_gv]]'
             . ' AND l.status IN ["lsts_curtailed","lsts_valid","lsts_suspended"]',
-
             $this->query
         );
     }
