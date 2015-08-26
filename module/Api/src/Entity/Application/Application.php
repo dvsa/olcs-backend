@@ -1320,4 +1320,10 @@ class Application extends AbstractApplication
 
         return false;
     }
+
+    public function isUnderConsideration()
+    {
+        return !is_null($this->getStatus())
+            && $this->getStatus()->getId() === self::APPLICATION_STATUS_UNDER_CONSIDERATION;
+    }
 }
