@@ -39,58 +39,34 @@ final class PrintDiscs extends AbstractCommandHandler implements
         ]
     ];
 
-    protected $documentService;
-
-    protected $queryHandlerManager;
-
-    protected $contentStore;
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->documentService = $serviceLocator->getServiceLocator()->get('Document');
-        $this->queryHandlerManager = $serviceLocator->getServiceLocator()->get('QueryHandlerManager');
-        $this->contentStore = $serviceLocator->getServiceLocator()->get('ContentStore');
-
-        return parent::createService($serviceLocator);
-    }
-
     public function handleCommand(CommandInterface $command)
     {
         $commandResult = new Result();
 
         $bookmark = $this->templateParams[$command->getType()]['bookmark'];
         $filename = $this->templateParams[$command->getType()]['template'] . '.rtf';
-        $template = '/templates/' . $filename;
-        $discsToPrint = $command->getDiscs();
-        $documentGenerator = $this->getDocumentGenerator();
 
+        $discsToPrint = $command->getDiscs();
         $queryData = [];
         foreach ($discsToPrint as $disc) {
             $queryData[] = $disc->getId();
         }
-        $file = $this->contentStore->read($template);
-        $queries = $this->documentService->getBookmarkQueries($file, $queryData);
-        $result = [];
 
-        foreach ($queries as $token => $query) {
-            $list = [];
-            foreach ($query as $qry) {
-                try {
-                    $list[] = $this->queryHandlerManager->handleQuery($qry);
-                } catch (\Exception $ex) {
-                    throw new \Exception('Error fetching data for bookmark: ' . $token . ': ' . $ex->getMessage());
-                }
-            }
-            $result[$token] = $list;
-        }
-
+        $knownValues = [
+            $bookmark => []
+        ];
         $discNumber = (int) $command->getStartNumber();
-        // NB the loop-by-reference here
-        foreach ($result[$bookmark] as &$row) {
-            $row['discNo'] = $discNumber ++;
+        for ($i = 0; $i < count($discsToPrint); $i++) {
+            $knownValues[$bookmark][$i]['discNo'] = $discNumber++;
         }
 
-        $document = $this->documentService->populateBookmarks($file, $result);
+        $documentGenerator = $this->getDocumentGenerator();
+        $document = $documentGenerator->generateFromTemplate(
+            $this->templateParams[$command->getType()]['template'],
+            $queryData,
+            $knownValues
+        );
+
         $storedFile = $documentGenerator->uploadGeneratedContent($document, 'documents', $filename);
 
         $printQueue = EnqueueFileCommand::create(
