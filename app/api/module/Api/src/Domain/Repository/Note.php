@@ -31,7 +31,7 @@ class Note extends AbstractRepository
             $qb->setParameter('caseId', $query->getCase());
         }
 
-        if ($query->getCasesMultiple() !== null) {
+        if ($query->getCasesMultiple() !== null && count($query->getCasesMultiple()) > 0) {
             $qb->andWhere($this->alias . '.case IN (:casesMultiple)');
             $qb->setParameter('casesMultiple', $query->getCasesMultiple());
         }
