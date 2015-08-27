@@ -4,9 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Statement;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
-use Dvsa\Olcs\Api\Entity\Person\Person;
-use Dvsa\Olcs\Api\Entity\Prohibition\Prohibition;
 
 /**
  * Class ProhibiitonHistory
@@ -53,29 +50,5 @@ final class Statements extends AbstractSection
                 ]
             ]
         ];
-    }
-
-    /**
-     * Extract personData if exists
-     * @param $contactDetails
-     * @return array
-     */
-    private function extractPerson($contactDetails = null)
-    {
-        $personData = [
-            'title' => '',
-            'forename' => '',
-            'familyName' => ''
-        ];
-
-        if ($contactDetails instanceof ContactDetails && ($contactDetails->getPerson() instanceof Person)) {
-            $person = $contactDetails->getPerson();
-            $personData = [
-                'title' => !empty($person->getTitle()) ? $person->getTitle()->getDescription() : '',
-                'forename' => $person->getForename(),
-                'familyName' => $person->getFamilyName()
-            ];
-        }
-        return $personData;
     }
 }
