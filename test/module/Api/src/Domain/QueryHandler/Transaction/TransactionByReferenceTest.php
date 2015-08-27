@@ -1,30 +1,30 @@
 <?php
 
 /**
- * Payment by reference Test
+ * Transaction by reference Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Payment;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Transaction;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Payment\PaymentByReference as QueryHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Transaction\TransactionByReference as QueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
-use Dvsa\Olcs\Api\Domain\Repository\Payment as PaymentRepo;
-use Dvsa\Olcs\Transfer\Query\Payment\PaymentByReference as Qry;
+use Dvsa\Olcs\Api\Domain\Repository\Transaction as PaymentRepo;
+use Dvsa\Olcs\Transfer\Query\Transaction\TransactionByReference as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * Payment by reference Test
+ * Transaction by reference Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class PaymentByReferenceTest extends QueryHandlerTestCase
+class TransactionByReferenceTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
         $this->sut = new QueryHandler();
-        $this->mockRepo('Payment', PaymentRepo::class);
+        $this->mockRepo('Transaction', PaymentRepo::class);
 
         parent::setUp();
     }
@@ -37,7 +37,7 @@ class PaymentByReferenceTest extends QueryHandlerTestCase
 
         $mockPayment = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
 
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('fetchByReference')
             ->with($paymentRef)
             ->once()

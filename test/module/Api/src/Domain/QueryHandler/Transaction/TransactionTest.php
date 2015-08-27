@@ -1,30 +1,30 @@
 <?php
 
 /**
- * Payment Test
+ * Transaction Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Payment;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Transaction;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Payment\Payment as QueryHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Transaction\Transaction as QueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
-use Dvsa\Olcs\Api\Domain\Repository\Payment as PaymentRepo;
-use Dvsa\Olcs\Transfer\Query\Payment\Payment as Qry;
+use Dvsa\Olcs\Api\Domain\Repository\Transaction as PaymentRepo;
+use Dvsa\Olcs\Transfer\Query\Transaction\Transaction as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * Payment Test
+ * Transaction Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class PaymentTest extends QueryHandlerTestCase
+class TransactionTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
         $this->sut = new QueryHandler();
-        $this->mockRepo('Payment', PaymentRepo::class);
+        $this->mockRepo('Transaction', PaymentRepo::class);
 
         parent::setUp();
     }
@@ -35,7 +35,7 @@ class PaymentTest extends QueryHandlerTestCase
 
         $mockPayment = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
 
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('fetchUsingId')
             ->with($query)
             ->once()
