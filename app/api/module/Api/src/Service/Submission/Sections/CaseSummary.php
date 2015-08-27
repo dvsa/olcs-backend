@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * Class CaseSummary
@@ -25,27 +27,73 @@ final class CaseSummary extends AbstractSection
         ];
 
         // organisation data
-        $data['organisationName'] = !empty($organisation) ? $organisation->getName() : '';
-        $data['isMlh'] = !empty($organisation) ? $organisation->isMlh() : '';
-        $data['organisationType'] = !empty($organisation) ? $organisation->getType()->getDescription() : '';
-
-        $data['businessType'] = $organisation->getNatureOfBusiness();
+        $data += $this->extractOrganisationData($organisation);
 
         // licence data
-        $data['licNo'] = !empty($licence) ? $licence->getLicNo() : '';
-        $data['licenceStartDate'] = !empty($licence) ? $licence->getInForceDate() : '';
-        $data['licenceType'] = !empty($licence) ? $licence->getLicenceType()->getDescription() : '';
-        $data['goodsOrPsv'] = !empty($licence) ? $licence->getGoodsOrPsv()->getDescription() : '';
-        $data['licenceStatus'] = !empty($licence) ? $licence->getStatus()->getDescription() : '';
-        $data['totAuthorisedVehicles'] = !empty($licence) ? $licence->getTotAuthVehicles() : '';
-        $data['totAuthorisedTrailers'] = !empty($licence) ? $licence->getTotAuthTrailers() : '';
-        $data['vehiclesInPossession'] = !empty($licence) ? $licence->getTotAuthTrailers() : '';
-        $data['vehiclesInPossession'] = !empty($licence) ? $licence->getActiveVehiclesCount() : '';
-        $data['trailersInPossession'] = !empty($licence) ? $licence->getTotAuthTrailers() : '';
+        $data += $this->extractLicenceData($licence);
 
         // application data
         $data['serviceStandardDate'] = !empty($application) ? $application->getTargetCompletionDate() : '';
 
         return ['data' => ['overview' => $data]];
+    }
+
+    /**
+     * @param $data
+     * @param null $licence
+     * @return array
+     */
+    private function extractLicenceData($licence = null)
+    {
+        $licenceData = [];
+        $licenceData['licNo'] = '';
+        $licenceData['licenceStartDate'] = '';
+        $licenceData['licenceType'] = '';
+        $licenceData['goodsOrPsv'] = '';
+        $licenceData['licenceStatus'] = '';
+        $licenceData['totAuthorisedVehicles'] = '';
+        $licenceData['totAuthorisedTrailers'] = '';
+        $licenceData['vehiclesInPossession'] = '';
+        $licenceData['vehiclesInPossession'] = '';
+        $licenceData['trailersInPossession'] = '';
+
+        if (!empty($licence) && $licence instanceof Licence) {
+            $licenceData['licNo'] = $licence->getLicNo();
+            $licenceData['licenceStartDate'] = $licence->getInForceDate();
+            $licenceData['licenceType'] = !empty($licence->getLicenceType()) ?
+                $licence->getLicenceType()->getDescription() : '';
+            $licenceData['goodsOrPsv'] = !empty($licence->getGoodsOrPsv()) ? $licence->getGoodsOrPsv()->getDescription() : '';
+            $licenceData['licenceStatus'] = !empty($licence->getGoodsOrPsv()) ? $licence->getStatus()->getDescription() : '';
+            $licenceData['totAuthorisedVehicles'] = $licence->getTotAuthVehicles();
+            $licenceData['totAuthorisedTrailers'] = $licence->getTotAuthTrailers();
+            $licenceData['vehiclesInPossession'] = $licence->getTotAuthTrailers();
+            $licenceData['vehiclesInPossession'] = $licence->getActiveVehiclesCount();
+            $licenceData['trailersInPossession'] = $licence->getTotAuthTrailers();
+        }
+
+        return $licenceData;
+    }
+
+    /**
+     * @param $data
+     * @param null $licence
+     * @return array
+     */
+    private function extractOrganisationData($organisation = null)
+    {
+        $organisationData = [];
+        $organisationData['organisationName'] = '';
+        $organisationData['isMlh'] = '';
+        $organisationData['organisationType'] = '';
+        $organisationData['businessType'] = '';
+
+        if (!empty($organisation) && ($organisation instanceof Organisation)) {
+            $organisationData['organisationName'] = $organisation->getName();
+            $organisationData['isMlh'] = $organisation->isMlh();
+            $organisationData['organisationType'] = $organisation->getType()->getDescription();
+            $organisationData['businessType'] = $organisation->getNatureOfBusiness();
+        }
+
+        return $organisationData;
     }
 }
