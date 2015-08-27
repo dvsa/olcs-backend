@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
+
 /**
  * Update Submission
  */
