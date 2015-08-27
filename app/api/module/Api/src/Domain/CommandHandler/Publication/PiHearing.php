@@ -214,10 +214,13 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
      */
     public function extractHearingData($hearing)
     {
+        $piVenue = $hearing->getPiVenue();
+        $hearingDate = $hearing->getHearingDate();
+
         return [
-            'piVenue' => $hearing->getPiVenue()->getId(),
+            'piVenue' => ($piVenue === null ? $piVenue : $piVenue->getId()),
             'piVenueOther' => $hearing->getPiVenueOther(),
-            'hearingDate' => $hearing->getHearingDate(),
+            'hearingDate' => $hearingDate->format('Y-m-d H:i:s'),
             'id' => $hearing->getId()
         ];
     }
