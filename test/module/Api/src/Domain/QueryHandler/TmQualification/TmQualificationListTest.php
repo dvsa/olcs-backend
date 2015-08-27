@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TmQualification;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\TmQualification\TmQualificationsList as QueryHandler;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Transfer\Query\TmQualification\TmQualificationsList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -27,6 +28,7 @@ class TmQualificationListTest extends QueryHandlerTestCase
         $this->sut = new QueryHandler();
         $this->mockRepo('TmQualification', TmQualificationRepo::class);
         $this->mockRepo('Document', DocumentRepo::class);
+        $this->mockRepo('TransportManager', DocumentRepo::class);
 
         parent::setUp();
     }
@@ -34,6 +36,9 @@ class TmQualificationListTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $query = Query::create(['transportManager' => 1]);
+
+        $this->repoMap['TransportManager']->shouldReceive('fetchById')
+            ->with(1)->andReturn(['tm']);
 
         $this->repoMap['TmQualification']
             ->shouldReceive('fetchList')
@@ -57,7 +62,10 @@ class TmQualificationListTest extends QueryHandlerTestCase
             [
                 'result'    => ['foo'],
                 'count'     => 1,
-                'documents' => ['doc']
+                'documents' => ['doc'],
+                'transportManager' => [
+                    'tm'
+                ]
             ],
             $this->sut->handleQuery($query)
         );
