@@ -108,7 +108,8 @@ final class Penalties extends AbstractSection
             $siData['checkDate'] = $si->getCheckDate();
             $siData['category'] = $si->getSiCategory();
             $siData['categoryType'] = $si->getSiCategoryType()->getDescription();
-            $siData['memberState'] = !empty($si->getMemberStateCode()) ? $si->getMemberStateCode()->getCountryDesc() : '';
+            $siData['memberState'] =
+                !empty($si->getMemberStateCode()) ? $si->getMemberStateCode()->getCountryDesc() : '';
         }
 
         return $siData;
