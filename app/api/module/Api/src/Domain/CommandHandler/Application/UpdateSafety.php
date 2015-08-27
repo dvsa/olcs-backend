@@ -52,7 +52,13 @@ final class UpdateSafety extends AbstractCommandHandler implements Transactioned
 
         $result->addMessage('Application updated');
 
-        $result->merge($this->handleSideEffect(LicenceUpdateSafety::create($command->getLicence())));
+        $licenceData = $command->getLicence();
+
+        if ((int)$application->getTotAuthTrailers() < 1) {
+            $licenceData['safetyInsTrailers'] = 0;
+        }
+
+        $result->merge($this->handleSideEffect(LicenceUpdateSafety::create($licenceData)));
 
         $data = [
             'id' => $command->getId(),
