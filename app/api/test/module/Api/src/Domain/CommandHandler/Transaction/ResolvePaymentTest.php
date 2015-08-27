@@ -5,15 +5,15 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Payment;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Payment\ResolvePayment;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\ResolvePayment;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
-use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\AbstractRepository as Repo;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -38,7 +38,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         ];
 
         $this->sut = new ResolvePayment();
-        $this->mockRepo('Payment', Repo::class);
+        $this->mockRepo('Transaction', Repo::class);
         $this->mockRepo('Fee', Repo::class);
 
         $this->refData = [
@@ -100,7 +100,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('fetchUsingId')
             ->once()
             ->with($command)
@@ -112,7 +112,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->with($guid)
             ->andReturn(CpmsHelper::PAYMENT_SUCCESS);
 
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('save')
             ->once()
             ->with($payment);
@@ -177,7 +177,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('fetchUsingId')
             ->once()
             ->with($command)
@@ -189,7 +189,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->with($guid)
             ->andReturn($cpmsStatus);
 
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('save')
             ->once()
             ->with($payment);
@@ -257,7 +257,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('fetchUsingId')
             ->once()
             ->with($command)
