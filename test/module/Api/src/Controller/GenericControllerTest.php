@@ -336,6 +336,39 @@ class GenericControllerTest extends TestCase
         $this->assertSame($viewModel, $response);
     }
 
+    public function testUpdateConflict()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(
+            409,
+            [
+                'VER_CONF' => 'The resource you are editing is out of date'
+            ]
+        )->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow(new Exception\VersionConflictException('foo'));
+
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->update(25, []);
+
+        $this->assertSame($viewModel, $response);
+    }
+
     public function testUpdateServerError()
     {
         $viewModel = new JsonModel();
@@ -440,6 +473,39 @@ class GenericControllerTest extends TestCase
         $mockCommandHandler->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
+
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->replaceList(25, []);
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testReplaceListConflict()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(
+            409,
+            [
+                'VER_CONF' => 'The resource you are editing is out of date'
+            ]
+        )->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow(new Exception\VersionConflictException('foo'));
 
         $mockLogger = $this->mockLogger();
 
