@@ -3,12 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
 /**
- * Class RegistrationDetailsTest
+ * Class NoDataCommentsOnlyTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class RegistrationDetailsTest extends SubmissionSectionTest
+class NoDataCommentsOnly extends SubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\RegistrationDetails';
+    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly';
 
     /**
      * Filter provider
