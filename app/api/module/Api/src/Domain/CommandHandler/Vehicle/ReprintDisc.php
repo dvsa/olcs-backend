@@ -27,14 +27,15 @@ final class ReprintDisc extends AbstractCommandHandler implements TransactionedI
     {
         $ids = [];
 
-        foreach ($command->getIds() as $id) {
-            /** @var LicenceVehicle $licenceVehicle */
-            $licenceVehicle = $this->getRepo()->fetchById($id);
+        $licenceVehicles = $this->getRepo()->fetchByIds($command->getIds());
+
+        /** @var LicenceVehicle $licenceVehicle */
+        foreach ($licenceVehicles as $licenceVehicle) {
 
             $activeDisc = $licenceVehicle->getActiveDisc();
 
             if ($activeDisc !== null && $activeDisc->getDiscNo() !== null) {
-                $ids[] = $id;
+                $ids[] = $licenceVehicle->getId();
             }
         }
 
