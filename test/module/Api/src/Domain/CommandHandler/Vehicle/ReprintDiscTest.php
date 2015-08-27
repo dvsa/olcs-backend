@@ -62,23 +62,20 @@ class ReprintDiscTest extends CommandHandlerTestCase
 
         /** @var LicenceVehicle $licenceVehicle1 */
         $licenceVehicle1 = m::mock(LicenceVehicle::class)->makePartial();
+        $licenceVehicle1->setId(111);
         $licenceVehicle1->shouldReceive('getActiveDisc')->andReturn(null);
         /** @var LicenceVehicle $licenceVehicle2 */
         $licenceVehicle2 = m::mock(LicenceVehicle::class)->makePartial();
         $licenceVehicle2->shouldReceive('getActiveDisc')->andReturn($disc1);
+        $licenceVehicle2->setId(222);
         /** @var LicenceVehicle $licenceVehicle3 */
         $licenceVehicle3 = m::mock(LicenceVehicle::class)->makePartial();
         $licenceVehicle3->shouldReceive('getActiveDisc')->andReturn($disc2);
+        $licenceVehicle3->setId(333);
 
-        $this->repoMap['LicenceVehicle']->shouldReceive('fetchById')
-            ->with(111)
-            ->andReturn($licenceVehicle1)
-            ->shouldReceive('fetchById')
-            ->with(222)
-            ->andReturn($licenceVehicle2)
-            ->shouldReceive('fetchById')
-            ->with(333)
-            ->andReturn($licenceVehicle3);
+        $this->repoMap['LicenceVehicle']->shouldReceive('fetchByIds')
+            ->with([111, 333, 222])
+            ->andReturn([$licenceVehicle1, $licenceVehicle3, $licenceVehicle2]);
 
         $data['ids'] = [333];
         $result1 = new Result();
