@@ -97,6 +97,13 @@ class TaskSearchView extends AbstractRepository
             $qb->setParameter('busReg', $query->getBusReg());
         }
 
+        if ($query->getOrganisation() !== null) {
+            $idExpressions[] = $qb->expr()->eq(
+                $this->alias . '.irfoOrganisationId', ':organisation'
+            );
+            $qb->setParameter('organisation', $query->getOrganisation());
+        }
+
         if (!empty($idExpressions)) {
             $expr = $qb->expr();
 
