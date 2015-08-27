@@ -35,11 +35,11 @@ final class ConvictionFpnOffenceHistory extends AbstractSection
             $thisRow['defendantType'] = $entity->getDefendantType()->getDescription();
             $thisRow['name'] = $this->determineName($entity);
             $thisRow['categoryText'] = $entity->getCategoryText();
-            $thisRow['court'] = $entity->getOffenceDate();
-            $thisRow['penalty'] = $entity->getOffenceDate();
-            $thisRow['msi'] = $entity->getOffenceDate();
-            $thisRow['isDeclared'] = $entity->getOffenceDate();
-            $thisRow['isDealtWith'] = $entity->getOffenceDate();
+            $thisRow['court'] = $entity->getCourt();
+            $thisRow['penalty'] = $entity->getPenalty();
+            $thisRow['msi'] = $entity->getMsi();
+            $thisRow['isDeclared'] = $entity->getIsDeclared();
+            $thisRow['isDealtWith'] = $entity->getIsDealtWith();
 
             $data[] = $thisRow;
 

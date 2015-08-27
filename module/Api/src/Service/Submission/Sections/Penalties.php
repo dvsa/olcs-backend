@@ -106,7 +106,7 @@ final class Penalties extends AbstractSection
             $siData['notificationNumber'] = $si->getNotificationNumber();
             $siData['infringementDate'] = $si->getInfringementDate();
             $siData['checkDate'] = $si->getCheckDate();
-            $siData['category'] = $si->getSiCategory();
+            $siData['category'] = $si->getSiCategory()->getDescription();
             $siData['categoryType'] = $si->getSiCategoryType()->getDescription();
             $siData['memberState'] =
                 !empty($si->getMemberStateCode()) ? $si->getMemberStateCode()->getCountryDesc() : '';
