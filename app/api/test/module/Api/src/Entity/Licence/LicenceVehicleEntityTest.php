@@ -124,4 +124,16 @@ class LicenceVehicleEntityTest extends EntityTester
         $this->assertEquals($today->format('Y-m-d'), $entity->getWarningLetterSeedDate()->format('Y-m-d'));
         $this->assertNull($entity->getWarningLetterSentDate());
     }
+
+    public function testRemoveDuplicateMark()
+    {
+        /** @var Entity $entity */
+        $entity = $this->instantiate(Entity::class);
+
+        $entity->setWarningLetterSeedDate(new DateTime('2015-01-01'));
+
+        $entity->removeDuplicateMark();
+
+        $this->assertNull($entity->getWarningLetterSeedDate());
+    }
 }
