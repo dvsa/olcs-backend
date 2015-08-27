@@ -349,6 +349,10 @@ return [
     // Organisation Person
    TransferQuery\OrganisationPerson\GetSingle::class => QueryHandler\OrganisationPerson\GetSingle::class,
 
+    // Disc Printing
+    TransferQuery\DiscSequence\DiscPrefixes::class => QueryHandler\DiscSequence\DiscPrefixes::class,
+    TransferQuery\DiscSequence\DiscsNumbering::class => QueryHandler\DiscSequence\DiscsNumbering::class,
+
     // Person
     TransferQuery\Person\Person::class => QueryHandler\Person\Person::class,
 ];

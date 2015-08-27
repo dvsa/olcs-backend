@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\Stdlib\ArrayUtils;
 
 /**
  * Document Generator
@@ -75,8 +76,7 @@ class DocumentGenerator implements ServiceLocatorAwareInterface
                 $result[$token] = $list;
             }
         }
-
-        $result = array_merge($result, $knownValues);
+        $result = ArrayUtils::merge($result, $knownValues, true);
 
         return $documentService->populateBookmarks($file, $result);
     }
