@@ -7943,6 +7943,7 @@ CREATE VIEW task_search_view AS
       l.lic_no,
       l.id lic_id,
       tm.id tm_id,
+      t.irfo_organisation_id irfo_organisation_id,
       irfo.name irfo_op_name,
       o.name op_name,
       tmp.family_name,
