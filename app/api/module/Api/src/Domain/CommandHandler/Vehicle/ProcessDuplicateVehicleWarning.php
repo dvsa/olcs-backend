@@ -7,7 +7,9 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
+use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
@@ -54,8 +56,13 @@ final class ProcessDuplicateVehicleWarning extends AbstractCommandHandler implem
             'isExternal'  => false
         ];
 
-        // @todo Check if we just save and print, or whether we email
-        //$this->result->merge($this->handleSideEffect(DispatchDocument::create($data)));
+        $this->result->merge($this->handleSideEffect(CreateDocumentSpecific::create($data)));
+
+        $data = [
+            'fileIdentifier' => $storedFile->getIdentifier(),
+            'jobName' => $description
+        ];
+        $this->result->merge($this->handleSideEffect(Enqueue::create($data)));
 
         $licenceVehicle->setWarningLetterSentDate(new DateTime());
         $this->getRepo()->save($licenceVehicle);

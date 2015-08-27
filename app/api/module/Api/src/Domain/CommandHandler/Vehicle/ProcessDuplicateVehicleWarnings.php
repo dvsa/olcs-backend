@@ -29,12 +29,13 @@ final class ProcessDuplicateVehicleWarnings extends AbstractCommandHandler
 
         // Nothing to process
         if (empty($results)) {
+            $this->result->addMessage('Nothing to process');
             return $this->result;
         }
 
         $count = 0;
         $countUnmarked = 0;
-        $exceptions = [];
+        $countFailed = 0;
 
         /** @var LicenceVehicle $licenceVehicle */
         foreach ($results as $key => $licenceVehicle) {
@@ -57,16 +58,17 @@ final class ProcessDuplicateVehicleWarnings extends AbstractCommandHandler
 
             try {
                 $this->result->merge($this->handleSideEffect(ProcessDuplicateVehicleWarningCmd::create($data)));
+                $this->result->addMessage($licenceVehicle->getId() . ' succeeded');
                 $count++;
             } catch (\Exception $ex) {
-                // @todo handle exceptions
-                $exceptions[] = $ex;
+                $this->result->addMessage($licenceVehicle->getId() . ' failed: ' . $ex->getMessage());
+                $countFailed++;
             }
         }
 
         $this->result->addMessage($count . ' letter(s) sent');
         $this->result->addMessage($countUnmarked . ' record(s) no longer duplicates');
-        $this->result->addMessage(count($exceptions) . ' failed record(s)');
+        $this->result->addMessage($countFailed . ' failed record(s)');
 
         return $this->result;
     }
