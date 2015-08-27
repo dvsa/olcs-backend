@@ -8,12 +8,10 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
-use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 
 /**
  * Cease Active Discs
@@ -28,8 +26,6 @@ final class CeaseActiveDiscs extends AbstractCommandHandler implements Transacti
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         $discs = 0;
 
         foreach ($command->getIds() as $id) {
@@ -41,24 +37,19 @@ final class CeaseActiveDiscs extends AbstractCommandHandler implements Transacti
             }
         }
 
-        $result->addMessage($discs . ' Disc(s) Ceased');
+        $this->result->addMessage($discs . ' Disc(s) Ceased');
 
-        return $result;
+        return $this->result;
     }
 
     private function ceaseActiveDisc(LicenceVehicle $licenceVehicle)
     {
-        $goodsDiscs = $licenceVehicle->getGoodsDiscs();
+        $activeDisc = $licenceVehicle->getActiveDisc();
 
-        if ($goodsDiscs->count() > 0) {
-            /** @var GoodsDisc $activeDisc */
-            $activeDisc = $goodsDiscs->first();
-
-            if ($activeDisc->getCeasedDate() === null) {
-                $activeDisc->setCeasedDate(new \DateTime());
-                $this->getRepo('GoodsDisc')->save($activeDisc);
-                return true;
-            }
+        if ($activeDisc !== null) {
+            $activeDisc->setCeasedDate(new \DateTime());
+            $this->getRepo('GoodsDisc')->save($activeDisc);
+            return true;
         }
 
         return false;
