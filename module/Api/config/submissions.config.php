@@ -134,6 +134,10 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\Statements::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\EnvironmentalComplaints::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\ComplianceComplaints::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
         ],
         'aliases' => [
             'introduction' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
@@ -177,8 +181,8 @@ return [
             'planning-permission' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'applicants-comments' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'visibility-access-egress-size' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
-            'compliance-complaints' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
-            'environmental-complaints' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
+            'compliance-complaints' => \Dvsa\Olcs\Api\Service\Submission\Sections\ComplianceComplaints::class,
+            'environmental-complaints' => \Dvsa\Olcs\Api\Service\Submission\Sections\EnvironmentalComplaints::class,
             'oppositions' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'financial-information' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'maps' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
