@@ -248,6 +248,7 @@ return [
     TransferCommand\Irfo\CreateIrfoGvPermit::class => CommandHandler\Irfo\CreateIrfoGvPermit::class,
     TransferCommand\Irfo\UpdateIrfoGvPermit::class => CommandHandler\Irfo\UpdateIrfoGvPermit::class,
     TransferCommand\Irfo\CreateIrfoPermitStock::class => CommandHandler\Irfo\CreateIrfoPermitStock::class,
+    TransferCommand\Irfo\UpdateIrfoPermitStock::class => CommandHandler\Irfo\UpdateIrfoPermitStock::class,
     TransferCommand\Irfo\CreateIrfoPsvAuth::class => CommandHandler\Irfo\CreateIrfoPsvAuth::class,
     TransferCommand\Irfo\UpdateIrfoPsvAuth::class => CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
 
@@ -442,6 +443,13 @@ return [
         => CommandHandler\LicenceOperatingCentre\AssociateS4::class,
     Command\LicenceOperatingCentre\DisassociateS4::class
         => CommandHandler\LicenceOperatingCentre\DisassociateS4::class,
+
+    // Domain - Operating Centre
+    Command\OperatingCentre\DeleteApplicationLinks::class =>
+        CommandHandler\OperatingCentre\DeleteApplicationLinks::class,
+    Command\OperatingCentre\DeleteConditionUndertakings::class =>
+        CommandHandler\OperatingCentre\DeleteConditionUndertakings::class,
+    Command\OperatingCentre\DeleteTmLinks::class => CommandHandler\OperatingCentre\DeleteTmLinks::class,
 
     // Domain - Condition Undertaking
     Command\Cases\ConditionUndertaking\CreateConditionUndertaking::class
