@@ -66,7 +66,7 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
                 )
             )
         );
-        $this->clearLicenceVehicleSpecifiedDates($application->getLicence()->getLicenceVehicles());
+        $this->clearLicenceVehicleSpecifiedDatesAndInterimApp($application->getLicence()->getLicenceVehicles());
 
         $result->addMessage('Application ' . $application->getId() . ' withdrawn.');
 
@@ -79,10 +79,11 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
         return $this->handleSideEffect(CreateSnapshotCmd::create($data));
     }
 
-    protected function clearLicenceVehicleSpecifiedDates($licenceVehilces)
+    protected function clearLicenceVehicleSpecifiedDatesAndInterimApp($licenceVehilces)
     {
         foreach ($licenceVehilces as $licenceVehilce) {
             $licenceVehilce->setSpecifiedDate(null);
+            $licenceVehilce->setInterimApplication(null);
             $this->getRepo('LicenceVehicle')->save($licenceVehilce);
         }
     }

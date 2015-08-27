@@ -64,7 +64,7 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
                 )
             )
         );
-        $this->clearLicenceVehicleSpecifiedDates($application->getLicence()->getLicenceVehicles());
+        $this->clearLicenceVehicleSpecifiedDatesAndInterimApp($application->getLicence()->getLicenceVehicles());
 
         $result->addMessage('Application ' . $application->getId() . ' refused.');
 
@@ -77,10 +77,11 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
         return $this->handleSideEffect(CreateSnapshotCmd::create($data));
     }
 
-    protected function clearLicenceVehicleSpecifiedDates($licenceVehilces)
+    protected function clearLicenceVehicleSpecifiedDatesAndInterimApp($licenceVehilces)
     {
         foreach ($licenceVehilces as $licenceVehilce) {
             $licenceVehilce->setSpecifiedDate(null);
+            $licenceVehilce->setInterimApplication(null);
             $this->getRepo('LicenceVehicle')->save($licenceVehilce);
         }
     }
