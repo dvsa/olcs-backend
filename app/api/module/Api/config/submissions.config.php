@@ -132,6 +132,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\Penalties::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\Statements::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
         ],
         'aliases' => [
             'introduction' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
@@ -183,6 +185,7 @@ return [
             'waive-fee-late-fee' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'surrender' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'annex' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
+            'statements' => \Dvsa\Olcs\Api\Service\Submission\Sections\Statements::class,
         ]
     ]
 ];
