@@ -24,7 +24,7 @@ class BatchController extends AbstractConsoleController
         return $this->handleExitStatus(
             $this->handleCommand(
                 [
-                    Command\LicenceStatusRule\ProcessToRevokeCurtailSuspend::create([]),
+                    Command\Vehicle\ProcessDuplicateVehicleWarnings::create([]),
                 ]
             )
         );
@@ -74,7 +74,7 @@ class BatchController extends AbstractConsoleController
      * exit code from the process.
      *
      * @param int $result exit code, should be non-zero if there was an error
-     * @return Zend\View\Model\ConsoleModel
+     * @return \Zend\View\Model\ConsoleModel
      */
     private function handleExitStatus($result)
     {

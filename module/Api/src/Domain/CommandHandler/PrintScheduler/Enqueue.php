@@ -8,7 +8,6 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -39,12 +38,9 @@ final class Enqueue extends AbstractCommandHandler
         $document->setIsReadOnly('Y');
         $document->setIssuedDate(new \Datetime());
 
-        $document->setIdentifier($command->getFileIdentifier());
-
         $this->getRepo()->save($document);
 
-        $result = new Result();
-        $result->addMessage("File '{$command->getFileIdentifier()}', '{$command->getJobName()}' printed");
-        return $result;
+        $this->result->addMessage("File '{$command->getFileIdentifier()}', '{$command->getJobName()}' printed");
+        return $this->result;
     }
 }

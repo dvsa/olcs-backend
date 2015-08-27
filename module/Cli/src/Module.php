@@ -33,6 +33,7 @@ class Module implements ConsoleUsageProviderInterface
             // Describe available commands
             'licence-status-rules [--verbose|-v]' => 'Process licence status change rules',
             'enqueue-ch-compare [--verbose|-v]' => 'Enqueue Companies House lookups for all Organisations',
+            'duplicate-vehicle-warning [--verbose|-v]' => 'Send duplicate vehicle warning letters',
             array( '--verbose|-v', '(optional) turn on verbose mode'),
             'process-queue [--type=]' => 'Process the queue',
             array( '--type=<que_typ_xxx>', '(optional) queue message type to process'),
