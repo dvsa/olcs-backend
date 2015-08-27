@@ -219,6 +219,7 @@ return [
             'PostcodeEnforcementArea' => RepositoryFactory::class,
             'PiVenue' => RepositoryFactory::class,
             'Disqualification' => RepositoryFactory::class,
+            'DiscSequence' => RepositoryFactory::class,
             'EbsrSubmission' => RepositoryFactory::class,
             'TxcInbox' => RepositoryFactory::class,
             'OrganisationUser' => RepositoryFactory::class,

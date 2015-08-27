@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PsvDisc extends AbstractPsvDisc
 {
     const ERROR_CANT_EXCEED_TOT_AUTH = 'LIC-PSVDISC-1';
+    const ERROR_NO_DISCS_TO_PRINT = 'err_no_discs';
 
     public function __construct(Licence $licence)
     {
