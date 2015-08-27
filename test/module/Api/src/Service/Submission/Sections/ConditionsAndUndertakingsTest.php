@@ -35,7 +35,8 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
                             'isDraft' => 'N',
                             'attachedTo' => 'cat_lic-desc',
                             'OcAddress' => [
-                            ]
+                            ],
+                            'notes' => null
                         ]
                     ],
                     'undertakings' => [
@@ -56,7 +57,8 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
                                 'town' => '1t',
                                 'postcode' => 'pc11PC',
                                 'countryCode' => null
-                            ]
+                            ],
+                            'notes' => null
                         ],
                         1 => [
                             'id' => 34,
@@ -75,7 +77,8 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
                                 'town' => '1t',
                                 'postcode' => 'pc11PC',
                                 'countryCode' => null
-                            ]
+                            ],
+                            'notes' => null
                         ],
                         2 => [
                             'id' => 34,
@@ -94,7 +97,8 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
                                 'town' => '1t',
                                 'postcode' => 'pc11PC',
                                 'countryCode' => null
-                            ]
+                            ],
+                            'notes' => null
                         ],
                         3 => [
                             'id' => 88,
@@ -113,7 +117,8 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
                                 'town' => '1t',
                                 'postcode' => 'pc11PC',
                                 'countryCode' => null
-                            ]
+                            ],
+                            'notes' => null
                         ]
                     ]
                 ]
