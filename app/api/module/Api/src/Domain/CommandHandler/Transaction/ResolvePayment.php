@@ -7,16 +7,18 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction;
+use Dvsa\Olcs\Api\Service\CpmsHelperService as Cpms;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Service\CpmsHelperService as Cpms;
 
 /**
  * Resolve Payment
@@ -24,8 +26,10 @@ use Dvsa\Olcs\Api\Service\CpmsHelperService as Cpms;
  * @author Dan Eggleston <dan@stolenegg.com>
  * @todo rename this?
  */
-final class ResolvePayment extends AbstractCommandHandler implements TransactionedInterface
+final class ResolvePayment extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'Transaction';
 
     protected $extraRepos = ['Fee'];
@@ -49,7 +53,9 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
         switch ($cpmsStatus) {
             case Cpms::PAYMENT_SUCCESS:
                 $status = Transaction::STATUS_PAID;
-                $transaction->setCompletedDate($now);
+                $transaction
+                    ->setCompletedDate($now)
+                    ->setProcessedByUser($this->getCurrentUser());
                 $feeStatusRef = $this->getRepo()->getRefdataReference(Fee::STATUS_PAID);
                 foreach ($transaction->getFeeTransactions() as $ft) {
                     // $ft->setAmount($fee->getAmount()); // @todo check this is populated when ft is created
