@@ -200,7 +200,13 @@ class Fee extends AbstractFee
      */
     public function getOutstandingWaiveTransaction()
     {
-        $ft = $this->getFeeTransactions()->filter(
+        $feeTransactions = $this->getFeeTransactions();
+
+        if (empty($feeTransactions)) {
+            return;
+        }
+
+        $ft = $feeTransactions->filter(
             function ($ft) {
                 $transaction = $ft->getTransaction();
                 return (
