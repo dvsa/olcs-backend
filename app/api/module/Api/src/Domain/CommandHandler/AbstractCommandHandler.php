@@ -153,6 +153,23 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
+     * Wrapper to call an array of other commands
+     *
+     * @param array CommandInterface $commands
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
+    protected function handleSideEffects(array $commands)
+    {
+        $result = new Result();
+
+        foreach ($commands as $command) {
+            $result->merge($this->handleSideEffect($command));
+        }
+
+        return $result;
+    }
+
+    /**
      * Proxy to another command, using all data from the original command
      *
      * @param $originalCommand
