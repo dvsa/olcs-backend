@@ -72,7 +72,7 @@ final class EnvironmentalComplaints extends AbstractSection
         foreach ($operatingCentres as $operatingCentre) {
             $operatingCentreData[] = [
                'address' => $operatingCentre->getAddress()
-           ];
+            ];
         }
         return $operatingCentreData;
     }
