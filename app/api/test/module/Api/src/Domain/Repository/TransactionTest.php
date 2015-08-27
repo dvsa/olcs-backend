@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Payment test
+ * Transaction test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
@@ -12,27 +12,27 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\LockMode;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Repository\Payment as PaymentRepo;
-use Dvsa\Olcs\Api\Entity\Fee\Payment;
+use Dvsa\Olcs\Api\Domain\Repository\Transaction as TransactionRepo;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Mockery as m;
 
 /**
- * Payment test
+ * Transaction test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class PaymentTest extends RepositoryTestCase
+class TransactionTest extends RepositoryTestCase
 {
     public function setUp()
     {
-        $this->setUpSut(PaymentRepo::class);
+        $this->setUpSut(TransactionRepo::class);
     }
 
     public function testFetchByReference()
     {
         $ref = 'OLCS-1234-ABCD';
 
-        $result = m::mock(Payment::class);
+        $result = m::mock(Transaction::class);
         $results = [$result];
 
         /** @var QueryBuilder $qb */
@@ -43,7 +43,7 @@ class PaymentTest extends RepositoryTestCase
 
         $where = m::mock();
         $qb->shouldReceive('expr->eq')
-            ->with('p.guid', ':reference')
+            ->with('t.reference', ':reference')
             ->andReturn($where);
         $qb
             ->shouldReceive('andWhere')
@@ -69,11 +69,11 @@ class PaymentTest extends RepositoryTestCase
         /** @var EntityRepository $repo */
         $repo = m::mock(EntityRepository::class);
         $repo->shouldReceive('createQueryBuilder')
-            ->with('p')
+            ->with('t')
             ->andReturn($qb);
 
         $this->em->shouldReceive('getRepository')
-            ->with(Payment::class)
+            ->with(Transaction::class)
             ->andReturn($repo)
             ->shouldReceive('lock')
             ->with($result, LockMode::OPTIMISTIC, 1);
