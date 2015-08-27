@@ -9,7 +9,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;

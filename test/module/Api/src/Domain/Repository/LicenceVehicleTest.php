@@ -480,4 +480,26 @@ class LicenceVehicleTest extends RepositoryTestCase
             $this->query
         );
     }
+
+    public function testFetchQueuedForWarning()
+    {
+        $qb = $this->createMockQb('{{QUERY}}');
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery->getResult')
+            ->once()
+            ->with(Query::HYDRATE_OBJECT)
+            ->andReturn(['foo' => 'bar']);
+
+        $this->assertEquals(['foo' => 'bar'], $this->sut->fetchQueuedForWarning());
+
+        $this->assertEquals(
+            '{{QUERY}} INNER JOIN m.licence l'
+            . ' AND l.status IN ["lsts_curtailed","lsts_valid","lsts_suspended"]'
+            . ' AND m.warningLetterSeedDate < [[Dvsa\\Olcs\\Api\\Domain\\Util\\DateTime\\DateTime]]'
+            . ' AND m.warningLetterSentDate IS NULL'
+            . ' AND m.removalDate IS NULL',
+            $this->query
+        );
+    }
 }
