@@ -35,10 +35,11 @@ final class ProcessDuplicateVehicleWarning extends AbstractCommandHandler implem
         /** @var LicenceVehicle $licenceVehicle */
         $licenceVehicle = $this->getRepo()->fetchUsingId($command);
 
-        // @todo add query params
-        $query = [];
-        // @todo add template name
-        $storedFile = $this->getDocumentGenerator()->generateAndStore('', $query);
+        $query = [
+            'licence' => $licenceVehicle->getLicence()->getId(),
+            'vehicle' => $licenceVehicle->getVehicle()->getId()
+        ];
+        $storedFile = $this->getDocumentGenerator()->generateAndStore('GV_Duplicate_vehicle_letter', $query);
 
         $description = 'Duplicate vehicle letter';
 
