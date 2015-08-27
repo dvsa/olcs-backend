@@ -62,8 +62,10 @@ final class CaseSummary extends AbstractSection
             $licenceData['licenceStartDate'] = $licence->getInForceDate();
             $licenceData['licenceType'] = !empty($licence->getLicenceType()) ?
                 $licence->getLicenceType()->getDescription() : '';
-            $licenceData['goodsOrPsv'] = !empty($licence->getGoodsOrPsv()) ? $licence->getGoodsOrPsv()->getDescription() : '';
-            $licenceData['licenceStatus'] = !empty($licence->getGoodsOrPsv()) ? $licence->getStatus()->getDescription() : '';
+            $licenceData['goodsOrPsv'] =
+                !empty($licence->getGoodsOrPsv()) ? $licence->getGoodsOrPsv()->getDescription() : '';
+            $licenceData['licenceStatus'] =
+                !empty($licence->getGoodsOrPsv()) ? $licence->getStatus()->getDescription() : '';
             $licenceData['totAuthorisedVehicles'] = $licence->getTotAuthVehicles();
             $licenceData['totAuthorisedTrailers'] = $licence->getTotAuthTrailers();
             $licenceData['vehiclesInPossession'] = $licence->getTotAuthTrailers();
