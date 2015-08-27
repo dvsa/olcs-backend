@@ -31,6 +31,11 @@ class Note extends AbstractRepository
             $qb->setParameter('caseId', $query->getCase());
         }
 
+        if ($query->getCasesMultiple() !== null) {
+            $qb->andWhere($this->alias . '.case IN (:casesMultiple)');
+            $qb->setParameter('casesMultiple', $query->getCasesMultiple());
+        }
+
         if ($query->getLicence() !== null) {
             $qb->andWhere($this->alias . '.licence = :licenceId');
             $qb->setParameter('licenceId', $query->getLicence());
@@ -61,7 +66,7 @@ class Note extends AbstractRepository
             $qb->setParameter('noteTypeId', $query->getNoteType());
         }
 
-        $this->getQueryBuilder()->modifyQuery($qb)->withUser()->withBusReg();
+        $this->getQueryBuilder()->modifyQuery($qb)->withUser()->withBusReg()->withCase();
     }
 
     /**

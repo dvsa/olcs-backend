@@ -34,7 +34,7 @@ final class WithUser implements QueryPartialInterface
         $alias = ((isset($arguments[0]) && isset($arguments[1])) ? $arguments[1] : $qb->getRootAliases()[0]);
 
         $this->with->modifyQuery($qb, [$alias . '.user', 'u']);
-        $this->with->modifyQuery($qb, ['u.contactDetails', 'c']);
-        $this->with->modifyQuery($qb, ['c.person', 'p']);
+        $this->with->modifyQuery($qb, ['u.contactDetails', 'cd']);
+        $this->with->modifyQuery($qb, ['cd.person', 'p']);
     }
 }
