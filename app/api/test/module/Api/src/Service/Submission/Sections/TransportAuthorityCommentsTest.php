@@ -3,12 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
 /**
- * Class TransportAuthorityTest
+ * Class TransportAuthorityCommentsTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class TransportAuthorityTest extends SubmissionSectionTest
+class TransportAuthorityCommentsTest extends SubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\TransportAuthority';
+    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\TransportAuthorityComments';
 
     /**
      * Filter provider
