@@ -49,7 +49,9 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 532, 'reason' => 'withdrawn']);
 
-        $mockLicenceVehicle = m::mock()->shouldReceive('setSpecifiedDate')->with(null)->once()->getMock();
+        $mockLicenceVehicle = m::mock()
+            ->shouldReceive('setSpecifiedDate')->with(null)->once()
+            ->shouldReceive('setInterimApplication')->with(null)->once()->getMock();
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
