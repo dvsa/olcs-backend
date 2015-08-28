@@ -72,6 +72,8 @@ class GenericController extends AbstractRestfulController
         try {
             $result = $this->handleCommand($dto);
             return $this->response()->successfulUpdate($result);
+        } catch (Exception\VersionConflictException $ex) {
+            return $this->response()->error(409, $ex->getMessages());
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
         } catch (Exception\Exception $ex) {
@@ -92,6 +94,8 @@ class GenericController extends AbstractRestfulController
         try {
             $result = $this->handleCommand($dto);
             return $this->response()->successfulUpdate($result);
+        } catch (Exception\VersionConflictException  $ex) {
+            return $this->response()->error(409, $ex->getMessages());
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
         } catch (Exception\Exception $ex) {
