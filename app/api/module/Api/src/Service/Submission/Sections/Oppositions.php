@@ -43,8 +43,10 @@ final class Oppositions extends AbstractSection
             function ($a, $b) {
                 /** @var Opposition $a */
                 /** @var Opposition $b */
-                if (null !== $a->getRaisedDate() &&
-                    null !== $b->getRaisedDate()) {
+                if (
+                    ($a->getRaisedDate() instanceof \DateTime) &&
+                    ($b->getRaisedDate() instanceof \DateTime)
+                ) {
                     return strtotime($b->getRaisedDate()->format('Ymd')) -
                     strtotime($a->getRaisedDate()->format('Ymd'));
                 }
@@ -69,6 +71,7 @@ final class Oppositions extends AbstractSection
             foreach ($entity->getGrounds() as $ground) {
                 $thisRow['grounds'][] = $ground->getDescription();
             }
+
             $thisRow['isValid'] = $entity->getIsValid();
             $thisRow['isCopied'] = $entity->getIsCopied();
             $thisRow['isInTime'] = $entity->getIsInTime();
