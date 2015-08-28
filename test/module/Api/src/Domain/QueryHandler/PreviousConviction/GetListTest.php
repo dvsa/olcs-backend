@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\PreviousConviction;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\PreviousConviction\GetList as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\PreviousConviction as Repo;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Transfer\Query\PreviousConviction\GetList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 
@@ -18,13 +19,19 @@ class GetListTest extends QueryHandlerTestCase
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('PreviousConviction', Repo::class);
+        $this->mockRepo('TransportManager', Repo::class);
 
         parent::setUp();
     }
 
     public function testHandleQuery()
     {
-        $query = Query::create(['QUERY']);
+        $query = Query::create(['transportManager' => 1]);
+
+        $tm = new TransportManager();
+
+        $this->repoMap['TransportManager']->shouldReceive('fetchById')
+            ->with(1)->andReturn([$tm]);
 
         $previousConviction = new \Dvsa\Olcs\Api\Entity\Application\PreviousConviction();
         $previousConviction->setId(74);
