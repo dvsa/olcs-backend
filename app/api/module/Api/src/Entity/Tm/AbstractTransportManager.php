@@ -150,6 +150,15 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     protected $olbsKey;
 
     /**
+     * Removed date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="removed_date", nullable=true)
+     */
+    protected $removedDate;
+
+    /**
      * Tm status
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -188,6 +197,15 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
      * @ORM\JoinColumn(name="work_cd_id", referencedColumnName="id", nullable=true)
      */
     protected $workCd;
+
+    /**
+     * Case
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Cases", mappedBy="transportManager")
+     */
+    protected $cases;
 
     /**
      * Document
@@ -286,6 +304,7 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
 
     public function initCollections()
     {
+        $this->cases = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->otherLicences = new ArrayCollection();
         $this->previousConvictions = new ArrayCollection();
@@ -573,6 +592,29 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     }
 
     /**
+     * Set the removed date
+     *
+     * @param \DateTime $removedDate
+     * @return TransportManager
+     */
+    public function setRemovedDate($removedDate)
+    {
+        $this->removedDate = $removedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the removed date
+     *
+     * @return \DateTime
+     */
+    public function getRemovedDate()
+    {
+        return $this->removedDate;
+    }
+
+    /**
      * Set the tm status
      *
      * @param \Dvsa\Olcs\Api\Entity\System\RefData $tmStatus
@@ -662,6 +704,66 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     public function getWorkCd()
     {
         return $this->workCd;
+    }
+
+    /**
+     * Set the case
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return TransportManager
+     */
+    public function setCases($cases)
+    {
+        $this->cases = $cases;
+
+        return $this;
+    }
+
+    /**
+     * Get the cases
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCases()
+    {
+        return $this->cases;
+    }
+
+    /**
+     * Add a cases
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return TransportManager
+     */
+    public function addCases($cases)
+    {
+        if ($cases instanceof ArrayCollection) {
+            $this->cases = new ArrayCollection(
+                array_merge(
+                    $this->cases->toArray(),
+                    $cases->toArray()
+                )
+            );
+        } elseif (!$this->cases->contains($cases)) {
+            $this->cases->add($cases);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a cases
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $cases
+     * @return TransportManager
+     */
+    public function removeCases($cases)
+    {
+        if ($this->cases->contains($cases)) {
+            $this->cases->removeElement($cases);
+        }
+
+        return $this;
     }
 
     /**

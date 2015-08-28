@@ -74,6 +74,8 @@ return [
     Command\Application\Grant\GrantPeople::class => CommandHandler\Application\Grant\GrantPeople::class,
     Command\Application\Grant\ValidateApplication::class => CommandHandler\Application\Grant\ValidateApplication::class,
     Command\Application\Grant\Schedule41::class => CommandHandler\Application\Grant\Schedule41::class,
+    Command\Application\Grant\ProcessDuplicateVehicles::class
+        => CommandHandler\Application\Grant\ProcessDuplicateVehicles::class,
     TransferCommand\Application\CreatePeople::class => CommandHandler\Application\CreatePeople::class,
     TransferCommand\Application\UpdatePeople::class => CommandHandler\Application\UpdatePeople::class,
     TransferCommand\Application\DeletePeople::class => CommandHandler\Application\DeletePeople::class,
@@ -652,6 +654,7 @@ return [
     // Transfer - TransportManager
     TransferCommand\Tm\Create::class => CommandHandler\Tm\Create::class,
     TransferCommand\Tm\Update::class => CommandHandler\Tm\Update::class,
+    TransferCommand\Tm\Remove::class => CommandHandler\Tm\Remove::class,
 
     // Task
     TransferCommand\Task\CloseTasks::class => CommandHandler\Task\CloseTasks::class,

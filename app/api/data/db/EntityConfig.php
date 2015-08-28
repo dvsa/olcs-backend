@@ -347,6 +347,12 @@ return array(
                 'property' => 'case'
             )
         ),
+        'transport_manager_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManager',
+                'property' => 'case'
+            )
+        ),
         'is_impounding' => array(
             'type' => 'yesno'
         )

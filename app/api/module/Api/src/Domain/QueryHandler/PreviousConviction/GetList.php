@@ -14,17 +14,20 @@ use Doctrine\ORM\Query;
 class GetList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'PreviousConviction';
+    protected $extraRepos = ['TransportManager'];
 
     public function handleQuery(QueryInterface $query)
     {
         /** @var \Dvsa\Olcs\Api\Domain\Repository\PreviousConviction $repo */
         $repo = $this->getRepo();
+        $transportManager = $this->getRepo('TransportManager')->fetchById($query->getTransportManager());
 
         return [
             'result' => $this->resultList(
                 $repo->fetchList($query, Query::HYDRATE_OBJECT)
             ),
-            'count' => $repo->fetchCount($query)
+            'count' => $repo->fetchCount($query),
+            'transportManager' => $transportManager
         ];
     }
 }

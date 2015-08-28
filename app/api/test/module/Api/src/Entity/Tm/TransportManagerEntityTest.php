@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Tm;
 
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Mockery as m;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -448,6 +450,29 @@ class TransportManagerEntityTest extends EntityTester
         ];
     }
 
+    public function testIsDetachedCases()
+    {
+        $entity = new Entity();
+        $entity->setCases([1,2,3]);
+
+        $this->assertFalse($entity->isDetached());
+    }
+
+    public function testIsDetachedLicences()
+    {
+        $org1 = new Organisation();
+        $lic1 = new Licence($org1, $this->getRefData(Licence::LICENCE_STATUS_VALID));
+        $tm1 = new TransportManager();
+
+        $tml1 = new TransportManagerLicence($lic1, $tm1);
+
+        $entity = new Entity();
+        $entity->setCases([]);
+        $entity->setTmLicences([$tml1]);
+
+        $this->assertFalse($entity->isDetached());
+    }
+
     public function testGetCalculatedBundleValues()
     {
         $entity = new Entity();
@@ -460,6 +485,7 @@ class TransportManagerEntityTest extends EntityTester
                 'requireSiNiQualification' => false,
                 'associatedOrganisationCount' => 0,
                 'associatedTotalAuthVehicles' => 0,
+                'isDetached' => true
             ],
             $entity->getCalculatedBundleValues()
         );
