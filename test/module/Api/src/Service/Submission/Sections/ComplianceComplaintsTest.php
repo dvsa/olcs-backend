@@ -26,6 +26,14 @@ class ComplianceComplaintsTest extends SubmissionSectionTest
                 'tables' => [
                     'compliance-complaints' => [
                         0 => [
+                            'id' => 543,
+                            'version' => 545,
+                            'complainantForename' => 'fn22',
+                            'complainantFamilyName' => 'sn22',
+                            'description' => null,
+                            'complaintDate' => new \DateTime('2006-06-03')
+                        ],
+                        1 => [
                             'id' => 253,
                             'version' => 255,
                             'complainantForename' => 'fn22',

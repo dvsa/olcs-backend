@@ -28,7 +28,8 @@ final class ComplianceComplaints extends AbstractSection
             function ($a, $b) {
                 if (null !== $a->getComplaintDate() &&
                     null !== $b->getComplaintDate()) {
-                    return strtotime($a->getComplaintDate() - strtotime($b->getComplaintDate()));
+                    return strtotime($a->getComplaintDate()->format('Ymd') -
+                        strtotime($b->getComplaintDate()->format('Ymd')));
                 }
             }
         );

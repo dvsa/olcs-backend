@@ -26,6 +26,29 @@ class EnvironmentalComplaintsTest extends SubmissionSectionTest
                 'tables' => [
                     'environmental-complaints' => [
                         0 => [
+                            'id' => 543,
+                            'version' => 545,
+                            'complainantForename' => 'fn22',
+                            'complainantFamilyName' => 'sn22',
+                            'description' => null,
+                            'complaintDate' => new \DateTime('2006-06-03'),
+                            'ocAddress' => [
+                                0 => [
+                                    'address' =>[
+                                        'addressLine1' => '633_a1',
+                                        'addressLine2' => '633_a2',
+                                        'addressLine3' => '633_a3',
+                                        'addressLine4' => null,
+                                        'town' => '633t',
+                                        'postcode' => 'pc6331PC',
+                                        'countryCode' => null
+                                    ]
+                                ]
+                            ],
+                            'closeDate' => null,
+                            'status' => 'ecst_open-desc'
+                        ],
+                        1 => [
                             'id' => 253,
                             'version' => 255,
                             'complainantForename' => 'fn22',
