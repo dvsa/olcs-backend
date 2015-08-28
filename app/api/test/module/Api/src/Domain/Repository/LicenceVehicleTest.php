@@ -12,6 +12,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
@@ -414,5 +415,37 @@ class LicenceVehicleTest extends RepositoryTestCase
         $this->assertTrue($collection->contains($matched1));
         $this->assertFalse($collection->contains($matched2));
         $this->assertFalse($collection->contains($unmatched1));
+    }
+
+    public function testFetchDuplicates()
+    {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setId(111);
+
+        $vrm = 'AB11ABC';
+
+        $qb = $this->createMockQb('{{QUERY}}');
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery->getResult')
+            ->once()
+            ->with(Query::HYDRATE_OBJECT)
+            ->andReturn(['foo' => 'bar']);
+
+        $this->assertEquals(['foo' => 'bar'], $this->sut->fetchDuplicates($licence, $vrm));
+
+        $this->assertEquals(
+            '{{QUERY}} INNER JOIN m.vehicle v'
+            . ' INNER JOIN m.licence l'
+            . ' AND v.vrm = [[AB11ABC]]'
+            . ' AND m.specifiedDate IS NOT NULL'
+            . ' AND m.removalDate IS NULL'
+            . ' AND l.id != [[111]]'
+            . ' AND l.goodsOrPsv = [[lcat_gv]]'
+            . ' AND l.status IN ["lsts_curtailed","lsts_valid","lsts_suspended"]'
+            . ' AND m.warningLetterSeedDate IS NULL',
+            $this->query
+        );
     }
 }
