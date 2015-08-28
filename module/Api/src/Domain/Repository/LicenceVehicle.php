@@ -125,6 +125,45 @@ class LicenceVehicle extends AbstractRepository
         return $entity->getLicenceVehicles()->matching($criteria);
     }
 
+    public function fetchDuplicates(LicenceEntity $licence, $vrm, $checkWarningSeedDate = true)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->innerJoin('m.vehicle', 'v')
+            ->innerJoin('m.licence', 'l')
+            // VRM matches
+            ->andWhere($qb->expr()->eq('v.vrm', ':vrm'))
+            // licence_vehicle.specified_date is not NULL;
+            ->andWhere($qb->expr()->isNotNull('m.specifiedDate'))
+            // licence_vehicle.removed_date is NULL;
+            ->andWhere($qb->expr()->isNull('m.removalDate'))
+            // Not the current licence
+            ->andWhere($qb->expr()->neq('l.id', ':licence'))
+            // licence.goods_or_psv = Goods;
+            ->andWhere($qb->expr()->eq('l.goodsOrPsv', ':goods'))
+            // licence.status in (Curtailed, Valid, Suspended);
+            ->andWhere(
+                $qb->expr()->in(
+                    'l.status',
+                    [
+                        LicenceEntity::LICENCE_STATUS_CURTAILED,
+                        LicenceEntity::LICENCE_STATUS_VALID,
+                        LicenceEntity::LICENCE_STATUS_SUSPENDED
+                    ]
+                )
+            )
+            ->setParameter('goods', LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
+            ->setParameter('vrm', $vrm)
+            ->setParameter('licence', $licence->getId());
+
+        if ($checkWarningSeedDate) {
+            // licence_vehicle.warning_letter_seed_date is NULL
+            $qb->andWhere($qb->expr()->isNull('m.warningLetterSeedDate'));
+        }
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+    }
+
     /**
      * Generic filters for LVA
      *

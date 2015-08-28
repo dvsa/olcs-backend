@@ -71,6 +71,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->eq')
             ->andReturnUsing([$this, 'mockExprEq']);
 
+        $this->qb->shouldReceive('expr->neq')
+            ->andReturnUsing([$this, 'mockExprNeq']);
+
         $this->qb->shouldReceive('expr->lte')
             ->andReturnUsing([$this, 'mockExprLte']);
 
@@ -179,6 +182,13 @@ class RepositoryTestCase extends MockeryTestCase
         $value = $this->formatValue($value);
 
         return $field . ' = ' . $value;
+    }
+
+    public function mockExprNeq($field, $value)
+    {
+        $value = $this->formatValue($value);
+
+        return $field . ' != ' . $value;
     }
 
     public function mockExprLte($field, $value)

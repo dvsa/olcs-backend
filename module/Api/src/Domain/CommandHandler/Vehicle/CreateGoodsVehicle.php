@@ -34,6 +34,10 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
 
     protected $extraRepos = ['Vehicle', 'LicenceVehicle'];
 
+    /**
+     * @param Cmd $command
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -43,9 +47,28 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
 
         $this->checkIfVrmAlreadyExistsOnLicence($licence, $command->getVrm());
 
+        $duplicates = [];
+
+        if ($command->getIdentifyDuplicates() === true) {
+            $duplicates = $this->getRepo('LicenceVehicle')->fetchDuplicates($licence, $command->getVrm(), false);
+        }
+
         // If we haven't confirmed, then we need to check if we need to confirm
         if ($command->getConfirm() !== true) {
-            $this->checkForConfirmation($licence, $command);
+
+            if ($command->getIdentifyDuplicates() === true) {
+                $this->identifyDuplicates($duplicates);
+            } else {
+                $this->checkForConfirmation($licence, $command);
+            }
+        }
+
+        if ($command->getIdentifyDuplicates() === true) {
+            /** @var LicenceVehicle $duplicate */
+            foreach ($duplicates as $duplicate) {
+                $duplicate->updateDuplicateMark();
+                $this->getRepo('LicenceVehicle')->save($duplicate);
+            }
         }
 
         $vehicle = new Vehicle();
@@ -102,17 +125,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
 
             /** @var LicenceEntity $otherLicence */
             foreach ($otherLicences as $otherLicence) {
-
-                $licNo = $otherLicence->getLicNo();
-
-                if (empty($licNo)) {
-                    $applications = $otherLicence->getApplications();
-                    if ($applications->count() > 0) {
-                        $licNo = 'APP-' . $applications->first()->getId();
-                    }
-                }
-
-                $refs[] = $licNo;
+                $refs[] = $this->getLicNo($otherLicence);
             }
 
             $message = json_encode($refs);
@@ -121,6 +134,46 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         }
 
         throw new RequiresConfirmationException($message, Vehicle::ERROR_VRM_OTHER_LICENCE);
+    }
+
+    /**
+     * Check if the vrm exists on any other licences
+     */
+    protected function identifyDuplicates($duplicates)
+    {
+        if (empty($duplicates)) {
+            return;
+        }
+
+        if ($this->isGranted(Permission::INTERNAL_USER)) {
+
+            $refs = [];
+
+            /** @var LicenceVehicle $duplicate */
+            foreach ($duplicates as $duplicate) {
+                $refs[] = $this->getLicNo($duplicate->getLicence());
+            }
+
+            $message = json_encode($refs);
+        } else {
+            $message = 'Vehicle exists on other licence';
+        }
+
+        throw new RequiresConfirmationException($message, Vehicle::ERROR_VRM_OTHER_LICENCE);
+    }
+
+    protected function getLicNo(LicenceEntity $licence)
+    {
+        $licNo = $licence->getLicNo();
+
+        if (empty($licNo)) {
+            $applications = $licence->getApplications();
+            if ($applications->count() > 0) {
+                $licNo = 'APP-' . $applications->first()->getId();
+            }
+        }
+
+        return $licNo;
     }
 
     /**
