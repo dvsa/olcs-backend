@@ -49,7 +49,12 @@ class TransportManagersTest extends SubmissionSectionTest
                             'qualifications' => [
                                 0 => 'tm-qual-desc'
                             ],
-                            'otherLicences' => []
+                            'otherLicences' => [
+                                0 => [
+                                    'licNo' => '1-licNo',
+                                    'applicationId' => 2255
+                                ]
+                            ]
                         ],
                         2 => [
                             'id' => 153,
@@ -63,7 +68,12 @@ class TransportManagersTest extends SubmissionSectionTest
                             'qualifications' => [
                                 0 => 'tm-qual-desc'
                             ],
-                            'otherLicences' => []
+                            'otherLicences' => [
+                                0 => [
+                                    'licNo' => '1-licNo',
+                                    'applicationId' => 2255
+                                ]
+                            ]
                         ]
                     ]
                 ]

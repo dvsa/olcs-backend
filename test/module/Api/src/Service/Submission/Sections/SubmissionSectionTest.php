@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Opposition\Opposer;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
+use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement;
 use Dvsa\Olcs\Api\Entity\Si\SiCategory;
@@ -260,7 +261,8 @@ class SubmissionSectionTest extends MockeryTestCase
         $tm->setId(153);
         $tm->setVersion(306);
         $tm->setHomeCd($this->generateContactDetails(83));
-        $tm->setOtherLicences([]);
+
+        $tm->setOtherLicences($this->generateArrayCollection('OtherLicence', 1));
         $tm->setQualifications($this->generateArrayCollection('tmQualification'));
 
         $tma = new TransportManagerApplication();
@@ -269,6 +271,26 @@ class SubmissionSectionTest extends MockeryTestCase
         $applicationTms->add($tma);
 
         return $applicationTms;
+    }
+
+    protected function generateOtherLicence($id) {
+        $entity = new OtherLicence();
+        $entity->setId($id);
+        $entity->setVersion($id+2);
+        $entity->setLicNo($id . '-licNo');
+
+        $organisation = new Organisation();
+        $organisationType = $this->generateRefDataEntity($this->organisationType);
+        $organisation->setType($organisationType);
+        $organisation->setName('Org name');
+
+        $licence = $this->generateLicence($organisation, 55);
+
+        $entity->setApplication(
+            $this->generateApplication(2255, $licence, Application::APPLICATION_STATUS_UNDER_CONSIDERATION),
+            false
+        );
+        return $entity;
     }
 
     protected function generateConditionsUndertakings($parentEntity, $conditionType, $id = 1)
