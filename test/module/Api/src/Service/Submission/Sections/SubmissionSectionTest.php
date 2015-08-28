@@ -25,7 +25,9 @@ use Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruRequested;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyImposedType;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyRequestedType;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyType;
+use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
@@ -158,9 +160,18 @@ class SubmissionSectionTest extends MockeryTestCase
 
         for ($i=1; $i < 3; $i++) {
             $licence = $this->generateLicence($organisation, $i);
-            $applications->add(
-                $this->generateApplication($i, $licence, Application::APPLICATION_STATUS_GRANTED)
-            );
+            $application = $this->generateApplication($i, $licence, Application::APPLICATION_STATUS_GRANTED);
+
+            if ($i == 1) {
+                // assign some tms to the first application
+                $application->setTransportManagers(
+                    $this->generateTransportManagerApplications(
+                        $application
+                    )
+                );
+            }
+            $applications->add($application);
+
             $applications->add(
                 $this->generateApplication((100+$i), $licence, Application::APPLICATION_STATUS_UNDER_CONSIDERATION)
             );
@@ -240,6 +251,25 @@ class SubmissionSectionTest extends MockeryTestCase
         return $licenceTms;
     }
 
+    protected function generateTransportManagerApplications(Application $application)
+    {
+        $applicationTms = new ArrayCollection();
+
+        $tm = new TransportManager();
+        $tm->setTmType($this->generateRefDataEntity('tm_type1'));
+        $tm->setId(153);
+        $tm->setVersion(306);
+        $tm->setHomeCd($this->generateContactDetails(83));
+        $tm->setOtherLicences([]);
+        $tm->setQualifications($this->generateArrayCollection('tmQualification'));
+
+        $tma = new TransportManagerApplication();
+        $tma->setTransportManager($tm);
+
+        $applicationTms->add($tma);
+
+        return $applicationTms;
+    }
 
     protected function generateConditionsUndertakings($parentEntity, $conditionType, $id = 1)
     {
@@ -268,6 +298,16 @@ class SubmissionSectionTest extends MockeryTestCase
         $conditionUndertakings->add($cu);
 
         return $conditionUndertakings;
+    }
+
+    protected function generateTmQualification($id)
+    {
+        $entity = new TmQualification();
+        $entity->setId($id);
+        $entity->setVersion(($id+4));
+        $entity->setQualificationType($this->generateRefDataEntity('tm-qual'));
+
+        return $entity;
     }
 
     protected function generateLicenceOperatingCentres($licence)
@@ -321,7 +361,6 @@ class SubmissionSectionTest extends MockeryTestCase
                 88
             )
         );
-        $applications->add($grantedApp);
 
         $applications->add(
             $this->generateApplication(75, $licence, Application::APPLICATION_STATUS_NOT_SUBMITTED)

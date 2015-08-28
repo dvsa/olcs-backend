@@ -36,6 +36,34 @@ class TransportManagersTest extends SubmissionSectionTest
                             'dob' => new \DateTime('1977-01-22'),
                             'qualifications' => [],
                             'otherLicences' => []
+                        ],
+                        1 => [
+                            'id' => 153,
+                            'version' => 306,
+                            'licNo' => 'OB12345',
+                            'tmType' => 'tm_type1-desc',
+                            'title' => 'title-desc',
+                            'forename' => 'fn22',
+                            'familyName' => 'sn22',
+                            'dob' => new \DateTime('1977-01-22'),
+                            'qualifications' => [
+                                0 => 'tm-qual-desc'
+                            ],
+                            'otherLicences' => []
+                        ],
+                        2 => [
+                            'id' => 153,
+                            'version' => 306,
+                            'licNo' => 'OB12345',
+                            'tmType' => 'tm_type1-desc',
+                            'title' => 'title-desc',
+                            'forename' => 'fn22',
+                            'familyName' => 'sn22',
+                            'dob' => new \DateTime('1977-01-22'),
+                            'qualifications' => [
+                                0 => 'tm-qual-desc'
+                            ],
+                            'otherLicences' => []
                         ]
                     ]
                 ]
