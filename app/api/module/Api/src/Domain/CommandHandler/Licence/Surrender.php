@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences as ReturnComLics;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -35,7 +36,7 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
 
         if ($command->isTerminated() == true) {
             $status = Licence::LICENCE_STATUS_TERMINATED;
-        }else{
+        } else {
             $status = Licence::LICENCE_STATUS_SURRENDERED;
         }
 
@@ -74,6 +75,19 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
                 )
             )
         );
+
+        $communityLicences = $licence->getCommunityLics()->toArray();
+        if (!empty($communityLicences)) {
+            $result->merge(
+                $this->handleSideEffect(
+                    ReturnComLics::create(
+                        [
+                            'id' => $licence->getId(),
+                        ]
+                    )
+                )
+            );
+        }
 
         $this->getRepo()->save($licence);
         $result->addMessage("Licence ID {$licence->getId()} surrendered");
