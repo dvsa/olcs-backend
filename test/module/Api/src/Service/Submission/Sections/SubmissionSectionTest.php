@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Cases\Complaint;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
@@ -87,6 +88,7 @@ class SubmissionSectionTest extends MockeryTestCase
         );
 
         $case->setId(99);
+        $case->setComplaints($this->generateComplaints($case));
 
         return $case;
     }
@@ -163,7 +165,7 @@ class SubmissionSectionTest extends MockeryTestCase
 
         $licence->setLicenceVehicles($this->generateLicenceVehicles($licence));
 
-        $licence->setOperatingCentres($this->generateOperatingCentres($licence));
+        $licence->setOperatingCentres($this->generateLicenceOperatingCentres($licence));
 
         $licence->setApplications($this->generateApplications($licence));
         $licence->setTmLicences($this->generateTmLicences($licence));
@@ -242,7 +244,7 @@ class SubmissionSectionTest extends MockeryTestCase
         return $conditionUndertakings;
     }
 
-    protected function generateOperatingCentres($licence)
+    protected function generateLicenceOperatingCentres($licence)
     {
         $operatingCentres = new ArrayCollection();
 
@@ -349,5 +351,49 @@ class SubmissionSectionTest extends MockeryTestCase
         $cd->setPerson($this->generatePerson(22));
 
         return $cd;
+    }
+
+    protected function generateComplaints(CasesEntity $case) {
+        $complaints = new ArrayCollection();
+
+        // add compliance complaint
+        $complaints->add(
+            $this->generateComplaint(
+                253,
+                $case,
+                $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
+                1
+            )
+        );
+
+        // add env complaint
+        $complaints->add(
+            $this->generateComplaint(
+                253,
+                $case,
+                $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
+                0
+            )
+        );
+        return $complaints;
+    }
+
+    protected function generateComplaint($id, CasesEntity $case, ContactDetails $contactDetails, $isCompliance = 1)
+    {
+        $complaint = new Complaint(
+            $case,
+            (bool) $isCompliance,
+            $this->generateRefDataEntity(Complaint::COMPLAIN_STATUS_OPEN),
+            new \DateTime('2006-06-03'),
+            $contactDetails
+        );
+        $complaint->setId($id);
+        $complaint->setVersion(($id+2));
+        $complaint->setIsCompliance($isCompliance);
+
+        if (!$isCompliance) {
+            $complaint->setOperatingCentres(new ArrayCollection([$this->generateOperatingCentre(633)]));
+        }
+        return $complaint;
     }
 }

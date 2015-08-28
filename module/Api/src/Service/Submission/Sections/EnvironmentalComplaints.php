@@ -48,7 +48,7 @@ final class EnvironmentalComplaints extends AbstractSection
             $thisRow['complainantFamilyName'] = $personData['familyName'];
             $thisRow['description'] = $entity->getDescription();
             $thisRow['complaintDate'] = $entity->getComplaintDate();
-            $thisRow['operatingCentres'] = $this->extractOperatingCentreData($entity->getOperatingCentres());
+            $thisRow['ocAddress'] = $this->extractOperatingCentreData($entity->getOperatingCentres());
             $thisRow['closeDate'] = $entity->getClosedDate();
             $thisRow['status'] = !empty($entity->getStatus()) ? $entity->getStatus()->getDescription() : '';
 
@@ -71,7 +71,7 @@ final class EnvironmentalComplaints extends AbstractSection
         $operatingCentreData = [];
         foreach ($operatingCentres as $operatingCentre) {
             $operatingCentreData[] = [
-               'address' => $operatingCentre->getAddress()
+               'address' => $operatingCentre->getAddress()->toArray()
             ];
         }
         return $operatingCentreData;
