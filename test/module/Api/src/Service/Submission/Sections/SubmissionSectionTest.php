@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\Cases\Conviction;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposer;
@@ -15,6 +16,15 @@ use Dvsa\Olcs\Api\Entity\Opposition\Opposition;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 use Dvsa\Olcs\Api\Entity\Person\Person;
+use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement;
+use Dvsa\Olcs\Api\Entity\Si\SiCategory;
+use Dvsa\Olcs\Api\Entity\Si\SiCategoryType;
+use Dvsa\Olcs\Api\Entity\Si\SiPenalty;
+use Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruImposed;
+use Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruRequested;
+use Dvsa\Olcs\Api\Entity\Si\SiPenaltyImposedType;
+use Dvsa\Olcs\Api\Entity\Si\SiPenaltyRequestedType;
+use Dvsa\Olcs\Api\Entity\Si\SiPenaltyType;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
@@ -100,6 +110,11 @@ class SubmissionSectionTest extends MockeryTestCase
         $case->setConvictions($this->generateConvictions($case));
         $case->setConvictionNote('conv_note1');
 
+        $case->setSeriousInfringements($this->generateSeriousInfringements($case));
+        $case->setErruVrm('erruVrm1');
+        $case->setErruTransportUndertakingName('tun');
+        $case->setErruOriginatingAuthority('erru_oa');
+        $case->setPenaltiesNote('pen-notes1');
 
         return $case;
     }
@@ -559,9 +574,149 @@ class SubmissionSectionTest extends MockeryTestCase
         $entity->setIsDealtWith(true);
         $entity->setPersonFirstname('fn');
         $entity->setPersonLastname('sn');
-
-
         $entity->setDefendantType($this->generateRefDataEntity($defendantType));
+
+        return $entity;
+    }
+
+    protected function generateSeriousInfringements(CasesEntity $case)
+    {
+        $sis = new ArrayCollection();
+
+        $sis->add(
+            $this->generateSeriousInfringement(734, $case)
+        );
+
+        return $sis;
+    }
+
+    protected function generateSeriousInfringement($id, CasesEntity $case)
+    {
+        $entity = new SeriousInfringement();
+        $entity->setId($id);
+        $entity->setVersion(($id+2));
+        $entity->setSiCategory($this->generateSiCategory(274, 'sicatdesc'));
+        $entity->setSiCategoryType($this->generateSiCategoryType(274, 'sicattypedesc'));
+        $entity->setNotificationNumber('notificationNo' . $id);
+        $entity->setInfringementDate(new \DateTime('2009-11-30'));
+        $entity->setCheckDate(new \DateTime('2010-07-20'));
+        $entity->setMemberStateCode($this->generateCountry('GB'));
+
+        $entity->setAppliedPenalties($this->generateArrayCollection('appliedPenalty'));
+        $entity->setImposedErrus($this->generateArrayCollection('imposedErru'));
+        $entity->setRequestedErrus($this->generateArrayCollection('requestedErru'));
+
+        return $entity;
+    }
+
+    protected function generateArrayCollection($entity, $count = 1)
+    {
+        $ac = new ArrayCollection();
+        $method = 'generate' . ucfirst($entity);
+        for ($i=1; $i<=count($count); $i++) {
+            $ac->add(
+                $this->$method($i)
+            );
+        }
+
+        return $ac;
+    }
+
+    protected function generateAppliedPenalty($id)
+    {
+        $entity = new SiPenalty();
+        $entity->setId($id);
+        $entity->setVersion(6);
+        $entity->setSiPenaltyType($this->generateSiPenaltyType(533));
+        $entity->setStartDate(new \DateTime('2013-06-31'));
+        $entity->setEndDate(new \DateTime('2013-08-31'));
+        $entity->setImposed('imposed');
+
+        return $entity;
+    }
+
+    protected function generateImposedErru($id = 101)
+    {
+        $entity = new SiPenaltyErruImposed();
+        $entity->setId($id);
+        $entity->setVersion(23);
+        $entity->setSiPenaltyImposedType($this->generateSiPenaltyImposedType(42));
+        $entity->setFinalDecisionDate(new \DateTime('2014-12-31'));
+        $entity->setStartDate(new \DateTime('2014-06-31'));
+        $entity->setEndDate(new \DateTime('2014-08-31'));
+        $entity->setExecuted('executed');
+
+        return $entity;
+    }
+
+    protected function generateRequestedErru($id = 101)
+    {
+        $entity = new SiPenaltyErruRequested();
+        $entity->setId($id);
+        $entity->setVersion(34);
+        $entity->setSiPenaltyRequestedType($this->generateSiPenaltyRequestedType(952));
+        $entity->setDuration('duration1');
+
+        return $entity;
+    }
+
+    protected function generateSiPenaltyType($id)
+    {
+        $entity = new SiPenaltyType();
+        $entity->setId($id);
+        $entity->setVersion(6);
+        $entity->setDescription($id . '-desc');
+
+        return $entity;
+    }
+
+    protected function generateSiPenaltyImposedType($id)
+    {
+        $entity = new SiPenaltyImposedType();
+        $entity->setId($id);
+        $entity->setVersion(6);
+        $entity->setDescription($id . '-desc');
+
+        return $entity;
+    }
+
+    protected function generateSiPenaltyRequestedType($id)
+    {
+        $entity = new SiPenaltyRequestedType();
+        $entity->setId($id);
+        $entity->setVersion(6);
+        $entity->setDescription($id . '-desc');
+
+        return $entity;
+    }
+
+    protected function generateCountry($id, $isMemberState = true)
+    {
+        $entity = new Country();
+        $entity->setId($id);
+        $entity->setVersion(1);
+        $entity->setIsMemberState($isMemberState);
+        $entity->setCountryDesc($id . '-desc');
+
+        return $entity;
+    }
+
+    protected function generateSiCategory($id, $desc)
+    {
+        $entity = new SiCategory();
+        $entity->setId($id);
+        $entity->setVersion(($id+5));
+        $entity->setDescription($desc);
+
+        return $entity;
+    }
+
+    protected function generateSiCategoryType($id, $desc)
+    {
+        $entity = new SiCategoryType();
+        $entity->setId($id);
+        $entity->setVersion(($id+5));
+        $entity->setDescription($desc);
 
         return $entity;
     }
