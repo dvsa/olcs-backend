@@ -15,7 +15,15 @@ final class MostSeriousInfringement extends AbstractSection
     public function generateSection(CasesEntity $case)
     {
         $seriousInfringements = $case->getSeriousInfringements();
-        $mostSeriousInfringement = [];
+        $data = [];
+        $data['id'] = '';
+        $data['notificationNumber'] = '';
+        $data['siCategory'] = '';
+        $data['siCategoryType'] = '';
+        $data['infringementDate'] = '';
+        $data['checkDate'] = '';
+        $data['isMemberState'] = '';
+
         if (isset($seriousInfringements[0]) && $seriousInfringements[0] instanceof SeriousInfringmentEntity) {
             /** @var SeriousInfringmentEntity $mostSeriousInfringement */
             $mostSeriousInfringement = $seriousInfringements[0];
@@ -29,14 +37,6 @@ final class MostSeriousInfringement extends AbstractSection
             $data['checkDate'] =  $mostSeriousInfringement->getCheckDate();
             $data['isMemberState'] = !empty($mostSeriousInfringement->getMemberStateCode()) ?
                 $mostSeriousInfringement->getMemberStateCode()->getIsMemberState() : '';
-        } else {
-            $data['id'] = '';
-            $data['notificationNumber'] = '';
-            $data['siCategory'] = '';
-            $data['siCategoryType'] = '';
-            $data['infringementDate'] = '';
-            $data['checkDate'] = '';
-            $data['isMemberState'] = '';
         }
 
         return ['data' => ['overview' => $data]];

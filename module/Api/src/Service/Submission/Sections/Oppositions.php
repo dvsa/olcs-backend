@@ -45,7 +45,8 @@ final class Oppositions extends AbstractSection
                 /** @var Opposition $b */
                 if (null !== $a->getRaisedDate() &&
                     null !== $b->getRaisedDate()) {
-                    return strtotime($b->getRaisedDate()) - strtotime($a->getRaisedDate());
+                    return strtotime($b->getRaisedDate()->format('Ymd')) -
+                    strtotime($a->getRaisedDate()->format('Ymd'));
                 }
             }
         );
