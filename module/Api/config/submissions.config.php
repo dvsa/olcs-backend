@@ -138,6 +138,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\ComplianceComplaints::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\Oppositions::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
         ],
         'aliases' => [
             'introduction' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
@@ -183,7 +185,7 @@ return [
             'visibility-access-egress-size' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'compliance-complaints' => \Dvsa\Olcs\Api\Service\Submission\Sections\ComplianceComplaints::class,
             'environmental-complaints' => \Dvsa\Olcs\Api\Service\Submission\Sections\EnvironmentalComplaints::class,
-            'oppositions' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
+            'oppositions' => \Dvsa\Olcs\Api\Service\Submission\Sections\Oppositions::class,
             'financial-information' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'maps' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'waive-fee-late-fee' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
