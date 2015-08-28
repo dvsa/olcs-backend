@@ -91,6 +91,8 @@ class SubmissionSectionTest extends MockeryTestCase
         );
 
         $case->setId(99);
+        $case->setAnnualTestHistory('ath');
+
         $case->setComplaints($this->generateComplaints($case));
         $case->setStatements($this->generateStatements($case));
         $case->setOppositions($this->generateOppositions($case));
@@ -472,6 +474,15 @@ class SubmissionSectionTest extends MockeryTestCase
             )
         );
 
+        $oppositions->add(
+            $this->generateOpposition(
+                263,
+                $case,
+                $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
+                1
+            )
+        );
+
         return $oppositions;
     }
 
@@ -480,7 +491,7 @@ class SubmissionSectionTest extends MockeryTestCase
         $entity = new Opposition(
             $case,
             $this->generateOpposer(),
-            $this->generateRefDataEntity('opposition_type1'),
+            $this->generateRefDataEntity('opposition_type' . $id),
             1,
             1,
             1,

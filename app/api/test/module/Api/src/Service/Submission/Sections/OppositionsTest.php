@@ -25,11 +25,31 @@ class OppositionsTest extends SubmissionSectionTest
             'data' => [
                 'tables' => [
                     'oppositions' => [
-                        0 => [
+                        0  => [
                             'id' => 253,
                             'version' => 255,
                             'dateReceived' => new \DateTime('2008-08-11'),
-                            'oppositionType' => 'opposition_type1-desc',
+                            'oppositionType' => 'opposition_type253-desc',
+                            'contactName' => [
+                                'title' => 'title-desc',
+                                'forename' => 'fn22',
+                                'familyName' => 'sn22'
+                            ],
+                            'grounds' => [
+                                'g1-desc',
+                                'g2-desc'
+                            ],
+                            'isValid' => 1,
+                            'isCopied' => 1,
+                            'isInTime' => 1,
+                            'isPublicInquiry' => 0,
+                            'isWithdrawn' => 0
+                        ],
+                        1 => [
+                            'id' => 263,
+                            'version' => 265,
+                            'dateReceived' => new \DateTime('2008-08-11'),
+                            'oppositionType' => 'opposition_type263-desc',
                             'contactName' => [
                                 'title' => 'title-desc',
                                 'forename' => 'fn22',
