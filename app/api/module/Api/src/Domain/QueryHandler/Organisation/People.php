@@ -22,12 +22,17 @@ class People extends AbstractQueryHandler
         return $this->result(
             $organisation,
             [
+                'disqualifications',
                 'organisationPersons' => [
-                    'person' => ['title']
+                    'person' => [
+                        'title',
+                        'contactDetails' => ['disqualifications']
+                    ]
                 ]
             ],
             [
-                'isSoleTrader' => $organisation->isSoleTrader()
+                'isSoleTrader' => $organisation->isSoleTrader(),
+                'isDisqualified' => $organisation->getDisqualifications()->count() > 0,
             ]
         );
     }
