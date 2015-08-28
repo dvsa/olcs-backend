@@ -56,6 +56,11 @@ class PsvDiscTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf();
 
+        $mockQb->shouldReceive('expr->isNull')->with('psv.ceasedDate')->once()->andReturn('noCeasedDateCond');
+        $mockQb->shouldReceive('expr->isNull')->with('psv.issuedDate')->once()->andReturn('noIssuedDateCond');
+        $mockQb->shouldReceive('andWhere')->with('noCeasedDateCond')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('noIssuedDateCond')->once()->andReturnSelf();
+
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('withRefdata')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
