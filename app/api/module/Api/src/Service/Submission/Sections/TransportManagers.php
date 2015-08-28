@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
 use Dvsa\Olcs\Api\Entity\Person\Person;
+use Dvsa\Olcs\Api\Entity\Tm\AbstractTmQualification;
+use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
@@ -46,14 +48,17 @@ final class TransportManagers extends AbstractSection
             // process all but the case licence
             if ($caseLicence->getId() !== $licence->getId()) {
                 /** @var Application $application */
+
                 foreach ($licence->getApplications() as $application) {
                     /** @var TransportManagerApplication $transportManagerApplication */
+
                     foreach ($application->getTransportManagers() as $transportManagerApplication) {
                         $this->extractTmData(
                             $transportManagerApplication->getTransportManager(),
                             $application->getLicence()->getLicNo()
                         );
                     }
+
                 }
             }
         }
@@ -118,6 +123,7 @@ final class TransportManagers extends AbstractSection
     private function extractQualificationsData(TransportManager $transportManager)
     {
         $qualificationData = [];
+        /** @var TmQualification $qualification */
         foreach ($transportManager->getQualifications() as $qualification) {
             $qualificationData[] = (null !== $qualification->getQualificationType()) ?
                 $qualification->getQualificationType()->getDescription() : '';
