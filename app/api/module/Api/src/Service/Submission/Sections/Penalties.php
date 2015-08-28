@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruImposed;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruRequested;
 
 /**
- * Class ProhibiitonHistory
+ * Class Penalties
  * @package Dvsa\Olcs\Api\Service\Submission\Sections
  * @author Shaun Lizzio <shaun.lizzio@valtech.co.uk>
  */

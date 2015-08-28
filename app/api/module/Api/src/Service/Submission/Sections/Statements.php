@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Statement;
 
 /**
- * Class ProhibiitonHistory
+ * Class Statements
  * @package Dvsa\Olcs\Api\Service\Submission\Sections
  * @author Shaun Lizzio <shaun.lizzio@valtech.co.uk>
  */

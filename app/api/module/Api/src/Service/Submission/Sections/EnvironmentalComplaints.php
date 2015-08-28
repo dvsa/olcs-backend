@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint;
 
 /**
- * Class ProhibiitonHistory
+ * Class EnvironmentalComplaints
  * @package Dvsa\Olcs\Api\Service\Submission\Sections
  * @author Shaun Lizzio <shaun.lizzio@valtech.co.uk>
  */
