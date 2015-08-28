@@ -28,10 +28,17 @@ class PeopleTest extends QueryHandlerTestCase
 
         $mockOrganisation = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
         $mockOrganisation->shouldReceive('isSoleTrader')->with()->once()->andReturn('IS_SOLE_TRADER');
+        $mockOrganisation->shouldReceive('getDisqualifications')->with()->once()->andReturn(
+            new \Doctrine\Common\Collections\ArrayCollection(['ONE'])
+        );
         $mockOrganisation->shouldReceive('serialize')->with(
             [
+                'disqualifications',
                 'organisationPersons' => [
-                    'person' => ['title']
+                    'person' => [
+                        'title',
+                        'contactDetails' => ['disqualifications']
+                    ]
                 ]
             ]
         )->once()->andReturn(['SERIALIZED']);
@@ -41,6 +48,9 @@ class PeopleTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertSame(['SERIALIZED', 'isSoleTrader' => 'IS_SOLE_TRADER'], $result->serialize());
+        $this->assertSame(
+            ['SERIALIZED', 'isSoleTrader' => 'IS_SOLE_TRADER', 'isDisqualified' => true],
+            $result->serialize()
+        );
     }
 }

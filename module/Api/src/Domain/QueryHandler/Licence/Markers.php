@@ -28,7 +28,15 @@ class Markers extends AbstractQueryHandler
             $licence,
             [
                 'licenceStatusRules' => ['licenceStatus'],
-                'organisation' => ['disqualifications'],
+                'organisation' => [
+                    'type',
+                    'disqualifications',
+                    'organisationPersons' => [
+                        'person' => [
+                            'contactDetails' => ['disqualifications']
+                        ]
+                    ]
+                ],
                 'cases' => [
                     'appeal' => ['outcome'],
                     'stays' => ['outcome', 'stayType']
