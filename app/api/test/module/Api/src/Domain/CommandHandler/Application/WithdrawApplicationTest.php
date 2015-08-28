@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -59,6 +60,14 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             ->shouldReceive('getLicenceVehicles')
             ->andReturn([$mockLicenceVehicle])
             ->twice()
+            ->shouldReceive('getCommunityLics')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('toArray')
+                    ->once()
+                    ->andReturn([1,2,3])
+                    ->getMock()
+            )
             ->getMock();
 
         $application = m::mock(Application::class)->makePartial();
@@ -85,6 +94,8 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $result1->addMessage('Snapshot created');
         $data = ['id' => 532, 'event' => CreateSnapshot::ON_WITHDRAW];
         $this->expectedSideEffect(CreateSnapshot::class, $data, $result1);
+
+        $this->expectedSideEffect(ReturnAllCommunityLicences::class, ['id' => 123], new Result());
 
         $result = $this->sut->handleCommand($command);
 
