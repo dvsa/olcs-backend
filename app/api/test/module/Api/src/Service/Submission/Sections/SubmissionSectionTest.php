@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
+use Dvsa\Olcs\Api\Entity\Cases\Conviction;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -93,6 +94,10 @@ class SubmissionSectionTest extends MockeryTestCase
         $case->setComplaints($this->generateComplaints($case));
         $case->setStatements($this->generateStatements($case));
         $case->setOppositions($this->generateOppositions($case));
+
+        $case->setConvictions($this->generateConvictions($case));
+        $case->setConvictionNote('conv_note1');
+
 
         return $case;
     }
@@ -370,11 +375,27 @@ class SubmissionSectionTest extends MockeryTestCase
                 1
             )
         );
+        $complaints->add(
+            $this->generateComplaint(
+                543,
+                $case,
+                $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
+                1
+            )
+        );
 
         // add env complaint
         $complaints->add(
             $this->generateComplaint(
                 253,
+                $case,
+                $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
+                0
+            )
+        );
+        $complaints->add(
+            $this->generateComplaint(
+                543,
                 $case,
                 $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
                 0
@@ -492,6 +513,44 @@ class SubmissionSectionTest extends MockeryTestCase
         );
         $entity->setId($id);
         $entity->setVersion(($id+2));
+
+        return $entity;
+    }
+
+    protected function generateConvictions(CasesEntity $case)
+    {
+        $convictions = new ArrayCollection();
+
+        $convictions->add(
+            $this->generateConviction(734, Conviction::DEFENDANT_TYPE_ORGANISATION)
+        );
+
+        $convictions->add(
+            $this->generateConviction(734, Conviction::DEFENDANT_TYPE_DIRECTOR)
+        );
+
+        return $convictions;
+    }
+
+    protected function generateConviction($id, $defendantType)
+    {
+        $entity = new Conviction();
+        $entity->setId($id);
+        $entity->setVersion(($id+2));
+        $entity->setOffenceDate(new \DateTime('2007-06-03'));
+        $entity->setConvictionDate(new \DateTime('2008-06-03'));
+        $entity->setOperatorName('operator1');
+        $entity->setCategoryText('cat-text');
+        $entity->setCourt('court1');
+        $entity->setPenalty('pen1');
+        $entity->setMsi('msi1');
+        $entity->setIsDeclared(false);
+        $entity->setIsDealtWith(true);
+        $entity->setPersonFirstname('fn');
+        $entity->setPersonLastname('sn');
+
+
+        $entity->setDefendantType($this->generateRefDataEntity($defendantType));
 
         return $entity;
     }
