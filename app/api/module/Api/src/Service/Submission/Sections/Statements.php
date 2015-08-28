@@ -30,7 +30,7 @@ final class Statements extends AbstractSection
             $thisRow = array();
             $thisRow['id'] = $entity->getId();
             $thisRow['version'] = $entity->getVersion();
-            $thisRow['requestedDate'] = $entity->getRequestedDate()->format('d/m/Y');
+            $thisRow['requestedDate'] = $entity->getRequestedDate();
             $thisRow['requestedBy'] = $this->extractPerson($entity->getRequestorsContactDetails());
             $thisRow['statementType'] = $entity->getStatementType()->getDescription();
             $thisRow['stoppedDate'] = $entity->getStoppedDate();
