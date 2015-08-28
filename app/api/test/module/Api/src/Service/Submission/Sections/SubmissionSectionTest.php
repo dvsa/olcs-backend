@@ -9,6 +9,8 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
+use Dvsa\Olcs\Api\Entity\Opposition\Opposer;
+use Dvsa\Olcs\Api\Entity\Opposition\Opposition;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 use Dvsa\Olcs\Api\Entity\Person\Person;
@@ -90,6 +92,7 @@ class SubmissionSectionTest extends MockeryTestCase
         $case->setId(99);
         $case->setComplaints($this->generateComplaints($case));
         $case->setStatements($this->generateStatements($case));
+        $case->setOppositions($this->generateOppositions($case));
 
         return $case;
     }
@@ -430,6 +433,64 @@ class SubmissionSectionTest extends MockeryTestCase
         $entity->setRequestorsBody('req body');
         $entity->setIssuedDate(new \DateTime('2009-03-30'));
         $entity->setVrm('VR12 MAB');
+
+        return $entity;
+    }
+
+    protected function generateOppositions(CasesEntity $case)
+    {
+        $oppositions = new ArrayCollection();
+
+        $oppositions->add(
+            $this->generateOpposition(
+                253,
+                $case,
+                $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
+                1
+            )
+        );
+
+        return $oppositions;
+    }
+
+    protected function generateOpposition($id, CasesEntity $case, ContactDetails $contactDetails, $isCompliance = 1)
+    {
+        $entity = new Opposition(
+            $case,
+            $this->generateOpposer(),
+            $this->generateRefDataEntity('opposition_type1'),
+            1,
+            1,
+            1,
+            0,
+            1,
+            0
+        );
+        $entity->setId($id);
+        $entity->setVersion(($id+2));
+        $entity->setRaisedDate(new \DateTime('2008-08-11'));
+
+        $grounds = new ArrayCollection();
+        $grounds->add($this->generateRefDataEntity('g1'));
+        $grounds->add($this->generateRefDataEntity('g2'));
+        $entity->setGrounds($grounds);
+
+        return $entity;
+    }
+
+    protected function generateOpposer($id = 834)
+    {
+        $contactDetails = $this->generateContactDetails(
+            744,
+            ContactDetails::CONTACT_TYPE_COMPLAINANT
+        );
+        $entity = new Opposer(
+            $contactDetails,
+            $this->generateRefDataEntity('opposer_type1'),
+            $this->generateRefDataEntity('opposition_type1')
+        );
+        $entity->setId($id);
+        $entity->setVersion(($id+2));
 
         return $entity;
     }
