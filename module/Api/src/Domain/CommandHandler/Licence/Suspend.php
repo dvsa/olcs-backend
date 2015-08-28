@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences as ReturnComLics;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -40,6 +41,19 @@ final class Suspend extends AbstractCommandHandler implements TransactionedInter
                     RemoveLicenceStatusRulesForLicence::create(
                         [
                         'licence' => $licence
+                        ]
+                    )
+                )
+            );
+        }
+
+        $communityLicences = $licence->getCommunityLics()->toArray();
+        if (!empty($communityLicences)) {
+            $result->merge(
+                $this->handleSideEffect(
+                    ReturnComLics::create(
+                        [
+                            'id' => $licence->getId(),
                         ]
                     )
                 )
