@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 
 /**
  * IrfoGvPermit Entity
@@ -37,5 +38,22 @@ class IrfoGvPermit extends AbstractIrfoGvPermit
         $this->setOrganisation($organisation);
         $this->setIrfoGvPermitType($type);
         $this->setIrfoPermitStatus($status);
+    }
+
+    /**
+     * Reset
+     *
+     * @param RefData $status
+     * @return IrfoGvPermit
+     */
+    public function reset(RefData $status)
+    {
+        if ($status->getId() !== self::STATUS_PENDING) {
+            throw new BadRequestException('Please provide a valid status');
+        }
+
+        $this->setIrfoPermitStatus($status);
+
+        return $this;
     }
 }
