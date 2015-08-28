@@ -18,6 +18,10 @@
             "type": "vcs"
         },
         {
+            "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-utils.git",
+            "type": "vcs"
+        },
+        {
             "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/companies-house.git",
             "type": "vcs"
         },
@@ -44,6 +48,7 @@
         "ruflin/Elastica": "v1.4.3.0",
         "olcs/companies-house": "dev-develop",
         "olcs/olcs-transfer": "dev-develop",
+        "olcs/olcs-utils": "dev-develop",
         "olcs/olcs-logging": "dev-develop",
         "olcs/autoload": "dev-develop",
         "zf-commons/zfc-rbac": "~2.4.0",
