@@ -357,7 +357,8 @@ class SubmissionSectionTest extends MockeryTestCase
         return $cd;
     }
 
-    protected function generateComplaints(CasesEntity $case) {
+    protected function generateComplaints(CasesEntity $case)
+    {
         $complaints = new ArrayCollection();
 
         // add compliance complaint
