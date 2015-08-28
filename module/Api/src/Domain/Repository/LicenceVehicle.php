@@ -295,4 +295,19 @@ class LicenceVehicle extends AbstractRepository
             $qb->setParameter('vrm', $vrm . '%');
         }
     }
+
+    public function fetchByVehicleId($vehicleId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with($this->alias .'.vehicle', 'v')
+            ->with($this->alias .'.licence', 'l');
+
+        $qb->where($qb->expr()->eq($this->alias . '.vehicle', ':vehicle'))
+            ->setParameter('vehicle', $vehicleId)
+            ->orderBy($this->alias . '.specifiedDate', 'DESC');
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
 }

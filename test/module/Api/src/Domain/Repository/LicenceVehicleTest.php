@@ -22,6 +22,7 @@ use Dvsa\Olcs\Transfer\Query\Licence\GoodsVehicles as LicGoodsVehicles;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * LicenceVehicle test
@@ -415,6 +416,37 @@ class LicenceVehicleTest extends RepositoryTestCase
         $this->assertTrue($collection->contains($matched1));
         $this->assertFalse($collection->contains($matched2));
         $this->assertFalse($collection->contains($unmatched1));
+    }
+
+    public function testFetchByVehicleId()
+    {
+        $mockQb = m::mock(QueryBuilder::class);
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('m')
+            ->once()
+            ->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($mockQb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('m.licence', 'l')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('m.vehicle', 'v')
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('m.vehicle', ':vehicle')->andReturn('condition');
+        $mockQb->shouldReceive('where')->with('condition')->andReturnSelf();
+        $mockQb->shouldReceive('orderBy')->with('m.specifiedDate', 'DESC')->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('vehicle', 1)->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
+        $this->assertSame('result', $this->sut->fetchByVehicleId(1));
     }
 
     public function testFetchDuplicates()
