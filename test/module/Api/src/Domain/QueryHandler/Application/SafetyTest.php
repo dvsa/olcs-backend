@@ -57,7 +57,14 @@ class SafetyTest extends QueryHandlerTestCase
             ->with($licence)
             ->andReturn($licence);
 
-        $this->assertEquals(['foo' => 'bar', 'canHaveTrailers' => true], $this->sut->handleQuery($query));
+        $this->assertEquals(
+            [
+                'foo' => 'bar',
+                'canHaveTrailers' => true,
+                'hasTrailers' => false
+            ],
+            $this->sut->handleQuery($query)
+        );
     }
 
     public function testHandleQueryPsv()
@@ -85,6 +92,13 @@ class SafetyTest extends QueryHandlerTestCase
             ->with($licence)
             ->andReturn($licence);
 
-        $this->assertEquals(['foo' => 'bar', 'canHaveTrailers' => false], $this->sut->handleQuery($query));
+        $this->assertEquals(
+            [
+                'foo' => 'bar',
+                'canHaveTrailers' => false,
+                'hasTrailers' => false
+            ],
+            $this->sut->handleQuery($query)
+        );
     }
 }
