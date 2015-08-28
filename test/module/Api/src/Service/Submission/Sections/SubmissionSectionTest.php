@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
 use Dvsa\Olcs\Api\Entity\Person\Person;
+use Dvsa\Olcs\Api\Entity\Prohibition\Prohibition;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement;
 use Dvsa\Olcs\Api\Entity\Si\SiCategory;
 use Dvsa\Olcs\Api\Entity\Si\SiCategoryType;
@@ -118,6 +119,9 @@ class SubmissionSectionTest extends MockeryTestCase
         $case->setErruTransportUndertakingName('tun');
         $case->setErruOriginatingAuthority('erru_oa');
         $case->setPenaltiesNote('pen-notes1');
+
+        $case->setProhibitionNote('prohibition-note');
+        $case->setProhibitions($this->generateArrayCollection('Prohibition'));
 
         return $case;
     }
@@ -778,6 +782,21 @@ class SubmissionSectionTest extends MockeryTestCase
         $entity->setId($id);
         $entity->setVersion(($id+5));
         $entity->setDescription($desc);
+
+        return $entity;
+    }
+
+    protected function generateProhibition($id)
+    {
+        $entity = new Prohibition();
+        $entity->setId($id);
+        $entity->setVersion(($id+5));
+        $entity->setProhibitionDate(new \DateTime('2008-08-11'));
+        $entity->setClearedDate(new \DateTime('2012-08-11'));
+        $entity->setVrm('VR12 MAB');
+        $entity->setIsTrailer(false);
+        $entity->setImposedAt('imposed-at');
+        $entity->setProhibitionType($this->generateRefDataEntity('prohibition-type1'));
 
         return $entity;
     }
