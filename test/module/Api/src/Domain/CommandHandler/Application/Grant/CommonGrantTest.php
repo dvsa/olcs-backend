@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantCommunityLicence;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantConditionUndertaking;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantTransportManager;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessDuplicateVehicles;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\CommonGrant;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -52,6 +53,8 @@ class CommonGrantTest extends CommandHandlerTestCase
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
+        $application->shouldReceive('isGoods')
+            ->andReturn(false);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -151,6 +154,10 @@ class CommonGrantTest extends CommandHandlerTestCase
             $result7
         );
 
+        $result8 = new Result();
+        $result8->addMessage('ProcessDuplicateVehicles');
+        $this->expectedSideEffect(ProcessDuplicateVehicles::class, $data, $result8);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -162,7 +169,8 @@ class CommonGrantTest extends CommandHandlerTestCase
                 'GrantTransportManager',
                 'GrantPeople',
                 'PrintLicence',
-                'Schedule41'
+                'Schedule41',
+                'ProcessDuplicateVehicles',
             ]
         ];
 

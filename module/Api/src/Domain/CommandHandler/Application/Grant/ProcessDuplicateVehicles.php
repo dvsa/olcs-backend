@@ -39,7 +39,7 @@ final class ProcessDuplicateVehicles extends AbstractCommandHandler implements T
             $count += $this->processDuplicatesForLicenceVehicle($licenceVehicle, $licence);
         }
 
-        $this->result->addMessage($count . ' vehicle(s) marked as duplicates');
+        $this->result->addMessage($count . ' vehicle(s) marked as duplicate');
 
         return $this->result;
     }
