@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantCommunityLicence as Gran
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantConditionUndertaking as GrantConditionUndertakingCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople as GrantPeopleCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantTransportManager as GrantTransportManagerCmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessDuplicateVehicles as ProcessDuplicateVehiclesCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -48,6 +49,8 @@ final class CommonGrant extends AbstractCommandHandler implements TransactionedI
             $result->merge(
                 $this->handleSideEffect(GrantSchedule41::create(['id' => $application->getId()]))
             );
+
+            $result->merge($this->proxyCommand($command, ProcessDuplicateVehiclesCmd::class));
         }
 
         return $result;

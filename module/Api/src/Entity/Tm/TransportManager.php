@@ -3,7 +3,9 @@
 namespace Dvsa\Olcs\Api\Entity\Tm;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Transfer\Query\InspectionRequest\ApplicationInspectionRequestList;
 
 /**
  * TransportManager Entity
@@ -239,6 +241,31 @@ class TransportManager extends AbstractTransportManager
         return false;
     }
 
+    public function isDetached()
+    {
+        $applicationStatuses = [
+            Application::APPLICATION_STATUS_NOT_SUBMITTED,
+            Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+            Application::APPLICATION_STATUS_GRANTED
+        ];
+
+        if (count($this->getCases()) > 0) {
+            return false;
+        }
+
+        if (count($this->getTmLicencesValid()) > 0) {
+            return false;
+        }
+
+        foreach ($this->getTmApplications() as $tmApplication) {
+            if (in_array($tmApplication->getStatus()->getId(), $applicationStatuses)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Return extra properties when serialzed
      *
@@ -253,6 +280,7 @@ class TransportManager extends AbstractTransportManager
             'requireSiNiQualification' => $this->isSiQualificationRequired('Y'),
             'associatedOrganisationCount' => count($this->getAssociatedOrganisations()),
             'associatedTotalAuthVehicles' => $this->getTotAuthVehicles(),
+            'isDetached' => $this->isDetached()
         ];
     }
 }

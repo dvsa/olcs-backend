@@ -22,28 +22,15 @@ final class CreateGoodsVehicle extends AbstractCommand
     use Licence,
         Vrm;
 
-    /**
-     * @Transfer\Filter({"name":"Zend\Filter\Digits"})
-     * @Transfer\Validator({"name":"Zend\Validator\Digits"})
-     * @Transfer\Validator({"name":"Zend\Validator\Between", "options": {"min": 0, "max": 999999}})
-     */
     protected $platedWeight;
 
-    /**
-     * @Transfer\Optional
-     */
     protected $specifiedDate;
 
-    /**
-     * @Transfer\Optional
-     */
     protected $receivedDate;
 
-    /**
-     * @Transfer\Filter({"name": "Zend\Filter\Boolean"})
-     * @Transfer\Optional
-     */
     protected $confirm;
+
+    protected $identifyDuplicates = false;
 
     /**
      * @return mixed
@@ -75,5 +62,13 @@ final class CreateGoodsVehicle extends AbstractCommand
     public function getConfirm()
     {
         return $this->confirm;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIdentifyDuplicates()
+    {
+        return $this->identifyDuplicates;
     }
 }
