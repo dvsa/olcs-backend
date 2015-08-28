@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
-use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
@@ -23,6 +22,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use \Dvsa\Olcs\Api\Entity\Cases\Statement;
 
 /**
  * Class SubmissionSectionTest
@@ -89,6 +89,7 @@ class SubmissionSectionTest extends MockeryTestCase
 
         $case->setId(99);
         $case->setComplaints($this->generateComplaints($case));
+        $case->setStatements($this->generateStatements($case));
 
         return $case;
     }
@@ -395,5 +396,41 @@ class SubmissionSectionTest extends MockeryTestCase
             $complaint->setOperatingCentres(new ArrayCollection([$this->generateOperatingCentre(633)]));
         }
         return $complaint;
+    }
+
+    protected function generateStatements(CasesEntity $case)
+    {
+        $statements = new ArrayCollection();
+
+        $statements->add(
+            $this->generateStatement(
+                253,
+                $case,
+                $this->generateContactDetails(423, ContactDetails::CONTACT_TYPE_COMPLAINANT),
+                1
+            )
+        );
+
+        return $statements;
+    }
+
+    protected function generateStatement($id, CasesEntity $case, ContactDetails $contactDetails, $isCompliance = 1)
+    {
+        $entity = new Statement($case, $this->generateRefDataEntity('statement_type1'));
+        $entity->setId($id);
+        $entity->setVersion(($id+2));
+        $entity->setRequestedDate(new \DateTime('2008-08-11'));
+        $entity->setRequestorsContactDetails(
+            $this->generateContactDetails(
+                744,
+                ContactDetails::CONTACT_TYPE_COMPLAINANT
+            )
+        );
+        $entity->setStoppedDate(new \DateTime('2009-03-26'));
+        $entity->setRequestorsBody('req body');
+        $entity->setIssuedDate(new \DateTime('2009-03-30'));
+        $entity->setVrm('VR12 MAB');
+
+        return $entity;
     }
 }
