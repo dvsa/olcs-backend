@@ -8,15 +8,16 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessApplicationOperatingCentres as ProcessAocCmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\ProcessApplicationOperatingCentres;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessApplicationOperatingCentres as ProcessAocCmd;
+use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -218,6 +219,22 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
         $this->repoMap['LicenceOperatingCentre']->shouldReceive('delete')
             ->once()
             ->with($loc);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteConditionUndertakings::class,
+            ['operatingCentre' => $oc, 'licence' => $licence],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteTmLinks::class,
+            ['operatingCentre' => $oc],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteApplicationLinks::class,
+            ['operatingCentre' => $oc],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 

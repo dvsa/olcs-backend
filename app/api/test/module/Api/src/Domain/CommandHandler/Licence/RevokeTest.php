@@ -9,6 +9,8 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Revoke as CommandHandler;
@@ -57,6 +59,14 @@ class RevokeTest extends CommandHandlerTestCase
         );
         $licence->setId(532);
         $licence->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_PSV]);
+        $licence->setCommunityLics(
+            new ArrayCollection(
+                [
+                    new CommunityLic(),
+                    new CommunityLic()
+                ]
+            )
+        );
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($licence);
         $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
@@ -95,6 +105,14 @@ class RevokeTest extends CommandHandlerTestCase
                 'licence' => $licence
             ],
             $removeRulesResult
+        );
+
+        $this->expectedSideEffect(
+            ReturnAllCommunityLicences::class,
+            [
+                'id' => 532
+            ],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);

@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\CreateDocument;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Create Vehicle List Document
@@ -23,9 +25,12 @@ use Dvsa\Olcs\Transfer\Command\Document\CreateDocument;
  */
 final class CreateVehicleListDocument extends AbstractCommandHandler implements
     TransactionedInterface,
-    DocumentGeneratorAwareInterface
+    DocumentGeneratorAwareInterface,
+    AuthAwareInterface
 {
     use DocumentGeneratorAwareTrait;
+
+    use AuthAwareTrait;
 
     protected $repoServiceName = 'Licence';
 
@@ -34,7 +39,8 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements
         $content = $this->getDocumentGenerator()->generateFromTemplate(
             'GVVehiclesList',
             [
-                'licence' => $command->getId()
+                'licence' => $command->getId(),
+                'user' => $this->getCurrentUser()
             ]
         );
 

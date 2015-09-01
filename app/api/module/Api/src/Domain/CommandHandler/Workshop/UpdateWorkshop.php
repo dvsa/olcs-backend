@@ -9,13 +9,10 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Workshop;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Licence\Workshop;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * Update Workshop
@@ -28,15 +25,13 @@ final class UpdateWorkshop extends AbstractCommandHandler implements Transaction
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /** @var Workshop $workshop */
         $workshop = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         // Update the address
         $addressData = $command->getContactDetails()['address'];
         $addressResult = $this->handleSideEffect(SaveAddress::create($addressData));
-        $result->merge($addressResult);
+        $this->result->merge($addressResult);
 
         // Update the Contact Details
         $contactDetails = $workshop->getContactDetails();
@@ -46,8 +41,9 @@ final class UpdateWorkshop extends AbstractCommandHandler implements Transaction
         $workshop->setIsExternal($command->getIsExternal());
         $this->getRepo()->save($workshop);
 
-        $result->addMessage('Workshop updated');
+        $this->result->addMessage('Workshop updated');
+        $this->result->setFlag('hasChanged', ($command->getVersion() != $workshop->getVersion()));
 
-        return $result;
+        return $this->result;
     }
 }

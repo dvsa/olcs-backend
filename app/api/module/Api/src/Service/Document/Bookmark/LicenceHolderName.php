@@ -20,9 +20,8 @@ class LicenceHolderName extends DynamicBookmark
             [
                 'id' => $data['licence'],
                 'bundle' => [
-                    'organisation' => [
-                        'tradingNames',
-                    ],
+                    'tradingNames',
+                    'organisation',
                 ],
             ]
         );
@@ -32,12 +31,12 @@ class LicenceHolderName extends DynamicBookmark
     {
         $name = $this->data['organisation']['name'];
 
-        if (!empty($this->data['organisation']['tradingNames'])) {
+        if (!empty($this->data['tradingNames'])) {
             $tradingNames = array_map(
                 function ($tradingName) {
                     return $tradingName['name'];
                 },
-                $this->data['organisation']['tradingNames']
+                $this->data['tradingNames']
             );
             $tradingAs = sprintf("\nT/A %s", implode(', ', $tradingNames));
             $name .= substr($tradingAs, 0, self::MAX_TRADING_NAME_LINE_LENGTH);

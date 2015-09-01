@@ -336,6 +336,39 @@ class GenericControllerTest extends TestCase
         $this->assertSame($viewModel, $response);
     }
 
+    public function testUpdateConflict()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(
+            409,
+            [
+                'VER_CONF' => 'The resource you are editing is out of date'
+            ]
+        )->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow(new Exception\VersionConflictException('foo'));
+
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->update(25, []);
+
+        $this->assertSame($viewModel, $response);
+    }
+
     public function testUpdateServerError()
     {
         $viewModel = new JsonModel();
@@ -362,6 +395,156 @@ class GenericControllerTest extends TestCase
         $sut = $this->setupSut($mockSl);
 
         $response = $sut->update(25, []);
+
+        $this->assertSame($viewModel, $response);
+    }
+
+
+    public function testReplaceList()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+        $result = new Result();
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('successfulUpdate')->with($result)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andReturn($result);
+
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->replaceList(25, []);
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testReplaceListNotFound()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('notFound')->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow(new Exception\NotFoundException());
+
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->replaceList(25, []);
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testReplaceListClientError()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+        $errors = ['foo' => 'is not bar'];
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(400, $errors)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow(new Exception\ValidationException($errors));
+
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->replaceList(25, []);
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testReplaceListConflict()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(
+            409,
+            [
+                'VER_CONF' => 'The resource you are editing is out of date'
+            ]
+        )->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow(new Exception\VersionConflictException('foo'));
+
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->replaceList(25, []);
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testReplaceListServerError()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+        $ex = new \Exception('blargle');
+        $errors = ['blargle', explode('#', $ex->getTraceAsString())];
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(500, $errors)->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow($ex);
+
+        $mockLogger = $this->mockLogger();
+
+        $mockSl =
+            $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager', $mockLogger);
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->replaceList(25, []);
 
         $this->assertSame($viewModel, $response);
     }

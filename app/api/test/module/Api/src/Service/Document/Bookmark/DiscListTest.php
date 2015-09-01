@@ -43,11 +43,11 @@ class DiscListTest extends \PHPUnit_Framework_TestCase
                     'licence' => [
                         'organisation' => [
                             'name' => 'A short org name',
-                            'tradingNames' => [
-                                ['name' => 'org'],
-                                ['name' => 'trading'],
-                                ['name' => 'names']
-                            ],
+                        ],
+                        'tradingNames' => [
+                            ['name' => 'org'],
+                            ['name' => 'trading'],
+                            ['name' => 'names']
                         ],
                         'licNo' => 'L1234',
                         'expiryDate' => '2014-10-03'
@@ -68,8 +68,8 @@ class DiscListTest extends \PHPUnit_Framework_TestCase
                     'licence' => [
                         'organisation' => [
                             'name' => 'An extremely long org name which will split over multiple lines',
-                            'tradingNames' => [],
                         ],
+                        'tradingNames' => [],
                         'licNo' => 'L3143',
                         'expiryDate' => null
                     ],
@@ -86,11 +86,11 @@ class DiscListTest extends \PHPUnit_Framework_TestCase
                     'licence' => [
                         'organisation' => [
                             'name' => 'A short org name',
-                            'tradingNames' => [
-                                ['name' => 'org'],
-                                ['name' => 'trading'],
-                                ['name' => 'names']
-                            ],
+                        ],
+                        'tradingNames' => [
+                            ['name' => 'org'],
+                            ['name' => 'trading'],
+                            ['name' => 'names']
                         ],
                         'licNo' => 'L1234',
                         'expiryDate' => '2014-10-03'

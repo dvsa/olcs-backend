@@ -420,6 +420,15 @@ class Application extends AbstractApplication
         );
     }
 
+    public function isPsvDowngrade()
+    {
+        if ($this->isGoods() || $this->isRestricted() === false) {
+            return false;
+        }
+
+        return $this->getLicence()->isRestricted() === false;
+    }
+
     public function updateLicenceHistory(
         $prevHasLicence,
         $prevHadLicence,
@@ -1287,5 +1296,34 @@ class Application extends AbstractApplication
         }
 
         return $this->getLicence()->allowFeePayments();
+    }
+
+    public function hasAuthChanged()
+    {
+        if ($this->isNew()) {
+            return false;
+        }
+
+        $comparisons = [
+            'TotAuthVehicles',
+            'TotAuthTrailers',
+            'TotAuthSmallVehicles',
+            'TotAuthMediumVehicles',
+            'TotAuthLargeVehicles'
+        ];
+
+        foreach ($comparisons as $comparison) {
+            if ((int)$this->{'get' . $comparison}() !== (int)$this->getLicence()->{'get' . $comparison}()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUnderConsideration()
+    {
+        return !is_null($this->getStatus())
+            && $this->getStatus()->getId() === self::APPLICATION_STATUS_UNDER_CONSIDERATION;
     }
 }

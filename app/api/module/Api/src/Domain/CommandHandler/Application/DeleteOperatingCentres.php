@@ -7,12 +7,16 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteApplicationLinks;
+use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteConditionUndertakings;
+use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteTmLinks;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Application\DeleteOperatingCentres as Cmd;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Delete Operating Centres
@@ -41,9 +45,16 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
         /** @var ApplicationOperatingCentre $aoc */
         foreach ($aocs as $aoc) {
             if (in_array($aoc->getId(), $command->getIds())) {
+                $message = $aoc->checkCanDelete();
+                if ($message) {
+                    throw new \Dvsa\Olcs\Api\Domain\Exception\BadRequestException(key($message));
+                }
                 $count++;
                 $this->getRepo('ApplicationOperatingCentre')->delete($aoc);
                 $aocs->removeElement($aoc);
+                $this->result->merge($this->deleteConditionUndertakings($aoc));
+                $this->result->merge($this->deleteTransportManagerLinks($aoc));
+                $this->result->merge($this->deleteFromOtherApplications($aoc));
             }
         }
 
@@ -73,5 +84,35 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
         );
 
         return $this->result;
+    }
+
+    /**
+     * @param ApplicationOperatingCentre $laoc
+     * @return Result
+     */
+    private function deleteConditionUndertakings($aoc)
+    {
+        return $this->handleSideEffect(
+            DeleteConditionUndertakings::create(
+                [
+                    'operatingCentre' => $aoc->getOperatingCentre(),
+                    'application' => $aoc->getApplication(),
+                ]
+            )
+        );
+    }
+
+    private function deleteTransportManagerLinks($aoc)
+    {
+        return $this->handleSideEffect(
+            DeleteTmLinks::create(['operatingCentre' => $aoc->getOperatingCentre()])
+        );
+    }
+
+    private function deleteFromOtherApplications($aoc)
+    {
+        return $this->handleSideEffect(
+            DeleteApplicationLinks::create(['operatingCentre' => $aoc->getOperatingCentre()])
+        );
     }
 }

@@ -183,7 +183,7 @@ class Licence extends AbstractLicence
         $this->setSafetyInsVaries($safetyInsVaries);
     }
 
-    public function getActiveCommunityLicences($licence)
+    public function getActiveCommunityLicences()
     {
         $criteria = Criteria::create()
             ->where(
@@ -195,9 +195,9 @@ class Licence extends AbstractLicence
                         CommunityLic::STATUS_SUSPENDED
                     ]
                 )
-            )->andWhere(Criteria::expr()->eq('licence', $licence));
+            );
 
-        return $this->getCommunityLics()->matching($criteria)->current();
+        return $this->getCommunityLics()->matching($criteria);
     }
 
     public function getActiveBusRoutes($licence)
@@ -238,7 +238,7 @@ class Licence extends AbstractLicence
 
     public function getCalculatedValues()
     {
-        $decisionCriteria['activeComLics'] = $this->getActiveCommunityLicences($this) !== false;
+        $decisionCriteria['activeComLics'] = !$this->getActiveCommunityLicences()->isEmpty();
         $decisionCriteria['activeBusRoutes'] = $this->getActiveBusRoutes($this) !== false;
         $decisionCriteria['activeVariations'] = $this->getActiveVariations($this) !== false;
 
@@ -632,5 +632,26 @@ class Licence extends AbstractLicence
         }
 
         return true;
+    }
+
+    /**
+     * Get Outstanding applications of status "under consideration" or "granted"
+     *
+     * @return \Doctrine\Common\Collections\Collection|static
+     */
+    public function getOutstandingApplications()
+    {
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->in(
+                    'status',
+                    [
+                        Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                        Application::APPLICATION_STATUS_GRANTED
+                    ]
+                )
+            );
+
+        return $this->getApplications()->matching($criteria);
     }
 }

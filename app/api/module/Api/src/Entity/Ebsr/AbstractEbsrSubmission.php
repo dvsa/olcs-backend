@@ -20,7 +20,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_ebsr_submission_ebsr_submission_status_id",
      *     columns={"ebsr_submission_status_id"}),
  *        @ORM\Index(name="ix_ebsr_submission_ebsr_submission_type_id",
-     *     columns={"ebsr_submission_type_id"})
+     *     columns={"ebsr_submission_type_id"}),
+ *        @ORM\Index(name="ix_ebsr_submission_organisation_id", columns={"organisation_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_ebsr_submission_olbs_key", columns={"olbs_key"})
@@ -159,6 +160,16 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     protected $olbsKey;
 
     /**
+     * Organisation
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
+     */
+    protected $organisation;
+
+    /**
      * Organisation email address
      *
      * @var string
@@ -166,15 +177,6 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      * @ORM\Column(type="string", name="organisation_email_address", length=100, nullable=true)
      */
     protected $organisationEmailAddress;
-
-    /**
-     * Organisation id
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="organisation_id", nullable=true)
-     */
-    protected $organisationId;
 
     /**
      * Process end
@@ -576,6 +578,29 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     }
 
     /**
+     * Set the organisation
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     * @return EbsrSubmission
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
      * Set the organisation email address
      *
      * @param string $organisationEmailAddress
@@ -596,29 +621,6 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     public function getOrganisationEmailAddress()
     {
         return $this->organisationEmailAddress;
-    }
-
-    /**
-     * Set the organisation id
-     *
-     * @param int $organisationId
-     * @return EbsrSubmission
-     */
-    public function setOrganisationId($organisationId)
-    {
-        $this->organisationId = $organisationId;
-
-        return $this;
-    }
-
-    /**
-     * Get the organisation id
-     *
-     * @return int
-     */
-    public function getOrganisationId()
-    {
-        return $this->organisationId;
     }
 
     /**

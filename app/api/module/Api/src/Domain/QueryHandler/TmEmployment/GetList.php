@@ -14,8 +14,12 @@ class GetList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'TmEmployment';
 
+    protected $extraRepos = ['TransportManager'];
+
     public function handleQuery(QueryInterface $query)
     {
+        $transportManager = $this->getRepo('TransportManager')->fetchById($query->getTransportManager());
+
         return [
             'result' => $this->resultList(
                 $this->getRepo()->fetchList($query, \Doctrine\ORM\Query::HYDRATE_OBJECT),
@@ -27,7 +31,8 @@ class GetList extends AbstractQueryHandler
                     ]
                 ]
             ),
-            'count' => $this->getRepo()->fetchCount($query)
+            'count' => $this->getRepo()->fetchCount($query),
+            'transportManager' => $transportManager
         ];
     }
 }

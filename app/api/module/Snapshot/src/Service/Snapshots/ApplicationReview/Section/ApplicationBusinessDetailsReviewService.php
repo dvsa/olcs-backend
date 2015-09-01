@@ -125,19 +125,11 @@ class ApplicationBusinessDetailsReviewService extends AbstractReviewService
     protected function getNatureOfBusinessPartial($data)
     {
         $list = [];
-        $first = true;
 
-        foreach ($data['natureOfBusinesses'] as $natureOfBusinessLink) {
-            $label = '';
-            if ($first) {
-                $label = 'application-review-business-details-nature-of-business';
-                $first = false;
-            }
-            $list[] = [
-                'label' => $label,
-                'value' => $this->formatRefData($natureOfBusinessLink)
-            ];
-        }
+        $list[] = [
+            'label' => 'application-review-business-details-nature-of-business',
+            'value' => $data['natureOfBusiness'],
+        ];
 
         return $list;
     }

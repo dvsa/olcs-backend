@@ -73,6 +73,9 @@ return [
         => CommandHandler\Application\Grant\GrantTransportManager::class,
     Command\Application\Grant\GrantPeople::class => CommandHandler\Application\Grant\GrantPeople::class,
     Command\Application\Grant\ValidateApplication::class => CommandHandler\Application\Grant\ValidateApplication::class,
+    Command\Application\Grant\Schedule41::class => CommandHandler\Application\Grant\Schedule41::class,
+    Command\Application\Grant\ProcessDuplicateVehicles::class
+        => CommandHandler\Application\Grant\ProcessDuplicateVehicles::class,
     TransferCommand\Application\CreatePeople::class => CommandHandler\Application\CreatePeople::class,
     TransferCommand\Application\UpdatePeople::class => CommandHandler\Application\UpdatePeople::class,
     TransferCommand\Application\DeletePeople::class => CommandHandler\Application\DeletePeople::class,
@@ -207,6 +210,7 @@ return [
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
+    TransferCommand\Organisation\TransferTo::class => CommandHandler\Organisation\TransferTo::class,
 
     // Transfer - OtherLicence
     TransferCommand\OtherLicence\UpdateOtherLicence::class => CommandHandler\OtherLicence\UpdateOtherLicence::class,
@@ -248,6 +252,7 @@ return [
     TransferCommand\Irfo\CreateIrfoGvPermit::class => CommandHandler\Irfo\CreateIrfoGvPermit::class,
     TransferCommand\Irfo\UpdateIrfoGvPermit::class => CommandHandler\Irfo\UpdateIrfoGvPermit::class,
     TransferCommand\Irfo\CreateIrfoPermitStock::class => CommandHandler\Irfo\CreateIrfoPermitStock::class,
+    TransferCommand\Irfo\UpdateIrfoPermitStock::class => CommandHandler\Irfo\UpdateIrfoPermitStock::class,
     TransferCommand\Irfo\CreateIrfoPsvAuth::class => CommandHandler\Irfo\CreateIrfoPsvAuth::class,
     TransferCommand\Irfo\UpdateIrfoPsvAuth::class => CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
 
@@ -311,12 +316,20 @@ return [
         CommandHandler\Submission\CreateSubmissionAction::class,
     TransferCommand\Submission\UpdateSubmissionAction::class =>
         CommandHandler\Submission\UpdateSubmissionAction::class,
+
     TransferCommand\Submission\CreateSubmissionSectionComment::class =>
         CommandHandler\Submission\CreateSubmissionSectionComment::class,
     TransferCommand\Submission\UpdateSubmissionSectionComment::class =>
         CommandHandler\Submission\UpdateSubmissionSectionComment::class,
     TransferCommand\Submission\DeleteSubmissionSectionComment::class =>
         CommandHandler\Submission\DeleteSubmissionSectionComment::class,
+
+    TransferCommand\Submission\CreateSubmission::class =>
+        CommandHandler\Submission\CreateSubmission::class,
+    TransferCommand\Submission\UpdateSubmission::class =>
+        CommandHandler\Submission\UpdateSubmission::class,
+    TransferCommand\Submission\DeleteSubmission::class =>
+        CommandHandler\Submission\DeleteSubmission::class,
 
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
@@ -435,6 +448,13 @@ return [
     Command\LicenceOperatingCentre\DisassociateS4::class
         => CommandHandler\LicenceOperatingCentre\DisassociateS4::class,
 
+    // Domain - Operating Centre
+    Command\OperatingCentre\DeleteApplicationLinks::class =>
+        CommandHandler\OperatingCentre\DeleteApplicationLinks::class,
+    Command\OperatingCentre\DeleteConditionUndertakings::class =>
+        CommandHandler\OperatingCentre\DeleteConditionUndertakings::class,
+    Command\OperatingCentre\DeleteTmLinks::class => CommandHandler\OperatingCentre\DeleteTmLinks::class,
+
     // Domain - Condition Undertaking
     Command\Cases\ConditionUndertaking\CreateConditionUndertaking::class
         => CommandHandler\Cases\ConditionUndertaking\CreateConditionUndertaking::class,
@@ -471,6 +491,10 @@ return [
     Command\LicenceVehicle\RemoveLicenceVehicle::class => CommandHandler\LicenceVehicle\RemoveLicenceVehicle::class,
     TransferCommand\LicenceVehicle\UpdatePsvLicenceVehicle::class
         => CommandHandler\LicenceVehicle\UpdatePsvLicenceVehicle::class,
+    Command\Vehicle\ProcessDuplicateVehicleWarning::class
+        => CommandHandler\Vehicle\ProcessDuplicateVehicleWarning::class,
+    Command\Vehicle\ProcessDuplicateVehicleWarnings::class
+        => CommandHandler\Vehicle\ProcessDuplicateVehicleWarnings::class,
 
     // Domain - Transport Managers
     Command\Tm\DeleteTransportManagerLicence::class => CommandHandler\Tm\DeleteTransportManagerLicence::class,
@@ -636,6 +660,7 @@ return [
     // Transfer - TransportManager
     TransferCommand\Tm\Create::class => CommandHandler\Tm\Create::class,
     TransferCommand\Tm\Update::class => CommandHandler\Tm\Update::class,
+    TransferCommand\Tm\Remove::class => CommandHandler\Tm\Remove::class,
 
     // Task
     TransferCommand\Task\CloseTasks::class => CommandHandler\Task\CloseTasks::class,
@@ -705,4 +730,13 @@ return [
     // Disqualification
     TransferCommand\Disqualification\Create::class => CommandHandler\Disqualification\Create::class,
     TransferCommand\Disqualification\Update::class => CommandHandler\Disqualification\Update::class,
+
+    // Disc Printing
+    TransferCommand\GoodsDisc\PrintDiscs::class => CommandHandler\GoodsDisc\PrintDiscs::class,
+    TransferCommand\PsvDisc\PrintDiscs::class => CommandHandler\PsvDisc\PrintDiscs::class,
+    TransferCommand\GoodsDisc\ConfirmPrinting::class => CommandHandler\GoodsDisc\ConfirmPrinting::class,
+    TransferCommand\PsvDisc\ConfirmPrinting::class => CommandHandler\PsvDisc\ConfirmPrinting::class,
+    Command\Discs\PrintDiscs::class => CommandHandler\Discs\PrintDiscs::class,
+    Command\Discs\CreatePsvVehicleListForDiscs::class => CommandHandler\Discs\CreatePsvVehicleListForDiscs::class,
+
 ];

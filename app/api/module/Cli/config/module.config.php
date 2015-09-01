@@ -22,6 +22,15 @@ return [
                         ],
                     ],
                 ],
+                'duplicate-vehicle-warning' => [
+                    'options' => [
+                        'route' => 'duplicate-vehicle-warning [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'duplicateVehicleWarning',
+                        ],
+                    ],
+                ],
                 'process-queue' => [
                     'options' => [
                         'route' => 'process-queue [--type=]',
@@ -66,8 +75,8 @@ return [
         ]
     ],
     'queue' => [
-        'isLongRunningProcess' => true,
-        //'runFor' => 60
+        //'isLongRunningProcess' => true,
+        'runFor' => 60
     ],
     'file-system' => [
         'path' => '/tmp'

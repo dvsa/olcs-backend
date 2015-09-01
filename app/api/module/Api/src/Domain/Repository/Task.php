@@ -17,4 +17,21 @@ use Dvsa\Olcs\Api\Entity\Task\Task as Entity;
 class Task extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+    /**
+     * Fetch a list for an irfo organisation
+     *
+     * @param int|\Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     *
+     * @return array
+     */
+    public function fetchByIrfoOrganisation($organisation)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.irfoOrganisation', ':organisaion'))
+            ->setParameter('organisaion', $organisation);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
 }

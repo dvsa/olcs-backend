@@ -13,7 +13,6 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
@@ -35,12 +34,15 @@ final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwa
 
     protected $repoServiceName = 'Organisation';
 
+    protected $oldType;
+
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
 
         /** @var Organisation $organisation */
         $organisation = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        $this->oldType = $organisation->getType()->getId();
 
         $canChangeBusinessType = $this->canChangeBusinessType($command, $organisation);
 
@@ -136,7 +138,13 @@ final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwa
     private function createUpdateApplicationCompletionCommand($applicationId)
     {
         return UpdateApplicationCompletion::create(
-            ['id' => $applicationId, 'section' => 'businessType']
+            [
+                'id' => $applicationId,
+                'section' => 'businessType',
+                'data' => [
+                    'type' => $this->oldType
+                ]
+            ]
         );
     }
 }

@@ -48,9 +48,15 @@ final class UpdateSafety extends AbstractCommandHandler implements Transactioned
             $tachoIns = $this->getRepo()->getRefdataReference($command->getTachographIns());
         }
 
+        if ((int)$licence->getTotAuthTrailers() < 1) {
+            $safetyInsTrailers = 0;
+        } else {
+            $safetyInsTrailers = $command->getSafetyInsTrailers();
+        }
+
         $licence->updateSafetyDetails(
             $command->getSafetyInsVehicles(),
-            $command->getSafetyInsTrailers(),
+            $safetyInsTrailers,
             $tachoIns,
             $command->getTachographInsName(),
             $command->getSafetyInsVaries()

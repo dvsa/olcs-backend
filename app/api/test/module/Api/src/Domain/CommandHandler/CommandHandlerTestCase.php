@@ -59,9 +59,12 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
     protected $mockedSmServices = [];
 
+    protected $queryHandler;
+
     public function setUp()
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class);
+        $this->queryHandler = m::mock(QueryHandlerManager::class);
 
         foreach ($this->repoMap as $alias => $service) {
             $this->repoManager
@@ -73,7 +76,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $sm = m::mock(ServiceLocatorInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn(m::mock(TransactionManagerInterface::class));
-        $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn(m::mock(QueryHandlerManager::class));
+        $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
 
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
@@ -169,6 +172,19 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
                 function (CommandInterface $command) use ($class, $data, $result) {
                     $this->commands[] = [$command, $data];
                     return $result;
+                }
+            );
+    }
+
+    public function expectedSideEffectThrowsException($class, $data, $exception)
+    {
+        $this->commandHandler->shouldReceive('handleCommand')
+            ->once()
+            ->with(m::type($class))
+            ->andReturnUsing(
+                function (CommandInterface $command) use ($class, $data, $exception) {
+                    $this->commands[] = [$command, $data];
+                    throw $exception;
                 }
             );
     }

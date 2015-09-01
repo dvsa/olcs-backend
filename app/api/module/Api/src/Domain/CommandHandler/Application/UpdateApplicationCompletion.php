@@ -56,9 +56,7 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
 
         // if Variation then run UpdateVariationCompletion command
         if ($application->getIsVariation()) {
-            return $this->getCommandHandler()->handleCommand(
-                VariationCommand::create(['id' => $command->getId(), 'section' => $command->getSection()])
-            );
+            return $this->proxyCommand($command, VariationCommand::class);
         }
 
         $completion = $application->getApplicationCompletion();
