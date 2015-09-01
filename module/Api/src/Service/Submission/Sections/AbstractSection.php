@@ -45,7 +45,9 @@ abstract class AbstractSection implements SectionGeneratorInterface
             $personData = [
                 'title' => !empty($person->getTitle()) ? $person->getTitle()->getDescription() : '',
                 'forename' => $person->getForename(),
-                'familyName' => $person->getFamilyName()
+                'familyName' => $person->getFamilyName(),
+                'birthDate' => $person->getBirthDate(),
+                'birthPlace' => $person->getBirthPlace()
             ];
         }
         return $personData;
