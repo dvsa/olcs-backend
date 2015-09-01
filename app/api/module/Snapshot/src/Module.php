@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Snapshot;
 
-use Dvsa\Olcs\Snapshot\Service\Translator\MissingTranslationProcessor;
+use Dvsa\Olcs\Utils\Translation\MissingTranslationProcessor;
 use Zend\I18n\Translator\Translator;
 
 /**
@@ -19,24 +19,19 @@ class Module
 {
     public function onBootstrap(\Zend\Mvc\MvcEvent $e)
     {
+        $sm = $e->getApplication()->getServiceManager();
+
         // initialise the translator
         /* @var $translator \Zend\I18n\Translator\Translator */
-        $translator = $e->getApplication()->getServiceManager()->get('translator');
+        $translator = $sm->get('translator');
         $translator->setLocale('en_GB');
         $translator->addTranslationFilePattern('phparray', __DIR__ . '/../config/language', '%s.php', 'snapshot');
 
         $events = $e->getApplication()->getEventManager();
 
-        $missingTranslationProcessor = new MissingTranslationProcessor(
-        // Inject the renderer and template resolver
-            $e->getApplication()->getServiceManager()->get('ViewRenderer'),
-            $e->getApplication()->getServiceManager()->get('Zend\View\Resolver\TemplatePathStack')
-        );
-
-        $events->attach(
-            Translator::EVENT_MISSING_TRANSLATION,
-            array($missingTranslationProcessor, 'processEvent')
-        );
+        /** @var  MissingTranslationProcessor $missingTranslationProcessor */
+        $missingTranslationProcessor = $sm->get('Utils\MissingTranslationProcessor');
+        $missingTranslationProcessor->attach($events);
 
         $translator->enableEventManager();
         $translator->setEventManager($events);
