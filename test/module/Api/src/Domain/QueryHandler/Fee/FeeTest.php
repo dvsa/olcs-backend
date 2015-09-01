@@ -74,7 +74,6 @@ class FeeTest extends QueryHandlerTestCase
             ->once()
             ->andReturn('TestWaiveReason');
 
-
         $result = $this->sut->handleQuery($query);
 
         $this->assertInstanceOf(Result::class, $result);

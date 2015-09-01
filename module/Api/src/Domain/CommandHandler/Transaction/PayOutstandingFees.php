@@ -144,44 +144,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
         $this->checkAmountMatchesTotalDue($command->getReceived(), $fees);
 
         // fire off to relevant CPMS method to record payment
-        switch ($command->getPaymentMethod()) {
-            case FeeEntity::METHOD_CASH:
-                $response = $this->cpmsHelper->recordCashPayment(
-                    $fees,
-                    $customerReference,
-                    $command->getReceived(),
-                    $command->getReceiptDate(),
-                    $command->getPayer(),
-                    $command->getSlipNo()
-                );
-                break;
-            case FeeEntity::METHOD_CHEQUE:
-                $response = $this->cpmsHelper->recordChequePayment(
-                    $fees,
-                    $customerReference,
-                    $command->getReceived(),
-                    $command->getReceiptDate(),
-                    $command->getPayer(),
-                    $command->getSlipNo(),
-                    $command->getChequeNo(),
-                    $command->getChequeDate()
-                );
-                break;
-            case FeeEntity::METHOD_POSTAL_ORDER:
-                $response = $this->cpmsHelper->recordPostalOrderPayment(
-                    $fees,
-                    $customerReference,
-                    $command->getReceived(),
-                    $command->getReceiptDate(),
-                    $command->getPayer(),
-                    $command->getSlipNo(),
-                    $command->getPoNo()
-                );
-                break;
-            default:
-                throw new RuntimeException('invalid payment method: ' . $command->getPaymentMethod());
-                break;
-        }
+        $response = $this->recordPaymentInCpms($customerReference, $command, $fees);
 
         if ($response === false) {
             throw new RuntimeException('error from CPMS service');
@@ -239,6 +202,52 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
         return $result;
     }
 
+    /**
+     * @return array|false
+     */
+    protected function recordPaymentInCpms($customerReference, $command, $fees)
+    {
+        switch ($command->getPaymentMethod()) {
+            case FeeEntity::METHOD_CASH:
+                $response = $this->cpmsHelper->recordCashPayment(
+                    $fees,
+                    $customerReference,
+                    $command->getReceived(),
+                    $command->getReceiptDate(),
+                    $command->getPayer(),
+                    $command->getSlipNo()
+                );
+                break;
+            case FeeEntity::METHOD_CHEQUE:
+                $response = $this->cpmsHelper->recordChequePayment(
+                    $fees,
+                    $customerReference,
+                    $command->getReceived(),
+                    $command->getReceiptDate(),
+                    $command->getPayer(),
+                    $command->getSlipNo(),
+                    $command->getChequeNo(),
+                    $command->getChequeDate()
+                );
+                break;
+            case FeeEntity::METHOD_POSTAL_ORDER:
+                $response = $this->cpmsHelper->recordPostalOrderPayment(
+                    $fees,
+                    $customerReference,
+                    $command->getReceived(),
+                    $command->getReceiptDate(),
+                    $command->getPayer(),
+                    $command->getSlipNo(),
+                    $command->getPoNo()
+                );
+                break;
+            default:
+                throw new RuntimeException('invalid payment method: ' . $command->getPaymentMethod());
+        }
+
+        return $response;
+    }
+
     protected function filterValid(CommandInterface $command, array $outstandingFees)
     {
         $fees = [];
@@ -288,7 +297,11 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
                 // check payment status
                 $transaction = $this->getRepo()->fetchById($transactionId);
                 $result->addMessage(
-                    sprintf('transaction %d resolved as %s', $transactionId, $transaction->getStatus()->getDescription())
+                    sprintf(
+                        'transaction %d resolved as %s',
+                        $transactionId,
+                        $transaction->getStatus()->getDescription()
+                    )
                 );
 
                 if ($transaction->isPaid()) {

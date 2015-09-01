@@ -56,7 +56,6 @@ class Fee extends AbstractFee
 
     /**
      * Loop through a fee's payment records and check if any are outstanding
-     * @todo check this
      */
     public function hasOutstandingPayment()
     {
@@ -121,8 +120,8 @@ class Fee extends AbstractFee
     }
 
     /**
-     * @todo OLCS-10407 this currently assumes only one transaction against a fee,
-     * needs updating
+     * @todo OLCS-10407 this currently assumes only one transaction against a
+     * fee, will need updating when part payments are allowed
      */
     public function getReceivedAmount()
     {
@@ -133,8 +132,7 @@ class Fee extends AbstractFee
     }
 
     /**
-     * @todo  OLCS-10407 may be able to get rid of this if frontend once frontend fee
-     * screens are finalised
+     * @todo OLCS-10425 will remove the need for this method
      */
     public function getReceivedDate()
     {
