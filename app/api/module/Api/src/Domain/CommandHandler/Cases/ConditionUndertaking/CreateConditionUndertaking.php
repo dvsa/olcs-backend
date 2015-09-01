@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Application\S4;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Dvsa\Olcs\Transfer\Command\Cases\ConditionUndertaking\CreateConditionUndertaking as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Cases\ConditionUndertaking\CreateConditionUndertaking as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 /**
@@ -53,6 +53,7 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
      */
     private function createConditionUndertakingObject($command)
     {
+        /* @var $command Cmd */
         $conditionUndertaking = new ConditionUndertaking(
             $this->getRepo()->getRefdataReference($command->getConditionType()),
             $command->getIsFulfilled(),
@@ -80,6 +81,7 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
         $conditionUndertaking->setAttachedTo($this->getRepo()->getRefdataReference($command->getAttachedTo()));
         $conditionUndertaking->setAddedVia($this->getRepo()->getRefdataReference($command->getAddedVia()));
         $conditionUndertaking->setNotes($command->getNotes());
+        $conditionUndertaking->setAction($command->getAction());
 
         $conditionUndertaking = $this->setAttachedToProperties($conditionUndertaking, $command);
 
