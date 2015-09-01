@@ -37,7 +37,7 @@ final class TmResponsibilities extends AbstractSection
                 /** @var TransportManagerApplication $entity */
                 $entity = $tmApplications->current();
 
-                $applications[] = $this->extractResponsibilityData($case, $entity);;
+                $applications[] = $this->extractResponsibilityData($case, $entity);
 
                 $tmApplications->next();
             }
@@ -54,7 +54,7 @@ final class TmResponsibilities extends AbstractSection
                 /** @var TransportManagerLicence $entity */
                 $entity = $tmLicences->current();
 
-                $licences[] = $this->extractResponsibilityData($case, $entity);;
+                $licences[] = $this->extractResponsibilityData($case, $entity);
 
                 $tmLicences->next();
             }

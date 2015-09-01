@@ -102,11 +102,13 @@ class SubmissionSectionTest extends MockeryTestCase
         $transportManager = $this->generateTransportManager(43);
 
         $tmLicences = new ArrayCollection();
-        $tmLicences->add($this->generateTransportManagerLicence(
-            234,
-            $licence,
-            $transportManager
-        ));
+        $tmLicences->add(
+            $this->generateTransportManagerLicence(
+                234,
+                $licence,
+                $transportManager
+            )
+        );
 
         $transportManager->setTmApplications($this->generateArrayCollection('TransportManagerApplication'));
         $transportManager->setTmLicences($tmLicences);
@@ -169,6 +171,9 @@ class SubmissionSectionTest extends MockeryTestCase
         $tm->setId($id);
         $tm->setVersion(($id+10));
         $tm->setTmType($this->generateRefDataEntity('tmType'));
+
+        $tm->setHomeCd($this->generateContactDetails(533, ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS));
+        $tm->setWorkCd($this->generateContactDetails(343, ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS));
 
         return $tm;
     }
@@ -326,7 +331,7 @@ class SubmissionSectionTest extends MockeryTestCase
         return $licenceTms;
     }
 
-    protected function generateTransportManagerApplications(Application $application)
+    protected function generateTransportManagerApplications()
     {
         $applicationTms = new ArrayCollection();
 
@@ -347,7 +352,8 @@ class SubmissionSectionTest extends MockeryTestCase
         return $applicationTms;
     }
 
-    protected function generateOtherLicence($id) {
+    protected function generateOtherLicence($id)
+    {
         $entity = new OtherLicence();
         $entity->setId($id);
         $entity->setVersion($id+2);
@@ -511,6 +517,7 @@ class SubmissionSectionTest extends MockeryTestCase
         $cd = new ContactDetails($this->generateRefDataEntity($type));
         $cd->setAddress($this->generateAddress($id));
         $cd->setPerson($this->generatePerson(22));
+        $cd->setEmailAddress('blah@blah.com');
 
         return $cd;
     }
