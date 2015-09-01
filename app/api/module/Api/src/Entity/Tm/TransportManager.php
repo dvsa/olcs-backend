@@ -257,8 +257,9 @@ class TransportManager extends AbstractTransportManager
             return false;
         }
 
+        /** @var TransportManagerApplication $tmApplication */
         foreach ($this->getTmApplications() as $tmApplication) {
-            if (in_array($tmApplication->getStatus()->getId(), $applicationStatuses)) {
+            if (in_array($tmApplication->getApplication()->getStatus()->getId(), $applicationStatuses)) {
                 return false;
             }
         }
