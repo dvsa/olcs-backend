@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * IrfoGvPermit Entity
@@ -38,6 +39,56 @@ class IrfoGvPermit extends AbstractIrfoGvPermit
         $this->setOrganisation($organisation);
         $this->setIrfoGvPermitType($type);
         $this->setIrfoPermitStatus($status);
+    }
+
+    /**
+     * Update
+     *
+     * @param IrfoGvPermitType $irfoGvPermitType
+     * @param int $yearRequired
+     * @param \DateTime $inForceDate
+     * @param \DateTime $expiryDate
+     * @param int $noOfCopies
+     * @param string $isFeeExempt
+     * @param string $exemptionDetails
+     * @param string $irfoFeeId
+     * @return IrfoGvPermit
+     */
+    public function update(
+        IrfoGvPermitType $irfoGvPermitType,
+        $yearRequired,
+        \DateTime $inForceDate,
+        \DateTime $expiryDate,
+        $noOfCopies,
+        $isFeeExempt = null,
+        $exemptionDetails = null,
+        $irfoFeeId = null
+    ) {
+        // validate
+        if ($expiryDate < $inForceDate) {
+            throw new ValidationException(['Expiry date must be after or the same as in force date']);
+        }
+
+        // update
+        $this->irfoGvPermitType = $irfoGvPermitType;
+        $this->yearRequired = $yearRequired;
+        $this->inForceDate = $inForceDate;
+        $this->expiryDate = $expiryDate;
+        $this->noOfCopies = $noOfCopies;
+
+        if ($isFeeExempt !== null) {
+            $this->isFeeExempt = $isFeeExempt;
+        }
+
+        if ($exemptionDetails !== null) {
+            $this->exemptionDetails = $exemptionDetails;
+        }
+
+        if ($irfoFeeId !== null) {
+            $this->irfoFeeId = $irfoFeeId;
+        }
+
+        return $this;
     }
 
     /**
