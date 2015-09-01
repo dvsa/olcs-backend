@@ -42,6 +42,60 @@ class IrfoGvPermitEntityTest extends EntityTester
         $this->assertSame($status, $entity->getIrfoPermitStatus());
     }
 
+    public function testUpdate()
+    {
+        $irfoGvPermitType = m::mock(IrfoGvPermitTypeEntity::class);
+        $yearRequired = 2010;
+        $inForceDate = new \DateTime('2010-02-03');
+        $expiryDate = new \DateTime('2011-02-03');
+        $noOfCopies = 11;
+        $isFeeExempt = 'N';
+        $exemptionDetails = 'testing';
+        $irfoFeeId = 'N00001';
+
+        $this->entity->update(
+            $irfoGvPermitType,
+            $yearRequired,
+            $inForceDate,
+            $expiryDate,
+            $noOfCopies,
+            $isFeeExempt,
+            $exemptionDetails,
+            $irfoFeeId
+        );
+
+        $this->assertEquals($irfoGvPermitType, $this->entity->getIrfoGvPermitType());
+        $this->assertEquals($yearRequired, $this->entity->getYearRequired());
+        $this->assertEquals($inForceDate, $this->entity->getInForceDate());
+        $this->assertEquals($expiryDate, $this->entity->getExpiryDate());
+        $this->assertEquals($noOfCopies, $this->entity->getNoOfCopies());
+        $this->assertEquals($isFeeExempt, $this->entity->getIsFeeExempt());
+        $this->assertEquals($exemptionDetails, $this->entity->getExemptionDetails());
+        $this->assertEquals($irfoFeeId, $this->entity->getIrfoFeeId());
+    }
+
+    /**
+     * Tests update throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testUpdateWithInvalidExpiryDate()
+    {
+        $irfoGvPermitType = m::mock(IrfoGvPermitTypeEntity::class);
+        $yearRequired = 2010;
+        $inForceDate = new \DateTime('2010-02-03');
+        $expiryDate = new \DateTime('2010-01-05');
+        $noOfCopies = 11;
+
+        $this->entity->update(
+            $irfoGvPermitType,
+            $yearRequired,
+            $inForceDate,
+            $expiryDate,
+            $noOfCopies
+        );
+    }
+
     public function testReset()
     {
         $status = new RefData();

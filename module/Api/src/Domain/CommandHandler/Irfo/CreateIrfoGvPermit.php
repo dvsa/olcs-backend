@@ -61,17 +61,16 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler implements Transac
         $status = $this->getRepo()->getRefdataReference(IrfoGvPermit::STATUS_PENDING);
 
         $irfoGvPermit = new IrfoGvPermit($organisation, $type, $status);
-
-        $irfoGvPermit->setYearRequired($command->getYearRequired());
-        $irfoGvPermit->setIsFeeExempt($command->getIsFeeExempt());
-        $irfoGvPermit->setExemptionDetails($command->getExemptionDetails());
-        $irfoGvPermit->setNoOfCopies($command->getNoOfCopies());
-
-        $irfoGvPermit->setIrfoFeeId($this->getIrfoFeeId($organisation));
-
-        if ($command->getInForceDate() !== null) {
-            $irfoGvPermit->setInForceDate(new \DateTime($command->getInForceDate()));
-        }
+        $irfoGvPermit->update(
+            $type,
+            $command->getYearRequired(),
+            new \DateTime($command->getInForceDate()),
+            new \DateTime($command->getExpiryDate()),
+            $command->getNoOfCopies(),
+            $command->getIsFeeExempt(),
+            $command->getExemptionDetails(),
+            $this->getIrfoFeeId($organisation)
+        );
 
         return $irfoGvPermit;
     }
