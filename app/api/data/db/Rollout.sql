@@ -2561,7 +2561,10 @@ VALUES
     (702, 999999, 479, 702, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'GV Continuation checklist', '2015-01-01 00:00:00', 1),
     (703, 999999, 479, 703, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'GV Continuation checklist', '2015-01-01 00:00:00', 1),
     (704, 999999, 479, 704, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'PSV Continuation checklist', '2015-01-01 00:00:00', 1),
-    (705, 999999, 479, 705, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'PSV SR Continuation checklist', '2015-01-01 00:00:00', 1);
+    (705, 999999, 479, 705, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'PSV SR Continuation checklist', '2015-01-01 00:00:00', 1),
+
+    (706, 999999, 479, 706, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'GV Duplicate vehicle letter', '2015-01-01 00:00:00', 1),
+    (707, 999999, 479, 707, 479, 999999, 1, 1, '2015-01-01 00:00:00', 'GV Duplicate vehicle letter (NI)', '2015-01-01 00:00:00', 1);
 
 INSERT INTO `doc_bookmark` (`id`, `name`, `description`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
@@ -4747,7 +4750,10 @@ VALUES
     (702, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/GVChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
     (703, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/GVChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
     (704, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSVChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'PSV continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
-    (705, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSVSRChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'PSV SR continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1);
+    (705, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSVSRChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'PSV SR continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
+
+    (706, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/GV_Duplicate_vehicle_letter.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV Duplicate vehicle letter', 0, NULL, '2015-01-01 00:00:00', 1),
+    (707, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/GV_Duplicate_vehicle_letter.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV Duplicate vehicle letter (NI)', 0, NULL, '2015-01-01 00:00:00', 1);
 
 INSERT INTO `role` (`id`, `role`, `code`, `description`) VALUES
     (1, 'internal-limited-read-only', '', 'Internal - Limited read only'), -- internal only

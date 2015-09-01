@@ -39,6 +39,7 @@ return [
     BookmarkQuery\PreviousPublicationByApplication::class => BookmarkQueryHandler\PreviousPublication::class,
     BookmarkQuery\PreviousPublicationByLicence::class => BookmarkQueryHandler\PreviousPublication::class,
     BookmarkQuery\TotalContFee::class => BookmarkQueryHandler\TotalContFee::class,
+    BookmarkQuery\VehicleBundle::class => BookmarkQueryHandler\VehicleBundle::class,
 
     // Application
     TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
