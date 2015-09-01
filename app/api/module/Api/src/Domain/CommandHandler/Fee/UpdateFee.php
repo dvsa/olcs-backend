@@ -112,9 +112,8 @@ final class UpdateFee extends AbstractCommandHandler implements TransactionedInt
             throw new ValidationException(['pending waive transaction not found']);
         }
 
-        // @todo change status to 'COMPLETE'?
         $transaction
-            ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_PAID))
+            ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_COMPLETE))
             ->setComment($reason)
             ->setCompletedDate($now)
             ->setProcessedByUser($this->getCurrentUser());
