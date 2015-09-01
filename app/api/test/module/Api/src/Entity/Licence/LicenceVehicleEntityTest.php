@@ -93,6 +93,7 @@ class LicenceVehicleEntityTest extends EntityTester
         $now = new DateTime();
 
         $this->assertEquals($now->format('Y-m-d'), $entity->getWarningLetterSeedDate()->format('Y-m-d'));
+
         $this->assertNull($entity->getWarningLetterSentDate());
     }
 
