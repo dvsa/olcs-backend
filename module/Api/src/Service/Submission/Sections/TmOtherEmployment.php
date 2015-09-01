@@ -36,7 +36,7 @@ final class TmOtherEmployment extends AbstractSection
                 $thisRow['version'] = $entity->getVersion();
                 $thisRow['position'] = $entity->getPosition();
                 $thisRow['employerName'] = $entity->getEmployerName();
-                $thisRow['address'] = $entity->getContactDetails()->getAddress();
+                $thisRow['address'] = $entity->getContactDetails()->getAddress()->toArray();
                 $thisRow['hoursPerWeek'] = $entity->getHoursPerWeek();
 
                 $data[] = $thisRow;

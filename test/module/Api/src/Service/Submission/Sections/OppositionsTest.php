@@ -33,7 +33,10 @@ class OppositionsTest extends SubmissionSectionTest
                             'contactName' => [
                                 'title' => 'title-desc',
                                 'forename' => 'fn22',
-                                'familyName' => 'sn22'
+                                'familyName' => 'sn22',
+                                'birthDate' => new \DateTime('1977-01-22'),
+                                'birthPlace' => 'bp'
+
                             ],
                             'grounds' => [
                                 'g1-desc',
@@ -53,7 +56,9 @@ class OppositionsTest extends SubmissionSectionTest
                             'contactName' => [
                                 'title' => 'title-desc',
                                 'forename' => 'fn22',
-                                'familyName' => 'sn22'
+                                'familyName' => 'sn22',
+                                'birthDate' => new \DateTime('1977-01-22'),
+                                'birthPlace' => 'bp'
                             ],
                             'grounds' => [
                                 'g1-desc',

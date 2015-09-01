@@ -36,7 +36,7 @@ final class TmPreviousHistory extends AbstractSection
                 $thisRow['id'] = $entity->getId();
                 $thisRow['version'] = $entity->getVersion();
                 $thisRow['offence'] = $entity->getCategoryText();
-                $thisRow['convictionDate'] = $entity->getConvictionDate();
+                $thisRow['convictionDate'] = $entity->getConvictionDate()->format('d/m/Y');
                 $thisRow['courtFpn'] = $entity->getCourtFpn();
                 $thisRow['penalty'] = $entity->getPenalty();
 
