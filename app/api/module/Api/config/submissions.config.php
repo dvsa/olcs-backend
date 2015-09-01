@@ -140,6 +140,10 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\Oppositions::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\TmDetails::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\TmResponsibilities::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
         ],
         'aliases' => [
             'introduction' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
@@ -192,6 +196,8 @@ return [
             'surrender' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'annex' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'statements' => \Dvsa\Olcs\Api\Service\Submission\Sections\Statements::class,
+            'tm-details' => \Dvsa\Olcs\Api\Service\Submission\Sections\TmDetails::class,
+            'tm-responsibilities' => \Dvsa\Olcs\Api\Service\Submission\Sections\TmResponsibilities::class,
         ]
     ]
 ];
