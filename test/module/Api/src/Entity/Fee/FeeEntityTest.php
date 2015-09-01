@@ -4,6 +4,8 @@ namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
@@ -165,5 +167,56 @@ class FeeEntityTest extends EntityTester
             [Entity::STATUS_WAIVED, true],
             ['invalid', true],
         ];
+    }
+
+    public function testCompatibilityGetMethods()
+    {
+        $this->assertNull($this->sut->getReceivedAmount());
+        $this->assertNull($this->sut->getReceivedDate());
+        $this->assertNull($this->sut->getPaymentMethod());
+        $this->assertNull($this->sut->getProcessedBy());
+        $this->assertNull($this->sut->getPayer());
+        $this->assertNull($this->sut->getSlipNo());
+        $this->assertNull($this->sut->getChequePoNumber());
+        $this->assertNull($this->sut->getWaiveReason());
+
+        $transaction = new Transaction();
+        $feeTransaction = new FeeTransaction();
+        $feeTransaction->setTransaction($transaction);
+        $feeTransaction->setAmount('1234.56');
+
+        $completed = new \DateTime();
+        $transaction->setCompletedDate($completed);
+
+        $paymentMethod = m::mock(RefData::class)
+            ->shouldReceive('getDescription')
+            ->andReturn('method')
+            ->getMock();
+        $transaction->setPaymentMethod($paymentMethod);
+
+        $user = m::mock()
+            ->shouldReceive('getLoginId')
+            ->andReturn('bob')
+            ->getMock();
+        $transaction->setProcessedByUser($user);
+
+        $transaction->setPayerName('payer');
+
+        $transaction->setPayingInSlipNumber('12345');
+
+        $transaction->setChequePoNumber('23456');
+
+        $transaction->setComment('reason');
+
+        $this->sut->getFeeTransactions()->add($feeTransaction);
+
+        $this->assertEquals('1234.56', $this->sut->getReceivedAmount());
+        $this->assertEquals($completed, $this->sut->getReceivedDate());
+        $this->assertEquals('method', $this->sut->getPaymentMethod());
+        $this->assertEquals('bob', $this->sut->getProcessedBy());
+        $this->assertEquals('payer', $this->sut->getPayer());
+        $this->assertEquals('12345', $this->sut->getSlipNo());
+        $this->assertEquals('23456', $this->sut->getChequePoNumber());
+        $this->assertEquals('reason', $this->sut->getWaiveReason());
     }
 }
