@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -160,6 +161,35 @@ class LicenceVehicle extends AbstractRepository
             // licence_vehicle.warning_letter_seed_date is NULL
             $qb->andWhere($qb->expr()->isNull('m.warningLetterSeedDate'));
         }
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+    }
+
+    public function fetchQueuedForWarning()
+    {
+        $qb = $this->createQueryBuilder();
+
+        $seedDate = new DateTime('-28 days');
+
+        $qb->innerJoin('m.licence', 'l')
+            // licence.status in (Curtailed, Valid, Suspended);
+            ->andWhere(
+                $qb->expr()->in(
+                    'l.status',
+                    [
+                        LicenceEntity::LICENCE_STATUS_CURTAILED,
+                        LicenceEntity::LICENCE_STATUS_VALID,
+                        LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    ]
+                )
+            )
+            // licence_vehicle.warning_letter_seed_date + 28 days < current date/time;
+            ->andWhere($qb->expr()->lt('m.warningLetterSeedDate', ':seedDate'))
+            // licence_vehicle.warning_letter_sent_date is NULL;
+            ->andWhere($qb->expr()->isNull('m.warningLetterSentDate'))
+            // licence_vehicle.removed_date is NULL;
+            ->andWhere($qb->expr()->isNull('m.removalDate'))
+            ->setParameter('seedDate', $seedDate);
 
         return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
     }

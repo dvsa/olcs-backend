@@ -22,6 +22,8 @@ class QueryHandlerManager extends AbstractPluginManager implements QueryHandlerI
 {
     public function __construct(ConfigInterface $config = null)
     {
+        $this->setShareByDefault(false);
+
         if ($config) {
             $config->configureServiceManager($this);
         }

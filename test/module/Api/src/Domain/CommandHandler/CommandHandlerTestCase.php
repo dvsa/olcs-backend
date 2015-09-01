@@ -176,6 +176,19 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             );
     }
 
+    public function expectedSideEffectThrowsException($class, $data, $exception)
+    {
+        $this->commandHandler->shouldReceive('handleCommand')
+            ->once()
+            ->with(m::type($class))
+            ->andReturnUsing(
+                function (CommandInterface $command) use ($class, $data, $exception) {
+                    $this->commands[] = [$command, $data];
+                    throw $exception;
+                }
+            );
+    }
+
     public function mapRefData($key)
     {
         return isset($this->refData[$key]) ? $this->refData[$key] : null;
