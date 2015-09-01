@@ -21,12 +21,10 @@ final class UpdateIrfoGvPermit extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command)
     {
         $type = $this->getRepo()->getReference(IrfoGvPermitType::class, $command->getIrfoGvPermitType());
-        $status = $this->getRepo()->getRefdataReference($command->getIrfoPermitStatus());
 
         $irfoGvPermit = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $irfoGvPermit->setIrfoGvPermitType($type);
-        $irfoGvPermit->setIrfoPermitStatus($status);
         $irfoGvPermit->setYearRequired($command->getYearRequired());
         $irfoGvPermit->setIsFeeExempt($command->getIsFeeExempt());
         $irfoGvPermit->setExemptionDetails($command->getExemptionDetails());
