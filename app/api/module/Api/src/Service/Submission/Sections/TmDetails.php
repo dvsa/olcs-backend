@@ -39,10 +39,10 @@ final class TmDetails extends AbstractSection
             $data['dob'] = $person['birthDate'];
             $data['placeOfBirth'] = $person['birthPlace'];
             $data['tmType'] = !empty($tmData->getTmType()) ? $tmData->getTmType()->getDescription() : '';
-            $data['homeAddress'] = !empty($tmData->getHomeCd()->getAddress()) ? 
-                $tmData->getHomeCd()->getAddress() : [];
+            $data['homeAddress'] = !empty($tmData->getHomeCd()->getAddress()) ?
+                $tmData->getHomeCd()->getAddress()->toArray() : [];
             $data['workAddress'] = !empty($tmData->getWorkCd()->getAddress()) ?
-                $tmData->getWorkCd()->getAddress() : [];
+                $tmData->getWorkCd()->getAddress()->toArray() : [];
         }
 
         return ['data' => ['overview' => $data]];
