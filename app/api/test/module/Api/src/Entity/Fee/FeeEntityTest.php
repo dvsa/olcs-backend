@@ -188,10 +188,7 @@ class FeeEntityTest extends EntityTester
         $completed = new \DateTime();
         $transaction->setCompletedDate($completed);
 
-        $paymentMethod = m::mock(RefData::class)
-            ->shouldReceive('getDescription')
-            ->andReturn('method')
-            ->getMock();
+        $paymentMethod = m::mock(RefData::class);
         $transaction->setPaymentMethod($paymentMethod);
 
         $user = m::mock()
@@ -212,7 +209,7 @@ class FeeEntityTest extends EntityTester
 
         $this->assertEquals('1234.56', $this->sut->getReceivedAmount());
         $this->assertEquals($completed, $this->sut->getReceivedDate());
-        $this->assertEquals('method', $this->sut->getPaymentMethod());
+        $this->assertEquals($paymentMethod, $this->sut->getPaymentMethod());
         $this->assertEquals('bob', $this->sut->getProcessedBy());
         $this->assertEquals('payer', $this->sut->getPayer());
         $this->assertEquals('12345', $this->sut->getSlipNo());

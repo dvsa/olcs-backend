@@ -146,7 +146,7 @@ class Fee extends AbstractFee
     {
         $ft = $this->getFeeTransactions()->last();
         if ($ft) {
-            return $ft->getTransaction()->getPaymentMethod()->getDescription();
+            return $ft->getTransaction()->getPaymentMethod();
         }
     }
 

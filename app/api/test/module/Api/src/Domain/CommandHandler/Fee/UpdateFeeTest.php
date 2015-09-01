@@ -56,7 +56,6 @@ class UpdateFeeTest extends CommandHandlerTestCase
     public function testHandleCommandRecommendWaive()
     {
         $feeId = 69;
-        $transactionId = 99;
 
         $command = UpdateFeeCmd::create(
             [
@@ -148,7 +147,7 @@ class UpdateFeeTest extends CommandHandlerTestCase
             ->andReturnSelf()
             ->shouldReceive('setCompletedDate')
             ->with(
-                 m::on(
+                m::on(
                     // compare date objects
                     function ($arg) use ($now) {
                         return $arg == $now;
@@ -263,7 +262,7 @@ class UpdateFeeTest extends CommandHandlerTestCase
             ->andReturnSelf()
             ->shouldReceive('setCompletedDate')
             ->with(
-                 m::on(
+                m::on(
                     // compare date objects
                     function ($arg) use ($now) {
                         return $arg == $now;
@@ -313,7 +312,7 @@ class UpdateFeeTest extends CommandHandlerTestCase
         );
     }
 
-  public function testHandleCommandRejectWaiveError()
+    public function testHandleCommandRejectWaiveError()
     {
         $feeId = 69;
 
