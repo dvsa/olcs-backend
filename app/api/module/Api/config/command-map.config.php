@@ -513,7 +513,9 @@ return [
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
     Command\Fee\PayFee::class => CommandHandler\Fee\PayFee::class,
-    TransferCommand\Fee\UpdateFee::class => CommandHandler\Fee\UpdateFee::class,
+    TransferCommand\Fee\ApproveWaive::class => CommandHandler\Fee\ApproveWaive::class,
+    TransferCommand\Fee\RecommendWaive::class => CommandHandler\Fee\RecommendWaive::class,
+    TransferCommand\Fee\RejectWaive::class => CommandHandler\Fee\RejectWaive::class,
     TransferCommand\Fee\CreateMiscellaneousFee::class => CommandHandler\Fee\CreateMiscellaneousFee::class,
 
     // Domain - Transaction (formerly 'Payment')
