@@ -20,6 +20,12 @@ return array(
         'company_cert_seen' => array(
             'type' => 'yesno'
         ),
+        'confirm_share_vehicle_info' => array(
+            'type' => 'yesno'
+        ),
+        'confirm_share_trailer_info' => array(
+            'type' => 'yesno'
+        ),
         'is_irfo' => array(
             'type' => 'yesno'
         ),

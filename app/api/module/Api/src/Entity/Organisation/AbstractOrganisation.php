@@ -66,6 +66,30 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     protected $companyOrLlpNo;
 
     /**
+     * Confirm share trailer info
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno",
+     *     name="confirm_share_trailer_info",
+     *     nullable=false,
+     *     options={"default": 0})
+     */
+    protected $confirmShareTrailerInfo = 0;
+
+    /**
+     * Confirm share vehicle info
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno",
+     *     name="confirm_share_vehicle_info",
+     *     nullable=false,
+     *     options={"default": 0})
+     */
+    protected $confirmShareVehicleInfo = 0;
+
+    /**
      * Contact details
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails
@@ -406,6 +430,52 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     public function getCompanyOrLlpNo()
     {
         return $this->companyOrLlpNo;
+    }
+
+    /**
+     * Set the confirm share trailer info
+     *
+     * @param string $confirmShareTrailerInfo
+     * @return Organisation
+     */
+    public function setConfirmShareTrailerInfo($confirmShareTrailerInfo)
+    {
+        $this->confirmShareTrailerInfo = $confirmShareTrailerInfo;
+
+        return $this;
+    }
+
+    /**
+     * Get the confirm share trailer info
+     *
+     * @return string
+     */
+    public function getConfirmShareTrailerInfo()
+    {
+        return $this->confirmShareTrailerInfo;
+    }
+
+    /**
+     * Set the confirm share vehicle info
+     *
+     * @param string $confirmShareVehicleInfo
+     * @return Organisation
+     */
+    public function setConfirmShareVehicleInfo($confirmShareVehicleInfo)
+    {
+        $this->confirmShareVehicleInfo = $confirmShareVehicleInfo;
+
+        return $this;
+    }
+
+    /**
+     * Get the confirm share vehicle info
+     *
+     * @return string
+     */
+    public function getConfirmShareVehicleInfo()
+    {
+        return $this->confirmShareVehicleInfo;
     }
 
     /**
