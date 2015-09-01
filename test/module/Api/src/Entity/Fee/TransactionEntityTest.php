@@ -89,6 +89,27 @@ class TransactionEntityTest extends EntityTester
     }
 
     /**
+     * @param string $status
+     * @param boolean $expected
+     *
+     * @dataProvider isPaidProvider
+     */
+    public function testIsComplete($status, $expected)
+    {
+        $sut = new $this->entityClass;
+
+        $status = m::mock(RefData::class)
+            ->shouldReceive('getId')
+            ->once()
+            ->andReturn($status)
+            ->getMock();
+
+        $sut->setStatus($status);
+
+        $this->assertEquals($expected, $sut->isComplete());
+    }
+
+    /**
      * @return array
      */
     public function isPaidProvider()
@@ -99,6 +120,7 @@ class TransactionEntityTest extends EntityTester
             [Entity::STATUS_LEGACY, false],
             [Entity::STATUS_FAILED, false],
             [Entity::STATUS_PAID, true],
+            [Entity::STATUS_COMPLETE, true],
             ['invalid', false],
         ];
     }

@@ -22,7 +22,9 @@ class Transaction extends AbstractTransaction
     const STATUS_CANCELLED = 'pay_s_cn';
     const STATUS_LEGACY = 'pay_s_leg';
     const STATUS_FAILED = 'pay_s_fail';
+    // 'paid' and 'complete' are synonymous
     const STATUS_PAID = 'pay_s_pd';
+    const STATUS_COMPLETE = 'pay_s_pd';
 
     const TYPE_WAIVE = 'trt_waive';
     const TYPE_PAYMENT = 'trt_payment';
@@ -37,9 +39,18 @@ class Transaction extends AbstractTransaction
 
     /**
      * @return boolean
+     * @deprecated
      */
     public function isPaid()
     {
         return $this->getStatus()->getId() === self::STATUS_PAID;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isComplete()
+    {
+        return $this->getStatus()->getId() === self::STATUS_COMPLETE;
     }
 }
