@@ -217,10 +217,15 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
         $piVenue = $hearing->getPiVenue();
         $hearingDate = $hearing->getHearingDate();
 
+        //sometimes we have a datetime, and sometimes a string
+        if ($hearingDate instanceof \DateTime) {
+            $hearingDate = $hearingDate->format('Y-m-d H:i:s');
+        }
+
         return [
             'piVenue' => ($piVenue === null ? $piVenue : $piVenue->getId()),
             'piVenueOther' => $hearing->getPiVenueOther(),
-            'hearingDate' => $hearingDate->format('Y-m-d H:i:s'),
+            'hearingDate' => $hearingDate,
             'id' => $hearing->getId()
         ];
     }
