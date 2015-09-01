@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Pay Outstanding Fees Test
  *
@@ -82,10 +83,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             PaymentEntity::STATUS_OUTSTANDING,
             PaymentEntity::STATUS_PAID,
             PaymentEntity::STATUS_FAILED,
+            PaymentEntity::TYPE_PAYMENT,
             FeeEntity::METHOD_CARD_ONLINE,
-            FeeEntity::METHOD_CASH,
-            FeeEntity::METHOD_CHEQUE,
-            FeeEntity::METHOD_POSTAL_ORDER,
+            FeeEntity::METHOD_CASH => m::mock(RefData::class)->makePartial()->setDescription('Cash'),
+            FeeEntity::METHOD_CHEQUE => m::mock(RefData::class)->makePartial()->setDescription('Cheque'),
+            FeeEntity::METHOD_POSTAL_ORDER => m::mock(RefData::class)->makePartial()->setDescription('Postal Order'),
             FeeEntity::STATUS_PAID,
             LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
@@ -211,8 +213,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
     public function testResolvePaidFees()
     {
-        $this->markTestIncomplete('@todo update this');
-
         $result = new Result();
 
         // set up fee with outstanding payment that was paid
@@ -220,11 +220,12 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $payment = new PaymentEntity();
         $payment
             ->setStatus($this->mapRefData(PaymentEntity::STATUS_OUTSTANDING))
-            ->setId($paymentId);
+            ->setId($paymentId)
+            ->setPaymentMethod($this->mapRefData(FeeEntity::METHOD_CARD_ONLINE));
         $fp = new FeePaymentEntity();
         $fp->setTransaction($payment);
         $fee1 = $this->getStubFee(99, 150.00);
-        $fee1->getFeePayments()->add($fp);
+        $fee1->getFeeTransactions()->add($fp);
 
         $fees = [$fee1];
 
@@ -254,22 +255,19 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
     public function testResolvePaidFeesOutstandingPaymentUnpaid()
     {
-        $this->markTestIncomplete('@todo update this');
-
         $result = new Result();
 
-        // set up fee with outstanding payment that was paid
+        // set up fee with outstanding payment that was not paid
         $paymentId = 222;
         $payment = new PaymentEntity();
         $payment
             ->setStatus($this->mapRefData(PaymentEntity::STATUS_OUTSTANDING))
-            ->setId($paymentId);
+            ->setId($paymentId)
+            ->setPaymentMethod($this->mapRefData(FeeEntity::METHOD_CARD_ONLINE));
         $fp = new FeePaymentEntity();
         $fp->setTransaction($payment);
         $fee1 = $this->getStubFee(99, 150.00);
-        $fee1
-            ->setPaymentMethod($this->mapRefData(FeeEntity::METHOD_CARD_ONLINE))
-            ->getFeePayments()->add($fp);
+        $fee1->getFeeTransactions()->add($fp);
 
         $fees = [$fee1];
 
@@ -446,12 +444,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
     public function testHandleCommandCashPayment()
     {
-        $this->markTestIncomplete('@todo update this');
-
         // set up data
         $feeIds = [99];
         $fee1 = $this->getStubFee(99, 99.99);
         $fees = [$fee1];
+        $transactionId = 69;
 
         $data = [
             'feeIds' => $feeIds,
@@ -487,6 +484,16 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->once()
             ->with($fee1);
 
+        $savedTransaction = null;
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->andReturnUsing(
+                function ($transaction) use (&$savedTransaction, $transactionId) {
+                    $savedTransaction = $transaction;
+                    $savedTransaction->setId($transactionId);
+                }
+            );
+
         $updateData = ['id' => 99];
         $result2 = new Result();
         $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
@@ -495,31 +502,36 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'transaction' => $transactionId,
+            ],
             'messages' => [
-                'Fee(s) updated as Paid by cash',
+                'Transaction record created',
+                'Fee(s) updated as paid by Cash',
             ]
         ];
 
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(FeeEntity::STATUS_PAID, $fee1->getFeeStatus()->getId());
-        $this->assertEquals('2015-06-17', $fee1->getReceivedDate()->format('Y-m-d'));
-        $this->assertEquals('OLCS-1234-CASH', $fee1->getReceiptNo());
-        $this->assertEquals(FeeEntity::METHOD_CASH, $fee1->getPaymentMethod()->getId());
-        $this->assertEquals('Dan', $fee1->getPayerName());
-        $this->assertEquals('12345', $fee1->getPayingInSlipNumber());
-        $this->assertEquals('99.99', $fee1->getReceivedAmount());
+        $this->assertEquals('2015-06-17', $savedTransaction->getCompletedDate()->format('Y-m-d'));
+        $this->assertEquals('OLCS-1234-CASH', $savedTransaction->getReference());
+        $this->assertEquals(FeeEntity::METHOD_CASH, $savedTransaction->getPaymentMethod()->getId());
+        $this->assertEquals('Dan', $savedTransaction->getPayerName());
+        $this->assertEquals('12345', $savedTransaction->getPayingInSlipNumber());
+        $this->assertEquals('bob', $savedTransaction->getProcessedByUser()->getLoginId());
+        $this->assertEquals('99.99', $savedTransaction->getFeeTransactions()->first()->getAmount());
+        $this->assertEquals(PaymentEntity::STATUS_PAID, $savedTransaction->getStatus()->getId());
+        $this->assertEquals(PaymentEntity::TYPE_PAYMENT, $savedTransaction->getType()->getId());
     }
 
     public function testHandleCommandChequePayment()
     {
-        $this->markTestIncomplete('@todo update this');
-
         // set up data
         $feeIds = [99];
         $fee1 = $this->getStubFee(99, 99.99);
         $fees = [$fee1];
+        $transactionId = 69;
 
         $data = [
             'feeIds' => $feeIds,
@@ -557,6 +569,16 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->once()
             ->with($fee1);
 
+        $savedTransaction = null;
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->andReturnUsing(
+                function ($transaction) use (&$savedTransaction, $transactionId) {
+                    $savedTransaction = $transaction;
+                    $savedTransaction->setId($transactionId);
+                }
+            );
+
         $updateData = ['id' => 99];
         $result2 = new Result();
         $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
@@ -565,33 +587,38 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'transaction' => $transactionId,
+            ],
             'messages' => [
-                'Fee(s) updated as Paid by cheque',
+                'Transaction record created',
+                'Fee(s) updated as paid by Cheque',
             ]
         ];
 
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(FeeEntity::STATUS_PAID, $fee1->getFeeStatus()->getId());
-        $this->assertEquals('2015-06-17', $fee1->getReceivedDate()->format('Y-m-d'));
-        $this->assertEquals('OLCS-1234-CHEQUE', $fee1->getReceiptNo());
-        $this->assertEquals(FeeEntity::METHOD_CHEQUE, $fee1->getPaymentMethod()->getId());
-        $this->assertEquals('Dan', $fee1->getPayerName());
-        $this->assertEquals('12345', $fee1->getPayingInSlipNumber());
-        $this->assertEquals('99.99', $fee1->getReceivedAmount());
-        $this->assertEquals('23456', $fee1->getChequePoNumber());
-        $this->assertEquals('2015-06-10', $fee1->getChequePoDate()->format('Y-m-d'));
+        $this->assertEquals('2015-06-17', $savedTransaction->getCompletedDate()->format('Y-m-d'));
+        $this->assertEquals('OLCS-1234-CHEQUE', $savedTransaction->getReference());
+        $this->assertEquals(FeeEntity::METHOD_CHEQUE, $savedTransaction->getPaymentMethod()->getId());
+        $this->assertEquals('Dan', $savedTransaction->getPayerName());
+        $this->assertEquals('12345', $savedTransaction->getPayingInSlipNumber());
+        $this->assertEquals('bob', $savedTransaction->getProcessedByUser()->getLoginId());
+        $this->assertEquals('99.99', $savedTransaction->getFeeTransactions()->first()->getAmount());
+        $this->assertEquals(PaymentEntity::STATUS_PAID, $savedTransaction->getStatus()->getId());
+        $this->assertEquals(PaymentEntity::TYPE_PAYMENT, $savedTransaction->getType()->getId());
+        $this->assertEquals('23456', $savedTransaction->getChequePoNumber());
+        $this->assertEquals('2015-06-10', $savedTransaction->getChequePoDate()->format('Y-m-d'));
     }
 
     public function testHandleCommandPoPayment()
     {
-        $this->markTestIncomplete('@todo update this');
-
         // set up data
         $feeIds = [99];
         $fee1 = $this->getStubFee(99, 99.99);
         $fees = [$fee1];
+        $transactionId = 69;
 
         $data = [
             'feeIds' => $feeIds,
@@ -628,6 +655,16 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->once()
             ->with($fee1);
 
+        $savedTransaction = null;
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->andReturnUsing(
+                function ($transaction) use (&$savedTransaction, $transactionId) {
+                    $savedTransaction = $transaction;
+                    $savedTransaction->setId($transactionId);
+                }
+            );
+
         $updateData = ['id' => 99];
         $result2 = new Result();
         $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
@@ -636,22 +673,28 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'transaction' => $transactionId,
+            ],
             'messages' => [
-                'Fee(s) updated as Paid by postal order',
+                'Transaction record created',
+                'Fee(s) updated as paid by Postal Order',
             ]
         ];
 
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(FeeEntity::STATUS_PAID, $fee1->getFeeStatus()->getId());
-        $this->assertEquals('2015-06-17', $fee1->getReceivedDate()->format('Y-m-d'));
-        $this->assertEquals('OLCS-1234-PO', $fee1->getReceiptNo());
-        $this->assertEquals(FeeEntity::METHOD_POSTAL_ORDER, $fee1->getPaymentMethod()->getId());
-        $this->assertEquals('Dan', $fee1->getPayerName());
-        $this->assertEquals('12345', $fee1->getPayingInSlipNumber());
-        $this->assertEquals('99.99', $fee1->getReceivedAmount());
-        $this->assertEquals('23456', $fee1->getChequePoNumber());
+        $this->assertEquals('2015-06-17', $savedTransaction->getCompletedDate()->format('Y-m-d'));
+        $this->assertEquals('OLCS-1234-PO', $savedTransaction->getReference());
+        $this->assertEquals(FeeEntity::METHOD_POSTAL_ORDER, $savedTransaction->getPaymentMethod()->getId());
+        $this->assertEquals('Dan', $savedTransaction->getPayerName());
+        $this->assertEquals('12345', $savedTransaction->getPayingInSlipNumber());
+        $this->assertEquals('bob', $savedTransaction->getProcessedByUser()->getLoginId());
+        $this->assertEquals('99.99', $savedTransaction->getFeeTransactions()->first()->getAmount());
+        $this->assertEquals(PaymentEntity::STATUS_PAID, $savedTransaction->getStatus()->getId());
+        $this->assertEquals(PaymentEntity::TYPE_PAYMENT, $savedTransaction->getType()->getId());
+        $this->assertEquals('23456', $savedTransaction->getChequePoNumber());
     }
 
     public function testHandleCommandAmountMismatch()
