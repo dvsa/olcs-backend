@@ -248,20 +248,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
         return $response;
     }
 
-    protected function filterValid(CommandInterface $command, array $outstandingFees)
-    {
-        $fees = [];
-        if (!empty($outstandingFees)) {
-            $ids = $command->getFeeIds();
-            foreach ($outstandingFees as $fee) {
-                if (in_array($fee->getId(), $ids)) {
-                    $fees[] = $fee;
-                }
-            }
-        }
-        return $fees;
-    }
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         parent::createService($serviceLocator);
