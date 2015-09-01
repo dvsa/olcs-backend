@@ -3,14 +3,15 @@
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TmEmployment;
 use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
 
 /**
- * Class TmQualifications
+ * Class TmOtherEmployment
  * @package Dvsa\Olcs\Api\Service\Submission\Sections
  * @author Shaun Lizzio <shaun.lizzio@valtech.co.uk>
  */
-final class TmQualifications extends AbstractSection
+final class TmOtherEmployment extends AbstractSection
 {
     /**
      * Generate only the section data required.
@@ -22,32 +23,32 @@ final class TmQualifications extends AbstractSection
     {
         $data = [];
 
-        if (!empty($case->getTransportManager())) {
+        if (!empty($case->getTransportManager()->getEmployments())) {
 
-            $tmQualifications = $case->getTransportManager()->getQualifications();
+            $tmEmployments = $case->getTransportManager()->getEmployments();
 
-            for ($i = 0; $i < count($tmQualifications); $i++) {
-                /** @var TmQualification $entity */
-                $entity = $tmQualifications->current();
+            for ($i = 0; $i < count($tmEmployments); $i++) {
+                /** @var TmEmployment $entity */
+                $entity = $tmEmployments->current();
 
                 $thisRow = array();
                 $thisRow['id'] = $entity->getId();
                 $thisRow['version'] = $entity->getVersion();
-                $thisRow['qualificationType'] = $entity->getQualificationType()->getDescription();
-                $thisRow['serialNo'] = $entity->getSerialNo();
-                $thisRow['issuedDate'] = $entity->getIssuedDate();
-                $thisRow['country'] = $entity->getCountryCode()->getCountryDesc();
+                $thisRow['position'] = $entity->getPosition();
+                $thisRow['employerName'] = $entity->getEmployerName();
+                $thisRow['address'] = $entity->getContactDetails()->getAddress();
+                $thisRow['hoursPerWeek'] = $entity->getHoursPerWeek();
 
                 $data[] = $thisRow;
 
-                $tmQualifications->next();
+                $tmEmployments->next();
             }
         }
 
         return [
             'data' => [
                 'tables' => [
-                    'tm-qualifications' => $data,
+                    'tm-other-employment' => $data,
                 ]
             ]
         ];
