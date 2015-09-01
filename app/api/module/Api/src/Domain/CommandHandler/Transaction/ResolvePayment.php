@@ -58,7 +58,6 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
                     ->setProcessedByUser($this->getCurrentUser());
                 $feeStatusRef = $this->getRepo()->getRefdataReference(Fee::STATUS_PAID);
                 foreach ($transaction->getFeeTransactions() as $ft) {
-                    // $ft->setAmount($fee->getAmount()); // @todo check this is populated when ft is created
                     $fee = $ft->getFee();
                     $fee->setFeeStatus($feeStatusRef);
                     $this->getRepo('Fee')->save($fee);
