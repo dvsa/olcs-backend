@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Api\Service\CpmsHelperService as Cpms;
@@ -46,7 +47,7 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
 
         $cpmsStatus = $this->cpmsHelper->getPaymentStatus($transaction->getReference());
 
-        $now = new \DateTime();
+        $now = new DateTime();
 
         $result = new Result();
 

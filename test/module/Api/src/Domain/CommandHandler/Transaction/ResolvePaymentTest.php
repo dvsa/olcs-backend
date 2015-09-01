@@ -7,15 +7,17 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\ResolvePayment;
+
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
-use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Repository\AbstractRepository as Repo;
+use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\ResolvePayment;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
+use Dvsa\Olcs\Api\Domain\Repository\AbstractRepository as Repo;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeePaymentEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\CpmsHelperService as CpmsHelper;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -44,6 +46,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $this->mockRepo('Fee', Repo::class);
 
         $this->refData = [
+            PaymentEntity::STATUS_OUTSTANDING,
             PaymentEntity::STATUS_PAID => m::mock(RefData::class)
                 ->shouldReceive('getDescription')
                 ->andReturn('PAYMENT PAID')
@@ -60,7 +63,10 @@ class ResolvePaymentTest extends CommandHandlerTestCase
                 ->shouldReceive('getDescription')
                 ->andReturn('FEE PAID')
                 ->getMock(),
-            FeeEntity::METHOD_CARD_ONLINE,
+            FeeEntity::METHOD_CARD_ONLINE => m::mock(RefData::class)
+                ->shouldReceive('getDescription')
+                ->andReturn('CARD')
+                ->getMock(),
         ];
 
         $this->references = [
@@ -89,8 +95,6 @@ class ResolvePaymentTest extends CommandHandlerTestCase
 
     public function testHandleCommandSuccess()
     {
-        $this->markTestIncomplete('@todo update FeeTransaction stuff');
-
         // set up data
         $paymentId = 69;
         $guid = 'OLCS-1234-ABCDE';
@@ -139,20 +143,21 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $result2 = new Result();
         $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
 
+        $now = new DateTime();
+
         // assertions
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals('FEE PAID', $fee->getFeeStatus()->getDescription());
-        $this->assertEquals($guid, $fee->getReceiptNo());
-        $this->assertEquals(FeeEntity::METHOD_CARD_ONLINE, $fee->getPaymentMethod()->getId());
-        $this->assertEquals($amount, $fee->getReceivedAmount());
+        $this->assertEquals($guid, $payment->getReference());
+        $this->assertEquals($now->format('Y-m-d'), $payment->getCompletedDate()->format('Y-m-d'));
 
         $expected = [
             'id' => [
-                'payment' => 69,
+                'transaction' => 69,
             ],
             'messages' => [
-                'Payment resolved as PAYMENT PAID'
+                'Transaction resolved as PAYMENT PAID'
             ]
         ];
 
@@ -168,8 +173,6 @@ class ResolvePaymentTest extends CommandHandlerTestCase
      */
     public function testHandleCommandFailures($cpmsStatus, $expectedPaymentStatus, $expectedMessage)
     {
-        $this->markTestIncomplete('@todo update FeeTransaction stuff');
-
         // set up data
         $paymentId = 69;
         $guid = 'OLCS-1234-ABCDE';
@@ -187,7 +190,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $payment->setId($paymentId);
         $payment->setReference($guid);
         $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
-        $payment->setStatus($this->refData[$expectedPaymentStatus]);
+        $payment->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING]);
 
         $command = Cmd::create($data);
 
@@ -216,12 +219,11 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         // assertions
         $result = $this->sut->handleCommand($command);
 
-        $this->assertNull($fee->getReceiptNo());
-        $this->assertEquals(0, $fee->getReceivedAmount());
+        $this->assertEquals($expectedPaymentStatus, $payment->getStatus()->getId());
 
         $expected = [
             'id' => [
-                'payment' => 69,
+                'transaction' => 69,
             ],
             'messages' => [
                 $expectedMessage,
@@ -237,17 +239,17 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             [
                 CpmsHelper::PAYMENT_FAILURE,
                 PaymentEntity::STATUS_FAILED,
-                'Payment resolved as PAYMENT FAILED',
+                'Transaction resolved as PAYMENT FAILED',
             ],
             [
                 CpmsHelper::PAYMENT_CANCELLATION,
                 PaymentEntity::STATUS_CANCELLED,
-                'Payment resolved as PAYMENT CANCELLED',
+                'Transaction resolved as PAYMENT CANCELLED',
             ],
             [
                 CpmsHelper::PAYMENT_IN_PROGRESS,
                 PaymentEntity::STATUS_FAILED,
-                'Payment resolved as PAYMENT FAILED',
+                'Transaction resolved as PAYMENT FAILED',
             ],
         ];
     }
