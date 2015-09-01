@@ -144,6 +144,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\TmResponsibilities::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\TmQualifications::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
         ],
         'aliases' => [
             'introduction' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
@@ -198,6 +200,7 @@ return [
             'statements' => \Dvsa\Olcs\Api\Service\Submission\Sections\Statements::class,
             'tm-details' => \Dvsa\Olcs\Api\Service\Submission\Sections\TmDetails::class,
             'tm-responsibilities' => \Dvsa\Olcs\Api\Service\Submission\Sections\TmResponsibilities::class,
+            'tm-qualifications' => \Dvsa\Olcs\Api\Service\Submission\Sections\TmQualifications::class,
         ]
     ]
 ];
