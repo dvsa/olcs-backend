@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
  */
 final class People extends AbstractSection
 {
-    public function generateSection(CasesEntity $case, \ArrayObject $context = null)
+    public function generateSection(CasesEntity $case)
     {
         $licence = $case->getLicence();
         $organisation = !empty($licence) ? $licence->getOrganisation() : '';

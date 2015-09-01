@@ -210,22 +210,6 @@ class Organisation extends AbstractOrganisation
     }
 
     /**
-     * Get nature of business as a string
-     *
-     * @params array $natureOfBusiness
-     * @return string
-     */
-    public function getNatureOfBusinessString()
-    {
-        $nob = $this->getNatureOfBusinesses();
-        $result = [];
-        foreach ($nob as $element) {
-            $result[] = $element->getDescription();
-        }
-        return implode(', ', $result);
-    }
-
-    /**
      * Get All Outstanding applications for all licences
      * Status "under consideration" or "granted"
      *
@@ -236,10 +220,36 @@ class Organisation extends AbstractOrganisation
         $applications = [];
 
         $licences = $this->getLicences();
+
+        /** @var LicenceEntity $licence */
         foreach ($licences as $licence) {
             $outstandingApplications = $licence->getOutstandingApplications()->toArray();
+
             $applications += $outstandingApplications;
         }
         return new ArrayCollection($applications);
+    }
+
+    /**
+     * Returns licences linked to this organisation for submissions
+     * @return array LicenceEntity[]
+     */
+    public function getLinkedLicences()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->in(
+                'status',
+                [
+                    LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+                    LicenceEntity::LICENCE_STATUS_GRANTED,
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                ]
+            )
+        );
+
+        return $this->getLicences()->matching($criteria);
     }
 }
