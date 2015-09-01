@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\PreviousConviction;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\Cases\Conviction;
@@ -27,6 +28,7 @@ use Dvsa\Olcs\Api\Entity\Si\SiPenaltyErruRequested;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyImposedType;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyRequestedType;
 use Dvsa\Olcs\Api\Entity\Si\SiPenaltyType;
+use Dvsa\Olcs\Api\Entity\Tm\TmEmployment;
 use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
@@ -97,7 +99,21 @@ class SubmissionSectionTest extends MockeryTestCase
 
         $ecmsNo = 'ecms1234';
         $description = 'case description';
-        $transportManager = null;
+        $transportManager = $this->generateTransportManager(43);
+
+        $tmLicences = new ArrayCollection();
+        $tmLicences->add($this->generateTransportManagerLicence(
+            234,
+            $licence,
+            $transportManager
+        ));
+
+        $transportManager->setTmApplications($this->generateArrayCollection('TransportManagerApplication'));
+        $transportManager->setTmLicences($tmLicences);
+
+        $transportManager->setEmployments($this->generateArrayCollection('TmEmployment'));
+        $transportManager->setOtherLicences($this->generateArrayCollection('OtherLicence'));
+        $transportManager->setPreviousConvictions($this->generateArrayCollection('PreviousConviction'));
 
         $case = new CasesEntity(
             $openDate, $caseType, $categorys, $outcomes, $application, $licence, $transportManager, $ecmsNo,
@@ -142,8 +158,62 @@ class SubmissionSectionTest extends MockeryTestCase
         $person->setForename('fn' . $id);
         $person->setFamilyName('sn' . $id);
         $person->setBirthDate(new \DateTime('1977-01-' . $id));
+        $person->setBirthPlace('bp');
 
         return $person;
+    }
+
+    protected function generateTransportManager($id)
+    {
+        $tm = new TransportManager($id);
+        $tm->setId($id);
+        $tm->setVersion(($id+10));
+        $tm->setTmType($this->generateRefDataEntity('tmType'));
+
+        return $tm;
+    }
+
+    protected function generateTransportManagerApplication($id)
+    {
+        $entity = new TransportManagerApplication($id);
+        $entity->setId($id);
+        $entity->setOperatingCentres($this->generateArrayCollection('OperatingCentre', 2));
+        $entity->setHoursMon(1);
+        $entity->setHoursTue(2);
+        $entity->setHoursWed(3);
+        $entity->setHoursThu(4);
+        $entity->setHoursFri(5);
+        $entity->setHoursSat(6);
+        $entity->setHoursSun(7);
+
+        $organisation = new Organisation();
+        $organisationType = $this->generateRefDataEntity($this->organisationType);
+        $organisation->setType($organisationType);
+        $organisation->setName('Org name');
+
+        $licence = $this->generateLicence($organisation, 55);
+
+        $entity->setApplication(
+            $this->generateApplication(852, $licence, Application::APPLICATION_STATUS_UNDER_CONSIDERATION, false)
+        );
+
+        return $entity;
+    }
+
+    protected function generateTransportManagerLicence($id, $licence, $transportManager)
+    {
+        $entity = new TransportManagerLicence($licence, $transportManager);
+        $entity->setId($id);
+        $entity->setOperatingCentres($this->generateArrayCollection('OperatingCentre', 2));
+        $entity->setHoursMon(1);
+        $entity->setHoursTue(2);
+        $entity->setHoursWed(3);
+        $entity->setHoursThu(4);
+        $entity->setHoursFri(5);
+        $entity->setHoursSat(6);
+        $entity->setHoursSun(7);
+
+        return $entity;
     }
 
     protected function generateOrganisation()
@@ -282,6 +352,7 @@ class SubmissionSectionTest extends MockeryTestCase
         $entity->setId($id);
         $entity->setVersion($id+2);
         $entity->setLicNo($id . '-licNo');
+        $entity->setHolderName($id . '-holderName');
 
         $organisation = new Organisation();
         $organisationType = $this->generateRefDataEntity($this->organisationType);
@@ -644,6 +715,19 @@ class SubmissionSectionTest extends MockeryTestCase
         return $entity;
     }
 
+    protected function generatePreviousConviction($id)
+    {
+        $entity = new PreviousConviction();
+        $entity->setId($id);
+        $entity->setVersion(($id+2));
+        $entity->setConvictionDate(new \DateTime('2008-06-03'));
+        $entity->setCategoryText('cat-text');
+        $entity->setCourtFpn('courtFpn1');
+        $entity->setPenalty('pen1');
+
+        return $entity;
+    }
+
     protected function generateSeriousInfringements(CasesEntity $case)
     {
         $sis = new ArrayCollection();
@@ -678,7 +762,7 @@ class SubmissionSectionTest extends MockeryTestCase
     {
         $ac = new ArrayCollection();
         $method = 'generate' . ucfirst($entity);
-        for ($i=1; $i<=count($count); $i++) {
+        for ($i=1; $i <= $count; $i++) {
             $ac->add(
                 $this->$method($i)
             );
@@ -797,6 +881,19 @@ class SubmissionSectionTest extends MockeryTestCase
         $entity->setIsTrailer(false);
         $entity->setImposedAt('imposed-at');
         $entity->setProhibitionType($this->generateRefDataEntity('prohibition-type1'));
+
+        return $entity;
+    }
+
+    protected function generateTmEmployment($id)
+    {
+        $entity = new TmEmployment();
+        $entity->setId($id);
+        $entity->setVersion(($id+5));
+        $entity->setPosition('Some position');
+        $entity->setEmployerName('Employer name');
+        $entity->setHoursPerWeek(32);
+        $entity->setContactDetails($this->generateContactDetails(54));
 
         return $entity;
     }

@@ -32,7 +32,9 @@ class StatementsTest extends SubmissionSectionTest
                             'requestedBy' => [
                                 'forename' => 'fn22',
                                 'title' => 'title-desc',
-                                'familyName' => 'sn22'
+                                'familyName' => 'sn22',
+                                'birthDate' => new \DateTime('1977-01-22'),
+                                'birthPlace' => 'bp'
                             ],
                             'statementType' => 'statement_type1-desc',
                             'stoppedDate' => new \DateTime('2009-03-26'),
