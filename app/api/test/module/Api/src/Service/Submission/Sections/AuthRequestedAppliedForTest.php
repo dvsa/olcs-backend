@@ -26,8 +26,8 @@ class AuthRequestedAppliedForTest extends SubmissionSectionTest
                 'tables' => [
                     'auth-requested-applied-for' => [
                         0 => [
-                            'id' => 63,
-                            'version' => 126,
+                            'id' => 75,
+                            'version' => 150,
                             'currentVehiclesInPossession' => '0',
                             'currentTrailersInPossession' => '0',
                             'currentVehicleAuthorisation' => '0',
@@ -48,20 +48,10 @@ class AuthRequestedAppliedForTest extends SubmissionSectionTest
                         2 => [
                             'id' => 75,
                             'version' => 150,
-                            'currentVehiclesInPossession' => '0',
-                            'currentTrailersInPossession' => '0',
+                            'currentVehiclesInPossession' => 3,
+                            'currentTrailersInPossession' => 5,
                             'currentVehicleAuthorisation' => '0',
-                            'currentTrailerAuthorisation' => '0',
-                            'requestedVehicleAuthorisation' => '0',
-                            'requestedTrailerAuthorisation' => '0',
-                        ],
-                        3 => [
-                            'id' => 75,
-                            'version' => 150,
-                            'currentVehiclesInPossession' => '3',
-                            'currentTrailersInPossession' => '5',
-                            'currentVehicleAuthorisation' => '0',
-                            'currentTrailerAuthorisation' => '5',
+                            'currentTrailerAuthorisation' => 5,
                             'requestedVehicleAuthorisation' => '0',
                             'requestedTrailerAuthorisation' => '0',
                         ]
