@@ -38,7 +38,7 @@ class TmAddressTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'al1, al2, al3, al4, town, postcode',
+            "al1\nal2\nal3\nal4\ntown\npostcode",
             $bookmark->render()
         );
     }

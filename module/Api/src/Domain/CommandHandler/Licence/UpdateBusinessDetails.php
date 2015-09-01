@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -68,8 +67,6 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
         // Optimistic locking on the org
         $this->getRepo('Organisation')->lock($organisation, $command->getVersion());
 
-        $this->result = new Result();
-
         $this->updateTradingNames(
             $licence->getId(),
             $organisation->getId(),
@@ -101,7 +98,7 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
                 'licence' => $licence->getId()
             ];
 
-            $this->result->merge($this->getCommandHandler()->handleCommand(CreateTask::create($taskData)));
+            $this->result->merge($this->handleSideEffect(CreateTask::create($taskData)));
         }
 
         $this->result->setFlag('hasChanged', $this->isDirty);
@@ -118,14 +115,14 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
     {
         $address['contactType'] = ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS;
 
-        return $this->getCommandHandler()->handleCommand(
+        return $this->handleSideEffect(
             SaveAddress::create($address)
         );
     }
 
     private function updateTradingNames($licenceId, $organisationId, $tradingNames)
     {
-        $result = $this->getCommandHandler()->handleCommand(
+        $result = $this->handleSideEffect(
             UpdateTradingNames::create(
                 [
                     'licence' => $licenceId,

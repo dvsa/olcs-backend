@@ -50,7 +50,15 @@ class Application extends AbstractQueryHandler
             $application,
             [
                 'licence' => [
-                    'organisation' => ['disqualifications'],
+                    'organisation' => [
+                        'type',
+                        'disqualifications',
+                        'organisationPersons' => [
+                            'person' => [
+                                'contactDetails' => ['disqualifications']
+                            ]
+                        ]
+                    ],
                 ],
                 'applicationCompletion',
                 's4s' => [

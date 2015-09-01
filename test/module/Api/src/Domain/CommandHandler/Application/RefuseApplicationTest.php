@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -49,15 +50,24 @@ class RefuseApplicationTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 532]);
 
-        $mockLicenceVehicle = m::mock()->shouldReceive('setSpecifiedDate')->with(null)->once()->getMock();
+        $mockLicenceVehicle = m::mock()
+            ->shouldReceive('setSpecifiedDate')->with(null)->once()
+            ->shouldReceive('setInterimApplication')->with(null)->once()->getMock();
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
-            ->once()
             ->andReturn(123)
             ->shouldReceive('getLicenceVehicles')
             ->andReturn([$mockLicenceVehicle])
             ->twice()
+            ->shouldReceive('getCommunityLics')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('toArray')
+                    ->once()
+                    ->andReturn([1,2,3])
+                    ->getMock()
+            )
             ->getMock();
 
         $application = m::mock(Application::class)->makePartial();
@@ -83,6 +93,8 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
         $this->expectedSideEffect(CreateSnapshot::class, ['id' => 532, 'event' => CreateSnapshot::ON_REFUSE], $result1);
+
+        $this->expectedSideEffect(ReturnAllCommunityLicences::class, ['id' => 123], new Result());
 
         $result = $this->sut->handleCommand($command);
 

@@ -26,6 +26,8 @@ interface ReadonlyRepositoryInterface
 
     public function fetchById($id, $hydrateMode = Query::HYDRATE_OBJECT, $version = null);
 
+    public function fetchByIds(array $ids, $hydrateMode = Query::HYDRATE_OBJECT);
+
     /**
      * @param QueryInterface $query
      * @param int $hydrateMode

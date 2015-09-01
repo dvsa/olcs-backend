@@ -106,7 +106,7 @@ class UpdateSafetyTest extends CommandHandlerTestCase
             'id' => 222,
             'version' => 1,
             'safetyInsVehicles' => 2,
-            'safetyInsTrailers' => 3,
+            'safetyInsTrailers' => 0,
             'safetyInsVaries' => 'Y',
             'tachographIns' => 'tach_ext',
             'tachographInsName' => 'Some name'

@@ -8,16 +8,19 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant;
 
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteApplicationLinks;
+use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteConditionUndertakings;
+use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteTmLinks;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\EntityCloner;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre as Aoc;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre as Loc;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre as Aoc;
-use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre as Loc;
 
 /**
  * Process Application Operating Centres
@@ -90,6 +93,20 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
     {
         $loc = $this->findCorrespondingLoc($aoc, $licence);
         $this->getRepo('LicenceOperatingCentre')->delete($loc);
+
+        // Side effects:
+        // the system removes any undertakings or conditions attached to that operating centre
+        // delinks them from a transport manager
+        // removes the operating centre from any other applications
+        $operatingCentre = $loc->getOperatingCentre();
+        $licence = $loc->getLicence();
+        $this->handleSideEffects(
+            [
+                DeleteConditionUndertakings::create(['operatingCentre' => $operatingCentre, 'licence' => $licence]),
+                DeleteTmLinks::create(['operatingCentre' => $operatingCentre]),
+                DeleteApplicationLinks::create(['operatingCentre' => $operatingCentre]),
+            ]
+        );
     }
 
     protected function updateLicenceOperatingCentre(Aoc $aoc, Loc $loc)

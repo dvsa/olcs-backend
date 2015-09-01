@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -62,6 +63,17 @@ final class UpdateGoodsVehicle extends AbstractCommandHandler implements Transac
         }
         if ($command->getRemovalDate() !== null) {
             $licenceVehicle->setRemovalDate(new \DateTime($command->getRemovalDate()));
+        }
+
+        if ($this->isGranted(Permission::INTERNAL_USER)) {
+
+            $date = $command->getSeedDate();
+
+            if ($date !== null) {
+                $date = new DateTime($date);
+            }
+
+            $licenceVehicle->setWarningLetterSeedDate($date);
         }
 
         $this->getRepo()->save($licenceVehicle);

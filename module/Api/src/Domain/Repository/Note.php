@@ -31,6 +31,11 @@ class Note extends AbstractRepository
             $qb->setParameter('caseId', $query->getCase());
         }
 
+        if ($query->getCasesMultiple() !== null && count($query->getCasesMultiple()) > 0) {
+            $qb->andWhere($this->alias . '.case IN (:casesMultiple)');
+            $qb->setParameter('casesMultiple', $query->getCasesMultiple());
+        }
+
         if ($query->getLicence() !== null) {
             $qb->andWhere($this->alias . '.licence = :licenceId');
             $qb->setParameter('licenceId', $query->getLicence());
@@ -61,6 +66,23 @@ class Note extends AbstractRepository
             $qb->setParameter('noteTypeId', $query->getNoteType());
         }
 
-        $this->getQueryBuilder()->modifyQuery($qb)->withUser()->withBusReg();
+        $this->getQueryBuilder()->modifyQuery($qb)->withUser()->withBusReg()->withCase();
+    }
+
+    /**
+     * Fetch a list for an organisation
+     *
+     * @param int|Organisation $organisation
+     *
+     * @return array
+     */
+    public function fetchByOrganisation($organisation)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.organisation', ':organisaion'))
+            ->setParameter('organisaion', $organisation);
+
+        return $doctrineQb->getQuery()->getResult();
     }
 }

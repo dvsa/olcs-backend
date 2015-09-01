@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Organisation Abstract Entity
@@ -16,6 +17,7 @@ use Doctrine\Common\Collections\Collection;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="organisation",
  *    indexes={
  *        @ORM\Index(name="ix_organisation_created_by", columns={"created_by"}),
@@ -27,7 +29,8 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_organisation_contact_details_id", columns={"contact_details_id"}),
  *        @ORM\Index(name="ix_organisation_irfo_contact_details_id",
      *     columns={"irfo_contact_details_id"}),
- *        @ORM\Index(name="ix_organisation_irfo_nationality", columns={"irfo_nationality"})
+ *        @ORM\Index(name="ix_organisation_irfo_nationality", columns={"irfo_nationality"}),
+ *        @ORM\Index(name="ix_organisation_cpid_name", columns={"cpid","name"})
  *    }
  * )
  */
@@ -100,6 +103,15 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      */
     protected $createdOn;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
 
     /**
      * Identifier - Id
@@ -486,6 +498,29 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     public function getCreatedOn()
     {
         return $this->createdOn;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return Organisation
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
     }
 
     /**

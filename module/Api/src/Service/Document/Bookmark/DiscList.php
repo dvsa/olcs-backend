@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\GoodsDiscBundle as Qry;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Goods Disc list bookmark
@@ -36,9 +37,8 @@ class DiscList extends AbstractDiscList
     protected $discBundle = [
         'licenceVehicle' => [
             'licence' => [
-                'organisation' => [
-                    'tradingNames'
-                ]
+                'tradingNames',
+                'organisation'
             ],
             'vehicle',
             'interimApplication'
@@ -61,7 +61,7 @@ class DiscList extends AbstractDiscList
             $orgParts = $this->splitString($organisation['name']);
 
             // we want all trading names as one comma separated array...
-            $tradingNames = $this->implodeNames($organisation['tradingNames']);
+            $tradingNames = $this->implodeNames($licence['tradingNames']);
             // ... before worrying about whether to split them into different bookmark lines
             $tradingParts = $this->splitString($tradingNames);
 

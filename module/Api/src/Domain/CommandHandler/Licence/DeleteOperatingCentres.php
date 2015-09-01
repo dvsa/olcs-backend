@@ -7,6 +7,10 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteApplicationLinks;
+use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteConditionUndertakings;
+use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteTmLinks;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -41,13 +45,51 @@ final class DeleteOperatingCentres extends AbstractCommandHandler implements Tra
         /** @var LicenceOperatingCentre $loc */
         foreach ($locs as $loc) {
             if (in_array($loc->getId(), $command->getIds())) {
+                $message = $loc->checkCanDelete();
+                if ($message) {
+                    throw new \Dvsa\Olcs\Api\Domain\Exception\BadRequestException(key($message));
+                }
+
                 $count++;
                 $this->getRepo('LicenceOperatingCentre')->delete($loc);
+                $this->result->merge($this->deleteConditionUndertakings($loc));
+                $this->result->merge($this->deleteTransportManagerLinks($loc));
+                $this->result->merge($this->deleteFromOtherApplications($loc));
             }
         }
 
         $this->result->addMessage($count . ' Operating Centre(s) removed');
 
         return $this->result;
+    }
+
+    /**
+     * @param LicenceOperatingCentre $loc
+     * @return Result
+     */
+    private function deleteConditionUndertakings($loc)
+    {
+        return $this->handleSideEffect(
+            DeleteConditionUndertakings::create(
+                [
+                    'operatingCentre' => $loc->getOperatingCentre(),
+                    'licence' => $loc->getLicence(),
+                ]
+            )
+        );
+    }
+
+    private function deleteTransportManagerLinks($loc)
+    {
+        return $this->handleSideEffect(
+            DeleteTmLinks::create(['operatingCentre' => $loc->getOperatingCentre()])
+        );
+    }
+
+    private function deleteFromOtherApplications($loc)
+    {
+        return $this->handleSideEffect(
+            DeleteApplicationLinks::create(['operatingCentre' => $loc->getOperatingCentre()])
+        );
     }
 }

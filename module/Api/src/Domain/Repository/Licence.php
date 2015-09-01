@@ -121,18 +121,11 @@ class Licence extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->innerJoin('m.licenceVehicles', 'lv');
-        $qb->innerJoin('lv.vehicle', 'v');
-
-        $qb->andWhere(
-            $qb->expr()->isNull('lv.removalDate')
-        );
-
-        $qb->andWhere(
-            $qb->expr()->eq('v.vrm', ':vrm')
-        );
-
-        $qb->setParameter('vrm', $vrm);
+        $qb->innerJoin('m.licenceVehicles', 'lv')
+            ->innerJoin('lv.vehicle', 'v')
+            ->andWhere($qb->expr()->isNull('lv.removalDate'))
+            ->andWhere($qb->expr()->eq('v.vrm', ':vrm'))
+            ->setParameter('vrm', $vrm);
 
         $query = $qb->getQuery();
 

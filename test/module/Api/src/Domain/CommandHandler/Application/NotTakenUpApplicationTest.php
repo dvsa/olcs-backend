@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
@@ -51,14 +52,13 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleCommand()
     {
         $command = Command::create(['id' => 532]);
 
-        $mockLicenceVehicle = m::mock()->shouldReceive('setSpecifiedDate')->with(null)->once()->getMock();
+        $mockLicenceVehicle = m::mock()
+            ->shouldReceive('setSpecifiedDate')->with(null)->once()
+            ->shouldReceive('setInterimApplication')->with(null)->once()->getMock();
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
@@ -93,16 +93,8 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             ->once()
             ->andReturn(
                 [
-                    m::mock(CommunityLic::class)
-                        ->shouldReceive('getId')
-                        ->once()
-                        ->andReturn(1)
-                        ->getMock(),
-                    m::mock(CommunityLic::class)
-                        ->shouldReceive('getId')
-                        ->once()
-                        ->andReturn(2)
-                        ->getMock(),
+                    m::mock(CommunityLic::class)->makePartial(),
+                    m::mock(CommunityLic::class)->makePartial()
                 ]
             );
 
@@ -144,11 +136,9 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(Delete::class, ['ids' => array(1,2)], new Result());
 
         $this->expectedSideEffect(
-            Void::class,
+            ReturnAllCommunityLicences::class,
             [
-                'licence' => $licence,
-                'communityLicenceIds' => null,
-                'checkOfficeCopy' => false
+                'id' => 123
             ],
             new Result()
         );

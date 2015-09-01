@@ -44,15 +44,15 @@ class LicenceHolderNameTest extends \PHPUnit_Framework_TestCase
             [
                 'organisation' => [
                     'name' => 'Org 1',
-                    'tradingNames' => [
-                        [
-                            'id' => 1,
-                            'name' => 'Alias 1',
-                        ],
-                        [
-                            'id' => 2,
-                            'name' => 'Alias 2',
-                        ],
+                ],
+                'tradingNames' => [
+                    [
+                        'id' => 1,
+                        'name' => 'Alias 1',
+                    ],
+                    [
+                        'id' => 2,
+                        'name' => 'Alias 2',
                     ],
                 ],
             ]
@@ -71,19 +71,19 @@ class LicenceHolderNameTest extends \PHPUnit_Framework_TestCase
             [
                 'organisation' => [
                     'name' => 'Org 1',
-                    'tradingNames' => [
-                        [
-                            'id' => 1,
-                            'name' => 'Quite Long Alias 1',
-                        ],
-                        [
-                            'id' => 2,
-                            'name' => 'Quite Long Alias 2',
-                        ],
-                        [
-                            'id' => 3,
-                            'name' => 'Quite Long Alias 3',
-                        ],
+                ],
+                'tradingNames' => [
+                    [
+                        'id' => 1,
+                        'name' => 'Quite Long Alias 1',
+                    ],
+                    [
+                        'id' => 2,
+                        'name' => 'Quite Long Alias 2',
+                    ],
+                    [
+                        'id' => 3,
+                        'name' => 'Quite Long Alias 3',
                     ],
                 ],
             ]

@@ -29,6 +29,7 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_fee_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_fee_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_fee_irfo_gv_permit_id", columns={"irfo_gv_permit_id"}),
+ *        @ORM\Index(name="ix_fee_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
  *        @ORM\Index(name="ix_fee_fee_status", columns={"fee_status"}),
  *        @ORM\Index(name="ix_fee_payment_method", columns={"payment_method"})
  *    }
@@ -202,6 +203,16 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      * @ORM\JoinColumn(name="irfo_gv_permit_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoGvPermit;
+
+    /**
+     * Irfo psv auth
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth", fetch="LAZY")
+     * @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id", nullable=true)
+     */
+    protected $irfoPsvAuth;
 
     /**
      * Last modified by
@@ -783,6 +794,29 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     public function getIrfoGvPermit()
     {
         return $this->irfoGvPermit;
+    }
+
+    /**
+     * Set the irfo psv auth
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth $irfoPsvAuth
+     * @return Fee
+     */
+    public function setIrfoPsvAuth($irfoPsvAuth)
+    {
+        $this->irfoPsvAuth = $irfoPsvAuth;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo psv auth
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth
+     */
+    public function getIrfoPsvAuth()
+    {
+        return $this->irfoPsvAuth;
     }
 
     /**

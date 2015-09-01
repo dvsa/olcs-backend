@@ -67,6 +67,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
         /** @var OrganisationEntity $organisation */
         $organisation = m::mock(OrganisationEntity::class)->makePartial();
         $organisation->setId(11);
+        $organisation->setType($this->refData[OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY]);
 
         $organisation->shouldReceive('hasInforceLicences')
             ->andReturn(false);

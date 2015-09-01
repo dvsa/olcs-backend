@@ -39,6 +39,7 @@ return [
     BookmarkQuery\PreviousPublicationByApplication::class => BookmarkQueryHandler\PreviousPublication::class,
     BookmarkQuery\PreviousPublicationByLicence::class => BookmarkQueryHandler\PreviousPublication::class,
     BookmarkQuery\TotalContFee::class => BookmarkQueryHandler\TotalContFee::class,
+    BookmarkQuery\VehicleBundle::class => BookmarkQueryHandler\VehicleBundle::class,
 
     // Application
     TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
@@ -145,6 +146,8 @@ return [
     // Submission
     TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
     TransferQuery\Submission\SubmissionSectionComment::class => QueryHandler\Submission\SubmissionSectionComment::class,
+    TransferQuery\Submission\Submission::class => QueryHandler\Submission\Submission::class,
+    TransferQuery\Submission\SubmissionList::class => QueryHandler\Submission\SubmissionList::class,
 
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
@@ -348,6 +351,10 @@ return [
 
     // Organisation Person
    TransferQuery\OrganisationPerson\GetSingle::class => QueryHandler\OrganisationPerson\GetSingle::class,
+
+    // Disc Printing
+    TransferQuery\DiscSequence\DiscPrefixes::class => QueryHandler\DiscSequence\DiscPrefixes::class,
+    TransferQuery\DiscSequence\DiscsNumbering::class => QueryHandler\DiscSequence\DiscsNumbering::class,
 
     // Person
     TransferQuery\Person\Person::class => QueryHandler\Person\Person::class,

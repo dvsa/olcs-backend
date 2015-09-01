@@ -108,7 +108,7 @@ final class Schedule41 extends AbstractCommandHandler implements TransactionedIn
                         CreateConditionUndertaking::create(
                             [
                                 'licence' => null,
-                                'application' => $application,
+                                'application' => $application->getId(),
                                 'operatingCentre' => $licenceOperatingCentre->getOperatingCentre()->getId(),
                                 'conditionType' => $conditionUndertaking->getConditionType()->getId(),
                                 'addedVia' => ConditionUndertaking::ADDED_VIA_APPLICATION,

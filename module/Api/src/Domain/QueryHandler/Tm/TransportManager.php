@@ -44,6 +44,9 @@ class TransportManager extends AbstractQueryHandler
                         'countryCode'
                     ]
                 ]
+            ],
+            [
+                'hasUsers' => (count($transportManager->getUsers()) > 0 ? $transportManager->getUsers() : false)
             ]
         );
     }
