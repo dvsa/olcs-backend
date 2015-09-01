@@ -47,7 +47,7 @@ final class UpdateFee extends AbstractCommandHandler implements TransactionedInt
                 $result->merge($this->approveWaive($fee, $command->getWaiveReason()));
                 break;
             case FeeEntity::STATUS_OUTSTANDING:
-                $result->merge($this->cancelWaive($fee));
+                $result->merge($this->rejectWaive($fee));
                 break;
         }
 
@@ -130,7 +130,7 @@ final class UpdateFee extends AbstractCommandHandler implements TransactionedInt
         return $result;
     }
 
-    private function cancelWaive($fee)
+    private function rejectWaive($fee)
     {
         $now = new DateTime();
         $result = new Result();
