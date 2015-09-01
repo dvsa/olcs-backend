@@ -26,7 +26,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class recommendWaive extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+final class RecommendWaive extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
     use AuthAwareTrait;
 

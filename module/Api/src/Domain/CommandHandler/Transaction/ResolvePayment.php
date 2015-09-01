@@ -25,7 +25,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * Resolve Payment
  *
  * @author Dan Eggleston <dan@stolenegg.com>
- * @todo rename this?
  */
 final class ResolvePayment extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {

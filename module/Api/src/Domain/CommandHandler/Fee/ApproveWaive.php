@@ -48,7 +48,6 @@ final class ApproveWaive extends AbstractCommandHandler implements Transactioned
             throw new ValidationException(['pending waive transaction not found']);
         }
 
-        // @todo change status to 'COMPLETE'?
         $transaction
             ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_PAID))
             ->setComment($command->getWaiveReason())

@@ -50,7 +50,6 @@ class RecommendWaiveTest extends CommandHandlerTestCase
     public function testHandleCommandRecommendWaive()
     {
         $feeId = 69;
-        $transactionId = 99;
 
         $command = RecommendWaiveCmd::create(
             [
