@@ -47,6 +47,6 @@ class Pi extends AbstractRepository
 
         $pi = $qb->getQuery()->getResult($hydrateMode);
 
-        return $pi[0];
+        return (isset($pi[0]) ? $pi[0] : null);
     }
 }

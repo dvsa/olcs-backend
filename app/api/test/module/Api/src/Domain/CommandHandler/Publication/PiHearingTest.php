@@ -82,7 +82,7 @@ class PiHearingTest extends CommandHandlerTestCase
         $pi = 44;
         $piVenueId = 55;
         $piVenueOther = 'pi venue other';
-        $hearingDate = '2014-03-05';
+        $hearingDate = \DateTime::createFromFormat('Y-m-d', '2014-03-05');
 
         $command = $cmdClass::Create(
             [

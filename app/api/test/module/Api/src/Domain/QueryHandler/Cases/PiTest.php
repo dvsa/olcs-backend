@@ -43,6 +43,20 @@ class PiTest extends QueryHandlerTestCase
     }
 
     /**
+     * Tests an empty result is correctly dealt with
+     */
+    public function testHandleQueryEmptyResult()
+    {
+        $query = Qry::create(['id' => 1]);
+
+        $this->repoMap['Pi']->shouldReceive('fetchUsingCase')
+            ->with($query, Query::HYDRATE_OBJECT)
+            ->andReturn(null);
+
+        $this->assertEquals([], $this->sut->handleQuery($query));
+    }
+
+    /**
      * @dataProvider slaAppliesToProvider
      * @param $slaAppliesTo
      */
