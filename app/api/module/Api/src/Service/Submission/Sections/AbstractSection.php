@@ -37,19 +37,35 @@ abstract class AbstractSection implements SectionGeneratorInterface
         $personData = [
             'title' => '',
             'forename' => '',
-            'familyName' => ''
+            'familyName' => '',
+            'birthDate' => '',
+            'birthPlace' => ''
         ];
 
         if ($contactDetails instanceof ContactDetails && ($contactDetails->getPerson() instanceof Person)) {
             $person = $contactDetails->getPerson();
+
             $personData = [
                 'title' => !empty($person->getTitle()) ? $person->getTitle()->getDescription() : '',
                 'forename' => $person->getForename(),
                 'familyName' => $person->getFamilyName(),
-                'birthDate' => $person->getBirthDate(),
+                'birthDate' => $this->formatDate($person->getBirthDate()),
                 'birthPlace' => $person->getBirthPlace()
             ];
         }
         return $personData;
+    }
+
+    protected function formatDate($datetime = null)
+    {
+        if (!empty($datetime)) {
+            if (is_string($datetime)) {
+                return $datetime;
+            } elseif ($datetime instanceof \Datetime) {
+                return $datetime->format('d/m/Y');
+            }
+        }
+
+        return '';
     }
 }

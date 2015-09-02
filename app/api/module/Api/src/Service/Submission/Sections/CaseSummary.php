@@ -59,7 +59,7 @@ final class CaseSummary extends AbstractSection
 
         if (!empty($licence) && $licence instanceof Licence) {
             $licenceData['licNo'] = $licence->getLicNo();
-            $licenceData['licenceStartDate'] = $licence->getInForceDate();
+            $licenceData['licenceStartDate'] = $this->formatDate($licence->getInForceDate());
             $licenceData['licenceType'] = !empty($licence->getLicenceType()) ?
                 $licence->getLicenceType()->getDescription() : '';
             $licenceData['goodsOrPsv'] =

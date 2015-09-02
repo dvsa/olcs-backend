@@ -36,7 +36,7 @@ final class TmDetails extends AbstractSection
             $data['forename'] = $person['forename'];
             $data['familyName'] = $person['familyName'];
             $data['emailAddress'] = $tmData->getHomeCd()->getEmailAddress();
-            $data['dob'] = $person['birthDate'];
+            $data['dob'] = $this->formatDate($person['birthDate']);
             $data['placeOfBirth'] = $person['birthPlace'];
             $data['tmType'] = !empty($tmData->getTmType()) ? $tmData->getTmType()->getDescription() : '';
             $data['homeAddress'] = !empty($tmData->getHomeCd()->getAddress()) ?

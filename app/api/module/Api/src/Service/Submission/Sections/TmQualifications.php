@@ -35,7 +35,7 @@ final class TmQualifications extends AbstractSection
                 $thisRow['version'] = $entity->getVersion();
                 $thisRow['qualificationType'] = $entity->getQualificationType()->getDescription();
                 $thisRow['serialNo'] = $entity->getSerialNo();
-                $thisRow['issuedDate'] = $entity->getIssuedDate();
+                $thisRow['issuedDate'] = $this->formatDate($entity->getIssuedDate());
                 $thisRow['country'] = $entity->getCountryCode()->getCountryDesc();
 
                 $data[] = $thisRow;

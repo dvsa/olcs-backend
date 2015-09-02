@@ -175,6 +175,8 @@ class SubmissionSectionTest extends MockeryTestCase
         $tm->setHomeCd($this->generateContactDetails(533, ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS));
         $tm->setWorkCd($this->generateContactDetails(343, ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS));
 
+        $tm->setQualifications($this->generateArrayCollection('tmQualification'));
+
         return $tm;
     }
 
@@ -409,6 +411,9 @@ class SubmissionSectionTest extends MockeryTestCase
         $entity->setId($id);
         $entity->setVersion(($id+4));
         $entity->setQualificationType($this->generateRefDataEntity('tm-qual'));
+        $entity->setCountryCode($this->generateCountry('GB'));
+        $entity->setSerialNo('12344321');
+        $entity->setIssuedDate(new \DateTime('2008-12-04'));
 
         return $entity;
     }

@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 
 /**
  * Class EnvironmentalComplaints
@@ -25,8 +26,8 @@ final class EnvironmentalComplaints extends AbstractSection
 
         $iterator->uasort(
             function ($a, $b) {
-                if ($a->getComplaintDate() instanceof \DateTime &&
-                    $b->getComplaintDate() instanceof \DateTime) {
+                if (($a->getComplaintDate() instanceof \DateTime) &&
+                    ($b->getComplaintDate() instanceof \DateTime)) {
                     return strtotime(
                         $a->getComplaintDate()->format('Ymd') - strtotime(
                             $b->getComplaintDate()->format('Ymd')
@@ -51,9 +52,9 @@ final class EnvironmentalComplaints extends AbstractSection
             $thisRow['complainantForename'] = $personData['forename'];
             $thisRow['complainantFamilyName'] = $personData['familyName'];
             $thisRow['description'] = $entity->getDescription();
-            $thisRow['complaintDate'] = $entity->getComplaintDate();
+            $thisRow['complaintDate'] = $this->formatDate($entity->getComplaintDate());
             $thisRow['ocAddress'] = $this->extractOperatingCentreData($entity->getOperatingCentres());
-            $thisRow['closeDate'] = $entity->getClosedDate();
+            $thisRow['closeDate'] = $this->formatDate($entity->getClosedDate());
             $thisRow['status'] = !empty($entity->getStatus()) ? $entity->getStatus()->getDescription() : '';
 
             $data[] = $thisRow;
@@ -73,6 +74,7 @@ final class EnvironmentalComplaints extends AbstractSection
     private function extractOperatingCentreData($operatingCentres = [])
     {
         $operatingCentreData = [];
+        /** @var OperatingCentre $operatingCentre */
         foreach ($operatingCentres as $operatingCentre) {
             $operatingCentreData[] = [
                'address' => $operatingCentre->getAddress()->toArray()
