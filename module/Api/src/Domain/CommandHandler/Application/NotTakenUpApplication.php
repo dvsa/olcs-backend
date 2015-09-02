@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\Licence\NotTakenUp;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Delete;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Class NotTakenUpApplication
@@ -106,6 +107,13 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
                     )
                 )
             );
+        }
+
+        if (
+            $application->isGoods() &&
+            $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
+        ) {
+            $result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
         }
 
         $result->addMessage('Application ' . $application->getId() . ' set to not taken up.');

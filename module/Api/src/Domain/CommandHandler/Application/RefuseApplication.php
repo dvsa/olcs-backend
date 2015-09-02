@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Refuse;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Class RefuseApplication
@@ -78,6 +79,13 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
                     )
                 )
             );
+        }
+
+        if (
+            $application->isGoods() &&
+            $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
+        ) {
+            $result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
         }
 
         $result->addMessage('Application ' . $application->getId() . ' refused.');

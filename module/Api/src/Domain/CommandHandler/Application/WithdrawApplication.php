@@ -17,6 +17,7 @@ use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Withdraw;
 use Dvsa\Olcs\Transfer\Query\LicenceVehicle\LicenceVehicle;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Class WithdrawApplication
@@ -80,6 +81,13 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
                     )
                 )
             );
+        }
+
+        if (
+            $application->isGoods() &&
+            $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
+            ) {
+            $result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
         }
 
         $result->addMessage('Application ' . $application->getId() . ' withdrawn.');

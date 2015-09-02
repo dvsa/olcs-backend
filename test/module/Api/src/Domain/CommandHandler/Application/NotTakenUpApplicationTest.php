@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Domain\Command\CommunityLic\Void;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Class WithdrawApplicationTest
@@ -89,7 +90,16 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
                 ]
             );
 
-            $licence->shouldReceive('getCommunityLics->toArray')
+        $application->shouldReceive('getCurrentInterimStatus')
+            ->andReturn(Application::INTERIM_STATUS_INFORCE)
+            ->once()
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+        $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
+
+        $licence->shouldReceive('getCommunityLics->toArray')
             ->once()
             ->andReturn(
                 [

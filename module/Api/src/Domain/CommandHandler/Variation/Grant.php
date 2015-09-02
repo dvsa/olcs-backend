@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Grant
@@ -65,6 +66,13 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 
         $result->merge($this->proxyCommand($command, ProcessApplicationOperatingCentres::class));
         $result->merge($this->proxyCommand($command, CommonGrant::class));
+
+        if (
+            $application->isGoods() && $application->isVariation() &&
+            $application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE
+        ) {
+            $result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
+        }
 
         return $result;
     }
