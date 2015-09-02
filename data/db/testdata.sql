@@ -665,6 +665,29 @@ VALUES
 (97,20051,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,NULL,'2015-04-01 12:34:56','Photocopying charge',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
 (98,20052,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,NULL,'2015-04-01 12:34:56','Court fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1);
 
+INSERT INTO `transaction` (
+    `id`,
+    `reference`,
+    `type`,
+    `status`,
+    `completed_date`,
+    `payment_method`,
+    `comment`,
+    `waive_recommendation_date`,
+    `waive_recommender_user_id`,
+    `processed_by_user_id`
+)
+VALUES
+    (10001,'OLCS-1234-2345','trt_payment','pay_s_pd','2015-08-26','fpm_cheque','',NULL,NULL,1),
+    (10002,'OLCS-2345-3456','trt_bounce','pay_s_pd','2015-09-01','fpm_cheque','',NULL,NULL,1),
+    (10003,'OLCS-3456-4567','trt_payment','pay_s_pd','2015-09-02','fpm_cash','',NULL,NULL,1);
+
+INSERT INTO `fee_transaction`
+    (`fee_id`,`transaction_id`,`amount`)
+VALUES
+    (97,10001,100.00),
+    (97,10002,-100.00),
+    (97,10003,120.00);
 
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `enforcement_area_id`, `created_by`, `correspondence_cd_id`, `establishment_cd_id`,
@@ -2041,11 +2064,11 @@ INSERT INTO `transaction` (
     `waive_recommender_user_id`,
     `processed_by_user_id`
 ) VALUES
-    (1,'','trt_waive','pay_s_pd','2015-08-26','fpm_waive','Waive OK for fee 96','2015-08-25',1,1);
+    (10004,'','trt_waive','pay_s_pd','2015-08-26','fpm_waive','Waive OK for fee 96','2015-08-25',1,1);
 INSERT INTO `fee_transaction`
     (`fee_id`,`transaction_id`,`amount`)
     VALUES
-    (96,1,254.50);
+    (96,10004,254.50);
 INSERT INTO `phone_contact` (`id`,    `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (12,127,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
 INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, `last_modified_by`, `is_external`, `maintenance`, `safety_inspection`, `created_on`, `last_modified_on`, `olbs_key`, `removed_date`, `version`) VALUES (2,212,129,NULL,NULL,0,0,0,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
 
