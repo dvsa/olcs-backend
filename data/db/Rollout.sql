@@ -4888,10 +4888,10 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (9, 30), -- partner-admin
     (9, 31), -- partner-admin
     (9, 32), -- partner-admin
-    
+
     (10, 30), -- partner-user
     (10, 31), -- partner-user
-    (10, 32), -- partner-user
+    (10, 32); -- partner-user
 
 INSERT INTO `financial_standing_rate` (
     `id`,
