@@ -243,4 +243,20 @@ class Cases extends AbstractCases
     {
         return $this->getTransportManager() !== null;
     }
+
+    public function getComplianceComplaints()
+    {
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->eq('isCompliance', 1));
+
+        return $this->getComplaints()->matching($criteria);
+    }
+
+    public function getEnvironmentalComplaints()
+    {
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->eq('isCompliance', 0));
+
+        return $this->getComplaints()->matching($criteria);
+    }
 }

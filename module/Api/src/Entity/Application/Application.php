@@ -923,6 +923,44 @@ class Application extends AbstractApplication
     }
 
     /**
+     * Method to return ooo as strings. Used in submission tables
+     * @param string $format
+     * @return string
+     */
+    public function getOutOfOppositionDateAsString()
+    {
+        $ooo = $this->getOutOfOppositionDate();
+        return $this->formatDateToString($ooo);
+    }
+
+    /**
+     * Method to return oor as strings. Used in submission tables
+     * @param string $format
+     * @return string
+     */
+    public function getOutOfRepresentationDateAsString()
+    {
+        $oor = $this->getOutOfRepresentationDate();
+        return $this->formatDateToString($oor);
+    }
+
+    /**
+     * @param $date
+     * @param string $format
+     * @return string
+     */
+    private function formatDateToString($date, $format = 'd/m/Y')
+    {
+        if (is_string($date)) {
+            return $date;
+        }
+        if ($date instanceOf \DateTime) {
+            return $date->format($format);
+        }
+        return '';
+    }
+
+    /**
      * Get a collection of Application Operating Centres that have been added
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
