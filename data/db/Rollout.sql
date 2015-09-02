@@ -4806,7 +4806,8 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (25, 'partner-user', 'PAUS'),
     (26, 'local-authority-admin', 'LAAD'),
     (27, 'local-authority-user', 'LAUS'),
-    (28, 'can-update-licence-licence-type', 'ULLT');
+    (28, 'can-update-licence-licence-type', 'ULLT'),
+    (29, 'selfserve-landing-page-bus-registration', 'SSLPB');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     -- set each role to it's respective permission
@@ -4877,7 +4878,9 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (3, 28), -- internal users can update licence licence type
     (4, 28), -- internal users can update licence licence type
     (5, 28), -- selfserve users can update licence licence type
-    (6, 28); -- selfserve users can update licence licence type
+    (6, 28), -- selfserve users can update licence licence type
+
+    (8, 28); -- operator-ebsr can see the link to bus-registration on the home page in SS
 
 INSERT INTO `financial_standing_rate` (
     `id`,
