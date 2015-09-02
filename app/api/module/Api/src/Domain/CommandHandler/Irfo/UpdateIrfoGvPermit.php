@@ -20,21 +20,17 @@ final class UpdateIrfoGvPermit extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
-        $type = $this->getRepo()->getReference(IrfoGvPermitType::class, $command->getIrfoGvPermitType());
-        $status = $this->getRepo()->getRefdataReference($command->getIrfoPermitStatus());
-
         $irfoGvPermit = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        $irfoGvPermit->setIrfoGvPermitType($type);
-        $irfoGvPermit->setIrfoPermitStatus($status);
-        $irfoGvPermit->setYearRequired($command->getYearRequired());
-        $irfoGvPermit->setIsFeeExempt($command->getIsFeeExempt());
-        $irfoGvPermit->setExemptionDetails($command->getExemptionDetails());
-        $irfoGvPermit->setNoOfCopies($command->getNoOfCopies());
-
-        if ($command->getInForceDate() !== null) {
-            $irfoGvPermit->setInForceDate(new \DateTime($command->getInForceDate()));
-        }
+        $irfoGvPermit->update(
+            $this->getRepo()->getReference(IrfoGvPermitType::class, $command->getIrfoGvPermitType()),
+            $command->getYearRequired(),
+            new \DateTime($command->getInForceDate()),
+            new \DateTime($command->getExpiryDate()),
+            $command->getNoOfCopies(),
+            $command->getIsFeeExempt(),
+            $command->getExemptionDetails()
+        );
 
         $this->getRepo()->save($irfoGvPermit);
 

@@ -6,6 +6,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
@@ -18,7 +19,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 /**
  * Create Irfo Gv Permit
  */
-final class CreateIrfoGvPermit extends AbstractCommandHandler
+final class CreateIrfoGvPermit extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'IrfoGvPermit';
 
@@ -57,20 +58,19 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler
     {
         $organisation = $this->getRepo()->getReference(Organisation::class, $command->getOrganisation());
         $type = $this->getRepo()->getReference(IrfoGvPermitType::class, $command->getIrfoGvPermitType());
-        $status = $this->getRepo()->getRefdataReference($command->getIrfoPermitStatus());
+        $status = $this->getRepo()->getRefdataReference(IrfoGvPermit::STATUS_PENDING);
 
         $irfoGvPermit = new IrfoGvPermit($organisation, $type, $status);
-
-        $irfoGvPermit->setYearRequired($command->getYearRequired());
-        $irfoGvPermit->setIsFeeExempt($command->getIsFeeExempt());
-        $irfoGvPermit->setExemptionDetails($command->getExemptionDetails());
-        $irfoGvPermit->setNoOfCopies($command->getNoOfCopies());
-
-        $irfoGvPermit->setIrfoFeeId($this->getIrfoFeeId($organisation));
-
-        if ($command->getInForceDate() !== null) {
-            $irfoGvPermit->setInForceDate(new \DateTime($command->getInForceDate()));
-        }
+        $irfoGvPermit->update(
+            $type,
+            $command->getYearRequired(),
+            new \DateTime($command->getInForceDate()),
+            new \DateTime($command->getExpiryDate()),
+            $command->getNoOfCopies(),
+            $command->getIsFeeExempt(),
+            $command->getExemptionDetails(),
+            $this->getIrfoFeeId($organisation)
+        );
 
         return $irfoGvPermit;
     }
