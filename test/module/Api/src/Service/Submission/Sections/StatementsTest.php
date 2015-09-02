@@ -28,18 +28,18 @@ class StatementsTest extends SubmissionSectionTest
                         0 => [
                             'id' => 253,
                             'version' => 255,
-                            'requestedDate' => new \DateTime('2008-08-11'),
+                            'requestedDate' => '11/08/2008',
                             'requestedBy' => [
                                 'forename' => 'fn22',
                                 'title' => 'title-desc',
                                 'familyName' => 'sn22',
-                                'birthDate' => new \DateTime('1977-01-22'),
+                                'birthDate' => '22/01/1977',
                                 'birthPlace' => 'bp'
                             ],
                             'statementType' => 'statement_type1-desc',
-                            'stoppedDate' => new \DateTime('2009-03-26'),
+                            'stoppedDate' => '26/03/2009',
                             'requestorsBody' => 'req body',
-                            'issuedDate' => new \DateTime('2009-03-30'),
+                            'issuedDate' => '30/03/2009',
                             'vrm' => 'VR12 MAB'
                         ]
                     ]

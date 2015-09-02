@@ -63,7 +63,8 @@ final class Oppositions extends AbstractSection
             $thisRow = array();
             $thisRow['id'] = $entity->getId();
             $thisRow['version'] = $entity->getVersion();
-            $thisRow['dateReceived'] = $entity->getRaisedDate();
+
+            $thisRow['dateReceived'] = $this->formatDate($entity->getRaisedDate());
             $thisRow['oppositionType'] = $entity->getOppositionType()->getDescription();
             $thisRow['contactName'] = $this->extractPerson($entity->getOpposer()->getContactDetails());
 

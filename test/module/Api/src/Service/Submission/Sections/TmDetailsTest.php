@@ -28,7 +28,7 @@ class TmDetailsTest extends SubmissionSectionTest
                     'title' => 'title-desc',
                     'forename' => 'fn22',
                     'familyName' => 'sn22',
-                    'dob' => new \DateTime('1977-01-22'),
+                    'dob' => '22/01/1977',
                     'placeOfBirth' => 'bp',
                     'tmType' => 'tmType-desc',
                     'homeAddress' => [
