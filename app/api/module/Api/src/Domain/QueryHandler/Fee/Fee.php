@@ -31,6 +31,8 @@ class Fee extends AbstractQueryHandler
                     'transaction' => [
                         'paymentMethod',
                         'processedByUser',
+                        'status',
+                        'type',
                     ],
                 ],
             ],
