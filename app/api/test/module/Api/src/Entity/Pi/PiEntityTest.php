@@ -228,14 +228,14 @@ class PiEntityTest extends EntityTester
     /**
      * @dataProvider canCloseWithHearingProvider
      *
-     * @param $cancelledDate
+     * @param $isCancelled
      * @param $closedDate
      * @param $returnValue
      */
-    public function testCanCloseWithHearing($cancelledDate, $closedDate, $returnValue)
+    public function testCanCloseWithHearing($isCancelled, $closedDate, $returnValue)
     {
         $piHearing = m::mock(PiHearingEntity::class);
-        $piHearing->shouldReceive('getCancelledDate')->andReturn($cancelledDate);
+        $piHearing->shouldReceive('getIsCancelled')->andReturn($isCancelled);
         $piHearings = new ArrayCollection([$piHearing]);
 
         $writtenOutcome = m::mock(RefData::class);
@@ -253,9 +253,9 @@ class PiEntityTest extends EntityTester
         $date = '2015-12-25';
 
         return [
-            [$date, null, true],
-            [$date, $date, false],
-            [null, $date, false]
+            ['Y', null, true],
+            ['Y', $date, false],
+            ['N', $date, false]
         ];
     }
 
@@ -266,6 +266,8 @@ class PiEntityTest extends EntityTester
         $writtenOutcome->shouldReceive('getId')->andReturn(null);
         $this->entity->setPiHearings(new ArrayCollection());
         $this->entity->setWrittenOutcome($writtenOutcome);
+        $this->entity->setCallUpLetterDate(new \DateTime());
+        $this->entity->setBriefToTcDate(new \DateTime());
 
         $this->assertEquals(false, $this->entity->canClose());
     }
@@ -294,6 +296,8 @@ class PiEntityTest extends EntityTester
         $writtenOutcome->shouldReceive('getId')->andReturn($writtenOutcomeId);
         $this->entity->setClosedDate($closedDate);
         $this->entity->setPiHearings(new ArrayCollection());
+        $this->entity->setCallUpLetterDate(new \DateTime());
+        $this->entity->setBriefToTcDate(new \DateTime());
         $this->entity->setWrittenOutcome($writtenOutcome);
         $this->entity->setTcWrittenReasonDate($tcWrittenReasonDate);
         $this->entity->setWrittenReasonLetterDate($writtenReasonLetterDate);
@@ -320,6 +324,76 @@ class PiEntityTest extends EntityTester
             [SlaEntity::WRITTEN_OUTCOME_REASON, null, $date, null, null, $date, false]
         ];
     }
+
+    /**
+     * @dataProvider canCloseWithMissingGeneralSlaProvider
+     *
+     * @param $briefToTcDate
+     * @param $callUpLetterDate
+     */
+    public function testCanCloseWithMissingGeneralSla($briefToTcDate, $callUpLetterDate)
+    {
+        $this->entity->setPiHearings(new ArrayCollection());
+        $this->entity->setCallUpLetterDate($briefToTcDate);
+        $this->entity->setBriefToTcDate($callUpLetterDate);
+
+        $this->assertEquals(false, $this->entity->canClose());
+    }
+
+    public function canCloseWithMissingGeneralSlaProvider()
+    {
+        $date = '2015-12-25';
+
+        return [
+            [null, $date],
+            [$date, null],
+        ];
+    }
+
+    /**
+     * Tests closing a Pi
+     */
+    public function testClose()
+    {
+        $piHearing = m::mock(PiHearingEntity::class);
+        $piHearing->shouldReceive('getIsCancelled')->andReturn('Y');
+
+        $this->entity->setPiHearings(new ArrayCollection([$piHearing]));
+
+        $this->entity->close();
+
+        $this->assertInstanceOf('\DateTime', $this->entity->getClosedDate());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testCloseThrowsException()
+    {
+        $this->entity->setPiHearings(new ArrayCollection());
+
+        $this->entity->close();
+    }
+
+    public function testReopen()
+    {
+        $this->entity->setClosedDate(new \DateTime());
+
+        $this->entity->reopen();
+
+        $this->assertEquals(null, $this->entity->getClosedDate());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testReopenThrowsException()
+    {
+        $this->entity->setPiHearings(new ArrayCollection());
+
+        $this->entity->reopen();
+    }
+
 
     /**
      * @dataProvider testGetHearingDateProvider
@@ -372,6 +446,7 @@ class PiEntityTest extends EntityTester
         $expected = [
             'isClosed' => false,
             'canReopen' => false,
+            'canClose' => false,
             'hearingDate' => null,
             'isTm' => $isTm
         ];
