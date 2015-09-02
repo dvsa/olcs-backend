@@ -2419,4 +2419,46 @@ class ApplicationEntityTest extends EntityTester
             [Entity::APPLICATION_STATUS_NOT_TAKEN_UP, false],
         ];
     }
+
+    /**
+     * @dataProvider providerDatesAsString
+     */
+    public function testGetOutOfOppositionDateAsString($input, $expected)
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getOutOfOppositionDate')
+            ->andReturn($input);
+
+        $oooDate = $application->getOutOfOppositionDateAsString();
+        $this->assertEquals($expected, $oooDate);
+    }
+
+    /**
+     * @dataProvider providerDatesAsString
+     */
+    public function testGetOutOfRepresentationDateAsString($input, $expected)
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getOutOfRepresentationDate')
+            ->andReturn($input);
+
+        $oorDate = $application->getOutOfRepresentationDateAsString();
+        $this->assertEquals($expected, $oorDate);
+
+    }
+
+    public function providerDatesAsString()
+    {
+        return [
+            [Entity::NOT_APPLICABLE, Entity::NOT_APPLICABLE],
+            [new DateTime('2015-01-01'), '01/01/2015'],
+            [Entity::UNKNOWN, Entity::UNKNOWN],
+            ['', ''],
+            [null, '']
+        ];
+    }
 }

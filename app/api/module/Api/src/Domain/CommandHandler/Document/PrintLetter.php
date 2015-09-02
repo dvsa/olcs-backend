@@ -16,6 +16,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter as Cmd;
+use Dvsa\Olcs\Utils\Helper\ValueHelper;
 
 /**
  * Print Letter
@@ -38,7 +39,7 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
         $translated = false;
 
         // We always want a translation task if the translateToWelsh flag is on
-        if ($licence !== null && $this->isOn($licence->getTranslateToWelsh())) {
+        if ($licence !== null && ValueHelper::isOn($licence->getTranslateToWelsh())) {
             $translated = true;
             $this->createTranslationTask($document);
         }
@@ -137,7 +138,7 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
 
         // If we can't find a licence
         // OR if the allow email preference is off
-        if ($licence === null || !$this->isOn($licence->getOrganisation()->getAllowEmail())) {
+        if ($licence === null || !ValueHelper::isOn($licence->getOrganisation()->getAllowEmail())) {
             return false;
         }
 
@@ -149,22 +150,11 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
         $template = $this->getRepo('DocTemplate')->fetchById($templateId);
 
         // If the document is suppressed
-        if ($this->isOn($template->getSuppressFromOp())) {
+        if (ValueHelper::isOn($template->getSuppressFromOp())) {
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * @NOTE This might be useful elsewhere
-     *
-     * @param $value
-     * @return bool
-     */
-    protected function isOn($value)
-    {
-        return ($value === 'Y' || $value === true || $value == 1);
     }
 
     /**

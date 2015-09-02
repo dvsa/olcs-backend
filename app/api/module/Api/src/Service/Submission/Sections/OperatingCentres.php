@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 
 /**
  * Class OperatingCentres
@@ -21,7 +20,7 @@ final class OperatingCentres extends AbstractSection
      * @param \ArrayObject|null $context
      * @return array
      */
-    public function generateSection(CasesEntity $case, \ArrayObject $context = null)
+    public function generateSection(CasesEntity $case)
     {
         $licence = $case->getLicence();
 

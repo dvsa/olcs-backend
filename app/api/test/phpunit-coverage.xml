@@ -46,6 +46,7 @@
                 <file>../module/Snapshot/src/Module.php</file>
                 <file>../module/Address/src/Module.php</file>
                 <directory>../module/Email/config</directory>
+                <directory>../module/Cli/config</directory>
                 <directory>../module/CompaniesHouse/config</directory>
                 <directory>../module/Snapshot/config</directory>
                 <directory>../module/Address/config</directory>

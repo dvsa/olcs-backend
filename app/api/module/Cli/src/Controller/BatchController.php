@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Cli\Controller;
 use Zend\Mvc\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Command;
 
 /**
  * BatchController
@@ -18,6 +19,17 @@ use Dvsa\Olcs\Api\Domain\Exception;
  */
 class BatchController extends AbstractConsoleController
 {
+    public function duplicateVehicleWarningAction()
+    {
+        return $this->handleExitStatus(
+            $this->handleCommand(
+                [
+                    Command\Vehicle\ProcessDuplicateVehicleWarnings::create([]),
+                ]
+            )
+        );
+    }
+
     /**
      * Process LicenceStatusRules
      *
@@ -28,8 +40,8 @@ class BatchController extends AbstractConsoleController
         return $this->handleExitStatus(
             $this->handleCommand(
                 [
-                    \Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\ProcessToRevokeCurtailSuspend::create([]),
-                    \Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\ProcessToValid::create([])
+                    Command\LicenceStatusRule\ProcessToRevokeCurtailSuspend::create([]),
+                    Command\LicenceStatusRule\ProcessToValid::create([])
                 ]
             )
         );
@@ -43,7 +55,7 @@ class BatchController extends AbstractConsoleController
         return $this->handleExitStatus(
             $this->handleCommand(
                 [
-                    \Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\EnqueueOrganisations::create([]),
+                    Command\CompaniesHouse\EnqueueOrganisations::create([]),
                 ]
             )
         );
@@ -62,7 +74,7 @@ class BatchController extends AbstractConsoleController
      * exit code from the process.
      *
      * @param int $result exit code, should be non-zero if there was an error
-     * @return Zend\View\Model\ConsoleModel
+     * @return \Zend\View\Model\ConsoleModel
      */
     private function handleExitStatus($result)
     {
@@ -83,7 +95,7 @@ class BatchController extends AbstractConsoleController
         $this->writeVerboseMessages((new \DateTime())->format(\DateTime::W3C));
 
         try {
-            $result = new \Dvsa\Olcs\Api\Domain\Command\Result();
+            $result = new Command\Result();
             foreach ($dto as $dtoCommand) {
                 $result->merge($this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dtoCommand));
             }

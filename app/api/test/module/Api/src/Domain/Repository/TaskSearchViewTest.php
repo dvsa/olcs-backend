@@ -42,7 +42,8 @@ class TaskSearchViewTest extends RepositoryTestCase
             'transportManager' => 222,
             'case' => 333,
             'application' => 444,
-            'busReg' => 555
+            'busReg' => 555,
+            'organisation' => 666,
         ];
 
         $query = TaskList::create($data);
@@ -69,6 +70,7 @@ class TaskSearchViewTest extends RepositoryTestCase
                 . ' OR m.caseId = :case'
                 . ' OR m.applicationId = :application'
                 . ' OR m.busRegId = :busReg'
+                . ' OR m.irfoOrganisationId = :organisation'
             . ')';
 
         $this->assertEquals($expected, $this->query);
