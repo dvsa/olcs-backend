@@ -31,7 +31,7 @@ final class Delete extends AbstractCommandHandler
         /** @var NoteRepository $repo */
         $repo = $this->getRepo();
 
-        $note = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        $note = $this->getRepo()->fetchUsingId($command);
         $this->getRepo()->delete($note);
 
         $result->addMessage('Note deleted');
