@@ -112,12 +112,13 @@ class Fee extends AbstractFee
         );
     }
 
+    /**
+     * @deprecated will be removed in OLCS-10426
+     * @see getLatestPaymentRef()
+     */
     public function getReceiptNo()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getReference();
-        }
+        return $this->getLatestPaymentRef();
     }
 
     /**
@@ -126,7 +127,7 @@ class Fee extends AbstractFee
      */
     public function getReceivedAmount()
     {
-        $ft = $this->getFeeTransactions()->last();
+        $ft = $this->getLatestFeeTransaction();
         if ($ft) {
             return $ft->getAmount();
         }
@@ -137,25 +138,25 @@ class Fee extends AbstractFee
      */
     public function getReceivedDate()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getCompletedDate();
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            return $transaction->getCompletedDate();
         }
     }
 
     public function getPaymentMethod()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getPaymentMethod();
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            return $transaction->getPaymentMethod();
         }
     }
 
     public function getProcessedBy()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            $user = $ft->getTransaction()->getProcessedByUser();
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            $user = $transaction->getProcessedByUser();
             if ($user) {
                 return $user->getLoginId();
             }
@@ -164,33 +165,33 @@ class Fee extends AbstractFee
 
     public function getPayer()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getPayerName();
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            return $transaction->getPayerName();
         }
     }
 
     public function getSlipNo()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getPayingInSlipNumber();
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            return $transaction->getPayingInSlipNumber();
         }
     }
 
     public function getChequePoNumber()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getChequePoNumber();
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            return $transaction->getChequePoNumber();
         }
     }
 
     public function getWaiveReason()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getComment();
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            return $transaction->getComment();
         }
     }
 
@@ -217,5 +218,87 @@ class Fee extends AbstractFee
         )->first(); // there should only ever be one!
 
         return $ft ? $ft->getTransaction() : null;
+    }
+
+    /**
+     * @return string e.g. '1234.56'
+     */
+    public function getOutstandingAmount()
+    {
+        $amount = (float) $this->getAmount();
+
+        $ftSum = 0;
+        $feeTransactions = $this->getFeeTransactions()->forAll(
+            function ($key, $feeTransaction) use (&$ftSum) {
+                if ($feeTransaction->getTransaction()->isComplete()) {
+                    $ftSum += (float) $feeTransaction->getAmount();
+                    return true;
+                }
+            }
+        );
+
+        return number_format(($amount - $ftSum), 2, '.', '');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLatestPaymentRef()
+    {
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            return $transaction->getReference();
+        }
+    }
+
+    /**
+     * @return FeeTransaction
+     */
+    protected function getLatestFeeTransaction()
+    {
+        // Criteria won't handle relations, only properties, so get them all and
+        // sort the transactions manually
+        if ($this->getFeeTransactions() && $this->getFeeTransactions()->count()) {
+            $transactions = [];
+            foreach ($this->getFeeTransactions() as $key => $ft) {
+                if ($ft->getTransaction()->isComplete()) {
+                    $transactions[$key] = $ft->getTransaction();
+                }
+            }
+            uasort(
+                $transactions,
+                function ($a, $b) {
+                    if ($a->getCompletedDate() == $b->getCompletedDate()) {
+                        // if same date, use createdOn timestamp
+                        return $a->getCreatedOn() < $b->getCreatedOn();
+                    }
+                    return $a->getCompletedDate() < $b->getCompletedDate();
+                }
+            );
+            $key = array_keys($transactions)[0];
+            return $this->getFeeTransactions()->get($key);
+        }
+    }
+
+    /**
+     * @return Transaction
+     */
+    protected function getLatestTransaction()
+    {
+        $ft = $this->getLatestFeeTransaction();
+        if ($ft) {
+            return $ft->getTransaction();
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'outstanding' => $this->getOutstandingAmount(),
+            'receiptNo' => $this->getLatestPaymentRef(),
+        ];
     }
 }
