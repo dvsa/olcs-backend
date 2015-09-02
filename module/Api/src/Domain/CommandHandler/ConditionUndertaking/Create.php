@@ -22,6 +22,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 final class Create extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'ConditionUndertaking';
+    protected $extraRepos = ['Cases'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -50,10 +51,18 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 
         // if added via a case
         if (!empty($command->getCase())) {
+            /* @var $case Cases */
+            $case = $this->getRepo('Cases')->fetchById($command->getCase());
             $conditionUndertaking
                 ->setAddedVia($this->getRepo()->getRefdataReference(ConditionUndertaking::ADDED_VIA_CASE))
-                ->setCase($this->getRepo()->getReference(Cases::class, $command->getCase()))
+                ->setCase($case)
                 ->setIsDraft('N');
+            if ($case->getApplication()) {
+                $conditionUndertaking->setApplication($case->getApplication());
+            }
+            if ($case->getLicence()) {
+                $conditionUndertaking->setLicence($case->getLicence());
+            }
         }
 
         // if added via a licence
