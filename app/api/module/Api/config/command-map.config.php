@@ -131,6 +131,8 @@ return [
     TransferCommand\Cases\Pi\UpdateSla::class => CommandHandler\Cases\Pi\UpdateSla::class,
     TransferCommand\Cases\Pi\CreateHearing::class => CommandHandler\Cases\Pi\CreateHearing::class,
     TransferCommand\Cases\Pi\UpdateHearing::class => CommandHandler\Cases\Pi\UpdateHearing::class,
+    TransferCommand\Cases\Pi\Close::class => CommandHandler\Cases\Pi\Close::class,
+    TransferCommand\Cases\Pi\Reopen::class => CommandHandler\Cases\Pi\Reopen::class,
 
     // Transfer - Bus
     TransferCommand\Bus\CreateBus::class => CommandHandler\Bus\CreateBus::class,
