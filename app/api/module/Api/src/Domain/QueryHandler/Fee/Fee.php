@@ -39,6 +39,7 @@ class Fee extends AbstractQueryHandler
     {
         return [
             'allowEdit' => $fee->allowEdit(),
+            'outstanding' => $fee->getOutstandingAmount(),
 
             // fields that the frontend may expect as they were previously
             // on the fee table

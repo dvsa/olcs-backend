@@ -182,13 +182,17 @@ class FeeEntityTest extends EntityTester
         $this->assertNull($this->sut->getChequePoNumber());
         $this->assertNull($this->sut->getWaiveReason());
 
-        $transaction = new Transaction();
-        $feeTransaction = new FeeTransaction();
-        $feeTransaction->setTransaction($transaction);
-        $feeTransaction->setAmount('1234.56');
+        $ft1 = $this->getStubFeeTransaction('1234.56', '2015-09-01', '2015-09-02 12:34:56');
+        $ft2 = $this->getStubFeeTransaction('1234.56', '2015-08-01', '2015-09-02 12:34:56');
+        $ft3 = $this->getStubFeeTransaction('1234.56', '2015-09-01', '2015-09-02 12:34:55');
+        $ft4 = $this->getStubFeeTransaction(
+            '234.56',
+            '2015-09-03',
+            '2015-09-03 12:34:55',
+            Transaction::STATUS_OUTSTANDING
+        );
 
-        $completed = new \DateTime();
-        $transaction->setCompletedDate($completed);
+        $transaction = $ft1->getTransaction();
 
         $paymentMethod = m::mock(RefData::class);
         $transaction->setPaymentMethod($paymentMethod);
@@ -209,10 +213,13 @@ class FeeEntityTest extends EntityTester
 
         $transaction->setReference('OLCS-1234');
 
-        $this->sut->getFeeTransactions()->add($feeTransaction);
+        $this->sut->getFeeTransactions()->add($ft1);
+        $this->sut->getFeeTransactions()->add($ft2);
+        $this->sut->getFeeTransactions()->add($ft3);
+        $this->sut->getFeeTransactions()->add($ft4);
 
         $this->assertEquals('1234.56', $this->sut->getReceivedAmount());
-        $this->assertEquals($completed, $this->sut->getReceivedDate());
+        $this->assertEquals('2015-09-01', $this->sut->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals($paymentMethod, $this->sut->getPaymentMethod());
         $this->assertEquals('bob', $this->sut->getProcessedBy());
         $this->assertEquals('payer', $this->sut->getPayer());
@@ -220,6 +227,26 @@ class FeeEntityTest extends EntityTester
         $this->assertEquals('23456', $this->sut->getChequePoNumber());
         $this->assertEquals('reason', $this->sut->getWaiveReason());
         $this->assertEquals('OLCS-1234', $this->sut->getReceiptNo());
+    }
+
+    private function getStubFeeTransaction(
+        $amount,
+        $completedDate,
+        $createdOn,
+        $statusId = Transaction::STATUS_COMPLETE
+    ) {
+        $transaction = new Transaction();
+        $feeTransaction = new FeeTransaction();
+        $feeTransaction->setTransaction($transaction);
+        $feeTransaction->setAmount($amount);
+        $completed = new \DateTime($completedDate);
+        $transaction->setCompletedDate($completed);
+        $created = new \DateTime($createdOn);
+        $transaction->setCreatedOn($created);
+        $status = (new RefData())->setId($statusId);
+        $transaction->setStatus($status);
+
+        return $feeTransaction;
     }
 
     /**
@@ -263,6 +290,76 @@ class FeeEntityTest extends EntityTester
             'valid' => [
                 [$feeTransaction1, $feeTransaction2],
                 $transaction2,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider outstandingAmountProvider
+     */
+    public function testGetOutstandingAmount($feeAmount, $feeTransactions, $expected)
+    {
+        $this->sut->setAmount($feeAmount);
+        $this->sut->setFeeTransactions($feeTransactions);
+        $this->assertEquals($expected, $this->sut->getOutstandingAmount());
+    }
+
+    public function outstandingAmountProvider()
+    {
+        return [
+            'no transactions' => [
+                '1234.56',
+                new ArrayCollection(),
+                '1234.56',
+            ],
+            'one complete transaction' => [
+                '1234.56',
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction('1234.56', '2015-09-01', '2015-09-02'),
+                    ]
+                ),
+                '0.00',
+            ],
+            'one pending transaction' => [
+                '1234.56',
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction(
+                            '1234.56',
+                            '2015-09-01',
+                            '2015-09-02 12:34:56',
+                            Transaction::STATUS_OUTSTANDING
+                        ),
+                    ]
+                ),
+                '1234.56',
+            ],
+            'two complete one refund one pending' => [
+                '1234.56',
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction('1000', '2015-09-01', '2015-09-02'),
+                        $this->getStubFeeTransaction('300', '2015-09-01', '2015-09-02'),
+                        $this->getStubFeeTransaction('-100', '2015-09-01', '2015-09-02'),
+                        $this->getStubFeeTransaction(
+                            '34.56',
+                            '2015-09-01',
+                            '2015-09-02',
+                            Transaction::STATUS_OUTSTANDING
+                        ),
+                    ]
+                ),
+                '34.56',
+            ],
+            'one overpayment' => [
+                '1234.56',
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction('2000', '2015-09-01', '2015-09-02'),
+                    ]
+                ),
+                '-765.44',
             ],
         ];
     }
