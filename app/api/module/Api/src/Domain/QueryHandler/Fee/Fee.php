@@ -26,7 +26,14 @@ class Fee extends AbstractQueryHandler
 
         return $this->result(
             $fee,
-            [],
+            [
+                'feeTransactions' => [
+                    'transaction' => [
+                        'paymentMethod',
+                        'processedByUser',
+                    ],
+                ],
+            ],
             $this->getAdditionalFeeData($fee)
         );
     }
@@ -52,6 +59,7 @@ class Fee extends AbstractQueryHandler
             'slipNo' => $fee->getSlipNo(),
             'chequePoNumber' => $fee->getChequePoNumber(),
             'waiveReason' => $fee->getWaiveReason(),
+            'hasOutstandingWaiveTransaction' => !empty($fee->getOutstandingWaiveTransaction()),
         ];
     }
 }

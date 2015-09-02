@@ -30,6 +30,8 @@ final class RecommendWaive extends AbstractCommandHandler implements Transaction
 {
     use AuthAwareTrait;
 
+    const WAIVE_REFERENCE = 'Waive'; // string to go in transaction.reference
+
     protected $repoServiceName = 'Fee';
 
     public function handleCommand(CommandInterface $command)
@@ -47,12 +49,14 @@ final class RecommendWaive extends AbstractCommandHandler implements Transaction
             ->setPaymentMethod($this->getRepo()->getRefdataReference(FeeEntity::METHOD_WAIVE))
             ->setComment($command->getWaiveReason())
             ->setWaiveRecommendationDate($now)
-            ->setWaiveRecommenderUser($this->getCurrentUser());
+            ->setWaiveRecommenderUser($this->getCurrentUser())
+            ->setReference(self::WAIVE_REFERENCE);
 
         $feeTransaction = new FeeTransactionEntity();
         $feeTransaction
             ->setFee($fee)
-            ->setTransaction($transaction);
+            ->setTransaction($transaction)
+            ->setAmount($fee->getOutstandingAmount());;
         $fee->getFeeTransactions()->add($feeTransaction);
 
         // save fee will cascade persist
