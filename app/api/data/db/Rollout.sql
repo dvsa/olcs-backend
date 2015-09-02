@@ -4883,7 +4883,9 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (5, 28), -- selfserve users can update licence licence type
     (6, 28), -- selfserve users can update licence licence type
 
-    (8, 28), -- operator-ebsr can see the link to bus-registration on the home page in SS
+    (8, 29), -- operator-ebsr can see the link to bus-registration on the home page in SS
+    (11, 29), -- operator-ebsr can see the link to bus-registration on the home page in SS
+    (12, 29), -- operator-ebsr can see the link to bus-registration on the home page in SS
 
     (9, 30), -- partner-admin
     (9, 31), -- partner-admin
