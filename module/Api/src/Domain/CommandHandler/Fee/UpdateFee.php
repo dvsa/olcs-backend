@@ -84,7 +84,8 @@ final class UpdateFee extends AbstractCommandHandler implements TransactionedInt
         $feeTransaction = new FeeTransactionEntity();
         $feeTransaction
             ->setFee($fee)
-            ->setTransaction($transaction);
+            ->setTransaction($transaction)
+            ->setAmount($fee->getOutstandingAmount());
         $fee->getFeeTransactions()->add($feeTransaction);
 
         // save fee will cascade persist

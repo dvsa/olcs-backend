@@ -189,7 +189,7 @@ class Fee extends AbstractFee
 
     public function getWaiveReason()
     {
-        $transaction = $this->getLatestTransaction();
+        $transaction = $this->getOutstandingWaiveTransaction();
         if ($transaction) {
             return $transaction->getComment();
         }
@@ -275,8 +275,11 @@ class Fee extends AbstractFee
                     return $a->getCompletedDate() < $b->getCompletedDate();
                 }
             );
-            $key = array_keys($transactions)[0];
-            return $this->getFeeTransactions()->get($key);
+
+            if (!empty($transactions)) {
+                $key = array_keys($transactions)[0];
+                return $this->getFeeTransactions()->get($key);
+            }
         }
     }
 
