@@ -22,6 +22,8 @@ class CommandHandlerManager extends AbstractPluginManager implements CommandHand
 {
     public function __construct(ConfigInterface $config = null)
     {
+        $this->setShareByDefault(false);
+
         if ($config) {
             $config->configureServiceManager($this);
         }

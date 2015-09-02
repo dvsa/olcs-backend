@@ -22,6 +22,15 @@ return [
                         ],
                     ],
                 ],
+                'duplicate-vehicle-warning' => [
+                    'options' => [
+                        'route' => 'duplicate-vehicle-warning [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'duplicateVehicleWarning',
+                        ],
+                    ],
+                ],
                 'process-queue' => [
                     'options' => [
                         'route' => 'process-queue [--type=]',

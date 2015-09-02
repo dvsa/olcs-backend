@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  */
 final class OutstandingApplications extends AbstractSection
 {
-    public function generateSection(CasesEntity $case, \ArrayObject $context = null)
+    public function generateSection(CasesEntity $case)
     {
         $licence = $case->getLicence();
         $organisation = !empty($licence) ? $licence->getOrganisation() : '';
@@ -27,8 +27,8 @@ final class OutstandingApplications extends AbstractSection
             $data[$i]['version'] = $applicationEntity->getVersion();
             $data[$i]['applicationType'] = 'TBC';
             $data[$i]['receivedDate'] = $applicationEntity->getReceivedDate();
-            $data[$i]['oor'] = $applicationEntity->getOutOfRepresentationDate();
-            $data[$i]['ooo'] = $applicationEntity->getOutOfOppositionDate();
+            $data[$i]['oor'] = $applicationEntity->getOutOfRepresentationDateAsString();
+            $data[$i]['ooo'] = $applicationEntity->getOutOfOppositionDateAsString();
 
             $outstandingApplications->next();
         }

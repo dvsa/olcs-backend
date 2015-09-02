@@ -1,18 +1,13 @@
 <?php
 
 /**
- * BatchControllerTest
+ * Batch Controller Test
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
 namespace Dvsa\OlcsTest\Cli\Controller;
 
-use Dvsa\Olcs\Api\Controller\GenericController;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence;
-use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
-use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response;
 use Dvsa\Olcs\Transfer\Query\Application\Application;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
@@ -20,19 +15,29 @@ use Zend\Mvc\Controller\Plugin\Params;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\View\Model\JsonModel;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Command;
+use Dvsa\Olcs\Cli\Controller\BatchController;
+use Zend\ServiceManager\ServiceManager;
+use Zend\Console\Adapter\AdapterInterface;
 
 /**
- * Class BatchControllerTest
+ * Batch Controller Test
+ *
+ * @author Mat Evans <mat.evans@valtech.co.uk>
  */
 class BatchControllerTest extends TestCase
 {
     protected $sut;
 
+    protected $sm;
+
+    protected $pm;
+
     protected function setUp()
     {
-        $this->sut = new \Dvsa\Olcs\Cli\Controller\BatchController();
+        $this->sut = new BatchController();
 
-        $this->sm = m::mock(\Zend\ServiceManager\ServiceManager::class);
+        $this->sm = m::mock(ServiceManager::class);
         $this->sut->setServiceLocator($this->sm);
 
         $this->pm = m::mock(PluginManager::class);
@@ -46,7 +51,7 @@ class BatchControllerTest extends TestCase
     {
         $this->pm->shouldReceive('get')->with('params', null)->andReturn(true);
 
-        $mockConsole = m::mock(\Zend\Console\Adapter\AdapterInterface::class);
+        $mockConsole = m::mock(AdapterInterface::class);
 
         $mockConsole->shouldReceive('writeLine');
 
@@ -62,7 +67,7 @@ class BatchControllerTest extends TestCase
         $mockCommandHandler = m::mock();
         $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
 
-        $mockCommandHandler->shouldReceive('handleCommand')->twice()->andReturn(new Result());
+        $mockCommandHandler->shouldReceive('handleCommand')->twice()->andReturn(new Command\Result());
 
         $this->sut->licenceStatusRulesAction();
     }
@@ -121,10 +126,26 @@ class BatchControllerTest extends TestCase
 
         $mockCommandHandler
             ->shouldReceive('handleCommand')
-            ->with(m::type(\Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\EnqueueOrganisations::class))
+            ->with(m::type(Command\CompaniesHouse\EnqueueOrganisations::class))
             ->once()
-            ->andReturn(new Result());
+            ->andReturn(new Command\Result());
 
         $this->sut->enqueueCompaniesHouseCompareAction();
+    }
+
+    public function testDuplicateVehicleWarningAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+
+        $mockCommandHandler = m::mock();
+        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
+
+        $mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\Vehicle\ProcessDuplicateVehicleWarnings::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $this->sut->duplicateVehicleWarningAction();
     }
 }

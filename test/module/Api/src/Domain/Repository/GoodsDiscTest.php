@@ -52,6 +52,11 @@ class GoodsDiscTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->orX')->with('conditionAndX1', 'conditionAndX2')->once()->andReturn('and');
         $mockQb->shouldReceive('andWhere')->with('and')->once()->andReturnSelf();
 
+        $mockQb->shouldReceive('expr->isNull')->with('gd.ceasedDate')->once()->andReturn('noCeasedDateCond');
+        $mockQb->shouldReceive('expr->isNull')->with('gd.issuedDate')->once()->andReturn('noIssuedDateCond');
+        $mockQb->shouldReceive('andWhere')->with('noCeasedDateCond')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('noIssuedDateCond')->once()->andReturnSelf();
+
         $mockQb->shouldReceive('setParameter')
             ->with('applicationLicenceType', $licenceType)
             ->once()
@@ -121,6 +126,11 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('expr->orX')->with('conditionAndX1', 'conditionAndX2')->once()->andReturn('and');
         $mockQb->shouldReceive('andWhere')->with('and')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->isNull')->with('gd.ceasedDate')->once()->andReturn('noCeasedDateCond');
+        $mockQb->shouldReceive('expr->isNull')->with('gd.issuedDate')->once()->andReturn('noIssuedDateCond');
+        $mockQb->shouldReceive('andWhere')->with('noCeasedDateCond')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('noIssuedDateCond')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('setParameter')
             ->with('operatorType', LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)

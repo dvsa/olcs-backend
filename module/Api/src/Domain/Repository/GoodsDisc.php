@@ -69,6 +69,9 @@ class GoodsDisc extends AbstractRepository
                     )
                 )
             );
+            $qb->andWhere($qb->expr()->isNull('gd.issuedDate'));
+            $qb->andWhere($qb->expr()->isNull('gd.ceasedDate'));
+
             $qb->setParameter('applicationLicenceType', $licenceType);
             $qb->setParameter('licenceTrafficAreaId', TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
 
@@ -98,6 +101,9 @@ class GoodsDisc extends AbstractRepository
                     )
                 )
             );
+            $qb->andWhere($qb->expr()->isNull('gd.issuedDate'));
+            $qb->andWhere($qb->expr()->isNull('gd.ceasedDate'));
+
             $qb->setParameter('operatorType', LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE);
             $qb->setParameter('applicationLicenceType', $licenceType);
             $qb->setParameter('licenceTrafficAreaId', TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);

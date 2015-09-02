@@ -54,6 +54,8 @@ class PsvDisc extends AbstractRepository
                 $qb->expr()->eq('lgp.id', ':goodsOrPsv')
             )
         );
+        $qb->andWhere($qb->expr()->isNull('psv.issuedDate'));
+        $qb->andWhere($qb->expr()->isNull('psv.ceasedDate'));
         $qb->setParameter('licenceType', $licenceType);
         $qb->setParameter('licenceTrafficAreaId', TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
         $qb->setParameter('goodsOrPsv', LicenceEntity::LICENCE_CATEGORY_PSV);

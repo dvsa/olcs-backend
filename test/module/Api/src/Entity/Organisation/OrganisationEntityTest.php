@@ -276,4 +276,32 @@ class OrganisationEntityTest extends EntityTester
 
         $this->assertSame(Disqualification::STATUS_ACTIVE, $organisation->getDisqualificationStatus());
     }
+
+    public function testGetLinkedLicences()
+    {
+        /** @var Entity $organisation */
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturnUsing(
+                function (Criteria $criteria) {
+
+                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
+                    $expr = $criteria->getWhereExpression();
+
+                    $this->assertEquals('status', $expr->getField());
+                    $this->assertEquals('IN', $expr->getOperator());
+                    $this->assertTrue(is_array($expr->getValue()->getValue()));
+
+                    $collection = m::mock();
+                    $collection->shouldReceive('toArray')
+                        ->andReturn(['foo']);
+
+                    return $collection;
+                }
+            );
+
+        $this->assertEquals(['foo'], $organisation->getLinkedLicences()->toArray());
+
+    }
 }
