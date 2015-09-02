@@ -26,8 +26,8 @@ final class ComplianceComplaints extends AbstractSection
 
         $iterator->uasort(
             function ($a, $b) {
-                if (null !== $a->getComplaintDate() &&
-                    null !== $b->getComplaintDate()) {
+                if ($a->getComplaintDate() instanceof \DateTime &&
+                    $b->getComplaintDate() instanceof \DateTime) {
                     return strtotime(
                         $a->getComplaintDate()->format('Ymd') - strtotime(
                             $b->getComplaintDate()->format('Ymd')
