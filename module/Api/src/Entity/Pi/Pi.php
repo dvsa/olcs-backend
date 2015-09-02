@@ -284,17 +284,22 @@ class Pi extends AbstractPi
 
     /**
      * @param string $date
+     * @param string $format
+     * @param bool $zeroTime
      * @return \DateTime|null
      */
-    public function processDate($date)
+    public function processDate($date, $format = 'Y-m-d', $zeroTime = true)
     {
-        $dateTime = \DateTime::createFromFormat('Y-m-d', $date);
+        $dateTime = \DateTime::createFromFormat($format, $date);
 
         if (!$dateTime instanceof \DateTime) {
             return null;
         }
 
-        $dateTime->setTime(0, 0, 0);
+        if ($zeroTime) {
+            $dateTime->setTime(0, 0, 0);
+        }
+
         return $dateTime;
     }
 
