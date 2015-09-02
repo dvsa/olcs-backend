@@ -433,6 +433,7 @@ return [
     Command\Application\CancelAllInterimFees::class => CommandHandler\Application\CancelAllInterimFees::class,
     Command\Application\SetDefaultTrafficAreaAndEnforcementArea::class
         => CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementArea::class,
+    Command\Application\DeleteApplication::class => CommandHandler\Application\DeleteApplication::class,
 
     // Domain - Application Operating Centre
     Command\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class
