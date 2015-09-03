@@ -228,8 +228,9 @@ class Fee extends AbstractFee
         $amount = (float) $this->getAmount();
 
         $ftSum = 0;
-        $feeTransactions = $this->getFeeTransactions()->forAll(
+        $this->getFeeTransactions()->forAll(
             function ($key, $feeTransaction) use (&$ftSum) {
+                unset($key); // unused
                 if ($feeTransaction->getTransaction()->isComplete()) {
                     $ftSum += (float) $feeTransaction->getAmount();
                     return true;

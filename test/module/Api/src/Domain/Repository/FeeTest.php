@@ -455,6 +455,7 @@ class FeeTest extends RepositoryTestCase
         $this->em->shouldReceive('getReference')
             ->andReturnUsing(
                 function ($refData, $input) {
+                    unset($refData); // unused
                     return $input;
                 }
             );
