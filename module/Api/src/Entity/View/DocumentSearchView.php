@@ -194,6 +194,15 @@ class DocumentSearchView
     protected $ciId;
 
     /**
+     * Organisation ID
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="irfo_organisation_id")
+     */
+    protected $irfoOrganisationId;
+
+    /**
      * Deleted date
      *
      * @var \DateTime
@@ -390,6 +399,16 @@ class DocumentSearchView
     public function getCiId()
     {
         return $this->ciId;
+    }
+
+    /**
+     * Get the IRFO Organisation ID (if applicable)
+     *
+     * @return int
+     */
+    public function getIrfoOrganisationId()
+    {
+        return $this->irfoOrganisationId;
     }
 
     /**

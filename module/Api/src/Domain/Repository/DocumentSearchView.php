@@ -64,6 +64,13 @@ class DocumentSearchView extends AbstractReadonlyRepository
             $qb->setParameter('case', $query->getCase());
         }
 
+        if ($query->getIrfoOrganisation() !== null) {
+            $idExpressions[] = $qb->expr()->eq(
+                'm.irfoOrganisationId', ':irfoOrganisation'
+            );
+            $qb->setParameter('irfoOrganisation', $query->getIrfoOrganisation());
+        }
+
         if (!empty($idExpressions)) {
             $expr = $qb->expr();
 
