@@ -46,7 +46,7 @@ class FeeTest extends QueryHandlerTestCase
             ->shouldReceive('allowEdit')
             ->once()
             ->andReturn(true)
-            ->shouldReceive('getReceiptNo')
+            ->shouldReceive('getLatestPaymentRef')
             ->once()
             ->andReturn('TestReceiptNo')
             ->shouldReceive('getReceivedAmount')

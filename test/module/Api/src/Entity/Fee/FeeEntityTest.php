@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
@@ -172,7 +171,7 @@ class FeeEntityTest extends EntityTester
     public function testCompatibilityGetMethods()
     {
         $this->assertNull($this->sut->getReceivedAmount());
-        $this->assertNull($this->sut->getReceiptNo());
+        $this->assertNull($this->sut->getLatestPaymentRef());
         $this->assertNull($this->sut->getReceivedDate());
         $this->assertNull($this->sut->getPaymentMethod());
         $this->assertNull($this->sut->getProcessedBy());
@@ -225,7 +224,7 @@ class FeeEntityTest extends EntityTester
         $this->assertEquals('12345', $this->sut->getSlipNo());
         $this->assertEquals('23456', $this->sut->getChequePoNumber());
         $this->assertEquals('waive reason', $this->sut->getWaiveReason());
-        $this->assertEquals('OLCS-1234', $this->sut->getReceiptNo());
+        $this->assertEquals('OLCS-1234', $this->sut->getLatestPaymentRef());
     }
 
     private function getStubFeeTransaction(
