@@ -20,6 +20,12 @@ return array(
         'company_cert_seen' => array(
             'type' => 'yesno'
         ),
+        'confirm_share_vehicle_info' => array(
+            'type' => 'yesno'
+        ),
+        'confirm_share_trailer_info' => array(
+            'type' => 'yesno'
+        ),
         'is_irfo' => array(
             'type' => 'yesno'
         ),
@@ -1456,23 +1462,29 @@ return array(
             )
         )
     ),
-    'fee_payment' => array(
+    'fee_transaction' => array(
         'fee_id' => array(
             'inversedBy' => array(
                 'entity' => 'Fee',
-                'property' => 'feePayment',
+                'property' => 'feeTransaction',
                 'cascade' => array(
                     'persist'
                 ),
             ),
+            'cascade' => array(
+                'persist'
+            ),
         ),
-        'payment_id' => array(
+        'transaction_id' => array(
             'inversedBy' => array(
-                'entity' => 'Payment',
-                'property' => 'feePayment',
+                'entity' => 'Transaction',
+                'property' => 'feeTransaction',
                 'cascade' => array(
                     'persist'
                 ),
+            ),
+            'cascade' => array(
+                'persist'
             ),
         ),
     ),

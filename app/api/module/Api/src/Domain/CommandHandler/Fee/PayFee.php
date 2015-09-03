@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence as ContinueLicenceCmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Pay Fee (handles fee side effects)
@@ -120,6 +121,12 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         }
 
         $application = $fee->getApplication();
+        if (
+            $application->isGoods() && !$application->isVariation() &&
+            $application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE
+        ) {
+            $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
+        }
 
         if ($application->getCurrentInterimStatus() !== ApplicationEntity::INTERIM_STATUS_GRANTED) {
             return;

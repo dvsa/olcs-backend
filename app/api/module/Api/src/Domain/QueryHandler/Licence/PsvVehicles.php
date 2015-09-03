@@ -44,6 +44,12 @@ class PsvVehicles extends AbstractQueryHandler
         $flags['canTransfer'] = !$licence->getOtherActiveLicences()->isEmpty();
         $flags['hasBreakdown'] = $licence->hasPsvBreakdown();
 
-        return $this->result($licence, [], $flags);
+        return $this->result(
+            $licence,
+            [
+                'organisation'
+            ],
+            $flags
+        );
     }
 }

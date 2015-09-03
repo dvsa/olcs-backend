@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Fee;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Fee\Fee as QueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
-use Dvsa\Olcs\Api\Entity\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Transfer\Query\Fee\Fee as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -34,7 +34,7 @@ class FeeTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 69]);
 
-        $mockFee = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+        $mockFee = m::mock(FeeEntity::class);
 
         $this->repoMap['Fee']
             ->shouldReceive('fetchUsingId')
@@ -45,7 +45,34 @@ class FeeTest extends QueryHandlerTestCase
         $mockFee
             ->shouldReceive('allowEdit')
             ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getReceiptNo')
+            ->once()
+            ->andReturn('TestReceiptNo')
+            ->shouldReceive('getReceivedAmount')
+            ->once()
+            ->andReturn('TestReceivedAmount')
+            ->shouldReceive('getReceivedDate')
+            ->once()
+            ->andReturn('TestReceivedDate')
+            ->shouldReceive('getPaymentMethod')
+            ->once()
+            ->andReturn('TestPaymentMethod')
+            ->shouldReceive('getProcessedBy')
+            ->once()
+            ->andReturn('TestProcessedBy')
+            ->shouldReceive('getPayer')
+            ->once()
+            ->andReturn('TestPayer')
+            ->shouldReceive('getSlipNo')
+            ->once()
+            ->andReturn('TestSlipNo')
+            ->shouldReceive('getChequePoNumber')
+            ->once()
+            ->andReturn('TestChequePoNumber')
+            ->shouldReceive('getWaiveReason')
+            ->once()
+            ->andReturn('TestWaiveReason');
 
         $result = $this->sut->handleQuery($query);
 
@@ -59,6 +86,20 @@ class FeeTest extends QueryHandlerTestCase
                 ]
             );
 
-        $this->assertEquals(['id' => '69', 'allowEdit' => true], $result->serialize());
+        $expected = [
+            'id' => '69',
+            'allowEdit' => true,
+            'receiptNo' => 'TestReceiptNo',
+            'receivedAmount' => 'TestReceivedAmount',
+            'receivedDate' => 'TestReceivedDate',
+            'paymentMethod' => 'TestPaymentMethod',
+            'processedBy' => 'TestProcessedBy',
+            'payer' => 'TestPayer',
+            'slipNo' => 'TestSlipNo',
+            'chequePoNumber' => 'TestChequePoNumber',
+            'waiveReason' => 'TestWaiveReason',
+        ];
+
+        $this->assertEquals($expected, $result->serialize());
     }
 }

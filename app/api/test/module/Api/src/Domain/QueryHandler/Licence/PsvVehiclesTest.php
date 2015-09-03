@@ -46,7 +46,7 @@ class PsvVehiclesTest extends QueryHandlerTestCase
         $licence->shouldReceive('hasPsvBreakdown')->andReturn(false);
         $licence->shouldReceive('getOtherActiveLicences->isEmpty')->andReturn(true);
         $licence->shouldReceive('serialize')
-            ->with([])
+            ->with(['organisation'])
             ->andReturn(['foo' => 'bar']);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')

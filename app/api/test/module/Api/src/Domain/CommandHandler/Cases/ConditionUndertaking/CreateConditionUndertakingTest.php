@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\OperatingCentre as OperatingCentreRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\ConditionUndertaking\CreateConditionUndertaking as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Cases\ConditionUndertaking\CreateConditionUndertaking as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -74,7 +74,8 @@ class CreateConditionUndertakingTest extends CommandHandlerTestCase
             'notes' => 'Notes',
             'isFulfilled' => 'N',
             'attachedTo' => 'cat_oc',
-            'operatingCentre' => 16
+            'operatingCentre' => 16,
+            'action' => 'X',
             ]
         );
 
@@ -124,6 +125,7 @@ class CreateConditionUndertakingTest extends CommandHandlerTestCase
                 function (ConditionUndertakingEntity $conditionUndertaking) use (&$conditionUndertakingEntity) {
                     $conditionUndertakingEntity = $conditionUndertaking;
                     $conditionUndertaking->setId(99);
+                    $this->assertSame('X', $conditionUndertaking->getAction());
                 }
             )
             ->once();
