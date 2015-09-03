@@ -19,7 +19,7 @@ final class OutstandingApplications extends AbstractSection
         $outstandingApplications = !empty($organisation) ? $organisation->getOutstandingApplications() : [];
 
         $data = [];
-        
+
         for ($i=0; $i<count($outstandingApplications); $i++) {
             /** @var ApplicationEntity $applicationEntity */
             $applicationEntity = $outstandingApplications->current();
