@@ -72,7 +72,12 @@ class FeeTest extends QueryHandlerTestCase
             ->andReturn('TestChequePoNumber')
             ->shouldReceive('getWaiveReason')
             ->once()
-            ->andReturn('TestWaiveReason');
+            ->andReturn('TestWaiveReason')
+            ->shouldReceive('getOutstandingAmount')
+            ->once()
+            ->andReturn('TestOutstanding')
+            ->shouldReceive('getOutstandingWaiveTransaction')
+            ->andReturn(null);
 
         $result = $this->sut->handleQuery($query);
 
@@ -98,6 +103,8 @@ class FeeTest extends QueryHandlerTestCase
             'slipNo' => 'TestSlipNo',
             'chequePoNumber' => 'TestChequePoNumber',
             'waiveReason' => 'TestWaiveReason',
+            'outstanding' => 'TestOutstanding',
+            'hasOutstandingWaiveTransaction' => false,
         ];
 
         $this->assertEquals($expected, $result->serialize());

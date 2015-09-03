@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
@@ -187,7 +188,9 @@ class FeeEntityTest extends EntityTester
             '234.56',
             '2015-09-03',
             '2015-09-03 12:34:55',
-            Transaction::STATUS_OUTSTANDING
+            Transaction::STATUS_OUTSTANDING,
+            Transaction::TYPE_WAIVE,
+            'waive reason'
         );
 
         $transaction = $ft1->getTransaction();
@@ -207,8 +210,6 @@ class FeeEntityTest extends EntityTester
 
         $transaction->setChequePoNumber('23456');
 
-        $transaction->setComment('reason');
-
         $transaction->setReference('OLCS-1234');
 
         $this->sut->getFeeTransactions()->add($ft1);
@@ -223,7 +224,7 @@ class FeeEntityTest extends EntityTester
         $this->assertEquals('payer', $this->sut->getPayer());
         $this->assertEquals('12345', $this->sut->getSlipNo());
         $this->assertEquals('23456', $this->sut->getChequePoNumber());
-        $this->assertEquals('reason', $this->sut->getWaiveReason());
+        $this->assertEquals('waive reason', $this->sut->getWaiveReason());
         $this->assertEquals('OLCS-1234', $this->sut->getReceiptNo());
     }
 
@@ -231,7 +232,9 @@ class FeeEntityTest extends EntityTester
         $amount,
         $completedDate,
         $createdOn,
-        $statusId = Transaction::STATUS_COMPLETE
+        $statusId = Transaction::STATUS_COMPLETE,
+        $typeId = Transaction::TYPE_PAYMENT,
+        $comment = ''
     ) {
         $transaction = new Transaction();
         $feeTransaction = new FeeTransaction();
@@ -243,6 +246,9 @@ class FeeEntityTest extends EntityTester
         $transaction->setCreatedOn($created);
         $status = (new RefData())->setId($statusId);
         $transaction->setStatus($status);
+        $type = (new RefData())->setId($typeId);
+        $transaction->setType($type);
+        $transaction->setComment($comment);
 
         return $feeTransaction;
     }
