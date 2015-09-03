@@ -68,11 +68,8 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
             ->shouldReceive('getSize')
             ->andReturn(1500);
 
-        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateFromTemplate')
+        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateAndStore')
             ->with('GVVehiclesList', ['licence' => 111, 'user' => $mockUser])
-            ->andReturn('CONTENT')
-            ->shouldReceive('uploadGeneratedContent')
-            ->with('CONTENT')
             ->andReturn($file);
 
         $data = [
@@ -110,10 +107,7 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
         $this->assertSame($result2, $this->sut->handleCommand($command));
     }
 
-    /**
-     * @dataProvider licenceTypeProvider
-     */
-    public function testHandleCommandWithTypeDp($niFlag, $template)
+    public function testHandleCommandWithTypeDp()
     {
         $data = [
             'id' => 111,
@@ -126,25 +120,14 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 
-        $mockLicence = m::mock()
-            ->shouldReceive('getNiFlag')
-            ->andReturn($niFlag)
-            ->once()
-            ->getMock();
-
-        $this->repoMap['Licence']->shouldReceive('fetchById')->with(111)->andReturn($mockLicence)->once();
-
         $file = m::mock();
         $file->shouldReceive('getIdentifier')
             ->andReturn(123)
             ->shouldReceive('getSize')
             ->andReturn(1500);
 
-        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateFromTemplate')
-            ->with($template, ['licence' => 111, 'user' => $mockUser])
-            ->andReturn('CONTENT')
-            ->shouldReceive('uploadGeneratedContent')
-            ->with('CONTENT')
+        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateAndStore')
+            ->with('GVDiscLetter', ['licence' => 111, 'user' => $mockUser])
             ->andReturn($file);
 
         $data = [
@@ -180,13 +163,5 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
         $this->expectedSideEffect(CreateDocument::class, $data, $result2);
 
         $this->assertSame($result2, $this->sut->handleCommand($command));
-    }
-
-    public function licenceTypeProvider()
-    {
-        return [
-            ['N', 'GB/GVDiscLetter'],
-            ['Y', 'NI/GVDiscLetter']
-        ];
     }
 }
