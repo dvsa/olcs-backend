@@ -47,19 +47,6 @@ final class Suspend extends AbstractCommandHandler implements TransactionedInter
             );
         }
 
-        $communityLicences = $licence->getCommunityLics()->toArray();
-        if (!empty($communityLicences)) {
-            $result->merge(
-                $this->handleSideEffect(
-                    ReturnComLics::create(
-                        [
-                            'id' => $licence->getId(),
-                        ]
-                    )
-                )
-            );
-        }
-
         $result->addMessage("Licence ID {$licence->getId()} suspended");
 
         return $result;
