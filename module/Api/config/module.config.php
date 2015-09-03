@@ -14,8 +14,6 @@ return [
         'alias' => [
             'PublicationContextPlugin' => \Dvsa\Olcs\Api\Service\Publication\Context\PluginManager::class,
             'PublicationProcessPlugin' => \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class,
-            'SubmissionContextPlugin' => \Dvsa\Olcs\Api\Service\Submission\Context\PluginManager::class,
-            'SubmissionProcessPlugin' => \Dvsa\Olcs\Api\Service\Submission\Process\PluginManager::class
         ],
         'invokables' => [
             'Document' => \Dvsa\Olcs\Api\Service\Document\Document::class,
@@ -63,6 +61,9 @@ return [
 
             \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManagerFactory::class,
+
+            \Dvsa\Olcs\Api\Service\Submission\SubmissionCommentService::class =>
+                \Dvsa\Olcs\Api\Service\Submission\SubmissionCommentServiceFactory::class,
 
         ],
     ],

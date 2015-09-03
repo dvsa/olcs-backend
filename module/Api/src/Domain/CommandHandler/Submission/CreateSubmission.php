@@ -39,12 +39,19 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
 
         $this->getRepo()->save($submissionEntity);
 
+        // add default comments for the submission
+        // Generate comments for all sections that are configured as type = 'text'
+        $commentCommands = $this->getSubmissionCommentService()->generateCommentCommands($submissionEntity);
+
+        $this->handleSideEffects($commentCommands);
+
         $result = new Result();
         $result->addId('submission', $submissionEntity->getId());
         $result->addMessage('Submission created successfully');
 
         return $result;
     }
+
 
     /**
      * @param Cmd $command
