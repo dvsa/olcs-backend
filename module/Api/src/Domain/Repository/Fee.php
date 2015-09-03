@@ -191,6 +191,29 @@ class Fee extends AbstractRepository
         return $doctrineQb->getQuery()->getResult();
     }
 
+    /**
+     * Fetch fees by irfoGvPermitId
+     *
+     * @param int $irfoGvPermitId
+     *
+     * @return array
+     */
+    public function fetchFeesByIrfoGvPermitId($irfoGvPermitId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($doctrineQb)
+            ->withRefdata()
+            ->order('invoicedDate', 'ASC');
+
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.irfoGvPermit', ':irfoGvPermitId'))
+            ->setParameter('irfoGvPermitId', $irfoGvPermitId);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
     public function fetchLatestFeeByTypeStatusesAndApplicationId(
         $feeType,
         $feeStatuses,
