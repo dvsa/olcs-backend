@@ -188,8 +188,8 @@ return [
     TransferQuery\Bus\ByRouteNo::class => QueryHandler\Bus\ByRouteNo::class,
 
     // Trailer
-    TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
-    TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
+    TransferQuery\Licence\Trailers::class => QueryHandler\Licence\Trailers::class,
+    TransferQuery\Trailer\Trailer::class => QueryHandler\Trailer\Trailer::class,
 
     // Grace Periods
     TransferQuery\GracePeriod\GracePeriod::class => QueryHandler\GracePeriod\GracePeriod::class,
