@@ -1,33 +1,33 @@
 <?php
 
 /**
- * Payment
+ * Transaction
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Payment;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Transaction;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Payment
+ * Transaction
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class PaymentByReference extends AbstractQueryHandler
+class TransactionByReference extends AbstractQueryHandler
 {
-    protected $repoServiceName = 'Payment';
+    protected $repoServiceName = 'Transaction';
 
     public function handleQuery(QueryInterface $query)
     {
-        $payment = $this->getRepo()->fetchByReference($query->getReference());
+        $transaction = $this->getRepo()->fetchByReference($query->getReference());
 
         return $this->result(
-            $payment,
+            $transaction,
             [
-                'feePayments' => [
+                'feeTransactions' => [
                     'fee' => [
                         'application',
                         'licence' => [

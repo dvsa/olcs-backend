@@ -5,19 +5,21 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Payment;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
-use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -27,14 +29,16 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class PayOutstandingFees extends AbstractCommandHandler implements TransactionedInterface
+final class PayOutstandingFees extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     /**
      * @var \Dvsa\Olcs\Api\Service\FeesHelperService
      */
     protected $feesHelper;
 
-    protected $repoServiceName = 'Payment';
+    protected $repoServiceName = 'Transaction';
 
     protected $extraRepos = ['Fee'];
 
@@ -74,11 +78,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             case FeeEntity::METHOD_CARD_OFFLINE:
                 return $this->cardPayment($customerReference, $command, $feesToPay, $result);
             case FeeEntity::METHOD_CASH:
-                return $this->cashPayment($customerReference, $command, $feesToPay, $result);
             case FeeEntity::METHOD_CHEQUE:
-                return $this->chequePayment($customerReference, $command, $feesToPay, $result);
             case FeeEntity::METHOD_POSTAL_ORDER:
-                return $this->poPayment($customerReference, $command, $feesToPay, $result);
+                return $this->immediatePayment($customerReference, $command, $feesToPay, $result);
         }
     }
 
@@ -99,86 +101,32 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $feesToPay
         );
 
-        // create payment
-        $payment = new PaymentEntity();
-        $payment->setGuid($response['receipt_reference']);
-        $payment->setGatewayUrl($response['gateway_url']);
-        $payment->setStatus($this->getRepo()->getRefdataReference(PaymentEntity::STATUS_OUTSTANDING));
+        // create transaction
+        $transaction = new TransactionEntity();
+        $transaction
+            ->setReference($response['receipt_reference'])
+            ->setGatewayUrl($response['gateway_url'])
+            ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_OUTSTANDING))
+            ->setType($this->getRepo()->getRefdataReference(TransactionEntity::TYPE_PAYMENT))
+            ->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()));
 
-        // create feePayment records
-        $feePayments = new ArrayCollection();
-        $payment->setFeePayments($feePayments);
+        // create feeTransaction record(s)
+        $feeTransactions = new ArrayCollection();
+        $transaction->setFeeTransactions($feeTransactions);
         foreach ($feesToPay as $fee) {
-            $feePayment = new FeePaymentEntity();
-            $feePayment
+            $feeTransaction = new FeeTransactionEntity();
+            $feeTransaction
                 ->setFee($fee)
-                ->setFeeValue($fee->getAmount())
-                ->setPayment($payment); // needed for cascade persist to work
-            $feePayments->add($feePayment);
-
-            // update payment method on fee records
-            $fee->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()));
+                ->setAmount($fee->getAmount())
+                ->setTransaction($transaction); // needed for cascade persist to work
+            $feeTransactions->add($feeTransaction);
         }
 
         // persist
-        $this->getRepo()->save($payment);
+        $this->getRepo()->save($transaction);
 
-        $result->addId('payment', $payment->getId());
-        $result->addMessage('Payment record created');
-
-        return $result;
-    }
-
-    /**
-     * @param string $customerReference
-     * @param CommandInterface $command
-     * @param array $fees
-     * @param Result $result
-     *
-     * @return Result
-     */
-    protected function cashPayment($customerReference, $command, $fees, $result)
-    {
-        $this->checkAmountMatchesTotalDue($command->getReceived(), $fees);
-
-        // fire off to CPMS to record payment
-        $response = $this->cpmsHelper->recordCashPayment(
-            $fees,
-            $customerReference,
-            $command->getReceived(),
-            $command->getReceiptDate(),
-            $command->getPayer(),
-            $command->getSlipNo()
-        );
-
-        if ($response === false) {
-            throw new RuntimeException('error from CPMS service');
-        }
-
-        $receiptDate = new \DateTime($command->getReceiptDate());
-        $feeStatusRef = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID);
-        $paymentMethodRef = $this->getRepo()->getRefdataReference(FeeEntity::METHOD_CASH);
-
-        // update fee records as paid
-        foreach ($fees as $fee) {
-            $fee
-                ->setFeeStatus($feeStatusRef)
-                ->setReceivedDate($receiptDate)
-                ->setReceiptNo($response['receipt_reference'])
-                ->setPaymentMethod($paymentMethodRef)
-                ->setPayerName($command->getPayer())
-                ->setPayingInSlipNumber($command->getSlipNo())
-                ->setReceivedAmount($fee->getAmount());
-
-            $this->getRepo('Fee')->save($fee);
-
-            // trigger side effects
-            $result->merge(
-                $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))
-            );
-        }
-
-        $result->addMessage('Fee(s) updated as Paid by cash');
+        $result->addId('transaction', $transaction->getId());
+        $result->addMessage('Transaction record created');
 
         return $result;
     }
@@ -191,44 +139,49 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
      *
      * @return Result
      */
-    protected function chequePayment($customerReference, $command, $fees, $result)
+    protected function immediatePayment($customerReference, $command, $fees, $result)
     {
         $this->checkAmountMatchesTotalDue($command->getReceived(), $fees);
 
-        // fire off to CPMS to record payment
-        $response = $this->cpmsHelper->recordChequePayment(
-            $fees,
-            $customerReference,
-            $command->getReceived(),
-            $command->getReceiptDate(),
-            $command->getPayer(),
-            $command->getSlipNo(),
-            $command->getChequeNo(),
-            $command->getChequeDate()
-        );
+        // fire off to relevant CPMS method to record payment
+        $response = $this->recordPaymentInCpms($customerReference, $command, $fees);
 
         if ($response === false) {
             throw new RuntimeException('error from CPMS service');
         }
 
         $receiptDate = new \DateTime($command->getReceiptDate());
-        $chequeDate = new \DateTime($command->getChequeDate());
-        $feeStatusRef = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID);
-        $paymentMethodRef = $this->getRepo()->getRefdataReference(FeeEntity::METHOD_CHEQUE);
+        $chequeDate = $command->getChequeDate() ? new \DateTime($command->getChequeDate()) : null;
+        $chequePoNumber = $command->getChequeNo() ?: $command->getPoNo();
 
-        // update fee records as paid
+        // create transaction
+        $transaction = new TransactionEntity();
+        $transaction
+            ->setReference($response['receipt_reference'])
+            ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_PAID))
+            ->setType($this->getRepo()->getRefdataReference(TransactionEntity::TYPE_PAYMENT))
+            ->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()))
+            ->setCompletedDate($receiptDate)
+            ->setPayerName($command->getPayer())
+            ->setPayingInSlipNumber($command->getSlipNo())
+            ->setProcessedByUser($this->getCurrentUser())
+            ->setChequePoDate($chequeDate) // note we don't actually capture date for PO's
+            ->setChequePoNumber($chequePoNumber);
+
+        // create feeTransaction record(s)
+        $feeTransactions = new ArrayCollection();
+        $transaction->setFeeTransactions($feeTransactions);
         foreach ($fees as $fee) {
-            $fee
-                ->setFeeStatus($feeStatusRef)
-                ->setReceivedDate($receiptDate)
-                ->setReceiptNo($response['receipt_reference'])
-                ->setPaymentMethod($paymentMethodRef)
-                ->setPayerName($command->getPayer())
-                ->setPayingInSlipNumber($command->getSlipNo())
-                ->setReceivedAmount($fee->getAmount())
-                ->setChequePoNumber($command->getChequeNo())
-                ->setChequePoDate($chequeDate);
+            $feeTransaction = new FeeTransactionEntity();
+            $feeTransaction
+                ->setFee($fee)
+                ->setAmount($fee->getAmount())
+                ->setTransaction($transaction); // needed for cascade persist to work
+            $feeTransactions->add($feeTransaction);
 
+            // Update fee status, we need to call save() rather than rely on cascade persist
+            // at this level of nesting.
+            $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID));
             $this->getRepo('Fee')->save($fee);
 
             // trigger side effects
@@ -237,79 +190,62 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             );
         }
 
-        $result->addMessage('Fee(s) updated as Paid by cheque');
+        // persist
+        $this->getRepo()->save($transaction);
+
+        $method = $this->getRepo()->getRefdataReference($command->getPaymentMethod())->getDescription();
+        $result
+            ->addId('transaction', $transaction->getId())
+            ->addMessage('Transaction record created')
+            ->addMessage('Fee(s) updated as paid by ' . $method);
 
         return $result;
     }
 
     /**
-     * @param string $customerReference
-     * @param CommandInterface $command
-     * @param array $fees
-     * @param Result $result
-     *
-     * @return Result
+     * @return array|false
      */
-    protected function poPayment($customerReference, $command, $fees, $result)
+    protected function recordPaymentInCpms($customerReference, $command, $fees)
     {
-        $this->checkAmountMatchesTotalDue($command->getReceived(), $fees);
-
-        // fire off to CPMS to record payment
-        $response = $this->cpmsHelper->recordPostalOrderPayment(
-            $fees,
-            $customerReference,
-            $command->getReceived(),
-            $command->getReceiptDate(),
-            $command->getPayer(),
-            $command->getSlipNo(),
-            $command->getPoNo()
-        );
-
-        if ($response === false) {
-            throw new RuntimeException('error from CPMS service');
+        switch ($command->getPaymentMethod()) {
+            case FeeEntity::METHOD_CASH:
+                $response = $this->cpmsHelper->recordCashPayment(
+                    $fees,
+                    $customerReference,
+                    $command->getReceived(),
+                    $command->getReceiptDate(),
+                    $command->getPayer(),
+                    $command->getSlipNo()
+                );
+                break;
+            case FeeEntity::METHOD_CHEQUE:
+                $response = $this->cpmsHelper->recordChequePayment(
+                    $fees,
+                    $customerReference,
+                    $command->getReceived(),
+                    $command->getReceiptDate(),
+                    $command->getPayer(),
+                    $command->getSlipNo(),
+                    $command->getChequeNo(),
+                    $command->getChequeDate()
+                );
+                break;
+            case FeeEntity::METHOD_POSTAL_ORDER:
+                $response = $this->cpmsHelper->recordPostalOrderPayment(
+                    $fees,
+                    $customerReference,
+                    $command->getReceived(),
+                    $command->getReceiptDate(),
+                    $command->getPayer(),
+                    $command->getSlipNo(),
+                    $command->getPoNo()
+                );
+                break;
+            default:
+                throw new RuntimeException('invalid payment method: ' . $command->getPaymentMethod());
         }
 
-        $receiptDate = new \DateTime($command->getReceiptDate());
-        $feeStatusRef = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID);
-        $paymentMethodRef = $this->getRepo()->getRefdataReference(FeeEntity::METHOD_POSTAL_ORDER);
-
-        // update fee records as paid
-        foreach ($fees as $fee) {
-            $fee
-                ->setFeeStatus($feeStatusRef)
-                ->setReceivedDate($receiptDate)
-                ->setReceiptNo($response['receipt_reference'])
-                ->setPaymentMethod($paymentMethodRef)
-                ->setPayerName($command->getPayer())
-                ->setPayingInSlipNumber($command->getSlipNo())
-                ->setReceivedAmount($fee->getAmount())
-                ->setChequePoNumber($command->getPoNo());
-
-            $this->getRepo('Fee')->save($fee);
-
-            // trigger side effects
-            $result->merge(
-                $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))
-            );
-        }
-
-        $result->addMessage('Fee(s) updated as Paid by postal order');
-
-        return $result;
-    }
-
-    protected function filterValid(CommandInterface $command, array $outstandingFees)
-    {
-        $fees = [];
-        if (!empty($outstandingFees)) {
-            $ids = $command->getFeeIds();
-            foreach ($outstandingFees as $fee) {
-                if (in_array($fee->getId(), $ids)) {
-                    $fees[] = $fee;
-                }
-            }
-        }
-        return $fees;
+        return $response;
     }
 
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -330,27 +266,31 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     {
         $paid = false;
 
-        foreach ($fee->getFeePayments() as $fp) {
-            if ($fp->getPayment()->isOutstanding()) {
+        foreach ($fee->getFeeTransactions() as $ft) {
+            if ($ft->getTransaction()->isOutstanding()) {
 
-                $paymentId = $fp->getPayment()->getId();
+                $transactionId = $ft->getTransaction()->getId();
 
                 // resolve outstanding payment
                 $dto = ResolvePaymentCommand::create(
                     [
-                    'id' => $paymentId,
-                    'paymentMethod' => $fee->getPaymentMethod()->getId(),
+                        'id' => $transactionId,
+                        'paymentMethod' => $ft->getTransaction()->getPaymentMethod()->getId(),
                     ]
                 );
                 $this->getCommandHandler()->handleCommand($dto);
 
                 // check payment status
-                $payment = $this->getRepo()->fetchById($paymentId);
+                $transaction = $this->getRepo()->fetchById($transactionId);
                 $result->addMessage(
-                    sprintf('payment %d resolved as %s', $paymentId, $payment->getStatus()->getDescription())
+                    sprintf(
+                        'transaction %d resolved as %s',
+                        $transactionId,
+                        $transaction->getStatus()->getDescription()
+                    )
                 );
 
-                if ($payment->isPaid()) {
+                if ($transaction->isPaid()) {
                     $paid = true;
                 }
             }

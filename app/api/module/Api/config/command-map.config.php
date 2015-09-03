@@ -517,14 +517,16 @@ return [
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
     Command\Fee\PayFee::class => CommandHandler\Fee\PayFee::class,
+    TransferCommand\Fee\ApproveWaive::class => CommandHandler\Fee\ApproveWaive::class,
+    TransferCommand\Fee\RecommendWaive::class => CommandHandler\Fee\RecommendWaive::class,
+    TransferCommand\Fee\RejectWaive::class => CommandHandler\Fee\RejectWaive::class,
     TransferCommand\Fee\UpdateFee::class => CommandHandler\Fee\UpdateFee::class,
     TransferCommand\Fee\CreateMiscellaneousFee::class => CommandHandler\Fee\CreateMiscellaneousFee::class,
 
-    // Domain - Payment
-    Command\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
-    TransferCommand\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
-    TransferCommand\Payment\CompletePayment::class => CommandHandler\Payment\CompletePayment::class,
-    Command\Payment\ResolvePayment::class => CommandHandler\Payment\ResolvePayment::class,
+    // Domain - Transaction (formerly 'Payment')
+    TransferCommand\Transaction\PayOutstandingFees::class => CommandHandler\Transaction\PayOutstandingFees::class,
+    TransferCommand\Transaction\CompleteTransaction::class => CommandHandler\Transaction\CompleteTransaction::class,
+    Command\Transaction\ResolvePayment::class => CommandHandler\Transaction\ResolvePayment::class,
 
     // Domain - ApplicationCompletion
     AppCompCommand\UpdateTypeOfLicenceStatus::class => AppCompCommandHandler\UpdateTypeOfLicenceStatus::class,

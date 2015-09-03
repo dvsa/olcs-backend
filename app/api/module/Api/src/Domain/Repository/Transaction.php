@@ -1,26 +1,26 @@
 <?php
 
 /**
- * Payment
+ * Transaction
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Fee\Payment as Entity;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as Entity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
- * Payment
+ * Transaction
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class Payment extends AbstractRepository
+class Transaction extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    protected $alias = 'p';
+    protected $alias = 't';
 
     /**
      * @param string $reference
@@ -33,14 +33,14 @@ class Payment extends AbstractRepository
 
         $this->getQueryBuilder()->modifyQuery($qb)
             ->withRefdata()
-            ->with('feePayments', 'fp')
-            ->with('fp.fee', 'f')
+            ->with('feeTransactions', 'ft')
+            ->with('ft.fee', 'f')
             ->with('f.licence', 'l')
             ->with('f.application')
             ->with('l.organisation');
 
         $qb
-            ->andWhere($qb->expr()->eq('p.guid', ':reference'))
+            ->andWhere($qb->expr()->eq('t.reference', ':reference'))
             ->setParameter('reference', $reference);
 
         $results = $qb->getQuery()->getResult($hydrateMode);

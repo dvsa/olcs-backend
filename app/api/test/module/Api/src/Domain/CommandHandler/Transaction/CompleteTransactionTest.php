@@ -1,31 +1,31 @@
 <?php
 
 /**
- * Complete Payment Test
+ * Complete Transaction Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Payment;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
-use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
+use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Payment\CompletePayment;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\CompleteTransaction;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Repository\Payment as PaymentRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Transaction as PaymentRepo;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperService as CpmsHelper;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCommand;
-use Dvsa\Olcs\Transfer\Command\Payment\CompletePayment as Cmd;
+use Dvsa\Olcs\Transfer\Command\Transaction\CompleteTransaction as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 /**
- * Complete Payment Test
+ * Complete Transaction Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CompletePaymentTest extends CommandHandlerTestCase
+class CompleteTransactionTest extends CommandHandlerTestCase
 {
     protected $mockCpmsService;
 
@@ -36,8 +36,8 @@ class CompletePaymentTest extends CommandHandlerTestCase
             'CpmsHelperService' => $this->mockCpmsService,
         ];
 
-        $this->sut = new CompletePayment();
-        $this->mockRepo('Payment', PaymentRepo::class);
+        $this->sut = new CompleteTransaction();
+        $this->mockRepo('Transaction', PaymentRepo::class);
 
         $this->refData = [
             PaymentEntity::STATUS_OUTSTANDING,
@@ -64,7 +64,7 @@ class CompletePaymentTest extends CommandHandlerTestCase
 
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
-        $payment->setGuid($guid);
+        $payment->setReference($guid);
         $payment
             ->shouldReceive('getStatus')
             ->twice()
@@ -76,7 +76,7 @@ class CompletePaymentTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('fetchByReference')
             ->once()
             ->with($guid)
@@ -89,7 +89,7 @@ class CompletePaymentTest extends CommandHandlerTestCase
 
         $resolveResult = new Result();
         $resolveResult
-            ->addId('payment', $paymentId)
+            ->addId('transaction', $paymentId)
             ->addMessage('payment updated');
         $this->expectedSideEffect(
             ResolvePaymentCommand::class,
@@ -118,7 +118,7 @@ class CompletePaymentTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'payment' => $paymentId,
+                'transaction' => $paymentId,
                 'application' => $applicationId,
             ],
             'messages' => [
@@ -146,13 +146,13 @@ class CompletePaymentTest extends CommandHandlerTestCase
 
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
-        $payment->setGuid($guid);
+        $payment->setReference($guid);
         $payment->setStatus($this->refData[PaymentEntity::STATUS_PAID]);
 
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('fetchByReference')
             ->once()
             ->with($guid)

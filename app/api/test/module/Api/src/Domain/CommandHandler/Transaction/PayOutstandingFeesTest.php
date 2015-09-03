@@ -1,32 +1,35 @@
 <?php
 
+
 /**
  * Pay Outstanding Fees Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Payment;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
-use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
+use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Payment\PayOutstandingFees;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\PayOutstandingFees;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeePaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperService as CpmsHelper;
 use Dvsa\Olcs\Api\Service\FeesHelperService as FeesHelper;
-use Dvsa\Olcs\Transfer\Command\Payment\PayOutstandingFees as Cmd;
+use Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Pay Outstanding Fees Test
@@ -46,11 +49,12 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             'CpmsHelperService' => $this->mockCpmsService,
             'FeesHelperService' => $this->mockFeesHelperService,
+            AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
         ];
 
         $this->sut = new PayOutstandingFees();
         $this->mockRepo('Fee', Repository\Fee::class);
-        $this->mockRepo('Payment', Repository\Payment::class);
+        $this->mockRepo('Transaction', Repository\Transaction::class);
         $this->mockRepo('Application', Repository\Application::class);
 
         $this->mockCpmsService
@@ -61,6 +65,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 }
             );
 
+        /** @var UserEntity $mockUser */
+        $mockUser = m::mock(UserEntity::class)
+            ->shouldReceive('getLoginId')
+            ->andReturn('bob')
+            ->getMock();
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
+
         parent::setUp();
     }
 
@@ -70,10 +83,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             PaymentEntity::STATUS_OUTSTANDING,
             PaymentEntity::STATUS_PAID,
             PaymentEntity::STATUS_FAILED,
+            PaymentEntity::TYPE_PAYMENT,
             FeeEntity::METHOD_CARD_ONLINE,
-            FeeEntity::METHOD_CASH,
-            FeeEntity::METHOD_CHEQUE,
-            FeeEntity::METHOD_POSTAL_ORDER,
+            FeeEntity::METHOD_CASH => m::mock(RefData::class)->makePartial()->setDescription('Cash'),
+            FeeEntity::METHOD_CHEQUE => m::mock(RefData::class)->makePartial()->setDescription('Cheque'),
+            FeeEntity::METHOD_POSTAL_ORDER => m::mock(RefData::class)->makePartial()->setDescription('Postal Order'),
             FeeEntity::STATUS_PAID,
             LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
@@ -131,7 +145,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('save')
             ->once()
             ->with(m::type(PaymentEntity::class))
@@ -147,10 +161,10 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'payment' => $paymentId,
+                'transaction' => $paymentId,
             ],
             'messages' => [
-                'Payment record created',
+                'Transaction record created',
             ]
         ];
 
@@ -206,18 +220,17 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $payment = new PaymentEntity();
         $payment
             ->setStatus($this->mapRefData(PaymentEntity::STATUS_OUTSTANDING))
-            ->setId($paymentId);
+            ->setId($paymentId)
+            ->setPaymentMethod($this->mapRefData(FeeEntity::METHOD_CARD_ONLINE));
         $fp = new FeePaymentEntity();
-        $fp->setPayment($payment);
+        $fp->setTransaction($payment);
         $fee1 = $this->getStubFee(99, 150.00);
-        $fee1
-            ->setPaymentMethod($this->mapRefData(FeeEntity::METHOD_CARD_ONLINE))
-            ->getFeePayments()->add($fp);
+        $fee1->getFeeTransactions()->add($fp);
 
         $fees = [$fee1];
 
         $resolveResult = new Result();
-        $resolveResult->addId('payment', $paymentId);
+        $resolveResult->addId('transaction', $paymentId);
         $this->expectedSideEffect(
             ResolvePaymentCommand::class,
             [
@@ -231,7 +244,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $updatedPayment
             ->setId($paymentId)
             ->setStatus($this->mapRefData(PaymentEntity::STATUS_PAID));
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('fetchById')
             ->once()
             ->with($paymentId)
@@ -244,23 +257,22 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
     {
         $result = new Result();
 
-        // set up fee with outstanding payment that was paid
+        // set up fee with outstanding payment that was not paid
         $paymentId = 222;
         $payment = new PaymentEntity();
         $payment
             ->setStatus($this->mapRefData(PaymentEntity::STATUS_OUTSTANDING))
-            ->setId($paymentId);
+            ->setId($paymentId)
+            ->setPaymentMethod($this->mapRefData(FeeEntity::METHOD_CARD_ONLINE));
         $fp = new FeePaymentEntity();
-        $fp->setPayment($payment);
+        $fp->setTransaction($payment);
         $fee1 = $this->getStubFee(99, 150.00);
-        $fee1
-            ->setPaymentMethod($this->mapRefData(FeeEntity::METHOD_CARD_ONLINE))
-            ->getFeePayments()->add($fp);
+        $fee1->getFeeTransactions()->add($fp);
 
         $fees = [$fee1];
 
         $resolveResult = new Result();
-        $resolveResult->addId('payment', $paymentId);
+        $resolveResult->addId('transaction', $paymentId);
         $this->expectedSideEffect(
             ResolvePaymentCommand::class,
             [
@@ -274,7 +286,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $updatedPayment
             ->setId($paymentId)
             ->setStatus($this->mapRefData(PaymentEntity::STATUS_FAILED));
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('fetchById')
             ->once()
             ->with($paymentId)
@@ -330,7 +342,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('save')
             ->once()
             ->with(m::type(PaymentEntity::class))
@@ -346,10 +358,10 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'payment' => $paymentId,
+                'transaction' => $paymentId,
             ],
             'messages' => [
-                'Payment record created',
+                'Transaction record created',
             ]
         ];
 
@@ -402,7 +414,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('save')
             ->once()
             ->with(m::type(PaymentEntity::class))
@@ -418,10 +430,10 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'payment' => $paymentId,
+                'transaction' => $paymentId,
             ],
             'messages' => [
-                'Payment record created',
+                'Transaction record created',
             ]
         ];
 
@@ -436,6 +448,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $feeIds = [99];
         $fee1 = $this->getStubFee(99, 99.99);
         $fees = [$fee1];
+        $transactionId = 69;
 
         $data = [
             'feeIds' => $feeIds,
@@ -471,6 +484,16 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->once()
             ->with($fee1);
 
+        $savedTransaction = null;
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->andReturnUsing(
+                function ($transaction) use (&$savedTransaction, $transactionId) {
+                    $savedTransaction = $transaction;
+                    $savedTransaction->setId($transactionId);
+                }
+            );
+
         $updateData = ['id' => 99];
         $result2 = new Result();
         $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
@@ -479,21 +502,27 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'transaction' => $transactionId,
+            ],
             'messages' => [
-                'Fee(s) updated as Paid by cash',
+                'Transaction record created',
+                'Fee(s) updated as paid by Cash',
             ]
         ];
 
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(FeeEntity::STATUS_PAID, $fee1->getFeeStatus()->getId());
-        $this->assertEquals('2015-06-17', $fee1->getReceivedDate()->format('Y-m-d'));
-        $this->assertEquals('OLCS-1234-CASH', $fee1->getReceiptNo());
-        $this->assertEquals(FeeEntity::METHOD_CASH, $fee1->getPaymentMethod()->getId());
-        $this->assertEquals('Dan', $fee1->getPayerName());
-        $this->assertEquals('12345', $fee1->getPayingInSlipNumber());
-        $this->assertEquals('99.99', $fee1->getReceivedAmount());
+        $this->assertEquals('2015-06-17', $savedTransaction->getCompletedDate()->format('Y-m-d'));
+        $this->assertEquals('OLCS-1234-CASH', $savedTransaction->getReference());
+        $this->assertEquals(FeeEntity::METHOD_CASH, $savedTransaction->getPaymentMethod()->getId());
+        $this->assertEquals('Dan', $savedTransaction->getPayerName());
+        $this->assertEquals('12345', $savedTransaction->getPayingInSlipNumber());
+        $this->assertEquals('bob', $savedTransaction->getProcessedByUser()->getLoginId());
+        $this->assertEquals('99.99', $savedTransaction->getFeeTransactions()->first()->getAmount());
+        $this->assertEquals(PaymentEntity::STATUS_PAID, $savedTransaction->getStatus()->getId());
+        $this->assertEquals(PaymentEntity::TYPE_PAYMENT, $savedTransaction->getType()->getId());
     }
 
     public function testHandleCommandChequePayment()
@@ -502,6 +531,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $feeIds = [99];
         $fee1 = $this->getStubFee(99, 99.99);
         $fees = [$fee1];
+        $transactionId = 69;
 
         $data = [
             'feeIds' => $feeIds,
@@ -539,6 +569,16 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->once()
             ->with($fee1);
 
+        $savedTransaction = null;
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->andReturnUsing(
+                function ($transaction) use (&$savedTransaction, $transactionId) {
+                    $savedTransaction = $transaction;
+                    $savedTransaction->setId($transactionId);
+                }
+            );
+
         $updateData = ['id' => 99];
         $result2 = new Result();
         $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
@@ -547,23 +587,29 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'transaction' => $transactionId,
+            ],
             'messages' => [
-                'Fee(s) updated as Paid by cheque',
+                'Transaction record created',
+                'Fee(s) updated as paid by Cheque',
             ]
         ];
 
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(FeeEntity::STATUS_PAID, $fee1->getFeeStatus()->getId());
-        $this->assertEquals('2015-06-17', $fee1->getReceivedDate()->format('Y-m-d'));
-        $this->assertEquals('OLCS-1234-CHEQUE', $fee1->getReceiptNo());
-        $this->assertEquals(FeeEntity::METHOD_CHEQUE, $fee1->getPaymentMethod()->getId());
-        $this->assertEquals('Dan', $fee1->getPayerName());
-        $this->assertEquals('12345', $fee1->getPayingInSlipNumber());
-        $this->assertEquals('99.99', $fee1->getReceivedAmount());
-        $this->assertEquals('23456', $fee1->getChequePoNumber());
-        $this->assertEquals('2015-06-10', $fee1->getChequePoDate()->format('Y-m-d'));
+        $this->assertEquals('2015-06-17', $savedTransaction->getCompletedDate()->format('Y-m-d'));
+        $this->assertEquals('OLCS-1234-CHEQUE', $savedTransaction->getReference());
+        $this->assertEquals(FeeEntity::METHOD_CHEQUE, $savedTransaction->getPaymentMethod()->getId());
+        $this->assertEquals('Dan', $savedTransaction->getPayerName());
+        $this->assertEquals('12345', $savedTransaction->getPayingInSlipNumber());
+        $this->assertEquals('bob', $savedTransaction->getProcessedByUser()->getLoginId());
+        $this->assertEquals('99.99', $savedTransaction->getFeeTransactions()->first()->getAmount());
+        $this->assertEquals(PaymentEntity::STATUS_PAID, $savedTransaction->getStatus()->getId());
+        $this->assertEquals(PaymentEntity::TYPE_PAYMENT, $savedTransaction->getType()->getId());
+        $this->assertEquals('23456', $savedTransaction->getChequePoNumber());
+        $this->assertEquals('2015-06-10', $savedTransaction->getChequePoDate()->format('Y-m-d'));
     }
 
     public function testHandleCommandPoPayment()
@@ -572,6 +618,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $feeIds = [99];
         $fee1 = $this->getStubFee(99, 99.99);
         $fees = [$fee1];
+        $transactionId = 69;
 
         $data = [
             'feeIds' => $feeIds,
@@ -608,6 +655,16 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->once()
             ->with($fee1);
 
+        $savedTransaction = null;
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->andReturnUsing(
+                function ($transaction) use (&$savedTransaction, $transactionId) {
+                    $savedTransaction = $transaction;
+                    $savedTransaction->setId($transactionId);
+                }
+            );
+
         $updateData = ['id' => 99];
         $result2 = new Result();
         $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
@@ -616,22 +673,28 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'transaction' => $transactionId,
+            ],
             'messages' => [
-                'Fee(s) updated as Paid by postal order',
+                'Transaction record created',
+                'Fee(s) updated as paid by Postal Order',
             ]
         ];
 
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(FeeEntity::STATUS_PAID, $fee1->getFeeStatus()->getId());
-        $this->assertEquals('2015-06-17', $fee1->getReceivedDate()->format('Y-m-d'));
-        $this->assertEquals('OLCS-1234-PO', $fee1->getReceiptNo());
-        $this->assertEquals(FeeEntity::METHOD_POSTAL_ORDER, $fee1->getPaymentMethod()->getId());
-        $this->assertEquals('Dan', $fee1->getPayerName());
-        $this->assertEquals('12345', $fee1->getPayingInSlipNumber());
-        $this->assertEquals('99.99', $fee1->getReceivedAmount());
-        $this->assertEquals('23456', $fee1->getChequePoNumber());
+        $this->assertEquals('2015-06-17', $savedTransaction->getCompletedDate()->format('Y-m-d'));
+        $this->assertEquals('OLCS-1234-PO', $savedTransaction->getReference());
+        $this->assertEquals(FeeEntity::METHOD_POSTAL_ORDER, $savedTransaction->getPaymentMethod()->getId());
+        $this->assertEquals('Dan', $savedTransaction->getPayerName());
+        $this->assertEquals('12345', $savedTransaction->getPayingInSlipNumber());
+        $this->assertEquals('bob', $savedTransaction->getProcessedByUser()->getLoginId());
+        $this->assertEquals('99.99', $savedTransaction->getFeeTransactions()->first()->getAmount());
+        $this->assertEquals(PaymentEntity::STATUS_PAID, $savedTransaction->getStatus()->getId());
+        $this->assertEquals(PaymentEntity::TYPE_PAYMENT, $savedTransaction->getType()->getId());
+        $this->assertEquals('23456', $savedTransaction->getChequePoNumber());
     }
 
     public function testHandleCommandAmountMismatch()

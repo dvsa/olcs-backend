@@ -5,21 +5,24 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Payment;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Payment\ResolvePayment;
+
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
-use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Repository\AbstractRepository as Repo;
+use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\ResolvePayment;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
+use Dvsa\Olcs\Api\Domain\Repository\AbstractRepository as Repo;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeePaymentEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\CpmsHelperService as CpmsHelper;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Resolve Payment Test
@@ -35,13 +38,15 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $this->mockCpmsService = m::mock(CpmsHelper::class);
         $this->mockedSmServices = [
             'CpmsHelperService' => $this->mockCpmsService,
+            AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
         ];
 
         $this->sut = new ResolvePayment();
-        $this->mockRepo('Payment', Repo::class);
+        $this->mockRepo('Transaction', Repo::class);
         $this->mockRepo('Fee', Repo::class);
 
         $this->refData = [
+            PaymentEntity::STATUS_OUTSTANDING,
             PaymentEntity::STATUS_PAID => m::mock(RefData::class)
                 ->shouldReceive('getDescription')
                 ->andReturn('PAYMENT PAID')
@@ -58,7 +63,10 @@ class ResolvePaymentTest extends CommandHandlerTestCase
                 ->shouldReceive('getDescription')
                 ->andReturn('FEE PAID')
                 ->getMock(),
-            FeeEntity::METHOD_CARD_ONLINE,
+            FeeEntity::METHOD_CARD_ONLINE => m::mock(RefData::class)
+                ->shouldReceive('getDescription')
+                ->andReturn('CARD')
+                ->getMock(),
         ];
 
         $this->references = [
@@ -72,6 +80,15 @@ class ResolvePaymentTest extends CommandHandlerTestCase
 
         $this->references[FeePaymentEntity::class][11]
             ->setFee($this->references[FeeEntity::class][22]);
+
+        /** @var UserEntity $mockUser */
+        $mockUser = m::mock(UserEntity::class)
+            ->shouldReceive('getLoginId')
+            ->andReturn('bob')
+            ->getMock();
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
 
         parent::setUp();
     }
@@ -93,14 +110,14 @@ class ResolvePaymentTest extends CommandHandlerTestCase
 
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
-        $payment->setGuid($guid);
-        $payment->setFeePayments($this->references[FeePaymentEntity::class]);
+        $payment->setReference($guid);
+        $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
         $payment->setStatus($this->refData[PaymentEntity::STATUS_PAID]);
 
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('fetchUsingId')
             ->once()
             ->with($command)
@@ -112,7 +129,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->with($guid)
             ->andReturn(CpmsHelper::PAYMENT_SUCCESS);
 
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('save')
             ->once()
             ->with($payment);
@@ -126,20 +143,21 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $result2 = new Result();
         $this->expectedSideEffect(PayFeeCmd::class, $updateData, $result2);
 
+        $now = new DateTime();
+
         // assertions
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals('FEE PAID', $fee->getFeeStatus()->getDescription());
-        $this->assertEquals($guid, $fee->getReceiptNo());
-        $this->assertEquals(FeeEntity::METHOD_CARD_ONLINE, $fee->getPaymentMethod()->getId());
-        $this->assertEquals($amount, $fee->getReceivedAmount());
+        $this->assertEquals($guid, $payment->getReference());
+        $this->assertEquals($now->format('Y-m-d'), $payment->getCompletedDate()->format('Y-m-d'));
 
         $expected = [
             'id' => [
-                'payment' => 69,
+                'transaction' => 69,
             ],
             'messages' => [
-                'Payment resolved as PAYMENT PAID'
+                'Transaction resolved as PAYMENT PAID'
             ]
         ];
 
@@ -170,14 +188,14 @@ class ResolvePaymentTest extends CommandHandlerTestCase
 
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
-        $payment->setGuid($guid);
-        $payment->setFeePayments($this->references[FeePaymentEntity::class]);
-        $payment->setStatus($this->refData[$expectedPaymentStatus]);
+        $payment->setReference($guid);
+        $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
+        $payment->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING]);
 
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('fetchUsingId')
             ->once()
             ->with($command)
@@ -189,7 +207,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->with($guid)
             ->andReturn($cpmsStatus);
 
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('save')
             ->once()
             ->with($payment);
@@ -201,12 +219,11 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         // assertions
         $result = $this->sut->handleCommand($command);
 
-        $this->assertNull($fee->getReceiptNo());
-        $this->assertEquals(0, $fee->getReceivedAmount());
+        $this->assertEquals($expectedPaymentStatus, $payment->getStatus()->getId());
 
         $expected = [
             'id' => [
-                'payment' => 69,
+                'transaction' => 69,
             ],
             'messages' => [
                 $expectedMessage,
@@ -222,17 +239,17 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             [
                 CpmsHelper::PAYMENT_FAILURE,
                 PaymentEntity::STATUS_FAILED,
-                'Payment resolved as PAYMENT FAILED',
+                'Transaction resolved as PAYMENT FAILED',
             ],
             [
                 CpmsHelper::PAYMENT_CANCELLATION,
                 PaymentEntity::STATUS_CANCELLED,
-                'Payment resolved as PAYMENT CANCELLED',
+                'Transaction resolved as PAYMENT CANCELLED',
             ],
             [
                 CpmsHelper::PAYMENT_IN_PROGRESS,
                 PaymentEntity::STATUS_FAILED,
-                'Payment resolved as PAYMENT FAILED',
+                'Transaction resolved as PAYMENT FAILED',
             ],
         ];
     }
@@ -252,12 +269,12 @@ class ResolvePaymentTest extends CommandHandlerTestCase
 
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
-        $payment->setGuid($guid);
+        $payment->setReference($guid);
 
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['Payment']
+        $this->repoMap['Transaction']
             ->shouldReceive('fetchUsingId')
             ->once()
             ->with($command)
