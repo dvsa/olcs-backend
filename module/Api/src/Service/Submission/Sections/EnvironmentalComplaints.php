@@ -40,11 +40,8 @@ final class EnvironmentalComplaints extends AbstractSection
         $complaints = new ArrayCollection(iterator_to_array($iterator));
 
         $data = [];
-        for ($i = 0; $i < count($complaints); $i++) {
-
-            /** @var Complaint $entity */
-            $entity = $complaints->current();
-
+        /** @var Complaint $entity */
+        foreach ($complaints as $entity) {
             $thisRow = array();
             $thisRow['id'] = $entity->getId();
             $thisRow['version'] = $entity->getVersion();
@@ -58,8 +55,6 @@ final class EnvironmentalComplaints extends AbstractSection
             $thisRow['status'] = !empty($entity->getStatus()) ? $entity->getStatus()->getDescription() : '';
 
             $data[] = $thisRow;
-
-            $complaints->next();
         }
 
         return [

@@ -28,10 +28,8 @@ final class TmPreviousHistory extends AbstractSection
 
             $previousConvictions = $case->getTransportManager()->getPreviousConvictions();
 
-            for ($i = 0; $i < count($previousConvictions); $i++) {
-                /** @var PreviousConviction $entity */
-                $entity = $previousConvictions->current();
-
+            /** @var PreviousConviction $entity */
+            foreach ($previousConvictions as $entity) {
                 $thisRow = array();
                 $thisRow['id'] = $entity->getId();
                 $thisRow['version'] = $entity->getVersion();
@@ -41,16 +39,12 @@ final class TmPreviousHistory extends AbstractSection
                 $thisRow['penalty'] = $entity->getPenalty();
 
                 $convictionPenaltyData[] = $thisRow;
-
-                $previousConvictions->next();
             }
 
             $otherLicences = $case->getTransportManager()->getOtherLicences();
 
-            for ($i = 0; $i < count($otherLicences); $i++) {
-                /** @var OtherLicence $entity */
-                $entity = $otherLicences->current();
-
+            /** @var OtherLicence $entity */
+            foreach ($otherLicences as $entity) {
                 $thisRow = array();
                 $thisRow['id'] = $entity->getId();
                 $thisRow['version'] = $entity->getVersion();
@@ -58,8 +52,6 @@ final class TmPreviousHistory extends AbstractSection
                 $thisRow['holderName'] = $entity->getHolderName();
 
                 $revokedCurtailedSuspendedLicences[] = $thisRow;
-
-                $previousConvictions->next();
             }
 
         }

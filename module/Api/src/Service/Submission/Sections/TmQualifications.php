@@ -26,10 +26,8 @@ final class TmQualifications extends AbstractSection
 
             $tmQualifications = $case->getTransportManager()->getQualifications();
 
-            for ($i = 0; $i < count($tmQualifications); $i++) {
-                /** @var TmQualification $entity */
-                $entity = $tmQualifications->current();
-
+            /** @var TmQualification $entity */
+            foreach ($tmQualifications as $entity) {
                 $thisRow = array();
                 $thisRow['id'] = $entity->getId();
                 $thisRow['version'] = $entity->getVersion();
@@ -39,8 +37,6 @@ final class TmQualifications extends AbstractSection
                 $thisRow['country'] = $entity->getCountryCode()->getCountryDesc();
 
                 $data[] = $thisRow;
-
-                $tmQualifications->next();
             }
         }
 

@@ -23,10 +23,9 @@ final class ProhibitionHistory extends AbstractSection
         $prohibitions = $case->getProhibitions();
 
         $data = [];
-        for ($i=0; $i<count($prohibitions); $i++) {
-            /** @var Prohibition $prohibition */
-            $prohibition = $prohibitions->current();
 
+        /** @var Prohibition $entity */
+        foreach ($prohibitions as $prohibition) {
             $thisRow = array();
             $thisRow['id'] = $prohibition->getId();
             $thisRow['version'] = $prohibition->getVersion();
@@ -38,8 +37,6 @@ final class ProhibitionHistory extends AbstractSection
             $thisRow['prohibitionType'] = $prohibition->getProhibitionType()->getDescription();
 
             $data[] = $thisRow;
-
-            $prohibitions->next();
         }
 
         return [

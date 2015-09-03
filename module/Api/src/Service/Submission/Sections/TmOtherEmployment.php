@@ -27,10 +27,8 @@ final class TmOtherEmployment extends AbstractSection
 
             $tmEmployments = $case->getTransportManager()->getEmployments();
 
-            for ($i = 0; $i < count($tmEmployments); $i++) {
-                /** @var TmEmployment $entity */
-                $entity = $tmEmployments->current();
-
+            /** @var TmEmployment $entity */
+            foreach ($tmEmployments as $entity) {
                 $thisRow = array();
                 $thisRow['id'] = $entity->getId();
                 $thisRow['version'] = $entity->getVersion();
@@ -40,15 +38,13 @@ final class TmOtherEmployment extends AbstractSection
                 $thisRow['hoursPerWeek'] = $entity->getHoursPerWeek();
 
                 $data[] = $thisRow;
-
-                $tmEmployments->next();
             }
         }
 
         return [
             'data' => [
                 'tables' => [
-                    'tm-other-employment' => $data,
+                    'tm-other-employment' => $data
                 ]
             ]
         ];

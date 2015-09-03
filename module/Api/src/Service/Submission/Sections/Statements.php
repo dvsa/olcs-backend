@@ -23,10 +23,9 @@ final class Statements extends AbstractSection
         $statements = $case->getStatements();
 
         $data = [];
-        for ($i = 0; $i < count($statements); $i++) {
-            /** @var Statement $entity */
-            $entity = $statements->current();
 
+        /** @var Statement $entity */
+        foreach ($statements as $entity) {
             $thisRow = array();
             $thisRow['id'] = $entity->getId();
             $thisRow['version'] = $entity->getVersion();
@@ -39,8 +38,6 @@ final class Statements extends AbstractSection
             $thisRow['vrm'] = $entity->getVrm();
 
             $data[] = $thisRow;
-
-            $statements->next();
         }
 
         return [
