@@ -694,8 +694,8 @@ class BusReg extends AbstractBusReg
             return true;
         }
 
-        if (in_array($fee->getFeeStatus()->getId(), [FeeEntity::STATUS_PAID, FeeEntity::STATUS_WAIVED])) {
-            // the fee is paid or waived
+        if ($fee->getFeeStatus()->getId() === FeeEntity::STATUS_PAID) {
+            // the fee is paid
             return true;
         }
 

@@ -164,8 +164,6 @@ class FeeEntityTest extends EntityTester
             [Entity::STATUS_PAID, false],
             [Entity::STATUS_CANCELLED, false],
             [Entity::STATUS_OUTSTANDING, true],
-            [Entity::STATUS_WAIVE_RECOMMENDED, true],
-            [Entity::STATUS_WAIVED, true],
             ['invalid', true],
         ];
     }
