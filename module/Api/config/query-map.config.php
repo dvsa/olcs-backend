@@ -188,8 +188,8 @@ return [
     TransferQuery\Bus\ByRouteNo::class => QueryHandler\Bus\ByRouteNo::class,
 
     // Trailer
-    TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
-    TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
+    TransferQuery\Licence\Trailers::class => QueryHandler\Licence\Trailers::class,
+    TransferQuery\Trailer\Trailer::class => QueryHandler\Trailer\Trailer::class,
 
     // Grace Periods
     TransferQuery\GracePeriod\GracePeriod::class => QueryHandler\GracePeriod\GracePeriod::class,
@@ -223,9 +223,9 @@ return [
     TransferQuery\Correspondence\Correspondence::class => QueryHandler\Correspondence\Correspondence::class,
     TransferQuery\Correspondence\Correspondences::class => QueryHandler\Correspondence\Correspondences::class,
 
-    // Payment
-    TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
-    TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
+    // Transaction (formerly 'Payment')
+    TransferQuery\Transaction\Transaction::class => QueryHandler\Transaction\Transaction::class,
+    TransferQuery\Transaction\TransactionByReference::class => QueryHandler\Transaction\TransactionByReference::class,
 
     // CommunityLic
     TransferQuery\CommunityLic\CommunityLic::class => QueryHandler\CommunityLic\CommunityLic::class,

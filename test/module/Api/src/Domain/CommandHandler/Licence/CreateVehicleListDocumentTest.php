@@ -68,11 +68,66 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
             ->shouldReceive('getSize')
             ->andReturn(1500);
 
-        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateFromTemplate')
+        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateAndStore')
             ->with('GVVehiclesList', ['licence' => 111, 'user' => $mockUser])
-            ->andReturn('CONTENT')
-            ->shouldReceive('uploadGeneratedContent')
-            ->with('CONTENT')
+            ->andReturn($file);
+
+        $data = [
+            'fileIdentifier' => 123,
+            'jobName' => 'Goods Vehicle List'
+        ];
+        $result1 = new Result();
+        $this->expectedSideEffect(Enqueue::class, $data, $result1);
+
+        $data = [
+            'licence' => 111,
+            'identifier' => 123,
+            'description' => 'Goods Vehicle List',
+            'filename' => date('YmdHi') . '_Goods_Vehicle_List.rtf',
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
+            'isExternal' => false,
+            'isReadOnly' => true,
+            'size' => 1500,
+            'application' => null,
+            'busReg' => null,
+            'case' => null,
+            'irfoOrganisation' => null,
+            'submission' => null,
+            'trafficArea' => null,
+            'transportManager' => null,
+            'operatingCentre' => null,
+            'opposition' => null,
+            'isScan' => 0,
+            'issuedDate' => null
+        ];
+        $result2 = new Result();
+        $this->expectedSideEffect(CreateDocument::class, $data, $result2);
+
+        $this->assertSame($result2, $this->sut->handleCommand($command));
+    }
+
+    public function testHandleCommandWithTypeDp()
+    {
+        $data = [
+            'id' => 111,
+            'type' => 'dp'
+        ];
+        $command = Cmd::create($data);
+
+        $mockUser = m::mock(User::class)->makePartial();
+        $mockUser->setId(1);
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
+
+        $file = m::mock();
+        $file->shouldReceive('getIdentifier')
+            ->andReturn(123)
+            ->shouldReceive('getSize')
+            ->andReturn(1500);
+
+        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateAndStore')
+            ->with('GVDiscLetter', ['licence' => 111, 'user' => $mockUser])
             ->andReturn($file);
 
         $data = [

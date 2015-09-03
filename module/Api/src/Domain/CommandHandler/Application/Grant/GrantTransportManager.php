@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant;
 
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\Command\Licence\TmNominatedTask;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -48,6 +49,7 @@ final class GrantTransportManager extends AbstractCommandHandler implements Tran
         }
 
         $tmas = $application->getTransportManagers();
+        $isDeleting = false;
 
         /** @var TransportManagerApplication $tma */
         foreach ($tmas as $tma) {
@@ -57,9 +59,14 @@ final class GrantTransportManager extends AbstractCommandHandler implements Tran
                     $this->createTransportManager($tma, $licence);
                     break;
                 case 'D':
+                    $isDeleting = true;
                     $this->deleteTransportManager($tma->getTransportManager(), $licence);
                     break;
             }
+        }
+
+        if ($application->isVariation() && $isDeleting) {
+            $result->merge($this->handleSideEffect(TmNominatedTask::create(['ids' => [$licence->getId()]])));
         }
 
         $result->addMessage('Transport managers copied to licence');

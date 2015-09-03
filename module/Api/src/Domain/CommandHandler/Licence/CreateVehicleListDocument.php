@@ -28,23 +28,26 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements
     DocumentGeneratorAwareInterface,
     AuthAwareInterface
 {
-    use DocumentGeneratorAwareTrait;
-
-    use AuthAwareTrait;
+    use DocumentGeneratorAwareTrait,
+        AuthAwareTrait;
 
     protected $repoServiceName = 'Licence';
 
     public function handleCommand(CommandInterface $command)
     {
-        $content = $this->getDocumentGenerator()->generateFromTemplate(
-            'GVVehiclesList',
+        if ($command->getType() === 'dp') {
+            $template = 'GVDiscLetter';
+        } else {
+            $template = 'GVVehiclesList';
+        }
+
+        $file = $this->getDocumentGenerator()->generateAndStore(
+            $template,
             [
                 'licence' => $command->getId(),
                 'user' => $this->getCurrentUser()
             ]
         );
-
-        $file = $this->getDocumentGenerator()->uploadGeneratedContent($content);
 
         $fileName = date('YmdHi') . '_Goods_Vehicle_List.rtf';
 

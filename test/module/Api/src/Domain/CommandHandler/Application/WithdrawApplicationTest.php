@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Withdraw Application Test
@@ -73,6 +74,16 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $application = m::mock(Application::class)->makePartial();
         $application->setId(1);
         $application->setLicence($licence);
+
+        $application->shouldReceive('getCurrentInterimStatus')
+            ->andReturn(Application::INTERIM_STATUS_INFORCE)
+            ->once()
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+        $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
+
         $application->shouldReceive('getIsVariation')->andReturn(false);
 
         $this->repoMap['Application']->shouldReceive('fetchById')

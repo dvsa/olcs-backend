@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Trailers
+ * Trailer
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -14,7 +14,7 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * Trailers
+ * Trailer
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
@@ -25,6 +25,6 @@ class Trailer extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         $qb->where($qb->expr()->eq($this->alias . '.licence', ':licenceId'));
-        $qb->setParameter(':licenceId', $query->getLicence());
+        $qb->setParameter(':licenceId', $query->getId());
     }
 }

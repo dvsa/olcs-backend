@@ -52,14 +52,6 @@ class SuspendTest extends CommandHandlerTestCase
             m::mock(\Dvsa\Olcs\Api\Entity\System\RefData::class)
         );
         $licence->setId(532);
-        $licence->setCommunityLics(
-            new ArrayCollection(
-                [
-                    new CommunityLic(),
-                    new CommunityLic()
-                ]
-            )
-        );
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($licence);
         $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
@@ -80,14 +72,6 @@ class SuspendTest extends CommandHandlerTestCase
                 'licence' => $licence
             ],
             $removeRulesResult
-        );
-
-        $this->expectedSideEffect(
-            ReturnAllCommunityLicences::class,
-            [
-                'id' => 532
-            ],
-            new Result()
         );
 
         $result = $this->sut->handleCommand($command);

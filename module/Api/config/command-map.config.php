@@ -93,6 +93,7 @@ return [
     TransferCommand\Application\RefuseInterim::class => CommandHandler\Application\RefuseInterim::class,
     TransferCommand\Application\GrantInterim::class => CommandHandler\Application\GrantInterim::class,
     Command\Application\InForceInterim::class => CommandHandler\Application\InForceInterim::class,
+    Command\Application\EndInterim::class => CommandHandler\Application\EndInterim::class,
     TransferCommand\Application\UpdateOperatingCentres::class
         => CommandHandler\Application\UpdateOperatingCentres::class,
     TransferCommand\Application\DeleteOperatingCentres::class
@@ -177,6 +178,9 @@ return [
     TransferCommand\Licence\UpdateOperatingCentres::class => CommandHandler\Licence\UpdateOperatingCentres::class,
     TransferCommand\Licence\CreatePsvVehicle::class => CommandHandler\Licence\CreatePsvVehicle::class,
     Command\Licence\ReturnAllCommunityLicences::class => CommandHandler\Licence\ReturnAllCommunityLicences::class,
+    TransferCommand\Licence\UpdateTrailers::class => CommandHandler\Licence\UpdateTrailers::class,
+    TransferCommand\Licence\UpdateVehicles::class => CommandHandler\Licence\UpdateVehicles::class,
+    Command\Licence\TmNominatedTask::class => CommandHandler\Licence\TmNominatedTask::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
@@ -438,6 +442,7 @@ return [
     Command\Application\CancelAllInterimFees::class => CommandHandler\Application\CancelAllInterimFees::class,
     Command\Application\SetDefaultTrafficAreaAndEnforcementArea::class
         => CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementArea::class,
+    Command\Application\DeleteApplication::class => CommandHandler\Application\DeleteApplication::class,
 
     // Domain - Application Operating Centre
     Command\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class
@@ -517,14 +522,16 @@ return [
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
     Command\Fee\PayFee::class => CommandHandler\Fee\PayFee::class,
+    TransferCommand\Fee\ApproveWaive::class => CommandHandler\Fee\ApproveWaive::class,
+    TransferCommand\Fee\RecommendWaive::class => CommandHandler\Fee\RecommendWaive::class,
+    TransferCommand\Fee\RejectWaive::class => CommandHandler\Fee\RejectWaive::class,
     TransferCommand\Fee\UpdateFee::class => CommandHandler\Fee\UpdateFee::class,
     TransferCommand\Fee\CreateMiscellaneousFee::class => CommandHandler\Fee\CreateMiscellaneousFee::class,
 
-    // Domain - Payment
-    Command\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
-    TransferCommand\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
-    TransferCommand\Payment\CompletePayment::class => CommandHandler\Payment\CompletePayment::class,
-    Command\Payment\ResolvePayment::class => CommandHandler\Payment\ResolvePayment::class,
+    // Domain - Transaction (formerly 'Payment')
+    TransferCommand\Transaction\PayOutstandingFees::class => CommandHandler\Transaction\PayOutstandingFees::class,
+    TransferCommand\Transaction\CompleteTransaction::class => CommandHandler\Transaction\CompleteTransaction::class,
+    Command\Transaction\ResolvePayment::class => CommandHandler\Transaction\ResolvePayment::class,
 
     // Domain - ApplicationCompletion
     AppCompCommand\UpdateTypeOfLicenceStatus::class => AppCompCommandHandler\UpdateTypeOfLicenceStatus::class,
