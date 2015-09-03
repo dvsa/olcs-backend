@@ -228,6 +228,7 @@ class BusReg extends AbstractBusReg
      * Populate properties from data
      *
      * @param array $data
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function fromData($data)
     {

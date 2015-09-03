@@ -56,7 +56,7 @@ final class RecommendWaive extends AbstractCommandHandler implements Transaction
         $feeTransaction
             ->setFee($fee)
             ->setTransaction($transaction)
-            ->setAmount($fee->getOutstandingAmount());;
+            ->setAmount($fee->getOutstandingAmount());
         $fee->getFeeTransactions()->add($feeTransaction);
 
         // save fee will cascade persist
