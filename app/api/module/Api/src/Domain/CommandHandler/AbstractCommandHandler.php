@@ -21,6 +21,7 @@ use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
+use Dvsa\Olcs\Api\Service\Submission\SubmissionCommentService;
 
 /**
  * Abstract Command Handler
@@ -79,6 +80,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         if ($this instanceof SubmissionGeneratorAwareInterface) {
             $this->setSubmissionGenerator($mainServiceLocator->get(SubmissionGenerator::class));
+            $this->setSubmissionConfig($mainServiceLocator->get('Config')['submissions']['sections']['configuration']);
+            $this->setSubmissionCommentService($mainServiceLocator->get(SubmissionCommentService::class));
         }
 
         if ($this instanceof AddressServiceAwareInterface) {
