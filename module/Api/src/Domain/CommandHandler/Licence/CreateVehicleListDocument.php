@@ -36,8 +36,18 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements
 
     public function handleCommand(CommandInterface $command)
     {
+        if ($command->getType() === 'dp') {
+            $licence = $this->getRepo()->fetchById($command->getId());
+            if ($licence->getNiFlag() == 'Y') {
+                $template = 'NI/GVDiscLetter';
+            } else {
+                $template = 'GB/GVDiscLetter';
+            }
+        } else {
+            $template = 'GVVehiclesList';
+        }
         $content = $this->getDocumentGenerator()->generateFromTemplate(
-            'GVVehiclesList',
+            $template,
             [
                 'licence' => $command->getId(),
                 'user' => $this->getCurrentUser()
