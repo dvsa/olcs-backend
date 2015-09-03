@@ -61,7 +61,7 @@ abstract class AbstractSection implements SectionGeneratorInterface
         if (!empty($datetime)) {
             if (is_string($datetime)) {
                 return $datetime;
-            } elseif ($datetime instanceof \Datetime) {
+            } elseif ($datetime instanceof \DateTime) {
                 return $datetime->format('d/m/Y');
             }
         }

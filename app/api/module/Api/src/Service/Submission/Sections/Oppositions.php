@@ -56,10 +56,8 @@ final class Oppositions extends AbstractSection
         $oppositions = new ArrayCollection(iterator_to_array($iterator));
 
         $data = [];
-        for ($i = 0; $i < count($oppositions); $i++) {
-            /** @var Opposition $entity */
-            $entity = $oppositions->current();
-
+        /** @var Opposition $entity */
+        foreach ($oppositions as $entity) {
             $thisRow = array();
             $thisRow['id'] = $entity->getId();
             $thisRow['version'] = $entity->getVersion();
@@ -80,8 +78,6 @@ final class Oppositions extends AbstractSection
             $thisRow['isWithdrawn'] = $entity->getIsWithdrawn();
 
             $data[] = $thisRow;
-
-            $oppositions->next();
         }
 
         return [

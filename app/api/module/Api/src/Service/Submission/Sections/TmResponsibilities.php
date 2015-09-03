@@ -25,38 +25,19 @@ final class TmResponsibilities extends AbstractSection
         $applications = [];
         $licences = [];
 
-        if (
-            !empty($case->getTransportManager()) &&
-            !empty($case->getTransportManager()->getTmApplications()
-            )) {
-
+        if (!empty($case->getTransportManager()) && !empty($case->getTransportManager()->getTmApplications())) {
             $tmApplications = $case->getTransportManager()->getTmApplications();
-
-            for ($i = 0; $i < count($tmApplications); $i++) {
-
-                /** @var TransportManagerApplication $entity */
-                $entity = $tmApplications->current();
-
+            /** @var TransportManagerApplication $entity */
+            foreach ($tmApplications as $entity) {
                 $applications[] = $this->extractResponsibilityData($case, $entity);
-
-                $tmApplications->next();
             }
         }
 
-        if (
-            !empty($case->getTransportManager()) &&
-            !empty($case->getTransportManager()->getTmLicences()
-            )) {
-
+        if (!empty($case->getTransportManager()) && !empty($case->getTransportManager()->getTmLicences())) {
             $tmLicences = $case->getTransportManager()->getTmLicences();
-
-            for ($i = 0; $i < count($tmLicences); $i++) {
-                /** @var TransportManagerLicence $entity */
-                $entity = $tmLicences->current();
-
+            /** @var TransportManagerLicence $entity */
+            foreach ($tmLicences as $entity) {
                 $licences[] = $this->extractResponsibilityData($case, $entity);
-
-                $tmLicences->next();
             }
         }
 
