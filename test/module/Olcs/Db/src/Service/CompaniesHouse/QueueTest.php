@@ -20,7 +20,6 @@ class QueueTest extends MockeryTestCase
         parent::setUp();
 
         $this->sm = Bootstrap::getServiceManager();
-        $this->sm->setAllowOverride(true);
 
         $this->sut = new Service();
         $this->sut->setServiceLocator($this->sm);

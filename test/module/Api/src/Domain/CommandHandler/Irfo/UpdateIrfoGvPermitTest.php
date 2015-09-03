@@ -29,10 +29,6 @@ class UpdateIrfoGvPermitTest extends CommandHandlerTestCase
 
     protected function initReferences()
     {
-        $this->refData = [
-            IrfoGvPermitEntity::STATUS_PENDING
-        ];
-
         $this->references = [
             IrfoGvPermitType::class => [
                 22 => m::mock(IrfoGvPermitType::class)
@@ -48,7 +44,6 @@ class UpdateIrfoGvPermitTest extends CommandHandlerTestCase
             'id' => 11,
             'version' => 1,
             'irfoGvPermitType' => 22,
-            'irfoPermitStatus' => IrfoGvPermitEntity::STATUS_PENDING,
             'yearRequired' => 2014,
             'inForceDate' => '2015-01-01',
             'isFeeExempt' => 'Y',
@@ -92,10 +87,6 @@ class UpdateIrfoGvPermitTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertSame($this->references[IrfoGvPermitType::class][22], $savedIrfoGvPermit->getIrfoGvPermitType());
-        $this->assertSame(
-            $this->refData[IrfoGvPermitEntity::STATUS_PENDING],
-            $savedIrfoGvPermit->getIrfoPermitStatus()
-        );
         $this->assertEquals(2014, $savedIrfoGvPermit->getYearRequired());
         $this->assertEquals('2015-01-01', $savedIrfoGvPermit->getInForceDate()->format('Y-m-d'));
         $this->assertEquals('Y', $savedIrfoGvPermit->getIsFeeExempt());

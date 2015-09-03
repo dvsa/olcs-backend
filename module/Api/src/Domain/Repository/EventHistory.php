@@ -49,4 +49,21 @@ class EventHistory extends AbstractRepository
 
         $this->getQueryBuilder()->modifyQuery($qb)->with('eventHistoryType')->withUser();
     }
+
+    /**
+     * Fetch a list for an organisation
+     *
+     * @param int|\Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
+     *
+     * @return array
+     */
+    public function fetchByOrganisation($organisation)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.organisation', ':organisaion'))
+            ->setParameter('organisaion', $organisation);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
 }

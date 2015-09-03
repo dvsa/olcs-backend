@@ -46,6 +46,7 @@ class LicenceOperatingCentre extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
+        $qb->leftJoin('loc.s4', 's4');
         $qb->innerJoin('loc.operatingCentre', 'oc');
         $qb->innerJoin('oc.address', 'oca');
         $qb->leftJoin('oca.countryCode', 'ocac');
@@ -57,6 +58,7 @@ class LicenceOperatingCentre extends AbstractRepository
         );
         $qb->setParameter('licence', $licenceId);
 
+        $qb->addSelect('s4');
         $qb->addSelect('oc');
         $qb->addSelect('oca');
         $qb->addSelect('ocac');

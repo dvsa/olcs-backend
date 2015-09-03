@@ -96,13 +96,12 @@ class Disqualification extends AbstractDisqualification
         // if is_disqualified = 1 and the start_date is today or in the past and period is NULL or 0
         if ($this->getIsDisqualified() === 'Y') {
             $startDate = new DateTime($this->getStartDate());
-            if (empty($this->getPeriod())) {
-                // if period is empty make sure endDate is always in the future, set to today + 1 month
+            $endDate = $this->getEndDate();
+            if ($endDate === null) {
+                // if endDate is null, make sure its in the future (indefinate), set to today + 1 month
                 $endDate = new DateTime('+1 month');
-            } else {
-                $endDate = (new DateTime($this->getStartDate()))
-                    ->add(new \DateInterval('P'. (int) $this->getPeriod() .'M'));
             }
+
             $now = new DateTime('now');
             if ($now->getTimestamp() >= $startDate->getTimestamp() &&
                 $now->getTimestamp() <= $endDate->getTimestamp()
@@ -111,5 +110,41 @@ class Disqualification extends AbstractDisqualification
             }
         }
         return self::STATUS_INACTIVE;
+    }
+
+    /**
+     * Get (calculate) the end date for the disqualification
+     *
+     * @return null|\DateTime
+     */
+    public function getEndDate()
+    {
+        if (empty($this->getPeriod())) {
+            // if period is empty then its indefinate
+            $endDate = null;
+        } else {
+            $startDate = $this->getStartDate();
+            if (!($startDate instanceof \DateTime)) {
+                $startDate = new \DateTime($startDate);
+            }
+
+            $endDate = $startDate->add(new \DateInterval('P'. (int) $this->getPeriod() .'M'));
+        }
+
+        return $endDate;
+    }
+
+    /**
+     * Serialize properties
+     * 
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        $endDate = $this->getEndDate();
+        return [
+            'endDate' => ($endDate instanceof \DateTime) ? $endDate->format(\DateTime::W3C) : null,
+            'status' => $this->getStatus(),
+        ];
     }
 }

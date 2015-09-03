@@ -41,8 +41,8 @@ class RepositoryTestCase extends MockeryTestCase
 
     public function setUpSut($class = null, $mockSut = false)
     {
-        $this->em = m::mock(EntityManager::class)->makePartial();
-        $this->queryBuilder = m::mock(QueryBuilderInterface::class)->makePartial();
+        $this->em = m::mock(EntityManager::class);
+        $this->queryBuilder = m::mock(QueryBuilderInterface::class);
 
         if ($mockSut) {
             $this->sut = m::mock($class, [$this->em, $this->queryBuilder])
@@ -71,8 +71,14 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->eq')
             ->andReturnUsing([$this, 'mockExprEq']);
 
+        $this->qb->shouldReceive('expr->neq')
+            ->andReturnUsing([$this, 'mockExprNeq']);
+
         $this->qb->shouldReceive('expr->lte')
             ->andReturnUsing([$this, 'mockExprLte']);
+
+        $this->qb->shouldReceive('expr->lt')
+            ->andReturnUsing([$this, 'mockExprLt']);
 
         $this->qb->shouldReceive('expr->isNull')
             ->andReturnUsing([$this, 'mockExprIsNull']);
@@ -181,11 +187,25 @@ class RepositoryTestCase extends MockeryTestCase
         return $field . ' = ' . $value;
     }
 
+    public function mockExprNeq($field, $value)
+    {
+        $value = $this->formatValue($value);
+
+        return $field . ' != ' . $value;
+    }
+
     public function mockExprLte($field, $value)
     {
         $value = $this->formatValue($value);
 
         return $field . ' <= ' . $value;
+    }
+
+    public function mockExprLt($field, $value)
+    {
+        $value = $this->formatValue($value);
+
+        return $field . ' < ' . $value;
     }
 
     public function mockExprIn($field, $value)

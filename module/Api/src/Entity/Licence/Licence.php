@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
  * Licence Entity
@@ -183,7 +184,7 @@ class Licence extends AbstractLicence
         $this->setSafetyInsVaries($safetyInsVaries);
     }
 
-    public function getActiveCommunityLicences($licence)
+    public function getActiveCommunityLicences()
     {
         $criteria = Criteria::create()
             ->where(
@@ -195,9 +196,9 @@ class Licence extends AbstractLicence
                         CommunityLic::STATUS_SUSPENDED
                     ]
                 )
-            )->andWhere(Criteria::expr()->eq('licence', $licence));
+            );
 
-        return $this->getCommunityLics()->matching($criteria)->current();
+        return $this->getCommunityLics()->matching($criteria);
     }
 
     public function getActiveBusRoutes($licence)
@@ -238,7 +239,7 @@ class Licence extends AbstractLicence
 
     public function getCalculatedValues()
     {
-        $decisionCriteria['activeComLics'] = $this->getActiveCommunityLicences($this) !== false;
+        $decisionCriteria['activeComLics'] = !$this->getActiveCommunityLicences()->isEmpty();
         $decisionCriteria['activeBusRoutes'] = $this->getActiveBusRoutes($this) !== false;
         $decisionCriteria['activeVariations'] = $this->getActiveVariations($this) !== false;
 
@@ -612,5 +613,45 @@ class Licence extends AbstractLicence
         }
 
         return (int)$this->getTotAuthLargeVehicles() > 0 || $count > 0;
+    }
+
+    public function allowFeePayments()
+    {
+        if (in_array(
+            $this->getStatus()->getId(),
+            [
+                self::LICENCE_STATUS_REVOKED,
+                self::LICENCE_STATUS_TERMINATED,
+                self::LICENCE_STATUS_SURRENDERED,
+                self::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT,
+                self::LICENCE_STATUS_REFUSED,
+                self::LICENCE_STATUS_WITHDRAWN,
+                self::LICENCE_STATUS_NOT_TAKEN_UP,
+            ]
+        )) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get Outstanding applications of status "under consideration" or "granted"
+     *
+     * @return \Doctrine\Common\Collections\Collection|static
+     */
+    public function getOutstandingApplications()
+    {
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->in(
+                    'status',
+                    [
+                        Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                        Application::APPLICATION_STATUS_GRANTED
+                    ]
+                )
+            );
+        return $this->getApplications()->matching($criteria);
     }
 }

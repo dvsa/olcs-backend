@@ -60,7 +60,6 @@ class CreateIrfoGvPermitTest extends CommandHandlerTestCase
         $data = [
             'organisation' => 11,
             'irfoGvPermitType' => 22,
-            'irfoPermitStatus' => IrfoGvPermitEntity::STATUS_PENDING,
             'yearRequired' => 2014,
             'inForceDate' => '2015-01-01',
             'isFeeExempt' => 'Y',

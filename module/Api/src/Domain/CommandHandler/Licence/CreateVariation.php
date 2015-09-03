@@ -75,6 +75,7 @@ final class CreateVariation extends AbstractCommandHandler implements AuthAwareI
 
         if ($this->isGranted(Permission::INTERNAL_USER) && $command->getReceivedDate() !== null) {
             $variation->setReceivedDate(new DateTime($command->getReceivedDate()));
+            $variation->setTargetCompletionDateFromReceivedDate();
         }
 
         $this->getRepo('Application')->save($variation);

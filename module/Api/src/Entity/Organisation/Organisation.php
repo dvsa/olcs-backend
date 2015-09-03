@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Organisation;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ArrayCollection;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
@@ -31,6 +32,8 @@ class Organisation extends AbstractOrganisation
     const ORG_TYPE_LLP = 'org_t_llp';
     const ORG_TYPE_SOLE_TRADER = 'org_t_st';
     const ORG_TYPE_IRFO = 'org_t_ir';
+
+    const OPERATOR_CPID_ALL = 'op_cpid_all';
 
     protected $hasInforceLicences;
 
@@ -105,12 +108,12 @@ class Organisation extends AbstractOrganisation
         $lastName,
         $isIrfo,
         $businessType,
-        $natureOfBusinesses,
+        $natureOfBusiness,
         $cpid
     ) {
         $this->setCpid($cpid);
         $this->setType($businessType);
-        $this->setNatureOfBusinesses($natureOfBusinesses);
+        $this->setNatureOfBusiness($natureOfBusiness);
         if ($isIrfo === 'Y' || $this->getType()->getId() === self::ORG_TYPE_IRFO) {
             $this->isIrfo = 'Y';
         } else {
@@ -183,5 +186,70 @@ class Organisation extends AbstractOrganisation
         }
 
         return $this->getDisqualification()->getStatus();
+    }
+
+    /**
+     * Determine is an organisation isMlh (has at least one valid licence)
+     *
+     * @param $id
+     * @return bool
+     */
+    public function isMlh()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->in(
+                'status',
+                [
+                    LicenceEntity::LICENCE_STATUS_VALID
+                ]
+            )
+        );
+
+        return (bool) count($this->getLicences()->matching($criteria));
+    }
+
+    /**
+     * Get All Outstanding applications for all licences
+     * Status "under consideration" or "granted"
+     *
+     * @return \Doctrine\Common\Collections\Collection|static
+     */
+    public function getOutstandingApplications()
+    {
+        $applications = [];
+
+        $licences = $this->getLicences();
+
+        /** @var LicenceEntity $licence */
+        foreach ($licences as $licence) {
+            $outstandingApplications = $licence->getOutstandingApplications()->toArray();
+
+            $applications += $outstandingApplications;
+        }
+        return new ArrayCollection($applications);
+    }
+
+    /**
+     * Returns licences linked to this organisation for submissions
+     * @return array LicenceEntity[]
+     */
+    public function getLinkedLicences()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->in(
+                'status',
+                [
+                    LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+                    LicenceEntity::LICENCE_STATUS_GRANTED,
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                ]
+            )
+        );
+
+        return $this->getLicences()->matching($criteria);
     }
 }

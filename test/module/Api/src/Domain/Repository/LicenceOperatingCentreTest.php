@@ -56,11 +56,13 @@ class LicenceOperatingCentreTest extends RepositoryTestCase
             ' ',
             [
                 '{QUERY}',
+                'LEFT JOIN loc.s4 s4',
                 'INNER JOIN loc.operatingCentre oc',
                 'INNER JOIN oc.address oca',
                 'LEFT JOIN oca.countryCode ocac',
                 'LEFT JOIN oc.complaints occ WITH occ.status = [[ecst_open]]',
                 'AND loc.licence = [[111]]',
+                'SELECT s4',
                 'SELECT oc',
                 'SELECT oca',
                 'SELECT ocac',

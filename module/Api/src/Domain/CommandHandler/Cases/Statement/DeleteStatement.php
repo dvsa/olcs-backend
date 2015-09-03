@@ -33,8 +33,7 @@ final class DeleteStatement extends AbstractCommandHandler implements Transactio
 
         $statement = $this->getRepo()->fetchUsingId(
             $command,
-            Query::HYDRATE_OBJECT,
-            $command->getVersion()
+            Query::HYDRATE_OBJECT
         );
 
         $this->getRepo()->delete($statement);

@@ -50,7 +50,8 @@ class QueueControllerTest extends MockeryTestCase
         // Mocks
         $mockConfig = [
             'queue' => [
-                'runFor' => 1
+                'runFor' => 0.1, // seconds
+                'sleepFor' => 500, // microseconds
             ]
         ];
         $mockQueue = m::mock();
@@ -67,7 +68,6 @@ class QueueControllerTest extends MockeryTestCase
             ->andReturn(null);
 
         $this->console->shouldReceive('writeLine')
-            ->once()
             ->with('No items queued, waiting for items');
 
         // Assertions
@@ -80,7 +80,8 @@ class QueueControllerTest extends MockeryTestCase
         // Mocks
         $mockConfig = [
             'queue' => [
-                'runFor' => 1
+                'runFor' => 0.1,
+                'sleepFor' => 50,
             ]
         ];
         $mockQueue = m::mock();

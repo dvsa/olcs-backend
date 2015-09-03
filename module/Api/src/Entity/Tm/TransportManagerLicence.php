@@ -87,37 +87,37 @@ class TransportManagerLicence extends AbstractTransportManagerLicence
     ) {
         $errors = [];
         if (!is_null($hoursMon)) {
-            if ((int) $hoursMon < 0 || (int) $hoursMon > 24) {
+            if ((float) $hoursMon < 0 || (float) $hoursMon > 24) {
                 $errors[] = ['hoursMon' => [self::ERROR_MON => 'Mon must be between 0 and 24, inclusively']];
             }
         }
         if (!is_null($hoursTue)) {
-            if ((int) $hoursTue < 0 || (int) $hoursTue > 24) {
+            if ((float) $hoursTue < 0 || (float) $hoursTue > 24) {
                 $errors[] = ['hoursTue' => [self::ERROR_TUE => 'Tue must be between 0 and 24, inclusively']];
             }
         }
         if (!is_null($hoursWed)) {
-            if ((int) $hoursWed < 0 || (int) $hoursWed > 24) {
+            if ((float) $hoursWed < 0 || (float) $hoursWed > 24) {
                 $errors[] = ['hoursWed' => [self::ERROR_WED => 'Wed must be between 0 and 24, inclusively']];
             }
         }
         if (!is_null($hoursThu)) {
-            if ((int) $hoursThu < 0 || (int) $hoursThu > 24) {
+            if ((float) $hoursThu < 0 || (float) $hoursThu > 24) {
                 $errors[] = ['hoursThu' => [self::ERROR_WED => 'Thu must be between 0 and 24, inclusively']];
             }
         }
         if (!is_null($hoursFri)) {
-            if ((int) $hoursFri < 0 || (int) $hoursFri > 24) {
+            if ((float) $hoursFri < 0 || (float) $hoursFri > 24) {
                 $errors[] = ['hoursFri' => [self::ERROR_WED => 'Fri must be between 0 and 24, inclusively']];
             }
         }
         if (!is_null($hoursSat)) {
-            if ((int) $hoursSat < 0 || (int) $hoursSat > 24) {
+            if ((float) $hoursSat < 0 || (float) $hoursSat > 24) {
                 $errors[] = ['hoursSat' => [self::ERROR_WED => 'Sat must be between 0 and 24, inclusively']];
             }
         }
         if (!is_null($hoursSun)) {
-            if ((int) $hoursSun < 0 || (int) $hoursSun > 24) {
+            if ((float) $hoursSun < 0 || (float) $hoursSun > 24) {
                 $errors[] = ['hoursSun' => [self::ERROR_WED => 'Sun must be between 0 and 24, inclusively']];
             }
         }

@@ -36,6 +36,7 @@ class DisqualificationEntityTest extends EntityTester
     {
         try {
             $sut = new Entity();
+            $this->assertInstanceOf(Entity::class, $sut);
             $this->fail();
         } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
             $this->assertArrayHasKey('DISQ_MISSING_ORG_OFFICER', $e->getMessages());
@@ -49,6 +50,7 @@ class DisqualificationEntityTest extends EntityTester
                 m::mock(\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class),
                 m::mock(\Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails::class)
             );
+            $this->assertInstanceOf(Entity::class, $sut);
             $this->fail();
         } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
             $this->assertArrayHasKey('DISQ_BOTH_ORG_OFFICER', $e->getMessages());
@@ -147,5 +149,16 @@ class DisqualificationEntityTest extends EntityTester
             [Entity::STATUS_ACTIVE, '', 0],
             [Entity::STATUS_ACTIVE, '', 1],
         ];
+    }
+
+    public function testGetCalculatedBundleValues()
+    {
+        $this->assertSame(
+            [
+                'endDate' => null,
+                'status' => 'Inactive'
+            ],
+            $this->sut->getCalculatedBundleValues()
+        );
     }
 }

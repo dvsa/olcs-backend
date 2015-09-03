@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TmEmployment;
 
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\TmEmployment\GetList as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TmEmployment as Repo;
@@ -19,13 +20,19 @@ class GetListTest extends QueryHandlerTestCase
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('TmEmployment', Repo::class);
+        $this->mockRepo('TransportManager', Repo::class);
 
         parent::setUp();
     }
 
     public function testHandleQuery()
     {
-        $query = Query::create(['QUERY']);
+        $query = Query::create(['transportManager' => 1]);
+
+        $tm = new TransportManager();
+
+        $this->repoMap['TransportManager']->shouldReceive('fetchById')
+            ->with(1)->andReturn([$tm]);
 
         $tmEmployment = m::mock(\Dvsa\Olcs\Api\Entity\Tm\TmEmployment::class);
         $tmEmployment->shouldReceive('serialize')->with(

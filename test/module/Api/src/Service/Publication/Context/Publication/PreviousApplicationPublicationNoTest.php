@@ -23,7 +23,6 @@ class PreviousApplicationPublicationNoTest extends MockeryTestCase
      */
     public function testProvideByApplication($appStatus)
     {
-        $pi = 99;
         $pubType = 'A&D';
         $trafficArea = 'trafficArea';
         $currentPublicationNo = 889;
@@ -65,7 +64,6 @@ class PreviousApplicationPublicationNoTest extends MockeryTestCase
      */
     public function testProvideByLicence($appStatus)
     {
-        $pi = 99;
         $pubType = 'A&D';
         $trafficArea = 'trafficArea';
         $currentPublicationNo = 889;

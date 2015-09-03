@@ -28,13 +28,27 @@ class NoteList extends AbstractQueryHandler
             $caseId = $query->getCase();
 
             /* @var \Dvsa\Olcs\Api\Entity\Cases\Cases $case */
-            $case = $this->getRepo('Cases')->fetchById($caseId);
+            $caseRepo = $this->getRepo('Cases');
+            $case = $caseRepo->fetchById($caseId);
 
             if ($case->getLicence() !== null) {
 
-                $licenceId = $case->getLicence()->getId();
                 $data = $query->getArrayCopy();
+
+                $licenceId = $case->getLicence()->getId();
+
+                // Get all cases for that licence
+                $caseIds = [];
+                $cases = $case->getLicence()->getCases();
+                foreach ($cases as $case) {
+                    $caseIds[] = $case->getId();
+                }
+
+                $data['casesMultiple'] = $caseIds;
+                if (isset($data['case'])) unset($data['case']);
+
                 $data['licence'] = $licenceId;
+
                 // Replace existing
                 $query = NoteListQuery::create($data);
             }

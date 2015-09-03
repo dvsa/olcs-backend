@@ -123,14 +123,6 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
     private function updateOrganisation($command, $organisation)
     {
         $businessType = $this->getRepo()->getRefdataReference($command->getBusinessType());
-        $references = null;
-        if ($command->getNatureOfBusiness() !== null) {
-            $natureOfBusinesses = $command->getNatureOfBusiness();
-            $references = [];
-            foreach ($natureOfBusinesses as $natureOfBusiness) {
-                $references[] = $this->getRepo()->getRefdataReference($natureOfBusiness);
-            }
-        }
 
         $cpid = $this->getRepo()->getRefdataReference($command->getCpid());
 
@@ -141,7 +133,7 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
             $command->getLastName(),
             $command->getIsIrfo(),
             $businessType,
-            $references,
+            $command->getNatureOfBusiness(),
             $cpid
         );
         return $organisation;

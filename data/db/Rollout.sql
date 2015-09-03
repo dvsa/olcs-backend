@@ -1812,6 +1812,11 @@ VALUES
  ,(10, 163, 0, 0, 0, 0, 'Other employment')
  ,(10, 164, 0, 0, 0, 0, 'Previous history')
  ,(9,  165, 0, 0, 0, 0, 'Change to taxi/phv digital')
+ ,(1,  166, 0, 0, 0, 0, 'Discs')
+ ,(1,  167, 0, 0, 0, 0, 'Community licence')
+ ,(1,  168, 0, 0, 0, 0, 'Scanning separator')
+ ,(1,  169, 0, 1, 0, 0, 'Business details change')
+ ,( 1, 170, 1, 0, 0, 0, 'CPID')
  ,( 999999, 999999, 1, 1, 1, 0, 'Not yet implemented (remove before go live)');
 
 
@@ -1974,11 +1979,11 @@ VALUES
 
 INSERT INTO `doc_template` (`id`, `category_id`, `created_by`, `document_id`, `last_modified_by`, `sub_category_id`, `is_ni`, `suppress_from_op`, `created_on`, `description`, `last_modified_on`, `version`)
 VALUES
-    (2, 999999, 479, 2, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - New App Refusal - no advert', '2002-05-14 17:45:01', 1),
-    (3, 999999, 479, 3, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - New App Refusal - no response to supporting docs requests', '2002-05-14 17:45:01', 1),
+    (2, 9, 479, 2, 479, 31, 0, 0, '2002-05-14 17:45:01', 'GV - New App Refusal - no advert', '2002-05-14 17:45:01', 1),
+    (3, 9, 479, 3, 479, 31, 0, 0, '2002-05-14 17:45:01', 'GV - New App Refusal - no response to supporting docs requests', '2002-05-14 17:45:01', 1),
     (4, 999999, 479, 4, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - Var App - Wrong TAO', '2002-05-14 17:45:01', 1),
-    (5, 999999, 479, 5, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - Var App Refusal - no advert', '2002-05-14 17:45:01', 1),
-    (6, 999999, 479, 6, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - Var App Refusal - no response to supporting docs requests', '2002-05-14 17:45:01', 1),
+    (5, 9, 479, 5, 479, 31, 0, 0, '2002-05-14 17:45:01', 'GV - Var App Refusal - no advert', '2002-05-14 17:45:01', 1),
+    (6, 9, 479, 6, 479, 31, 0, 0, '2002-05-14 17:45:01', 'GV - Var App Refusal - no response to supporting docs requests', '2002-05-14 17:45:01', 1),
     (7, 9, 479, 7, 479, 31, 0, 0, '2002-05-14 17:45:01', 'GV - New/Var App Incomplete - 1st request for supporting docs', '2002-05-14 17:45:01', 1),
     (9, 999999, 479, 9, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'GV - New applications - grant/refusal', '2002-05-14 17:45:01', 1),
     (10, 999999, 479, 10, 479, 999999, 0, 1, '2002-05-14 17:45:01', 'GV - Variation applications - grant/refusal', '2002-05-14 17:45:01', 1),
@@ -2153,7 +2158,7 @@ VALUES
     (282, 9, 1, 282, 1, 31, 0, 0, '2007-12-06 17:35:32', 'PSV - blank letter template to operator', '2007-12-06 17:35:32', 1),
     (283, 9, 1, 283, 1, 31, 0, 1, '2007-12-06 17:35:32', 'GV - Blank letter template to other than operator', '2007-12-06 17:35:32', 1),
     (284, 9, 1, 284, 1, 31, 0, 1, '2007-12-06 17:35:32', 'PSV - blank letter to other than operator', '2007-12-06 17:35:32', 1),
-    (288, 999999, 1, 288, 1, 999999, 0, 1, '2007-12-18 15:23:01', 'PSV - App Refusal', '2007-12-18 15:23:01', 1),
+    (288, 9, 1, 288, 1, 31, 0, 1, '2007-12-18 15:23:01', 'PSV - App Refusal', '2007-12-18 15:23:01', 1),
     (289, 999999, 1, 289, 1, 999999, 0, 1, '2007-12-18 15:23:01', 'PSV - Propose to refuse - new app', '2007-12-18 15:23:01', 1),
     (290, 999999, 1, 290, 1, 999999, 0, 1, '2007-12-18 15:23:01', 'PSV - Response to objection (3rd Party)', '2007-12-18 15:23:01', 1),
     (291, 999999, 479, 291, 479, 999999, 0, 1, '2008-03-31 11:57:57', 'Scottish-Cheque Returned - Re-Apply', '2008-03-31 11:57:57', 1),
@@ -2179,10 +2184,10 @@ VALUES
     (316, 1, 479, 316, 479, 79, 0, 0, '2009-05-14 17:50:00', 'VAR_APP_INT_GRANTED', '2009-05-14 17:50:00', 1),
     (317, 999999, 479, 317, 479, 999999, 0, 0, '2009-05-14 17:50:00', 'VAR_APP_INT_REFUSED', '2009-05-14 17:50:00', 1),
     (318, 999999, 122, 318, 122, 999999, 0, 0, '2009-03-31 00:00:00', 'PSV_VEHICLE_LIST', '2009-03-31 00:00:00', 1),
-    (319, 999999, 479, 319, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - Letter confirming grant of new app', '2002-05-14 17:45:01', 1),
-    (320, 999999, 479, 320, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Letter confirming grant of new app', '2002-05-14 17:45:01', 1),
-    (321, 999999, 479, 321, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'PSV - Letter confirming grant of var app', '2002-05-14 17:45:01', 1),
-    (322, 999999, 479, 322, 479, 999999, 0, 0, '2002-05-14 17:45:01', 'GV - Letter confirming grant of pub var', '2002-05-14 17:45:01', 1),
+    (319, 9, 479, 319, 479, 31, 0, 0, '2002-05-14 17:45:01', 'GV - Letter confirming grant of new app', '2002-05-14 17:45:01', 1),
+    (320, 9, 479, 320, 479, 31, 0, 0, '2002-05-14 17:45:01', 'PSV - Letter confirming grant of new app', '2002-05-14 17:45:01', 1),
+    (321, 9, 479, 321, 479, 31, 0, 0, '2002-05-14 17:45:01', 'PSV - Letter confirming grant of var app', '2002-05-14 17:45:01', 1),
+    (322, 9, 479, 322, 479, 31, 0, 0, '2002-05-14 17:45:01', 'GV - Letter confirming grant of pub var', '2002-05-14 17:45:01', 1),
     (323, 9, 1, 323, 1, 31, 0, 1, '2010-01-13 13:19:16', 'ENV09 - New/Var App Incomplete - 1st request for supporting docs', '2010-01-13 13:19:16', 1),
     (324, 999999, 1, 324, 1, 999999, 0, 1, '2010-01-13 13:21:06', 'GV - Letter informing OP of PI to be held-Var app', '2010-01-13 13:21:06', 1),
     (325, 999999, 1, 325, 1, 999999, 0, 1, '2010-01-13 13:21:06', 'GV - Letter informing OP of PI to be held-New app', '2010-01-13 13:21:06', 1),
@@ -2244,8 +2249,8 @@ VALUES
     (381, 999999, 479, 381, 479, 999999, 0, 1, '2012-01-12 14:31:55', 'ENV16 -  Letter to objector - operating centre follow up', '2012-01-12 14:31:55', 1),
     (382, 999999, 479, 382, 479, 999999, 0, 1, '2012-01-12 14:31:55', 'ENV17 - Letter to applicant - operating centre follow up', '2012-01-12 14:31:55', 1),
     (383, 999999, 479, 383, 479, 999999, 0, 1, '2012-01-12 14:31:55', 'ENV21 - Propose to refuse letter - oc issues', '2012-01-12 14:31:55', 1),
-    (384, 999999, 479, 384, 479, 999999, 0, 1, '2012-01-12 14:31:55', 'ENV22- Letter confirming grant of new app', '2012-01-12 14:31:55', 1),
-    (385, 999999, 479, 385, 479, 999999, 0, 1, '2012-01-12 14:31:55', 'ENV23 - Letter confirming grant of pub var', '2012-01-12 14:31:55', 1),
+    (384, 9, 479, 384, 479, 31, 0, 1, '2012-01-12 14:31:55', 'ENV22- Letter confirming grant of new app', '2012-01-12 14:31:55', 1),
+    (385, 9, 479, 385, 479, 31, 0, 1, '2012-01-12 14:31:55', 'ENV23 - Letter confirming grant of pub var', '2012-01-12 14:31:55', 1),
     (386, 999999, 479, 386, 479, 999999, 0, 1, '2012-01-12 14:31:55', 'ENV24 - Refusal of new application - oc issues', '2012-01-12 14:31:55', 1),
     (387, 999999, 479, 387, 479, 999999, 0, 1, '2012-01-12 14:31:55', 'ENV25 - Refusal of variation - oc issues', '2012-01-12 14:31:55', 1),
     (388, 7, 479, 388, 479, 62, 0, 1, '2012-01-12 14:31:55', 'ENV28 - letter advising invalid obj of non PI application decision', '2012-01-12 14:31:55', 1),
@@ -2255,17 +2260,17 @@ VALUES
     (392, 9, 1, 392, 1, 31, 1, 0, '2012-09-14 00:00:00', 'GV - acknowledgement of complete pub app (NI)', '2012-09-14 00:00:00', 1),
     (393, 999999, 1, 393, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Change of Entity - New App required (NI)', '2012-09-14 00:00:00', 1),
     (394, 999999, 1, 394, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Letter advising new app grant set aside (NI)', '2012-09-14 00:00:00', 1),
-    (395, 999999, 1, 395, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Letter confirming grant of new app (NI)', '2012-09-14 00:00:00', 1),
-    (396, 999999, 1, 396, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Letter confirming grant of pub var (NI)', '2012-09-14 00:00:00', 1),
+    (395, 9, 1, 395, 1, 31, 1, 0, '2012-09-14 00:00:00', 'GV - Letter confirming grant of new app (NI)', '2012-09-14 00:00:00', 1),
+    (396, 9, 1, 396, 1, 31, 1, 0, '2012-09-14 00:00:00', 'GV - Letter confirming grant of pub var (NI)', '2012-09-14 00:00:00', 1),
     (397, 999999, 1, 397, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Letter to op advising that grant/refusal decision reviewed (NI)', '2012-09-14 00:00:00', 1),
-    (398, 999999, 1, 398, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - New App Refusal - no advert (NI)', '2012-09-14 00:00:00', 1),
-    (399, 999999, 1, 399, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - New App Refusal - no response to supporting doc request (NI)', '2012-09-14 00:00:00', 1),
+    (398, 9, 1, 398, 1, 31, 1, 0, '2012-09-14 00:00:00', 'GV - New App Refusal - no advert (NI)', '2012-09-14 00:00:00', 1),
+    (399, 9, 1, 399, 1, 31, 1, 0, '2012-09-14 00:00:00', 'GV - New App Refusal - no response to supporting doc request (NI)', '2012-09-14 00:00:00', 1),
     (400, 9, 1, 400, 1, 31, 1, 0, '2012-09-14 00:00:00', 'GV - New/Var App Incomplete - 1st request for supporting docs (NI)', '2012-09-14 00:00:00', 1),
     (402, 999999, 1, 402, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Var App - O/C not in Northern Ireland (NI)', '2012-09-14 00:00:00', 1),
-    (403, 999999, 1, 403, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Var App Refusal - no response to supporting doc request (NI)', '2012-09-14 00:00:00', 1),
-    (404, 999999, 1, 404, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'GV - Var App Refusal -no advert (NI)', '2012-09-14 00:00:00', 1),
+    (403, 9, 1, 403, 1, 31, 1, 0, '2012-09-14 00:00:00', 'GV - Var App Refusal - no response to supporting doc request (NI)', '2012-09-14 00:00:00', 1),
+    (404, 9, 1, 404, 1, 31, 1, 0, '2012-09-14 00:00:00', 'GV - Var App Refusal -no advert (NI)', '2012-09-14 00:00:00', 1),
     (405, 999999, 1, 405, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'PSV - acknowledgement of complete new app (NI)', '2012-09-14 00:00:00', 1),
-    (406, 999999, 1, 406, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'PSV - App Refusal (NI)', '2012-09-14 00:00:00', 1),
+    (406, 9, 1, 406, 1, 31, 1, 1, '2012-09-14 00:00:00', 'PSV - App Refusal (NI)', '2012-09-14 00:00:00', 1),
     (407, 999999, 1, 407, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'PSV - Change of entity - new app required (NI)', '2012-09-14 00:00:00', 1),
     (408, 999999, 1, 408, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'PSV - Letter advising of review of grant or refusal decision (NI)', '2012-09-14 00:00:00', 1),
     (409, 999999, 1, 409, 1, 999999, 1, 0, '2012-09-14 00:00:00', 'PSV - Letter confirming grant of new app (NI)', '2012-09-14 00:00:00', 1),
@@ -2329,8 +2334,8 @@ VALUES
     (467, 999999, 1, 467, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV18 - Letter advising objector of proposed conditions (NI)', '2012-09-14 00:00:00', 1),
     (468, 999999, 1, 468, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV19 - Letter advising rep of proposed conditions (NI)', '2012-09-14 00:00:00', 1),
     (469, 999999, 1, 469, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV21 - Propose to refuse letter - oc issues (NI)', '2012-09-14 00:00:00', 1),
-    (470, 999999, 1, 470, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV22 - Letter confirming grant of new app (NI)', '2012-09-14 00:00:00', 1),
-    (471, 999999, 1, 471, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV23 - Letter confirming grant of pub var (NI)', '2012-09-14 00:00:00', 1),
+    (470, 9, 1, 470, 1, 31, 1, 1, '2012-09-14 00:00:00', 'ENV22 - Letter confirming grant of new app (NI)', '2012-09-14 00:00:00', 1),
+    (471, 9, 1, 471, 1, 31, 1, 1, '2012-09-14 00:00:00', 'ENV23 - Letter confirming grant of pub var (NI)', '2012-09-14 00:00:00', 1),
     (472, 999999, 1, 472, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV24 - Refusal of new application - oc issues (NI)', '2012-09-14 00:00:00', 1),
     (473, 999999, 1, 473, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV25 - Refusal of variation - oc issues (NI)', '2012-09-14 00:00:00', 1),
     (474, 999999, 1, 474, 1, 999999, 1, 1, '2012-09-14 00:00:00', 'ENV26 - Letter advising Valid Obj of non PI app decision (NI)', '2012-09-14 00:00:00', 1),
@@ -2556,7 +2561,10 @@ VALUES
     (702, 999999, 479, 702, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'GV Continuation checklist', '2015-01-01 00:00:00', 1),
     (703, 999999, 479, 703, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'GV Continuation checklist', '2015-01-01 00:00:00', 1),
     (704, 999999, 479, 704, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'PSV Continuation checklist', '2015-01-01 00:00:00', 1),
-    (705, 999999, 479, 705, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'PSV SR Continuation checklist', '2015-01-01 00:00:00', 1);
+    (705, 999999, 479, 705, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'PSV SR Continuation checklist', '2015-01-01 00:00:00', 1),
+
+    (706, 999999, 479, 706, 479, 999999, 0, 1, '2015-01-01 00:00:00', 'GV Duplicate vehicle letter', '2015-01-01 00:00:00', 1),
+    (707, 999999, 479, 707, 479, 999999, 1, 1, '2015-01-01 00:00:00', 'GV Duplicate vehicle letter (NI)', '2015-01-01 00:00:00', 1);
 
 INSERT INTO `doc_bookmark` (`id`, `name`, `description`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
@@ -4157,11 +4165,11 @@ VALUES
 -- but we can't truncate the table as it will remove application data
 INSERT IGNORE INTO `document` (`id`, `application_id`, `bus_reg_id`, `case_id`, `licence_id`, `operating_centre_id`, `opposition_id`, `sub_category_id`, `traffic_area_id`, `transport_manager_id`, `category_id`, `created_by`, `irfo_organisation_id`, `last_modified_by`, `filename`, `document_store_id`, `is_external`, `is_read_only`, `size`, `created_on`, `deleted_date`, `description`, `is_scan`, `issued_date`, `last_modified_on`, `version`)
 VALUES
-    (2, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/NEW_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New App Refusal - no advert', 0, NULL, '2002-05-14 17:45:01', 1),
-    (3, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/NEW_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New App Refusal - no response to supporting docs requests', 0, NULL, '2002-05-14 17:45:01', 1),
+    (2, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 479, NULL, 479, NULL, '/templates/GB/NEW_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New App Refusal - no advert', 0, NULL, '2002-05-14 17:45:01', 1),
+    (3, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 479, NULL, 479, NULL, '/templates/GB/NEW_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New App Refusal - no response to supporting docs requests', 0, NULL, '2002-05-14 17:45:01', 1),
     (4, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_WRONG_TAO.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Var App - Wrong TAO', 0, NULL, '2002-05-14 17:45:01', 1),
-    (5, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Var App Refusal -no advert', 0, NULL, '2002-05-14 17:45:01', 1),
-    (6, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Var App Refusal - no response to supporting docs requests', 0, NULL, '2002-05-14 17:45:01', 1),
+    (5, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Var App Refusal -no advert', 0, NULL, '2002-05-14 17:45:01', 1),
+    (6, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Var App Refusal - no response to supporting docs requests', 0, NULL, '2002-05-14 17:45:01', 1),
     (7, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 85, 479, NULL, 479, NULL, '/templates/GB/PUB_APPS_SUPP_DOCS_1ST.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New/Var App Incomplete - 1st request for supporting docs', 0, NULL, '2002-05-14 17:45:01', 1),
     (9, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/SCH4_NEW_APP_DECISION.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - New applications - grant/refusal', 0, NULL, '2002-05-14 17:45:01', 1),
     (10, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/SCH4_VAR_APP_DECISION.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Variation applications - grant/refusal', 0, NULL, '2002-05-14 17:45:01', 1),
@@ -4337,7 +4345,7 @@ VALUES
     (282, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/BLANK_LETTER_TEMPLATE_OPERATOR_PSV.rtf', 0, NULL, NULL, '2007-12-06 17:35:32', NULL, 'PSV - blank letter template to operator', 0, NULL, '2007-12-06 17:35:32', 1),
     (283, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/BLANK_LETTER_TEMPLATE_OTHER_THAN_OPERATOR_GV.rtf', 0, NULL, NULL, '2007-12-06 17:35:32', NULL, 'GV - Blank letter template to other than operator', 0, NULL, '2007-12-06 17:35:32', 1),
     (284, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/BLANK_LETTER_TEMPLATE_OTHER_THAN_OPERATOR_PSV.rtf', 0, NULL, NULL, '2007-12-06 17:35:32', NULL, 'PSV - Blank letter template to other than operator', 0, NULL, '2007-12-06 17:35:32', 1),
-    (288, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSV_APP_REFUSED.rtf', 0, NULL, NULL, '2007-12-18 15:23:01', NULL, 'PSV - App Refusal', 0, NULL, '2007-12-18 15:23:01', 1),
+    (288, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/GB/PSV_APP_REFUSED.rtf', 0, NULL, NULL, '2007-12-18 15:23:01', NULL, 'PSV - App Refusal', 0, NULL, '2007-12-18 15:23:01', 1),
     (289, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSV_FOLLOWUP_FINANCES_ON_GRANT.rtf', 0, NULL, NULL, '2007-12-18 15:23:01', NULL, 'PSV - Propose to refuse - new app', 0, NULL, '2007-12-18 15:23:01', 1),
     (290, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSV_RESPONSE_TO_OBJECTION_3RD_PARTY.rtf', 0, NULL, NULL, '2007-12-18 15:23:01', NULL, 'PSV - Response to objection (3rd Party)', 0, NULL, '2007-12-18 15:23:01', 1),
     (291, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/SCOTTISH_BUS_REG_CHEQUE_RETD_REAPPLY_TAN21.rtf', 0, NULL, NULL, '2008-03-31 11:57:57', NULL, 'Scottish-Cheque Returned - Re-Apply', 0, NULL, '2008-03-31 11:57:57', 1),
@@ -4363,10 +4371,10 @@ VALUES
     (316, NULL, NULL, NULL, NULL, NULL, NULL, 79, NULL, NULL, 1, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_INT_GRANTED.rtf', 0, NULL, NULL, '2009-05-14 17:50:00', NULL, 'VAR_APP_INT_GRANTED', 0, NULL, '2009-05-14 17:50:00', 1),
     (317, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_INT_REFUSED.rtf', 0, NULL, NULL, '2009-05-14 17:50:00', NULL, 'VAR_APP_INT_REFUSED', 0, NULL, '2009-05-14 17:50:00', 1),
     (318, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 122, NULL, 122, NULL, '/templates/GB/PSVVehiclesList.rtf', 0, NULL, NULL, '2009-03-31 00:00:00', NULL, 'PSV_VEHICLE_LIST', 0, NULL, '2009-03-31 00:00:00', 1),
-    (319, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/NEW_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Letter confirming grant of new app', 0, NULL, '2002-05-14 17:45:01', 1),
-    (320, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/PSV_NEW_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Letter confirming grant of new app', 0, NULL, '2002-05-14 17:45:01', 1),
-    (321, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/PSV_VAR_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Letter confirming grant of var app', 0, NULL, '2002-05-14 17:45:01', 1),
-    (322, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Letter confirming grant of pub var', 0, NULL, '2002-05-14 17:45:01', 1),
+    (319, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 479, NULL, 479, NULL, '/templates/GB/NEW_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Letter confirming grant of new app', 0, NULL, '2002-05-14 17:45:01', 1),
+    (320, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 479, NULL, 479, NULL, '/templates/GB/PSV_NEW_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Letter confirming grant of new app', 0, NULL, '2002-05-14 17:45:01', 1),
+    (321, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 479, NULL, 479, NULL, '/templates/GB/PSV_VAR_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'PSV - Letter confirming grant of var app', 0, NULL, '2002-05-14 17:45:01', 1),
+    (322, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 479, NULL, 479, NULL, '/templates/GB/VAR_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2002-05-14 17:45:01', NULL, 'GV - Letter confirming grant of pub var', 0, NULL, '2002-05-14 17:45:01', 1),
     (323, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/ENV_PUB_APPS_SUPP_DOCS_1ST.rtf', 0, NULL, NULL, '2010-01-13 13:19:16', NULL, 'ENV09 - New/Var App Incomplete - 1st request for supporting docs', 0, NULL, '2010-01-13 13:19:16', 1),
     (324, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/INFORM_OP_OF_PI_VAR_APP.rtf', 0, NULL, NULL, '2010-01-13 13:21:06', NULL, 'GV - Letter informing OP of PI to be held-Var app', 0, NULL, '2010-01-13 13:21:06', 1),
     (325, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/INFORM_OP_OF_PI_NEW_APP.rtf', 0, NULL, NULL, '2010-01-13 13:21:06', NULL, 'GV - Letter informing OP of PI to be held-New app', 0, NULL, '2010-01-13 13:21:06', 1),
@@ -4428,8 +4436,8 @@ VALUES
     (381, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/ENV16 -  Letter to objector - operating centre follow up.rtf', 0, NULL, NULL, '2012-01-12 14:31:55', NULL, 'ENV16 -  Letter to objector - operating centre follow up', 0, NULL, '2012-01-12 14:31:55', 1),
     (382, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/ENV17 - Letter to applicant - operating centre follow up.rtf', 0, NULL, NULL, '2012-01-12 14:31:55', NULL, 'ENV17 - Letter to applicant - operating centre follow up', 0, NULL, '2012-01-12 14:31:55', 1),
     (383, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/ENV21 - Propose to refuse letter - oc issues.rtf', 0, NULL, NULL, '2012-01-12 14:31:55', NULL, 'ENV21 - Propose to refuse letter - oc issues', 0, NULL, '2012-01-12 14:31:55', 1),
-    (384, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/ENV22_NEW_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2012-01-12 14:31:55', NULL, 'ENV22- Letter confirming grant of new app', 0, NULL, '2012-01-12 14:31:55', 1),
-    (385, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/ENV23_VAR_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2012-01-12 14:31:55', NULL, 'ENV23 - Letter confirming grant of pub var', 0, NULL, '2012-01-12 14:31:55', 1),
+    (384, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 479, NULL, 479, NULL, '/templates/GB/ENV22_NEW_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2012-01-12 14:31:55', NULL, 'ENV22- Letter confirming grant of new app', 0, NULL, '2012-01-12 14:31:55', 1),
+    (385, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 479, NULL, 479, NULL, '/templates/GB/ENV23_VAR_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2012-01-12 14:31:55', NULL, 'ENV23 - Letter confirming grant of pub var', 0, NULL, '2012-01-12 14:31:55', 1),
     (386, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/ENV24 - Refusal of new application - oc issues.rtf', 0, NULL, NULL, '2012-01-12 14:31:55', NULL, 'ENV24 - Refusal of new application - oc issues', 0, NULL, '2012-01-12 14:31:55', 1),
     (387, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 479, NULL, 479, NULL, '/templates/GB/ENV25 - Refusal of variation - oc issues.rtf', 0, NULL, NULL, '2012-01-12 14:31:55', NULL, 'ENV25 - Refusal of variation - oc issues', 0, NULL, '2012-01-12 14:31:55', 1),
     (388, NULL, NULL, NULL, NULL, NULL, NULL, 62, NULL, NULL, 7, 479, NULL, 479, NULL, '/templates/GB/ENV28 - letter advising invalid obj of non PI application decision.rtf', 0, NULL, NULL, '2012-01-12 14:31:55', NULL, 'ENV28 - letter advising invalid obj of non PI application decision', 0, NULL, '2012-01-12 14:31:55', 1),
@@ -4439,19 +4447,19 @@ VALUES
     (392, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/COMPLETE_PUB_APP_ACK.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - acknowledgement of complete pub app (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (393, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENTITY_CHANGE_NEW_APP_REQD.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Change of Entity - New App required (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (394, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/NEW_APP_GRANT_NOT_TAKEN_UP.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Letter advising new app grant set aside (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (395, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/NEW_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Letter confirming grant of new app (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (396, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/VAR_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Letter confirming grant of pub var (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (395, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/NEW_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Letter confirming grant of new app (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (396, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/VAR_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Letter confirming grant of pub var (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (397, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/APPLICATION_DECISION_REVIEWED.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Letter to op advising that grant/refusal decision reviewed (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (398, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/NEW_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New App Refusal - no advert (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (399, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/NEW_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New App Refusal - no response to supporting doc request (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (398, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/NEW_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New App Refusal - no advert (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (399, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/NEW_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - New App Refusal - no response to supporting doc request (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (400, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 85, 1, NULL, 1, NULL,
     '/templates/NI/PUB_APPS_SUPP_DOCS_1ST.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL,
     'GV - New/Var App Incomplete - 1st request for supporting docs (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (402, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/VAR_APP_OC not in Northern Ireland.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Var App - O/C not in Northern Ireland (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (403, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/VAR_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Var App Refusal - no response to supporting doc request (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (404, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/VAR_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Var App Refusal -no advert (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (403, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/VAR_APP_REFUSED_SUPP_DOCS.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Var App Refusal - no response to supporting doc request (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (404, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/VAR_APP_REFUSED_NO_ADVERT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'GV - Var App Refusal -no advert (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (405, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/PSV_COMPLETE_NEW_APP_ACK.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'PSV - acknowledgement of complete new app (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (406, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/PSV_APP_REFUSED.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'PSV - App Refusal (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (406, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/PSV_APP_REFUSED.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'PSV - App Refusal (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (407, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/PSV_ENTITY_CHANGE_NEW_APP_REQD.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'PSV - Change of entity - new app required (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (408, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/PSV_APPLICATION_DECISION_REVIEWED.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'PSV - Letter advising of review of grant or refusal decision (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (409, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/PSV_NEW_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'PSV - Letter confirming grant of new app (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
@@ -4515,8 +4523,8 @@ VALUES
     (467, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV18 - PUB_APP_PROPOSED_CONDITIONS_OBJ.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV18 - Letter advising objector of proposed conditions (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (468, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV19 - PUB_APP_PROPOSED_CONDITIONS_REP.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV19 - Letter advising rep of proposed conditions (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (469, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV21 - Propose to refuse letter - oc issues.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV21 - Propose to refuse letter - oc issues (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (470, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV22_NEW_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV22 - Letter confirming grant of new app (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
-    (471, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV23_VAR_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV23 - Letter confirming grant of pub var (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (470, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/ENV22_NEW_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV22 - Letter confirming grant of new app (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
+    (471, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL, 9, 1, NULL, 1, NULL, '/templates/NI/ENV23_VAR_APP_FULL_GRANT.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV23 - Letter confirming grant of pub var (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (472, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV24 - Refusal of new application - oc issues.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV24 - Refusal of new application - oc issues (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (473, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV25 - Refusal of variation - oc issues.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV25 - Refusal of variation - oc issues (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
     (474, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/ENV26 - PUB_APP_DECISION_TO_OBJECTOR.rtf', 0, NULL, NULL, '2012-09-14 00:00:00', NULL, 'ENV26 - Letter advising Valid Obj of non PI app decision (NI)', 0, NULL, '2012-09-14 00:00:00', 1),
@@ -4742,7 +4750,10 @@ VALUES
     (702, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/GVChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
     (703, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/GVChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
     (704, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSVChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'PSV continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
-    (705, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSVSRChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'PSV SR continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1);
+    (705, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/PSVSRChecklist.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'PSV SR continuation checklist', 0, NULL, '2015-01-01 00:00:00', 1),
+
+    (706, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/GV_Duplicate_vehicle_letter.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV Duplicate vehicle letter', 0, NULL, '2015-01-01 00:00:00', 1),
+    (707, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/GV_Duplicate_vehicle_letter.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV Duplicate vehicle letter (NI)', 0, NULL, '2015-01-01 00:00:00', 1);
 
 INSERT INTO `role` (`id`, `role`, `code`, `description`) VALUES
     (1, 'internal-limited-read-only', '', 'Internal - Limited read only'), -- internal only
@@ -4795,7 +4806,11 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (25, 'partner-user', 'PAUS'),
     (26, 'local-authority-admin', 'LAAD'),
     (27, 'local-authority-user', 'LAUS'),
-    (28, 'can-update-licence-licence-type', 'ULLT');
+    (28, 'can-update-licence-licence-type', 'ULLT'),
+    (29, 'selfserve-landing-page-bus-registration', 'SSLPB'),
+    (30, 'selfserve-search-operating-centre', 'SSLPO'),
+    (31, 'selfserve-search-person', 'SSSPN'),
+    (32, 'selfserve-search-vehicle-external', 'SSVEX');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     -- set each role to it's respective permission
@@ -4866,7 +4881,19 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (3, 28), -- internal users can update licence licence type
     (4, 28), -- internal users can update licence licence type
     (5, 28), -- selfserve users can update licence licence type
-    (6, 28); -- selfserve users can update licence licence type
+    (6, 28), -- selfserve users can update licence licence type
+
+    (8, 29), -- operator-ebsr can see the link to bus-registration on the home page in SS
+    (11, 29), -- operator-ebsr can see the link to bus-registration on the home page in SS
+    (12, 29), -- operator-ebsr can see the link to bus-registration on the home page in SS
+
+    (9, 30), -- partner-admin
+    (9, 31), -- partner-admin
+    (9, 32), -- partner-admin
+
+    (10, 30), -- partner-user
+    (10, 31), -- partner-user
+    (10, 32); -- partner-user
 
 INSERT INTO `financial_standing_rate` (
     `id`,
@@ -7938,6 +7965,7 @@ CREATE VIEW task_search_view AS
       l.lic_no,
       l.id lic_id,
       tm.id tm_id,
+      t.irfo_organisation_id irfo_organisation_id,
       irfo.name irfo_op_name,
       o.name op_name,
       tmp.family_name,

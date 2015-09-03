@@ -26,8 +26,25 @@ class Markers extends AbstractQueryHandler
 
         return $this->result(
             $licence,
-            [],
-            ['continuationMarker' => $continuationDetailResponse]
+            [
+                'licenceStatusRules' => ['licenceStatus'],
+                'organisation' => [
+                    'type',
+                    'disqualifications',
+                    'organisationPersons' => [
+                        'person' => [
+                            'contactDetails' => ['disqualifications']
+                        ]
+                    ]
+                ],
+                'cases' => [
+                    'appeal' => ['outcome'],
+                    'stays' => ['outcome', 'stayType']
+                ],
+            ],
+            [
+                'continuationMarker' => $continuationDetailResponse,
+            ]
         );
     }
 

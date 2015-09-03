@@ -39,8 +39,6 @@ final class Enqueue extends AbstractCommandHandler
         $document->setIsReadOnly('Y');
         $document->setIssuedDate(new \Datetime());
 
-        $document->setIdentifier($command->getFileIdentifier());
-
         $this->getRepo()->save($document);
 
         $result = new Result();

@@ -70,13 +70,13 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
             $tma->setTmType($this->getRepo()->getRefdataReference($command->getTmType()));
         }
         $tma->setAdditionalInformation($command->getAdditionalInfo());
-        $tma->setHoursMon((int) $command->getHoursMon());
-        $tma->setHoursTue((int) $command->getHoursTue());
-        $tma->setHoursWed((int) $command->getHoursWed());
-        $tma->setHoursThu((int) $command->getHoursThu());
-        $tma->setHoursFri((int) $command->getHoursFri());
-        $tma->setHoursSat((int) $command->getHoursSat());
-        $tma->setHoursSun((int) $command->getHoursSun());
+        $tma->setHoursMon((float) $command->getHoursMon());
+        $tma->setHoursTue((float) $command->getHoursTue());
+        $tma->setHoursWed((float) $command->getHoursWed());
+        $tma->setHoursThu((float) $command->getHoursThu());
+        $tma->setHoursFri((float) $command->getHoursFri());
+        $tma->setHoursSat((float) $command->getHoursSat());
+        $tma->setHoursSun((float) $command->getHoursSun());
         if ($command->getIsOwner()) {
             $tma->setIsOwner($command->getIsOwner());
         }

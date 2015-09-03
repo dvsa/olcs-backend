@@ -3,7 +3,9 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
+use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 
 /**
  * LicenceVehicle Entity
@@ -31,5 +33,43 @@ class LicenceVehicle extends AbstractLicenceVehicle
 
         $this->setLicence($licence);
         $this->setVehicle($vehicle);
+    }
+
+    /**
+     * @return GoodsDisc|null
+     */
+    public function getActiveDisc()
+    {
+        $goodsDiscs = $this->getGoodsDiscs();
+
+        if ($goodsDiscs->isEmpty()) {
+            return null;
+        }
+
+        $activeDisc = $goodsDiscs->first();
+
+        if ($activeDisc->getCeasedDate() === null) {
+            return $activeDisc;
+        }
+
+        return null;
+    }
+
+    public function removeDuplicateMark()
+    {
+        $this->setWarningLetterSeedDate(null);
+    }
+
+    public function markAsDuplicate()
+    {
+        $this->setWarningLetterSeedDate(new DateTime());
+        $this->setWarningLetterSentDate(null);
+    }
+
+    public function updateDuplicateMark()
+    {
+        if ($this->getWarningLetterSeedDate() === null || $this->getWarningLetterSentDate() !== null) {
+            $this->markAsDuplicate();
+        }
     }
 }

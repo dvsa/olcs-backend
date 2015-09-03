@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocumentSpecificCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -24,9 +26,11 @@ use Dvsa\Olcs\Transfer\Command\Document\CreateLetter as Cmd;
  */
 final class CreateLetter extends AbstractCommandHandler implements
     TransactionedInterface,
-    DocumentGeneratorAwareInterface
+    DocumentGeneratorAwareInterface,
+    AuthAwareInterface
 {
-    use DocumentGeneratorAwareTrait;
+    use DocumentGeneratorAwareTrait,
+        AuthAwareTrait;
 
     protected $repoServiceName = 'DocTemplate';
 
@@ -36,6 +40,8 @@ final class CreateLetter extends AbstractCommandHandler implements
     public function handleCommand(CommandInterface $command)
     {
         $queryData = $command->getData();
+
+        $queryData['user'] = $this->getUser()->getId();
 
         /** @var Entity $template */
         $template = $this->getRepo()->fetchById($command->getTemplate());
@@ -71,6 +77,9 @@ final class CreateLetter extends AbstractCommandHandler implements
 
     private function formatFilename($input)
     {
-        return str_replace([' ', '/'], '_', $input);
+        $input = str_replace([' ', '/'], '_', $input);
+
+        // Only allow alpha-num plus "_()"
+        return preg_replace('/[^a-zA-Z0-9_\(\)\-]/', '', $input);
     }
 }

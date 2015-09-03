@@ -29,6 +29,7 @@ class Safety extends AbstractQueryHandler
 
         $goodsOrPsv = $licence->getGoodsOrPsv()->getId();
         $data['canHaveTrailers'] = ($goodsOrPsv === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE);
+        $data['hasTrailers'] = $licence->getTotAuthTrailers() > 0;
 
         return $data;
     }

@@ -84,9 +84,9 @@ class Fee extends AbstractRepository
             ->withRefdata()
             ->with('licence')
             ->with('application')
-            ->with('feePayments', 'fp')
-            ->with('fp.payment', 'p')
-            ->with('p.status')
+            ->with('feeTransactions', 'ft')
+            ->with('ft.transaction', 't')
+            ->with('t.status')
             ->order('invoicedDate', 'ASC');
 
         $this->whereOutstandingFee($doctrineQb);
@@ -177,9 +177,9 @@ class Fee extends AbstractRepository
             ->withRefdata()
             ->with('licence')
             ->with('application')
-            ->with('feePayments', 'fp')
-            ->with('fp.payment', 'p')
-            ->with('p.status')
+            ->with('feeTransactions', 'ft')
+            ->with('ft.transaction', 't')
+            ->with('t.status')
             ->order('invoicedDate', 'ASC');
 
         $this->whereOutstandingFee($doctrineQb);
@@ -319,6 +319,20 @@ class Fee extends AbstractRepository
             ->filterByApplication($query->getApplication())
             ->filterByIds($query->getIds());
 
+        if ($query->getOrganisation() !== null) {
+            // all fees linked to the organisation by irfo_gv_permit_id or irfo_psv_auth_id
+            $qb
+                ->leftJoin($this->alias . '.irfoGvPermit', 'igp')
+                ->leftJoin($this->alias . '.irfoPsvAuth', 'ipa')
+                ->andWhere(
+                    $qb->expr()->orX(
+                        $qb->expr()->eq('igp.organisation', ':organisationId'),
+                        $qb->expr()->eq('ipa.organisation', ':organisationId')
+                    )
+                )
+                ->setParameter('organisationId', $query->getOrganisation());
+        }
+
         if ($query->getBusReg() !== null) {
             /** @var array $busRegIds */
             $busRegIds = $this->getBusRegIdsForRouteFromBusRegId($query->getBusReg());
@@ -344,33 +358,43 @@ class Fee extends AbstractRepository
         }
 
         if ($query->getStatus() !== null) {
-            switch ($query->getStatus()) {
-                case 'historical':
-                    $feeStatus = [
-                        Entity::STATUS_PAID,
-                        Entity::STATUS_WAIVED,
-                        Entity::STATUS_CANCELLED,
-                    ];
-                    break;
-                case 'all':
-                    $feeStatus = [];
-                    break;
-                case 'current':
-                default:
-                    $feeStatus = [
-                        Entity::STATUS_OUTSTANDING,
-                        Entity::STATUS_WAIVE_RECOMMENDED,
-                    ];
-                    break;
-            }
-            if (!empty($feeStatus)) {
-                $qb
-                    ->andWhere($qb->expr()->in($this->alias . '.feeStatus', ':feeStatus'))
-                    ->setParameter('feeStatus', $feeStatus);
-            }
+            $this->filterByStatus($qb, $query->getStatus());
         }
 
         $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param string $status
+     */
+    private function filterByStatus($qb, $status)
+    {
+        switch ($status) {
+            case 'historical':
+                $feeStatus = [
+                    Entity::STATUS_PAID,
+                    Entity::STATUS_WAIVED,
+                    Entity::STATUS_CANCELLED,
+                ];
+                break;
+            case 'all':
+                $feeStatus = [];
+                break;
+            case 'current':
+            default:
+                $feeStatus = [
+                    Entity::STATUS_OUTSTANDING,
+                    Entity::STATUS_WAIVE_RECOMMENDED,
+                ];
+                break;
+        }
+
+        if (!empty($feeStatus)) {
+            $qb
+                ->andWhere($qb->expr()->in($this->alias . '.feeStatus', ':feeStatus'))
+                ->setParameter('feeStatus', $feeStatus);
+        }
     }
 
     /**

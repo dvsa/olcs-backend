@@ -141,22 +141,16 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
                 'addressLine1' => 'Address 1',
                 'postcode' => 'AB1 1AB'
             ],
-            'natureOfBusinesses' => [
-                '01110',
-                '01120'
-            ]
+            'natureOfBusiness' => 'Stuff',
         ];
         $command = Cmd::create($data);
-
-        $nobCollection = new ArrayCollection();
-        $nobCollection->add($this->refData['01130']);
 
         /** @var OrganisationEntity $organisation */
         $organisation = m::mock(OrganisationEntity::class)->makePartial();
         $organisation->setId(111);
         $organisation->setName('Original name ltd');
         $organisation->setCompanyOrLlpNo('87654321');
-        $organisation->setNatureOfBusinesses($nobCollection);
+        $organisation->setNatureOfBusiness('Old Stuff');
 
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
@@ -204,7 +198,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             'addressLine3' => null,
             'addressLine4' => null,
             'town' => null,
-            'countryCode' => null
+            'countryCode' => null,
         ];
         $result2 = new Result();
         $result2->setFlag('hasChanged', false);
@@ -221,19 +215,11 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             'messages' => [
                 'Trading names updated',
                 'Address created',
-                '2 new nature(s) of business',
-                '0 unchanged nature(s) of business',
-                '1 nature(s) of business removed',
                 'Organisation updated'
             ]
         ];
 
         $this->assertEquals($expected, $result->toArray());
-
-        $this->assertCount(2, $nobCollection);
-        $this->assertTrue($nobCollection->contains($this->refData['01110']));
-        $this->assertTrue($nobCollection->contains($this->refData['01120']));
-        $this->assertFalse($nobCollection->contains($this->refData['01130']));
 
         $this->assertEquals('Changed name ltd', $organisation->getName());
         $this->assertEquals('12345678', $organisation->getCompanyOrLlpNo());
@@ -254,9 +240,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
                 'addressLine1' => 'Address 1',
                 'postcode' => 'AB1 1AB'
             ],
-            'natureOfBusinesses' => [
-                '01110'
-            ]
+            'natureOfBusiness' => 'Stuff',
         ];
         $command = Cmd::create($data);
 
@@ -268,7 +252,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
         $organisation->setId(111);
         $organisation->setName('Original name ltd');
         $organisation->setCompanyOrLlpNo('12345678');
-        $organisation->setNatureOfBusinesses($nobCollection);
+        $organisation->setNatureOfBusiness('Stuff');
         $organisation->shouldReceive('hasInforceLicences')
             ->andReturn(false);
 
@@ -332,9 +316,6 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             'messages' => [
                 'Trading names unchanged',
                 'Address unchanged',
-                '0 new nature(s) of business',
-                '1 unchanged nature(s) of business',
-                '0 nature(s) of business removed',
                 'Organisation unchanged'
             ]
         ];
@@ -357,9 +338,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
                 'addressLine1' => 'Address 1',
                 'postcode' => 'AB1 1AB'
             ],
-            'natureOfBusinesses' => [
-                '01110'
-            ]
+            'natureOfBusiness' => 'Stuff',
         ];
         $command = Cmd::create($data);
 
@@ -371,7 +350,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
         $organisation->setId(111);
         $organisation->setName('Original name ltd');
         $organisation->setCompanyOrLlpNo('12345678');
-        $organisation->setNatureOfBusinesses($nobCollection);
+        $organisation->setNatureOfBusiness('Stuff');
         $organisation->shouldReceive('hasInforceLicences')
             ->andReturn(false);
 
@@ -430,8 +409,8 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
 
         // Create task
         $expectedData = [
-            'category' => Category::CATEGORY_APPLICATION,
-            'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SUBSIDIARY_DIGITAL,
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::TASK_SUB_CATEGORY_BUSINESS_DETAILS_CHANGE,
             'description' => 'Change to business details',
             'licence' => 222,
             'actionDate' => null,
@@ -459,9 +438,6 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             'messages' => [
                 'Trading names unchanged',
                 'Address unchanged',
-                '0 new nature(s) of business',
-                '1 unchanged nature(s) of business',
-                '0 nature(s) of business removed',
                 'Organisation updated',
                 'Task created'
             ]
@@ -485,9 +461,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
                 'addressLine1' => 'Address 1',
                 'postcode' => 'AB1 1AB'
             ],
-            'natureOfBusinesses' => [
-                '01110'
-            ]
+            'natureOfBusiness' => 'Stuff',
         ];
         $command = Cmd::create($data);
 
@@ -499,7 +473,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
         $organisation->setId(111);
         $organisation->setName('Original name ltd');
         $organisation->setCompanyOrLlpNo('12345678');
-        $organisation->setNatureOfBusinesses($nobCollection);
+        $organisation->setNatureOfBusiness('Stuff');
         $organisation->shouldReceive('hasInforceLicences')
             ->andReturn(true);
 
@@ -558,8 +532,8 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
 
         // Create task
         $expectedData = [
-            'category' => Category::CATEGORY_APPLICATION,
-            'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SUBSIDIARY_DIGITAL,
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::TASK_SUB_CATEGORY_BUSINESS_DETAILS_CHANGE,
             'description' => 'Change to business details',
             'licence' => 222,
             'actionDate' => null,
@@ -587,9 +561,6 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             'messages' => [
                 'Trading names updated',
                 'Address unchanged',
-                '0 new nature(s) of business',
-                '1 unchanged nature(s) of business',
-                '0 nature(s) of business removed',
                 'Organisation unchanged',
                 'Task created'
             ]

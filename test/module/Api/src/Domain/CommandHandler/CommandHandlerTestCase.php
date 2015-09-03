@@ -16,7 +16,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
-use Zend\ServiceManager\ServiceManager;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -60,25 +59,33 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
     protected $mockedSmServices = [];
 
+    protected $queryHandler;
+
     public function setUp()
     {
-        $this->repoManager = m::mock(RepositoryServiceManager::class)->makePartial();
+        $this->repoManager = m::mock(RepositoryServiceManager::class);
+        $this->queryHandler = m::mock(QueryHandlerManager::class);
 
         foreach ($this->repoMap as $alias => $service) {
-            $this->repoManager->setService($alias, $service);
+            $this->repoManager
+                ->shouldReceive('get')
+                ->with($alias)
+                ->andReturn($service);
         }
 
-        $sm = m::mock(ServiceManager::class)->makePartial();
-        $sm->setService('RepositoryServiceManager', $this->repoManager);
-        $sm->setService('TransactionManager', m::mock(TransactionManagerInterface::class));
-        $sm->setService('QueryHandlerManager', m::mock(QueryHandlerManager::class)->makePartial());
+        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
+        $sm->shouldReceive('get')->with('TransactionManager')->andReturn(m::mock(TransactionManagerInterface::class));
+        $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
 
         foreach ($this->mockedSmServices as $serviceName => $service) {
-            $sm->setService($serviceName, $service);
+            $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
         }
 
-        $this->commandHandler = m::mock(CommandHandlerManager::class)->makePartial();
-        $this->commandHandler->setServiceLocator($sm);
+        $this->commandHandler = m::mock(CommandHandlerManager::class);
+        $this->commandHandler
+            ->shouldReceive('getServiceLocator')
+            ->andReturn($sm);
 
         $this->sut->createService($this->commandHandler);
 
@@ -169,6 +176,19 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             );
     }
 
+    public function expectedSideEffectThrowsException($class, $data, $exception)
+    {
+        $this->commandHandler->shouldReceive('handleCommand')
+            ->once()
+            ->with(m::type($class))
+            ->andReturnUsing(
+                function (CommandInterface $command) use ($class, $data, $exception) {
+                    $this->commands[] = [$command, $data];
+                    throw $exception;
+                }
+            );
+    }
+
     public function mapRefData($key)
     {
         return isset($this->refData[$key]) ? $this->refData[$key] : null;
@@ -201,6 +221,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             $cmdDataToMatch = [];
 
             foreach ($data as $key => $value) {
+                unset($value);
                 $cmdDataToMatch[$key] = isset($cmdData[$key]) ? $cmdData[$key] : null;
             }
 

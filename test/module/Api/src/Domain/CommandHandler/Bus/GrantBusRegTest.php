@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Transfer\Command\Bus\GrantBusReg as Cmd;
+use Dvsa\Olcs\Transfer\Command\Publication\Bus as PublishDto;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
 /**
@@ -132,6 +133,12 @@ class GrantBusRegTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with(m::type(BusRegEntity::class))
             ->once();
+
+        $this->expectedSideEffect(
+            PublishDto::class,
+            ['id' => $id],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 

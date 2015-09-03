@@ -10,8 +10,8 @@ use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
-use Dvsa\Olcs\Transfer\Command\Publication\PiHearing as PiHearingCmd;
-use Dvsa\Olcs\Transfer\Command\Publication\PiDecision as PiDecisionCmd;
+use Dvsa\Olcs\Api\Domain\Command\Publication\PiDecision as PiDecisionCmd;
+use Dvsa\Olcs\Api\Domain\Command\Publication\PiHearing as PiHearingCmd;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
@@ -87,7 +87,7 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
         $transportManager = $case->getTransportManager();
         $publicationSection = $this->getPublicationSection($pubSection);
         $trafficAreas = $command->getTrafficAreas();
-        $pubTypes = $command->getPubTypes();
+        $pubTypes = $command->getPubType();
 
         if (in_array('all', $trafficAreas)) {
             $trafficAreas = $this->getRepo('TrafficArea')->fetchAll();
@@ -214,10 +214,18 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
      */
     public function extractHearingData($hearing)
     {
+        $piVenue = $hearing->getPiVenue();
+        $hearingDate = $hearing->getHearingDate();
+
+        //sometimes we have a datetime, and sometimes a string
+        if ($hearingDate instanceof \DateTime) {
+            $hearingDate = $hearingDate->format('Y-m-d H:i:s');
+        }
+
         return [
-            'piVenue' => $hearing->getPiVenue()->getId(),
+            'piVenue' => ($piVenue === null ? $piVenue : $piVenue->getId()),
             'piVenueOther' => $hearing->getPiVenueOther(),
-            'hearingDate' => $hearing->getHearingDate(),
+            'hearingDate' => $hearingDate,
             'id' => $hearing->getId()
         ];
     }

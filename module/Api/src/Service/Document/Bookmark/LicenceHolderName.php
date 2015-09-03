@@ -12,13 +12,36 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
  */
 class LicenceHolderName extends DynamicBookmark
 {
+    const MAX_TRADING_NAME_LINE_LENGTH = 40;
+
     public function getQuery(array $data)
     {
-        return Qry::create(['id' => $data['licence'], 'bundle' => ['organisation']]);
+        return Qry::create(
+            [
+                'id' => $data['licence'],
+                'bundle' => [
+                    'tradingNames',
+                    'organisation',
+                ],
+            ]
+        );
     }
 
     public function render()
     {
-        return $this->data['organisation']['name'];
+        $name = $this->data['organisation']['name'];
+
+        if (!empty($this->data['tradingNames'])) {
+            $tradingNames = array_map(
+                function ($tradingName) {
+                    return $tradingName['name'];
+                },
+                $this->data['tradingNames']
+            );
+            $tradingAs = sprintf("\nT/A %s", implode(', ', $tradingNames));
+            $name .= substr($tradingAs, 0, self::MAX_TRADING_NAME_LINE_LENGTH);
+        }
+
+        return $name;
     }
 }

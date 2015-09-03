@@ -109,7 +109,6 @@ class Generator implements ServiceLocatorAwareInterface
                 'companySubsidiaries',
                 'organisation' => [
                     'type',
-                    'natureOfBusinesses',
                     'contactDetails' => [
                         'address'
                     ]
@@ -225,6 +224,9 @@ class Generator implements ServiceLocatorAwareInterface
     {
         $sections = $this->getServiceLocator()->get('SectionAccessService')->getAccessibleSections($application);
         $sections = array_keys($sections);
+
+        // Set the NI Locale
+        $this->getServiceLocator()->get('Utils\NiTextTranslation')->setLocaleForNiFlag($application->getNiFlag());
 
         if ($application->isVariation()) {
 

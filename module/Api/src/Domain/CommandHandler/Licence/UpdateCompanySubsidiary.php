@@ -10,7 +10,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -33,17 +32,15 @@ final class UpdateCompanySubsidiary extends AbstractCommandHandler implements Au
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /** @var CompanySubsidiary $companySubsidiary */
         $companySubsidiary = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         if ($companySubsidiary->getName() === $command->getName()
             && $companySubsidiary->getCompanyNo() == $command->getCompanyNo()
         ) {
-            $result->addMessage('Company Subsidiary unchanged');
-            $result->setFlag('hasChanged', false);
-            return $result;
+            $this->result->addMessage('Company Subsidiary unchanged');
+            $this->result->setFlag('hasChanged', false);
+            return $this->result;
         }
 
         $companySubsidiary->setName($command->getName());
@@ -51,15 +48,15 @@ final class UpdateCompanySubsidiary extends AbstractCommandHandler implements Au
 
         $this->getRepo()->save($companySubsidiary);
 
-        $result->addMessage('Company Subsidiary updated');
+        $this->result->addMessage('Company Subsidiary updated');
 
         if ($this->isGranted(Permission::SELFSERVE_USER)) {
-            $result->merge($this->createTask($command));
+            $this->result->merge($this->createTask($command));
         }
 
-        $result->setFlag('hasChanged', true);
+        $this->result->setFlag('hasChanged', true);
 
-        return $result;
+        return $this->result;
     }
 
     private function createTask(Cmd $command)
