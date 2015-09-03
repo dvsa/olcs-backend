@@ -8000,8 +8000,8 @@ CREATE VIEW document_search_view AS
         d.document_store_id, d.id document_id,
         cat.description category_name, dsc.sub_category_name document_sub_category_name, d.filename,
 		d.is_external, d.deleted_date,
-        coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
-        l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id, tm.id tm_id, ci.id ci_id
+        coalesce(c.id, br.reg_no, l.lic_no, tm.id, org.id, 'Unlinked') id_col,
+        l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id, tm.id tm_id, ci.id ci_id, org.id irfo_organisation_id
     FROM `document` d
     INNER JOIN (category cat, sub_category dsc) ON (cat.id = d.category_id AND dsc.id = d.sub_category_id)
     LEFT JOIN licence l ON d.licence_id = l.id
@@ -8009,7 +8009,8 @@ CREATE VIEW document_search_view AS
         ON (d.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.home_cd_id)
     LEFT JOIN cases c ON d.case_id = c.id
     LEFT JOIN bus_reg br ON d.bus_reg_id = br.id
-    LEFT JOIN correspondence_inbox ci ON d.id = ci.document_id;
+    LEFT JOIN correspondence_inbox ci ON d.id = ci.document_id
+    LEFT JOIN organisation org ON d.irfo_organisation_id = org.id;
 
 DROP TABLE IF EXISTS vehicle_history_view;
 DROP VIEW IF EXISTS vehicle_history_view;
