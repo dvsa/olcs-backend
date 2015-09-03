@@ -21,13 +21,12 @@ final class ComplianceComplaints extends AbstractSection
      */
     public function generateSection(CasesEntity $case)
     {
-
         $iterator = $case->getComplianceComplaints()->getIterator();
 
         $iterator->uasort(
             function ($a, $b) {
-                if ($a->getComplaintDate() instanceof \DateTime &&
-                    $b->getComplaintDate() instanceof \DateTime) {
+                if (($a->getComplaintDate() instanceof \DateTime) &&
+                    ($b->getComplaintDate() instanceof \DateTime)) {
                     return strtotime(
                         $a->getComplaintDate()->format('Ymd') - strtotime(
                             $b->getComplaintDate()->format('Ymd')
@@ -40,11 +39,8 @@ final class ComplianceComplaints extends AbstractSection
         $complaints = new ArrayCollection(iterator_to_array($iterator));
 
         $data = [];
-        for ($i = 0; $i < count($complaints); $i++) {
-
-            /** @var Complaint $entity */
-            $entity = $complaints->current();
-
+        /** @var Complaint $entity */
+        foreach ($complaints as $entity) {
             $thisRow = array();
             $thisRow['id'] = $entity->getId();
             $thisRow['version'] = $entity->getVersion();
@@ -52,11 +48,9 @@ final class ComplianceComplaints extends AbstractSection
             $thisRow['complainantForename'] = $personData['forename'];
             $thisRow['complainantFamilyName'] = $personData['familyName'];
             $thisRow['description'] = $entity->getDescription();
-            $thisRow['complaintDate'] = $entity->getComplaintDate();
+            $thisRow['complaintDate'] = $this->formatDate($entity->getComplaintDate());
 
             $data[] = $thisRow;
-
-            $complaints->next();
         }
 
         return [

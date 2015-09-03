@@ -19,6 +19,7 @@ final class OutstandingApplications extends AbstractSection
         $outstandingApplications = !empty($organisation) ? $organisation->getOutstandingApplications() : [];
 
         $data = [];
+
         for ($i=0; $i<count($outstandingApplications); $i++) {
             /** @var ApplicationEntity $applicationEntity */
             $applicationEntity = $outstandingApplications->current();
@@ -26,7 +27,7 @@ final class OutstandingApplications extends AbstractSection
             $data[$i]['id'] = $applicationEntity->getId();
             $data[$i]['version'] = $applicationEntity->getVersion();
             $data[$i]['applicationType'] = 'TBC';
-            $data[$i]['receivedDate'] = $applicationEntity->getReceivedDate();
+            $data[$i]['receivedDate'] = $this->formatDate($applicationEntity->getReceivedDate());
             $data[$i]['oor'] = $applicationEntity->getOutOfRepresentationDateAsString();
             $data[$i]['ooo'] = $applicationEntity->getOutOfOppositionDateAsString();
 
@@ -39,36 +40,6 @@ final class OutstandingApplications extends AbstractSection
                     'outstanding-applications' => $data
                 ]
             ]
-        ];
-    }
-
-    /**
-     * Filter provider
-     *
-     * @return array
-     */
-    public function sectionTestProvider()
-    {
-        $case = $this->getCase();
-
-        $expectedResult = [
-            'data' => [
-                'tables' => [
-                    'people' => [
-                        0 => [
-                            'id' => 1,
-                            'title' => 'title-desc',
-                            'forename' => 'fn1',
-                            'familyName' => 'sn1',
-                            'birthDate' => new \DateTime('1977-01-1')
-                        ]
-                    ]
-                ]
-            ]
-        ];
-
-        return [
-            [$case, $expectedResult],
         ];
     }
 }
