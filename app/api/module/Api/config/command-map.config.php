@@ -93,6 +93,7 @@ return [
     TransferCommand\Application\RefuseInterim::class => CommandHandler\Application\RefuseInterim::class,
     TransferCommand\Application\GrantInterim::class => CommandHandler\Application\GrantInterim::class,
     Command\Application\InForceInterim::class => CommandHandler\Application\InForceInterim::class,
+    Command\Application\EndInterim::class => CommandHandler\Application\EndInterim::class,
     TransferCommand\Application\UpdateOperatingCentres::class
         => CommandHandler\Application\UpdateOperatingCentres::class,
     TransferCommand\Application\DeleteOperatingCentres::class
