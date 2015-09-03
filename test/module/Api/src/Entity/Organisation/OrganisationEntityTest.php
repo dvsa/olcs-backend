@@ -37,6 +37,8 @@ class OrganisationEntityTest extends EntityTester
             'allowEmail',
             'companyCertSeen',
             'companyOrLlpNo',
+            'confirmShareTrailerInfo',
+            'confirmShareVehicleInfo',
             'contactDetails',
             'cpid',
             'createdBy',
