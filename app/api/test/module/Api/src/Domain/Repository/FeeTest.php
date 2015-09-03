@@ -183,6 +183,7 @@ class FeeTest extends RepositoryTestCase
                 'task' => 13,
                 'busReg' => 14,
                 'irfoGvPermit' => 15,
+                'organisation' => 16,
                 'page' => 1,
                 'limit' => 10,
                 'sort' => 'id',
@@ -261,8 +262,13 @@ class FeeTest extends RepositoryTestCase
             ->shouldReceive('setParameter')
             ->andReturnSelf()
             ->shouldReceive('innerJoin')
+            ->andReturnSelf()
+            ->shouldReceive('leftJoin')
+            ->times(2)
             ->andReturnSelf();
 
+        $mockQb->shouldReceive('expr->orX')->once();
+        $mockQb->shouldReceive('expr->eq')->times(2);
         $mockQb->shouldReceive('expr->in');
 
         // mock pagination

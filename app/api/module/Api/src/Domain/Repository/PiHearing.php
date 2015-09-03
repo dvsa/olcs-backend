@@ -9,6 +9,8 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as Entity;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * PiHearing
@@ -41,5 +43,16 @@ class PiHearing extends AbstractRepository
         }
 
         return $result[0];
+    }
+
+    /**
+     * Applies a case filter
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $qb->andWhere($qb->expr()->eq($this->alias . '.pi', ':byPi'))
+            ->setParameter('byPi', $query->getPi());
     }
 }

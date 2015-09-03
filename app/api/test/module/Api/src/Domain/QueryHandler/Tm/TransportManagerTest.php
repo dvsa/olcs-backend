@@ -51,6 +51,8 @@ class TransportManagerTest extends QueryHandlerTestCase
         $query = Query::create(['id' => 1]);
 
         $mock = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('getUsers')
+            ->andReturn([1,2,3])
             ->shouldReceive('serialize')->with($bundle)
             ->once()
             ->andReturn(['foo'])
@@ -62,6 +64,6 @@ class TransportManagerTest extends QueryHandlerTestCase
             ->once()
             ->andReturn($mock);
 
-        $this->assertSame(['foo'], $this->sut->handleQuery($query)->serialize());
+        $this->assertSame(['foo', 'hasUsers' => [1,2,3]], $this->sut->handleQuery($query)->serialize());
     }
 }

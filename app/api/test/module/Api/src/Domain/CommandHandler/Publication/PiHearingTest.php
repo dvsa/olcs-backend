@@ -12,8 +12,8 @@ use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PiHearing as PiHearingRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Publication\PiHearing as PiHearingCmd;
-use Dvsa\Olcs\Transfer\Command\Publication\PiDecision as PiDecisionCmd;
+use Dvsa\Olcs\Api\Domain\Command\Publication\PiHearing as PiHearingCmd;
+use Dvsa\Olcs\Api\Domain\Command\Publication\PiDecision as PiDecisionCmd;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
@@ -82,13 +82,13 @@ class PiHearingTest extends CommandHandlerTestCase
         $pi = 44;
         $piVenueId = 55;
         $piVenueOther = 'pi venue other';
-        $hearingDate = '2014-03-05';
+        $hearingDate = \DateTime::createFromFormat('Y-m-d', '2014-03-05');
 
         $command = $cmdClass::Create(
             [
                 'id' => $id,
                 'trafficAreas' => $trafficAreas,
-                'pubTypes' => $pubTypes,
+                'pubType' => $pubTypes,
                 'text2' => $text2
             ]
         );

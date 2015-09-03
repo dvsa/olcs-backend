@@ -36,7 +36,6 @@ class BusinessDetails extends AbstractQueryHandler
         return $this->result(
             $organisation,
             [
-                'natureOfBusinesses',
                 'contactDetails' => [
                     'address' => [
                         'countryCode'

@@ -73,6 +73,9 @@ return [
         => CommandHandler\Application\Grant\GrantTransportManager::class,
     Command\Application\Grant\GrantPeople::class => CommandHandler\Application\Grant\GrantPeople::class,
     Command\Application\Grant\ValidateApplication::class => CommandHandler\Application\Grant\ValidateApplication::class,
+    Command\Application\Grant\Schedule41::class => CommandHandler\Application\Grant\Schedule41::class,
+    Command\Application\Grant\ProcessDuplicateVehicles::class
+        => CommandHandler\Application\Grant\ProcessDuplicateVehicles::class,
     TransferCommand\Application\CreatePeople::class => CommandHandler\Application\CreatePeople::class,
     TransferCommand\Application\UpdatePeople::class => CommandHandler\Application\UpdatePeople::class,
     TransferCommand\Application\DeletePeople::class => CommandHandler\Application\DeletePeople::class,
@@ -90,6 +93,7 @@ return [
     TransferCommand\Application\RefuseInterim::class => CommandHandler\Application\RefuseInterim::class,
     TransferCommand\Application\GrantInterim::class => CommandHandler\Application\GrantInterim::class,
     Command\Application\InForceInterim::class => CommandHandler\Application\InForceInterim::class,
+    Command\Application\EndInterim::class => CommandHandler\Application\EndInterim::class,
     TransferCommand\Application\UpdateOperatingCentres::class
         => CommandHandler\Application\UpdateOperatingCentres::class,
     TransferCommand\Application\DeleteOperatingCentres::class
@@ -118,6 +122,18 @@ return [
     TransferCommand\Cases\NonPi\Create::class => CommandHandler\Cases\NonPi\Create::class,
     TransferCommand\Cases\NonPi\Update::class => CommandHandler\Cases\NonPi\Update::class,
     TransferCommand\Cases\NonPi\Delete::class => CommandHandler\Cases\NonPi\Delete::class,
+
+    // Pi
+    TransferCommand\Cases\Pi\CreateAgreedAndLegislation::class =>
+        CommandHandler\Cases\Pi\CreateAgreedAndLegislation::class,
+    TransferCommand\Cases\Pi\UpdateAgreedAndLegislation::class =>
+        CommandHandler\Cases\Pi\AgreedAndLegislationUpdate::class,
+    TransferCommand\Cases\Pi\UpdateDecision::class => CommandHandler\Cases\Pi\UpdateDecision::class,
+    TransferCommand\Cases\Pi\UpdateSla::class => CommandHandler\Cases\Pi\UpdateSla::class,
+    TransferCommand\Cases\Pi\CreateHearing::class => CommandHandler\Cases\Pi\CreateHearing::class,
+    TransferCommand\Cases\Pi\UpdateHearing::class => CommandHandler\Cases\Pi\UpdateHearing::class,
+    TransferCommand\Cases\Pi\Close::class => CommandHandler\Cases\Pi\Close::class,
+    TransferCommand\Cases\Pi\Reopen::class => CommandHandler\Cases\Pi\Reopen::class,
 
     // Transfer - Bus
     TransferCommand\Bus\CreateBus::class => CommandHandler\Bus\CreateBus::class,
@@ -162,6 +178,9 @@ return [
     TransferCommand\Licence\UpdateOperatingCentres::class => CommandHandler\Licence\UpdateOperatingCentres::class,
     TransferCommand\Licence\CreatePsvVehicle::class => CommandHandler\Licence\CreatePsvVehicle::class,
     Command\Licence\ReturnAllCommunityLicences::class => CommandHandler\Licence\ReturnAllCommunityLicences::class,
+    TransferCommand\Licence\UpdateTrailers::class => CommandHandler\Licence\UpdateTrailers::class,
+    TransferCommand\Licence\UpdateVehicles::class => CommandHandler\Licence\UpdateVehicles::class,
+    Command\Licence\TmNominatedTask::class => CommandHandler\Licence\TmNominatedTask::class,
 
     Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
     Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
@@ -197,6 +216,7 @@ return [
 
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
+    TransferCommand\Organisation\TransferTo::class => CommandHandler\Organisation\TransferTo::class,
 
     // Transfer - OtherLicence
     TransferCommand\OtherLicence\UpdateOtherLicence::class => CommandHandler\OtherLicence\UpdateOtherLicence::class,
@@ -237,7 +257,9 @@ return [
     TransferCommand\Irfo\UpdateIrfoDetails::class => CommandHandler\Irfo\UpdateIrfoDetails::class,
     TransferCommand\Irfo\CreateIrfoGvPermit::class => CommandHandler\Irfo\CreateIrfoGvPermit::class,
     TransferCommand\Irfo\UpdateIrfoGvPermit::class => CommandHandler\Irfo\UpdateIrfoGvPermit::class,
+    TransferCommand\Irfo\ResetIrfoGvPermit::class => CommandHandler\Irfo\ResetIrfoGvPermit::class,
     TransferCommand\Irfo\CreateIrfoPermitStock::class => CommandHandler\Irfo\CreateIrfoPermitStock::class,
+    TransferCommand\Irfo\UpdateIrfoPermitStock::class => CommandHandler\Irfo\UpdateIrfoPermitStock::class,
     TransferCommand\Irfo\CreateIrfoPsvAuth::class => CommandHandler\Irfo\CreateIrfoPsvAuth::class,
     TransferCommand\Irfo\UpdateIrfoPsvAuth::class => CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
 
@@ -301,12 +323,20 @@ return [
         CommandHandler\Submission\CreateSubmissionAction::class,
     TransferCommand\Submission\UpdateSubmissionAction::class =>
         CommandHandler\Submission\UpdateSubmissionAction::class,
+
     TransferCommand\Submission\CreateSubmissionSectionComment::class =>
         CommandHandler\Submission\CreateSubmissionSectionComment::class,
     TransferCommand\Submission\UpdateSubmissionSectionComment::class =>
         CommandHandler\Submission\UpdateSubmissionSectionComment::class,
     TransferCommand\Submission\DeleteSubmissionSectionComment::class =>
         CommandHandler\Submission\DeleteSubmissionSectionComment::class,
+
+    TransferCommand\Submission\CreateSubmission::class =>
+        CommandHandler\Submission\CreateSubmission::class,
+    TransferCommand\Submission\UpdateSubmission::class =>
+        CommandHandler\Submission\UpdateSubmission::class,
+    TransferCommand\Submission\DeleteSubmission::class =>
+        CommandHandler\Submission\DeleteSubmission::class,
 
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
@@ -316,6 +346,7 @@ return [
     TransferCommand\Document\CopyDocument::class => CommandHandler\Document\CopyDocument::class,
     TransferCommand\Document\MoveDocument::class => CommandHandler\Document\MoveDocument::class,
     TransferCommand\Document\UpdateDocumentLinks::class => CommandHandler\Document\UpdateDocumentLinks::class,
+    TransferCommand\Document\PrintLetter::class => CommandHandler\Document\PrintLetter::class,
 
     // Transfer - CommunityLic
     TransferCommand\CommunityLic\Application\Create::class => CommandHandler\CommunityLic\Application\Create::class,
@@ -411,6 +442,7 @@ return [
     Command\Application\CancelAllInterimFees::class => CommandHandler\Application\CancelAllInterimFees::class,
     Command\Application\SetDefaultTrafficAreaAndEnforcementArea::class
         => CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementArea::class,
+    Command\Application\DeleteApplication::class => CommandHandler\Application\DeleteApplication::class,
 
     // Domain - Application Operating Centre
     Command\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class
@@ -423,6 +455,13 @@ return [
         => CommandHandler\LicenceOperatingCentre\AssociateS4::class,
     Command\LicenceOperatingCentre\DisassociateS4::class
         => CommandHandler\LicenceOperatingCentre\DisassociateS4::class,
+
+    // Domain - Operating Centre
+    Command\OperatingCentre\DeleteApplicationLinks::class =>
+        CommandHandler\OperatingCentre\DeleteApplicationLinks::class,
+    Command\OperatingCentre\DeleteConditionUndertakings::class =>
+        CommandHandler\OperatingCentre\DeleteConditionUndertakings::class,
+    Command\OperatingCentre\DeleteTmLinks::class => CommandHandler\OperatingCentre\DeleteTmLinks::class,
 
     // Domain - Condition Undertaking
     Command\Cases\ConditionUndertaking\CreateConditionUndertaking::class
@@ -450,6 +489,7 @@ return [
 
     // Domain - Publications
     Command\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,
+    Command\Publication\PiDecision::class => CommandHandler\Publication\PiHearing::class,
 
     // Domain - Discs
     Command\Discs\CeaseGoodsDiscs::class => CommandHandler\Discs\CeaseGoodsDiscs::class,
@@ -459,6 +499,10 @@ return [
     Command\LicenceVehicle\RemoveLicenceVehicle::class => CommandHandler\LicenceVehicle\RemoveLicenceVehicle::class,
     TransferCommand\LicenceVehicle\UpdatePsvLicenceVehicle::class
         => CommandHandler\LicenceVehicle\UpdatePsvLicenceVehicle::class,
+    Command\Vehicle\ProcessDuplicateVehicleWarning::class
+        => CommandHandler\Vehicle\ProcessDuplicateVehicleWarning::class,
+    Command\Vehicle\ProcessDuplicateVehicleWarnings::class
+        => CommandHandler\Vehicle\ProcessDuplicateVehicleWarnings::class,
 
     // Domain - Transport Managers
     Command\Tm\DeleteTransportManagerLicence::class => CommandHandler\Tm\DeleteTransportManagerLicence::class,
@@ -471,19 +515,23 @@ return [
 
     // Domain - Organisation
     Command\Organisation\UpdateTradingNames::class => CommandHandler\Organisation\UpdateTradingNames::class,
+    TransferCommand\Organisation\CpidOrganisationExport::class
+        => CommandHandler\Organisation\CpidOrganisationExport::class,
 
     // Domain - Fee
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
     Command\Fee\PayFee::class => CommandHandler\Fee\PayFee::class,
+    TransferCommand\Fee\ApproveWaive::class => CommandHandler\Fee\ApproveWaive::class,
+    TransferCommand\Fee\RecommendWaive::class => CommandHandler\Fee\RecommendWaive::class,
+    TransferCommand\Fee\RejectWaive::class => CommandHandler\Fee\RejectWaive::class,
     TransferCommand\Fee\UpdateFee::class => CommandHandler\Fee\UpdateFee::class,
     TransferCommand\Fee\CreateMiscellaneousFee::class => CommandHandler\Fee\CreateMiscellaneousFee::class,
 
-    // Domain - Payment
-    Command\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
-    TransferCommand\Payment\PayOutstandingFees::class => CommandHandler\Payment\PayOutstandingFees::class,
-    TransferCommand\Payment\CompletePayment::class => CommandHandler\Payment\CompletePayment::class,
-    Command\Payment\ResolvePayment::class => CommandHandler\Payment\ResolvePayment::class,
+    // Domain - Transaction (formerly 'Payment')
+    TransferCommand\Transaction\PayOutstandingFees::class => CommandHandler\Transaction\PayOutstandingFees::class,
+    TransferCommand\Transaction\CompleteTransaction::class => CommandHandler\Transaction\CompleteTransaction::class,
+    Command\Transaction\ResolvePayment::class => CommandHandler\Transaction\ResolvePayment::class,
 
     // Domain - ApplicationCompletion
     AppCompCommand\UpdateTypeOfLicenceStatus::class => AppCompCommandHandler\UpdateTypeOfLicenceStatus::class,
@@ -577,6 +625,13 @@ return [
     TransferCommand\Operator\Update::class => CommandHandler\Operator\SaveOperator::class,
     TransferCommand\Operator\CreateUnlicensed::class => CommandHandler\Operator\CreateUnlicensed::class,
     TransferCommand\Operator\UpdateUnlicensed::class => CommandHandler\Operator\UpdateUnlicensed::class,
+    TransferCommand\LicenceVehicle\UpdateUnlicensedOperatorLicenceVehicle::class
+        => CommandHandler\LicenceVehicle\UpdateUnlicensedOperatorLicenceVehicle::class,
+    TransferCommand\LicenceVehicle\DeleteUnlicensedOperatorLicenceVehicle::class
+        => CommandHandler\LicenceVehicle\DeleteUnlicensedOperatorLicenceVehicle::class,
+    TransferCommand\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class
+        => CommandHandler\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class,
+
 
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
@@ -615,6 +670,7 @@ return [
     // Transfer - TransportManager
     TransferCommand\Tm\Create::class => CommandHandler\Tm\Create::class,
     TransferCommand\Tm\Update::class => CommandHandler\Tm\Update::class,
+    TransferCommand\Tm\Remove::class => CommandHandler\Tm\Remove::class,
 
     // Task
     TransferCommand\Task\CloseTasks::class => CommandHandler\Task\CloseTasks::class,
@@ -648,6 +704,21 @@ return [
     QueueCommand\Complete::class => QueueCommandHandler\Complete::class,
     QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
 
+    // Transfer - TmCaseDecision
+    TransferCommand\TmCaseDecision\CreateReputeNotLost::class
+        => CommandHandler\TmCaseDecision\CreateReputeNotLost::class,
+    TransferCommand\TmCaseDecision\UpdateReputeNotLost::class
+        => CommandHandler\TmCaseDecision\UpdateReputeNotLost::class,
+    TransferCommand\TmCaseDecision\CreateNoFurtherAction::class
+        => CommandHandler\TmCaseDecision\CreateNoFurtherAction::class,
+    TransferCommand\TmCaseDecision\UpdateNoFurtherAction::class
+        => CommandHandler\TmCaseDecision\UpdateNoFurtherAction::class,
+    TransferCommand\TmCaseDecision\CreateDeclareUnfit::class
+        => CommandHandler\TmCaseDecision\CreateDeclareUnfit::class,
+    TransferCommand\TmCaseDecision\UpdateDeclareUnfit::class
+        => CommandHandler\TmCaseDecision\UpdateDeclareUnfit::class,
+    TransferCommand\TmCaseDecision\Delete::class => CommandHandler\TmCaseDecision\Delete::class,
+
     // Transfer - TmQualification
     TransferCommand\TmQualification\Create::class => CommandHandler\TmQualification\Create::class,
     TransferCommand\TmQualification\Update::class => CommandHandler\TmQualification\Update::class,
@@ -663,12 +734,19 @@ return [
     TransferCommand\LicenceOperatingCentre\Update::class => CommandHandler\LicenceOperatingCentre\Update::class,
 
     /** @to-do Review whether these commands are still needed once front end controllers have been migrated */
-    TransferCommand\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,
-    TransferCommand\Publication\PiDecision::class => CommandHandler\Publication\PiHearing::class,
     TransferCommand\Publication\Bus::class => CommandHandler\Publication\Bus::class,
     TransferCommand\Publication\Application::class => CommandHandler\Publication\Application::class,
 
     // Disqualification
     TransferCommand\Disqualification\Create::class => CommandHandler\Disqualification\Create::class,
     TransferCommand\Disqualification\Update::class => CommandHandler\Disqualification\Update::class,
+
+    // Disc Printing
+    TransferCommand\GoodsDisc\PrintDiscs::class => CommandHandler\GoodsDisc\PrintDiscs::class,
+    TransferCommand\PsvDisc\PrintDiscs::class => CommandHandler\PsvDisc\PrintDiscs::class,
+    TransferCommand\GoodsDisc\ConfirmPrinting::class => CommandHandler\GoodsDisc\ConfirmPrinting::class,
+    TransferCommand\PsvDisc\ConfirmPrinting::class => CommandHandler\PsvDisc\ConfirmPrinting::class,
+    Command\Discs\PrintDiscs::class => CommandHandler\Discs\PrintDiscs::class,
+    Command\Discs\CreatePsvVehicleListForDiscs::class => CommandHandler\Discs\CreatePsvVehicleListForDiscs::class,
+
 ];

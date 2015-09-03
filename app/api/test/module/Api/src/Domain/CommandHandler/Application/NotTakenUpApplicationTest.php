@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
@@ -24,6 +25,7 @@ use Dvsa\Olcs\Api\Domain\Command\CommunityLic\Void;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Class WithdrawApplicationTest
@@ -51,14 +53,13 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleCommand()
     {
         $command = Command::create(['id' => 532]);
 
-        $mockLicenceVehicle = m::mock()->shouldReceive('setSpecifiedDate')->with(null)->once()->getMock();
+        $mockLicenceVehicle = m::mock()
+            ->shouldReceive('setSpecifiedDate')->with(null)->once()
+            ->shouldReceive('setInterimApplication')->with(null)->once()->getMock();
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
@@ -89,20 +90,21 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
                 ]
             );
 
-            $licence->shouldReceive('getCommunityLics->toArray')
+        $application->shouldReceive('getCurrentInterimStatus')
+            ->andReturn(Application::INTERIM_STATUS_INFORCE)
+            ->once()
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+        $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
+
+        $licence->shouldReceive('getCommunityLics->toArray')
             ->once()
             ->andReturn(
                 [
-                    m::mock(CommunityLic::class)
-                        ->shouldReceive('getId')
-                        ->once()
-                        ->andReturn(1)
-                        ->getMock(),
-                    m::mock(CommunityLic::class)
-                        ->shouldReceive('getId')
-                        ->once()
-                        ->andReturn(2)
-                        ->getMock(),
+                    m::mock(CommunityLic::class)->makePartial(),
+                    m::mock(CommunityLic::class)->makePartial()
                 ]
             );
 
@@ -144,11 +146,9 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(Delete::class, ['ids' => array(1,2)], new Result());
 
         $this->expectedSideEffect(
-            Void::class,
+            ReturnAllCommunityLicences::class,
             [
-                'licence' => $licence,
-                'communityLicenceIds' => null,
-                'checkOfficeCopy' => false
+                'id' => 123
             ],
             new Result()
         );

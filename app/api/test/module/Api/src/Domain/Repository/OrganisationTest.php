@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Dvsa\Olcs\Transfer\Query\Organisation\CpidOrganisation;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as Repo;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -30,7 +31,7 @@ class OrganisationTest extends RepositoryTestCase
 
     public function setUp()
     {
-        $this->setUpSut(Repo::class);
+        $this->setUpSut(Repo::class, true);
     }
 
     public function testFetchBusinessDetailsByIdNotFound()
@@ -278,5 +279,142 @@ class OrganisationTest extends RepositoryTestCase
         $this->setExpectedException(NotFoundException::class);
 
         $this->sut->getByCompanyOrLlpNo($companyNumber);
+    }
+
+    public function testFetchByStatusPaginatedWithNullStatus()
+    {
+        $query = m::mock(CpidOrganisation::class)->makePartial();
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->andReturnSelf()
+            ->shouldReceive('paginate')
+            ->andReturnSelf();
+
+        $qb->shouldReceive('where');
+        $qb->shouldReceive('expr->isNull');
+
+        $this->sut->shouldReceive('fetchPaginatedList');
+        $this->sut->shouldReceive('fetchPaginatedCount');
+
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Organisation::class)
+            ->andReturn($repo);
+
+        $this->sut->fetchByStatusPaginated($query);
+    }
+
+    public function testFetchByStatusPaginatedWithStatus()
+    {
+        $query = m::mock(CpidOrganisation::class)
+            ->makePartial()
+            ->shouldReceive('getCpid')
+            ->andReturn('op_cpid_central');
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->andReturnSelf()
+            ->shouldReceive('paginate')
+            ->andReturnSelf();
+
+        $this->sut->shouldReceive('getRefdataReference');
+
+        $qb->shouldReceive('where');
+        $qb->shouldReceive('expr->eq');
+
+        $qb->shouldReceive('setParameter');
+
+        $this->sut->shouldReceive('fetchPaginatedList');
+        $this->sut->shouldReceive('fetchPaginatedCount');
+
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Organisation::class)
+            ->andReturn($repo);
+
+        $this->sut->fetchByStatusPaginated($query->getMock());
+    }
+
+    public function testFetchAllByStatusForCpidExportWithStatus()
+    {
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->andReturnSelf();
+
+        $qb->shouldReceive('where');
+        $qb->shouldReceive('expr->eq');
+
+        $qb->shouldReceive('setParameter');
+
+        $qb->shouldReceive('select')
+            ->with('o.id', 'o.name', 'r.id AS cpid');
+
+        $qb->shouldReceive('getQuery')
+            ->once()
+            ->andReturn(m::mock()->shouldReceive('iterate')->getMock());
+
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Organisation::class)
+            ->andReturn($repo);
+
+        $this->sut->fetchAllByStatusForCpidExport('op_cpid_central');
+    }
+
+    public function testFetchAllByStatusForCpidExportWithNullStatus()
+    {
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->andReturnSelf();
+
+        $qb->shouldReceive('where');
+        $qb->shouldReceive('expr->isNull');
+
+        $qb->shouldReceive('select')
+            ->with('o.id', 'o.name', 'r.id AS cpid');
+
+        $qb->shouldReceive('getQuery')
+            ->once()
+            ->andReturn(m::mock()->shouldReceive('iterate')->getMock());
+
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Organisation::class)
+            ->andReturn($repo);
+
+        $this->sut->fetchAllByStatusForCpidExport(null);
     }
 }

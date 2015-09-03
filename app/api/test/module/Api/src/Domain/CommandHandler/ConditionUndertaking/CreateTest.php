@@ -25,6 +25,7 @@ class CreateTest extends CommandHandlerTestCase
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('ConditionUndertaking', ConditionUndertakingRepo::class);
+        $this->mockRepo('Cases', \Dvsa\Olcs\Api\Domain\Repository\Cases::class);
 
         parent::setUp();
     }
@@ -91,15 +92,24 @@ class CreateTest extends CommandHandlerTestCase
 
         $command = Command::create($params);
 
+        $application = m::mock(Application::class)->makePartial();
+        $licence = m::mock(Licence::class)->makePartial();
+        $case = m::mock(Cases::class)->makePartial();
+        $case->setLicence($licence);
+        $case->setApplication($application);
+
+        $this->repoMap['Cases']->shouldReceive('fetchById')->with(24)->once()->andReturn($case);
         $this->repoMap['ConditionUndertaking']->shouldReceive('save')->once()->andReturnUsing(
-            function (ConditionUndertaking $cu) use ($params) {
+            function (ConditionUndertaking $cu) use ($params, $case) {
                 $this->assertSame($this->refData[$params['type']], $cu->getConditionType());
                 $this->assertSame($params['fulfilled'], $cu->getIsFulfilled());
                 $this->assertSame('N', $cu->getIsDraft());
                 $this->assertSame(null, $cu->getOperatingCentre());
                 $this->assertSame($this->refData['cav_case'], $cu->getAddedVia());
-                $this->assertSame($this->references[Cases::class][24], $cu->getCase());
+                $this->assertSame($case, $cu->getCase());
                 $this->assertSame(null, $cu->getAction());
+                $this->assertSame($case->getLicence(), $cu->getLicence());
+                $this->assertSame($case->getApplication(), $cu->getApplication());
                 $cu->setId(76);
             }
         );

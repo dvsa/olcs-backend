@@ -2252,4 +2252,213 @@ class ApplicationEntityTest extends EntityTester
         );
         $this->assertEquals(1, $application->getOperatingCentresNetDelta());
     }
+
+    /**
+     * @dataProvider allowFeePaymentsProvider
+     */
+    public function testAllowFeePayments($statusId, $licenceStatusId, $expected)
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+
+        $organisation = m::mock(Organisation::class);
+
+        $status = m::mock(RefData::class)
+            ->shouldReceive('getId')
+            ->andReturn($statusId)
+            ->getMock();
+        $licenceStatus = m::mock(RefData::class)
+            ->shouldReceive('getId')
+            ->andReturn($licenceStatusId)
+            ->getMock();
+
+        $licence = new Licence($organisation, $licenceStatus);
+
+        $application->setStatus($status);
+        $application->setLicence($licence);
+
+        $this->assertEquals($expected, $application->allowFeePayments());
+    }
+
+    public function testIsPsvDowngradeGoods()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isGoods')
+            ->andReturn(true);
+
+        $this->assertFalse($application->isPsvDowngrade());
+    }
+
+    public function testIsPsvDowngradeNotRestricted()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isGoods')->andReturn(false);
+        $application->shouldReceive('isRestricted')->andReturn(false);
+
+        $this->assertFalse($application->isPsvDowngrade());
+    }
+
+    public function testIsPsvDowngrade()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isGoods')->andReturn(false);
+        $application->shouldReceive('isRestricted')->andReturn(true);
+        $application->shouldReceive('getLicence->isRestricted')->andReturn(false);
+
+        $this->assertTrue($application->isPsvDowngrade());
+    }
+
+    public function testHasAuthChangedNew()
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isNew')->andReturn(true);
+
+        $this->assertFalse($application->hasAuthChanged());
+    }
+
+    public function testHasAuthChanged()
+    {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setTotAuthVehicles(9);
+
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isNew')->andReturn(false);
+        $application->setTotAuthVehicles(10);
+        $application->setLicence($licence);
+
+        $this->assertTrue($application->hasAuthChanged());
+    }
+
+    public function testHasAuthChangedWithoutChange()
+    {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setTotAuthVehicles(10);
+
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isNew')->andReturn(false);
+        $application->setTotAuthVehicles(10);
+        $application->setLicence($licence);
+
+        $this->assertFalse($application->hasAuthChanged());
+    }
+
+    public function allowFeePaymentsProvider()
+    {
+        return [
+            'refused' => [
+                Entity::APPLICATION_STATUS_REFUSED,
+                Licence::LICENCE_STATUS_REFUSED,
+                false,
+            ],
+            'withdrawn' => [
+                Entity::APPLICATION_STATUS_WITHDRAWN,
+                Licence::LICENCE_STATUS_WITHDRAWN,
+                false,
+            ],
+            'ntu' => [
+                Entity::APPLICATION_STATUS_NOT_TAKEN_UP,
+                Licence::LICENCE_STATUS_NOT_TAKEN_UP,
+                false,
+            ],
+            'licence surrendered' => [
+                Entity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                Licence::LICENCE_STATUS_SURRENDERED,
+                false,
+            ],
+            'licence terminated' => [
+                Entity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                Licence::LICENCE_STATUS_TERMINATED,
+                false,
+            ],
+            'licence revoked' => [
+                Entity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                Licence::LICENCE_STATUS_REVOKED,
+                false,
+            ],
+            'licence cns' => [
+                Entity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                Licence::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT,
+                false,
+            ],
+            'under consideration' => [
+                Entity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                Licence::LICENCE_STATUS_UNDER_CONSIDERATION,
+                true,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider isUnderConsiderationProvider
+     */
+    public function testIsUnderConsideration($status, $expected)
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+
+        $sut->shouldReceive('getStatus->getId')->once()->andReturn($status);
+        $this->assertEquals($expected, $sut->isUnderConsideration());
+    }
+
+    public function isUnderConsiderationProvider()
+    {
+        return [
+            [Entity::APPLICATION_STATUS_NOT_SUBMITTED, false],
+            [Entity::APPLICATION_STATUS_GRANTED, false],
+            [Entity::APPLICATION_STATUS_UNDER_CONSIDERATION, true],
+            [Entity::APPLICATION_STATUS_VALID, false],
+            [Entity::APPLICATION_STATUS_WITHDRAWN, false],
+            [Entity::APPLICATION_STATUS_REFUSED, false],
+            [Entity::APPLICATION_STATUS_NOT_TAKEN_UP, false],
+        ];
+    }
+
+    /**
+     * @dataProvider providerDatesAsString
+     */
+    public function testGetOutOfOppositionDateAsString($input, $expected)
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getOutOfOppositionDate')
+            ->andReturn($input);
+
+        $oooDate = $application->getOutOfOppositionDateAsString();
+        $this->assertEquals($expected, $oooDate);
+    }
+
+    /**
+     * @dataProvider providerDatesAsString
+     */
+    public function testGetOutOfRepresentationDateAsString($input, $expected)
+    {
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getOutOfRepresentationDate')
+            ->andReturn($input);
+
+        $oorDate = $application->getOutOfRepresentationDateAsString();
+        $this->assertEquals($expected, $oorDate);
+
+    }
+
+    public function providerDatesAsString()
+    {
+        return [
+            [Entity::NOT_APPLICABLE, Entity::NOT_APPLICABLE],
+            [new DateTime('2015-01-01'), '01/01/2015'],
+            [Entity::UNKNOWN, Entity::UNKNOWN],
+            ['', ''],
+            [null, '']
+        ];
+    }
 }

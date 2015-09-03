@@ -58,6 +58,7 @@ class Application extends AbstractApplication
     const INTERIM_STATUS_REFUSED = 'int_sts_refused';
     const INTERIM_STATUS_REVOKED = 'int_sts_revoked';
     const INTERIM_STATUS_GRANTED = 'int_sts_granted';
+    const INTERIM_STATUS_ENDED = 'int_sts_ended';
 
     const VARIATION_STATUS_UNCHANGED = 0;
     const VARIATION_STATUS_REQUIRES_ATTENTION = 1;
@@ -76,6 +77,8 @@ class Application extends AbstractApplication
 
     const NOT_APPLICABLE = 'Not applicable';
     const UNKNOWN = 'Unknown';
+
+    const TARGET_COMPLETION_TIME = '+9 week';
 
     /**
      * Publication No
@@ -416,6 +419,15 @@ class Application extends AbstractApplication
             $this->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_RESTRICTED
             && in_array($this->getLicenceType()->getId(), $restrictedUpgrades)
         );
+    }
+
+    public function isPsvDowngrade()
+    {
+        if ($this->isGoods() || $this->isRestricted() === false) {
+            return false;
+        }
+
+        return $this->getLicence()->isRestricted() === false;
     }
 
     public function updateLicenceHistory(
@@ -912,6 +924,44 @@ class Application extends AbstractApplication
     }
 
     /**
+     * Method to return ooo as strings. Used in submission tables
+     * @param string $format
+     * @return string
+     */
+    public function getOutOfOppositionDateAsString()
+    {
+        $ooo = $this->getOutOfOppositionDate();
+        return $this->formatDateToString($ooo);
+    }
+
+    /**
+     * Method to return oor as strings. Used in submission tables
+     * @param string $format
+     * @return string
+     */
+    public function getOutOfRepresentationDateAsString()
+    {
+        $oor = $this->getOutOfRepresentationDate();
+        return $this->formatDateToString($oor);
+    }
+
+    /**
+     * @param $date
+     * @param string $format
+     * @return string
+     */
+    private function formatDateToString($date, $format = 'd/m/Y')
+    {
+        if (is_string($date)) {
+            return $date;
+        }
+        if ($date instanceOf \DateTime) {
+            return $date->format($format);
+        }
+        return '';
+    }
+
+    /**
      * Get a collection of Application Operating Centres that have been added
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
@@ -1256,5 +1306,63 @@ class Application extends AbstractApplication
         }
 
         return $delta;
+    }
+
+    /**
+     * Set the target completion date to +9 weeks from received date
+     * @return this
+     */
+    public function setTargetCompletionDateFromReceivedDate()
+    {
+        $received = $this->getReceivedDate();
+        $target = clone $received;
+        $target->modify(self::TARGET_COMPLETION_TIME);
+        $this->setTargetCompletionDate($target);
+        return $this;
+    }
+
+    public function allowFeePayments()
+    {
+        if (in_array(
+            $this->getStatus()->getId(),
+            [
+                self::APPLICATION_STATUS_REFUSED,
+                self::APPLICATION_STATUS_WITHDRAWN,
+                self::APPLICATION_STATUS_NOT_TAKEN_UP,
+            ]
+        )) {
+            return false;
+        }
+
+        return $this->getLicence()->allowFeePayments();
+    }
+
+    public function hasAuthChanged()
+    {
+        if ($this->isNew()) {
+            return false;
+        }
+
+        $comparisons = [
+            'TotAuthVehicles',
+            'TotAuthTrailers',
+            'TotAuthSmallVehicles',
+            'TotAuthMediumVehicles',
+            'TotAuthLargeVehicles'
+        ];
+
+        foreach ($comparisons as $comparison) {
+            if ((int)$this->{'get' . $comparison}() !== (int)$this->getLicence()->{'get' . $comparison}()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUnderConsideration()
+    {
+        return !is_null($this->getStatus())
+            && $this->getStatus()->getId() === self::APPLICATION_STATUS_UNDER_CONSIDERATION;
     }
 }

@@ -51,6 +51,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
         if ($command->getSpecifiedDate() === null) {
             $dtoData['specifiedDate'] = date('Y-m-d');
         }
+        $dtoData['identifyDuplicates'] = true;
 
         $vehicleResult = $this->handleSideEffect(VehicleCmd::create($dtoData));
         $result->merge($vehicleResult);

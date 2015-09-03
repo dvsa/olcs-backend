@@ -115,63 +115,63 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Hours fri
      *
-     * @var int
+     * @var float
      *
-     * @ORM\Column(type="smallint", name="hours_fri", nullable=true)
+     * @ORM\Column(type="decimal", name="hours_fri", precision=3, scale=1, nullable=true)
      */
     protected $hoursFri;
 
     /**
      * Hours mon
      *
-     * @var int
+     * @var float
      *
-     * @ORM\Column(type="smallint", name="hours_mon", nullable=true)
+     * @ORM\Column(type="decimal", name="hours_mon", precision=3, scale=1, nullable=true)
      */
     protected $hoursMon;
 
     /**
      * Hours sat
      *
-     * @var int
+     * @var float
      *
-     * @ORM\Column(type="smallint", name="hours_sat", nullable=true)
+     * @ORM\Column(type="decimal", name="hours_sat", precision=3, scale=1, nullable=true)
      */
     protected $hoursSat;
 
     /**
      * Hours sun
      *
-     * @var int
+     * @var float
      *
-     * @ORM\Column(type="smallint", name="hours_sun", nullable=true)
+     * @ORM\Column(type="decimal", name="hours_sun", precision=3, scale=1, nullable=true)
      */
     protected $hoursSun;
 
     /**
      * Hours thu
      *
-     * @var int
+     * @var float
      *
-     * @ORM\Column(type="smallint", name="hours_thu", nullable=true)
+     * @ORM\Column(type="decimal", name="hours_thu", precision=3, scale=1, nullable=true)
      */
     protected $hoursThu;
 
     /**
      * Hours tue
      *
-     * @var int
+     * @var float
      *
-     * @ORM\Column(type="smallint", name="hours_tue", nullable=true)
+     * @ORM\Column(type="decimal", name="hours_tue", precision=3, scale=1, nullable=true)
      */
     protected $hoursTue;
 
     /**
      * Hours wed
      *
-     * @var int
+     * @var float
      *
-     * @ORM\Column(type="smallint", name="hours_wed", nullable=true)
+     * @ORM\Column(type="decimal", name="hours_wed", precision=3, scale=1, nullable=true)
      */
     protected $hoursWed;
 
@@ -478,7 +478,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Set the hours fri
      *
-     * @param int $hoursFri
+     * @param float $hoursFri
      * @return TransportManagerApplication
      */
     public function setHoursFri($hoursFri)
@@ -491,7 +491,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Get the hours fri
      *
-     * @return int
+     * @return float
      */
     public function getHoursFri()
     {
@@ -501,7 +501,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Set the hours mon
      *
-     * @param int $hoursMon
+     * @param float $hoursMon
      * @return TransportManagerApplication
      */
     public function setHoursMon($hoursMon)
@@ -514,7 +514,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Get the hours mon
      *
-     * @return int
+     * @return float
      */
     public function getHoursMon()
     {
@@ -524,7 +524,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Set the hours sat
      *
-     * @param int $hoursSat
+     * @param float $hoursSat
      * @return TransportManagerApplication
      */
     public function setHoursSat($hoursSat)
@@ -537,7 +537,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Get the hours sat
      *
-     * @return int
+     * @return float
      */
     public function getHoursSat()
     {
@@ -547,7 +547,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Set the hours sun
      *
-     * @param int $hoursSun
+     * @param float $hoursSun
      * @return TransportManagerApplication
      */
     public function setHoursSun($hoursSun)
@@ -560,7 +560,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Get the hours sun
      *
-     * @return int
+     * @return float
      */
     public function getHoursSun()
     {
@@ -570,7 +570,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Set the hours thu
      *
-     * @param int $hoursThu
+     * @param float $hoursThu
      * @return TransportManagerApplication
      */
     public function setHoursThu($hoursThu)
@@ -583,7 +583,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Get the hours thu
      *
-     * @return int
+     * @return float
      */
     public function getHoursThu()
     {
@@ -593,7 +593,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Set the hours tue
      *
-     * @param int $hoursTue
+     * @param float $hoursTue
      * @return TransportManagerApplication
      */
     public function setHoursTue($hoursTue)
@@ -606,7 +606,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Get the hours tue
      *
-     * @return int
+     * @return float
      */
     public function getHoursTue()
     {
@@ -616,7 +616,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Set the hours wed
      *
-     * @param int $hoursWed
+     * @param float $hoursWed
      * @return TransportManagerApplication
      */
     public function setHoursWed($hoursWed)
@@ -629,7 +629,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Get the hours wed
      *
-     * @return int
+     * @return float
      */
     public function getHoursWed()
     {

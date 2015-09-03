@@ -10,7 +10,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses as SaveAddressesCmd;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -35,9 +34,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
     {
         $licence = $this->getRepo()->fetchUsingId($command);
 
-        $result = $this->getCommandHandler()->handleCommand(
-            SaveAddressesCmd::create($command->getArrayCopy())
-        );
+        $result = $this->handleSideEffect(SaveAddressesCmd::create($command->getArrayCopy()));
 
         // @NOTE: duped with Variation\UpdateAddresses
         if ($result->getFlag('isDirty') && $this->isGranted(Permission::SELFSERVE_USER)) {
@@ -49,7 +46,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements AuthAwareI
                 'actionDate' => (new DateTime)->format('Y-m-d H:i:s'),
             ];
 
-            $result->merge($this->getCommandHandler()->handleCommand(CreateTask::create($taskParams)));
+            $result->merge($this->handleSideEffect(CreateTask::create($taskParams)));
         }
 
         $result->setFlag('hasChanged', $result->getFlag('isDirty'));

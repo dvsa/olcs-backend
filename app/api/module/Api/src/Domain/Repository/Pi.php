@@ -5,10 +5,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as Entity;
 
@@ -19,31 +17,17 @@ class Pi extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    private $cases;
-
-    public function __construct(
-        EntityManagerInterface $em,
-        QueryBuilderInterface $queryBuilder,
-        RepositoryInterface $cases
-    ) {
-        parent::__construct($em, $queryBuilder);
-        $this->cases = $cases;
-    }
-
     /**
-     * Fetch the default record by it's id
+     * Fetch the pi for a case id
      *
      * @param Query|QryCmd $query
      * @param int $hydrateMode
-     * @param null $version
      * @return mixed
      * @throws Exception\NotFoundException
      * @throws Exception\VersionConflictException
      */
-    public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
+    public function fetchUsingCase(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT)
     {
-        $case = $this->cases->fetchUsingId($query, $hydrateMode, $version);
-
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
 
@@ -54,17 +38,15 @@ class Pi extends AbstractRepository
             ->with('decidedByTc')
             ->with('reasons')
             ->with('decisions')
-            ->with('piHearings');
+            ->with('piHearings')
+            ->with('case', 'c')
+            ->with('c.transportManager');
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byId'))
             ->setParameter('byId', $query->getId());
 
         $pi = $qb->getQuery()->getResult($hydrateMode);
 
-        if (!empty($pi) && $hydrateMode === Query::HYDRATE_ARRAY) {
-            $case['pi'] = $pi[0];
-        }
-
-        return $case;
+        return (isset($pi[0]) ? $pi[0] : null);
     }
 }

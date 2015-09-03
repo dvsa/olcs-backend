@@ -71,7 +71,6 @@ class LicenceVehicleTest extends QueryHandlerTestCase
 
         $licenceVehicle->shouldReceive('serialize')
             ->once()
-            ->with(['vehicle', 'goodsDiscs'])
             ->andReturn(['foo' => 'cake']);
 
         $expected = [

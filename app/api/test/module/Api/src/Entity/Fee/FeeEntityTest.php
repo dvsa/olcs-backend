@@ -2,8 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
@@ -32,14 +35,14 @@ class FeeEntityTest extends EntityTester
     }
 
     /**
-     * @param array $feePayments
+     * @param array $feeTransactions
      * @param boolean $expected
      *
      * @dataProvider outstandingPaymentProvider
      */
-    public function testHadOutstandingPayment($feePayments, $expected)
+    public function testHadOutstandingPayment($feeTransactions, $expected)
     {
-        $this->sut->setFeePayments($feePayments);
+        $this->sut->setFeeTransactions($feeTransactions);
 
         $this->assertEquals($expected, $this->sut->hasOutstandingPayment());
     }
@@ -54,7 +57,7 @@ class FeeEntityTest extends EntityTester
             'one outstanding' => [
                 [
                     m::mock()
-                        ->shouldReceive('getPayment')
+                        ->shouldReceive('getTransaction')
                         ->andReturn(
                             m::mock()
                                 ->shouldReceive('isOutstanding')
@@ -164,6 +167,103 @@ class FeeEntityTest extends EntityTester
             [Entity::STATUS_WAIVE_RECOMMENDED, true],
             [Entity::STATUS_WAIVED, true],
             ['invalid', true],
+        ];
+    }
+
+    public function testCompatibilityGetMethods()
+    {
+        $this->assertNull($this->sut->getReceivedAmount());
+        $this->assertNull($this->sut->getReceiptNo());
+        $this->assertNull($this->sut->getReceivedDate());
+        $this->assertNull($this->sut->getPaymentMethod());
+        $this->assertNull($this->sut->getProcessedBy());
+        $this->assertNull($this->sut->getPayer());
+        $this->assertNull($this->sut->getSlipNo());
+        $this->assertNull($this->sut->getChequePoNumber());
+        $this->assertNull($this->sut->getWaiveReason());
+
+        $transaction = new Transaction();
+        $feeTransaction = new FeeTransaction();
+        $feeTransaction->setTransaction($transaction);
+        $feeTransaction->setAmount('1234.56');
+
+        $completed = new \DateTime();
+        $transaction->setCompletedDate($completed);
+
+        $paymentMethod = m::mock(RefData::class);
+        $transaction->setPaymentMethod($paymentMethod);
+
+        $user = m::mock()
+            ->shouldReceive('getLoginId')
+            ->andReturn('bob')
+            ->getMock();
+        $transaction->setProcessedByUser($user);
+
+        $transaction->setPayerName('payer');
+
+        $transaction->setPayingInSlipNumber('12345');
+
+        $transaction->setChequePoNumber('23456');
+
+        $transaction->setComment('reason');
+
+        $transaction->setReference('OLCS-1234');
+
+        $this->sut->getFeeTransactions()->add($feeTransaction);
+
+        $this->assertEquals('1234.56', $this->sut->getReceivedAmount());
+        $this->assertEquals($completed, $this->sut->getReceivedDate());
+        $this->assertEquals($paymentMethod, $this->sut->getPaymentMethod());
+        $this->assertEquals('bob', $this->sut->getProcessedBy());
+        $this->assertEquals('payer', $this->sut->getPayer());
+        $this->assertEquals('12345', $this->sut->getSlipNo());
+        $this->assertEquals('23456', $this->sut->getChequePoNumber());
+        $this->assertEquals('reason', $this->sut->getWaiveReason());
+        $this->assertEquals('OLCS-1234', $this->sut->getReceiptNo());
+    }
+
+    /**
+     * @dataProvider outstandingWaiveTransactionProvider
+     */
+    public function testGetOutstandingWaiveTransaction(array $feeTransactions, $expected)
+    {
+        $this->sut->setFeeTransactions(new ArrayCollection($feeTransactions));
+
+        $this->assertEquals($expected, $this->sut->getOutstandingWaiveTransaction());
+    }
+
+    public function outstandingWaiveTransactionProvider()
+    {
+        $transaction1 = m::mock(Transaction::class);
+        $transaction1->shouldReceive('getStatus->getId')
+            ->andReturn(Transaction::STATUS_CANCELLED);
+        $transaction1->shouldReceive('getType->getId')
+            ->andReturn(Transaction::TYPE_WAIVE);
+
+        $transaction2 = m::mock(Transaction::class);
+        $transaction2->shouldReceive('getStatus->getId')
+            ->andReturn(Transaction::STATUS_OUTSTANDING);
+        $transaction2->shouldReceive('getType->getId')
+            ->andReturn(Transaction::TYPE_WAIVE);
+
+        $feeTransaction1 = m::mock(FeeTransaction::class)
+            ->shouldReceive('getTransaction')
+            ->andReturn($transaction1)
+            ->getMock();
+        $feeTransaction2 = m::mock(FeeTransaction::class)
+            ->shouldReceive('getTransaction')
+            ->andReturn($transaction2)
+            ->getMock();
+
+        return [
+            'none' => [
+                [],
+                null,
+            ],
+            'valid' => [
+                [$feeTransaction1, $feeTransaction2],
+                $transaction2,
+            ],
         ];
     }
 }

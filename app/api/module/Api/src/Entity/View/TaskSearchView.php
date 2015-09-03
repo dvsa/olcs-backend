@@ -252,6 +252,14 @@ class TaskSearchView
     protected $transportManagerId;
 
     /**
+     * IRFO Organisation ID
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="irfo_organisation_id")
+     */
+    protected $irfoOrganisationId;
+
+    /**
      * Name
      *
      * @var int
@@ -526,6 +534,16 @@ class TaskSearchView
     public function getTransportManagerId()
     {
         return $this->transportManagerId;
+    }
+
+    /**
+     * Get the IRFO organisation id
+     *
+     * @return int
+     */
+    public function getIrfoOrganisationId()
+    {
+        return $this->irfoOrganisationId;
     }
 
     /**

@@ -25,8 +25,6 @@ class TmAddress extends DynamicBookmark
 
     public function render()
     {
-        $formatter = new Formatter\Address();
-        $formatter->setSeparator(', ');
-        return $formatter->format($this->data['homeCd']['address']);
+        return Formatter\Address::format($this->data['homeCd']['address']);
     }
 }

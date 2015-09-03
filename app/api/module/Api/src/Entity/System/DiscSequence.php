@@ -19,5 +19,51 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DiscSequence extends AbstractDiscSequence
 {
+    const DISCS_ON_PAGE = 6;
 
+    const ERROR_DECREASING = 'err_decr';
+    /**
+     * Licence type to prefixes mapping
+     *
+     * @var array
+     */
+    protected $prefixes = [
+        'ltyp_r'  => 'rPrefix', // Restricted
+        'ltyp_sn' => 'snPrefix', // Standard National
+        'ltyp_si' => 'siPrefix' // Standard International
+    ];
+
+    /**
+     * Licence type to numbers mapping
+     *
+     * @var array
+     */
+    protected $numbers = [
+        'ltyp_r'  => 'restricted',
+        'ltyp_sn' => 'standardNational',
+        'ltyp_si' => 'standardInternational'
+    ];
+
+    public function getDiscPrefix($licenceType)
+    {
+        $method = 'get' . ucfirst($this->prefixes[$licenceType]);
+        return $this->$method();
+    }
+
+    /**
+     * @param $licenceType
+     * @param $startNumber
+     * @return mixed
+     */
+    public function setDiscStartNumber($licenceType, $startNumber)
+    {
+        $method = 'set' . ucfirst($this->numbers[$licenceType]);
+        return $this->$method($startNumber);
+    }
+
+    public function getDiscNumber($licenceType)
+    {
+        $method = 'get' . ucfirst($this->numbers[$licenceType]);
+        return $this->$method();
+    }
 }

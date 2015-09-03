@@ -42,7 +42,6 @@ class BusinessDetailsTest extends QueryHandlerTestCase
                 'organisation',
                 [
                     'organisationPersons' => ['person'],
-                    'natureOfBusinesses',
                     'contactDetails' => ['address']
                 ]
             )

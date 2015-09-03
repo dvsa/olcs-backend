@@ -37,10 +37,13 @@ class OrganisationEntityTest extends EntityTester
             'allowEmail',
             'companyCertSeen',
             'companyOrLlpNo',
+            'confirmShareTrailerInfo',
+            'confirmShareVehicleInfo',
             'contactDetails',
             'cpid',
             'createdBy',
             'createdOn',
+            'deletedDate',
             'id',
             'irfoContactDetails',
             'irfoName',
@@ -51,7 +54,7 @@ class OrganisationEntityTest extends EntityTester
             'lastModifiedOn',
             'leadTcArea',
             'name',
-            'natureOfBusinesses',
+            'natureOfBusiness',
             'type',
             'version',
             'viAction',
@@ -113,7 +116,7 @@ class OrganisationEntityTest extends EntityTester
             $lastName,
             $isIrfo,
             $mockBusinessType,
-            ['nob'],
+            'nob',
             ['cpid']
         );
 
@@ -122,7 +125,7 @@ class OrganisationEntityTest extends EntityTester
         $this->assertEquals($organisation->getCompanyOrLlpNo(), '12345678');
         $this->assertEquals($organisation->getIsIrfo(), $isIrfo);
         $this->assertEquals($organisation->getType()->getId(), 'type');
-        $this->assertEquals($organisation->getNatureOfBusinesses(), ['nob']);
+        $this->assertEquals($organisation->getNatureOfBusiness(), 'nob');
     }
 
     public function organisationDataProvider()
@@ -274,5 +277,33 @@ class OrganisationEntityTest extends EntityTester
         $organisation->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection([$disqualification]));
 
         $this->assertSame(Disqualification::STATUS_ACTIVE, $organisation->getDisqualificationStatus());
+    }
+
+    public function testGetLinkedLicences()
+    {
+        /** @var Entity $organisation */
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturnUsing(
+                function (Criteria $criteria) {
+
+                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
+                    $expr = $criteria->getWhereExpression();
+
+                    $this->assertEquals('status', $expr->getField());
+                    $this->assertEquals('IN', $expr->getOperator());
+                    $this->assertTrue(is_array($expr->getValue()->getValue()));
+
+                    $collection = m::mock();
+                    $collection->shouldReceive('toArray')
+                        ->andReturn(['foo']);
+
+                    return $collection;
+                }
+            );
+
+        $this->assertEquals(['foo'], $organisation->getLinkedLicences()->toArray());
+
     }
 }

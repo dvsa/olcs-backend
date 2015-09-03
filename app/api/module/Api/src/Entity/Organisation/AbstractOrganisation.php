@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Organisation Abstract Entity
@@ -16,6 +17,7 @@ use Doctrine\Common\Collections\Collection;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="organisation",
  *    indexes={
  *        @ORM\Index(name="ix_organisation_created_by", columns={"created_by"}),
@@ -27,7 +29,8 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_organisation_contact_details_id", columns={"contact_details_id"}),
  *        @ORM\Index(name="ix_organisation_irfo_contact_details_id",
      *     columns={"irfo_contact_details_id"}),
- *        @ORM\Index(name="ix_organisation_irfo_nationality", columns={"irfo_nationality"})
+ *        @ORM\Index(name="ix_organisation_irfo_nationality", columns={"irfo_nationality"}),
+ *        @ORM\Index(name="ix_organisation_cpid_name", columns={"cpid","name"})
  *    }
  * )
  */
@@ -61,6 +64,30 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
      * @ORM\Column(type="string", name="company_or_llp_no", length=20, nullable=true)
      */
     protected $companyOrLlpNo;
+
+    /**
+     * Confirm share trailer info
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno",
+     *     name="confirm_share_trailer_info",
+     *     nullable=false,
+     *     options={"default": 0})
+     */
+    protected $confirmShareTrailerInfo = 0;
+
+    /**
+     * Confirm share vehicle info
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno",
+     *     name="confirm_share_vehicle_info",
+     *     nullable=false,
+     *     options={"default": 0})
+     */
+    protected $confirmShareVehicleInfo = 0;
 
     /**
      * Contact details
@@ -100,6 +127,15 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      */
     protected $createdOn;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
 
     /**
      * Identifier - Id
@@ -202,25 +238,13 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     protected $name;
 
     /**
-     * Nature of businesse
+     * Nature of business
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var string
      *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
-     *     inversedBy="organisations",
-     *     fetch="LAZY"
-     * )
-     * @ORM\JoinTable(name="organisation_nature_of_business",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="organisation_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="ref_data_id", referencedColumnName="id")
-     *     }
-     * )
+     * @ORM\Column(type="string", name="nature_of_business", length=255, nullable=true)
      */
-    protected $natureOfBusinesses;
+    protected $natureOfBusiness;
 
     /**
      * Type
@@ -331,7 +355,6 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
 
     public function initCollections()
     {
-        $this->natureOfBusinesses = new ArrayCollection();
         $this->disqualifications = new ArrayCollection();
         $this->irfoPartners = new ArrayCollection();
         $this->licences = new ArrayCollection();
@@ -407,6 +430,52 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     public function getCompanyOrLlpNo()
     {
         return $this->companyOrLlpNo;
+    }
+
+    /**
+     * Set the confirm share trailer info
+     *
+     * @param string $confirmShareTrailerInfo
+     * @return Organisation
+     */
+    public function setConfirmShareTrailerInfo($confirmShareTrailerInfo)
+    {
+        $this->confirmShareTrailerInfo = $confirmShareTrailerInfo;
+
+        return $this;
+    }
+
+    /**
+     * Get the confirm share trailer info
+     *
+     * @return string
+     */
+    public function getConfirmShareTrailerInfo()
+    {
+        return $this->confirmShareTrailerInfo;
+    }
+
+    /**
+     * Set the confirm share vehicle info
+     *
+     * @param string $confirmShareVehicleInfo
+     * @return Organisation
+     */
+    public function setConfirmShareVehicleInfo($confirmShareVehicleInfo)
+    {
+        $this->confirmShareVehicleInfo = $confirmShareVehicleInfo;
+
+        return $this;
+    }
+
+    /**
+     * Get the confirm share vehicle info
+     *
+     * @return string
+     */
+    public function getConfirmShareVehicleInfo()
+    {
+        return $this->confirmShareVehicleInfo;
     }
 
     /**
@@ -499,6 +568,29 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     public function getCreatedOn()
     {
         return $this->createdOn;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return Organisation
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
     }
 
     /**
@@ -732,63 +824,26 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the nature of businesse
+     * Set the nature of business
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesses
+     * @param string $natureOfBusiness
      * @return Organisation
      */
-    public function setNatureOfBusinesses($natureOfBusinesses)
+    public function setNatureOfBusiness($natureOfBusiness)
     {
-        $this->natureOfBusinesses = $natureOfBusinesses;
+        $this->natureOfBusiness = $natureOfBusiness;
 
         return $this;
     }
 
     /**
-     * Get the nature of businesses
+     * Get the nature of business
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return string
      */
-    public function getNatureOfBusinesses()
+    public function getNatureOfBusiness()
     {
-        return $this->natureOfBusinesses;
-    }
-
-    /**
-     * Add a nature of businesses
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesses
-     * @return Organisation
-     */
-    public function addNatureOfBusinesses($natureOfBusinesses)
-    {
-        if ($natureOfBusinesses instanceof ArrayCollection) {
-            $this->natureOfBusinesses = new ArrayCollection(
-                array_merge(
-                    $this->natureOfBusinesses->toArray(),
-                    $natureOfBusinesses->toArray()
-                )
-            );
-        } elseif (!$this->natureOfBusinesses->contains($natureOfBusinesses)) {
-            $this->natureOfBusinesses->add($natureOfBusinesses);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a nature of businesses
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $natureOfBusinesses
-     * @return Organisation
-     */
-    public function removeNatureOfBusinesses($natureOfBusinesses)
-    {
-        if ($this->natureOfBusinesses->contains($natureOfBusinesses)) {
-            $this->natureOfBusinesses->removeElement($natureOfBusinesses);
-        }
-
-        return $this;
+        return $this->natureOfBusiness;
     }
 
     /**

@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -19,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Withdraw Application Test
@@ -49,7 +51,9 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 532, 'reason' => 'withdrawn']);
 
-        $mockLicenceVehicle = m::mock()->shouldReceive('setSpecifiedDate')->with(null)->once()->getMock();
+        $mockLicenceVehicle = m::mock()
+            ->shouldReceive('setSpecifiedDate')->with(null)->once()
+            ->shouldReceive('setInterimApplication')->with(null)->once()->getMock();
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
@@ -57,11 +61,29 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             ->shouldReceive('getLicenceVehicles')
             ->andReturn([$mockLicenceVehicle])
             ->twice()
+            ->shouldReceive('getCommunityLics')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('toArray')
+                    ->once()
+                    ->andReturn([1,2,3])
+                    ->getMock()
+            )
             ->getMock();
 
         $application = m::mock(Application::class)->makePartial();
         $application->setId(1);
         $application->setLicence($licence);
+
+        $application->shouldReceive('getCurrentInterimStatus')
+            ->andReturn(Application::INTERIM_STATUS_INFORCE)
+            ->once()
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+        $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
+
         $application->shouldReceive('getIsVariation')->andReturn(false);
 
         $this->repoMap['Application']->shouldReceive('fetchById')
@@ -83,6 +105,8 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $result1->addMessage('Snapshot created');
         $data = ['id' => 532, 'event' => CreateSnapshot::ON_WITHDRAW];
         $this->expectedSideEffect(CreateSnapshot::class, $data, $result1);
+
+        $this->expectedSideEffect(ReturnAllCommunityLicences::class, ['id' => 123], new Result());
 
         $result = $this->sut->handleCommand($command);
 

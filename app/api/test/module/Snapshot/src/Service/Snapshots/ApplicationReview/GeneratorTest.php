@@ -46,16 +46,21 @@ class GeneratorTest extends MockeryTestCase
      */
     protected $application;
 
+    protected $niTranslation;
+
     public function setUp()
     {
         $this->sut = new Generator();
         $this->sm = Bootstrap::getServiceManager();
         $this->sut->setServiceLocator($this->sm);
 
+        $this->niTranslation = m::mock();
+
         $this->sectionAccessService = m::mock(SectionAccessService::class);
         $this->viewRenderer = m::mock(PhpRenderer::class);
         $this->sm->setService('SectionAccessService', $this->sectionAccessService);
         $this->sm->setService('ViewRenderer', $this->viewRenderer);
+        $this->sm->setService('Utils\NiTextTranslation', $this->niTranslation);
         $this->application = m::mock(Application::class)->makePartial();
     }
 
@@ -90,6 +95,7 @@ class GeneratorTest extends MockeryTestCase
         $appCompletion->setPeopleStatus(Application::VARIATION_STATUS_UPDATED);
 
         $this->application->setIsVariation(true);
+        $this->application->setNiFlag('Y');
         $this->application->setApplicationCompletion($appCompletion);
         $this->application->shouldReceive('isGoods')
             ->andReturn(true)
@@ -98,6 +104,10 @@ class GeneratorTest extends MockeryTestCase
             ->shouldReceive('serialize')
             ->once()
             ->andReturn($expectedData);
+
+        $this->niTranslation->shouldReceive('setLocaleForNiFlag')
+            ->once()
+            ->with('Y');
 
         $sections = [
             'vehicles' => 'bar',
@@ -169,6 +179,7 @@ class GeneratorTest extends MockeryTestCase
         $this->sm->setService('Review\ApplicationPeople', $mockPeople);
 
         $this->application->setIsVariation(false);
+        $this->application->setNiFlag('Y');
         $this->application->shouldReceive('isGoods')
             ->andReturn(true)
             ->shouldReceive('isSpecialRestricted')
@@ -182,6 +193,10 @@ class GeneratorTest extends MockeryTestCase
             'community_licences' => 'test',
             'people' => 'foo',
         ];
+
+        $this->niTranslation->shouldReceive('setLocaleForNiFlag')
+            ->once()
+            ->with('Y');
 
         $this->sectionAccessService->shouldReceive('getAccessibleSections')
             ->with($this->application)

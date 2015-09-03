@@ -39,6 +39,7 @@ return [
     BookmarkQuery\PreviousPublicationByApplication::class => BookmarkQueryHandler\PreviousPublication::class,
     BookmarkQuery\PreviousPublicationByLicence::class => BookmarkQueryHandler\PreviousPublication::class,
     BookmarkQuery\TotalContFee::class => BookmarkQueryHandler\TotalContFee::class,
+    BookmarkQuery\VehicleBundle::class => BookmarkQueryHandler\VehicleBundle::class,
 
     // Application
     TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
@@ -100,6 +101,8 @@ return [
     TransferQuery\Organisation\OutstandingFees::class => QueryHandler\Organisation\OutstandingFees::class,
     TransferQuery\Organisation\Dashboard::class => QueryHandler\Organisation\Dashboard::class,
     TransferQuery\Organisation\People::class => QueryHandler\Organisation\People::class,
+    TransferQuery\Organisation\CpidOrganisation::class
+        => QueryHandler\Organisation\CpidOrganisation::class,
     TransferQuery\Organisation\UnlicensedCases::class => QueryHandler\Organisation\UnlicensedCases::class,
 
     // Variation
@@ -113,6 +116,8 @@ return [
     TransferQuery\Cases\CasesWithOppositionDates::class => QueryHandler\Cases\CasesWithOppositionDates::class,
     TransferQuery\Cases\CasesWithLicence::class => QueryHandler\Cases\CasesWithLicence::class,
     TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
+    TransferQuery\Cases\Pi\Hearing::class => QueryHandler\Cases\Pi\Hearing::class,
+    TransferQuery\Cases\Pi\HearingList::class => QueryHandler\Cases\Pi\HearingList::class,
     TransferQuery\Cases\AnnualTestHistory::class => QueryHandler\Cases\AnnualTestHistory::class,
     TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
     TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
@@ -141,6 +146,8 @@ return [
     // Submission
     TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
     TransferQuery\Submission\SubmissionSectionComment::class => QueryHandler\Submission\SubmissionSectionComment::class,
+    TransferQuery\Submission\Submission::class => QueryHandler\Submission\Submission::class,
+    TransferQuery\Submission\SubmissionList::class => QueryHandler\Submission\SubmissionList::class,
 
     // Processing
     TransferQuery\Processing\History::class => QueryHandler\Processing\History::class,
@@ -181,8 +188,8 @@ return [
     TransferQuery\Bus\ByRouteNo::class => QueryHandler\Bus\ByRouteNo::class,
 
     // Trailer
-    TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
-    TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
+    TransferQuery\Licence\Trailers::class => QueryHandler\Licence\Trailers::class,
+    TransferQuery\Trailer\Trailer::class => QueryHandler\Trailer\Trailer::class,
 
     // Grace Periods
     TransferQuery\GracePeriod\GracePeriod::class => QueryHandler\GracePeriod\GracePeriod::class,
@@ -216,9 +223,9 @@ return [
     TransferQuery\Correspondence\Correspondence::class => QueryHandler\Correspondence\Correspondence::class,
     TransferQuery\Correspondence\Correspondences::class => QueryHandler\Correspondence\Correspondences::class,
 
-    // Payment
-    TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
-    TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
+    // Transaction (formerly 'Payment')
+    TransferQuery\Transaction\Transaction::class => QueryHandler\Transaction\Transaction::class,
+    TransferQuery\Transaction\TransactionByReference::class => QueryHandler\Transaction\TransactionByReference::class,
 
     // CommunityLic
     TransferQuery\CommunityLic\CommunityLic::class => QueryHandler\CommunityLic\CommunityLic::class,
@@ -240,6 +247,8 @@ return [
     // Transport Manager Licence
     TransferQuery\TransportManagerLicence\GetForResponsibilities::class
         => QueryHandler\TransportManagerLicence\GetForResponsibilities::class,
+    TransferQuery\TransportManagerLicence\GetList::class
+        => QueryHandler\TransportManagerLicence\GetList::class,
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
@@ -258,6 +267,7 @@ return [
     // Operator
     TransferQuery\Operator\BusinessDetails::class => QueryHandler\Operator\BusinessDetails::class,
     TransferQuery\Operator\UnlicensedBusinessDetails::class => QueryHandler\Operator\UnlicensedBusinessDetails::class,
+    TransferQuery\Operator\UnlicensedVehicles::class => QueryHandler\Operator\UnlicensedVehicles::class,
 
     // Licence Vehicle
     TransferQuery\LicenceVehicle\LicenceVehicle::class => QueryHandler\LicenceVehicle\LicenceVehicle::class,
@@ -310,6 +320,10 @@ return [
     // Queue
     QueueQuery\NextItem::class => QueueQueryHandler\NextItem::class,
 
+    // TmCaseDecision
+    TransferQuery\TmCaseDecision\GetByCase::class =>
+        QueryHandler\TmCaseDecision\GetByCase::class,
+
     // TmQualification
     TransferQuery\TmQualification\TmQualificationsList::class =>
         QueryHandler\TmQualification\TmQualificationsList::class,
@@ -337,6 +351,10 @@ return [
 
     // Organisation Person
    TransferQuery\OrganisationPerson\GetSingle::class => QueryHandler\OrganisationPerson\GetSingle::class,
+
+    // Disc Printing
+    TransferQuery\DiscSequence\DiscPrefixes::class => QueryHandler\DiscSequence\DiscPrefixes::class,
+    TransferQuery\DiscSequence\DiscsNumbering::class => QueryHandler\DiscSequence\DiscsNumbering::class,
 
     // Person
     TransferQuery\Person\Person::class => QueryHandler\Person\Person::class,

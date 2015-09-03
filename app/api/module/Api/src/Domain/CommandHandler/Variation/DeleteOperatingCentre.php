@@ -47,9 +47,12 @@ final class DeleteOperatingCentre extends AbstractCommandHandler implements Tran
 
         if ($type === 'A') {
             $this->result->addMessage('Removed application operating centre delta record');
-            $this->getRepo('ApplicationOperatingCentre')->delete(
-                $this->getRepo()->getReference(ApplicationOperatingCentre::class, $id)
-            );
+            $aoc = $this->getRepo()->getReference(ApplicationOperatingCentre::class, $id);
+            $message = $aoc->checkCanDelete();
+            if ($message) {
+                throw new \Dvsa\Olcs\Api\Domain\Exception\BadRequestException(key($message));
+            }
+            $this->getRepo('ApplicationOperatingCentre')->delete($aoc);
         } else {
             $this->variationDelete($id, $application);
         }
@@ -63,6 +66,11 @@ final class DeleteOperatingCentre extends AbstractCommandHandler implements Tran
     public function variationDelete($id, ApplicationEntity $application)
     {
         $locRecord = $this->getRepo()->getReference(LicenceOperatingCentre::class, $id);
+
+        $message = $locRecord->checkCanDelete();
+        if ($message) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\BadRequestException(key($message));
+        }
 
         /** @var ApplicationOperatingCentre $aocRecord */
         $aocRecord = EntityCloner::cloneEntityInto($locRecord, ApplicationOperatingCentre::class);

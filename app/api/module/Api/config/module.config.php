@@ -13,7 +13,9 @@ return [
     'service_manager' => [
         'alias' => [
             'PublicationContextPlugin' => \Dvsa\Olcs\Api\Service\Publication\Context\PluginManager::class,
-            'PublicationProcessPlugin' => \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class
+            'PublicationProcessPlugin' => \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class,
+            'SubmissionContextPlugin' => \Dvsa\Olcs\Api\Service\Submission\Context\PluginManager::class,
+            'SubmissionProcessPlugin' => \Dvsa\Olcs\Api\Service\Submission\Process\PluginManager::class
         ],
         'invokables' => [
             'Document' => \Dvsa\Olcs\Api\Service\Document\Document::class,
@@ -45,13 +47,23 @@ return [
             'CpmsIdentityProvider' => \Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
             'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperService::class,
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
+            'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
+
             \Dvsa\Olcs\Api\Service\Publication\PublicationGenerator::class =>
                 \Dvsa\Olcs\Api\Service\Publication\PublicationGeneratorFactory::class,
+
             \Dvsa\Olcs\Api\Service\Publication\Context\PluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Publication\Context\PluginManagerFactory::class,
+
             \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Publication\Process\PluginManagerFactory::class,
-            'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
+
+            \Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator::class =>
+                \Dvsa\Olcs\Api\Service\Submission\SubmissionGeneratorFactory::class,
+
+            \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManagerFactory::class,
+
         ],
     ],
     'file_uploader' => [
@@ -119,7 +131,7 @@ return [
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
             'Cases' => RepositoryFactory::class,
-            'Pi' => \Dvsa\Olcs\Api\Domain\Repository\PiFactory::class,
+            'Pi' => RepositoryFactory::class,
             'NonPi' => RepositoryFactory::class,
             'EventHistory' => RepositoryFactory::class,
             'PublicHoliday' => RepositoryFactory::class,
@@ -147,9 +159,10 @@ return [
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
             'Stay' => RepositoryFactory::class,
+            'Submission ' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
             'IrfoPartner' => RepositoryFactory::class,
-            'Payment' => RepositoryFactory::class,
+            'Transaction' => RepositoryFactory::class,
             'TransportManager' => RepositoryFactory::class,
             'DocParagraph' => RepositoryFactory::class,
             'Opposition' => RepositoryFactory::class,
@@ -166,6 +179,7 @@ return [
             'Person' => RepositoryFactory::class,
             'ApplicationOperatingCentre' => RepositoryFactory::class,
             'LicenceOperatingCentre' => RepositoryFactory::class,
+            'TmCaseDecision' => RepositoryFactory::class,
             'TmEmployment' => RepositoryFactory::class,
             'TmQualification' => RepositoryFactory::class,
             'DocTemplate' => RepositoryFactory::class,
@@ -205,6 +219,10 @@ return [
             'PostcodeEnforcementArea' => RepositoryFactory::class,
             'PiVenue' => RepositoryFactory::class,
             'Disqualification' => RepositoryFactory::class,
+            'DiscSequence' => RepositoryFactory::class,
+            'EbsrSubmission' => RepositoryFactory::class,
+            'TxcInbox' => RepositoryFactory::class,
+            'OrganisationUser' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
@@ -417,5 +435,6 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantCancelText3::class
             ],
         ),
-    ]
+    ],
+    'submissions' => require(__DIR__ . '/submissions.config.php')
 ];

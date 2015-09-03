@@ -8,11 +8,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Vehicle;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Vehicle\CeaseActiveDiscs;
-use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
@@ -120,7 +118,8 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
             'platedWeight' => 100,
             'specifiedDate' => '2015-01-01',
             'receivedDate' => '2015-02-02',
-            'version' => 1
+            'version' => 1,
+            'seedDate' => null
         ];
         $command = Cmd::create($data);
 
@@ -130,6 +129,7 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
         /** @var LicenceVehicle $licenceVehicle */
         $licenceVehicle = m::mock(LicenceVehicle::class)->makePartial();
         $licenceVehicle->setVehicle($vehicle);
+        $licenceVehicle->setWarningLetterSeedDate(new DateTime());
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(Permission::INTERNAL_USER, null)
@@ -155,6 +155,53 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertEquals('2015-01-01', $licenceVehicle->getSpecifiedDate()->format('Y-m-d'));
         $this->assertEquals('2015-02-02', $licenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
+        $this->assertNull($licenceVehicle->getWarningLetterSeedDate());
+    }
+
+    public function testHandleCommandUpdateSeedDates()
+    {
+        $data = [
+            'platedWeight' => 100,
+            'specifiedDate' => '2015-01-01',
+            'receivedDate' => '2015-02-02',
+            'version' => 1,
+            'seedDate' => '2015-01-01'
+        ];
+        $command = Cmd::create($data);
+
+        /** @var Vehicle $vehicle */
+        $vehicle = m::mock(Vehicle::class)->makePartial();
+
+        /** @var LicenceVehicle $licenceVehicle */
+        $licenceVehicle = m::mock(LicenceVehicle::class)->makePartial();
+        $licenceVehicle->setVehicle($vehicle);
+        $licenceVehicle->setWarningLetterSeedDate(new DateTime());
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn(true);
+
+        $this->repoMap['LicenceVehicle']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($licenceVehicle)
+            ->shouldReceive('save')
+            ->with($licenceVehicle);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Vehicle updated'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals('2015-01-01', $licenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+        $this->assertEquals('2015-02-02', $licenceVehicle->getReceivedDate()->format('Y-m-d'));
+        $this->assertEquals(100, $vehicle->getPlatedWeight());
+        $this->assertEquals('2015-01-01', $licenceVehicle->getWarningLetterSeedDate()->format('Y-m-d'));
     }
 
     public function testHandleCommandUpdateRemoved()

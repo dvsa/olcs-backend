@@ -30,6 +30,7 @@ class Queue extends AbstractQueue
     const TYPE_COMPANIES_HOUSE_INITIAL = 'que_typ_ch_initial';
     const TYPE_COMPANIES_HOUSE_COMPARE = 'que_typ_ch_compare';
     const TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER = 'que_typ_cont_check_rem_gen_let';
+    const TYPE_CPID_EXPORT_CSV = 'que_typ_cpid_export_csv';
 
     public function incrementAttempts()
     {

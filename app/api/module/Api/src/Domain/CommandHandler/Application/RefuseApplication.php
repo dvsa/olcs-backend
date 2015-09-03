@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -15,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Refuse;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Class RefuseApplication
@@ -64,7 +66,27 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
                 )
             )
         );
-        $this->clearLicenceVehicleSpecifiedDates($application->getLicence()->getLicenceVehicles());
+        $this->clearLicenceVehicleSpecifiedDatesAndInterimApp($application->getLicence()->getLicenceVehicles());
+
+        $communityLicences = $application->getLicence()->getCommunityLics()->toArray();
+        if (!empty($communityLicences)) {
+            $result->merge(
+                $this->handleSideEffect(
+                    ReturnAllCommunityLicences::create(
+                        [
+                            'id' => $application->getLicence()->getId(),
+                        ]
+                    )
+                )
+            );
+        }
+
+        if (
+            $application->isGoods() &&
+            $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
+        ) {
+            $result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
+        }
 
         $result->addMessage('Application ' . $application->getId() . ' refused.');
 
@@ -77,10 +99,11 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
         return $this->handleSideEffect(CreateSnapshotCmd::create($data));
     }
 
-    protected function clearLicenceVehicleSpecifiedDates($licenceVehilces)
+    protected function clearLicenceVehicleSpecifiedDatesAndInterimApp($licenceVehilces)
     {
         foreach ($licenceVehilces as $licenceVehilce) {
             $licenceVehilce->setSpecifiedDate(null);
+            $licenceVehilce->setInterimApplication(null);
             $this->getRepo('LicenceVehicle')->save($licenceVehilce);
         }
     }

@@ -5,11 +5,11 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
-use Dvsa\Olcs\Api\Entity\System\Sla;
+use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
+use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Domain\Repository\Licence;
-use Dvsa\Olcs\Api\Domain\Repository\Sla as SlaRepo;
 
 /**
  * PI
@@ -18,67 +18,79 @@ final class Pi extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Pi';
 
+    protected $extraRepos = ['Licence', 'Sla'];
+
+    protected $bundle = [
+        'piStatus' => [],
+        'piTypes' => [],
+        'reasons' => [],
+        'piHearings' => [
+            'presidingTc' => [],
+            'presidedByRole' => [],
+            'piVenue' => []
+        ],
+        'writtenOutcome' => [],
+        'decidedByTc' => [],
+        'agreedByTc' => [],
+        'decidedByTcRole' => [],
+        'agreedByTcRole' => [],
+        'decisions' => [],
+        'assignedTo' => [],
+        'case' => [],
+    ];
+
     /**
      * @var SlaCalculatorInterface
      */
     private $slaService;
 
-    /**
-     * @var Licence
-     */
-    private $licenceRepo;
-
-    /**
-     * @var SlaRepo
-     */
-    private $slaRepo;
-
     public function handleQuery(QueryInterface $query)
     {
-        $case = $this->getRepo()->fetchUsingId($query, Query::HYDRATE_ARRAY);
+        /** @var PiEntity $result */
+        $result = $this->getRepo()->fetchUsingCase($query, Query::HYDRATE_OBJECT);
 
-        $this->extractHearingDate($case['pi']);
+        if ($result === null) {
+            return [];
+        }
 
-        /** @TODO change me to use queries*/
-        $licence = $this->licenceRepo->fetchByCaseId($query->getId(), Query::HYDRATE_OBJECT);
+        $slaValues = [];
 
-        $slas = $this->slaRepo->fetchByCategory('pi', Query::HYDRATE_OBJECT);
+        //we need a traffic area so we can calculate slas
+        if ($result->isTm()) {
+            //no licence for TM cases so using English TA
+            $trafficArea = $this->getRepo()->getReference(
+                TrafficAreaEntity::class,
+                TrafficAreaEntity::SE_MET_TRAFFIC_AREA_CODE
+            );
+        } else {
+            $trafficArea = $result->getCase()->getLicence()->getTrafficArea();
+        }
+
+        $slas = $this->getRepo('Sla')->fetchByCategory('pi', Query::HYDRATE_OBJECT);
 
         foreach ($slas as $sla) {
-            /** @var Sla $sla*/
-            if (isset($case['pi'][$sla->getCompareTo()]) && !empty($case['pi'][$sla->getCompareTo()])) {
+            /** @var SlaEntity $sla*/
+            $getMethod = 'get' . ucfirst($sla->getCompareTo());
 
-                $dateTime = date_create($case['pi'][$sla->getCompareTo()]);
+            if ($result->$getMethod() !== null) {
+                $dateTime = date_create($result->$getMethod());
 
-                if ($dateTime && $sla->appliesTo($dateTime)) {
-                    $targetDate = $this->slaService->applySla($dateTime, $sla, $licence->getTrafficArea());
-                    $case['pi'][$sla->getField() . 'Target'] = $targetDate->format('Y-m-d');
+                if ($sla->appliesTo($dateTime)) {
+                    $targetDate = $this->slaService->applySla($dateTime, $sla, $trafficArea);
+                    $slaValues[$sla->getField() . 'Target'] = $targetDate->format('Y-m-d');
                 }
             }
 
-            if (!isset($case['pi'][$sla->getField() . 'Target'])) {
-                $case['pi'][$sla->getField() . 'Target'] = '';
+            if (!isset($slaValues[$sla->getField() . 'Target'])) {
+                $slaValues[$sla->getField() . 'Target'] = '';
             }
         }
 
-        return $case;
-    }
-
-    /**
-     * @param $data
-     * @return mixed
-     */
-    protected function extractHearingDate(&$data)
-    {
-        if (isset($data['piHearings']) && is_array($data['piHearings']) && count($data['piHearings']) > 0) {
-            $hearing = end($data['piHearings']);
-            if ($hearing['isAdjourned'] != 'Y' && $hearing['isCancelled'] != 'Y') {
-                $data['hearingDate'] = $hearing['hearingDate'];
-            }
-        }
-        if (!isset($data['hearingDate'])) {
-            $data['hearingDate'] = '';
-        }
+        return $this->result(
+            $result,
+            $this->bundle,
+            $slaValues
+        );
     }
 
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -87,8 +99,6 @@ final class Pi extends AbstractQueryHandler
         $serviceLocator = $serviceLocator->getServiceLocator();
 
         $this->slaService = $serviceLocator->get(SlaCalculatorInterface::class);
-        $this->slaRepo = $serviceLocator->get('RepositoryServiceManager')->get('Sla');
-        $this->licenceRepo = $serviceLocator->get('RepositoryServiceManager')->get('Licence');
 
         return $this;
     }

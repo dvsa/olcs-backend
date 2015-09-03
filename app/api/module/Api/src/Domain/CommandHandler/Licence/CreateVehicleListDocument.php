@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\CreateDocument;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Create Vehicle List Document
@@ -23,22 +25,29 @@ use Dvsa\Olcs\Transfer\Command\Document\CreateDocument;
  */
 final class CreateVehicleListDocument extends AbstractCommandHandler implements
     TransactionedInterface,
-    DocumentGeneratorAwareInterface
+    DocumentGeneratorAwareInterface,
+    AuthAwareInterface
 {
-    use DocumentGeneratorAwareTrait;
+    use DocumentGeneratorAwareTrait,
+        AuthAwareTrait;
 
     protected $repoServiceName = 'Licence';
 
     public function handleCommand(CommandInterface $command)
     {
-        $content = $this->getDocumentGenerator()->generateFromTemplate(
-            'GVVehiclesList',
+        if ($command->getType() === 'dp') {
+            $template = 'GVDiscLetter';
+        } else {
+            $template = 'GVVehiclesList';
+        }
+
+        $file = $this->getDocumentGenerator()->generateAndStore(
+            $template,
             [
-                'licence' => $command->getId()
+                'licence' => $command->getId(),
+                'user' => $this->getCurrentUser()
             ]
         );
-
-        $file = $this->getDocumentGenerator()->uploadGeneratedContent($content);
 
         $fileName = date('YmdHi') . '_Goods_Vehicle_List.rtf';
 

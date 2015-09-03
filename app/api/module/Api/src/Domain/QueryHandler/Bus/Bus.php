@@ -23,7 +23,7 @@ class Bus extends AbstractQueryHandler
             $busReg,
             [
                 'licence' => [
-                    'organisation',
+                    'organisation' => ['disqualifications'],
                     'licenceType',
                     'status',
                 ],

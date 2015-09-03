@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -17,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\Licence\NotTakenUp;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Delete;
-use Dvsa\Olcs\Api\Domain\Command\CommunityLic\Void;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Class NotTakenUpApplication
@@ -65,7 +66,7 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
                 )
             )
         );
-        $this->clearLicenceVehicleSpecifiedDates($application->getLicence()->getLicenceVehicles());
+        $this->clearLicenceVehicleSpecifiedDatesAndInterimApp($application->getLicence()->getLicenceVehicles());
 
         $result->merge(
             $this->handleSideEffect(
@@ -99,19 +100,20 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
         if (!empty($communityLicences)) {
             $result->merge(
                 $this->handleSideEffect(
-                    Void::create(
+                    ReturnAllCommunityLicences::create(
                         [
-                            'licence' => $application->getLicence(),
-                            'communityLicences' => array_map(
-                                function ($cl) {
-                                    return $cl->getId();
-                                },
-                                $communityLicences
-                            )
+                            'id' => $application->getLicence()->getId(),
                         ]
                     )
                 )
             );
+        }
+
+        if (
+            $application->isGoods() &&
+            $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
+        ) {
+            $result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
         }
 
         $result->addMessage('Application ' . $application->getId() . ' set to not taken up.');
@@ -125,10 +127,11 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
         return $this->handleSideEffect(CreateSnapshotCmd::create($data));
     }
 
-    protected function clearLicenceVehicleSpecifiedDates($licenceVehilces)
+    protected function clearLicenceVehicleSpecifiedDatesAndInterimApp($licenceVehilces)
     {
         foreach ($licenceVehilces as $licenceVehilce) {
             $licenceVehilce->setSpecifiedDate(null);
+            $licenceVehilce->setInterimApplication(null);
             $this->getRepo('LicenceVehicle')->save($licenceVehilce);
         }
     }

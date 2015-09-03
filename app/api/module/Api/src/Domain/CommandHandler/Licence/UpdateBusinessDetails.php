@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -68,8 +67,6 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
         // Optimistic locking on the org
         $this->getRepo('Organisation')->lock($organisation, $command->getVersion());
 
-        $this->result = new Result();
-
         $this->updateTradingNames(
             $licence->getId(),
             $organisation->getId(),
@@ -80,19 +77,10 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
 
         $this->maybeUpdateOrganisation($command, $organisation);
 
-        if (!$command->getPartial() && $command->getNatureOfBusinesses() == null) {
-            throw new ValidationException(
-                [
-                    'natureOfBusinesses' => [
-                        [
-                            'Value is required and can\'t be empty' => 'Value is required and can\'t be empty'
-                        ]
-                    ]
-                ]
-            );
+        if ($organisation->getNatureOfBusiness() !== $command->getNatureOfBusiness()) {
+            $organisation->setNatureOfBusiness($command->getNatureOfBusiness());
+            $this->hasChangedOrg = true;
         }
-
-        $this->updateNatureOfBusinesses($command->getNatureOfBusinesses(), $organisation);
 
         if ($this->hasChangedOrg) {
             $this->isDirty = true;
@@ -104,62 +92,18 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
 
         if ($this->isDirty && $this->isGranted(Permission::SELFSERVE_USER)) {
             $taskData = [
-                'category' => Category::CATEGORY_APPLICATION,
-                'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SUBSIDIARY_DIGITAL,
+                'category' => Category::CATEGORY_LICENSING,
+                'subCategory' => Category::TASK_SUB_CATEGORY_BUSINESS_DETAILS_CHANGE,
                 'description' => 'Change to business details',
                 'licence' => $licence->getId()
             ];
 
-            $this->result->merge($this->getCommandHandler()->handleCommand(CreateTask::create($taskData)));
+            $this->result->merge($this->handleSideEffect(CreateTask::create($taskData)));
         }
 
         $this->result->setFlag('hasChanged', $this->isDirty);
 
         return $this->result;
-    }
-
-    private function updateNatureOfBusinesses(array $nobList, Organisation $organisation)
-    {
-        $nobObjects = [];
-
-        foreach ($nobList as $nob) {
-            $nobObjects[] = $this->getRepo()->getRefdataReference($nob);
-        }
-
-        $current = $organisation->getNatureOfBusinesses();
-
-        $added = 0;
-        $removed = 0;
-        $initial = $current->count();
-
-        foreach ($nobObjects as $nob) {
-            // If we need to add a new one
-            if (!$current->contains($nob)) {
-                $added++;
-                $this->isDirty = true;
-                $this->hasChangedOrg = true;
-                $current->add($nob);
-                continue;
-            }
-        }
-
-        $list = $current->getIterator();
-
-        foreach ($list as $nob) {
-            if (!in_array($nob, $nobObjects)) {
-                $removed++;
-                $this->isDirty = true;
-                $this->hasChangedOrg = true;
-                $current->removeElement($nob);
-                continue;
-            }
-        }
-
-        $unchanged = $initial - $removed;
-
-        $this->result->addMessage($added . ' new nature(s) of business');
-        $this->result->addMessage($unchanged . ' unchanged nature(s) of business');
-        $this->result->addMessage($removed . ' nature(s) of business removed');
     }
 
     private function canUpdateOrganisation($organisation)
@@ -171,14 +115,14 @@ final class UpdateBusinessDetails extends AbstractCommandHandler implements Auth
     {
         $address['contactType'] = ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS;
 
-        return $this->getCommandHandler()->handleCommand(
+        return $this->handleSideEffect(
             SaveAddress::create($address)
         );
     }
 
     private function updateTradingNames($licenceId, $organisationId, $tradingNames)
     {
-        $result = $this->getCommandHandler()->handleCommand(
+        $result = $this->handleSideEffect(
             UpdateTradingNames::create(
                 [
                     'licence' => $licenceId,

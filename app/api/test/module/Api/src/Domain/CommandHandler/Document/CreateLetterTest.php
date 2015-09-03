@@ -32,6 +32,7 @@ class CreateLetterTest extends CommandHandlerTestCase
         $this->mockRepo('DocTemplate', DocTemplate::class);
 
         $this->mockedSmServices['DocumentGenerator'] = m::mock(DocumentGenerator::class);
+        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
 
         parent::setUp();
     }
@@ -45,6 +46,10 @@ class CreateLetterTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $queryData = ['details' => ['category' => '123', 'documentSubCategory' => '321']];
+        $expectedQueryData = ['details' => ['category' => '123', 'documentSubCategory' => '321'], 'user' => 456];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser->getId')
+            ->andReturn(456);
 
         $data = [
             'template' => 111,
@@ -64,7 +69,7 @@ class CreateLetterTest extends CommandHandlerTestCase
 
         /** @var Entity\Doc\DocTemplate $template */
         $template = m::mock(Entity\Doc\DocTemplate::class)->makePartial();
-        $template->setDescription('Foo-Bar_Cake Cheese');
+        $template->setDescription('Foo-:Bar_Cake Cheese');
         $template->shouldReceive('getDocument->getIdentifier')
             ->andReturn('Foo-Bar_Cake Cheese.rtf');
 
@@ -73,7 +78,7 @@ class CreateLetterTest extends CommandHandlerTestCase
         $expectedFilename = $date . '_Foo-Bar_Cake_Cheese.rtf';
 
         $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateFromTemplateIdentifier')
-            ->with('Foo-Bar_Cake_Cheese.rtf', $queryData)
+            ->with('Foo-Bar_Cake_Cheese.rtf', $expectedQueryData)
             ->andReturn($content)
             ->shouldReceive('uploadGeneratedContent')
             ->once()
@@ -88,7 +93,7 @@ class CreateLetterTest extends CommandHandlerTestCase
         $result->addMessage('CreateDocumentSpecific');
         $data = [
             'identifier' => 12345,
-            'description' => 'Foo-Bar_Cake Cheese',
+            'description' => 'Foo-:Bar_Cake Cheese',
             'filename' => $expectedFilename,
             'category' => '123',
             'subCategory' => '321',
