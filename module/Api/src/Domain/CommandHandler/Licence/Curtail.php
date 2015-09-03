@@ -49,19 +49,6 @@ final class Curtail extends AbstractCommandHandler implements TransactionedInter
             );
         }
 
-        $communityLicences = $licence->getCommunityLics()->toArray();
-        if (!empty($communityLicences)) {
-            $result->merge(
-                $this->handleSideEffect(
-                    ReturnAllCommunityLicences::create(
-                        [
-                            'id' => $licence->getId(),
-                        ]
-                    )
-                )
-            );
-        }
-
         $result->addMessage("Licence ID {$licence->getId()} curtailed");
 
         return $result;
