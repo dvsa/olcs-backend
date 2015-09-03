@@ -23,23 +23,20 @@ final class ProhibitionHistory extends AbstractSection
         $prohibitions = $case->getProhibitions();
 
         $data = [];
-        for ($i=0; $i<count($prohibitions); $i++) {
-            /** @var Prohibition $prohibition */
-            $prohibition = $prohibitions->current();
 
+        /** @var Prohibition $entity */
+        foreach ($prohibitions as $prohibition) {
             $thisRow = array();
             $thisRow['id'] = $prohibition->getId();
             $thisRow['version'] = $prohibition->getVersion();
-            $thisRow['prohibitionDate'] = $prohibition->getProhibitionDate();
-            $thisRow['clearedDate'] = $prohibition->getClearedDate();
+            $thisRow['prohibitionDate'] = $this->formatDate($prohibition->getProhibitionDate());
+            $thisRow['clearedDate'] = $this->formatDate($prohibition->getClearedDate());
             $thisRow['vehicle'] = $prohibition->getVrm();
             $thisRow['trailer'] = $prohibition->getIsTrailer();
             $thisRow['imposedAt'] = $prohibition->getImposedAt();
             $thisRow['prohibitionType'] = $prohibition->getProhibitionType()->getDescription();
 
             $data[] = $thisRow;
-
-            $prohibitions->next();
         }
 
         return [

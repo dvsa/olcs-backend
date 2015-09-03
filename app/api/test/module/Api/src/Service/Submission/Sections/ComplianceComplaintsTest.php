@@ -31,7 +31,7 @@ class ComplianceComplaintsTest extends SubmissionSectionTest
                             'complainantForename' => 'fn22',
                             'complainantFamilyName' => 'sn22',
                             'description' => null,
-                            'complaintDate' => new \DateTime('2006-06-03')
+                            'complaintDate' => '03/06/2006'
                         ],
                         1 => [
                             'id' => 253,
@@ -39,7 +39,7 @@ class ComplianceComplaintsTest extends SubmissionSectionTest
                             'complainantForename' => 'fn22',
                             'complainantFamilyName' => 'sn22',
                             'description' => null,
-                            'complaintDate' => new \DateTime('2006-06-03')
+                            'complaintDate' => '03/06/2006'
                         ]
                     ]
                 ]
