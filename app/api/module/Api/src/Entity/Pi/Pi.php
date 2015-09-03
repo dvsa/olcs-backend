@@ -10,6 +10,9 @@ use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\CloseableInterface;
+use Dvsa\Olcs\Api\Entity\ReopenableInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
  * Pi Entity
@@ -33,7 +36,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *    }
  * )
  */
-class Pi extends AbstractPi
+class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 {
     const STATUS_REGISTERED = 'pi_s_reg';
 
@@ -248,18 +251,49 @@ class Pi extends AbstractPi
     }
 
     /**
+     * Close the Pi
+     */
+    public function close()
+    {
+        if (!$this->canClose()) {
+            throw new ForbiddenException('Pi is not allowed to be closed');
+        }
+
+        $this->closedDate = new \DateTime();
+    }
+
+    /**
+     * Reopen the Pi
+     */
+    public function reopen()
+    {
+        if (!$this->canReopen()) {
+            throw new ForbiddenException('Pi is not allowed to be reopened');
+        }
+
+        $this->closedDate = null;
+    }
+
+    /**
      * Can the Pi be closed?
      *
      * @return bool
      */
     public function canClose()
     {
+        //if latest pi hearing is cancelled
         if ($this->piHearings->count() > 0) {
-            if ($this->piHearings->first()->getCancelledDate() !== null) {
+            if ($this->piHearings->last()->getIsCancelled() === 'Y') {
                 return !$this->isClosed();
             }
         }
 
+        //sla fields not specific to the decision
+        if ($this->callUpLetterDate === null || $this->briefToTcDate === null) {
+            return false;
+        }
+
+        //sla fields specific to the decision
         if ($this->writtenOutcome !== null) {
             $writtenOutcomeId = $this->writtenOutcome->getId();
 
@@ -358,6 +392,7 @@ class Pi extends AbstractPi
         return [
             'isClosed' => $this->isClosed(),
             'canReopen' => $this->canReopen(),
+            'canClose' => $this->canClose(),
             'hearingDate' => $this->getHearingDate(),
             'isTm' => $this->isTm()
         ];
