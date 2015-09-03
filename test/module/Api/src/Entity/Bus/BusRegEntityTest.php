@@ -1403,21 +1403,6 @@ class BusRegEntityTest extends EntityTester
         $this->assertEquals(true, $this->entity->isGrantable($fee));
     }
 
-    public function testIsGrantableWithFeeWaived()
-    {
-        $this->getAssertionsForIsGrantable();
-
-        $feeType = new FeeTypeEntity();
-
-        $status = new RefDataEntity();
-        $status->setId(FeeEntity::STATUS_WAIVED);
-
-        $fee = new FeeEntity($feeType, 10, $status);
-
-        // Grantable - Rule: Other - isShortNotice: N - Fee: waived
-        $this->assertEquals(true, $this->entity->isGrantable($fee));
-    }
-
     public function testIsGrantableWithFeeOutstanding()
     {
         $this->getAssertionsForIsGrantable();
