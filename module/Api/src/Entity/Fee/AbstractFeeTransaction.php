@@ -8,27 +8,39 @@ use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * FeePayment Abstract Entity
+ * FeeTransaction Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="fee_payment",
+ * @ORM\Table(name="fee_transaction",
  *    indexes={
- *        @ORM\Index(name="ix_fee_payment_payment_id", columns={"payment_id"}),
- *        @ORM\Index(name="ix_fee_payment_fee_id", columns={"fee_id"}),
- *        @ORM\Index(name="ix_fee_payment_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_fee_payment_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_fee_transaction_transaction_id", columns={"transaction_id"}),
+ *        @ORM\Index(name="ix_fee_transaction_fee_id", columns={"fee_id"}),
+ *        @ORM\Index(name="ix_fee_transaction_reversed_fee_transaction_id",
+     *     columns={"reversed_fee_transaction_id"}),
+ *        @ORM\Index(name="ix_fee_transaction_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_fee_transaction_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_fee_payment_fee_id_payment_id", columns={"fee_id","payment_id"})
+ *        @ORM\UniqueConstraint(name="uk_fee_transaction_fee_id_transaction_id",
+     *     columns={"fee_id","transaction_id"})
  *    }
  * )
  */
-abstract class AbstractFeePayment implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractFeeTransaction implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
+
+    /**
+     * Amount
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal", name="amount", precision=10, scale=2, nullable=true)
+     */
+    protected $amount;
 
     /**
      * Created by
@@ -57,20 +69,12 @@ abstract class AbstractFeePayment implements BundleSerializableInterface, JsonSe
      * @ORM\ManyToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee",
      *     fetch="LAZY",
-     *     inversedBy="feePayments"
+     *     cascade={"persist"},
+     *     inversedBy="feeTransactions"
      * )
      * @ORM\JoinColumn(name="fee_id", referencedColumnName="id", nullable=false)
      */
     protected $fee;
-
-    /**
-     * Fee value
-     *
-     * @var float
-     *
-     * @ORM\Column(type="decimal", name="fee_value", precision=10, scale=2, nullable=true)
-     */
-    protected $feeValue;
 
     /**
      * Identifier - Id
@@ -103,18 +107,29 @@ abstract class AbstractFeePayment implements BundleSerializableInterface, JsonSe
     protected $lastModifiedOn;
 
     /**
-     * Payment
+     * Reversed fee transaction
      *
-     * @var \Dvsa\Olcs\Api\Entity\Fee\Payment
+     * @var \Dvsa\Olcs\Api\Entity\Fee\FeeTransaction
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Fee\FeeTransaction", fetch="LAZY")
+     * @ORM\JoinColumn(name="reversed_fee_transaction_id", referencedColumnName="id", nullable=true)
+     */
+    protected $reversedFeeTransaction;
+
+    /**
+     * Transaction
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Fee\Transaction
      *
      * @ORM\ManyToOne(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\Payment",
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\Transaction",
      *     fetch="LAZY",
-     *     inversedBy="feePayments"
+     *     cascade={"persist"},
+     *     inversedBy="feeTransactions"
      * )
-     * @ORM\JoinColumn(name="payment_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="transaction_id", referencedColumnName="id", nullable=false)
      */
-    protected $payment;
+    protected $transaction;
 
     /**
      * Version
@@ -127,10 +142,33 @@ abstract class AbstractFeePayment implements BundleSerializableInterface, JsonSe
     protected $version = 1;
 
     /**
+     * Set the amount
+     *
+     * @param float $amount
+     * @return FeeTransaction
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    /**
+     * Get the amount
+     *
+     * @return float
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
      * Set the created by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy
-     * @return FeePayment
+     * @return FeeTransaction
      */
     public function setCreatedBy($createdBy)
     {
@@ -153,7 +191,7 @@ abstract class AbstractFeePayment implements BundleSerializableInterface, JsonSe
      * Set the created on
      *
      * @param \DateTime $createdOn
-     * @return FeePayment
+     * @return FeeTransaction
      */
     public function setCreatedOn($createdOn)
     {
@@ -176,7 +214,7 @@ abstract class AbstractFeePayment implements BundleSerializableInterface, JsonSe
      * Set the fee
      *
      * @param \Dvsa\Olcs\Api\Entity\Fee\Fee $fee
-     * @return FeePayment
+     * @return FeeTransaction
      */
     public function setFee($fee)
     {
@@ -196,33 +234,10 @@ abstract class AbstractFeePayment implements BundleSerializableInterface, JsonSe
     }
 
     /**
-     * Set the fee value
-     *
-     * @param float $feeValue
-     * @return FeePayment
-     */
-    public function setFeeValue($feeValue)
-    {
-        $this->feeValue = $feeValue;
-
-        return $this;
-    }
-
-    /**
-     * Get the fee value
-     *
-     * @return float
-     */
-    public function getFeeValue()
-    {
-        return $this->feeValue;
-    }
-
-    /**
      * Set the id
      *
      * @param int $id
-     * @return FeePayment
+     * @return FeeTransaction
      */
     public function setId($id)
     {
@@ -245,7 +260,7 @@ abstract class AbstractFeePayment implements BundleSerializableInterface, JsonSe
      * Set the last modified by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
-     * @return FeePayment
+     * @return FeeTransaction
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -268,7 +283,7 @@ abstract class AbstractFeePayment implements BundleSerializableInterface, JsonSe
      * Set the last modified on
      *
      * @param \DateTime $lastModifiedOn
-     * @return FeePayment
+     * @return FeeTransaction
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -288,33 +303,56 @@ abstract class AbstractFeePayment implements BundleSerializableInterface, JsonSe
     }
 
     /**
-     * Set the payment
+     * Set the reversed fee transaction
      *
-     * @param \Dvsa\Olcs\Api\Entity\Fee\Payment $payment
-     * @return FeePayment
+     * @param \Dvsa\Olcs\Api\Entity\Fee\FeeTransaction $reversedFeeTransaction
+     * @return FeeTransaction
      */
-    public function setPayment($payment)
+    public function setReversedFeeTransaction($reversedFeeTransaction)
     {
-        $this->payment = $payment;
+        $this->reversedFeeTransaction = $reversedFeeTransaction;
 
         return $this;
     }
 
     /**
-     * Get the payment
+     * Get the reversed fee transaction
      *
-     * @return \Dvsa\Olcs\Api\Entity\Fee\Payment
+     * @return \Dvsa\Olcs\Api\Entity\Fee\FeeTransaction
      */
-    public function getPayment()
+    public function getReversedFeeTransaction()
     {
-        return $this->payment;
+        return $this->reversedFeeTransaction;
+    }
+
+    /**
+     * Set the transaction
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Fee\Transaction $transaction
+     * @return FeeTransaction
+     */
+    public function setTransaction($transaction)
+    {
+        $this->transaction = $transaction;
+
+        return $this;
+    }
+
+    /**
+     * Get the transaction
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Fee\Transaction
+     */
+    public function getTransaction()
+    {
+        return $this->transaction;
     }
 
     /**
      * Set the version
      *
      * @param int $version
-     * @return FeePayment
+     * @return FeeTransaction
      */
     public function setVersion($version)
     {

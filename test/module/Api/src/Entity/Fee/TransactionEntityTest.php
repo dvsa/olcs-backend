@@ -3,16 +3,16 @@
 namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as Entity;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as Entity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 
 /**
- * Payment Entity Unit Tests
+ * Transaction Entity Unit Tests
  *
  * Initially auto-generated but won't be overridden
  */
-class PaymentEntityTest extends EntityTester
+class TransactionEntityTest extends EntityTester
 {
     /**
      * Define the entity to test
@@ -25,9 +25,9 @@ class PaymentEntityTest extends EntityTester
     {
         $sut = $this->instantiate($this->entityClass);
 
-        $feePayments = $sut->getFeePayments();
+        $feeTransactions = $sut->getFeeTransactions();
 
-        $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $feePayments);
+        $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $feeTransactions);
     }
 
     /**
@@ -89,6 +89,27 @@ class PaymentEntityTest extends EntityTester
     }
 
     /**
+     * @param string $status
+     * @param boolean $expected
+     *
+     * @dataProvider isPaidProvider
+     */
+    public function testIsComplete($status, $expected)
+    {
+        $sut = new $this->entityClass;
+
+        $status = m::mock(RefData::class)
+            ->shouldReceive('getId')
+            ->once()
+            ->andReturn($status)
+            ->getMock();
+
+        $sut->setStatus($status);
+
+        $this->assertEquals($expected, $sut->isComplete());
+    }
+
+    /**
      * @return array
      */
     public function isPaidProvider()
@@ -99,6 +120,7 @@ class PaymentEntityTest extends EntityTester
             [Entity::STATUS_LEGACY, false],
             [Entity::STATUS_FAILED, false],
             [Entity::STATUS_PAID, true],
+            [Entity::STATUS_COMPLETE, true],
             ['invalid', false],
         ];
     }

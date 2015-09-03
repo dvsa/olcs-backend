@@ -5,9 +5,8 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\Olcs\Api\Domain\Command\Payment;
+namespace Dvsa\Olcs\Api\Domain\Command\Transaction;
 
-use Dvsa\Olcs\Api\Entity\Fee\Payment;
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**

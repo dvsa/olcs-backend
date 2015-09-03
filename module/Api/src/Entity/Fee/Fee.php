@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Fee;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Fee Entity
@@ -18,13 +19,11 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *        @ORM\Index(name="ix_fee_task_id", columns={"task_id"}),
  *        @ORM\Index(name="ix_fee_fee_type_id", columns={"fee_type_id"}),
  *        @ORM\Index(name="ix_fee_parent_fee_id", columns={"parent_fee_id"}),
- *        @ORM\Index(name="ix_fee_waive_recommender_user_id", columns={"waive_recommender_user_id"}),
- *        @ORM\Index(name="ix_fee_waive_approver_user_id", columns={"waive_approver_user_id"}),
  *        @ORM\Index(name="ix_fee_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_fee_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_fee_irfo_gv_permit_id", columns={"irfo_gv_permit_id"}),
- *        @ORM\Index(name="ix_fee_fee_status", columns={"fee_status"}),
- *        @ORM\Index(name="ix_fee_payment_method", columns={"payment_method"})
+ *        @ORM\Index(name="ix_fee_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
+ *        @ORM\Index(name="ix_fee_fee_status", columns={"fee_status"})
  *    }
  * )
  */
@@ -32,8 +31,8 @@ class Fee extends AbstractFee
 {
     const STATUS_OUTSTANDING       = 'lfs_ot';
     const STATUS_PAID              = 'lfs_pd';
-    const STATUS_WAIVE_RECOMMENDED = 'lfs_wr';
-    const STATUS_WAIVED            = 'lfs_w';
+    const STATUS_WAIVE_RECOMMENDED = 'lfs_wr'; // @deprecated
+    const STATUS_WAIVED            = 'lfs_w'; // @deprecated
     const STATUS_CANCELLED         = 'lfs_cn';
 
     const ACCRUAL_RULE_LICENCE_START = 'acr_licence_start';
@@ -61,8 +60,8 @@ class Fee extends AbstractFee
      */
     public function hasOutstandingPayment()
     {
-        foreach ($this->getFeePayments() as $fp) {
-            if ($fp->getPayment()->isOutstanding()) {
+        foreach ($this->getFeeTransactions() as $fp) {
+            if ($fp->getTransaction()->isOutstanding()) {
                 return true;
             }
         }
@@ -111,5 +110,112 @@ class Fee extends AbstractFee
                 self::STATUS_CANCELLED,
             ]
         );
+    }
+
+    public function getReceiptNo()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getReference();
+        }
+    }
+
+    /**
+     * @todo OLCS-10407 this currently assumes only one transaction against a
+     * fee, will need updating when part payments are allowed
+     */
+    public function getReceivedAmount()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getAmount();
+        }
+    }
+
+    /**
+     * @todo OLCS-10425 will remove the need for this method
+     */
+    public function getReceivedDate()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getCompletedDate();
+        }
+    }
+
+    public function getPaymentMethod()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getPaymentMethod();
+        }
+    }
+
+    public function getProcessedBy()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            $user = $ft->getTransaction()->getProcessedByUser();
+            if ($user) {
+                return $user->getLoginId();
+            }
+        }
+    }
+
+    public function getPayer()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getPayerName();
+        }
+    }
+
+    public function getSlipNo()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getPayingInSlipNumber();
+        }
+    }
+
+    public function getChequePoNumber()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getChequePoNumber();
+        }
+    }
+
+    public function getWaiveReason()
+    {
+        $ft = $this->getFeeTransactions()->last();
+        if ($ft) {
+            return $ft->getTransaction()->getComment();
+        }
+    }
+
+    /**
+     * @return Transaction
+     */
+    public function getOutstandingWaiveTransaction()
+    {
+        $feeTransactions = $this->getFeeTransactions();
+
+        if (empty($feeTransactions)) {
+            return;
+        }
+
+        $ft = $feeTransactions->filter(
+            function ($ft) {
+                $transaction = $ft->getTransaction();
+                return (
+                    $transaction->getType()->getId() === Transaction::TYPE_WAIVE
+                    &&
+                    $transaction->getStatus()->getId() === Transaction::STATUS_OUTSTANDING
+                );
+            }
+        )->first(); // there should only ever be one!
+
+        return $ft ? $ft->getTransaction() : null;
     }
 }

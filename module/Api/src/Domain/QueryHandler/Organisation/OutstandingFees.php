@@ -36,8 +36,8 @@ class OutstandingFees extends AbstractQueryHandler
                     $fees,
                     [
                         'licence',
-                        'feePayments' => [
-                            'payment'
+                        'feeTransactions' => [
+                            'transaction'
                         ]
                     ]
                 )

@@ -5,15 +5,13 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Payment;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 
-use Dvsa\Olcs\Api\Domain\Command\Payment\ResolvePayment as ResolvePaymentCommand;
+use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Fee\FeePayment as FeePaymentEntity;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -24,9 +22,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class CompletePayment extends AbstractCommandHandler implements TransactionedInterface
+final class CompleteTransaction extends AbstractCommandHandler implements TransactionedInterface
 {
-    protected $repoServiceName = 'Payment';
+    protected $repoServiceName = 'Transaction';
 
     protected $extraRepos = ['Application'];
 
@@ -43,10 +41,10 @@ final class CompletePayment extends AbstractCommandHandler implements Transactio
         $reference = $command->getReference();
 
         // check payment status
-        $payment = $this->getRepo()->fetchbyReference($reference);
-        if (!$payment->isOutstanding()) {
+        $transaction = $this->getRepo()->fetchbyReference($reference);
+        if (!$transaction->isOutstanding()) {
             throw new ValidationException(
-                ['Invalid payment status: '.$payment->getStatus()->getId()]
+                ['Invalid transaction status: '.$transaction->getStatus()->getId()]
             );
         }
 
@@ -54,24 +52,24 @@ final class CompletePayment extends AbstractCommandHandler implements Transactio
         $this->cpmsHelper->handleResponse($reference, $command->getCpmsData());
 
         // resolve payment
-        $result->merge($this->resolvePayment($command, $payment));
+        $result->merge($this->resolvePayment($command, $transaction));
 
         // handle application submission
-        if ($payment->isPaid() && $command->getSubmitApplicationId()) {
+        if ($transaction->isPaid() && $command->getSubmitApplicationId()) {
             $result->merge($this->updateApplication($command));
         }
 
-        $result->addId('payment', $payment->getId());
+        $result->addId('transaction', $transaction->getId());
         $result->addMessage('CPMS record updated');
         return $result;
     }
 
-    protected function resolvePayment($command, $payment)
+    protected function resolvePayment($command, $transaction)
     {
         return  $this->getCommandHandler()->handleCommand(
             ResolvePaymentCommand::create(
                 [
-                    'id' => $payment->getId(),
+                    'id' => $transaction->getId(),
                     'paymentMethod' => $command->getPaymentMethod(),
                 ]
             )
