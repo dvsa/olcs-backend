@@ -52,7 +52,7 @@ class Fee extends AbstractQueryHandler
 
             // fields that the frontend may expect as they were previously
             // on the fee table
-            'receiptNo' => $fee->getReceiptNo(),
+            'receiptNo' => $fee->getLatestPaymentRef(),
             'receivedAmount' => $fee->getReceivedAmount(),
             'receivedDate' => $fee->getReceivedDate(),
             'paymentMethod' => $fee->getPaymentMethod(),

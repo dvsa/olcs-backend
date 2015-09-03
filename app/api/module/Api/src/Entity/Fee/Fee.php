@@ -113,15 +113,6 @@ class Fee extends AbstractFee
     }
 
     /**
-     * @deprecated will be removed in OLCS-10426
-     * @see getLatestPaymentRef()
-     */
-    public function getReceiptNo()
-    {
-        return $this->getLatestPaymentRef();
-    }
-
-    /**
      * @todo OLCS-10407 this currently assumes only one transaction against a
      * fee, will need updating when part payments are allowed
      */
