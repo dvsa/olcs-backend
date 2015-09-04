@@ -671,6 +671,7 @@ return [
     TransferCommand\Tm\Create::class => CommandHandler\Tm\Create::class,
     TransferCommand\Tm\Update::class => CommandHandler\Tm\Update::class,
     TransferCommand\Tm\Remove::class => CommandHandler\Tm\Remove::class,
+    TransferCommand\Tm\Merge::class => CommandHandler\Tm\Merge::class,
 
     // Task
     TransferCommand\Task\CloseTasks::class => CommandHandler\Task\CloseTasks::class,

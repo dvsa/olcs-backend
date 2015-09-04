@@ -32,27 +32,30 @@ class TransportManagerTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $bundle = [
-                'tmType',
-                'tmStatus',
-                'homeCd' => [
-                    'person' => [
-                        'title'
-                    ],
-                    'address' => [
-                        'countryCode'
-                    ]
+            'tmType',
+            'tmStatus',
+            'homeCd' => [
+                'person' => [
+                    'title'
                 ],
-                'workCd' => [
-                    'address' => [
-                        'countryCode'
-                    ]
+                'address' => [
+                    'countryCode'
                 ]
+            ],
+            'workCd' => [
+                'address' => [
+                    'countryCode'
+                ]
+            ],
+            'users',
         ];
         $query = Query::create(['id' => 1]);
 
         $mock = m::mock(BundleSerializableInterface::class)
             ->shouldReceive('getUsers')
             ->andReturn([1,2,3])
+            ->shouldReceive('getMergeToTransportManager')
+            ->andReturn(null)
             ->shouldReceive('serialize')->with($bundle)
             ->once()
             ->andReturn(['foo'])
@@ -64,6 +67,9 @@ class TransportManagerTest extends QueryHandlerTestCase
             ->once()
             ->andReturn($mock);
 
-        $this->assertSame(['foo', 'hasUsers' => [1,2,3]], $this->sut->handleQuery($query)->serialize());
+        $this->assertSame(
+            ['foo', 'hasUsers' => [1,2,3], 'hasBeenMerged' => false],
+            $this->sut->handleQuery($query)->serialize()
+        );
     }
 }
