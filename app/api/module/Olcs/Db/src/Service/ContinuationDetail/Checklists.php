@@ -33,7 +33,6 @@ class Checklists implements ServiceLocatorAwareInterface
     const LICENCE_CATEGORY_PSV = 'lcat_psv';
 
     const FEE_STATUS_OUTSTANDING = 'lfs_ot';
-    const FEE_STATUS_WAIVE_RECOMMENDED = 'lfs_wr';
 
     const FEE_TYPE_CONT = 'CONT';
 
