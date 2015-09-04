@@ -45,6 +45,9 @@ class TransportManager extends AbstractQueryHandler
                     ]
                 ],
                 'users',
+                'mergeToTransportManager' => [
+                    'homeCd' => ['person']
+                ]
             ],
             [
                 'hasUsers' => (count($transportManager->getUsers()) > 0 ? $transportManager->getUsers() : false),

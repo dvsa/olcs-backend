@@ -48,6 +48,9 @@ class TransportManagerTest extends QueryHandlerTestCase
                 ]
             ],
             'users',
+            'mergeToTransportManager' => [
+                'homeCd' => ['person']
+            ]
         ];
         $query = Query::create(['id' => 1]);
 
