@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
-use Dvsa\Olcs\Api\Service\Submission\SubmissionCommentService;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 
 /**
@@ -11,7 +10,7 @@ use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 trait SubmissionGeneratorAwareTrait
 {
     /**
-     * @var SubmissionnGenerator
+     * @var SubmissionGenerator
      */
     protected $submissionGenerator;
 
@@ -21,7 +20,7 @@ trait SubmissionGeneratorAwareTrait
     protected $submissionConfig;
 
     /**
-     * @param SubmissionnGenerator $service
+     * @param SubmissionGenerator $service
      */
     public function setSubmissionGenerator(SubmissionGenerator $service)
     {
@@ -29,7 +28,7 @@ trait SubmissionGeneratorAwareTrait
     }
 
     /**
-     * @return SubmissionnGenerator
+     * @return SubmissionGenerator
      */
     public function getSubmissionGenerator()
     {
@@ -47,7 +46,7 @@ trait SubmissionGeneratorAwareTrait
     /**
      * @param array $submissionConfig
      */
-    public function setSubmissionConfig($submissionConfig)
+    public function setSubmissionConfig(array $submissionConfig)
     {
         $this->submissionConfig = $submissionConfig;
     }

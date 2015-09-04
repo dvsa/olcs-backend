@@ -36,8 +36,7 @@ class CreateSubmissionTest extends CommandHandlerTestCase
                         'config' => [],
                         'section_type' => ['text'],
                         'allow_comments' => true,
-                        'allow_attachments' => true,
-                        'config' => []
+                        'allow_attachments' => true
                     ]
                 ]
             ]

@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
-use Dvsa\Olcs\Api\Service\Submission\SubmissionCommentService;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 
 /**
@@ -23,7 +22,7 @@ interface SubmissionGeneratorAwareInterface
     /**
      * @param array $submissionConfig
      */
-    public function setSubmissionConfig($submissionConfig);
+    public function setSubmissionConfig(array $submissionConfig);
 
     /**
      * @return array submission configuration
