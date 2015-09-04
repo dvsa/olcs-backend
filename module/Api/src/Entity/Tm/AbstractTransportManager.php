@@ -23,6 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_transport_manager_tm_status", columns={"tm_status"}),
  *        @ORM\Index(name="ix_transport_manager_tm_type", columns={"tm_type"}),
  *        @ORM\Index(name="ix_transport_manager_home_cd_id", columns={"home_cd_id"}),
+ *        @ORM\Index(name="ix_transport_manager_merge_to_transport_manager_id",
+     *     columns={"merge_to_transport_manager_id"}),
  *        @ORM\Index(name="ix_transport_manager_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_transport_manager_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_transport_manager_work_cd_id", columns={"work_cd_id"})
@@ -112,6 +114,25 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
      * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
      */
     protected $lastModifiedOn;
+
+    /**
+     * Merge details
+     *
+     * @var unknown
+     *
+     * @ORM\Column(type="json_array", name="merge_details", length=65535, nullable=true)
+     */
+    protected $mergeDetails;
+
+    /**
+     * Merge to transport manager
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManager
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager", fetch="LAZY")
+     * @ORM\JoinColumn(name="merge_to_transport_manager_id", referencedColumnName="id", nullable=true)
+     */
+    protected $mergeToTransportManager;
 
     /**
      * Notes
@@ -497,6 +518,52 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     public function getLastModifiedOn()
     {
         return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the merge details
+     *
+     * @param unknown $mergeDetails
+     * @return TransportManager
+     */
+    public function setMergeDetails($mergeDetails)
+    {
+        $this->mergeDetails = $mergeDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the merge details
+     *
+     * @return unknown
+     */
+    public function getMergeDetails()
+    {
+        return $this->mergeDetails;
+    }
+
+    /**
+     * Set the merge to transport manager
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $mergeToTransportManager
+     * @return TransportManager
+     */
+    public function setMergeToTransportManager($mergeToTransportManager)
+    {
+        $this->mergeToTransportManager = $mergeToTransportManager;
+
+        return $this;
+    }
+
+    /**
+     * Get the merge to transport manager
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Tm\TransportManager
+     */
+    public function getMergeToTransportManager()
+    {
+        return $this->mergeToTransportManager;
     }
 
     /**
