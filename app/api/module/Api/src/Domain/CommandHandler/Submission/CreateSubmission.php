@@ -73,7 +73,7 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
      * @param SubmissionEntity $submissionEntity
      * @return array
      */
-    public function generateCommentCommands(SubmissionEntity $submissionEntity)
+    private function generateCommentCommands(SubmissionEntity $submissionEntity)
     {
         $commentCommands = [];
         $selectedSectionsData = $submissionEntity->getSectionData();
