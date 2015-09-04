@@ -60,11 +60,7 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\SubmissionGeneratorFactory::class,
 
             \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager::class =>
-                \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManagerFactory::class,
-
-            \Dvsa\Olcs\Api\Service\Submission\SubmissionCommentService::class =>
-                \Dvsa\Olcs\Api\Service\Submission\SubmissionCommentServiceFactory::class,
-
+                \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManagerFactory::class
         ],
     ],
     'file_uploader' => [

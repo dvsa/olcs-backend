@@ -21,11 +21,6 @@ trait SubmissionGeneratorAwareTrait
     protected $submissionConfig;
 
     /**
-     * @var SubmissionCommentService
-     */
-    protected $submissionCommentService;
-
-    /**
      * @param SubmissionnGenerator $service
      */
     public function setSubmissionGenerator(SubmissionGenerator $service)
@@ -55,21 +50,5 @@ trait SubmissionGeneratorAwareTrait
     public function setSubmissionConfig($submissionConfig)
     {
         $this->submissionConfig = $submissionConfig;
-    }
-
-    /**
-     * @return SubmissionCommentService
-     */
-    public function getSubmissionCommentService()
-    {
-        return $this->submissionCommentService;
-    }
-
-    /**
-     * @param SubmissionCommentService $submissionCommentService
-     */
-    public function setSubmissionCommentService(SubmissionCommentService $submissionCommentService)
-    {
-        $this->submissionCommentService = $submissionCommentService;
     }
 }
