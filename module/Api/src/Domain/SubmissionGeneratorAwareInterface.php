@@ -11,8 +11,8 @@ use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 interface SubmissionGeneratorAwareInterface
 {
     /**
- * @param SubmissionGenerator $service
- */
+     * @param SubmissionGenerator $service
+     */
     public function setSubmissionGenerator(SubmissionGenerator $service);
 
     /**
