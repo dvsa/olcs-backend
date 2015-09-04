@@ -91,16 +91,13 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
                 // if section config entry contains 'text', generate comment based on value of text stored against the
                 // section
                 if (in_array('text', $sectionConfig['section_type']) && isset($selectedSectionData['data']['text'])) {
-                    array_push(
-                        $commentCommands,
-                        SectionCommentCommand::create(
-                            [
-                                'id' => '',
-                                'submission' => $submissionEntity->getId(),
-                                'submissionSection' => $selectedSectionId,
-                                'comment' => $selectedSectionData['data']['text'],
-                            ]
-                        )
+                    $commentCommands[] = SectionCommentCommand::create(
+                        [
+                            'id' => '',
+                            'submission' => $submissionEntity->getId(),
+                            'submissionSection' => $selectedSectionId,
+                            'comment' => $selectedSectionData['data']['text'],
+                        ]
                     );
                 }
             }
