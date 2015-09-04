@@ -214,8 +214,7 @@ return [
                 'config' => [],
                 'section_type' => [],
                 'allow_comments' => true,
-                'allow_attachments' => true,
-                'config' => []
+                'allow_attachments' => true
             ],
             'case-summary' => [
                 'subcategoryId' => 116,
