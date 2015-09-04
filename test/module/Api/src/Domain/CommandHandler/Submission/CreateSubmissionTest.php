@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CommentCommand;
 
 /**
  * Create Submission Test
@@ -150,7 +151,7 @@ class CreateSubmissionTest extends CommandHandlerTestCase
             );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment::class,
+            CommentCommand::class,
             [
                 'id' => '',
                 'submission' => 111,

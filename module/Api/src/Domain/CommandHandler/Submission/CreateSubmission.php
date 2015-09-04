@@ -13,7 +13,7 @@ use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmission as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
-use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment;
+use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as SectionCommentCommand;
 
 /**
  * Create Submission
@@ -41,7 +41,6 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
         $this->getRepo()->save($submissionEntity);
 
         // add default comments for the submission
-        // Generate comments for all sections that are configured as type = 'text'
         $commentCommands = $this->generateCommentCommands($submissionEntity);
 
         $this->handleSideEffects($commentCommands);
@@ -55,7 +54,8 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
 
     /**
      * @param Cmd $command
-     * @return Submission
+     * @return SubmissionEntity
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     private function createSubmission(Cmd $command)
     {
@@ -68,8 +68,9 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
     }
 
     /**
-     * Returns an array of Comment commands set up with comment text generated from the section data
-     *
+     * Returns an array of Comment commands set up with comment text generated from the section data.
+     * Generate comments for all sections that are configured as type = 'text'
+     * 
      * @param SubmissionEntity $submissionEntity
      * @return array
      */
@@ -92,7 +93,7 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
                 if (in_array('text', $sectionConfig['section_type']) && isset($selectedSectionData['data']['text'])) {
                     array_push(
                         $commentCommands,
-                        CreateSubmissionSectionComment::create(
+                        SectionCommentCommand::create(
                             [
                                 'id' => '',
                                 'submission' => $submissionEntity->getId(),
