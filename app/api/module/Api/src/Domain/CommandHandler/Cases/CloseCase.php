@@ -21,7 +21,7 @@ final class CloseCase extends AbstractCommandHandler implements TransactionedInt
     protected $repoServiceName = 'Cases';
 
     /**
-     * Updates a case
+     * Close a case
      *
      * @param CommandInterface $command
      * @return Result
