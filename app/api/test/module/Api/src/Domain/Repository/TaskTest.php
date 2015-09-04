@@ -33,6 +33,23 @@ class TaskTest extends RepositoryTestCase
 
         $expectedQuery = 'BLAH AND m.irfoOrganisation = [[ORG1]]';
         $this->assertEquals($expectedQuery, $this->query);
+    }
 
+    public function testFetchByTransportManager()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchByTransportManager('TM1'));
+
+        $expectedQuery = 'BLAH AND m.transportManager = [[TM1]]';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }
