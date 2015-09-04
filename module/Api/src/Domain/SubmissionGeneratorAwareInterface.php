@@ -29,15 +29,4 @@ interface SubmissionGeneratorAwareInterface
      * @return array submission configuration
      */
     public function getSubmissionConfig();
-
-    /**
-     * @param SubmissionCommentService $submissionConfigService
-     * @return mixed
-     */
-    public function setSubmissionCommentService(SubmissionCommentService $submissionConfigService);
-
-    /**
-     * @return SubmissionCommentService $submissionConfigService
-     */
-    public function getSubmissionCommentService();
 }

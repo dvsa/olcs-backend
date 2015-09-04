@@ -81,7 +81,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         if ($this instanceof SubmissionGeneratorAwareInterface) {
             $this->setSubmissionGenerator($mainServiceLocator->get(SubmissionGenerator::class));
             $this->setSubmissionConfig($mainServiceLocator->get('Config')['submissions']['sections']['configuration']);
-            $this->setSubmissionCommentService($mainServiceLocator->get(SubmissionCommentService::class));
         }
 
         if ($this instanceof AddressServiceAwareInterface) {
