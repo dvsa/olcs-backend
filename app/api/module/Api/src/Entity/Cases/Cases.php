@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Entity\CloseableInterface;
+use Dvsa\Olcs\Api\Entity\ReopenableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
@@ -28,7 +30,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
  *    }
  * )
  */
-class Cases extends AbstractCases
+class Cases extends AbstractCases implements CloseableInterface, ReopenableInterface
 {
     const LICENCE_CASE_TYPE = 'case_t_lic';
     const IMPOUNDING_CASE_TYPE = 'case_t_imp';
@@ -258,5 +260,77 @@ class Cases extends AbstractCases
         $criteria->where($criteria->expr()->eq('isCompliance', 0));
 
         return $this->getComplaints()->matching($criteria);
+    }
+
+    /**
+     * Close the case
+     */
+    public function close()
+    {
+        if (!$this->canClose()) {
+            throw new ForbiddenException('Case is not allowed to be closed');
+        }
+
+        $this->closedDate = new \DateTime();
+    }
+
+    /**
+     * Reopen the case
+     */
+    public function reopen()
+    {
+        if (!$this->canReopen()) {
+            throw new ForbiddenException('Case is not allowed to be reopened');
+        }
+
+        $this->closedDate = null;
+    }
+
+    /**
+     * Can the case be closed?
+     *
+     * @return bool
+     */
+    public function canClose()
+    {
+        if ($this->getOutcomes()->isEmpty()) {
+            return false;
+        }
+
+        return !$this->isClosed();
+    }
+
+    /**
+     * Is the case closed?
+     *
+     * return bool
+     */
+    public function isClosed()
+    {
+        return $this->canReopen();
+    }
+
+    /**
+     * Can the Case be reopened?
+     *
+     * @return bool
+     */
+    public function canReopen()
+    {
+        return (bool) $this->closedDate != null;
+    }
+
+    /**
+     * Calculated values to be added to a bundle
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'isClosed' => $this->isClosed(),
+            'canReopen' => $this->canReopen(),
+            'canClose' => $this->canClose()
+        ];
     }
 }
