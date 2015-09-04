@@ -26,7 +26,16 @@ class Fee extends AbstractQueryHandler
 
         return $this->result(
             $fee,
-            [],
+            [
+                'feeTransactions' => [
+                    'transaction' => [
+                        'paymentMethod',
+                        'processedByUser',
+                        'status',
+                        'type',
+                    ],
+                ],
+            ],
             $this->getAdditionalFeeData($fee)
         );
     }
@@ -39,10 +48,11 @@ class Fee extends AbstractQueryHandler
     {
         return [
             'allowEdit' => $fee->allowEdit(),
+            'outstanding' => $fee->getOutstandingAmount(),
 
             // fields that the frontend may expect as they were previously
             // on the fee table
-            'receiptNo' => $fee->getReceiptNo(),
+            'receiptNo' => $fee->getLatestPaymentRef(),
             'receivedAmount' => $fee->getReceivedAmount(),
             'receivedDate' => $fee->getReceivedDate(),
             'paymentMethod' => $fee->getPaymentMethod(),
@@ -51,6 +61,7 @@ class Fee extends AbstractQueryHandler
             'slipNo' => $fee->getSlipNo(),
             'chequePoNumber' => $fee->getChequePoNumber(),
             'waiveReason' => $fee->getWaiveReason(),
+            'hasOutstandingWaiveTransaction' => !empty($fee->getOutstandingWaiveTransaction()),
         ];
     }
 }
