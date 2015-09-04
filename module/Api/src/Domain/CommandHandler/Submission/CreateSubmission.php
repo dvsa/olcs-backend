@@ -83,10 +83,10 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
         // foreach section chosen
         foreach ($selectedSectionsData as $selectedSectionId => $selectedSectionData) {
 
-            // get the config for that section
-            $sectionConfig = $allSectionsConfig[$selectedSectionId];
+            if (!empty($allSectionsConfig[$selectedSectionId])) {
 
-            if (!empty($sectionConfig)) {
+                // get the config for that section
+                $sectionConfig = $allSectionsConfig[$selectedSectionId];
 
                 // if section config entry contains 'text', generate comment based on value of text stored against the
                 // section
