@@ -7952,16 +7952,17 @@ CREATE VIEW task_search_view AS
        t.sub_category_id task_sub_category_id,
        t.description,
        te.name as team_name,
-       coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
-       coalesce(t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,
+       coalesce(concat(s.id, '/', c.id), c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
+       coalesce(submission_id, t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,
        case when t.irfo_organisation_id is not null then 'IRFO Organisation'
             when t.bus_reg_id is not null then 'Bus Registration'
             when t.application_id is not null then 'Application'
+            when t.submission_id is not null then 'Submission'
             when t.case_id is not null then 'Case'
             when t.licence_id is not null then 'Licence'
             when t.transport_manager_id is not null then 'Transport Manager'
             else 'Unlinked' end link_type,
-      coalesce(o.name, irfo.name, tmp.family_name, concat('Case:', c.id), 'Unlinked') name_display,
+      coalesce(concat('Submission:', s.id), o.name, irfo.name, tmp.family_name, concat('Case:', c.id), 'Unlinked') name_display,
       l.lic_no,
       l.id lic_id,
       tm.id tm_id,
@@ -7977,7 +7978,8 @@ CREATE VIEW task_search_view AS
       t.category_id category_id,
       tsc.sub_category_name task_sub_category_name,
       concat(ifnull(cdp.family_name,''), ', ', ifnull(cdp.forename,'')) user_name,
-     (select count(ll.id) from licence ll where ll.organisation_id = o.id and ll.status = 'lsts_valid') licence_count
+     (select count(ll.id) from licence ll where ll.organisation_id = o.id and ll.status = 'lsts_valid') licence_count,
+      s.id submission_id
     FROM `task` t
    inner join (category cat, sub_category tsc) on (cat.id = t.category_id and tsc.id = t.sub_category_id)
    left join (licence l inner join organisation o) on (t.licence_id = l.id and l.organisation_id = o.id)
@@ -7990,6 +7992,7 @@ CREATE VIEW task_search_view AS
    left join contact_details cd on (u.contact_details_id = cd.id)
    left join person cdp on (cd.person_id = cdp.id)
    left join team te on (t.assigned_to_team_id = te.id)
+   left join submission s on (t.submission_id = s.id)
 ;
 
 DROP TABLE IF EXISTS document_search_view;
