@@ -45,6 +45,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchById($command->getLicence());
 
+        $this->checkIfVrmIsSection26($command->getVrm());
         $this->checkIfVrmAlreadyExistsOnLicence($licence, $command->getVrm());
 
         $duplicates = [];
@@ -194,6 +195,27 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
                         'vrm' => [
                             Vehicle::ERROR_VRM_EXISTS => 'Vehicle already exists on this licence'
                         ]
+                    ]
+                );
+            }
+        }
+    }
+
+    /**
+     * Check if a vehicle has a section 26
+     *
+     * @param string $vrm
+     * @throws ValidationException
+     */
+    protected function checkIfVrmIsSection26($vrm)
+    {
+        $vehicles = $this->getRepo('Vehicle')->fetchByVrm($vrm);
+        /* @var $vehicle Vehicle */
+        foreach ($vehicles as $vehicle) {
+            if ($vehicle->getSection26()) {
+                throw new ValidationException(
+                    [
+                        Vehicle::ERROR_VRM_HAS_SECTION_26
                     ]
                 );
             }

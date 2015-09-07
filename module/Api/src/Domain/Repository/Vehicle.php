@@ -17,4 +17,23 @@ use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle as Entity;
 class Vehicle extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+    /**
+     * Get a vehicle by its VRM
+     *
+     * @param string $vrm
+     * @return array of Entity
+     */
+    public function fetchByVrm($vrm)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere(
+            $qb->expr()->eq('m.vrm', ':vrm')
+        )->setParameter('vrm', $vrm);
+
+        $query = $qb->getQuery();
+        $query->execute();
+
+        return $query->getResult();
+    }
 }
