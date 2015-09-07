@@ -984,4 +984,73 @@ class LicenceEntityTest extends EntityTester
 
         $this->assertEquals(-1, $licence->getRemainingSpacesPsv());
     }
+
+    /**
+     * @dataProvider licenceDataProvider
+     */
+    public function testValidateTotalAuthority(
+        $categoryType,
+        $licenceType,
+        $totAuthVehicles,
+        $totAuthSmallVehicles,
+        $totAuthMediumVehicles,
+        $totAuthLargeVehicles
+    ) {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setGoodsOrPsv(m::mock()->shouldReceive('getId')->andReturn($categoryType)->once()->getMock());
+        $licence->setLicenceType(m::mock()->shouldReceive('getId')->andReturn($licenceType)->once()->getMock());
+
+        $this->assertNull(
+            $licence->validateTotalAuthority(
+                $totAuthVehicles,
+                $totAuthSmallVehicles,
+                $totAuthMediumVehicles,
+                $totAuthLargeVehicles
+            )
+        );
+    }
+
+    public function licenceDataProvider()
+    {
+        return [
+            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, Entity::LICENCE_TYPE_STANDARD_NATIONAL, 1, 2, 3, 4],
+            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_STANDARD_NATIONAL, 5, 1, 2, 2],
+            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_RESTRICTED, 5, 2, 3, 2],
+        ];
+    }
+
+    /**
+     * @dataProvider licenceBadDataProvider
+     */
+    public function testValidateTotalAuthorityWithException(
+        $categoryType,
+        $licenceType,
+        $totAuthVehicles,
+        $totAuthSmallVehicles,
+        $totAuthMediumVehicles,
+        $totAuthLargeVehicles
+    ) {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setGoodsOrPsv(m::mock()->shouldReceive('getId')->andReturn($categoryType)->once()->getMock());
+        $licence->setLicenceType(m::mock()->shouldReceive('getId')->andReturn($licenceType)->once()->getMock());
+
+        $this->setExpectedException(ValidationException::class);
+
+        $this->assertNull(
+            $licence->validateTotalAuthority(
+                $totAuthVehicles,
+                $totAuthSmallVehicles,
+                $totAuthMediumVehicles,
+                $totAuthLargeVehicles
+            )
+        );
+    }
+
+    public function licenceBadDataProvider()
+    {
+        return [
+            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_STANDARD_NATIONAL, 5, 2, 2, 2],
+            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_RESTRICTED, 5, 2, 4, null],
+        ];
+    }
 }
