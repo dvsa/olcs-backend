@@ -343,6 +343,11 @@ return [
     TransferCommand\Submission\DeleteSubmission::class =>
         CommandHandler\Submission\DeleteSubmission::class,
 
+    TransferCommand\Submission\FilterSubmissionSections::class =>
+        CommandHandler\Submission\FilterSubmissionSections::class,
+    TransferCommand\Submission\RefreshSubmissionSections::class =>
+        CommandHandler\Submission\RefreshSubmissionSections::class,
+
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
     Command\Document\CreateDocumentSpecific::class => CommandHandler\Document\CreateDocumentSpecific::class,
