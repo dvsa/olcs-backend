@@ -260,6 +260,14 @@ class TaskSearchView
     protected $irfoOrganisationId;
 
     /**
+     * Submission ID
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="submission_id")
+     */
+    protected $submissionId;
+
+    /**
      * Name
      *
      * @var int
@@ -504,6 +512,16 @@ class TaskSearchView
     public function getApplicationId()
     {
         return $this->applicationId;
+    }
+
+    /**
+     * Get the submission id
+     *
+     * @return int
+     */
+    public function getSubmissionId()
+    {
+        return $this->submissionId;
     }
 
     /**
