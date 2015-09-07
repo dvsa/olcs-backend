@@ -15,8 +15,22 @@ class IrfoGvPermit extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrfoGvPermit';
 
+    protected $extraRepos = ['Fee'];
+
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchUsingId($query);
+        $irfoGvPermit = $this->getRepo()->fetchUsingId($query);
+
+        return $this->result(
+            $irfoGvPermit,
+            [
+                'irfoGvPermitType'
+            ],
+            [
+                'isApprovable' => $irfoGvPermit->isApprovable(
+                    $this->getRepo('Fee')->fetchFeesByIrfoGvPermitId($query->getId())
+                )
+            ]
+        );
     }
 }
