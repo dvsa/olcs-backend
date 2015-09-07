@@ -127,6 +127,9 @@ class TransactionEntityTest extends EntityTester
         ];
     }
 
+    /**
+     * implicitly tests getTotalAmount() as well
+     */
     public function testGetCalculatedBundleValues()
     {
         $sut = $this->instantiate($this->entityClass);
