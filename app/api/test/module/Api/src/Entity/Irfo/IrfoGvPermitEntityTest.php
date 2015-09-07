@@ -196,12 +196,8 @@ class IrfoGvPermitEntityTest extends EntityTester
         $feeStatusPaid = new RefData();
         $feeStatusPaid->setId(FeeEntity::STATUS_PAID);
 
-        $feeStatusWaived = new RefData();
-        $feeStatusWaived->setId(FeeEntity::STATUS_WAIVED);
-
         $fees = [
             new FeeEntity($feeType, 10, $feeStatusPaid),
-            new FeeEntity($feeType, 10, $feeStatusWaived),
         ];
 
         $this->assertEquals(true, $this->entity->isApprovable($fees));
