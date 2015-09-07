@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
-use Dvsa\Olcs\Transfer\Command\Submission\UpdateSubmission as Cmd;
+use Dvsa\Olcs\Transfer\Command\Submission\RefreshSubmissionSections as Cmd;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareTrait;
