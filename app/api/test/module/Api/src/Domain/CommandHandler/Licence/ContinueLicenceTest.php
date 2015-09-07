@@ -11,7 +11,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ContinueLicence as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence as Command;
@@ -28,7 +28,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new CommandHandler();
-        $this->mockRepo('Licence', Licence::class);
+        $this->mockRepo('Licence', LicenceEntity::class);
         $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
 
         parent::setUp();
@@ -38,35 +38,35 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     {
         $this->refData = [
             'con_det_sts_complete',
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
-            Licence::LICENCE_TYPE_RESTRICTED,
-            Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-            Licence::LICENCE_CATEGORY_PSV,
+            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+            LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
+            LicenceEntity::LICENCE_TYPE_RESTRICTED,
+            LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+            LicenceEntity::LICENCE_CATEGORY_PSV,
         ];
 
         parent::initReferences();
     }
 
-    private function getGoodsLicence($licenceId, $type = Licence::LICENCE_TYPE_STANDARD_NATIONAL)
+    private function getGoodsLicence($licenceId, $type = LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL)
     {
         $organisation = new Organisation();
-        $licence = new Licence($organisation, new RefData());
+        $licence = new LicenceEntity($organisation, new RefData());
         $licence->setId($licenceId);
         $licence->setLicenceType($this->refData[$type]);
-        $licence->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE]);
+        $licence->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
 
         return $licence;
     }
 
-    private function getPsvLicence($licenceId, $type = Licence::LICENCE_TYPE_STANDARD_NATIONAL)
+    private function getPsvLicence($licenceId, $type = LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL)
     {
         $organisation = new Organisation();
-        $licence = new Licence($organisation, new RefData());
+        $licence = new LicenceEntity($organisation, new RefData());
         $licence->setId($licenceId);
         $licence->setLicenceType($this->refData[$type]);
-        $licence->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_PSV]);
+        $licence->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_PSV]);
 
         return $licence;
     }
@@ -94,7 +94,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $command = Command::create($data);
 
-        $licence = $this->getPsvLicence(717, Licence::LICENCE_TYPE_SPECIAL_RESTRICTED);
+        $licence = $this->getPsvLicence(717, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED);
         $licence->setExpiryDate('2015-07-17');
         $licence->setReviewDate('2015-12-04');
 
@@ -107,7 +107,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             ->andReturn([$continuationDetail]);
 
         $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
-            function (Licence $saveLicence) {
+            function (LicenceEntity $saveLicence) {
                 $this->assertEquals(new \DateTime('2020-07-17'), $saveLicence->getExpiryDate());
                 $this->assertEquals(new \DateTime('2020-12-04'), $saveLicence->getReviewDate());
             }
@@ -132,7 +132,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $command = Command::create($data);
 
-        $licence = $this->getPsvLicence(717, Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+        $licence = $this->getPsvLicence(717, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL);
         $licence->setExpiryDate('2015-07-17');
         $licence->setReviewDate('2015-12-04');
         $licence->setPsvDiscs(['disc1', 'disc2']);
@@ -151,7 +151,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             ->andReturn([$continuationDetail]);
 
         $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
-            function (Licence $saveLicence) {
+            function (LicenceEntity $saveLicence) {
                 $this->assertEquals(new \DateTime('2020-07-17'), $saveLicence->getExpiryDate());
                 $this->assertEquals(new \DateTime('2020-12-04'), $saveLicence->getReviewDate());
                 $this->assertEquals(434, $saveLicence->getTotAuthVehicles());
@@ -191,7 +191,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $command = Command::create($data);
 
-        $licence = $this->getPsvLicence(717, Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+        $licence = $this->getPsvLicence(717, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL);
         $licence->setExpiryDate('2015-07-17');
         $licence->setReviewDate('2015-12-04');
         $licence->setPsvDiscs(['disc1', 'disc2']);
@@ -211,7 +211,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             ->andReturn([$continuationDetail]);
 
         $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
-            function (Licence $saveLicence) {
+            function (LicenceEntity $saveLicence) {
                 $this->assertEquals(new \DateTime('2020-07-17'), $saveLicence->getExpiryDate());
                 $this->assertEquals(new \DateTime('2020-12-04'), $saveLicence->getReviewDate());
                 $this->assertEquals(434, $saveLicence->getTotAuthVehicles());
@@ -262,7 +262,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $command = Command::create($data);
 
-        $licence = $this->getGoodsLicence(717, Licence::LICENCE_TYPE_RESTRICTED);
+        $licence = $this->getGoodsLicence(717, LicenceEntity::LICENCE_TYPE_RESTRICTED);
         $licence->setExpiryDate('2015-07-17');
         $licence->setReviewDate('2015-12-04');
         $lv1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle($licence, new \Dvsa\Olcs\Api\Entity\Vehicle\Vehicle());
@@ -281,7 +281,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             ->andReturn([$continuationDetail]);
 
         $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
-            function (Licence $saveLicence) {
+            function (LicenceEntity $saveLicence) {
                 $this->assertEquals(new \DateTime('2020-07-17'), $saveLicence->getExpiryDate());
                 $this->assertEquals(new \DateTime('2020-12-04'), $saveLicence->getReviewDate());
             }
@@ -317,7 +317,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $command = Command::create($data);
 
-        $licence = $this->getGoodsLicence(717, Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+        $licence = $this->getGoodsLicence(717, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL);
         $licence->setExpiryDate('2015-07-17');
         $licence->setReviewDate('2015-12-04');
         $lv1 = new \Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle($licence, new \Dvsa\Olcs\Api\Entity\Vehicle\Vehicle());
@@ -336,7 +336,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             ->andReturn([$continuationDetail]);
 
         $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
-            function (Licence $saveLicence) {
+            function (LicenceEntity $saveLicence) {
                 $this->assertEquals(new \DateTime('2020-07-17'), $saveLicence->getExpiryDate());
                 $this->assertEquals(new \DateTime('2020-12-04'), $saveLicence->getReviewDate());
             }

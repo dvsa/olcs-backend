@@ -997,8 +997,8 @@ class LicenceEntityTest extends EntityTester
         $totAuthLargeVehicles
     ) {
         $licence = m::mock(Entity::class)->makePartial();
-        $licence->setGoodsOrPsv(m::mock()->shouldReceive('getId')->andReturn($categoryType)->once()->getMock());
-        $licence->setLicenceType(m::mock()->shouldReceive('getId')->andReturn($licenceType)->once()->getMock());
+        $licence->shouldReceive('getGoodsOrPsv->getId')->andReturn($categoryType);
+        $licence->shouldReceive('getLicenceType->getId')->andReturn($licenceType);
 
         $this->assertNull(
             $licence->validateTotalAuthority(
@@ -1031,8 +1031,8 @@ class LicenceEntityTest extends EntityTester
         $totAuthLargeVehicles
     ) {
         $licence = m::mock(Entity::class)->makePartial();
-        $licence->setGoodsOrPsv(m::mock()->shouldReceive('getId')->andReturn($categoryType)->once()->getMock());
-        $licence->setLicenceType(m::mock()->shouldReceive('getId')->andReturn($licenceType)->once()->getMock());
+        $licence->shouldReceive('getGoodsOrPsv->getId')->andReturn($categoryType);
+        $licence->shouldReceive('getLicenceType->getId')->andReturn($licenceType);
 
         $this->setExpectedException(ValidationException::class);
 
