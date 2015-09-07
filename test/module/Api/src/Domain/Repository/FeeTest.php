@@ -115,6 +115,49 @@ class FeeTest extends RepositoryTestCase
         );
     }
 
+    public function testFetchFeesByIrfoGvPermitId()
+    {
+        $irfoGvPermitId = 123;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($mockQb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->with('invoicedDate', 'ASC')
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb
+            ->shouldReceive('expr->eq');
+        $mockQb
+            ->shouldReceive('andWhere')
+            ->andReturnSelf();
+        $mockQb
+            ->shouldReceive('setParameter')
+            ->with('irfoGvPermitId', $irfoGvPermitId)
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
+
+        $this->assertSame(
+            'result',
+            $this->sut->fetchFeesByIrfoGvPermitId($irfoGvPermitId)
+        );
+    }
+
     public function testFetchOutstandingFeesByIds()
     {
         $ids = [1, 2, 3];
