@@ -29,23 +29,12 @@ final class DeleteImpounding extends AbstractCommandHandler implements Transacti
     {
         $result = new Result();
 
-        $impounding = $this->createImpoundingObject($command);
+        $impounding = $this->getRepo()->fetchUsingId($command);
 
         $this->getRepo()->delete($impounding);
 
         $result->addMessage('Impounding deleted');
 
         return $result;
-    }
-
-    /**
-     * @param Cmd $command
-     * @return Impounding
-     */
-    private function createImpoundingObject(Cmd $command)
-    {
-        $impounding = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
-
-        return $impounding;
     }
 }
