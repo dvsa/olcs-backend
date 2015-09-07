@@ -60,6 +60,7 @@ class Transaction extends AbstractTransaction
 
         $this->getFeeTransactions()->forAll(
             function ($key, $ft) use (&$total) {
+                unset($key); // unused
                 $total += $ft->getAmount();
                 return true;
             }
