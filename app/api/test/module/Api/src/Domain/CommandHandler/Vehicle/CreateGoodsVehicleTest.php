@@ -78,11 +78,36 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $licence->shouldReceive('getActiveVehicles')
             ->andReturn($activeVehicles);
 
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
             ->andReturn($licence);
 
         $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandVrmSection26()
+    {
+        $data = [
+            'licence' => 111,
+            'vrm' => 'ABC123'
+        ];
+        $command = Cmd::create($data);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+
+        $vehicle1 = new Vehicle();
+        $vehicle1->setSection26(true);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')->with(111)->once()->andReturn($licence);
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([$vehicle1]);
+
+        try {
+            $this->sut->handleCommand($command);
+        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
+            $this->assertSame(Vehicle::ERROR_VRM_HAS_SECTION_26, $e->getMessages()[0]);
+        }
     }
 
     public function testHandleCommandRequiredConfirmationSelfserve()
@@ -106,6 +131,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $otherLicence1 = m::mock(Licence::class)->makePartial();
         $otherLicences = [$licence, $otherLicence1];
 
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
             ->andReturn($licence);
@@ -148,6 +174,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $licenceVehicles = new ArrayCollection();
         $licenceVehicles->add($licenceVehicle);
 
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
         $this->repoMap['LicenceVehicle']->shouldReceive('fetchDuplicates')
             ->with($licence, 'ABC123', false)
             ->andReturn($licenceVehicles);
@@ -202,6 +229,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $otherLicences = [$licence, $otherLicence1, $otherLicence2];
 
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
             ->andReturn($licence);
@@ -259,6 +287,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $otherLicence2 = m::mock(Licence::class)->makePartial();
         $otherLicence2->setApplications($applications2);
 
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
             ->andReturn($licence);
@@ -306,6 +335,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $otherLicences = [];
 
+        $section26Vehicle = new Vehicle();
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([$section26Vehicle]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
             ->andReturn($licence)
@@ -382,6 +413,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $licence->shouldReceive('getActiveVehicles')
             ->andReturn($activeVehicles);
 
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
             ->andReturn($licence);
@@ -459,6 +491,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $otherLicences = [$licence];
 
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
             ->andReturn($licence)
@@ -536,6 +569,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $licence->shouldReceive('getActiveVehicles')
             ->andReturn($activeVehicles);
 
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
             ->andReturn($licence);
