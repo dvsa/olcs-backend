@@ -1710,5 +1710,10 @@ return array(
                 'property' => 'trafficAreaEnforcementArea'
             )
         )
-    )
+    ),
+    'transport_manager' => array(
+        'merge_details' => array(
+            'type' => 'json_array'
+        ),
+    ),
 );
