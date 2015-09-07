@@ -307,7 +307,7 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
      */
     public function isClosed()
     {
-        return $this->canReopen();
+        return (bool) $this->closedDate != null;
     }
 
     /**
@@ -317,7 +317,7 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
      */
     public function canReopen()
     {
-        return (bool) $this->closedDate != null;
+        return $this->isClosed();
     }
 
     /**
