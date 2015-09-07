@@ -2,8 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as Entity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 
@@ -123,5 +125,29 @@ class TransactionEntityTest extends EntityTester
             [Entity::STATUS_COMPLETE, true],
             ['invalid', false],
         ];
+    }
+
+    public function testGetCalculatedBundleValues()
+    {
+        $sut = $this->instantiate($this->entityClass);
+
+        $ft1 = m::mock(FeeTransaction::class)
+            ->shouldReceive('getAmount')
+            ->andReturn('12.34')
+            ->getMock();
+        $ft2 = m::mock(FeeTransaction::class)
+            ->shouldReceive('getAmount')
+            ->andReturn('23.45')
+            ->getMock();
+
+        $feeTransactions = new ArrayCollection([$ft1, $ft2]);
+        $sut->setFeeTransactions($feeTransactions);
+
+        $this->assertEquals(
+            [
+                'amount' => '35.79',
+            ],
+            $sut->getCalculatedBundleValues()
+        );
     }
 }
