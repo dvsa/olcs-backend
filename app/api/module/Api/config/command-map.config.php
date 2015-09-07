@@ -281,6 +281,8 @@ return [
     TransferCommand\Cases\CreateCase::class => CommandHandler\Cases\CreateCase::class,
     TransferCommand\Cases\UpdateCase::class => CommandHandler\Cases\UpdateCase::class,
     TransferCommand\Cases\DeleteCase::class => CommandHandler\Cases\DeleteCase::class,
+    TransferCommand\Cases\CloseCase::class => CommandHandler\Cases\CloseCase::class,
+    TransferCommand\Cases\ReopenCase::class => CommandHandler\Cases\ReopenCase::class,
 
     //Transfer - Cases (note fields)
     TransferCommand\Cases\UpdateConvictionNote::class => CommandHandler\Cases\UpdateConvictionNote::class,
