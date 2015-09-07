@@ -10,12 +10,17 @@ use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 trait SubmissionGeneratorAwareTrait
 {
     /**
-     * @var SubmissionnGenerator
+     * @var SubmissionGenerator
      */
     protected $submissionGenerator;
 
     /**
-     * @param SubmissionnGenerator $service
+     * @var array $submissionConfig
+     */
+    protected $submissionConfig;
+
+    /**
+     * @param SubmissionGenerator $service
      */
     public function setSubmissionGenerator(SubmissionGenerator $service)
     {
@@ -23,10 +28,26 @@ trait SubmissionGeneratorAwareTrait
     }
 
     /**
-     * @return SubmissionnGenerator
+     * @return SubmissionGenerator
      */
     public function getSubmissionGenerator()
     {
         return $this->submissionGenerator;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSubmissionConfig()
+    {
+        return $this->submissionConfig;
+    }
+
+    /**
+     * @param array $submissionConfig
+     */
+    public function setSubmissionConfig(array $submissionConfig)
+    {
+        $this->submissionConfig = $submissionConfig;
     }
 }

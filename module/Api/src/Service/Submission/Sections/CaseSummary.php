@@ -88,12 +88,14 @@ final class CaseSummary extends AbstractSection
         $organisationData['isMlh'] = '';
         $organisationData['organisationType'] = '';
         $organisationData['businessType'] = '';
+        $organisationData['disqualificationStatus'] = '';
 
         if (!empty($organisation) && ($organisation instanceof Organisation)) {
             $organisationData['organisationName'] = $organisation->getName();
             $organisationData['isMlh'] = $organisation->isMlh();
             $organisationData['organisationType'] = $organisation->getType()->getDescription();
             $organisationData['businessType'] = $organisation->getNatureOfBusiness();
+            $organisationData['disqualificationStatus'] = $organisation->getDisqualificationStatus();
         }
 
         return $organisationData;

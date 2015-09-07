@@ -18,4 +18,14 @@ interface SubmissionGeneratorAwareInterface
      * @return SubmissionGenerator
      */
     public function getSubmissionGenerator();
+
+    /**
+     * @param array $submissionConfig
+     */
+    public function setSubmissionConfig(array $submissionConfig);
+
+    /**
+     * @return array submission configuration
+     */
+    public function getSubmissionConfig();
 }
