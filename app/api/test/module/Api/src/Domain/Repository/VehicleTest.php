@@ -1,24 +1,22 @@
 <?php
 
-/**
- * IrfoGvPermit Repo test
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\IrfoGvPermit as Repo;
 
 /**
- * IrfoGvPermit Repo test
+ * VehicleTest
+ *
+ * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class IrfoGvPermitTest extends RepositoryTestCase
+class VehicleTest extends RepositoryTestCase
 {
     public function setUp()
     {
-        $this->setUpSut(Repo::class);
+        $this->setUpSut(\Dvsa\Olcs\Api\Domain\Repository\Vehicle::class);
     }
 
-    public function testFetchByOrganisation()
+    public function testFetchByVrm()
     {
         $qb = $this->createMockQb('BLAH');
 
@@ -30,10 +28,9 @@ class IrfoGvPermitTest extends RepositoryTestCase
                 ->andReturn(['RESULTS'])
                 ->getMock()
         );
-        $this->assertEquals(['RESULTS'], $this->sut->fetchByOrganisation('ORG1'));
+        $this->assertEquals(['RESULTS'], $this->sut->fetchByVrm('ABC123'));
 
-        $expectedQuery = 'BLAH AND m.organisation = [[ORG1]]';
+        $expectedQuery = 'BLAH AND m.vrm = [[ABC123]]';
         $this->assertEquals($expectedQuery, $this->query);
-
     }
 }

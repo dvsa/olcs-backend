@@ -258,6 +258,7 @@ return [
     TransferCommand\Irfo\CreateIrfoGvPermit::class => CommandHandler\Irfo\CreateIrfoGvPermit::class,
     TransferCommand\Irfo\UpdateIrfoGvPermit::class => CommandHandler\Irfo\UpdateIrfoGvPermit::class,
     TransferCommand\Irfo\ResetIrfoGvPermit::class => CommandHandler\Irfo\ResetIrfoGvPermit::class,
+    TransferCommand\Irfo\ApproveIrfoGvPermit::class => CommandHandler\Irfo\ApproveIrfoGvPermit::class,
     TransferCommand\Irfo\CreateIrfoPermitStock::class => CommandHandler\Irfo\CreateIrfoPermitStock::class,
     TransferCommand\Irfo\UpdateIrfoPermitStock::class => CommandHandler\Irfo\UpdateIrfoPermitStock::class,
     TransferCommand\Irfo\CreateIrfoPsvAuth::class => CommandHandler\Irfo\CreateIrfoPsvAuth::class,
@@ -280,6 +281,8 @@ return [
     TransferCommand\Cases\CreateCase::class => CommandHandler\Cases\CreateCase::class,
     TransferCommand\Cases\UpdateCase::class => CommandHandler\Cases\UpdateCase::class,
     TransferCommand\Cases\DeleteCase::class => CommandHandler\Cases\DeleteCase::class,
+    TransferCommand\Cases\CloseCase::class => CommandHandler\Cases\CloseCase::class,
+    TransferCommand\Cases\ReopenCase::class => CommandHandler\Cases\ReopenCase::class,
 
     //Transfer - Cases (note fields)
     TransferCommand\Cases\UpdateConvictionNote::class => CommandHandler\Cases\UpdateConvictionNote::class,
@@ -671,6 +674,8 @@ return [
     TransferCommand\Tm\Create::class => CommandHandler\Tm\Create::class,
     TransferCommand\Tm\Update::class => CommandHandler\Tm\Update::class,
     TransferCommand\Tm\Remove::class => CommandHandler\Tm\Remove::class,
+    TransferCommand\Tm\Merge::class => CommandHandler\Tm\Merge::class,
+    TransferCommand\Tm\Unmerge::class => CommandHandler\Tm\Unmerge::class,
 
     // Task
     TransferCommand\Task\CloseTasks::class => CommandHandler\Task\CloseTasks::class,
