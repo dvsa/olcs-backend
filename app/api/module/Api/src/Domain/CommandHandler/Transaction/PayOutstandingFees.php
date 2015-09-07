@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
+use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -29,9 +31,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class PayOutstandingFees extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+final class PayOutstandingFees extends AbstractCommandHandler implements
+    TransactionedInterface, AuthAwareInterface, CpmsAwareInterface
 {
-    use AuthAwareTrait;
+    use AuthAwareTrait, CpmsAwareTrait;
 
     /**
      * @var \Dvsa\Olcs\Api\Service\FeesHelperService
@@ -41,8 +44,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     protected $repoServiceName = 'Transaction';
 
     protected $extraRepos = ['Fee'];
-
-    protected $cpmsHelper;
 
     /**
      * There are three valid use cases for this command
@@ -95,7 +96,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     protected function cardPayment($customerReference, $command, $feesToPay, $result)
     {
         // fire off to CPMS
-        $response = $this->cpmsHelper->initiateCardRequest(
+        $response = $this->getCpmsService()->initiateCardRequest(
             $customerReference,
             $command->getCpmsRedirectUrl(),
             $feesToPay
@@ -209,7 +210,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     {
         switch ($command->getPaymentMethod()) {
             case FeeEntity::METHOD_CASH:
-                $response = $this->cpmsHelper->recordCashPayment(
+                $response = $this->getCpmsService()->recordCashPayment(
                     $fees,
                     $customerReference,
                     $command->getReceived(),
@@ -219,7 +220,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
                 );
                 break;
             case FeeEntity::METHOD_CHEQUE:
-                $response = $this->cpmsHelper->recordChequePayment(
+                $response = $this->getCpmsService()->recordChequePayment(
                     $fees,
                     $customerReference,
                     $command->getReceived(),
@@ -231,7 +232,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
                 );
                 break;
             case FeeEntity::METHOD_POSTAL_ORDER:
-                $response = $this->cpmsHelper->recordPostalOrderPayment(
+                $response = $this->getCpmsService()->recordPostalOrderPayment(
                     $fees,
                     $customerReference,
                     $command->getReceived(),
@@ -252,7 +253,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     {
         parent::createService($serviceLocator);
         $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->cpmsHelper = $mainServiceLocator->get('CpmsHelperService');
         $this->feesHelper = $mainServiceLocator->get('FeesHelperService');
         return $this;
     }
@@ -373,8 +373,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
      */
     protected function checkAmountMatchesTotalDue($amount, $fees)
     {
-        $amount    = $this->cpmsHelper->formatAmount($amount);
-        $totalFees = $this->cpmsHelper->formatAmount($this->getTotalAmountFromFees($fees));
+        $amount    = $this->getCpmsService()->formatAmount($amount);
+        $totalFees = $this->getCpmsService()->formatAmount($this->getTotalAmountFromFees($fees));
         if ($amount !== $totalFees) {
             throw new ValidationException(["Amount must match the fee(s) due"]);
         }
