@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Cpms Helper Service
+ * Cpms Version 2 Helper Service
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
@@ -14,11 +14,11 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Cpms Helper Service
+ * Cpms Version 2 Helper Service
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CpmsHelperService implements FactoryInterface
+class CpmsV2HelperService implements FactoryInterface
 {
     const PAYMENT_SUCCESS      = 801;
     const PAYMENT_FAILURE      = 802;
@@ -38,6 +38,8 @@ class CpmsHelperService implements FactoryInterface
     // what OLCS should pass for this field.
     const COST_CENTRE = '12345,67890';
 
+    const TAX_CODE = 'Z';
+
     protected $logger;
 
     protected $cpmsClient;
@@ -55,12 +57,10 @@ class CpmsHelperService implements FactoryInterface
     }
 
     /**
+     * @param string $customerReference usually organisation id
      * @param string $redirectUrl redirect back to here from payment gateway
      * @param array $fees
-     * @param string $paymentMethod 'fpm_card_offline'|'fpm_card_online'
-     *
      * @return array
-     * @throws Common\Service\Cpms\Exception\PaymentInvalidResponseException on error
      */
     public function initiateCardRequest(
         $redirectUrl,
@@ -68,31 +68,49 @@ class CpmsHelperService implements FactoryInterface
     ) {
         $totalAmount = $this->getTotalAmountFromFees($fees);
 
-        $paymentData = [];
-        foreach ($fees as $fee) {
-            $paymentData[] = [
-                'amount' => $this->formatAmount($fee->getAmount()),
-                'sales_reference' => (string)$fee->getId(),
-                'product_reference' => self::PRODUCT_REFERENCE,
-                'payment_reference' => [
-                    'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
-                ],
-            ];
-        }
+        // Note: CPMS has been known to reject ints as 'missing', so we cast
+        // some fields to strings
 
         $endPoint = '/api/payment/card';
         $scope    = ApiService::SCOPE_CARD;
 
         $params = [
-            // @NOTE CPMS rejects ints as 'missing', so we have to force a string...
             'customer_reference' => (string) $this->getCustomerReference($fees),
             'scope' => $scope,
             'disable_redirection' => true,
             'redirect_uri' => $redirectUrl,
-            'payment_data' => $paymentData,
+            'payment_data' => [],
             'cost_centre' => self::COST_CENTRE,
             'total_amount' => $this->formatAmount($totalAmount),
+            'customer_name' => reset($fees)->getCustomerNameForInvoice(),
+            'customer_manager_name' => '@todo',
+            'customer_address' => reset($fees)->getCustomerAddressForInvoice(),
         ];
+
+        foreach ($fees as $fee) {
+            $params['payment_data'][] = [
+                'line_identifier' => (string) $fee->getInvoiceLineNo(),
+                'amount' => $this->formatAmount($fee->getAmount()),
+                'allocated_amount' => $this->formatAmount(
+                    // will change when we do under/overpayment
+                    $fee->getOutstandingAmount()
+                ),
+                // all fees are currently zero rated
+                'net_amount' => $this->formatAmount($fee->getAmount()),
+                'tax_amount' => '0.00',
+                'tax_code' => self::TAX_CODE,
+                'tax_rate' => '0',
+                'invoice_date' => $this->formatDate($fee->getInvoicedDate()),
+                'sales_reference' => (string) $fee->getId(),
+                'product_reference' => $fee->getFeeType()->getDescription(),
+                'receiver_reference' => (string) $customerReference,
+                'receiver_name' => $fee->getCustomerNameForInvoice(),
+                'receiver_address' => $fee->getCustomerAddressForInvoice(),
+                'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
+                'deferment_period' => (string) $fee->getDefermentPeriod(),
+                // 'country_code' ('GB' or 'NI') is optional and deliberately omitted
+            ];
+        }
 
         $this->debug(
             'Card payment request',
@@ -177,6 +195,7 @@ class CpmsHelperService implements FactoryInterface
      * Record a cash payment in CPMS
      *
      * @param array $fees
+     * @param string $customerReference
      * @param float $amount
      * @param string|DateTime $receiptDate
      * @param string $payer payer name
@@ -185,6 +204,7 @@ class CpmsHelperService implements FactoryInterface
      */
     public function recordCashPayment(
         $fees,
+        $customerReference,
         $amount,
         $receiptDate,
         $payer,
@@ -209,7 +229,7 @@ class CpmsHelperService implements FactoryInterface
         $scope    = ApiService::SCOPE_CASH;
 
         $params = [
-            'customer_reference' => (string) $this->getCustomerReference($fees),
+            'customer_reference' => (string)$customerReference,
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
             'payment_data' => $paymentData,
@@ -244,6 +264,7 @@ class CpmsHelperService implements FactoryInterface
      * Record a cheque payment in CPMS
      *
      * @param array $fees
+     * @param string $customerReference
      * @param float $amount
      * @param array $receiptDate (from DateSelect)
      * @param string $payer payer name
@@ -254,6 +275,7 @@ class CpmsHelperService implements FactoryInterface
      */
     public function recordChequePayment(
         $fees,
+        $customerReference,
         $amount,
         $receiptDate,
         $payer,
@@ -282,7 +304,7 @@ class CpmsHelperService implements FactoryInterface
         $scope    = ApiService::SCOPE_CHEQUE;
 
         $params = [
-            'customer_reference' => (string) $this->getCustomerReference($fees),
+            'customer_reference' => (string)$customerReference,
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
             'payment_data' => $paymentData,
@@ -317,6 +339,7 @@ class CpmsHelperService implements FactoryInterface
      * Record a Postal Order payment in CPMS
      *
      * @param array $fees
+     * @param string $customerReference
      * @param float $amount
      * @param array $receiptDate (from DateSelect)
      * @param string $payer payer name
@@ -326,6 +349,7 @@ class CpmsHelperService implements FactoryInterface
      */
     public function recordPostalOrderPayment(
         $fees,
+        $customerReference,
         $amount,
         $receiptDate,
         $payer,
@@ -352,7 +376,7 @@ class CpmsHelperService implements FactoryInterface
         $scope    = ApiService::SCOPE_POSTAL_ORDER;
 
         $params = [
-            'customer_reference' => (string) $this->getCustomerReference($fees),
+            'customer_reference' => (string)$customerReference,
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
             'payment_data' => $paymentData,
@@ -452,6 +476,22 @@ class CpmsHelperService implements FactoryInterface
             }
             return $date->format(self::DATE_FORMAT);
         }
+    }
+
+    /**
+     * @param Dvsa\Olcs\Api\Entity\ContactDetails\Address $address
+     * @return array
+     */
+    public function formatAddress($address)
+    {
+         return [
+            'line_1' => $this->getAddressLine1(),
+            'line_2' => $this->getAddressLine2(),
+            'line_3' => $this->getAddressLine3(),
+            'line_4' => $this->getAddressLine4(),
+            'city' => $this->getTown(),
+            'postcode' => $this->getPostcode(),
+        ];
     }
 
     /**

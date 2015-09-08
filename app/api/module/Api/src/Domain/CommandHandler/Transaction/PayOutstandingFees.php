@@ -57,13 +57,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
         if (!empty($command->getOrganisationId())) {
             $fees = $this->getOutstandingFeesForOrganisation($command);
-            $customerReference = $command->getOrganisationId();
         } elseif (!empty($command->getApplicationId())) {
             $fees = $this->feesHelper->getOutstandingFeesForApplication($command->getApplicationId());
-            $customerReference = $this->getCustomerReference($fees);
         } else {
             $fees = $this->getRepo('Fee')->fetchOutstandingFeesByIds($command->getFeeIds());
-            $customerReference = $this->getCustomerReference($fees);
         }
 
         // filter out fees that may have been paid by resolving outstanding payments
@@ -77,27 +74,25 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         switch ($command->getPaymentMethod()) {
             case FeeEntity::METHOD_CARD_ONLINE:
             case FeeEntity::METHOD_CARD_OFFLINE:
-                return $this->cardPayment($customerReference, $command, $feesToPay, $result);
+                return $this->cardPayment($command, $feesToPay, $result);
             case FeeEntity::METHOD_CASH:
             case FeeEntity::METHOD_CHEQUE:
             case FeeEntity::METHOD_POSTAL_ORDER:
-                return $this->immediatePayment($customerReference, $command, $feesToPay, $result);
+                return $this->immediatePayment($command, $feesToPay, $result);
         }
     }
 
     /**
-     * @param string $customerReference
      * @param CommandInterface $command
      * @param array $feesToPay
      * @param Result $result
      *
      * @return Result
      */
-    protected function cardPayment($customerReference, $command, $feesToPay, $result)
+    protected function cardPayment($command, $feesToPay, $result)
     {
         // fire off to CPMS
         $response = $this->getCpmsService()->initiateCardRequest(
-            $customerReference,
             $command->getCpmsRedirectUrl(),
             $feesToPay
         );
@@ -133,19 +128,18 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     }
 
     /**
-     * @param string $customerReference
      * @param CommandInterface $command
      * @param array $fees
      * @param Result $result
      *
      * @return Result
      */
-    protected function immediatePayment($customerReference, $command, $fees, $result)
+    protected function immediatePayment($command, $fees, $result)
     {
         $this->checkAmountMatchesTotalDue($command->getReceived(), $fees);
 
         // fire off to relevant CPMS method to record payment
-        $response = $this->recordPaymentInCpms($customerReference, $command, $fees);
+        $response = $this->recordPaymentInCpms($command, $fees);
 
         if ($response === false) {
             throw new RuntimeException('error from CPMS service');
@@ -206,13 +200,12 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     /**
      * @return array|false
      */
-    protected function recordPaymentInCpms($customerReference, $command, $fees)
+    protected function recordPaymentInCpms($command, $fees)
     {
         switch ($command->getPaymentMethod()) {
             case FeeEntity::METHOD_CASH:
                 $response = $this->getCpmsService()->recordCashPayment(
                     $fees,
-                    $customerReference,
                     $command->getReceived(),
                     $command->getReceiptDate(),
                     $command->getPayer(),
@@ -222,7 +215,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             case FeeEntity::METHOD_CHEQUE:
                 $response = $this->getCpmsService()->recordChequePayment(
                     $fees,
-                    $customerReference,
                     $command->getReceived(),
                     $command->getReceiptDate(),
                     $command->getPayer(),
@@ -234,7 +226,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             case FeeEntity::METHOD_POSTAL_ORDER:
                 $response = $this->getCpmsService()->recordPostalOrderPayment(
                     $fees,
-                    $customerReference,
                     $command->getReceived(),
                     $command->getReceiptDate(),
                     $command->getPayer(),
@@ -318,30 +309,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             }
         }
         return $feesToPay;
-    }
-
-    /**
-     * Gets Customer Reference based on the fees details
-     * The method assumes that all fees link to the same organisationId
-     *
-     * @param array $fees
-     * @return int organisationId
-     */
-    protected function getCustomerReference($fees)
-    {
-        $reference = 'Miscellaneous'; // default value
-
-        foreach ($fees as $fee) {
-            if (!empty($fee->getLicence())) {
-                $organisation = $fee->getLicence()->getOrganisation();
-                if (!empty($organisation)) {
-                    $reference = $organisation->getId();
-                    break;
-                }
-            }
-        }
-
-        return $reference;
     }
 
     /**
