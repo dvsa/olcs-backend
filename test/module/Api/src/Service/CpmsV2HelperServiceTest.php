@@ -97,7 +97,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-29',
                     'sales_reference' => '1',
-                    'product_reference' => 'fee type description',
+                    // 'product_reference' => 'fee type description',
+                    'product_reference' => 'GVR_APPLICATION_FEE', // @todo
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
                     'receiver_address' => [
@@ -121,7 +122,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-30',
                     'sales_reference' => '2',
-                    'product_reference' => 'fee type description',
+                    // 'product_reference' => 'fee type description',
+                    'product_reference' => 'GVR_APPLICATION_FEE', // @todo
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
                     'receiver_address' => [

@@ -50,6 +50,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'CpmsHelperService' => $this->mockCpmsService,
             'FeesHelperService' => $this->mockFeesHelperService,
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
+            'Config' => [],
         ];
 
         $this->sut = new PayOutstandingFees();
