@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
+use Dvsa\Olcs\Api\Service\CpmsHelperInterface;
+
 /**
  * CpmsAwareTrait
  */
@@ -10,16 +12,15 @@ trait CpmsAwareTrait
     protected $cpmsService;
 
     /**
-     * @param Dvsa\Olcs\Api\Service\CpmsHelperService $service
-     * @note not type-hinted as this will be swapped out
+     * @param Dvsa\Olcs\Api\Service\CpmsHelperInterface $service
      */
-    public function setCpmsService($service)
+    public function setCpmsService(CpmsHelperInterface $service)
     {
         $this->cpmsService = $service;
     }
 
     /**
-     * @return Dvsa\Olcs\Api\Service\CpmsHelperService
+     * @return Dvsa\Olcs\Api\Service\CpmsHelperInterface
      */
     public function getCpmsService()
     {

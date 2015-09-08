@@ -18,7 +18,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CpmsV2HelperService implements FactoryInterface
+class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 {
     const PAYMENT_SUCCESS      = 801;
     const PAYMENT_FAILURE      = 802;
