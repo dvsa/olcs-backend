@@ -118,7 +118,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             $feeTransaction = new FeeTransactionEntity();
             $feeTransaction
                 ->setFee($fee)
-                ->setAmount($fee->getAmount())
+                ->setAmount($fee->getOutstandingAmount())
                 ->setTransaction($transaction); // needed for cascade persist to work
             $feeTransactions->add($feeTransaction);
         }
@@ -176,7 +176,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             $feeTransaction = new FeeTransactionEntity();
             $feeTransaction
                 ->setFee($fee)
-                ->setAmount($fee->getAmount())
+                ->setAmount($fee->getOutstandingAmount())
                 ->setTransaction($transaction); // needed for cascade persist to work
             $feeTransactions->add($feeTransaction);
 
@@ -352,7 +352,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     {
         $totalAmount = 0;
         foreach ($fees as $fee) {
-            $totalAmount += (float)$fee->getAmount();
+            $totalAmount += (float)$fee->getOutstandingAmount();
         }
         return $totalAmount;
     }
