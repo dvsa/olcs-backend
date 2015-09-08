@@ -20,24 +20,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 {
-    const PAYMENT_SUCCESS      = 801;
-    const PAYMENT_FAILURE      = 802;
-    const PAYMENT_CANCELLATION = 807;
-    const PAYMENT_IN_PROGRESS  = 800;
-
-    const RESPONSE_SUCCESS = '000';
-
-    // CPMS' preferred date format (note: this changed around 03/2015)
-    const DATE_FORMAT = 'Y-m-d';
-
-    // @TODO product ref shouldn't have to come from a whitelist...
-    const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
-
-    // @TODO this is a dummy value for testing purposes as cost_centre is now
-    // a required parameter in cpms/payment-service. Awaiting further info on
-    // what OLCS should pass for this field.
-    const COST_CENTRE = '12345,67890';
-
     const TAX_CODE = 'Z';
 
     protected $logger;
@@ -66,50 +48,21 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $redirectUrl,
         array $fees
     ) {
-        $totalAmount = $this->getTotalAmountFromFees($fees);
-
-        // Note: CPMS has been known to reject ints as 'missing', so we cast
-        // some fields to strings
 
         $endPoint = '/api/payment/card';
-        $scope    = ApiService::SCOPE_CARD;
+        $scope = ApiService::SCOPE_CARD;
 
-        $params = [
-            'customer_reference' => (string) $this->getCustomerReference($fees),
-            'scope' => $scope,
-            'disable_redirection' => true,
-            'redirect_uri' => $redirectUrl,
-            'payment_data' => [],
-            'cost_centre' => self::COST_CENTRE,
-            'total_amount' => $this->formatAmount($totalAmount),
-            'customer_name' => reset($fees)->getCustomerNameForInvoice(),
-            'customer_manager_name' => '@todo',
-            'customer_address' => reset($fees)->getCustomerAddressForInvoice(),
-        ];
+        $params = array_merge(
+            $this->getStandardParametersForFees($fees),
+            [
+                'redirect_uri' => $redirectUrl,
+                'disable_redirection' => true, // legacy??
+                'scope' => $scope,
+            ]
+        );
 
         foreach ($fees as $fee) {
-            $params['payment_data'][] = [
-                'line_identifier' => (string) $fee->getInvoiceLineNo(),
-                'amount' => $this->formatAmount($fee->getAmount()),
-                'allocated_amount' => $this->formatAmount(
-                    // will change when we do under/overpayment
-                    $fee->getOutstandingAmount()
-                ),
-                // all fees are currently zero rated
-                'net_amount' => $this->formatAmount($fee->getAmount()),
-                'tax_amount' => '0.00',
-                'tax_code' => self::TAX_CODE,
-                'tax_rate' => '0',
-                'invoice_date' => $this->formatDate($fee->getInvoicedDate()),
-                'sales_reference' => (string) $fee->getId(),
-                'product_reference' => $fee->getFeeType()->getDescription(),
-                'receiver_reference' => (string) $customerReference,
-                'receiver_name' => $fee->getCustomerNameForInvoice(),
-                'receiver_address' => $fee->getCustomerAddressForInvoice(),
-                'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
-                'deferment_period' => (string) $fee->getDefermentPeriod(),
-                // 'country_code' ('GB' or 'NI') is optional and deliberately omitted
-            ];
+            $params['payment_data'][] = $this->getStandardPaymentDataForFee($fee);
         }
 
         $this->debug(
@@ -204,7 +157,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function recordCashPayment(
         $fees,
-        $customerReference,
         $amount,
         $receiptDate,
         $payer,
@@ -264,7 +216,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * Record a cheque payment in CPMS
      *
      * @param array $fees
-     * @param string $customerReference
      * @param float $amount
      * @param array $receiptDate (from DateSelect)
      * @param string $payer payer name
@@ -275,7 +226,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function recordChequePayment(
         $fees,
-        $customerReference,
         $amount,
         $receiptDate,
         $payer,
@@ -339,7 +289,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * Record a Postal Order payment in CPMS
      *
      * @param array $fees
-     * @param string $customerReference
      * @param float $amount
      * @param array $receiptDate (from DateSelect)
      * @param string $payer payer name
@@ -349,7 +298,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function recordPostalOrderPayment(
         $fees,
-        $customerReference,
         $amount,
         $receiptDate,
         $payer,
@@ -485,12 +433,12 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     public function formatAddress($address)
     {
          return [
-            'line_1' => $this->getAddressLine1(),
-            'line_2' => $this->getAddressLine2(),
-            'line_3' => $this->getAddressLine3(),
-            'line_4' => $this->getAddressLine4(),
-            'city' => $this->getTown(),
-            'postcode' => $this->getPostcode(),
+            'line_1' => $address->getAddressLine1(),
+            'line_2' => $address->getAddressLine2(),
+            'line_3' => $address->getAddressLine3(),
+            'line_4' => $address->getAddressLine4(),
+            'city' => $address->getTown(),
+            'postcode' => $address->getPostcode(),
         ];
     }
 
@@ -513,5 +461,54 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         }
 
         return $reference;
+    }
+
+    /**
+     * @param Fee $fee
+     * @return array
+     */
+    protected function getStandardPaymentDataForFee($fee)
+    {
+        return [
+            'line_identifier' => (string) $fee->getInvoiceLineNo(),
+            'amount' => $this->formatAmount($fee->getAmount()),
+            'allocated_amount' => $this->formatAmount(
+                // will change when we do under/overpayment
+                $fee->getOutstandingAmount()
+            ),
+            // all fees are currently zero rated
+            'net_amount' => $this->formatAmount($fee->getAmount()),
+            'tax_amount' => '0.00',
+            'tax_code' => self::TAX_CODE,
+            'tax_rate' => '0',
+            'invoice_date' => $this->formatDate($fee->getInvoicedDate()),
+            'sales_reference' => (string) $fee->getId(),
+            'product_reference' => $fee->getFeeType()->getDescription(),
+            'receiver_reference' => (string) $this->getCustomerReference([$fee]),
+            'receiver_name' => $fee->getCustomerNameForInvoice(),
+            'receiver_address' => $this->formatAddress($fee->getCustomerAddressForInvoice()),
+            'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
+            'deferment_period' => (string) $fee->getDefermentPeriod(),
+            // 'country_code' ('GB' or 'NI') is optional and deliberately omitted
+        ];
+    }
+
+        // Note: CPMS has been known to reject ints as 'missing', so we cast
+        // some fields to strings
+
+
+    protected function getStandardParametersForFees(array $fees)
+    {
+        $totalAmount = $this->getTotalAmountFromFees($fees);
+        $firstFee = reset($fees);
+        return [
+            'customer_reference' => (string) $this->getCustomerReference($fees),
+            'payment_data' => [],
+            'cost_centre' => self::COST_CENTRE,
+            'total_amount' => $this->formatAmount($totalAmount),
+            'customer_name' => $firstFee->getCustomerNameForInvoice(),
+            'customer_manager_name' => $firstFee->getCustomerNameForInvoice(),
+            'customer_address' => $this->formatAddress($firstFee->getCustomerAddressForInvoice()),
+        ];
     }
 }
