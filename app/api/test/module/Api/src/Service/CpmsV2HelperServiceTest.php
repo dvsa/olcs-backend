@@ -166,6 +166,23 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->assertSame($response, $result);
     }
 
+    public function testInitiateCardRequestInvalidApiResponse()
+    {
+        $redirectUrl = 'http://olcs-selfserve/foo';
+
+        $fees = [];
+
+        $response = [];
+        $this->setExpectedException(\Exception::class, 'Invalid payment response');
+
+        $this->cpmsClient
+            ->shouldReceive('post')
+            ->with('/api/payment/card', 'CARD', m::any())
+            ->andReturn($response);
+
+        $this->sut->initiateCardRequest($redirectUrl, $fees);
+    }
+
     /**
      * Helper function to generate a stub fee entity
      *
