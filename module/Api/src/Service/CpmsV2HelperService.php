@@ -493,15 +493,17 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         ];
     }
 
-        // Note: CPMS has been known to reject ints as 'missing', so we cast
-        // some fields to strings
-
-
     protected function getStandardParametersForFees(array $fees)
     {
+        if (empty($fees)) {
+            return [];
+        }
+
         $totalAmount = $this->getTotalAmountFromFees($fees);
         $firstFee = reset($fees);
         return [
+            // Note: CPMS has been known to reject ints as 'missing', so we cast
+            // some fields to strings
             'customer_reference' => (string) $this->getCustomerReference($fees),
             'payment_data' => [],
             'cost_centre' => self::COST_CENTRE,
