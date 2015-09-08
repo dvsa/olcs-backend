@@ -23,7 +23,7 @@ final class Text1 implements ProcessInterface
     public function process(PublicationLink $publication, ImmutableArrayObject $context)
     {
         $licence = $publication->getLicence();
-        $text = $licence->getLicNo() . $licence->getLicenceType()->getOlbsKey();
+        $text = $licence->getLicNo() . $licence->getLicenceTypeShortCode();
 
         if ($context->offsetExists('previousPublication')) {
             $text .= ' ' . sprintf($this->previousPublication, $context->offsetGet('previousPublication'));
