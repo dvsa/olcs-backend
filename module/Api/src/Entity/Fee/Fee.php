@@ -2,10 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Entity\Fee;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Doctrine\Common\Collections\Criteria;
 
 /**
  * Fee Entity
@@ -45,6 +47,9 @@ class Fee extends AbstractFee
     const METHOD_CHEQUE       = 'fpm_cheque';
     const METHOD_POSTAL_ORDER = 'fpm_po';
     const METHOD_WAIVE        = 'fpm_waive';
+
+    const DEFAULT_INVOICE_CUSTOMER_NAME = 'Miscellaneous payment';
+    const DEFAULT_INVOICE_ADDRESS_LINE = 'Miscellaneous payment';
 
     public function __construct(FeeType $feeType, $amount, RefData $feeStatus)
     {
@@ -98,6 +103,21 @@ class Fee extends AbstractFee
                 break;
             default:
                 break;
+        }
+    }
+
+    public function getDefermentPeriod()
+    {
+        $map = [
+            self::ACCRUAL_RULE_LICENCE_START        => 60,
+            self::ACCRUAL_RULE_LICENCE_CONTINUATION => 60,
+            self::ACCRUAL_RULE_IMMEDIATE            => 1,
+        ];
+
+        $rule = $this->getFeeType()->getAccrualRule()->getId();
+
+        if (array_key_exists($rule, $map)) {
+            return $map[$rule];
         }
     }
 
@@ -295,5 +315,64 @@ class Fee extends AbstractFee
             'outstanding' => $this->getOutstandingAmount(),
             'receiptNo' => $this->getLatestPaymentRef(),
         ];
+    }
+
+    /**
+     * @return Organisation|null
+     */
+    public function getOrganisation()
+    {
+        if (!empty($this->getLicence())) {
+            return $this->getLicence()->getOrganisation();
+        }
+
+        if (!empty($this->getIrfoGvPermit())) {
+            return $this->getIrfoGvPermit()->getOrganisation();
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerNameForInvoice()
+    {
+        $name = self::DEFAULT_INVOICE_CUSTOMER_NAME;
+
+        if (!empty($this->getOrganisation())) {
+            $name = $organisation->getName();
+        }
+
+        return $name;
+    }
+
+    /**
+     * @return Address
+     */
+    public function getCustomerAddressForInvoice()
+    {
+        if (!empty($this->getLicence())) {
+            $contactDetails = $this->getLicence()->getCorrespondenceCd();
+            if (!empty($contactDetails)) {
+                return $contactDetails->getAddress();
+            }
+        }
+
+        if (!empty($this->getIrfoGvPermit())) {
+            $organisation = $this->getIrfoGvPermit()->getOrganisation();
+            if (!empty($organisation)) {
+                $contactDetails = $organisation->getIrfoContactDetails();
+                if (!empty($contactDetails)) {
+                    return $contactDetails->getAddress();
+                }
+            }
+        }
+
+        // we always need to return a valid address object
+        $default = new Address();
+        $default
+            ->setAddressLine1(self::DEFAULT_INVOICE_ADDRESS_LINE)
+            ->setTown(self::DEFAULT_INVOICE_ADDRESS_LINE)
+            ->setPostcode(self::DEFAULT_INVOICE_ADDRESS_LINE);
+        return $default;
     }
 }

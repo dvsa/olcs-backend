@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\MockLoggerTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -72,18 +73,18 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
     public function testInitiateCardRequest()
     {
-        $customerReference = 99;
+        $organisationId = 99;
         $redirectUrl = 'http://olcs-selfserve/foo';
 
         $fees = [
-            $this->getStubFee(1, 525.25, FeeEntity::ACCRUAL_RULE_IMMEDIATE),
-            $this->getStubFee(2, 125.25, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25'),
+            $this->getStubFee(1, 525.25, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $organisationId),
+            $this->getStubFee(2, 125.25, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25', $organisationId),
         ];
 
         $now = (new DateTime())->format('Y-m-d');
 
         $params = [
-            'customer_reference' => '99',
+            'customer_reference' => $organisationId,
             'scope' => 'CARD',
             'disable_redirection' => true,
             'redirect_uri' => 'http://olcs-selfserve/foo',
@@ -118,20 +119,19 @@ class CpmsHelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
-        $result = $this->sut->initiateCardRequest($customerReference, $redirectUrl, $fees);
+        $result = $this->sut->initiateCardRequest($redirectUrl, $fees);
 
         $this->assertSame($response, $result);
     }
 
     public function testInitiateCardRequestInvalidApiResponse()
     {
-        $customerReference = 99;
         $redirectUrl = 'http://olcs-selfserve/foo';
 
         $fees = [];
 
         $params = [
-            'customer_reference' => '99',
+            'customer_reference' => 'Miscellaneous',
             'scope' => 'CARD',
             'disable_redirection' => true,
             'redirect_uri' => 'http://olcs-selfserve/foo',
@@ -148,7 +148,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
             ->with('/api/payment/card', 'CARD', $params)
             ->andReturn($response);
 
-        $this->sut->initiateCardRequest($customerReference, $redirectUrl, $fees);
+        $this->sut->initiateCardRequest($redirectUrl, $fees);
     }
 
     public function testGetPaymentStatus()
@@ -204,11 +204,13 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
     public function testRecordCashPayment()
     {
-        $fee1 = $this->getStubFee(1, 1234.56);
-        $fee2 = $this->getStubFee(2, 100.10);
+        $organisationId = 99;
+
+        $fee1 = $this->getStubFee(1, 1234.56, null, null, $organisationId);
+        $fee2 = $this->getStubFee(2, 100.10, null, null, $organisationId);
 
         $params = [
-            'customer_reference' => 'cust_ref',
+            'customer_reference' => $organisationId,
             'scope' => 'CASH',
             'total_amount' => '1334.66',
             'payment_data' => [
@@ -250,7 +252,6 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
         $result = $this->sut->recordCashPayment(
             array($fee1, $fee2),
-            'cust_ref',
             '1334.66',
             '2015-01-07',
             'Payer',
@@ -273,7 +274,6 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
         $result = $this->sut->recordCashPayment(
             array(),
-            'cust_ref',
             '1334.66',
             '2015-01-07',
             'Payer',
@@ -285,11 +285,13 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
     public function testRecordChequePayment()
     {
-        $fee1 = $this->getStubFee(1, 1234.56);
-        $fee2 = $this->getStubFee(2, 100.10);
+        $organisationId = 99;
+
+        $fee1 = $this->getStubFee(1, 1234.56, null, null, $organisationId);
+        $fee2 = $this->getStubFee(2, 100.10, null, null, $organisationId);
 
         $params = [
-            'customer_reference' => 'cust_ref',
+            'customer_reference' => $organisationId,
             'scope' => 'CHEQUE',
             'total_amount' => '1334.66',
             'payment_data' => [
@@ -335,7 +337,6 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
         $result = $this->sut->recordChequePayment(
             array($fee1, $fee2),
-            'cust_ref',
             '1334.66',
             '2015-01-07',
             'Payer',
@@ -360,7 +361,6 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
         $result = $this->sut->recordChequePayment(
             array(),
-            'cust_ref',
             '1334.66',
             '2015-01-07',
             'Payer',
@@ -374,11 +374,13 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
     public function testRecordPostalOrderPayment()
     {
-        $fee1 = $this->getStubFee(1, 1234.56);
-        $fee2 = $this->getStubFee(2, 100.10);
+        $organisationId = 99;
+
+        $fee1 = $this->getStubFee(1, 1234.56, null, null, $organisationId);
+        $fee2 = $this->getStubFee(2, 100.10, null, null, $organisationId);
 
         $params = [
-            'customer_reference' => 'cust_ref',
+            'customer_reference' => $organisationId,
             'scope' => 'POSTAL_ORDER',
             'total_amount' => '1334.66',
             'payment_data' => [
@@ -422,7 +424,6 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
         $result = $this->sut->recordPostalOrderPayment(
             array($fee1, $fee2),
-            'cust_ref',
             '1334.66',
             '2015-01-07',
             'Payer',
@@ -446,7 +447,6 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
         $result = $this->sut->recordPostalOrderPayment(
             array(),
-            'cust_ref',
             '1334.66',
             '2015-01-07',
             'Payer',
@@ -470,7 +470,8 @@ class CpmsHelperServiceTest extends MockeryTestCase
         $id,
         $amount,
         $accrualRule = null,
-        $licenceStartDate = null
+        $licenceStartDate = null,
+        $organisationId = null
     ) {
         $status = new RefData();
         $rule = new RefData();
@@ -483,11 +484,17 @@ class CpmsHelperServiceTest extends MockeryTestCase
         $fee = new FeeEntity($feeType, $amount, $status);
         $fee->setId($id);
 
+        $organisation = new OrganisationEntity();
+        $organisation->setId($organisationId);
+
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setOrganisation($organisation);
+
         if (!is_null($licenceStartDate)) {
-            $licence = m::mock(LicenceEntity::class)->makePartial();
             $licence->setInForceDate($licenceStartDate);
-            $fee->setLicence($licence);
         }
+
+        $fee->setLicence($licence);
 
         return $fee;
     }
