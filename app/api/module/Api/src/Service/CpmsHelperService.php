@@ -18,7 +18,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CpmsHelperService implements FactoryInterface
+class CpmsHelperService implements FactoryInterface, CpmsHelperInterface
 {
     const PAYMENT_SUCCESS      = 801;
     const PAYMENT_FAILURE      = 802;
@@ -396,7 +396,7 @@ class CpmsHelperService implements FactoryInterface
      * @param array $fees
      * return string
      */
-    public function getTotalAmountFromFees($fees)
+    protected function getTotalAmountFromFees($fees)
     {
         $totalAmount = 0;
         foreach ($fees as $fee) {
@@ -444,7 +444,7 @@ class CpmsHelperService implements FactoryInterface
      * @param string|DateTime $date
      * @return string
      */
-    public function formatDate($date)
+    protected function formatDate($date)
     {
         if (!is_null($date)) {
             if (is_string($date)) {

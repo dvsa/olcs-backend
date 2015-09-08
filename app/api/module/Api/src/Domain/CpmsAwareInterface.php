@@ -2,19 +2,20 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
+use Dvsa\Olcs\Api\Service\CpmsHelperInterface;
+
 /**
  * Cpms Aware Interface
  */
 interface CpmsAwareInterface
 {
     /**
-     * @param Dvsa\Olcs\Api\Service\CpmsHelperService $service
-     * @note not type-hinted as this will be swapped out
+     * @param Dvsa\Olcs\Api\Service\CpmsHelperInterface $service
      */
-    public function setCpmsService($service);
+    public function setCpmsService(CpmsHelperInterface $service);
 
     /**
-     * @return Dvsa\Olcs\Api\Service\CpmsHelperService
+     * @return Dvsa\Olcs\Api\Service\CpmsHelperInterface
      */
     public function getCpmsService();
 }
