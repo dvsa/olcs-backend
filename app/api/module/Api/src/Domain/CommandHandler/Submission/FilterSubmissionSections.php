@@ -9,8 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
-use Dvsa\Olcs\Transfer\Command\Submission\UpdateSubmission as Cmd;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Transfer\Command\Submission\FilterSubmissionSections as Cmd;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
@@ -27,20 +26,13 @@ final class FilterSubmissionSections extends AbstractCommandHandler implements S
     public function handleCommand(CommandInterface $command)
     {
         /** @var Submission $submission */
-        $submission = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
-
-        $existingData = $submission->getDataSnapshot();
-
-        $submissionEntity = $this->getSubmissionGenerator()->generateSubmission(
-            $submissionEntity,
-            $command->getSections()
-        );
+        $submissionEntity = $this->filterSubmission($command);
 
         $this->getRepo()->save($submissionEntity);
 
         $result = new Result();
         $result->addId('submission', $submissionEntity->getId());
-        $result->addMessage('Submission updated successfully');
+        $result->addMessage('Submission filtered successfully');
 
         return $result;
     }
@@ -49,32 +41,52 @@ final class FilterSubmissionSections extends AbstractCommandHandler implements S
      * @param Cmd $command
      * @return Submission
      */
-    private function updateSubmission(Cmd $command)
+    private function filterSubmission(Cmd $command)
     {
-        $submission = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        /** @var Submission $submissionEntity */
+        $submissionEntity = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        if ($command->getSubmissionType() !== null) {
-            $submission->setSubmissionType($this->getRepo()->getRefdataReference($command->getSubmissionType()));
+        // set section data prior to update in order to retain any other sections
+        $dataSnapshot = json_decode($submissionEntity->getDataSnapshot(), true);
+
+        foreach ($dataSnapshot as $sectionId => $sectionData) {
+            if ($sectionId === $command->getSection()) {
+
+                if (!empty($command->getSubSection()) &&
+                    is_array($sectionData['data']['tables'][$command->getSubSection()])
+                ) {
+                    // filter a subsection table
+                    $sectionData['data']['tables'][$command->getSubSection()] = $this->filterTable(
+                        $sectionData['data']['tables'][$command->getSubSection()],
+                        $command->getRowsToFilter()
+                    );
+                } else {
+                    // filter section table
+                    $sectionData['data']['tables'][$sectionId] = $this->filterTable(
+                        $sectionData['data']['tables'][$sectionId],
+                        $command->getRowsToFilter()
+                    );
+                }
+            }
+
+            $submissionEntity->setSectionData($sectionId, $sectionData);
         }
 
-        if ($command->getRecipientUser() !== null) {
-            $submission->setRecipientUser(
-                $this->getRepo()->getReference(UserEntity::class, $command->getRecipientUser())
-            );
-        }
+        $submissionEntity->setSubmissionDataSnapshot();
 
-        if ($command->getSenderUser() !== null) {
-            $submission->setSenderUser($this->getRepo()->getReference(UserEntity::class, $command->getSenderUser()));
-        }
-
-        if ($command->getClosedDate() !== null) {
-            $submission->setClosedDate($command->getClosedDate());
-        }
-
-        if ($command->getUrgent() !== null) {
-            $submission->setUrgent($command->getUrgent());
-        }
-
-        return $submission;
+        return $submissionEntity;
     }
+
+    private function filterTable($table, $rowsToRemove)
+    {
+        foreach ($table as $key => $dataRow) {
+            if (in_array($dataRow['id'], $rowsToRemove)) {
+                unset($table[$key]);
+            }
+        }
+        ksort($table);
+
+        return $table;
+    }
+
 }

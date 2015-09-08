@@ -48,14 +48,24 @@ final class RefreshSubmissionSections extends AbstractCommandHandler implements 
 
         // set section data prior to update in order to retain any other sections
         $dataSnapshot = json_decode($submissionEntity->getDataSnapshot(), true);
-        foreach ($dataSnapshot as $section => $sectionData) {
-            $submissionEntity->setSectionData($section, $sectionData);
+        foreach ($dataSnapshot as $sectionId => $sectionData) {
+            if ($sectionId === $command->getSection()) {
+                // refresh data
+                $refreshData = $this->getSubmissionGenerator()->generateSubmissionSectionData(
+                    $submissionEntity,
+                    $sectionId
+                );
+                if (!empty($command->getSubSection())) {
+                    $sectionData['data']['tables'][$command->getSubSection()] =
+                        $refreshData['data']['tables'][$command->getSubSection()];
+                } else {
+                    $sectionData = $refreshData;
+                }
+            }
+            $submissionEntity->setSectionData($sectionId, $sectionData);
         }
 
-        $submissionEntity = $this->getSubmissionGenerator()->generateSubmission(
-            $submissionEntity,
-            $command->getSections()
-        );
+        $submissionEntity->setSubmissionDataSnapshot();
 
         return $submissionEntity;
     }
