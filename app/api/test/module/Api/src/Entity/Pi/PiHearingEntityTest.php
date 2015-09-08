@@ -35,6 +35,7 @@ class PiHearingEntityTest extends EntityTester
     public function testCreateNotAdjournedOrCancelled()
     {
         $piEntity = m::mock(PiEntity::class);
+        $piEntity->shouldReceive('isClosed')->andReturn(false);
         $presidingTc = m::mock(PresidingTcEntity::class);
         $presidedByRole = m::mock(RefData::class);
         $hearingDate = m::mock(\DateTime::class);
@@ -90,6 +91,9 @@ class PiHearingEntityTest extends EntityTester
      */
     public function testUpdateWithAdjournedOrCancelled($adjournedDate)
     {
+        $piEntity = m::mock(PiEntity::class);
+        $piEntity->shouldReceive('isClosed')->andReturn(false);
+        $this->entity->setPi($piEntity);
         $presidingTc = m::mock(PresidingTcEntity::class);
         $presidedByRole = m::mock(RefData::class);
         $hearingDate = m::mock(\DateTime::class);
@@ -134,6 +138,64 @@ class PiHearingEntityTest extends EntityTester
         $this->assertEquals($entityAdjournedDate, $this->entity->getAdjournedDate());
         $this->assertEquals($adjournedReason, $this->entity->getAdjournedReason());
         $this->assertEquals($details, $this->entity->getDetails());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testCreateExceptionWhenPiClosed()
+    {
+        $piEntity = m::mock(PiEntity::class);
+        $piEntity->shouldReceive('isClosed')->andReturn(true);
+        $presidingTc = m::mock(PresidingTcEntity::class);
+        $presidedByRole = m::mock(RefData::class);
+        $hearingDate = m::mock(\DateTime::class);
+
+        $hearing = new Entity(
+            $piEntity,
+            $presidingTc,
+            $presidedByRole,
+            $hearingDate,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateExceptionWhenPiClosed()
+    {
+        $piEntity = m::mock(PiEntity::class);
+        $piEntity->shouldReceive('isClosed')->andReturn(true);
+        $this->entity->setPi($piEntity);
+        $presidingTc = m::mock(PresidingTcEntity::class);
+        $presidedByRole = m::mock(RefData::class);
+        $hearingDate = m::mock(\DateTime::class);
+
+        $this->entity->update(
+            $presidingTc,
+            $presidedByRole,
+            $hearingDate,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
     }
 
     /**
