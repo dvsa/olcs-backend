@@ -133,9 +133,9 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="invoice_line_no", nullable=true)
+     * @ORM\Column(type="smallint", name="invoice_line_no", nullable=false, options={"default": 1})
      */
-    protected $invoiceLineNo;
+    protected $invoiceLineNo = 1;
 
     /**
      * Invoiced date
