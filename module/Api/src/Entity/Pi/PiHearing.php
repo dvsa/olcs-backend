@@ -192,6 +192,16 @@ class PiHearing extends AbstractPiHearing
         );
     }
 
+    /**
+     * Process adjourned and cancelled information
+     *
+     * @param $isCancelled
+     * @param $cancelledReason
+     * @param $cancelledDate
+     * @param $isAdjourned
+     * @param $adjournedReason
+     * @param $adjournedDate
+     */
     private function processAdjournedAndCancelled(
         $isCancelled,
         $cancelledReason,
