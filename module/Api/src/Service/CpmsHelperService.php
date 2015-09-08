@@ -402,15 +402,15 @@ class CpmsHelperService implements FactoryInterface
 
     /**
      * @param array $fees
-     * return float
+     * return string
      */
-    protected function getTotalAmountFromFees($fees)
+    public function getTotalAmountFromFees($fees)
     {
         $totalAmount = 0;
         foreach ($fees as $fee) {
-            $totalAmount += (float)$fee->getAmount();
+            $totalAmount += (float)$fee->getOutstandingAmount();
         }
-        return $totalAmount;
+        return $this->formatAmount($totalAmount);
     }
 
     protected function debug($message, $data)
