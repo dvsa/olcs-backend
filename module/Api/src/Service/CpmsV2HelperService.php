@@ -70,7 +70,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             [
                 'method' => [
                     'location' => __METHOD__,
-                    'data' => func_get_args()
                 ],
                 'endPoint' => $endPoint,
                 'scope'    => $scope,
@@ -193,7 +192,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             [
                 'method' => [
                     'location' => __METHOD__,
-                    'data' => func_get_args()
                 ],
                 'endPoint' => $endPoint,
                 'scope'    => $scope,
@@ -266,7 +264,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             [
                 'method' => [
                     'location' => __METHOD__,
-                    'data' => func_get_args()
                 ],
                 'endPoint' => $endPoint,
                 'scope'    => $scope,
@@ -336,7 +333,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             [
                 'method' => [
                     'location' => __METHOD__,
-                    'data' => func_get_args()
                 ],
                 'endPoint' => $endPoint,
                 'scope'    => $scope,
@@ -384,7 +380,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             [
                 'data' => array_merge(
                     [
-                        'domain' => $this->cpmsClient->getOptions()->getDomain(),
+                        'domain' => $this->getClient()->getOptions()->getDomain(),
                     ],
                     $data
                 ),
@@ -483,7 +479,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'tax_rate' => '0',
             'invoice_date' => $this->formatDate($fee->getInvoicedDate()),
             'sales_reference' => (string) $fee->getId(),
-            'product_reference' => $fee->getFeeType()->getDescription(),
+            'product_reference' => self::PRODUCT_REFERENCE,
+            // @todo - cpms responds  {"code":104,"message":"product_reference is invalid"}
+            // 'product_reference' => $fee->getFeeType()->getDescription(),
             'receiver_reference' => (string) $this->getCustomerReference([$fee]),
             'receiver_name' => $fee->getCustomerNameForInvoice(),
             'receiver_address' => $this->formatAddress($fee->getCustomerAddressForInvoice()),
