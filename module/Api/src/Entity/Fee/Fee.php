@@ -109,9 +109,9 @@ class Fee extends AbstractFee
     public function getDefermentPeriod()
     {
         $map = [
-            self::ACCRUAL_RULE_LICENCE_START        => 60,
-            self::ACCRUAL_RULE_LICENCE_CONTINUATION => 60,
-            self::ACCRUAL_RULE_IMMEDIATE            => 1,
+            self::ACCRUAL_RULE_LICENCE_START => 60,
+            self::ACCRUAL_RULE_CONTINUATION  => 60,
+            self::ACCRUAL_RULE_IMMEDIATE     => 1,
         ];
 
         $rule = $this->getFeeType()->getAccrualRule()->getId();
@@ -339,7 +339,7 @@ class Fee extends AbstractFee
         $name = self::DEFAULT_INVOICE_CUSTOMER_NAME;
 
         if (!empty($this->getOrganisation())) {
-            $name = $organisation->getName();
+            $name = $this->getOrganisation()->getName();
         }
 
         return $name;

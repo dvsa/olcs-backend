@@ -4,6 +4,7 @@
  * Cpms Helper Service
  *
  * @author Dan Eggleston <dan@stolenegg.com>
+ * @deprecated to be replaced eventually by CpmsV2HelperService
  */
 namespace Dvsa\Olcs\Api\Service;
 
@@ -20,24 +21,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class CpmsHelperService implements FactoryInterface, CpmsHelperInterface
 {
-    const PAYMENT_SUCCESS      = 801;
-    const PAYMENT_FAILURE      = 802;
-    const PAYMENT_CANCELLATION = 807;
-    const PAYMENT_IN_PROGRESS  = 800;
-
-    const RESPONSE_SUCCESS = '000';
-
-    // CPMS' preferred date format (note: this changed around 03/2015)
-    const DATE_FORMAT = 'Y-m-d';
-
-    // @TODO product ref shouldn't have to come from a whitelist...
-    const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
-
-    // @TODO this is a dummy value for testing purposes as cost_centre is now
-    // a required parameter in cpms/payment-service. Awaiting further info on
-    // what OLCS should pass for this field.
-    const COST_CENTRE = '12345,67890';
-
     protected $logger;
 
     protected $cpmsClient;
