@@ -643,6 +643,7 @@ return [
     Command\Vehicle\CeaseActiveDiscs::class => CommandHandler\Vehicle\CeaseActiveDiscs::class,
     TransferCommand\Vehicle\ReprintDisc::class => CommandHandler\Vehicle\ReprintDisc::class,
     Command\Vehicle\CreateGoodsDiscs::class => CommandHandler\Vehicle\CreateGoodsDiscs::class,
+    TransferCommand\Vehicle\UpdateSection26::class => CommandHandler\Vehicle\UpdateSection26::class,
 
     // Transfer - InspectionRequest
     TransferCommand\InspectionRequest\Create::class => CommandHandler\InspectionRequest\Create::class,
