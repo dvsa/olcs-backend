@@ -34,6 +34,7 @@ class CompleteTransactionTest extends CommandHandlerTestCase
         $this->mockCpmsService = m::mock(CpmsHelper::class);
         $this->mockedSmServices = [
             'CpmsHelperService' => $this->mockCpmsService,
+            'Config' => [],
         ];
 
         $this->sut = new CompleteTransaction();

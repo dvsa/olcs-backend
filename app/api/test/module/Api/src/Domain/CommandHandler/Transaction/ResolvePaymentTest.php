@@ -39,6 +39,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             'CpmsHelperService' => $this->mockCpmsService,
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
+            'Config' => [],
         ];
 
         $this->sut = new ResolvePayment();
