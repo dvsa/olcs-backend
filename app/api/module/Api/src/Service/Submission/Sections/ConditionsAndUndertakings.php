@@ -28,11 +28,12 @@ final class ConditionsAndUndertakings extends AbstractSection
         $tables = ['undertakings' => [], 'conditions' => []];
 
         // CUs attached to the case
-        $caseConditionsAndUndertakings = $case->getConditionUndertakings();
+        $caseConditionsAndUndertakings = $case->getConditionUndertakingsAddedViaCase();
         if (!empty($caseConditionsAndUndertakings)) {
+            /** @var ConditionUndertaking $entity */
             foreach ($caseConditionsAndUndertakings as $entity) {
                 $tables[$this->determineTableName($entity)][] =
-                    $this->generateSubmissionEntity($entity, $entity->getId());
+                    $this->generateSubmissionEntity($entity, $entity->getCase()->getId());
             }
         }
 
@@ -51,10 +52,10 @@ final class ConditionsAndUndertakings extends AbstractSection
         }
 
         // CUs attached to the licence
-        $licenceConditionsUndertakings = $case->getLicence()->getConditionUndertakings();
+        $licenceConditionsUndertakings = $case->getLicence()->getConditionUndertakingsAddedViaLicence();
         foreach ($licenceConditionsUndertakings as $entity) {
             $tables[$this->determineTableName($entity)][] =
-                $this->generateSubmissionEntity($entity, $case->getLicence()->getId());
+                $this->generateSubmissionEntity($entity, $case->getLicence()->getLicNo());
         }
 
         usort(

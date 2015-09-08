@@ -333,4 +333,23 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
             'canClose' => $this->canClose()
         ];
     }
+
+    /**
+     * Return Conditions and Undertakings that are added via Case. Used in submissions.
+     *
+     * @return \Doctrine\Common\Collections\Collection|static
+     */
+    public function getConditionUndertakingsAddedViaCase()
+    {
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->in(
+                    'addedVia',
+                    [
+                        ConditionUndertaking::ADDED_VIA_CASE
+                    ]
+                )
+            );
+        return $this->getConditionUndertakings()->matching($criteria);
+    }
 }
