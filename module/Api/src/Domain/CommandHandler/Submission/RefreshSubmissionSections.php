@@ -55,6 +55,7 @@ final class RefreshSubmissionSections extends AbstractCommandHandler implements 
                     $submissionEntity,
                     $sectionId
                 );
+
                 if (!empty($command->getSubSection())) {
                     $sectionData['data']['tables'][$command->getSubSection()] =
                         $refreshData['data']['tables'][$command->getSubSection()];
