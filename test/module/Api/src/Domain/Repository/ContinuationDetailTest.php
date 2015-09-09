@@ -9,6 +9,10 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail as Repo;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * ContinuationDetailTest
@@ -87,5 +91,107 @@ EOT;
         $expectedQuery = 'BLAH AND m.licence = [[95]] AND m.status = [[con_det_sts_acceptable]]';
 
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchChecklistReminders()
+    {
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->twice()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('continuation', 'c')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.status', 'ls')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.licenceType', 'lt')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.goodsOrPsv', 'lgp')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.organisation', 'lo')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.fees', 'lf')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('lf.feeType', 'lfft')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->in')->with('l.status', ':licenceStatuses')->once()->andReturn('conditionLic');
+        $mockQb->shouldReceive('andWhere')->with('conditionLic')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with(
+                'licenceStatuses',
+                [
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED
+                ]
+            )
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('m.received', 0)->once()->andReturn('conditionReceived');
+        $mockQb->shouldReceive('andWhere')->with('conditionReceived')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')
+            ->with('lfft.feeType', ':feeType')
+            ->once()
+            ->andReturn('conditionType');
+        $mockQb->shouldReceive('expr->in')
+            ->with('lf.feeStatus', ':feeStatus')
+            ->once()
+            ->andReturn('conditionStatus');
+        $mockQb->shouldReceive('expr->andX')
+            ->with('conditionType', 'conditionStatus')
+            ->once()
+            ->andReturn('conditionAndX');
+        $mockQb->shouldReceive('expr->not')
+            ->with('conditionAndX')
+            ->once()
+            ->andReturn('conditionNot');
+        $mockQb->shouldReceive('expr->isNull')
+            ->with('lf.id')
+            ->once()->
+            andReturn('conditionIsNull');
+        $mockQb->shouldReceive('expr->orX')
+            ->with('conditionNot', 'conditionIsNull')
+            ->once()
+            ->andReturn('conditionOrX');
+        $mockQb->shouldReceive('andWhere')->with('conditionOrX')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('feeType', FeeTypeEntity::FEE_TYPE_CONT)
+            ->once()
+            ->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('feeStatus', [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED])
+            ->once()
+            ->andReturnSelf();
+
+        $this->queryBuilder->shouldReceive('filterByIds')->with([1])->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')
+            ->with('c.month', ':month')
+            ->once()
+            ->andReturn('conditionMonth');
+        $mockQb->shouldReceive('andWhere')->with('conditionMonth')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('month', 1)
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')
+            ->with('c.year', ':year')
+            ->once()
+            ->andReturn('conditionYear');
+        $mockQb->shouldReceive('andWhere')->with('conditionYear')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('year', 2016)
+            ->once()
+            ->andReturnSelf();
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('m')
+            ->once()
+            ->andReturn($mockQb);
+
+        $mockQb->shouldReceive('getQuery->getResult')
+            ->with(\Doctrine\ORM\Query::HYDRATE_ARRAY)
+            ->once()
+            ->andReturn(['result']);
+
+        $this->sut->fetchChecklistReminders(1, 2016, [1]);
     }
 }
