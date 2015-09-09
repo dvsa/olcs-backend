@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Pi\PiVenue as PiVenueEntity;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
  * PiHearing Entity
@@ -93,6 +94,7 @@ class PiHearing extends AbstractPiHearing
      * @param string $adjournedDate
      * @param string $adjournedReason
      * @param string $details
+     * @throws ForbiddenException
      */
     private function create(
         PiEntity $pi,
@@ -110,6 +112,10 @@ class PiHearing extends AbstractPiHearing
         $adjournedReason,
         $details
     ) {
+        if ($pi->isClosed()) {
+            throw new ForbiddenException('Can\'t create a hearing for a closed Pi');
+        }
+
         $this->pi = $pi;
         $this->presidingTc = $presidingTc;
         $this->presidedByRole = $presidedByRole;
@@ -145,6 +151,7 @@ class PiHearing extends AbstractPiHearing
      * @param string $adjournedDate
      * @param string $adjournedReason
      * @param string $details
+     * @throws ForbiddenException
      */
     public function update(
         PresidingTcEntity $presidingTc,
@@ -161,6 +168,10 @@ class PiHearing extends AbstractPiHearing
         $adjournedReason,
         $details
     ) {
+        if ($this->getPi()->isClosed()) {
+            throw new ForbiddenException('Can\'t update a hearing for a closed Pi');
+        }
+
         $this->presidingTc = $presidingTc;
         $this->presidedByRole = $presidedByRole;
         $this->piVenue = $piVenue;
@@ -181,6 +192,16 @@ class PiHearing extends AbstractPiHearing
         );
     }
 
+    /**
+     * Process adjourned and cancelled information
+     *
+     * @param $isCancelled
+     * @param $cancelledReason
+     * @param $cancelledDate
+     * @param $isAdjourned
+     * @param $adjournedReason
+     * @param $adjournedDate
+     */
     private function processAdjournedAndCancelled(
         $isCancelled,
         $cancelledReason,

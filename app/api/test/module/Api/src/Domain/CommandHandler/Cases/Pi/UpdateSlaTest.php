@@ -59,6 +59,7 @@ class UpdateSlaTest extends CommandHandlerTestCase
 
         /** @var PiEntity $pi */
         $pi = m::mock(PiEntity::class)->makePartial();
+        $pi->shouldReceive('isClosed')->once()->andReturn(false);
 
         $this->repoMap['Pi']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, $version)

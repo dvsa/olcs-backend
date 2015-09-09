@@ -39,6 +39,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 {
     const STATUS_REGISTERED = 'pi_s_reg';
+    const MSG_UPDATE_CLOSED = 'Can\'t update a closed Pi';
 
     /**
      * @param CasesEntity $case
@@ -74,6 +75,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
      * @param \DateTime $agreedDate
      * @param RefData $piStatus
      * @param String $comment
+     * @throws ForbiddenException
      */
     private function create(
         CasesEntity $case,
@@ -85,6 +87,10 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         RefData $piStatus,
         $comment
     ) {
+        if ($case->isClosed()) {
+            throw new ForbiddenException('Can\'t create a Pi for a closed case');
+        }
+
         $this->case = $case;
         $this->agreedByTc = $agreedByTc;
         $this->agreedByTcRole = $agreedByTcRole;
@@ -102,6 +108,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
      * @param ArrayCollection $reasons
      * @param \DateTime $agreedDate
      * @param String $comment
+     * @throws ForbiddenException
      */
     public function updateAgreedAndLegislation(
         PresidingTcEntity $agreedByTc,
@@ -111,6 +118,10 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         \DateTime $agreedDate,
         $comment
     ) {
+        if ($this->isClosed()) {
+            throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
+        }
+
         $this->agreedByTc = $agreedByTc;
         $this->agreedByTcRole = $agreedByTcRole;
         $this->piTypes = $piTypes;
@@ -130,6 +141,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
      * @param $decisionDate
      * @param $notificationDate
      * @param $decisionNotes
+     * @throws ForbiddenException
      */
     public function updatePiWithDecision(
         $decidedByTc,
@@ -143,6 +155,10 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $notificationDate,
         $decisionNotes
     ) {
+        if ($this->isClosed()) {
+            throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
+        }
+
         $this->setDecidedByTc($decidedByTc);
         $this->decidedByTcRole = $decidedByTcRole;
         $this->decisions = $decisions;
@@ -159,9 +175,14 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
      * @param RefData|null $writtenOutcome
      * @param string $callUpLetterDate
      * @param string $briefToTcDate
+     * @throws ForbiddenException
      */
     public function updateWrittenOutcomeNone($writtenOutcome, $callUpLetterDate, $briefToTcDate)
     {
+        if ($this->isClosed()) {
+            throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
+        }
+
         $this->updateSla(
             $writtenOutcome,
             $this->processDate($callUpLetterDate),
@@ -179,6 +200,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
      * @param string $briefToTcDate
      * @param string $tcWrittenDecisionDate
      * @param string $decisionLetterSentDate
+     * @throws ForbiddenException
      */
     public function updateWrittenOutcomeDecision(
         RefData $writtenOutcome,
@@ -187,6 +209,10 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $tcWrittenDecisionDate,
         $decisionLetterSentDate
     ) {
+        if ($this->isClosed()) {
+            throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
+        }
+
         $this->updateSla(
             $writtenOutcome,
             $this->processDate($callUpLetterDate),
@@ -204,6 +230,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
      * @param string $briefToTcDate
      * @param string $tcWrittenReasonDate
      * @param string $writtenReasonLetterDate
+     * @throws ForbiddenException
      */
     public function updateWrittenOutcomeReason(
         RefData $writtenOutcome,
@@ -212,6 +239,10 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $tcWrittenReasonDate,
         $writtenReasonLetterDate
     ) {
+        if ($this->isClosed()) {
+            throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
+        }
+
         $this->updateSla(
             $writtenOutcome,
             $this->processDate($callUpLetterDate),
