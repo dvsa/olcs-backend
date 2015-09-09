@@ -84,8 +84,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $params = $this->getParametersForFees($fees, $extraParams);
 
         foreach ($fees as $fee) {
-            $extraPaymentData = [];
-            $params['payment_data'][] = $this->getPaymentDataForFee($fee, $extraPaymentData);
+            $params['payment_data'][] = $this->getPaymentDataForFee($fee);
         }
 
         $response = $this->send($method, $endPoint, $scope, $params);
@@ -147,35 +146,31 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param string $slipNo paying in slip number
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
+     *
+     * @todo batch_number
+     * @todo $payer appears to be no longer required, but retained to keep the
+     * interface the same as v1
      */
     public function recordCashPayment($fees, $amount, $receiptDate, $payer, $slipNo)
     {
+        unset($payer); // unused
+
         $method   = 'post';
         $endPoint = '/api/payment/cash';
         $scope    = ApiService::SCOPE_CASH;
 
-        $paymentData = [];
-        foreach ($fees as $fee) {
-            $paymentData[] = [
-                'amount' => $this->formatAmount($fee->getAmount()),
-                'sales_reference' => (string)$fee->getId(),
-                'product_reference' => self::PRODUCT_REFERENCE,
-                'payer_details' => $payer,
-                'payment_reference' => [
-                    'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
-                    'receipt_date' => $this->formatDate($receiptDate),
-                    'slip_number' => (string)$slipNo,
-                ],
-            ];
-        }
-
-        $params = [
-            'customer_reference' => (string) $this->getCustomerReference($fees),
+        $extraParams = [
+            'slip_number' => (string) $slipNo,
+            'batch_number' => '',
+            'receipt_date' => $this->formatDate($receiptDate),
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
-            'payment_data' => $paymentData,
-            'cost_centre' => self::COST_CENTRE,
         ];
+        $params = $this->getParametersForFees($fees, $extraParams);
+
+        foreach ($fees as $fee) {
+            $params['payment_data'][] = $this->getPaymentDataForFee($fee);
+        }
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
@@ -187,13 +182,16 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @param array $fees
      * @param float $amount
-     * @param array $receiptDate (from DateSelect)
+     * @param string $receiptDate (from DateSelect)
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
      * @param string $chequeNo cheque number
      * @param string $chequeDate (from DateSelect)
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
+     *
+     * @todo API docs aren't clear which fields should go top level or in payment_data
+     * @todo batch_number
      */
     public function recordChequePayment($fees, $amount, $receiptDate, $payer, $slipNo, $chequeNo, $chequeDate)
     {
@@ -201,30 +199,21 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $endPoint = '/api/payment/cheque';
         $scope    = ApiService::SCOPE_CHEQUE;
 
-        $paymentData = [];
-        foreach ($fees as $fee) {
-            $paymentData[] = [
-                'amount' => $this->formatAmount($fee->getAmount()),
-                'sales_reference' => (string)$fee->getId(),
-                'product_reference' => self::PRODUCT_REFERENCE,
-                'payer_details' => $payer,
-                'payment_reference' => [
-                    'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
-                    'receipt_date' => $this->formatDate($receiptDate),
-                    'cheque_number' => (string)$chequeNo,
-                    'cheque_date' => $this->formatDate($chequeDate),
-                    'slip_number' => (string)$slipNo,
-                ],
-            ];
-        }
-
-        $params = [
-            'customer_reference' => (string) $this->getCustomerReference($fees),
+        $extraParams = [
+            'cheque_date' => $this->formatDate($chequeDate),
+            'cheque_number' => (string)$chequeNo,
+            'slip_number' => (string) $slipNo,
+            'batch_number' => '',
+            'receipt_date' => $this->formatDate($receiptDate),
+            'name_on_cheque' => $payer,
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
-            'payment_data' => $paymentData,
-            'cost_centre' => self::COST_CENTRE,
         ];
+        $params = $this->getParametersForFees($fees, $extraParams);
+
+        foreach ($fees as $fee) {
+            $params['payment_data'][] = $this->getPaymentDataForFee($fee);
+        }
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
@@ -236,44 +225,40 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @param array $fees
      * @param float $amount
-     * @param array $receiptDate (from DateSelect)
+     * @param string $receiptDate (from DateSelect)
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
      * @param string $poNo Postal Order number
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
+     *
+     * @todo batch_number
+     * @todo $payer appears to be no longer required, but retained to keep the
+     * interface the same as v1
      */
     public function recordPostalOrderPayment($fees, $amount, $receiptDate, $payer, $slipNo, $poNo)
     {
+        unset($payer); // unused
+
         $method   = 'post';
         $endPoint = '/api/payment/postal-order';
         $scope    = ApiService::SCOPE_POSTAL_ORDER;
 
-        $paymentData = [];
-        foreach ($fees as $fee) {
-            $paymentData[] = [
-                'amount' => $this->formatAmount($fee->getAmount()),
-                'sales_reference' => (string)$fee->getid(),
-                'product_reference' => self::PRODUCT_REFERENCE,
-                'payer_details' => $payer,
-                'payment_reference' => [
-                    'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
-                    'receipt_date' => $this->formatDate($receiptDate),
-                    'postal_order_number' => [ $poNo ], // array!
-                    'slip_number' => (string)$slipNo,
-                ],
-            ];
-        }
-
-        $params = [
-            'customer_reference' => (string) $this->getCustomerReference($fees),
+        $extraParams = [
+            'postal_order_number' => (string) $poNo,
+            'slip_number' => (string) $slipNo,
+            'batch_number' => '',
+            'receipt_date' => $this->formatDate($receiptDate),
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
-            'payment_data' => $paymentData,
-            'cost_centre' => self::COST_CENTRE,
         ];
+        $params = $this->getParametersForFees($fees, $extraParams);
 
-         $response = $this->send($method, $endPoint, $scope, $params);
+        foreach ($fees as $fee) {
+            $params['payment_data'][] = $this->getPaymentDataForFee($fee);
+        }
+
+        $response = $this->send($method, $endPoint, $scope, $params);
 
         return $this->validatePaymentResponse($response);
     }
@@ -401,6 +386,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param Fee $fee
      * @param array $extraPayment data
      * @return array
+     *
+     * @todo 'product_reference' should be $fee->getFeeType()->getDescription()
+     * but CPMS has a whitelist and responds  {"code":104,"message":"product_reference is invalid"}
      */
     protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [])
     {
@@ -419,8 +407,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'invoice_date' => $this->formatDate($fee->getInvoicedDate()),
             'sales_reference' => (string) $fee->getId(),
             'product_reference' => self::PRODUCT_REFERENCE,
-            // @todo - cpms responds  {"code":104,"message":"product_reference is invalid"}
-            // 'product_reference' => $fee->getFeeType()->getDescription(),
             'product_description' => $fee->getFeeType()->getDescription(),
             'receiver_reference' => (string) $this->getCustomerReference([$fee]),
             'receiver_name' => $fee->getCustomerNameForInvoice(),
