@@ -88,5 +88,4 @@ final class FilterSubmissionSections extends AbstractCommandHandler implements S
 
         return $table;
     }
-
 }
