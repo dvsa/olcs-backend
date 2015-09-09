@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Service;
 
 use Dvsa\Olcs\Api\Service\CpmsV2HelperService as Sut;
+use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -175,7 +176,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $fees = [];
 
         $response = [];
-        $this->setExpectedException(\Exception::class, 'Invalid payment response');
+        $this->setExpectedException(CpmsResponseException::class, 'Invalid payment response');
 
         $this->cpmsClient
             ->shouldReceive('post')

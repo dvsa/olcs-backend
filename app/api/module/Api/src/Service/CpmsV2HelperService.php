@@ -20,12 +20,33 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 {
+    // CPMS' preferred date format (note: this changed around 03/2015)
+    const DATE_FORMAT = 'Y-m-d';
+
+    // @TODO product ref shouldn't have to come from a whitelist...
+    const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
+
+    // @TODO this is a dummy value for testing purposes as cost_centre is now
+    // a required parameter in cpms/payment-service. Awaiting further info on
+    // what OLCS should pass for this field.
+    const COST_CENTRE = '12345,67890';
+
     const TAX_CODE = 'Z';
 
+    /**
+     * @var \Zend\Log\LoggerInterface
+     */
     protected $logger;
 
+    /**
+     * @var ApiService
+     */
     protected $cpmsClient;
 
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return self
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->cpmsClient = $serviceLocator->get('cpms\service\api');
@@ -33,22 +54,24 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         return $this;
     }
 
+    /**
+     * @return ApiService
+     */
     protected function getClient()
     {
         return $this->cpmsClient;
     }
 
     /**
-     * @param string $customerReference usually organisation id
+     * Initiate a card payment
+     *
      * @param string $redirectUrl redirect back to here from payment gateway
      * @param array $fees
-     * @return array
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
-    public function initiateCardRequest(
-        $redirectUrl,
-        array $fees
-    ) {
-
+    public function initiateCardRequest($redirectUrl, array $fees)
+    {
         $endPoint = '/api/payment/card';
         $scope = ApiService::SCOPE_CARD;
 
@@ -80,20 +103,17 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $response = $this->getClient()->post($endPoint, $scope, $params);
 
         $this->debug('Card payment response', ['response' => $response]);
-        if (!is_array($response)
-            || !isset($response['receipt_reference'])
-            || empty($response['receipt_reference'])
-        ) {
-            throw new \Exception('Invalid payment response: '.json_encode($response));
-        }
 
-        return $response;
+        return $this->validatePaymentResponse($response, false);
     }
 
     /**
      * Update CPMS with payment result
+     *
      * @param string $reference payment reference / guid
      * @param array $data response data from the payment gateway
+     * @return array|mixed response
+     * @see CpmsClient\Service\ApiService::put()
      */
     public function handleResponse($reference, $data)
     {
@@ -107,10 +127,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
-     * Determine the status of a payment
+     * Determine the status of a payment/transaction
      *
      * @param string $receiptReference
-     * @return int status
+     * @return int status code
      */
     public function getPaymentStatus($receiptReference)
     {
@@ -147,20 +167,15 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * Record a cash payment in CPMS
      *
      * @param array $fees
-     * @param string $customerReference
      * @param float $amount
      * @param string|DateTime $receiptDate
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
-     * @return array|false only return successful response, otherwise false
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
-    public function recordCashPayment(
-        $fees,
-        $amount,
-        $receiptDate,
-        $payer,
-        $slipNo
-    ) {
+    public function recordCashPayment($fees, $amount, $receiptDate, $payer, $slipNo)
+    {
         $paymentData = [];
         foreach ($fees as $fee) {
             $paymentData[] = [
@@ -203,11 +218,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $this->debug('Cash payment response', ['response' => $response]);
 
-        if ($this->isSuccessfulPaymentResponse($response)) {
-            return $response;
-        }
-
-        return false;
+        return $this->validatePaymentResponse($response);
     }
 
     /**
@@ -220,17 +231,11 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param string $slipNo paying in slip number
      * @param string $chequeNo cheque number
      * @param string $chequeDate (from DateSelect)
-     * @return array|false only return successful response, otherwise false
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
-    public function recordChequePayment(
-        $fees,
-        $amount,
-        $receiptDate,
-        $payer,
-        $slipNo,
-        $chequeNo,
-        $chequeDate
-    ) {
+    public function recordChequePayment($fees, $amount, $receiptDate, $payer, $slipNo, $chequeNo, $chequeDate)
+    {
         $paymentData = [];
         foreach ($fees as $fee) {
             $paymentData[] = [
@@ -275,11 +280,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $this->debug('Cheque payment response', ['response' => $response]);
 
-        if ($this->isSuccessfulPaymentResponse($response)) {
-            return $response;
-        }
-
-        return false;
+        return $this->validatePaymentResponse($response);
     }
 
     /**
@@ -291,16 +292,11 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
      * @param string $poNo Postal Order number
-     * @return array|false only return successful response, otherwise false
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
-    public function recordPostalOrderPayment(
-        $fees,
-        $amount,
-        $receiptDate,
-        $payer,
-        $slipNo,
-        $poNo
-    ) {
+    public function recordPostalOrderPayment($fees, $amount, $receiptDate, $payer, $slipNo, $poNo)
+    {
         $paymentData = [];
         foreach ($fees as $fee) {
             $paymentData[] = [
@@ -344,11 +340,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $this->debug('Postal order payment response', ['response' => $response]);
 
-        if ($this->isSuccessfulPaymentResponse($response)) {
-            return $response;
-        }
-
-        return false;
+        return $this->validatePaymentResponse($response);
     }
 
     /**
@@ -361,10 +353,42 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Format a date as required by CPMS payment reference fields
+     *
+     * @param string|DateTime $date
+     * @return string
+     */
+    protected function formatDate($date)
+    {
+        if (!is_null($date)) {
+            if (is_string($date)) {
+                $date = new DateTime($date);
+            }
+            return $date->format(self::DATE_FORMAT);
+        }
+    }
+
+    /**
+     * @param Dvsa\Olcs\Api\Entity\ContactDetails\Address $address
+     * @return array
+     */
+    protected function formatAddress($address)
+    {
+         return [
+            'line_1' => $address->getAddressLine1(),
+            'line_2' => $address->getAddressLine2(),
+            'line_3' => $address->getAddressLine3(),
+            'line_4' => $address->getAddressLine4(),
+            'city' => $address->getTown(),
+            'postcode' => $address->getPostcode(),
+        ];
+    }
+
+    /**
      * @param array $fees
      * return string
      */
-    public function getTotalAmountFromFees($fees)
+    protected function getTotalAmountFromFees($fees)
     {
         $totalAmount = 0;
         foreach ($fees as $fee) {
@@ -391,51 +415,35 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * Small helper to check if response was successful
      * (We require a successful response code AND a receipt reference)
+     * Returns the response if OK, otherwise throws an exception
      *
      * @param array $response response data
-     * @return boolean
-     */
-    protected function isSuccessfulPaymentResponse($response)
-    {
-        return (
-            is_array($response)
-            && isset($response['code'])
-            && $response['code'] === self::RESPONSE_SUCCESS
-            && isset($response['receipt_reference'])
-            && !empty($response['receipt_reference'])
-        );
-    }
-
-    /**
-     * Format a date as required by CPMS payment reference fields
-     *
-     * @param string|DateTime $date
-     * @return string
-     */
-    public function formatDate($date)
-    {
-        if (!is_null($date)) {
-            if (is_string($date)) {
-                $date = new DateTime($date);
-            }
-            return $date->format(self::DATE_FORMAT);
-        }
-    }
-
-    /**
-     * @param Dvsa\Olcs\Api\Entity\ContactDetails\Address $address
+     * @param boolean $requireSuccessCode
      * @return array
+     * @throws CpmsResponseException
      */
-    public function formatAddress($address)
+    protected function validatePaymentResponse($response, $requireSuccessCode = true)
     {
-         return [
-            'line_1' => $address->getAddressLine1(),
-            'line_2' => $address->getAddressLine2(),
-            'line_3' => $address->getAddressLine3(),
-            'line_4' => $address->getAddressLine4(),
-            'city' => $address->getTown(),
-            'postcode' => $address->getPostcode(),
-        ];
+
+        // check it's an array
+        if (is_array($response)) {
+
+            // check we have receipt reference
+            if (isset($response['receipt_reference']) && !empty($response['receipt_reference'])) {
+
+                // check we have a success code if required
+                if (!$requireSuccessCode) {
+                    return $response;
+                }
+                if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
+                    return $response;
+                }
+            }
+        }
+
+        $e = new CpmsResponseException('Invalid payment response');
+        $e->setResponse($response);
+        throw $e;
     }
 
     /**

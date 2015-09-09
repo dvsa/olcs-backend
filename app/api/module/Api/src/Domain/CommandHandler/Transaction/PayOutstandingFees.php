@@ -71,14 +71,19 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             return $result;
         }
 
-        switch ($command->getPaymentMethod()) {
-            case FeeEntity::METHOD_CARD_ONLINE:
-            case FeeEntity::METHOD_CARD_OFFLINE:
-                return $this->cardPayment($command, $feesToPay, $result);
-            case FeeEntity::METHOD_CASH:
-            case FeeEntity::METHOD_CHEQUE:
-            case FeeEntity::METHOD_POSTAL_ORDER:
-                return $this->immediatePayment($command, $feesToPay, $result);
+        try {
+            switch ($command->getPaymentMethod()) {
+                case FeeEntity::METHOD_CARD_ONLINE:
+                case FeeEntity::METHOD_CARD_OFFLINE:
+                    return $this->cardPayment($command, $feesToPay, $result);
+                case FeeEntity::METHOD_CASH:
+                case FeeEntity::METHOD_CHEQUE:
+                case FeeEntity::METHOD_POSTAL_ORDER:
+                    return $this->immediatePayment($command, $feesToPay, $result);
+            }
+        } catch (CpmsResponseException $e) {
+            // rethrow as Domain exception
+            throw new RuntimeException('Error from CPMS service');
         }
     }
 
@@ -140,10 +145,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
         // fire off to relevant CPMS method to record payment
         $response = $this->recordPaymentInCpms($command, $fees);
-
-        if ($response === false) {
-            throw new RuntimeException('error from CPMS service');
-        }
 
         $receiptDate = new \DateTime($command->getReceiptDate());
         $chequeDate = $command->getChequeDate() ? new \DateTime($command->getChequeDate()) : null;

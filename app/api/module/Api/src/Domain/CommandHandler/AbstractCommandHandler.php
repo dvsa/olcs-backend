@@ -119,13 +119,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         }
 
         if ($this instanceof \Dvsa\Olcs\Api\Domain\CpmsAwareInterface) {
-            // check config to see which api helper to use
-            $config = $mainServiceLocator->get('Config');
-            if (isset($config['cpms_api']['version']) && $config['cpms_api']['version'] == '2') {
-                $this->setCpmsService($mainServiceLocator->get('CpmsV2HelperService'));
-            } else {
-                $this->setCpmsService($mainServiceLocator->get('CpmsHelperService'));
-            }
+            $this->setCpmsService($mainServiceLocator->get('CpmsHelperService'));
         }
     }
 

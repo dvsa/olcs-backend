@@ -9,9 +9,6 @@ namespace Dvsa\Olcs\Api\Service;
 
 use CpmsClient\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Cpms Helper Interface
@@ -27,38 +24,31 @@ interface CpmsHelperInterface
 
     const RESPONSE_SUCCESS = '000';
 
-    // CPMS' preferred date format (note: this changed around 03/2015)
-    const DATE_FORMAT = 'Y-m-d';
-
-    // @TODO product ref shouldn't have to come from a whitelist...
-    const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
-
-    // @TODO this is a dummy value for testing purposes as cost_centre is now
-    // a required parameter in cpms/payment-service. Awaiting further info on
-    // what OLCS should pass for this field.
-    const COST_CENTRE = '12345,67890';
-
     /**
+     * Initiate a card payment
+     *
      * @param string $redirectUrl redirect back to here from payment gateway
      * @param array $fees
-     * @param string $paymentMethod 'fpm_card_offline'|'fpm_card_online'
-     *
-     * @return array
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
     public function initiateCardRequest($redirectUrl, array $fees);
 
     /**
      * Update CPMS with payment result
+     *
      * @param string $reference payment reference / guid
      * @param array $data response data from the payment gateway
+     * @return array|mixed response
+     * @see CpmsClient\Service\ApiService::put()
      */
     public function handleResponse($reference, $data);
 
     /**
-     * Determine the status of a payment
+     * Determine the status of a payment/transaction
      *
      * @param string $receiptReference
-     * @return int status
+     * @return int status code
      */
     public function getPaymentStatus($receiptReference);
 
@@ -70,7 +60,8 @@ interface CpmsHelperInterface
      * @param string|DateTime $receiptDate
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
-     * @return array|false only return successful response, otherwise false
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
     public function recordCashPayment($fees, $amount, $receiptDate, $payer, $slipNo);
 
@@ -84,7 +75,8 @@ interface CpmsHelperInterface
      * @param string $slipNo paying in slip number
      * @param string $chequeNo cheque number
      * @param string $chequeDate (from DateSelect)
-     * @return array|false only return successful response, otherwise false
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
     public function recordChequePayment($fees, $amount, $receiptDate, $payer, $slipNo, $chequeNo, $chequeDate);
 
@@ -97,7 +89,8 @@ interface CpmsHelperInterface
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
      * @param string $poNo Postal Order number
-     * @return array|false only return successful response, otherwise false
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
     public function recordPostalOrderPayment($fees, $amount, $receiptDate, $payer, $slipNo, $poNo);
 
