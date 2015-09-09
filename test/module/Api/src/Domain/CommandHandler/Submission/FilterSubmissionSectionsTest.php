@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Refresh Submission Sections Test
+ * Filter Submission Sections Test
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\RefreshSubmissionSections;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\FilterSubmissionSections;
 use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Transfer\Command\Submission\RefreshSubmissionSections as Cmd;
+use Dvsa\Olcs\Transfer\Command\Submission\FilterSubmissionSections as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
@@ -24,9 +24,9 @@ use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as Com
 use Doctrine\ORM\Query;
 
 /**
- * Refresh Submission Sections Test
+ * Filter Submission Sections Test
  */
-class RefreshSubmissionSectionsTest extends CommandHandlerTestCase
+class FilterSubmissionSectionsTest extends CommandHandlerTestCase
 {
     protected $submissionConfig = [
         'submissions' => [
@@ -46,7 +46,7 @@ class RefreshSubmissionSectionsTest extends CommandHandlerTestCase
 
     public function setUp()
     {
-        $this->sut = new RefreshSubmissionSections();
+        $this->sut = new FilterSubmissionSections();
         $this->mockRepo('Submission', SubmissionRepo::class);
 
         $this->mockedSmServices = [
@@ -113,11 +113,8 @@ class RefreshSubmissionSectionsTest extends CommandHandlerTestCase
             'version' => 3,
             'case' => '24',
             'submissionType'=> 'submission_type_o_mlh_otc',
-            'section'=> 'operating-centres'
-        ];
-
-        $refreshData = [
-            'refreshData'
+            'section' => 'operating-centres',
+            'rowsToFilter'=> [72]
         ];
 
         /** @var SubmissionEntity $submissionMock */
@@ -131,9 +128,6 @@ class RefreshSubmissionSectionsTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with($submissionMock);
 
-        $this->mockedSmServices[SubmissionGenerator::class]->shouldReceive('generateSubmissionSectionData')->once()
-            ->andReturn($refreshData);
-
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -141,15 +135,27 @@ class RefreshSubmissionSectionsTest extends CommandHandlerTestCase
                 'submission' => 111,
             ],
             'messages' => [
-                'Submission updated successfully'
+                'Submission filtered successfully'
             ]
         ];
 
         $this->assertEquals($expected, $result->toArray());
 
-        // assert data has been refreshed
+        // assert data has been filtered
+        $filterData = [
+            'data' => [
+                'tables' => [
+                    'operating-centres' => [
+                        1 => [
+                            'id' => 16
+                        ]
+                    ]
+                ]
+            ]
+        ];
         $newDataSnapshot = json_decode($submissionMock->getDataSnapshot(), true);
-        $this->assertEquals($refreshData, $newDataSnapshot['operating-centres']);
+
+        $this->assertEquals($filterData, $newDataSnapshot['operating-centres']);
     }
 
     public function testHandleCommandSubSection()
@@ -160,20 +166,8 @@ class RefreshSubmissionSectionsTest extends CommandHandlerTestCase
             'case' => '24',
             'submissionType'=> 'submission_type_o_mlh_otc',
             'section' => 'conditions-and-undertakings',
-            'subSection' => 'conditions'
-        ];
-
-        $refreshData = [
-            'data' => [
-                'tables' => [
-                    'conditions' => [
-                        'refreshSubsectionData'
-                    ],
-                    'undertakings' => [
-                        'someotherValue'
-                    ]
-                ]
-            ]
+            'subSection' => 'conditions',
+            'rowsToFilter'=> [3]
         ];
 
         /** @var SubmissionEntity $submissionMock */
@@ -187,9 +181,6 @@ class RefreshSubmissionSectionsTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with($submissionMock);
 
-        $this->mockedSmServices[SubmissionGenerator::class]->shouldReceive('generateSubmissionSectionData')->once()
-            ->andReturn($refreshData);
-
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -197,25 +188,37 @@ class RefreshSubmissionSectionsTest extends CommandHandlerTestCase
                 'submission' => 111,
             ],
             'messages' => [
-                'Submission updated successfully'
+                'Submission filtered successfully'
             ]
         ];
 
         $this->assertEquals($expected, $result->toArray());
 
-        // assert data has been refreshed
+        // assert data has been filtered
+        $filterData = [
+            'data' => [
+                'tables' => [
+                    'undertakings' => [
+                        0 => [
+                            'id' => 5
+                        ]
+                    ],
+                    'conditions' => [
+                        0 => [
+                            'id' => 10
+                        ]
+                    ]
+                ]
+            ]
+        ];
         $newDataSnapshot = json_decode($submissionMock->getDataSnapshot(), true);
+
+        $this->assertEquals($filterData, $newDataSnapshot['conditions-and-undertakings']);
 
         // check that conditions have been updated
         $this->assertEquals(
             $newDataSnapshot['conditions-and-undertakings']['data']['tables']['conditions'],
-            $refreshData['data']['tables']['conditions']
-        );
-
-        // but undertakings are left
-        $this->assertNotEquals(
-            $newDataSnapshot['conditions-and-undertakings']['data']['tables']['undertakings'],
-            $refreshData['data']['tables']['undertakings']
+            $filterData['data']['tables']['conditions']
         );
     }
 
@@ -248,6 +251,9 @@ class RefreshSubmissionSectionsTest extends CommandHandlerTestCase
                 "conditions": [
                     {
                         "id": 10
+                    },
+                    {
+                        "id": 3
                     }
                 ]
             }
