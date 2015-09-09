@@ -7,7 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Service;
 
-use Dvsa\Olcs\Api\Service\CpmsHelperService;
+use Dvsa\Olcs\Api\Service\CpmsV1HelperService as Sut;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
@@ -23,7 +23,7 @@ use Mockery as m;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CpmsHelperServiceTest extends MockeryTestCase
+class CpmsV1HelperServiceTest extends MockeryTestCase
 {
     use MockLoggerTrait;
 
@@ -33,7 +33,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
     protected $cpmsClient;
 
     /**
-     * @var CpmsHelperService
+     * @var Sut
      */
     protected $sut;
 
@@ -67,7 +67,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
             ->with('Logger')
             ->andReturn($logger);
 
-        $sut = new CpmsHelperService();
+        $sut = new Sut();
         return $sut->createService($sm);
     }
 
@@ -241,7 +241,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
         ];
 
         $response = [
-            'code' => CpmsHelperService::RESPONSE_SUCCESS,
+            'code' => Sut::RESPONSE_SUCCESS,
             'receipt_reference' => 'OLCS-1234-CASH',
         ];
 
@@ -326,7 +326,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
         ];
 
         $response = [
-            'code' => CpmsHelperService::RESPONSE_SUCCESS,
+            'code' => Sut::RESPONSE_SUCCESS,
             'receipt_reference' => 'OLCS-1234-CHEQUE',
         ];
 
@@ -413,7 +413,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
         ];
 
         $response = [
-            'code' => CpmsHelperService::RESPONSE_SUCCESS,
+            'code' => Sut::RESPONSE_SUCCESS,
             'receipt_reference' => 'OLCS-1234-PO',
         ];
 

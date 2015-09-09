@@ -7,8 +7,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Service;
 
-use Dvsa\Olcs\Api\Service\CpmsHelperService as V1;
 use Dvsa\Olcs\Api\Service\CpmsHelperServiceFactory as Sut;
+use Dvsa\Olcs\Api\Service\CpmsV1HelperService as V1;
 use Dvsa\Olcs\Api\Service\CpmsV2HelperService as V2;
 use Dvsa\OlcsTest\Api\MockLoggerTrait;
 use Mockery as m;
