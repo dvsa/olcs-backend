@@ -11,6 +11,7 @@ use CpmsClient\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 
 /**
  * Cpms Version 2 Helper Service
@@ -71,37 +72,23 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function initiateCardRequest($redirectUrl, array $fees)
     {
+        $method   = 'post';
         $endPoint = '/api/payment/card';
-        $scope = ApiService::SCOPE_CARD;
+        $scope    = ApiService::SCOPE_CARD;
 
-        $params = array_merge(
-            $this->getStandardParametersForFees($fees),
-            [
-                'redirect_uri' => $redirectUrl,
-                'disable_redirection' => true, // legacy??
-                'scope' => $scope,
-            ]
-        );
+        $extraParams = [
+            'redirect_uri' => $redirectUrl,
+            'disable_redirection' => true, // legacy??
+            'scope' => $scope,
+        ];
+        $params = $this->getParametersForFees($fees, $extraParams);
 
         foreach ($fees as $fee) {
-            $params['payment_data'][] = $this->getStandardPaymentDataForFee($fee);
+            $extraPaymentData = [];
+            $params['payment_data'][] = $this->getPaymentDataForFee($fee, $extraPaymentData);
         }
 
-        $this->debug(
-            'Card payment request',
-            [
-                'method' => [
-                    'location' => __METHOD__,
-                ],
-                'endPoint' => $endPoint,
-                'scope'    => $scope,
-                'params'   => $params,
-            ]
-        );
-
-        $response = $this->getClient()->post($endPoint, $scope, $params);
-
-        $this->debug('Card payment response', ['response' => $response]);
+        $response = $this->send($method, $endPoint, $scope, $params);
 
         return $this->validatePaymentResponse($response, false);
     }
@@ -133,8 +120,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function getPaymentStatus($receiptReference)
     {
+        $method   = 'get';
         $endPoint = '/api/payment/'.$receiptReference;
-        $scope = ApiService::SCOPE_QUERY_TXN;
+        $scope    = ApiService::SCOPE_QUERY_TXN;
+
         $params = [
             'required_fields' => [
                 'payment' => [
@@ -143,21 +132,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             ]
         ];
 
-        $this->debug(
-            'Payment status request',
-            [
-                'method' => [
-                    'location' => __METHOD__,
-                    'data' => func_get_args()
-                ],
-                'endPoint' => $endPoint,
-                'scope'    => $scope,
-            ]
-        );
-
-        $response = $this->getClient()->get($endPoint, $scope, $params);
-
-        $this->debug('Payment status response', ['response' => $response]);
+        $response = $this->send($method, $endPoint, $scope, $params);
 
         return $response['payment_status']['code'];
     }
@@ -175,6 +150,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function recordCashPayment($fees, $amount, $receiptDate, $payer, $slipNo)
     {
+        $method   = 'post';
+        $endPoint = '/api/payment/cash';
+        $scope    = ApiService::SCOPE_CASH;
+
         $paymentData = [];
         foreach ($fees as $fee) {
             $paymentData[] = [
@@ -190,9 +169,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             ];
         }
 
-        $endPoint = '/api/payment/cash';
-        $scope    = ApiService::SCOPE_CASH;
-
         $params = [
             'customer_reference' => (string) $this->getCustomerReference($fees),
             'scope' => $scope,
@@ -201,21 +177,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'cost_centre' => self::COST_CENTRE,
         ];
 
-        $this->debug(
-            'Cash payment request',
-            [
-                'method' => [
-                    'location' => __METHOD__,
-                ],
-                'endPoint' => $endPoint,
-                'scope'    => $scope,
-                'params'   => $params,
-            ]
-        );
-
-        $response = $this->getClient()->post($endPoint, $scope, $params);
-
-        $this->debug('Cash payment response', ['response' => $response]);
+        $response = $this->send($method, $endPoint, $scope, $params);
 
         return $this->validatePaymentResponse($response);
     }
@@ -235,6 +197,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function recordChequePayment($fees, $amount, $receiptDate, $payer, $slipNo, $chequeNo, $chequeDate)
     {
+        $method   = 'post';
+        $endPoint = '/api/payment/cheque';
+        $scope    = ApiService::SCOPE_CHEQUE;
+
         $paymentData = [];
         foreach ($fees as $fee) {
             $paymentData[] = [
@@ -252,9 +218,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             ];
         }
 
-        $endPoint = '/api/payment/cheque';
-        $scope    = ApiService::SCOPE_CHEQUE;
-
         $params = [
             'customer_reference' => (string) $this->getCustomerReference($fees),
             'scope' => $scope,
@@ -263,21 +226,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'cost_centre' => self::COST_CENTRE,
         ];
 
-        $this->debug(
-            'Cheque payment request',
-            [
-                'method' => [
-                    'location' => __METHOD__,
-                ],
-                'endPoint' => $endPoint,
-                'scope'    => $scope,
-                'params'   => $params,
-            ]
-        );
-
-        $response = $this->getClient()->post($endPoint, $scope, $params);
-
-        $this->debug('Cheque payment response', ['response' => $response]);
+        $response = $this->send($method, $endPoint, $scope, $params);
 
         return $this->validatePaymentResponse($response);
     }
@@ -296,6 +245,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function recordPostalOrderPayment($fees, $amount, $receiptDate, $payer, $slipNo, $poNo)
     {
+        $method   = 'post';
+        $endPoint = '/api/payment/postal-order';
+        $scope    = ApiService::SCOPE_POSTAL_ORDER;
+
         $paymentData = [];
         foreach ($fees as $fee) {
             $paymentData[] = [
@@ -312,9 +265,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             ];
         }
 
-        $endPoint = '/api/payment/postal-order';
-        $scope    = ApiService::SCOPE_POSTAL_ORDER;
-
         $params = [
             'customer_reference' => (string) $this->getCustomerReference($fees),
             'scope' => $scope,
@@ -323,21 +273,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'cost_centre' => self::COST_CENTRE,
         ];
 
-        $this->debug(
-            'Postal order payment request',
-            [
-                'method' => [
-                    'location' => __METHOD__,
-                ],
-                'endPoint' => $endPoint,
-                'scope'    => $scope,
-                'params'   => $params,
-            ]
-        );
-
-        $response = $this->getClient()->post($endPoint, $scope, $params);
-
-        $this->debug('Postal order payment response', ['response' => $response]);
+         $response = $this->send($method, $endPoint, $scope, $params);
 
         return $this->validatePaymentResponse($response);
     }
@@ -404,21 +340,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         return $this->formatAmount($totalAmount);
     }
 
-    protected function debug($message, $data)
-    {
-        return $this->logger->debug(
-            $message,
-            [
-                'data' => array_merge(
-                    [
-                        'domain' => $this->getClient()->getOptions()->getDomain(),
-                    ],
-                    $data
-                ),
-            ]
-        );
-    }
-
     /**
      * Small helper to check if response was successful
      * (We require a successful response code AND a receipt reference)
@@ -475,14 +396,15 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
-     * Common data for 'payment_data' elements of a payment request
+     * Get data for 'payment_data' elements of a payment request
      *
      * @param Fee $fee
+     * @param array $extraPayment data
      * @return array
      */
-    protected function getStandardPaymentDataForFee($fee)
+    protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [])
     {
-        return [
+        $commonPaymentData = [
             'line_identifier' => (string) $fee->getInvoiceLineNo(),
             'amount' => $this->formatAmount($fee->getAmount()),
             'allocated_amount' => $this->formatAmount(
@@ -508,15 +430,17 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             // 'country_code' ('GB' or 'NI') is optional and deliberately omitted
             'sales_person_reference' => '', // @todo
         ];
+
+        return array_merge($commonPaymentData, $extraPaymentData);
     }
 
     /**
-     * Common top-level data for a payment request
+     * Get top-level data for a payment request
      *
      * @param array $fees array of Fee objects
      * @return array
      */
-    protected function getStandardParametersForFees(array $fees)
+    protected function getParametersForFees(array $fees, array $extraParams)
     {
         if (empty($fees)) {
             return [];
@@ -524,7 +448,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $totalAmount = $this->getTotalAmountFromFees($fees);
         $firstFee = reset($fees);
-        return [
+        $commonParams = [
             // Note: CPMS has been known to reject ints as 'missing', so we cast
             // some fields to strings
             'customer_reference' => (string) $this->getCustomerReference($fees),
@@ -535,5 +459,48 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'customer_manager_name' => $firstFee->getCustomerNameForInvoice(),
             'customer_address' => $this->formatAddress($firstFee->getCustomerAddressForInvoice()),
         ];
+
+        return array_merge($commonParams, $extraParams);
+    }
+
+    /**
+     * Send a request via the CPMS client and log request/response
+     *
+     * @param string $endPoint
+     * @param string $scope
+     * @param array $params
+     * @return array|mixed cpms client response
+     */
+    protected function send($method, $endPoint, $scope, $params)
+    {
+        $this->debug(
+            $scope . ' payment request',
+            [
+                'endPoint' => $endPoint,
+                'scope'    => $scope,
+                'params'   => $params,
+            ]
+        );
+
+        $response = $this->getClient()->$method($endPoint, $scope, $params);
+
+        $this->debug($scope . ' payment request', ['response' => $response]);
+
+        return $response;
+    }
+
+    protected function debug($message, $data)
+    {
+        return $this->logger->debug(
+            $message,
+            [
+                'data' => array_merge(
+                    [
+                        'domain' => $this->getClient()->getOptions()->getDomain(),
+                    ],
+                    $data
+                ),
+            ]
+        );
     }
 }
