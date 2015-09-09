@@ -30,7 +30,7 @@ final class CpmsHelperServiceFactory implements FactoryInterface
         if (isset($config['cpms_api']['version']) && $config['cpms_api']['version'] == '2') {
             $service = new CpmsV2HelperService();
         } else {
-            $service = new CpmsHelperService();
+            $service = new CpmsV1HelperService();
         }
 
         return $service->createService($serviceLocator);

@@ -19,7 +19,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CpmsHelperService implements FactoryInterface, CpmsHelperInterface
+class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
 {
     // CPMS' preferred date format (note: this changed around 03/2015)
     const DATE_FORMAT = 'Y-m-d';
