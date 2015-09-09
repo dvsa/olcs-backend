@@ -259,6 +259,8 @@ return [
     TransferCommand\Irfo\UpdateIrfoGvPermit::class => CommandHandler\Irfo\UpdateIrfoGvPermit::class,
     TransferCommand\Irfo\ResetIrfoGvPermit::class => CommandHandler\Irfo\ResetIrfoGvPermit::class,
     TransferCommand\Irfo\ApproveIrfoGvPermit::class => CommandHandler\Irfo\ApproveIrfoGvPermit::class,
+    TransferCommand\Irfo\WithdrawIrfoGvPermit::class => CommandHandler\Irfo\WithdrawIrfoGvPermit::class,
+    TransferCommand\Irfo\RefuseIrfoGvPermit::class => CommandHandler\Irfo\RefuseIrfoGvPermit::class,
     TransferCommand\Irfo\CreateIrfoPermitStock::class => CommandHandler\Irfo\CreateIrfoPermitStock::class,
     TransferCommand\Irfo\UpdateIrfoPermitStock::class => CommandHandler\Irfo\UpdateIrfoPermitStock::class,
     TransferCommand\Irfo\CreateIrfoPsvAuth::class => CommandHandler\Irfo\CreateIrfoPsvAuth::class,
@@ -524,6 +526,7 @@ return [
     // Domain - Fee
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
+    Command\Fee\CancelIrfoGvPermitFees::class => CommandHandler\Fee\CancelIrfoGvPermitFees::class,
     Command\Fee\PayFee::class => CommandHandler\Fee\PayFee::class,
     TransferCommand\Fee\ApproveWaive::class => CommandHandler\Fee\ApproveWaive::class,
     TransferCommand\Fee\RecommendWaive::class => CommandHandler\Fee\RecommendWaive::class,
