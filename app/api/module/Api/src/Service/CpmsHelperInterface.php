@@ -99,4 +99,9 @@ interface CpmsHelperInterface
      * @return string amount formatted to two decimal places with no thousands separator
      */
     public function formatAmount($amount);
+
+    /**
+     * @return int
+     */
+    public function getVersion();
 }

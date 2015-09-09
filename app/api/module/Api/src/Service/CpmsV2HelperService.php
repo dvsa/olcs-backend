@@ -353,6 +353,14 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * @return int
+     */
+    public function getVersion()
+    {
+        return 2;
+    }
+
+    /**
      * Format a date as required by CPMS payment reference fields
      *
      * @param string|DateTime $date
