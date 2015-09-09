@@ -7,7 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\User\User as Entity;
+use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query\Expr;
@@ -71,5 +75,33 @@ class User extends AbstractRepository
             ->byId($userId);
 
         return $qb->getQuery()->getSingleResult();
+    }
+
+    /**
+     * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     * @return array
+     */
+    public function populateRefDataReference(array $data)
+    {
+        if (isset($data['team'])) {
+            $data['team'] = $this->getReference(TeamEntity::class, $data['team']);
+        }
+
+        if (isset($data['transportManager'])) {
+            $data['transportManager'] = $this->getReference(TransportManagerEntity::class, $data['transportManager']);
+        }
+
+        if (isset($data['partnerContactDetails'])) {
+            $data['partnerContactDetails'] = $this->getReference(
+                ContactDetailsEntity::class,
+                $data['partnerContactDetails']
+            );
+        }
+
+        if (isset($data['localAuthority'])) {
+            $data['localAuthority'] = $this->getReference(LocalAuthorityEntity::class, $data['localAuthority']);
+        }
+
+        return $data;
     }
 }

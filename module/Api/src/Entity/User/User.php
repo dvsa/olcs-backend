@@ -25,9 +25,182 @@ use Dvsa\Olcs\Api\Entity\User\Team;
  */
 class User extends AbstractUser
 {
-    public function update(Team $team, $loginId)
+    const USER_TYPE_INTERNAL = 'internal';
+    const USER_TYPE_LOCAL_AUTHORITY = 'local-authority';
+    const USER_TYPE_PARTNER = 'partner';
+    const USER_TYPE_SELF_SERVICE = 'self-service';
+    const USER_TYPE_TRANSPORT_MANAGER = 'transport-manager';
+
+    /**
+     * User type
+     *
+     * @var string
+     */
+    protected $userType = null;
+
+    public function __construct($userType)
     {
-        $this->team = $team;
-        $this->loginId = $loginId;
+        parent::__construct();
+        $this->userType = $userType;
+    }
+
+    /**
+     * @param string $userType
+     * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     * @return User
+     */
+    public static function create($userType, $data)
+    {
+        $user = new static($userType);
+        $user->update($data);
+
+        return $user;
+    }
+
+    /**
+     * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     * @return User
+     */
+    public function update(array $data)
+    {
+        // update common data
+        if (isset($data['userType']) && ($this->getUserType() !== $data['userType'])) {
+            // update user type
+            $this->userType = $data['userType'];
+
+            // clear all user type specific fields
+            $this->team = null;
+            $this->transportManager = null;
+            $this->partnerContactDetails = null;
+            $this->localAuthority = null;
+            // TODO - remove link to organisationUser
+        }
+
+        $this->loginId = $data['loginId'];
+
+        if (isset($data['userRoles'])) {
+            $this->userRoles = $data['userRoles'];
+        }
+
+        if (isset($data['memorableWord'])) {
+            $this->memorableWord = $data['memorableWord'];
+        }
+
+        if (isset($data['mustResetPassword'])) {
+            $this->mustResetPassword = $data['mustResetPassword'];
+        }
+
+        if (isset($data['accountDisabled'])) {
+            $this->accountDisabled = $data['accountDisabled'];
+
+            if ($this->accountDisabled === 'Y') {
+                // set locked date to now
+                $this->lockedDate = new \DateTime();
+            }
+        }
+
+        // each type may have different update
+        switch($this->getUserType()) {
+            case self::USER_TYPE_INTERNAL:
+                $this->updateInternal($data);
+                break;
+            case self::USER_TYPE_TRANSPORT_MANAGER:
+                $this->updateTransportManager($data);
+                break;
+            case self::USER_TYPE_PARTNER:
+                $this->updatePartner($data);
+                break;
+            case self::USER_TYPE_LOCAL_AUTHORITY:
+                $this->updateLocalAuthority($data);
+                break;
+            case self::USER_TYPE_SELF_SERVICE:
+                $this->updateSelfService($data);
+                break;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     */
+    private function updateInternal(array $data)
+    {
+        if (isset($data['team'])) {
+            $this->team = $data['team'];
+        }
+    }
+
+    /**
+     * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     */
+    private function updateTransportManager(array $data)
+    {
+        if (isset($data['transportManager'])) {
+            $this->transportManager = $data['transportManager'];
+        }
+    }
+
+    /**
+     * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     */
+    private function updatePartner(array $data)
+    {
+        if (isset($data['partnerContactDetails'])) {
+            $this->partnerContactDetails = $data['partnerContactDetails'];
+        }
+    }
+
+    /**
+     * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     */
+    private function updateLocalAuthority(array $data)
+    {
+        if (isset($data['localAuthority'])) {
+            $this->localAuthority = $data['localAuthority'];
+        }
+    }
+
+    /**
+     * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     */
+    private function updateSelfService(array $data)
+    {
+        // TODO - link to organisationUser using $licenceNumber
+    }
+
+    /**
+     * Get the user type
+     *
+     * @return string
+     */
+    public function getUserType()
+    {
+        if ($this->userType === null) {
+            $this->populateUserType();
+        }
+        return $this->userType;
+    }
+
+    /**
+     * Uses existing data to populate the user type
+     *
+     * @return User
+     */
+    private function populateUserType()
+    {
+        if (isset($this->team)) {
+            $this->userType = self::USER_TYPE_INTERNAL;
+        } elseif (isset($this->localAuthority)) {
+            $this->userType = self::USER_TYPE_LOCAL_AUTHORITY;
+        } elseif (isset($this->transportManager)) {
+            $this->userType = self::USER_TYPE_TRANSPORT_MANAGER;
+        } elseif (isset($this->partnerContactDetails)) {
+            $this->userType = self::USER_TYPE_PARTNER;
+        } else {
+            $this->userType = self::USER_TYPE_SELF_SERVICE;
+        }
+
+        return $this;
     }
 }

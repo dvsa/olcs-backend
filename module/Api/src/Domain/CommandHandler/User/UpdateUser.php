@@ -1,12 +1,10 @@
 <?php
 
 /**
- * Update MyAccount
+ * Update User
  */
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\MyAccount;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -15,23 +13,17 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
 /**
- * Update MyAccount
+ * Update User
  */
-final class UpdateMyAccount extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class UpdateUser extends AbstractCommandHandler implements TransactionedInterface
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'User';
 
     protected $extraRepos = ['ContactDetails'];
 
     public function handleCommand(CommandInterface $command)
     {
-        $user = $this->getRepo()->fetchById(
-            $this->getCurrentUser()->getId(),
-            Query::HYDRATE_OBJECT,
-            $command->getVersion()
-        );
+        $user = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
 
         $user->update(
             $this->getRepo()->populateRefDataReference(
