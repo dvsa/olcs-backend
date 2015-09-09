@@ -29,7 +29,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 final class ResolvePayment extends AbstractCommandHandler implements
-    TransactionedInterface, AuthAwareInterface, CpmsAwareInterface
+    TransactionedInterface,
+    AuthAwareInterface,
+    CpmsAwareInterface
 {
     use AuthAwareTrait, CpmsAwareTrait;
 

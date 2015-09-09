@@ -39,9 +39,7 @@ class CpmsHelperServiceFactoryTest extends MockeryTestCase
             )
             ->getMock();
 
-
         $mockLogger = $this->mockLogger();
-
 
         $sm = m::mock('\Zend\ServiceManager\ServiceLocatorInterface');
         $sm
@@ -104,4 +102,3 @@ class CpmsHelperServiceFactoryTest extends MockeryTestCase
         ];
     }
 }
-

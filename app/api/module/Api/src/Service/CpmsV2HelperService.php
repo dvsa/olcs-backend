@@ -194,7 +194,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $scope    = ApiService::SCOPE_CASH;
 
         $params = [
-            'customer_reference' => (string)$customerReference,
+            'customer_reference' => (string) $this->getCustomerReference($fees),
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
             'payment_data' => $paymentData,
@@ -256,7 +256,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $scope    = ApiService::SCOPE_CHEQUE;
 
         $params = [
-            'customer_reference' => (string)$customerReference,
+            'customer_reference' => (string) $this->getCustomerReference($fees),
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
             'payment_data' => $paymentData,
@@ -316,7 +316,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $scope    = ApiService::SCOPE_POSTAL_ORDER;
 
         $params = [
-            'customer_reference' => (string)$customerReference,
+            'customer_reference' => (string) $this->getCustomerReference($fees),
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
             'payment_data' => $paymentData,

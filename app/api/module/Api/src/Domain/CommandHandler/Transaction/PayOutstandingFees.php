@@ -32,7 +32,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 final class PayOutstandingFees extends AbstractCommandHandler implements
-    TransactionedInterface, AuthAwareInterface, CpmsAwareInterface
+    TransactionedInterface,
+    AuthAwareInterface,
+    CpmsAwareInterface
 {
     use AuthAwareTrait, CpmsAwareTrait;
 

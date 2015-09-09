@@ -275,7 +275,7 @@ class CpmsV1HelperServiceTest extends MockeryTestCase
             ->with('/api/payment/cash', 'CASH', m::any())
             ->andReturn($response);
 
-        $result = $this->sut->recordCashPayment(
+        $this->sut->recordCashPayment(
             array(),
             '1334.66',
             '2015-01-07',
@@ -363,7 +363,7 @@ class CpmsV1HelperServiceTest extends MockeryTestCase
             ->with('/api/payment/cheque', 'CHEQUE', m::any())
             ->andReturn($response);
 
-        $result = $this->sut->recordChequePayment(
+        $this->sut->recordChequePayment(
             array(),
             '1334.66',
             '2015-01-07',
@@ -450,7 +450,7 @@ class CpmsV1HelperServiceTest extends MockeryTestCase
             ->with('/api/payment/postal-order', 'POSTAL_ORDER', m::any())
             ->andReturn($response);
 
-        $result = $this->sut->recordPostalOrderPayment(
+        $this->sut->recordPostalOrderPayment(
             array(),
             '1334.66',
             '2015-01-07',
