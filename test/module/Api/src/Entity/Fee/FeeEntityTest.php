@@ -147,7 +147,7 @@ class FeeEntityTest extends EntityTester
         ];
     }
 
-/**
+    /**
      * @param string $accrualRuleId,
      * @param int $expected
      *

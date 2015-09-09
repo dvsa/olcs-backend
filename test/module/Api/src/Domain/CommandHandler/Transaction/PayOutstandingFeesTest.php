@@ -737,7 +737,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $feeIds = [99];
         $fee1 = $this->getStubFee(99, 99.99);
         $fees = [$fee1];
-        $transactionId = 69;
 
         $data = [
             'feeIds' => $feeIds,
@@ -764,8 +763,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
 
-        // assertions
-        $result = $this->sut->handleCommand($command);
+        $this->sut->handleCommand($command);
     }
 
     /**
