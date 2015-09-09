@@ -86,7 +86,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             }
         } catch (CpmsResponseException $e) {
             // rethrow as Domain exception
-            throw new RuntimeException('Error from CPMS service');
+            throw new RuntimeException('Error from CPMS service', $e->getCode(), $e);
         }
     }
 

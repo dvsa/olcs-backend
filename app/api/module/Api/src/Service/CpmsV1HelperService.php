@@ -49,12 +49,12 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Initiate a card payment
+     *
      * @param string $redirectUrl redirect back to here from payment gateway
      * @param array $fees
-     * @param string $paymentMethod 'fpm_card_offline'|'fpm_card_online'
-     *
-     * @return array
-     * @throws Common\Service\Cpms\Exception\PaymentInvalidResponseException on error
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
     public function initiateCardRequest(
         $redirectUrl,
@@ -108,7 +108,7 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
             || !isset($response['receipt_reference'])
             || empty($response['receipt_reference'])
         ) {
-            throw new \Exception('Invalid payment response: '.json_encode($response));
+            throw new CpmsResponseException('Invalid payment response: '.json_encode($response));
         }
 
         return $response;
@@ -116,8 +116,11 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
 
     /**
      * Update CPMS with payment result
+     *
      * @param string $reference payment reference / guid
      * @param array $data response data from the payment gateway
+     * @return array|mixed response
+     * @see CpmsClient\Service\ApiService::put()
      */
     public function handleResponse($reference, $data)
     {
@@ -131,10 +134,10 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
-     * Determine the status of a payment
+     * Determine the status of a payment/transaction
      *
      * @param string $receiptReference
-     * @return int status
+     * @return int status code
      */
     public function getPaymentStatus($receiptReference)
     {
@@ -175,7 +178,8 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
      * @param string|DateTime $receiptDate
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
-     * @return array|false only return successful response, otherwise false
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
     public function recordCashPayment(
         $fees,
@@ -231,7 +235,7 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
             return $response;
         }
 
-        return false;
+        throw new CpmsResponseException('Invalid payment response: '.json_encode($response));
     }
 
     /**
@@ -244,7 +248,8 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
      * @param string $slipNo paying in slip number
      * @param string $chequeNo cheque number
      * @param string $chequeDate (from DateSelect)
-     * @return array|false only return successful response, otherwise false
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
     public function recordChequePayment(
         $fees,
@@ -304,7 +309,7 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
             return $response;
         }
 
-        return false;
+        throw new CpmsResponseException('Invalid payment response: '.json_encode($response));
     }
 
     /**
@@ -316,7 +321,8 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
      * @param string $poNo Postal Order number
-     * @return array|false only return successful response, otherwise false
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
     public function recordPostalOrderPayment(
         $fees,
@@ -374,7 +380,7 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
             return $response;
         }
 
-        return false;
+        throw new CpmsResponseException('Invalid payment response: '.json_encode($response));
     }
 
     /**

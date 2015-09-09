@@ -261,7 +261,10 @@ class CpmsV1HelperServiceTest extends MockeryTestCase
         $this->assertEquals($response, $result);
     }
 
-    public function testRecordCashPaymentFailureReturnsFalse()
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Service\CpmsResponseException
+     */
+    public function testRecordCashPaymentFailureThrowsException()
     {
         $response = [
             'code' => 'xxx',
@@ -279,8 +282,6 @@ class CpmsV1HelperServiceTest extends MockeryTestCase
             'Payer',
             '123456'
         );
-
-        $this->assertFalse($result);
     }
 
     public function testRecordChequePayment()
@@ -348,7 +349,10 @@ class CpmsV1HelperServiceTest extends MockeryTestCase
         $this->assertEquals($response, $result);
     }
 
-    public function testRecordChequePaymentFailureReturnsFalse()
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Service\CpmsResponseException
+     */
+    public function testRecordChequePaymentFailureThrowsException()
     {
         $response = [
             'code' => 'xxx',
@@ -368,8 +372,6 @@ class CpmsV1HelperServiceTest extends MockeryTestCase
             '234567',
             '2015-03-01'
         );
-
-        $this->assertFalse($result);
     }
 
     public function testRecordPostalOrderPayment()
@@ -434,7 +436,10 @@ class CpmsV1HelperServiceTest extends MockeryTestCase
         $this->assertEquals($response, $result);
     }
 
-    public function testRecordPostalOrderPaymentFailureReturnsFalse()
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Service\CpmsResponseException
+     */
+    public function testRecordPostalOrderPaymentFailureThrowsException()
     {
         $response = [
             'code' => 'xxx',
@@ -453,8 +458,6 @@ class CpmsV1HelperServiceTest extends MockeryTestCase
             '123456',
             '234567'
         );
-
-        $this->assertFalse($result);
     }
 
     /**
