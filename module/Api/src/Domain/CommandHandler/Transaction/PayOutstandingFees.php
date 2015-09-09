@@ -55,6 +55,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     {
         $result = new Result();
 
+        // @todo remove
+        // $result->addMessage('Using API helper version ' . $this->getCpmsService()->getVersion());
+
         if (!empty($command->getOrganisationId())) {
             $fees = $this->getOutstandingFeesForOrganisation($command);
         } elseif (!empty($command->getApplicationId())) {

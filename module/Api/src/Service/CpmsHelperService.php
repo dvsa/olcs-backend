@@ -387,6 +387,14 @@ class CpmsHelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * @return int
+     */
+    public function getVersion()
+    {
+        return 1;
+    }
+
+    /**
      * @param array $fees
      * return string
      */
