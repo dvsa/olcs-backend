@@ -34,11 +34,12 @@ class UserTest extends QueryHandlerTestCase
 
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
         $mockUser->shouldReceive('serialize')->once()->andReturn(['foo' => 'bar']);
+        $mockUser->shouldReceive('getUserType')->once()->andReturn('internal');
 
         $this->repoMap['User']->shouldReceive('fetchUsingId')->with($query)->andReturn($mockUser);
 
         $result = $this->sut->handleQuery($query)->serialize();
 
-        $this->assertSame(['foo' => 'bar'], $result);
+        $this->assertSame(['foo' => 'bar', 'userType' => 'internal'], $result);
     }
 }
