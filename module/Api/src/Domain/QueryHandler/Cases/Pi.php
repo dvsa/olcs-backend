@@ -36,9 +36,7 @@ final class Pi extends AbstractQueryHandler
         'agreedByTcRole' => [],
         'decisions' => [],
         'assignedTo' => [],
-        'case' => [
-            'licence'
-        ],
+        'case' => [],
     ];
 
     /**
