@@ -127,6 +127,64 @@ class IrfoGvPermitEntityTest extends EntityTester
         return true;
     }
 
+    public function testWithdraw()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_PENDING);
+        $this->entity->setIrfoPermitStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_WITHDRAWN);
+
+        $this->entity->withdraw($newStatus);
+
+        $this->assertEquals($newStatus, $this->entity->getIrfoPermitStatus());
+    }
+
+    /**
+     * Tests withdraw throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testWithdrawThrowsInvalidStatusException()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_APPROVED);
+
+        $this->entity->withdraw($status);
+
+        return true;
+    }
+
+    public function testRefuse()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_PENDING);
+        $this->entity->setIrfoPermitStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_REFUSED);
+
+        $this->entity->refuse($newStatus);
+
+        $this->assertEquals($newStatus, $this->entity->getIrfoPermitStatus());
+    }
+
+    /**
+     * Tests refuse throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testRefuseThrowsInvalidStatusException()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_APPROVED);
+
+        $this->entity->refuse($status);
+
+        return true;
+    }
+
     /**
      * Tests approve throws exception correctly
      *
