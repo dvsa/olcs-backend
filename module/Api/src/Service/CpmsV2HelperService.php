@@ -9,7 +9,6 @@ namespace Dvsa\Olcs\Api\Service;
 
 use CpmsClient\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -476,6 +475,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Common data for 'payment_data' elements of a payment request
+     *
      * @param Fee $fee
      * @return array
      */
@@ -498,15 +499,23 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'product_reference' => self::PRODUCT_REFERENCE,
             // @todo - cpms responds  {"code":104,"message":"product_reference is invalid"}
             // 'product_reference' => $fee->getFeeType()->getDescription(),
+            'product_description' => $fee->getFeeType()->getDescription(),
             'receiver_reference' => (string) $this->getCustomerReference([$fee]),
             'receiver_name' => $fee->getCustomerNameForInvoice(),
             'receiver_address' => $this->formatAddress($fee->getCustomerAddressForInvoice()),
             'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
             'deferment_period' => (string) $fee->getDefermentPeriod(),
             // 'country_code' ('GB' or 'NI') is optional and deliberately omitted
+            'sales_person_reference' => '', // @todo
         ];
     }
 
+    /**
+     * Common top-level data for a payment request
+     *
+     * @param array $fees array of Fee objects
+     * @return array
+     */
     protected function getStandardParametersForFees(array $fees)
     {
         if (empty($fees)) {

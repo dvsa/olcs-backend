@@ -100,6 +100,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'sales_reference' => '1',
                     // 'product_reference' => 'fee type description',
                     'product_reference' => 'GVR_APPLICATION_FEE', // @todo
+                    'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
                     'receiver_address' => [
@@ -112,6 +113,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
+                    'sales_person_reference' => '',
                 ],
                 [
                     'line_identifier' => '1',
@@ -125,6 +127,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'sales_reference' => '2',
                     // 'product_reference' => 'fee type description',
                     'product_reference' => 'GVR_APPLICATION_FEE', // @todo
+                    'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
                     'receiver_address' => [
@@ -137,6 +140,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
+                    'sales_person_reference' => '',
                 ]
             ],
             'cost_centre' => '12345,67890',
@@ -171,19 +175,14 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     public function testInitiateCardRequestInvalidApiResponse()
     {
-        $redirectUrl = 'http://olcs-selfserve/foo';
-
-        $fees = [];
-
-        $response = [];
         $this->setExpectedException(CpmsResponseException::class, 'Invalid payment response');
 
         $this->cpmsClient
             ->shouldReceive('post')
             ->with('/api/payment/card', 'CARD', m::any())
-            ->andReturn($response);
+            ->andReturn([]);
 
-        $this->sut->initiateCardRequest($redirectUrl, $fees);
+        $this->sut->initiateCardRequest('http://olcs-selfserve/foo', []);
     }
 
     /**
@@ -213,42 +212,33 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->setAccrualRule($rule)
             ->setDescription('fee type description');
 
-        $fee = new FeeEntity($feeType, $amount, $status);
-        $fee
-            ->setId($id)
-            ->setInvoiceLineNo(1)
-            ->setInvoicedDate($invoicedDate);
-
         $organisation = new OrganisationEntity();
         $organisation
             ->setId($organisationId)
             ->setName('some organisation');
 
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setOrganisation($organisation);
+        $address = new AddressEntity();
+        $address->updateAddress('Foo', null, null, null, 'Bar', 'LS9 6NF', null);
 
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence
+            ->setOrganisation($organisation)
+            ->setCorrespondenceCd(
+                m::mock()
+                    ->shouldReceive('getAddress')
+                    ->andReturn($address)
+                    ->getMock()
+            );
         if (!is_null($licenceStartDate)) {
             $licence->setInForceDate($licenceStartDate);
         }
 
-        $fee->setLicence($licence);
-
-        $address = new AddressEntity();
-        $address->updateAddress(
-            'Foo',
-            null,
-            null,
-            null,
-            'Bar',
-            'LS9 6NF',
-            null
-        );
-        $licence->setCorrespondenceCd(
-            m::mock()
-                ->shouldReceive('getAddress')
-                ->andReturn($address)
-                ->getMock()
-        );
+        $fee = new FeeEntity($feeType, $amount, $status);
+        $fee
+            ->setId($id)
+            ->setInvoiceLineNo(1)
+            ->setInvoicedDate($invoicedDate)
+            ->setLicence($licence);
 
         return $fee;
     }
