@@ -460,7 +460,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     protected function send($method, $endPoint, $scope, $params)
     {
         $this->debug(
-            $scope . ' payment request',
+            "CPMS $scope request",
             [
                 'endPoint' => $endPoint,
                 'scope'    => $scope,
@@ -470,7 +470,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $response = $this->getClient()->$method($endPoint, $scope, $params);
 
-        $this->debug($scope . ' payment request', ['response' => $response]);
+        $this->debug("CPMS $scope response", ['response' => $response]);
 
         return $response;
     }
@@ -482,6 +482,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             [
                 'data' => array_merge(
                     [
+                        'version' => $this->getVersion(),
                         'domain' => $this->getClient()->getOptions()->getDomain(),
                     ],
                     $data
