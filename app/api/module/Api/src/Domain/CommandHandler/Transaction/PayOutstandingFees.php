@@ -22,6 +22,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
+use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -77,14 +78,11 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         }
 
         try {
-            switch ($command->getPaymentMethod()) {
-                case FeeEntity::METHOD_CARD_ONLINE:
-                case FeeEntity::METHOD_CARD_OFFLINE:
-                    return $this->cardPayment($command, $feesToPay, $result);
-                case FeeEntity::METHOD_CASH:
-                case FeeEntity::METHOD_CHEQUE:
-                case FeeEntity::METHOD_POSTAL_ORDER:
-                    return $this->immediatePayment($command, $feesToPay, $result);
+            $cardMethods = [FeeEntity::METHOD_CARD_ONLINE, FeeEntity:: METHOD_CARD_OFFLINE];
+            if (in_array($command->getPaymentMethod(), $cardMethods)) {
+                return $this->cardPayment($command, $feesToPay, $result);
+            } else {
+                return $this->immediatePayment($command, $feesToPay, $result);
             }
         } catch (CpmsResponseException $e) {
             // rethrow as Domain exception

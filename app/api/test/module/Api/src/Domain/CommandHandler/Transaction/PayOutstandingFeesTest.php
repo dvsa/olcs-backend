@@ -731,6 +731,43 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
+    public function testHandleCommandCpmsResponseException()
+    {
+        // set up data
+        $feeIds = [99];
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fees = [$fee1];
+        $transactionId = 69;
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => FeeEntity::METHOD_CASH,
+            'receiptDate' => '2015-06-17',
+            'payer' => 'Dan',
+            'slipNo' => '12345',
+            'received' => '99.99',
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('recordCashPayment')
+            ->once()
+            ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));
+
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+    }
+
     /**
      * Helper function to generate a stub fee entity
      *
