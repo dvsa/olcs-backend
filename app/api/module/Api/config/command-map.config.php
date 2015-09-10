@@ -776,4 +776,5 @@ return [
     // Admin - Financial Standing Rates
     TransferCommand\System\CreateFinancialStandingRate::class => CommandHandler\System\CreateFinancialStandingRate::class,
     TransferCommand\System\UpdateFinancialStandingRate::class => CommandHandler\System\UpdateFinancialStandingRate::class,
+    TransferCommand\System\DeleteFinancialStandingRateList::class => CommandHandler\System\DeleteFinancialStandingRateList::class,
 ];
