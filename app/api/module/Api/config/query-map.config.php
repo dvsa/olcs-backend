@@ -364,4 +364,8 @@ return [
         QueryHandler\ContinuationDetail\ChecklistReminders::class,
     TransferQuery\ContinuationDetail\GetList::class =>
         QueryHandler\ContinuationDetail\GetList::class,
+
+    // System
+    TransferQuery\System\FinancialStandingRateList::class => QueryHandler\System\FinancialStandingRateList::class,
+
 ];
