@@ -14,6 +14,8 @@ return [
         'alias' => [
             'PublicationContextPlugin' => \Dvsa\Olcs\Api\Service\Publication\Context\PluginManager::class,
             'PublicationProcessPlugin' => \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class,
+            'SubmissionContextPlugin' => \Dvsa\Olcs\Api\Service\Submission\Context\PluginManager::class,
+            'SubmissionProcessPlugin' => \Dvsa\Olcs\Api\Service\Submission\Process\PluginManager::class
         ],
         'invokables' => [
             'Document' => \Dvsa\Olcs\Api\Service\Document\Document::class,
@@ -37,7 +39,7 @@ return [
             'ApplicationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Application\PublishValidationService::class,
             'ContentStore' => \Dvsa\Olcs\DocumentShare\Service\ClientFactory::class,
-            'IdentityProvider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
+            \Dvsa\Olcs\Api\Rbac\IdentityProvider::class => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
             'CommandHandlerManager' => \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::class,
             'QueryHandlerManager' => \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::class,
@@ -74,6 +76,7 @@ return [
 
             \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientFactory::class,
+            \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class => \Dvsa\Olcs\Api\Rbac\PidIdentityProviderFactory::class,
 
             'TransExchangeXmlMapping' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangeXmlFactory::class,
@@ -315,7 +318,7 @@ return [
         ]
     ],
     'zfc_rbac' => [
-        'identity_provider' => 'IdentityProvider',
+        'identity_provider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
         'role_provider' => [
             'ZfcRbac\Role\ObjectRepositoryRoleProvider' => [
                 'object_manager'     => 'doctrine.entitymanager.orm_default',
