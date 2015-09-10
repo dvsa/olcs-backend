@@ -33,7 +33,7 @@ final class UpdateFinancialStandingRate extends AbstractCommandHandler
             ->setLicenceType($this->getRepo()->getRefdataReference($command->getLicenceType()))
             ->setFirstVehicleRate($command->getFirstVehicleRate())
             ->setAdditionalVehicleRate($command->getAdditionalVehicleRate())
-            ->setEffectiveFrom(new \DateTime($command->getEffectiveFrom()));;
+            ->setEffectiveFrom(new \DateTime($command->getEffectiveFrom()));
 
         $this->getRepo()->save($rate);
 
