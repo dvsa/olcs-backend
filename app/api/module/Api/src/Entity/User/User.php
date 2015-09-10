@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
-use Dvsa\Olcs\Api\Entity\User\Team;
 
 /**
  * User Entity

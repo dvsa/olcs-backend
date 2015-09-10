@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\User\User as Entity;
+use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Doctrine\ORM\QueryBuilder;
@@ -100,6 +101,15 @@ class User extends AbstractRepository
 
         if (isset($data['localAuthority'])) {
             $data['localAuthority'] = $this->getReference(LocalAuthorityEntity::class, $data['localAuthority']);
+        }
+
+        if (isset($data['roles'])) {
+            $data['roles'] = array_map(
+                function ($roleId) {
+                    return $this->getReference(RoleEntity::class, $roleId);
+                },
+                $data['roles']
+            );
         }
 
         return $data;
