@@ -117,7 +117,13 @@ class RefreshSubmissionSectionsTest extends CommandHandlerTestCase
         ];
 
         $refreshData = [
-            'refreshData'
+            'data' => [
+                'tables' => [
+                    'operating-centres' => [
+                        'refreshData'
+                    ]
+                ]
+            ]
         ];
 
         /** @var SubmissionEntity $submissionMock */

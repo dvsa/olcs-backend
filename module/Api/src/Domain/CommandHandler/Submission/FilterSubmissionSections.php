@@ -49,30 +49,15 @@ final class FilterSubmissionSections extends AbstractCommandHandler implements S
         // set section data prior to update in order to retain any other sections
         $dataSnapshot = json_decode($submissionEntity->getDataSnapshot(), true);
 
-        foreach ($dataSnapshot as $sectionId => $sectionData) {
-            if ($sectionId === $command->getSection()) {
+        $sectionToFilter = !empty($command->getSubSection()) ? $command->getSubSection() : $command->getSection();
 
-                if (!empty($command->getSubSection()) &&
-                    is_array($sectionData['data']['tables'][$command->getSubSection()])
-                ) {
-                    // filter a subsection table
-                    $sectionData['data']['tables'][$command->getSubSection()] = $this->filterTable(
-                        $sectionData['data']['tables'][$command->getSubSection()],
-                        $command->getRowsToFilter()
-                    );
-                } else {
-                    // filter section table
-                    $sectionData['data']['tables'][$sectionId] = $this->filterTable(
-                        $sectionData['data']['tables'][$sectionId],
-                        $command->getRowsToFilter()
-                    );
-                }
-            }
+        $dataSnapshot[$command->getSection()]['data']['tables'][$sectionToFilter] =
+            $this->filterTable(
+                $dataSnapshot[$command->getSection()]['data']['tables'][$sectionToFilter],
+                $command->getRowsToFilter()
+            );
 
-            $submissionEntity->setSectionData($sectionId, $sectionData);
-        }
-
-        $submissionEntity->setSubmissionDataSnapshot();
+        $submissionEntity->setNewSubmissionDataSnapshot($dataSnapshot);
 
         return $submissionEntity;
     }
