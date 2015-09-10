@@ -693,6 +693,9 @@ return [
     TransferCommand\ContinuationDetail\QueueLetters::class => CommandHandler\ContinuationDetail\QueueLetters::class,
     Command\ContinuationDetail\Process::class => CommandHandler\ContinuationDetail\Process::class,
 
+    // Continuation
+    TransferCommand\Continuation\Create::class => CommandHandler\Continuation\Create::class,
+
     // Transport Manager Licence
     TransferCommand\TransportManagerLicence\UpdateForResponsibilities::class =>
         CommandHandler\TransportManagerLicence\UpdateForResponsibilities::class,

@@ -362,4 +362,6 @@ return [
     // Continuation Detail
     TransferQuery\ContinuationDetail\ChecklistReminders::class =>
         QueryHandler\ContinuationDetail\ChecklistReminders::class,
+    TransferQuery\ContinuationDetail\GetList::class =>
+        QueryHandler\ContinuationDetail\GetList::class,
 ];

@@ -178,4 +178,48 @@ class ContinuationDetail extends AbstractRepository
 
         return $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
     }
+
+    public function fetchDetails($continuationId, $licenceStatuses, $licNo, $method, $status)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata()
+            ->with('continuation', 'c')
+            ->with('status', 's')
+            ->with('licence', 'l')
+            ->with('l.status', 'ls')
+            ->with('l.organisation', 'lo')
+            ->with('l.licenceType', 'lt')
+            ->with('l.goodsOrPsv', 'lg');
+
+        $qb->orderBy('l.licNo', 'ASC');
+
+        if ($continuationId) {
+            $qb->andWhere($qb->expr()->eq('c.id', ':continuationId'))
+                ->setParameter('continuationId', $continuationId);
+        }
+        if ($licenceStatuses) {
+            $qb->andWhere($qb->expr()->in('l.status', ':licenceStatuses'))
+                ->setParameter('licenceStatuses', $licenceStatuses);
+        }
+        if ($licNo) {
+            $qb->andWhere($qb->expr()->eq('l.licNo', ':licNo'))
+                ->setParameter('licNo', $licNo);
+        }
+        if ($method) {
+            if ($method === Entity::METHOD_EMAIL) {
+                $qb->andWhere($qb->expr()->eq('lo.allowEmail', 1));
+            } elseif ($method === Entity::METHOD_POST) {
+                $qb->andWhere($qb->expr()->eq('lo.allowEmail', 0));
+            }
+        }
+        if ($status) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.status', ':status'))
+                ->setParameter('status', $status);
+        }
+
+        return $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+    }
 }
