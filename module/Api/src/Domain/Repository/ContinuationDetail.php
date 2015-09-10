@@ -10,6 +10,8 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 
 /**
  * ContinuationDetail
@@ -115,5 +117,65 @@ class ContinuationDetail extends AbstractRepository
             ->setParameter('status', Entity::STATUS_ACCEPTABLE);
 
         return $qb->getQuery()->getSingleResult();
+    }
+
+    public function fetchChecklistReminders($month, $year, $ids = [])
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata()
+            ->with('continuation', 'c')
+            ->with('licence', 'l')
+            ->with('l.status', 'ls')
+            ->with('l.licenceType', 'lt')
+            ->with('l.goodsOrPsv', 'lgp')
+            ->with('l.organisation', 'lo')
+            ->with('l.fees', 'lf')
+            ->with('lf.feeType', 'lfft');
+
+        $qb->andWhere($qb->expr()->in('l.status', ':licenceStatuses'))
+            ->setParameter(
+                'licenceStatuses',
+                [
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED
+                ]
+            );
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.received', 0));
+
+        $qb->andWhere(
+            $qb->expr()->orX(
+                $qb->expr()->not(
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('lfft.feeType', ':feeType'),
+                        $qb->expr()->in('lf.feeStatus', ':feeStatus')
+                    )
+                ),
+                $qb->expr()->isNull('lf.id')
+            )
+        );
+        $qb->setParameter('feeType', FeeTypeEntity::FEE_TYPE_CONT);
+        $qb->setParameter('feeStatus', [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED]);
+
+        if ($ids) {
+            $this->getQueryBuilder()
+                ->modifyQuery($qb)
+                ->filterByIds($ids);
+        }
+        if ($month) {
+            $qb->andWhere($qb->expr()->eq('c.month', ':month'))
+                ->setParameter('month', $month);
+        }
+        if ($year) {
+            $qb->andWhere($qb->expr()->eq('c.year', ':year'))
+                ->setParameter('year', $year);
+        }
+
+        return $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
     }
 }

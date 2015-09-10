@@ -358,4 +358,8 @@ return [
 
     // Person
     TransferQuery\Person\Person::class => QueryHandler\Person\Person::class,
+
+    // Continuation Detail
+    TransferQuery\ContinuationDetail\ChecklistReminders::class =>
+        QueryHandler\ContinuationDetail\ChecklistReminders::class,
 ];
