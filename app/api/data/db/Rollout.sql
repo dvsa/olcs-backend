@@ -4810,7 +4810,8 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (29, 'selfserve-landing-page-bus-registration', 'SSLPB'),
     (30, 'selfserve-search-operating-centre', 'SSLPO'),
     (31, 'selfserve-search-person', 'SSSPN'),
-    (32, 'selfserve-search-vehicle-external', 'SSVEX');
+    (32, 'selfserve-search-vehicle-external', 'SSVEX'),
+    (33, 'selfserve-nav-dashboard', 'SSNVD');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     -- set each role to it's respective permission
@@ -4893,7 +4894,11 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
 
     (10, 30), -- partner-user
     (10, 31), -- partner-user
-    (10, 32); -- partner-user
+    (10, 32), -- partner-user
+
+    (5, 33), -- operator-admin = selfserve-nav-dashboard
+    (6, 33), -- operator-user = selfserve-nav-dashboard
+    (7, 33); -- operator-tm = selfserve-nav-dashboard
 
 INSERT INTO `financial_standing_rate` (
     `id`,
