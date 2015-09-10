@@ -38,7 +38,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     {
         $result = new Result();
 
-        /** @var ApplicationEntity $application */
+        /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $this->validate($application);
@@ -48,6 +48,11 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
         $this->updateStatus($application, $result);
 
         $result->merge($this->createTask($application));
+
+        if ($application->isNew()) {
+            $result->merge($this->createPublication($application));
+            $result->merge($this->createTexTask($application));
+        }
 
         return $result;
     }
@@ -147,5 +152,42 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     protected function getTaskDescription(ApplicationEntity $application)
     {
         return $application->getCode() . ' Application';
+    }
+
+    /**
+     * Create a publicaction
+     *
+     * @param ApplicationEntity $application
+     *
+     * @return Result
+     */
+    protected function createPublication(ApplicationEntity $application)
+    {
+        return $this->handleSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\Application::create(
+                [
+                    'id' => $application->getId(),
+                    'trafficArea' => $application->getTrafficArea()->getId(),
+                ]
+            )
+        );
+    }
+
+    /**
+     * Create a TEX task
+     *
+     * @param ApplicationEntity $application
+     *
+     * @return Result
+     */
+    protected function createTexTask(ApplicationEntity $application)
+    {
+        return $this->handleSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::create(
+                [
+                    'id' => $application->getId(),
+                ]
+            )
+        );
     }
 }

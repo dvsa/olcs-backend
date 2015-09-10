@@ -21,6 +21,7 @@ class PublicationSection extends AbstractPublicationSection
     const APP_GRANTED_SECTION = 4;
     const APP_REFUSED_SECTION = 5;
     const APP_WITHDRAWN_SECTION = 6;
+    const APP_GRANT_NOT_TAKEN_SECTION = 7;
 
     const LIC_SURRENDERED_SECTION = 10;
     const LIC_TERMINATED_SECTION = 11;

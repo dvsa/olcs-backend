@@ -986,7 +986,6 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
-<<<<<<< HEAD
      * @dataProvider licenceDataProvider
      */
     public function testValidateTotalAuthority(
@@ -1079,6 +1078,7 @@ class LicenceEntityTest extends EntityTester
             ['ltyp_dbp', 'DBP'],
             ['ltyp_lbp', 'LBP'],
             ['ltyp_sbp', 'SBP'],
+            ['XXXX', null],
         ];
     }
 }
