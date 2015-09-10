@@ -701,7 +701,7 @@ class Licence extends AbstractLicence
     }
 
     /**
-     * Return Conditions and Undertakings that are added via Case. Used in submissions.
+     * Return Conditions and Undertakings that are added via Licence. Used in submissions.
      *
      * @return \Doctrine\Common\Collections\Collection|static
      */

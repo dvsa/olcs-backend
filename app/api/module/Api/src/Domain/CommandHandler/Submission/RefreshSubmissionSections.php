@@ -46,27 +46,21 @@ final class RefreshSubmissionSections extends AbstractCommandHandler implements 
         /** @var Submission $submissionEntity */
         $submissionEntity = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        // set section data prior to update in order to retain any other sections
         $dataSnapshot = json_decode($submissionEntity->getDataSnapshot(), true);
-        foreach ($dataSnapshot as $sectionId => $sectionData) {
-            if ($sectionId === $command->getSection()) {
-                // refresh data
-                $refreshData = $this->getSubmissionGenerator()->generateSubmissionSectionData(
-                    $submissionEntity,
-                    $sectionId
-                );
 
-                if (!empty($command->getSubSection())) {
-                    $sectionData['data']['tables'][$command->getSubSection()] =
-                        $refreshData['data']['tables'][$command->getSubSection()];
-                } else {
-                    $sectionData = $refreshData;
-                }
-            }
-            $submissionEntity->setSectionData($sectionId, $sectionData);
-        }
+        $sectionToRefresh = !empty($command->getSubSection()) ? $command->getSubSection() : $command->getSection();
 
-        $submissionEntity->setSubmissionDataSnapshot();
+        // get the refresh data
+        $refreshData = $this->getSubmissionGenerator()->generateSubmissionSectionData(
+            $submissionEntity,
+            $command->getSection()
+        );
+
+        // assign new data
+        $dataSnapshot[$command->getSection()]['data']['tables'][$sectionToRefresh] =
+            $refreshData['data']['tables'][$sectionToRefresh];
+
+        $submissionEntity->setNewSubmissionDataSnapshot($dataSnapshot);
 
         return $submissionEntity;
     }
