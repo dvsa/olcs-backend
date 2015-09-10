@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Licence;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -662,18 +663,19 @@ class Licence extends AbstractLicence
         $totAuthSmallVehicles,
         $totAuthMediumVehicles,
         $totAuthLargeVehicles
-    ) {
+    )
+    {
         if ($this->isPsv() && ($this->isStandardNational() || $this->isStandardInternational())) {
             if (
-                (int) $totAuthVehicles !==
-                ((int) $totAuthSmallVehicles + (int) $totAuthMediumVehicles + (int) $totAuthLargeVehicles)
+                (int)$totAuthVehicles !==
+                ((int)$totAuthSmallVehicles + (int)$totAuthMediumVehicles + (int)$totAuthLargeVehicles)
             ) {
                 throw new ValidationException(
                     [
                         'totAuthVehicles' => [
                             [
                                 self::ERROR_SUM_AUTHORITY_3 => 'The sum of small, medium and large ' .
-                                'vehicles does not match the total number of vehicles'
+                                    'vehicles does not match the total number of vehicles'
                             ]
                         ]
                     ]
@@ -682,7 +684,7 @@ class Licence extends AbstractLicence
         }
         if ($this->isPsv() && $this->isRestricted()) {
             if (
-                (int) $totAuthVehicles !==  ((int) $totAuthSmallVehicles + (int) $totAuthMediumVehicles)
+                (int)$totAuthVehicles !== ((int)$totAuthSmallVehicles + (int)$totAuthMediumVehicles)
             ) {
                 throw new ValidationException(
                     [
@@ -696,5 +698,24 @@ class Licence extends AbstractLicence
                 );
             }
         }
+    }
+
+    /**
+     * Return Conditions and Undertakings that are added via Licence. Used in submissions.
+     *
+     * @return \Doctrine\Common\Collections\Collection|static
+     */
+    public function getConditionUndertakingsAddedViaLicence()
+    {
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->in(
+                    'addedVia',
+                    [
+                        ConditionUndertaking::ADDED_VIA_LICENCE
+                    ]
+                )
+            );
+        return $this->getConditionUndertakings()->matching($criteria);
     }
 }
