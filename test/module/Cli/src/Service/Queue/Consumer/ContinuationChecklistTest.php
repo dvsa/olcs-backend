@@ -72,13 +72,16 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
         $this->expectCommand(
             \Dvsa\Olcs\Transfer\Command\ContinuationDetail\Update::class,
             [
-              'id' => 69,
-              'status' => ContinuationDetailEntity::STATUS_ERROR,
-              'version' => null,
-              'received' => null,
-              'totAuthVehicles' => null,
-              'totPsvDiscs' => null,
-              'totCommunityLicences' => null,
+                'id' => 69,
+                'status' => ContinuationDetailEntity::STATUS_ERROR,
+                'version' => null,
+                'received' => null,
+                'totAuthVehicles' => null,
+                'totAuthSmallVehicles' => null,
+                'totAuthMediumVehicles' => null,
+                'totAuthLargeVehicles' => null,
+                'totPsvDiscs' => null,
+                'totCommunityLicences' => null,
             ],
             new Result()
         );

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Bus Registration List (by routeNo)
+ * Bus Registration List (by licenceId and routeNo)
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus;
 
@@ -10,9 +10,9 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 
 /**
- * Bus Registration List (by routeNo)
+ * Bus Registration List (by licenceId and routeNo)
  */
-class ByRouteNo extends AbstractQueryHandler
+class ByLicenceRoute extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Bus';
 
