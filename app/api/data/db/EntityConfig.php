@@ -104,38 +104,12 @@ return array(
                 'persist'
             )
         ),
-        'userRoles' => array(
-            'cascade' => array(
-                'persist'
-            ),
-            'inversedBy' => array(
-                'entity' => 'UserRole',
-                'property' => 'user'
-            )
-        ),
         'transport_manager_id' => array(
             'inversedBy' => array(
                 'entity' => 'TransportManager',
                 'property' => 'user'
             ),
         ),
-    ),
-    'user_role' => array(
-        'user_id' => array(
-            'inversedBy' => array(
-                'entity' => 'User',
-                'property' => 'userRole',
-                'cascade' => array(
-                    'persist'
-                )
-            )
-        ),
-        'role_id' => array(
-            'inversedBy' => array(
-                'entity' => 'Role',
-                'property' => 'role'
-            )
-        )
     ),
     'licence' => array(
         'organisation_id' => array(

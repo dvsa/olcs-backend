@@ -30,9 +30,7 @@ class User extends AbstractQueryHandler
                 'transportManager',
                 'localAuthority',
                 'partnerContactDetails',
-                'userRoles' => [
-                    'role'
-                ],
+                'roles',
                 'contactDetails' => [
                     'person',
                     'address' => ['countryCode'],

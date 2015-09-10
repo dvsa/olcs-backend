@@ -78,8 +78,8 @@ class User extends AbstractUser
 
         $this->loginId = $data['loginId'];
 
-        if (isset($data['userRoles'])) {
-            $this->userRoles = $data['userRoles'];
+        if (isset($data['roles'])) {
+            $this->roles = $data['roles'];
         }
 
         if (isset($data['memorableWord'])) {
