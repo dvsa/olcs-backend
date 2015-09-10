@@ -49,6 +49,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->refData = [
             Licence::LICENCE_STATUS_NOT_SUBMITTED,
             ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED,
+            ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
             Licence::LICENCE_CATEGORY_GOODS_VEHICLE
         ];
@@ -68,7 +69,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
     public function testHandleCommandMinimal()
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
+            ->twice()
             ->with(Permission::INTERNAL_USER, null)
             ->andReturn(false);
 
@@ -121,9 +122,9 @@ class CreateApplicationTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
+            ->twice()
             ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(false);
+            ->andReturn(true);
 
         $command = Cmd::create(
             [
@@ -147,6 +148,12 @@ class CreateApplicationTest extends CommandHandlerTestCase
                     $application->getLicence()->setId(33);
                 }
             );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::class,
+            ['id' => 22],
+            new Result()
+        );
 
         $result1 = new Result();
         $result1->addId('fee', 44);
@@ -186,7 +193,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->assertInstanceOf(Licence::class, $app->getLicence());
         $this->assertSame($this->references[Organisation::class][11], $app->getLicence()->getOrganisation());
         $this->assertSame($this->refData[Licence::LICENCE_STATUS_NOT_SUBMITTED], $app->getLicence()->getStatus());
-        $this->assertSame($this->refData[ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED], $app->getStatus());
+        $this->assertSame($this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION], $app->getStatus());
 
         $this->assertInstanceOf('\DateTime', $app->getReceivedDate());
         $this->assertEquals('2015-01-01', $app->getReceivedDate()->format('Y-m-d'));

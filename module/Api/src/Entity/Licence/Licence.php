@@ -663,8 +663,7 @@ class Licence extends AbstractLicence
         $totAuthSmallVehicles,
         $totAuthMediumVehicles,
         $totAuthLargeVehicles
-    )
-    {
+    ) {
         if ($this->isPsv() && ($this->isStandardNational() || $this->isStandardInternational())) {
             if (
                 (int)$totAuthVehicles !==
