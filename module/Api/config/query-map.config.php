@@ -366,6 +366,7 @@ return [
         QueryHandler\ContinuationDetail\GetList::class,
 
     // System
+    TransferQuery\System\FinancialStandingRate::class => QueryHandler\System\FinancialStandingRate::class,
     TransferQuery\System\FinancialStandingRateList::class => QueryHandler\System\FinancialStandingRateList::class,
 
 ];
