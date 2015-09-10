@@ -110,6 +110,40 @@ class IrfoGvPermit extends AbstractIrfoGvPermit
     }
 
     /**
+     * Withdraw
+     *
+     * @param RefData $status
+     * @return IrfoGvPermit
+     */
+    public function withdraw(RefData $status)
+    {
+        if ($status->getId() !== self::STATUS_WITHDRAWN) {
+            throw new BadRequestException('Please provide a valid status');
+        }
+
+        $this->setIrfoPermitStatus($status);
+
+        return $this;
+    }
+
+    /**
+     * Refuse
+     *
+     * @param RefData $status
+     * @return IrfoGvPermit
+     */
+    public function refuse(RefData $status)
+    {
+        if ($status->getId() !== self::STATUS_REFUSED) {
+            throw new BadRequestException('Please provide a valid status');
+        }
+
+        $this->setIrfoPermitStatus($status);
+
+        return $this;
+    }
+
+    /**
      * Approve
      *
      * @param RefData $status

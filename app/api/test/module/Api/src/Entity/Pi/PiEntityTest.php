@@ -38,6 +38,7 @@ class PiEntityTest extends EntityTester
     public function testCreate()
     {
         $caseEntity = m::mock(CasesEntity::class);
+        $caseEntity->shouldReceive('isClosed')->andReturn(false);
         $agreedByTc = m::mock(PresidingTcEntity::class);
         $agreedByTcRole = m::mock(RefData::class);
         $piTypes = new ArrayCollection();
@@ -68,6 +69,34 @@ class PiEntityTest extends EntityTester
     }
 
     /**
+     * test create throws exception when case is closed
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testCreateClosedCaseException()
+    {
+        $caseEntity = m::mock(CasesEntity::class);
+        $caseEntity->shouldReceive('isClosed')->andReturn(true);
+        $agreedByTc = m::mock(PresidingTcEntity::class);
+        $agreedByTcRole = m::mock(RefData::class);
+        $piTypes = new ArrayCollection();
+        $reasons = new ArrayCollection();
+        $agreedDate = m::mock(\DateTime::class);
+        $piStatus = m::mock(RefData::class);
+
+        $pi = new Entity(
+            $caseEntity,
+            $agreedByTc,
+            $agreedByTcRole,
+            $piTypes,
+            $reasons,
+            $agreedDate,
+            $piStatus,
+            ''
+        );
+    }
+
+    /**
      * test agreed and legislation
      */
     public function testAgreedAndLegislation()
@@ -94,6 +123,30 @@ class PiEntityTest extends EntityTester
         $this->assertEquals($reasons, $this->entity->getReasons());
         $this->assertEquals($agreedDate, $this->entity->getAgreedDate());
         $this->assertEquals($comment, $this->entity->getComment());
+    }
+
+    /**
+     * test agreed and legislation throws exception when Pi is closed
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testAgreedAndLegislationClosedException()
+    {
+        $agreedByTc = m::mock(PresidingTcEntity::class);
+        $agreedByTcRole = m::mock(RefData::class);
+        $piTypes = new ArrayCollection();
+        $reasons = new ArrayCollection();
+        $agreedDate = m::mock(\DateTime::class);
+        $this->entity->setClosedDate(new \DateTime());
+
+        $this->entity->updateAgreedAndLegislation(
+            $agreedByTc,
+            $agreedByTcRole,
+            $piTypes,
+            $reasons,
+            $agreedDate,
+            ''
+        );
     }
 
     /**
@@ -141,6 +194,30 @@ class PiEntityTest extends EntityTester
     }
 
     /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdatePiWithDecisionClosedException()
+    {
+        $decidedByTc = m::mock(PresidingTcEntity::class);
+        $decidedByTcRole = m::mock(RefData::class);
+        $decisions = new ArrayCollection();
+        $this->entity->setClosedDate(new \DateTime());
+
+        $this->entity->updatePiWithDecision(
+            $decidedByTc,
+            $decidedByTcRole,
+            $decisions,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+    }
+
+    /**
      * @dataProvider dateProvider
      *
      * @param string $inputDate
@@ -161,6 +238,17 @@ class PiEntityTest extends EntityTester
         $this->assertEquals(null, $this->entity->getDecisionLetterSentDate());
         $this->assertEquals(null, $this->entity->getTcWrittenReasonDate());
         $this->assertEquals(null, $this->entity->getWrittenReasonLetterDate());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateWrittenOutcomeNoneClosedException()
+    {
+        $writtenOutcome = m::mock(RefData::class);
+        $this->entity->setClosedDate(new \DateTime());
+
+        $this->entity->updateWrittenOutcomeNone($writtenOutcome, null, null);
     }
 
     /**
@@ -195,6 +283,17 @@ class PiEntityTest extends EntityTester
     }
 
     /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateWrittenOutcomeDecisionClosedException()
+    {
+        $writtenOutcome = m::mock(RefData::class);
+        $this->entity->setClosedDate(new \DateTime());
+
+        $this->entity->updateWrittenOutcomeDecision($writtenOutcome, null, null, null, null);
+    }
+
+    /**
      * @dataProvider dateProvider
      *
      * @param string $inputDate
@@ -223,6 +322,17 @@ class PiEntityTest extends EntityTester
         $this->assertEquals(null, $this->entity->getDecisionLetterSentDate());
         $this->assertEquals($entityDate, $this->entity->getTcWrittenReasonDate());
         $this->assertEquals($entityDate, $this->entity->getWrittenReasonLetterDate());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateWrittenOutcomeReasonClosedException()
+    {
+        $writtenOutcome = m::mock(RefData::class);
+        $this->entity->setClosedDate(new \DateTime());
+
+        $this->entity->updateWrittenOutcomeReason($writtenOutcome, null, null, null, null);
     }
 
     /**
@@ -375,6 +485,9 @@ class PiEntityTest extends EntityTester
         $this->entity->close();
     }
 
+    /**
+     * Tests reopen
+     */
     public function testReopen()
     {
         $this->entity->setClosedDate(new \DateTime());

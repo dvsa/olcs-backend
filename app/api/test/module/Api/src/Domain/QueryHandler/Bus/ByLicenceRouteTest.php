@@ -3,20 +3,20 @@
 namespace Dvsa\OlcsTest\Api\Entity\Bus;
 
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\ByRouteNo;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\ByLicenceRoute;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\Olcs\Transfer\Query\Bus\ByRouteNo as Qry;
+use Dvsa\Olcs\Transfer\Query\Bus\ByLicenceRoute as Qry;
 use Doctrine\ORM\Query;
 use Mockery as m;
 
 /**
- * ByRouteNo Test
+ * ByLicenceRoute Test
  */
-class ByRouteNoTest extends QueryHandlerTestCase
+class ByLicenceRouteTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new ByRouteNo();
+        $this->sut = new ByLicenceRoute();
         $this->mockRepo('Bus', BusRepo::class);
 
         parent::setUp();
