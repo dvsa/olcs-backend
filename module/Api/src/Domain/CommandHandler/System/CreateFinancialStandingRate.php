@@ -31,8 +31,8 @@ final class CreateFinancialStandingRate extends AbstractCommandHandler
         $this->getRepo()->save($rate);
 
         $result = new Result();
-        $result->addId('FinancialStandingRate', $rate->getId());
-        $result->addMessage('Financial Standing Rate created successfully');
+        $result->addId('financialStandingRate', $rate->getId());
+        $result->addMessage('Financial Standing Rate created');
 
         return $result;
     }
