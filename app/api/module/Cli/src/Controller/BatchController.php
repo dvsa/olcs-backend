@@ -89,8 +89,9 @@ class BatchController extends AbstractConsoleController
                     'version' => $licenceData['version'],
                 ]
             );
-            // Email\continuationNotSoughtAction
         }
+
+        // $commands[] =             // Email\continuationNotSoughtAction
 
         // execute commands
         if (!$dryRun) {
