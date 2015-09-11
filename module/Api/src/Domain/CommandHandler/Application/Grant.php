@@ -87,6 +87,48 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             $result->merge($this->handleSideEffect(CreateFromGrant::create($data)));
         }
 
+        if ($application->isNew()) {
+            $result->merge($this->publishApplication($application));
+            $result->merge($this->closeTexTask($application));
+        }
+
         return $result;
+    }
+
+    /**
+     * Publish the application
+     *
+     * @param ApplicationEntity $application
+     *
+     * @return Result
+     */
+    protected function publishApplication(ApplicationEntity $application)
+    {
+        return $this->handleSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\Application::create(
+                [
+                    'id' => $application->getId(),
+                    'trafficArea' => $application->getTrafficArea()->getId(),
+                ]
+            )
+        );
+    }
+
+    /**
+     * Close any TEX tasks on the application
+     *
+     * @param ApplicationEntity $application
+     *
+     * @return Result
+     */
+    protected function closeTexTask(ApplicationEntity $application)
+    {
+        return $this->handleSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::create(
+                [
+                    'id' => $application->getId(),
+                ]
+            )
+        );
     }
 }

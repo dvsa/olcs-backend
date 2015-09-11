@@ -31,7 +31,7 @@ class ApplicationTest extends CommandHandlerTestCase
     {
         $this->sut = new Application();
         $this->mockRepo('Publication', PublicationRepo::class);
-        $this->mockRepo('PublicationLink', PublicationLinkRepo::class);
+        $this->mockRepo('PublicationLink', PuConditionsAndUndertakingsblicationLinkRepo::class);
         $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockRepo('TrafficArea', TrafficAreaRepo::class);
 
@@ -52,7 +52,8 @@ class ApplicationTest extends CommandHandlerTestCase
                 PublicationSectionEntity::APP_NEW_SECTION => m::mock(PublicationSectionEntity::class),
                 PublicationSectionEntity::APP_GRANTED_SECTION => m::mock(PublicationSectionEntity::class),
                 PublicationSectionEntity::APP_REFUSED_SECTION => m::mock(PublicationSectionEntity::class),
-                PublicationSectionEntity::APP_WITHDRAWN_SECTION => m::mock(PublicationSectionEntity::class)
+                PublicationSectionEntity::APP_WITHDRAWN_SECTION => m::mock(PublicationSectionEntity::class),
+                PublicationSectionEntity::APP_GRANT_NOT_TAKEN_SECTION => m::mock(PublicationSectionEntity::class),
             ]
         ];
 
@@ -147,7 +148,8 @@ class ApplicationTest extends CommandHandlerTestCase
             [ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION],
             [ApplicationEntity::APPLICATION_STATUS_GRANTED],
             [ApplicationEntity::APPLICATION_STATUS_REFUSED],
-            [ApplicationEntity::APPLICATION_STATUS_WITHDRAWN]
+            [ApplicationEntity::APPLICATION_STATUS_WITHDRAWN],
+            [ApplicationEntity::APPLICATION_STATUS_NOT_TAKEN_UP],
         ];
     }
 

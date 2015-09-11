@@ -89,8 +89,11 @@ class GrantTest extends CommandHandlerTestCase
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setId(111);
         $application->shouldReceive('isGoods')
             ->andReturn(true);
+        $application->shouldReceive('getTrafficArea->getId')
+            ->andReturn('TA');
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -102,6 +105,17 @@ class GrantTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('GrantGoods');
         $this->expectedSideEffect(GrantGoods::class, $data, $result1);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
+            ['id' => 111, 'trafficArea' => 'TA'],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            ['id' => 111],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 
@@ -128,8 +142,11 @@ class GrantTest extends CommandHandlerTestCase
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setId(111);
         $application->shouldReceive('isGoods')
             ->andReturn(false);
+        $application->shouldReceive('getTrafficArea->getId')
+            ->andReturn('TA');
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -141,6 +158,17 @@ class GrantTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('GrantPsv');
         $this->expectedSideEffect(GrantPsv::class, $data, $result1);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
+            ['id' => 111, 'trafficArea' => 'TA'],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            ['id' => 111],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 
@@ -170,6 +198,8 @@ class GrantTest extends CommandHandlerTestCase
         $application->setId(111);
         $application->shouldReceive('isGoods')
             ->andReturn(false);
+        $application->shouldReceive('getTrafficArea->getId')
+            ->andReturn('TA');
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -190,6 +220,17 @@ class GrantTest extends CommandHandlerTestCase
             'caseworkerNotes' => 'Notes go here'
         ];
         $this->expectedSideEffect(CreateFromGrant::class, $data, $result2);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
+            ['id' => 111, 'trafficArea' => 'TA'],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            ['id' => 111],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 

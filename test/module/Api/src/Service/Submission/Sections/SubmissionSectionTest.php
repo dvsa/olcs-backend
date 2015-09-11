@@ -141,6 +141,14 @@ class SubmissionSectionTest extends MockeryTestCase
         $case->setProhibitionNote('prohibition-note');
         $case->setProhibitions($this->generateArrayCollection('Prohibition'));
 
+        $case->setConditionUndertakings(
+            $this->generateConditionsUndertakings(
+                $case,
+                ConditionUndertaking::TYPE_CONDITION,
+                29
+            )
+        );
+
         return $case;
     }
 
@@ -392,13 +400,14 @@ class SubmissionSectionTest extends MockeryTestCase
             $cu->setAddedVia($this->generateRefDataEntity(ConditionUndertaking::ADDED_VIA_APPLICATION));
             $cu->setAttachedTo($this->generateRefDataEntity(ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE));
             $cu->setOperatingCentre($this->generateOperatingCentre());
+        } else {
+            $cu->setAddedVia($this->generateRefDataEntity(ConditionUndertaking::ADDED_VIA_CASE));
+            $cu->setAttachedTo($this->generateRefDataEntity(ConditionUndertaking::ATTACHED_TO_LICENCE));
         }
 
         $cu->setId($id);
         $cu->setVersion((100+$id));
         $cu->setCreatedOn(new \DateTime('2011-01-23'));
-        $cu->setAddedVia($this->generateRefDataEntity(ConditionUndertaking::ADDED_VIA_LICENCE));
-        $cu->setAttachedTo($this->generateRefDataEntity(ConditionUndertaking::ATTACHED_TO_LICENCE));
 
         $conditionUndertakings->add($cu);
 

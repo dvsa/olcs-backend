@@ -61,12 +61,16 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             ->shouldReceive('setSpecifiedDate')->with(null)->once()
             ->shouldReceive('setInterimApplication')->with(null)->once()->getMock();
 
+        $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea->setId('TA');
+
         $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
             ->andReturn(123)
             ->shouldReceive('getLicenceVehicles')
             ->andReturn([$mockLicenceVehicle])
             ->times(3)
+            ->shouldReceive('getTrafficArea')->with()->once()->andReturn($trafficArea)
             ->getMock();
 
         $application = m::mock(Application::class)->makePartial();
@@ -150,6 +154,12 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             [
                 'id' => 123
             ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
+            ['id' => 1, 'trafficArea' => 'TA'],
             new Result()
         );
 

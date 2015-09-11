@@ -103,6 +103,8 @@ return [
     TransferCommand\Application\CreateTaxiPhv::class => CommandHandler\Application\CreateTaxiPhv::class,
     TransferCommand\Application\UpdateTaxiPhv::class => CommandHandler\Application\UpdateTaxiPhv::class,
     TransferCommand\Application\DeleteTaxiPhv::class => CommandHandler\Application\DeleteTaxiPhv::class,
+    Command\Application\CreateTexTask::class => CommandHandler\Application\CreateTexTask::class,
+    Command\Application\CloseTexTask::class => CommandHandler\Application\CloseTexTask::class,
 
     Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
     TransferCommand\Application\UpdatePsvVehicles::class => CommandHandler\Application\UpdatePsvVehicles::class,
@@ -342,6 +344,11 @@ return [
         CommandHandler\Submission\UpdateSubmission::class,
     TransferCommand\Submission\DeleteSubmission::class =>
         CommandHandler\Submission\DeleteSubmission::class,
+
+    TransferCommand\Submission\FilterSubmissionSections::class =>
+        CommandHandler\Submission\FilterSubmissionSections::class,
+    TransferCommand\Submission\RefreshSubmissionSections::class =>
+        CommandHandler\Submission\RefreshSubmissionSections::class,
 
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
@@ -694,6 +701,7 @@ return [
 
     // ContinuationDetail
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
+    TransferCommand\ContinuationDetail\QueueLetters::class => CommandHandler\ContinuationDetail\QueueLetters::class,
     Command\ContinuationDetail\Process::class => CommandHandler\ContinuationDetail\Process::class,
 
     // Transport Manager Licence
@@ -712,6 +720,7 @@ return [
     // Domain - Queue
     QueueCommand\Complete::class => QueueCommandHandler\Complete::class,
     QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
+    QueueCommand\Create::class => QueueCommandHandler\Create::class,
 
     // Transfer - TmCaseDecision
     TransferCommand\TmCaseDecision\CreateReputeNotLost::class
