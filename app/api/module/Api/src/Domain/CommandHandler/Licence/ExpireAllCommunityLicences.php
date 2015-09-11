@@ -11,5 +11,5 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
  */
 final class ReturnAllCommunityLicences extends UpdateAllCommunityLicences
 {
-    protected $status = CommunityLic::STATUS_RETURNDED;
+    protected $status = CommunityLic::STATUS_EXPIRED;
 }

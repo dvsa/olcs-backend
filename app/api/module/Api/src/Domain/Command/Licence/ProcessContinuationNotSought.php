@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Command\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
+use Dvsa\Olcs\Transfer\FieldType\Traits\Version;
 
 /**
  * Process Continuation Not Sought
@@ -16,5 +17,5 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class ProcessContinuationNotSought extends AbstractIdOnlyCommand
 {
-
+    use Version;
 }

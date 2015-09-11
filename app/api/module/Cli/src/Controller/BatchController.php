@@ -83,7 +83,12 @@ class BatchController extends AbstractConsoleController
         $commands = [];
         foreach ($result['result'] as $licenceData) {
             $this->writeVerboseMessages("Processing Licence ID {$licenceData['id']}");
-            $commands[] = Command\Licence\ProcessContinuationNotSought::create(['id' => $licenceData['id']]);
+            $commands[] = Command\Licence\ProcessContinuationNotSought::create(
+                [
+                    'id' => $licenceData['id'],
+                    'version' => $licenceData['version'],
+                ]
+            );
             // Email\continuationNotSoughtAction
         }
 
