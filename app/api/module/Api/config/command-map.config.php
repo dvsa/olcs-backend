@@ -780,4 +780,7 @@ return [
         CommandHandler\System\UpdateFinancialStandingRate::class,
     TransferCommand\System\DeleteFinancialStandingRateList::class =>
         CommandHandler\System\DeleteFinancialStandingRateList::class,
+
+    // Domain - Licence
+    Command\Licence\ProcessContinuationNotSought::class => CommandHandler\Licence\ProcessContinuationNotSought::class,
 ];

@@ -10,8 +10,11 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 
 /**
  * Licence
@@ -178,6 +181,62 @@ class Licence extends AbstractRepository
             ->byId($licenceId);
 
         return $qb->getQuery()->getSingleResult(Query::HYDRATE_OBJECT);
+    }
+
+    public function fetchForContinuationNotSought(\DateTime $now = null)
+    {
+        if (is_null($now)) {
+            $now = new DateTime('now');
+        }
+
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata()
+            ->with('licenceVehicles', 'lv')
+            ->with('lv.goodsDiscs', 'gd')
+            ->with('psvDiscs', 'pd');
+
+        $qb
+            // the continuation date is in the past;
+            ->andWhere($qb->expr()->lt($this->alias . '.expiryDate', ':now'))
+            // the status of the licence is valid, valid curtailed or valid suspended;
+            ->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
+            // the licence is a goods licence or a PSV special restricted
+            // (i.e. it excludes restricted and standard PSV licences)
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->eq($this->alias .'.goodsOrPsv', ':gv'),
+                    $qb->expr()->andX(
+                        $qb->expr()->eq($this->alias .'.goodsOrPsv', ':psv'),
+                        $qb->expr()->eq($this->alias .'.licenceType', ':sr')
+                    )
+                )
+            )
+            // there is an outstanding continuation fee
+            ->innerJoin($this->alias . '.fees', 'f')
+            ->innerJoin('f.feeType', 'ft')
+            ->andWhere($qb->expr()->eq('f.feeStatus', ':feeStatus'))
+            ->andWhere($qb->expr()->eq('ft.feeType', ':feeType'))
+            ->setParameter('now', $now)
+            ->setParameter(
+                'statuses',
+                [
+                    Entity::LICENCE_STATUS_VALID,
+                    Entity::LICENCE_STATUS_CURTAILED,
+                    Entity::LICENCE_STATUS_SUSPENDED,
+                ]
+            )
+            ->setParameter('feeStatus', FeeEntity::STATUS_OUTSTANDING)
+            ->setParameter('feeType', FeeTypeEntity::FEE_TYPE_CONT)
+            ->setParameter('gv', Entity::LICENCE_CATEGORY_GOODS_VEHICLE)
+            ->setParameter('psv', Entity::LICENCE_CATEGORY_PSV)
+            ->setParameter('sr', Entity::LICENCE_TYPE_SPECIAL_RESTRICTED);
+
+        $query = $qb->getQuery();
+
+        return $query->getResult();
     }
 
     /**

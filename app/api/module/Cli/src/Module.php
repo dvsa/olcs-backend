@@ -34,7 +34,10 @@ class Module implements ConsoleUsageProviderInterface
             'licence-status-rules [--verbose|-v]' => 'Process licence status change rules',
             'enqueue-ch-compare [--verbose|-v]' => 'Enqueue Companies House lookups for all Organisations',
             'duplicate-vehicle-warning [--verbose|-v]' => 'Send duplicate vehicle warning letters',
+            'batch-cns  [--verbose|-v] [--dryrun|-d]' => 'Process Licences for Continuation Not Sought',
+            // Describe parameters
             array( '--verbose|-v', '(optional) turn on verbose mode'),
+            array( '--dryrun|-d', '(optional) dryrun, nothing is actually changed'),
             'process-queue [--type=]' => 'Process the queue',
             array( '--type=<que_typ_xxx>', '(optional) queue message type to process'),
         );
