@@ -135,9 +135,9 @@ class GrantValidationService implements \Zend\ServiceManager\FactoryInterface
     {
         $criteria = \Doctrine\Common\Collections\Criteria::create();
         $criteria->andWhere(
-            $criteria->expr()->eq(
+            $criteria->expr()->in(
                 'feeStatus',
-                Fee::STATUS_OUTSTANDING
+                [Fee::STATUS_OUTSTANDING]
             )
         );
 
