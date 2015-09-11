@@ -116,7 +116,7 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
                     $trafficArea = $this->getRepo()->getReference(TrafficAreaEntity::class, $ta);
                 }
 
-                //no N&P for Northern Ireland
+                //no N&P for Northern Ireland, this is already defaulted to published, no need to record it twice below
                 if ($trafficArea->getId() === TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
                     && $pubType == 'N&P') {
                     continue;
@@ -230,7 +230,7 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
      * @param int $pubSection
      * @return UnpublishedPiQry
      */
-    public function getUnpublishedPiQuery($publication, $pi, $pubSection)
+    private function getUnpublishedPiQuery($publication, $pi, $pubSection)
     {
         $data =  [
             'publication' => $publication,
@@ -245,7 +245,7 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
      * @param PiHearingEntity $hearing
      * @return array
      */
-    public function extractHearingData($hearing)
+    private function extractHearingData($hearing)
     {
         $piVenue = $hearing->getPiVenue();
         $hearingDate = $hearing->getHearingDate();
