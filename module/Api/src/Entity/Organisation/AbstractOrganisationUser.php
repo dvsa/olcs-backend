@@ -113,15 +113,6 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     protected $organisation;
 
     /**
-     * Removed date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="removed_date", nullable=true)
-     */
-    protected $removedDate;
-
-    /**
      * Sftp access
      *
      * @var string
@@ -336,29 +327,6 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     public function getOrganisation()
     {
         return $this->organisation;
-    }
-
-    /**
-     * Set the removed date
-     *
-     * @param \DateTime $removedDate
-     * @return OrganisationUser
-     */
-    public function setRemovedDate($removedDate)
-    {
-        $this->removedDate = $removedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the removed date
-     *
-     * @return \DateTime
-     */
-    public function getRemovedDate()
-    {
-        return $this->removedDate;
     }
 
     /**
