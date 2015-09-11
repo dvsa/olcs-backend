@@ -22,12 +22,23 @@ use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Domain\Command\Result as ResultCmd;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedBusReg as UnpublishedBusRegQry;
 
 /**
  * BusTest
  */
 class BusTest extends CommandHandlerTestCase
 {
+    //variables to hold traffic area entity references
+    protected $ta1;
+    protected $ta2;
+    protected $ta3;
+
+    //traffic area id values
+    protected $trafficArea = 'M';
+    protected $trafficArea2 = 'N'; //NI
+    protected $trafficArea3 = 'D';
+
     public function setUp()
     {
         $this->sut = new Bus();
@@ -45,9 +56,20 @@ class BusTest extends CommandHandlerTestCase
 
     protected function initReferences()
     {
+        $this->ta1 = m::mock(TrafficAreaEntity::class);
+        $this->ta1->shouldReceive('getId')->andReturn($this->trafficArea);
+
+        $this->ta2 = m::mock(TrafficAreaEntity::class);
+        $this->ta2->shouldReceive('getId')->andReturn($this->trafficArea2);
+
+        $this->ta3 = m::mock(TrafficAreaEntity::class);
+        $this->ta3->shouldReceive('getId')->andReturn($this->trafficArea3);
+
         $this->references = [
             TrafficAreaEntity::class => [
-                'M' => m::mock(TrafficAreaEntity::class)
+                $this->trafficArea => $this->ta1,
+                $this->trafficArea2 => $this->ta2,
+                $this->trafficArea3 => $this->ta3
             ],
             PublicationSectionEntity::class => [
                 PublicationSectionEntity::BUS_NEW_SHORT_SECTION => m::mock(PublicationSectionEntity::class),
@@ -93,20 +115,94 @@ class BusTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
+
+    /**
+     * testHandleCommandDelete
+     */
+    public function testHandleCommandDelete()
+    {
+        $id = 99;
+        $publicationId = 33;
+        $publicationLinkId = 66;
+        $regNo = 44;
+        $revertStatus = BusRegEntity::STATUS_NEW;
+        $shortNotice = 'Y';
+
+        $allTrafficAreas = [
+            0 => $this->ta2,
+            1 => $this->ta3
+        ];
+
+        $command = Cmd::Create(['id' => $id]);
+
+        $this->repoMap['TrafficArea']->shouldReceive('fetchAll')->andReturn($allTrafficAreas);
+
+        $publicationLinkMock = m::mock(PublicationLinkEntity::class)->makePartial();
+        $publicationLinkMock->shouldReceive('getId')->andReturn($publicationLinkId);
+
+        $this->mockedSmServices[PublicationGenerator::class]
+            ->shouldReceive('createPublication')
+            ->andReturn($publicationLinkMock);
+
+        $publicationMock = m::mock(PublicationEntity::class);
+        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+
+        $mockTa = m::mock(TrafficAreaEntity::class);
+        $mockTa->shouldReceive('getId')->andReturn('N');
+
+        $licenceTrafficAreas = new ArrayCollection([$mockTa]);
+
+        $licenceMock = m::mock(LicenceEntity::class);
+
+        $busMock = m::mock(BusRegEntity::class);
+        $busMock->shouldReceive('getLicence')->andReturn($licenceMock);
+        $busMock->shouldReceive('getRevertStatus->getId')->andReturn($revertStatus);
+        $busMock->shouldReceive('getTrafficAreas')->andReturn($licenceTrafficAreas);
+        $busMock->shouldReceive('getRegNo')->andReturn($regNo);
+        $busMock->shouldReceive('getId')->andReturn($id);
+        $busMock->shouldReceive('getIsShortNotice')->andReturn($shortNotice);
+
+        $this->repoMap['Bus']->shouldReceive('fetchUsingId')->andReturn($busMock);
+
+        $this->repoMap['Publication']->shouldReceive('fetchLatestForTrafficAreaAndType')
+            ->with('D', 'N&P')
+            ->once()
+            ->andReturn($publicationMock);
+
+        $this->repoMap['PublicationLink']
+            ->shouldReceive('fetchSingleUnpublished')
+            ->with(m::type(UnpublishedBusRegQry::class))
+            ->andReturn($publicationLinkMock)
+            ->shouldReceive('delete')
+            ->with(m::type(PublicationLinkEntity::class));
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf(ResultCmd::class, $result);
+    }
+
     /**
      * testHandleCommand
      *
-     * @dataProvider handleCommandProvider
+     * @dataProvider handleCommandCreateProvider
      * @param string $revertStatus
+     * @param string $shortNotice
      */
-    public function testHandleCommand($revertStatus, $shortNotice)
+    public function testHandleCommandCreate($revertStatus, $shortNotice)
     {
         $id = 99;
         $publicationId = 33;
         $regNo = 44;
-        $trafficArea = 'M';
+
+        $allTrafficAreas = [
+            0 => $this->ta1,
+            1 => $this->ta2,
+            2 => $this->ta3
+        ];
 
         $command = Cmd::Create(['id' => $id]);
+
+        $this->repoMap['TrafficArea']->shouldReceive('fetchAll')->andReturn($allTrafficAreas);
 
         $publicationLinkMock = m::mock(PublicationLinkEntity::class)->makePartial();
 
@@ -118,16 +214,16 @@ class BusTest extends CommandHandlerTestCase
         $publicationMock->shouldReceive('getId')->andReturn($publicationId);
 
         $mockTa = m::mock(TrafficAreaEntity::class);
-        $mockTa->shouldReceive('getId')->andReturn($trafficArea);
+        $mockTa->shouldReceive('getId')->andReturn('M');
 
-        $trafficAreas = new ArrayCollection([$mockTa]);
+        $licenceTrafficAreas = new ArrayCollection([$mockTa]);
 
         $licenceMock = m::mock(LicenceEntity::class);
 
         $busMock = m::mock(BusRegEntity::class);
         $busMock->shouldReceive('getLicence')->andReturn($licenceMock);
         $busMock->shouldReceive('getRevertStatus->getId')->andReturn($revertStatus);
-        $busMock->shouldReceive('getTrafficAreas')->andReturn($trafficAreas);
+        $busMock->shouldReceive('getTrafficAreas')->andReturn($licenceTrafficAreas);
         $busMock->shouldReceive('getRegNo')->andReturn($regNo);
         $busMock->shouldReceive('getId')->andReturn($id);
         $busMock->shouldReceive('getIsShortNotice')->andReturn($shortNotice);
@@ -135,9 +231,17 @@ class BusTest extends CommandHandlerTestCase
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')->andReturn($busMock);
 
         $this->repoMap['Publication']->shouldReceive('fetchLatestForTrafficAreaAndType')
+            ->with('M', 'N&P')
+            ->once()
+            ->andReturn($publicationMock)
+            ->shouldReceive('fetchLatestForTrafficAreaAndType')
+            ->with('D', 'N&P')
+            ->once()
             ->andReturn($publicationMock);
 
-        $this->repoMap['PublicationLink']->shouldReceive('fetchSingleUnpublished')
+        $this->repoMap['PublicationLink']
+            ->shouldReceive('fetchSingleUnpublished')
+            ->with(m::type(UnpublishedBusRegQry::class))
             ->andReturn($publicationLinkMock)
             ->shouldReceive('save')
             ->with(m::type(PublicationLinkEntity::class));
@@ -147,7 +251,10 @@ class BusTest extends CommandHandlerTestCase
         $this->assertInstanceOf(ResultCmd::class, $result);
     }
 
-    public function handleCommandProvider()
+    /**
+     * @return array
+     */
+    public function handleCommandCreateProvider()
     {
         return [
             [BusRegEntity::STATUS_NEW, 'Y'],
