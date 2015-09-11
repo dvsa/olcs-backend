@@ -1053,4 +1053,32 @@ class LicenceEntityTest extends EntityTester
             [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_RESTRICTED, 5, 2, 4, null],
         ];
     }
+
+    /**
+     * @dataProvider dpTestGetLicenceTypeShortCode
+     * @param string $licenceType
+     * @param string $shortCode
+     */
+    public function testGetLicenceTypeShortCode($licenceType, $shortCode)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setLicenceType((new RefData())->setId($licenceType));
+
+        $this->assertSame($shortCode, $licence->getLicenceTypeShortCode());
+    }
+
+    public function dpTestGetLicenceTypeShortCode()
+    {
+        return [
+            ['ltyp_r', 'R'],
+            ['ltyp_si', 'SI'],
+            ['ltyp_sn', 'SN'],
+            ['ltyp_sr', 'SR'],
+            ['ltyp_cbp', 'CBP'],
+            ['ltyp_dbp', 'DBP'],
+            ['ltyp_lbp', 'LBP'],
+            ['ltyp_sbp', 'SBP'],
+            ['XXXX', null],
+        ];
+    }
 }
