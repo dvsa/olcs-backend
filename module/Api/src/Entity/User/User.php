@@ -141,6 +141,8 @@ class User extends AbstractUser
         if ($this->accountDisabled === 'Y') {
             // set locked date to now
             $this->lockedDate = new \DateTime();
+        } else {
+            $this->lockedDate = null;
         }
 
         return $this;

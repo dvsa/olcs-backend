@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Merge as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Tm\Merge as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use \Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Class MergeTest
@@ -58,8 +59,9 @@ class MergeTest extends CommandHandlerTestCase
         $mockDonorTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
         $mockRecipientTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
 
-        $mockDonorTm->addUsers(new \Dvsa\Olcs\Api\Entity\User\User());
-        $mockRecipientTm->addUsers(new \Dvsa\Olcs\Api\Entity\User\User());
+        $user = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
+        $mockDonorTm->addUsers($user);
+        $mockRecipientTm->addUsers($user);
 
         $command = Cmd::create($data);
 
@@ -436,7 +438,7 @@ class MergeTest extends CommandHandlerTestCase
         $mockRecipientTm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
         $mockRecipientTm->setId(9);
 
-        $user = new \Dvsa\Olcs\Api\Entity\User\User();
+        $user = new UserEntity(UserEntity::USER_TYPE_INTERNAL);
         $user->setId(115);
         $mockDonorTm->addUsers($user);
 
@@ -457,7 +459,7 @@ class MergeTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(
-            [\Dvsa\Olcs\Api\Entity\User\User::class => [115]],
+            [UserEntity::class => [115]],
             $mockDonorTm->getMergeDetails()
         );
         $this->assertSame($mockRecipientTm, $mockDonorTm->getMergeToTransportManager());
