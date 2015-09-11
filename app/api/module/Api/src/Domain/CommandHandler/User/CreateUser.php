@@ -19,35 +19,36 @@ final class CreateUser extends AbstractCommandHandler implements TransactionedIn
 {
     protected $repoServiceName = 'User';
 
-    protected $extraRepos = ['ContactDetails'];
+    protected $extraRepos = ['ContactDetails', 'Licence'];
 
     public function handleCommand(CommandInterface $command)
     {
+        // TODO - OLCS-10516 - User management restrictions
+
+        $data = $command->getArrayCopy();
+
+        if (($command->getUserType() === User::USER_TYPE_SELF_SERVICE) && (!empty($data['licenceNumber']))) {
+            // fetch licence by licence number
+            $licence = $this->getRepo('Licence')->fetchByLicNo($data['licenceNumber']);
+
+            // link with the organisation
+            $data['organisations'] = [$licence->getOrganisation()];
+        }
+
         $user = User::create(
             $command->getUserType(),
-            $this->getRepo()->populateRefDataReference(
-                $command->getArrayCopy()
-            )
+            $this->getRepo()->populateRefDataReference($data)
         );
 
-        if ($user->getContactDetails() instanceof ContactDetails) {
-            // update existing contact details
-            $user->getContactDetails()->update(
+        // create new contact details
+        $user->setContactDetails(
+            ContactDetails::create(
+                $this->getRepo()->getRefdataReference(ContactDetails::CONTACT_TYPE_USER),
                 $this->getRepo('ContactDetails')->populateRefDataReference(
                     $command->getContactDetails()
                 )
-            );
-        } else {
-            // create new contact details
-            $user->setContactDetails(
-                ContactDetails::create(
-                    $this->getRepo()->getRefdataReference(ContactDetails::CONTACT_TYPE_USER),
-                    $this->getRepo('ContactDetails')->populateRefDataReference(
-                        $command->getContactDetails()
-                    )
-                )
-            );
-        }
+            )
+        );
 
         $this->getRepo()->save($user);
 
