@@ -11,6 +11,9 @@ use Zend\Mvc\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Command;
+use Dvsa\Olcs\Api\Domain\Query;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * BatchController
@@ -59,6 +62,37 @@ class BatchController extends AbstractConsoleController
                 ]
             )
         );
+    }
+
+    /**
+     * @return ConsoleModel
+     */
+    public function continuationNotSoughtAction()
+    {
+        $dryRun = $this->getRequest()->getParam('dryrun') || $this->getRequest()->getParam('d');
+        $date = new DateTime('2016-02-01'); // this could come from a param if needed
+
+        // we use a separate query and command so we can do more granular output..
+
+        // get list of licences
+        $dto = Query\Licence\ContinuationNotSoughtList::create(['date' => $date]);
+        $result = $this->handleQuery($dto);
+        $this->writeVerboseMessages("{$result['count']} Licence(s) found to change to CNS");
+
+        // build array of commands (once per licence)
+        $commands = [];
+        foreach ($result['result'] as $licenceData) {
+            $this->writeVerboseMessages("Processing Licence ID {$licenceData['id']}");
+            $commands[] = Command\Licence\ProcessContinuationNotSought::create(['id' => $licenceData['id']]);
+            // Email\continuationNotSoughtAction
+        }
+
+        // execute commands
+        if (!$dryRun) {
+            return $this->handleExitStatus($this->handleCommand($commands));
+        }
+
+        return $this->handleExitStatus(0);
     }
 
     /**
@@ -113,6 +147,30 @@ class BatchController extends AbstractConsoleController
         $this->writeVerboseMessages($result->getMessages());
 
         return 0;
+    }
+
+    /**
+     * Handle DTO query
+     *
+     * @param QueryInterface $dto
+     *
+     * @return mixed $result|false
+     */
+    protected function handleQuery(QueryInterface $dto)
+    {
+        $this->writeVerboseMessages((new \DateTime())->format(\DateTime::W3C));
+
+        try {
+            return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
+        } catch (Exception\NotFoundException $e) {
+            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()]);
+        } catch (Exception\Exception $e) {
+            $this->writeVerboseMessages($e->getMessages());
+        } catch (\Exception $e) {
+            $this->writeVerboseMessages($e->getMessage());
+        }
+
+        return false;
     }
 
     /**
