@@ -17,7 +17,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateSafety as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Transfer\Command\Licence\UpdateSafety as LicenceUpdateSafety;
 
 /**
  * Update Safety Test
@@ -30,13 +29,14 @@ class UpdateSafetyTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateSafety();
         $this->mockRepo('Application', Application::class);
+        $this->mockRepo('Licence', \Dvsa\Olcs\Api\Entity\Licence\Licence::class);
 
         parent::setUp();
     }
 
     protected function initReferences()
     {
-        $this->refData = [];
+        $this->refData = ['tach_ext'];
 
         $this->references = [];
 
@@ -93,8 +93,15 @@ class UpdateSafetyTest extends CommandHandlerTestCase
         ];
         $command = Cmd::create($data);
 
+        $licence = new \Dvsa\Olcs\Api\Entity\Licence\Licence(
+            new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(),
+            new \Dvsa\Olcs\Api\Entity\System\RefData()
+        );
+
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setLicence($licence);
+        $application->setTotAuthTrailers(12);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
@@ -102,19 +109,7 @@ class UpdateSafetyTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with($application);
 
-        $expectedData = [
-            'id' => 222,
-            'version' => 1,
-            'safetyInsVehicles' => 2,
-            'safetyInsTrailers' => 0,
-            'safetyInsVaries' => 'Y',
-            'tachographIns' => 'tach_ext',
-            'tachographInsName' => 'Some name'
-        ];
-        $result1 = new Result();
-        $result1->addMessage('Safety updated');
-
-        $this->expectedSideEffect(LicenceUpdateSafety::class, $expectedData, $result1);
+        $this->repoMap['Licence']->shouldReceive('save')->with($licence)->once();
 
         $expectedData = [
             'id' => 111,
@@ -127,11 +122,81 @@ class UpdateSafetyTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
+        $this->assertSame($licence->getSafetyInsVehicles(), 2);
+        $this->assertSame($licence->getSafetyInsTrailers(), 3);
+        $this->assertSame($licence->getTachographIns(), $this->refData['tach_ext']);
+        $this->assertSame($licence->getTachographInsName(), 'Some name');
+        $this->assertSame($licence->getSafetyInsVaries(), 'Y');
+
         $expected = [
             'id' => [],
             'messages' => [
                 'Application updated',
-                'Safety updated',
+                'Section updated'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandNoTotAuthTrailers()
+    {
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'safetyConfirmation' => 'Y',
+            'partial' => false,
+            'licence' => [
+                'id' => 222,
+                'version' => 1,
+                'safetyInsVehicles' => 2,
+                'safetyInsTrailers' => 3,
+                'safetyInsVaries' => 'Y',
+                'tachographIns' => 'tach_ext',
+                'tachographInsName' => 'Some name'
+            ]
+        ];
+        $command = Cmd::create($data);
+
+        $licence = new \Dvsa\Olcs\Api\Entity\Licence\Licence(
+            new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(),
+            new \Dvsa\Olcs\Api\Entity\System\RefData()
+        );
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setLicence($licence);
+        $application->setTotAuthTrailers(0);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->with($application);
+
+        $this->repoMap['Licence']->shouldReceive('save')->with($licence)->once();
+
+        $expectedData = [
+            'id' => 111,
+            'section' => 'safety'
+        ];
+        $result2 = new Result();
+        $result2->addMessage('Section updated');
+
+        $this->expectedSideEffect(UpdateApplicationCompletion::class, $expectedData, $result2);
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame($licence->getSafetyInsVehicles(), 2);
+        $this->assertSame($licence->getSafetyInsTrailers(), 0);
+        $this->assertSame($licence->getTachographIns(), $this->refData['tach_ext']);
+        $this->assertSame($licence->getTachographInsName(), 'Some name');
+        $this->assertSame($licence->getSafetyInsVaries(), 'Y');
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Application updated',
                 'Section updated'
             ]
         ];

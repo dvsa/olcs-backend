@@ -93,6 +93,8 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
                 return PublicationSectionEntity::APP_REFUSED_SECTION;
             case ApplicationEntity::APPLICATION_STATUS_WITHDRAWN:
                 return PublicationSectionEntity::APP_WITHDRAWN_SECTION;
+            case ApplicationEntity::APPLICATION_STATUS_NOT_TAKEN_UP:
+                return PublicationSectionEntity::APP_GRANT_NOT_TAKEN_SECTION;
         }
 
         throw new ForbiddenException('Could not match to a publication section');

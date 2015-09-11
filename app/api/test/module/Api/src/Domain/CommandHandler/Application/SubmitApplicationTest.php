@@ -71,14 +71,19 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ]
         );
 
+        $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea->setId('TA');
+
         /** @var LicenceEntity $licence */
         $licence = $this->mapReference(LicenceEntity::class, $licenceId);
+        $licence->setTrafficArea($trafficArea);
 
         /** @var ApplicationEntity $application */
         $application = $this->mapReference(ApplicationEntity::class, $applicationId);
         $application->setLicence($licence);
         $application->setStatus($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED));
         $application->setIsVariation($isVariation);
+
         $expectedTargetCompletionDate = clone $now;
         $expectedTargetCompletionDate->modify('+9 week');
         $application
@@ -99,6 +104,18 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 ->with($this->mapRefdata(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION))
                 ->once()
                 ->andReturnSelf();
+
+            $this->expectedSideEffect(
+                \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
+                ['id' => 69, 'trafficArea' => 'TA'],
+                new Result()
+            );
+            $this->expectedSideEffect(
+                \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::class,
+                ['id' => 69],
+                new Result()
+            );
+
         }
 
         $this->repoMap['Application']

@@ -47,4 +47,9 @@ class Submission extends AbstractSubmission
     {
         $this->setDataSnapshot(json_encode($this->sectionData));
     }
+
+    public function setNewSubmissionDataSnapshot($data = [])
+    {
+        $this->setDataSnapshot(json_encode($data));
+    }
 }
