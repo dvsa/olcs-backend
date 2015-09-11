@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
@@ -19,16 +20,31 @@ final class UpdateUser extends AbstractCommandHandler implements TransactionedIn
 {
     protected $repoServiceName = 'User';
 
-    protected $extraRepos = ['ContactDetails'];
+    protected $extraRepos = ['ContactDetails', 'Licence'];
 
     public function handleCommand(CommandInterface $command)
     {
+        // TODO - OLCS-10516 - User management restrictions
+
+        $data = $command->getArrayCopy();
+
+        if (($command->getUserType() === User::USER_TYPE_SELF_SERVICE) && (isset($data['licenceNumber']))) {
+            if (!empty($data['licenceNumber'])) {
+                // fetch licence by licence number
+                $licence = $this->getRepo('Licence')->fetchByLicNo($data['licenceNumber']);
+
+                // link with the organisation
+                $data['organisations'] = [$licence->getOrganisation()];
+            } else {
+                // unlink any organisation
+                $data['organisations'] = [];
+            }
+        }
+
         $user = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
 
         $user->update(
-            $this->getRepo()->populateRefDataReference(
-                $command->getArrayCopy()
-            )
+            $this->getRepo()->populateRefDataReference($data)
         );
 
         if ($user->getContactDetails() instanceof ContactDetails) {

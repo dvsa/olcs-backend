@@ -373,7 +373,10 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      *
      * @ORM\OneToMany(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser",
-     *     mappedBy="user"
+     *     mappedBy="user",
+     *     cascade={"persist"},
+     *     indexBy="organisation_id",
+     *     orphanRemoval=true
      * )
      */
     protected $organisationUsers;

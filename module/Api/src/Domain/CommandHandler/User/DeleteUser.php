@@ -22,6 +22,8 @@ final class DeleteUser extends AbstractCommandHandler implements TransactionedIn
 
     public function handleCommand(CommandInterface $command)
     {
+        // TODO - OLCS-10516 - User management restrictions
+
         $user = $this->getRepo()->fetchUsingId($command);
 
         if (!empty($this->getRepo('Task')->fetchByUser($user->getId(), true))) {

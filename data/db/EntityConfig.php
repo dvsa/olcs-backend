@@ -959,7 +959,12 @@ return array(
         'user_id' => array(
             'inversedBy' => array(
                 'entity' => 'User',
-                'property' => 'organisationUser'
+                'property' => 'organisationUser',
+                'cascade' => array(
+                    'persist'
+                ),
+                'indexBy' => 'organisation_id',
+                'orphanRemoval' => 'true'
             )
         ),
         'organisation_id' => array(
