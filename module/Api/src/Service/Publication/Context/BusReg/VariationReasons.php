@@ -20,7 +20,7 @@ final class VariationReasons extends AbstractContext
 
         $reasons = [];
 
-        if ($variationReasons->count()) {
+        if (!$variationReasons->isEmpty()) {
             /** @var RefData $reason */
             foreach ($variationReasons as $reason) {
                 $reasons[] = $reason->getDescription();
