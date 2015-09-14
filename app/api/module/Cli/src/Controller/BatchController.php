@@ -69,7 +69,7 @@ class BatchController extends AbstractConsoleController
      */
     public function continuationNotSoughtAction()
     {
-        $dryRun = $this->getRequest()->getParam('dryrun') || $this->getRequest()->getParam('d');
+        $dryRun = $this->isDryRun();
         $date = new DateTime(); // this could come from a CLI param if needed
 
         // we use a separate query and command so we can do more granular output..
@@ -117,6 +117,14 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * @return boolean
+     */
+    private function isDryRun()
+    {
+        return $this->params('dryrun') || $this->params('d');
+    }
+
+    /**
      * Using this method ensures the calling CLI environment gets an appropriate
      * exit code from the process.
      *
@@ -139,7 +147,7 @@ class BatchController extends AbstractConsoleController
      */
     protected function handleCommand(array $dto)
     {
-        $this->writeVerboseMessages((new \DateTime())->format(\DateTime::W3C));
+        $this->writeVerboseMessages((new DateTime())->format(\DateTime::W3C));
 
         try {
             $result = new Command\Result();
@@ -171,7 +179,7 @@ class BatchController extends AbstractConsoleController
      */
     protected function handleQuery(QueryInterface $dto)
     {
-        $this->writeVerboseMessages((new \DateTime())->format(\DateTime::W3C));
+        $this->writeVerboseMessages((new DateTime())->format(\DateTime::W3C));
 
         try {
             return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
