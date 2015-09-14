@@ -208,11 +208,12 @@ class Licence extends AbstractRepository
             ->with('trafficArea', 'ta');
 
         $startDate = new \DateTime($year . '-' . $month . '-01');
-        $endDate =\ DateTime::createFromFormat('Y-m-t', $year . '-' . $month . '-01');
+        $endDate = new \DateTime($year . '-' . $month . '-01');
+        $endDate->modify('last day of this month');
 
         $qb->andWhere($qb->expr()->gte($this->alias . '.expiryDate', ':expiryFrom'))
             ->setParameter('expiryFrom', $startDate);
-        $qb->andWhere($qb->expr()->gte($this->alias . '.expiryDate', ':expiryTo'))
+        $qb->andWhere($qb->expr()->lte($this->alias . '.expiryDate', ':expiryTo'))
             ->setParameter('expiryTo', $endDate);
         $qb->andWhere($qb->expr()->eq('ta.id', ':trafficArea'))
             ->setParameter('trafficArea', $trafficArea);

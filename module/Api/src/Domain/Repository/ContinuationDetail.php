@@ -4,6 +4,7 @@
  * ContinuationDetail
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
@@ -17,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
  * ContinuationDetail
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 class ContinuationDetail extends AbstractRepository
 {
@@ -221,5 +223,21 @@ class ContinuationDetail extends AbstractRepository
         }
 
         return $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+    }
+
+    public function fetchWithLicence($id)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata()
+            ->with('status', 's')
+            ->with('licence', 'l')
+            ->with('l.licenceType', 'lt')
+            ->with('l.goodsOrPsv', 'lg')
+            ->byId($id);
+
+        return $qb->getQuery()->getSingleResult();
     }
 }

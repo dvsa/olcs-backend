@@ -699,8 +699,11 @@ return [
 
     // ContinuationDetail
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
-    TransferCommand\ContinuationDetail\QueueLetters::class => CommandHandler\ContinuationDetail\QueueLetters::class,
+    TransferCommand\ContinuationDetail\Queue::class => CommandHandler\ContinuationDetail\Queue::class,
+    TransferCommand\ContinuationDetail\PrepareContinuations::class =>
+        CommandHandler\ContinuationDetail\PrepareContinuations::class,
     Command\ContinuationDetail\Process::class => CommandHandler\ContinuationDetail\Process::class,
+    Command\ContinuationDetail\ProcessReminder::class => CommandHandler\ContinuationDetail\ProcessReminder::class,
 
     // Continuation
     TransferCommand\Continuation\Create::class => CommandHandler\Continuation\Create::class,
