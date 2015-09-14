@@ -82,7 +82,10 @@ class SendContinuationNotSoughtTest extends CommandHandlerTestCase
             ->andReturnUsing(
                 function (\Dvsa\Olcs\Email\Data\Message $message) {
                     $this->assertEquals('cns@example.com', $message->getTo());
-                    $this->assertEquals('CNS EMAIL FROM 10/08/2015 TO 10/09/2015', $message->getSubject());
+                    $this->assertEquals(
+                        'CNS EMAIL FROM 10/08/2015 TO 10/09/2015',
+                        $message->getSubjectReplaceVariables()
+                    );
                     $this->assertEquals('en_GB', $message->getLocale());
                 }
             );
