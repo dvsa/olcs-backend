@@ -166,7 +166,6 @@ return [
             'ExpressionBuilder' => '\Olcs\Db\Utility\ExpressionBuilder',
             'BundleQuery' => '\Olcs\Db\Utility\BundleQuery',
             'PaginateQuery' => '\Olcs\Db\Utility\PaginateQuery',
-            'ContinuationDetail/Checklists' => 'Olcs\Db\Service\ContinuationDetail\Checklists',
             'CompaniesHouse/Queue' => 'Olcs\Db\Service\CompaniesHouse\Queue',
         ]
     ],
@@ -184,8 +183,7 @@ return [
             'defendant-search' => 'Olcs\Db\Controller\DefendantSearchController',
             'organisation-search' => 'Olcs\Db\Controller\OrganisationSearchController',
             'ref-data' => 'Olcs\Db\Controller\RefDataController',
-            'bookmark-search' => 'Olcs\Db\Controller\BookmarkSearchController',
-            'continuation-detail-checklists' => 'Olcs\Db\Controller\ContinuationDetail\ChecklistsController',
+            'bookmark-search' => 'Olcs\Db\Controller\BookmarkSearchController'
         ]
     ],
     'view_manager' => [

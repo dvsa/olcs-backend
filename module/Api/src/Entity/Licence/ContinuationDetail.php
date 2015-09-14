@@ -33,4 +33,7 @@ class ContinuationDetail extends AbstractContinuationDetail
     const STATUS_ACCEPTABLE   = 'con_det_sts_acceptable';
     const STATUS_COMPLETE     = 'con_det_sts_complete';
     const STATUS_ERROR        = 'con_det_sts_error';
+
+    const METHOD_EMAIL = 'email';
+    const METHOD_POST  = 'post';
 }

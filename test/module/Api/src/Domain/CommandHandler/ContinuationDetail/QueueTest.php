@@ -4,8 +4,8 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ContinuationDetail;
 
 use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\QueueLetters as CommandHandler;
-use Dvsa\Olcs\Transfer\Command\ContinuationDetail\QueueLetters as Command;
+use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\Queue as CommandHandler;
+use Dvsa\Olcs\Transfer\Command\ContinuationDetail\Queue as Command;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class QueueLettersTest extends CommandHandlerTestCase
+class QueueTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
@@ -28,7 +28,8 @@ class QueueLettersTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'ids' => [1]
+            'ids' => [1],
+            'type' => QueueEntity::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER
         ];
         $command = Command::create($data);
 
