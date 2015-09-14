@@ -7,10 +7,12 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 
-use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
+use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -22,16 +24,13 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class CompleteTransaction extends AbstractCommandHandler implements TransactionedInterface
+final class CompleteTransaction extends AbstractCommandHandler implements TransactionedInterface, CpmsAwareInterface
 {
+    use CpmsAwareTrait;
+
     protected $repoServiceName = 'Transaction';
 
     protected $extraRepos = ['Application'];
-
-    /**
-     * @var \Dvsa\Olcs\Api\Service\CpmsHelperService $cpmsHelper
-     */
-    protected $cpmsHelper;
 
     public function handleCommand(CommandInterface $command)
     {
@@ -49,7 +48,7 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
         }
 
         // update CPMS
-        $this->cpmsHelper->handleResponse($reference, $command->getCpmsData());
+        $this->getCpmsService()->handleResponse($reference, $command->getCpmsData());
 
         // resolve payment
         $result->merge($this->resolvePayment($command, $transaction));
@@ -88,12 +87,5 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
                 ]
             )
         );
-    }
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        parent::createService($serviceLocator);
-        $this->cpmsHelper = $serviceLocator->getServiceLocator()->get('CpmsHelperService');
-        return $this;
     }
 }

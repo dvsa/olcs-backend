@@ -7,11 +7,12 @@
  */
 namespace Dvsa\OlcsTest\Api\Service;
 
-use Dvsa\Olcs\Api\Service\CpmsHelperService;
+use Dvsa\Olcs\Api\Service\CpmsV1HelperService as Sut;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\MockLoggerTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -22,7 +23,7 @@ use Mockery as m;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CpmsHelperServiceTest extends MockeryTestCase
+class CpmsV1HelperServiceTest extends MockeryTestCase
 {
     use MockLoggerTrait;
 
@@ -32,7 +33,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
     protected $cpmsClient;
 
     /**
-     * @var CpmsHelperService
+     * @var Sut
      */
     protected $sut;
 
@@ -66,24 +67,24 @@ class CpmsHelperServiceTest extends MockeryTestCase
             ->with('Logger')
             ->andReturn($logger);
 
-        $sut = new CpmsHelperService();
+        $sut = new Sut();
         return $sut->createService($sm);
     }
 
     public function testInitiateCardRequest()
     {
-        $customerReference = 99;
+        $organisationId = 99;
         $redirectUrl = 'http://olcs-selfserve/foo';
 
         $fees = [
-            $this->getStubFee(1, 525.25, FeeEntity::ACCRUAL_RULE_IMMEDIATE),
-            $this->getStubFee(2, 125.25, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25'),
+            $this->getStubFee(1, 525.25, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $organisationId),
+            $this->getStubFee(2, 125.25, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25', $organisationId),
         ];
 
         $now = (new DateTime())->format('Y-m-d');
 
         $params = [
-            'customer_reference' => '99',
+            'customer_reference' => $organisationId,
             'scope' => 'CARD',
             'disable_redirection' => true,
             'redirect_uri' => 'http://olcs-selfserve/foo',
@@ -118,20 +119,19 @@ class CpmsHelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
-        $result = $this->sut->initiateCardRequest($customerReference, $redirectUrl, $fees);
+        $result = $this->sut->initiateCardRequest($redirectUrl, $fees);
 
         $this->assertSame($response, $result);
     }
 
     public function testInitiateCardRequestInvalidApiResponse()
     {
-        $customerReference = 99;
         $redirectUrl = 'http://olcs-selfserve/foo';
 
         $fees = [];
 
         $params = [
-            'customer_reference' => '99',
+            'customer_reference' => 'Miscellaneous',
             'scope' => 'CARD',
             'disable_redirection' => true,
             'redirect_uri' => 'http://olcs-selfserve/foo',
@@ -148,7 +148,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
             ->with('/api/payment/card', 'CARD', $params)
             ->andReturn($response);
 
-        $this->sut->initiateCardRequest($customerReference, $redirectUrl, $fees);
+        $this->sut->initiateCardRequest($redirectUrl, $fees);
     }
 
     public function testGetPaymentStatus()
@@ -204,11 +204,13 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
     public function testRecordCashPayment()
     {
-        $fee1 = $this->getStubFee(1, 1234.56);
-        $fee2 = $this->getStubFee(2, 100.10);
+        $organisationId = 99;
+
+        $fee1 = $this->getStubFee(1, 1234.56, null, null, $organisationId);
+        $fee2 = $this->getStubFee(2, 100.10, null, null, $organisationId);
 
         $params = [
-            'customer_reference' => 'cust_ref',
+            'customer_reference' => $organisationId,
             'scope' => 'CASH',
             'total_amount' => '1334.66',
             'payment_data' => [
@@ -239,7 +241,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
         ];
 
         $response = [
-            'code' => CpmsHelperService::RESPONSE_SUCCESS,
+            'code' => Sut::RESPONSE_SUCCESS,
             'receipt_reference' => 'OLCS-1234-CASH',
         ];
 
@@ -250,7 +252,6 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
         $result = $this->sut->recordCashPayment(
             array($fee1, $fee2),
-            'cust_ref',
             '1334.66',
             '2015-01-07',
             'Payer',
@@ -260,7 +261,10 @@ class CpmsHelperServiceTest extends MockeryTestCase
         $this->assertEquals($response, $result);
     }
 
-    public function testRecordCashPaymentFailureReturnsFalse()
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Service\CpmsResponseException
+     */
+    public function testRecordCashPaymentFailureThrowsException()
     {
         $response = [
             'code' => 'xxx',
@@ -271,25 +275,24 @@ class CpmsHelperServiceTest extends MockeryTestCase
             ->with('/api/payment/cash', 'CASH', m::any())
             ->andReturn($response);
 
-        $result = $this->sut->recordCashPayment(
+        $this->sut->recordCashPayment(
             array(),
-            'cust_ref',
             '1334.66',
             '2015-01-07',
             'Payer',
             '123456'
         );
-
-        $this->assertFalse($result);
     }
 
     public function testRecordChequePayment()
     {
-        $fee1 = $this->getStubFee(1, 1234.56);
-        $fee2 = $this->getStubFee(2, 100.10);
+        $organisationId = 99;
+
+        $fee1 = $this->getStubFee(1, 1234.56, null, null, $organisationId);
+        $fee2 = $this->getStubFee(2, 100.10, null, null, $organisationId);
 
         $params = [
-            'customer_reference' => 'cust_ref',
+            'customer_reference' => $organisationId,
             'scope' => 'CHEQUE',
             'total_amount' => '1334.66',
             'payment_data' => [
@@ -324,7 +327,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
         ];
 
         $response = [
-            'code' => CpmsHelperService::RESPONSE_SUCCESS,
+            'code' => Sut::RESPONSE_SUCCESS,
             'receipt_reference' => 'OLCS-1234-CHEQUE',
         ];
 
@@ -335,7 +338,6 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
         $result = $this->sut->recordChequePayment(
             array($fee1, $fee2),
-            'cust_ref',
             '1334.66',
             '2015-01-07',
             'Payer',
@@ -347,7 +349,10 @@ class CpmsHelperServiceTest extends MockeryTestCase
         $this->assertEquals($response, $result);
     }
 
-    public function testRecordChequePaymentFailureReturnsFalse()
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Service\CpmsResponseException
+     */
+    public function testRecordChequePaymentFailureThrowsException()
     {
         $response = [
             'code' => 'xxx',
@@ -358,9 +363,8 @@ class CpmsHelperServiceTest extends MockeryTestCase
             ->with('/api/payment/cheque', 'CHEQUE', m::any())
             ->andReturn($response);
 
-        $result = $this->sut->recordChequePayment(
+        $this->sut->recordChequePayment(
             array(),
-            'cust_ref',
             '1334.66',
             '2015-01-07',
             'Payer',
@@ -368,17 +372,17 @@ class CpmsHelperServiceTest extends MockeryTestCase
             '234567',
             '2015-03-01'
         );
-
-        $this->assertFalse($result);
     }
 
     public function testRecordPostalOrderPayment()
     {
-        $fee1 = $this->getStubFee(1, 1234.56);
-        $fee2 = $this->getStubFee(2, 100.10);
+        $organisationId = 99;
+
+        $fee1 = $this->getStubFee(1, 1234.56, null, null, $organisationId);
+        $fee2 = $this->getStubFee(2, 100.10, null, null, $organisationId);
 
         $params = [
-            'customer_reference' => 'cust_ref',
+            'customer_reference' => $organisationId,
             'scope' => 'POSTAL_ORDER',
             'total_amount' => '1334.66',
             'payment_data' => [
@@ -411,7 +415,7 @@ class CpmsHelperServiceTest extends MockeryTestCase
         ];
 
         $response = [
-            'code' => CpmsHelperService::RESPONSE_SUCCESS,
+            'code' => Sut::RESPONSE_SUCCESS,
             'receipt_reference' => 'OLCS-1234-PO',
         ];
 
@@ -422,7 +426,6 @@ class CpmsHelperServiceTest extends MockeryTestCase
 
         $result = $this->sut->recordPostalOrderPayment(
             array($fee1, $fee2),
-            'cust_ref',
             '1334.66',
             '2015-01-07',
             'Payer',
@@ -433,7 +436,10 @@ class CpmsHelperServiceTest extends MockeryTestCase
         $this->assertEquals($response, $result);
     }
 
-    public function testRecordPostalOrderPaymentFailureReturnsFalse()
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Service\CpmsResponseException
+     */
+    public function testRecordPostalOrderPaymentFailureThrowsException()
     {
         $response = [
             'code' => 'xxx',
@@ -444,17 +450,14 @@ class CpmsHelperServiceTest extends MockeryTestCase
             ->with('/api/payment/postal-order', 'POSTAL_ORDER', m::any())
             ->andReturn($response);
 
-        $result = $this->sut->recordPostalOrderPayment(
+        $this->sut->recordPostalOrderPayment(
             array(),
-            'cust_ref',
             '1334.66',
             '2015-01-07',
             'Payer',
             '123456',
             '234567'
         );
-
-        $this->assertFalse($result);
     }
 
     /**
@@ -470,7 +473,8 @@ class CpmsHelperServiceTest extends MockeryTestCase
         $id,
         $amount,
         $accrualRule = null,
-        $licenceStartDate = null
+        $licenceStartDate = null,
+        $organisationId = null
     ) {
         $status = new RefData();
         $rule = new RefData();
@@ -483,11 +487,17 @@ class CpmsHelperServiceTest extends MockeryTestCase
         $fee = new FeeEntity($feeType, $amount, $status);
         $fee->setId($id);
 
+        $organisation = new OrganisationEntity();
+        $organisation->setId($organisationId);
+
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setOrganisation($organisation);
+
         if (!is_null($licenceStartDate)) {
-            $licence = m::mock(LicenceEntity::class)->makePartial();
             $licence->setInForceDate($licenceStartDate);
-            $fee->setLicence($licence);
         }
+
+        $fee->setLicence($licence);
 
         return $fee;
     }

@@ -4,6 +4,7 @@
  * Cpms Helper Service
  *
  * @author Dan Eggleston <dan@stolenegg.com>
+ * @deprecated to be replaced eventually by CpmsV2HelperService
  */
 namespace Dvsa\Olcs\Api\Service;
 
@@ -18,15 +19,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CpmsHelperService implements FactoryInterface
+class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
 {
-    const PAYMENT_SUCCESS      = 801;
-    const PAYMENT_FAILURE      = 802;
-    const PAYMENT_CANCELLATION = 807;
-    const PAYMENT_IN_PROGRESS  = 800;
-
-    const RESPONSE_SUCCESS = '000';
-
     // CPMS' preferred date format (note: this changed around 03/2015)
     const DATE_FORMAT = 'Y-m-d';
 
@@ -55,16 +49,14 @@ class CpmsHelperService implements FactoryInterface
     }
 
     /**
-     * @param string $customerReference usually organisation id
+     * Initiate a card payment
+     *
      * @param string $redirectUrl redirect back to here from payment gateway
      * @param array $fees
-     * @param string $paymentMethod 'fpm_card_offline'|'fpm_card_online'
-     *
-     * @return array
-     * @throws Common\Service\Cpms\Exception\PaymentInvalidResponseException on error
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
     public function initiateCardRequest(
-        $customerReference,
         $redirectUrl,
         array $fees
     ) {
@@ -87,7 +79,7 @@ class CpmsHelperService implements FactoryInterface
 
         $params = [
             // @NOTE CPMS rejects ints as 'missing', so we have to force a string...
-            'customer_reference' => (string)$customerReference,
+            'customer_reference' => (string) $this->getCustomerReference($fees),
             'scope' => $scope,
             'disable_redirection' => true,
             'redirect_uri' => $redirectUrl,
@@ -116,7 +108,7 @@ class CpmsHelperService implements FactoryInterface
             || !isset($response['receipt_reference'])
             || empty($response['receipt_reference'])
         ) {
-            throw new \Exception('Invalid payment response: '.json_encode($response));
+            throw new CpmsResponseException('Invalid payment response: '.json_encode($response));
         }
 
         return $response;
@@ -124,8 +116,11 @@ class CpmsHelperService implements FactoryInterface
 
     /**
      * Update CPMS with payment result
+     *
      * @param string $reference payment reference / guid
      * @param array $data response data from the payment gateway
+     * @return array|mixed response
+     * @see CpmsClient\Service\ApiService::put()
      */
     public function handleResponse($reference, $data)
     {
@@ -139,10 +134,10 @@ class CpmsHelperService implements FactoryInterface
     }
 
     /**
-     * Determine the status of a payment
+     * Determine the status of a payment/transaction
      *
      * @param string $receiptReference
-     * @return int status
+     * @return int status code
      */
     public function getPaymentStatus($receiptReference)
     {
@@ -179,16 +174,15 @@ class CpmsHelperService implements FactoryInterface
      * Record a cash payment in CPMS
      *
      * @param array $fees
-     * @param string $customerReference
      * @param float $amount
      * @param string|DateTime $receiptDate
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
-     * @return array|false only return successful response, otherwise false
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
     public function recordCashPayment(
         $fees,
-        $customerReference,
         $amount,
         $receiptDate,
         $payer,
@@ -213,7 +207,7 @@ class CpmsHelperService implements FactoryInterface
         $scope    = ApiService::SCOPE_CASH;
 
         $params = [
-            'customer_reference' => (string)$customerReference,
+            'customer_reference' => (string) $this->getCustomerReference($fees),
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
             'payment_data' => $paymentData,
@@ -241,25 +235,24 @@ class CpmsHelperService implements FactoryInterface
             return $response;
         }
 
-        return false;
+        throw new CpmsResponseException('Invalid payment response: '.json_encode($response));
     }
 
     /**
      * Record a cheque payment in CPMS
      *
      * @param array $fees
-     * @param string $customerReference
      * @param float $amount
      * @param array $receiptDate (from DateSelect)
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
      * @param string $chequeNo cheque number
      * @param string $chequeDate (from DateSelect)
-     * @return array|false only return successful response, otherwise false
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
     public function recordChequePayment(
         $fees,
-        $customerReference,
         $amount,
         $receiptDate,
         $payer,
@@ -288,7 +281,7 @@ class CpmsHelperService implements FactoryInterface
         $scope    = ApiService::SCOPE_CHEQUE;
 
         $params = [
-            'customer_reference' => (string)$customerReference,
+            'customer_reference' => (string) $this->getCustomerReference($fees),
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
             'payment_data' => $paymentData,
@@ -316,24 +309,23 @@ class CpmsHelperService implements FactoryInterface
             return $response;
         }
 
-        return false;
+        throw new CpmsResponseException('Invalid payment response: '.json_encode($response));
     }
 
     /**
      * Record a Postal Order payment in CPMS
      *
      * @param array $fees
-     * @param string $customerReference
      * @param float $amount
      * @param array $receiptDate (from DateSelect)
      * @param string $payer payer name
      * @param string $slipNo paying in slip number
      * @param string $poNo Postal Order number
-     * @return array|false only return successful response, otherwise false
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
      */
     public function recordPostalOrderPayment(
         $fees,
-        $customerReference,
         $amount,
         $receiptDate,
         $payer,
@@ -360,7 +352,7 @@ class CpmsHelperService implements FactoryInterface
         $scope    = ApiService::SCOPE_POSTAL_ORDER;
 
         $params = [
-            'customer_reference' => (string)$customerReference,
+            'customer_reference' => (string) $this->getCustomerReference($fees),
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
             'payment_data' => $paymentData,
@@ -388,7 +380,7 @@ class CpmsHelperService implements FactoryInterface
             return $response;
         }
 
-        return false;
+        throw new CpmsResponseException('Invalid payment response: '.json_encode($response));
     }
 
     /**
@@ -401,16 +393,24 @@ class CpmsHelperService implements FactoryInterface
     }
 
     /**
+     * @return int
+     */
+    public function getVersion()
+    {
+        return 1;
+    }
+
+    /**
      * @param array $fees
-     * return float
+     * return string
      */
     protected function getTotalAmountFromFees($fees)
     {
         $totalAmount = 0;
         foreach ($fees as $fee) {
-            $totalAmount += (float)$fee->getAmount();
+            $totalAmount += (float)$fee->getOutstandingAmount();
         }
-        return $totalAmount;
+        return $this->formatAmount($totalAmount);
     }
 
     protected function debug($message, $data)
@@ -452,7 +452,7 @@ class CpmsHelperService implements FactoryInterface
      * @param string|DateTime $date
      * @return string
      */
-    public function formatDate($date)
+    protected function formatDate($date)
     {
         if (!is_null($date)) {
             if (is_string($date)) {
@@ -460,5 +460,26 @@ class CpmsHelperService implements FactoryInterface
             }
             return $date->format(self::DATE_FORMAT);
         }
+    }
+
+    /**
+     * Gets Customer Reference based on the fees details
+     * The method assumes that all fees link to the same organisationId
+     *
+     * @param array $fees
+     * @return int organisationId
+     */
+    protected function getCustomerReference($fees)
+    {
+        $reference = 'Miscellaneous'; // default value
+
+        foreach ($fees as $fee) {
+            if (!empty($fee->getOrganisation())) {
+                $reference = $fee->getOrganisation()->getId();
+                break;
+            }
+        }
+
+        return $reference;
     }
 }

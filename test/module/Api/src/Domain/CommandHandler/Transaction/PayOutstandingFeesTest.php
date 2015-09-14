@@ -22,9 +22,8 @@ use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use Dvsa\Olcs\Api\Service\CpmsHelperService as CpmsHelper;
+use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
 use Dvsa\Olcs\Api\Service\FeesHelperService as FeesHelper;
 use Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -50,6 +49,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'CpmsHelperService' => $this->mockCpmsService,
             'FeesHelperService' => $this->mockFeesHelperService,
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
+            'Config' => [],
         ];
 
         $this->sut = new PayOutstandingFees();
@@ -141,7 +141,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('initiateCardRequest')
             ->once()
-            ->with($organisationId, $cpmsRedirectUrl, $fees);
+            ->with($cpmsRedirectUrl, $fees);
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
@@ -338,7 +338,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('initiateCardRequest')
             ->once()
-            ->with($organisationId, $cpmsRedirectUrl, $fees);
+            ->with($cpmsRedirectUrl, $fees);
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
@@ -410,7 +410,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('initiateCardRequest')
             ->once()
-            ->with($organisationId, $cpmsRedirectUrl, $fees);
+            ->with($cpmsRedirectUrl, $fees);
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
@@ -471,7 +471,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('recordCashPayment')
             ->once()
-            ->with($fees, 'Miscellaneous', '99.99', '2015-06-17', 'Dan', '12345')
+            ->with($fees, '99.99', '2015-06-17', 'Dan', '12345')
             ->andReturn(
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
@@ -556,7 +556,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('recordChequePayment')
             ->once()
-            ->with($fees, 'Miscellaneous', '99.99', '2015-06-17', 'Dan', '12345', '23456', '2015-06-10')
+            ->with($fees, '99.99', '2015-06-17', 'Dan', '12345', '23456', '2015-06-10')
             ->andReturn(
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
@@ -642,7 +642,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('recordPostalOrderPayment')
             ->once()
-            ->with($fees, 'Miscellaneous', '99.99', '2015-06-17', 'Dan', '12345', '23456')
+            ->with($fees, '99.99', '2015-06-17', 'Dan', '12345', '23456')
             ->andReturn(
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
@@ -727,6 +727,41 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->never();
 
         $this->setExpectedException(ValidationException::class);
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandCpmsResponseException()
+    {
+        // set up data
+        $feeIds = [99];
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fees = [$fee1];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => FeeEntity::METHOD_CASH,
+            'receiptDate' => '2015-06-17',
+            'payer' => 'Dan',
+            'slipNo' => '12345',
+            'received' => '99.99',
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('recordCashPayment')
+            ->once()
+            ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));
+
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
 
         $this->sut->handleCommand($command);
     }

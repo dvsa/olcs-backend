@@ -40,7 +40,7 @@ class FeesHelperServiceTest extends MockeryTestCase
     protected $feeTypeRepo;
 
     /**
-     * @var CpmsHelperService
+     * @var FeesHelperService
      */
     protected $sut;
 
