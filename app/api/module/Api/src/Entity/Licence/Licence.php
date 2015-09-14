@@ -719,7 +719,7 @@ class Licence extends AbstractLicence
     }
 
     /**
-     * Get the Shortcode version of a licene type
+     * Get the shortcode version of a licence type
      *
      * @return string|null if licence type is not set or shortcode does not exist
      */
