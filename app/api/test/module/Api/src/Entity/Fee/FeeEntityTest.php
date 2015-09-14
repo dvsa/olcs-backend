@@ -4,9 +4,13 @@ namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
@@ -137,6 +141,46 @@ class FeeEntityTest extends EntityTester
             ],
             'invalid' => [
                 'foo',
+                null,
+                null,
+            ],
+        ];
+    }
+
+    /**
+     * @param string $accrualRuleId,
+     * @param int $expected
+     *
+     * @dataProvider defermentPeriodProvider
+     */
+    public function testGetDefermentPeriod($accrualRuleId, $expected)
+    {
+        $feeType = m::mock()
+            ->shouldReceive('getAccrualRule')
+            ->andReturn((new RefData())->setId($accrualRuleId))
+            ->getMock();
+
+        $this->sut->setFeeType($feeType);
+
+        $this->assertEquals($expected, $this->sut->getDefermentPeriod());
+    }
+
+    public function defermentPeriodProvider()
+    {
+        return [
+            'immediate' => [
+                Entity::ACCRUAL_RULE_IMMEDIATE,
+                1
+            ],
+            'licence start' => [
+                Entity::ACCRUAL_RULE_LICENCE_START,
+                60,
+            ],
+            'continuation' => [
+                Entity::ACCRUAL_RULE_CONTINUATION,
+                60,
+            ],
+            'no rule' => [
                 null,
                 null,
             ],
@@ -363,6 +407,155 @@ class FeeEntityTest extends EntityTester
                     ]
                 ),
                 '-765.44',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getOrganisationProvider
+     */
+    public function testGetOrganisation($licence, $irfoGvPermit, $expected)
+    {
+        $this->sut->setLicence($licence);
+        $this->sut->setIrfoGvPermit($irfoGvPermit);
+        $this->assertSame($expected, $this->sut->getOrganisation());
+    }
+
+    public function getOrganisationProvider()
+    {
+        $organisation = m::mock(Organisation::class);
+
+        return [
+            'licence' => [
+                m::mock(Licence::class)->makePartial()->setOrganisation($organisation),
+                null,
+                $organisation,
+            ],
+            'irfo' => [
+                null,
+                m::mock(IrfoGvPermit::class)->makePartial()->setOrganisation($organisation),
+                $organisation,
+            ],
+            'neither' => [
+                null,
+                null,
+                null,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getCustomerNameProvider
+     */
+    public function testGetCustomerNameForInvoice($licence, $irfoGvPermit, $expected)
+    {
+        $this->sut->setLicence($licence);
+        $this->sut->setIrfoGvPermit($irfoGvPermit);
+        $this->assertEquals($expected, $this->sut->getCustomerNameForInvoice());
+    }
+
+    public function getCustomerNameProvider()
+    {
+        $organisation = m::mock(Organisation::class)
+            ->shouldReceive('getName')
+            ->andReturn('Foo')
+            ->getMock();
+
+        return [
+            'licence' => [
+                m::mock(Licence::class)->makePartial()->setOrganisation($organisation),
+                null,
+                'Foo',
+            ],
+            'irfo' => [
+                null,
+                m::mock(IrfoGvPermit::class)->makePartial()->setOrganisation($organisation),
+                'Foo',
+            ],
+            'neither' => [
+                null,
+                null,
+                'Miscellaneous payment',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getCustomerAddressProvider
+     */
+    public function testGetCustomerAddressForInvoice($licence, $irfoGvPermit, $expected)
+    {
+        $this->sut->setLicence($licence);
+        $this->sut->setIrfoGvPermit($irfoGvPermit);
+        $this->assertEquals($expected, $this->sut->getCustomerAddressForInvoice()->toArray());
+    }
+
+    public function getCustomerAddressProvider()
+    {
+        $address = m::mock(Address::class)
+            ->shouldReceive('toArray')
+            ->andReturn(
+                [
+                    'addressLine1' => 'Foo1',
+                    'addressLine2' => 'Foo2',
+                    'addressLine3' => 'Foo3',
+                    'addressLine4' => 'Foo4',
+                    'town' => 'FooTown',
+                    'postcode' =>'FooPostcode',
+                    'countryCode' => 'FooCountry',
+                ]
+            )
+            ->getMock();
+
+        $contactDetails = m::mock(ContactDetails::class)
+            ->shouldReceive('getAddress')
+            ->andReturn($address)
+            ->getMock();
+
+        $organisation = m::mock(Organisation::class)
+            ->shouldReceive('getIrfoContactDetails')
+            ->andReturn($contactDetails)
+            ->getMock();
+
+        return [
+            'licence' => [
+                m::mock(Licence::class)->makePartial()->setCorrespondenceCd($contactDetails),
+                null,
+                [
+                    'addressLine1' => 'Foo1',
+                    'addressLine2' => 'Foo2',
+                    'addressLine3' => 'Foo3',
+                    'addressLine4' => 'Foo4',
+                    'town' => 'FooTown',
+                    'postcode' =>'FooPostcode',
+                    'countryCode' => 'FooCountry',
+                ],
+            ],
+            'irfo' => [
+                null,
+                m::mock(IrfoGvPermit::class)->makePartial()->setOrganisation($organisation),
+                [
+                    'addressLine1' => 'Foo1',
+                    'addressLine2' => 'Foo2',
+                    'addressLine3' => 'Foo3',
+                    'addressLine4' => 'Foo4',
+                    'town' => 'FooTown',
+                    'postcode' =>'FooPostcode',
+                    'countryCode' => 'FooCountry',
+                ],
+            ],
+            'neither' => [
+                null,
+                null,
+                [
+                    'addressLine1' => 'Miscellaneous payment',
+                    'addressLine2' => null,
+                    'addressLine3' => null,
+                    'addressLine4' => null,
+                    'town' => 'Miscellaneous payment',
+                    'postcode' => 'Miscellaneous payment',
+                    'countryCode' => null,
+                ],
             ],
         ];
     }

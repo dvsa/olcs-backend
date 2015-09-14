@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Transaction as PaymentRepo;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
-use Dvsa\Olcs\Api\Service\CpmsHelperService as CpmsHelper;
+use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCommand;
 use Dvsa\Olcs\Transfer\Command\Transaction\CompleteTransaction as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -34,6 +34,7 @@ class CompleteTransactionTest extends CommandHandlerTestCase
         $this->mockCpmsService = m::mock(CpmsHelper::class);
         $this->mockedSmServices = [
             'CpmsHelperService' => $this->mockCpmsService,
+            'Config' => [],
         ];
 
         $this->sut = new CompleteTransaction();

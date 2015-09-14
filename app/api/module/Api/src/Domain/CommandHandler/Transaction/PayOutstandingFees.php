@@ -15,11 +15,14 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
+use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
+use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -29,9 +32,12 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class PayOutstandingFees extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+final class PayOutstandingFees extends AbstractCommandHandler implements
+    TransactionedInterface,
+    AuthAwareInterface,
+    CpmsAwareInterface
 {
-    use AuthAwareTrait;
+    use AuthAwareTrait, CpmsAwareTrait;
 
     /**
      * @var \Dvsa\Olcs\Api\Service\FeesHelperService
@@ -41,8 +47,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     protected $repoServiceName = 'Transaction';
 
     protected $extraRepos = ['Fee'];
-
-    protected $cpmsHelper;
 
     /**
      * There are three valid use cases for this command
@@ -54,15 +58,15 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     {
         $result = new Result();
 
+        // @todo remove
+        // $result->addMessage('Using API helper version ' . $this->getCpmsService()->getVersion());
+
         if (!empty($command->getOrganisationId())) {
             $fees = $this->getOutstandingFeesForOrganisation($command);
-            $customerReference = $command->getOrganisationId();
         } elseif (!empty($command->getApplicationId())) {
             $fees = $this->feesHelper->getOutstandingFeesForApplication($command->getApplicationId());
-            $customerReference = $this->getCustomerReference($fees);
         } else {
             $fees = $this->getRepo('Fee')->fetchOutstandingFeesByIds($command->getFeeIds());
-            $customerReference = $this->getCustomerReference($fees);
         }
 
         // filter out fees that may have been paid by resolving outstanding payments
@@ -73,30 +77,30 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             return $result;
         }
 
-        switch ($command->getPaymentMethod()) {
-            case FeeEntity::METHOD_CARD_ONLINE:
-            case FeeEntity::METHOD_CARD_OFFLINE:
-                return $this->cardPayment($customerReference, $command, $feesToPay, $result);
-            case FeeEntity::METHOD_CASH:
-            case FeeEntity::METHOD_CHEQUE:
-            case FeeEntity::METHOD_POSTAL_ORDER:
-                return $this->immediatePayment($customerReference, $command, $feesToPay, $result);
+        try {
+            $cardMethods = [FeeEntity::METHOD_CARD_ONLINE, FeeEntity:: METHOD_CARD_OFFLINE];
+            if (in_array($command->getPaymentMethod(), $cardMethods)) {
+                return $this->cardPayment($command, $feesToPay, $result);
+            } else {
+                return $this->immediatePayment($command, $feesToPay, $result);
+            }
+        } catch (CpmsResponseException $e) {
+            // rethrow as Domain exception
+            throw new RuntimeException('Error from CPMS service', $e->getCode(), $e);
         }
     }
 
     /**
-     * @param string $customerReference
      * @param CommandInterface $command
      * @param array $feesToPay
      * @param Result $result
      *
      * @return Result
      */
-    protected function cardPayment($customerReference, $command, $feesToPay, $result)
+    protected function cardPayment($command, $feesToPay, $result)
     {
         // fire off to CPMS
-        $response = $this->cpmsHelper->initiateCardRequest(
-            $customerReference,
+        $response = $this->getCpmsService()->initiateCardRequest(
             $command->getCpmsRedirectUrl(),
             $feesToPay
         );
@@ -117,7 +121,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $feeTransaction = new FeeTransactionEntity();
             $feeTransaction
                 ->setFee($fee)
-                ->setAmount($fee->getAmount())
+                ->setAmount($fee->getOutstandingAmount())
                 ->setTransaction($transaction); // needed for cascade persist to work
             $feeTransactions->add($feeTransaction);
         }
@@ -132,23 +136,18 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     }
 
     /**
-     * @param string $customerReference
      * @param CommandInterface $command
      * @param array $fees
      * @param Result $result
      *
      * @return Result
      */
-    protected function immediatePayment($customerReference, $command, $fees, $result)
+    protected function immediatePayment($command, $fees, $result)
     {
         $this->checkAmountMatchesTotalDue($command->getReceived(), $fees);
 
         // fire off to relevant CPMS method to record payment
-        $response = $this->recordPaymentInCpms($customerReference, $command, $fees);
-
-        if ($response === false) {
-            throw new RuntimeException('error from CPMS service');
-        }
+        $response = $this->recordPaymentInCpms($command, $fees);
 
         $receiptDate = new \DateTime($command->getReceiptDate());
         $chequeDate = $command->getChequeDate() ? new \DateTime($command->getChequeDate()) : null;
@@ -175,7 +174,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
             $feeTransaction = new FeeTransactionEntity();
             $feeTransaction
                 ->setFee($fee)
-                ->setAmount($fee->getAmount())
+                ->setAmount($fee->getOutstandingAmount())
                 ->setTransaction($transaction); // needed for cascade persist to work
             $feeTransactions->add($feeTransaction);
 
@@ -205,13 +204,12 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     /**
      * @return array|false
      */
-    protected function recordPaymentInCpms($customerReference, $command, $fees)
+    protected function recordPaymentInCpms($command, $fees)
     {
         switch ($command->getPaymentMethod()) {
             case FeeEntity::METHOD_CASH:
-                $response = $this->cpmsHelper->recordCashPayment(
+                $response = $this->getCpmsService()->recordCashPayment(
                     $fees,
-                    $customerReference,
                     $command->getReceived(),
                     $command->getReceiptDate(),
                     $command->getPayer(),
@@ -219,9 +217,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
                 );
                 break;
             case FeeEntity::METHOD_CHEQUE:
-                $response = $this->cpmsHelper->recordChequePayment(
+                $response = $this->getCpmsService()->recordChequePayment(
                     $fees,
-                    $customerReference,
                     $command->getReceived(),
                     $command->getReceiptDate(),
                     $command->getPayer(),
@@ -231,9 +228,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
                 );
                 break;
             case FeeEntity::METHOD_POSTAL_ORDER:
-                $response = $this->cpmsHelper->recordPostalOrderPayment(
+                $response = $this->getCpmsService()->recordPostalOrderPayment(
                     $fees,
-                    $customerReference,
                     $command->getReceived(),
                     $command->getReceiptDate(),
                     $command->getPayer(),
@@ -252,7 +248,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     {
         parent::createService($serviceLocator);
         $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->cpmsHelper = $mainServiceLocator->get('CpmsHelperService');
         $this->feesHelper = $mainServiceLocator->get('FeesHelperService');
         return $this;
     }
@@ -321,30 +316,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     }
 
     /**
-     * Gets Customer Reference based on the fees details
-     * The method assumes that all fees link to the same organisationId
-     *
-     * @param array $fees
-     * @return int organisationId
-     */
-    protected function getCustomerReference($fees)
-    {
-        $reference = 'Miscellaneous'; // default value
-
-        foreach ($fees as $fee) {
-            if (!empty($fee->getLicence())) {
-                $organisation = $fee->getLicence()->getOrganisation();
-                if (!empty($organisation)) {
-                    $reference = $organisation->getId();
-                    break;
-                }
-            }
-        }
-
-        return $reference;
-    }
-
-    /**
      * @param array $fees
      * return float
      */
@@ -352,7 +323,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
     {
         $totalAmount = 0;
         foreach ($fees as $fee) {
-            $totalAmount += (float)$fee->getAmount();
+            $totalAmount += (float)$fee->getOutstandingAmount();
         }
         return $totalAmount;
     }
@@ -373,8 +344,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements Transac
      */
     protected function checkAmountMatchesTotalDue($amount, $fees)
     {
-        $amount    = $this->cpmsHelper->formatAmount($amount);
-        $totalFees = $this->cpmsHelper->formatAmount($this->getTotalAmountFromFees($fees));
+        $amount    = $this->getCpmsService()->formatAmount($amount);
+        $totalFees = $this->getCpmsService()->formatAmount($this->getTotalAmountFromFees($fees));
         if ($amount !== $totalFees) {
             throw new ValidationException(["Amount must match the fee(s) due"]);
         }

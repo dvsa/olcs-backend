@@ -13,11 +13,13 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
+use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
-use Dvsa\Olcs\Api\Service\CpmsHelperService as Cpms;
+use Dvsa\Olcs\Api\Service\CpmsHelperInterface as Cpms;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -26,25 +28,23 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class ResolvePayment extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+final class ResolvePayment extends AbstractCommandHandler implements
+    TransactionedInterface,
+    AuthAwareInterface,
+    CpmsAwareInterface
 {
-    use AuthAwareTrait;
+    use AuthAwareTrait, CpmsAwareTrait;
 
     protected $repoServiceName = 'Transaction';
 
     protected $extraRepos = ['Fee'];
-
-    /**
-     * @var \Dvsa\Olcs\Api\Service\CpmsHelperService $cpmsHelper
-     */
-    protected $cpmsHelper;
 
     public function handleCommand(CommandInterface $command)
     {
         /* @var $transaction Transaction */
         $transaction = $this->getRepo()->fetchUsingId($command);
 
-        $cpmsStatus = $this->cpmsHelper->getPaymentStatus($transaction->getReference());
+        $cpmsStatus = $this->getCpmsService()->getPaymentStatus($transaction->getReference());
 
         $now = new DateTime();
 
@@ -88,12 +88,5 @@ final class ResolvePayment extends AbstractCommandHandler implements Transaction
         $result->addMessage('Transaction resolved as '. $transaction->getStatus()->getDescription());
 
         return $result;
-    }
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        parent::createService($serviceLocator);
-        $this->cpmsHelper = $serviceLocator->getServiceLocator()->get('CpmsHelperService');
-        return $this;
     }
 }

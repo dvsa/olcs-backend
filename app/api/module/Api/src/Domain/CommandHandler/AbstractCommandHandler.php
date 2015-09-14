@@ -66,6 +66,25 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         /** @var ServiceLocatorInterface $mainServiceLocator  */
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
+        $this->applyInterfaces($mainServiceLocator);
+
+        $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
+
+        if ($this->repoServiceName !== null) {
+            $this->extraRepos[] = $this->repoServiceName;
+        }
+
+        $this->commandHandler = $serviceLocator;
+
+        if ($this instanceof TransactionedInterface) {
+            return new TransactioningCommandHandler($this, $mainServiceLocator->get('TransactionManager'));
+        }
+
+        return $this;
+    }
+
+    private function applyInterfaces($mainServiceLocator)
+    {
         if ($this instanceof AuthAwareInterface) {
             $this->setAuthService($mainServiceLocator->get(AuthorizationService::class));
         }
@@ -99,19 +118,9 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             $this->setCompaniesHouseService($companiesHouseService);
         }
 
-        $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
-
-        if ($this->repoServiceName !== null) {
-            $this->extraRepos[] = $this->repoServiceName;
+        if ($this instanceof \Dvsa\Olcs\Api\Domain\CpmsAwareInterface) {
+            $this->setCpmsService($mainServiceLocator->get('CpmsHelperService'));
         }
-
-        $this->commandHandler = $serviceLocator;
-
-        if ($this instanceof TransactionedInterface) {
-            return new TransactioningCommandHandler($this, $mainServiceLocator->get('TransactionManager'));
-        }
-
-        return $this;
     }
 
     /**
