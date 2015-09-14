@@ -984,4 +984,101 @@ class LicenceEntityTest extends EntityTester
 
         $this->assertEquals(-1, $licence->getRemainingSpacesPsv());
     }
+
+    /**
+     * @dataProvider licenceDataProvider
+     */
+    public function testValidateTotalAuthority(
+        $categoryType,
+        $licenceType,
+        $totAuthVehicles,
+        $totAuthSmallVehicles,
+        $totAuthMediumVehicles,
+        $totAuthLargeVehicles
+    ) {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getGoodsOrPsv->getId')->andReturn($categoryType);
+        $licence->shouldReceive('getLicenceType->getId')->andReturn($licenceType);
+
+        $this->assertNull(
+            $licence->validateTotalAuthority(
+                $totAuthVehicles,
+                $totAuthSmallVehicles,
+                $totAuthMediumVehicles,
+                $totAuthLargeVehicles
+            )
+        );
+    }
+
+    public function licenceDataProvider()
+    {
+        return [
+            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, Entity::LICENCE_TYPE_STANDARD_NATIONAL, 1, 2, 3, 4],
+            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_STANDARD_NATIONAL, 5, 1, 2, 2],
+            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_RESTRICTED, 5, 2, 3, 2],
+        ];
+    }
+
+    /**
+     * @dataProvider licenceBadDataProvider
+     */
+    public function testValidateTotalAuthorityWithException(
+        $categoryType,
+        $licenceType,
+        $totAuthVehicles,
+        $totAuthSmallVehicles,
+        $totAuthMediumVehicles,
+        $totAuthLargeVehicles
+    ) {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getGoodsOrPsv->getId')->andReturn($categoryType);
+        $licence->shouldReceive('getLicenceType->getId')->andReturn($licenceType);
+
+        $this->setExpectedException(ValidationException::class);
+
+        $this->assertNull(
+            $licence->validateTotalAuthority(
+                $totAuthVehicles,
+                $totAuthSmallVehicles,
+                $totAuthMediumVehicles,
+                $totAuthLargeVehicles
+            )
+        );
+    }
+
+    public function licenceBadDataProvider()
+    {
+        return [
+            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_STANDARD_NATIONAL, 5, 2, 2, 2],
+            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_RESTRICTED, 5, 2, 4, null],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestGetLicenceTypeShortCode
+     * @param string $licenceType
+     * @param string $shortCode
+     */
+    public function testGetLicenceTypeShortCode($licenceType, $shortCode)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setLicenceType((new RefData())->setId($licenceType));
+
+        $this->assertSame($shortCode, $licence->getLicenceTypeShortCode());
+    }
+
+    public function dpTestGetLicenceTypeShortCode()
+    {
+        return [
+            ['ltyp_r', 'R'],
+            ['ltyp_si', 'SI'],
+            ['ltyp_sn', 'SN'],
+            ['ltyp_sr', 'SR'],
+            ['ltyp_cbp', 'CBP'],
+            ['ltyp_dbp', 'DBP'],
+            ['ltyp_lbp', 'LBP'],
+            ['ltyp_sbp', 'SBP'],
+            ['XXXX', null],
+        ];
+    }
 }

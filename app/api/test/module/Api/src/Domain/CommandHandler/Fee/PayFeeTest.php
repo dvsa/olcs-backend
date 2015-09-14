@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Pay Fee Test
@@ -42,7 +43,8 @@ class PayFeeTest extends CommandHandlerTestCase
         $this->refData = [
             Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
             Application::APPLICATION_STATUS_GRANTED,
-            Application::INTERIM_STATUS_GRANTED
+            Application::INTERIM_STATUS_GRANTED,
+            Application::INTERIM_STATUS_INFORCE,
         ];
 
         parent::initReferences();
@@ -415,6 +417,48 @@ class PayFeeTest extends CommandHandlerTestCase
             'messages' => [
                 'ValidateApplication',
                 'InForceInterim'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWithVariationAndInterimInForce()
+    {
+        $command = PayFeeCommand::create(['id' => 111]);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(222);
+        $application->setIsVariation(false);
+        $application->setStatus($this->refData[Application::APPLICATION_STATUS_UNDER_CONSIDERATION]);
+        $application->setInterimStatus($this->refData[Application::INTERIM_STATUS_INFORCE]);
+
+        $application
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+        $endResult = new Result();
+        $endResult->addMessage('EndInterim');
+        $this->expectedSideEffect(EndInterimCmd::class, ['id' => 222], $endResult);
+
+        /** @var FeeEntity $fee */
+        $fee = m::mock(FeeEntity::class)->makePartial();
+        $fee->setApplication($application);
+        $fee->shouldReceive('getFeeType->getFeeType->getId')
+            ->andReturn(FeeType::FEE_TYPE_GRANTINT);
+
+        $this->repoMap['Fee']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($fee);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'EndInterim'
             ]
         ];
 

@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Queue;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as Entity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Queue Entity Unit Tests
@@ -37,5 +38,34 @@ class QueueEntityTest extends EntityTester
         $this->assertEquals(1, $sut->getAttempts());
         $sut->incrementAttempts();
         $this->assertEquals(2, $sut->getAttempts());
+    }
+
+    public function testValidateQueue()
+    {
+        $sut = new $this->entityClass();
+        $this->assertNull(
+            $sut->validateQueue(
+                Entity::TYPE_CPID_EXPORT_CSV,
+                Entity::STATUS_QUEUED
+            )
+        );
+    }
+
+    /**
+     * @dataProvider queueDataProvider
+     */
+    public function testValidateQueueWithException($type, $status)
+    {
+        $this->setExpectedException(ValidationException::class);
+        $sut = new $this->entityClass();
+        $sut->validateQueue($type, $status);
+    }
+
+    public function queueDataProvider()
+    {
+        return [
+            [Entity::TYPE_COMPANIES_HOUSE_INITIAL, 'foo'],
+            ['bar', Entity::STATUS_QUEUED]
+        ];
     }
 }

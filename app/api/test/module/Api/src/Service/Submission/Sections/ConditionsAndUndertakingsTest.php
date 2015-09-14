@@ -24,31 +24,17 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
         $expectedResult = [
             'data' => [
                 'tables' => [
-                    'conditions' => [
-                        0 => [
-                            'id' => 58,
-                            'version' => 158,
-                            'createdOn' => '23/01/2011',
-                            'parentId' => 7,
-                            'addedVia' => 'cav_lic-desc',
-                            'isFulfilled' => 'Y',
-                            'isDraft' => 'N',
-                            'attachedTo' => 'cat_lic-desc',
-                            'OcAddress' => [
-                            ],
-                            'notes' => null
-                        ]
-                    ],
+                    'conditions' => [],
                     'undertakings' => [
                         0 => [
                             'id' => 34,
                             'version' => 134,
                             'createdOn' => '23/01/2011',
                             'parentId' => 75,
-                            'addedVia' => 'cav_lic-desc',
+                            'addedVia' => 'cav_app-desc',
                             'isFulfilled' => 'Y',
                             'isDraft' => 'N',
-                            'attachedTo' => 'cat_lic-desc',
+                            'attachedTo' => 'cat_oc-desc',
                             'OcAddress' => [
                                 'addressLine1' => '1_a1',
                                 'addressLine2' => '1_a2',
@@ -65,10 +51,10 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
                             'version' => 134,
                             'createdOn' => '23/01/2011',
                             'parentId' => 75,
-                            'addedVia' => 'cav_lic-desc',
+                            'addedVia' => 'cav_app-desc',
                             'isFulfilled' => 'Y',
                             'isDraft' => 'N',
-                            'attachedTo' => 'cat_lic-desc',
+                            'attachedTo' => 'cat_oc-desc',
                             'OcAddress' => [
                                 'addressLine1' => '1_a1',
                                 'addressLine2' => '1_a2',
@@ -85,10 +71,10 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
                             'version' => 134,
                             'createdOn' => '23/01/2011',
                             'parentId' => 75,
-                            'addedVia' => 'cav_lic-desc',
+                            'addedVia' => 'cav_app-desc',
                             'isFulfilled' => 'Y',
                             'isDraft' => 'N',
-                            'attachedTo' => 'cat_lic-desc',
+                            'attachedTo' => 'cat_oc-desc',
                             'OcAddress' => [
                                 'addressLine1' => '1_a1',
                                 'addressLine2' => '1_a2',

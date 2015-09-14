@@ -79,4 +79,23 @@ class TransportManagerLicenceEntityTest extends EntityTester
             1
         );
     }
+
+    public function testGetTotalWeeklyHours()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->updateTransportManagerLicence(
+            'tmt',
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            'ai',
+            '2015-01-01',
+            1
+        );
+        $this->assertEquals($sut->getTotalWeeklyHours(), 28);
+    }
 }

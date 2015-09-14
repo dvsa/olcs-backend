@@ -34,4 +34,21 @@ class Task extends AbstractRepository
 
         return $doctrineQb->getQuery()->getResult();
     }
+
+    /**
+     * Fetch a list for a Transport Manager
+     *
+     * @param int|\Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager
+     *
+     * @return array
+     */
+    public function fetchByTransportManager($transportManager)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.transportManager', ':transportManager'))
+            ->setParameter('transportManager', $transportManager);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
 }

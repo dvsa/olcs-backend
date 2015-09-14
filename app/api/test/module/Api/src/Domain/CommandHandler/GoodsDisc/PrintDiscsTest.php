@@ -164,7 +164,8 @@ class PrintDiscsTest extends CommandHandlerTestCase
         $this->expectedSideEffect(PrintDiscsCommand::class, $printDiscData, new Result());
 
         $createVehicleListData = [
-            'id' => 3
+            'id' => 3,
+            'type' => 'dp'
         ];
         $this->expectedSideEffect(CreateVehicleListDocumentCommand::class, $createVehicleListData, new Result());
 

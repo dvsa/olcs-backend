@@ -24,14 +24,11 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_fee_task_id", columns={"task_id"}),
  *        @ORM\Index(name="ix_fee_fee_type_id", columns={"fee_type_id"}),
  *        @ORM\Index(name="ix_fee_parent_fee_id", columns={"parent_fee_id"}),
- *        @ORM\Index(name="ix_fee_waive_recommender_user_id", columns={"waive_recommender_user_id"}),
- *        @ORM\Index(name="ix_fee_waive_approver_user_id", columns={"waive_approver_user_id"}),
  *        @ORM\Index(name="ix_fee_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_fee_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_fee_irfo_gv_permit_id", columns={"irfo_gv_permit_id"}),
  *        @ORM\Index(name="ix_fee_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="ix_fee_fee_status", columns={"fee_status"}),
- *        @ORM\Index(name="ix_fee_payment_method", columns={"payment_method"})
+ *        @ORM\Index(name="ix_fee_fee_status", columns={"fee_status"})
  *    }
  * )
  */
@@ -71,24 +68,6 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
      */
     protected $busReg;
-
-    /**
-     * Cheque po date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="cheque_po_date", nullable=true)
-     */
-    protected $chequePoDate;
-
-    /**
-     * Cheque po number
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="cheque_po_number", length=100, nullable=true)
-     */
-    protected $chequePoNumber;
 
     /**
      * Created by
@@ -154,9 +133,9 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="invoice_line_no", nullable=true)
+     * @ORM\Column(type="smallint", name="invoice_line_no", nullable=false, options={"default": 1})
      */
-    protected $invoiceLineNo;
+    protected $invoiceLineNo = 1;
 
     /**
      * Invoiced date
@@ -258,61 +237,6 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     protected $parentFee;
 
     /**
-     * Payer name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="payer_name", length=100, nullable=true)
-     */
-    protected $payerName;
-
-    /**
-     * Paying in slip number
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="paying_in_slip_number", length=100, nullable=true)
-     */
-    protected $payingInSlipNumber;
-
-    /**
-     * Payment method
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="payment_method", referencedColumnName="id", nullable=true)
-     */
-    protected $paymentMethod;
-
-    /**
-     * Receipt no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="receipt_no", length=45, nullable=true)
-     */
-    protected $receiptNo;
-
-    /**
-     * Received amount
-     *
-     * @var float
-     *
-     * @ORM\Column(type="decimal", name="received_amount", precision=10, scale=2, nullable=true)
-     */
-    protected $receivedAmount;
-
-    /**
-     * Received date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="received_date", nullable=true)
-     */
-    protected $receivedDate;
-
-    /**
      * Task
      *
      * @var \Dvsa\Olcs\Api\Entity\Task\Task
@@ -333,64 +257,17 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     protected $version = 1;
 
     /**
-     * Waive approval date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="waive_approval_date", nullable=true)
-     */
-    protected $waiveApprovalDate;
-
-    /**
-     * Waive approver user
-     *
-     * @var \Dvsa\Olcs\Api\Entity\User\User
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="waive_approver_user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $waiveApproverUser;
-
-    /**
-     * Waive reason
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="waive_reason", length=255, nullable=true)
-     */
-    protected $waiveReason;
-
-    /**
-     * Waive recommendation date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="waive_recommendation_date", nullable=true)
-     */
-    protected $waiveRecommendationDate;
-
-    /**
-     * Waive recommender user
-     *
-     * @var \Dvsa\Olcs\Api\Entity\User\User
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="waive_recommender_user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $waiveRecommenderUser;
-
-    /**
-     * Fee payment
+     * Fee transaction
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\FeePayment",
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\FeeTransaction",
      *     mappedBy="fee",
      *     cascade={"persist"}
      * )
      */
-    protected $feePayments;
+    protected $feeTransactions;
 
     /**
      * Initialise the collections
@@ -402,7 +279,7 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
 
     public function initCollections()
     {
-        $this->feePayments = new ArrayCollection();
+        $this->feeTransactions = new ArrayCollection();
     }
 
     /**
@@ -472,52 +349,6 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     public function getBusReg()
     {
         return $this->busReg;
-    }
-
-    /**
-     * Set the cheque po date
-     *
-     * @param \DateTime $chequePoDate
-     * @return Fee
-     */
-    public function setChequePoDate($chequePoDate)
-    {
-        $this->chequePoDate = $chequePoDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the cheque po date
-     *
-     * @return \DateTime
-     */
-    public function getChequePoDate()
-    {
-        return $this->chequePoDate;
-    }
-
-    /**
-     * Set the cheque po number
-     *
-     * @param string $chequePoNumber
-     * @return Fee
-     */
-    public function setChequePoNumber($chequePoNumber)
-    {
-        $this->chequePoNumber = $chequePoNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get the cheque po number
-     *
-     * @return string
-     */
-    public function getChequePoNumber()
-    {
-        return $this->chequePoNumber;
     }
 
     /**
@@ -912,144 +743,6 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     }
 
     /**
-     * Set the payer name
-     *
-     * @param string $payerName
-     * @return Fee
-     */
-    public function setPayerName($payerName)
-    {
-        $this->payerName = $payerName;
-
-        return $this;
-    }
-
-    /**
-     * Get the payer name
-     *
-     * @return string
-     */
-    public function getPayerName()
-    {
-        return $this->payerName;
-    }
-
-    /**
-     * Set the paying in slip number
-     *
-     * @param string $payingInSlipNumber
-     * @return Fee
-     */
-    public function setPayingInSlipNumber($payingInSlipNumber)
-    {
-        $this->payingInSlipNumber = $payingInSlipNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get the paying in slip number
-     *
-     * @return string
-     */
-    public function getPayingInSlipNumber()
-    {
-        return $this->payingInSlipNumber;
-    }
-
-    /**
-     * Set the payment method
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $paymentMethod
-     * @return Fee
-     */
-    public function setPaymentMethod($paymentMethod)
-    {
-        $this->paymentMethod = $paymentMethod;
-
-        return $this;
-    }
-
-    /**
-     * Get the payment method
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getPaymentMethod()
-    {
-        return $this->paymentMethod;
-    }
-
-    /**
-     * Set the receipt no
-     *
-     * @param string $receiptNo
-     * @return Fee
-     */
-    public function setReceiptNo($receiptNo)
-    {
-        $this->receiptNo = $receiptNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the receipt no
-     *
-     * @return string
-     */
-    public function getReceiptNo()
-    {
-        return $this->receiptNo;
-    }
-
-    /**
-     * Set the received amount
-     *
-     * @param float $receivedAmount
-     * @return Fee
-     */
-    public function setReceivedAmount($receivedAmount)
-    {
-        $this->receivedAmount = $receivedAmount;
-
-        return $this;
-    }
-
-    /**
-     * Get the received amount
-     *
-     * @return float
-     */
-    public function getReceivedAmount()
-    {
-        return $this->receivedAmount;
-    }
-
-    /**
-     * Set the received date
-     *
-     * @param \DateTime $receivedDate
-     * @return Fee
-     */
-    public function setReceivedDate($receivedDate)
-    {
-        $this->receivedDate = $receivedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the received date
-     *
-     * @return \DateTime
-     */
-    public function getReceivedDate()
-    {
-        return $this->receivedDate;
-    }
-
-    /**
      * Set the task
      *
      * @param \Dvsa\Olcs\Api\Entity\Task\Task $task
@@ -1096,175 +789,60 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     }
 
     /**
-     * Set the waive approval date
+     * Set the fee transaction
      *
-     * @param \DateTime $waiveApprovalDate
+     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions
      * @return Fee
      */
-    public function setWaiveApprovalDate($waiveApprovalDate)
+    public function setFeeTransactions($feeTransactions)
     {
-        $this->waiveApprovalDate = $waiveApprovalDate;
+        $this->feeTransactions = $feeTransactions;
 
         return $this;
     }
 
     /**
-     * Get the waive approval date
-     *
-     * @return \DateTime
-     */
-    public function getWaiveApprovalDate()
-    {
-        return $this->waiveApprovalDate;
-    }
-
-    /**
-     * Set the waive approver user
-     *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $waiveApproverUser
-     * @return Fee
-     */
-    public function setWaiveApproverUser($waiveApproverUser)
-    {
-        $this->waiveApproverUser = $waiveApproverUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the waive approver user
-     *
-     * @return \Dvsa\Olcs\Api\Entity\User\User
-     */
-    public function getWaiveApproverUser()
-    {
-        return $this->waiveApproverUser;
-    }
-
-    /**
-     * Set the waive reason
-     *
-     * @param string $waiveReason
-     * @return Fee
-     */
-    public function setWaiveReason($waiveReason)
-    {
-        $this->waiveReason = $waiveReason;
-
-        return $this;
-    }
-
-    /**
-     * Get the waive reason
-     *
-     * @return string
-     */
-    public function getWaiveReason()
-    {
-        return $this->waiveReason;
-    }
-
-    /**
-     * Set the waive recommendation date
-     *
-     * @param \DateTime $waiveRecommendationDate
-     * @return Fee
-     */
-    public function setWaiveRecommendationDate($waiveRecommendationDate)
-    {
-        $this->waiveRecommendationDate = $waiveRecommendationDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the waive recommendation date
-     *
-     * @return \DateTime
-     */
-    public function getWaiveRecommendationDate()
-    {
-        return $this->waiveRecommendationDate;
-    }
-
-    /**
-     * Set the waive recommender user
-     *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $waiveRecommenderUser
-     * @return Fee
-     */
-    public function setWaiveRecommenderUser($waiveRecommenderUser)
-    {
-        $this->waiveRecommenderUser = $waiveRecommenderUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the waive recommender user
-     *
-     * @return \Dvsa\Olcs\Api\Entity\User\User
-     */
-    public function getWaiveRecommenderUser()
-    {
-        return $this->waiveRecommenderUser;
-    }
-
-    /**
-     * Set the fee payment
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $feePayments
-     * @return Fee
-     */
-    public function setFeePayments($feePayments)
-    {
-        $this->feePayments = $feePayments;
-
-        return $this;
-    }
-
-    /**
-     * Get the fee payments
+     * Get the fee transactions
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getFeePayments()
+    public function getFeeTransactions()
     {
-        return $this->feePayments;
+        return $this->feeTransactions;
     }
 
     /**
-     * Add a fee payments
+     * Add a fee transactions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $feePayments
+     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions
      * @return Fee
      */
-    public function addFeePayments($feePayments)
+    public function addFeeTransactions($feeTransactions)
     {
-        if ($feePayments instanceof ArrayCollection) {
-            $this->feePayments = new ArrayCollection(
+        if ($feeTransactions instanceof ArrayCollection) {
+            $this->feeTransactions = new ArrayCollection(
                 array_merge(
-                    $this->feePayments->toArray(),
-                    $feePayments->toArray()
+                    $this->feeTransactions->toArray(),
+                    $feeTransactions->toArray()
                 )
             );
-        } elseif (!$this->feePayments->contains($feePayments)) {
-            $this->feePayments->add($feePayments);
+        } elseif (!$this->feeTransactions->contains($feeTransactions)) {
+            $this->feeTransactions->add($feeTransactions);
         }
 
         return $this;
     }
 
     /**
-     * Remove a fee payments
+     * Remove a fee transactions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $feePayments
+     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions
      * @return Fee
      */
-    public function removeFeePayments($feePayments)
+    public function removeFeeTransactions($feeTransactions)
     {
-        if ($this->feePayments->contains($feePayments)) {
-            $this->feePayments->removeElement($feePayments);
+        if ($this->feeTransactions->contains($feeTransactions)) {
+            $this->feeTransactions->removeElement($feeTransactions);
         }
 
         return $this;

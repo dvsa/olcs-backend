@@ -198,4 +198,26 @@ class Licence extends AbstractRepository
                 ->setParameter('excludeStatuses', $query->getExcludeStatuses());
         }
     }
+
+    public function fetchForContinuation($year, $month, $trafficArea)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('trafficArea', 'ta');
+
+        $startDate = new \DateTime($year . '-' . $month . '-01');
+        $endDate = new \DateTime($year . '-' . $month . '-01');
+        $endDate->modify('last day of this month');
+
+        $qb->andWhere($qb->expr()->gte($this->alias . '.expiryDate', ':expiryFrom'))
+            ->setParameter('expiryFrom', $startDate);
+        $qb->andWhere($qb->expr()->lte($this->alias . '.expiryDate', ':expiryTo'))
+            ->setParameter('expiryTo', $endDate);
+        $qb->andWhere($qb->expr()->eq('ta.id', ':trafficArea'))
+            ->setParameter('trafficArea', $trafficArea);
+
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -29,7 +29,8 @@ class CaseSummaryTest extends SubmissionSectionTest
         'totAuthorisedTrailers' => 5,
         'vehiclesInPossession' => 3,
         'trailersInPossession' => 5,
-        'serviceStandardDate' => ''
+        'serviceStandardDate' => '',
+        'disqualificationStatus' => 'None',
     ];
 
     /**

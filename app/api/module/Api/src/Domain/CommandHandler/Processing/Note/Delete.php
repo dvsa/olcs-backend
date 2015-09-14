@@ -15,8 +15,7 @@ use Dvsa\Olcs\Api\Entity;
 /**
  * Delete a Note
  */
-final class Delete extends AbstractCommandHandler
-    implements TransactionedInterface
+final class Delete extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Note';
 
@@ -31,8 +30,8 @@ final class Delete extends AbstractCommandHandler
         /** @var NoteRepository $repo */
         $repo = $this->getRepo();
 
-        $note = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
-        $this->getRepo()->delete($note);
+        $note = $repo->fetchUsingId($command);
+        $repo->delete($note);
 
         $result->addMessage('Note deleted');
 

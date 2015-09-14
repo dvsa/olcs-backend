@@ -58,6 +58,7 @@ class Application extends AbstractApplication
     const INTERIM_STATUS_REFUSED = 'int_sts_refused';
     const INTERIM_STATUS_REVOKED = 'int_sts_revoked';
     const INTERIM_STATUS_GRANTED = 'int_sts_granted';
+    const INTERIM_STATUS_ENDED = 'int_sts_ended';
 
     const VARIATION_STATUS_UNCHANGED = 0;
     const VARIATION_STATUS_REQUIRES_ATTENTION = 1;

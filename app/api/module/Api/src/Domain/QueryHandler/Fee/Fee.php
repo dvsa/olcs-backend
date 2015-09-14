@@ -8,6 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Fee;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepository;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 
 /**
  * Fee
@@ -25,10 +26,42 @@ class Fee extends AbstractQueryHandler
 
         return $this->result(
             $fee,
-            [],
             [
-                'allowEdit' => $fee->allowEdit(),
-            ]
+                'feeTransactions' => [
+                    'transaction' => [
+                        'paymentMethod',
+                        'processedByUser',
+                        'status',
+                        'type',
+                    ],
+                ],
+            ],
+            $this->getAdditionalFeeData($fee)
         );
+    }
+
+    /**
+     * @param FeeEntity $fee
+     * @return array
+     */
+    private function getAdditionalFeeData(FeeEntity $fee)
+    {
+        return [
+            'allowEdit' => $fee->allowEdit(),
+            'outstanding' => $fee->getOutstandingAmount(),
+
+            // fields that the frontend may expect as they were previously
+            // on the fee table
+            'receiptNo' => $fee->getLatestPaymentRef(),
+            'receivedAmount' => $fee->getReceivedAmount(),
+            'receivedDate' => $fee->getReceivedDate(),
+            'paymentMethod' => $fee->getPaymentMethod(),
+            'processedBy' => $fee->getProcessedBy(),
+            'payer' => $fee->getPayer(),
+            'slipNo' => $fee->getSlipNo(),
+            'chequePoNumber' => $fee->getChequePoNumber(),
+            'waiveReason' => $fee->getWaiveReason(),
+            'hasOutstandingWaiveTransaction' => !empty($fee->getOutstandingWaiveTransaction()),
+        ];
     }
 }

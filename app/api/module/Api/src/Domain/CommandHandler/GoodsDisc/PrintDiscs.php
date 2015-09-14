@@ -66,7 +66,8 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
         foreach ($discsToPrint as $disc) {
             $licenceId = $disc->getLicenceVehicle()->getLicence()->getId();
             $licences[$licenceId] = [
-                'id' => $licenceId
+                'id' => $licenceId,
+                'type' => 'dp'
             ];
         }
         foreach ($licences as $data) {

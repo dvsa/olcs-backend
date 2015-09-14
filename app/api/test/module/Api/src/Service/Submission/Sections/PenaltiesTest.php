@@ -29,8 +29,8 @@ class PenaltiesTest extends SubmissionSectionTest
                     'originatingAuthority' => 'erru_oa',
                     'infringementId' => 734,
                     'notificationNumber' => 'notificationNo734',
-                    'infringementDate' => new \DateTime('2009-11-30'),
-                    'checkDate' =>  new \DateTime('2010-07-20'),
+                    'infringementDate' => '30/11/2009',
+                    'checkDate' => '20/07/2010',
                     'category' => 'sicatdesc',
                     'categoryType' => 'sicattypedesc',
                     'memberState' => 'GB-desc'
@@ -42,8 +42,8 @@ class PenaltiesTest extends SubmissionSectionTest
                             'id' => 1,
                             'version' => 6,
                             'penaltyType' => '533-desc',
-                            'startDate' => new \DateTime('2013-07-01'),
-                            'endDate' => new \DateTime('2013-08-31'),
+                            'startDate' => '01/07/2013',
+                            'endDate' => '31/08/2013',
                             'imposed' => 'imposed'
                         ]
                     ],
@@ -52,9 +52,9 @@ class PenaltiesTest extends SubmissionSectionTest
                             'id' => 1,
                             'version' => 23,
                             'penaltyType' => '42-desc',
-                            'finalDecisionDate' => new \DateTime('2014-12-31'),
-                            'startDate' => new \DateTime('2014-07-01'),
-                            'endDate' => new \DateTime('2014-08-31'),
+                            'finalDecisionDate' => '31/12/2014',
+                            'startDate' => '01/07/2014',
+                            'endDate' => '31/08/2014',
                             'executed' => 'executed'
                         ]
                     ],

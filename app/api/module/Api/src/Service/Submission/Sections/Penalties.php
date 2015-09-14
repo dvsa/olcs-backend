@@ -38,8 +38,8 @@ final class Penalties extends AbstractSection
                 $penalty['id'] = $appliedPenalty->getId();
                 $penalty['version'] = $appliedPenalty->getVersion();
                 $penalty['penaltyType'] = $appliedPenalty->getSiPenaltyType()->getDescription();
-                $penalty['startDate'] = $appliedPenalty->getStartDate();
-                $penalty['endDate'] = $appliedPenalty->getEndDate();
+                $penalty['startDate'] = $this->formatDate($appliedPenalty->getStartDate());
+                $penalty['endDate'] = $this->formatDate($appliedPenalty->getEndDate());
                 $penalty['imposed'] = $appliedPenalty->getImposed();
                 $tables['applied-penalties'][] = $penalty;
             }
@@ -49,10 +49,10 @@ final class Penalties extends AbstractSection
                 $penalty = array();
                 $penalty['id'] = $imposedPenalty->getId();
                 $penalty['version'] = $imposedPenalty->getVersion();
-                $penalty['finalDecisionDate'] = $imposedPenalty->getFinalDecisionDate();
+                $penalty['finalDecisionDate'] = $this->formatDate($imposedPenalty->getFinalDecisionDate());
                 $penalty['penaltyType'] = $imposedPenalty->getSiPenaltyImposedType()->getDescription();
-                $penalty['startDate'] = $imposedPenalty->getStartDate();
-                $penalty['endDate'] = $imposedPenalty->getEndDate();
+                $penalty['startDate'] = $this->formatDate($imposedPenalty->getStartDate());
+                $penalty['endDate'] = $this->formatDate($imposedPenalty->getEndDate());
                 $penalty['executed'] = $imposedPenalty->getExecuted();
                 $tables['imposed-penalties'][] = $penalty;
             }
@@ -104,8 +104,8 @@ final class Penalties extends AbstractSection
 
             $siData['infringementId'] = $si->getId();
             $siData['notificationNumber'] = $si->getNotificationNumber();
-            $siData['infringementDate'] = $si->getInfringementDate();
-            $siData['checkDate'] = $si->getCheckDate();
+            $siData['infringementDate'] = $this->formatDate($si->getInfringementDate());
+            $siData['checkDate'] = $this->formatDate($si->getCheckDate());
             $siData['category'] = $si->getSiCategory()->getDescription();
             $siData['categoryType'] = $si->getSiCategoryType()->getDescription();
             $siData['memberState'] =

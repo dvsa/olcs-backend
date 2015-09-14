@@ -40,7 +40,7 @@ class FeesHelperServiceTest extends MockeryTestCase
     protected $feeTypeRepo;
 
     /**
-     * @var CpmsHelperService
+     * @var FeesHelperService
      */
     protected $sut;
 
@@ -150,7 +150,7 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->once()
             ->with(
                 $applicationFeeTypeId,
-                [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED],
+                [FeeEntity::STATUS_OUTSTANDING],
                 $applicationId
             )
             ->andReturn($applicationFee);
@@ -160,7 +160,7 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->once()
             ->with(
                 $interimFeeTypeId,
-                [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED],
+                [FeeEntity::STATUS_OUTSTANDING],
                 $applicationId
             )
             ->andReturn($interimFee);

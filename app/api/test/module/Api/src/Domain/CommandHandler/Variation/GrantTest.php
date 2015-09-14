@@ -24,6 +24,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\VoidPsvDiscs;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Variation\Grant as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Grant Test
@@ -71,6 +72,18 @@ class GrantTest extends CommandHandlerTestCase
         $application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
         $application->setId(111);
         $application->setLicence($licence);
+
+        $application->shouldReceive('getCurrentInterimStatus')
+            ->andReturn(ApplicationEntity::INTERIM_STATUS_INFORCE)
+            ->once()
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->once()
+            ->shouldReceive('isVariation')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+        $this->expectedSideEffect(EndInterimCmd::class, ['id' => 111], new Result());
 
         $licence->shouldReceive('copyInformationFromApplication')
             ->with($application);

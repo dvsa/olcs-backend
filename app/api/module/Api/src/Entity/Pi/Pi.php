@@ -10,6 +10,9 @@ use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\CloseableInterface;
+use Dvsa\Olcs\Api\Entity\ReopenableInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
  * Pi Entity
@@ -33,9 +36,10 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *    }
  * )
  */
-class Pi extends AbstractPi
+class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 {
     const STATUS_REGISTERED = 'pi_s_reg';
+    const MSG_UPDATE_CLOSED = 'Can\'t update a closed Pi';
 
     /**
      * @param CasesEntity $case
@@ -71,6 +75,7 @@ class Pi extends AbstractPi
      * @param \DateTime $agreedDate
      * @param RefData $piStatus
      * @param String $comment
+     * @throws ForbiddenException
      */
     private function create(
         CasesEntity $case,
@@ -82,6 +87,10 @@ class Pi extends AbstractPi
         RefData $piStatus,
         $comment
     ) {
+        if ($case->isClosed()) {
+            throw new ForbiddenException('Can\'t create a Pi for a closed case');
+        }
+
         $this->case = $case;
         $this->agreedByTc = $agreedByTc;
         $this->agreedByTcRole = $agreedByTcRole;
@@ -99,6 +108,7 @@ class Pi extends AbstractPi
      * @param ArrayCollection $reasons
      * @param \DateTime $agreedDate
      * @param String $comment
+     * @throws ForbiddenException
      */
     public function updateAgreedAndLegislation(
         PresidingTcEntity $agreedByTc,
@@ -108,6 +118,10 @@ class Pi extends AbstractPi
         \DateTime $agreedDate,
         $comment
     ) {
+        if ($this->isClosed()) {
+            throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
+        }
+
         $this->agreedByTc = $agreedByTc;
         $this->agreedByTcRole = $agreedByTcRole;
         $this->piTypes = $piTypes;
@@ -127,6 +141,7 @@ class Pi extends AbstractPi
      * @param $decisionDate
      * @param $notificationDate
      * @param $decisionNotes
+     * @throws ForbiddenException
      */
     public function updatePiWithDecision(
         $decidedByTc,
@@ -140,6 +155,10 @@ class Pi extends AbstractPi
         $notificationDate,
         $decisionNotes
     ) {
+        if ($this->isClosed()) {
+            throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
+        }
+
         $this->setDecidedByTc($decidedByTc);
         $this->decidedByTcRole = $decidedByTcRole;
         $this->decisions = $decisions;
@@ -156,9 +175,14 @@ class Pi extends AbstractPi
      * @param RefData|null $writtenOutcome
      * @param string $callUpLetterDate
      * @param string $briefToTcDate
+     * @throws ForbiddenException
      */
     public function updateWrittenOutcomeNone($writtenOutcome, $callUpLetterDate, $briefToTcDate)
     {
+        if ($this->isClosed()) {
+            throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
+        }
+
         $this->updateSla(
             $writtenOutcome,
             $this->processDate($callUpLetterDate),
@@ -176,6 +200,7 @@ class Pi extends AbstractPi
      * @param string $briefToTcDate
      * @param string $tcWrittenDecisionDate
      * @param string $decisionLetterSentDate
+     * @throws ForbiddenException
      */
     public function updateWrittenOutcomeDecision(
         RefData $writtenOutcome,
@@ -184,6 +209,10 @@ class Pi extends AbstractPi
         $tcWrittenDecisionDate,
         $decisionLetterSentDate
     ) {
+        if ($this->isClosed()) {
+            throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
+        }
+
         $this->updateSla(
             $writtenOutcome,
             $this->processDate($callUpLetterDate),
@@ -201,6 +230,7 @@ class Pi extends AbstractPi
      * @param string $briefToTcDate
      * @param string $tcWrittenReasonDate
      * @param string $writtenReasonLetterDate
+     * @throws ForbiddenException
      */
     public function updateWrittenOutcomeReason(
         RefData $writtenOutcome,
@@ -209,6 +239,10 @@ class Pi extends AbstractPi
         $tcWrittenReasonDate,
         $writtenReasonLetterDate
     ) {
+        if ($this->isClosed()) {
+            throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
+        }
+
         $this->updateSla(
             $writtenOutcome,
             $this->processDate($callUpLetterDate),
@@ -248,18 +282,49 @@ class Pi extends AbstractPi
     }
 
     /**
+     * Close the Pi
+     */
+    public function close()
+    {
+        if (!$this->canClose()) {
+            throw new ForbiddenException('Pi is not allowed to be closed');
+        }
+
+        $this->closedDate = new \DateTime();
+    }
+
+    /**
+     * Reopen the Pi
+     */
+    public function reopen()
+    {
+        if (!$this->canReopen()) {
+            throw new ForbiddenException('Pi is not allowed to be reopened');
+        }
+
+        $this->closedDate = null;
+    }
+
+    /**
      * Can the Pi be closed?
      *
      * @return bool
      */
     public function canClose()
     {
+        //if latest pi hearing is cancelled
         if ($this->piHearings->count() > 0) {
-            if ($this->piHearings->first()->getCancelledDate() !== null) {
+            if ($this->piHearings->last()->getIsCancelled() === 'Y') {
                 return !$this->isClosed();
             }
         }
 
+        //sla fields not specific to the decision
+        if ($this->callUpLetterDate === null || $this->briefToTcDate === null) {
+            return false;
+        }
+
+        //sla fields specific to the decision
         if ($this->writtenOutcome !== null) {
             $writtenOutcomeId = $this->writtenOutcome->getId();
 
@@ -284,17 +349,22 @@ class Pi extends AbstractPi
 
     /**
      * @param string $date
+     * @param string $format
+     * @param bool $zeroTime
      * @return \DateTime|null
      */
-    public function processDate($date)
+    public function processDate($date, $format = 'Y-m-d', $zeroTime = true)
     {
-        $dateTime = \DateTime::createFromFormat('Y-m-d', $date);
+        $dateTime = \DateTime::createFromFormat($format, $date);
 
         if (!$dateTime instanceof \DateTime) {
             return null;
         }
 
-        $dateTime->setTime(0, 0, 0);
+        if ($zeroTime) {
+            $dateTime->setTime(0, 0, 0);
+        }
+
         return $dateTime;
     }
 
@@ -353,6 +423,7 @@ class Pi extends AbstractPi
         return [
             'isClosed' => $this->isClosed(),
             'canReopen' => $this->canReopen(),
+            'canClose' => $this->canClose(),
             'hearingDate' => $this->getHearingDate(),
             'isTm' => $this->isTm()
         ];

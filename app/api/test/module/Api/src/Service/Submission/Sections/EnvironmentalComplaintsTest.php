@@ -31,7 +31,7 @@ class EnvironmentalComplaintsTest extends SubmissionSectionTest
                             'complainantForename' => 'fn22',
                             'complainantFamilyName' => 'sn22',
                             'description' => null,
-                            'complaintDate' => new \DateTime('2006-06-03'),
+                            'complaintDate' => '03/06/2006',
                             'ocAddress' => [
                                 0 => [
                                     'address' =>[
@@ -45,7 +45,7 @@ class EnvironmentalComplaintsTest extends SubmissionSectionTest
                                     ]
                                 ]
                             ],
-                            'closeDate' => null,
+                            'closeDate' => '',
                             'status' => 'ecst_open-desc'
                         ],
                         1 => [
@@ -54,7 +54,7 @@ class EnvironmentalComplaintsTest extends SubmissionSectionTest
                             'complainantForename' => 'fn22',
                             'complainantFamilyName' => 'sn22',
                             'description' => null,
-                            'complaintDate' => new \DateTime('2006-06-03'),
+                            'complaintDate' => '03/06/2006',
                             'ocAddress' => [
                                 0 => [
                                     'address' =>[
@@ -68,7 +68,7 @@ class EnvironmentalComplaintsTest extends SubmissionSectionTest
                                     ]
                                 ]
                             ],
-                            'closeDate' => null,
+                            'closeDate' => '',
                             'status' => 'ecst_open-desc'
                         ]
                     ]

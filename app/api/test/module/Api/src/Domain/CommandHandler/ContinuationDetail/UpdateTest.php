@@ -5,8 +5,8 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ContinuationDetail;
 use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\Update as CommandHandler;
-use Dvsa\Olcs\Transfer\Command\ContinuationDetail\Update as Command;
-use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
+use Dvsa\Olcs\Transfer\Command\ContinuationDetail\Update as UpdateCommand;
+use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 
 /**
  * UpdateTest
@@ -40,22 +40,28 @@ class UpdateTest extends CommandHandlerTestCase
             'status' => 'STATUS',
             'received' => 'Y',
             'totAuthVehicles' => '213',
+            'totAuthSmallVehicles' => 200,
+            'totAuthMediumVehicles' => 10,
+            'totAuthLargeVehicles' => 3,
             'totPsvDiscs' => '12',
             'totCommunityLicences' => '43',
         ];
-        $command = Command::create($data);
+        $command = UpdateCommand::create($data);
 
-        $continuationDetail = new ContinuationDetail();
+        $continuationDetail = new ContinuationDetailEntity();
         $continuationDetail->setId(154);
 
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchById')->with(154, Query::HYDRATE_OBJECT, 43)->once()
             ->andReturn($continuationDetail);
 
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->once()->andReturnUsing(
-            function (ContinuationDetail $saveContinuationDetail) use ($data) {
+            function (ContinuationDetailEntity $saveContinuationDetail) use ($data) {
                 $this->assertSame($this->refData[$data['status']], $saveContinuationDetail->getStatus());
                 $this->assertSame($data['received'], $saveContinuationDetail->getReceived());
                 $this->assertSame($data['totAuthVehicles'], $saveContinuationDetail->getTotAuthVehicles());
+                $this->assertSame($data['totAuthSmallVehicles'], $saveContinuationDetail->getTotAuthSmallVehicles());
+                $this->assertSame($data['totAuthMediumVehicles'], $saveContinuationDetail->getTotAuthMediumVehicles());
+                $this->assertSame($data['totAuthLargeVehicles'], $saveContinuationDetail->getTotAuthLargeVehicles());
                 $this->assertSame($data['totPsvDiscs'], $saveContinuationDetail->getTotPsvDiscs());
                 $this->assertSame($data['totCommunityLicences'], $saveContinuationDetail->getTotCommunityLicences());
             }
