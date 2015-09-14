@@ -48,11 +48,8 @@ final class CreateFinancialStandingRate extends AbstractCommandHandler
             ->setGoodsOrPsv($this->getRepo()->getRefdataReference($command->getGoodsOrPsv()))
             ->setLicenceType($this->getRepo()->getRefdataReference($command->getLicenceType()))
             ->setFirstVehicleRate($command->getFirstVehicleRate())
-            ->setAdditionalVehicleRate($command->getAdditionalVehicleRate());
-
-        if ($command->getEffectiveFrom() !== null) {
-            $rate->setEffectiveFrom(new \DateTime($command->getEffectiveFrom()));
-        }
+            ->setAdditionalVehicleRate($command->getAdditionalVehicleRate())
+            ->setEffectiveFrom(new \DateTime($command->getEffectiveFrom()));
 
         return $rate;
     }
