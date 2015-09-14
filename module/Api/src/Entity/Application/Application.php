@@ -1371,7 +1371,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             && $this->getStatus()->getId() === self::APPLICATION_STATUS_UNDER_CONSIDERATION;
     }
 
-    /**
+    /*
      * Get the Shortcode version of a licence type
      *
      * @return string|null if licence type is not set or shortcode does not exist
@@ -1395,5 +1395,36 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     public function getContextValue()
     {
         return $this->getLicence()->getLicNo();
+    }
+
+    /**
+     * Get a list of open tasks attached to the application, optionally filtered by category, sub category
+     *
+     * @param int $categoryId    Category ID
+     * @param int $subCategoryId Sub category ID, null means all
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOpenTasksForCategory($categoryId, $subCategoryId = null)
+    {
+        // use Criteria to retrieve open tasks
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('isClosed', 'N'));
+        $openTasks = $this->getTasks()->matching($criteria);
+
+        $tasks = new \Doctrine\Common\Collections\ArrayCollection();
+
+        // iterate to get tasks of category, subcategory
+        // NB reason to iterate is crtieria should only be used with scalar values
+        foreach ($openTasks as $task) {
+            if ($task->getCategory()->getId() !== $categoryId) {
+                continue;
+            }
+            if ($subCategoryId !== null && $task->getSubCategory()->getId() !== $subCategoryId) {
+                continue;
+            }
+            $tasks->add($task);
+        }
+
+        return $tasks;
     }
 }
