@@ -58,5 +58,4 @@ class PublicationPoliceDataEntityTest extends EntityTester
             [new \DateTime()]
         ];
     }
-
 }
