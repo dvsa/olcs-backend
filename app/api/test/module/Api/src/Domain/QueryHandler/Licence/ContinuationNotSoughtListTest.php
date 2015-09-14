@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Licence\ContinuationNotSoughtList as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as Repo;
-use Dvsa\Olcs\Transfer\Query\Licence\ContinuationNotSoughtList as Query;
+use Dvsa\Olcs\Api\Domain\Query\Licence\ContinuationNotSoughtList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 
 /**
