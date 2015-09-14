@@ -8,23 +8,27 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
+use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+use Dvsa\Olcs\Api\Domain\TranslatorAwareInterface;
+use Dvsa\Olcs\Api\Domain\TranslatorAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
-
+use Dvsa\Olcs\Email\Data\Message as EmailMessage;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Send Continuation Not Sought Email
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class SendContinuationNotSought extends AbstractCommandHandler implements EmailAwareInterface
+final class SendContinuationNotSought extends AbstractCommandHandler implements
+    EmailAwareInterface,
+    TranslatorAwareInterface
 {
-    use \Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+    use EmailAwareTrait, TranslatorAwareTrait;
 
-    protected $repoServiceName = 'TransportManagerApplication';
-    protected $extraRepos = ['SystemParameter'];
+    protected $repoServiceName = 'SystemParameter';
 
     const DATE_FORMAT = 'd/m/Y';
     /**
@@ -33,13 +37,13 @@ final class SendContinuationNotSought extends AbstractCommandHandler implements 
      */
     public function handleCommand(CommandInterface $command)
     {
-        /* @var $tma \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication */
-        $licences = $command->getLicences()
+        /* @var $licences array \Dvsa\Olcs\Api\Entity\Licence\Licence */
+        $licences = $command->getLicences();
 
+        /* @var $endDate \DateTime */
         $endDate = $command->getDate();
-        $time = strtotime($endDate);
-        $startDate = clone $endData;
-        $startDate->sub(new \DateInterval('P1M')
+        $startDate = clone $endDate;
+        $startDate->sub(new \DateInterval('P1M')); // -1 month
 
         $to = $this->getRepo('SystemParameter')->fetchValue(SystemParameter::CNS_EMAIL_LIST);
 
@@ -48,12 +52,16 @@ final class SendContinuationNotSought extends AbstractCommandHandler implements 
             [$startDate->format(self::DATE_FORMAT), $endDate->format(self::DATE_FORMAT)]
         );
 
-        $message = new \Dvsa\Olcs\Email\Data\Message($to, $subject);
+        $message = new EmailMessage($to, $subject);
 
         $this->sendEmailTemplate(
             $message,
             'continuation-not-sought',
-            compact('startDate', 'endDate', 'licences')
+            [
+               'startDate' => $startDate->format(self::DATE_FORMAT),
+               'endDate' => $endDate->format(self::DATE_FORMAT),
+               'licences' => $licences,
+            ]
         );
 
         $result = new Result();
