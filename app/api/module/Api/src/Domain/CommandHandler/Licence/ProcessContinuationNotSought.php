@@ -34,8 +34,7 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler
         /** @var Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        $discsCommandClass = ($licence->isGoods() ? CeaseGoodsDiscs::class : CeasePsvDiscs::class);
-        $discsCommand = $discsCommandClass::create(['licence' => $licence]);
+        $discsCommand = $this->createDiscsCommand($licence);
 
         $result->merge(
             $this->handleSideEffects(
@@ -43,7 +42,7 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler
                     // Remove any vehicles
                     RemoveLicenceVehicle::create(['licenceVehicles' => $licence->getLicenceVehicles()]),
                     // Unlink any Transport Managers
-                    DeleteTransportManagerLicence::create(['licence' => $licence ]),
+                    DeleteTransportManagerLicence::create(['licence' => $licence->getId()]),
                     // Expire community licences that are of status 'Pending', 'Active' or 'Suspended'
                     ExpireComLics::create(['id' => $licence->getId()]),
                     // Void any discs associated to vehicles linked to the licence
@@ -58,5 +57,24 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler
         $result->addMessage('Licence updated');
 
         return $result;
+    }
+
+    private function createDiscsCommand($licence)
+    {
+        if ($licence->isGoods()) {
+            $commandClass = CeaseGoodsDiscs::class;
+            $dtoData = [
+                'licenceVehicles' => $licence->getLicenceVehicles(),
+            ];
+        } else {
+            $commandClass = CeasePsvDiscs::class;
+            $dtoData = [
+                'discs' => $licence->getPsvDiscs(),
+            ];
+        }
+
+        $discsCommand = $commandClass::create($dtoData);
+
+        return $discsCommand;
     }
 }
