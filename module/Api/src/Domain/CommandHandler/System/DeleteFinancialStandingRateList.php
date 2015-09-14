@@ -20,12 +20,12 @@ final class DeleteFinancialStandingRateList extends AbstractCommandHandler imple
     {
         $result = new Result();
 
-        foreach ($command->getIds() as $rateId) {
-            /* @var $rate \Dvsa\Olcs\Api\Entity\System\FinancialStandingRate */
-            $rate = $this->getRepo()->fetchById($rateId);
-            $this->getRepo()->delete($rate);
+        $rates = $this->getRepo()->fetchByIds($command->getIds());
 
-            $result->addMessage("Financial Standing Rate ID {$rateId} deleted");
+        /* @var $rate \Dvsa\Olcs\Api\Entity\System\FinancialStandingRate */
+        foreach ($rates as $rate) {
+            $this->getRepo()->delete($rate);
+            $result->addMessage("Financial Standing Rate ID {$rate->getId()} deleted");
         }
 
         return $result;

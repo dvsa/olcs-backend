@@ -31,18 +31,20 @@ class DeleteFinancialStandingRateListTest extends CommandHandlerTestCase
         ];
         $command = Command::create($data);
 
-        $mockRate1 = m::mock(Entity::class);
-        $mockRate2 = m::mock(Entity::class);
+        $mockRate1 = m::mock(Entity::class)
+            ->shouldReceive('getId')
+            ->andReturn(69)
+            ->getMock();
+
+        $mockRate2 = m::mock(Entity::class)
+            ->shouldReceive('getId')
+            ->andReturn(99)
+            ->getMock();
 
         $this->repoMap['FinancialStandingRate']
-            ->shouldReceive('fetchById')
-            ->with(69)
+            ->shouldReceive('fetchByIds')
             ->once()
-            ->andReturn($mockRate1)
-            ->shouldReceive('fetchById')
-            ->with(99)
-            ->once()
-            ->andReturn($mockRate2)
+            ->andReturn([$mockRate1, $mockRate2])
             ->shouldReceive('delete')
             ->with($mockRate1)
             ->once()
