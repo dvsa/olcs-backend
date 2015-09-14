@@ -19,4 +19,10 @@ interface TranslatorAwareInterface
      * @return TranslatorInterface
      */
     public function getTranslator();
+
+    /**
+     * @param string $message
+     * @return string
+     */
+    public function translate($message);
 }
