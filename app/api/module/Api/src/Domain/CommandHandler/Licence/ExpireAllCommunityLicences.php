@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class ReturnAllCommunityLicences extends UpdateAllCommunityLicences
+final class ExpireAllCommunityLicences extends UpdateAllCommunityLicences
 {
     protected $status = CommunityLic::STATUS_EXPIRED;
 }

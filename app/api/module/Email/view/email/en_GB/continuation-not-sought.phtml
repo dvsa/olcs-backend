@@ -6,8 +6,8 @@
 <table>
   <?php foreach ($this->licences as $licence): ?>
     <tr>
-      <td width="125"><?php echo $licence->getLicNo() ?></td>
-      <td><?php echo $licence->getTrafficArea()->getName() ?></td>
+      <td width="125"><?php echo $licence['licNo'] ?></td>
+      <td><?php echo $licence['trafficArea']['name'] ?></td>
     </tr>
   <?php endforeach; ?>
 </table>

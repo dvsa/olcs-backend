@@ -57,8 +57,6 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler
         $this->getRepo()->save($licence);
         $result->addMessage('Licence updated');
 
-        // @TODO email sending
-
         return $result;
     }
 }

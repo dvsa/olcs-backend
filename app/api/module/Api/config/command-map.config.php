@@ -614,6 +614,7 @@ return [
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
     Command\Email\CreateCorrespondenceRecord::class => CommandHandler\Email\CreateCorrespondenceRecord::class,
+    Command\Email\SendContinuationNotSought::class => CommandHandler\Email\SendContinuationNotSought::class,
 
     // Person
     TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,
