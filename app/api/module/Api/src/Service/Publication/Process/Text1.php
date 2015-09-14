@@ -97,7 +97,7 @@ class Text1 implements ProcessInterface
         $licence = "\n" . sprintf(
             '%s %s '. "\n" . '%s',
             $licence->getLicNo(),
-            $licence->getLicenceType()->getOlbsKey(),
+            $licence->getLicenceTypeShortCode(),
             $organisation->getName()
         );
 
