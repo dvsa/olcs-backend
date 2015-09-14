@@ -912,7 +912,9 @@ INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `crea
     (3,NULL,NULL,NULL,NULL,1,77,1),
     (4,NULL,NULL,NULL,NULL,1,78,1),
     (5,NULL,NULL,NULL,NULL,1,78,100),
-    (6,NULL,NULL,NULL,NULL,1,77,100);
+    (6,NULL,NULL,NULL,NULL,1,77,100),
+    (7,NULL,NULL,NULL,NULL,1,11,75),
+    (8,NULL,NULL,NULL,NULL,1,32,75);
 
 INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `birth_place`, `title`, `birth_date`, `forename`,
 `family_name`, `other_name`, `created_on`, `last_modified_on`, `version`, `deleted_date`) VALUES
