@@ -59,6 +59,7 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
 
         $command = $discsCommand::create(
             [
+                // ???
                 'licence' => $licence
             ]
         );
