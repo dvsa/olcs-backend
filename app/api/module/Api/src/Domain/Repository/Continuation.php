@@ -49,5 +49,4 @@ class Continuation extends AbstractRepository
 
         return $qb->getQuery()->getResult();
     }
-
 }
