@@ -200,8 +200,8 @@ class IrfoGvPermit extends AbstractIrfoGvPermit
         }
 
         foreach ($fees as $fee) {
-            if (!in_array($fee->getFeeStatus()->getId(), [FeeEntity::STATUS_PAID, FeeEntity::STATUS_WAIVED])) {
-                // all fees must be either paid or waived
+            if ($fee->getFeeStatus()->getId() !== FeeEntity::STATUS_PAID) {
+                // all fees must be paid
                 return false;
             }
         }
