@@ -4903,7 +4903,7 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
 
     (5, 34), -- operator-admin = selfserve-nav-manage-users
     (9, 34), -- partner-admin = selfserve-nav-manage-users
-    (26, 34); -- la-admin = selfserve-nav-manage-users
+    (11, 34); -- la-admin = selfserve-nav-manage-users
 
 INSERT INTO `financial_standing_rate` (
     `id`,
