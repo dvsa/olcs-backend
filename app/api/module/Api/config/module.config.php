@@ -208,6 +208,7 @@ return [
             'S4' => RepositoryFactory::class,
             'TaskSearchView' => RepositoryFactory::class,
             'PrivateHireLicence' => RepositoryFactory::class,
+            'Continuation' => RepositoryFactory::class,
             'ContinuationDetail' => RepositoryFactory::class,
             'CompaniesHouseAlert' => RepositoryFactory::class,
             'CompaniesHouseCompany' => RepositoryFactory::class,

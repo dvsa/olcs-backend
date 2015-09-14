@@ -68,6 +68,8 @@ return [
             'que_typ_ch_initial' => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\InitialDataLoad::class,
             'que_typ_ch_compare' => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\Compare::class,
             'que_typ_cont_checklist' => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklist::class,
+            'que_typ_cont_check_rem_gen_let' =>
+                Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklistReminderGenerateLetter::class,
         ],
         'factories' => [
             'que_typ_cpid_export_csv'
