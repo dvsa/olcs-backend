@@ -38,7 +38,7 @@ final class ConditionUndertaking extends AbstractContext implements AddressForma
         /** @var ArrayCollection $conditionUndertakings */
         $conditionUndertakings = $publication->getApplication()->getConditionUndertakings();
 
-        if ($conditionUndertakings->count()) {
+        if (!$conditionUndertakings->isEmpty()) {
             $addressFormatter = $this->getAddressFormatter();
 
             /** @var ConditionUndertakingEntity $conditionUndertaking */
