@@ -126,18 +126,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             $translator = $mainServiceLocator->get('translator');
             $this->setTranslator($translator);
         }
-
-        $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
-
-        if ($this->repoServiceName !== null) {
-            $this->extraRepos[] = $this->repoServiceName;
-        }
-
-        $this->commandHandler = $serviceLocator;
-
-        if ($this instanceof TransactionedInterface) {
-            return new TransactioningCommandHandler($this, $mainServiceLocator->get('TransactionManager'));
-        }
     }
 
     /**

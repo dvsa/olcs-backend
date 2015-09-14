@@ -10,6 +10,11 @@ namespace Dvsa\Olcs\Api\Domain\Query\Licence;
 use Dvsa\Olcs\Transfer\Util\Annotation as Transfer;
 use Dvsa\Olcs\Transfer\Query\AbstractQuery;
 
+/**
+ * Continuation Not Sought List
+ *
+ * @author Dan Eggleston <dan@stolenegg.com>
+ */
 class ContinuationNotSoughtList extends AbstractQuery
 {
     /**
