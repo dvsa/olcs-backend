@@ -362,8 +362,9 @@ class LicenceTest extends RepositoryTestCase
         $this->mockCreateQueryBuilder($qb);
 
         $qb->shouldReceive('getQuery')->andReturn(
-            m::mock()->shouldReceive('execute')
+            m::mock()
                 ->shouldReceive('getResult')
+                ->once()
                 ->andReturn(['RESULTS'])
                 ->getMock()
         );
