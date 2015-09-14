@@ -16,7 +16,10 @@ class ContinuationNotSoughtList extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        $results = $this->resultList($this->getRepo()->fetchForContinuationNotSought($query->getDate()));
+        $results = $this->resultList(
+            $this->getRepo()->fetchForContinuationNotSought($query->getDate()),
+            ['trafficArea']
+        );
 
         return [
             'result' => $results,

@@ -70,7 +70,7 @@ class BatchController extends AbstractConsoleController
     public function continuationNotSoughtAction()
     {
         $dryRun = $this->getRequest()->getParam('dryrun') || $this->getRequest()->getParam('d');
-        $date = new DateTime('2016-02-01'); // this could come from a param if needed
+        $date = new DateTime(); // this could come from a CLI param if needed
 
         // we use a separate query and command so we can do more granular output..
 
@@ -78,20 +78,27 @@ class BatchController extends AbstractConsoleController
         $dto = Query\Licence\ContinuationNotSoughtList::create(['date' => $date]);
         $result = $this->handleQuery($dto);
         $this->writeVerboseMessages("{$result['count']} Licence(s) found to change to CNS");
+        $licences = $result['result'];
 
         // build array of commands (once per licence)
         $commands = [];
-        foreach ($result['result'] as $licenceData) {
-            $this->writeVerboseMessages("Processing Licence ID {$licenceData['id']}");
+        foreach ($licences as $licence) {
+            $this->writeVerboseMessages("Processing Licence ID {$licence['id']}");
             $commands[] = Command\Licence\ProcessContinuationNotSought::create(
                 [
-                    'id' => $licenceData['id'],
-                    'version' => $licenceData['version'],
+                    'id' => $licence['id'],
+                    'version' => $licence['version'],
                 ]
             );
         }
 
-        // $commands[] =             // Email\continuationNotSoughtAction
+        // add a command to send email summary
+        $commands[] = Command\Email\SendContinuationNotSought::create(
+            [
+                'date' => $date,
+                'licences' => $licences,
+            ]
+        );
 
         // execute commands
         if (!$dryRun) {

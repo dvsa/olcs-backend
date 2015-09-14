@@ -196,7 +196,8 @@ class Licence extends AbstractRepository
             ->withRefdata()
             ->with('licenceVehicles', 'lv')
             ->with('lv.goodsDiscs', 'gd')
-            ->with('psvDiscs', 'pd');
+            ->with('psvDiscs', 'pd')
+            ->with('trafficArea', 'ta');
 
         $qb
             // the continuation date is in the past;

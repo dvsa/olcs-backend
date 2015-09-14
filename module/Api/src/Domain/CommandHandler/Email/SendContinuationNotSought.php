@@ -47,12 +47,14 @@ final class SendContinuationNotSought extends AbstractCommandHandler implements
 
         $to = $this->getRepo('SystemParameter')->fetchValue(SystemParameter::CNS_EMAIL_LIST);
 
-        $subject = vsprintf(
-            $this->translate('email.cns.subject'),
-            [$startDate->format(self::DATE_FORMAT), $endDate->format(self::DATE_FORMAT)]
-        );
-
+        $subject = $this->translate('email.cns.subject');
         $message = new EmailMessage($to, $subject);
+        $message->setSubjectVariables(
+            [
+                $startDate->format(self::DATE_FORMAT),
+                $endDate->format(self::DATE_FORMAT),
+            ]
+        );
 
         $this->sendEmailTemplate(
             $message,
