@@ -116,6 +116,8 @@ return [
     TransferQuery\Cases\CasesWithOppositionDates::class => QueryHandler\Cases\CasesWithOppositionDates::class,
     TransferQuery\Cases\CasesWithLicence::class => QueryHandler\Cases\CasesWithLicence::class,
     TransferQuery\Cases\Pi::class => QueryHandler\Cases\Pi::class,
+    TransferQuery\Cases\Pi\Hearing::class => QueryHandler\Cases\Pi\Hearing::class,
+    TransferQuery\Cases\Pi\HearingList::class => QueryHandler\Cases\Pi\HearingList::class,
     TransferQuery\Cases\AnnualTestHistory::class => QueryHandler\Cases\AnnualTestHistory::class,
     TransferQuery\Cases\LegacyOffence::class => QueryHandler\Cases\LegacyOffence::class,
     TransferQuery\Cases\LegacyOffenceList::class => QueryHandler\Cases\LegacyOffenceList::class,
@@ -183,11 +185,11 @@ return [
     TransferQuery\Bus\BusRegDecision::class => QueryHandler\Bus\BusRegDecision::class,
     TransferQuery\Bus\ShortNoticeByBusReg::class => QueryHandler\Bus\ShortNoticeByBusReg::class,
     TransferQuery\Bus\RegistrationHistoryList::class => QueryHandler\Bus\RegistrationHistoryList::class,
-    TransferQuery\Bus\ByRouteNo::class => QueryHandler\Bus\ByRouteNo::class,
+    TransferQuery\Bus\ByLicenceRoute::class => QueryHandler\Bus\ByLicenceRoute::class,
 
     // Trailer
-    TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
-    TransferQuery\Trailer\Trailers::class => QueryHandler\Trailer\Trailers::class,
+    TransferQuery\Licence\Trailers::class => QueryHandler\Licence\Trailers::class,
+    TransferQuery\Trailer\Trailer::class => QueryHandler\Trailer\Trailer::class,
 
     // Grace Periods
     TransferQuery\GracePeriod\GracePeriod::class => QueryHandler\GracePeriod\GracePeriod::class,
@@ -221,9 +223,9 @@ return [
     TransferQuery\Correspondence\Correspondence::class => QueryHandler\Correspondence\Correspondence::class,
     TransferQuery\Correspondence\Correspondences::class => QueryHandler\Correspondence\Correspondences::class,
 
-    // Payment
-    TransferQuery\Payment\Payment::class => QueryHandler\Payment\Payment::class,
-    TransferQuery\Payment\PaymentByReference::class => QueryHandler\Payment\PaymentByReference::class,
+    // Transaction (formerly 'Payment')
+    TransferQuery\Transaction\Transaction::class => QueryHandler\Transaction\Transaction::class,
+    TransferQuery\Transaction\TransactionByReference::class => QueryHandler\Transaction\TransactionByReference::class,
 
     // CommunityLic
     TransferQuery\CommunityLic\CommunityLic::class => QueryHandler\CommunityLic\CommunityLic::class,
@@ -356,4 +358,10 @@ return [
 
     // Person
     TransferQuery\Person\Person::class => QueryHandler\Person\Person::class,
+
+    // Continuation Detail
+    TransferQuery\ContinuationDetail\ChecklistReminders::class =>
+        QueryHandler\ContinuationDetail\ChecklistReminders::class,
+    TransferQuery\ContinuationDetail\GetList::class =>
+        QueryHandler\ContinuationDetail\GetList::class,
 ];

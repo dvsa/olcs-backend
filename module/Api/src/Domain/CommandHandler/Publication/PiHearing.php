@@ -89,14 +89,25 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
         $trafficAreas = $command->getTrafficAreas();
         $pubTypes = $command->getPubType();
 
+        $allTrafficAreas = $this->getRepo('TrafficArea')->fetchAll();
+        $allPubTypes = ['A&D', 'N&P'];
+
+        //default Northern Ireland N&P to already published (as it doesn't exist)
+        $publishedAreas = [
+            TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE => [
+                'N&P' => true
+            ]
+        ];
+
         if (in_array('all', $trafficAreas)) {
-            $trafficAreas = $this->getRepo('TrafficArea')->fetchAll();
+            $trafficAreas = $allTrafficAreas;
         }
 
         if (in_array('All', $pubTypes)) {
-            $pubTypes = ['A&D', 'N&P'];
+            $pubTypes = $allPubTypes;
         }
 
+        //process the traffic areas where we're adding or amending the publication
         foreach ($trafficAreas as $ta) {
             foreach ($pubTypes as $pubType) {
                 if ($ta instanceof TrafficAreaEntity) {
@@ -105,11 +116,14 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
                     $trafficArea = $this->getRepo()->getReference(TrafficAreaEntity::class, $ta);
                 }
 
-                //no N&P for Northern Ireland
+                //no N&P for Northern Ireland, this is already defaulted to published, no need to record it twice below
                 if ($trafficArea->getId() === TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
                     && $pubType == 'N&P') {
                     continue;
                 }
+
+                //record that we've dealt with this traffic area and pub type combination
+                $publishedAreas[$trafficArea->getId()][$pubType] = true;
 
                 /**
                  * @var UnpublishedPiQry $unpublishedQuery
@@ -139,6 +153,25 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
                         $this->extractHearingData($hearing)
                     )
                 );
+            }
+        }
+
+        //if we haven't published to a traffic area, check whether there's an existing publication we need to delete
+        foreach ($allTrafficAreas as $trafficArea) {
+            foreach ($allPubTypes as $pubType) {
+                if (isset($publishedAreas[$trafficArea->getId()][$pubType])) {
+                    continue;
+                }
+
+                //check for a previous publication
+                $publication = $this->getPublication($trafficArea->getId(), $pubType);
+                $unpublishedQuery = $this->getUnpublishedPiQuery($publication->getId(), $pi->getId(), $pubSection);
+                $publicationLink = $this->getPublicationLink($unpublishedQuery);
+
+                //if previous publication is found, remove it
+                if ($publicationLink->getId() !== null) {
+                    $this->getRepo()->delete($publicationLink);
+                }
             }
         }
 
@@ -197,7 +230,7 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
      * @param int $pubSection
      * @return UnpublishedPiQry
      */
-    public function getUnpublishedPiQuery($publication, $pi, $pubSection)
+    private function getUnpublishedPiQuery($publication, $pi, $pubSection)
     {
         $data =  [
             'publication' => $publication,
@@ -212,12 +245,20 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
      * @param PiHearingEntity $hearing
      * @return array
      */
-    public function extractHearingData($hearing)
+    private function extractHearingData($hearing)
     {
+        $piVenue = $hearing->getPiVenue();
+        $hearingDate = $hearing->getHearingDate();
+
+        //sometimes we have a datetime, and sometimes a string
+        if ($hearingDate instanceof \DateTime) {
+            $hearingDate = $hearingDate->format('Y-m-d H:i:s');
+        }
+
         return [
-            'piVenue' => $hearing->getPiVenue()->getId(),
+            'piVenue' => ($piVenue === null ? $piVenue : $piVenue->getId()),
             'piVenueOther' => $hearing->getPiVenueOther(),
-            'hearingDate' => $hearing->getHearingDate(),
+            'hearingDate' => $hearingDate,
             'id' => $hearing->getId()
         ];
     }

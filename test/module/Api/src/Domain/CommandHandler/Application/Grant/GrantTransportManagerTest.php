@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\Command\Licence\TmNominatedTask;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\GrantTransportManager;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -181,6 +182,7 @@ class GrantTransportManagerTest extends CommandHandlerTestCase
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
+        $licence->setId(222);
         $licence->shouldReceive('getTmLicences->matching')
             ->with(m::type(Criteria::class))
             ->andReturn($matchingTms);
@@ -201,6 +203,7 @@ class GrantTransportManagerTest extends CommandHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
         $application->setTransportManagers($tmas);
+        $application->setIsVariation(true);
 
         $licence->shouldReceive('isRestricted')
             ->andReturn(false);
@@ -212,11 +215,19 @@ class GrantTransportManagerTest extends CommandHandlerTestCase
         $this->repoMap['TransportManagerLicence']->shouldReceive('delete')
             ->with($ltm);
 
+        $result1 = new Result();
+        $result1->addMessage('TmNominatedTask');
+        $data = [
+            'ids' => [222]
+        ];
+        $this->expectedSideEffect(TmNominatedTask::class, $data, $result1);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
+                'TmNominatedTask',
                 'Transport managers copied to licence'
             ]
         ];

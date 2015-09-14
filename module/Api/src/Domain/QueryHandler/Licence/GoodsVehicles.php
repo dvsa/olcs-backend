@@ -40,7 +40,9 @@ class GoodsVehicles extends AbstractQueryHandler implements AuthAwareInterface
 
         return $this->result(
             $licence,
-            [],
+            [
+                'organisation'
+            ],
             [
                 'canReprint' => true,
                 'canTransfer' => $this->canTransfer($licence),

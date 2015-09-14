@@ -84,9 +84,9 @@ class Fee extends AbstractRepository
             ->withRefdata()
             ->with('licence')
             ->with('application')
-            ->with('feePayments', 'fp')
-            ->with('fp.payment', 'p')
-            ->with('p.status')
+            ->with('feeTransactions', 'ft')
+            ->with('ft.transaction', 't')
+            ->with('t.status')
             ->order('invoicedDate', 'ASC');
 
         $this->whereOutstandingFee($doctrineQb);
@@ -177,9 +177,9 @@ class Fee extends AbstractRepository
             ->withRefdata()
             ->with('licence')
             ->with('application')
-            ->with('feePayments', 'fp')
-            ->with('fp.payment', 'p')
-            ->with('p.status')
+            ->with('feeTransactions', 'ft')
+            ->with('ft.transaction', 't')
+            ->with('t.status')
             ->order('invoicedDate', 'ASC');
 
         $this->whereOutstandingFee($doctrineQb);
@@ -187,6 +187,29 @@ class Fee extends AbstractRepository
         $doctrineQb
             ->andWhere($doctrineQb->expr()->in($this->alias . '.id', ':feeIds'))
             ->setParameter('feeIds', $ids);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch fees by irfoGvPermitId
+     *
+     * @param int $irfoGvPermitId
+     *
+     * @return array
+     */
+    public function fetchFeesByIrfoGvPermitId($irfoGvPermitId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($doctrineQb)
+            ->withRefdata()
+            ->order('invoicedDate', 'ASC');
+
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.irfoGvPermit', ':irfoGvPermitId'))
+            ->setParameter('irfoGvPermitId', $irfoGvPermitId);
 
         return $doctrineQb->getQuery()->getResult();
     }
@@ -244,15 +267,9 @@ class Fee extends AbstractRepository
      */
     private function whereOutstandingFee($doctrineQb)
     {
-        $doctrineQb->andWhere($doctrineQb->expr()->in('f.feeStatus', ':feeStatus'));
+        $doctrineQb->andWhere($doctrineQb->expr()->eq('f.feeStatus', ':feeStatus'));
 
-        $doctrineQb->setParameter(
-            'feeStatus',
-            [
-                $this->getRefdataReference(Entity::STATUS_OUTSTANDING),
-                $this->getRefdataReference(Entity::STATUS_WAIVE_RECOMMENDED),
-            ]
-        );
+        $doctrineQb->setParameter('feeStatus', $this->getRefdataReference(Entity::STATUS_OUTSTANDING));
     }
 
     /**
@@ -374,7 +391,6 @@ class Fee extends AbstractRepository
             case 'historical':
                 $feeStatus = [
                     Entity::STATUS_PAID,
-                    Entity::STATUS_WAIVED,
                     Entity::STATUS_CANCELLED,
                 ];
                 break;
@@ -385,7 +401,6 @@ class Fee extends AbstractRepository
             default:
                 $feeStatus = [
                     Entity::STATUS_OUTSTANDING,
-                    Entity::STATUS_WAIVE_RECOMMENDED,
                 ];
                 break;
         }

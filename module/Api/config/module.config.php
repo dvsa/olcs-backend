@@ -14,8 +14,6 @@ return [
         'alias' => [
             'PublicationContextPlugin' => \Dvsa\Olcs\Api\Service\Publication\Context\PluginManager::class,
             'PublicationProcessPlugin' => \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class,
-            'SubmissionContextPlugin' => \Dvsa\Olcs\Api\Service\Submission\Context\PluginManager::class,
-            'SubmissionProcessPlugin' => \Dvsa\Olcs\Api\Service\Submission\Process\PluginManager::class
         ],
         'invokables' => [
             'Document' => \Dvsa\Olcs\Api\Service\Document\Document::class,
@@ -45,7 +43,7 @@ return [
             Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class,
             'TransactionManager' => \Dvsa\Olcs\Api\Domain\Repository\TransactionManagerFactory::class,
             'CpmsIdentityProvider' => \Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
-            'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperService::class,
+            'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperServiceFactory::class,
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
             'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
 
@@ -62,8 +60,7 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\SubmissionGeneratorFactory::class,
 
             \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager::class =>
-                \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManagerFactory::class,
-
+                \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManagerFactory::class
         ],
     ],
     'file_uploader' => [
@@ -162,7 +159,7 @@ return [
             'Submission ' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
             'IrfoPartner' => RepositoryFactory::class,
-            'Payment' => RepositoryFactory::class,
+            'Transaction' => RepositoryFactory::class,
             'TransportManager' => RepositoryFactory::class,
             'DocParagraph' => RepositoryFactory::class,
             'Opposition' => RepositoryFactory::class,
@@ -211,6 +208,7 @@ return [
             'S4' => RepositoryFactory::class,
             'TaskSearchView' => RepositoryFactory::class,
             'PrivateHireLicence' => RepositoryFactory::class,
+            'Continuation' => RepositoryFactory::class,
             'ContinuationDetail' => RepositoryFactory::class,
             'CompaniesHouseAlert' => RepositoryFactory::class,
             'CompaniesHouseCompany' => RepositoryFactory::class,

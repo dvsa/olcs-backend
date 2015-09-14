@@ -40,7 +40,6 @@ class DeleteTest extends CommandHandlerTestCase
 
         $data = [
             'id' => $id,
-            'version' => 2
         ];
 
         $command = DeleteCommand::create($data);
@@ -53,7 +52,7 @@ class DeleteTest extends CommandHandlerTestCase
         $note = null;
 
         $this->repoMap['Note']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
+            ->with($command)
             ->andReturn($noteEntity)
             ->shouldReceive('delete')
             ->with(m::type(NoteEntity::class))

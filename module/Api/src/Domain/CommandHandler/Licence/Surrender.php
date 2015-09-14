@@ -7,13 +7,15 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\DeleteApplication;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences as ReturnComLics;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Transfer\Command\Application\RefuseApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
@@ -87,6 +89,29 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
                     )
                 )
             );
+        }
+
+        foreach ($licence->getApplications() as $application) {
+            if ($application->getIsVariation()) {
+                switch ($application->getStatus()->getId()) {
+                    case Application::APPLICATION_STATUS_NOT_SUBMITTED:
+                        $result->merge(
+                            $this->handleSideEffect(
+                                DeleteApplication::create(['id' => $application->getId()])
+                            )
+                        );
+                        break;
+                    case Application::APPLICATION_STATUS_UNDER_CONSIDERATION:
+                        $result->merge(
+                            $this->handleSideEffect(
+                                RefuseApplication::create(['id' => $application->getId()])
+                            )
+                        );
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         $this->getRepo()->save($licence);

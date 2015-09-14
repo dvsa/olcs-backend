@@ -25,6 +25,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\UpdateSafety as LicenceUpdateSafety;
 final class UpdateSafety extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
+    protected $extraRepos = ['Licence'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -52,13 +53,7 @@ final class UpdateSafety extends AbstractCommandHandler implements Transactioned
 
         $result->addMessage('Application updated');
 
-        $licenceData = $command->getLicence();
-
-        if ((int)$application->getTotAuthTrailers() < 1) {
-            $licenceData['safetyInsTrailers'] = 0;
-        }
-
-        $result->merge($this->handleSideEffect(LicenceUpdateSafety::create($licenceData)));
+        $this->updateLicenceSafetyDetails($application, $command->getLicence());
 
         $data = [
             'id' => $command->getId(),
@@ -71,5 +66,31 @@ final class UpdateSafety extends AbstractCommandHandler implements Transactioned
         $result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($data)));
 
         return $result;
+    }
+
+    /**
+     * Update safety details on the licence
+     *
+     * @param Application $application
+     * @param array       $data        Data to update the licence with
+     */
+    protected function updateLicenceSafetyDetails(Application $application, array $data)
+    {
+        $licence = $application->getLicence();
+
+        $tachoIns = $data['tachographIns'];
+        if (!empty($tachoIns)) {
+            $tachoIns = $this->getRepo()->getRefdataReference($data['tachographIns']);
+        }
+
+        $licence->updateSafetyDetails(
+            (int) $data['safetyInsVehicles'],
+            ((int) $application->getTotAuthTrailers() < 1) ? 0 : (int) $data['safetyInsTrailers'],
+            $tachoIns,
+            $data['tachographInsName'],
+            $data['safetyInsVaries']
+        );
+
+        $this->getRepo('Licence')->save($licence);
     }
 }

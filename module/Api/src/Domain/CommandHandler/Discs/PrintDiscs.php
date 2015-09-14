@@ -16,6 +16,9 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\PrintSchedulerInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocumentSpecificCmd;
 
 /**
  * Print Discs
@@ -68,6 +71,17 @@ final class PrintDiscs extends AbstractCommandHandler implements
         );
 
         $storedFile = $documentGenerator->uploadGeneratedContent($document, 'documents', $filename);
+        $data = [
+            'identifier' => $storedFile->getIdentifier(),
+            'description' => 'Vehicle discs',
+            'filename' => $filename,
+            'category' => CategoryEntity::CATEGORY_LICENSING,
+            'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_DISCS,
+            'isExternal' => false,
+            'isScan' => false,
+            'size' => $storedFile->getSize()
+        ];
+        $commandResult->merge($this->handleSideEffect(CreateDocumentSpecificCmd::create($data)));
 
         $printQueue = EnqueueFileCommand::create(
             [

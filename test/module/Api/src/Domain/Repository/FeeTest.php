@@ -67,14 +67,10 @@ class FeeTest extends RepositoryTestCase
             \Dvsa\Olcs\Api\Entity\System\RefData::class,
             \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_OUTSTANDING
         )->once()->andReturn('ot');
-        $this->em->shouldReceive('getReference')->with(
-            \Dvsa\Olcs\Api\Entity\System\RefData::class,
-            \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_WAIVE_RECOMMENDED
-        )->once()->andReturn('wr');
 
-        $mockQb->shouldReceive('expr->in')->with('f.feeStatus', ':feeStatus')->once()->andReturn('expr-in');
-        $mockQb->shouldReceive('andWhere')->with('expr-in')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('feeStatus', ['ot', 'wr'])->once();
+        $mockQb->shouldReceive('expr->eq')->with('f.feeStatus', ':feeStatus')->once()->andReturn('expr-eq');
+        $mockQb->shouldReceive('andWhere')->with('expr-eq')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('feeStatus', 'ot')->once();
 
         $this->assertSame('result', $this->sut->fetchInterimFeesByApplicationId(12, true));
     }
@@ -116,6 +112,49 @@ class FeeTest extends RepositoryTestCase
         $this->assertSame(
             'result',
             $this->sut->fetchOutstandingFeesByOrganisationId($organisationId)
+        );
+    }
+
+    public function testFetchFeesByIrfoGvPermitId()
+    {
+        $irfoGvPermitId = 123;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($mockQb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->with('invoicedDate', 'ASC')
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb
+            ->shouldReceive('expr->eq');
+        $mockQb
+            ->shouldReceive('andWhere')
+            ->andReturnSelf();
+        $mockQb
+            ->shouldReceive('setParameter')
+            ->with('irfoGvPermitId', $irfoGvPermitId)
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
+
+        $this->assertSame(
+            'result',
+            $this->sut->fetchFeesByIrfoGvPermitId($irfoGvPermitId)
         );
     }
 
@@ -297,7 +336,7 @@ class FeeTest extends RepositoryTestCase
     public function testFetchLatestFeeByTypeStatusesAndApplicationId()
     {
         $feeType = 'APP';
-        $feeStatuses = ['lfs_ot', 'lfs_w'];
+        $feeStatuses = ['lfs_ot', 'lfs_cn'];
         $applicationId = 69;
 
         /** @var QueryBuilder $qb */
@@ -392,14 +431,14 @@ class FeeTest extends RepositoryTestCase
     {
         $where = m::mock();
         $mockQb
-            ->shouldReceive('expr->in')
+            ->shouldReceive('expr->eq')
             ->with('f.feeStatus', ':feeStatus')
             ->once()
             ->andReturn($where);
 
         $mockQb
             ->shouldReceive('setParameter')
-            ->with('feeStatus', m::type('array')); // refdata ['lfs_ot', 'lfs_wr']
+            ->with('feeStatus', m::any()); // refdata 'lfs_ot'
         $mockQb
             ->shouldReceive('andWhere')
             ->with($where);
@@ -459,6 +498,7 @@ class FeeTest extends RepositoryTestCase
         $this->em->shouldReceive('getReference')
             ->andReturnUsing(
                 function ($refData, $input) {
+                    unset($refData); // unused
                     return $input;
                 }
             );
@@ -472,7 +512,7 @@ class FeeTest extends RepositoryTestCase
         $this->assertEquals(
             '{QUERY}'
             // whereOutstandingFee
-            . ' AND f.feeStatus IN [[["lfs_ot","lfs_wr"]]]'
+            . ' AND f.feeStatus = [[lfs_ot]]'
             . ' INNER JOIN f.feeType ft AND f.application = [[111]] AND ft.feeType = [[GRANT]]',
             $this->query
         );
@@ -488,10 +528,6 @@ class FeeTest extends RepositoryTestCase
             \Dvsa\Olcs\Api\Entity\System\RefData::class,
             \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_OUTSTANDING
         )->once()->andReturn('ot');
-        $this->em->shouldReceive('getReference')->with(
-            \Dvsa\Olcs\Api\Entity\System\RefData::class,
-            \Dvsa\Olcs\Api\Entity\Fee\Fee::STATUS_WAIVE_RECOMMENDED
-        )->once()->andReturn('wr');
 
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
@@ -502,7 +538,7 @@ class FeeTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchOutstandingContinuationFeesByLicenceId(716));
 
         $expectedQuery = 'BLAH INNER JOIN f.feeType ft AND f.licence = [[716]] AND '
-            . 'ft.feeType = [[CONT]] AND f.feeStatus IN [[["ot","wr"]]]';
+            . 'ft.feeType = [[CONT]] AND f.feeStatus = [[ot]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 }

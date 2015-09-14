@@ -27,6 +27,7 @@ final class Pi extends AbstractQueryHandler
         'piHearings' => [
             'presidingTc' => [],
             'presidedByRole' => [],
+            'piVenue' => []
         ],
         'writtenOutcome' => [],
         'decidedByTc' => [],
@@ -47,6 +48,11 @@ final class Pi extends AbstractQueryHandler
     {
         /** @var PiEntity $result */
         $result = $this->getRepo()->fetchUsingCase($query, Query::HYDRATE_OBJECT);
+
+        if ($result === null) {
+            return [];
+        }
+
         $slaValues = [];
 
         //we need a traffic area so we can calculate slas
@@ -80,13 +86,11 @@ final class Pi extends AbstractQueryHandler
             }
         }
 
-        $pi = $this->result(
+        return $this->result(
             $result,
             $this->bundle,
             $slaValues
         );
-
-        return $pi;
     }
 
     public function createService(ServiceLocatorInterface $serviceLocator)

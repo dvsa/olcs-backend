@@ -23,15 +23,14 @@ final class ConvictionFpnOffenceHistory extends AbstractSection
         $convictions = $case->getConvictions();
 
         $data = [];
-        for ($i=0; $i<count($convictions); $i++) {
-            /** @var Conviction $entity */
-            $entity = $convictions->current();
 
+        /** @var Conviction $entity */
+        foreach ($convictions as $entity) {
             $thisRow = array();
             $thisRow['id'] = $entity->getId();
             $thisRow['version'] = $entity->getVersion();
-            $thisRow['offenceDate'] = $entity->getOffenceDate();
-            $thisRow['convictionDate'] = $entity->getConvictionDate();
+            $thisRow['offenceDate'] = $this->formatDate($entity->getOffenceDate());
+            $thisRow['convictionDate'] = $this->formatDate($entity->getConvictionDate());
             $thisRow['defendantType'] = $entity->getDefendantType()->getDescription();
             $thisRow['name'] = $this->determineName($entity);
             $thisRow['categoryText'] = $entity->getCategoryText();
@@ -42,8 +41,6 @@ final class ConvictionFpnOffenceHistory extends AbstractSection
             $thisRow['isDealtWith'] = $entity->getIsDealtWith();
 
             $data[] = $thisRow;
-
-            $convictions->next();
         }
 
         return [

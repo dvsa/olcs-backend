@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Irfo;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
@@ -106,5 +107,105 @@ class IrfoGvPermit extends AbstractIrfoGvPermit
         $this->setIrfoPermitStatus($status);
 
         return $this;
+    }
+
+    /**
+     * Withdraw
+     *
+     * @param RefData $status
+     * @return IrfoGvPermit
+     */
+    public function withdraw(RefData $status)
+    {
+        if ($status->getId() !== self::STATUS_WITHDRAWN) {
+            throw new BadRequestException('Please provide a valid status');
+        }
+
+        $this->setIrfoPermitStatus($status);
+
+        return $this;
+    }
+
+    /**
+     * Refuse
+     *
+     * @param RefData $status
+     * @return IrfoGvPermit
+     */
+    public function refuse(RefData $status)
+    {
+        if ($status->getId() !== self::STATUS_REFUSED) {
+            throw new BadRequestException('Please provide a valid status');
+        }
+
+        $this->setIrfoPermitStatus($status);
+
+        return $this;
+    }
+
+    /**
+     * Approve
+     *
+     * @param RefData $status
+     * @param array $fees
+     * @return IrfoGvPermit
+     */
+    public function approve(RefData $status, array $fees)
+    {
+        if ($status->getId() !== self::STATUS_APPROVED) {
+            throw new BadRequestException('Please provide a valid status');
+        }
+
+        if ($this->isApprovable($fees) !== true) {
+            throw new BadRequestException('The record is not approvable');
+        }
+
+        $this->irfoPermitStatus = $status;
+
+        return $this;
+    }
+
+    /**
+     * Returns whether a record is approvable
+     *
+     * @param array $fees
+     * @return bool
+     */
+    public function isApprovable($fees)
+    {
+        if ($this->irfoPermitStatus->getId() !== self::STATUS_PENDING) {
+            // only record in pending state can be approved
+            return false;
+        }
+
+        if ((false === $this->isApprovableBasedOnFees($fees))) {
+            // record with a fee which makes it non-approvable
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns whether a record has a fees which makes it approvable
+     *
+     * @param array $fees
+     * @return bool
+     */
+    private function isApprovableBasedOnFees(array $fees)
+    {
+        if (empty($fees)) {
+            // no fee makes it non-approvable
+            return false;
+        }
+
+        foreach ($fees as $fee) {
+            if ($fee->getFeeStatus()->getId() !== FeeEntity::STATUS_PAID) {
+                // all fees must be paid
+                return false;
+            }
+        }
+
+        return true;
     }
 }

@@ -4806,7 +4806,13 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (25, 'partner-user', 'PAUS'),
     (26, 'local-authority-admin', 'LAAD'),
     (27, 'local-authority-user', 'LAUS'),
-    (28, 'can-update-licence-licence-type', 'ULLT');
+    (28, 'can-update-licence-licence-type', 'ULLT'),
+    (29, 'selfserve-landing-page-bus-registration', 'SSLPB'),
+    (30, 'selfserve-search-operating-centre', 'SSLPO'),
+    (31, 'selfserve-search-person', 'SSSPN'),
+    (32, 'selfserve-search-vehicle-external', 'SSVEX'),
+    (33, 'selfserve-nav-dashboard', 'SSNVD'),
+    (34, 'selfserve-nav-manage-users', 'SSNVU');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     -- set each role to it's respective permission
@@ -4877,7 +4883,27 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (3, 28), -- internal users can update licence licence type
     (4, 28), -- internal users can update licence licence type
     (5, 28), -- selfserve users can update licence licence type
-    (6, 28); -- selfserve users can update licence licence type
+    (6, 28), -- selfserve users can update licence licence type
+
+    (8, 29), -- operator-ebsr can see the link to bus-registration on the home page in SS
+    (11, 29), -- operator-ebsr can see the link to bus-registration on the home page in SS
+    (12, 29), -- operator-ebsr can see the link to bus-registration on the home page in SS
+
+    (9, 30), -- partner-admin
+    (9, 31), -- partner-admin
+    (9, 32), -- partner-admin
+
+    (10, 30), -- partner-user
+    (10, 31), -- partner-user
+    (10, 32), -- partner-user
+
+    (5, 33), -- operator-admin = selfserve-nav-dashboard
+    (6, 33), -- operator-user = selfserve-nav-dashboard
+    (7, 33), -- operator-tm = selfserve-nav-dashboard
+
+    (5, 34), -- operator-admin = selfserve-nav-manage-users
+    (9, 34), -- partner-admin = selfserve-nav-manage-users
+    (11, 34); -- la-admin = selfserve-nav-manage-users
 
 INSERT INTO `financial_standing_rate` (
     `id`,
@@ -7936,16 +7962,17 @@ CREATE VIEW task_search_view AS
        t.sub_category_id task_sub_category_id,
        t.description,
        te.name as team_name,
-       coalesce(c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
-       coalesce(t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,
+       coalesce(concat(s.id, '/', c.id), c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
+       coalesce(submission_id, t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,
        case when t.irfo_organisation_id is not null then 'IRFO Organisation'
             when t.bus_reg_id is not null then 'Bus Registration'
             when t.application_id is not null then 'Application'
+            when t.submission_id is not null then 'Submission'
             when t.case_id is not null then 'Case'
             when t.licence_id is not null then 'Licence'
             when t.transport_manager_id is not null then 'Transport Manager'
             else 'Unlinked' end link_type,
-      coalesce(o.name, irfo.name, tmp.family_name, concat('Case:', c.id), 'Unlinked') name_display,
+      coalesce(concat('Submission:', s.id), o.name, irfo.name, tmp.family_name, concat('Case:', c.id), 'Unlinked') name_display,
       l.lic_no,
       l.id lic_id,
       tm.id tm_id,
@@ -7961,7 +7988,8 @@ CREATE VIEW task_search_view AS
       t.category_id category_id,
       tsc.sub_category_name task_sub_category_name,
       concat(ifnull(cdp.family_name,''), ', ', ifnull(cdp.forename,'')) user_name,
-     (select count(ll.id) from licence ll where ll.organisation_id = o.id and ll.status = 'lsts_valid') licence_count
+     (select count(ll.id) from licence ll where ll.organisation_id = o.id and ll.status = 'lsts_valid') licence_count,
+      s.id submission_id
     FROM `task` t
    inner join (category cat, sub_category tsc) on (cat.id = t.category_id and tsc.id = t.sub_category_id)
    left join (licence l inner join organisation o) on (t.licence_id = l.id and l.organisation_id = o.id)
@@ -7974,6 +8002,7 @@ CREATE VIEW task_search_view AS
    left join contact_details cd on (u.contact_details_id = cd.id)
    left join person cdp on (cd.person_id = cdp.id)
    left join team te on (t.assigned_to_team_id = te.id)
+   left join submission s on (t.submission_id = s.id)
 ;
 
 DROP TABLE IF EXISTS document_search_view;
@@ -7984,8 +8013,8 @@ CREATE VIEW document_search_view AS
         d.document_store_id, d.id document_id,
         cat.description category_name, dsc.sub_category_name document_sub_category_name, d.filename,
 		d.is_external, d.deleted_date,
-        coalesce(c.id, br.reg_no, l.lic_no, tm.id, 'Unlinked') id_col,
-        l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id, tm.id tm_id, ci.id ci_id
+        coalesce(c.id, br.reg_no, l.lic_no, tm.id, org.id, 'Unlinked') id_col,
+        l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id, tm.id tm_id, ci.id ci_id, org.id irfo_organisation_id
     FROM `document` d
     INNER JOIN (category cat, sub_category dsc) ON (cat.id = d.category_id AND dsc.id = d.sub_category_id)
     LEFT JOIN licence l ON d.licence_id = l.id
@@ -7993,7 +8022,8 @@ CREATE VIEW document_search_view AS
         ON (d.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.home_cd_id)
     LEFT JOIN cases c ON d.case_id = c.id
     LEFT JOIN bus_reg br ON d.bus_reg_id = br.id
-    LEFT JOIN correspondence_inbox ci ON d.id = ci.document_id;
+    LEFT JOIN correspondence_inbox ci ON d.id = ci.document_id
+    LEFT JOIN organisation org ON d.irfo_organisation_id = org.id;
 
 DROP TABLE IF EXISTS vehicle_history_view;
 DROP VIEW IF EXISTS vehicle_history_view;

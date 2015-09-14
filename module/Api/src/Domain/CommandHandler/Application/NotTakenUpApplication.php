@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\Licence\NotTakenUp;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Delete;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Class NotTakenUpApplication
@@ -36,7 +37,7 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
     {
         $result = new Result();
 
-        /** @var Application $application */
+        /* @var $application Application */
         $application = $this->getRepo()->fetchById($command->getId());
 
         $application->setStatus($this->getRepo()->getRefdataReference(Application::APPLICATION_STATUS_NOT_TAKEN_UP));
@@ -102,6 +103,27 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
                     ReturnAllCommunityLicences::create(
                         [
                             'id' => $application->getLicence()->getId(),
+                        ]
+                    )
+                )
+            );
+        }
+
+        if (
+            $application->isGoods() &&
+            $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
+        ) {
+            $result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
+        }
+
+        if ($application->isNew()) {
+            // Publish new application
+            $result->merge(
+                $this->handleSideEffect(
+                    \Dvsa\Olcs\Transfer\Command\Publication\Application::create(
+                        [
+                            'id' => $application->getId(),
+                            'trafficArea' => $application->getTrafficArea()->getId(),
                         ]
                     )
                 )

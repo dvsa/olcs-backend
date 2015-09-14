@@ -98,7 +98,7 @@ class GoodsVehiclesTest extends QueryHandlerTestCase
         $this->assertInstanceOf(Result::class, $result);
 
         $licence->shouldReceive('serialize')
-            ->with([])
+            ->with(['organisation'])
             ->andReturn(['foo' => 'bar']);
 
         $expected = [

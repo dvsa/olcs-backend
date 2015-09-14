@@ -26,7 +26,7 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
     const LIC = 'licence';
     const BUSREG = 'busReg';
     const CASES = 'case';
-    const IRFO = 'irfo';
+    const IRFO = 'irfoOrganisation';
     const TM = 'transportManager';
 
     protected $repoServiceName = 'Document';

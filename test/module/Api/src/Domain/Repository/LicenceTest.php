@@ -319,4 +319,38 @@ class LicenceTest extends RepositoryTestCase
 
         $this->sut->applyListFilters($mockQb, $mockQuery);
     }
+
+    public function testFetchForContinuation()
+    {
+        $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->once()->with($qb)->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('trafficArea', 'ta')->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->gte')->with('m.expiryDate', ':expiryFrom')->once()->andReturn('condFrom');
+        $qb->shouldReceive('andWhere')->with('condFrom')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('expiryFrom', m::type(\DateTime::class))->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->lte')->with('m.expiryDate', ':expiryTo')->once()->andReturn('condTo');
+        $qb->shouldReceive('andWhere')->with('condTo')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('expiryTo', m::type(\DateTime::class))->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')->with('ta.id', ':trafficArea')->once()->andReturn('condTa');
+        $qb->shouldReceive('andWhere')->with('condTa')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('trafficArea', 'B')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getResult')
+            ->andReturn('RESULT');
+
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+        $this->em->shouldReceive('getRepository')
+            ->with(Licence::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchForContinuation(2015, 1, 'B');
+        $this->assertEquals('RESULT', $result);
+    }
 }
