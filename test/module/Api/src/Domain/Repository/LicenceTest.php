@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Doctrine\DBAL\LockMode;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Licence test
@@ -352,5 +353,42 @@ class LicenceTest extends RepositoryTestCase
 
         $result = $this->sut->fetchForContinuation(2015, 1, 'B');
         $this->assertEquals('RESULT', $result);
+    }
+
+    public function testFetchForContinuationNotSought()
+    {
+        $qb = $this->createMockQb('[QUERY]');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->andReturnSelf();
+
+        $now = new DateTime();
+
+        $this->assertEquals(['RESULTS'], $this->sut->fetchForContinuationNotSought($now));
+
+        $expectedQuery = '[QUERY] AND m.expiryDate < [[' . $now->format(\DateTime::W3C) . ']] '
+            . 'AND m.status IN [[["lsts_valid","lsts_curtailed","lsts_suspended"]]] '
+            . 'AND (m.goodsOrPsv = [[lcat_gv]] OR (m.goodsOrPsv = [[lcat_psv]] AND m.licenceType = [[ltyp_sr]])) '
+            . 'INNER JOIN m.fees f INNER JOIN f.feeType ft AND f.feeStatus = [[lfs_ot]] AND ft.feeType = [[CONT]]'
+            ;
+
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }
