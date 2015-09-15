@@ -36,7 +36,7 @@ class PidIdentityProvider implements IdentityProviderInterface
 
     private function authenticate()
     {
-        $pid = $this->request->getHeader('HTTP_HTTP_PID', new GenericHeader())->getFieldValue();
+        $pid = $this->request->getHeader('Http-Pid', new GenericHeader())->getFieldValue();
 
         if (!empty($pid)) {
             return $this->repository->fetchByPid($pid);

@@ -318,7 +318,7 @@ return [
         ]
     ],
     'zfc_rbac' => [
-        'identity_provider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
+        'identity_provider' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class,
         'role_provider' => [
             'ZfcRbac\Role\ObjectRepositoryRoleProvider' => [
                 'object_manager'     => 'doctrine.entitymanager.orm_default',
