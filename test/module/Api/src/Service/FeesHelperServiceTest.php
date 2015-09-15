@@ -210,6 +210,45 @@ class FeesHelperServiceTest extends MockeryTestCase
     }
 
     /**
+     * @param string $amount
+     * @param array $fees array of FeeEntity
+     * @param array $expected allocated amounts e.g. ['97' => '12.45', '98' => '0.05']
+     * @dataProvider allocateProvider()
+     */
+    public function testAllocatePayments($amount, $fees, $expected)
+    {
+        $this->assertEquals($expected, $this->sut->allocatePayments($amount, $fees));
+    }
+
+    public function allocateProvider()
+    {
+        return [
+            [
+                '0.00',
+                [
+                    $this->getStubFee('10', '99.99'),
+                    $this->getStubFee('11', '100.01'),
+                ],
+                [
+                    '10' => '0.00',
+                    '11' => '0.00',
+                ]
+            ],
+            [
+                '200.00',
+                [
+                    $this->getStubFee('10', '99.99'),
+                    $this->getStubFee('11', '100.01'),
+                ],
+                [
+                    '10' => '99.99',
+                    '11' => '100.01',
+                ]
+            ]
+        ];
+    }
+
+    /**
      * Helper function to generate a stub fee entity
      *
      * @param int $id
@@ -221,8 +260,12 @@ class FeesHelperServiceTest extends MockeryTestCase
         $status = new RefData();
         $feeType = new FeeTypeEntity();
 
-        $fee = new FeeEntity($feeType, $amount, $status);
-        $fee->setId($id);
+        $fee = m::mock(FeeEntity::class)->makePartial()
+            ->setId($id)
+            ->setAmount($amount);
+        $fee
+            ->shouldReceive('getOutstandingAmount')
+            ->andReturn($amount);
 
         return $fee;
     }
