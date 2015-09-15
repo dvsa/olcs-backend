@@ -9,8 +9,10 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Pi\Reason;
+use Dvsa\Olcs\Api\Entity\Submission\SubmissionAction;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
  * Update SubmissionAction
@@ -22,6 +24,21 @@ final class UpdateSubmissionAction extends AbstractCommandHandler implements Tra
     public function handleCommand(CommandInterface $command)
     {
         $submissionAction = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+
+        // Backend validate
+        foreach ($command->getActionTypes() as $actionType) {
+            if (
+                in_array(
+                    $actionType,
+                    [
+                        SubmissionAction::ACTION_TYPE_PUBLIC_INQUIRY,
+                        SubmissionAction::ACTION_TYPE_PROPOSE_TO_REVOKE
+                    ]
+                ) && empty($command->getReasons()
+                ) && $command->getIsDecision() == 'N') {
+                throw new ForbiddenException('This action requires legislation to be specified');
+            }
+        }
 
         $actionTypes = array_map(
             function ($actionTypeId) {

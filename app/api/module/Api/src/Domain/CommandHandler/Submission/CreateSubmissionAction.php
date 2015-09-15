@@ -42,13 +42,15 @@ final class CreateSubmissionAction extends AbstractCommandHandler
     {
         // Backend validate
         foreach ($command->getActionTypes() as $actionType) {
-            if (in_array(
+            if (
+                in_array(
                     $actionType,
                     [
                         SubmissionAction::ACTION_TYPE_PUBLIC_INQUIRY,
                         SubmissionAction::ACTION_TYPE_PROPOSE_TO_REVOKE
                     ]
-                ) && empty($command->getReasons()) && $command->getIsDecision() == 'N') {
+                ) && empty($command->getReasons()
+                ) && $command->getIsDecision() == 'N') {
                 throw new ForbiddenException('This action requires legislation to be specified');
             }
         }
