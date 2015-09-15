@@ -112,6 +112,7 @@ class GrantConditionUndertakingTest extends CommandHandlerTestCase
             ->andReturnUsing(
                 function (ConditionUndertaking $cu) use ($user) {
                     $this->assertSame($user, $cu->getApprovalUser());
+                    $this->assertNull($cu->getS4());
                 }
             );
 
@@ -174,6 +175,7 @@ class GrantConditionUndertakingTest extends CommandHandlerTestCase
                 function (ConditionUndertaking $cu) use ($user, $lcu1) {
                     $this->assertSame($user, $cu->getApprovalUser());
                     $this->assertSame($lcu1, $cu);
+                    $this->assertNull($cu->getS4());
                 }
             );
 
@@ -236,6 +238,7 @@ class GrantConditionUndertakingTest extends CommandHandlerTestCase
                 function (ConditionUndertaking $cu) use ($user, $lcu1) {
                     $this->assertSame($user, $cu->getApprovalUser());
                     $this->assertSame($lcu1, $cu);
+                    $this->assertNull($cu->getS4());
                 }
             )
             ->shouldReceive('delete')
