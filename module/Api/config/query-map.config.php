@@ -217,6 +217,8 @@ return [
     TransferQuery\User\PartnerList::class => QueryHandler\User\PartnerList::class,
     TransferQuery\User\User::class => QueryHandler\User\User::class,
     TransferQuery\User\UserList::class => QueryHandler\User\UserList::class,
+    TransferQuery\User\UserSelfserve::class => QueryHandler\User\UserSelfserve::class,
+    TransferQuery\User\UserListSelfserve::class => QueryHandler\User\UserListSelfserve::class,
 
     // Workshop
     TransferQuery\Workshop\Workshop::class => QueryHandler\Workshop\Workshop::class,
