@@ -30,7 +30,7 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function setUp()
     {
-        $user = new UserEntity();
+        $user = m::mock(UserEntity::class)->makePartial();
         $user->setId(1);
 
         $as = m::mock(AuthorizationService::class);
@@ -77,7 +77,6 @@ class UpdateTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $id = 150;
-        $applicationId = 55;
         $version = 2;
 
         $data = [
@@ -89,24 +88,17 @@ class UpdateTest extends CommandHandlerTestCase
 
         $command = UpdateCommand::create($data);
 
-        /** @var $note NoteEntity */
-        $note = null;
-
         $this->repoMap['Note']
             ->shouldReceive('fetchById')
             ->with($id, \Doctrine\Orm\Query::HYDRATE_OBJECT, $version)
             ->andReturn(
                 m::mock(NoteEntity::class)
-
                     ->shouldReceive('setPriority')
                     ->with(1)
-
                     ->shouldreceive('getId')
                     ->andReturn($id)
-
                     ->shouldReceive('setUser')
                     ->with(m::type(Entity\User\User::class))
-
                     ->getMock()
             )
             ->shouldReceive('save')

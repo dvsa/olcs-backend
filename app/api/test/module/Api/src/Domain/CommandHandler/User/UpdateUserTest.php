@@ -1,38 +1,36 @@
 <?php
 
 /**
- * Update MyAccount Test
+ * Update User Test
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\MyAccount;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Mockery as m;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\CommandHandler\MyAccount\UpdateMyAccount;
+use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUser as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
+use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Transfer\Command\MyAccount\UpdateMyAccount as Cmd;
+use Dvsa\Olcs\Transfer\Command\User\UpdateUser as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
- * Update MyAccount Test
+ * Update User Test
  */
-class UpdateMyAccountTest extends CommandHandlerTestCase
+class UpdateUserTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new UpdateMyAccount();
+        $this->sut = new Sut();
         $this->mockRepo('User', User::class);
         $this->mockRepo('ContactDetails', ContactDetails::class);
-
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
-        ];
+        $this->mockRepo('Licence', Licence::class);
 
         parent::setUp();
     }
@@ -57,12 +55,14 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithNewContactDetails()
     {
-        $userId = 1;
+        $userId = 111;
 
         $data = [
             'id' => 111,
             'version' => 1,
+            'userType' => UserEntity::USER_TYPE_SELF_SERVICE,
             'team' => 1,
+            'licenceNumber' => '',
             'loginId' => 'login_id',
             'contactDetails' => [
                 'emailAddress' => 'test1@test.me',
@@ -103,9 +103,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
         $user->setTeam($team);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($user);
+        $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -147,6 +145,10 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
 
         $this->assertInstanceOf(ContactDetailsEntity::class, $savedUser->getContactDetails());
         $this->assertEquals(
+            ContactDetailsEntity::CONTACT_TYPE_USER,
+            $savedUser->getContactDetails()->getContactType()->getId()
+        );
+        $this->assertEquals(
             $data['contactDetails']['emailAddress'],
             $savedUser->getContactDetails()->getEmailAddress()
         );
@@ -154,12 +156,15 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithUpdatedContactDetails()
     {
-        $userId = 1;
+        $userId = 111;
+        $licenceNumber = 'LIC123';
 
         $data = [
             'id' => 111,
             'version' => 1,
+            'userType' => UserEntity::USER_TYPE_SELF_SERVICE,
             'team' => 1,
+            'licenceNumber' => $licenceNumber,
             'loginId' => 'login_id',
             'contactDetails' => [
                 'emailAddress' => 'test1@test.me',
@@ -192,13 +197,6 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             ],
         ];
 
-        /** @var User $mockUser */
-        $mockUser = m::mock(UserEntity::class)->makePartial();
-        $mockUser->setId($userId);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
-
         $command = Cmd::create($data);
 
         /** @var ContactDetailsEntity $contactDetails */
@@ -216,6 +214,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         $user->setId($userId);
         $user->setTeam($team);
         $user->setContactDetails($contactDetails);
+        $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -229,6 +228,16 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             ->once()
             ->with($data['contactDetails'])
             ->andReturn($data['contactDetails']);
+
+        /** @var LicenceEntity $licence */
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->shouldReceive('getOrganisation')
+            ->once();
+
+        $this->repoMap['Licence']->shouldReceive('fetchByLicNo')
+            ->once()
+            ->with($licenceNumber)
+            ->andReturn($licence);
 
         /** @var UserEntity $savedUser */
         $savedUser = null;
