@@ -31,6 +31,15 @@ return [
                         ],
                     ],
                 ],
+                'batch-cns' => [
+                    'options' => [
+                        'route' => 'batch-cns [--verbose|-v] [--dryrun|-d]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'continuationNotSought'
+                        ],
+                    ],
+                ],
                 'process-queue' => [
                     'options' => [
                         'route' => 'process-queue [--type=]',

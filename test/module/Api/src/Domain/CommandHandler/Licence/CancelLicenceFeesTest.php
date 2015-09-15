@@ -61,8 +61,8 @@ class CancelLicenceFeesTest extends CommandHandlerTestCase
                     $expression = $criteria->getWhereExpression();
 
                     $this->assertEquals('feeStatus', $expression->getField());
-                    $this->assertEquals('=', $expression->getOperator());
-                    $this->assertEquals(Fee::STATUS_OUTSTANDING, $expression->getValue()->getValue());
+                    $this->assertEquals('IN', $expression->getOperator());
+                    $this->assertEquals([Fee::STATUS_OUTSTANDING], $expression->getValue()->getValue());
 
                     return $fees;
                 }
@@ -109,8 +109,8 @@ class CancelLicenceFeesTest extends CommandHandlerTestCase
                     $expression = $criteria->getWhereExpression();
 
                     $this->assertEquals('feeStatus', $expression->getField());
-                    $this->assertEquals('=', $expression->getOperator());
-                    $this->assertEquals(Fee::STATUS_OUTSTANDING, $expression->getValue()->getValue());
+                    $this->assertEquals('IN', $expression->getOperator());
+                    $this->assertEquals([Fee::STATUS_OUTSTANDING], $expression->getValue()->getValue());
 
                     return $fees;
                 }

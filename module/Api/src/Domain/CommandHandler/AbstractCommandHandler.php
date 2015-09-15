@@ -121,6 +121,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         if ($this instanceof \Dvsa\Olcs\Api\Domain\CpmsAwareInterface) {
             $this->setCpmsService($mainServiceLocator->get('CpmsHelperService'));
         }
+
+        if ($this instanceof \Dvsa\Olcs\Api\Domain\TranslatorAwareInterface) {
+            $translator = $mainServiceLocator->get('translator');
+            $this->setTranslator($translator);
+        }
     }
 
     /**
