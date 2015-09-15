@@ -169,7 +169,8 @@ class LicenceVehicle extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $seedDate = new DateTime('-28 days');
+        $now = new DateTime();
+        $seedDate = $now->sub(new \DateInterval('P28D'));
 
         $qb->innerJoin('m.licence', 'l')
             // licence.status in (Curtailed, Valid, Suspended);

@@ -1198,18 +1198,17 @@ INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator
     (1, 12504, 1),
     (1, 12505, 0);
 
-INSERT INTO `user_role` (`user_id`, `role_id`, `created_by`,`last_modified_by`,`expiry_date`,
-`valid_from`, `created_on`,`version`) VALUES
-    (12504, 3, 1, 1, NOW(),NOW(),NOW(),1),
-    (12505, 5, 1, 1, NOW(),NOW(),NOW(),1),
-    (1, 1, 1, 1, NOW(),NOW(),NOW(),1), -- loggedinuser=internal-limited-read-only
-    (2, 4, 1, 1, NOW(),NOW(),NOW(),1), -- johnspellman=internal-admin
-    (3, 4, 1, 1, NOW(),NOW(),NOW(),1), -- stevefox=internal-admin
-    (4, 3, 1, 1, NOW(),NOW(),NOW(),1), -- amywrigg=internal-case-worker
-    (5, 4, 1, 1, NOW(),NOW(),NOW(),1), -- philjowitt=internal-admin
-    (6, 4, 1, 1, NOW(),NOW(),NOW(),1), -- kevinrooney=internal-admin
-    (7, 4, 1, 1, NOW(),NOW(),NOW(),1), -- sarahthompson=internal-admin
-    (8, 3, 1, 1, NOW(),NOW(),NOW(),1); -- anotheruser=internal-case-worker
+INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
+    (12504, 3),
+    (12505, 5),
+    (1, 1), -- loggedinuser=internal-limited-read-only
+    (2, 4), -- johnspellman=internal-admin
+    (3, 4), -- stevefox=internal-admin
+    (4, 3), -- amywrigg=internal-case-worker
+    (5, 4), -- philjowitt=internal-admin
+    (6, 4), -- kevinrooney=internal-admin
+    (7, 4), -- sarahthompson=internal-admin
+    (8, 3); -- anotheruser=internal-case-worker
 
 INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`,
     `certificate_no`, `vi_action`, `psv_type`, `created_on`,

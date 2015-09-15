@@ -21,15 +21,27 @@ class User extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
+        $user = $this->getRepo()->fetchUsingId($query);
+
         return $this->result(
-            $this->getRepo()->fetchUsingId($query),
+            $user,
             [
+                'team',
+                'transportManager',
+                'localAuthority',
+                'partnerContactDetails',
+                'roles',
                 'contactDetails' => [
                     'person',
+                    'address' => ['countryCode'],
+                    'phoneContacts' => ['phoneContactType']
                 ],
                 'organisationUsers' => [
                     'organisation',
                 ],
+            ],
+            [
+                'userType' => $user->getUserType()
             ]
         );
     }

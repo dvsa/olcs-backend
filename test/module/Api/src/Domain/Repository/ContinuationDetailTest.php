@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as Entity;
 
 /**
  * ContinuationDetailTest
@@ -193,5 +194,96 @@ EOT;
             ->andReturn(['result']);
 
         $this->sut->fetchChecklistReminders(1, 2016, [1]);
+    }
+
+    /**
+     * @dataProvider statusProvider
+     */
+    public function testFetchDetails($method, $allowEmail)
+    {
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('continuation', 'c')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('status', 's')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.status', 'ls')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.organisation', 'lo')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.licenceType', 'lt')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.goodsOrPsv', 'lg')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('orderBy')->with('l.licNo', 'ASC')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('c.id', ':continuationId')->once()->andReturn('conditionContId');
+        $mockQb->shouldReceive('andWhere')->with('conditionContId')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('continuationId', 1)->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->in')->with('l.status', ':licenceStatuses')->once()->andReturn('conditionLicSt');
+        $mockQb->shouldReceive('andWhere')->with('conditionLicSt')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('licenceStatuses', ['st'])->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('l.licNo', ':licNo')->once()->andReturn('conditionLicNo');
+        $mockQb->shouldReceive('andWhere')->with('conditionLicNo')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('licNo', 'ln')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('lo.allowEmail', $allowEmail)->once()->andReturn('conditionMethod');
+        $mockQb->shouldReceive('andWhere')->with('conditionMethod')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('m.status', ':status')->once()->andReturn('conditionStatus');
+        $mockQb->shouldReceive('andWhere')->with('conditionStatus')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('status', 'st')->once()->andReturnSelf();
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('m')
+            ->once()
+            ->andReturn($mockQb);
+
+        $mockQb->shouldReceive('getQuery->getResult')
+            ->with(\Doctrine\ORM\Query::HYDRATE_ARRAY)
+            ->once()
+            ->andReturn(['result']);
+
+        $this->assertEquals(
+            $this->sut->fetchDetails(1, ['st'], 'ln', $method, 'st'),
+            ['result']
+        );
+    }
+
+    public function statusProvider()
+    {
+        return [
+            [Entity::METHOD_EMAIL, 1],
+            [Entity::METHOD_POST, 0]
+        ];
+    }
+
+    public function testFetchWithLicence()
+    {
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('status', 's')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.licenceType', 'lt')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.goodsOrPsv', 'lg')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('byId')->with(1)->once()->andReturnSelf();
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('m')
+            ->once()
+            ->andReturn($mockQb);
+
+        $mockQb->shouldReceive('getQuery->getSingleResult')
+            ->once()
+            ->andReturn(['result']);
+
+        $this->assertEquals(
+            $this->sut->fetchWithLicence(1),
+            ['result']
+        );
     }
 }

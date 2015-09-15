@@ -1,6 +1,7 @@
 <?php
 
 use Dvsa\Olcs\Transfer\Query as TransferQuery;
+use Dvsa\Olcs\Api\Domain\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark as BookmarkQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark as BookmarkQueryHandler;
@@ -87,6 +88,7 @@ return [
     TransferQuery\Licence\GetList::class => QueryHandler\Licence\GetList::class,
     TransferQuery\Licence\OperatingCentres::class => QueryHandler\Licence\OperatingCentres::class,
     TransferQuery\Licence\PsvVehicles::class => QueryHandler\Licence\PsvVehicles::class,
+    Query\Licence\ContinuationNotSoughtList::class => QueryHandler\Licence\ContinuationNotSoughtList::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
@@ -362,4 +364,11 @@ return [
     // Continuation Detail
     TransferQuery\ContinuationDetail\ChecklistReminders::class =>
         QueryHandler\ContinuationDetail\ChecklistReminders::class,
+    TransferQuery\ContinuationDetail\GetList::class =>
+        QueryHandler\ContinuationDetail\GetList::class,
+
+    // System
+    TransferQuery\System\FinancialStandingRate::class => QueryHandler\System\FinancialStandingRate::class,
+    TransferQuery\System\FinancialStandingRateList::class => QueryHandler\System\FinancialStandingRateList::class,
+
 ];
