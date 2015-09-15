@@ -130,4 +130,50 @@ class FeesHelperService implements FactoryInterface
             $application->getId()
         );
     }
+
+    /**
+     * Gets the minimum allowable payment amount for an array of fees,
+     * this prevents creating invalid payment attempts which would result
+     * in a zero allocated amount
+     *
+     * @param array $fees
+     * @return string formatted amount
+     */
+    public function getMinPaymentForFees(array $fees)
+    {
+        // sort fees in invoicedDate order
+        uasort(
+            $fees,
+            function ($a, $b) {
+                return $a->getInvoicedDate() < $b->getInvoicedDate() ? -1 : 1;
+            }
+        );
+
+        // min. payment must be greater than the outstanding amount for all but the last fee
+        $minPayment = 0.01;
+        for($i=0; $i < count($fees) -1 ; $i++) {
+            $minPayment += $fees[$i]->getOutstandingAmount();
+        }
+
+        return number_format($minPayment, 2, '.', '');
+    }
+
+    /**
+     * Gets the maximum allowable payment amount for an array of fees, currently
+     * the total of the outstanding amounts, but may change once we permit
+     * overpayments
+     *
+     * @param array $fees
+     * @return string formatted amount
+     */
+    public function getMaxPaymentForFees(array $fees)
+    {
+        $maxPayment = 0;
+
+        foreach ($fees as $fee) {
+            $maxPayment += $fee->getOutstandingAmount();
+        }
+
+        return number_format($maxPayment, 2, '.', '');
+    }
 }
