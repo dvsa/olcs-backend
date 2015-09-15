@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ReturnAllCommunityLicences as Co
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 
 /**
@@ -30,7 +31,7 @@ class ReturnAllCommunityLicencesTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            CommunityLic::STATUS_RETURNDED
+            CommunityLic::STATUS_RETURNDED => m::mock(RefData::class)->makePartial()->setDescription('returned'),
         ];
 
         parent::initReferences();
@@ -79,7 +80,7 @@ class ReturnAllCommunityLicencesTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                '2 Community licence returned',
+                '2 Community licence(s) updated to returned',
                 'UpdateTotalCommunityLicences',
             ]
         ];
