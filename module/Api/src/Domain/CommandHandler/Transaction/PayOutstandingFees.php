@@ -144,7 +144,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     protected function immediatePayment($command, $fees, $result)
     {
-        $this->checkAmountMatchesTotalDue($command->getReceived(), $fees);
+        $this->validateAmount($command->getReceived(), $fees);
 
         // fire off to relevant CPMS method to record payment
         $response = $this->recordPaymentInCpms($command, $fees);
@@ -247,8 +247,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         parent::createService($serviceLocator);
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->feesHelper = $mainServiceLocator->get('FeesHelperService');
+        $this->feesHelper = $serviceLocator->getServiceLocator()->get('FeesHelperService');
         return $this;
     }
 
@@ -316,19 +315,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     }
 
     /**
-     * @param array $fees
-     * return float
-     */
-    protected function getTotalAmountFromFees($fees)
-    {
-        $totalAmount = 0;
-        foreach ($fees as $fee) {
-            $totalAmount += (float)$fee->getOutstandingAmount();
-        }
-        return $totalAmount;
-    }
-
-    /**
      * Partial payments are not supported for cash/cheque/PO payments.
      * The form validation will normally catch any mismatch but it relies on a
      * hidden field so we have a secondary check here in the service layer.
@@ -342,12 +328,11 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      * doesn't work!!
      * @see http://php.net/manual/en/language.types.float.php
      */
-    protected function checkAmountMatchesTotalDue($amount, $fees)
+    protected function validateAmount($amount, $fees)
     {
-        $amount    = $this->getCpmsService()->formatAmount($amount);
-        $totalFees = $this->getCpmsService()->formatAmount($this->getTotalAmountFromFees($fees));
-        if ($amount !== $totalFees) {
-            throw new ValidationException(["Amount must match the fee(s) due"]);
+        $minAmount = $this->feesHelper->getMinPaymentForFees($fees);
+        if ($amount < $minAmount) {
+            throw new ValidationException([sprintf("Amount must be at least %1\$.2f", $minAmount)]);
         }
     }
 

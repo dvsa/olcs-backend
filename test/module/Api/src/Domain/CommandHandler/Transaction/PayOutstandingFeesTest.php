@@ -479,6 +479,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 ]
             );
 
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(0.01);
+
         $this->repoMap['Fee']
             ->shouldReceive('save')
             ->once()
@@ -563,6 +568,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                     'receipt_reference' => 'OLCS-1234-CHEQUE',
                 ]
             );
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(0.01);
 
         $this->repoMap['Fee']
             ->shouldReceive('save')
@@ -650,6 +660,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 ]
             );
 
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(0.01);
+
         $this->repoMap['Fee']
             ->shouldReceive('save')
             ->once()
@@ -726,9 +741,19 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('recordCashPayment')
             ->never();
 
-        $this->setExpectedException(ValidationException::class);
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(99);
 
-        $this->sut->handleCommand($command);
+        // $this->setExpectedException(ValidationException::class, "The amount must be at least ");
+        // try/catch as we can't assert the message otherwise
+        try {
+            $this->sut->handleCommand($command);
+        } catch (ValidationException $e) {
+            $messages = $e->getMessages();
+            $this->assertTrue(strpos(reset($messages), 'Amount must be at least 99.00') !== false);
+        }
     }
 
     public function testHandleCommandCpmsResponseException()
@@ -760,6 +785,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('recordCashPayment')
             ->once()
             ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(0.01);
 
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
 
