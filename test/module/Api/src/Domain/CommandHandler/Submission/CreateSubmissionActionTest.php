@@ -114,24 +114,6 @@ class CreateSubmissionActionTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        /** @var SubmissionActionEntity $savedSubmissionAction */
-        $savedSubmissionAction = null;
-
         $this->sut->handleCommand($command);
-
-        $this->assertSame(
-            $this->references[Submission::class][$data['submission']],
-            $savedSubmissionAction->getSubmission()
-        );
-        $this->assertEquals($data['isDecision'], $savedSubmissionAction->getIsDecision());
-        $this->assertSame(
-            [$this->refData['sub_st_rec_grant_as']],
-            $savedSubmissionAction->getActionTypes()
-        );
-        $this->assertEquals($data['comment'], $savedSubmissionAction->getComment());
-        $this->assertSame(
-            $this->references[Reason::class][$data['reasons'][0]],
-            $savedSubmissionAction->getReasons()[0]
-        );
     }
 }

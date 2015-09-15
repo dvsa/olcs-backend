@@ -35,7 +35,7 @@ final class UpdateSubmissionAction extends AbstractCommandHandler implements Tra
                         SubmissionAction::ACTION_TYPE_PROPOSE_TO_REVOKE
                     ]
                 ) && empty($command->getReasons()
-                ) && $command->getIsDecision() == 'N') {
+                ) && $submissionAction->getIsDecision() == 'N') {
                 throw new ForbiddenException('This action requires legislation to be specified');
             }
         }
