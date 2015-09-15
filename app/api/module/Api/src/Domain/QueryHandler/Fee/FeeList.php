@@ -37,7 +37,7 @@ class FeeList extends AbstractQueryHandler
             'count' => $repo->fetchCount($query),
             'allowFeePayments' => $this->shouldAllowFeePayments($query),
             'minPayment' => $this->feesHelper->getMinPaymentForFees($fees->getArrayCopy()),
-            'maxPayment' => $this->feesHelper->getMaxPaymentForFees($fees->getArrayCopy()),
+            'totalOutstanding' => $this->feesHelper->getTotalOutstanding($fees->getArrayCopy()),
         ];
     }
 

@@ -315,7 +315,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     }
 
     /**
-     * Partial payments are not supported for cash/cheque/PO payments.
+     * Partial payments are supported for cash/cheque/PO payments but amount
+     * must not result in a zero allocation to any fee.
      * The form validation will normally catch any mismatch but it relies on a
      * hidden field so we have a secondary check here in the service layer.
      *
@@ -323,10 +324,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      * @param array $fees
      * @return null
      * @throws ValidationException
-     *
-     * @note We compare the formatted amounts as comparing floats for equality
-     * doesn't work!!
-     * @see http://php.net/manual/en/language.types.float.php
      */
     protected function validateAmount($amount, $fees)
     {
