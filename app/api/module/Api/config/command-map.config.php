@@ -773,4 +773,11 @@ return [
     Command\Discs\PrintDiscs::class => CommandHandler\Discs\PrintDiscs::class,
     Command\Discs\CreatePsvVehicleListForDiscs::class => CommandHandler\Discs\CreatePsvVehicleListForDiscs::class,
 
+    // Admin - Financial Standing Rates
+    TransferCommand\System\CreateFinancialStandingRate::class =>
+        CommandHandler\System\CreateFinancialStandingRate::class,
+    TransferCommand\System\UpdateFinancialStandingRate::class =>
+        CommandHandler\System\UpdateFinancialStandingRate::class,
+    TransferCommand\System\DeleteFinancialStandingRateList::class =>
+        CommandHandler\System\DeleteFinancialStandingRateList::class,
 ];
