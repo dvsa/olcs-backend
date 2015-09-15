@@ -159,14 +159,12 @@ class FeesHelperService implements FactoryInterface
     }
 
     /**
-     * Gets the maximum allowable payment amount for an array of fees, currently
-     * the total of the outstanding amounts, but may change once we permit
-     * overpayments
+     * Gets the total outstanding payment amount for an array of fees
      *
      * @param array $fees
      * @return string formatted amount
      */
-    public function getMaxPaymentForFees(array $fees)
+    public function getTotalOutstanding(array $fees)
     {
         $maxPayment = 0;
 
