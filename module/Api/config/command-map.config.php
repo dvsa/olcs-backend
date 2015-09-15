@@ -278,6 +278,9 @@ return [
     TransferCommand\MyAccount\UpdateMyAccount::class => CommandHandler\MyAccount\UpdateMyAccount::class,
 
     // Transfer - User
+    TransferCommand\User\CreateUser::class => CommandHandler\User\CreateUser::class,
+    TransferCommand\User\UpdateUser::class => CommandHandler\User\UpdateUser::class,
+    TransferCommand\User\DeleteUser::class => CommandHandler\User\DeleteUser::class,
     TransferCommand\User\CreatePartner::class => CommandHandler\User\CreatePartner::class,
     TransferCommand\User\UpdatePartner::class => CommandHandler\User\UpdatePartner::class,
     TransferCommand\User\DeletePartner::class => CommandHandler\User\DeletePartner::class,
