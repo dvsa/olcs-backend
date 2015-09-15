@@ -316,6 +316,23 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     protected $resetPasswordExpiryDate;
 
     /**
+     * Role
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\User\Role", inversedBy="users", fetch="LAZY")
+     * @ORM\JoinTable(name="user_role",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $roles;
+
+    /**
      * Team
      *
      * @var \Dvsa\Olcs\Api\Entity\User\Team
@@ -356,23 +373,13 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      *
      * @ORM\OneToMany(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser",
-     *     mappedBy="user"
+     *     mappedBy="user",
+     *     cascade={"persist"},
+     *     indexBy="organisation_id",
+     *     orphanRemoval=true
      * )
      */
     protected $organisationUsers;
-
-    /**
-     * User role
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\User\UserRole",
-     *     mappedBy="user",
-     *     cascade={"persist"}
-     * )
-     */
-    protected $userRoles;
 
     /**
      * Initialise the collections
@@ -384,8 +391,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
 
     public function initCollections()
     {
+        $this->roles = new ArrayCollection();
         $this->organisationUsers = new ArrayCollection();
-        $this->userRoles = new ArrayCollection();
     }
 
     /**
@@ -1056,6 +1063,66 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     }
 
     /**
+     * Set the role
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $roles
+     * @return User
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * Get the roles
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Add a roles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $roles
+     * @return User
+     */
+    public function addRoles($roles)
+    {
+        if ($roles instanceof ArrayCollection) {
+            $this->roles = new ArrayCollection(
+                array_merge(
+                    $this->roles->toArray(),
+                    $roles->toArray()
+                )
+            );
+        } elseif (!$this->roles->contains($roles)) {
+            $this->roles->add($roles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a roles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $roles
+     * @return User
+     */
+    public function removeRoles($roles)
+    {
+        if ($this->roles->contains($roles)) {
+            $this->roles->removeElement($roles);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the team
      *
      * @param \Dvsa\Olcs\Api\Entity\User\Team $team
@@ -1179,66 +1246,6 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     {
         if ($this->organisationUsers->contains($organisationUsers)) {
             $this->organisationUsers->removeElement($organisationUsers);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the user role
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $userRoles
-     * @return User
-     */
-    public function setUserRoles($userRoles)
-    {
-        $this->userRoles = $userRoles;
-
-        return $this;
-    }
-
-    /**
-     * Get the user roles
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getUserRoles()
-    {
-        return $this->userRoles;
-    }
-
-    /**
-     * Add a user roles
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $userRoles
-     * @return User
-     */
-    public function addUserRoles($userRoles)
-    {
-        if ($userRoles instanceof ArrayCollection) {
-            $this->userRoles = new ArrayCollection(
-                array_merge(
-                    $this->userRoles->toArray(),
-                    $userRoles->toArray()
-                )
-            );
-        } elseif (!$this->userRoles->contains($userRoles)) {
-            $this->userRoles->add($userRoles);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a user roles
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $userRoles
-     * @return User
-     */
-    public function removeUserRoles($userRoles)
-    {
-        if ($this->userRoles->contains($userRoles)) {
-            $this->userRoles->removeElement($userRoles);
         }
 
         return $this;

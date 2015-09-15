@@ -213,4 +213,60 @@ class CasesEntityTest extends EntityTester
 
         $this->assertTrue($sut->hasComplaints());
     }
+
+    /**
+     * Tests closing a case
+     */
+    public function testClose()
+    {
+        $outcome = m::mock(RefData::class);
+
+        $this->entity->setOutcomes(new ArrayCollection([$outcome]));
+
+        $this->entity->close();
+
+        $this->assertInstanceOf('\DateTime', $this->entity->getClosedDate());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testCloseThrowsException()
+    {
+        $this->entity->setOutcomes(new ArrayCollection());
+
+        $this->entity->close();
+    }
+
+    public function testReopen()
+    {
+        $this->entity->setClosedDate(new \DateTime());
+
+        $this->entity->reopen();
+
+        $this->assertEquals(null, $this->entity->getClosedDate());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testReopenThrowsException()
+    {
+        $this->entity->setClosedDate(null);
+        $this->entity->reopen();
+    }
+
+    /**
+     * Tests getCalculatedBundleValues
+     */
+    public function testGetCalculatedBundleValues()
+    {
+        $expected = [
+            'isClosed' => false,
+            'canReopen' => false,
+            'canClose' => false,
+        ];
+
+        $this->assertEquals($expected, $this->entity->getCalculatedBundleValues());
+    }
 }

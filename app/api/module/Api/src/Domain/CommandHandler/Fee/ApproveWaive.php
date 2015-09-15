@@ -49,7 +49,7 @@ final class ApproveWaive extends AbstractCommandHandler implements Transactioned
         }
 
         $transaction
-            ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_PAID))
+            ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_COMPLETE))
             ->setComment($command->getWaiveReason())
             ->setCompletedDate($now)
             ->setProcessedByUser($this->getCurrentUser());

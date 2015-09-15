@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\User\UserList as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
 use Dvsa\Olcs\Transfer\Query\User\UserList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Mockery as m;
 
 /**
  * UserListTest
@@ -31,7 +32,7 @@ class UserListTest extends QueryHandlerTestCase
     {
         $query = Query::create(['QUERY']);
 
-        $user = new \Dvsa\Olcs\Api\Entity\User\User();
+        $user = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $user->setId(74);
 
         $this->repoMap['User']->shouldReceive('fetchList')->with($query, \Doctrine\ORM\Query::HYDRATE_OBJECT)

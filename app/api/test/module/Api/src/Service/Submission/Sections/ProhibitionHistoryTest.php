@@ -29,8 +29,8 @@ class ProhibitionHistoryTest extends SubmissionSectionTest
                         0 => [
                             'id' => 1,
                             'version' => 6,
-                            'prohibitionDate' => new \DateTime('2008-08-11'),
-                            'clearedDate' => new \DateTime('2012-08-11'),
+                            'prohibitionDate' => '11/08/2008',
+                            'clearedDate' => '11/08/2012',
                             'prohibitionType' => 'prohibition-type1-desc',
                             'vehicle' => 'VR12 MAB',
                             'trailer' => false,

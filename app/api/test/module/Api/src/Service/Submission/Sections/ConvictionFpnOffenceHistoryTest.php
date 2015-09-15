@@ -30,8 +30,8 @@ class ConvictionFpnOffenceHistoryTest extends SubmissionSectionTest
                         0 => [
                             'id' => 734,
                             'version' => 736,
-                            'offenceDate' => new \DateTime('2007-06-03'),
-                            'convictionDate' => new \DateTime('2008-06-03'),
+                            'offenceDate' => '03/06/2007',
+                            'convictionDate' => '03/06/2008',
                             'defendantType' => Conviction::DEFENDANT_TYPE_ORGANISATION . '-desc',
                             'name' => 'operator1',
                             'categoryText' => 'cat-text',
@@ -44,8 +44,8 @@ class ConvictionFpnOffenceHistoryTest extends SubmissionSectionTest
                         1 => [
                             'id' => 734,
                             'version' => 736,
-                            'offenceDate' => new \DateTime('2007-06-03'),
-                            'convictionDate' => new \DateTime('2008-06-03'),
+                            'offenceDate' => '03/06/2007',
+                            'convictionDate' => '03/06/2008',
                             'defendantType' => Conviction::DEFENDANT_TYPE_DIRECTOR . '-desc',
                             'name' => 'fn sn',
                             'categoryText' => 'cat-text',

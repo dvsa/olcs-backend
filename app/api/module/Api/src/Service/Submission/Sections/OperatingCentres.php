@@ -38,8 +38,7 @@ final class OperatingCentres extends AbstractSection
                 $thisEntity['id'] = $operatingCentre->getId();
                 $thisEntity['version'] = $operatingCentre->getVersion();
                 $thisEntity['totAuthVehicles'] = $licenceOperatingCentres->current()->getNoOfVehiclesRequired();
-                $thisEntity['totAuthTrailers'] = $licenceOperatingCentres->current()
-                    ->getNoOfTrailersRequired();
+                $thisEntity['totAuthTrailers'] = $licenceOperatingCentres->current()->getNoOfTrailersRequired();
                 if (empty($operatingCentre->getAddress())) {
                     $thisEntity['OcAddress'] = [];
                 } else {

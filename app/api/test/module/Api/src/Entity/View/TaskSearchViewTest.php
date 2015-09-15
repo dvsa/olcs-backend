@@ -55,6 +55,7 @@ class TaskSearchViewTest extends \PHPUnit_Framework_TestCase
             'transportManagerId' => 11,
             'urgent' => 1,
             'irfoOrganisationId' => 12,
+            'submissionId' => 13,
         ];
 
         $this->entity = new TaskSearchView();

@@ -34,7 +34,7 @@ final class MostSeriousInfringement extends AbstractSection
             $data['siCategoryType'] = !empty($mostSeriousInfringement->getSiCategoryType()) ?
                 $mostSeriousInfringement->getSiCategoryType()->getDescription() : '';
             $data['infringementDate'] = $mostSeriousInfringement->getInfringementDate();
-            $data['checkDate'] =  $mostSeriousInfringement->getCheckDate();
+            $data['checkDate'] =  $this->formatDate($mostSeriousInfringement->getCheckDate());
             $data['isMemberState'] = !empty($mostSeriousInfringement->getMemberStateCode()) ?
                 $mostSeriousInfringement->getMemberStateCode()->getIsMemberState() : '';
         }

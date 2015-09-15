@@ -4,17 +4,21 @@
  * ContinuationDetail
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 
 /**
  * ContinuationDetail
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 class ContinuationDetail extends AbstractRepository
 {
@@ -113,6 +117,126 @@ class ContinuationDetail extends AbstractRepository
         // and status is Acceptable
         $qb->andWhere($qb->expr()->eq($this->alias . '.status', ':status'))
             ->setParameter('status', Entity::STATUS_ACCEPTABLE);
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
+    public function fetchChecklistReminders($month, $year, $ids = [])
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata()
+            ->with('continuation', 'c')
+            ->with('licence', 'l')
+            ->with('l.status', 'ls')
+            ->with('l.licenceType', 'lt')
+            ->with('l.goodsOrPsv', 'lgp')
+            ->with('l.organisation', 'lo')
+            ->with('l.fees', 'lf')
+            ->with('lf.feeType', 'lfft');
+
+        $qb->andWhere($qb->expr()->in('l.status', ':licenceStatuses'))
+            ->setParameter(
+                'licenceStatuses',
+                [
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED
+                ]
+            );
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.received', 0));
+
+        $qb->andWhere(
+            $qb->expr()->orX(
+                $qb->expr()->not(
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('lfft.feeType', ':feeType'),
+                        $qb->expr()->in('lf.feeStatus', ':feeStatus')
+                    )
+                ),
+                $qb->expr()->isNull('lf.id')
+            )
+        );
+        $qb->setParameter('feeType', FeeTypeEntity::FEE_TYPE_CONT);
+        $qb->setParameter('feeStatus', [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED]);
+
+        if ($ids) {
+            $this->getQueryBuilder()
+                ->modifyQuery($qb)
+                ->filterByIds($ids);
+        }
+        if ($month) {
+            $qb->andWhere($qb->expr()->eq('c.month', ':month'))
+                ->setParameter('month', $month);
+        }
+        if ($year) {
+            $qb->andWhere($qb->expr()->eq('c.year', ':year'))
+                ->setParameter('year', $year);
+        }
+
+        return $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+    }
+
+    public function fetchDetails($continuationId, $licenceStatuses, $licNo, $method, $status)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata()
+            ->with('continuation', 'c')
+            ->with('status', 's')
+            ->with('licence', 'l')
+            ->with('l.status', 'ls')
+            ->with('l.organisation', 'lo')
+            ->with('l.licenceType', 'lt')
+            ->with('l.goodsOrPsv', 'lg');
+
+        $qb->orderBy('l.licNo', 'ASC');
+
+        if ($continuationId) {
+            $qb->andWhere($qb->expr()->eq('c.id', ':continuationId'))
+                ->setParameter('continuationId', $continuationId);
+        }
+        if ($licenceStatuses) {
+            $qb->andWhere($qb->expr()->in('l.status', ':licenceStatuses'))
+                ->setParameter('licenceStatuses', $licenceStatuses);
+        }
+        if ($licNo) {
+            $qb->andWhere($qb->expr()->eq('l.licNo', ':licNo'))
+                ->setParameter('licNo', $licNo);
+        }
+        if ($method) {
+            if ($method === Entity::METHOD_EMAIL) {
+                $qb->andWhere($qb->expr()->eq('lo.allowEmail', 1));
+            } elseif ($method === Entity::METHOD_POST) {
+                $qb->andWhere($qb->expr()->eq('lo.allowEmail', 0));
+            }
+        }
+        if ($status) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.status', ':status'))
+                ->setParameter('status', $status);
+        }
+
+        return $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+    }
+
+    public function fetchWithLicence($id)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata()
+            ->with('status', 's')
+            ->with('licence', 'l')
+            ->with('l.licenceType', 'lt')
+            ->with('l.goodsOrPsv', 'lg')
+            ->byId($id);
 
         return $qb->getQuery()->getSingleResult();
     }

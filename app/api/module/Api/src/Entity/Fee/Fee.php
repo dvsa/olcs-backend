@@ -2,10 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Entity\Fee;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Doctrine\Common\Collections\Criteria;
 
 /**
  * Fee Entity
@@ -45,6 +47,9 @@ class Fee extends AbstractFee
     const METHOD_CHEQUE       = 'fpm_cheque';
     const METHOD_POSTAL_ORDER = 'fpm_po';
     const METHOD_WAIVE        = 'fpm_waive';
+
+    const DEFAULT_INVOICE_CUSTOMER_NAME = 'Miscellaneous payment';
+    const DEFAULT_INVOICE_ADDRESS_LINE = 'Miscellaneous payment';
 
     public function __construct(FeeType $feeType, $amount, RefData $feeStatus)
     {
@@ -101,6 +106,21 @@ class Fee extends AbstractFee
         }
     }
 
+    public function getDefermentPeriod()
+    {
+        $map = [
+            self::ACCRUAL_RULE_LICENCE_START => 60,
+            self::ACCRUAL_RULE_CONTINUATION  => 60,
+            self::ACCRUAL_RULE_IMMEDIATE     => 1,
+        ];
+
+        $rule = $this->getFeeType()->getAccrualRule()->getId();
+
+        if (array_key_exists($rule, $map)) {
+            return $map[$rule];
+        }
+    }
+
     public function allowEdit()
     {
         return !in_array(
@@ -112,21 +132,13 @@ class Fee extends AbstractFee
         );
     }
 
-    public function getReceiptNo()
-    {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getReference();
-        }
-    }
-
     /**
      * @todo OLCS-10407 this currently assumes only one transaction against a
      * fee, will need updating when part payments are allowed
      */
     public function getReceivedAmount()
     {
-        $ft = $this->getFeeTransactions()->last();
+        $ft = $this->getLatestFeeTransaction();
         if ($ft) {
             return $ft->getAmount();
         }
@@ -137,25 +149,25 @@ class Fee extends AbstractFee
      */
     public function getReceivedDate()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getCompletedDate();
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            return $transaction->getCompletedDate();
         }
     }
 
     public function getPaymentMethod()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getPaymentMethod();
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            return $transaction->getPaymentMethod();
         }
     }
 
     public function getProcessedBy()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            $user = $ft->getTransaction()->getProcessedByUser();
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            $user = $transaction->getProcessedByUser();
             if ($user) {
                 return $user->getLoginId();
             }
@@ -164,33 +176,33 @@ class Fee extends AbstractFee
 
     public function getPayer()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getPayerName();
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            return $transaction->getPayerName();
         }
     }
 
     public function getSlipNo()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getPayingInSlipNumber();
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            return $transaction->getPayingInSlipNumber();
         }
     }
 
     public function getChequePoNumber()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getChequePoNumber();
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            return $transaction->getChequePoNumber();
         }
     }
 
     public function getWaiveReason()
     {
-        $ft = $this->getFeeTransactions()->last();
-        if ($ft) {
-            return $ft->getTransaction()->getComment();
+        $transaction = $this->getOutstandingWaiveTransaction();
+        if ($transaction) {
+            return $transaction->getComment();
         }
     }
 
@@ -217,5 +229,150 @@ class Fee extends AbstractFee
         )->first(); // there should only ever be one!
 
         return $ft ? $ft->getTransaction() : null;
+    }
+
+    /**
+     * @return string e.g. '1234.56'
+     */
+    public function getOutstandingAmount()
+    {
+        $amount = (float) $this->getAmount();
+
+        $ftSum = 0;
+        $this->getFeeTransactions()->forAll(
+            function ($key, $feeTransaction) use (&$ftSum) {
+                unset($key); // unused
+                if ($feeTransaction->getTransaction()->isComplete()) {
+                    $ftSum += (float) $feeTransaction->getAmount();
+                    return true;
+                }
+            }
+        );
+
+        return number_format(($amount - $ftSum), 2, '.', '');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLatestPaymentRef()
+    {
+        $transaction = $this->getLatestTransaction();
+        if ($transaction) {
+            return $transaction->getReference();
+        }
+    }
+
+    /**
+     * @return FeeTransaction
+     */
+    protected function getLatestFeeTransaction()
+    {
+        // Criteria won't handle relations, only properties, so get them all and
+        // sort the transactions manually
+        if ($this->getFeeTransactions() && $this->getFeeTransactions()->count()) {
+            $transactions = [];
+            foreach ($this->getFeeTransactions() as $key => $ft) {
+                if ($ft->getTransaction()->isComplete()) {
+                    $transactions[$key] = $ft->getTransaction();
+                }
+            }
+            uasort(
+                $transactions,
+                function ($a, $b) {
+                    if ($a->getCompletedDate() == $b->getCompletedDate()) {
+                        // if same date, use createdOn timestamp
+                        return $a->getCreatedOn() < $b->getCreatedOn();
+                    }
+                    return $a->getCompletedDate() < $b->getCompletedDate();
+                }
+            );
+
+            if (!empty($transactions)) {
+                $key = array_keys($transactions)[0];
+                return $this->getFeeTransactions()->get($key);
+            }
+        }
+    }
+
+    /**
+     * @return Transaction
+     */
+    protected function getLatestTransaction()
+    {
+        $ft = $this->getLatestFeeTransaction();
+        if ($ft) {
+            return $ft->getTransaction();
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'outstanding' => $this->getOutstandingAmount(),
+            'receiptNo' => $this->getLatestPaymentRef(),
+        ];
+    }
+
+    /**
+     * @return Organisation|null
+     */
+    public function getOrganisation()
+    {
+        if (!empty($this->getLicence())) {
+            return $this->getLicence()->getOrganisation();
+        }
+
+        if (!empty($this->getIrfoGvPermit())) {
+            return $this->getIrfoGvPermit()->getOrganisation();
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerNameForInvoice()
+    {
+        $name = self::DEFAULT_INVOICE_CUSTOMER_NAME;
+
+        if (!empty($this->getOrganisation())) {
+            $name = $this->getOrganisation()->getName();
+        }
+
+        return $name;
+    }
+
+    /**
+     * @return Address
+     */
+    public function getCustomerAddressForInvoice()
+    {
+        if (!empty($this->getLicence())) {
+            $contactDetails = $this->getLicence()->getCorrespondenceCd();
+            if (!empty($contactDetails)) {
+                return $contactDetails->getAddress();
+            }
+        }
+
+        if (!empty($this->getIrfoGvPermit())) {
+            $organisation = $this->getIrfoGvPermit()->getOrganisation();
+            if (!empty($organisation)) {
+                $contactDetails = $organisation->getIrfoContactDetails();
+                if (!empty($contactDetails)) {
+                    return $contactDetails->getAddress();
+                }
+            }
+        }
+
+        // we always need to return a valid address object
+        $default = new Address();
+        $default
+            ->setAddressLine1(self::DEFAULT_INVOICE_ADDRESS_LINE)
+            ->setTown(self::DEFAULT_INVOICE_ADDRESS_LINE)
+            ->setPostcode(self::DEFAULT_INVOICE_ADDRESS_LINE);
+        return $default;
     }
 }

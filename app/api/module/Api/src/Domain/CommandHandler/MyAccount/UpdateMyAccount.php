@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
-use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
@@ -35,8 +34,9 @@ final class UpdateMyAccount extends AbstractCommandHandler implements AuthAwareI
         );
 
         $user->update(
-            $this->getRepo()->getReference(Team::class, $command->getTeam()),
-            $command->getLoginId()
+            $this->getRepo()->populateRefDataReference(
+                $command->getArrayCopy()
+            )
         );
 
         if ($user->getContactDetails() instanceof ContactDetails) {

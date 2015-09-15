@@ -8,6 +8,11 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
+use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
+use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Mockery as m;
 
 /**
@@ -95,5 +100,65 @@ class UserTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getSingleResult')->once()->andReturn('RESULT');
 
         $this->assertSame('RESULT', $this->sut->fetchForTma(1));
+    }
+
+    public function testPopulateRefDataReference()
+    {
+        $teamId = 1;
+        $transportManagerId = 2;
+        $partnerContactDetailsId = 3;
+        $localAuthorityId = 4;
+        $roleId = 100;
+
+        $data = [
+            'team' => $teamId,
+            'transportManager' => $transportManagerId,
+            'partnerContactDetails' => $partnerContactDetailsId,
+            'localAuthority' => $localAuthorityId,
+            'roles' => [$roleId]
+        ];
+
+        $teamEntity = m::mock(TeamEntity::class);
+        $this->em->shouldReceive('getReference')
+            ->once()
+            ->with(TeamEntity::class, $teamId)
+            ->andReturn($teamEntity);
+
+        $transportManagerEntity = m::mock(TransportManagerEntity::class);
+        $this->em->shouldReceive('getReference')
+            ->once()
+            ->with(TransportManagerEntity::class, $transportManagerId)
+            ->andReturn($transportManagerEntity);
+
+        $partnerContactDetailsEntity = m::mock(ContactDetailsEntity::class);
+        $this->em->shouldReceive('getReference')
+            ->once()
+            ->with(ContactDetailsEntity::class, $partnerContactDetailsId)
+            ->andReturn($partnerContactDetailsEntity);
+
+        $localAuthorityEntity = m::mock(LocalAuthorityEntity::class);
+        $this->em->shouldReceive('getReference')
+            ->once()
+            ->with(LocalAuthorityEntity::class, $localAuthorityId)
+            ->andReturn($localAuthorityEntity);
+
+        $roleEntity = m::mock(RoleEntity::class);
+        $this->em->shouldReceive('getReference')
+            ->once()
+            ->with(RoleEntity::class, $roleId)
+            ->andReturn($roleEntity);
+
+        $result = $this->sut->populateRefDataReference($data);
+
+        $this->assertEquals(
+            [
+                'team' => $teamEntity,
+                'transportManager' => $transportManagerEntity,
+                'partnerContactDetails' => $partnerContactDetailsEntity,
+                'localAuthority' => $localAuthorityEntity,
+                'roles' => [$roleEntity],
+            ],
+            $result
+        );
     }
 }

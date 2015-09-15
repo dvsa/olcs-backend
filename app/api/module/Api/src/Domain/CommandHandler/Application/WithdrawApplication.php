@@ -36,7 +36,7 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
     {
         $result = new Result();
 
-        /** @var Application $application */
+        /* @var $application Application */
         $application = $this->getRepo()->fetchById($command->getId());
 
         $application->setStatus($this->getRepo()->getRefdataReference(Application::APPLICATION_STATUS_WITHDRAWN));
@@ -47,7 +47,7 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
         $result->merge($this->createSnapshot($command->getId()));
 
-        if ($application->getIsVariation() === false) {
+        if ($application->isNew()) {
             $result->merge(
                 $this->handleSideEffect(
                     Withdraw::create(
@@ -57,6 +57,9 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
                     )
                 )
             );
+
+            $result->merge($this->publishApplication($application));
+            $result->merge($this->closeTexTask($application));
         }
 
         $result->merge(
@@ -108,5 +111,42 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
             $licenceVehilce->setInterimApplication(null);
             $this->getRepo('LicenceVehicle')->save($licenceVehilce);
         }
+    }
+
+    /**
+     * Publish the application
+     *
+     * @param Application $application
+     *
+     * @return Result
+     */
+    protected function publishApplication(Application $application)
+    {
+        return $this->handleSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\Application::create(
+                [
+                    'id' => $application->getId(),
+                    'trafficArea' => $application->getTrafficArea()->getId(),
+                ]
+            )
+        );
+    }
+
+    /**
+     * Close any TEX tasks on the application
+     *
+     * @param Application $application
+     *
+     * @return Result
+     */
+    protected function closeTexTask(Application $application)
+    {
+        return $this->handleSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::create(
+                [
+                    'id' => $application->getId(),
+                ]
+            )
+        );
     }
 }

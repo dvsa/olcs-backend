@@ -46,6 +46,21 @@ class SubmissionGenerator
         return $submissionEntity;
     }
 
+    public function generateSubmissionSectionData(SubmissionEntity $submissionEntity, $sectionId, $subSection = null)
+    {
+        $data = $this->sectionGeneratorPluginManager
+            ->get($sectionId)
+            ->generateSection(
+                $submissionEntity->getCase()
+            );
+
+        if (!empty($subSection) && isset($data[$subSection])) {
+            return $data[$subSection];
+        }
+
+        return $data;
+    }
+
     private function getRequiredSections($sectionTypeId, $postedSections)
     {
         $submissionTypeSections = $this->submissionConfig['section-types'][$sectionTypeId];

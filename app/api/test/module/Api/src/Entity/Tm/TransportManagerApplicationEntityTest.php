@@ -94,4 +94,24 @@ class TransportManagerApplicationEntityTest extends EntityTester
             'tmas'
         );
     }
+
+    public function testGetTotalWeeklyHours()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->updateTransportManagerApplicationFull(
+            '2015-01-01',
+            'tmt',
+            1,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            'ai',
+            'tmas'
+        );
+        $this->assertEquals($sut->getTotalWeeklyHours(), 28);
+    }
 }
