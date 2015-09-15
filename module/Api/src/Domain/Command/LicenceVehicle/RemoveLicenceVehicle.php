@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  *
  * Remove licence vehicle.
  *
- * @package Dvsa\Olcs\Api\Domain\Command\Discs
+ * @package Dvsa\Olcs\Api\Domain\Command\LicenceVehicle
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
 final class RemoveLicenceVehicle extends AbstractIdOnlyCommand

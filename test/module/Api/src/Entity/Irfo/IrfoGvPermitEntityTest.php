@@ -3,6 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Entity\Irfo;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as Entity;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType as IrfoGvPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
@@ -115,7 +117,7 @@ class IrfoGvPermitEntityTest extends EntityTester
      *
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
-    public function testResetThrowsCanMakeDecisionException()
+    public function testResetThrowsInvalidStatusException()
     {
         $status = new RefData();
         $status->setId(Entity::STATUS_APPROVED);
@@ -123,5 +125,187 @@ class IrfoGvPermitEntityTest extends EntityTester
         $this->entity->reset($status);
 
         return true;
+    }
+
+    public function testWithdraw()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_PENDING);
+        $this->entity->setIrfoPermitStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_WITHDRAWN);
+
+        $this->entity->withdraw($newStatus);
+
+        $this->assertEquals($newStatus, $this->entity->getIrfoPermitStatus());
+    }
+
+    /**
+     * Tests withdraw throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testWithdrawThrowsInvalidStatusException()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_APPROVED);
+
+        $this->entity->withdraw($status);
+
+        return true;
+    }
+
+    public function testRefuse()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_PENDING);
+        $this->entity->setIrfoPermitStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_REFUSED);
+
+        $this->entity->refuse($newStatus);
+
+        $this->assertEquals($newStatus, $this->entity->getIrfoPermitStatus());
+    }
+
+    /**
+     * Tests refuse throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testRefuseThrowsInvalidStatusException()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_APPROVED);
+
+        $this->entity->refuse($status);
+
+        return true;
+    }
+
+    /**
+     * Tests approve throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testApproveThrowsInvalidStatusException()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_PENDING);
+
+        $fees = [];
+
+        $this->entity->approve($status, $fees);
+
+        return true;
+    }
+
+    /**
+     * Tests approve throws exception correctly
+     *
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
+     */
+    public function testApproveThrowsNotApprovableException()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('isApprovable')->once()->andReturn(false);
+
+        $status = new RefData();
+        $status->setId(Entity::STATUS_APPROVED);
+
+        $fees = [];
+
+        $sut->approve($status, $fees);
+
+        return true;
+    }
+
+    public function testApprove()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('isApprovable')->once()->andReturn(true);
+
+        $status = new RefData();
+        $status->setId(Entity::STATUS_PENDING);
+        $sut->setIrfoPermitStatus($status);
+
+        $newStatus = new RefData();
+        $newStatus->setId(Entity::STATUS_APPROVED);
+
+        $fees = [];
+
+        $sut->approve($newStatus, $fees);
+
+        $this->assertEquals($newStatus, $sut->getIrfoPermitStatus());
+
+        return true;
+    }
+
+    public function testIsApprovable()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_PENDING);
+        $this->entity->setIrfoPermitStatus($status);
+
+        $feeType = new FeeTypeEntity();
+
+        $feeStatusPaid = new RefData();
+        $feeStatusPaid->setId(FeeEntity::STATUS_PAID);
+
+        $fees = [
+            new FeeEntity($feeType, 10, $feeStatusPaid),
+        ];
+
+        $this->assertEquals(true, $this->entity->isApprovable($fees));
+    }
+
+    public function testIsApprovableWhenNotPending()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_REFUSED);
+        $this->entity->setIrfoPermitStatus($status);
+
+        $fees = [];
+
+        $this->assertEquals(false, $this->entity->isApprovable($fees));
+    }
+
+    public function testIsApprovableWhenWithoutFees()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_PENDING);
+        $this->entity->setIrfoPermitStatus($status);
+
+        $fees = [];
+
+        $this->assertEquals(false, $this->entity->isApprovable($fees));
+    }
+
+    public function testIsApprovableWhenOutstandingFees()
+    {
+        $status = new RefData();
+        $status->setId(Entity::STATUS_PENDING);
+        $this->entity->setIrfoPermitStatus($status);
+
+        $feeType = new FeeTypeEntity();
+
+        $feeStatusPaid = new RefData();
+        $feeStatusPaid->setId(FeeEntity::STATUS_PAID);
+
+        $feeStatusWaived = new RefData();
+        $feeStatusWaived->setId(FeeEntity::STATUS_WAIVED);
+
+        $feeStatusOutstanding = new RefData();
+        $feeStatusOutstanding->setId(FeeEntity::STATUS_OUTSTANDING);
+
+        $fees = [
+            new FeeEntity($feeType, 10, $feeStatusPaid),
+            new FeeEntity($feeType, 10, $feeStatusWaived),
+            new FeeEntity($feeType, 10, $feeStatusOutstanding),
+        ];
+
+        $this->assertEquals(false, $this->entity->isApprovable($fees));
     }
 }

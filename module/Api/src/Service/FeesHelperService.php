@@ -126,7 +126,7 @@ class FeesHelperService implements FactoryInterface
 
         return $this->feeRepo->fetchLatestFeeByTypeStatusesAndApplicationId(
             $feeType->getId(),
-            [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED],
+            [FeeEntity::STATUS_OUTSTANDING],
             $application->getId()
         );
     }

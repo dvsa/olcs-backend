@@ -4,9 +4,13 @@ namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
@@ -144,6 +148,46 @@ class FeeEntityTest extends EntityTester
     }
 
     /**
+     * @param string $accrualRuleId,
+     * @param int $expected
+     *
+     * @dataProvider defermentPeriodProvider
+     */
+    public function testGetDefermentPeriod($accrualRuleId, $expected)
+    {
+        $feeType = m::mock()
+            ->shouldReceive('getAccrualRule')
+            ->andReturn((new RefData())->setId($accrualRuleId))
+            ->getMock();
+
+        $this->sut->setFeeType($feeType);
+
+        $this->assertEquals($expected, $this->sut->getDefermentPeriod());
+    }
+
+    public function defermentPeriodProvider()
+    {
+        return [
+            'immediate' => [
+                Entity::ACCRUAL_RULE_IMMEDIATE,
+                1
+            ],
+            'licence start' => [
+                Entity::ACCRUAL_RULE_LICENCE_START,
+                60,
+            ],
+            'continuation' => [
+                Entity::ACCRUAL_RULE_CONTINUATION,
+                60,
+            ],
+            'no rule' => [
+                null,
+                null,
+            ],
+        ];
+    }
+
+    /**
      * @param string $status
      * @param boolean $expected
      *
@@ -164,8 +208,6 @@ class FeeEntityTest extends EntityTester
             [Entity::STATUS_PAID, false],
             [Entity::STATUS_CANCELLED, false],
             [Entity::STATUS_OUTSTANDING, true],
-            [Entity::STATUS_WAIVE_RECOMMENDED, true],
-            [Entity::STATUS_WAIVED, true],
             ['invalid', true],
         ];
     }
@@ -173,7 +215,7 @@ class FeeEntityTest extends EntityTester
     public function testCompatibilityGetMethods()
     {
         $this->assertNull($this->sut->getReceivedAmount());
-        $this->assertNull($this->sut->getReceiptNo());
+        $this->assertNull($this->sut->getLatestPaymentRef());
         $this->assertNull($this->sut->getReceivedDate());
         $this->assertNull($this->sut->getPaymentMethod());
         $this->assertNull($this->sut->getProcessedBy());
@@ -182,13 +224,19 @@ class FeeEntityTest extends EntityTester
         $this->assertNull($this->sut->getChequePoNumber());
         $this->assertNull($this->sut->getWaiveReason());
 
-        $transaction = new Transaction();
-        $feeTransaction = new FeeTransaction();
-        $feeTransaction->setTransaction($transaction);
-        $feeTransaction->setAmount('1234.56');
+        $ft1 = $this->getStubFeeTransaction('1234.56', '2015-09-01', '2015-09-02 12:34:56');
+        $ft2 = $this->getStubFeeTransaction('1234.56', '2015-08-01', '2015-09-02 12:34:56');
+        $ft3 = $this->getStubFeeTransaction('1234.56', '2015-09-01', '2015-09-02 12:34:55');
+        $ft4 = $this->getStubFeeTransaction(
+            '234.56',
+            '2015-09-03',
+            '2015-09-03 12:34:55',
+            Transaction::STATUS_OUTSTANDING,
+            Transaction::TYPE_WAIVE,
+            'waive reason'
+        );
 
-        $completed = new \DateTime();
-        $transaction->setCompletedDate($completed);
+        $transaction = $ft1->getTransaction();
 
         $paymentMethod = m::mock(RefData::class);
         $transaction->setPaymentMethod($paymentMethod);
@@ -205,21 +253,47 @@ class FeeEntityTest extends EntityTester
 
         $transaction->setChequePoNumber('23456');
 
-        $transaction->setComment('reason');
-
         $transaction->setReference('OLCS-1234');
 
-        $this->sut->getFeeTransactions()->add($feeTransaction);
+        $this->sut->getFeeTransactions()->add($ft1);
+        $this->sut->getFeeTransactions()->add($ft2);
+        $this->sut->getFeeTransactions()->add($ft3);
+        $this->sut->getFeeTransactions()->add($ft4);
 
         $this->assertEquals('1234.56', $this->sut->getReceivedAmount());
-        $this->assertEquals($completed, $this->sut->getReceivedDate());
+        $this->assertEquals('2015-09-01', $this->sut->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals($paymentMethod, $this->sut->getPaymentMethod());
         $this->assertEquals('bob', $this->sut->getProcessedBy());
         $this->assertEquals('payer', $this->sut->getPayer());
         $this->assertEquals('12345', $this->sut->getSlipNo());
         $this->assertEquals('23456', $this->sut->getChequePoNumber());
-        $this->assertEquals('reason', $this->sut->getWaiveReason());
-        $this->assertEquals('OLCS-1234', $this->sut->getReceiptNo());
+        $this->assertEquals('waive reason', $this->sut->getWaiveReason());
+        $this->assertEquals('OLCS-1234', $this->sut->getLatestPaymentRef());
+    }
+
+    private function getStubFeeTransaction(
+        $amount,
+        $completedDate,
+        $createdOn,
+        $statusId = Transaction::STATUS_COMPLETE,
+        $typeId = Transaction::TYPE_PAYMENT,
+        $comment = ''
+    ) {
+        $transaction = new Transaction();
+        $feeTransaction = new FeeTransaction();
+        $feeTransaction->setTransaction($transaction);
+        $feeTransaction->setAmount($amount);
+        $completed = new \DateTime($completedDate);
+        $transaction->setCompletedDate($completed);
+        $created = new \DateTime($createdOn);
+        $transaction->setCreatedOn($created);
+        $status = (new RefData())->setId($statusId);
+        $transaction->setStatus($status);
+        $type = (new RefData())->setId($typeId);
+        $transaction->setType($type);
+        $transaction->setComment($comment);
+
+        return $feeTransaction;
     }
 
     /**
@@ -263,6 +337,225 @@ class FeeEntityTest extends EntityTester
             'valid' => [
                 [$feeTransaction1, $feeTransaction2],
                 $transaction2,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider outstandingAmountProvider
+     */
+    public function testGetOutstandingAmount($feeAmount, $feeTransactions, $expected)
+    {
+        $this->sut->setAmount($feeAmount);
+        $this->sut->setFeeTransactions($feeTransactions);
+        $this->assertEquals($expected, $this->sut->getOutstandingAmount());
+    }
+
+    public function outstandingAmountProvider()
+    {
+        return [
+            'no transactions' => [
+                '1234.56',
+                new ArrayCollection(),
+                '1234.56',
+            ],
+            'one complete transaction' => [
+                '1234.56',
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction('1234.56', '2015-09-01', '2015-09-02'),
+                    ]
+                ),
+                '0.00',
+            ],
+            'one pending transaction' => [
+                '1234.56',
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction(
+                            '1234.56',
+                            '2015-09-01',
+                            '2015-09-02 12:34:56',
+                            Transaction::STATUS_OUTSTANDING
+                        ),
+                    ]
+                ),
+                '1234.56',
+            ],
+            'two complete one refund one pending' => [
+                '1234.56',
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction('1000', '2015-09-01', '2015-09-02'),
+                        $this->getStubFeeTransaction('300', '2015-09-01', '2015-09-02'),
+                        $this->getStubFeeTransaction('-100', '2015-09-01', '2015-09-02'),
+                        $this->getStubFeeTransaction(
+                            '34.56',
+                            '2015-09-01',
+                            '2015-09-02',
+                            Transaction::STATUS_OUTSTANDING
+                        ),
+                    ]
+                ),
+                '34.56',
+            ],
+            'one overpayment' => [
+                '1234.56',
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction('2000', '2015-09-01', '2015-09-02'),
+                    ]
+                ),
+                '-765.44',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getOrganisationProvider
+     */
+    public function testGetOrganisation($licence, $irfoGvPermit, $expected)
+    {
+        $this->sut->setLicence($licence);
+        $this->sut->setIrfoGvPermit($irfoGvPermit);
+        $this->assertSame($expected, $this->sut->getOrganisation());
+    }
+
+    public function getOrganisationProvider()
+    {
+        $organisation = m::mock(Organisation::class);
+
+        return [
+            'licence' => [
+                m::mock(Licence::class)->makePartial()->setOrganisation($organisation),
+                null,
+                $organisation,
+            ],
+            'irfo' => [
+                null,
+                m::mock(IrfoGvPermit::class)->makePartial()->setOrganisation($organisation),
+                $organisation,
+            ],
+            'neither' => [
+                null,
+                null,
+                null,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getCustomerNameProvider
+     */
+    public function testGetCustomerNameForInvoice($licence, $irfoGvPermit, $expected)
+    {
+        $this->sut->setLicence($licence);
+        $this->sut->setIrfoGvPermit($irfoGvPermit);
+        $this->assertEquals($expected, $this->sut->getCustomerNameForInvoice());
+    }
+
+    public function getCustomerNameProvider()
+    {
+        $organisation = m::mock(Organisation::class)
+            ->shouldReceive('getName')
+            ->andReturn('Foo')
+            ->getMock();
+
+        return [
+            'licence' => [
+                m::mock(Licence::class)->makePartial()->setOrganisation($organisation),
+                null,
+                'Foo',
+            ],
+            'irfo' => [
+                null,
+                m::mock(IrfoGvPermit::class)->makePartial()->setOrganisation($organisation),
+                'Foo',
+            ],
+            'neither' => [
+                null,
+                null,
+                'Miscellaneous payment',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getCustomerAddressProvider
+     */
+    public function testGetCustomerAddressForInvoice($licence, $irfoGvPermit, $expected)
+    {
+        $this->sut->setLicence($licence);
+        $this->sut->setIrfoGvPermit($irfoGvPermit);
+        $this->assertEquals($expected, $this->sut->getCustomerAddressForInvoice()->toArray());
+    }
+
+    public function getCustomerAddressProvider()
+    {
+        $address = m::mock(Address::class)
+            ->shouldReceive('toArray')
+            ->andReturn(
+                [
+                    'addressLine1' => 'Foo1',
+                    'addressLine2' => 'Foo2',
+                    'addressLine3' => 'Foo3',
+                    'addressLine4' => 'Foo4',
+                    'town' => 'FooTown',
+                    'postcode' =>'FooPostcode',
+                    'countryCode' => 'FooCountry',
+                ]
+            )
+            ->getMock();
+
+        $contactDetails = m::mock(ContactDetails::class)
+            ->shouldReceive('getAddress')
+            ->andReturn($address)
+            ->getMock();
+
+        $organisation = m::mock(Organisation::class)
+            ->shouldReceive('getIrfoContactDetails')
+            ->andReturn($contactDetails)
+            ->getMock();
+
+        return [
+            'licence' => [
+                m::mock(Licence::class)->makePartial()->setCorrespondenceCd($contactDetails),
+                null,
+                [
+                    'addressLine1' => 'Foo1',
+                    'addressLine2' => 'Foo2',
+                    'addressLine3' => 'Foo3',
+                    'addressLine4' => 'Foo4',
+                    'town' => 'FooTown',
+                    'postcode' =>'FooPostcode',
+                    'countryCode' => 'FooCountry',
+                ],
+            ],
+            'irfo' => [
+                null,
+                m::mock(IrfoGvPermit::class)->makePartial()->setOrganisation($organisation),
+                [
+                    'addressLine1' => 'Foo1',
+                    'addressLine2' => 'Foo2',
+                    'addressLine3' => 'Foo3',
+                    'addressLine4' => 'Foo4',
+                    'town' => 'FooTown',
+                    'postcode' =>'FooPostcode',
+                    'countryCode' => 'FooCountry',
+                ],
+            ],
+            'neither' => [
+                null,
+                null,
+                [
+                    'addressLine1' => 'Miscellaneous payment',
+                    'addressLine2' => null,
+                    'addressLine3' => null,
+                    'addressLine4' => null,
+                    'town' => 'Miscellaneous payment',
+                    'postcode' => 'Miscellaneous payment',
+                    'countryCode' => null,
+                ],
             ],
         ];
     }

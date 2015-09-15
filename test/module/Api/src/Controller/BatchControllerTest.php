@@ -7,18 +7,20 @@
  */
 namespace Dvsa\OlcsTest\Cli\Controller;
 
+use Dvsa\Olcs\Api\Domain\Command;
+use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Query;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Cli\Controller\BatchController;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence;
 use Dvsa\Olcs\Transfer\Query\Application\Application;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Zend\Console\Adapter\AdapterInterface;
 use Zend\Mvc\Controller\Plugin\Params;
 use Zend\Mvc\Controller\PluginManager;
-use Zend\View\Model\JsonModel;
-use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Domain\Command;
-use Dvsa\Olcs\Cli\Controller\BatchController;
 use Zend\ServiceManager\ServiceManager;
-use Zend\Console\Adapter\AdapterInterface;
+use Zend\View\Model\JsonModel;
 
 /**
  * Batch Controller Test
@@ -147,5 +149,126 @@ class BatchControllerTest extends TestCase
             ->andReturn(new Command\Result());
 
         $this->sut->duplicateVehicleWarningAction();
+    }
+
+    public function testContinuationNotSoughtAction()
+    {
+        $mockParams =  m::mock(\Zend\Mvc\Controller\Plugin\Params::class)
+            ->shouldReceive('__invoke')
+            ->andReturnUsing(
+                function ($param) {
+                    $map = [
+                        'dryrun' => false,
+                        'verbose' => true,
+                    ];
+                    return isset($map[$param]) && $map[$param];
+                }
+            )
+            ->getMock();
+
+        $this->pm
+            ->shouldReceive('get')
+            ->with('params', null)
+            ->andReturn($mockParams);
+
+        $mockCommandHandler = m::mock();
+        $mockQueryHandler = m::mock();
+        $mockConsole = m::mock(AdapterInterface::class);
+
+        $now = new DateTime();
+
+        $this->sm
+            ->shouldReceive('get')
+            ->with('CommandHandlerManager')
+            ->andReturn($mockCommandHandler)
+            ->shouldReceive('get')
+            ->with('QueryHandlerManager')
+            ->andReturn($mockQueryHandler);
+
+        $licences = [
+            [
+                'id' => 1,
+                'version' => 1,
+                'licNo' => 'OB001',
+                'trafficArea' => [
+                    'id' => 'B',
+                    'name' => 'North East',
+                ],
+            ],
+            [
+                'id' => 2,
+                'version' => 1,
+                'licNo' => 'OB002',
+                'trafficArea' => [
+                    'id' => 'B',
+                    'name' => 'North East',
+                ],
+            ],
+        ];
+
+        $mockQueryHandler
+            ->shouldReceive('handleQuery')
+            ->with(m::type(Query\Licence\ContinuationNotSoughtList::class))
+            ->andReturnUsing(
+                function ($qry) use ($licences, $now) {
+                    $this->assertEquals(
+                        $now->format('Y-m-d'),
+                        $qry->getDate()->format('Y-m-d')
+                    );
+                    return [
+                        'result' => $licences,
+                        'count' => 2,
+                    ];
+                }
+            );
+
+        $mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\Licence\ProcessContinuationNotSought::class))
+            ->twice()
+            ->andReturnUsing(
+                function ($cmd) {
+                    $result = new Command\Result();
+                    $result->addMessage('Licence updated');
+                    return $result;
+                }
+            );
+
+        $mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\Email\SendContinuationNotSought::class))
+            ->once()
+            ->andReturnUsing(
+                function ($cmd) use ($licences, $now) {
+                    $this->assertEquals($now->format('Y-m-d'), $cmd->getDate()->format('Y-m-d'));
+                    $this->assertSame($licences, $cmd->getLicences());
+                    $result = new Command\Result();
+                    $result->addMessage('Email sent');
+                    return $result;
+                }
+            );
+
+        $mockConsole = m::mock(AdapterInterface::class);
+        $mockConsole
+            ->shouldReceive('writeLine')
+            ->with($now->format(\DateTime::W3C))
+            ->shouldReceive('writeLine')
+            ->with('2 Licence(s) found to change to CNS')
+            ->once()
+            ->shouldReceive('writeLine')
+            ->with('Processing Licence ID 1')
+            ->once()
+            ->shouldReceive('writeLine')
+            ->with('Processing Licence ID 2')
+            ->once()
+            ->shouldReceive('writeLine')
+            ->with('Licence updated')
+            ->twice()
+            ->shouldReceive('writeLine')
+            ->with('Email sent')
+            ->once();
+        $this->sut->setConsole($mockConsole);
+
+        $this->sut->continuationNotSoughtAction();
     }
 }

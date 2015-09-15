@@ -104,6 +104,15 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     protected $role;
 
     /**
+     * User
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\User\User", mappedBy="roles", fetch="LAZY")
+     */
+    protected $users;
+
+    /**
      * Version
      *
      * @var int
@@ -123,15 +132,6 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     protected $rolePermissions;
 
     /**
-     * Role
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\User\UserRole", mappedBy="role")
-     */
-    protected $roles;
-
-    /**
      * Initialise the collections
      */
     public function __construct()
@@ -141,8 +141,8 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
 
     public function initCollections()
     {
+        $this->users = new ArrayCollection();
         $this->rolePermissions = new ArrayCollection();
-        $this->roles = new ArrayCollection();
     }
 
     /**
@@ -330,6 +330,66 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     }
 
     /**
+     * Set the user
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $users
+     * @return Role
+     */
+    public function setUsers($users)
+    {
+        $this->users = $users;
+
+        return $this;
+    }
+
+    /**
+     * Get the users
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * Add a users
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $users
+     * @return Role
+     */
+    public function addUsers($users)
+    {
+        if ($users instanceof ArrayCollection) {
+            $this->users = new ArrayCollection(
+                array_merge(
+                    $this->users->toArray(),
+                    $users->toArray()
+                )
+            );
+        } elseif (!$this->users->contains($users)) {
+            $this->users->add($users);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a users
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $users
+     * @return Role
+     */
+    public function removeUsers($users)
+    {
+        if ($this->users->contains($users)) {
+            $this->users->removeElement($users);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the version
      *
      * @param int $version
@@ -407,66 +467,6 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     {
         if ($this->rolePermissions->contains($rolePermissions)) {
             $this->rolePermissions->removeElement($rolePermissions);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the role
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $roles
-     * @return Role
-     */
-    public function setRoles($roles)
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
-     * Get the roles
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getRoles()
-    {
-        return $this->roles;
-    }
-
-    /**
-     * Add a roles
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $roles
-     * @return Role
-     */
-    public function addRoles($roles)
-    {
-        if ($roles instanceof ArrayCollection) {
-            $this->roles = new ArrayCollection(
-                array_merge(
-                    $this->roles->toArray(),
-                    $roles->toArray()
-                )
-            );
-        } elseif (!$this->roles->contains($roles)) {
-            $this->roles->add($roles);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a roles
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $roles
-     * @return Role
-     */
-    public function removeRoles($roles)
-    {
-        if ($this->roles->contains($roles)) {
-            $this->roles->removeElement($roles);
         }
 
         return $this;

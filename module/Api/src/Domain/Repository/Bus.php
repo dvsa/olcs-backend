@@ -71,6 +71,11 @@ class Bus extends AbstractRepository
             $qb->andWhere($qb->expr()->lt($this->alias . '.variationNo', ':byVariationNo'))
                 ->setParameter('byVariationNo', $query->getVariationNo());
         }
+
+        if (method_exists($query, 'getLicenceId')) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':byLicence'))
+                ->setParameter('byLicence', $query->getLicenceId());
+        }
     }
 
     /**

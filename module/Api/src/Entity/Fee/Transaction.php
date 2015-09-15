@@ -53,4 +53,26 @@ class Transaction extends AbstractTransaction
     {
         return $this->getStatus()->getId() === self::STATUS_COMPLETE;
     }
+
+    public function getTotalAmount()
+    {
+        $total = 0;
+
+        $this->getFeeTransactions()->forAll(
+            function ($key, $ft) use (&$total) {
+                unset($key); // unused
+                $total += $ft->getAmount();
+                return true;
+            }
+        );
+
+        return number_format($total, 2, '.', '');
+    }
+
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'amount' => $this->getTotalAmount(),
+        ];
+    }
 }

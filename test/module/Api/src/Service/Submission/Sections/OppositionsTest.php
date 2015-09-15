@@ -28,12 +28,15 @@ class OppositionsTest extends SubmissionSectionTest
                         0  => [
                             'id' => 253,
                             'version' => 255,
-                            'dateReceived' => new \DateTime('2008-08-11'),
+                            'dateReceived' => '11/08/2008',
                             'oppositionType' => 'opposition_type253-desc',
                             'contactName' => [
                                 'title' => 'title-desc',
                                 'forename' => 'fn22',
-                                'familyName' => 'sn22'
+                                'familyName' => 'sn22',
+                                'birthDate' => '22/01/1977',
+                                'birthPlace' => 'bp'
+
                             ],
                             'grounds' => [
                                 'g1-desc',
@@ -48,12 +51,14 @@ class OppositionsTest extends SubmissionSectionTest
                         1 => [
                             'id' => 263,
                             'version' => 265,
-                            'dateReceived' => new \DateTime('2008-08-11'),
+                            'dateReceived' => '11/08/2008',
                             'oppositionType' => 'opposition_type263-desc',
                             'contactName' => [
                                 'title' => 'title-desc',
                                 'forename' => 'fn22',
-                                'familyName' => 'sn22'
+                                'familyName' => 'sn22',
+                                'birthDate' => '22/01/1977',
+                                'birthPlace' => 'bp'
                             ],
                             'grounds' => [
                                 'g1-desc',

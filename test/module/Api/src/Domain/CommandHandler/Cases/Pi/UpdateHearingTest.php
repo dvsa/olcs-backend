@@ -127,6 +127,7 @@ class UpdateHearingTest extends CommandHandlerTestCase
         $piHearing = m::mock(PiHearingEntity::class)->makePartial();
         $piHearing->shouldReceive('getPi->getCase')->andReturn($cases);
         $piHearing->shouldReceive('getId')->andReturn($hearingId);
+        $piHearing->shouldReceive('getPi->isClosed')->once()->andReturn(false);
 
         $this->repoMap['PiHearing']
             ->shouldReceive('fetchUsingId')

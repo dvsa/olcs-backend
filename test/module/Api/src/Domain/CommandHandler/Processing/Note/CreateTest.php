@@ -30,7 +30,7 @@ class CreateTest extends CommandHandlerTestCase
 
     public function setUp()
     {
-        $user = new UserEntity();
+        $user = m::mock(UserEntity::class)->makePartial();
         $user->setId(1);
 
         $as = m::mock(AuthorizationService::class);
@@ -88,8 +88,6 @@ class CreateTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $id = 111;
-
         $data = [
             'application' => 50,
             'busReg' => 51,

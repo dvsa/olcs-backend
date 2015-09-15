@@ -104,38 +104,12 @@ return array(
                 'persist'
             )
         ),
-        'userRoles' => array(
-            'cascade' => array(
-                'persist'
-            ),
-            'inversedBy' => array(
-                'entity' => 'UserRole',
-                'property' => 'user'
-            )
-        ),
         'transport_manager_id' => array(
             'inversedBy' => array(
                 'entity' => 'TransportManager',
                 'property' => 'user'
             ),
         ),
-    ),
-    'user_role' => array(
-        'user_id' => array(
-            'inversedBy' => array(
-                'entity' => 'User',
-                'property' => 'userRole',
-                'cascade' => array(
-                    'persist'
-                )
-            )
-        ),
-        'role_id' => array(
-            'inversedBy' => array(
-                'entity' => 'Role',
-                'property' => 'role'
-            )
-        )
     ),
     'licence' => array(
         'organisation_id' => array(
@@ -985,7 +959,12 @@ return array(
         'user_id' => array(
             'inversedBy' => array(
                 'entity' => 'User',
-                'property' => 'organisationUser'
+                'property' => 'organisationUser',
+                'cascade' => array(
+                    'persist'
+                ),
+                'indexBy' => 'organisation_id',
+                'orphanRemoval' => 'true'
             )
         ),
         'organisation_id' => array(
@@ -1710,5 +1689,10 @@ return array(
                 'property' => 'trafficAreaEnforcementArea'
             )
         )
-    )
+    ),
+    'transport_manager' => array(
+        'merge_details' => array(
+            'type' => 'json_array'
+        ),
+    ),
 );

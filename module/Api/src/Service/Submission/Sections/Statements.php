@@ -23,24 +23,21 @@ final class Statements extends AbstractSection
         $statements = $case->getStatements();
 
         $data = [];
-        for ($i = 0; $i < count($statements); $i++) {
-            /** @var Statement $entity */
-            $entity = $statements->current();
 
+        /** @var Statement $entity */
+        foreach ($statements as $entity) {
             $thisRow = array();
             $thisRow['id'] = $entity->getId();
             $thisRow['version'] = $entity->getVersion();
-            $thisRow['requestedDate'] = $entity->getRequestedDate();
+            $thisRow['requestedDate'] = $this->formatDate($entity->getRequestedDate());
             $thisRow['requestedBy'] = $this->extractPerson($entity->getRequestorsContactDetails());
             $thisRow['statementType'] = $entity->getStatementType()->getDescription();
-            $thisRow['stoppedDate'] = $entity->getStoppedDate();
+            $thisRow['stoppedDate'] = $this->formatDate($entity->getStoppedDate());
             $thisRow['requestorsBody'] = $entity->getRequestorsBody();
-            $thisRow['issuedDate'] = $entity->getIssuedDate();
+            $thisRow['issuedDate'] = $this->formatDate($entity->getIssuedDate());
             $thisRow['vrm'] = $entity->getVrm();
 
             $data[] = $thisRow;
-
-            $statements->next();
         }
 
         return [

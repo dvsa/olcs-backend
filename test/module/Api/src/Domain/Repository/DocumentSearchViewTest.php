@@ -60,7 +60,8 @@ class DocumentSearchViewTest extends RepositoryTestCase
             'documentSubCategory' => 22,
             'licence' => 111,
             'transportManager' => 222,
-            'case' => 333
+            'case' => 333,
+            'irfoOrganisation' => 444,
         ];
 
         $query = DocumentList::create($data);
@@ -77,7 +78,8 @@ class DocumentSearchViewTest extends RepositoryTestCase
         $expected = '{QUERY} AND m.isExternal = [[1]] '
             . 'AND m.category = 11 '
             . 'AND m.documentSubCategory = 22 '
-            . 'AND (m.licenceId = :licence OR m.tmId = :tm OR m.caseId = :case)';
+            . 'AND (m.licenceId = :licence OR m.tmId = :tm OR m.caseId = :case '
+            . 'OR m.irfoOrganisationId = :irfoOrganisation)';
 
         $this->assertEquals($expected, $this->query);
     }

@@ -91,6 +91,7 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
                 function (LicenceOperatingCentre $loc) use ($oc) {
                     $this->assertEquals(10, $loc->getNoOfVehiclesRequired());
                     $this->assertSame($oc, $loc->getOperatingCentre());
+                    $this->assertNull($loc->getS4());
                 }
             );
 
@@ -156,6 +157,7 @@ class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
                 function (LicenceOperatingCentre $loc) use ($oc) {
                     $this->assertEquals(10, $loc->getNoOfVehiclesRequired());
                     $this->assertSame($oc, $loc->getOperatingCentre());
+                    $this->assertNull($loc->getS4());
                 }
             );
 

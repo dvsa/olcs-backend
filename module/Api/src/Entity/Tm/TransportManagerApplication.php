@@ -146,4 +146,23 @@ class TransportManagerApplication extends AbstractTransportManagerApplication
             throw new ValidationException($errors);
         }
     }
+
+    /**
+     * Simple method to sum all the daily hours to give a weekly total
+     * @return int
+     */
+    public function getTotalWeeklyHours()
+    {
+        $weeklyHours = 0;
+
+        $weeklyHours += (int) $this->getHoursMon();
+        $weeklyHours += (int) $this->getHoursTue();
+        $weeklyHours += (int) $this->getHoursWed();
+        $weeklyHours += (int) $this->getHoursThu();
+        $weeklyHours += (int) $this->getHoursFri();
+        $weeklyHours += (int) $this->getHoursSat();
+        $weeklyHours += (int) $this->getHoursSun();
+
+        return $weeklyHours;
+    }
 }

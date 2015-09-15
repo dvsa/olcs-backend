@@ -40,7 +40,7 @@ class PeopleTest extends SubmissionSectionTest
                             'title' => 'title-desc',
                             'forename' => 'fn1',
                             'familyName' => 'sn1',
-                            'birthDate' => new \DateTime('1977-01-1')
+                            'birthDate' => '01/01/1977'
                         ]
                     ]
                 ]
