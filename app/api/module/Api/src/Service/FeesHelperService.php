@@ -141,13 +141,7 @@ class FeesHelperService implements FactoryInterface
      */
     public function getMinPaymentForFees(array $fees)
     {
-        // sort fees in invoicedDate order
-        uasort(
-            $fees,
-            function ($a, $b) {
-                return $a->getInvoicedDate() < $b->getInvoicedDate() ? -1 : 1;
-            }
-        );
+        $fees = $this->sortFeesByInvoiceDate($fees);
 
         // min. payment must be greater than the outstanding amount for all but the last fee
         $minPayment = 0.01;
@@ -173,5 +167,49 @@ class FeesHelperService implements FactoryInterface
         }
 
         return number_format($maxPayment, 2, '.', '');
+    }
+
+    /**
+     * @return array ['feeId' => 'allocatedAmount']
+     */
+    public function allocatePayments($amount, array $fees)
+    {
+        $fees = $this->sortFeesByInvoiceDate($fees);
+
+        $allocations = [];
+
+        $remaining = (float) $amount;
+
+        foreach ($fees as $fee) {
+
+            $allocated = 0;
+            (float) $outstanding = $fee->getOutstandingAmount();
+
+            if ($remaining >= $outstanding) {
+                $allocated = $outstanding;
+            } elseif ($remaining > 0) {
+                $allocated = $remaining;
+            }
+
+            $remaining = ($remaining - $allocated);
+
+            $allocations[$fee->getId()] = number_format($allocated, 2, '.', '');
+        }
+
+        return $allocations;
+    }
+
+    protected function sortFeesByInvoiceDate(array $fees)
+    {
+        $sorted = $fees;
+        // sort fees in invoicedDate order
+        uasort(
+            $sorted,
+            function ($a, $b) {
+                return $a->getInvoicedDate() < $b->getInvoicedDate() ? -1 : 1;
+            }
+        );
+
+        return $sorted;
     }
 }

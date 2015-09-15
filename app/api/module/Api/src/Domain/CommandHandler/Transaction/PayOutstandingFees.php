@@ -149,6 +149,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         // fire off to relevant CPMS method to record payment
         $response = $this->recordPaymentInCpms($command, $fees);
 
+        $allocations = $this->feesHelper->allocatePayment$($command->getReceived(), $fees);
+
         $receiptDate = new \DateTime($command->getReceiptDate());
         $chequeDate = $command->getChequeDate() ? new \DateTime($command->getChequeDate()) : null;
         $chequePoNumber = $command->getChequeNo() ?: $command->getPoNo();
