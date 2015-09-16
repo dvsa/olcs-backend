@@ -7,8 +7,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Service;
 
-use Dvsa\Olcs\Api\Service\CpmsV2HelperService as Sut;
-use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -16,9 +14,12 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\CpmsResponseException;
+use Dvsa\Olcs\Api\Service\CpmsV2HelperService as Sut;
+use Dvsa\Olcs\Api\Service\FeesHelperService;
 use Dvsa\OlcsTest\Api\MockLoggerTrait;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * CPMS Version 2 Helper Service Test
@@ -39,6 +40,11 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
      */
     protected $sut;
 
+    /**
+     * @var \Dvsa\Olcs\Api\Service\FeesHelperService
+     */
+    protected $feesHelper;
+
     public function setUp()
     {
         // Mock the CPMS client
@@ -52,13 +58,15 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             )
             ->getMock();
 
+        $this->feesHelper = m::mock(FeesHelperService::class);
+
         // Create service with mocked dependencies
-        $this->sut = $this->createService($this->cpmsClient, $this->mockLogger());
+        $this->sut = $this->createService($this->cpmsClient, $this->mockLogger(), $this->feesHelper);
 
         return parent::setUp();
     }
 
-    private function createService($api, $logger)
+    private function createService($api, $logger, $feesHelper)
     {
         $sm = m::mock('\Zend\ServiceManager\ServiceLocatorInterface');
         $sm
@@ -67,7 +75,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn($api)
             ->shouldReceive('get')
             ->with('Logger')
-            ->andReturn($logger);
+            ->andReturn($logger)
+            ->shouldReceive('get')
+            ->with('FeesHelperService')
+            ->andReturn($feesHelper);
 
         $sut = new Sut();
         return $sut->createService($sm);
@@ -284,6 +295,16 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
+        $this->feesHelper
+            ->shouldReceive('allocatePayments')
+            ->with('1000.00', $fees)
+            ->andReturn(
+                [
+                    1 => '525.25',
+                    2 => '125.25'
+                ]
+            );
+
         $result = $this->sut->recordCashPayment($fees, $amount, $receiptDate, null, $slipNo);
 
         $this->assertSame($response, $result);
@@ -395,6 +416,16 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->with('/api/payment/cheque', 'CHEQUE', $expectedParams)
             ->once()
             ->andReturn($response);
+
+        $this->feesHelper
+            ->shouldReceive('allocatePayments')
+            ->with('1000.00', $fees)
+            ->andReturn(
+                [
+                    1 => '525.25',
+                    2 => '125.25'
+                ]
+            );
 
         $result = $this->sut->recordChequePayment(
             $fees,
@@ -512,6 +543,16 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->with('/api/payment/postal-order', 'POSTAL_ORDER', $expectedParams)
             ->once()
             ->andReturn($response);
+
+         $this->feesHelper
+            ->shouldReceive('allocatePayments')
+            ->with('1000.00', $fees)
+            ->andReturn(
+                [
+                    1 => '525.25',
+                    2 => '125.25'
+                ]
+            );
 
         $result = $this->sut->recordPostalOrderPayment(
             $fees,
