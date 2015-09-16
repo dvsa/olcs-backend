@@ -249,6 +249,7 @@ class SectionConfig
                 ]
             ]
         ],
+        // external decalrations
         'undertakings' => [
             'restricted' => [
                 [
@@ -256,6 +257,23 @@ class SectionConfig
                     [
                         'application',
                         'variation'
+                    ],
+                    [
+                        'external'
+                    ],
+                ]
+            ],
+        ],
+        'declarations_internal' => [
+            'restricted' => [
+                [
+                    // Must be variation or application
+                    [
+                        'application',
+                        'variation'
+                    ],
+                    [
+                        'internal'
                     ],
                 ]
             ],
