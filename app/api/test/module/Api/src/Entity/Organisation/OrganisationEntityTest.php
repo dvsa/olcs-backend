@@ -8,6 +8,11 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\User\User as User;
+use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Organisation Entity Unit Tests
@@ -305,5 +310,29 @@ class OrganisationEntityTest extends EntityTester
 
         $this->assertEquals(['foo'], $organisation->getLinkedLicences()->toArray());
 
+    }
+
+    public function testGetAdminEmailAddresses()
+    {
+        $emailAddress = 'foo@bar.com';
+        /* @var $organisation Entity */
+        $organisation = $this->instantiate($this->entityClass);
+
+        $contactType = new RefData(ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS);
+        $user = new User();
+        $contactDetails = new ContactDetails($contactType);
+        $contactDetails->setEmailAddress($emailAddress);
+        $user->setContactDetails($contactDetails);
+
+        $organisationUser = new OrganisationUser();
+        $organisationUser->setUser($user);
+        $organisationUser->setOrganisation($organisation);
+        $organisationUser->setIsAdministrator('Y');
+
+        $collection = new ArrayCollection();
+        $collection->add($organisationUser);
+        $organisation->addOrganisationUsers($collection);
+
+        $this->assertEquals([$emailAddress], $organisation->getAdminEmailAddresses());
     }
 }
