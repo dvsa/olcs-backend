@@ -12,7 +12,7 @@ namespace Dvsa\Olcs\Api\Service;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CpmsResponseException extends \RuntimeException
+class CpmsResponseException extends Exception
 {
     protected $response;
 

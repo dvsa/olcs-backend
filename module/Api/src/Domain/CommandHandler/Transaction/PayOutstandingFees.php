@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
+use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -152,7 +153,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         try {
             // work out the allocation of the payment amount to fees
             $allocations = $this->feesHelper->allocatePayments($command->getReceived(), $fees);
-        } catch (\Exception $e) {
+        } catch (ServiceException $e) {
             // if there is an allocation error, rethrow as Domain exception
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }

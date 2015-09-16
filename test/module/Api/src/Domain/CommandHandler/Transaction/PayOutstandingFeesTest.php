@@ -449,6 +449,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $fee1 = $this->getStubFee(99, 99.99);
         $fees = [$fee1];
         $transactionId = 69;
+        $feeTransactionId = 123;
 
         $data = [
             'feeIds' => $feeIds,
@@ -484,6 +485,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->with($fees)
             ->andReturn(0.01);
 
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->with('99.99', $fees)
+            ->andReturn(
+                [
+                    99 => '99.99',
+                ]
+            );
+
         $this->repoMap['Fee']
             ->shouldReceive('save')
             ->once()
@@ -493,9 +503,14 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->repoMap['Transaction']
             ->shouldReceive('save')
             ->andReturnUsing(
-                function ($transaction) use (&$savedTransaction, $transactionId) {
+                function ($transaction) use (&$savedTransaction, $transactionId, $feeTransactionId) {
                     $savedTransaction = $transaction;
                     $savedTransaction->setId($transactionId);
+                    $savedTransaction->getFeeTransactions()->forAll(
+                        function ($key, $ft) use ($feeTransactionId) {
+                            $ft->setId($feeTransactionId);
+                        }
+                    );
                 }
             );
 
@@ -509,10 +524,12 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $expected = [
             'id' => [
                 'transaction' => $transactionId,
+                'feeTransaction' => [$feeTransactionId],
             ],
             'messages' => [
-                'Transaction record created',
-                'Fee(s) updated as paid by Cash',
+                'Fee ID 99 updated as paid by Cash',
+                'Transaction record created: OLCS-1234-CASH',
+                'FeeTransaction record(s) created',
             ]
         ];
 
@@ -537,6 +554,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $fee1 = $this->getStubFee(99, 99.99);
         $fees = [$fee1];
         $transactionId = 69;
+        $feeTransactionId = 123;
 
         $data = [
             'feeIds' => $feeIds,
@@ -574,6 +592,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->with($fees)
             ->andReturn(0.01);
 
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->with('99.99', $fees)
+            ->andReturn(
+                [
+                    99 => '99.99',
+                ]
+            );
+
         $this->repoMap['Fee']
             ->shouldReceive('save')
             ->once()
@@ -583,9 +610,14 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->repoMap['Transaction']
             ->shouldReceive('save')
             ->andReturnUsing(
-                function ($transaction) use (&$savedTransaction, $transactionId) {
+                function ($transaction) use (&$savedTransaction, $transactionId, $feeTransactionId) {
                     $savedTransaction = $transaction;
                     $savedTransaction->setId($transactionId);
+                    $savedTransaction->getFeeTransactions()->forAll(
+                        function ($key, $ft) use ($feeTransactionId) {
+                            $ft->setId($feeTransactionId);
+                        }
+                    );
                 }
             );
 
@@ -599,10 +631,12 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $expected = [
             'id' => [
                 'transaction' => $transactionId,
+                'feeTransaction' => [$feeTransactionId],
             ],
             'messages' => [
-                'Transaction record created',
-                'Fee(s) updated as paid by Cheque',
+                'Fee ID 99 updated as paid by Cheque',
+                'Transaction record created: OLCS-1234-CHEQUE',
+                'FeeTransaction record(s) created',
             ]
         ];
 
@@ -629,6 +663,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $fee1 = $this->getStubFee(99, 99.99);
         $fees = [$fee1];
         $transactionId = 69;
+        $feeTransactionId = 123;
 
         $data = [
             'feeIds' => $feeIds,
@@ -665,6 +700,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->with($fees)
             ->andReturn(0.01);
 
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->with('99.99', $fees)
+            ->andReturn(
+                [
+                    99 => '99.99',
+                ]
+            );
+
         $this->repoMap['Fee']
             ->shouldReceive('save')
             ->once()
@@ -674,9 +718,14 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->repoMap['Transaction']
             ->shouldReceive('save')
             ->andReturnUsing(
-                function ($transaction) use (&$savedTransaction, $transactionId) {
+                function ($transaction) use (&$savedTransaction, $transactionId, $feeTransactionId) {
                     $savedTransaction = $transaction;
                     $savedTransaction->setId($transactionId);
+                    $savedTransaction->getFeeTransactions()->forAll(
+                        function ($key, $ft) use ($feeTransactionId) {
+                            $ft->setId($feeTransactionId);
+                        }
+                    );
                 }
             );
 
@@ -690,10 +739,12 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $expected = [
             'id' => [
                 'transaction' => $transactionId,
+                'feeTransaction' => [$feeTransactionId],
             ],
             'messages' => [
-                'Transaction record created',
-                'Fee(s) updated as paid by Postal Order',
+                'Fee ID 99 updated as paid by Postal Order',
+                'Transaction record created: OLCS-1234-PO',
+                'FeeTransaction record(s) created',
             ]
         ];
 
