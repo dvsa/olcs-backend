@@ -549,7 +549,8 @@ class FeeEntityTest extends EntityTester
                     'addressLine3' => null,
                     'addressLine4' => null,
                     'town' => 'Miscellaneous payment',
-                    'postcode' => 'Miscellaneous payment',
+                    // hardcoded to DVSA office, CPMS api enforces a valid postcode
+                    'postcode' => 'LS9 6NF',
                     'countryCode' => null,
                 ],
             ],
