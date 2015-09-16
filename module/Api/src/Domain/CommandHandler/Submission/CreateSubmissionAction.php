@@ -47,6 +47,7 @@ final class CreateSubmissionAction extends AbstractCommandHandler
                 $command->getActionTypes(),
                 [
                     SubmissionAction::ACTION_TYPE_PUBLIC_INQUIRY,
+                    SubmissionAction::ACTION_TYPE_TM_PUBLIC_INQUIRY,
                     SubmissionAction::ACTION_TYPE_PROPOSE_TO_REVOKE
                 ]
             )
