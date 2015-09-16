@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Resolve Payment Test
  *
@@ -93,6 +94,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
 
         parent::setUp();
     }
+
 
     public function testHandleCommandSuccess()
     {

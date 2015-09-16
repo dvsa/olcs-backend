@@ -851,9 +851,12 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->once()
             ->andThrow(new ServiceException('ohnoes'));
 
-        $this->setExpectedException(RuntimeException::class, "The amount must be at least ");
-
-        $this->sut->handleCommand($command);
+        try {
+            $this->sut->handleCommand($command);
+        } catch (RuntimeException $e) {
+            $messages = $e->getMessages();
+            $this->assertTrue(strpos(reset($messages), 'ohnoes') !== false);
+        }
     }
 
     public function testHandleCommandCpmsResponseException()
@@ -880,6 +883,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->once()
             ->with($feeIds)
             ->andReturn($fees);
+
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->with('99.99', $fees)
+            ->andReturn(
+                [
+                    99 => '99.99',
+                ]
+            );
 
         $this->mockCpmsService
             ->shouldReceive('recordCashPayment')

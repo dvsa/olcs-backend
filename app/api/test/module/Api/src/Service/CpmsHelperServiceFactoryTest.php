@@ -83,7 +83,11 @@ class CpmsHelperServiceFactoryTest extends MockeryTestCase
             'v1 config string' => [
                 [
                     'cpms_api' => [
-                        'version' => '1',
+                        'rest_client' => [
+                            'options' => [
+                                'version' => '1',
+                            ],
+                        ],
                     ],
                 ],
                 V1::class,
@@ -92,7 +96,11 @@ class CpmsHelperServiceFactoryTest extends MockeryTestCase
             'v2 config string' => [
                 [
                     'cpms_api' => [
-                        'version' => '2',
+                        'rest_client' => [
+                            'options' => [
+                                'version' => '2',
+                            ],
+                        ],
                     ],
                 ],
                 V2::class,
@@ -101,7 +109,11 @@ class CpmsHelperServiceFactoryTest extends MockeryTestCase
             'v1 config int' => [
                 [
                     'cpms_api' => [
-                        'version' => 1,
+                        'rest_client' => [
+                            'options' => [
+                                'version' => 1,
+                            ],
+                        ],
                     ],
                 ],
                 V1::class,
@@ -110,7 +122,11 @@ class CpmsHelperServiceFactoryTest extends MockeryTestCase
             'v2 config int' => [
                 [
                     'cpms_api' => [
-                        'version' => 2,
+                        'rest_client' => [
+                            'options' => [
+                                'version' => 2,
+                            ],
+                        ],
                     ],
                 ],
                 V2::class,
