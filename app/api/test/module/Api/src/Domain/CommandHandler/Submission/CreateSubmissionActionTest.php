@@ -100,7 +100,7 @@ class CreateSubmissionActionTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testHandleInvalidCommand()
     {
