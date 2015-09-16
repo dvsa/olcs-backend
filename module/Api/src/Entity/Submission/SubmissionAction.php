@@ -19,6 +19,10 @@ use Dvsa\Olcs\Api\Entity\Submission\Submission;
  */
 class SubmissionAction extends AbstractSubmissionAction
 {
+    const ACTION_TYPE_PUBLIC_INQUIRY = 'sub_st_rec_pi';
+    const ACTION_TYPE_PROPOSE_TO_REVOKE = 'sub_st_rec_ptr';
+    const ERROR_ACTION_REQUIRES_LEGISLATION = 'This action requires legislation to be specified';
+
     public function __construct(Submission $submission, $isDecision, array $actionTypes, $comment)
     {
         $this->submission = $submission;
