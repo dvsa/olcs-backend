@@ -205,7 +205,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             ->addId('transaction', $transaction->getId())
             ->addMessage('Transaction record created: ' . $transaction->getReference())
             ->addId('feeTransaction', $transaction->getFeeTransactionIds())
-            ->addMessage('FeeTransaction records created');
+            ->addMessage('FeeTransaction record(s) created');
 
         return $result;
     }
