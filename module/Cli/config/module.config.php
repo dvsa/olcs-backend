@@ -40,6 +40,15 @@ return [
                         ],
                     ],
                 ],
+                'process-inbox' => [
+                    'options' => [
+                        'route' => 'process-inbox [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'processInboxDocuments'
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
