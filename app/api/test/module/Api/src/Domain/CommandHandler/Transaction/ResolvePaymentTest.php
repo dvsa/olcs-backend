@@ -252,6 +252,11 @@ class ResolvePaymentTest extends CommandHandlerTestCase
                 PaymentEntity::STATUS_FAILED,
                 'Transaction resolved as PAYMENT FAILED',
             ],
+            [
+                CpmsHelper::PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED,
+                PaymentEntity::STATUS_FAILED,
+                'Transaction resolved as PAYMENT FAILED',
+            ],
         ];
     }
 
