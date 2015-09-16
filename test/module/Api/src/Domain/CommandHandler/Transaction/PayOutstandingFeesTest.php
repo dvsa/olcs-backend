@@ -508,6 +508,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                     $savedTransaction->setId($transactionId);
                     $savedTransaction->getFeeTransactions()->forAll(
                         function ($key, $ft) use ($feeTransactionId) {
+                            unset($key); // unused
                             $ft->setId($feeTransactionId);
                         }
                     );
@@ -615,6 +616,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                     $savedTransaction->setId($transactionId);
                     $savedTransaction->getFeeTransactions()->forAll(
                         function ($key, $ft) use ($feeTransactionId) {
+                            unset($key);
                             $ft->setId($feeTransactionId);
                         }
                     );
@@ -723,6 +725,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                     $savedTransaction->setId($transactionId);
                     $savedTransaction->getFeeTransactions()->forAll(
                         function ($key, $ft) use ($feeTransactionId) {
+                            unset($key);
                             $ft->setId($feeTransactionId);
                         }
                     );

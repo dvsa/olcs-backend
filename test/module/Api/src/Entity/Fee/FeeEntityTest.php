@@ -214,9 +214,7 @@ class FeeEntityTest extends EntityTester
 
     public function testCompatibilityGetMethods()
     {
-        $this->assertNull($this->sut->getReceivedAmount());
         $this->assertNull($this->sut->getLatestPaymentRef());
-        $this->assertNull($this->sut->getReceivedDate());
         $this->assertNull($this->sut->getPaymentMethod());
         $this->assertNull($this->sut->getProcessedBy());
         $this->assertNull($this->sut->getPayer());
@@ -260,8 +258,6 @@ class FeeEntityTest extends EntityTester
         $this->sut->getFeeTransactions()->add($ft3);
         $this->sut->getFeeTransactions()->add($ft4);
 
-        $this->assertEquals('1234.56', $this->sut->getReceivedAmount());
-        $this->assertEquals('2015-09-01', $this->sut->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals($paymentMethod, $this->sut->getPaymentMethod());
         $this->assertEquals('bob', $this->sut->getProcessedBy());
         $this->assertEquals('payer', $this->sut->getPayer());
