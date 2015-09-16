@@ -272,9 +272,6 @@ class FeesHelperServiceTest extends MockeryTestCase
      */
     private function getStubFee($id, $amount, $invoicedDate = '2015-09-10')
     {
-        $status = new RefData();
-        $feeType = new FeeTypeEntity();
-
         $fee = m::mock(FeeEntity::class)->makePartial()
             ->setId($id)
             ->setAmount($amount);

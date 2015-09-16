@@ -132,29 +132,6 @@ class Fee extends AbstractFee
         );
     }
 
-    /**
-     * @todo OLCS-10407 this currently assumes only one transaction against a
-     * fee, will need updating when part payments are allowed
-     */
-    public function getReceivedAmount()
-    {
-        $ft = $this->getLatestFeeTransaction();
-        if ($ft) {
-            return $ft->getAmount();
-        }
-    }
-
-    /**
-     * @todo OLCS-10425 will remove the need for this method
-     */
-    public function getReceivedDate()
-    {
-        $transaction = $this->getLatestTransaction();
-        if ($transaction) {
-            return $transaction->getCompletedDate();
-        }
-    }
-
     public function getPaymentMethod()
     {
         $transaction = $this->getLatestTransaction();
