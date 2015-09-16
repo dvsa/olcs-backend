@@ -26,25 +26,26 @@ final class UpdateSubmissionAction extends AbstractCommandHandler implements Tra
         $submissionAction = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         // Backend validate
-        foreach ($command->getActionTypes() as $actionType) {
-            if (
-                in_array(
-                    $actionType,
-                    [
-                        SubmissionAction::ACTION_TYPE_PUBLIC_INQUIRY,
-                        SubmissionAction::ACTION_TYPE_PROPOSE_TO_REVOKE
+        if (
+            !empty(
+            array_intersect(
+                $command->getActionTypes(),
+                [
+                    SubmissionAction::ACTION_TYPE_PUBLIC_INQUIRY,
+                    SubmissionAction::ACTION_TYPE_PROPOSE_TO_REVOKE
+                ]
+            )
+            )
+            && empty($command->getReasons())
+            && ($submissionAction->getIsDecision() === 'N')
+        ) {
+            throw new ValidationException(
+                [
+                    'actionTypes' => [
+                        SubmissionAction::ERROR_ACTION_REQUIRES_LEGISLATION
                     ]
-                ) && empty($command->getReasons()
-                ) && $submissionAction->getIsDecision() == 'N'
-            ) {
-                throw new ValidationException(
-                    [
-                        'actionTypes' => [
-                            SubmissionAction::ERROR_ACTION_REQUIRES_LEGISLATION
-                        ]
-                    ]
-                );
-            }
+                ]
+            );
         }
 
         $actionTypes = array_map(
