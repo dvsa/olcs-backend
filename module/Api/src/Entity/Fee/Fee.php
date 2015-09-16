@@ -375,4 +375,12 @@ class Fee extends AbstractFee
             ->setPostcode(self::DEFAULT_INVOICE_ADDRESS_LINE);
         return $default;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isPaid()
+    {
+        return $this->getFeeStatus()->getId() === self::STATUS_PAID;
+    }
 }

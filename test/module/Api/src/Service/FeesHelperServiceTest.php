@@ -244,6 +244,21 @@ class FeesHelperServiceTest extends MockeryTestCase
                     '10' => '99.99',
                     '11' => '100.01',
                 ]
+            ],
+            [
+                '200.00',
+                [
+                    $this->getStubFee('10', '99.99', '2015-09-04'),
+                    $this->getStubFee('11', '50.01', '2015-09-02'),
+                    $this->getStubFee('12', '100.00', '2015-09-03'),
+                    $this->getStubFee('13', '100.00', '2015-09-05'),
+                ],
+                [
+                    '11' => '50.01',
+                    '12' => '100.00',
+                    '10' => '49.99',
+                    '13' => '0.00',
+                ]
             ]
         ];
     }
@@ -255,7 +270,7 @@ class FeesHelperServiceTest extends MockeryTestCase
      * @param string $amount
      * @return FeeEntity
      */
-    private function getStubFee($id, $amount)
+    private function getStubFee($id, $amount, $invoicedDate = '2015-09-10')
     {
         $status = new RefData();
         $feeType = new FeeTypeEntity();
@@ -265,7 +280,9 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->setAmount($amount);
         $fee
             ->shouldReceive('getOutstandingAmount')
-            ->andReturn($amount);
+            ->andReturn($amount)
+            ->shouldReceive('getInvoicedDate')
+            ->andReturn(new \DateTime($invoicedDate));
 
         return $fee;
     }

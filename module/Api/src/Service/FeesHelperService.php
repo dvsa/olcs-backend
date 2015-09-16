@@ -170,7 +170,17 @@ class FeesHelperService implements FactoryInterface
     }
 
     /**
-     * @return array ['feeId' => 'allocatedAmount']
+     * Determine how a payment should be allocated to an array of fees.
+     * Payment is allocated to earliest fees first (by invoicedDate)
+     *
+     * @param string $amount payment amount
+     * @param array $fees array of FeeEntity
+     * @return array ['feeId' => 'allocatedAmount'] e.g.
+     * [
+     *     97 => '12.34',
+     *     98 => '50.00',
+     *     99 => '0.00',
+     * ]
      */
     public function allocatePayments($amount, array $fees)
     {
@@ -183,17 +193,24 @@ class FeesHelperService implements FactoryInterface
         foreach ($fees as $fee) {
 
             $allocated = 0;
-            (float) $outstanding = $fee->getOutstandingAmount();
+            $outstanding = (float) $fee->getOutstandingAmount();
 
             if ($remaining >= $outstanding) {
+                // if we have enough to pay the fee in full, allocate full amount
                 $allocated = $outstanding;
             } elseif ($remaining > 0) {
+                // otherwise allocate remaining available amount
                 $allocated = $remaining;
             }
 
+            // then decrement remaining available
             $remaining = ($remaining - $allocated);
 
             $allocations[$fee->getId()] = number_format($allocated, 2, '.', '');
+        }
+
+        if ($remaining > 0) {
+            throw new \Exception("Overpayments not permitted");
         }
 
         return $allocations;

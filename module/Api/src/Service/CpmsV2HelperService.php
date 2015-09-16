@@ -44,6 +44,11 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     protected $cpmsClient;
 
     /**
+     * @var \Dvsa\Olcs\Api\Service\FeesHelperService
+     */
+    protected $feesHelper;
+
+    /**
      * @param ServiceLocatorInterface $serviceLocator
      * @return self
      */
@@ -51,6 +56,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     {
         $this->cpmsClient = $serviceLocator->get('cpms\service\api');
         $this->logger = $serviceLocator->get('Logger');
+        $this->feesHelper = $serviceLocator->get('FeesHelperService');
         return $this;
     }
 
@@ -168,8 +174,11 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         ];
         $params = $this->getParametersForFees($fees, $extraParams);
 
+        $allocations = $this->feesHelper->allocatePayments($amount, $fees);
+
         foreach ($fees as $fee) {
-            $params['payment_data'][] = $this->getPaymentDataForFee($fee);
+            $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
+            $params['payment_data'][] = $this->getPaymentDataForFee($fee, $extraPaymentData);
         }
 
         $response = $this->send($method, $endPoint, $scope, $params);
