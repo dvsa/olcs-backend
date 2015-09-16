@@ -50,6 +50,8 @@ class Fee extends AbstractFee
 
     const DEFAULT_INVOICE_CUSTOMER_NAME = 'Miscellaneous payment';
     const DEFAULT_INVOICE_ADDRESS_LINE = 'Miscellaneous payment';
+    // CPMS enforces 'valid' postcodes :(
+    const DEFAULT_POSTCODE = 'LS9 6NF';
 
     public function __construct(FeeType $feeType, $amount, RefData $feeStatus)
     {
@@ -349,7 +351,7 @@ class Fee extends AbstractFee
         $default
             ->setAddressLine1(self::DEFAULT_INVOICE_ADDRESS_LINE)
             ->setTown(self::DEFAULT_INVOICE_ADDRESS_LINE)
-            ->setPostcode(self::DEFAULT_INVOICE_ADDRESS_LINE);
+            ->setPostcode(self::DEFAULT_POSTCODE);
         return $default;
     }
 

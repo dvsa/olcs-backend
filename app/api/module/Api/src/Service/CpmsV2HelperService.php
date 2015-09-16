@@ -167,7 +167,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $extraParams = [
             'slip_number' => (string) $slipNo,
-            'batch_number' => '',
+            'batch_number' => (string) $slipNo,
             'receipt_date' => $this->formatDate($receiptDate),
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
@@ -212,7 +212,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'cheque_date' => $this->formatDate($chequeDate),
             'cheque_number' => (string)$chequeNo,
             'slip_number' => (string) $slipNo,
-            'batch_number' => '',
+            'batch_number' => (string) $slipNo,
             'receipt_date' => $this->formatDate($receiptDate),
             'name_on_cheque' => $payer,
             'scope' => $scope,
@@ -256,7 +256,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $extraParams = [
             'postal_order_number' => (string) $poNo,
             'slip_number' => (string) $slipNo,
-            'batch_number' => '',
+            'batch_number' => (string) $slipNo,
             'receipt_date' => $this->formatDate($receiptDate),
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),

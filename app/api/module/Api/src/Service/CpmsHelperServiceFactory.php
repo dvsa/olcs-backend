@@ -27,7 +27,9 @@ final class CpmsHelperServiceFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('Config');
 
-        if (isset($config['cpms_api']['version']) && $config['cpms_api']['version'] == '2') {
+        // @todo check which version flag to use from config
+        if (isset($config['cpms_api']['rest_client']['options']['version'])
+            && $config['cpms_api']['rest_client']['options']['version'] == '2') {
             $service = new CpmsV2HelperService();
         } else {
             $service = new CpmsV1HelperService();
