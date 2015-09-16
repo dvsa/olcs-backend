@@ -23,7 +23,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     // CPMS' preferred date format (note: this changed around 03/2015)
     const DATE_FORMAT = 'Y-m-d';
 
-    // @TODO product ref shouldn't have to come from a whitelist...
     const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
 
     // @TODO this is a dummy value for testing purposes as cost_centre is now
@@ -153,7 +152,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      *
-     * @todo batch_number
      * @todo $payer appears to be no longer required, but retained to keep the
      * interface the same as v1
      */
@@ -198,9 +196,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param string $chequeDate (from DateSelect)
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
-     *
-     * @todo API docs aren't clear which fields should go top level or in payment_data
-     * @todo batch_number
      */
     public function recordChequePayment($fees, $amount, $receiptDate, $payer, $slipNo, $chequeNo, $chequeDate)
     {
@@ -241,7 +236,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      *
-     * @todo batch_number
      * @todo $payer appears to be no longer required, but retained to keep the
      * interface the same as v1
      */
@@ -398,6 +392,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @todo 'product_reference' should be $fee->getFeeType()->getDescription()
      * but CPMS has a whitelist and responds  {"code":104,"message":"product_reference is invalid"}
+     * @todo 'sales_person_reference'
      */
     protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [])
     {
@@ -423,7 +418,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
             'deferment_period' => (string) $fee->getDefermentPeriod(),
             // 'country_code' ('GB' or 'NI') is optional and deliberately omitted
-            'sales_person_reference' => '', // @todo
+            'sales_person_reference' => '',
         ];
 
         return array_merge($commonPaymentData, $extraPaymentData);
