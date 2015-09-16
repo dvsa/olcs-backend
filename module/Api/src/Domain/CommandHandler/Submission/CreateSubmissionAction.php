@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Submission\SubmissionAction;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Api\Entity\Pi\Reason;
 use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionAction as Cmd;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Create SubmissionAction
@@ -50,8 +50,15 @@ final class CreateSubmissionAction extends AbstractCommandHandler
                         SubmissionAction::ACTION_TYPE_PROPOSE_TO_REVOKE
                     ]
                 ) && empty($command->getReasons()
-                ) && $command->getIsDecision() == 'N') {
-                throw new ForbiddenException('This action requires legislation to be specified');
+                ) && $command->getIsDecision() == 'N'
+            ) {
+                throw new ValidationException(
+                    [
+                        'actionTypes' => [
+                            SubmissionAction::ERROR_ACTION_REQUIRES_LEGISLATION
+                        ]
+                    ]
+                );
             }
         }
 

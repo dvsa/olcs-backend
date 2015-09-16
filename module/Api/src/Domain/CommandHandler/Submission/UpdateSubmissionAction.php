@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Pi\Reason;
 use Dvsa\Olcs\Api\Entity\Submission\SubmissionAction;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Update SubmissionAction
@@ -35,8 +35,15 @@ final class UpdateSubmissionAction extends AbstractCommandHandler implements Tra
                         SubmissionAction::ACTION_TYPE_PROPOSE_TO_REVOKE
                     ]
                 ) && empty($command->getReasons()
-                ) && $submissionAction->getIsDecision() == 'N') {
-                throw new ForbiddenException('This action requires legislation to be specified');
+                ) && $submissionAction->getIsDecision() == 'N'
+            ) {
+                throw new ValidationException(
+                    [
+                        'actionTypes' => [
+                            SubmissionAction::ERROR_ACTION_REQUIRES_LEGISLATION
+                        ]
+                    ]
+                );
             }
         }
 
