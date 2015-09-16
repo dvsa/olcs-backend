@@ -75,4 +75,23 @@ class Transaction extends AbstractTransaction
             'amount' => $this->getTotalAmount(),
         ];
     }
+
+    /**
+     * Small helper to get array of feeTransaction IDs, useful for logging
+     */
+    public function getFeeTransactionIds()
+    {
+        $ftIds = [];
+
+        if (!empty($this->getFeeTransactions())) {
+            $ftIds = array_map(
+                function ($ft) {
+                    return $ft->getId();
+                },
+                $this->getFeeTransactions()->toArray()
+            );
+        }
+
+        return $ftIds;
+    }
 }

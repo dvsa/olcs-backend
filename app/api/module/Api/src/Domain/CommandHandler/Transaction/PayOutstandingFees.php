@@ -28,7 +28,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Pay Outstanding Fees
- * (initiates a CPMS payment which is a two-step process)
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
@@ -57,9 +56,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-
-        // @todo remove
-        // $result->addMessage('Using API helper version ' . $this->getCpmsService()->getVersion());
 
         if (!empty($command->getOrganisationId())) {
             $fees = $this->getOutstandingFeesForOrganisation($command);
@@ -91,6 +87,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     }
 
     /**
+     * Initiates a CPMS card payment which is a two-step process
+     *
      * @param CommandInterface $command
      * @param array $feesToPay
      * @param Result $result
@@ -136,6 +134,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     }
 
     /**
+     * Cash/cheque/PO payment
+     *
      * @param CommandInterface $command
      * @param array $fees
      * @param Result $result
@@ -149,7 +149,13 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         // fire off to relevant CPMS method to record payment
         $response = $this->recordPaymentInCpms($command, $fees);
 
-        $allocations = $this->feesHelper->allocatePayment$($command->getReceived(), $fees);
+        try {
+            // work out the allocation of the payment amount to fees
+            $allocations = $this->feesHelper->allocatePayments($command->getReceived(), $fees);
+        } catch (\Exception $e) {
+            // if there is an allocation error, rethrow as Domain exception
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
 
         $receiptDate = new \DateTime($command->getReceiptDate());
         $chequeDate = $command->getChequeDate() ? new \DateTime($command->getChequeDate()) : null;
@@ -173,32 +179,33 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         $feeTransactions = new ArrayCollection();
         $transaction->setFeeTransactions($feeTransactions);
         foreach ($fees as $fee) {
+            $allocatedAmount = $allocations[$fee->getId()];
+            $markAsPaid = ($allocatedAmount === $fee->getOutstandingAmount());
             $feeTransaction = new FeeTransactionEntity();
             $feeTransaction
                 ->setFee($fee)
-                ->setAmount($fee->getOutstandingAmount())
+                ->setAmount($allocatedAmount)
                 ->setTransaction($transaction); // needed for cascade persist to work
             $feeTransactions->add($feeTransaction);
 
-            // Update fee status, we need to call save() rather than rely on cascade persist
-            // at this level of nesting.
-            $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID));
-            $this->getRepo('Fee')->save($fee);
-
-            // trigger side effects
-            $result->merge(
-                $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))
-            );
+            if ($markAsPaid) {
+                $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID));
+                $method = $this->getRepo()->getRefdataReference($command->getPaymentMethod())->getDescription();
+                $result->addMessage('Fee ID ' . $fee->getId() . ' updated as paid by ' . $method);
+                // We need to call save() on the fee, it won't cascade persist from the transaction
+                $this->getRepo('Fee')->save($fee);
+                $result->merge($this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()])));
+            }
         }
 
-        // persist
+        // persist transaction
         $this->getRepo()->save($transaction);
 
-        $method = $this->getRepo()->getRefdataReference($command->getPaymentMethod())->getDescription();
         $result
             ->addId('transaction', $transaction->getId())
-            ->addMessage('Transaction record created')
-            ->addMessage('Fee(s) updated as paid by ' . $method);
+            ->addMessage('Transaction record created: ' . $transaction->getReference())
+            ->addId('feeTransaction', $transaction->getFeeTransactionIds())
+            ->addMessage('FeeTransaction records created');
 
         return $result;
     }
@@ -280,7 +287,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 $transaction = $this->getRepo()->fetchById($transactionId);
                 $result->addMessage(
                     sprintf(
-                        'transaction %d resolved as %s',
+                        'Transaction %d resolved as %s',
                         $transactionId,
                         $transaction->getStatus()->getDescription()
                     )
