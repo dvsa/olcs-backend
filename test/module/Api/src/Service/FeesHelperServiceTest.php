@@ -172,7 +172,6 @@ class FeesHelperServiceTest extends MockeryTestCase
 
     public function testGetOutstandingFeesForBrandNewApplication()
     {
-        // $this->markTestIncomplete();
         $applicationId = 69;
         $licenceId = 7;
 
@@ -261,6 +260,41 @@ class FeesHelperServiceTest extends MockeryTestCase
                 ]
             ]
         ];
+    }
+
+    public function testAllocatePaymentsOverPaymentThrowsException()
+    {
+        $amount = '500';
+        $fees = [
+            $this->getStubFee('10', '99.99', '2015-09-04'),
+            $this->getStubFee('11', '50.01', '2015-09-02'),
+            $this->getStubFee('12', '100.00', '2015-09-03'),
+            $this->getStubFee('13', '100.00', '2015-09-05'),
+        ];
+
+        $this->setExpectedException(\Dvsa\Olcs\Api\Service\Exception::class, 'Overpayments not permitted');
+
+        $this->sut->allocatePayments($amount, $fees);
+    }
+
+    public function testGetMinPaymentForFees()
+    {
+        $fees = [
+            $this->getStubFee('1', '99.99'),
+            $this->getStubFee('1', '99.99'),
+        ];
+
+        $this->assertEquals('100.00', $this->sut->getMinPaymentForFees($fees));
+    }
+
+    public function testGetTotalOutstanding()
+    {
+         $fees = [
+            $this->getStubFee('1', '99.99'),
+            $this->getStubFee('1', '99.99'),
+        ];
+
+        $this->assertEquals('199.98', $this->sut->getTotalOutstanding($fees));
     }
 
     /**
