@@ -147,9 +147,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     {
         $this->validateAmount($command->getReceived(), $fees);
 
-        // fire off to relevant CPMS method to record payment
-        $response = $this->recordPaymentInCpms($command, $fees);
-
         try {
             // work out the allocation of the payment amount to fees
             $allocations = $this->feesHelper->allocatePayments($command->getReceived(), $fees);
@@ -157,6 +154,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             // if there is an allocation error, rethrow as Domain exception
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
+
+        // fire off to relevant CPMS method to record payment
+        $response = $this->recordPaymentInCpms($command, $fees);
 
         $receiptDate = new \DateTime($command->getReceiptDate());
         $chequeDate = $command->getChequeDate() ? new \DateTime($command->getChequeDate()) : null;

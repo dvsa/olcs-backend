@@ -555,4 +555,29 @@ class FeeEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @param string $status
+     * @param boolean $expected
+     *
+     * @dataProvider isPaidProvider
+     */
+    public function testIsPaid($status, $expected)
+    {
+        $feeStatus = m::mock(RefData::class)->makePartial();
+        $feeStatus->setId($status);
+        $this->sut->setFeeStatus($feeStatus);
+
+        $this->assertEquals($expected, $this->sut->isPaid());
+    }
+
+    public function isPaidProvider()
+    {
+        return [
+            [Entity::STATUS_PAID, true],
+            [Entity::STATUS_CANCELLED, false],
+            [Entity::STATUS_OUTSTANDING, false],
+            ['invalid', false],
+        ];
+    }
 }
