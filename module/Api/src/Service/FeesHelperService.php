@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Exception as ServiceException;
 
 /**
  * Fees Helper Service
@@ -211,7 +210,7 @@ class FeesHelperService implements FactoryInterface
         }
 
         if ($remaining > 0) {
-            throw new ServiceException("Overpayments not permitted");
+            throw new Exception("Overpayments not permitted");
         }
 
         return $allocations;

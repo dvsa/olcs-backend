@@ -9,9 +9,10 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
-use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\PayOutstandingFees;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -24,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
+use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Api\Service\FeesHelperService as FeesHelper;
 use Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -808,6 +810,50 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             $messages = $e->getMessages();
             $this->assertTrue(strpos(reset($messages), 'Amount must be at least 99.00') !== false);
         }
+    }
+
+    public function testHandleCommandAllocationError()
+    {
+        // set up data
+        $feeIds = [99];
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fees = [$fee1];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => FeeEntity::METHOD_CASH,
+            'receiptDate' => '2015-06-17',
+            'payer' => 'Dan',
+            'slipNo' => '12345',
+            'received' => '1000',
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('recordCashPayment')
+            ->never();
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn('0.01');
+
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->once()
+            ->andThrow(new ServiceException('ohnoes'));
+
+        $this->setExpectedException(RuntimeException::class, "The amount must be at least ");
+
+        $this->sut->handleCommand($command);
     }
 
     public function testHandleCommandCpmsResponseException()
