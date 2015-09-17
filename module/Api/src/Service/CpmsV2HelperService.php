@@ -205,7 +205,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $extraParams = [
             'cheque_date' => $this->formatDate($chequeDate),
-            'cheque_number' => (string)$chequeNo,
+            'cheque_number' => (string) $chequeNo,
             'slip_number' => (string) $slipNo,
             'batch_number' => (string) $slipNo,
             'receipt_date' => $this->formatDate($receiptDate),
@@ -323,9 +323,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     {
         $totalAmount = 0;
         foreach ($fees as $fee) {
-            $totalAmount += (float)$fee->getOutstandingAmount();
+            $totalAmount += (int) ($fee->getOutstandingAmount() * 100);
         }
-        return $this->formatAmount($totalAmount);
+        return $this->formatAmount($totalAmount / 100);
     }
 
     /**
