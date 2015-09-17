@@ -37,8 +37,10 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements
     {
         if ($command->getType() === 'dp') {
             $template = 'GVDiscLetter';
+            $description = 'New disc notification';
         } else {
             $template = 'GVVehiclesList';
+            $description = 'Goods Vehicle List';
         }
 
         $file = $this->getDocumentGenerator()->generateAndStore(
@@ -54,7 +56,7 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements
         $data = [
             'licence'       => $command->getId(),
             'identifier'    => $file->getIdentifier(),
-            'description'   => 'Goods Vehicle List',
+            'description'   => $description,
             'filename'      => $fileName,
             'category'      => Category::CATEGORY_LICENSING,
             'subCategory'   => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
@@ -63,7 +65,7 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements
             'size'          => $file->getSize()
         ];
 
-        $printData = ['fileIdentifier' => $file->getIdentifier(), 'jobName' => 'Goods Vehicle List'];
+        $printData = ['fileIdentifier' => $file->getIdentifier(), 'jobName' => $description];
         $this->handleSideEffect(Enqueue::create($printData));
 
         return $this->handleSideEffect(CreateDocument::create($data));

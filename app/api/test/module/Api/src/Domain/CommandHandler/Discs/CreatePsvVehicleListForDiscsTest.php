@@ -72,7 +72,7 @@ class CreatePsvVehicleListForDiscsTest extends CommandHandlerTestCase
 
         $printData = [
             'fileIdentifier' => 'id1',
-            'jobName' => 'PSV Vehicle List'
+            'jobName' => 'New disc notification'
         ];
         $this->expectedSideEffect(Enqueue::class, $printData, new Result());
 
@@ -87,7 +87,7 @@ class CreatePsvVehicleListForDiscsTest extends CommandHandlerTestCase
             'opposition' => null,
             'category'      => Category::CATEGORY_LICENSING,
             'subCategory'   => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
-            'description'   => 'PSV Vehicle List',
+            'description'   => 'New disc notification',
             'isExternal'    => false,
             'isReadOnly'    => true,
             'isScan' => 0,

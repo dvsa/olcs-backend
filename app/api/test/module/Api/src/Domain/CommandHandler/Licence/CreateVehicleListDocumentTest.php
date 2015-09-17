@@ -132,7 +132,7 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
 
         $data = [
             'fileIdentifier' => 123,
-            'jobName' => 'Goods Vehicle List'
+            'jobName' => 'New disc notification'
         ];
         $result1 = new Result();
         $this->expectedSideEffect(Enqueue::class, $data, $result1);
@@ -140,7 +140,7 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
         $data = [
             'licence' => 111,
             'identifier' => 123,
-            'description' => 'Goods Vehicle List',
+            'description' => 'New disc notification',
             'filename' => date('YmdHi') . '_Goods_Vehicle_List.rtf',
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
