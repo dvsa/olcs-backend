@@ -63,6 +63,7 @@ class Overview extends AbstractQueryHandler
                         'status',
                     ],
                     'leadTcArea',
+                    'organisationUsers'
                 ],
                 'psvDiscs' => [
                     'criteria' => $discCriteria,
