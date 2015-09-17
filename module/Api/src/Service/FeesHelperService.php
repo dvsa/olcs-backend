@@ -160,13 +160,13 @@ class FeesHelperService implements FactoryInterface
      */
     public function getTotalOutstanding(array $fees)
     {
-        $maxPayment = 0;
+        $total = 0;
 
         foreach ($fees as $fee) {
-            $maxPayment += $fee->getOutstandingAmount();
+            $total += $fee->getOutstandingAmount();
         }
 
-        return $this->format($maxPayment);
+        return $this->format($total);
     }
 
     /**
