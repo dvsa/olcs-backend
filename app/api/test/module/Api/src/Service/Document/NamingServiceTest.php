@@ -86,14 +86,10 @@ class NamingServiceTest extends MockeryTestCase
     {
         $date = new DateTime();
 
-        /** @var Category $category */
-        $category = m::mock(Category::class)->makePartial();
-        $category->setDescription('Cat');
-
-        $name = $this->sut->generateName('Some Desc', 'rtf', $category);
+        $name = $this->sut->generateName('Some Desc', 'rtf');
 
         $expected = sprintf(
-            'documents/Cat/Unknown/%s/%s/%s__Some_Desc.rtf',
+            'documents/Unknown/Unknown/%s/%s/%s__Some_Desc.rtf',
             $date->format('Y'),
             $date->format('m'),
             $date->format('YmdHis')
