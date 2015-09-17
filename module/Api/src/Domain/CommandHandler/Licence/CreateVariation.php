@@ -78,6 +78,10 @@ final class CreateVariation extends AbstractCommandHandler implements AuthAwareI
             $variation->setTargetCompletionDateFromReceivedDate();
         }
 
+        if ($this->isGranted(Permission::SELFSERVE_USER)) {
+            $variation->setAppliedVia( $this->getRepo()->getRefdataReference(Application::APPLIED_VIA_SELFSERVE));
+        }
+
         $this->getRepo('Application')->save($variation);
 
         $result->addId('application', $variation->getId());
