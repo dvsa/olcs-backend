@@ -393,6 +393,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @todo 'product_reference' should be $fee->getFeeType()->getDescription()
      * but CPMS has a whitelist and responds  {"code":104,"message":"product_reference is invalid"}
      * @todo 'sales_person_reference'
+     * @todo exclude OVERPAYMENT fees from payment_data otherwise CPMS won't be
+     * able to determine refund amount when refund_overpayment flag is set
      */
     protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [])
     {
@@ -429,6 +431,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @param array $fees array of Fee objects
      * @return array
+     * @todo add refund_overpayment flag if any fees are feeType OVERPAYMENT
      */
     protected function getParametersForFees(array $fees, array $extraParams)
     {
