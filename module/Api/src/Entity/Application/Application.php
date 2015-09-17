@@ -1365,4 +1365,25 @@ class Application extends AbstractApplication
         return !is_null($this->getStatus())
             && $this->getStatus()->getId() === self::APPLICATION_STATUS_UNDER_CONSIDERATION;
     }
+
+    /**
+     * Get the Shortcode version of a licence type
+     *
+     * @return string|null if licence type is not set or shortcode does not exist
+     */
+    public function getLicenceTypeShortCode()
+    {
+        $shortCodes = [
+            'ltyp_r' => 'R',
+            'ltyp_si' => 'SI',
+            'ltyp_sn' => 'SN',
+            'ltyp_sr' => 'SR',
+        ];
+
+        if ($this->getLicenceType() === null || !isset($shortCodes[$this->getLicenceType()->getId()])) {
+            return null;
+        }
+
+        return $shortCodes[$this->getLicenceType()->getId()];
+    }
 }
