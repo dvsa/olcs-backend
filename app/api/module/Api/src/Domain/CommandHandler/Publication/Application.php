@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-
 use Dvsa\Olcs\Transfer\Command\Publication\Application as ApplicationCmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -55,10 +54,14 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
             'A&D' : 'N&P';
         $appStatus = $application->getStatus()->getId();
 
-        $pubSection = $this->getPublicationSectionId($appStatus);
+        $pubSection = $command->getPublicationSection();
+        if (empty($pubSection)) {
+            $pubSection = $this->getPublicationSectionId($appStatus);
+        }
         $trafficArea = $this->getRepo()->getReference(TrafficAreaEntity::class, $command->getTrafficArea());
 
         $publication = $this->getPublication($command->getTrafficArea(), $pubType);
+
         $publicationSection = $this->getPublicationSection($pubSection);
 
         $unpublishedQuery = $this->getUnpublishedApplicationQuery(
@@ -79,7 +82,10 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
             );
         }
 
-        return $this->createPublication('ApplicationPublication', $publicationLink, []);
+        // switch configuration if its a variation
+        $publicationConfig = $application->isNew() ? 'ApplicationPublication' : 'VariationPublication';
+
+        return $this->createPublication($publicationConfig, $publicationLink, []);
     }
 
     public function getPublicationSectionId($appStatus)
