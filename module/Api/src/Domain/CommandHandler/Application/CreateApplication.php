@@ -148,7 +148,10 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
             $application->setTargetCompletionDateFromReceivedDate();
         }
         if ($this->isGranted(Permission::SELFSERVE_USER)) {
-            $application->setAppliedVia( $this->getRepo()->getRefdataReference(Application::APPLIED_VIA_SELFSERVE));
+            $application->setAppliedVia($this->getRepo()->getRefdataReference(Application::APPLIED_VIA_SELFSERVE));
+        }
+        if ($this->isGranted(Permission::INTERNAL_USER)) {
+            $application->setAppliedVia($this->getRepo()->getRefdataReference($command->getAppliedVia()));
         }
 
         return $application;
