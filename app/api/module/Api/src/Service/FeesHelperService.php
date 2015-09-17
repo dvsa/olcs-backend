@@ -181,6 +181,7 @@ class FeesHelperService implements FactoryInterface
      *     98 => '50.00',
      *     99 => '0.00',
      * ]
+     * @todo rewrite to not use floats - convert everything to integer pence?
      */
     public function allocatePayments($amount, array $fees)
     {
@@ -209,7 +210,7 @@ class FeesHelperService implements FactoryInterface
             $allocations[$fee->getId()] = $this->format($allocated);
         }
 
-        if ($remaining > 0) {
+        if ($this->format($remaining) > 0) {
             // note, a balancing fee for any overpayment should always be created
             // prior to calculating allocations, so keep this in as a safeguard:
             throw new Exception("Overpayments not permitted");

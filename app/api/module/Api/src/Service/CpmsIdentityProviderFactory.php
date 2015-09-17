@@ -32,6 +32,7 @@ class CpmsIdentityProviderFactory implements FactoryInterface
 
         $config = $config['cpms_credentials'];
 
+        // @todo user_id should be the authenticated user id, not from config
         if (!isset($config['user_id'])) {
             throw new RuntimeException('Missing required option cpms.user_id');
         }
