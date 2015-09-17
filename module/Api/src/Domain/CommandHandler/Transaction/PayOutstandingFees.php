@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
@@ -19,8 +20,10 @@ use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Service\Exception as ServiceException;
@@ -46,7 +49,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Transaction';
 
-    protected $extraRepos = ['Fee'];
+    protected $extraRepos = ['Fee', 'FeeType'];
 
     /**
      * There are three valid use cases for this command
@@ -151,13 +154,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     {
         $this->validateAmount($command->getReceived(), $fees);
 
-        try {
-            // work out the allocation of the payment amount to fees
-            $allocations = $this->feesHelper->allocatePayments($command->getReceived(), $fees);
-        } catch (ServiceException $e) {
-            // if there is an allocation error, rethrow as Domain exception
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
+        // work out the allocation of the payment amount to fees, will create
+        // balancing entry to handle any overpayment
+        $allocations = $this->allocatePayments($command->getReceived(), $fees, $result);
 
         // fire off to relevant CPMS method to record payment
         $response = $this->recordPaymentInCpms($command, $fees);
@@ -364,5 +363,80 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             }
         }
         return $fees;
+    }
+
+    /**
+     * @param string $receivedAmount
+     * @param array $fees - passed by reference as we may need to append
+     * @param Result $result
+     * @return array
+     */
+    protected function allocatePayments($receivedAmount, &$fees, $result)
+    {
+        $feeResult = $this->maybeCreateOverpaymentFee($receivedAmount, $fees);
+
+        if ($feeResult->getId('fee')) {
+            // an overpayment balancing fee was created, add it to the list
+            $fees[] = $this->getRepo('Fee')->fetchById($feeResult->getId('fee'));
+        }
+
+        $result->merge($feeResult);
+
+        try {
+            // work out the allocation of the payment amount to fees
+            $allocations = $this->feesHelper->allocatePayments($receivedAmount, $fees);
+        } catch (ServiceException $e) {
+            // if there is an allocation error, rethrow as Domain exception
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        return $allocations;
+    }
+
+    /**
+     * @param string $receivedAmount
+     * @param array $fees
+     * @return Result
+     * @todo maybe move to separate command?
+     */
+    protected function maybeCreateOverpaymentFee($receivedAmount, $fees)
+    {
+        $overpaymentAmount = $this->feesHelper->getOverpaymentAmount($receivedAmount, $fees);
+
+        if ($overpaymentAmount > 0) {
+
+            // sort fees
+            $fees = $this->feesHelper->sortFeesByInvoiceDate($fees);
+
+            // get IDs for description
+            $feeIds = array_map(
+                function($fee) {
+                    return $fee->getId();
+                },
+                $fees
+            );
+
+            // we get licenceId, applicationId, irfoGvPermit, busReg from the first existing fee
+            $existingFee = reset($fees);
+
+            // get correct feeType
+            $feeType = $this->getRepo('FeeType')->fetchLatestForOverpayment();
+
+            $dtoData = [
+                'amount'       => $overpaymentAmount,
+                'invoicedDate' => (new DateTime())->format(\DateTime::W3C),
+                'feeType'      => $feeType->getId(),
+                'description'  => 'Overpayment on fees: ' . implode(', ', $feeIds),
+                'licence'      => $existingFee->getLicence(),
+                'application'  => $existingFee->getApplication(),
+                'busReg'       => $existingFee->getBusReg(),
+                'irfoGvPermit' => $existingFee->getIrfoGvPermit(),
+            ];
+
+            return $this->handleSideEffect(CreateFeeCmd::create($dtoData));
+        }
+
+        // if no overpayment, return empty result
+        return new Result();
     }
 }

@@ -496,6 +496,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 ]
             );
 
+        $this->mockFeesHelperService
+            ->shouldReceive('getOverpaymentAmount')
+            ->with('99.99', $fees)
+            ->andReturn('0.00');
+
         $this->repoMap['Fee']
             ->shouldReceive('save')
             ->once()
@@ -603,6 +608,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                     99 => '99.99',
                 ]
             );
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getOverpaymentAmount')
+            ->with('99.99', $fees)
+            ->andReturn('0.00');
 
         $this->repoMap['Fee']
             ->shouldReceive('save')
@@ -712,6 +722,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                     99 => '99.99',
                 ]
             );
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getOverpaymentAmount')
+            ->with('99.99', $fees)
+            ->andReturn('0.00');
 
         $this->repoMap['Fee']
             ->shouldReceive('save')
@@ -847,6 +862,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->andReturn('0.01');
 
         $this->mockFeesHelperService
+            ->shouldReceive('getOverpaymentAmount')
+            ->with('1000', $fees)
+            ->andReturn('0.00');
+
+        $this->mockFeesHelperService
             ->shouldReceive('allocatePayments')
             ->once()
             ->andThrow(new ServiceException('ohnoes'));
@@ -892,6 +912,11 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                     99 => '99.99',
                 ]
             );
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getOverpaymentAmount')
+            ->with('99.99', $fees)
+            ->andReturn('0.00');
 
         $this->mockCpmsService
             ->shouldReceive('recordCashPayment')
