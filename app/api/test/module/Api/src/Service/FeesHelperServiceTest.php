@@ -216,7 +216,7 @@ class FeesHelperServiceTest extends MockeryTestCase
      */
     public function testAllocatePayments($amount, $fees, $expected)
     {
-        $this->assertEquals($expected, $this->sut->allocatePayments($amount, $fees));
+        $this->assertSame($expected, $this->sut->allocatePayments($amount, $fees));
     }
 
     public function allocateProvider()
@@ -257,6 +257,22 @@ class FeesHelperServiceTest extends MockeryTestCase
                     '12' => '100.00',
                     '10' => '49.99',
                     '13' => '0.00',
+                ]
+            ],
+            [
+                '200.00',
+                [
+                    // check tie-break on same invoicedDate
+                    $this->getStubFee('1', '100.00', '2015-09-03'),
+                    $this->getStubFee('2', '100.00', '2015-09-02'),
+                    $this->getStubFee('3', '100.00', '2015-09-02'),
+                    $this->getStubFee('4', '100.00', '2015-09-02'),
+                ],
+                [
+                    '2' => '100.00',
+                    '3' => '100.00',
+                    '4' => '0.00',
+                    '1' => '0.00',
                 ]
             ]
         ];

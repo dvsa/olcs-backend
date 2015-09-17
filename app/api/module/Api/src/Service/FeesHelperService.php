@@ -223,6 +223,10 @@ class FeesHelperService implements FactoryInterface
         uasort(
             $sorted,
             function ($a, $b) {
+                if ($a->getInvoicedDate() === $b->getInvoicedDate()) {
+                    // if invoicedDate the same, use id as a tie-break
+                    return $a->getId() < $b->getId() ? -1 : 1;
+                }
                 return $a->getInvoicedDate() < $b->getInvoicedDate() ? -1 : 1;
             }
         );
