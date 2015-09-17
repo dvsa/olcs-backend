@@ -149,7 +149,7 @@ class FeesHelperService implements FactoryInterface
             $minPayment += $fees[$i]->getOutstandingAmount();
         }
 
-        return number_format($minPayment, 2, '.', '');
+        return $this->format($minPayment);
     }
 
     /**
@@ -166,7 +166,7 @@ class FeesHelperService implements FactoryInterface
             $maxPayment += $fee->getOutstandingAmount();
         }
 
-        return number_format($maxPayment, 2, '.', '');
+        return $this->format($maxPayment);
     }
 
     /**
@@ -206,7 +206,7 @@ class FeesHelperService implements FactoryInterface
             // then decrement remaining available
             $remaining = ($remaining - $allocated);
 
-            $allocations[$fee->getId()] = number_format($allocated, 2, '.', '');
+            $allocations[$fee->getId()] = $this->format($allocated);
         }
 
         if ($remaining > 0) {
@@ -232,5 +232,13 @@ class FeesHelperService implements FactoryInterface
         );
 
         return $sorted;
+    }
+
+    /**
+     * @param float $amount
+     * @return string formatted amount - two decimal places, no thousands separator
+     */
+    private function format($amount) {
+        return number_format($amount, 2, '.', '');
     }
 }
