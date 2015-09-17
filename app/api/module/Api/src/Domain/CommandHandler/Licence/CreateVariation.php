@@ -79,7 +79,10 @@ final class CreateVariation extends AbstractCommandHandler implements AuthAwareI
         }
 
         if ($this->isGranted(Permission::SELFSERVE_USER)) {
-            $variation->setAppliedVia( $this->getRepo()->getRefdataReference(Application::APPLIED_VIA_SELFSERVE));
+            $variation->setAppliedVia($this->getRepo()->getRefdataReference(Application::APPLIED_VIA_SELFSERVE));
+        }
+        if ($this->isGranted(Permission::INTERNAL_USER)) {
+            $variation->setAppliedVia($this->getRepo()->getRefdataReference($command->getAppliedVia()));
         }
 
         $this->getRepo('Application')->save($variation);

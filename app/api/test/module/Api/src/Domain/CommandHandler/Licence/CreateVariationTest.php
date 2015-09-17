@@ -46,7 +46,9 @@ class CreateVariationTest extends CommandHandlerTestCase
             ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED,
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
             LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            LicenceEntity::LICENCE_STATUS_VALID
+            LicenceEntity::LICENCE_STATUS_VALID,
+            ApplicationEntity::APPLIED_VIA_PHONE,
+            ApplicationEntity::APPLIED_VIA_SELFSERVE,
         ];
 
         parent::initReferences();
@@ -58,12 +60,17 @@ class CreateVariationTest extends CommandHandlerTestCase
             'id' => 111,
             'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
             'receivedDate' => '2015-01-01',
-            'feeRequired' => 'Y'
+            'feeRequired' => 'Y',
+            'appliedVia' => ApplicationEntity::APPLIED_VIA_PHONE
         ];
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(false);
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
@@ -122,12 +129,17 @@ class CreateVariationTest extends CommandHandlerTestCase
             'id' => 111,
             'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
             'receivedDate' => '2015-01-01',
-            'feeRequired' => 'N'
+            'feeRequired' => 'N',
+            'appliedVia' => ApplicationEntity::APPLIED_VIA_PHONE
         ];
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(false);
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
@@ -179,12 +191,17 @@ class CreateVariationTest extends CommandHandlerTestCase
         $data = [
             'id' => 111,
             'receivedDate' => '2015-01-01',
-            'feeRequired' => 'N'
+            'feeRequired' => 'N',
+            'appliedVia' => ApplicationEntity::APPLIED_VIA_PHONE
         ];
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(false);
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
@@ -229,12 +246,17 @@ class CreateVariationTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 111,
-            'feeRequired' => 'N'
+            'feeRequired' => 'N',
+            'appliedVia' => ApplicationEntity::APPLIED_VIA_PHONE
         ];
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(false);
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
@@ -284,7 +306,11 @@ class CreateVariationTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(true);
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
