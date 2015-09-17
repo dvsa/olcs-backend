@@ -313,6 +313,44 @@ class FeesHelperServiceTest extends MockeryTestCase
         $this->assertEquals('199.98', $this->sut->getTotalOutstanding($fees));
     }
 
+   /**
+     * @param string $amount
+     * @param array $fees array of FeeEntity
+     * @param string $expected formatted amount
+     * @dataProvider overpaymentProvider()
+     */
+    public function testGetOverpaymentAmount($amount, $fees, $expected)
+    {
+        $this->assertSame($expected, $this->sut->getOverpaymentAmount($amount, $fees));
+    }
+
+    public function overpaymentProvider()
+    {
+        return [
+            'no fees' => [
+                '0.00',
+                [],
+                '0.00',
+            ],
+            'underpayment' => [
+                '0.00',
+                [
+                    $this->getStubFee('10', '99.99'),
+                    $this->getStubFee('11', '100.01'),
+                ],
+                '-200.00',
+            ],
+            'overpayment' => [
+                '250',
+                [
+                    $this->getStubFee('10', '99.99'),
+                    $this->getStubFee('11', '100.01'),
+                ],
+                '50.00',
+            ],
+        ];
+    }
+
     /**
      * Helper function to generate a stub fee entity
      *
