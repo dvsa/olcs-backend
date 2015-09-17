@@ -31,7 +31,7 @@ class MyAccount extends AbstractQueryHandler implements AuthAwareInterface
                 'organisationUsers' => [
                     'organisation',
                 ],
-                'userRoles' => ['role']
+                'roles' => ['role']
             ]
         );
     }
