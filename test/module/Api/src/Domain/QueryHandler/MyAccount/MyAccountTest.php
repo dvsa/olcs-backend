@@ -39,6 +39,11 @@ class MyAccountTest extends QueryHandlerTestCase
         $mockUser->shouldReceive('serialize')
             ->andReturn(['foo']);
 
+        $mockUser = m::mock(BundleSerializableInterface::class)
+            ->shouldReceive('serialize')
+            ->andReturn(['foo'])
+            ->getMock();
+
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 
