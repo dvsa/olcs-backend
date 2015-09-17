@@ -173,6 +173,8 @@ class FeesHelperService implements FactoryInterface
      * Determine how a payment should be allocated to an array of fees.
      * Payment is allocated to earliest fees first (by invoicedDate)
      *
+     * (Does calculations as integers/pence to avoid floating point rounding errors)
+     *
      * @param string $amount payment amount
      * @param array $fees array of FeeEntity
      * @return array ['feeId' => 'allocatedAmount'] e.g.
@@ -181,7 +183,6 @@ class FeesHelperService implements FactoryInterface
      *     98 => '50.00',
      *     99 => '0.00',
      * ]
-     * @todo rewrite to not use floats - convert everything to integer pence?
      */
     public function allocatePayments($amount, array $fees)
     {
@@ -189,12 +190,12 @@ class FeesHelperService implements FactoryInterface
 
         $allocations = [];
 
-        $remaining = (float) $amount;
+        $remaining = (int) ($amount * 100);
 
         foreach ($fees as $fee) {
 
             $allocated = 0;
-            $outstanding = (float) $fee->getOutstandingAmount();
+            $outstanding = (int) ($fee->getOutstandingAmount() * 100);
 
             if ($remaining >= $outstanding) {
                 // if we have enough to pay the fee in full, allocate full amount
@@ -207,10 +208,10 @@ class FeesHelperService implements FactoryInterface
             // then decrement remaining available
             $remaining = ($remaining - $allocated);
 
-            $allocations[$fee->getId()] = $this->format($allocated);
+            $allocations[$fee->getId()] = $this->format($allocated / 100);
         }
 
-        if ($this->format($remaining) > 0) {
+        if ($remaining > 0) {
             // note, a balancing fee for any overpayment should always be created
             // prior to calculating allocations, so keep this in as a safeguard:
             throw new Exception("Overpayments not permitted");
@@ -241,17 +242,20 @@ class FeesHelperService implements FactoryInterface
      * Calculate amount of any overpayment. Note, will return a negative value
      * for an underpayment, although not really expected to be used as such
      *
+     * (Does calculations as integers/pence to avoid floating point rounding errors)
+     *
      * @param string $amount payment amount
      * @param array $fees array of FeeEntity
      * @return string formatted amount
      */
     public function getOverpaymentAmount($receivedAmount, $fees)
     {
-        $outstanding = $this->getTotalOutstanding($fees);
+        $receivedAmount = (int) ($receivedAmount * 100);
+        $outstanding = (int) ($this->getTotalOutstanding($fees) * 100);
 
-        $overpayment = ( (float) $receivedAmount - (float) $outstanding );
+        $overpayment = $receivedAmount - $outstanding;
 
-        return $this->format($overpayment);
+        return $this->format($overpayment / 100);
     }
 
     /**

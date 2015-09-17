@@ -215,20 +215,20 @@ class Fee extends AbstractFee
      */
     public function getOutstandingAmount()
     {
-        $amount = (float) $this->getAmount();
+        $amount = (int) ($this->getAmount() * 100);
 
         $ftSum = 0;
         $this->getFeeTransactions()->forAll(
             function ($key, $feeTransaction) use (&$ftSum) {
                 unset($key); // unused
                 if ($feeTransaction->getTransaction()->isComplete()) {
-                    $ftSum += (float) $feeTransaction->getAmount();
+                    $ftSum += (int) ($feeTransaction->getAmount() * 100);
                     return true;
                 }
             }
         );
 
-        return number_format(($amount - $ftSum), 2, '.', '');
+        return number_format(($amount - $ftSum) / 100, 2, '.', '');
     }
 
     /**
