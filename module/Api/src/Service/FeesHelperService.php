@@ -210,13 +210,15 @@ class FeesHelperService implements FactoryInterface
         }
 
         if ($remaining > 0) {
+            // note, a balancing fee for any overpayment should always be created
+            // prior to calculating allocations, so keep this in as a safeguard:
             throw new Exception("Overpayments not permitted");
         }
 
         return $allocations;
     }
 
-    protected function sortFeesByInvoiceDate(array $fees)
+    public function sortFeesByInvoiceDate(array $fees)
     {
         $sorted = $fees;
         // sort fees in invoicedDate order
@@ -232,6 +234,23 @@ class FeesHelperService implements FactoryInterface
         );
 
         return $sorted;
+    }
+
+    /**
+     * Calculate amount of any overpayment. Note, will return a negative value
+     * for an underpayment, although not really expected to be used as such
+     *
+     * @param string $amount payment amount
+     * @param array $fees array of FeeEntity
+     * @return string formatted amount
+     */
+    public function getOverpaymentAmount($receivedAmount, $fees)
+    {
+        $outstanding = $this->getTotalOutstanding($fees);
+
+        $overpayment = ( (float) $receivedAmount - (float) $outstanding );
+
+        return $this->format($overpayment);
     }
 
     /**
