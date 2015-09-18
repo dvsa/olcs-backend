@@ -256,6 +256,9 @@ return [
     TransferCommand\Correspondence\AccessCorrespondence::class
         => CommandHandler\Correspondence\AccessCorrespondence::class,
 
+    // Domain - Correspondence
+    Command\Correspondence\ProcessInboxDocuments::class => CommandHandler\Correspondence\ProcessInboxDocuments::class,
+
     // Transfer - IRFO
     TransferCommand\Irfo\UpdateIrfoDetails::class => CommandHandler\Irfo\UpdateIrfoDetails::class,
     TransferCommand\Irfo\CreateIrfoGvPermit::class => CommandHandler\Irfo\CreateIrfoGvPermit::class,
