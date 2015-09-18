@@ -31,8 +31,8 @@
         },
         {
             "type": "vcs",
-            "url": "git@192.168.2.180:cpms/cpms-client.git"
-        }
+            "url": "git@gitlab.inf.mgt.mtpdvsa:cpms/cpms-client.git"
+        },
     ],
     "require": {
         "php": ">=5.4",
@@ -49,6 +49,7 @@
         "olcs/autoload": "dev-develop",
         "zf-commons/zfc-rbac": "~2.4.0",
         "cpms/client": "~2.0.0",
+        "cpms/client": "0.1.x-dev",
         "soflomo/purifier": "~0.1.0",
         "symfony/Filesystem": "~2.6.0"
     },
