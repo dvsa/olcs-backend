@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Publication;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData as Entity;
+use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Mockery as m;
 
 /**
@@ -34,18 +35,19 @@ class PublicationPoliceDataEntityTest extends EntityTester
      */
     public function testCreate($birthDate)
     {
-        $publicationLink = m::mock(PublicationLink::class);
+        $publicationLinkMock = m::mock(PublicationLink::class);
         $forename = 'forename';
         $familyName = 'family name';
 
-        $sut = new Entity(
-            $publicationLink,
-            $birthDate,
-            $forename,
-            $familyName
-        );
+        $personMock = m::mock(PersonEntity::class);
+        $personMock->shouldReceive('getBirthDate')->once()->andReturn($birthDate);
+        $personMock->shouldReceive('getForename')->once()->andReturn($forename);
+        $personMock->shouldReceive('getFamilyName')->once()->andReturn($familyName);
 
-        $this->assertEquals($publicationLink, $sut->getPublicationLink());
+        $sut = new Entity($publicationLinkMock, $personMock);
+
+        $this->assertEquals($publicationLinkMock, $sut->getPublicationLink());
+        $this->assertEquals($personMock, $sut->getPerson());
         $this->assertEquals($birthDate, $sut->getBirthDate());
         $this->assertEquals($forename, $sut->getForename());
         $this->assertEquals($familyName, $sut->getFamilyName());
