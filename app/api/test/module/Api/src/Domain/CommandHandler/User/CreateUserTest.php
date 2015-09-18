@@ -6,7 +6,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Mockery as m;
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\CreateUser as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
@@ -59,7 +58,7 @@ class CreateUserTest extends CommandHandlerTestCase
         $licenceNumber = 'LIC123';
 
         $data = [
-            'userType' => UserEntity::USER_TYPE_SELF_SERVICE,
+            'userType' => UserEntity::USER_TYPE_OPERATOR,
             'team' => 1,
             'licenceNumber' => $licenceNumber,
             'loginId' => 'login_id',
@@ -143,7 +142,7 @@ class CreateUserTest extends CommandHandlerTestCase
 
         $this->assertInstanceOf(ContactDetailsEntity::class, $savedUser->getContactDetails());
         $this->assertEquals(
-            UserEntity::USER_TYPE_SELF_SERVICE,
+            UserEntity::USER_TYPE_OPERATOR,
             $savedUser->getUserType()
         );
         $this->assertEquals(

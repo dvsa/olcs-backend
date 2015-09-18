@@ -59,6 +59,7 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
                     'familyName' => 'updated familyName',
                 ],
             ],
+            'isAdministrator' => 'Y',
         ];
 
         $command = Cmd::create($data);
@@ -161,7 +162,7 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $organisationUser->setOrganisation($organisation);
 
         /** @var UserEntity $currentUser */
-        $currentUser = new UserEntity(UserEntity::USER_TYPE_SELF_SERVICE);
+        $currentUser = new UserEntity(UserEntity::USER_TYPE_OPERATOR);
         $currentUser->setId(222);
         $currentUser->getOrganisationUsers()->add($organisationUser);
 
@@ -170,7 +171,7 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
 
         $savedUser = $this->commonHandleCommandTest();
 
-        $this->assertEquals(UserEntity::USER_TYPE_SELF_SERVICE, $savedUser->getUserType());
+        $this->assertEquals(UserEntity::USER_TYPE_OPERATOR, $savedUser->getUserType());
     }
 
     /**

@@ -28,7 +28,7 @@ final class UpdateUser extends AbstractCommandHandler implements TransactionedIn
 
         $data = $command->getArrayCopy();
 
-        if (($command->getUserType() === User::USER_TYPE_SELF_SERVICE) && (isset($data['licenceNumber']))) {
+        if (($command->getUserType() === User::USER_TYPE_OPERATOR) && (isset($data['licenceNumber']))) {
             if (!empty($data['licenceNumber'])) {
                 // fetch licence by licence number
                 $licence = $this->getRepo('Licence')->fetchByLicNo($data['licenceNumber']);

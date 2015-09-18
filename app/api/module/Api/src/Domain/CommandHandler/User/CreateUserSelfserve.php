@@ -42,8 +42,8 @@ final class CreateUserSelfserve extends AbstractCommandHandler implements AuthAw
                 $data['userType'] = User::USER_TYPE_LOCAL_AUTHORITY;
                 $data['localAuthority'] = $this->getCurrentUser()->getLocalAuthority()->getId();
                 break;
-            case User::USER_TYPE_SELF_SERVICE:
-                $data['userType'] = User::USER_TYPE_SELF_SERVICE;
+            case User::USER_TYPE_OPERATOR:
+                $data['userType'] = User::USER_TYPE_OPERATOR;
                 $data['organisations'] = array_map(
                     function ($item) {
                         return $item->getOrganisation();
@@ -55,6 +55,12 @@ final class CreateUserSelfserve extends AbstractCommandHandler implements AuthAw
                 // only available to specific user types
                 throw new BadRequestException('User type must be provided');
         }
+
+        // populate roles based on the user type and isAdministrator flag
+        $data['roles'] = User::getRolesByUserType(
+            $data['userType'],
+            ($data['isAdministrator'] === 'Y') ? true : false
+        );
 
         $user = User::create(
             $data['userType'],

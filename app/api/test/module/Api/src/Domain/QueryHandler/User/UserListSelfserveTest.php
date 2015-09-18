@@ -40,6 +40,7 @@ class UserListSelfserveTest extends QueryHandlerTestCase
 
         $user = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $user->setId(74);
+        $user->shouldReceive('isAdministrator')->andReturn(false);
 
         $this->repoMap['User']->shouldReceive('fetchList')->andReturn([$user]);
         $this->repoMap['User']->shouldReceive('fetchCount')->andReturn('COUNT');
@@ -98,7 +99,7 @@ class UserListSelfserveTest extends QueryHandlerTestCase
         $organisationUser->setOrganisation($organisation);
 
         /** @var UserEntity $currentUser */
-        $currentUser = new UserEntity(UserEntity::USER_TYPE_SELF_SERVICE);
+        $currentUser = new UserEntity(UserEntity::USER_TYPE_OPERATOR);
         $currentUser->setId(222);
         $currentUser->getOrganisationUsers()->add($organisationUser);
 
