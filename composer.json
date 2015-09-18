@@ -31,7 +31,7 @@
         },
         {
             "type": "vcs",
-            "url": "git@gitlab.inf.mgt.mtpdvsa:cpms/cpms-client.git"
+            "url": "git@gitlab.clb.npm:cpms/cpms-client.git"
         },
         {
             "type": "vcs",
@@ -52,7 +52,7 @@
         "olcs/olcs-logging": "dev-develop",
         "olcs/autoload": "dev-develop",
         "zf-commons/zfc-rbac": "~2.4.0",
-        "cpms/client": "0.1.x-dev",
+        "cpms/client": "~2.0.0",
         "olcs/dvsa/document-share": "dev-develop",
         "soflomo/purifier": "~0.1.0",
         "symfony/Filesystem": "~2.6.0"

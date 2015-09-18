@@ -50,6 +50,8 @@ class Fee extends AbstractFee
 
     const DEFAULT_INVOICE_CUSTOMER_NAME = 'Miscellaneous payment';
     const DEFAULT_INVOICE_ADDRESS_LINE = 'Miscellaneous payment';
+    // CPMS enforces 'valid' postcodes :(
+    const DEFAULT_POSTCODE = 'LS9 6NF';
 
     public function __construct(FeeType $feeType, $amount, RefData $feeStatus)
     {
@@ -130,29 +132,6 @@ class Fee extends AbstractFee
                 self::STATUS_CANCELLED,
             ]
         );
-    }
-
-    /**
-     * @todo OLCS-10407 this currently assumes only one transaction against a
-     * fee, will need updating when part payments are allowed
-     */
-    public function getReceivedAmount()
-    {
-        $ft = $this->getLatestFeeTransaction();
-        if ($ft) {
-            return $ft->getAmount();
-        }
-    }
-
-    /**
-     * @todo OLCS-10425 will remove the need for this method
-     */
-    public function getReceivedDate()
-    {
-        $transaction = $this->getLatestTransaction();
-        if ($transaction) {
-            return $transaction->getCompletedDate();
-        }
     }
 
     public function getPaymentMethod()
@@ -372,7 +351,15 @@ class Fee extends AbstractFee
         $default
             ->setAddressLine1(self::DEFAULT_INVOICE_ADDRESS_LINE)
             ->setTown(self::DEFAULT_INVOICE_ADDRESS_LINE)
-            ->setPostcode(self::DEFAULT_INVOICE_ADDRESS_LINE);
+            ->setPostcode(self::DEFAULT_POSTCODE);
         return $default;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPaid()
+    {
+        return $this->getFeeStatus()->getId() === self::STATUS_PAID;
     }
 }

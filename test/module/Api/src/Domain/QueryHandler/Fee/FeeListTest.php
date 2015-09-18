@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Service\FeesHelperService;
 use Dvsa\Olcs\Transfer\Query\Fee\FeeList as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -31,6 +32,8 @@ class FeeListTest extends QueryHandlerTestCase
         $this->mockRepo('Licence', Repository\Licence::class);
         $this->mockRepo('Application', Repository\Application::class);
 
+        $this->mockedSmServices['FeesHelperService'] = m::mock(FeesHelperService::class);
+
         parent::setUp();
     }
 
@@ -40,7 +43,7 @@ class FeeListTest extends QueryHandlerTestCase
 
         $fee1 = m::mock()->shouldReceive('serialize')->andReturn(['id' => 1])->getMock();
         $fee2 = m::mock()->shouldReceive('serialize')->andReturn(['id' => 2])->getMock();
-        $mockList = [$fee1, $fee2];
+        $mockList = new \ArrayObject([$fee1, $fee2]);
 
         $this->repoMap['Fee']
             ->shouldReceive('fetchList')
@@ -51,6 +54,16 @@ class FeeListTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn(2);
 
+        $this->mockedSmServices['FeesHelperService']
+            ->shouldReceive('getMinPaymentForFees')
+            ->with([$fee1, $fee2])
+            ->once()
+            ->andReturn('123.45')
+            ->shouldReceive('getTotalOutstanding')
+            ->with([$fee1, $fee2])
+            ->once()
+            ->andReturn('200.00');
+
         $result = $this->sut->handleQuery($query);
 
         $expected = [
@@ -60,6 +73,8 @@ class FeeListTest extends QueryHandlerTestCase
             ],
             'count' => 2,
             'allowFeePayments' => true,
+            'minPayment' => '123.45',
+            'totalOutstanding' => '200.00',
         ];
 
         $this->assertEquals($expected, $result);
@@ -72,7 +87,7 @@ class FeeListTest extends QueryHandlerTestCase
 
         $fee1 = m::mock()->shouldReceive('serialize')->andReturn(['id' => 1])->getMock();
         $fee2 = m::mock()->shouldReceive('serialize')->andReturn(['id' => 2])->getMock();
-        $mockList = [$fee1, $fee2];
+        $mockList = new \ArrayObject([$fee1, $fee2]);
 
         $this->repoMap['Fee']
             ->shouldReceive('fetchList')
@@ -94,6 +109,16 @@ class FeeListTest extends QueryHandlerTestCase
                     ->getMock()
             );
 
+        $this->mockedSmServices['FeesHelperService']
+            ->shouldReceive('getMinPaymentForFees')
+            ->with([$fee1, $fee2])
+            ->once()
+            ->andReturn('123.45')
+            ->shouldReceive('getTotalOutstanding')
+            ->with([$fee1, $fee2])
+            ->once()
+            ->andReturn('200.00');
+
         $result = $this->sut->handleQuery($query);
 
         $expected = [
@@ -103,6 +128,8 @@ class FeeListTest extends QueryHandlerTestCase
             ],
             'count' => 2,
             'allowFeePayments' => false,
+            'minPayment' => '123.45',
+            'totalOutstanding' => '200.00',
         ];
 
         $this->assertEquals($expected, $result);
@@ -115,7 +142,7 @@ class FeeListTest extends QueryHandlerTestCase
 
         $fee1 = m::mock()->shouldReceive('serialize')->andReturn(['id' => 1])->getMock();
         $fee2 = m::mock()->shouldReceive('serialize')->andReturn(['id' => 2])->getMock();
-        $mockList = [$fee1, $fee2];
+        $mockList = new \ArrayObject([$fee1, $fee2]);
 
         $this->repoMap['Fee']
             ->shouldReceive('fetchList')
@@ -137,6 +164,16 @@ class FeeListTest extends QueryHandlerTestCase
                     ->getMock()
             );
 
+        $this->mockedSmServices['FeesHelperService']
+            ->shouldReceive('getMinPaymentForFees')
+            ->with([$fee1, $fee2])
+            ->once()
+            ->andReturn('123.45')
+            ->shouldReceive('getTotalOutstanding')
+            ->with([$fee1, $fee2])
+            ->once()
+            ->andReturn('200.00');
+
         $result = $this->sut->handleQuery($query);
 
         $expected = [
@@ -146,6 +183,8 @@ class FeeListTest extends QueryHandlerTestCase
             ],
             'count' => 2,
             'allowFeePayments' => false,
+            'minPayment' => '123.45',
+            'totalOutstanding' => '200.00',
         ];
 
         $this->assertEquals($expected, $result);
