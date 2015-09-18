@@ -80,6 +80,10 @@ class Application extends AbstractApplication
 
     const TARGET_COMPLETION_TIME = '+9 week';
 
+    const APPLIED_VIA_SELFSERVE = 'applied_via_selfserve';
+    const APPLIED_VIA_POST = 'applied_via_post';
+    const APPLIED_VIA_PHONE = 'applied_via_phone';
+
     /**
      * Publication No
      *
