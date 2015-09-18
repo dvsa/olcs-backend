@@ -29,7 +29,8 @@ class PublicationPoliceData extends AbstractPublicationPoliceData
      * @param PublicationLinkEntity $publicationLink
      * @param PersonEntity $person
      */
-    public function __construct(PublicationLinkEntity $publicationLink, PersonEntity $person) {
+    public function __construct(PublicationLinkEntity $publicationLink, PersonEntity $person)
+    {
         $this->create($publicationLink, $person);
     }
 
