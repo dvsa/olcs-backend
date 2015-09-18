@@ -57,7 +57,7 @@ class NamingServiceTest extends MockeryTestCase
         $subCategory = m::mock(SubCategory::class)->makePartial();
         $subCategory->setSubCategoryName('Sub Cat');
 
-        $name = $this->sut->generateName($category, $subCategory, 'Some Desc', 'rtf');
+        $name = $this->sut->generateName('Some Desc', 'rtf', $category, $subCategory);
 
         $expected = sprintf(
             'documents/Cat/Sub_Cat/%s/%s/%s__Some_Desc.rtf',
@@ -85,7 +85,7 @@ class NamingServiceTest extends MockeryTestCase
         $entity->shouldReceive('getContextValue')
             ->andReturn('12345');
 
-        $name = $this->sut->generateName($category, $subCategory, 'Some Desc', 'rtf', $entity);
+        $name = $this->sut->generateName('Some Desc', 'rtf', $category, $subCategory, $entity);
 
         $expected = sprintf(
             'documents/Cat/Sub_Cat/%s/%s/%s_12345_Some_Desc.rtf',

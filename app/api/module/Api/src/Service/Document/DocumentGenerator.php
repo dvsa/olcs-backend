@@ -10,8 +10,6 @@ namespace Dvsa\Olcs\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
-use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\FactoryInterface;
