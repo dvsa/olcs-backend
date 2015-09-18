@@ -1200,17 +1200,8 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
     (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00','abdou.bonomi2',140, NULL, NULL, NULL);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator`) VALUES
-    (1, 1, 1),
-    (1, 2, 0),
-    (1, 3, 0),
-    (1, 4, 0),
-    (1, 5, 0),
-    (1, 6, 0),
-    (1, 7, 0),
     (1, 20, 1),
-    (1, 21, 0),
-    (1, 12504, 1),
-    (1, 12505, 0);
+    (1, 21, 0);
 
 INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
     (20, 5),

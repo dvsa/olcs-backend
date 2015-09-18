@@ -29,9 +29,24 @@ class User extends AbstractUser
 {
     const USER_TYPE_INTERNAL = 'internal';
     const USER_TYPE_LOCAL_AUTHORITY = 'local-authority';
+    const USER_TYPE_OPERATOR = 'operator';
     const USER_TYPE_PARTNER = 'partner';
-    const USER_TYPE_SELF_SERVICE = 'self-service';
     const USER_TYPE_TRANSPORT_MANAGER = 'transport-manager';
+
+    private static $userTypeToRoles = [
+        self::USER_TYPE_LOCAL_AUTHORITY => [
+            'admin' => [RoleEntity::ROLE_LOCAL_AUTHORITY_ADMIN],
+            'user' => [RoleEntity::ROLE_LOCAL_AUTHORITY_USER],
+        ],
+        self::USER_TYPE_OPERATOR => [
+            'admin' => [RoleEntity::ROLE_OPERATOR_ADMIN],
+            'user' => [RoleEntity::ROLE_OPERATOR_USER],
+        ],
+        self::USER_TYPE_PARTNER => [
+            'admin' => [RoleEntity::ROLE_PARTNER_ADMIN],
+            'user' => [RoleEntity::ROLE_PARTNER_USER],
+        ],
+    ];
 
     /**
      * User type
@@ -44,6 +59,18 @@ class User extends AbstractUser
     {
         parent::__construct();
         $this->userType = $userType;
+    }
+
+    /**
+     * Gets calculated values
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'isAdministrator' => $this->isAdministrator() ? 'Y' : 'N',
+        ];
     }
 
     /**
@@ -102,8 +129,8 @@ class User extends AbstractUser
             case self::USER_TYPE_LOCAL_AUTHORITY:
                 $this->updateLocalAuthority($data);
                 break;
-            case self::USER_TYPE_SELF_SERVICE:
-                $this->updateSelfService($data);
+            case self::USER_TYPE_OPERATOR:
+                $this->updateOperator($data);
                 break;
         }
 
@@ -205,10 +232,21 @@ class User extends AbstractUser
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
      * @return User
      */
-    private function updateSelfService(array $data)
+    private function updateOperator(array $data)
     {
         if (isset($data['organisations'])) {
+            // update list of organisations
             $this->populateOrganisationUsers($data['organisations']);
+        } else {
+            // update isAdministrator flag only
+            $orgs = array_map(
+                function ($organisationUser) {
+                    return $organisationUser->getOrganisation();
+                },
+                $this->getOrganisationUsers()->toArray()
+            );
+
+            $this->populateOrganisationUsers($orgs);
         }
 
         return $this;
@@ -231,7 +269,7 @@ class User extends AbstractUser
             } elseif (isset($this->partnerContactDetails)) {
                 $this->userType = self::USER_TYPE_PARTNER;
             } else {
-                $this->userType = self::USER_TYPE_SELF_SERVICE;
+                $this->userType = self::USER_TYPE_OPERATOR;
             }
         }
         return $this->userType;
@@ -280,17 +318,37 @@ class User extends AbstractUser
     /**
      * @return bool
      */
-    private function isAdministrator()
+    public function isAdministrator()
     {
         // is admin if has "operator-admin" role
-        return !$this->roles->isEmpty() && in_array(
-            RoleEntity::ROLE_OPERATOR_ADMIN,
-            array_map(
-                function ($role) {
-                    return $role->getRole();
-                },
-                $this->roles->toArray()
+        return !$this->roles->isEmpty() && !empty(
+            array_intersect(
+                // list of admin roles for given user type
+                self::getRolesByUserType($this->getUserType(), true),
+                // list of roles selected
+                array_map(
+                    function ($role) {
+                        return $role->getId();
+                    },
+                    $this->roles->toArray()
+                )
             )
         );
+    }
+
+    /**
+     * @param string $userType
+     * @param bool $isAdmin
+     * @return array
+     */
+    public static function getRolesByUserType($userType, $isAdmin = false)
+    {
+        $key = $isAdmin ? 'admin' : 'user';
+
+        if (!empty(self::$userTypeToRoles[$userType][$key])) {
+            return self::$userTypeToRoles[$userType][$key];
+        }
+
+        return [];
     }
 }
