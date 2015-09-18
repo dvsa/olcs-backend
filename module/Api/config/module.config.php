@@ -355,6 +355,20 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class
             ],
         ),
+        'VariationPublication' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousApplicationPublicationNo::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Variation\ConditionUndertaking::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Variation\OperatingCentres::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\People::class,
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Variation\Text2::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Variation\Text3::class
+            ],
+        ),
         'HearingPublication' => array(
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData::class,

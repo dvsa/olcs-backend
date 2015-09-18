@@ -54,6 +54,7 @@ class ApplicationTest extends CommandHandlerTestCase
                 PublicationSectionEntity::APP_REFUSED_SECTION => m::mock(PublicationSectionEntity::class),
                 PublicationSectionEntity::APP_WITHDRAWN_SECTION => m::mock(PublicationSectionEntity::class),
                 PublicationSectionEntity::APP_GRANT_NOT_TAKEN_SECTION => m::mock(PublicationSectionEntity::class),
+                PublicationSectionEntity::VAR_GRANTED_SECTION => m::mock(PublicationSectionEntity::class),
             ]
         ];
 
@@ -81,11 +82,11 @@ class ApplicationTest extends CommandHandlerTestCase
             ]
         );
 
-        $publicationLinkMock = m::mock(PublicationLinkEntity::class)->makePartial();
+        $publicationLink = new PublicationLinkEntity();
 
         $this->mockedSmServices[PublicationGenerator::class]
-            ->shouldReceive('createPublication')
-            ->andReturn($publicationLinkMock);
+            ->shouldReceive('createPublication')->with('ApplicationPublication', $publicationLink, [])->once()
+            ->andReturn($publicationLink);
 
         $publicationMock = m::mock(PublicationEntity::class);
         $publicationMock->shouldReceive('getId')->andReturn($publicationId);
@@ -102,6 +103,7 @@ class ApplicationTest extends CommandHandlerTestCase
         $applicationMock->shouldReceive('getStatus->getId')->andReturn($appStatus);
         $applicationMock->shouldReceive('getGoodsOrPsv->getId')->andReturn($licType);
         $applicationMock->shouldReceive('getId')->andReturn($id);
+        $applicationMock->shouldReceive('isNew')->andReturn(true);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->andReturn($applicationMock);
 
@@ -109,7 +111,61 @@ class ApplicationTest extends CommandHandlerTestCase
             ->andReturn($publicationMock);
 
         $this->repoMap['PublicationLink']->shouldReceive('fetchSingleUnpublished')
-            ->andReturn($publicationLinkMock)
+            ->andReturn($publicationLink)
+            ->shouldReceive('save')
+            ->with(m::type(PublicationLinkEntity::class));
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf(ResultCmd::class, $result);
+    }
+
+    public function testHandleCommandVariation()
+    {
+        $id = 99;
+        $licenceId = 88;
+        $licType = LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE;
+        $trafficArea = 'M';
+        $publicationId = 33;
+
+        $command = Cmd::Create(
+            [
+                'id' => $id,
+                'trafficArea' => $trafficArea,
+                'publicationSection' => PublicationSectionEntity::VAR_GRANTED_SECTION,
+            ]
+        );
+
+        $publicationLink = new PublicationLinkEntity();
+
+        $this->mockedSmServices[PublicationGenerator::class]
+            ->shouldReceive('createPublication')->with('VariationPublication', $publicationLink, [])->once()
+            ->andReturn($publicationLink);
+
+        $publicationMock = m::mock(PublicationEntity::class);
+        $publicationMock->shouldReceive('getId')->andReturn($publicationId);
+
+        $mockTa = m::mock(TrafficAreaEntity::class);
+        $mockTa->shouldReceive('getId')->andReturn($trafficArea);
+
+        $licenceMock = m::mock(LicenceEntity::class);
+        $licenceMock->shouldReceive('getId')->andReturn($licenceId);
+
+        $applicationMock = m::mock(ApplicationEntity::class);
+        $applicationMock->shouldReceive('getLicence')->andReturn($licenceMock);
+        $applicationMock->shouldReceive('getLicence->getId')->andReturn($licenceId);
+        $applicationMock->shouldReceive('getStatus->getId')->andReturn('foo');
+        $applicationMock->shouldReceive('getGoodsOrPsv->getId')->andReturn($licType);
+        $applicationMock->shouldReceive('getId')->andReturn($id);
+        $applicationMock->shouldReceive('isNew')->andReturn(false);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')->andReturn($applicationMock);
+
+        $this->repoMap['Publication']->shouldReceive('fetchLatestForTrafficAreaAndType')
+            ->andReturn($publicationMock);
+
+        $this->repoMap['PublicationLink']->shouldReceive('fetchSingleUnpublished')
+            ->andReturn($publicationLink)
             ->shouldReceive('save')
             ->with(m::type(PublicationLinkEntity::class));
 

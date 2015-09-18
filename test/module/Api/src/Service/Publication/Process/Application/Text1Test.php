@@ -6,8 +6,11 @@ use Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1 as ApplicationTe
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 
 /**
  * Class Text1Test
@@ -24,24 +27,22 @@ class Text1Test extends MockeryTestCase
     {
         $sut = new ApplicationText1();
 
-        $previousPublication = 'previous publication';
-        $licNo = 12345;
-        $licenceType = 'SN';
-
         $input = [
-            'previousPublication' => $previousPublication
+            'previousPublication' => 9876
         ];
 
-        $expectedString = $licNo . $licenceType . ' (Previous Publication:(' . $previousPublication . '))';
+        $licence = new Licence(new Organisation(), new RefData());
+        $licence->setLicNo('OB12345');
+        $application = new Application($licence, new RefData(), false);
+        $application->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
 
-        $licenceMock = m::mock(LicenceEntity::class);
-        $licenceMock->shouldReceive('getLicNo')->andReturn($licNo);
-        $licenceMock->shouldReceive('getLicenceTypeShortCode')->andReturn($licenceType);
-
-        $publicationLink = m::mock(PublicationLink::class)->makePartial();
-        $publicationLink->shouldReceive('getLicence')->andReturn($licenceMock);
+        $publicationLink = new PublicationLink();
+        $publicationLink->setLicence($licence);
+        $publicationLink->setApplication($application);
 
         $output = $sut->process($publicationLink, new ImmutableArrayObject($input));
+
+        $expectedString = "OB12345 SN\n(9876)";
         $this->assertEquals($expectedString, $output->getText1());
     }
 }

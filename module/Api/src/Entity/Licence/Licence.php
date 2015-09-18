@@ -717,29 +717,4 @@ class Licence extends AbstractLicence
             );
         return $this->getConditionUndertakings()->matching($criteria);
     }
-
-    /**
-     * Get the Shortcode version of a licene type
-     *
-     * @return string|null if licence type is not set or shortcode does not exist
-     */
-    public function getLicenceTypeShortCode()
-    {
-        $shortCodes = [
-            'ltyp_r' => 'R',
-            'ltyp_si' => 'SI',
-            'ltyp_sn' => 'SN',
-            'ltyp_sr' => 'SR',
-            'ltyp_cbp' => 'CBP',
-            'ltyp_dbp' => 'DBP',
-            'ltyp_lbp' => 'LBP',
-            'ltyp_sbp' => 'SBP',
-        ];
-
-        if ($this->getLicenceType() === null || !isset($shortCodes[$this->getLicenceType()->getId()])) {
-            return null;
-        }
-
-        return $shortCodes[$this->getLicenceType()->getId()];
-    }
 }
