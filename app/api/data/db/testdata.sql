@@ -918,7 +918,9 @@ INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `crea
     (3,NULL,NULL,NULL,NULL,1,77,1),
     (4,NULL,NULL,NULL,NULL,1,78,1),
     (5,NULL,NULL,NULL,NULL,1,78,100),
-    (6,NULL,NULL,NULL,NULL,1,77,100);
+    (6,NULL,NULL,NULL,NULL,1,77,100),
+    (7,NULL,NULL,NULL,NULL,1,11,75),
+    (8,NULL,NULL,NULL,NULL,1,32,75);
 
 INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `birth_place`, `title`, `birth_date`, `forename`,
 `family_name`, `other_name`, `created_on`, `last_modified_on`, `version`, `deleted_date`) VALUES
@@ -1654,14 +1656,14 @@ VALUES
   (62, NULL, 7, NULL, 4, 14, NULL, NULL, NULL, 'B', NULL, 'Public Inquiry (49473) held at The Court Room, Eastern Traffic Area, Eastbrook, Shaftesbury Road, Cambridge, CB2 8BF on 31 October 2014 at 10:00(Previous Publication:(2200)\r)PF0001624 SI\rVICEROY OF ESSEX LTD\rDIRECTOR(s): STEVEN ANDREW MOORE, AARON RICHARD MOORE.\r10 - 12 BRIDGE STREET SAFFRON WALDEN CB10 1BU', 'PSV - S17 - Licence revoked with effect from 20 March 2015.\rPSV - Sch.3 - Steven Moore found to be of good repute', NULL, '2015-03-06 11:47:52', NULL, NULL, 1),
   (63, NULL, 7, NULL, 4, 27, NULL, NULL, NULL, 'B', NULL, 'TM Public Inquiry (EpisodeId:3764 PublicInquiryId:2479) for COLIN RICHARD COLLINS to be held at The Court Room Eastern Traffic Area Eastbrook Shaftesbury Road Cambridge CB2 8BF, on 20 March 2015 commencing at 10:00 (Previous Publication:(6093))', 'Article 6 of Regulation (EC) No 1071/2009', NULL, '2015-03-06 11:47:52', NULL, NULL, 1);
 
-INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`created_by`,`last_modified_by`,`olbs_dob`,`birth_date`,`created_on`,`family_name`,`forename`,`last_modified_on`,`version`)
+INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`person_id`,`created_by`,`last_modified_by`,`olbs_dob`,`birth_date`,`created_on`,`family_name`,`forename`,`last_modified_on`,`version`)
   VALUES
-    (1,1,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:00:34','Jones','Tom',NULL,1),
-    (2,1,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:00:35','Winnard','Keith',NULL,1),
-    (3,2,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:02:18','Jones','Tom',NULL,1),
-    (4,2,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:02:19','Winnard','Keith',NULL,1),
-    (5,3,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
-    (6,3,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
+    (1,1,77,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:00:34','Jones','Tom',NULL,1),
+    (2,1,78,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:00:35','Winnard','Keith',NULL,1),
+    (3,2,77,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:02:18','Jones','Tom',NULL,1),
+    (4,2,78,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:02:19','Winnard','Keith',NULL,1),
+    (5,3,77,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
+    (6,3,78,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
 
 INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`, `in_force_date`, `created_on`)
 VALUES

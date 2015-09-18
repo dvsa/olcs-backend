@@ -1571,6 +1571,20 @@ return array(
             )
         ),
     ),
+    'publication_police_data' => array(
+        'publication_link_id' => array(
+            'inversedBy' => array(
+                'entity' => 'PublicationLink',
+                'property' => 'policeData',
+                'cascade' => array(
+                    'persist',
+                ),
+                'orphanRemoval' => array(
+                    'true',
+                ),
+            )
+        )
+    ),
     'role_permission' => array(
         'role_id' => array(
             'inversedBy' => array(

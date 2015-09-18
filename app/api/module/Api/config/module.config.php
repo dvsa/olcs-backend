@@ -337,7 +337,9 @@ return [
         Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2::class =>
             Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2::class,
         Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class
+            Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\Police::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\Police::class
     ],
     'publications' => [
         'ApplicationPublication' => array(
@@ -353,7 +355,8 @@ return [
             'process' => [
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2::class,
-                Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class
+                Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Police::class
             ],
         ),
         'VariationPublication' => array(
@@ -379,7 +382,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
             ],
             'process' => [
-                Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\HearingText1::class
+                Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\HearingText1::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Police::class
             ],
         ),
         'HearingDecision' => array(
@@ -391,7 +395,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
             ],
             'process' => [
-                Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\DecisionText1::class
+                Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\DecisionText1::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Police::class
             ],
         ),
         'TmHearingPublication' => array(
@@ -424,7 +429,8 @@ return [
             ],
             'process' => [
                 Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2::class,
-                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantNewText3::class
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantNewText3::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Police::class
             ],
         ),
         'BusGrantVariation' => array(
@@ -435,7 +441,8 @@ return [
             ],
             'process' => [
                 Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2::class,
-                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantVarText3::class
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantVarText3::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Police::class
             ],
         ),
         'BusGrantCancel' => array(
@@ -445,7 +452,8 @@ return [
             ],
             'process' => [
                 Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2::class,
-                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantCancelText3::class
+                Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantCancelText3::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Police::class
             ],
         ),
     ],
