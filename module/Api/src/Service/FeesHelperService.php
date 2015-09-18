@@ -261,7 +261,8 @@ class FeesHelperService implements FactoryInterface
      * @param float $amount
      * @return string formatted amount - two decimal places, no thousands separator
      */
-    private function format($amount) {
+    private function format($amount)
+    {
         return number_format($amount, 2, '.', '');
     }
 }

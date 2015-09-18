@@ -315,7 +315,7 @@ class FeesHelperServiceTest extends MockeryTestCase
         $this->assertEquals('199.98', $this->sut->getTotalOutstanding($fees));
     }
 
-   /**
+    /**
      * @param string $amount
      * @param array $fees array of FeeEntity
      * @param string $expected formatted amount
