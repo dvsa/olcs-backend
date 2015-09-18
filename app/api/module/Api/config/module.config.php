@@ -17,14 +17,15 @@ return [
         ],
         'invokables' => [
             'Document' => \Dvsa\Olcs\Api\Service\Document\Document::class,
-            'DocumentGenerator' => \Dvsa\Olcs\Api\Service\Document\DocumentGenerator::class,
             'DateService' => \Dvsa\Olcs\Api\Service\Date::class,
-            'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
             'RestrictionService' => \Dvsa\Olcs\Api\Service\Lva\RestrictionService::class,
+            'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
             'SectionConfig' =>  \Dvsa\Olcs\Api\Service\Lva\SectionConfig::class,
             'AddressFormatter' => \Dvsa\Olcs\Api\Service\Helper\FormatAddress::class
         ],
         'factories' => [
+            'DocumentGenerator' => \Dvsa\Olcs\Api\Service\Document\DocumentGenerator::class,
+            'DocumentNamingService' => \Dvsa\Olcs\Api\Service\Document\NamingService::class,
             'PsvVehiclesQueryHelper' => \Dvsa\Olcs\Api\Domain\Service\PsvVehicles\PsvVehiclesQueryHelper::class,
             'UpdateOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper::class,
             'OperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper::class,

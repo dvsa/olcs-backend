@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
+use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 
@@ -33,7 +34,7 @@ use Zend\Filter\Word\UnderscoreToCamelCase;
  *    }
  * )
  */
-class Application extends AbstractApplication
+class Application extends AbstractApplication implements ContextProviderInterface
 {
     const ERROR_NI_NON_GOODS = 'AP-TOL-1';
     const ERROR_GV_NON_SR = 'AP-TOL-2';
@@ -1389,5 +1390,10 @@ class Application extends AbstractApplication
         }
 
         return $shortCodes[$this->getLicenceType()->getId()];
+    }
+
+    public function getContextValue()
+    {
+        return $this->getLicence()->getLicNo();
     }
 }

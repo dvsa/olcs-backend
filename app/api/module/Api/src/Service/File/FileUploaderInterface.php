@@ -38,15 +38,15 @@ interface FileUploaderInterface
     /**
      * Process the file upload
      */
-    public function upload($namespace = null, $key = null);
+    public function upload($identifier);
 
     /**
      * Process the file download
      */
-    public function download($identifier, $name, $namespace = null, $download = true);
+    public function download($identifier);
 
     /**
      * Process the file removal
      */
-    public function remove($identifier, $namespace = null);
+    public function remove($identifier);
 }
