@@ -397,7 +397,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      * @param string $receivedAmount
      * @param array $fees
      * @return Result
-     * @todo maybe move to separate command?
      */
     protected function maybeCreateOverpaymentFee($receivedAmount, $fees)
     {
@@ -410,7 +409,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
             // get IDs for description
             $feeIds = array_map(
-                function($fee) {
+                function ($fee) {
                     return $fee->getId();
                 },
                 $fees
