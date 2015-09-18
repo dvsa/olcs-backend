@@ -24,9 +24,12 @@ class CpmsHelperServiceFactoryTest extends MockeryTestCase
     use MockLoggerTrait;
 
     /**
+     * @param array $config
+     * @param string $expectedServiceClass
+     * @param boolean whether FeesHelperService should be requested via service locator
      * @dataProvider provider
      */
-    public function testCreateService($config, $expectedServiceClass)
+    public function testCreateService($config, $expectedServiceClass, $requiresFeesHelper)
     {
 
         $mockCpmsClient = m::mock()
@@ -41,17 +44,26 @@ class CpmsHelperServiceFactoryTest extends MockeryTestCase
 
         $mockLogger = $this->mockLogger();
 
+        $mockFeesHelper = m::mock();
+
         $sm = m::mock('\Zend\ServiceManager\ServiceLocatorInterface');
         $sm
             ->shouldReceive('get')
             ->with('cpms\service\api')
+            ->once()
             ->andReturn($mockCpmsClient)
             ->shouldReceive('get')
             ->with('Logger')
+            ->once()
             ->andReturn($mockLogger)
             ->shouldReceive('get')
             ->with('Config')
-            ->andReturn($config);
+            ->once()
+            ->andReturn($config)
+            ->shouldReceive('get')
+            ->with('FeesHelperService')
+            ->times($requiresFeesHelper ? 1 : 0)
+            ->andReturn($mockFeesHelper);
 
         $sut = new Sut();
 
@@ -66,38 +78,59 @@ class CpmsHelperServiceFactoryTest extends MockeryTestCase
             'missing config' => [
                 [],
                 V1::class,
+                false,
             ],
             'v1 config string' => [
                 [
                     'cpms_api' => [
-                        'version' => '1',
+                        'rest_client' => [
+                            'options' => [
+                                'version' => '1',
+                            ],
+                        ],
                     ],
                 ],
                 V1::class,
+                false,
             ],
             'v2 config string' => [
                 [
                     'cpms_api' => [
-                        'version' => '2',
+                        'rest_client' => [
+                            'options' => [
+                                'version' => '2',
+                            ],
+                        ],
                     ],
                 ],
                 V2::class,
+                true,
             ],
             'v1 config int' => [
                 [
                     'cpms_api' => [
-                        'version' => 1,
+                        'rest_client' => [
+                            'options' => [
+                                'version' => 1,
+                            ],
+                        ],
                     ],
                 ],
                 V1::class,
+                false,
             ],
             'v2 config int' => [
                 [
                     'cpms_api' => [
-                        'version' => 2,
+                        'rest_client' => [
+                            'options' => [
+                                'version' => 2,
+                            ],
+                        ],
                     ],
                 ],
                 V2::class,
+                true,
             ],
         ];
     }

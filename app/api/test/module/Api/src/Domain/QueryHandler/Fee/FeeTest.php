@@ -49,12 +49,6 @@ class FeeTest extends QueryHandlerTestCase
             ->shouldReceive('getLatestPaymentRef')
             ->once()
             ->andReturn('TestReceiptNo')
-            ->shouldReceive('getReceivedAmount')
-            ->once()
-            ->andReturn('TestReceivedAmount')
-            ->shouldReceive('getReceivedDate')
-            ->once()
-            ->andReturn('TestReceivedDate')
             ->shouldReceive('getPaymentMethod')
             ->once()
             ->andReturn('TestPaymentMethod')
@@ -95,8 +89,6 @@ class FeeTest extends QueryHandlerTestCase
             'id' => '69',
             'allowEdit' => true,
             'receiptNo' => 'TestReceiptNo',
-            'receivedAmount' => 'TestReceivedAmount',
-            'receivedDate' => 'TestReceivedDate',
             'paymentMethod' => 'TestPaymentMethod',
             'processedBy' => 'TestProcessedBy',
             'payer' => 'TestPayer',
