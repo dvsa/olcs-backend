@@ -2,13 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface as DocGenAwareInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
@@ -23,10 +21,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  * @author Mat Evans <mat.evans@valtech.co.uk>
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class Process extends AbstractCommandHandler implements TransactionedInterface, DocGenAwareInterface
+final class Process extends AbstractCommandHandler implements TransactionedInterface
 {
-    use DocumentGeneratorAwareTrait;
-
     protected $repoServiceName = 'ContinuationDetail';
 
     protected $extraRepos = ['Document', 'FeeType', 'Fee'];
@@ -73,23 +69,28 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
     {
         $template = $this->getTemplateName($continuationDetail);
 
-        $storedFile = $this->generateChecklist($continuationDetail, $template);
+        $licence = $continuationDetail->getLicence();
 
-        $data = [
-            'identifier' => $storedFile->getIdentifier(),
-            'size' => $storedFile->getSize(),
+        $dtoData = [
+            'template' => $template,
+            'query' => [
+                'licence' => $licence->getId(),
+                'goodsOrPsv' => $licence->getGoodsOrPsv()->getId(),
+                'licenceType' => $licence->getLicenceType()->getId(),
+                'niFlag' => $licence->getNiFlag(),
+                'organisation' => $licence->getOrganisation()->getId(),
+            ],
             'description' => 'Continuation checklist',
-            'filename' => $template . '.rtf',
             'licence' => $continuationDetail->getLicence()->getId(),
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
             'isReadOnly'  => 'Y',
             'isExternal'  => false,
             'isScan' => false,
-            // of the three boolean flags, only isReadOnly is mapped as YesNoNull :-/
+            'dispatch' => true
         ];
 
-        return $this->handleSideEffect(DispatchDocument::create($data));
+        return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
 
     protected function getTemplateName($continuationDetail)
@@ -106,27 +107,6 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
 
         return $template;
     }
-
-    /**
-     * @param ContinuationDetailEntity $continuationDetail
-     * @param string $template template name
-     */
-    protected function generateChecklist($continuationDetail, $template)
-    {
-        $licence = $continuationDetail->getLicence();
-        $query = [
-            'licence' => $licence->getId(),
-            'goodsOrPsv' => $licence->getGoodsOrPsv()->getId(),
-            'licenceType' => $licence->getLicenceType()->getId(),
-            'niFlag' => $licence->getNiFlag(),
-            'organisation' => $licence->getOrganisation()->getId(),
-        ];
-
-        $storedFile = $this->getDocumentGenerator()->generateAndStore($template, $query);
-
-        return $storedFile;
-    }
-
 
     /**
      * @param ContinuationDetailEntity $continuationDetail

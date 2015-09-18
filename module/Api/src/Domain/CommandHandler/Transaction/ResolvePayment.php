@@ -74,6 +74,7 @@ final class ResolvePayment extends AbstractCommandHandler implements
                 $status = Transaction::STATUS_CANCELLED;
                 break;
             case Cpms::PAYMENT_IN_PROGRESS:
+            case Cpms::PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED:
                 // resolve any abandoned payments as 'failed'
                 $status = Transaction::STATUS_FAILED;
                 break;

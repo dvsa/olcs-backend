@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Resolve Payment Test
  *
@@ -93,6 +94,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
 
         parent::setUp();
     }
+
 
     public function testHandleCommandSuccess()
     {
@@ -249,6 +251,11 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ],
             [
                 CpmsHelper::PAYMENT_IN_PROGRESS,
+                PaymentEntity::STATUS_FAILED,
+                'Transaction resolved as PAYMENT FAILED',
+            ],
+            [
+                CpmsHelper::PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED,
                 PaymentEntity::STATUS_FAILED,
                 'Transaction resolved as PAYMENT FAILED',
             ],

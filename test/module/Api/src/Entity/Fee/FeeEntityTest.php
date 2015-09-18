@@ -214,9 +214,7 @@ class FeeEntityTest extends EntityTester
 
     public function testCompatibilityGetMethods()
     {
-        $this->assertNull($this->sut->getReceivedAmount());
         $this->assertNull($this->sut->getLatestPaymentRef());
-        $this->assertNull($this->sut->getReceivedDate());
         $this->assertNull($this->sut->getPaymentMethod());
         $this->assertNull($this->sut->getProcessedBy());
         $this->assertNull($this->sut->getPayer());
@@ -260,8 +258,6 @@ class FeeEntityTest extends EntityTester
         $this->sut->getFeeTransactions()->add($ft3);
         $this->sut->getFeeTransactions()->add($ft4);
 
-        $this->assertEquals('1234.56', $this->sut->getReceivedAmount());
-        $this->assertEquals('2015-09-01', $this->sut->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals($paymentMethod, $this->sut->getPaymentMethod());
         $this->assertEquals('bob', $this->sut->getProcessedBy());
         $this->assertEquals('payer', $this->sut->getPayer());
@@ -553,10 +549,36 @@ class FeeEntityTest extends EntityTester
                     'addressLine3' => null,
                     'addressLine4' => null,
                     'town' => 'Miscellaneous payment',
-                    'postcode' => 'Miscellaneous payment',
+                    // hardcoded to DVSA office, CPMS api enforces a valid postcode
+                    'postcode' => 'LS9 6NF',
                     'countryCode' => null,
                 ],
             ],
+        ];
+    }
+
+    /**
+     * @param string $status
+     * @param boolean $expected
+     *
+     * @dataProvider isPaidProvider
+     */
+    public function testIsPaid($status, $expected)
+    {
+        $feeStatus = m::mock(RefData::class)->makePartial();
+        $feeStatus->setId($status);
+        $this->sut->setFeeStatus($feeStatus);
+
+        $this->assertEquals($expected, $this->sut->isPaid());
+    }
+
+    public function isPaidProvider()
+    {
+        return [
+            [Entity::STATUS_PAID, true],
+            [Entity::STATUS_CANCELLED, false],
+            [Entity::STATUS_OUTSTANDING, false],
+            ['invalid', false],
         ];
     }
 }

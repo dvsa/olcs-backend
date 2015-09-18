@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
+use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 
 /**
  * Licence Entity
@@ -41,7 +42,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
  *    }
  * )
  */
-class Licence extends AbstractLicence
+class Licence extends AbstractLicence implements ContextProviderInterface
 {
     const ERROR_CANT_BE_SR = 'LIC-TOL-1';
     const ERROR_REQUIRES_VARIATION = 'LIC-REQ-VAR';
@@ -741,5 +742,10 @@ class Licence extends AbstractLicence
         }
 
         return $shortCodes[$this->getLicenceType()->getId()];
+    }
+
+    public function getContextValue()
+    {
+        return $this->getLicNo();
     }
 }

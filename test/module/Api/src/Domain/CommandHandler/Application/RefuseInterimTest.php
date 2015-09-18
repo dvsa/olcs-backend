@@ -7,18 +7,15 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\RefuseInterim;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\RefuseInterim as Cmd;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Grant Interim Test
@@ -31,9 +28,6 @@ class RefuseInterimTest extends CommandHandlerTestCase
     {
         $this->sut = new RefuseInterim();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
-
-        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
-        $this->mockedSmServices['DocumentGenerator'] = m::mock(DocumentGenerator::class);
 
         parent::setUp();
     }
@@ -50,12 +44,6 @@ class RefuseInterimTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $command = Cmd::create(['id' => 111]);
-
-        $user = m::mock(User::class)->makePartial();
-        $user->setId(333);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($user);
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
@@ -74,25 +62,14 @@ class RefuseInterimTest extends CommandHandlerTestCase
             ->with($application);
 
         $expectedQuery = [
-            'user' => 333,
             'licence' => 222,
             'application' => 111
         ];
-        $file = m::mock();
-        $file->shouldReceive('getIdentifier')
-            ->andReturn('12345678')
-            ->shouldReceive('getSize')
-            ->andReturn(100);
-
-        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateAndStore')
-            ->with('NEW_APP_INT_REFUSED', $expectedQuery)
-            ->andReturn($file);
 
         $expectedData = [
-            'identifier' => '12345678',
-            'size' => 100,
+            'template' => 'NEW_APP_INT_REFUSED',
+            'query' => $expectedQuery,
             'description' => 'GV Refused Interim Licence',
-            'filename' => 'GV_Refused_Interim_Licence.rtf',
             'application' => 111,
             'licence' => 222,
             'category' => Category::CATEGORY_LICENSING,
@@ -108,12 +85,13 @@ class RefuseInterimTest extends CommandHandlerTestCase
             'operatingCentre' => null,
             'opposition' => null,
             'isReadOnly' => null,
-            'issuedDate' => null
+            'issuedDate' => null,
+            'dispatch' => true
         ];
 
         $result1 = new Result();
-        $result1->addMessage('DispatchDocument');
-        $this->expectedSideEffect(DispatchDocument::class, $expectedData, $result1);
+        $result1->addMessage('GenerateAndStore');
+        $this->expectedSideEffect(GenerateAndStore::class, $expectedData, $result1);
 
         $result = $this->sut->handleCommand($command);
 
@@ -121,8 +99,7 @@ class RefuseInterimTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'Interim updated',
-                'Refuse document generated',
-                'DispatchDocument'
+                'GenerateAndStore'
             ]
         ];
 

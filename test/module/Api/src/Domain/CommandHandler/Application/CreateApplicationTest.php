@@ -50,6 +50,8 @@ class CreateApplicationTest extends CommandHandlerTestCase
             Licence::LICENCE_STATUS_NOT_SUBMITTED,
             ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED,
             ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+            ApplicationEntity::APPLIED_VIA_PHONE,
+            ApplicationEntity::APPLIED_VIA_SELFSERVE,
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
             Licence::LICENCE_CATEGORY_GOODS_VEHICLE
         ];
@@ -69,9 +71,13 @@ class CreateApplicationTest extends CommandHandlerTestCase
     public function testHandleCommandMinimal()
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->twice()
+            ->times(3)
             ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(true);
 
         $command = Cmd::create(['organisation' => 11]);
         /** @var ApplicationEntity $app */
@@ -111,6 +117,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->assertSame($this->references[Organisation::class][11], $app->getLicence()->getOrganisation());
         $this->assertSame($this->refData[Licence::LICENCE_STATUS_NOT_SUBMITTED], $app->getLicence()->getStatus());
         $this->assertSame($this->refData[ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED], $app->getStatus());
+        $this->assertSame($this->refData[ApplicationEntity::APPLIED_VIA_SELFSERVE], $app->getAppliedVia());
 
         $this->assertNull($app->getReceivedDate());
         $this->assertNull($app->getNiFlag());
@@ -122,9 +129,13 @@ class CreateApplicationTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->twice()
+            ->times(3)
             ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(false);
 
         $command = Cmd::create(
             [
@@ -133,7 +144,8 @@ class CreateApplicationTest extends CommandHandlerTestCase
                 'trafficArea' => TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE,
                 'niFlag' => 'Y',
                 'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-                'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
+                'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                'appliedVia' => ApplicationEntity::APPLIED_VIA_PHONE
             ]
         );
         /** @var ApplicationEntity $app */
@@ -194,6 +206,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->assertSame($this->references[Organisation::class][11], $app->getLicence()->getOrganisation());
         $this->assertSame($this->refData[Licence::LICENCE_STATUS_NOT_SUBMITTED], $app->getLicence()->getStatus());
         $this->assertSame($this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION], $app->getStatus());
+        $this->assertSame($this->refData[ApplicationEntity::APPLIED_VIA_PHONE], $app->getAppliedVia());
 
         $this->assertInstanceOf('\DateTime', $app->getReceivedDate());
         $this->assertEquals('2015-01-01', $app->getReceivedDate()->format('Y-m-d'));
