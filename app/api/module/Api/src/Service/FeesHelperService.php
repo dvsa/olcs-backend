@@ -225,7 +225,7 @@ class FeesHelperService implements FactoryInterface
     {
         $sorted = $fees;
         // sort fees in invoicedDate order
-        uasort(
+        usort(
             $sorted,
             function ($a, $b) {
                 if ($a->getInvoicedDate() === $b->getInvoicedDate()) {
