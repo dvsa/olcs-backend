@@ -1610,7 +1610,7 @@ INSERT INTO `fee_type` (`id`, `is_miscellaneous`, `accrual_rule`, `created_by`, 
 
 -- adjustment fee types
 INSERT INTO `fee_type` (`id`, `is_miscellaneous`, `accrual_rule`, `created_by`, `goods_or_psv`, `last_modified_by`, `licence_type`, `traffic_area_id`, `annual_value`, `effective_from`, `expire_fee_with_licence`, `fee_type`, `five_year_value`, `fixed_value`, `created_on`, `description`, `last_modified_on`, `version`) VALUES
-(20100,0,'acr_immediate',NULL,NULL,NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'OVERPAYMENT',0.00,0.00,'2014-04-01 10:30:07','Overpayment balancing fee','2014-04-01 10:30:07',1);
+(20100,0,'acr_immediate',NULL,NULL,NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'ADJUSTMENT',0.00,0.00,'2014-04-01 10:30:07','Overpayment','2014-04-01 10:30:07',1);
 
 
 INSERT INTO `fee_type` (`id`, `accrual_rule`, `created_by`, `fee_type`, `irfo_fee_type`, `description`, `goods_or_psv`, `last_modified_by`, `licence_type`, `traffic_area_id`, `annual_value`, `created_on`, `effective_from`, `expire_fee_with_licence`, `five_year_value`, `fixed_value`, `is_miscellaneous`, `last_modified_on`, `version`)
