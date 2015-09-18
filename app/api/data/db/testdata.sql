@@ -1180,7 +1180,7 @@ INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_id`,`unfitness_reaso
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
 `last_successful_login_date`,`login_id`,`contact_details_id`,
 `local_authority_id`,`transport_manager_id`,`partner_contact_details_id`) VALUES
-    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-01-26 09:00:00','loggedinuser',101, 1, NULL, NULL),
+    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-01-26 09:00:00','loggedinuser',101, NULL, NULL, NULL),
     (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-25 23:00:00','johnspellman',105, NULL, NULL, NULL),
     (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-23 15:00:00','stevefox',106, NULL, NULL, NULL),
     (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-19 14:00:00','amywrigg',130, NULL, NULL, NULL),
@@ -1205,8 +1205,8 @@ INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator
     (1, 5, 0),
     (1, 6, 0),
     (1, 7, 0),
-    (1, 20, 1),
-    (1, 21, 0),
+    (104, 20, 1),
+    (104, 21, 0),
     (1, 12504, 1),
     (1, 12505, 0);
 
