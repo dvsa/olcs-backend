@@ -3,6 +3,9 @@
 /**
  * Cpms Version 2 Helper Service
  *
+ * Note: CPMS has been known to reject ints as 'missing', so we cast
+ * some fields (ID's, etc.) to strings
+ *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 namespace Dvsa\Olcs\Api\Service;
@@ -258,7 +261,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $params = $this->getParametersForFees($fees, $extraParams);
 
         foreach ($fees as $fee) {
-            $params['payment_data'][] = $this->getPaymentDataForFee($fee);
+            $paymentData = $this->getPaymentDataForFee($fee);
+            if (!empty($paymentData)) {
+                $params['payment_data'][] = $paymentData;
+            }
         }
 
         $response = $this->send($method, $endPoint, $scope, $params);
@@ -388,16 +394,19 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @param Fee $fee
      * @param array $extraPayment data
-     * @return array
+     * @return array|null (will return null if we don't want to include a fee,
+     * e.g. overpayment balancing fees)
      *
      * @todo 'product_reference' should be $fee->getFeeType()->getDescription()
      * but CPMS has a whitelist and responds  {"code":104,"message":"product_reference is invalid"}
      * @todo 'sales_person_reference'
-     * @todo exclude OVERPAYMENT fees from payment_data otherwise CPMS won't be
-     * able to determine refund amount when refund_overpayment flag is set
      */
     protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [])
     {
+        if ($fee->isBalancingFee()) {
+            return;
+        }
+
         $commonPaymentData = [
             'line_identifier' => (string) $fee->getInvoiceLineNo(),
             'amount' => $this->formatAmount($fee->getAmount()),
@@ -431,7 +440,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @param array $fees array of Fee objects
      * @return array
-     * @todo add refund_overpayment flag if any fees are feeType OVERPAYMENT
      */
     protected function getParametersForFees(array $fees, array $extraParams)
     {
@@ -442,8 +450,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $totalAmount = $this->getTotalAmountFromFees($fees);
         $firstFee = reset($fees);
         $commonParams = [
-            // Note: CPMS has been known to reject ints as 'missing', so we cast
-            // some fields to strings
             'customer_reference' => (string) $this->getCustomerReference($fees),
             'payment_data' => [],
             'cost_centre' => self::COST_CENTRE,
@@ -451,9 +457,26 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'customer_name' => $firstFee->getCustomerNameForInvoice(),
             'customer_manager_name' => $firstFee->getCustomerNameForInvoice(),
             'customer_address' => $this->formatAddress($firstFee->getCustomerAddressForInvoice()),
+            'refund_overpayment' => $this->isOverpayment($fees),
         ];
 
         return array_merge($commonParams, $extraParams);
+    }
+
+    /**
+     * Determine if an array of fees contains an overpayment
+     *
+     * @return boolean
+     */
+    protected function isOverpayment($fees)
+    {
+        foreach ($fees as $fee) {
+            if ($fee->isBalancingFee()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

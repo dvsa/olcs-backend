@@ -3,6 +3,9 @@
 /**
  * Fees Helper Service
  *
+ * NOTE: Does calculations as integers/pence wherever possible in order to avoid
+ * floating point rounding errors.
+ *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 namespace Dvsa\Olcs\Api\Service;
@@ -173,8 +176,6 @@ class FeesHelperService implements FactoryInterface
      * Determine how a payment should be allocated to an array of fees.
      * Payment is allocated to earliest fees first (by invoicedDate)
      *
-     * (Does calculations as integers/pence to avoid floating point rounding errors)
-     *
      * @param string $amount payment amount
      * @param array $fees array of FeeEntity
      * @return array ['feeId' => 'allocatedAmount'] e.g.
@@ -241,8 +242,6 @@ class FeesHelperService implements FactoryInterface
     /**
      * Calculate amount of any overpayment. Note, will return a negative value
      * for an underpayment, although not really expected to be used as such
-     *
-     * (Does calculations as integers/pence to avoid floating point rounding errors)
      *
      * @param string $amount payment amount
      * @param array $fees array of FeeEntity
