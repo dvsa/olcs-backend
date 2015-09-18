@@ -127,7 +127,12 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
 
         $savedVehicle = null;
 
-        $this->repoMap['Vehicle']->shouldReceive('save')
+        $this->repoMap['Vehicle']
+            ->shouldReceive('fetchByVrm')
+            ->with('AA11AAA')
+            ->andReturn([])
+            ->once()
+            ->shouldReceive('save')
             ->once()
             ->with(m::type(Entity\Vehicle\Vehicle::class))
             ->andReturnUsing(
@@ -215,7 +220,12 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
 
         $savedVehicle = null;
 
-        $this->repoMap['Vehicle']->shouldReceive('save')
+        $this->repoMap['Vehicle']
+            ->shouldReceive('fetchByVrm')
+            ->with('AA11AAA')
+            ->andReturn([])
+            ->once()
+            ->shouldReceive('save')
             ->once()
             ->with(m::type(Entity\Vehicle\Vehicle::class))
             ->andReturnUsing(
@@ -269,5 +279,90 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandVehicleExistsOnOtherLicence()
+    {
+        $command = Cmd::create(
+            [
+                'application' => 111,
+                'vrm' => 'AA11AAA',
+                'makeModel' => 'Foo',
+                'isNovelty' => 'Y',
+                'type' => 'small',
+                'receivedDate' => '2015-01-01'
+            ]
+        );
+
+        $activeVehicles = new ArrayCollection();
+
+        /** @var Entity\Licence\Licence $licence */
+        $licence = m::mock(Entity\Licence\Licence::class)->makePartial();
+        $licence->shouldReceive('getActiveVehicles')
+            ->with(false)
+            ->andReturn($activeVehicles);
+
+        /** @var Entity\Application\Application $application */
+        $application = m::mock(Entity\Application\Application::class)->makePartial();
+        $application->setLicence($licence);
+        $application->setId(111);
+
+        $this->repoMap['Application']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($application);
+
+        $mockVehicle = m::mock(Entity\Vehicle\Vehicle::class)
+            ->shouldReceive('getId')
+            ->andReturn(123)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Vehicle']
+            ->shouldReceive('fetchByVrm')
+            ->with('AA11AAA')
+            ->andReturn([$mockVehicle])
+            ->once();
+
+        $this->repoMap['LicenceVehicle']->shouldReceive('save')
+            ->once()
+            ->with(m::type(Entity\Licence\LicenceVehicle::class))
+            ->andReturnUsing(
+                function (Entity\Licence\LicenceVehicle $licenceVehicle) use ($licence, $application, &$mockVehicle) {
+                    $licenceVehicle->setId(321);
+                    $this->assertEquals('2015-01-01', $licenceVehicle->getReceivedDate()->format('Y-m-d'));
+                    $this->assertSame($mockVehicle, $licenceVehicle->getVehicle());
+                    $this->assertSame($licence, $licenceVehicle->getLicence());
+                    $this->assertSame($application, $licenceVehicle->getApplication());
+                }
+            );
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->with(Entity\User\Permission::INTERNAL_USER, null)
+            ->andReturn(true);
+
+        $data = [
+            'id' => 111,
+            'section' => 'vehiclesPsv'
+        ];
+        $result1 = new Result();
+        $result1->addMessage('UpdateApplicationCompletion');
+        $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result1);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'vehicle' => 123,
+                'licenceVehicle' => 321
+            ],
+            'messages' => [
+                'Vehicle created',
+                'Licence Vehicle created',
+                'UpdateApplicationCompletion'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
     }
 }
