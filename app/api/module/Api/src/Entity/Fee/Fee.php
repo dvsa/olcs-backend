@@ -362,4 +362,15 @@ class Fee extends AbstractFee
     {
         return $this->getFeeStatus()->getId() === self::STATUS_PAID;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isBalancingFee()
+    {
+        return in_array(
+            $this->getFeeType()->getFeeType()->getId(),
+            [FeeType::FEE_TYPE_ADJUSTMENT]
+        );
+    }
 }

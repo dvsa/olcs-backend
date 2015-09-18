@@ -167,6 +167,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'redirect_uri' => $redirectUrl,
             'disable_redirection' => true,
             'scope' => 'CARD',
+            'refund_overpayment' => false,
         ];
 
         $response = ['receipt_reference' => 'guid_123'];
@@ -282,6 +283,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'batch_number' => '12345',
             'receipt_date' => '2015-09-10',
             'scope' => 'CASH',
+            'refund_overpayment' => false,
         ];
 
          $response = [
@@ -404,6 +406,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'cheque_number' => '0098765',
             'cheque_date' => '2015-09-01',
             'name_on_cheque' => $payer,
+            'refund_overpayment' => false,
         ];
 
          $response = [
@@ -531,6 +534,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'receipt_date' => '2015-09-10',
             'scope' => 'POSTAL_ORDER',
             'postal_order_number' => '00666666',
+            'refund_overpayment' => false,
         ];
 
          $response = [
@@ -591,7 +595,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $feeType = new FeeTypeEntity();
         $feeType
             ->setAccrualRule($rule)
-            ->setDescription('fee type description');
+            ->setDescription('fee type description')
+            ->setFeeType((new RefData('SOMETYPE')));
 
         $organisation = new OrganisationEntity();
         $organisation
