@@ -32,15 +32,6 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     use BundleSerializableTrait;
 
     /**
-     * Added date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="added_date", nullable=true)
-     */
-    protected $addedDate;
-
-    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -144,29 +135,6 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
      * @ORM\Version
      */
     protected $version = 1;
-
-    /**
-     * Set the added date
-     *
-     * @param \DateTime $addedDate
-     * @return OrganisationUser
-     */
-    public function setAddedDate($addedDate)
-    {
-        $this->addedDate = $addedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the added date
-     *
-     * @return \DateTime
-     */
-    public function getAddedDate()
-    {
-        return $this->addedDate;
-    }
 
     /**
      * Set the created by
