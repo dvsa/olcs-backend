@@ -268,7 +268,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
      * @ORM\OneToMany(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData",
      *     mappedBy="publicationLink",
-     *     cascade={"persist"}
+     *     cascade={"persist"},
+     *     orphanRemoval=true
      * )
      */
     protected $policeDatas;
