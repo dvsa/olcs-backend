@@ -16,6 +16,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as TransportManagerApplicationEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * CreateTest
@@ -37,7 +38,7 @@ class CreateTest extends CommandHandlerTestCase
             \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
         ];
 
-        $this->loggedInUser = new \Dvsa\Olcs\Api\Entity\User\User();
+        $this->loggedInUser = m::mock(UserEntity::class)->makePartial();
         $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class]
             ->shouldReceive('getIdentity->getUser')->andReturn($this->loggedInUser);
 
@@ -104,7 +105,7 @@ class CreateTest extends CommandHandlerTestCase
     {
         $command = Command::create(['application' => 863, 'user' => 234, 'action' => 'D']);
 
-        $user = new \Dvsa\Olcs\Api\Entity\User\User();
+        $user = m::mock(UserEntity::class)->makePartial();
         $user->setContactDetails('CD');
 
         $this->repoMap['User']->shouldReceive('fetchForTma')->with(234)->once()->andReturn($user);
@@ -188,7 +189,7 @@ class CreateTest extends CommandHandlerTestCase
             )
             ->getMock();
 
-        $user = new \Dvsa\Olcs\Api\Entity\User\User();
+        $user = m::mock(UserEntity::class)->makePartial();
         $user->setContactDetails($mockContactDetails);
         $mockTm = m::mock()
             ->shouldReceive('getId')

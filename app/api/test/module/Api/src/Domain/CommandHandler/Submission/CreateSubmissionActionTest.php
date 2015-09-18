@@ -98,4 +98,22 @@ class CreateSubmissionActionTest extends CommandHandlerTestCase
             $savedSubmissionAction->getReasons()[0]
         );
     }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleInvalidCommand()
+    {
+        $data = [
+            'submission' => 11,
+            'isDecision' => 'N',
+            'actionTypes' => ['sub_st_rec_ptr'],
+            'reasons' => [],
+            'comment' => 'testing',
+        ];
+
+        $command = Cmd::create($data);
+
+        $this->sut->handleCommand($command);
+    }
 }

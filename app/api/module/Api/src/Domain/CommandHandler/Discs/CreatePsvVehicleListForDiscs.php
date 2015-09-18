@@ -54,7 +54,7 @@ final class CreatePsvVehicleListForDiscs extends AbstractCommandHandler implemen
         $data = [
             'licence'       => $command->getId(),
             'identifier'    => $file->getIdentifier(),
-            'description'   => 'PSV Vehicle List',
+            'description'   => 'New disc notification',
             'filename'      => $fileName,
             'category'      => Category::CATEGORY_LICENSING,
             'subCategory'   => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
@@ -63,7 +63,7 @@ final class CreatePsvVehicleListForDiscs extends AbstractCommandHandler implemen
             'size'          => $file->getSize()
         ];
 
-        $printData = ['fileIdentifier' => $file->getIdentifier(), 'jobName' => 'PSV Vehicle List'];
+        $printData = ['fileIdentifier' => $file->getIdentifier(), 'jobName' => 'New disc notification'];
         $this->handleSideEffect(Enqueue::create($printData));
 
         return $this->handleSideEffect(CreateDocument::create($data));

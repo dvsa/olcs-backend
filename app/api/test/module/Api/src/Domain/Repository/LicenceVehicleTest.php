@@ -483,6 +483,9 @@ class LicenceVehicleTest extends RepositoryTestCase
 
     public function testFetchQueuedForWarning()
     {
+        $now = new DateTime();
+        $expectedDate = $now->sub(new \DateInterval('P28D'))->format(\DateTime::W3C);
+
         $qb = $this->createMockQb('{{QUERY}}');
         $this->mockCreateQueryBuilder($qb);
 
@@ -496,7 +499,7 @@ class LicenceVehicleTest extends RepositoryTestCase
         $this->assertEquals(
             '{{QUERY}} INNER JOIN m.licence l'
             . ' AND l.status IN ["lsts_curtailed","lsts_valid","lsts_suspended"]'
-            . ' AND m.warningLetterSeedDate < [[Dvsa\\Olcs\\Api\\Domain\\Util\\DateTime\\DateTime]]'
+            . ' AND m.warningLetterSeedDate < [['.$expectedDate.']]'
             . ' AND m.warningLetterSentDate IS NULL'
             . ' AND m.removalDate IS NULL',
             $this->query
