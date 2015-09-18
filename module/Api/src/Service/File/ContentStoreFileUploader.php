@@ -17,36 +17,21 @@ use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
  */
 class ContentStoreFileUploader extends AbstractFileUploader
 {
-    /**
-     * Upload the file
-     */
-    public function upload($namespace = null, $key = null)
+    public function upload($identifier)
     {
         $file = $this->getFile();
-
-        if ($key === null) {
-            $key = $this->generateKey();
-        }
-
-        $path = $this->getPath($key, $namespace);
-
-        // allow for the fact the file might already have
-        // content set so we won't need to read from tmp disk
-        if ($file->getContent() === null) {
-            $this->populateFile();
-        }
 
         $storeFile = new ContentStoreFile();
         $storeFile->setContent($file->getContent());
 
-        $response = $this->getServiceLocator()->get('ContentStore')->write($path, $storeFile);
+        $response = $this->getServiceLocator()->get('ContentStore')->write($identifier, $storeFile);
 
         if (!$response->isSuccess()) {
             throw new Exception('Unable to store uploaded file: ' . $response->getBody());
         }
 
-        $file->setPath($path);
-        $file->setIdentifier($key);
+        $file->setPath($identifier);
+        $file->setIdentifier($identifier);
 
         return $file;
     }
@@ -54,58 +39,20 @@ class ContentStoreFileUploader extends AbstractFileUploader
     /**
      * Download the file
      */
-    public function download($identifier, $name, $namespace = null, $download = true)
+    public function download($identifier)
     {
-        $path = $this->getPath($identifier, $namespace);
-
         $store = $this->getServiceLocator()->get('ContentStore');
 
-        $file = $store->read($path);
-
-        return $this->serveFile($file, $name, $download);
+        return $store->read($identifier);
     }
 
     /**
      * Remove the file
      */
-    public function remove($identifier, $namespace = null)
+    public function remove($identifier)
     {
-        $path = $this->getPath($identifier, $namespace);
         $store = $this->getServiceLocator()->get('ContentStore');
-        return $store->remove($path);
-    }
 
-    public function serveFile($file, $name, $download = true)
-    {
-        $response = new Response();
-
-        if ($file === null) {
-            $response->setStatusCode(404);
-            $response->setContent('File not found');
-            return $response;
-        }
-
-        $fileData = $file->getContent();
-
-        if ($download && $this->forceDownload($name)) {
-            $headers = ['Content-Disposition: attachment; filename="' . $name . '"'];
-        }
-
-        $headers['Content-Length'] = strlen($fileData);
-
-        $response->setStatusCode(200);
-        $response->getHeaders()->addHeaders($headers);
-
-        $response->setContent($fileData);
-        return $response;
-    }
-
-    protected function forceDownload($name)
-    {
-        if (preg_match('/\.html$/', $name)) {
-            return false;
-        }
-
-        return true;
+        return $store->remove($identifier);
     }
 }

@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 
 /**
  * BusReg Entity
@@ -35,7 +36,7 @@ use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
  *    }
  * )
  */
-class BusReg extends AbstractBusReg
+class BusReg extends AbstractBusReg implements ContextProviderInterface
 {
     const STATUS_NEW = 'breg_s_new';
     const STATUS_VAR = 'breg_s_var';
@@ -894,5 +895,10 @@ class BusReg extends AbstractBusReg
     {
         return (!empty(self::$grantStatusMap[$this->status->getId()]))
             ? self::$grantStatusMap[$this->status->getId()] : null;
+    }
+
+    public function getContextValue()
+    {
+        return $this->getLicence()->getLicNo();
     }
 }

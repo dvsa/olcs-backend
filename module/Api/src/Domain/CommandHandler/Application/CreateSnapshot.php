@@ -14,9 +14,11 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as Cmd;
+use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 
 /**
  * Create Snapshot
@@ -36,6 +38,9 @@ final class CreateSnapshot extends AbstractCommandHandler
 
     protected $repoServiceName = 'Application';
 
+    /**
+     * @var ContentStoreFileUploader
+     */
     protected $uploader;
 
     /**
@@ -63,29 +68,18 @@ final class CreateSnapshot extends AbstractCommandHandler
         $markup = $this->reviewSnapshotService->generate($application);
         $result->addMessage('Snapshot generated');
 
-        $file = $this->uploadFile($markup);
-        $result->addMessage('Snapshot uploaded');
-
-        $result->merge($this->createDocumentRecord($application, $command->getEvent(), $file));
+        $result->merge($this->generateDocument($markup, $application, $command->getEvent()));
 
         return $result;
     }
 
-    protected function uploadFile($content)
-    {
-        $this->uploader->setFile(['content' => $content]);
-
-        return $this->uploader->upload();
-    }
-
-    protected function createDocumentRecord(ApplicationEntity $application, $event, $file)
+    protected function generateDocument($content, ApplicationEntity $application, $event)
     {
         $licenceId = $application->getLicence()->getId();
-
         $code = $this->getDocumentCode($application);
 
-        $defaults = [
-            'identifier' => $file->getIdentifier(),
+        $data = [
+            'content' => base64_encode(trim($content)),
             'application' => $application->getId(),
             'licence' => $licenceId,
             'category' => Category::CATEGORY_APPLICATION,
@@ -94,10 +88,9 @@ final class CreateSnapshot extends AbstractCommandHandler
             'isScan' => false
         ];
 
-        // merge defaults with event specific values
-        $data = array_merge($defaults, $this->getDocumentData($application, $event, $code));
+        $data = array_merge($data, $this->getDocumentData($application, $event, $code));
 
-        return $this->handleSideEffect(CreateDocumentSpecific::create($data));
+        return $this->handleSideEffect(Upload::create($data));
     }
 
     /**
