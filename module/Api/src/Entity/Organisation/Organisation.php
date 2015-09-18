@@ -252,4 +252,17 @@ class Organisation extends AbstractOrganisation
 
         return $this->getLicences()->matching($criteria);
     }
+
+    public function getAdminEmailAddresses()
+    {
+        $users = [];
+
+        /** @var OrganisationUser $orgUser */
+        foreach ($this->getAdminOrganisationUsers() as $orgUser) {
+            if ($orgUser->getUser()->getContactDetails()->getEmailAddress() !== null) {
+                $users[] = $orgUser->getUser()->getContactDetails()->getEmailAddress();
+            }
+        }
+        return $users;
+    }
 }
