@@ -1579,6 +1579,9 @@ return array(
                 'cascade' => array(
                     'persist',
                 ),
+                'orphanRemoval' => array(
+                    'true',
+                ),
             )
         )
     ),
