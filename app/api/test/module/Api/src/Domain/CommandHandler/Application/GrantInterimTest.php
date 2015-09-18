@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim;
 use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\GrantInterim;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -16,11 +17,9 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\GrantInterim as Cmd;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Grant Interim Test
@@ -34,9 +33,6 @@ class GrantInterimTest extends CommandHandlerTestCase
         $this->sut = new GrantInterim();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
         $this->mockRepo('Fee', \Dvsa\Olcs\Api\Domain\Repository\Fee::class);
-
-        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
-        $this->mockedSmServices['DocumentGenerator'] = m::mock(DocumentGenerator::class);
 
         parent::setUp();
     }
@@ -81,29 +77,11 @@ class GrantInterimTest extends CommandHandlerTestCase
     {
         $command = Cmd::create(['id' => 111]);
 
-        /** @var User $user */
-        $user = m::mock(User::class)->makePartial();
-        $user->setId(333);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($user);
-
         $expectedQuery = [
             'application' => 111,
             'licence' => 222,
-            'fee' => 444,
-            'user' => 333
+            'fee' => 444
         ];
-
-        $file = m::mock();
-        $file->shouldReceive('getIdentifier')
-            ->andReturn('12345678')
-            ->shouldReceive('getSize')
-            ->andReturn(100);
-
-        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateAndStore')
-            ->with('FEE_REQ_INT_APP', $expectedQuery)
-            ->andReturn($file);
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
@@ -119,9 +97,7 @@ class GrantInterimTest extends CommandHandlerTestCase
         $fee = m::mock(Fee::class)->makePartial();
         $fee->setId(444);
 
-        $fees = [
-            $fee
-        ];
+        $fees = [$fee];
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -134,10 +110,9 @@ class GrantInterimTest extends CommandHandlerTestCase
             ->andReturn($fees);
 
         $expectedData = [
-            'identifier' => '12345678',
-            'size' => 100,
+            'template' => 'FEE_REQ_INT_APP',
+            'query' => $expectedQuery,
             'description' => 'GV Interim licence fee request',
-            'filename' => 'GV_Interim_licence_fee_request.rtf',
             'application' => 111,
             'licence' => 222,
             'category' => Category::CATEGORY_LICENSING,
@@ -153,12 +128,13 @@ class GrantInterimTest extends CommandHandlerTestCase
             'operatingCentre' => null,
             'opposition' => null,
             'isReadOnly' => null,
-            'issuedDate' => null
+            'issuedDate' => null,
+            'dispatch' => true
         ];
 
         $result1 = new Result();
-        $result1->addMessage('DispatchDocument');
-        $this->expectedSideEffect(DispatchDocument::class, $expectedData, $result1);
+        $result1->addMessage('GenerateAndStore');
+        $this->expectedSideEffect(GenerateAndStore::class, $expectedData, $result1);
 
         $result = $this->sut->handleCommand($command);
 
@@ -167,8 +143,7 @@ class GrantInterimTest extends CommandHandlerTestCase
                 'action' => 'fee_request'
             ],
             'messages' => [
-                'Document generated',
-                'DispatchDocument',
+                'GenerateAndStore',
                 'Interim status updated'
             ]
         ];
@@ -180,29 +155,11 @@ class GrantInterimTest extends CommandHandlerTestCase
     {
         $command = Cmd::create(['id' => 111]);
 
-        /** @var User $user */
-        $user = m::mock(User::class)->makePartial();
-        $user->setId(333);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($user);
-
         $expectedQuery = [
             'application' => 111,
             'licence' => 222,
-            'fee' => 444,
-            'user' => 333
+            'fee' => 444
         ];
-
-        $file = m::mock();
-        $file->shouldReceive('getIdentifier')
-            ->andReturn('12345678')
-            ->shouldReceive('getSize')
-            ->andReturn(100);
-
-        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateAndStore')
-            ->with('FEE_REQ_INT_APP', $expectedQuery)
-            ->andReturn($file);
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
@@ -218,9 +175,7 @@ class GrantInterimTest extends CommandHandlerTestCase
         $fee = m::mock(Fee::class)->makePartial();
         $fee->setId(444);
 
-        $fees = [
-            $fee
-        ];
+        $fees = [$fee];
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -233,10 +188,9 @@ class GrantInterimTest extends CommandHandlerTestCase
             ->andReturn($fees);
 
         $expectedData = [
-            'identifier' => '12345678',
-            'size' => 100,
+            'template' => 'FEE_REQ_INT_APP',
+            'query' => $expectedQuery,
             'description' => 'GV Interim direction fee request',
-            'filename' => 'GV_Interim_direction_fee_request.rtf',
             'application' => 111,
             'licence' => 222,
             'category' => Category::CATEGORY_LICENSING,
@@ -252,12 +206,13 @@ class GrantInterimTest extends CommandHandlerTestCase
             'operatingCentre' => null,
             'opposition' => null,
             'isReadOnly' => null,
-            'issuedDate' => null
+            'issuedDate' => null,
+            'dispatch' => true
         ];
 
         $result1 = new Result();
-        $result1->addMessage('DispatchDocument');
-        $this->expectedSideEffect(DispatchDocument::class, $expectedData, $result1);
+        $result1->addMessage('GenerateAndStore');
+        $this->expectedSideEffect(GenerateAndStore::class, $expectedData, $result1);
 
         $result = $this->sut->handleCommand($command);
 
@@ -266,8 +221,7 @@ class GrantInterimTest extends CommandHandlerTestCase
                 'action' => 'fee_request'
             ],
             'messages' => [
-                'Document generated',
-                'DispatchDocument',
+                'GenerateAndStore',
                 'Interim status updated'
             ]
         ];

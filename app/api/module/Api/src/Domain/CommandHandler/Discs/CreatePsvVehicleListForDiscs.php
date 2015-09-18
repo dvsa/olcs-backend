@@ -7,65 +7,44 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Discs;
 
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Document\CreateDocument;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Create PSV Vehicle List Document for discs
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class CreatePsvVehicleListForDiscs extends AbstractCommandHandler implements
-    TransactionedInterface,
-    DocumentGeneratorAwareInterface,
-    AuthAwareInterface
+final class CreatePsvVehicleListForDiscs extends AbstractCommandHandler implements TransactionedInterface
 {
-    use DocumentGeneratorAwareTrait;
-
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'Licence';
 
     public function handleCommand(CommandInterface $command)
     {
-        $content = $this->getDocumentGenerator()->generateFromTemplate(
-            'PSVVehiclesList',
-            [
-                'licence' => $command->getId(),
-                'user' => $this->getCurrentUser()
+        $dtoData = [
+            'template' => 'PSVVehiclesList',
+            'query' => [
+                'licence' => $command->getId()
             ],
-            $command->getKnownValues()
-        );
-
-        $file = $this->getDocumentGenerator()->uploadGeneratedContent($content);
-
-        $fileName = (new DateTime())->format('YmdHi') . '_Psv_Vehicle_List.rtf';
-
-        $data = [
+            'knownValues' => $command->getKnownValues(),
+            'description'   => 'New disc notification',
             'licence'       => $command->getId(),
-            'identifier'    => $file->getIdentifier(),
-            'description'   => 'PSV Vehicle List',
-            'filename'      => $fileName,
             'category'      => Category::CATEGORY_LICENSING,
             'subCategory'   => Category::DOC_SUB_CATEGORY_LICENCE_VEHICLE_LIST,
             'isExternal'    => false,
-            'isReadOnly'    => true,
-            'size'          => $file->getSize()
+            'isReadOnly'    => true
         ];
 
-        $printData = ['fileIdentifier' => $file->getIdentifier(), 'jobName' => 'PSV Vehicle List'];
+        $result = $this->handleSideEffect(GenerateAndStore::create($dtoData));
+
+        $printData = ['fileIdentifier' => $result->getId('identifier'), 'jobName' => 'New disc notification'];
+
         $this->handleSideEffect(Enqueue::create($printData));
 
-        return $this->handleSideEffect(CreateDocument::create($data));
+        return $result;
     }
 }

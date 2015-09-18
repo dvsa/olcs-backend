@@ -7,17 +7,12 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface as DocGenAwareInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCmd;
 
@@ -26,10 +21,8 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateAppli
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateGrantFee extends AbstractCommandHandler implements TransactionedInterface, DocGenAwareInterface
+final class CreateGrantFee extends AbstractCommandHandler implements TransactionedInterface
 {
-    use DocumentGeneratorAwareTrait;
-
     protected $repoServiceName = 'Application';
 
     public function handleCommand(CommandInterface $command)
@@ -37,33 +30,11 @@ final class CreateGrantFee extends AbstractCommandHandler implements Transaction
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
-        $result = new Result();
+        $this->result->merge($this->createApplicationFee($command->getId()));
 
-        $result->merge($this->createApplicationFee($command->getId()));
+        $this->result->merge($this->generateDocument($application));
 
-        $params = [
-            'fee' => $result->getId('fee'),
-            'application' => $application->getId(),
-            'licence' => $application->getLicence()->getId()
-        ];
-
-        $storedFile = $this->getDocumentGenerator()->generateAndStore('FEE_REQ_GRANT_GV', $params);
-
-        $data = [
-            'identifier' => $storedFile->getIdentifier(),
-            'size' => $storedFile->getSize(),
-            'description' => 'Goods Grant Fee Request',
-            'filename'    => 'Goods_Grant_Fee_Request.rtf',
-            'application' => $application->getId(),
-            'licence'     => $application->getLicence()->getId(),
-            'category'    => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::DOC_SUB_CATEGORY_FEE_REQUEST,
-            'isExternal'  => false
-        ];
-
-        $result->merge($this->handleSideEffect(DispatchDocument::create($data)));
-
-        return $result;
+        return $this->result;
     }
 
     protected function createApplicationFee($applicationId)
@@ -75,5 +46,26 @@ final class CreateGrantFee extends AbstractCommandHandler implements Transaction
         ];
 
         return $this->handleSideEffect(CreateApplicationFeeCmd::create($data));
+    }
+
+    protected function generateDocument(ApplicationEntity $application)
+    {
+        $dtoData = [
+            'template' => 'FEE_REQ_GRANT_GV',
+            'query' => [
+                'fee' => $this->result->getId('fee'),
+                'application' => $application->getId(),
+                'licence' => $application->getLicence()->getId()
+            ],
+            'description' => 'Goods Grant Fee Request',
+            'application' => $application->getId(),
+            'licence'     => $application->getLicence()->getId(),
+            'category'    => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::DOC_SUB_CATEGORY_FEE_REQUEST,
+            'isExternal'  => false,
+            'dispatch' => true
+        ];
+
+        return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
 }

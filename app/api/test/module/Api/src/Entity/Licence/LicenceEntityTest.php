@@ -1081,4 +1081,12 @@ class LicenceEntityTest extends EntityTester
             ['XXXX', null],
         ];
     }
+
+    public function testGetContextValue()
+    {
+        $entity = $this->instantiate(Entity::class);
+        $entity->setLicNo(111);
+
+        $this->assertEquals(111, $entity->getContextValue());
+    }
 }

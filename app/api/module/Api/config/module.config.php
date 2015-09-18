@@ -17,14 +17,15 @@ return [
         ],
         'invokables' => [
             'Document' => \Dvsa\Olcs\Api\Service\Document\Document::class,
-            'DocumentGenerator' => \Dvsa\Olcs\Api\Service\Document\DocumentGenerator::class,
             'DateService' => \Dvsa\Olcs\Api\Service\Date::class,
-            'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
             'RestrictionService' => \Dvsa\Olcs\Api\Service\Lva\RestrictionService::class,
             'SectionConfig' =>  \Dvsa\Olcs\Api\Service\Lva\SectionConfig::class,
             'AddressFormatter' => \Dvsa\Olcs\Api\Service\Helper\FormatAddress::class
         ],
         'factories' => [
+            'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
+            'DocumentGenerator' => \Dvsa\Olcs\Api\Service\Document\DocumentGenerator::class,
+            'DocumentNamingService' => \Dvsa\Olcs\Api\Service\Document\NamingService::class,
             'PsvVehiclesQueryHelper' => \Dvsa\Olcs\Api\Domain\Service\PsvVehicles\PsvVehiclesQueryHelper::class,
             'UpdateOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper::class,
             'OperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper::class,
@@ -356,6 +357,20 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Police::class
+            ],
+        ),
+        'VariationPublication' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousApplicationPublicationNo::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Variation\ConditionUndertaking::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Variation\OperatingCentres::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\People::class,
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Variation\Text2::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Variation\Text3::class
             ],
         ),
         'HearingPublication' => array(

@@ -130,4 +130,115 @@ class FeesHelperService implements FactoryInterface
             $application->getId()
         );
     }
+
+    /**
+     * Gets the minimum allowable payment amount for an array of fees,
+     * this prevents creating invalid payment attempts which would result
+     * in a zero allocated amount
+     *
+     * @param array $fees
+     * @return string formatted amount
+     */
+    public function getMinPaymentForFees(array $fees)
+    {
+        $fees = $this->sortFeesByInvoiceDate($fees);
+
+        // min. payment must be greater than the outstanding amount for all but the last fee
+        $minPayment = 0.01;
+        for ($i=0; $i < count($fees) -1; $i++) {
+            $minPayment += $fees[$i]->getOutstandingAmount();
+        }
+
+        return $this->format($minPayment);
+    }
+
+    /**
+     * Gets the total outstanding payment amount for an array of fees
+     *
+     * @param array $fees
+     * @return string formatted amount
+     */
+    public function getTotalOutstanding(array $fees)
+    {
+        $total = 0;
+
+        foreach ($fees as $fee) {
+            $total += $fee->getOutstandingAmount();
+        }
+
+        return $this->format($total);
+    }
+
+    /**
+     * Determine how a payment should be allocated to an array of fees.
+     * Payment is allocated to earliest fees first (by invoicedDate)
+     *
+     * @param string $amount payment amount
+     * @param array $fees array of FeeEntity
+     * @return array ['feeId' => 'allocatedAmount'] e.g.
+     * [
+     *     97 => '12.34',
+     *     98 => '50.00',
+     *     99 => '0.00',
+     * ]
+     */
+    public function allocatePayments($amount, array $fees)
+    {
+        $fees = $this->sortFeesByInvoiceDate($fees);
+
+        $allocations = [];
+
+        $remaining = (float) $amount;
+
+        foreach ($fees as $fee) {
+
+            $allocated = 0;
+            $outstanding = (float) $fee->getOutstandingAmount();
+
+            if ($remaining >= $outstanding) {
+                // if we have enough to pay the fee in full, allocate full amount
+                $allocated = $outstanding;
+            } elseif ($remaining > 0) {
+                // otherwise allocate remaining available amount
+                $allocated = $remaining;
+            }
+
+            // then decrement remaining available
+            $remaining = ($remaining - $allocated);
+
+            $allocations[$fee->getId()] = $this->format($allocated);
+        }
+
+        if ($remaining > 0) {
+            throw new Exception("Overpayments not permitted");
+        }
+
+        return $allocations;
+    }
+
+    protected function sortFeesByInvoiceDate(array $fees)
+    {
+        $sorted = $fees;
+        // sort fees in invoicedDate order
+        uasort(
+            $sorted,
+            function ($a, $b) {
+                if ($a->getInvoicedDate() === $b->getInvoicedDate()) {
+                    // if invoicedDate the same, use id as a tie-break
+                    return $a->getId() < $b->getId() ? -1 : 1;
+                }
+                return $a->getInvoicedDate() < $b->getInvoicedDate() ? -1 : 1;
+            }
+        );
+
+        return $sorted;
+    }
+
+    /**
+     * @param float $amount
+     * @return string formatted amount - two decimal places, no thousands separator
+     */
+    private function format($amount) {
+        return number_format($amount, 2, '.', '');
+    }
 }

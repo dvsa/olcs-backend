@@ -7,28 +7,21 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\PrintSchedulerInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 
 /**
  * Generate Batch
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class GenerateBatch extends AbstractCommandHandler implements
-    TransactionedInterface,
-    DocumentGeneratorAwareInterface
+final class GenerateBatch extends AbstractCommandHandler implements TransactionedInterface
 {
-    use DocumentGeneratorAwareTrait;
-
     protected $repoServiceName = 'CommunityLic';
 
     protected $extraRepos = ['Licence', 'Application'];
@@ -43,11 +36,11 @@ final class GenerateBatch extends AbstractCommandHandler implements
             $application = $this->getRepo('Application')->fetchById($command->getIdentifier());
             $licence = $application->getLicence();
             $identifier = $application->getId();
-            $template = $this->getTemplateForLicence($application);
+            $template = $this->getTemplateForEntity($application);
         } else {
             $licenceId = $command->getLicence();
             $licence = $this->getRepo('Licence')->fetchById($licenceId);
-            $template = $this->getTemplateForLicence($licence);
+            $template = $this->getTemplateForEntity($licence);
             $identifier = null;
         }
 
@@ -61,41 +54,17 @@ final class GenerateBatch extends AbstractCommandHandler implements
                 'application' => $identifier
             ];
 
-            $documentGenerator = $this->getDocumentGenerator();
-
-            $date = new DateTime();
-            $fileName = sprintf(
-                '%s_%s-%s-%s_Community_licence.rtf',
-                $date->format('YmdHis'),
-                $identifier === null ? '0' : $identifier,
-                $licence->getId(),
-                $id
-            );
-
-            $document = $documentGenerator->generateFromTemplate($template, $query);
-            $file = $documentGenerator->uploadGeneratedContent($document, 'documents', $fileName);
-
-            $data = [
-                'identifier' => $file->getIdentifier(),
-                'description' => 'Community licence',
-                'filename' => $fileName,
-                'category' => Entity\System\Category::CATEGORY_LICENSING,
-                'subCategory' => Entity\System\SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
-                'isExternal' => false,
-                'isScan' => false,
-                'size' => $file->getSize()
-            ];
-
-            $this->result->merge($this->handleSideEffect(CreateDocumentSpecific::create($data)));
+            $identifier = $this->generateDocument($template, $query);
 
             $printQueue = EnqueueFileCommand::create(
                 [
-                    'fileIdentifier' => $file->getIdentifier(),
+                    'fileIdentifier' => $identifier,
                     // @note not working for now, just migrated, will be implemented in future stories
                     'options' => [PrintSchedulerInterface::OPTION_DOUBLE_SIDED],
                     'jobName' => 'Community Licence'
                 ]
             );
+
             $this->result->merge($this->handleSideEffect($printQueue));
 
             $this->result->addMessage("Community Licence {$id} processed");
@@ -104,11 +73,30 @@ final class GenerateBatch extends AbstractCommandHandler implements
         return $this->result;
     }
 
+    protected function generateDocument($template, $query)
+    {
+        $dtoData = [
+            'template' => $template,
+            'query' => $query,
+            'description' => 'Community licence',
+            'category' => Entity\System\Category::CATEGORY_LICENSING,
+            'subCategory' => Entity\System\SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+            'isExternal' => false,
+            'isScan' => false
+        ];
+
+        $result = $this->handleSideEffect(GenerateAndStore::create($dtoData));
+
+        $this->result->merge($result);
+
+        return $result->getId('identifier');
+    }
+
     /**
      * @param Entity\Application\Application|Entity\Licence\Licence $entity
      * @return string
      */
-    private function getTemplateForLicence($entity)
+    private function getTemplateForEntity($entity)
     {
         if ($entity->isPsv()) {
             $prefix = 'PSV';

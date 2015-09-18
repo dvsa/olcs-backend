@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Tm;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Dvsa\Olcs\Transfer\Query\InspectionRequest\ApplicationInspectionRequestList;
 
 /**
@@ -27,7 +28,7 @@ use Dvsa\Olcs\Transfer\Query\InspectionRequest\ApplicationInspectionRequestList;
  *    }
  * )
  */
-class TransportManager extends AbstractTransportManager
+class TransportManager extends AbstractTransportManager implements ContextProviderInterface
 {
     const TRANSPORT_MANAGER_STATUS_CURRENT = 'tm_s_cur';
     const TRANSPORT_MANAGER_STATUS_ACTIVE = 'tm_st_act';
@@ -285,5 +286,10 @@ class TransportManager extends AbstractTransportManager
             'associatedTotalAuthVehicles' => $this->getTotAuthVehicles(),
             'isDetached' => $this->isDetached()
         ];
+    }
+
+    public function getContextValue()
+    {
+        return $this->getId();
     }
 }

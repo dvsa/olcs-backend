@@ -2461,4 +2461,42 @@ class ApplicationEntityTest extends EntityTester
             [null, '']
         ];
     }
+
+    /**
+     * @dataProvider dpTestGetLicenceTypeShortCode
+     * @param string $licenceType
+     * @param string $shortCode
+     */
+    public function testGetLicenceTypeShortCode($licenceType, $shortCode)
+    {
+        $licence = new Licence(new Organisation(), new RefData());
+        $application = new Entity($licence, new RefData(), false);
+        $application->setLicenceType((new RefData())->setId($licenceType));
+
+        $this->assertSame($shortCode, $application->getLicenceTypeShortCode());
+    }
+
+    public function dpTestGetLicenceTypeShortCode()
+    {
+        return [
+            ['ltyp_r', 'R'],
+            ['ltyp_si', 'SI'],
+            ['ltyp_sn', 'SN'],
+            ['ltyp_sr', 'SR'],
+            ['XXXX', null],
+        ];
+    }
+
+    public function testGetContextValue()
+    {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setLicNo(111);
+
+        $entity = $this->instantiate(Entity::class);
+
+        $entity->setLicence($licence);
+
+        $this->assertEquals(111, $entity->getContextValue());
+    }
 }
