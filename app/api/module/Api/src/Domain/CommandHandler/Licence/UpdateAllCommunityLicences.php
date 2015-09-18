@@ -31,19 +31,25 @@ abstract class UpdateAllCommunityLicences extends AbstractCommandHandler impleme
         $result = new \Dvsa\Olcs\Api\Domain\Command\Result();
 
         $status = $this->getRepo()->getRefdataReference($this->status);
+
+        $count = 0;
+        /* @var $communityLicence \Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic */
+        foreach ($licence->getCommunityLics() as $communityLicence) {
+            // only change status and expiry if not already expired
+            if ($communityLicence->getExpiredDate() === null) {
+                $communityLicence->changeStatusAndExpiryDate($status, new DateTime());
+                $this->getRepo('CommunityLic')->save($communityLicence);
+                $count++;
+            }
+        }
+
         $result->addMessage(
             sprintf(
                 '%d Community licence(s) updated to %s',
-                $licence->getCommunityLics()->count(),
+                $count,
                 $status->getDescription()
             )
         );
-
-        /* @var $communityLicence  \Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic */
-        foreach ($licence->getCommunityLics() as $communityLicence) {
-            $communityLicence->changeStatusAndExpiryDate($status, new DateTime());
-            $this->getRepo('CommunityLic')->save($communityLicence);
-        }
 
         $result->merge(
             $this->handleSideEffect(
