@@ -7,34 +7,23 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim as InForceInterimCmd;
-use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface as DocGenAwareInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Application\GrantInterim as Cmd;
-use Dvsa\Olcs\Transfer\Query\Application\Application;
 
 /**
  * Grant Interim
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class GrantInterim extends AbstractCommandHandler implements
-    TransactionedInterface,
-    DocGenAwareInterface,
-    AuthAwareInterface
+final class GrantInterim extends AbstractCommandHandler implements TransactionedInterface
 {
-    use DocumentGeneratorAwareTrait,
-        AuthAwareTrait;
-
     protected $repoServiceName = 'Application';
 
     protected $extraRepos = ['Fee'];
@@ -89,29 +78,28 @@ final class GrantInterim extends AbstractCommandHandler implements
             $description = 'GV Interim licence fee request';
         }
 
-        $query = [
-            'application' => $application->getId(),
-            'licence' => $application->getLicence()->getId(),
-            'fee' => $fee->getId(),
-            'user' => $this->getUser()->getId()
-        ];
+        $this->result->merge($this->generateDocument($application, $fee, $description));
+    }
 
-        $storedFile = $this->getDocumentGenerator()->generateAndStore('FEE_REQ_INT_APP', $query);
-        $this->result->addMessage('Document generated');
-
-        $data = [
-            'identifier' => $storedFile->getIdentifier(),
-            'size' => $storedFile->getSize(),
+    protected function generateDocument(ApplicationEntity $application, Fee $fee, $description)
+    {
+        $dtoData = [
+            'template' => 'FEE_REQ_INT_APP',
+            'query' => [
+                'application' => $application->getId(),
+                'licence' => $application->getLicence()->getId(),
+                'fee' => $fee->getId()
+            ],
             'description' => $description,
-            'filename' => str_replace(' ', '_', $description) . '.rtf',
             'application' => $application->getId(),
             'licence' => $application->getLicence()->getId(),
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
             'isExternal' => false,
-            'isScan' => false
+            'isScan' => false,
+            'dispatch' => true
         ];
 
-        $this->result->merge($this->handleSideEffect(DispatchDocument::create($data)));
+        return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
 }

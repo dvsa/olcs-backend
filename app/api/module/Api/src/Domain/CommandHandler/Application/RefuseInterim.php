@@ -7,13 +7,9 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -25,14 +21,8 @@ use Dvsa\Olcs\Transfer\Command\Application\RefuseInterim as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class RefuseInterim extends AbstractCommandHandler implements
-    TransactionedInterface,
-    AuthAwareInterface,
-    DocumentGeneratorAwareInterface
+final class RefuseInterim extends AbstractCommandHandler implements TransactionedInterface
 {
-    use AuthAwareTrait,
-        DocumentGeneratorAwareTrait;
-
     protected $repoServiceName = 'Application';
 
     /**
@@ -51,26 +41,7 @@ final class RefuseInterim extends AbstractCommandHandler implements
 
         $this->getRepo()->save($application);
 
-        $fileName = $application->isVariation() ? 'GV Refused Interim Direction' : 'GV Refused Interim Licence';
-
-        $file = $this->generateDocument($application);
-
-        $this->result->addMessage('Refuse document generated');
-
-        $data = [
-            'identifier' => $file->getIdentifier(),
-            'size' => $file->getSize(),
-            'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
-            'description' => $fileName,
-            'filename' => str_replace(' ', '_', $fileName) . '.rtf',
-            'isExternal' => false,
-            'isScan' => false,
-            'licence' => $application->getLicence()->getId(),
-            'application' => $application->getId()
-        ];
-
-        $this->result->merge($this->handleSideEffect(DispatchDocument::create($data)));
+        $this->result->merge($this->generateDocument($application));
 
         return $this->result;
     }
@@ -79,14 +50,24 @@ final class RefuseInterim extends AbstractCommandHandler implements
     {
         $type = $application->isVariation() ? 'VAR' : 'NEW';
 
-        $templateName = $type . '_APP_INT_REFUSED';
+        $description = $application->isVariation() ? 'GV Refused Interim Direction' : 'GV Refused Interim Licence';
 
-        $queryData = [
-            'user' => $this->getUser()->getId(),
+        $dtoData = [
+            'template' => $type . '_APP_INT_REFUSED',
+            'query' => [
+                'licence' => $application->getLicence()->getId(),
+                'application' => $application->getId()
+            ],
+            'description' => $description,
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
+            'isExternal' => false,
+            'isScan' => false,
             'licence' => $application->getLicence()->getId(),
-            'application' => $application->getId()
+            'application' => $application->getId(),
+            'dispatch' => true
         ];
 
-        return $this->getDocumentGenerator()->generateAndStore($templateName, $queryData);
+        return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
 }

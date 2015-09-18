@@ -33,10 +33,6 @@
             "type": "vcs",
             "url": "git@gitlab.inf.mgt.mtpdvsa:cpms/cpms-client.git"
         },
-        {
-            "type": "vcs",
-            "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-document-share.git"
-        }
     ],
     "require": {
         "php": ">=5.4",
@@ -54,7 +50,6 @@
         "zf-commons/zfc-rbac": "~2.4.0",
         "cpms/client": "~2.0.0",
         "cpms/client": "0.1.x-dev",
-        "olcs/dvsa/document-share": "dev-develop",
         "soflomo/purifier": "~0.1.0",
         "symfony/Filesystem": "~2.6.0"
     },
@@ -71,6 +66,7 @@
         "psr-4": {
             "Olcs\\Db\\": "module/Olcs/Db/src",
             "Dvsa\\Olcs\\Api\\": "module/Api/src",
+            "Dvsa\\Olcs\\DocumentShare\\": "module/DocumentShare/src",
             "Dvsa\\Olcs\\Cli\\": "module/Cli/src",
             "Dvsa\\Olcs\\Email\\": "module/Email/src",
             "Dvsa\\Olcs\\CompaniesHouse\\": "module/CompaniesHouse/src",

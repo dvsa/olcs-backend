@@ -237,6 +237,7 @@ return [
     TransferQuery\Document\Document::class => QueryHandler\Document\Document::class,
     TransferQuery\Document\Letter::class => QueryHandler\Document\Letter::class,
     TransferQuery\Document\DocumentList::class => QueryHandler\Document\DocumentList::class,
+    TransferQuery\Document\Download::class => QueryHandler\Document\Download::class,
 
     // Transport Manager Application
     TransferQuery\TransportManagerApplication\GetDetails::class
@@ -258,9 +259,6 @@ return [
 
     // Bus Reg History View
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
-
-    // Scan
-    TransferQuery\Scan\GetSingle::class => QueryHandler\Scan\GetSingle::class,
 
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,

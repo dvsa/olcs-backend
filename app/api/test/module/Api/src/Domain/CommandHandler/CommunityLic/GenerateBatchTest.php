@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -32,7 +33,6 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $this->mockRepo('CommunityLic', Repository\CommunityLic::class);
         $this->mockRepo('Licence', Repository\Licence::class);
         $this->mockRepo('Application', Repository\Application::class);
-        $this->mockedSmServices = ['DocumentGenerator' => m::mock('Dvsa\Olcs\Api\Service\Document\DocumentGenerator')];
 
         parent::setUp();
     }
@@ -68,51 +68,23 @@ class GenerateBatchTest extends CommandHandlerTestCase
             ->with($licenceId)
             ->andReturn($mockLicence);
 
-        $generateAndUploadData = [
+        $docResult = new Result();
+        $docResult->addId('identifier', 1);
+        $docResult->addMessage('Create Document');
+        $data = [
             'template' => $template,
-            'data'     => [
+            'query' => [
                 'licence' => $licenceId,
                 'communityLic' => $communityLicenceIds[0],
                 'application' => $identifier
             ],
-            'folder'   => 'documents',
-            'fileName' => 'Community Licence'
-
-        ];
-
-        $date = new DateTime();
-
-        $this->mockedSmServices['DocumentGenerator']
-            ->shouldReceive('generateFromTemplate')
-            ->with($template, $generateAndUploadData['data'])
-            ->andReturn('document')
-            ->once()
-            ->shouldReceive('uploadGeneratedContent')
-            ->with('document', 'documents', $date->format('YmdHis') . '_0-1-10_Community_licence.rtf')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getIdentifier')
-                ->andReturn(1)
-                ->shouldReceive('getSize')
-                ->andReturn(100)
-                ->getMock()
-            )
-            ->once()
-            ->getMock();
-
-        $docResult = new Result();
-        $docResult->addMessage('Create Document');
-        $data = [
-            'identifier' => 1,
             'description' => 'Community licence',
-            'filename' => $date->format('YmdHis') . '_0-1-10_Community_licence.rtf',
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
             'isExternal' => false,
-            'isScan' => false,
-            'size' => 100
+            'isScan' => false
         ];
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $docResult);
+        $this->expectedSideEffect(GenerateAndStore::class, $data, $docResult);
 
         $printResult = new Result();
         $printResult->addMessage('File printed');
@@ -130,7 +102,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'file' => 1
+                'file' => 1,
+                'identifier' => 1
             ],
             'messages' => [
                 'Create Document',
@@ -179,50 +152,23 @@ class GenerateBatchTest extends CommandHandlerTestCase
             ->with($identifier)
             ->andReturn($mockApplication);
 
-        $generateAndUploadData = [
+        $docResult = new Result();
+        $docResult->addId('identifier', 1);
+        $docResult->addMessage('Create Document');
+        $data = [
             'template' => $template,
-            'data'     => [
+            'query' => [
                 'licence' => $licenceId,
                 'communityLic' => $communityLicenceIds[0],
                 'application' => $identifier
             ],
-            'folder'   => 'documents',
-            'fileName' => 'Community Licence'
-        ];
-
-        $date = new DateTime();
-
-        $this->mockedSmServices['DocumentGenerator']
-            ->shouldReceive('generateFromTemplate')
-            ->with($template, $generateAndUploadData['data'])
-            ->andReturn('document')
-            ->once()
-            ->shouldReceive('uploadGeneratedContent')
-            ->with('document', 'documents', $date->format('YmdHis') . '_2-1-10_Community_licence.rtf')
-            ->andReturn(
-                m::mock()
-                    ->shouldReceive('getIdentifier')
-                    ->andReturn(1)
-                    ->shouldReceive('getSize')
-                    ->andReturn(100)
-                    ->getMock()
-            )
-            ->once()
-            ->getMock();
-
-        $docResult = new Result();
-        $docResult->addMessage('Create Document');
-        $data = [
-            'identifier' => 1,
             'description' => 'Community licence',
-            'filename' => $date->format('YmdHis') . '_2-1-10_Community_licence.rtf',
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
             'isExternal' => false,
-            'isScan' => false,
-            'size' => 100
+            'isScan' => false
         ];
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $docResult);
+        $this->expectedSideEffect(GenerateAndStore::class, $data, $docResult);
 
         $printResult = new Result();
         $printResult->addMessage('File printed');
@@ -240,7 +186,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'file' => 1
+                'file' => 1,
+                'identifier' => 1
             ],
             'messages' => [
                 'Create Document',

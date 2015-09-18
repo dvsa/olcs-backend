@@ -7,12 +7,9 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface as DocGenAwareInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -22,42 +19,39 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class PrintLicence extends AbstractCommandHandler implements TransactionedInterface, DocGenAwareInterface
+final class PrintLicence extends AbstractCommandHandler implements TransactionedInterface
 {
-    use DocumentGeneratorAwareTrait;
-
     protected $repoServiceName = 'Licence';
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchUsingId($command);
 
+        return $this->generateDocument($licence);
+    }
+
+    protected function generateDocument(LicenceEntity $licence)
+    {
         $template = $this->getTemplateName($licence);
 
         $description = $this->getDescription($licence);
 
-        $storedFile = $this->getDocumentGenerator()
-            ->generateAndStore($template, ['licence' => $command->getId()]);
-
-        $result->addMessage('Document generated');
-
-        $data = [
-            'identifier'  => $storedFile->getIdentifier(),
+        $dtoData = [
+            'template' => $template,
+            'query' => [
+                'licence' => $licence->getId()
+            ],
             'description' => $description,
-            'filename'    => str_replace(' ', '_', $description) . '.rtf',
-            'licence'     => $command->getId(),
+            'licence'     => $licence->getId(),
             'category'    => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
             'isReadOnly'  => true,
-            'isExternal'  => false
+            'isExternal'  => false,
+            'dispatch' => true
         ];
 
-        $result->merge($this->handleSideEffect(DispatchDocument::create($data)));
-
-        return $result;
+        return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
 
     private function getTemplateName(LicenceEntity $licence)

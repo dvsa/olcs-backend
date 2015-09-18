@@ -588,7 +588,9 @@ return [
 
     // Domain - Document
     Command\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
-    Command\Document\GenerateAndUploadDocument::class => CommandHandler\Document\GenerateAndUploadDocument::class,
+    Command\Document\GenerateAndStore::class => CommandHandler\Document\GenerateAndStore::class,
+    TransferCommand\Document\GenerateAndStore::class => CommandHandler\Document\GenerateAndStore::class,
+    TransferCommand\Document\Upload::class => CommandHandler\Document\Upload::class,
 
     // Domain - PrintScheduler
     Command\PrintScheduler\EnqueueFile::class => CommandHandler\PrintScheduler\EnqueueFile::class,

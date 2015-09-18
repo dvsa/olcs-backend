@@ -3,15 +3,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ContinuationDetail;
 
 use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\ProcessReminder as Command;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\ProcessReminder as CommandHandler;
-use Dvsa\Olcs\Api\Service\Document\DocumentGenerator as DocGenerator;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail as ContinuationDetailRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Mockery as m;
-use Dvsa\Olcs\Api\Entity\User\User;
-use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 
@@ -22,19 +20,11 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
  */
 class ProcessReminderTest extends CommandHandlerTestCase
 {
-    protected $user;
-
     public function setUp()
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('ContinuationDetail', ContinuationDetailRepo::class);
         $this->mockRepo('Document', DocumentRepo::class);
-
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class),
-            'DocumentGenerator' => m::mock(DocGenerator::class)
-        ];
-        $this->mockAuthService();
 
         parent::setUp();
     }
@@ -67,37 +57,23 @@ class ProcessReminderTest extends CommandHandlerTestCase
             ->andReturn($mockContinuationDetail)
             ->getMock();
 
-        $mockStoredFile = m::mock(\Dvsa\Olcs\Api\Service\File\File::class)->makePartial();
-        $mockStoredFile->setIdentifier(1)->setSize(12345);
-        $this->mockedSmServices['DocumentGenerator']
-            ->shouldReceive('generateAndStore')
-            ->with(
-                $template,
-                [
-                    'licence' => 3,
-                    'user' => $this->user
-                ]
-            )
-            ->once()
-            ->andReturn($mockStoredFile);
-
         $docResult = new Result();
-        $docResult->addId('document', 101)->addMessage('Document dispatched');
-        $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument::class,
-            [
-                'identifier' => 1,
-                'size' => 12345,
-                'description' => 'Checklist reminder',
-                'filename' => $template . '.rtf',
-                'licence' => 3,
-                'category' => CategoryEntity::CATEGORY_LICENSING,
-                'subCategory' => CategoryEntity::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
-                'isExternal'  => false,
-                'isScan' => false,
+        $docResult->addId('document', 101);
+        $docResult->addMessage('Document dispatched');
+        $dtoData = [
+            'template' => $template,
+            'query' => [
+                'licence' => 3
             ],
-            $docResult
-        );
+            'description' => 'Checklist reminder',
+            'licence' => 3,
+            'category' => CategoryEntity::CATEGORY_LICENSING,
+            'subCategory' => CategoryEntity::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
+            'isExternal'  => false,
+            'isScan' => false,
+            'dispatch' => true
+        ];
+        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $docResult);
 
         $result = $this->sut->handleCommand($command);
 
@@ -121,16 +97,5 @@ class ProcessReminderTest extends CommandHandlerTestCase
             [true, 'LIC_CONTD_NO_CHECKLIST_GV'],
             [false, 'LIC_CONTD_NO_CHECKLIST_PSV']
         ];
-    }
-
-    protected function mockAuthService()
-    {
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId(1);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
-
-        $this->user = $mockUser;
     }
 }
