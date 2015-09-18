@@ -365,7 +365,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
                 $sortColumns = explode(',', $query->getSort());
                 $orderColumns = explode(',', $query->getOrder());
                 for ($i = 0; $i < count($sortColumns); $i++) {
-                    // if multiple order value doesn'y exist then use the first one
+                    // if multiple order value doesn't exist then use the first one
                     $order = isset($orderColumns[$i]) ? $orderColumns[$i] : $orderColumns[0];
                     $queryBuilderHelper->order($sortColumns[$i], $order);
                 }

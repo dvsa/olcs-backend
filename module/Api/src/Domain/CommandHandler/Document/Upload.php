@@ -7,8 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument;
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCmd;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocumentSpecificCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
@@ -98,9 +98,9 @@ final class Upload extends AbstractCommandHandler implements
         $data['description'] = $command->getFilename();
 
         if ($data['isExternal'] === null) {
-            return $this->handleSideEffect(CreateDocument::create($data));
+            return $this->handleSideEffect(CreateDocumentCmd::create($data));
         } else {
-            return $this->handleSideEffect(CreateDocumentSpecific::create($data));
+            return $this->handleSideEffect(CreateDocumentSpecificCmd::create($data));
         }
     }
 }

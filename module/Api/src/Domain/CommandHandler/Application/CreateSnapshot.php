@@ -7,8 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -18,7 +16,6 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as Cmd;
-use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 
 /**
  * Create Snapshot
@@ -39,11 +36,6 @@ final class CreateSnapshot extends AbstractCommandHandler
     protected $repoServiceName = 'Application';
 
     /**
-     * @var ContentStoreFileUploader
-     */
-    protected $uploader;
-
-    /**
      * @var Generator
      */
     protected $reviewSnapshotService;
@@ -52,7 +44,6 @@ final class CreateSnapshot extends AbstractCommandHandler
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->uploader = $mainServiceLocator->get('FileUploader');
         $this->reviewSnapshotService = $mainServiceLocator->get('ReviewSnapshot');
 
         return parent::createService($serviceLocator);
@@ -60,17 +51,15 @@ final class CreateSnapshot extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
         $markup = $this->reviewSnapshotService->generate($application);
-        $result->addMessage('Snapshot generated');
+        $this->result->addMessage('Snapshot generated');
 
-        $result->merge($this->generateDocument($markup, $application, $command->getEvent()));
+        $this->result->merge($this->generateDocument($markup, $application, $command->getEvent()));
 
-        return $result;
+        return $this->result;
     }
 
     protected function generateDocument($content, ApplicationEntity $application, $event)

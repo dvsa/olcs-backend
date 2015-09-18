@@ -117,11 +117,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function provideRead()
     {
         $f = new File();
-        $f->setContent('testing');
+        $f->setContent(base64_encode('testing'));
+
+        $expected = new File();
+        $expected->setContent('testing');
 
         return array(
             array(404, '', null),
-            array(200, json_encode($f->getArrayCopy()), $f)
+            array(200, json_encode($f->getArrayCopy()), $expected)
         );
     }
 
@@ -140,7 +143,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $mockRequest->expects($this->once())
             ->method('setContent')
-            ->with('{"content":"test","hubPath":"test","mime":"foo"}')
+            ->with('{"content":"dGVzdA==","hubPath":"test","mime":"foo"}')
             ->willReturnSelf();
 
         $mockHeaders = $this->getMock('\stdClass', ['addHeaderLine']);

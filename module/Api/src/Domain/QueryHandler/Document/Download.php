@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\Document\Download as Qry;
-use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 
@@ -44,7 +44,7 @@ class Download extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        /** @var Document[] $documents */
+        /** @var DocumentEntity[] $documents */
         $documents = $this->getRepo()->fetchByIdentifier($query->getIdentifier());
 
         if (empty($documents)) {

@@ -25,11 +25,11 @@ class FileTest extends \PHPUnit_Framework_TestCase
     public function testGetArrayCopy()
     {
         $data = array(
-            'content' => base64_encode('testing')
+            'content' => 'testing'
         );
 
         $sut = new File();
-        $sut->setContent(base64_decode($data['content']));
+        $sut->setContent($data['content']);
 
         $this->assertEquals($data, $sut->getArrayCopy());
     }
@@ -37,11 +37,11 @@ class FileTest extends \PHPUnit_Framework_TestCase
     public function testExchangeArray()
     {
         $data = array(
-            'content' => base64_encode('testing')
+            'content' => 'testing'
         );
 
         $sut = new File();
         $sut->exchangeArray($data);
-        $this->assertEquals(base64_decode($data['content']), $sut->getContent());
+        $this->assertEquals($data['content'], $sut->getContent());
     }
 }
