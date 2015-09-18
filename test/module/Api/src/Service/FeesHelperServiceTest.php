@@ -296,11 +296,13 @@ class FeesHelperServiceTest extends MockeryTestCase
     public function testGetMinPaymentForFees()
     {
         $fees = [
-            $this->getStubFee('1', '99.99'),
-            $this->getStubFee('1', '99.99'),
+            $this->getStubFee('1', '5.00', '2015-09-03'),
+            $this->getStubFee('2', '10.00', '2015-09-01'),
+            $this->getStubFee('3', '15.00', '2015-09-02'),
         ];
 
-        $this->assertEquals('100.00', $this->sut->getMinPaymentForFees($fees));
+        // minimum is total of fee2 + fee3 then 0.01 allocated to fee1
+        $this->assertEquals('25.01', $this->sut->getMinPaymentForFees($fees));
     }
 
     public function testGetTotalOutstanding()
