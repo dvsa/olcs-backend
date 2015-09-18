@@ -13,30 +13,19 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\Document\Download as Qry;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 
 /**
  * Download
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Download extends AbstractQueryHandler
+class Download extends AbstractQueryHandler implements UploaderAwareInterface
 {
+    use UploaderAwareTrait;
+
     protected $repoServiceName = 'Document';
-
-    /**
-     * @var ContentStoreFileUploader
-     */
-    protected $fileUploader;
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->fileUploader = $mainServiceLocator->get('FileUploader');
-
-        return parent::createService($serviceLocator);
-    }
 
     /**
      * @param Qry $query
@@ -54,10 +43,9 @@ class Download extends AbstractQueryHandler
         $document = $documents[0];
 
         $fullFileName = $document->getFilename();
-        $parts = explode('/', $fullFileName);
-        $fileName = array_pop($parts);
+        $fileName = basename($fullFileName);
 
-        $file = $this->fileUploader->download($document->getIdentifier());
+        $file = $this->getUploader()->download($document->getIdentifier());
 
         if ($file === null) {
             throw new NotFoundException();

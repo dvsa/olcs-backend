@@ -15,13 +15,6 @@ namespace Dvsa\Olcs\Api\Service\File;
 interface FileUploaderInterface
 {
     /**
-     * Get the config
-     *
-     * @return array
-     */
-    public function getConfig();
-
-    /**
      * Set the file
      *
      * @param array $file

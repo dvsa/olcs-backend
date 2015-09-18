@@ -45,6 +45,19 @@ class NamingServiceTest extends MockeryTestCase
         $this->sut->createService($sm);
     }
 
+    public function testCreateServiceFail()
+    {
+        $this->setExpectedException('\RuntimeException');
+
+        $config = [];
+
+        $sm = Bootstrap::getServiceManager();
+        $sm->setService('Config', $config);
+
+        $this->sut = new NamingService();
+        $this->sut->createService($sm);
+    }
+
     public function testGenerateName()
     {
         $date = new DateTime();
@@ -61,6 +74,26 @@ class NamingServiceTest extends MockeryTestCase
 
         $expected = sprintf(
             'documents/Cat/Sub_Cat/%s/%s/%s__Some_Desc.rtf',
+            $date->format('Y'),
+            $date->format('m'),
+            $date->format('YmdHis')
+        );
+
+        $this->assertEquals($expected, $name);
+    }
+
+    public function testGenerateNameWithUnknown()
+    {
+        $date = new DateTime();
+
+        /** @var Category $category */
+        $category = m::mock(Category::class)->makePartial();
+        $category->setDescription('Cat');
+
+        $name = $this->sut->generateName('Some Desc', 'rtf', $category);
+
+        $expected = sprintf(
+            'documents/Cat/Unknown/%s/%s/%s__Some_Desc.rtf',
             $date->format('Y'),
             $date->format('m'),
             $date->format('YmdHis')

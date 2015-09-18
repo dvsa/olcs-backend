@@ -490,4 +490,12 @@ class TransportManagerEntityTest extends EntityTester
             $entity->getCalculatedBundleValues()
         );
     }
+
+    public function testGetContextValue()
+    {
+        $entity = new Entity();
+        $entity->setId(111);
+
+        $this->assertEquals(111, $entity->getContextValue());
+    }
 }

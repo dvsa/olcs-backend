@@ -94,7 +94,7 @@ final class CreateDocument extends AbstractCommandHandler implements Transaction
     protected function generateDocument(Scan $scan, Cmd $command, $content)
     {
         $data = [
-            'content'       => $content,
+            'content'       => base64_encode($content),
             'filename'      => $command->getFilename(),
             'description'   => $scan->getDescription(),
             'isExternal'    => false,

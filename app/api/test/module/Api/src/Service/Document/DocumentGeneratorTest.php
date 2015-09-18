@@ -7,6 +7,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Service\Document;
 
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
@@ -115,6 +117,150 @@ class DocumentGeneratorTest extends MockeryTestCase
             ->andReturn(['b' => 2]);
 
         $this->sut->generateFromTemplate('x', ['y' => 1], ['z' => 2]);
+    }
+
+    public function testGenerateFromTemplateWithQueryFailedQuery()
+    {
+        $this->setExpectedException('\Exception');
+
+        $query = [
+            'a' => m::mock(QueryInterface::class),
+            'b' => [
+                m::mock(QueryInterface::class),
+                m::mock(QueryInterface::class)
+            ]
+        ];
+
+        $this->contentStore->shouldReceive('read')
+            ->with('x')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/x.rtf')
+            ->andReturn('file');
+
+        $this->document->shouldReceive('getBookmarkQueries')
+            ->with('file', ['y' => 1])
+            ->andReturn($query)
+            ->shouldReceive('populateBookmarks')
+            ->with('file', ['a' => ['a' => 1], 'b' => [['b' => 1], ['b' => 2]], 'z' => 2]);
+
+        $this->queryHandlerManager->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['a'])
+            ->andThrow('\Exception');
+
+        $this->sut->generateFromTemplate('x', ['y' => 1], ['z' => 2]);
+    }
+
+    public function testGenerateFromTemplateWithQueryWithLicence()
+    {
+        $query = [
+            'a' => m::mock(QueryInterface::class),
+            'b' => [
+                m::mock(QueryInterface::class),
+                m::mock(QueryInterface::class)
+            ]
+        ];
+
+        $this->contentStore->shouldReceive('read')
+            ->with('x')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/x.rtf')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/GB/x.rtf')
+            ->andReturn('file');
+
+        $this->document->shouldReceive('getBookmarkQueries')
+            ->with('file', ['y' => 1, 'licence' => 111])
+            ->andReturn($query)
+            ->shouldReceive('populateBookmarks')
+            ->with('file', ['a' => ['a' => 1], 'b' => [['b' => 1], ['b' => 2]], 'z' => 2]);
+
+        $this->queryHandlerManager->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['a'])
+            ->andReturn(['a' => 1])
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['b'][0])
+            ->andReturn(['b' => 1])
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['b'][1])
+            ->andReturn(['b' => 2])
+            ->shouldReceive('handleQuery')
+            ->with(m::type(LicenceBundle::class))
+            ->andReturn(['niFlag' => 'N']);
+
+        $this->sut->generateFromTemplate('x', ['y' => 1, 'licence' => 111], ['z' => 2]);
+    }
+
+    public function testGenerateFromTemplateWithQueryWithApplication()
+    {
+        $query = [
+            'a' => m::mock(QueryInterface::class),
+            'b' => [
+                m::mock(QueryInterface::class),
+                m::mock(QueryInterface::class)
+            ]
+        ];
+
+        $this->contentStore->shouldReceive('read')
+            ->with('x')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/x.rtf')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/NI/x.rtf')
+            ->andReturn('file');
+
+        $this->document->shouldReceive('getBookmarkQueries')
+            ->with('file', ['y' => 1, 'application' => 111])
+            ->andReturn($query)
+            ->shouldReceive('populateBookmarks')
+            ->with('file', ['a' => ['a' => 1], 'b' => [['b' => 1], ['b' => 2]], 'z' => 2]);
+
+        $this->queryHandlerManager->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['a'])
+            ->andReturn(['a' => 1])
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['b'][0])
+            ->andReturn(['b' => 1])
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['b'][1])
+            ->andReturn(['b' => 2])
+            ->shouldReceive('handleQuery')
+            ->with(m::type(ApplicationBundle::class))
+            ->andReturn(['niFlag' => 'Y']);
+
+        $this->sut->generateFromTemplate('x', ['y' => 1, 'application' => 111], ['z' => 2]);
+    }
+
+    public function testGenerateFromTemplateWithQueryWithApplicationWithoutTemplate()
+    {
+        $this->setExpectedException('\Exception');
+
+        $this->contentStore->shouldReceive('read')
+            ->with('x')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/x.rtf')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/NI/x.rtf')
+            ->andReturn(null);
+
+        $this->queryHandlerManager->shouldReceive('handleQuery')
+            ->with(m::type(ApplicationBundle::class))
+            ->andReturn(['niFlag' => 'Y']);
+
+        $this->sut->generateFromTemplate('x', ['y' => 1, 'application' => 111], ['z' => 2]);
     }
 
     public function testUploadGeneratedContent()

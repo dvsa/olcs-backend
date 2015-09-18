@@ -123,6 +123,10 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     {
         $file = $this->getTemplate($possibleTemplatePaths);
 
+        if ($file === null) {
+            throw new \Exception('Template not found');
+        }
+
         $queries = $this->documentService->getBookmarkQueries($file, $queryData);
 
         $result = [];
@@ -184,7 +188,6 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     private function getPrefix($niFlag)
     {
         return $niFlag === 'N' ? 'GB' : 'NI';
-
     }
 
     /**

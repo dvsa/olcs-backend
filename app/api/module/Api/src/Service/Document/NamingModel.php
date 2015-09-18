@@ -78,6 +78,10 @@ class NamingModel
      */
     public function getCategory()
     {
+        if ($this->category === null) {
+            return null;
+        }
+
         return $this->category->getDescription();
     }
 
@@ -86,6 +90,10 @@ class NamingModel
      */
     public function getSubCategory()
     {
+        if ($this->subCategory === null) {
+            return null;
+        }
+
         return $this->subCategory->getSubCategoryName();
     }
 
