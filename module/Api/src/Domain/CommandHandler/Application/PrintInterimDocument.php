@@ -7,11 +7,9 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface as DocGenAwareInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -22,10 +20,8 @@ use Dvsa\Olcs\Transfer\Command\Application\PrintInterimDocument as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class PrintInterimDocument extends AbstractCommandHandler implements TransactionedInterface, DocGenAwareInterface
+final class PrintInterimDocument extends AbstractCommandHandler implements TransactionedInterface
 {
-    use DocumentGeneratorAwareTrait;
-
     protected $repoServiceName = 'Application';
 
     /**
@@ -36,8 +32,13 @@ final class PrintInterimDocument extends AbstractCommandHandler implements Trans
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
-        $licence = $application->getLicence();
+        $this->result->merge($this->generateDocument($application));
 
+        return $this->result;
+    }
+
+    protected function generateDocument(ApplicationEntity $application)
+    {
         if ($application->isVariation()) {
             $template = 'GV_INT_DIRECTION_V1';
             $description = 'GV Interim Direction';
@@ -46,30 +47,22 @@ final class PrintInterimDocument extends AbstractCommandHandler implements Trans
             $description = 'GV Interim Licence';
         }
 
-        $query = [
-            'application' => $application->getId(),
-            'licence' => $licence->getId()
-        ];
-
-        $storedFile = $this->getDocumentGenerator()->generateAndStore($template, $query);
-
-        $this->result->addMessage('Document generated');
-
-        $data = [
-            'identifier' => $storedFile->getIdentifier(),
-            'size' => $storedFile->getSize(),
+        $dtoData = [
+            'template' => $template,
+            'query' => [
+                'application' => $application->getId(),
+                'licence' => $application->getLicence()->getId()
+            ],
             'description' => $description,
-            'filename' => str_replace(' ', '_', $description) . '.rtf',
             'application' => $application->getId(),
-            'licence' => $licence->getId(),
+            'licence' => $application->getLicence()->getId(),
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
             'isExternal' => false,
-            'isScan' => false
+            'isScan' => false,
+            'dispatch' => true
         ];
 
-        $this->result->merge($this->handleSideEffect(DispatchDocument::create($data)));
-
-        return $this->result;
+        return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
 }

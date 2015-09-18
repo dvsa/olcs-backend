@@ -53,6 +53,56 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         $this->queryBuilder = $queryBuilder;
     }
 
+    public function __call($name, $args)
+    {
+        // fetchByFoo => WHERE alias.foo = $args[0]
+        if (preg_match('/^fetchBy([a-zA-Z]+)$/', $name, $matches)) {
+
+            $fetchBy = lcfirst($matches[1]);
+
+            // If the property doesn't exist
+            if (!property_exists($this->entity, $fetchBy)) {
+                return false;
+            }
+
+            if (empty($args)) {
+                return false;
+            }
+
+            $value = $args[0];
+
+            if (empty($args[1])) {
+                $hydrateMode = Query::HYDRATE_OBJECT;
+            } else {
+                $hydrateMode = $args[1];
+            }
+
+            $qb = $this->createQueryBuilder();
+
+            switch (true) {
+                case is_array($value):
+                    $qb->andWhere(
+                        $qb->expr()->in($this->alias . '.' . $fetchBy, $value)
+                    );
+                    break;
+                case is_int($value):
+                    $qb->andWhere(
+                        $qb->expr()->eq($this->alias . '.' . $fetchBy, $value)
+                    );
+                    break;
+                case is_string($value):
+                    $qb->andWhere(
+                        $qb->expr()->eq($this->alias . '.' . $fetchBy, ':' . $fetchBy)
+                    )->setParameter($fetchBy, $value);
+                    break;
+            }
+
+            return $qb->getQuery()->getResult($hydrateMode);
+        }
+
+        return false;
+    }
+
     /**
      * Fetch the default record by its id
      *
@@ -315,7 +365,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
                 $sortColumns = explode(',', $query->getSort());
                 $orderColumns = explode(',', $query->getOrder());
                 for ($i = 0; $i < count($sortColumns); $i++) {
-                    // if multiple order value doesn'y exist then use the first one
+                    // if multiple order value doesn't exist then use the first one
                     $order = isset($orderColumns[$i]) ? $orderColumns[$i] : $orderColumns[0];
                     $queryBuilderHelper->order($sortColumns[$i], $order);
                 }

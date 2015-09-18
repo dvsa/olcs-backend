@@ -7,13 +7,12 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as Cmd;
@@ -36,8 +35,6 @@ final class CreateSnapshot extends AbstractCommandHandler
 
     protected $repoServiceName = 'Application';
 
-    protected $uploader;
-
     /**
      * @var Generator
      */
@@ -47,7 +44,6 @@ final class CreateSnapshot extends AbstractCommandHandler
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->uploader = $mainServiceLocator->get('FileUploader');
         $this->reviewSnapshotService = $mainServiceLocator->get('ReviewSnapshot');
 
         return parent::createService($serviceLocator);
@@ -55,37 +51,24 @@ final class CreateSnapshot extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
         $markup = $this->reviewSnapshotService->generate($application);
-        $result->addMessage('Snapshot generated');
+        $this->result->addMessage('Snapshot generated');
 
-        $file = $this->uploadFile($markup);
-        $result->addMessage('Snapshot uploaded');
+        $this->result->merge($this->generateDocument($markup, $application, $command->getEvent()));
 
-        $result->merge($this->createDocumentRecord($application, $command->getEvent(), $file));
-
-        return $result;
+        return $this->result;
     }
 
-    protected function uploadFile($content)
-    {
-        $this->uploader->setFile(['content' => $content]);
-
-        return $this->uploader->upload();
-    }
-
-    protected function createDocumentRecord(ApplicationEntity $application, $event, $file)
+    protected function generateDocument($content, ApplicationEntity $application, $event)
     {
         $licenceId = $application->getLicence()->getId();
-
         $code = $this->getDocumentCode($application);
 
-        $defaults = [
-            'identifier' => $file->getIdentifier(),
+        $data = [
+            'content' => base64_encode(trim($content)),
             'application' => $application->getId(),
             'licence' => $licenceId,
             'category' => Category::CATEGORY_APPLICATION,
@@ -94,10 +77,9 @@ final class CreateSnapshot extends AbstractCommandHandler
             'isScan' => false
         ];
 
-        // merge defaults with event specific values
-        $data = array_merge($defaults, $this->getDocumentData($application, $event, $code));
+        $data = array_merge($data, $this->getDocumentData($application, $event, $code));
 
-        return $this->handleSideEffect(CreateDocumentSpecific::create($data));
+        return $this->handleSideEffect(Upload::create($data));
     }
 
     /**
