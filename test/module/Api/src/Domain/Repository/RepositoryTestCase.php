@@ -95,6 +95,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->orX')
             ->andReturnUsing([$this, 'mockOrX']);
 
+        $this->qb->shouldReceive('expr->andX')
+            ->andReturnUsing([$this, 'mockAndX']);
+
         $this->qb->shouldReceive('addSelect')
             ->andReturnUsing([$this, 'mockAddSelect']);
 
@@ -237,10 +240,19 @@ class RepositoryTestCase extends MockeryTestCase
         return '(' . implode(' OR ', func_get_args()) . ')';
     }
 
+    public function mockAndX()
+    {
+        return '(' . implode(' AND ', func_get_args()) . ')';
+    }
+
     protected function formatValue($value)
     {
         if (is_array($value)) {
             $value = json_encode($value);
+        }
+
+        if (is_a($value, \DateTime::class)) {
+            return $value->format(\DateTime::W3C);
         }
 
         if (is_object($value)) {

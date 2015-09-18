@@ -96,9 +96,13 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        /** @var TeamEntity $user */
+        $team = m::mock(Team::class)->makePartial();
+
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
+        $user->setTeam($team);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($user);
@@ -106,7 +110,10 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
             ->with($userId, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($user);
+            ->andReturn($user)
+            ->shouldReceive('populateRefDataReference')
+            ->once()
+            ->andReturn($data);
 
         $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
             ->once()
@@ -137,9 +144,6 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
-
-        $this->assertEquals($data['team'], $savedUser->getTeam()->getId());
-        $this->assertEquals($data['loginId'], $savedUser->getLoginId());
 
         $this->assertInstanceOf(ContactDetailsEntity::class, $savedUser->getContactDetails());
         $this->assertEquals(
@@ -204,15 +208,22 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             ->with($data['contactDetails'])
             ->andReturnSelf();
 
+        /** @var TeamEntity $user */
+        $team = m::mock(Team::class)->makePartial();
+
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
+        $user->setTeam($team);
         $user->setContactDetails($contactDetails);
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
             ->with($userId, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($user);
+            ->andReturn($user)
+            ->shouldReceive('populateRefDataReference')
+            ->once()
+            ->andReturn($data);
 
         $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
             ->once()
@@ -244,8 +255,6 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
 
-        $this->assertEquals($data['team'], $savedUser->getTeam()->getId());
-        $this->assertEquals($data['loginId'], $savedUser->getLoginId());
         $this->assertSame(
             $contactDetails,
             $savedUser->getContactDetails()

@@ -180,6 +180,7 @@ return [
     TransferCommand\Licence\UpdateOperatingCentres::class => CommandHandler\Licence\UpdateOperatingCentres::class,
     TransferCommand\Licence\CreatePsvVehicle::class => CommandHandler\Licence\CreatePsvVehicle::class,
     Command\Licence\ReturnAllCommunityLicences::class => CommandHandler\Licence\ReturnAllCommunityLicences::class,
+    Command\Licence\ExpireAllCommunityLicences::class => CommandHandler\Licence\ExpireAllCommunityLicences::class,
     TransferCommand\Licence\UpdateTrailers::class => CommandHandler\Licence\UpdateTrailers::class,
     TransferCommand\Licence\UpdateVehicles::class => CommandHandler\Licence\UpdateVehicles::class,
     Command\Licence\TmNominatedTask::class => CommandHandler\Licence\TmNominatedTask::class,
@@ -280,6 +281,9 @@ return [
     TransferCommand\MyAccount\UpdateMyAccount::class => CommandHandler\MyAccount\UpdateMyAccount::class,
 
     // Transfer - User
+    TransferCommand\User\CreateUser::class => CommandHandler\User\CreateUser::class,
+    TransferCommand\User\UpdateUser::class => CommandHandler\User\UpdateUser::class,
+    TransferCommand\User\DeleteUser::class => CommandHandler\User\DeleteUser::class,
     TransferCommand\User\CreatePartner::class => CommandHandler\User\CreatePartner::class,
     TransferCommand\User\UpdatePartner::class => CommandHandler\User\UpdatePartner::class,
     TransferCommand\User\DeletePartner::class => CommandHandler\User\DeletePartner::class,
@@ -616,6 +620,7 @@ return [
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
     Command\Email\CreateCorrespondenceRecord::class => CommandHandler\Email\CreateCorrespondenceRecord::class,
+    Command\Email\SendContinuationNotSought::class => CommandHandler\Email\SendContinuationNotSought::class,
 
     // Person
     TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,
@@ -776,4 +781,14 @@ return [
     Command\Discs\PrintDiscs::class => CommandHandler\Discs\PrintDiscs::class,
     Command\Discs\CreatePsvVehicleListForDiscs::class => CommandHandler\Discs\CreatePsvVehicleListForDiscs::class,
 
+    // Admin - Financial Standing Rates
+    TransferCommand\System\CreateFinancialStandingRate::class =>
+        CommandHandler\System\CreateFinancialStandingRate::class,
+    TransferCommand\System\UpdateFinancialStandingRate::class =>
+        CommandHandler\System\UpdateFinancialStandingRate::class,
+    TransferCommand\System\DeleteFinancialStandingRateList::class =>
+        CommandHandler\System\DeleteFinancialStandingRateList::class,
+
+    // Domain - Licence
+    Command\Licence\ProcessContinuationNotSought::class => CommandHandler\Licence\ProcessContinuationNotSought::class,
 ];

@@ -113,7 +113,8 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
     {
         $ignore = [
             'action',
-            'isInterim'
+            'isInterim',
+            's4',
         ];
 
         EntityCloner::cloneEntityInto($aoc, $loc, $ignore);

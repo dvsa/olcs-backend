@@ -164,7 +164,6 @@ return [
     'RolePermission' => 'User',
     'Team' => 'User',
     'User' => 'User',
-    'UserRole' => 'User',
     'GoodsDisc' => 'Vehicle',
     'Vehicle' => 'Vehicle',
 ];
