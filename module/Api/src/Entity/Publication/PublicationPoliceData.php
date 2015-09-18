@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Publication;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
+use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 
 /**
  * PublicationPoliceData Entity
@@ -26,28 +27,24 @@ class PublicationPoliceData extends AbstractPublicationPoliceData
      * Creates a new entity
      *
      * @param PublicationLinkEntity $publicationLink
-     * @param \DateTime|null $birthDate
-     * @param string $forename
-     * @param string $familyName
+     * @param PersonEntity $person
      */
-    public function __construct(PublicationLinkEntity $publicationLink, $birthDate, $forename, $familyName)
-    {
-        $this->create($publicationLink, $birthDate, $forename, $familyName);
+    public function __construct(PublicationLinkEntity $publicationLink, PersonEntity $person) {
+        $this->create($publicationLink, $person);
     }
 
     /**
      * Creates a new entity
      *
-     * @param PublicationLinkEntity $publicationLink
-     * @param \DateTime|null $birthDate
-     * @param string $forename
-     * @param string $familyName
+     * @param PublicationLink $publicationLink
+     * @param PersonEntity $person
      */
-    private function create(PublicationLinkEntity $publicationLink, $birthDate, $forename, $familyName)
+    private function create(PublicationLinkEntity $publicationLink, PersonEntity $person)
     {
         $this->publicationLink = $publicationLink;
-        $this->birthDate = $birthDate;
-        $this->forename = $forename;
-        $this->familyName = $familyName;
+        $this->person = $person;
+        $this->birthDate = $person->getBirthDate();
+        $this->forename = $person->getForename();
+        $this->familyName = $person->getFamilyName();
     }
 }
