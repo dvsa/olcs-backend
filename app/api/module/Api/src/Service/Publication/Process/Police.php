@@ -2,13 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication\Process;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
-
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson as OrganisationPersonEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData as PoliceDataEntity;
 
 /**
  * Class Police
@@ -26,32 +25,37 @@ class Police implements ProcessInterface
     {
         //make sure we have a licence
         if ($publication->getLicence() !== null) {
-            $organisationPersons = $publication->getLicence()->getOrganisation()->getOrganisationPersons();
-
             /**
-             * @var PersonEntity $person
-             * @var OrganisationPersonEntity $organisationPerson
+             * @var OrganisationPersonEntity $orgPerson
+             * @var PoliceDataEntity $existing
              */
-            $policeDataCollection = new ArrayCollection();
 
-            if (!$organisationPersons->isEmpty()) {
-                foreach ($organisationPersons as $organisationPerson) {
-                    $person = $organisationPerson->getPerson();
+            $organisationPersons = $publication->getLicence()->getOrganisation()->getOrganisationPersons();
+            $existingData = $publication->getPoliceDatas();
 
-                    $policeData = new PublicationPoliceData(
-                        $publication,
-                        $person->getBirthDate(),
-                        $person->getForename(),
-                        $person->getFamilyName()
-                    );
-
-                    $policeDataCollection->add($policeData);
+            if (!$existingData->isEmpty()) {
+                foreach ($existingData as $existing) {
+                    $publication->getPoliceDatas()->removeElement($existing);
                 }
             }
 
-            $publication->setPoliceDatas($policeDataCollection);
+            if (!$organisationPersons->isEmpty()) {
+                foreach ($organisationPersons as $orgPerson) {
+                    $publication->getPoliceDatas()->add($this->getNewPoliceData($publication, $orgPerson));
+                }
+            }
         }
 
         return $publication;
+    }
+
+    /**
+     * @param PublicationLink $publication
+     * @param OrganisationPersonEntity $orgPerson
+     * @return PoliceDataEntity
+     */
+    private function getNewPoliceData(PublicationLink $publication, OrganisationPersonEntity $orgPerson)
+    {
+        return new PublicationPoliceData($publication, $orgPerson->getPerson());
     }
 }

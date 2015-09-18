@@ -3,11 +3,13 @@
 namespace Dvsa\OlcsTest\Api\Service\Publication\Process;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Publication\Process\Police;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
@@ -32,28 +34,33 @@ class PoliceTest extends MockeryTestCase
         $forename = 'forename';
         $familyName = 'family name';
 
-        $personMock = m::mock(PersonEntity::class);
-        $personMock->shouldReceive('getBirthDate')->andReturn($birthDate);
-        $personMock->shouldReceive('getForename')->andReturn($forename);
-        $personMock->shouldReceive('getFamilyName')->andReturn($familyName);
+        $initialPoliceData = new PublicationPoliceData(new PublicationLink, new PersonEntity());
+        $inputPoliceData = new ArrayCollection([$initialPoliceData]);
 
-        $organisationPersonMock = m::mock(OrganisationPerson::class);
-        $organisationPersonMock->shouldReceive('getPerson')->andReturn($personMock);
+        $person = new PersonEntity();
+        $person->setBirthDate($birthDate);
+        $person->setForename($forename);
+        $person->setFamilyName($familyName);
 
-        $organisationPersons = new ArrayCollection([$organisationPersonMock]);
+        $organisationPerson = new OrganisationPerson();
+        $organisationPerson->setPerson($person);
 
-        $licenceMock = m::mock(LicenceEntity::class);
-        $licenceMock->shouldReceive('getOrganisation->getOrganisationPersons')
-            ->once()
-            ->andReturn($organisationPersons);
+        $organisationPersons = new ArrayCollection([$organisationPerson]);
 
-        $publicationLink = m::mock(PublicationLink::class)->makePartial();
-        $publicationLink->shouldReceive('getLicence')->andReturn($licenceMock);
+        $organisation = new Organisation();
+        $organisation->setOrganisationPersons($organisationPersons);
 
-        $expectedPoliceData = new PublicationPoliceData($publicationLink, $birthDate, $forename, $familyName);
+        $licence = new LicenceEntity($organisation, new RefData());
+
+        $publicationLink = new PublicationLink();
+        $publicationLink->setLicence($licence);
+        $publicationLink->setPoliceDatas($inputPoliceData);
+        $expectedPoliceData = new PublicationPoliceData($publicationLink, $person);
 
         $output = $sut->process($publicationLink, new ImmutableArrayObject());
 
-        $this->assertEquals($expectedPoliceData, $output->getPoliceDatas()[0]);
+        //check the first element was removed, and that the second one replaced it
+        $this->assertEquals(1, $output->getPoliceDatas()->count());
+        $this->assertEquals($expectedPoliceData, $output->getPoliceDatas()->first());
     }
 }
