@@ -86,7 +86,6 @@ class ClientFactory implements FactoryInterface
             );
         }
 
-
         return $options;
     }
 }

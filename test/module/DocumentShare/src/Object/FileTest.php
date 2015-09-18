@@ -9,6 +9,14 @@ use Dvsa\Olcs\DocumentShare\Data\Object\File;
  */
 class FileTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGetRealType()
+    {
+        $sut = new File();
+        $sut->setContent('<html></html>');
+
+        $this->assertEquals('text/html', $sut->getRealType());
+    }
+
     public function testGetContent()
     {
         $sut = new File();

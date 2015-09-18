@@ -151,10 +151,20 @@ class ClientFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         return array(
-            array($configMissingBaseUri, new \RuntimeException('Missing required option document_share.client.baseuri') ),
-            array($configMisingWorkspace, new \RuntimeException('Missing required option document_share.client.workspace')),
-            array($config),
-            array($configWithUuid)
+            array(
+                $configMissingBaseUri,
+                new \RuntimeException('Missing required option document_share.client.baseuri')
+            ),
+            array(
+                $configMisingWorkspace,
+                new \RuntimeException('Missing required option document_share.client.workspace')
+            ),
+            array(
+                $config
+            ),
+            array(
+                $configWithUuid
+            )
         );
     }
 }

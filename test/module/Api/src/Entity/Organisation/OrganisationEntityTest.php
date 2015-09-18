@@ -309,7 +309,14 @@ class OrganisationEntityTest extends EntityTester
             );
 
         $this->assertEquals(['foo'], $organisation->getLinkedLicences()->toArray());
+    }
 
+    public function testGetContextValue()
+    {
+        $entity = new Entity();
+        $entity->setId(111);
+
+        $this->assertEquals(111, $entity->getContextValue());
     }
 
     public function testGetAdminEmailAddresses()

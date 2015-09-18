@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore as GenerateAndStoreCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Doc\DocTemplate;
@@ -53,6 +53,6 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
             'metadata' => $command->getMeta()
         ];
 
-        return $this->handleSideEffect(GenerateAndStore::create($dtoData));
+        return $this->handleSideEffect(GenerateAndStoreCmd::create($dtoData));
     }
 }

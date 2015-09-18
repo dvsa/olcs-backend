@@ -2486,4 +2486,17 @@ class ApplicationEntityTest extends EntityTester
             ['XXXX', null],
         ];
     }
+
+    public function testGetContextValue()
+    {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setLicNo(111);
+
+        $entity = $this->instantiate(Entity::class);
+
+        $entity->setLicence($licence);
+
+        $this->assertEquals(111, $entity->getContextValue());
+    }
 }
