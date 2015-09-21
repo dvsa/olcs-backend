@@ -178,6 +178,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $allocations = $this->feesHelper->allocatePayments($amount, $fees);
 
         foreach ($fees as $fee) {
+            $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
             $paymentData = $this->getPaymentDataForFee($fee);
             if (!empty($paymentData)) {
                 $params['payment_data'][] = $paymentData;
@@ -220,7 +221,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         ];
         $params = $this->getParametersForFees($fees, $extraParams);
 
+        $allocations = $this->feesHelper->allocatePayments($amount, $fees);
+
         foreach ($fees as $fee) {
+            $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
             $paymentData = $this->getPaymentDataForFee($fee);
             if (!empty($paymentData)) {
                 $params['payment_data'][] = $paymentData;
@@ -265,7 +269,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         ];
         $params = $this->getParametersForFees($fees, $extraParams);
 
+        $allocations = $this->feesHelper->allocatePayments($amount, $fees);
+
         foreach ($fees as $fee) {
+            $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
             $paymentData = $this->getPaymentDataForFee($fee);
             if (!empty($paymentData)) {
                 $params['payment_data'][] = $paymentData;
@@ -416,7 +423,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'line_identifier' => (string) $fee->getInvoiceLineNo(),
             'amount' => $this->formatAmount($fee->getAmount()),
             'allocated_amount' => $this->formatAmount(
-                // will change when we do under/overpayment
+                // may be overridden if under/overpayment
                 $fee->getOutstandingAmount()
             ),
             // all fees are currently zero rated
