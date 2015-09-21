@@ -5,18 +5,18 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CloseTexTask;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CloseFeeDueTask;
 
 /**
- * CloseTexTaskTest
+ * CloseFeeDueTaskTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CloseTexTaskTest extends CommandHandlerTestCase
+class CloseFeeDueTaskTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new CloseTexTask();
+        $this->sut = new CloseFeeDueTask();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
 
         parent::setUp();
@@ -35,7 +35,7 @@ class CloseTexTaskTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $command = \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::create(['id' => 32]);
+        $command = \Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask::create(['id' => 32]);
 
         $categoryApplication = new \Dvsa\Olcs\Api\Entity\System\Category();
         $categoryApplication->setId(\Dvsa\Olcs\Api\Entity\System\Category::CATEGORY_APPLICATION);
@@ -44,7 +44,7 @@ class CloseTexTaskTest extends CommandHandlerTestCase
         $categoryOther->setId('foo');
 
         $subCategoryTex = new \Dvsa\Olcs\Api\Entity\System\SubCategory();
-        $subCategoryTex->setId(\Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_TIME_EXPIRED);
+        $subCategoryTex->setId(\Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_GRANT_FEE_DUE);
 
         $subCategoryOther = new \Dvsa\Olcs\Api\Entity\System\SubCategory();
         $subCategoryOther->setId('bar');

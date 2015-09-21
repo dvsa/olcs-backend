@@ -10,11 +10,11 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\System\Category;
 
 /**
- * CloseTexTask
+ * CloseFeeDueTask
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class CloseTexTask extends AbstractCommandHandler implements TransactionedInterface
+final class CloseFeeDueTask extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
 
@@ -25,7 +25,7 @@ final class CloseTexTask extends AbstractCommandHandler implements Transactioned
 
         $tasks = $application->getOpenTasksForCategory(
             Category::CATEGORY_APPLICATION,
-            Category::TASK_SUB_CATEGORY_APPLICATION_TIME_EXPIRED
+            Category::TASK_SUB_CATEGORY_APPLICATION_GRANT_FEE_DUE
         );
 
         $taskIdsToClose = [];

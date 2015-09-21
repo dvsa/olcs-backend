@@ -15,21 +15,27 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask as CloseFeeDueTaskCmd;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Grant Goods
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class GrantGoods extends AbstractCommandHandler implements TransactionedInterface
+final class GrantGoods extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'Application';
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
 
-        /** @var ApplicationEntity $application */
+        /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($command);
 
         $this->updateStatusAndDate($application, ApplicationEntity::APPLICATION_STATUS_GRANTED);
@@ -39,6 +45,13 @@ final class GrantGoods extends AbstractCommandHandler implements TransactionedIn
         $result->addMessage('Licence status updated');
 
         $this->getRepo()->save($application);
+
+        // If Internal user grants Goods variation
+        if ($application->isVariation() && $this->isInternalUser()) {
+            $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
+            // close fee due tasks, createGrantFee will create a new fee due task
+            $result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
+        }
 
         $result->merge($this->createGrantFee($application));
 
