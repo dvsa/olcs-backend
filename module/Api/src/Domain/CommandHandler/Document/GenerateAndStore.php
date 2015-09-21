@@ -44,8 +44,8 @@ final class GenerateAndStore extends AbstractCommandHandler implements
     {
         $queryData = $command->getQuery();
 
-        if (!isset($queryData['user'])) {
-            $queryData['user'] = $this->getUser()->getId();
+        if (!isset($queryData['user']) && $this->getCurrentUser()) {
+            $queryData['user'] = $this->getCurrentUser()->getId();
         }
 
         $description = $this->formatDescription($command->getDescription());
