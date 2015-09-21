@@ -21,9 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class OperatingCentre extends AbstractOperatingCentre
 {
-    protected $hasEnvironmentalComplaint = 'N';
+    protected $hasEnvironmentalComplaint;
 
-    protected $hasOpposition = 'N';
+    protected $hasOpposition;
 
     public function getHasEnvironmentalComplaint()
     {
@@ -41,7 +41,7 @@ class OperatingCentre extends AbstractOperatingCentre
         return $this->hasEnvironmentalComplaint;
     }
 
-    public function hasOpposition()
+    public function getHasOpposition()
     {
         $this->hasOpposition = 'N';
 
