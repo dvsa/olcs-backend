@@ -53,6 +53,25 @@ final class CommonGrant extends AbstractCommandHandler implements TransactionedI
             $result->merge($this->proxyCommand($command, ProcessDuplicateVehiclesCmd::class));
         }
 
+        $this->tidyUpData($application);
+
         return $result;
+    }
+
+    protected function tidyUpData(ApplicationEntity $application)
+    {
+        // Tidy up some invalid data
+        $licence = $application->getLicence();
+
+        if ($licence->isRestricted()) {
+            $licence->setEstablishmentCd(null);
+
+            if ($licence->isPsv()) {
+                $licence->setTotAuthLargeVehicles(0);
+                $application->setTotAuthLargeVehicles(0);
+            }
+
+            $this->getRepo()->save($application);
+        }
     }
 }
