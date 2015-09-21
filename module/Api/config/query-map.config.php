@@ -1,6 +1,7 @@
 <?php
 
 use Dvsa\Olcs\Transfer\Query as TransferQuery;
+use Dvsa\Olcs\Api\Domain\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark as BookmarkQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark as BookmarkQueryHandler;
@@ -87,6 +88,7 @@ return [
     TransferQuery\Licence\GetList::class => QueryHandler\Licence\GetList::class,
     TransferQuery\Licence\OperatingCentres::class => QueryHandler\Licence\OperatingCentres::class,
     TransferQuery\Licence\PsvVehicles::class => QueryHandler\Licence\PsvVehicles::class,
+    Query\Licence\ContinuationNotSoughtList::class => QueryHandler\Licence\ContinuationNotSoughtList::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
@@ -215,6 +217,8 @@ return [
     TransferQuery\User\PartnerList::class => QueryHandler\User\PartnerList::class,
     TransferQuery\User\User::class => QueryHandler\User\User::class,
     TransferQuery\User\UserList::class => QueryHandler\User\UserList::class,
+    TransferQuery\User\UserSelfserve::class => QueryHandler\User\UserSelfserve::class,
+    TransferQuery\User\UserListSelfserve::class => QueryHandler\User\UserListSelfserve::class,
 
     // Workshop
     TransferQuery\Workshop\Workshop::class => QueryHandler\Workshop\Workshop::class,
@@ -235,6 +239,7 @@ return [
     TransferQuery\Document\Document::class => QueryHandler\Document\Document::class,
     TransferQuery\Document\Letter::class => QueryHandler\Document\Letter::class,
     TransferQuery\Document\DocumentList::class => QueryHandler\Document\DocumentList::class,
+    TransferQuery\Document\Download::class => QueryHandler\Document\Download::class,
 
     // Transport Manager Application
     TransferQuery\TransportManagerApplication\GetDetails::class
@@ -256,9 +261,6 @@ return [
 
     // Bus Reg History View
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
-
-    // Scan
-    TransferQuery\Scan\GetSingle::class => QueryHandler\Scan\GetSingle::class,
 
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,

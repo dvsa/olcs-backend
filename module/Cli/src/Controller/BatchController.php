@@ -11,6 +11,9 @@ use Zend\Mvc\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Command;
+use Dvsa\Olcs\Api\Domain\Query;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * BatchController
@@ -62,11 +65,77 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * @return ConsoleModel
+     */
+    public function continuationNotSoughtAction()
+    {
+        $dryRun = $this->isDryRun();
+        $date = new DateTime(); // this could come from a CLI param if needed
+
+        // we use a separate query and command so we can do more granular output..
+
+        // get list of licences
+        $dto = Query\Licence\ContinuationNotSoughtList::create(['date' => $date]);
+        $result = $this->handleQuery($dto);
+        $this->writeVerboseMessages("{$result['count']} Licence(s) found to change to CNS");
+        $licences = $result['result'];
+
+        // build array of commands (once per licence)
+        $commands = [];
+        foreach ($licences as $licence) {
+            $this->writeVerboseMessages("Processing Licence ID {$licence['id']}");
+            $commands[] = Command\Licence\ProcessContinuationNotSought::create(
+                [
+                    'id' => $licence['id'],
+                    'version' => $licence['version'],
+                ]
+            );
+        }
+
+        // add a command to send email summary
+        $commands[] = Command\Email\SendContinuationNotSought::create(
+            [
+                'date' => $date,
+                'licences' => $licences,
+            ]
+        );
+
+        // execute commands
+        if (!$dryRun) {
+            return $this->handleExitStatus($this->handleCommand($commands));
+        }
+
+        return $this->handleExitStatus(0);
+    }
+
+    /**
+     * @return ConsoleModel
+     */
+    public function processInboxDocumentsAction()
+    {
+        return $this->handleExitStatus(
+            $this->handleCommand(
+                [
+                    Command\Correspondence\ProcessInboxDocuments::create([]),
+                ]
+            )
+        );
+    }
+
+    /**
      * @return boolean
      */
     private function isVerbose()
     {
         return $this->params('verbose') || $this->params('v');
+    }
+
+    /**
+     * @return boolean
+     */
+    private function isDryRun()
+    {
+        return $this->params('dryrun') || $this->params('d');
     }
 
     /**
@@ -92,7 +161,7 @@ class BatchController extends AbstractConsoleController
      */
     protected function handleCommand(array $dto)
     {
-        $this->writeVerboseMessages((new \DateTime())->format(\DateTime::W3C));
+        $this->writeVerboseMessages((new DateTime())->format(\DateTime::W3C));
 
         try {
             $result = new Command\Result();
@@ -113,6 +182,30 @@ class BatchController extends AbstractConsoleController
         $this->writeVerboseMessages($result->getMessages());
 
         return 0;
+    }
+
+    /**
+     * Handle DTO query
+     *
+     * @param QueryInterface $dto
+     *
+     * @return mixed $result|false
+     */
+    protected function handleQuery(QueryInterface $dto)
+    {
+        $this->writeVerboseMessages((new DateTime())->format(\DateTime::W3C));
+
+        try {
+            return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
+        } catch (Exception\NotFoundException $e) {
+            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()]);
+        } catch (Exception\Exception $e) {
+            $this->writeVerboseMessages($e->getMessages());
+        } catch (\Exception $e) {
+            $this->writeVerboseMessages($e->getMessage());
+        }
+
+        return false;
     }
 
     /**

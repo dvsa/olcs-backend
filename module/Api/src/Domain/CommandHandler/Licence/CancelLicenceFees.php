@@ -32,7 +32,7 @@ final class CancelLicenceFees extends AbstractCommandHandler
 
         $criteria = Criteria::create();
         $criteria->andWhere(
-            $criteria->expr()->eq('feeStatus', Fee::STATUS_OUTSTANDING)
+            $criteria->expr()->in('feeStatus', [Fee::STATUS_OUTSTANDING])
         );
 
         $fees = $licence->getFees()->matching($criteria);

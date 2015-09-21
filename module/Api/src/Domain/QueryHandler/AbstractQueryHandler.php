@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
@@ -51,6 +52,10 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
 
         if ($this instanceof AuthAwareInterface) {
             $this->setAuthService($mainServiceLocator->get(AuthorizationService::class));
+        }
+
+        if ($this instanceof UploaderAwareInterface) {
+            $this->setUploader($mainServiceLocator->get('FileUploader'));
         }
 
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');

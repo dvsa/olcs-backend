@@ -9,9 +9,10 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
-use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\PayOutstandingFees;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -24,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
+use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Api\Service\FeesHelperService as FeesHelper;
 use Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -449,6 +451,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $fee1 = $this->getStubFee(99, 99.99);
         $fees = [$fee1];
         $transactionId = 69;
+        $feeTransactionId = 123;
 
         $data = [
             'feeIds' => $feeIds,
@@ -479,6 +482,20 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 ]
             );
 
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(0.01);
+
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->with('99.99', $fees)
+            ->andReturn(
+                [
+                    99 => '99.99',
+                ]
+            );
+
         $this->repoMap['Fee']
             ->shouldReceive('save')
             ->once()
@@ -488,9 +505,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->repoMap['Transaction']
             ->shouldReceive('save')
             ->andReturnUsing(
-                function ($transaction) use (&$savedTransaction, $transactionId) {
+                function ($transaction) use (&$savedTransaction, $transactionId, $feeTransactionId) {
                     $savedTransaction = $transaction;
                     $savedTransaction->setId($transactionId);
+                    $savedTransaction->getFeeTransactions()->forAll(
+                        function ($key, $ft) use ($feeTransactionId) {
+                            unset($key); // unused
+                            $ft->setId($feeTransactionId);
+                        }
+                    );
                 }
             );
 
@@ -504,10 +527,12 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $expected = [
             'id' => [
                 'transaction' => $transactionId,
+                'feeTransaction' => [$feeTransactionId],
             ],
             'messages' => [
-                'Transaction record created',
-                'Fee(s) updated as paid by Cash',
+                'Fee ID 99 updated as paid by Cash',
+                'Transaction record created: OLCS-1234-CASH',
+                'FeeTransaction record(s) created',
             ]
         ];
 
@@ -532,6 +557,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $fee1 = $this->getStubFee(99, 99.99);
         $fees = [$fee1];
         $transactionId = 69;
+        $feeTransactionId = 123;
 
         $data = [
             'feeIds' => $feeIds,
@@ -564,6 +590,20 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 ]
             );
 
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(0.01);
+
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->with('99.99', $fees)
+            ->andReturn(
+                [
+                    99 => '99.99',
+                ]
+            );
+
         $this->repoMap['Fee']
             ->shouldReceive('save')
             ->once()
@@ -573,9 +613,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->repoMap['Transaction']
             ->shouldReceive('save')
             ->andReturnUsing(
-                function ($transaction) use (&$savedTransaction, $transactionId) {
+                function ($transaction) use (&$savedTransaction, $transactionId, $feeTransactionId) {
                     $savedTransaction = $transaction;
                     $savedTransaction->setId($transactionId);
+                    $savedTransaction->getFeeTransactions()->forAll(
+                        function ($key, $ft) use ($feeTransactionId) {
+                            unset($key);
+                            $ft->setId($feeTransactionId);
+                        }
+                    );
                 }
             );
 
@@ -589,10 +635,12 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $expected = [
             'id' => [
                 'transaction' => $transactionId,
+                'feeTransaction' => [$feeTransactionId],
             ],
             'messages' => [
-                'Transaction record created',
-                'Fee(s) updated as paid by Cheque',
+                'Fee ID 99 updated as paid by Cheque',
+                'Transaction record created: OLCS-1234-CHEQUE',
+                'FeeTransaction record(s) created',
             ]
         ];
 
@@ -619,6 +667,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $fee1 = $this->getStubFee(99, 99.99);
         $fees = [$fee1];
         $transactionId = 69;
+        $feeTransactionId = 123;
 
         $data = [
             'feeIds' => $feeIds,
@@ -650,6 +699,20 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 ]
             );
 
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(0.01);
+
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->with('99.99', $fees)
+            ->andReturn(
+                [
+                    99 => '99.99',
+                ]
+            );
+
         $this->repoMap['Fee']
             ->shouldReceive('save')
             ->once()
@@ -659,9 +722,15 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->repoMap['Transaction']
             ->shouldReceive('save')
             ->andReturnUsing(
-                function ($transaction) use (&$savedTransaction, $transactionId) {
+                function ($transaction) use (&$savedTransaction, $transactionId, $feeTransactionId) {
                     $savedTransaction = $transaction;
                     $savedTransaction->setId($transactionId);
+                    $savedTransaction->getFeeTransactions()->forAll(
+                        function ($key, $ft) use ($feeTransactionId) {
+                            unset($key);
+                            $ft->setId($feeTransactionId);
+                        }
+                    );
                 }
             );
 
@@ -675,10 +744,12 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $expected = [
             'id' => [
                 'transaction' => $transactionId,
+                'feeTransaction' => [$feeTransactionId],
             ],
             'messages' => [
-                'Transaction record created',
-                'Fee(s) updated as paid by Postal Order',
+                'Fee ID 99 updated as paid by Postal Order',
+                'Transaction record created: OLCS-1234-PO',
+                'FeeTransaction record(s) created',
             ]
         ];
 
@@ -726,9 +797,66 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->shouldReceive('recordCashPayment')
             ->never();
 
-        $this->setExpectedException(ValidationException::class);
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(99);
 
-        $this->sut->handleCommand($command);
+        // $this->setExpectedException(ValidationException::class, "The amount must be at least ");
+        // try/catch as we can't assert the message otherwise
+        try {
+            $this->sut->handleCommand($command);
+        } catch (ValidationException $e) {
+            $messages = $e->getMessages();
+            $this->assertTrue(strpos(reset($messages), 'Amount must be at least 99.00') !== false);
+        }
+    }
+
+    public function testHandleCommandAllocationError()
+    {
+        // set up data
+        $feeIds = [99];
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fees = [$fee1];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => FeeEntity::METHOD_CASH,
+            'receiptDate' => '2015-06-17',
+            'payer' => 'Dan',
+            'slipNo' => '12345',
+            'received' => '1000',
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('recordCashPayment')
+            ->never();
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn('0.01');
+
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->once()
+            ->andThrow(new ServiceException('ohnoes'));
+
+        try {
+            $this->sut->handleCommand($command);
+        } catch (RuntimeException $e) {
+            $messages = $e->getMessages();
+            $this->assertTrue(strpos(reset($messages), 'ohnoes') !== false);
+        }
     }
 
     public function testHandleCommandCpmsResponseException()
@@ -756,10 +884,24 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->with($feeIds)
             ->andReturn($fees);
 
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->with('99.99', $fees)
+            ->andReturn(
+                [
+                    99 => '99.99',
+                ]
+            );
+
         $this->mockCpmsService
             ->shouldReceive('recordCashPayment')
             ->once()
             ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(0.01);
 
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
 

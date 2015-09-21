@@ -18,6 +18,8 @@ use Rbac\Role\RoleInterface;
  */
 class Role extends AbstractRole implements RoleInterface
 {
+    const ROLE_OPERATOR_ADMIN = 'operator-admin';
+
     /**
      * Get the name of the role.
      *

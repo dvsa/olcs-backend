@@ -31,12 +31,30 @@ return [
                         ],
                     ],
                 ],
+                'batch-cns' => [
+                    'options' => [
+                        'route' => 'batch-cns [--verbose|-v] [--dryrun|-d]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'continuationNotSought'
+                        ],
+                    ],
+                ],
                 'process-queue' => [
                     'options' => [
                         'route' => 'process-queue [--type=]',
                         'defaults' => [
                             'controller' => 'QueueController',
                             'action' => 'index'
+                        ],
+                    ],
+                ],
+                'process-inbox' => [
+                    'options' => [
+                        'route' => 'process-inbox [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'processInboxDocuments'
                         ],
                     ],
                 ],

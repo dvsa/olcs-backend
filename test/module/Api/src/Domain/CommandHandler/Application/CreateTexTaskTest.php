@@ -146,7 +146,7 @@ class CreateTexTaskTest extends CommandHandlerTestCase
 
         $identity = m::mock();
 
-        $user = new \Dvsa\Olcs\Api\Entity\User\User();
+        $user = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $user->setId(53);
         $team = new \Dvsa\Olcs\Api\Entity\User\Team();
         $team->setId(55);
