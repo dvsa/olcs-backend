@@ -125,8 +125,8 @@ class FeeType extends AbstractRepository
         $qb = $this->createQueryBuilder();
         $qb->andWhere($qb->expr()->eq('ft.feeType', ':feeType'));
 
-        $qb->addOrderBy('ft.effectiveFrom', 'DESC')
-            ->setParameter('feeType', Entity::FEE_TYPE_OVERPAYMENT)
+        $qb->orderBy('ft.effectiveFrom', 'DESC')
+            ->setParameter('feeType', Entity::FEE_TYPE_ADJUSTMENT)
             ->setMaxResults(1);
 
         $results = $qb->getQuery()->execute();
