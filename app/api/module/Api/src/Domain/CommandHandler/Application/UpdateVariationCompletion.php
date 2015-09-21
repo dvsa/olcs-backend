@@ -84,7 +84,8 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
         // @NOTE Not sure if we need this just yet
         //'licence_history' => 'hasUpdatedLicenceHistory',
         'convictions_penalties' => 'hasUpdatedConvictionsPenalties',
-        'undertakings' => 'hasUpdatedUndertakings'
+        'undertakings' => 'hasUpdatedUndertakings',
+        'declarations_internal' => 'hasUpdateDeclarationsInternal',
     ];
 
     protected $bespokeRulesMap = [
@@ -351,6 +352,16 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
     {
         return ($this->application->getDeclarationConfirmation() === 'Y');
     }
+
+    /**
+     *
+     * @return bool
+     */
+    protected function hasUpdateDeclarationsInternal()
+    {
+        return ($this->application->getAuthSignature());
+    }
+
 
     /**
      * If we have completed at least 1 of the fields in the list

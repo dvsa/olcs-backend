@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Submission\Submission as Entity;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Submission
@@ -52,5 +53,16 @@ class Submission extends AbstractRepository
             ->with('senderUser', 's')
             ->with('s.contactDetails', 'scd')
             ->with('scd.person');
+    }
+
+    /**
+     * Apply List Filters
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
+            ->setParameter('byCase', $query->getCase());
     }
 }

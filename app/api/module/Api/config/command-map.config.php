@@ -106,6 +106,7 @@ return [
     Command\Application\CreateTexTask::class => CommandHandler\Application\CreateTexTask::class,
     Command\Application\CloseTexTask::class => CommandHandler\Application\CloseTexTask::class,
     Command\Application\CloseFeeDueTask::class => CommandHandler\Application\CloseFeeDueTask::class,
+    TransferCommand\Application\UpdateAuthSignature::class => CommandHandler\Application\UpdateAuthSignature::class,
 
     Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
     TransferCommand\Application\UpdatePsvVehicles::class => CommandHandler\Application\UpdatePsvVehicles::class,
@@ -580,6 +581,8 @@ return [
     AppCompCommand\UpdateTaxiPhvStatus::class => AppCompCommandHandler\UpdateTaxiPhvStatus::class,
     AppCompCommand\UpdateCommunityLicencesStatus::class => AppCompCommandHandler\UpdateCommunityLicencesStatus::class,
     AppCompCommand\UpdateBusinessDetailsStatus::class => AppCompCommandHandler\UpdateBusinessDetailsStatus::class,
+    AppCompCommand\UpdateDeclarationsInternalStatus::class =>
+        AppCompCommandHandler\UpdateDeclarationsInternalStatus::class,
 
     // Domain - CommunityLic
     Command\CommunityLic\GenerateBatch::class => CommandHandler\CommunityLic\GenerateBatch::class,

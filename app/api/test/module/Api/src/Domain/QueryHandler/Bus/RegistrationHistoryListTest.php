@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Bus;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\RegistrationHistoryList;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\Olcs\Transfer\Query\Bus\ByLicenceRoute as LicenceRouteNoQuery;
+use Dvsa\Olcs\Api\Domain\Query\Bus\ByLicenceRoute as LicenceRouteNoQuery;
 use Dvsa\Olcs\Transfer\Query\Bus\RegistrationHistoryList as RegListQuery;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
