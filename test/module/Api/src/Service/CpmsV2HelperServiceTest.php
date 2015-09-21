@@ -195,7 +195,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->sut->initiateCardRequest('http://olcs-selfserve/foo', []);
     }
 
-    public function testRecordCashPayment()
+    public function testRecordCashPaymentWithOverpayment()
     {
         $orgId = 99;
 
@@ -205,8 +205,17 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $amount      = '1000';  // doesn't need to match fee total
 
         $fees = [
-            $this->getStubFee(1, 525.25, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-08-29'),
-            $this->getStubFee(2, 125.25, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25', $orgId, '2015-08-30'),
+            $this->getStubFee(1, 500.00, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-08-29'),
+            $this->getStubFee(2, 100.00, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25', $orgId, '2015-08-30'),
+            $this->getStubFee(
+                3,
+                400.00,
+                FeeEntity::ACCRUAL_RULE_IMMEDIATE,
+                null,
+                $orgId,
+                '2015-08-30',
+                FeeTypeEntity::FEE_TYPE_ADJUSTMENT
+            ),
         ];
 
         $now = (new DateTime())->format('Y-m-d');
@@ -216,9 +225,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'payment_data' => [
                 [
                     'line_identifier' => '1',
-                    'amount' => '525.25',
-                    'allocated_amount' => '525.25',
-                    'net_amount' => '525.25',
+                    'amount' => '500.00',
+                    'allocated_amount' => '500.00',
+                    'net_amount' => '500.00',
                     'tax_amount' => '0.00',
                     'tax_code' => 'Z',
                     'tax_rate' => '0',
@@ -242,9 +251,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 ],
                 [
                     'line_identifier' => '1',
-                    'amount' => '125.25',
-                    'allocated_amount' => '125.25',
-                    'net_amount' => '125.25',
+                    'amount' => '100.00',
+                    'allocated_amount' => '100.00',
+                    'net_amount' => '100.00',
                     'tax_amount' => '0.00',
                     'tax_code' => 'Z',
                     'tax_rate' => '0',
@@ -283,7 +292,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'batch_number' => '12345',
             'receipt_date' => '2015-09-10',
             'scope' => 'CASH',
-            'refund_overpayment' => false,
+            'refund_overpayment' => true,
         ];
 
          $response = [
@@ -302,8 +311,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->with('1000.00', $fees)
             ->andReturn(
                 [
-                    1 => '525.25',
-                    2 => '125.25'
+                    1 => '500.00',
+                    2 => '100.00',
+                    3 => '400.00',
                 ]
             );
 
@@ -585,7 +595,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $accrualRule = null,
         $licenceStartDate = null,
         $organisationId = null,
-        $invoicedDate = null
+        $invoicedDate = null,
+        $feeTypeId = null
     ) {
         $status = new RefData();
         $rule = new RefData();
@@ -596,7 +607,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $feeType
             ->setAccrualRule($rule)
             ->setDescription('fee type description')
-            ->setFeeType((new RefData('SOMETYPE')));
+            ->setFeeType((new RefData($feeTypeId)));
 
         $organisation = new OrganisationEntity();
         $organisation
