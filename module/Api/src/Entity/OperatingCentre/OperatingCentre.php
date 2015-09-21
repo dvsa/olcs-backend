@@ -21,5 +21,49 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class OperatingCentre extends AbstractOperatingCentre
 {
+    protected $hasEnvironmentalComplaint = 'N';
 
+    protected $hasOpposition = 'N';
+
+    public function getHasEnvironmentalComplaint()
+    {
+        $this->hasEnvironmentalComplaint = 'N';
+
+        /** @var \Dvsa\Olcs\Api\Entity\Cases\Complaint $complaint */
+        foreach ($this->getComplaints() as $complaint) {
+
+            if ($complaint->getClosedDate() === null && $complaint->isEnvironmentalComplaint()) {
+
+                $this->hasEnvironmentalComplaint = 'Y';
+            }
+        }
+
+        return $this->hasEnvironmentalComplaint;
+    }
+
+    public function hasOpposition()
+    {
+        $this->hasOpposition = 'N';
+
+        /** @var \Dvsa\Olcs\Api\Entity\Opposition\Opposition $opposition */
+        foreach ($this->getOppositions() as $opposition) {
+            // Only move on if is NOT withdrawn.
+            if ($opposition->getIsWithdrawn() === false) {
+
+                // Do we even have a linked application??
+                if ($application = $opposition->getCase()->getApplication()) {
+
+                    $notAllowedStatuses = ['apsts_granted', 'apsts_refused', 'apsts_ntu', 'apsts_withdrawn'];
+
+                    // status is NONE of these
+                    if (!in_array($application->getStatus()->getId(), $notAllowedStatuses)) {
+
+                        $this->hasOpposition = 'Y';
+                    }
+                }
+            }
+        }
+
+        return $this->hasOpposition;
+    }
 }
