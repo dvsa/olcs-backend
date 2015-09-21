@@ -105,6 +105,7 @@ return [
     TransferCommand\Application\DeleteTaxiPhv::class => CommandHandler\Application\DeleteTaxiPhv::class,
     Command\Application\CreateTexTask::class => CommandHandler\Application\CreateTexTask::class,
     Command\Application\CloseTexTask::class => CommandHandler\Application\CloseTexTask::class,
+    Command\Application\CloseFeeDueTask::class => CommandHandler\Application\CloseFeeDueTask::class,
 
     Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
     TransferCommand\Application\UpdatePsvVehicles::class => CommandHandler\Application\UpdatePsvVehicles::class,

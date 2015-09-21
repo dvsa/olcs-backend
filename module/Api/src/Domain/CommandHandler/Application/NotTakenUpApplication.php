@@ -19,6 +19,10 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Delete;
 use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask as CloseFeeDueTaskCmd;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Class NotTakenUpApplication
@@ -27,8 +31,10 @@ use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class NotTakenUpApplication extends AbstractCommandHandler implements TransactionedInterface
+class NotTakenUpApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     public $repoServiceName = 'Application';
 
     public $extraRepos = ['LicenceVehicle'];
@@ -128,6 +134,12 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
                     )
                 )
             );
+        }
+
+        // If Internal user close tasks
+        if ($application->isNew() && $application->isGoods() && $this->isInternalUser()) {
+            $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
+            $result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
         }
 
         $result->addMessage('Application ' . $application->getId() . ' set to not taken up.');
