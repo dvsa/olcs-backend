@@ -1184,23 +1184,23 @@ INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_id`,`unfitness_reaso
   (1,'tm_unfit_inn');
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `login_id`,`contact_details_id`, `local_authority_id`,`transport_manager_id`,`partner_contact_details_id`, `pid`) VALUES
-  (273, 1, 2, 2, now(), now(), 'usr273', 101, null, NULL, NULL, '0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90'),
-  (291, 1, 2, 2, now(), now(), 'usr291', 101, null, NULL, NULL, '6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3'), -- ADMIN, System	Internal
-  (20, 1, 2, 2, now(), now(), 'usr20', 101, null, NULL, NULL,'5860faf02b6bc6222ba5aca523560f0e364ccd8b67bee486fe8bf7c01d492ccb'), -- CW, Case Worker	Internal
-  (21, 1, 2, 2, now(), now(), 'usr21', 101, null, NULL, NULL, '5269ef980de47819ba3d14340f4665262c41e933dc92c1a27dd5d01b047ac80e'), -- CW, Case Worker	Internal
-  (528, 1, 2, 2, now(), now(), 'usr528', 101, null, NULL, NULL, '5a39bead318f306939acb1d016647be2e38c6501c58367fdb3e9f52542aa2442'),-- CWRO, Case Worker Read Only	Internal
-  (529, 1, 2, 2, now(), now(), 'usr529', 101, null, NULL, NULL, 'ecb48a1cc94f951252ec462fe9ecc55c3ef123fadfe935661396c26a45a5809d'),-- CWRO, Case Worker Read Only	Internal
-  (331, 1, 2, 2, now(), now(), 'usr331', 101, null, NULL, NULL,'9400f1b21cb527d7fa3d3eabba93557a18ebe7a2ca4e471cfe5e4c5b4ca7f767'),	-- CWRON, Case Worker Read Only No Documents	Internal
+  (273, 1, 2, 2, now(), now(), 'usr273', 105, null, NULL, NULL, '0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90'),
+  (291, 1, 2, 2, now(), now(), 'usr291', 106, null, NULL, NULL, '6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3'), -- ADMIN, System	Internal
+  (20, 1, 2, 2, now(), now(), 'usr20', 130, null, NULL, NULL,'5860faf02b6bc6222ba5aca523560f0e364ccd8b67bee486fe8bf7c01d492ccb'), -- CW, Case Worker	Internal
+  (21, 1, 2, 2, now(), now(), 'usr21', 131, null, NULL, NULL, '5269ef980de47819ba3d14340f4665262c41e933dc92c1a27dd5d01b047ac80e'), -- CW, Case Worker	Internal
+  (528, 1, 2, 2, now(), now(), 'usr528', 132, null, NULL, NULL, '5a39bead318f306939acb1d016647be2e38c6501c58367fdb3e9f52542aa2442'),-- CWRO, Case Worker Read Only	Internal
+  (529, 1, 2, 2, now(), now(), 'usr529', 133, null, NULL, NULL, 'ecb48a1cc94f951252ec462fe9ecc55c3ef123fadfe935661396c26a45a5809d'),-- CWRO, Case Worker Read Only	Internal
+  (331, 1, 2, 2, now(), now(), 'usr331', 114, null, NULL, NULL,'9400f1b21cb527d7fa3d3eabba93557a18ebe7a2ca4e471cfe5e4c5b4ca7f767'),	-- CWRON, Case Worker Read Only No Documents	Internal
   (342, 1, 2, 2, now(), now(), 'usr342', 101, null, NULL, NULL, 'f5ca38f748a1d6eaf726b8a42fb575c3c71f1864a8143301782de13da2d9202b'),	-- CWRON, Case Worker Read Only No Documents	Internal
-  (20131, 1, 2, 2, now(), now(), 'usr20131', 101, 1, NULL, NULL, '3268151e52d97b4cacf97f5b46a5c76c8416e928e137e3b3dc447696a29afbaa'),-- LA, Local Authority, LA dashboard application	SelfServe
-  (20132, 1, 2, 2, now(), now(), 'usr20132', 101, 1, NULL, NULL, 'f60afa4989a7db13314a2ab9881372634b5402c30ba7257448b13fa388de1b78'),-- LA, Local Authority, LA dashboard application	SelfServe
+  (20131, 1, 2, 2, now(), now(), 'usr20131', 169, 1, NULL, NULL, '3268151e52d97b4cacf97f5b46a5c76c8416e928e137e3b3dc447696a29afbaa'),-- LA, Local Authority, LA dashboard application	SelfServe
+  (20132, 1, 2, 2, now(), now(), 'usr20132', 170, 1, NULL, NULL, 'f60afa4989a7db13314a2ab9881372634b5402c30ba7257448b13fa388de1b78'),-- LA, Local Authority, LA dashboard application	SelfServe
   (1964, 1, 2, 2, now(), now(), 'usr1964', 101, null, NULL, 140, '19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7'),-- PART, Partner, HMRC	Partner
-  (1965, 1, 2, 2, now(), now(), 'usr1965', 101, null, NULL, 140, '4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5'),-- PART, Partner, HMRC	Partner
+  (1965, 1, 2, 2, now(), now(), 'usr1965', 168, null, NULL, 140, '4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5'),-- PART, Partner, HMRC	Partner
   (778, 1, 2, 2, now(), now(), 'usr778', 101, null, NULL, 140, '4fc82b26aecb47d2868c4efbe3581732a3e7cbcc6c2efb32062c08170a05eeb8'),-- PARTA, Partner Admin	Partner
-  (779, 1, 2, 2, now(), now(), 'usr779', 101, null, NULL, 140, '6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918'),-- PARTA, Partner Admin	Partner
-  (542, 1, 2, 2, now(), now(), 'usr542', 101, null, NULL, NULL,'3fdba35f04dc8c462986c992bcf875546257113072a909c162f7e470e581e278'),-- SS, Self Serve	SelfServe
+  (779, 1, 2, 2, now(), now(), 'usr779', 167, null, NULL, 140, '6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918'),-- PARTA, Partner Admin	Partner
+  (542, 1, 2, 2, now(), now(), 'usr542', 166, null, NULL, NULL,'3fdba35f04dc8c462986c992bcf875546257113072a909c162f7e470e581e278'),-- SS, Self Serve	SelfServe
   (543, 1, 2, 2, now(), now(), 'usr543', 101, null, NULL, NULL, '4ec9599fc203d176a301536c2e091a19bc852759b255bd6818810a42c5fed14a'),-- TM, Transport Manager	SelfServe
-  (611, 1, 2, 2, now(), now(), 'usr611', 101, null, NULL, NULL,'8fab3a60577befd765cde83f2737cd1a9f25a72356c94052c2194e816829b331'),-- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
+  (611, 1, 2, 2, now(), now(), 'usr611', 165, null, NULL, NULL,'8fab3a60577befd765cde83f2737cd1a9f25a72356c94052c2194e816829b331'),-- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
   (612, 1, 2, 2, now(), now(), 'usr612', 101, null, NULL, NULL, 'b999205cdacd2c4516598d99b420d29786443e9908556a65f583a6fd4765ee4a') -- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
 ;
 
