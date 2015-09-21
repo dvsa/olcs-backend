@@ -1207,8 +1207,8 @@ INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator
     (1, 5, 0),
     (1, 6, 0),
     (1, 7, 0),
-    (104, 20, 1),
-    (104, 21, 0),
+    (1, 20, 1),
+    (1, 21, 0),
     (1, 12504, 1),
     (1, 12505, 0);
 
