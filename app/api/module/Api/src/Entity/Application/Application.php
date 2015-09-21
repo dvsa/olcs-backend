@@ -1371,7 +1371,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             && $this->getStatus()->getId() === self::APPLICATION_STATUS_UNDER_CONSIDERATION;
     }
 
-    /*
+    /**
      * Get the Shortcode version of a licence type
      *
      * @return string|null if licence type is not set or shortcode does not exist
