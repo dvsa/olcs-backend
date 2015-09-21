@@ -15,7 +15,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Doctrine\ORM\EntityRepository;
-use Dvsa\Olcs\Transfer\Query\Bus\PreviousVariationByRouteNo;
+use Dvsa\Olcs\Api\Domain\Query\Bus\PreviousVariationByRouteNo;
 
 /**
  * Bus test
