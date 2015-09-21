@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\User;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
@@ -81,7 +82,7 @@ class UserEntityTest extends EntityTester
         $entity = Entity::create(Entity::USER_TYPE_INTERNAL, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -133,7 +134,7 @@ class UserEntityTest extends EntityTester
         $entity->update($data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -167,7 +168,7 @@ class UserEntityTest extends EntityTester
         $entity = Entity::create(Entity::USER_TYPE_TRANSPORT_MANAGER, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -219,7 +220,7 @@ class UserEntityTest extends EntityTester
         $entity->update($data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -253,7 +254,7 @@ class UserEntityTest extends EntityTester
         $entity = Entity::create(Entity::USER_TYPE_PARTNER, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -305,7 +306,7 @@ class UserEntityTest extends EntityTester
         $entity->update($data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -339,7 +340,7 @@ class UserEntityTest extends EntityTester
         $entity = Entity::create(Entity::USER_TYPE_LOCAL_AUTHORITY, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -391,7 +392,7 @@ class UserEntityTest extends EntityTester
         $entity->update($data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -428,7 +429,7 @@ class UserEntityTest extends EntityTester
         $entity = Entity::create(Entity::USER_TYPE_SELF_SERVICE, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -483,7 +484,7 @@ class UserEntityTest extends EntityTester
         $entity->update($data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());

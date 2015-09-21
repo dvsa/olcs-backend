@@ -514,7 +514,13 @@ VALUES
     (142,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Police',NULL,'2000-04-02 00:00:00',NULL,1),
     (143,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Department of Work and Pensions',NULL,'2000-04-02 00:00:00',
     NULL,1),
-    (144,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Home Office',NULL,'2000-04-02 00:00:00',NULL,1);
+    (144,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Home Office',NULL,'2000-04-02 00:00:00',NULL,1),
+    (165,'ct_user',NULL,NULL,4,1,NULL,0,'operator.admin@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (166,'ct_user',NULL,NULL,4,1,NULL,0,'operator.user@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (167,'ct_user',NULL,NULL,4,1,NULL,0,'partner.admin@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (168,'ct_user',NULL,NULL,4,1,NULL,0,'partner.user@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (169,'ct_user',NULL,NULL,4,1,NULL,0,'la.admin@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (170,'ct_user',NULL,NULL,4,1,NULL,0,'la.user@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1);
 
 INSERT INTO `conviction` (`id`, `case_id`, `created_by`, `last_modified_by`, `category_text`,
 `person_firstname`, `person_lastname`, `birth_date`,
@@ -912,7 +918,9 @@ INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `crea
     (3,NULL,NULL,NULL,NULL,1,77,1),
     (4,NULL,NULL,NULL,NULL,1,78,1),
     (5,NULL,NULL,NULL,NULL,1,78,100),
-    (6,NULL,NULL,NULL,NULL,1,77,100);
+    (6,NULL,NULL,NULL,NULL,1,77,100),
+    (7,NULL,NULL,NULL,NULL,1,11,75),
+    (8,NULL,NULL,NULL,NULL,1,32,75);
 
 INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `birth_place`, `title`, `birth_date`, `forename`,
 `family_name`, `other_name`, `created_on`, `last_modified_on`, `version`, `deleted_date`) VALUES
@@ -1173,17 +1181,23 @@ INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_id`,`unfitness_reaso
 
 INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
 `last_successful_login_date`,`login_id`,`contact_details_id`,
-`local_authority_id`) VALUES
-    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-01-26 09:00:00','loggedinuser',101, 1),
-    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-25 23:00:00','johnspellman',105, NULL),
-    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-23 15:00:00','stevefox',106, NULL),
-    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-19 14:00:00','amywrigg',130, NULL),
-    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-05-15 17:00:00','philjowitt',131, NULL),
-    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-22 11:00:00','kevinrooney',132, NULL),
-    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00','sarahthompson',133, NULL),
-    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','anotheruser',114, NULL),
-    (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00','abdou.bonomi',140, NULL),
-    (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00','abdou.bonomi2',140, NULL);
+`local_authority_id`,`transport_manager_id`,`partner_contact_details_id`) VALUES
+    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-01-26 09:00:00','loggedinuser',101, NULL, NULL, NULL),
+    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-25 23:00:00','johnspellman',105, NULL, NULL, NULL),
+    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-23 15:00:00','stevefox',106, NULL, NULL, NULL),
+    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-19 14:00:00','amywrigg',130, NULL, NULL, NULL),
+    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-05-15 17:00:00','philjowitt',131, NULL, NULL, NULL),
+    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-22 11:00:00','kevinrooney',132, NULL, NULL, NULL),
+    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00','sarahthompson',133, NULL, NULL, NULL),
+    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','anotheruser',114, NULL, NULL, NULL),
+    (20,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','operator-admin',165, NULL, NULL, NULL),
+    (21,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','operator-user',166, NULL, NULL, NULL),
+    (22,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','partner-admin',167, NULL, NULL, 140),
+    (23,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','partner-user',168, NULL, NULL, 140),
+    (24,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','local-authority-admin',169, 1, NULL, NULL),
+    (25,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','local-authority-user',170, 1, NULL, NULL),
+    (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00','abdou.bonomi',140, NULL, NULL, NULL),
+    (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00','abdou.bonomi2',140, NULL, NULL, NULL);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator`) VALUES
     (1, 1, 1),
@@ -1193,10 +1207,18 @@ INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator
     (1, 5, 0),
     (1, 6, 0),
     (1, 7, 0),
+    (1, 20, 1),
+    (1, 21, 0),
     (1, 12504, 1),
     (1, 12505, 0);
 
 INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
+    (20, 5),
+    (21, 6),
+    (22, 9),
+    (23, 10),
+    (24, 11),
+    (25, 12),
     (12504, 3),
     (12505, 5),
     (1, 1), -- loggedinuser=internal-limited-read-only
@@ -1634,14 +1656,14 @@ VALUES
   (62, NULL, 7, NULL, 4, 14, NULL, NULL, NULL, 'B', NULL, 'Public Inquiry (49473) held at The Court Room, Eastern Traffic Area, Eastbrook, Shaftesbury Road, Cambridge, CB2 8BF on 31 October 2014 at 10:00(Previous Publication:(2200)\r)PF0001624 SI\rVICEROY OF ESSEX LTD\rDIRECTOR(s): STEVEN ANDREW MOORE, AARON RICHARD MOORE.\r10 - 12 BRIDGE STREET SAFFRON WALDEN CB10 1BU', 'PSV - S17 - Licence revoked with effect from 20 March 2015.\rPSV - Sch.3 - Steven Moore found to be of good repute', NULL, '2015-03-06 11:47:52', NULL, NULL, 1),
   (63, NULL, 7, NULL, 4, 27, NULL, NULL, NULL, 'B', NULL, 'TM Public Inquiry (EpisodeId:3764 PublicInquiryId:2479) for COLIN RICHARD COLLINS to be held at The Court Room Eastern Traffic Area Eastbrook Shaftesbury Road Cambridge CB2 8BF, on 20 March 2015 commencing at 10:00 (Previous Publication:(6093))', 'Article 6 of Regulation (EC) No 1071/2009', NULL, '2015-03-06 11:47:52', NULL, NULL, 1);
 
-INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`created_by`,`last_modified_by`,`olbs_dob`,`birth_date`,`created_on`,`family_name`,`forename`,`last_modified_on`,`version`)
+INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`person_id`,`created_by`,`last_modified_by`,`olbs_dob`,`birth_date`,`created_on`,`family_name`,`forename`,`last_modified_on`,`version`)
   VALUES
-    (1,1,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:00:34','Jones','Tom',NULL,1),
-    (2,1,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:00:35','Winnard','Keith',NULL,1),
-    (3,2,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:02:18','Jones','Tom',NULL,1),
-    (4,2,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:02:19','Winnard','Keith',NULL,1),
-    (5,3,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
-    (6,3,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
+    (1,1,77,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:00:34','Jones','Tom',NULL,1),
+    (2,1,78,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:00:35','Winnard','Keith',NULL,1),
+    (3,2,77,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:02:18','Jones','Tom',NULL,1),
+    (4,2,78,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:02:19','Winnard','Keith',NULL,1),
+    (5,3,77,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
+    (6,3,78,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
 
 INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`, `in_force_date`, `created_on`)
 VALUES
