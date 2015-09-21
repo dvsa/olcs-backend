@@ -20,7 +20,7 @@ final class ServiceTypes extends AbstractContext
 
         $serviceTypes = [];
 
-        if ($busServiceTypes->count()) {
+        if (!$busServiceTypes->isEmpty()) {
             /** @var BusServiceType $serviceType */
             foreach ($busServiceTypes as $serviceType) {
                 $serviceTypes[] = $serviceType->getDescription();

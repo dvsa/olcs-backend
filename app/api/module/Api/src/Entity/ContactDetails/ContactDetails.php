@@ -103,17 +103,17 @@ class ContactDetails extends AbstractContactDetails
      */
     private function updateIrfoOperator(array $contactParams)
     {
-        if ($contactParams['emailAddress'] !== null) {
+        if (isset($contactParams['emailAddress'])) {
             // set email address
             $this->setEmailAddress($contactParams['emailAddress']);
         }
 
-        if ($contactParams['address'] !== null) {
+        if (isset($contactParams['address'])) {
             // populate address
             $this->populateAddress($contactParams['address']);
         }
 
-        if ($contactParams['phoneContacts'] !== null) {
+        if (isset($contactParams['phoneContacts'])) {
             // populate phone contacts
             $this->populatePhoneContacts($contactParams['phoneContacts']);
         }
@@ -124,27 +124,27 @@ class ContactDetails extends AbstractContactDetails
      */
     private function updateObjector(array $contactParams)
     {
-        if ($contactParams['emailAddress'] !== null) {
+        if (isset($contactParams['emailAddress'])) {
             // set email address
             $this->setEmailAddress($contactParams['emailAddress']);
         }
 
-        if ($contactParams['description'] !== null) {
+        if (isset($contactParams['description'])) {
             // set description
             $this->setDescription($contactParams['description']);
         }
 
-        if ($contactParams['address'] !== null) {
+        if (isset($contactParams['address'])) {
             // populate address
             $this->populateAddress($contactParams['address']);
         }
 
-        if ($contactParams['person'] !== null) {
+        if (isset($contactParams['person'])) {
             // populate person
             $this->populatePerson($contactParams['person']);
         }
 
-        if ($contactParams['phoneContacts'] !== null) {
+        if (isset($contactParams['phoneContacts'])) {
             // populate phone contacts
             $this->populatePhoneContacts($contactParams['phoneContacts']);
         }
@@ -186,12 +186,12 @@ class ContactDetails extends AbstractContactDetails
         // populate person
         $this->populatePerson($contactParams['person']);
 
-        if ($contactParams['address'] !== null) {
+        if (isset($contactParams['address'])) {
             // populate address
             $this->populateAddress($contactParams['address']);
         }
 
-        if ($contactParams['phoneContacts'] !== null) {
+        if (isset($contactParams['phoneContacts'])) {
             // populate phone contacts
             $this->populatePhoneContacts($contactParams['phoneContacts']);
         }
@@ -214,12 +214,12 @@ class ContactDetails extends AbstractContactDetails
      */
     private function updateCorrespondenceAddress(array $contactParams)
     {
-        if ($contactParams['emailAddress'] !== null) {
+        if (isset($contactParams['emailAddress'])) {
             // set email address
             $this->setEmailAddress($contactParams['emailAddress']);
         }
 
-        if ($contactParams['address'] !== null) {
+        if (isset($contactParams['address'])) {
             // populate address
             $this->populateAddress($contactParams['address']);
         }

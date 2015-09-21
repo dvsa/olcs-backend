@@ -105,6 +105,7 @@ return [
     TransferCommand\Application\DeleteTaxiPhv::class => CommandHandler\Application\DeleteTaxiPhv::class,
     Command\Application\CreateTexTask::class => CommandHandler\Application\CreateTexTask::class,
     Command\Application\CloseTexTask::class => CommandHandler\Application\CloseTexTask::class,
+    Command\Application\CloseFeeDueTask::class => CommandHandler\Application\CloseFeeDueTask::class,
 
     Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
     TransferCommand\Application\UpdatePsvVehicles::class => CommandHandler\Application\UpdatePsvVehicles::class,
@@ -284,6 +285,9 @@ return [
     TransferCommand\User\CreateUser::class => CommandHandler\User\CreateUser::class,
     TransferCommand\User\UpdateUser::class => CommandHandler\User\UpdateUser::class,
     TransferCommand\User\DeleteUser::class => CommandHandler\User\DeleteUser::class,
+    TransferCommand\User\CreateUserSelfserve::class => CommandHandler\User\CreateUserSelfserve::class,
+    TransferCommand\User\UpdateUserSelfserve::class => CommandHandler\User\UpdateUserSelfserve::class,
+    TransferCommand\User\DeleteUserSelfserve::class => CommandHandler\User\DeleteUserSelfserve::class,
     TransferCommand\User\CreatePartner::class => CommandHandler\User\CreatePartner::class,
     TransferCommand\User\UpdatePartner::class => CommandHandler\User\UpdatePartner::class,
     TransferCommand\User\DeletePartner::class => CommandHandler\User\DeletePartner::class,

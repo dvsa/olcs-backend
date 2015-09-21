@@ -228,4 +228,13 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             $this->assertEquals($data, $cmdDataToMatch, get_class($cmd) . ' has unexpected data');
         }
     }
+
+    protected function setupIsInternalUser($isInternalUser = true)
+    {
+        $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
+            ->once()->atLeast()
+            ->andReturn($isInternalUser);
+    }
 }

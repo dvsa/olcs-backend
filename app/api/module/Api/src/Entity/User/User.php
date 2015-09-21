@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\User;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
@@ -72,7 +73,7 @@ class User extends AbstractUser
         }
 
         if (isset($data['roles'])) {
-            $this->roles = $data['roles'];
+            $this->roles = new ArrayCollection($data['roles']);
         }
 
         if (isset($data['memorableWord'])) {
@@ -282,13 +283,13 @@ class User extends AbstractUser
     private function isAdministrator()
     {
         // is admin if has "operator-admin" role
-        return in_array(
+        return !$this->roles->isEmpty() && in_array(
             RoleEntity::ROLE_OPERATOR_ADMIN,
             array_map(
                 function ($role) {
                     return $role->getRole();
                 },
-                $this->roles
+                $this->roles->toArray()
             )
         );
     }
