@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Pay Fee (handles fee side effects)
+ * Pay Fee (handles fee side effects, doesn't actually change fee status)
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
- * Pay Fee (handles fee side effects)
+ * Pay Fee (handles fee side effects, doesn't actually change fee status)
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
