@@ -57,9 +57,6 @@ class GenerateAndStoreTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleCommandWithDispatch()
     {
         $data = [
