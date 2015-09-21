@@ -10,11 +10,13 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCmd;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocumentSpecificCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
 use Dvsa\Olcs\Api\Service\File\File;
+use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as Cmd;
@@ -29,6 +31,8 @@ final class Upload extends AbstractCommandHandler implements
     UploaderAwareInterface,
     NamingServiceAwareInterface
 {
+    const ERR_MIME = 'ERR_MIME';
+
     use UploaderAwareTrait,
         NamingServiceAwareTrait;
 
@@ -78,8 +82,12 @@ final class Upload extends AbstractCommandHandler implements
             'size' => strlen($command->getContent())
         ];
 
-        $this->getUploader()->setFile($file);
-        $file = $this->getUploader()->upload($identifier);
+        try {
+            $this->getUploader()->setFile($file);
+            $file = $this->getUploader()->upload($identifier);
+        } catch (MimeNotAllowedException $ex) {
+            throw new ValidationException([self::ERR_MIME => self::ERR_MIME]);
+        }
 
         $this->result->addMessage('File uploaded');
         $this->result->addId('identifier', $file->getIdentifier());
