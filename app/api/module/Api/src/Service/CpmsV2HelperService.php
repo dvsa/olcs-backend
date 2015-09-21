@@ -178,8 +178,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $allocations = $this->feesHelper->allocatePayments($amount, $fees);
 
         foreach ($fees as $fee) {
-            $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
-            $params['payment_data'][] = $this->getPaymentDataForFee($fee, $extraPaymentData);
+            $paymentData = $this->getPaymentDataForFee($fee);
+            if (!empty($paymentData)) {
+                $params['payment_data'][] = $paymentData;
+            }
         }
 
         $response = $this->send($method, $endPoint, $scope, $params);
@@ -219,7 +221,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $params = $this->getParametersForFees($fees, $extraParams);
 
         foreach ($fees as $fee) {
-            $params['payment_data'][] = $this->getPaymentDataForFee($fee);
+            $paymentData = $this->getPaymentDataForFee($fee);
+            if (!empty($paymentData)) {
+                $params['payment_data'][] = $paymentData;
+            }
         }
 
         $response = $this->send($method, $endPoint, $scope, $params);

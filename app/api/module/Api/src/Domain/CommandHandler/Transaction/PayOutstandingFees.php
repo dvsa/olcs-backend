@@ -180,8 +180,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             ->setChequePoNumber($chequePoNumber);
 
         // create feeTransaction record(s)
-        $feeTransactions = new ArrayCollection();
-        $transaction->setFeeTransactions($feeTransactions);
         foreach ($fees as $fee) {
             $allocatedAmount = $allocations[$fee->getId()];
             $markAsPaid = ($allocatedAmount === $fee->getOutstandingAmount());
@@ -190,7 +188,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 ->setFee($fee)
                 ->setAmount($allocatedAmount)
                 ->setTransaction($transaction); // needed for cascade persist to work
-            $feeTransactions->add($feeTransaction);
+            $transaction->getFeeTransactions()->add($feeTransaction);
 
             if ($markAsPaid) {
                 $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID));
