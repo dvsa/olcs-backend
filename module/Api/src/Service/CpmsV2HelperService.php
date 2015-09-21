@@ -123,7 +123,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * Determine the status of a payment/transaction
      *
      * @param string $receiptReference
-     * @return int status code
+     * @return int status code|null
      */
     public function getPaymentStatus($receiptReference)
     {
@@ -141,7 +141,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
-        return $response['payment_status']['code'];
+        if (isset($response['payment_status']['code'])) {
+            return $response['payment_status']['code'];
+        }
     }
 
     /**
@@ -179,7 +181,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         foreach ($fees as $fee) {
             $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
-            $paymentData = $this->getPaymentDataForFee($fee);
+            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
             if (!empty($paymentData)) {
                 $params['payment_data'][] = $paymentData;
             }
@@ -225,7 +227,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         foreach ($fees as $fee) {
             $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
-            $paymentData = $this->getPaymentDataForFee($fee);
+            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
             if (!empty($paymentData)) {
                 $params['payment_data'][] = $paymentData;
             }
@@ -273,7 +275,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         foreach ($fees as $fee) {
             $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
-            $paymentData = $this->getPaymentDataForFee($fee);
+            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
             if (!empty($paymentData)) {
                 $params['payment_data'][] = $paymentData;
             }
