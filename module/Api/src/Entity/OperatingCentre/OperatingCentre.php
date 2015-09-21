@@ -35,6 +35,7 @@ class OperatingCentre extends AbstractOperatingCentre
             if ($complaint->getClosedDate() === null && $complaint->isEnvironmentalComplaint()) {
 
                 $this->hasEnvironmentalComplaint = 'Y';
+                break;
             }
         }
 
@@ -59,6 +60,7 @@ class OperatingCentre extends AbstractOperatingCentre
                     if (!in_array($application->getStatus()->getId(), $notAllowedStatuses)) {
 
                         $this->hasOpposition = 'Y';
+                        break;
                     }
                 }
             }
