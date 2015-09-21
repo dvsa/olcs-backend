@@ -8,7 +8,8 @@ use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ReturnAllCommunityLicences as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as Licence;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 
 /**
@@ -30,7 +31,7 @@ class ReturnAllCommunityLicencesTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            CommunityLic::STATUS_RETURNDED
+            CommunityLic::STATUS_RETURNDED => m::mock(RefData::class)->makePartial()->setDescription('returned'),
         ];
 
         parent::initReferences();
@@ -43,12 +44,13 @@ class ReturnAllCommunityLicencesTest extends CommandHandlerTestCase
         ];
         $command = Cmd::create($data);
 
-        /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
+        $licence = new Licence(new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(), new RefData());
         $licence->setId(608);
         $comLic1 = new CommunityLic();
         $comLic2 = new CommunityLic();
-        $licence->setCommunityLics(new ArrayCollection([$comLic1, $comLic2]));
+        $comLic2->setExpiredDate(new DateTime());
+        $comLic3 = new CommunityLic();
+        $licence->setCommunityLics(new ArrayCollection([$comLic1, $comLic2, $comLic3]));
 
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(608)
@@ -61,7 +63,7 @@ class ReturnAllCommunityLicencesTest extends CommandHandlerTestCase
             }
         );
 
-        $this->repoMap['CommunityLic']->shouldReceive('save')->with($comLic2)->andReturnUsing(
+        $this->repoMap['CommunityLic']->shouldReceive('save')->with($comLic3)->andReturnUsing(
             function (CommunityLic $communityLic) {
                 $this->assertSame($this->refData[CommunityLic::STATUS_RETURNDED], $communityLic->getStatus());
                 $this->assertEquals(new DateTime(), $communityLic->getExpiredDate());
@@ -79,7 +81,7 @@ class ReturnAllCommunityLicencesTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                '2 Community licence returned',
+                '2 Community licence(s) updated to returned',
                 'UpdateTotalCommunityLicences',
             ]
         ];

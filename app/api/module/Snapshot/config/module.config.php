@@ -55,6 +55,8 @@ return [
             'Review\ApplicationAddresses' => Review\ApplicationAddressesReviewService::class,
             'Review\ApplicationTaxiPhv' => Review\ApplicationTaxiPhvReviewService::class,
             'Review\VariationVehicles' => Review\VariationVehiclesReviewService::class,
+            'Review\ApplicationUndertakings' => Review\ApplicationUndertakingsReviewService::class,
+            'Review\VariationUndertakings' => Review\VariationUndertakingsReviewService::class,
         ],
     ],
     'view_manager' => [

@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\Application\S4;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as Cmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -50,11 +51,38 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
         $result->merge($this->createTask($application));
 
         if ($application->isNew()) {
-            $result->merge($this->createPublication($application));
+            if ($this->shouldPublishApplication($application)) {
+                $result->merge($this->createPublication($application));
+            }
             $result->merge($this->createTexTask($application));
         }
 
         return $result;
+    }
+
+    /**
+     * Should the application be published
+     *
+     * @param ApplicationEntity $application
+     *
+     * @return boolean
+     */
+    private function shouldPublishApplication(ApplicationEntity $application)
+    {
+        // don't publish on submit if special restircted
+        if ($application->isSpecialRestricted()) {
+            return false;
+        }
+
+        // dont publish if application is associated with an S4 whoose outcomce is empty or approved
+        foreach ($application->getS4s() as $s4) {
+            /* @var $s4 S4 */
+            if ($s4->getOutcome() === null || $s4->getOutcome()->getId() === S4::STATUS_APPROVED) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

@@ -7,8 +7,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Vehicle;
 
-use Common\Service\File\File;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -17,7 +17,6 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
-use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\ProcessDuplicateVehicleWarning;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -36,16 +35,7 @@ class ProcessDuplicateVehicleWarningTest extends CommandHandlerTestCase
 
         $this->mockRepo('LicenceVehicle', Repository\LicenceVehicle::class);
 
-        $this->mockedSmServices['DocumentGenerator'] = m::mock(DocumentGenerator::class);
-
         parent::setUp();
-    }
-
-    protected function initReferences()
-    {
-        $this->refData = [];
-
-        parent::initReferences();
     }
 
     public function testHandleCommand()
@@ -73,27 +63,20 @@ class ProcessDuplicateVehicleWarningTest extends CommandHandlerTestCase
             ->once()
             ->with($licenceVehicle);
 
-        $storedFile = m::mock();
-        $storedFile->shouldReceive('getIdentifier')
-            ->andReturn(12345);
-
-        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateAndStore')
-            ->with('GV_Duplicate_vehicle_letter', ['licence' => 222, 'vehicle' => 333])
-            ->andReturn($storedFile);
-
         $result1 = new Result();
-        $result1->addMessage('CreateDocumentSpecific');
+        $result1->addMessage('GenerateAndStore');
+        $result1->addId('identifier', 12345);
         $data = [
-            'identifier'  => 12345,
+            'template' => 'GV_Duplicate_vehicle_letter',
+            'query' => ['licence' => 222, 'vehicle' => 333],
             'description' => 'Duplicate vehicle letter',
-            'filename'    => 'Duplicate_vehicle_letter.rtf',
             'licence'     => 222,
             'category'    => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
             'isReadOnly'  => true,
             'isExternal'  => false
         ];
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $result1);
+        $this->expectedSideEffect(GenerateAndStore::class, $data, $result1);
 
         $result2 = new Result();
         $result2->addMessage('Enqueue');
@@ -106,9 +89,11 @@ class ProcessDuplicateVehicleWarningTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'identifier' => 12345
+            ],
             'messages' => [
-                'CreateDocumentSpecific',
+                'GenerateAndStore',
                 'Enqueue',
                 'Licence vehicle ID: 111 duplication letter sent'
             ]

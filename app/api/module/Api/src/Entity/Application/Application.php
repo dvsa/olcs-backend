@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
+use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 
@@ -33,7 +34,7 @@ use Zend\Filter\Word\UnderscoreToCamelCase;
  *    }
  * )
  */
-class Application extends AbstractApplication
+class Application extends AbstractApplication implements ContextProviderInterface
 {
     const ERROR_NI_NON_GOODS = 'AP-TOL-1';
     const ERROR_GV_NON_SR = 'AP-TOL-2';
@@ -79,6 +80,10 @@ class Application extends AbstractApplication
     const UNKNOWN = 'Unknown';
 
     const TARGET_COMPLETION_TIME = '+9 week';
+
+    const APPLIED_VIA_SELFSERVE = 'applied_via_selfserve';
+    const APPLIED_VIA_POST = 'applied_via_post';
+    const APPLIED_VIA_PHONE = 'applied_via_phone';
 
     /**
      * Publication No
@@ -1364,5 +1369,31 @@ class Application extends AbstractApplication
     {
         return !is_null($this->getStatus())
             && $this->getStatus()->getId() === self::APPLICATION_STATUS_UNDER_CONSIDERATION;
+    }
+
+    /**
+     * Get the Shortcode version of a licence type
+     *
+     * @return string|null if licence type is not set or shortcode does not exist
+     */
+    public function getLicenceTypeShortCode()
+    {
+        $shortCodes = [
+            'ltyp_r' => 'R',
+            'ltyp_si' => 'SI',
+            'ltyp_sn' => 'SN',
+            'ltyp_sr' => 'SR',
+        ];
+
+        if ($this->getLicenceType() === null || !isset($shortCodes[$this->getLicenceType()->getId()])) {
+            return null;
+        }
+
+        return $shortCodes[$this->getLicenceType()->getId()];
+    }
+
+    public function getContextValue()
+    {
+        return $this->getLicence()->getLicNo();
     }
 }

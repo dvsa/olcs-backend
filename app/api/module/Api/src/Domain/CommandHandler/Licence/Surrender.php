@@ -31,6 +31,11 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
 {
     protected $repoServiceName = 'Licence';
 
+    /**
+     * @todo I don't think ceasing discs works... neither CeaseGoodsDiscs nor CeasePsvDiscs
+     * takes a licence or licence id parameter!!??
+     * @see Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ProcessContinuationNotSought::createDiscsCommand()
+     */
     public function handleCommand(CommandInterface $command)
     {
         /* @var $licence Licence */
@@ -51,8 +56,10 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
         );
 
         $result = new Result();
+
         $command = $discsCommand::create(
             [
+                // ???
                 'licence' => $licence
             ]
         );

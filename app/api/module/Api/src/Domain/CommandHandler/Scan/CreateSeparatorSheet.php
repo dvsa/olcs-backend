@@ -7,13 +7,10 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Scan;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
-use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\PrintScan\Scan;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -28,12 +25,8 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class CreateSeparatorSheet extends AbstractCommandHandler implements
-    TransactionedInterface,
-    DocumentGeneratorAwareInterface
+final class CreateSeparatorSheet extends AbstractCommandHandler implements TransactionedInterface
 {
-    use DocumentGeneratorAwareTrait;
-
     protected $repoServiceName = 'Scan';
 
     protected $extraRepos = [
@@ -90,31 +83,13 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements
             'DOC_DESCRIPTION_NAME_SCAN'  => $descriptionName,
         ];
 
-        $date = new DateTime();
-        $fileName = $date->format('YmdHis') . '_Scanning_Separator.rtf';
-
-        $docService = $this->getDocumentGenerator();
-        $content = $docService->generateFromTemplate('Scanning_SeparatorSheet', [], $knownValues);
-        $storedFile = $docService->uploadGeneratedContent($content, 'documents', $fileName);
-
-        $data = [
-            'identifier' => $storedFile->getIdentifier(),
-            'description' => 'Scanning separator',
-            'filename' => $fileName,
-            'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => SubCategory::DOC_SUB_CATEGORY_SCANNING_SEPARATOR,
-            'isExternal' => false,
-            'isScan' => false,
-            'size' => $storedFile->getSize()
-        ];
-
-        $this->result->merge($this->handleSideEffect(CreateDocumentSpecific::create($data)));
+        $identifier = $this->generateDocument($knownValues);
 
         $this->result->merge(
             $this->handleSideEffect(
                 Enqueue::create(
                     [
-                        'fileIdentifier' => $storedFile->getIdentifier(),
+                        'fileIdentifier' => $identifier,
                         'jobName' => 'Scanning Separator Sheet',
                     ]
                 )
@@ -236,5 +211,25 @@ final class CreateSeparatorSheet extends AbstractCommandHandler implements
         }
 
         return 'Unknown';
+    }
+
+    protected function generateDocument($knownValues)
+    {
+        $dtoData = [
+            'template' => 'Scanning_SeparatorSheet',
+            'query' => [],
+            'knownValues' => $knownValues,
+            'description' => 'Scanning separator',
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => SubCategory::DOC_SUB_CATEGORY_SCANNING_SEPARATOR,
+            'isExternal' => false,
+            'isScan' => false
+        ];
+
+        $result = $this->handleSideEffect(GenerateAndStore::create($dtoData));
+
+        $this->result->merge($result);
+
+        return $result->getId('identifier');
     }
 }

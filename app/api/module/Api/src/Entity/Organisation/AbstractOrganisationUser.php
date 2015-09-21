@@ -32,15 +32,6 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     use BundleSerializableTrait;
 
     /**
-     * Added date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="added_date", nullable=true)
-     */
-    protected $addedDate;
-
-    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -113,15 +104,6 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     protected $organisation;
 
     /**
-     * Removed date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="removed_date", nullable=true)
-     */
-    protected $removedDate;
-
-    /**
      * Sftp access
      *
      * @var string
@@ -153,29 +135,6 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
      * @ORM\Version
      */
     protected $version = 1;
-
-    /**
-     * Set the added date
-     *
-     * @param \DateTime $addedDate
-     * @return OrganisationUser
-     */
-    public function setAddedDate($addedDate)
-    {
-        $this->addedDate = $addedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the added date
-     *
-     * @return \DateTime
-     */
-    public function getAddedDate()
-    {
-        return $this->addedDate;
-    }
 
     /**
      * Set the created by
@@ -336,29 +295,6 @@ abstract class AbstractOrganisationUser implements BundleSerializableInterface, 
     public function getOrganisation()
     {
         return $this->organisation;
-    }
-
-    /**
-     * Set the removed date
-     *
-     * @param \DateTime $removedDate
-     * @return OrganisationUser
-     */
-    public function setRemovedDate($removedDate)
-    {
-        $this->removedDate = $removedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the removed date
-     *
-     * @return \DateTime
-     */
-    public function getRemovedDate()
-    {
-        return $this->removedDate;
     }
 
     /**
