@@ -28,6 +28,10 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $this->sut = new GrantGoods();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
 
+        $this->mockedSmServices = [
+            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+        ];
+
         parent::setUp();
     }
 
@@ -84,5 +88,58 @@ class GrantGoodsTest extends CommandHandlerTestCase
 
         $this->assertEquals(Licence::LICENCE_STATUS_GRANTED, $licence->getStatus()->getId());
         $this->assertEquals(ApplicationEntity::APPLICATION_STATUS_GRANTED, $application->getStatus()->getId());
+    }
+
+    public function testHandleCommandCloseTasks()
+    {
+        $data = [
+            'id' => 111
+        ];
+
+        $command = Cmd::create($data);
+
+        $this->setupIsInternalUser();
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setId(111);
+        $application->setLicence($licence);
+        $application->setIsVariation(true);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application)
+            ->shouldReceive('save')->with($application)->once();
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            ['id' => 111],
+            (new Result())->addMessage('CLOSE_TEX_TASK')
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask::class,
+            ['id' => 111],
+            (new Result())->addMessage('CLOSE_FEEDUE_TASK')
+        );
+
+        $result1 = new Result();
+        $result1->addMessage('CreateGrantFee');
+        $this->expectedSideEffect(CreateGrantFee::class, ['id' => 111], $result1);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Application status updated',
+                'Licence status updated',
+                'CLOSE_TEX_TASK',
+                'CLOSE_FEEDUE_TASK',
+                'CreateGrantFee',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
     }
 }

@@ -1396,4 +1396,35 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     {
         return $this->getLicence()->getLicNo();
     }
+
+    /**
+     * Get a list of open tasks attached to the application, optionally filtered by category, sub category
+     *
+     * @param int $categoryId    Category ID
+     * @param int $subCategoryId Sub category ID, null means all
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOpenTasksForCategory($categoryId, $subCategoryId = null)
+    {
+        // use Criteria to retrieve open tasks
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('isClosed', 'N'));
+        $openTasks = $this->getTasks()->matching($criteria);
+
+        $tasks = new \Doctrine\Common\Collections\ArrayCollection();
+
+        // iterate to get tasks of category, subcategory
+        // NB reason to iterate is crtieria should only be used with scalar values
+        foreach ($openTasks as $task) {
+            if ($task->getCategory()->getId() !== $categoryId) {
+                continue;
+            }
+            if ($subCategoryId !== null && $task->getSubCategory()->getId() !== $subCategoryId) {
+                continue;
+            }
+            $tasks->add($task);
+        }
+
+        return $tasks;
+    }
 }
