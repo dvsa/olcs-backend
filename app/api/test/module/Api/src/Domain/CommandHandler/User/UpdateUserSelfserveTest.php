@@ -45,7 +45,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $data = [
             'id' => 111,
             'version' => 1,
-            'userType' => UserEntity::USER_TYPE_SELF_SERVICE,
+            'userType' => UserEntity::USER_TYPE_OPERATOR,
             'loginId' => 'login_id',
             'contactDetails' => [
                 'emailAddress' => 'test1@test.me',
@@ -54,6 +54,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
                     'familyName' => 'updated familyName',
                 ],
             ],
+            'isAdministrator' => 'Y',
         ];
 
         $command = Cmd::create($data);
@@ -119,7 +120,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $data = [
             'id' => 111,
             'version' => 1,
-            'userType' => UserEntity::USER_TYPE_SELF_SERVICE,
+            'userType' => UserEntity::USER_TYPE_OPERATOR,
             'team' => 1,
             'loginId' => 'login_id',
             'contactDetails' => [
@@ -129,6 +130,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
                     'familyName' => 'updated familyName',
                 ],
             ],
+            'isAdministrator' => 'Y',
         ];
 
         $command = Cmd::create($data);

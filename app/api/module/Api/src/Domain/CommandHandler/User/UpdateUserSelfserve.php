@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
@@ -28,6 +29,12 @@ final class UpdateUserSelfserve extends AbstractCommandHandler implements Transa
         $data = $command->getArrayCopy();
 
         $user = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
+
+        // populate roles based on the user type and isAdministrator flag
+        $data['roles'] = User::getRolesByUserType(
+            $user->getUserType(),
+            ($data['isAdministrator'] === 'Y') ? true : false
+        );
 
         $user->update(
             $this->getRepo()->populateRefDataReference($data)
