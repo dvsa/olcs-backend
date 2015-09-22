@@ -11,10 +11,12 @@ use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\Upload;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Document;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Api\Service\File\File;
+use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as Cmd;
@@ -141,6 +143,56 @@ class UploadTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * @dataProvider provideLinkedEntity
+     */
+    public function testHandleCommandInvalidMime($key, $id, $entityClass)
+    {
+        $this->setExpectedException(ValidationException::class);
+
+        $data = [
+            'content' => base64_encode('<foo>'),
+            'filename' => 'foo.pdf',
+            'category' => 11,
+            'subCategory' => 22,
+            'isExternal' => 1
+        ];
+
+        $data[$key] = $id;
+
+        $command = \Dvsa\Olcs\Transfer\Command\Document\Upload::create($data);
+
+        $this->mockedSmServices['DocumentNamingService']->shouldReceive('generateName')
+            ->once()
+            ->with(
+                'foo',
+                'pdf',
+                $this->categoryReferences[11],
+                $this->subCategoryReferences[22],
+                $this->references[$entityClass][$id]
+            )
+            ->andReturn('/some/identifier.pdf');
+
+        /** @var File $file */
+        $file = m::mock(File::class)->makePartial();
+        $file->setIdentifier('/some/identifier.pdf');
+
+        $this->mockedSmServices['FileUploader']->shouldReceive('setFile')
+            ->once()
+            ->with(
+                [
+                    'name' => 'foo.pdf',
+                    'content' => '<foo>',
+                    'size' => 8
+                ]
+            )
+            ->shouldReceive('upload')
+            ->with('/some/identifier.pdf')
+            ->andThrow(MimeNotAllowedException::class);
+
+        $this->sut->handleCommand($command);
     }
 
     public function testHandleCommandWithoutIsExternal()
