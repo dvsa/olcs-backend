@@ -2124,6 +2124,9 @@ INSERT INTO `organisation` (`id`,`lead_tc_area_id`,`name`,`type`,`is_unlicensed`
 INSERT INTO `licence` (`id`,`correspondence_cd_id`,`organisation_id`,`goods_or_psv`,`licence_type`,`status`,`lic_no`) VALUES
     (701,145,106,'lcat_gv','ltyp_r','lsts_unlicenced','UOB3'),
     (702,145,107,'lcat_psv','ltyp_r','lsts_unlicenced','UOB4');
+INSERT INTO `licence_no_gen` (`id`, `licence_id`) VALUES
+    (3,701),
+    (4,702);
 INSERT INTO `contact_details` (`id`,`address_id`,`contact_type`,`email_address`) VALUES
     (145,124,'ct_corr','unlicensed@foo.bar'),
     (146,125,'ct_corr','unlicensed@foo.bar');
