@@ -26,6 +26,9 @@ class UserSelfserve extends AbstractQueryHandler
                 'contactDetails' => [
                     'person'
                 ],
+            ],
+            [
+                'isAdministrator' => $user->isAdministrator() ? 'Y' : 'N'
             ]
         );
     }
