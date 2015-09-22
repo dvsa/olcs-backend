@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\User\UserListSelfserve as ListDto;
-use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 
@@ -32,13 +32,13 @@ class UserListSelfserve extends AbstractQueryHandler implements AuthAwareInterfa
 
         // add extra conditions based on who you are
         switch ($this->getCurrentUser()->getUserType()) {
-            case User::USER_TYPE_PARTNER:
+            case UserEntity::USER_TYPE_PARTNER:
                 $data['partnerContactDetails'] = $this->getCurrentUser()->getPartnerContactDetails()->getId();
                 break;
-            case User::USER_TYPE_LOCAL_AUTHORITY:
+            case UserEntity::USER_TYPE_LOCAL_AUTHORITY:
                 $data['localAuthority'] = $this->getCurrentUser()->getLocalAuthority()->getId();
                 break;
-            case User::USER_TYPE_SELF_SERVICE:
+            case UserEntity::USER_TYPE_SELF_SERVICE:
                 $data['organisation']
                     = $this->getCurrentUser()->getOrganisationUsers()->first()->getOrganisation()->getId();
                 break;
