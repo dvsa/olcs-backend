@@ -94,4 +94,12 @@ class Transaction extends AbstractTransaction
 
         return $ftIds;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isWaive()
+    {
+        return $this->getType()->getId() === self::TYPE_WAIVE;
+    }
 }

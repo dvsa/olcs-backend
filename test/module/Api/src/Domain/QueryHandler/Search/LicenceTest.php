@@ -8,7 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Search;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Search\Licence;
-use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -22,9 +22,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as OtherLicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary as CompanySubsidiaryEntity;
-
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
-
 use Dvsa\Olcs\Transfer\Query\Search\Licence as Qry;
 use Mockery as m;
 
@@ -173,11 +171,28 @@ class LicenceTest extends QueryHandlerTestCase
         $licence->shouldReceive('getOtherActiveLicences')
             ->andReturn($otherLicences);
 
+        /** @var AddressEntity $address */
+        $address = m::mock(AddressEntity ::class)->makePartial();
+
+        /** @var PhoneContactEntity $phoneContact */
+        $phoneContact = m::mock(PhoneContactEntity::class)->makePartial();
+        $phoneContact->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar']);
+        $phoneContacts = [
+            $phoneContact
+        ];
+
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class);
         $contactDetails
+            ->shouldReceive('getPhoneContacts')
+            ->andReturn($phoneContacts)
             ->shouldReceive('serialize')
-            ->andReturn(['foo' => 'bar']);
+            ->andReturn(['foo' => 'bar'])
+            ->shouldReceive('getAddress')
+            ->andReturn($address)
+            ->shouldReceive('getEmailAddress')
+            ->andReturn('emailAddressFoo');
 
         $licence->setCorrespondenceCd($contactDetails);
 
