@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\OperatingCentre;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * OperatingCentre Entity
@@ -44,6 +45,13 @@ class OperatingCentre extends AbstractOperatingCentre
 
     public function getHasOpposition()
     {
+        $notAllowedStatuses = [
+            Licence::LICENCE_STATUS_GRANTED,
+            Licence::LICENCE_STATUS_REFUSED,
+            Licence::LICENCE_STATUS_NOT_TAKEN_UP,
+            Licence::LICENCE_STATUS_WITHDRAWN,
+        ];
+
         $this->hasOpposition = 'N';
 
         /** @var \Dvsa\Olcs\Api\Entity\Opposition\Opposition $opposition */
@@ -53,8 +61,6 @@ class OperatingCentre extends AbstractOperatingCentre
 
                 // Do we even have a linked application??
                 if ($application = $opposition->getCase()->getApplication()) {
-
-                    $notAllowedStatuses = ['apsts_granted', 'apsts_refused', 'apsts_ntu', 'apsts_withdrawn'];
 
                     // status is NONE of these
                     if (!in_array($application->getStatus()->getId(), $notAllowedStatuses)) {
