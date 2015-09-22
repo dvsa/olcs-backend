@@ -15,14 +15,19 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\LicenceOperatingCentre\Update as Cmd;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Update Licence Operating Centre
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class Update extends AbstractCommandHandler implements TransactionedInterface
+final class Update extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'LicenceOperatingCentre';
 
     protected $extraRepos = ['Document', 'OperatingCentre'];
@@ -51,7 +56,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
 
         $licence = $loc->getLicence();
 
-        $this->helper->validate($licence, $command);
+        $this->helper->validate($licence, $command, $this->isGranted(Permission::SELFSERVE_USER));
 
         $operatingCentre = $loc->getOperatingCentre();
 

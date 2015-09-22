@@ -44,6 +44,8 @@ class OperatingCentreHelper implements FactoryInterface
     const ERR_OR_R_TOO_MANY = 'ERR_OR_R_TOO_MANY';
     const ERR_OC_PC_TA_NI = 'ERR_OC_PC_TA_NI';
     const ERR_OC_PC_TA_GB = 'ERR_OC_PC_TA_GB';
+    const ERR_OC_SUFFICIENT_PARKING = 'ERR_OC_SUFFICIENT_PARKING';
+    const ERR_OC_PERMISSION = 'ERR_OC_PERMISSION';
 
     protected $messages = [];
 
@@ -68,8 +70,9 @@ class OperatingCentreHelper implements FactoryInterface
     /**
      * @param Application|Licence $entity
      * @param $command
+     * @param bool $isExternal
      */
-    public function validate($entity, $command)
+    public function validate($entity, $command, $isExternal = false)
     {
         $this->validateTrafficArea($entity, $command);
 
@@ -97,6 +100,10 @@ class OperatingCentreHelper implements FactoryInterface
                     $this->addMessage('adPlacedDate', self::ERR_OC_AD_DT_1);
                 }
             }
+        }
+
+        if ($isExternal) {
+            $this->validateConfirmations($command->getSufficientParking(), $command->getPermission());
         }
 
         if (!empty($this->messages)) {
@@ -256,5 +263,15 @@ class OperatingCentreHelper implements FactoryInterface
             $postcode,
             $this->adminAreaTrafficAreaRepo
         );
+    }
+
+    public function validateConfirmations($sufficientParking, $permission)
+    {
+        if ($sufficientParking !== 'Y') {
+            $this->addMessage('sufficientParking', self::ERR_OC_SUFFICIENT_PARKING);
+        }
+        if ($permission !== 'Y') {
+            $this->addMessage('permission', self::ERR_OC_PERMISSION);
+        }
     }
 }

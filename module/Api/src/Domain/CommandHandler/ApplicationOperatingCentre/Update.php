@@ -16,14 +16,19 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\ApplicationOperatingCentre\Update as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Update Application Operating Centre
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class Update extends AbstractCommandHandler implements TransactionedInterface
+final class Update extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'ApplicationOperatingCentre';
 
     protected $extraRepos = ['Document', 'OperatingCentre'];
@@ -52,7 +57,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
 
         $application = $aoc->getApplication();
 
-        $this->helper->validate($application, $command);
+        $this->helper->validate($application, $command, $this->isGranted(Permission::SELFSERVE_USER));
 
         $operatingCentre = $aoc->getOperatingCentre();
 
