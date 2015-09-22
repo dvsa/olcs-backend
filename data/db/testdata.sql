@@ -1232,15 +1232,15 @@ INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
 
 INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`,
     `certificate_no`, `vi_action`, `psv_type`, `created_on`,
-    `last_modified_on`, `version`) VALUES
-    (1,NULL,4,'VRM1',7200,'CERT10001',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (2,NULL,6,'VRM2',3500,'CERT10002',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (3,NULL,5,'VRM3',3800,'CERT10003',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (4,NULL,1,'VRM4',6800,'CERT10004',NULL,'vhl_t_a','2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (5,NULL,4,'VRM1',7200,'CERT10005',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (6,NULL,6,'VRM2',3500,'CERT10006',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (7,NULL,5,'VRM3',3800,'CERT10007',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1),
-    (8,NULL,1,'VRM4',6800,'CERT10008',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1);
+    `last_modified_on`, `version`, `section_26`) VALUES
+    (1,NULL,4,'VRM1',7200,'CERT10001',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
+    (2,NULL,6,'VRM2',3500,'CERT10002',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
+    (3,NULL,5,'VRM3',3800,'CERT10003',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
+    (4,NULL,1,'VRM4',6800,'CERT10004',NULL,'vhl_t_a','2010-01-12 00:00:00','2014-02-20 00:00:00',1, 1),
+    (5,NULL,4,'VRM1',7200,'CERT10005',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
+    (6,NULL,6,'VRM2',3500,'CERT10006',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
+    (7,NULL,5,'VRM3',3800,'CERT10007',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
+    (8,NULL,1,'VRM4',6800,'CERT10008',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0);
 
 -- Cases
 INSERT INTO `cases` (`id`,`case_type`,`erru_case_type`,`licence_id`,`application_id`,`transport_manager_id`,
@@ -2124,6 +2124,9 @@ INSERT INTO `organisation` (`id`,`lead_tc_area_id`,`name`,`type`,`is_unlicensed`
 INSERT INTO `licence` (`id`,`correspondence_cd_id`,`organisation_id`,`goods_or_psv`,`licence_type`,`status`,`lic_no`) VALUES
     (701,145,106,'lcat_gv','ltyp_r','lsts_unlicenced','UOB3'),
     (702,145,107,'lcat_psv','ltyp_r','lsts_unlicenced','UOB4');
+INSERT INTO `licence_no_gen` (`id`, `licence_id`) VALUES
+    (3,701),
+    (4,702);
 INSERT INTO `contact_details` (`id`,`address_id`,`contact_type`,`email_address`) VALUES
     (145,124,'ct_corr','unlicensed@foo.bar'),
     (146,125,'ct_corr','unlicensed@foo.bar');
