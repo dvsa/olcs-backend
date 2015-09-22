@@ -215,20 +215,20 @@ class Fee extends AbstractFee
      */
     public function getOutstandingAmount()
     {
-        $amount = (float) $this->getAmount();
+        $amount = (int) ($this->getAmount() * 100);
 
         $ftSum = 0;
         $this->getFeeTransactions()->forAll(
             function ($key, $feeTransaction) use (&$ftSum) {
                 unset($key); // unused
                 if ($feeTransaction->getTransaction()->isComplete()) {
-                    $ftSum += (float) $feeTransaction->getAmount();
+                    $ftSum += (int) ($feeTransaction->getAmount() * 100);
                     return true;
                 }
             }
         );
 
-        return number_format(($amount - $ftSum), 2, '.', '');
+        return number_format(($amount - $ftSum) / 100, 2, '.', '');
     }
 
     /**
@@ -361,5 +361,16 @@ class Fee extends AbstractFee
     public function isPaid()
     {
         return $this->getFeeStatus()->getId() === self::STATUS_PAID;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isBalancingFee()
+    {
+        return in_array(
+            $this->getFeeType()->getFeeType()->getId(),
+            [FeeType::FEE_TYPE_ADJUSTMENT]
+        );
     }
 }

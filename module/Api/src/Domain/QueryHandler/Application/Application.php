@@ -82,10 +82,10 @@ class Application extends AbstractQueryHandler
 
         if (is_array($outstandingFees)) {
             foreach ($outstandingFees as $fee) {
-                $total += $fee->getAmount();
+                $total += $fee->getOutstandingAmount();
             }
         }
 
-        return number_format($total, 2, null, null);
+        return number_format($total, 2, '.', null);
     }
 }
