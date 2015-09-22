@@ -100,6 +100,13 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
 
         $response = $this->write($identifier, $storeFile);
 
+        if ($response->isSuccess()) {
+            $file->setPath($identifier);
+            $file->setIdentifier($identifier);
+
+            return $file;
+        }
+
         if ($response->getStatusCode() === Response::STATUS_CODE_415) {
             throw new MimeNotAllowedException();
         }
@@ -107,11 +114,6 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
         if (!$response->isSuccess()) {
             throw new Exception('Unable to store uploaded file: ' . $response->getBody());
         }
-
-        $file->setPath($identifier);
-        $file->setIdentifier($identifier);
-
-        return $file;
     }
 
     /**
