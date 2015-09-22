@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Withdraw;
-use Dvsa\Olcs\Transfer\Query\LicenceVehicle\LicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask as CloseFeeDueTaskCmd;
@@ -63,7 +62,9 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
                     )
                 )
             );
+        }
 
+        if ($application->isNew() || $application->isVariationPublishable()) {
             $result->merge($this->publishApplication($application));
             $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
         }

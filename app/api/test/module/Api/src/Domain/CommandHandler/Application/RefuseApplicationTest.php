@@ -230,6 +230,85 @@ class RefuseApplicationTest extends CommandHandlerTestCase
             ],
             $result->getMessages()
         );
+    }
 
+    public function testHandleCommandVariationUnpublishable()
+    {
+        $command = Command::create(['id' => 532]);
+
+        $this->setupIsInternalUser(false);
+
+        $licence = $this->getTestingLicence()
+            ->setLicenceType(new \Dvsa\Olcs\Api\Entity\System\RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+
+        $application = $this->getTestingApplication($licence)
+            ->setId(1)
+            ->setIsVariation(true)
+            ->setLicenceType(new \Dvsa\Olcs\Api\Entity\System\RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+
+        $this->repoMap['Application']->shouldReceive('fetchById')->with(532)->andReturn($application);
+        $this->repoMap['Application']->shouldReceive('save')->once()->with(m::type(Application::class));
+
+        $this->expectedSideEffect(
+            CeaseGoodsDiscs::class,
+            ['licenceVehicles' => $licence->getLicenceVehicles()],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            CreateSnapshot::class,
+            ['id' => 532, 'event' => CreateSnapshot::ON_REFUSE],
+            (new Result())->addMessage('Snapshot created')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(['Snapshot created', 'Application 1 refused.'], $result->getMessages());
+    }
+
+    public function testHandleCommandVariationPublishable()
+    {
+        $command = Command::create(['id' => 532]);
+
+        $this->setupIsInternalUser(false);
+
+        $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea->setId('TA');
+
+        $licence = $this->getTestingLicence()
+            ->setTrafficArea($trafficArea)
+            ->setLicenceType(new \Dvsa\Olcs\Api\Entity\System\RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+
+        $application = $this->getTestingApplication($licence)
+            ->setId(1)
+            ->setIsVariation(true)
+            ->setLicenceType(new \Dvsa\Olcs\Api\Entity\System\RefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL));
+
+        $this->repoMap['Application']->shouldReceive('fetchById')->with(532)->andReturn($application);
+        $this->repoMap['Application']->shouldReceive('save')->once()->with(m::type(Application::class));
+
+        $this->expectedSideEffect(
+            CreateSnapshot::class,
+            ['id' => 532, 'event' => CreateSnapshot::ON_REFUSE],
+            (new Result())->addMessage('Snapshot created')
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
+            ['id' => 1, 'trafficArea' => 'TA'],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            ['id' => 1],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            CeaseGoodsDiscs::class,
+            ['licenceVehicles' => $licence->getLicenceVehicles()],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(['Snapshot created', 'Application 1 refused.'], $result->getMessages());
     }
 }
