@@ -180,9 +180,13 @@ class ApplicationTest extends CommandHandlerTestCase
      * @param string $appStatus
      * @param int $expectedSection
      */
-    public function testGetPublicationSectionId($appStatus, $expectedSection)
+    public function testGetPublicationSectionId($appStatus, $isVariation, $expectedSection)
     {
-        $this->assertEquals($expectedSection, $this->sut->getPublicationSectionId($appStatus));
+        $application = $this->getTestingApplication();
+        $application->setIsVariation($isVariation);
+        $application->getStatus()->setId($appStatus);
+
+        $this->assertEquals($expectedSection, $this->sut->getPublicationSectionId($application));
     }
 
     /**
@@ -190,7 +194,10 @@ class ApplicationTest extends CommandHandlerTestCase
      */
     public function testInvalidSectionIdException()
     {
-        $this->sut->getPublicationSectionId('some_status');
+        $application = $this->getTestingApplication();
+        $application->getStatus()->setId('some_status');
+
+        $this->sut->getPublicationSectionId($application);
     }
 
     /**
@@ -217,10 +224,27 @@ class ApplicationTest extends CommandHandlerTestCase
     public function publicationSectionIdProvider()
     {
         return [
-            [ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION, PublicationSectionEntity::APP_NEW_SECTION],
-            [ApplicationEntity::APPLICATION_STATUS_GRANTED, PublicationSectionEntity::APP_GRANTED_SECTION],
-            [ApplicationEntity::APPLICATION_STATUS_REFUSED, PublicationSectionEntity::APP_REFUSED_SECTION],
-            [ApplicationEntity::APPLICATION_STATUS_WITHDRAWN, PublicationSectionEntity::APP_WITHDRAWN_SECTION]
+            [
+                ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                false,
+                PublicationSectionEntity::APP_NEW_SECTION
+            ],
+            [ApplicationEntity::APPLICATION_STATUS_GRANTED, false, PublicationSectionEntity::APP_GRANTED_SECTION],
+            [ApplicationEntity::APPLICATION_STATUS_REFUSED, false, PublicationSectionEntity::APP_REFUSED_SECTION],
+            [ApplicationEntity::APPLICATION_STATUS_WITHDRAWN, false, PublicationSectionEntity::APP_WITHDRAWN_SECTION],
+            [
+                ApplicationEntity::APPLICATION_STATUS_NOT_TAKEN_UP,
+                false,
+                PublicationSectionEntity::APP_GRANT_NOT_TAKEN_SECTION
+            ],
+            [
+                ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                true,
+                PublicationSectionEntity::VAR_NEW_SECTION
+            ],
+            [ApplicationEntity::APPLICATION_STATUS_GRANTED, true, PublicationSectionEntity::VAR_GRANTED_SECTION],
+            [ApplicationEntity::APPLICATION_STATUS_REFUSED, true, PublicationSectionEntity::VAR_REFUSED_SECTION],
+            [ApplicationEntity::APPLICATION_STATUS_WITHDRAWN, true, PublicationSectionEntity::APP_WITHDRAWN_SECTION],
         ];
     }
 }
