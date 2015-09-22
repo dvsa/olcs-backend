@@ -117,6 +117,15 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     protected $createdOn;
 
     /**
+     * Declarations internal status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="declarations_internal_status", nullable=true)
+     */
+    protected $declarationsInternalStatus;
+
+    /**
      * Discs status
      *
      * @var int
@@ -235,15 +244,6 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
      * @ORM\Column(type="integer", name="type_of_licence_status", nullable=true)
      */
     protected $typeOfLicenceStatus;
-
-    /**
-     * Undertakings status
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="undertakings_status", nullable=true)
-     */
-    protected $undertakingsStatus;
 
     /**
      * Vehicles declarations status
@@ -487,6 +487,29 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     public function getCreatedOn()
     {
         return $this->createdOn;
+    }
+
+    /**
+     * Set the declarations internal status
+     *
+     * @param int $declarationsInternalStatus
+     * @return ApplicationTracking
+     */
+    public function setDeclarationsInternalStatus($declarationsInternalStatus)
+    {
+        $this->declarationsInternalStatus = $declarationsInternalStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the declarations internal status
+     *
+     * @return int
+     */
+    public function getDeclarationsInternalStatus()
+    {
+        return $this->declarationsInternalStatus;
     }
 
     /**
@@ -786,29 +809,6 @@ abstract class AbstractApplicationTracking implements BundleSerializableInterfac
     public function getTypeOfLicenceStatus()
     {
         return $this->typeOfLicenceStatus;
-    }
-
-    /**
-     * Set the undertakings status
-     *
-     * @param int $undertakingsStatus
-     * @return ApplicationTracking
-     */
-    public function setUndertakingsStatus($undertakingsStatus)
-    {
-        $this->undertakingsStatus = $undertakingsStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the undertakings status
-     *
-     * @return int
-     */
-    public function getUndertakingsStatus()
-    {
-        return $this->undertakingsStatus;
     }
 
     /**
