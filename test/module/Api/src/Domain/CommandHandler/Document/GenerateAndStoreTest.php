@@ -74,9 +74,16 @@ class GenerateAndStoreTest extends CommandHandlerTestCase
 
         $command = \Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore::create($data);
 
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser->getId')
-            ->once()
-            ->andReturn(123);
+        $mockUser = m::mock()->shouldReceive('getId')->andReturn(123)->once()->getMock();
+        $mockIdentity = m::mock()
+            ->shouldReceive('getUser')
+            ->andReturn($mockUser)
+            ->twice()
+            ->getMock();
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('getIdentity')
+            ->andReturn($mockIdentity)
+            ->twice();
 
         $document = m::mock();
         $file = m::mock();
