@@ -86,6 +86,8 @@ class VariationTest extends QueryHandlerTestCase
         $mock = m::mock(FeeEntity::class)->makePartial();
         $mock
             ->setAmount($amount)
+            ->shouldReceive('getOutstandingAmount')
+            ->andReturn($amount)
             ->shouldReceive('serialize')
             ->andReturn(['amount' => $amount]);
         return $mock;
