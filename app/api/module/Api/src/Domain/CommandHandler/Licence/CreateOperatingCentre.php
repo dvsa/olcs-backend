@@ -63,7 +63,7 @@ final class CreateOperatingCentre extends AbstractCommandHandler implements Tran
         /** @var Licence $licence */
         $licence = $this->getRepo()->fetchById($command->getLicence());
 
-        $this->helper->validate($licence, $command);
+        $this->helper->validate($licence, $command, $this->isGranted(Permission::SELFSERVE_USER));
 
         // Create an OC record
         $operatingCentre = $this->helper->createOperatingCentre(
