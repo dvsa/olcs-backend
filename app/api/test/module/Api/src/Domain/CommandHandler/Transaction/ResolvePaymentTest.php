@@ -69,6 +69,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
                 ->shouldReceive('getDescription')
                 ->andReturn('CARD')
                 ->getMock(),
+            PaymentEntity::TYPE_PAYMENT,
         ];
 
         $this->references = [
@@ -110,12 +111,15 @@ class ResolvePaymentTest extends CommandHandlerTestCase
 
         $fee = $this->references[FeeEntity::class][22];
         $fee->setAmount($amount);
+        $fee->shouldReceive('getOutstandingAmount')
+            ->andReturn('0.00');
 
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
         $payment->setReference($guid);
         $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
         $payment->setStatus($this->refData[PaymentEntity::STATUS_PAID]);
+        $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
 
         $command = Cmd::create($data);
 
@@ -160,7 +164,8 @@ class ResolvePaymentTest extends CommandHandlerTestCase
                 'transaction' => 69,
             ],
             'messages' => [
-                'Transaction resolved as PAYMENT PAID'
+                'Fee ID 22 updated as paid',
+                'Transaction 69 resolved as PAYMENT PAID',
             ]
         ];
 
@@ -194,6 +199,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $payment->setReference($guid);
         $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
         $payment->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING]);
+        $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
 
         $command = Cmd::create($data);
 
@@ -242,22 +248,22 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             [
                 CpmsHelper::PAYMENT_FAILURE,
                 PaymentEntity::STATUS_FAILED,
-                'Transaction resolved as PAYMENT FAILED',
+                'Transaction 69 resolved as PAYMENT FAILED',
             ],
             [
                 CpmsHelper::PAYMENT_CANCELLATION,
                 PaymentEntity::STATUS_CANCELLED,
-                'Transaction resolved as PAYMENT CANCELLED',
+                'Transaction 69 resolved as PAYMENT CANCELLED',
             ],
             [
                 CpmsHelper::PAYMENT_IN_PROGRESS,
                 PaymentEntity::STATUS_FAILED,
-                'Transaction resolved as PAYMENT FAILED',
+                'Transaction 69 resolved as PAYMENT FAILED',
             ],
             [
                 CpmsHelper::PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED,
                 PaymentEntity::STATUS_FAILED,
-                'Transaction resolved as PAYMENT FAILED',
+                'Transaction 69 resolved as PAYMENT FAILED',
             ],
         ];
     }
@@ -278,6 +284,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
         $payment->setReference($guid);
+        $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
 
         $command = Cmd::create($data);
 

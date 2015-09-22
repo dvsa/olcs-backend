@@ -3,6 +3,9 @@
 /**
  * Fees Helper Service
  *
+ * NOTE: Does calculations as integers/pence wherever possible in order to avoid
+ * floating point rounding errors.
+ *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 namespace Dvsa\Olcs\Api\Service;
@@ -188,12 +191,12 @@ class FeesHelperService implements FactoryInterface
 
         $allocations = [];
 
-        $remaining = (float) $amount;
+        $remaining = (int) ($amount * 100);
 
         foreach ($fees as $fee) {
 
             $allocated = 0;
-            $outstanding = (float) $fee->getOutstandingAmount();
+            $outstanding = (int) ($fee->getOutstandingAmount() * 100);
 
             if ($remaining >= $outstanding) {
                 // if we have enough to pay the fee in full, allocate full amount
@@ -206,21 +209,23 @@ class FeesHelperService implements FactoryInterface
             // then decrement remaining available
             $remaining = ($remaining - $allocated);
 
-            $allocations[$fee->getId()] = $this->format($allocated);
+            $allocations[$fee->getId()] = $this->format($allocated / 100);
         }
 
         if ($remaining > 0) {
+            // note, a balancing fee for any overpayment should always be created
+            // prior to calculating allocations, so keep this in as a safeguard:
             throw new Exception("Overpayments not permitted");
         }
 
         return $allocations;
     }
 
-    protected function sortFeesByInvoiceDate(array $fees)
+    public function sortFeesByInvoiceDate(array $fees)
     {
         $sorted = $fees;
         // sort fees in invoicedDate order
-        uasort(
+        usort(
             $sorted,
             function ($a, $b) {
                 if ($a->getInvoicedDate() === $b->getInvoicedDate()) {
@@ -235,10 +240,29 @@ class FeesHelperService implements FactoryInterface
     }
 
     /**
+     * Calculate amount of any overpayment. Note, will return a negative value
+     * for an underpayment, although not really expected to be used as such
+     *
+     * @param string $amount payment amount
+     * @param array $fees array of FeeEntity
+     * @return string formatted amount
+     */
+    public function getOverpaymentAmount($receivedAmount, $fees)
+    {
+        $receivedAmount = (int) ($receivedAmount * 100);
+        $outstanding = (int) ($this->getTotalOutstanding($fees) * 100);
+
+        $overpayment = $receivedAmount - $outstanding;
+
+        return $this->format($overpayment / 100);
+    }
+
+    /**
      * @param float $amount
      * @return string formatted amount - two decimal places, no thousands separator
      */
-    private function format($amount) {
+    private function format($amount)
+    {
         return number_format($amount, 2, '.', '');
     }
 }

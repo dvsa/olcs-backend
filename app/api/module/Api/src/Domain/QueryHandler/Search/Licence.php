@@ -60,6 +60,14 @@ class Licence extends AbstractQueryHandler
             $licence,
             [],
             [
+                'licenceContactDetails' => [
+                    'phoneContacts' => $this->resultList(
+                        $licence->getCorrespondenceCd()->getPhoneContacts(),
+                        ['phoneContactType']
+                    ),
+                    'address' => $licence->getCorrespondenceCd()->getAddress(),
+                    'emailAddress' => $licence->getCorrespondenceCd()->getEmailAddress(),
+                ],
                 'totalAuthVehicles' => $licence->getTotAuthVehicles(),
                 'totalAuthTrailers' => $licence->getTotAuthTrailers(),
                 'totalVehiclesInPossession' => $licence->getActiveVehiclesCount(),

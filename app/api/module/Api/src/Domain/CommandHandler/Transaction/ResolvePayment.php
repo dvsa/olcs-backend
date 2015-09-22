@@ -44,11 +44,16 @@ final class ResolvePayment extends AbstractCommandHandler implements
         /* @var $transaction Transaction */
         $transaction = $this->getRepo()->fetchUsingId($command);
 
+        $result = new Result();
+
+        if ($transaction->isWaive()) {
+            $result->addMessage(sprintf('Waive transaction %d not resolved', $transaction->getId()));
+            return $result;
+        }
+
         $cpmsStatus = $this->getCpmsService()->getPaymentStatus($transaction->getReference());
 
         $now = new DateTime();
-
-        $result = new Result();
 
         switch ($cpmsStatus) {
             case Cpms::PAYMENT_SUCCESS:
@@ -56,16 +61,7 @@ final class ResolvePayment extends AbstractCommandHandler implements
                 $transaction
                     ->setCompletedDate($now)
                     ->setProcessedByUser($this->getCurrentUser());
-                $feeStatusRef = $this->getRepo()->getRefdataReference(Fee::STATUS_PAID);
-                foreach ($transaction->getFeeTransactions() as $ft) {
-                    $fee = $ft->getFee();
-                    $fee->setFeeStatus($feeStatusRef);
-                    $this->getRepo('Fee')->save($fee);
-                    // trigger side effects
-                    $result->merge(
-                        $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))
-                    );
-                }
+                $result->merge($this->updateFees($transaction));
                 break;
             case Cpms::PAYMENT_FAILURE:
                 $status = Transaction::STATUS_FAILED;
@@ -86,7 +82,41 @@ final class ResolvePayment extends AbstractCommandHandler implements
         $this->getRepo()->save($transaction);
 
         $result->addId('transaction', $transaction->getId());
-        $result->addMessage('Transaction resolved as '. $transaction->getStatus()->getDescription());
+        $result->addMessage(
+            sprintf(
+                'Transaction %d resolved as %s',
+                $transaction->getId(),
+                $transaction->getStatus()->getDescription()
+            )
+        );
+
+        return $result;
+    }
+
+    /**
+     * Update fees that may now have been paid in full by a completed transaction
+     *
+     * @param Transaction
+     * @return Result
+     */
+    protected function updateFees($transaction)
+    {
+        $result = new Result();
+
+        $paidStatusRef = $this->getRepo()->getRefdataReference(Fee::STATUS_PAID);
+
+        foreach ($transaction->getFeeTransactions() as $ft) {
+            $fee = $ft->getFee();
+            if ($fee->getOutstandingAmount() <= 0) {
+                $fee->setFeeStatus($paidStatusRef);
+                $this->getRepo('Fee')->save($fee);
+                $result->addMessage('Fee ID ' . $fee->getId() . ' updated as paid');
+                // trigger side effects
+                $result->merge(
+                    $this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()]))
+                );
+            }
+        }
 
         return $result;
     }
