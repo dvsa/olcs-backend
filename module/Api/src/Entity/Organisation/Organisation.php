@@ -113,7 +113,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     ) {
         $this->setCpid($cpid);
         $this->setNatureOfBusiness($natureOfBusiness);
-        if ($isIrfo === 'Y' || $this->getType()->getId() === self::ORG_TYPE_IRFO) {
+        if ($isIrfo === 'Y' || ($this->getType() !== null && $this->getType()->getId() === self::ORG_TYPE_IRFO)) {
             $this->isIrfo = 'Y';
         } else {
             $this->isIrfo = 'N';
