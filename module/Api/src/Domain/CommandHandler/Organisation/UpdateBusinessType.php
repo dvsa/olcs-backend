@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Organisation;
 
-use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType;
+use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType as ChangeBusinessTypeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -87,7 +87,7 @@ final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwa
                 'confirm' => $command->getConfirm()
             ];
 
-            $this->handleSideEffect(ChangeBusinessType::create($data));
+            $this->handleSideEffect(ChangeBusinessTypeCmd::create($data));
         } else {
 
             $organisation->setType($this->getRepo()->getRefdataReference($command->getBusinessType()));
