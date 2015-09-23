@@ -262,7 +262,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface
     {
         $trafficArea = $this->getTrafficArea();
 
-        if ($trafficArea && $trafficArea->getId() === TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE) {
+        if ($trafficArea && $trafficArea->getIsNi()) {
             return CommunityLicEntity::PREFIX_NI;
         }
 
@@ -485,7 +485,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         $this->setTotAuthSmallVehicles($application->getTotAuthSmallVehicles());
         $this->setTotAuthMediumVehicles($application->getTotAuthMediumVehicles());
         $this->setTotAuthLargeVehicles($application->getTotAuthLargeVehicles());
-        $this->setNiFlag($application->getNiFlag());
     }
 
     public function getOcForInspectionRequest()
@@ -758,7 +757,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface
     public function getNiFlag()
     {
         $trafficArea = $this->getTrafficArea();
-        if ($trafficArea && $trafficArea->getId() === TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE) {
+        if ($trafficArea && $trafficArea->getIsNi()) {
             return 'Y';
         }
 

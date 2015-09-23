@@ -267,14 +267,14 @@ class LicenceEntityTest extends EntityTester
     /**
      * @dataProvider trafficAreaProvider
      */
-    public function testGetSerialNoPrefixFromTrafficArea($trafficArea, $expected)
+    public function testGetSerialNoPrefixFromTrafficArea($isNi, $expected)
     {
         $sut = m::mock(Entity::class)->makePartial();
         $sut->shouldReceive('getTrafficArea')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getId')
-                ->andReturn($trafficArea)
+                ->shouldReceive('getIsNi')
+                ->andReturn($isNi)
                 ->once()
                 ->getMock()
             )
@@ -287,8 +287,8 @@ class LicenceEntityTest extends EntityTester
     public function trafficAreaProvider()
     {
         return [
-            [TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE, CommunityLicEntity::PREFIX_NI],
-            [TrafficAreaEntity::NORTH_WESTERN_TRAFFIC_AREA_CODE, CommunityLicEntity::PREFIX_GB],
+            [true, CommunityLicEntity::PREFIX_NI],
+            [false, CommunityLicEntity::PREFIX_GB],
         ];
     }
 
@@ -679,7 +679,6 @@ class LicenceEntityTest extends EntityTester
         $this->assertEquals(4, $licence->getTotAuthSmallVehicles());
         $this->assertEquals(5, $licence->getTotAuthMediumVehicles());
         $this->assertEquals(3, $licence->getTotAuthLargeVehicles());
-        $this->assertEquals('Y', $licence->getNiFlag());
     }
 
     public function testGetPsvDiscsNotCeased()

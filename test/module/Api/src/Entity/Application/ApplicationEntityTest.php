@@ -1046,6 +1046,11 @@ class ApplicationEntityTest extends EntityTester
 
         $licenceType = m::mock(RefData::class);
         $goodsOrPsv = m::mock(RefData::class);
+        $trafficArea = m::mock(TrafficArea::class)
+            ->shouldReceive('getIsNi')
+            ->andReturn(true)
+            ->getMock();
+
 
         $licence->setLicenceType($licenceType);
         $licence->setGoodsOrPsv($goodsOrPsv);
@@ -1054,7 +1059,7 @@ class ApplicationEntityTest extends EntityTester
         $licence->setTotAuthSmallVehicles(7);
         $licence->setTotAuthMediumVehicles(8);
         $licence->setTotAuthLargeVehicles(9);
-        $licence->setNiFlag('Y');
+        $licence->setTrafficArea($trafficArea);
 
         $this->entity->copyInformationFromLicence($licence);
 
