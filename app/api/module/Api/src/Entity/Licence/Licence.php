@@ -748,4 +748,30 @@ class Licence extends AbstractLicence implements ContextProviderInterface
     {
         return $this->getLicNo();
     }
+
+    /**
+     * Determine NI ('is Northern Ireland') flag from traffic area, replaces
+     * deprecated 'ni_flag' database column
+     *
+     * @return string 'Y'|'N'
+     */
+    public function getNiFlag()
+    {
+        $trafficArea = $this->getTrafficArea();
+        if ($trafficArea && $trafficArea->getId() === TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE) {
+            return 'Y';
+        }
+
+        return 'N';
+    }
+
+    /**
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'niFlag' => $this->getNiFlag(),
+        ];
+    }
 }
