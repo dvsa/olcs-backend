@@ -248,6 +248,7 @@ return [
         => QueryHandler\TransportManagerApplication\GetList::class,
     TransferQuery\TransportManagerApplication\GetForResponsibilities::class
         => QueryHandler\TransportManagerApplication\GetForResponsibilities::class,
+    TransferQuery\TransportManagerApplication\Review::class => QueryHandler\TransportManagerApplication\Review::class,
 
     // Transport Manager Licence
     TransferQuery\TransportManagerLicence\GetForResponsibilities::class

@@ -51,7 +51,7 @@ class QueueControllerTest extends MockeryTestCase
         $mockConfig = [
             'queue' => [
                 'runFor' => 0.1, // seconds
-                'sleepFor' => 500, // microseconds
+                'sleepFor' => 50, // microseconds
             ]
         ];
         $mockQueue = m::mock();
