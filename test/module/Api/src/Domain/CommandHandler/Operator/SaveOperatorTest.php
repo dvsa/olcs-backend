@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Operator;
 
+use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Operator\SaveOperator;
@@ -287,7 +288,6 @@ class SaveOperatorTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
         $this->assertEquals(1, $result->getIds()['organisation']);
         $this->assertEquals('Organisation updated successfully', $result->getMessages()[0]);
-
     }
 
     public function testHandleCommandCreateSoleTrader()
@@ -357,6 +357,59 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with($mockOrganisation)
             ->once();
+
+        $result = $this->sut->handleCommand($command);
+        $this->assertEquals(1, $result->getIds()['organisation']);
+        $this->assertEquals('Organisation updated successfully', $result->getMessages()[0]);
+    }
+
+    public function testHandleCommandUpdateFromRcToSoleTrader()
+    {
+        $data = [
+            'businessType' => OrganisationEntity::ORG_TYPE_SOLE_TRADER,
+            'natureOfBusiness' => [self::NATURE_OF_BUSINESS],
+            'firstName' => 'fname',
+            'lastName' => 'lname',
+            'isIrfo' => 'Y',
+            'id' => 1,
+            'version' => 2,
+            'personId' => 3,
+            'personVersion' => 4
+        ];
+
+        $command = UpdateCmd::create($data);
+
+        /** @var OrganisationEntity $mockOrganisation */
+        $mockOrganisation = m::mock(OrganisationEntity::class)->makePartial();
+        $mockOrganisation->setId(1);
+        $mockOrganisation->setType($this->refData[OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY]);
+
+        $this->repoMap['Organisation']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 2)
+            ->andReturn($mockOrganisation)
+            ->once()
+            ->shouldReceive('save')
+            ->with($mockOrganisation)
+            ->once();
+
+        $mockPerson = m::mock(PersonEntity::class)->makePartial();
+        $mockPerson->setId(3);
+
+        $this->repoMap['Person']->shouldReceive('fetchById')
+            ->with(3, Query::HYDRATE_OBJECT, 4)
+            ->andReturn($mockPerson)
+            ->once()
+            ->shouldReceive('save')
+            ->with($mockPerson)
+            ->once();
+
+        $result = new Result();
+        $data = [
+            'id' => 1,
+            'businessType' => OrganisationEntity::ORG_TYPE_SOLE_TRADER,
+            'confirm' => false
+        ];
+        $this->expectedSideEffect(ChangeBusinessType::class, $data, $result);
 
         $result = $this->sut->handleCommand($command);
         $this->assertEquals(1, $result->getIds()['organisation']);

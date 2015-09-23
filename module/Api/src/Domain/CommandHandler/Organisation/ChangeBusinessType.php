@@ -8,8 +8,6 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Organisation;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RequiresConfirmationException;
@@ -25,10 +23,8 @@ use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ChangeBusinessType extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+class ChangeBusinessType extends AbstractCommandHandler implements TransactionedInterface
 {
-    use AuthAwareTrait;
-
     const REG_TO_ST = 'REG_TO_ST';
     const ANY_TO_ST = 'ANY_TO_ST';
     const BUS_TYP_REQ_CONF = 'BUS_TYP_REQ_CONF';
