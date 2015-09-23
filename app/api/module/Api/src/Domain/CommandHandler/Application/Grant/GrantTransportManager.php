@@ -9,11 +9,13 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant;
 
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\Licence\TmNominatedTask;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\EntityCloner;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
@@ -76,6 +78,14 @@ final class GrantTransportManager extends AbstractCommandHandler implements Tran
 
     protected function createTransportManager(TransportManagerApplication $tma, Licence $licence)
     {
+        $dtoData = [
+            'entityId' => $tma->getId(),
+            'type' => Queue::TYPE_TM_SNAPSHOT,
+            'status' => Queue::STATUS_QUEUED
+        ];
+
+        $this->handleSideEffect(Create::create($dtoData));
+
         if ($this->licenceHasTransportManager($tma->getTransportManager(), $licence)) {
             $this->deleteTransportManager($tma->getTransportManager(), $licence);
         }
