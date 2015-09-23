@@ -366,6 +366,9 @@ class LicenceEntityTest extends EntityTester
 
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
+
+        $this->assertNull($licence->isGoods());
+
         $licence->setGoodsOrPsv($goodsOrPsv);
 
         $this->assertTrue($licence->isGoods());
@@ -390,6 +393,9 @@ class LicenceEntityTest extends EntityTester
 
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
+
+        $this->assertNull($licence->isPsv());
+
         $licence->setGoodsOrPsv($goodsOrPsv);
 
         $this->assertTrue($licence->isPsv());
@@ -414,6 +420,9 @@ class LicenceEntityTest extends EntityTester
 
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
+
+        $this->assertNull($licence->isSpecialRestricted());
+
         $licence->setLicenceType($licenceType);
 
         $this->assertTrue($licence->isSpecialRestricted());
@@ -554,6 +563,8 @@ class LicenceEntityTest extends EntityTester
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
 
+        $this->assertNull($licence->isRestricted());
+
         $licenceType = m::mock(RefData::class)->makePartial();
         $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
         $licence->setLicenceType($licenceType);
@@ -572,6 +583,8 @@ class LicenceEntityTest extends EntityTester
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
 
+        $this->assertNull($licence->isStandardInternational());
+
         $licenceType = m::mock(RefData::class)->makePartial();
         $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
         $licence->setLicenceType($licenceType);
@@ -589,6 +602,8 @@ class LicenceEntityTest extends EntityTester
     {
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
+
+        $this->assertNull($licence->isStandardNational());
 
         $licenceType = m::mock(RefData::class)->makePartial();
         $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL);
