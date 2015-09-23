@@ -1051,7 +1051,6 @@ class ApplicationEntityTest extends EntityTester
             ->andReturn(true)
             ->getMock();
 
-
         $licence->setLicenceType($licenceType);
         $licence->setGoodsOrPsv($goodsOrPsv);
         $licence->setTotAuthTrailers(5);
