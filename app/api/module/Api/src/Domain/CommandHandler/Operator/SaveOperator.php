@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Operator;
 
+use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -126,17 +127,39 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
 
         $cpid = $this->getRepo()->getRefdataReference($command->getCpid());
 
+        if ($this->updatingBusinessType($organisation, $businessType)) {
+
+            $data = [
+                'id' => $organisation->getId(),
+                'businessType' => $command->getBusinessType(),
+                'confirm' => $command->getConfirm()
+            ];
+
+            $this->handleSideEffect(ChangeBusinessType::create($data));
+        } else {
+            $organisation->setType($businessType);
+        }
+
         $organisation->updateOrganisation(
             $command->getName(),
             $command->getCompanyNumber(),
             $command->getFirstName(),
             $command->getLastName(),
             $command->getIsIrfo(),
-            $businessType,
             $command->getNatureOfBusiness(),
             $cpid
         );
         return $organisation;
+    }
+
+    protected function updatingBusinessType($organisation, $businessType)
+    {
+        // We may be creating an org, so check if we have a business type set
+        if ($organisation->getType() === null) {
+            return false;
+        }
+
+        return ($organisation->getType() !== $businessType);
     }
 
     protected function validateOrganisation($command)

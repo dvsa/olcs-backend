@@ -222,6 +222,7 @@ return [
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
     TransferCommand\Organisation\TransferTo::class => CommandHandler\Organisation\TransferTo::class,
+    Command\Organisation\ChangeBusinessType::class => CommandHandler\Organisation\ChangeBusinessType::class,
 
     // Transfer - OtherLicence
     TransferCommand\OtherLicence\UpdateOtherLicence::class => CommandHandler\OtherLicence\UpdateOtherLicence::class,
