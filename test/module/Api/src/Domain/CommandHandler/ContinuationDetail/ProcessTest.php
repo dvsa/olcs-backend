@@ -95,7 +95,6 @@ class ProcessTest extends CommandHandlerTestCase
     {
         $id = 69;
         $licenceId = 7;
-        $storedFileId = 99;
         $documentId = 101;
         $organisationId = 1;
         $licNo = 'OB1234567';
