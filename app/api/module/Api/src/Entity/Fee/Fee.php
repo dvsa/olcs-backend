@@ -223,8 +223,8 @@ class Fee extends AbstractFee
                 unset($key); // unused
                 if ($feeTransaction->getTransaction()->isComplete()) {
                     $ftSum += (int) ($feeTransaction->getAmount() * 100);
-                    return true;
                 }
+                return true;
             }
         );
 
