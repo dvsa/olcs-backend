@@ -24,14 +24,13 @@ final class Create extends AbstractCommandHandler
     public function handleCommand(CommandInterface $query)
     {
         $queue = new QueueEntity();
+
         $queue->validateQueue($query->getType(), $query->getStatus());
-        $queue->setType(
-            $this->getRepo()->getRefdataReference($query->getType())
-        );
-        $queue->setStatus(
-            $this->getRepo()->getRefdataReference($query->getStatus())
-        );
+
+        $queue->setType($this->getRepo()->getRefdataReference($query->getType()));
+        $queue->setStatus($this->getRepo()->getRefdataReference($query->getStatus()));
         $queue->setEntityId($query->getEntityId());
+
         $this->getRepo()->save($queue);
 
         $result = new Result();

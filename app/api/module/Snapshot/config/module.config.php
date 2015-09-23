@@ -1,6 +1,7 @@
 <?php
 
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section as Review;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section as TmReview;
 
 return [
     'service_manager' => [
@@ -57,6 +58,13 @@ return [
             'Review\VariationVehicles' => Review\VariationVehiclesReviewService::class,
             'Review\ApplicationUndertakings' => Review\ApplicationUndertakingsReviewService::class,
             'Review\VariationUndertakings' => Review\VariationUndertakingsReviewService::class,
+            'TmReviewSnapshot' => \Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Generator::class,
+            'Review\TransportManagerMain' => TmReview\TransportManagerMainReviewService::class,
+            'Review\TransportManagerResponsibility' => TmReview\TransportManagerResponsibilityReviewService::class,
+            'Review\TransportManagerOtherEmployment' => TmReview\TransportManagerOtherEmploymentReviewService::class,
+            'Review\TransportManagerPreviousConviction'
+                => TmReview\TransportManagerPreviousConvictionReviewService::class,
+            'Review\TransportManagerPreviousLicence' => TmReview\TransportManagerPreviousLicenceReviewService::class,
         ],
     ],
     'view_manager' => [

@@ -640,6 +640,7 @@ return [
     TransferCommand\TmEmployment\DeleteList::class => CommandHandler\TmEmployment\DeleteList::class,
     TransferCommand\TmEmployment\Create::class => CommandHandler\TmEmployment\Create::class,
     TransferCommand\TmEmployment\Update::class => CommandHandler\TmEmployment\Update::class,
+    Command\TransportManagerApplication\Snapshot::class => CommandHandler\TransportManagerApplication\Snapshot::class,
 
     // Transfer - Scan
     TransferCommand\Scan\CreateDocument::class => CommandHandler\Scan\CreateDocument::class,
@@ -661,7 +662,6 @@ return [
         => CommandHandler\LicenceVehicle\DeleteUnlicensedOperatorLicenceVehicle::class,
     TransferCommand\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class
         => CommandHandler\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class,
-
 
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
