@@ -117,14 +117,11 @@ final class CreateUnlicensed extends AbstractCommandHandler
             $this->getRepo()->getRefdataReference(LicenceEntity::LICENCE_STATUS_UNLICENSED)
         );
 
-        $niFlag = $command->getTrafficArea() === TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE ? 'Y' : 'N';
-
         $licence
             ->setOrganisation($organisation)
             ->setTrafficArea($this->getRepo()->getReference(TrafficAreaEntity::class, $command->getTrafficArea()))
             ->setGoodsOrPsv($this->getRepo()->getRefdataReference($command->getOperatorType()))
             ->setLicenceType($this->getRepo()->getRefdataReference(LicenceEntity::LICENCE_TYPE_RESTRICTED))
-            ->setNiFlag($niFlag)
             ->setCorrespondenceCd($contactDetails);
 
         return $licence;

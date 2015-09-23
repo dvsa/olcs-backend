@@ -315,9 +315,9 @@ class TransportManagerEntityTest extends EntityTester
         $org2->setId(102);
 
         $lic1 = new Licence($org1, $this->getRefData(Licence::LICENCE_STATUS_VALID));
-        $lic1->setNiFlag('N')->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $lic1->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
         $lic2 = new Licence($org2, $this->getRefData(Licence::LICENCE_STATUS_VALID));
-        $lic2->setNiFlag('Y')->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $lic2->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
 
         $app1 = new Application($lic1, $this->getRefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION), 0);
         $app1->setNiFlag('Y')->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
@@ -350,9 +350,9 @@ class TransportManagerEntityTest extends EntityTester
         $org2->setId(102);
 
         $lic1 = new Licence($org1, $this->getRefData(Licence::LICENCE_STATUS_VALID));
-        $lic1->setNiFlag('N')->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL));
+        $lic1->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL));
         $lic2 = new Licence($org2, $this->getRefData(Licence::LICENCE_STATUS_VALID));
-        $lic2->setNiFlag('N')->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $lic2->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
 
         $app1 = new Application($lic1, $this->getRefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION), 0);
         $app1->setNiFlag('N')->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
@@ -385,9 +385,9 @@ class TransportManagerEntityTest extends EntityTester
         $org2->setId(102);
 
         $lic1 = new Licence($org1, $this->getRefData(Licence::LICENCE_STATUS_VALID));
-        $lic1->setNiFlag('N')->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $lic1->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
         $lic2 = new Licence($org2, $this->getRefData(Licence::LICENCE_STATUS_VALID));
-        $lic2->setNiFlag('N')->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $lic2->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
 
         $app1 = new Application($lic1, $this->getRefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION), 0);
         $app1->setNiFlag('N')->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
@@ -420,9 +420,9 @@ class TransportManagerEntityTest extends EntityTester
         $org2->setId(102);
 
         $lic1 = new Licence($org1, $this->getRefData(Licence::LICENCE_STATUS_VALID));
-        $lic1->setNiFlag('Y')->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $lic1->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
         $lic2 = new Licence($org2, $this->getRefData(Licence::LICENCE_STATUS_VALID));
-        $lic2->setNiFlag('Y')->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $lic2->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
 
         $app1 = new Application($lic1, $this->getRefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION), 0);
         $app1->setNiFlag('Y')->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
