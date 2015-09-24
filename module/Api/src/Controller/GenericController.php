@@ -167,7 +167,6 @@ class GenericController extends AbstractRestfulController
     {
         $this->getLogger()->debug(get_class($dto));
         $result = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
-        $this->getLogger()->debug(json_encode($result));
         return $result;
     }
 
@@ -179,7 +178,6 @@ class GenericController extends AbstractRestfulController
     {
         $this->getLogger()->debug(get_class($dto));
         $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
-        $this->getLogger()->debug(json_encode($result));
         return $result;
     }
 
