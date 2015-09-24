@@ -37,7 +37,7 @@ class Schedule41Refuse extends AbstractCommandHandler
 
         $result = new Result();
 
-        /** @var \Dvsa\Olcs\Api\Entity\Application\S4 $s4 */
+        /* @var $s4 \Dvsa\Olcs\Api\Entity\Application\S4 */
         foreach ($s4s as $s4) {
             $result->merge(
                 $this->handleSideEffect(
@@ -68,17 +68,17 @@ class Schedule41Refuse extends AbstractCommandHandler
                     )
                 )
             );
-        }
-
-        $result->merge(
-            $this->handleSideEffect(
-                DisassociateS4::create(
-                    [
-                        'licenceOperatingCentres' => $application->getLicence()->getOperatingCentres()
-                    ]
+            // remove s4 marker from donor licence
+            $result->merge(
+                $this->handleSideEffect(
+                    DisassociateS4::create(
+                        [
+                            'licenceOperatingCentres' => $s4->getLicence()->getOperatingCentres()
+                        ]
+                    )
                 )
-            )
-        );
+            );
+        }
 
         return $result;
     }
