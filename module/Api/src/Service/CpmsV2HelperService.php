@@ -443,7 +443,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
             'deferment_period' => (string) $fee->getDefermentPeriod(),
             // 'country_code' ('GB' or 'NI') is optional and deliberately omitted
-            'sales_person_reference' => 'B',
+            'sales_person_reference' => $fee->getSalesPersonReference(),
         ];
 
         return array_merge($commonPaymentData, $extraPaymentData);
