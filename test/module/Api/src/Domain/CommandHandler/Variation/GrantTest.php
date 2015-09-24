@@ -83,7 +83,7 @@ class GrantTest extends CommandHandlerTestCase
             ->shouldReceive('isVariation')
             ->andReturn(true)
             ->once()
-            ->shouldReceive('isVariationPublishable')
+            ->shouldReceive('isPublishable')
             ->andReturn(true)
             ->once()
             ->getMock();
@@ -171,7 +171,7 @@ class GrantTest extends CommandHandlerTestCase
         $application->setLicence($licence);
         $application->shouldReceive('isGoods')
             ->andReturn(true)
-            ->shouldReceive('isVariationPublishable')
+            ->shouldReceive('isPublishable')
             ->andReturn(false);
 
         /** @var GoodsDisc $goodsDisc1 */
@@ -273,7 +273,7 @@ class GrantTest extends CommandHandlerTestCase
         $application->setLicence($licence);
         $application->shouldReceive('isGoods')
             ->andReturn(false)
-            ->shouldReceive('isVariationPublishable')
+            ->shouldReceive('isPublishable')
             ->andReturn(false);
 
         /** @var PsvDisc $psvDisc */
