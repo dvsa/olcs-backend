@@ -187,7 +187,7 @@ return [
     TransferQuery\Bus\BusRegDecision::class => QueryHandler\Bus\BusRegDecision::class,
     TransferQuery\Bus\ShortNoticeByBusReg::class => QueryHandler\Bus\ShortNoticeByBusReg::class,
     TransferQuery\Bus\RegistrationHistoryList::class => QueryHandler\Bus\RegistrationHistoryList::class,
-    TransferQuery\Bus\ByLicenceRoute::class => QueryHandler\Bus\ByLicenceRoute::class,
+    Query\Bus\ByLicenceRoute::class => QueryHandler\Bus\ByLicenceRoute::class,
 
     // Trailer
     TransferQuery\Licence\Trailers::class => QueryHandler\Licence\Trailers::class,
@@ -248,6 +248,7 @@ return [
         => QueryHandler\TransportManagerApplication\GetList::class,
     TransferQuery\TransportManagerApplication\GetForResponsibilities::class
         => QueryHandler\TransportManagerApplication\GetForResponsibilities::class,
+    TransferQuery\TransportManagerApplication\Review::class => QueryHandler\TransportManagerApplication\Review::class,
 
     // Transport Manager Licence
     TransferQuery\TransportManagerLicence\GetForResponsibilities::class

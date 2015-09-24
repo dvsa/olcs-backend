@@ -29,8 +29,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_bus_reg_status", columns={"status"}),
  *        @ORM\Index(name="ix_bus_reg_revert_status", columns={"revert_status"}),
  *        @ORM\Index(name="ix_bus_reg_reg_no", columns={"reg_no"}),
- *        @ORM\Index(name="fk_bus_reg_parent_id_bus_reg_id", columns={"parent_id"}),
- *        @ORM\Index(name="fk_bus_reg_operating_centre1", columns={"operating_centre_id"})
+ *        @ORM\Index(name="fk_bus_reg_parent_id_bus_reg_id", columns={"parent_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_bus_reg_olbs_key", columns={"olbs_key"})
@@ -80,15 +79,6 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
      * )
      */
     protected $busServiceTypes;
-
-    /**
-     * Completed date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="completed_date", nullable=true)
-     */
-    protected $completedDate;
 
     /**
      * Copied to la pte
@@ -356,19 +346,6 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
      * @ORM\Column(type="yesno", name="op_notified_la_pte", nullable=false, options={"default": 0})
      */
     protected $opNotifiedLaPte = 0;
-
-    /**
-     * Operating centre
-     *
-     * @var \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre
-     *
-     * @ORM\ManyToOne(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre",
-     *     fetch="LAZY"
-     * )
-     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
-     */
-    protected $operatingCentre;
 
     /**
      * Organisation email
@@ -876,29 +853,6 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
         }
 
         return $this;
-    }
-
-    /**
-     * Set the completed date
-     *
-     * @param \DateTime $completedDate
-     * @return BusReg
-     */
-    public function setCompletedDate($completedDate)
-    {
-        $this->completedDate = $completedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the completed date
-     *
-     * @return \DateTime
-     */
-    public function getCompletedDate()
-    {
-        return $this->completedDate;
     }
 
     /**
@@ -1557,29 +1511,6 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     public function getOpNotifiedLaPte()
     {
         return $this->opNotifiedLaPte;
-    }
-
-    /**
-     * Set the operating centre
-     *
-     * @param \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre $operatingCentre
-     * @return BusReg
-     */
-    public function setOperatingCentre($operatingCentre)
-    {
-        $this->operatingCentre = $operatingCentre;
-
-        return $this;
-    }
-
-    /**
-     * Get the operating centre
-     *
-     * @return \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre
-     */
-    public function getOperatingCentre()
-    {
-        return $this->operatingCentre;
     }
 
     /**

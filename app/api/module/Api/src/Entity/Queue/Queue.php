@@ -27,12 +27,29 @@ class Queue extends AbstractQueue
     const STATUS_COMPLETE = 'que_sts_complete';
     const STATUS_FAILED = 'que_sts_failed';
 
+    protected $statuses = [
+        self::STATUS_QUEUED,
+        self::STATUS_PROCESSING,
+        self::STATUS_COMPLETE,
+        self::STATUS_FAILED
+    ];
+
     // Message types
     const TYPE_COMPANIES_HOUSE_INITIAL = 'que_typ_ch_initial';
     const TYPE_COMPANIES_HOUSE_COMPARE = 'que_typ_ch_compare';
     const TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER = 'que_typ_cont_check_rem_gen_let';
     const TYPE_CPID_EXPORT_CSV = 'que_typ_cpid_export_csv';
     const TYPE_CONT_CHECKLIST = 'que_typ_cont_checklist';
+    const TYPE_TM_SNAPSHOT = 'que_typ_tm_snapshot';
+
+    protected $types = [
+        self::TYPE_COMPANIES_HOUSE_INITIAL,
+        self::TYPE_COMPANIES_HOUSE_COMPARE,
+        self::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER,
+        self::TYPE_CPID_EXPORT_CSV,
+        self::TYPE_CONT_CHECKLIST,
+        self::TYPE_TM_SNAPSHOT
+    ];
 
     public function incrementAttempts()
     {
@@ -50,23 +67,11 @@ class Queue extends AbstractQueue
 
     public function validateQueue($type, $status)
     {
-        $statuses = [
-            self::STATUS_QUEUED,
-            self::STATUS_PROCESSING,
-            self::STATUS_COMPLETE,
-            self::STATUS_FAILED
-        ];
-        $types = [
-            self::TYPE_COMPANIES_HOUSE_INITIAL,
-            self::TYPE_COMPANIES_HOUSE_COMPARE,
-            self::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER,
-            self::TYPE_CPID_EXPORT_CSV,
-            self::TYPE_CONT_CHECKLIST
-        ];
-        if (!in_array($type, $types)) {
+        if (!in_array($type, $this->types)) {
             throw new ValidationException(['error' => 'Unknown queue type']);
         }
-        if (!in_array($status, $statuses)) {
+
+        if (!in_array($status, $this->statuses)) {
             throw new ValidationException(['error' => 'Unknown queue status']);
         }
     }

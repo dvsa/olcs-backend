@@ -11,9 +11,8 @@ use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
 use Zend\Filter\Word\UnderscoreToCamelCase;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -21,10 +20,8 @@ use Zend\View\Model\ViewModel;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Generator implements ServiceLocatorAwareInterface
+class Generator extends AbstractGenerator
 {
-    use ServiceLocatorAwareTrait;
-
     protected $defaultBundle = [
         'licence' => [
             'organisation' => []
@@ -257,16 +254,6 @@ class Generator implements ServiceLocatorAwareInterface
 
         // Generate readonly markup
         return $this->generateReadonly($config);
-    }
-
-    protected function generateReadonly(array $config)
-    {
-        $model = new ViewModel($config);
-        $model->setTerminal(true);
-        $model->setTemplate('layout/review');
-
-        $renderer = $this->getServiceLocator()->get('ViewRenderer');
-        return $renderer->render($model);
     }
 
     protected function buildReadonlyConfigForSections($sections, $reviewData)

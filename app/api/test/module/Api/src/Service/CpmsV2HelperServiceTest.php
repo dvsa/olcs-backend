@@ -123,7 +123,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ],
                 [
                     'line_identifier' => '1',
@@ -149,7 +149,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ]
             ],
             'cost_centre' => '12345,67890',
@@ -247,7 +247,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ],
                 [
                     'line_identifier' => '1',
@@ -273,7 +273,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ]
             ],
             'cost_centre' => '12345,67890',
@@ -368,7 +368,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ],
                 [
                     'line_identifier' => '1',
@@ -394,7 +394,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ]
             ],
             'cost_centre' => '12345,67890',
@@ -498,7 +498,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ],
                 [
                     'line_identifier' => '1',
@@ -524,7 +524,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ]
             ],
             'cost_centre' => '12345,67890',
