@@ -281,6 +281,8 @@ return [
 
     // Transfer - My Account
     TransferCommand\MyAccount\UpdateMyAccount::class => CommandHandler\MyAccount\UpdateMyAccount::class,
+    TransferCommand\MyAccount\UpdateMyAccountSelfserve::class
+        => CommandHandler\MyAccount\UpdateMyAccountSelfserve::class,
 
     // Transfer - User
     TransferCommand\User\CreateUser::class => CommandHandler\User\CreateUser::class,
