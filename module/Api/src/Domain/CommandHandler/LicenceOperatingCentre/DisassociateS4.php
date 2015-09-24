@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
-use Dvsa\Olcs\Api\Entity\Application\S4;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
@@ -27,21 +26,19 @@ final class DisassociateS4 extends AbstractCommandHandler implements Transaction
 
     public function handleCommand(CommandInterface $command)
     {
-        foreach ($command->getLicenceOperatingCentres() as $operatingCentre) {
-            /** @var LicenceOperatingCentre $operatingCentre */
-            $operatingCentre = $this->getRepo()
-                ->getReference(
-                    LicenceOperatingCentre::class,
-                    $operatingCentre->getId()
-                );
-
-            $operatingCentre->setS4(null);
-
-            $this->getRepo()->save($operatingCentre);
+        foreach ($command->getLicenceOperatingCentres() as $loc) {
+            /* @var $loc LicenceOperatingCentre */
+            $loc->setS4(null);
+            $this->getRepo()->save($loc);
         }
 
         $result = new Result();
-        $result->addMessage('Operating centre(s) updated.');
+        $result->addMessage(
+            sprintf(
+                'S4 flag removed from %d Licence Operating centre(s)',
+                count($command->getLicenceOperatingCentres())
+            )
+        );
 
         return $result;
     }
