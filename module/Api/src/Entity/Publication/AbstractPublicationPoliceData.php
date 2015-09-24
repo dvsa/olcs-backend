@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
      *     columns={"publication_link_id"}),
  *        @ORM\Index(name="ix_publication_police_data_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_publication_police_data_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_publication_police_data_person_id", columns={"person_id"})
+ *        @ORM\Index(name="fk_publication_police_data_person1_idx", columns={"person_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_publication_police_data_olbs_key", columns={"olbs_key"})
