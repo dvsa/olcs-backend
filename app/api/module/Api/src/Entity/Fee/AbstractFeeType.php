@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_fee_type_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_fee_type_ref_data1_idx", columns={"accrual_rule"}),
  *        @ORM\Index(name="fk_fee_type_ref_data2_idx", columns={"fee_type"}),
- *        @ORM\Index(name="fk_irfo_fee_type_ref_data3_idx", columns={"irfo_fee_type"})
+ *        @ORM\Index(name="fk_fee_type_ref_data3_idx", columns={"irfo_fee_type"})
  *    }
  * )
  */
