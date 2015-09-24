@@ -107,12 +107,7 @@ class OrganisationEntityTest extends EntityTester
      */
     public function testUpdateOrganisation($isIrfo, $lastName, $expectedName)
     {
-         $organisation = m::mock(Entity::class)->makePartial();
-
-         $mockBusinessType = m::mock()
-             ->shouldReceive('getId')
-            ->andReturn('type')
-            ->getMock();
+        $organisation = m::mock(Entity::class)->makePartial();
 
         $organisation->updateOrganisation(
             'name',
@@ -120,7 +115,6 @@ class OrganisationEntityTest extends EntityTester
             'fname',
             $lastName,
             $isIrfo,
-            $mockBusinessType,
             'nob',
             ['cpid']
         );
@@ -129,7 +123,6 @@ class OrganisationEntityTest extends EntityTester
         $this->assertEquals($organisation->getName(), $expectedName);
         $this->assertEquals($organisation->getCompanyOrLlpNo(), '12345678');
         $this->assertEquals($organisation->getIsIrfo(), $isIrfo);
-        $this->assertEquals($organisation->getType()->getId(), 'type');
         $this->assertEquals($organisation->getNatureOfBusiness(), 'nob');
     }
 
