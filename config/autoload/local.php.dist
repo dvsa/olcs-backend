@@ -163,7 +163,8 @@ return array(
     'openam' => [
         'username' => 'olcs_app',
         'password' => 'password',
-        'uri' => 'olcs-openam.olcs.gov.uk'
+        'uri' => 'olcs-openam.olcs.gov.uk',
+        'pid_header' => 'X-Pid'
     ],
     'zfc_rbac' => [
         'identity_provider' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class,

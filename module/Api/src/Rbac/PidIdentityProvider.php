@@ -24,19 +24,25 @@ class PidIdentityProvider implements IdentityProviderInterface
     private $request;
 
     /**
+     * @var string
+     */
+    private $headerName;
+
+    /**
      * @var Identity;
      */
     private $identity;
 
-    public function __construct(RepositoryInterface $repository, Request $request)
+    public function __construct(RepositoryInterface $repository, Request $request, $headerName)
     {
         $this->repository = $repository;
         $this->request = $request;
+        $this->headerName = $headerName;
     }
 
     private function authenticate()
     {
-        $pid = $this->request->getHeader('Http-Pid', new GenericHeader())->getFieldValue();
+        $pid = $this->request->getHeader($this->headerName, new GenericHeader())->getFieldValue();
 
         if (!empty($pid)) {
             return $this->repository->fetchByPid($pid);
