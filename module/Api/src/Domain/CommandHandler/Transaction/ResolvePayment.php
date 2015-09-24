@@ -60,7 +60,7 @@ final class ResolvePayment extends AbstractCommandHandler implements
                 $transaction
                     ->setCompletedDate($now)
                     ->setProcessedByUser($this->getCurrentUser())
-                    ->setStatus($this->getRepo()->getRefdataReference(Transaction::STATUS_PAID));;
+                    ->setStatus($this->getRepo()->getRefdataReference(Transaction::STATUS_PAID));
                 $result->merge($this->updateFees($transaction));
                 break;
             case Cpms::PAYMENT_FAILURE:
