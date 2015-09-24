@@ -13,7 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
- * @ORM\Table(name="event_history_type")
+ * @ORM\Table(name="event_history_type",
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="event_code_UNIQUE", columns={"event_code"})
+ *    }
+ * )
  */
 abstract class AbstractEventHistoryType implements BundleSerializableInterface, JsonSerializable
 {

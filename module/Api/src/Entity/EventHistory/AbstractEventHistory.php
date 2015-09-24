@@ -24,6 +24,9 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="fk_event_history_organisation1_idx", columns={"organisation_id"}),
  *        @ORM\Index(name="fk_event_history_cases1_idx", columns={"case_id"}),
  *        @ORM\Index(name="fk_event_history_bus_reg1_idx", columns={"bus_reg_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_olbs_key", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */
