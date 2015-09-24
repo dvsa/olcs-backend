@@ -380,10 +380,10 @@ class Fee extends AbstractFee
      *  - 'IR' for IRFO fees
      *  - 'MGB' for misc. GB fees
      *  - 'MNI' for misc. NI fees
-     *  - 'MIR' for misc. IRFO fees
+     *  - 'MR' for misc. IRFO fees
      *
      * @return string
-     * @todo implement logic, currently hard-coded traffic area code
+     * @todo OLCS-6845, currently hard-coded traffic area code
      */
     public function getSalesPersonReference()
     {
