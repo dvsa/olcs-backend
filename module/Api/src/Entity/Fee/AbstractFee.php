@@ -27,8 +27,8 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_fee_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_fee_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_fee_irfo_gv_permit_id", columns={"irfo_gv_permit_id"}),
- *        @ORM\Index(name="ix_fee_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="ix_fee_fee_status", columns={"fee_status"})
+ *        @ORM\Index(name="ix_fee_fee_status", columns={"fee_status"}),
+ *        @ORM\Index(name="fk_fee_irfo_psv_auth1_idx", columns={"irfo_psv_auth_id"})
  *    }
  * )
  */
