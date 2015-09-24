@@ -50,10 +50,8 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
 
         $result->merge($this->createTask($application));
 
-        if ($application->isNew()) {
-            if ($this->shouldPublishApplication($application)) {
-                $result->merge($this->createPublication($application));
-            }
+        if ($this->shouldPublishApplication($application)) {
+            $result->merge($this->createPublication($application));
             $result->merge($this->createTexTask($application));
         }
 
@@ -69,20 +67,46 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
      */
     private function shouldPublishApplication(ApplicationEntity $application)
     {
-        // don't publish on submit if special restircted
-        if ($application->isSpecialRestricted()) {
+        // don't publish on submit if new special restricted
+        if ($application->isNew() && $application->isSpecialRestricted()) {
             return false;
         }
 
-        // dont publish if application is associated with an S4 whoose outcomce is empty or approved
-        foreach ($application->getS4s() as $s4) {
-            /* @var $s4 S4 */
-            if ($s4->getOutcome() === null || $s4->getOutcome()->getId() === S4::STATUS_APPROVED) {
-                return false;
-            }
+        // Exclude for PSV variation applications
+        if ($application->isVariation() && $application->isPsv()) {
+            return false;
+        }
+
+        // Dont publish if application is associated with an S4 whoose outcome is empty or approved
+        if ($this->hasBlankApprovedS4($application)) {
+            return false;
+        }
+
+        // If variation, check it is publishable
+        if ($application->isVariation() && !$application->isVariationPublishable()) {
+            return false;
         }
 
         return true;
+    }
+
+    /**
+     * Has the application got a blank or approved S4 attached
+     *
+     * @param ApplicationEntity $application
+     * 
+     * @return boolean
+     */
+    private function hasBlankApprovedS4(ApplicationEntity $application)
+    {
+        foreach ($application->getS4s() as $s4) {
+            /* @var $s4 S4 */
+            if ($s4->getOutcome() === null || $s4->getOutcome()->getId() === S4::STATUS_APPROVED) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

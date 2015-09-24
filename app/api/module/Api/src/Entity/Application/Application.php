@@ -1427,4 +1427,34 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
         return $tasks;
     }
+
+    /**
+     * Is the variation in state where it should be published
+     *
+     * @return bool
+     */
+    public function isVariationPublishable()
+    {
+        // must be a variation
+        if (!$this->isVariation()) {
+            return false;
+        }
+
+        // An operating centre has been added;
+        if ($this->hasNewOperatingCentre()) {
+            return true;
+        }
+
+        // An operating centre has been updated and either the OC vehicles or trailers have increased;
+        if ($this->hasIncreaseInOperatingCentre()) {
+            return true;
+        }
+
+        // A major upgrade has taken place (ie restricted to standard national or restricted to standard international)
+        if ($this->isRealUpgrade()) {
+            return true;
+        }
+
+        return false;
+    }
 }
