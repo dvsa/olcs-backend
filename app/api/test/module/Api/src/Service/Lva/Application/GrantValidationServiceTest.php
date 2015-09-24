@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Lva;
+namespace Dvsa\OlcsTest\Api\Service\Lva\Application;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\System\RefData;
