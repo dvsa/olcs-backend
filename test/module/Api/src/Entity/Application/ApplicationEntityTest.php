@@ -2499,4 +2499,74 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertEquals(111, $entity->getContextValue());
     }
+
+    public function testIsVariationPublishableNewApplication()
+    {
+        $licence = new Licence(new Organisation(), new RefData());
+        $application = new Entity($licence, new RefData(), false);
+        /* @var $application Entity */
+
+        $this->assertFalse($application->isVariationPublishable());
+    }
+
+    public function testIsVariationPublishableFalse()
+    {
+        $licence = new Licence(new Organisation(), new RefData());
+        $licence->setLicenceType(new RefData('Foo'));
+        $application = new Entity($licence, new RefData(), true);
+        /* @var $application Entity */
+        $application->setLicenceType(new RefData('Bar'));
+
+        $this->assertFalse($application->isVariationPublishable());
+    }
+
+    public function testIsVariationPublishableNewOc()
+    {
+        $licence = new Licence(new Organisation(), new RefData());
+        $application = new Entity($licence, new RefData(), true);
+        /* @var $application Entity */
+
+        $aoc = $this->instantiate(ApplicationOperatingCentre::class);
+        /* @var $aoc ApplicationOperatingCentre */
+        $aoc->setAction('A');
+
+        $application->addOperatingCentres($aoc);
+
+        $this->assertTrue($application->isVariationPublishable());
+    }
+
+    public function testIsVariationPublishableOcIncrease()
+    {
+        $licence = new Licence(new Organisation(), new RefData());
+        $application = new Entity($licence, new RefData(), true);
+        /* @var $application Entity */
+
+        $oc = new OperatingCentre();
+        $oc->setId(1066);
+
+        $loc = $this->instantiate(\Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre::class);
+        $loc->setNoOfVehiclesRequired(9);
+        $loc->setOperatingCentre($oc);
+        $licence->addOperatingCentres($loc);
+
+        $aoc = $this->instantiate(ApplicationOperatingCentre::class);
+        /* @var $aoc ApplicationOperatingCentre */
+        $aoc->setAction('U');
+        $aoc->setOperatingCentre($oc);
+        $aoc->setNoOfVehiclesRequired(10);
+        $application->addOperatingCentres($aoc);
+
+        $this->assertTrue($application->isVariationPublishable());
+    }
+
+    public function testIsVariationPublishableUpgrade()
+    {
+        $licence = new Licence(new Organisation(), new RefData());
+        $licence->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $application = new Entity($licence, new RefData(), true);
+        /* @var $application Entity */
+        $application->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL));
+
+        $this->assertTrue($application->isVariationPublishable());
+    }
 }

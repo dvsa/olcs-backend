@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -79,15 +80,18 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         /** @var LicenceEntity $licence */
         $licence = $this->mapReference(LicenceEntity::class, $licenceId);
+        $licence->setLicenceType(new RefData());
         $licence->setTrafficArea($trafficArea);
+        $licence->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
 
-        /** @var ApplicationEntity $application */
+        /* @var $application ApplicationEntity */
         $application = $this->mapReference(ApplicationEntity::class, $applicationId);
         $application->setLicence($licence);
         $application->setStatus($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED));
         $application->setIsVariation($isVariation);
         $application->setLicenceType($this->mapRefdata(LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL));
         $application->setS4s(new \Doctrine\Common\Collections\ArrayCollection());
+        $application->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
 
         $expectedTargetCompletionDate = clone $now;
         $expectedTargetCompletionDate->modify('+9 week');
@@ -166,12 +170,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * @param boolean $isVariation
-     * @param array $expected
-     * @dataProvider isVariationProvider
-     */
-    public function testHandleCommandSpecialRestricted($isVariation, $expected)
+    public function testHandleCommandVariationPsv()
     {
         $applicationId = 69;
         $version       = 10;
@@ -191,15 +190,19 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         /** @var LicenceEntity $licence */
         $licence = $this->mapReference(LicenceEntity::class, $licenceId);
+        $licence->setLicenceType(new RefData());
         $licence->setTrafficArea($trafficArea);
+        $licence->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
 
-        /** @var ApplicationEntity $application */
+        /* @var $application ApplicationEntity */
         $application = $this->mapReference(ApplicationEntity::class, $applicationId);
         $application->setLicence($licence);
         $application->setStatus($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED));
-        $application->setIsVariation($isVariation);
-        $application->setLicenceType($this->mapRefdata(LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED));
+        $application->setIsVariation(true);
+        $application->setLicenceType($this->mapRefdata(LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL));
         $application->setS4s(new \Doctrine\Common\Collections\ArrayCollection());
+        $application->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
+        $application->setGoodsOrPsv(new RefData(LicenceEntity::LICENCE_CATEGORY_PSV));
 
         $expectedTargetCompletionDate = clone $now;
         $expectedTargetCompletionDate->modify('+9 week');
@@ -211,24 +214,126 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->andReturn('TEST CODE');
 
         // licence status should be updated if application is not a variation
-        if ($isVariation) {
-            $licence
-                ->shouldReceive('setStatus')
-                ->never();
-        } else {
-            $licence
-                ->shouldReceive('setStatus')
-                ->with($this->mapRefdata(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION))
-                ->once()
-                ->andReturnSelf();
+        $licence
+            ->shouldReceive('setStatus')
+            ->never();
 
-            $this->expectedSideEffect(
-                \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::class,
-                ['id' => 69],
-                new Result()
-            );
+        $this->repoMap['Application']
+            ->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, $version)
+            ->andReturn($application);
 
-        }
+        $this->repoMap['Application']
+            ->shouldReceive('save')
+            ->with($application)
+            ->once();
+
+        $expectedTaskData = [
+            'category' => CategoryEntity::CATEGORY_APPLICATION,
+            'subCategory' => CategoryEntity::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL,
+            'description' => 'TEST CODE Application',
+            'actionDate' => $now->format('Y-m-d'),
+            'assignedToUser' => null,
+            'assignedToTeam' => null,
+            'isClosed' => false,
+            'urgent' => false,
+            'application' => $applicationId,
+            'licence' => $licenceId,
+            'busReg' => null,
+            'case' => null,
+            'transportManager' => null,
+            'irfoOrganisation' => null,
+        ];
+        $taskResult = new Result();
+        $taskResult->addId('task', $taskId);
+        $taskResult->addMessage('task created');
+        $this->expectedSideEffect(CreateTaskCmd::class, $expectedTaskData, $taskResult);
+
+        $result1 = new Result();
+        $result1->addMessage('Snapshot created');
+        $this->expectedSideEffect(CreateSnapshot::class, ['id' => 69, 'event' => CreateSnapshot::ON_SUBMIT], $result1);
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals($expectedTargetCompletionDate, $application->getTargetCompletionDate());
+        $this->assertEquals($now, $application->getReceivedDate());
+        $expected = [
+            'id' => [
+                'application' => 69,
+                'task' => 111,
+            ],
+            'messages' => [
+                'Snapshot created',
+                'Application updated',
+                'task created'
+            ],
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandSpecialRestricted()
+    {
+        $applicationId = 69;
+        $version       = 10;
+        $licenceId     = 7;
+        $taskId        = 111;
+        $now           = new DateTime();
+
+        $expected = [
+            'id' => [
+                'application' => 69,
+                'licence' => 7,
+                'task' => 111,
+            ],
+            'messages' => [
+                'Snapshot created',
+                'Application updated',
+                'Licence updated',
+                'task created',
+            ],
+        ];
+
+        $command = Cmd::create(
+            [
+                'id' => $applicationId,
+                'version' => $version,
+            ]
+        );
+
+        $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea->setId('TA');
+
+        /** @var LicenceEntity $licence */
+        $licence = $this->mapReference(LicenceEntity::class, $licenceId);
+        $licence->setLicenceType(new RefData());
+        $licence->setTrafficArea($trafficArea);
+        $licence->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
+
+        /** @var ApplicationEntity $application */
+        $application = $this->mapReference(ApplicationEntity::class, $applicationId);
+        $application->setIsVariation(false);
+        $application->setLicence($licence);
+        $application->setStatus($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED));
+        $application->setLicenceType($this->mapRefdata(LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED));
+        $application->setS4s(new \Doctrine\Common\Collections\ArrayCollection());
+        $application->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
+
+        $expectedTargetCompletionDate = clone $now;
+        $expectedTargetCompletionDate->modify('+9 week');
+        $application
+            ->shouldReceive('setStatus')
+            ->with($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION))
+            ->andReturnSelf()
+            ->shouldReceive('getCode')
+            ->andReturn('TEST CODE');
+
+        // licence status should be updated if application is not a variation
+        $licence
+            ->shouldReceive('setStatus')
+            ->with($this->mapRefdata(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION))
+            ->once()
+            ->andReturnSelf();
 
         $this->repoMap['Application']
             ->shouldReceive('fetchUsingId')
@@ -331,13 +436,6 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 ->with($this->mapRefdata(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION))
                 ->once()
                 ->andReturnSelf();
-
-            $this->expectedSideEffect(
-                \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::class,
-                ['id' => 69],
-                new Result()
-            );
-
         }
 
         $this->repoMap['Application']
