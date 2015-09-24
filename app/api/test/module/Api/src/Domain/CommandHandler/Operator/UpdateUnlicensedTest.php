@@ -59,7 +59,10 @@ class UpdateUnlicensedTest extends CommandHandlerTestCase
                 7 => m::mock(LicenceEntity::class)->makePartial(),
             ],
             TrafficAreaEntity::class => [
-                'N' => m::mock(TrafficAreaEntity::class)->makePartial(),
+                'N' => m::mock(TrafficAreaEntity::class)->makePartial()
+                ->shouldReceive('getIsNi')
+                ->andReturn(true)
+                ->getMock(),
             ],
             AddressEntity::class => [
                 11 => m::mock(AddressEntity::class)->makePartial(),

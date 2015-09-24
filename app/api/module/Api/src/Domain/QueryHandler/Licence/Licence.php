@@ -44,6 +44,29 @@ class Licence extends AbstractQueryHandler
             $licence,
             [
                 'organisation',
+                'cases' => [
+                    'appeal' => [
+                        'outcome',
+                        'reason',
+                    ],
+                    'stays' => [
+                        'stayType',
+                        'outcome',
+                    ],
+                ],
+                'correspondenceCd' => [
+                    'address',
+                ],
+                'status',
+                'goodsOrPsv',
+                'licenceType',
+                'trafficArea',
+                'organisation' => [
+                    'organisationPersons' => [
+                        'person'
+                    ],
+                    'tradingNames',
+                ],
             ],
             [
                 'sections' => $this->sectionAccessService->getAccessibleSectionsForLicence($licence),
