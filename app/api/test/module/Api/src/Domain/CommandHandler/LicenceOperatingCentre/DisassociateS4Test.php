@@ -36,7 +36,8 @@ class DisassociateS4Test extends CommandHandlerTestCase
     {
         $this->references = [
             LicenceOperatingCentre::class => [
-                1 => m::mock(LicenceOperatingCentre::class)->makePartial()
+                1 => m::mock(LicenceOperatingCentre::class)->makePartial(),
+                54 => m::mock(LicenceOperatingCentre::class)->makePartial()
             ]
         ];
 
@@ -47,16 +48,17 @@ class DisassociateS4Test extends CommandHandlerTestCase
     {
         $data = [
             'licenceOperatingCentres' => [
-                $this->references[LicenceOperatingCentre::class][1]
+                $this->references[LicenceOperatingCentre::class][1],
+                $this->references[LicenceOperatingCentre::class][54]
             ]
         ];
 
         $command = Cmd::create($data);
 
-        $this->repoMap['LicenceOperatingCentre']
-            ->shouldReceive('save')
-            ->once()
-            ->with(m::type(LicenceOperatingCentre::class));
+        $this->repoMap['LicenceOperatingCentre']->shouldReceive('save')
+            ->with($this->references[LicenceOperatingCentre::class][1])->once();
+        $this->repoMap['LicenceOperatingCentre']->shouldReceive('save')
+            ->with($this->references[LicenceOperatingCentre::class][54])->once();
 
         $this->sut->handleCommand($command);
     }
