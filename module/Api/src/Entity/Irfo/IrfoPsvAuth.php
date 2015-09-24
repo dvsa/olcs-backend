@@ -20,9 +20,6 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *        @ORM\Index(name="ix_irfo_psv_auth_irfo_psv_auth_type_id", columns={"irfo_psv_auth_type_id"}),
  *        @ORM\Index(name="ix_irfo_psv_auth_status", columns={"status"}),
  *        @ORM\Index(name="ix_irfo_psv_auth_withdrawn_reason", columns={"withdrawn_reason"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_irfo_psv_auth_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
