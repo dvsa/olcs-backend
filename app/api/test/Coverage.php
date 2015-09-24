@@ -159,7 +159,6 @@ class Coverage implements PHPUnit_Framework_TestListener
                 unset($data[$file]);
             } else {
                 unset($data[$file][0]);
-                array_pop($data[$file]);
             }
         }
 
