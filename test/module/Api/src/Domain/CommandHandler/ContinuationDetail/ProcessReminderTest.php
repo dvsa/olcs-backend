@@ -34,7 +34,7 @@ class ProcessReminderTest extends CommandHandlerTestCase
      */
     public function testHandleCommand($isGoods, $template)
     {
-        $command = Command::create(['id' => 1]);
+        $command = Command::create(['id' => 1, 'user' => 2]);
 
         $mockLicence = m::mock()
             ->shouldReceive('getId')
@@ -63,7 +63,8 @@ class ProcessReminderTest extends CommandHandlerTestCase
         $dtoData = [
             'template' => $template,
             'query' => [
-                'licence' => 3
+                'licence' => 3,
+                'user' => 2
             ],
             'description' => 'Checklist reminder',
             'licence' => 3,
