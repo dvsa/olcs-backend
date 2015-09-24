@@ -34,6 +34,10 @@ class Bus extends AbstractQueryHandler
                 'subsidised',
                 'otherServices',
                 'variationReasons',
+                'npPublicationNo'
+            ],
+            [
+                'npPublicationNo' => $busReg->getLicence()->determineNpNumber()
             ]
         );
     }
