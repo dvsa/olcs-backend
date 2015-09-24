@@ -30,7 +30,9 @@ class Publication extends AbstractPublication
     const PUB_NEW_STATUS = 'pub_s_new';
     const PUB_GENERATED_STATUS = 'pub_s_generated';
     const PUB_PRINTED_STATUS = 'pub_s_printed';
-
+    const PUB_TYPE_N_P = 'N&P';
+    const PUB_TYPE_A_D = 'A&D';
+    
     public function __construct(
         TrafficAreaEntity $trafficArea,
         RefData $pubStatus,

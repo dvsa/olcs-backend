@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -16,6 +17,8 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
+use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 
 /**
  * Licence Entity
@@ -802,5 +805,55 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         return [
             'niFlag' => $this->getNiFlag(),
         ];
+    }
+
+    /**
+     * Returns the latest publication by type from a licence
+     *
+     * @param $licence
+     * @param $type string
+     * @return array|null
+     */
+    public function getLatestPublicationByType($type)
+    {
+        $latestCriteria = Criteria::create()->orderBy(['pubDate' => Criteria::DESC]);
+
+        $typeCriteria = Criteria::create()
+            ->where(
+                Criteria::expr()->in(
+                    'pubType',
+                    [
+                        $type
+                    ]
+                )
+            );
+
+        $iterator = $this->getPublicationLinks()->getIterator();
+        $iterator->uasort(
+            function ($a, $b) {
+                /** @var PublicationLinkEntity $a */
+                /** @var PublicationLinkEntity $b */
+                if (($a->getPublication()->getPubDate() instanceof \DateTime) &&
+                    ($b->getPublication()->getPubDate() instanceof \DateTime)) {
+                    return strtotime(
+                        $a->getComplaintDate()->format('Ymd') - strtotime(
+                            $b->getComplaintDate()->format('Ymd')
+                        )
+                    );
+                }
+            }
+        );
+        $publicationLinks = new ArrayCollection(iterator_to_array($iterator));
+
+        foreach ($publicationLinks as $pLink) {
+            if ($pLink->getPublication()->getPubType() == $type) {
+                return $pLink->getPublication();
+            }
+        }
+    }
+
+    public function determineNpNumber()
+    {
+        return $this->getLatestPublicationByType('N&P')->getPublicationNo();
     }
 }
