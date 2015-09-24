@@ -50,6 +50,18 @@ class Address
 
         $parts = array();
 
+        if ($data instanceof \Dvsa\Olcs\Api\Entity\ContactDetails\Address) {
+            $data = [
+                'addressLine1' => $data->getAddressLine1(),
+                'addressLine2' => $data->getAddressLine2(),
+                'addressLine3' => $data->getAddressLine3(),
+                'addressLine4' => $data->getAddressLine4(),
+                'town' => $data->getTown(),
+                'postcode' => $data->getPostcode(),
+                'countryCode' => ($data->getCountryCode() !== null ? $data->getCountryCode()->getId() : null)
+            ];
+        }
+
         if (isset($data['countryCode']['id'])) {
             $data['countryCode'] = $data['countryCode']['id'];
         } else {
