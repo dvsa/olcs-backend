@@ -25,9 +25,6 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_irfo_psv_auth_irfo_psv_auth_type_id", columns={"irfo_psv_auth_type_id"}),
  *        @ORM\Index(name="ix_irfo_psv_auth_status", columns={"status"}),
  *        @ORM\Index(name="ix_irfo_psv_auth_withdrawn_reason", columns={"withdrawn_reason"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_irfo_psv_auth_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
@@ -253,15 +250,6 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
      */
     protected $lastModifiedOn;
-
-    /**
-     * Olbs key
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
-     */
-    protected $olbsKey;
 
     /**
      * Organisation
@@ -884,29 +872,6 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     public function getLastModifiedOn()
     {
         return $this->lastModifiedOn;
-    }
-
-    /**
-     * Set the olbs key
-     *
-     * @param int $olbsKey
-     * @return IrfoPsvAuth
-     */
-    public function setOlbsKey($olbsKey)
-    {
-        $this->olbsKey = $olbsKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs key
-     *
-     * @return int
-     */
-    public function getOlbsKey()
-    {
-        return $this->olbsKey;
     }
 
     /**
