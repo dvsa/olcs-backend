@@ -22,6 +22,8 @@ final class Create extends AbstractCommand
 
     protected $status;
 
+    protected $user;
+
     /**
      * @return mixed
      */
@@ -44,5 +46,13 @@ final class Create extends AbstractCommand
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
