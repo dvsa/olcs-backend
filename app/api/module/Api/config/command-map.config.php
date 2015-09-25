@@ -629,6 +629,8 @@ return [
         CommandHandler\TransportManagerApplication\UpdateForResponsibilities::class,
     TransferCommand\TransportManagerApplication\DeleteForResponsibilities::class =>
         CommandHandler\TransportManagerApplication\DeleteForResponsibilities::class,
+    TransferCommand\TransportManagerApplication\SendTmApplication::class =>
+        CommandHandler\Email\SendTmApplication::class,
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
