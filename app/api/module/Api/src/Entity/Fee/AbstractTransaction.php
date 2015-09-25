@@ -16,15 +16,15 @@ use Doctrine\Common\Collections\Collection;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="transaction",
+ * @ORM\Table(name="txn",
  *    indexes={
- *        @ORM\Index(name="ix_transaction_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_transaction_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_transaction_transaction_status", columns={"status"}),
- *        @ORM\Index(name="ix_transaction_transaction_type", columns={"type"}),
- *        @ORM\Index(name="fk_transaction_user1_idx", columns={"waive_recommender_user_id"}),
- *        @ORM\Index(name="fk_transaction_user2_idx", columns={"processed_by_user_id"}),
- *        @ORM\Index(name="ix_transaction_payment_method", columns={"payment_method"}),
+ *        @ORM\Index(name="ix_txn_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_txn_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_txn_status", columns={"status"}),
+ *        @ORM\Index(name="ix_txn_type", columns={"type"}),
+ *        @ORM\Index(name="fk_txn_user1_idx", columns={"waive_recommender_user_id"}),
+ *        @ORM\Index(name="fk_txn_user2_idx", columns={"processed_by_user_id"}),
+ *        @ORM\Index(name="ix_txn_payment_method", columns={"payment_method"}),
  *        @ORM\Index(name="olbs_key", columns={"olbs_key"})
  *    }
  * )
@@ -38,7 +38,7 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="cheque_po_date", nullable=true)
+     * @ORM\Column(type="date", name="cheque_po_date", nullable=true)
      */
     protected $chequePoDate;
 
@@ -56,7 +56,7 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="comment", length=255, nullable=true)
+     * @ORM\Column(type="string", name="comment", length=1000, nullable=true)
      */
     protected $comment;
 
@@ -263,7 +263,7 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="waive_recommendation_date", nullable=true)
+     * @ORM\Column(type="date", name="waive_recommendation_date", nullable=true)
      */
     protected $waiveRecommendationDate;
 
