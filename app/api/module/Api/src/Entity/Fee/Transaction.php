@@ -12,7 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  *    indexes={
  *        @ORM\Index(name="ix_transaction_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_transaction_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_transaction_transaction_status", columns={"status"})
+ *        @ORM\Index(name="ix_transaction_transaction_status", columns={"status"}),
+ *        @ORM\Index(name="ix_transaction_transaction_type", columns={"type"}),
+ *        @ORM\Index(name="ix_transaction_waive_recommender_user_id",
+ *     columns={"waive_recommender_user_id"}),
+ *        @ORM\Index(name="ix_transaction_processed_by_user_id", columns={"processed_by_user_id"}),
+ *        @ORM\Index(name="ix_transaction_payment_method", columns={"payment_method"})
  *    }
  * )
  */
