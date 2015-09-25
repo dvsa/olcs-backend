@@ -57,28 +57,28 @@ final class ResolvePayment extends AbstractCommandHandler implements
 
         switch ($cpmsStatus) {
             case Cpms::PAYMENT_SUCCESS:
-                $status = Transaction::STATUS_PAID;
                 $transaction
                     ->setCompletedDate($now)
-                    ->setProcessedByUser($this->getCurrentUser());
+                    ->setProcessedByUser($this->getCurrentUser())
+                    ->setStatus($this->getRepo()->getRefdataReference(Transaction::STATUS_PAID));
                 $result->merge($this->updateFees($transaction));
                 break;
             case Cpms::PAYMENT_FAILURE:
-                $status = Transaction::STATUS_FAILED;
+                $transaction->setStatus($this->getRepo()->getRefdataReference(Transaction::STATUS_FAILED));
                 break;
             case Cpms::PAYMENT_CANCELLATION:
-                $status = Transaction::STATUS_CANCELLED;
+                $transaction->setStatus($this->getRepo()->getRefdataReference(Transaction::STATUS_CANCELLED));
                 break;
             case Cpms::PAYMENT_IN_PROGRESS:
             case Cpms::PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED:
+            case Cpms::PAYMENT_GATEWAY_ERROR:
                 // resolve any abandoned payments as 'failed'
-                $status = Transaction::STATUS_FAILED;
+                $transaction->setStatus($this->getRepo()->getRefdataReference(Transaction::STATUS_FAILED));
                 break;
             default:
                 throw new ValidationException(['Unknown CPMS payment_status: '.$cpmsStatus]);
         }
 
-        $transaction->setStatus($this->getRepo()->getRefdataReference($status));
         $this->getRepo()->save($transaction);
 
         $result->addId('transaction', $transaction->getId());
@@ -107,7 +107,8 @@ final class ResolvePayment extends AbstractCommandHandler implements
 
         foreach ($transaction->getFeeTransactions() as $ft) {
             $fee = $ft->getFee();
-            if ($fee->getOutstandingAmount() <= 0) {
+            $outstanding = (int) ($fee->getOutstandingAmount() * 100); // convert to integer pence for comparison
+            if ($outstanding <= 0) {
                 $fee->setFeeStatus($paidStatusRef);
                 $this->getRepo('Fee')->save($fee);
                 $result->addMessage('Fee ID ' . $fee->getId() . ' updated as paid');
