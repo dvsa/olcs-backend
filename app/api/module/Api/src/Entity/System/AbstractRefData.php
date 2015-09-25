@@ -18,9 +18,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="ix_ref_data_parent_id", columns={"parent_id"}),
  *        @ORM\Index(name="ix_ref_data_ref_data_category_id", columns={"ref_data_category_id"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_ref_data_olbs_key", columns={"ref_data_category_id","olbs_key"})
  *    }
  * )
  */
