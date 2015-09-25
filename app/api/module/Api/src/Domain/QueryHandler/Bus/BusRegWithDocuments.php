@@ -11,7 +11,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 /**
  * Bus
  */
-class Bus extends AbstractQueryHandler
+class BusRegWithDocuments extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Bus';
 
@@ -33,7 +33,13 @@ class Bus extends AbstractQueryHandler
                 'localAuthoritys',
                 'subsidised',
                 'otherServices',
-                'variationReasons'
+                'variationReasons',
+                'npPublicationNo',
+                //'documents'
+            ],
+            [
+                'npPublicationNo' => $busReg->getLicence()->determineNpNumber(),
+                //'documents' => $busReg->fetchDocumentsByLocalAuthority($query->getLocalAuthority())
             ]
         );
     }
