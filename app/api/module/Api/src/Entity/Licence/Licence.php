@@ -817,18 +817,13 @@ class Licence extends AbstractLicence implements ContextProviderInterface
     public function getLatestPublicationByType($type)
     {
         $iterator = $this->getPublicationLinks()->getIterator();
+
         $iterator->uasort(
             function ($a, $b) {
                 /** @var PublicationLinkEntity $a */
                 /** @var PublicationLinkEntity $b */
-                if (($a->getPublication()->getPubDate() instanceof \DateTime) &&
-                    ($b->getPublication()->getPubDate() instanceof \DateTime)) {
-                    return strtotime(
-                        $a->getPublication()->getPubDate()->format('Ymd') - strtotime(
-                            $b->getPublication()->getPubDate()->format('Ymd')
-                        )
-                    );
-                }
+                return strtotime($b->getPublication()->getPubDate()) -
+                    strtotime($a->getPublication()->getPubDate());
             }
         );
         $publicationLinks = new ArrayCollection(iterator_to_array($iterator));
