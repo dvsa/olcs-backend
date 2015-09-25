@@ -816,18 +816,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
      */
     public function getLatestPublicationByType($type)
     {
-        $latestCriteria = Criteria::create()->orderBy(['pubDate' => Criteria::DESC]);
-
-        $typeCriteria = Criteria::create()
-            ->where(
-                Criteria::expr()->in(
-                    'pubType',
-                    [
-                        $type
-                    ]
-                )
-            );
-
         $iterator = $this->getPublicationLinks()->getIterator();
         $iterator->uasort(
             function ($a, $b) {
@@ -836,8 +824,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface
                 if (($a->getPublication()->getPubDate() instanceof \DateTime) &&
                     ($b->getPublication()->getPubDate() instanceof \DateTime)) {
                     return strtotime(
-                        $a->getComplaintDate()->format('Ymd') - strtotime(
-                            $b->getComplaintDate()->format('Ymd')
+                        $a->getPublication()->getPubDate()->format('Ymd') - strtotime(
+                            $b->getPublication()->getPubDate()->format('Ymd')
                         )
                     );
                 }
