@@ -8093,6 +8093,7 @@ CREATE VIEW bus_reg_search_view AS
           , 0)
             AND br1.deleted_date is null;
 
+
 -- Bus reg history view
 DROP TABLE IF EXISTS bus_reg_history_view;
 DROP VIEW IF EXISTS bus_reg_history_view;
