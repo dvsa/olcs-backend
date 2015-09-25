@@ -7,9 +7,8 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
-use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\ContinuationChecklistReminderGenerateLetter as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\ProcessReminder as Cmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\Olcs\Transfer\Command\ContinuationDetail\Update as UpdateContinuationDetail;
 
 /**
  * Continuation Checklist Reminder Generate Letter Queue Consumer
