@@ -59,8 +59,16 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
 
         $mockDocument = m::mock()
             ->shouldReceive('getContinuationDetails')
-            ->andReturn('foo')
-            ->once()
+            ->andReturn(
+                [
+                    m::mock()
+                    ->shouldReceive('getChecklistDocument')
+                    ->andReturn('foo')
+                    ->once()
+                    ->getMock()
+                ]
+            )
+            ->twice()
             ->shouldReceive('getIdentifier')
             ->andReturn('id')
             ->once()
@@ -81,7 +89,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
             ->once()
             ->shouldReceive('getDocument')
             ->andReturn($mockDocument)
-            ->twice()
+            ->times(3)
             ->getMock();
 
         $this->repoMap['CorrespondenceInbox']
@@ -102,7 +110,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
             ->once()
             ->with(
                 m::type(Message::class),
-                'licensing-information-continuation',
+                'email-inbox-reminder-continuation',
                 ['licNo' => 'licNo', 'url' => 'http://selfserve/correspondence'],
                 null
             );
@@ -156,8 +164,16 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
 
         $mockDocument = m::mock()
             ->shouldReceive('getContinuationDetails')
-            ->andReturn('foo')
-            ->once()
+            ->andReturn(
+                [
+                    m::mock()
+                        ->shouldReceive('getChecklistDocument')
+                        ->andReturn('foo')
+                        ->once()
+                        ->getMock()
+                ]
+            )
+            ->twice()
             ->shouldReceive('getIdentifier')
             ->andReturn('id')
             ->once()
@@ -175,7 +191,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
             ->once()
             ->shouldReceive('getDocument')
             ->andReturn($mockDocument)
-            ->twice()
+            ->times(3)
             ->getMock();
 
         $this->repoMap['CorrespondenceInbox']
