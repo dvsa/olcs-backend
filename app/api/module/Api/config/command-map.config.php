@@ -279,6 +279,10 @@ return [
     TransferCommand\Publication\CreateRecipient::class => CommandHandler\Publication\CreateRecipient::class,
     TransferCommand\Publication\UpdateRecipient::class => CommandHandler\Publication\UpdateRecipient::class,
     TransferCommand\Publication\DeleteRecipient::class => CommandHandler\Publication\DeleteRecipient::class,
+    TransferCommand\Publication\Publish::class => CommandHandler\Publication\Publish::class,
+    TransferCommand\Publication\Generate::class => CommandHandler\Publication\Generate::class,
+    TransferCommand\Publication\DeletePublicationLink::class => CommandHandler\Publication\DeletePublicationLink::class,
+    TransferCommand\Publication\UpdatePublicationLink::class => CommandHandler\Publication\UpdatePublicationLink::class,
 
     // Transfer - My Account
     TransferCommand\MyAccount\UpdateMyAccount::class => CommandHandler\MyAccount\UpdateMyAccount::class,
