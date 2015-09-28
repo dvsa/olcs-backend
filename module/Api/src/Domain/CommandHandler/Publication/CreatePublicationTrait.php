@@ -77,4 +77,17 @@ trait CreatePublicationTrait
 
         return $result;
     }
+
+    private function clearPoliceData(PublicationLinkEntity $publicationLink)
+    {
+        $policeData = $publicationLink->getPoliceDatas();
+        if (!$policeData->isEmpty()) {
+            foreach ($policeData as $police) {
+                $police->setPublicationLink(null);
+            }
+        }
+
+        $publicationLink->setPoliceDatas($policeData);
+        return $publicationLink;
+    }
 }

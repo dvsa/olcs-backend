@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Transfer\Query\Bus\RegistrationHistoryList as QueryCmd;
-use Dvsa\Olcs\Transfer\Query\Bus\ByLicenceRoute as ByLicenceRouteQry;
+use Dvsa\Olcs\Api\Domain\Query\Bus\ByLicenceRoute as ByLicenceRouteQry;
 use Doctrine\ORM\Query;
 
 /**

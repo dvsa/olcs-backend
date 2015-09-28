@@ -57,7 +57,7 @@ class UserEntityTest extends EntityTester
             [null, $localAuthority, null, null, Entity::USER_TYPE_LOCAL_AUTHORITY],
             [null, null, $transportManager, null, Entity::USER_TYPE_TRANSPORT_MANAGER],
             [null, null, null, $partnerContactDetails, Entity::USER_TYPE_PARTNER],
-            [null, null, null, null, Entity::USER_TYPE_SELF_SERVICE],
+            [null, null, null, null, Entity::USER_TYPE_OPERATOR],
         ];
     }
 
@@ -81,7 +81,7 @@ class UserEntityTest extends EntityTester
         $entity = Entity::create(Entity::USER_TYPE_INTERNAL, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -133,7 +133,7 @@ class UserEntityTest extends EntityTester
         $entity->update($data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -167,7 +167,7 @@ class UserEntityTest extends EntityTester
         $entity = Entity::create(Entity::USER_TYPE_TRANSPORT_MANAGER, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -219,7 +219,7 @@ class UserEntityTest extends EntityTester
         $entity->update($data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -253,7 +253,7 @@ class UserEntityTest extends EntityTester
         $entity = Entity::create(Entity::USER_TYPE_PARTNER, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -305,7 +305,7 @@ class UserEntityTest extends EntityTester
         $entity->update($data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -339,7 +339,7 @@ class UserEntityTest extends EntityTester
         $entity = Entity::create(Entity::USER_TYPE_LOCAL_AUTHORITY, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -391,7 +391,7 @@ class UserEntityTest extends EntityTester
         $entity->update($data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
@@ -405,10 +405,10 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
     }
 
-    public function testCreateSelfService()
+    public function testCreateOperator()
     {
         $adminRole = m::mock(RoleEntity::class)->makePartial();
-        $adminRole->setRole(RoleEntity::ROLE_OPERATOR_ADMIN);
+        $adminRole->setId(RoleEntity::ROLE_OPERATOR_ADMIN);
 
         $data = [
             'loginId' => 'loginId',
@@ -425,16 +425,16 @@ class UserEntityTest extends EntityTester
             ],
         ];
 
-        $entity = Entity::create(Entity::USER_TYPE_SELF_SERVICE, $data);
+        $entity = Entity::create(Entity::USER_TYPE_OPERATOR, $data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
 
-        $this->assertEquals(Entity::USER_TYPE_SELF_SERVICE, $entity->getUserType());
+        $this->assertEquals(Entity::USER_TYPE_OPERATOR, $entity->getUserType());
         $this->assertEquals(null, $entity->getTeam());
         $this->assertEquals(null, $entity->getTransportManager());
         $this->assertEquals(null, $entity->getPartnerContactDetails());
@@ -443,12 +443,12 @@ class UserEntityTest extends EntityTester
         $this->assertEquals('Y', $entity->getOrganisationUsers()->first()->getIsAdministrator());
     }
 
-    public function testUpdateSelfService()
+    public function testUpdateOperator()
     {
         $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
 
         $data = [
-            'userType' => Entity::USER_TYPE_SELF_SERVICE,
+            'userType' => Entity::USER_TYPE_OPERATOR,
             'loginId' => 'loginId',
             'roles' => [$nonAdminRole],
             'memorableWord' => 'aWord',
@@ -483,18 +483,133 @@ class UserEntityTest extends EntityTester
         $entity->update($data);
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
-        $this->assertEquals($data['roles'], $entity->getRoles());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
         $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertEquals(null, $entity->getLockedDate());
 
-        $this->assertEquals(Entity::USER_TYPE_SELF_SERVICE, $entity->getUserType());
+        $this->assertEquals(Entity::USER_TYPE_OPERATOR, $entity->getUserType());
         $this->assertEquals(null, $entity->getTeam());
         $this->assertEquals(null, $entity->getTransportManager());
         $this->assertEquals(null, $entity->getPartnerContactDetails());
         $this->assertEquals(null, $entity->getLocalAuthority());
         $this->assertEquals(1, $entity->getOrganisationUsers()->count());
         $this->assertEquals('N', $entity->getOrganisationUsers()->first()->getIsAdministrator());
+    }
+
+    public function testUpdateOperatorIsAdministratorOnly()
+    {
+        $adminRole = m::mock(RoleEntity::class)->makePartial();
+        $adminRole->setId(RoleEntity::ROLE_OPERATOR_ADMIN);
+
+        $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
+
+        $data = [
+            'userType' => Entity::USER_TYPE_OPERATOR,
+            'loginId' => 'loginId',
+            'roles' => [$adminRole],
+        ];
+
+        $entity = Entity::create(
+            Entity::USER_TYPE_OPERATOR,
+            [
+                'loginId' => 'currentLoginId',
+                'roles' => [$nonAdminRole],
+                'organisations' => [
+                    m::mock(OrganisationEntity::class)->makePartial()
+                ],
+            ]
+        );
+
+        // update the entity
+        $entity->update($data);
+
+        $this->assertEquals($data['loginId'], $entity->getLoginId());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
+
+        $this->assertEquals(Entity::USER_TYPE_OPERATOR, $entity->getUserType());
+        $this->assertEquals(1, $entity->getOrganisationUsers()->count());
+        $this->assertEquals('Y', $entity->getOrganisationUsers()->first()->getIsAdministrator());
+    }
+
+    /**
+     * @dataProvider isAdministratorProvider
+     */
+    public function testIsAdministrator($userType, $roleIds, $expected)
+    {
+        $roles = array_map(
+            function ($id) {
+                $role = m::mock(RoleEntity::class)->makePartial();
+                $role->setId($id);
+
+                return $role;
+            },
+            $roleIds
+        );
+
+        $data = [
+            'loginId' => 'loginId',
+            'roles' => $roles,
+            'team' => m::mock(TeamEntity::class),
+            'transportManager' => m::mock(TransportManagerEntity::class),
+            'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
+            'localAuthority' => m::mock(LocalAuthorityEntity::class),
+            'organisations' => [
+                m::mock(OrganisationEntity::class)->makePartial()
+            ],
+        ];
+
+        $entity = Entity::create($userType, $data);
+
+        $this->assertEquals($expected, $entity->isAdministrator());
+    }
+
+    public function isAdministratorProvider()
+    {
+        return [
+            // local authority - admin
+            [
+                Entity::USER_TYPE_LOCAL_AUTHORITY,
+                Entity::getRolesByUserType(Entity::USER_TYPE_LOCAL_AUTHORITY, true),
+                true
+            ],
+            // local authority - user
+            [
+                Entity::USER_TYPE_LOCAL_AUTHORITY,
+                Entity::getRolesByUserType(Entity::USER_TYPE_LOCAL_AUTHORITY),
+                false
+            ],
+            // operator - admin
+            [
+                Entity::USER_TYPE_OPERATOR,
+                Entity::getRolesByUserType(Entity::USER_TYPE_OPERATOR, true),
+                true
+            ],
+            // operator - user
+            [
+                Entity::USER_TYPE_OPERATOR,
+                Entity::getRolesByUserType(Entity::USER_TYPE_OPERATOR),
+                false
+            ],
+            // partner - admin
+            [
+                Entity::USER_TYPE_PARTNER,
+                Entity::getRolesByUserType(Entity::USER_TYPE_PARTNER, true),
+                true
+            ],
+            // partner - user
+            [
+                Entity::USER_TYPE_PARTNER,
+                Entity::getRolesByUserType(Entity::USER_TYPE_PARTNER),
+                false
+            ],
+            // internal - user
+            [
+                Entity::USER_TYPE_INTERNAL,
+                Entity::getRolesByUserType(Entity::USER_TYPE_INTERNAL),
+                false
+            ],
+        ];
     }
 }

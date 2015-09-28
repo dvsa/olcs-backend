@@ -34,7 +34,7 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
         $data = $command->getArrayCopy();
         $data['id'] = $document->getId();
 
-        $this->handleSideEffect(UpdateDocumentLinks::create($data));
+        $result->merge($this->handleSideEffect(UpdateDocumentLinks::create($data)));
 
         $result->addId('document', $document->getId());
         $result->addMessage('Document created');

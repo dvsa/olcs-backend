@@ -55,7 +55,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $licence->shouldReceive('canHaveLargeVehicles')->andReturn(true);
         $licence->shouldReceive('canHaveCommunityLicences')->andReturn(true);
         $licence->setId(111);
-        $licence->setNiFlag('N');
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($query)
@@ -130,7 +129,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $licence->shouldReceive('canHaveLargeVehicles')->andReturn(true);
         $licence->shouldReceive('canHaveCommunityLicences')->andReturn(true);
         $licence->setId(111);
-        $licence->setNiFlag('N');
         $licence->setTrafficArea($ta);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')

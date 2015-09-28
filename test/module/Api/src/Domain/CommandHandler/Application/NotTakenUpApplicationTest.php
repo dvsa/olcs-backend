@@ -41,6 +41,10 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockRepo('LicenceVehicle', LicenceVehicleRepo::class);
 
+        $this->mockedSmServices = [
+            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+        ];
+
         parent::setUp();
     }
 
@@ -56,6 +60,8 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $command = Command::create(['id' => 532]);
+
+        $this->setupIsInternalUser(false);
 
         $mockLicenceVehicle = m::mock()
             ->shouldReceive('setSpecifiedDate')->with(null)->once()
@@ -99,7 +105,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             ->once()
             ->shouldReceive('isGoods')
             ->andReturn(true)
-            ->once()
+            ->twice()
             ->getMock();
         $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
 
@@ -166,5 +172,141 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Snapshot created', 'Application 1 set to not taken up.'], $result->getMessages());
+    }
+
+    public function testHandleCommandCloseTasks()
+    {
+        $command = Command::create(['id' => 532]);
+
+        $this->setupIsInternalUser(true);
+
+        $mockLicenceVehicle = m::mock()
+            ->shouldReceive('setSpecifiedDate')->with(null)->once()
+            ->shouldReceive('setInterimApplication')->with(null)->once()->getMock();
+
+        $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea->setId('TA');
+
+        $licence = m::mock(Licence::class)
+            ->shouldReceive('getId')
+            ->andReturn(123)
+            ->shouldReceive('getLicenceVehicles')
+            ->andReturn([$mockLicenceVehicle])
+            ->times(3)
+            ->shouldReceive('getTrafficArea')->with()->once()->andReturn($trafficArea)
+            ->getMock();
+
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(1);
+        $application->setLicence($licence);
+
+        $application->shouldReceive('getTransportManagers->toArray')
+            ->once()
+            ->andReturn(
+                [
+                    m::mock(TransportManagerApplication::class)
+                        ->shouldReceive('getId')
+                        ->once()
+                        ->andReturn(1)
+                        ->getMock(),
+                    m::mock(TransportManagerApplication::class)
+                        ->shouldReceive('getId')
+                        ->once()
+                        ->andReturn(2)
+                        ->getMock(),
+                ]
+            );
+
+        $application->shouldReceive('getCurrentInterimStatus')
+            ->andReturn(Application::INTERIM_STATUS_INFORCE)
+            ->once()
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->twice()
+            ->getMock();
+        $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
+
+        $licence->shouldReceive('getCommunityLics->toArray')
+            ->once()
+            ->andReturn(
+                [
+                    m::mock(CommunityLic::class)->makePartial(),
+                    m::mock(CommunityLic::class)->makePartial()
+                ]
+            );
+
+        $this->repoMap['Application']->shouldReceive('fetchById')
+            ->with(532)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(Application::class));
+
+        $this->repoMap['LicenceVehicle']->shouldReceive('save')
+            ->with($mockLicenceVehicle)
+            ->once()
+            ->getMock();
+
+        $result1 = new Result();
+        $result1->addMessage('Snapshot created');
+        $this->expectedSideEffect(CreateSnapshot::class, ['id' => 532, 'event' => CreateSnapshot::ON_NTU], $result1);
+
+        $this->expectedSideEffect(NotTakenUp::class, ['id' => 123], new Result());
+
+        $this->expectedSideEffect(
+            CeaseGoodsDiscs::class,
+            [
+                'licenceVehicles' => [$mockLicenceVehicle],
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            RemoveLicenceVehicle::class,
+            [
+                'licenceVehicles' => [$mockLicenceVehicle],
+                'id' => null
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(Delete::class, ['ids' => array(1,2)], new Result());
+
+        $this->expectedSideEffect(
+            ReturnAllCommunityLicences::class,
+            [
+                'id' => 123
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
+            ['id' => 1, 'trafficArea' => 'TA'],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            ['id' => 1],
+            (new Result())->addMessage('CLOSE_TEX_TASK')
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask::class,
+            ['id' => 1],
+            (new Result())->addMessage('CLOSE_FEEDUE_TASK')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(
+            [
+                'Snapshot created',
+                'CLOSE_TEX_TASK',
+                'CLOSE_FEEDUE_TASK',
+                'Application 1 set to not taken up.'
+            ],
+            $result->getMessages()
+        );
     }
 }

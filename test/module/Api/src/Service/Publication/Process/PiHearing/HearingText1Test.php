@@ -75,7 +75,7 @@ class HearingText1Test extends MockeryTestCase
         $licenceMock = m::mock(LicenceEntity::class);
         $licenceMock->shouldReceive('getOrganisation')->andReturn($organisationMock);
         $licenceMock->shouldReceive('getLicNo')->andReturn($licNo);
-        $licenceMock->shouldReceive('getLicenceType->getOlbsKey')->andReturn($licenceType);
+        $licenceMock->shouldReceive('getLicenceTypeShortCode')->andReturn($licenceType);
 
         $publicationLink = m::mock(PublicationLink::class)->makePartial();
         $publicationLink->shouldReceive('getLicence')->andReturn($licenceMock);

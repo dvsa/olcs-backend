@@ -11,6 +11,8 @@ use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as BusRegSearchViewRepository;
+use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as SearchViewListQuery;
 
 /**
  * Licence Overview
@@ -21,11 +23,27 @@ class Overview extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['Application', 'TrafficArea'];
+    protected $extraRepos = ['Application', 'TrafficArea', 'BusRegSearchView'];
 
     public function handleQuery(QueryInterface $query)
     {
+        /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
+
+        // Here we get the bus reg list - all we need is a count...
+
+        // BusRegSearchView query object
+        $busRegSearchViewParams = [
+            'licId' => $licence->getId(),
+            'page' => 1,
+            'sort' => 'regNo',
+            'order' => 'DESC',
+            'limit' => 10
+        ];
+        $query = SearchViewListQuery::create($busRegSearchViewParams);
+        /** @var BusRegSearchViewRepository $busRegSearchViewRepo */
+        $busRegSearchViewRepo = $this->getRepo('BusRegSearchView');
+        $busRegCount = $busRegSearchViewRepo->fetchCount($query);
 
         $discCriteria = Criteria::create();
         $discCriteria
@@ -54,6 +72,7 @@ class Overview extends AbstractQueryHandler
         return $this->result(
             $licence,
             [
+                'busRegs',
                 'licenceType',
                 'status',
                 'goodsOrPsv',
@@ -63,6 +82,7 @@ class Overview extends AbstractQueryHandler
                         'status',
                     ],
                     'leadTcArea',
+                    'organisationUsers'
                 ],
                 'psvDiscs' => [
                     'criteria' => $discCriteria,
@@ -76,6 +96,7 @@ class Overview extends AbstractQueryHandler
                 'gracePeriods',
             ],
             [
+                'busCount' => $busRegCount,
                 'currentApplications' => $this->resultList($applications),
                 'openCases' => $this->resultList($licence->getOpenCases(), ['publicInquirys']),
                 'tradingName' => $licence->getTradingName(),

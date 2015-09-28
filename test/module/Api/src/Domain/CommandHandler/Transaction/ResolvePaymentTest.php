@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Resolve Payment Test
  *
@@ -68,6 +69,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
                 ->shouldReceive('getDescription')
                 ->andReturn('CARD')
                 ->getMock(),
+            PaymentEntity::TYPE_PAYMENT,
         ];
 
         $this->references = [
@@ -94,6 +96,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
+
     public function testHandleCommandSuccess()
     {
         // set up data
@@ -108,12 +111,14 @@ class ResolvePaymentTest extends CommandHandlerTestCase
 
         $fee = $this->references[FeeEntity::class][22];
         $fee->setAmount($amount);
+        $fee->shouldReceive('getOutstandingAmount')
+            ->andReturn('0.00');
 
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
         $payment->setReference($guid);
         $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
-        $payment->setStatus($this->refData[PaymentEntity::STATUS_PAID]);
+        $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
 
         $command = Cmd::create($data);
 
@@ -130,15 +135,26 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->with($guid)
             ->andReturn(CpmsHelper::PAYMENT_SUCCESS);
 
-        $this->repoMap['Transaction']
-            ->shouldReceive('save')
+        $payment
+            ->shouldReceive('setStatus')
             ->once()
-            ->with($payment);
+            ->with($this->refData[PaymentEntity::STATUS_PAID])
+            ->passthru()
+            ->andReturnSelf()
+            ->globally()
+            ->ordered();
 
         $this->repoMap['Fee']
             ->shouldReceive('save')
             ->once()
-            ->with($fee);
+            ->with($fee)
+            ->globally()
+            ->ordered();
+
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->once()
+            ->with($payment);
 
         $updateData = ['id' => 22];
         $result2 = new Result();
@@ -158,7 +174,8 @@ class ResolvePaymentTest extends CommandHandlerTestCase
                 'transaction' => 69,
             ],
             'messages' => [
-                'Transaction resolved as PAYMENT PAID'
+                'Fee ID 22 updated as paid',
+                'Transaction 69 resolved as PAYMENT PAID',
             ]
         ];
 
@@ -192,6 +209,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $payment->setReference($guid);
         $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
         $payment->setStatus($this->refData[PaymentEntity::STATUS_OUTSTANDING]);
+        $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
 
         $command = Cmd::create($data);
 
@@ -240,17 +258,22 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             [
                 CpmsHelper::PAYMENT_FAILURE,
                 PaymentEntity::STATUS_FAILED,
-                'Transaction resolved as PAYMENT FAILED',
+                'Transaction 69 resolved as PAYMENT FAILED',
             ],
             [
                 CpmsHelper::PAYMENT_CANCELLATION,
                 PaymentEntity::STATUS_CANCELLED,
-                'Transaction resolved as PAYMENT CANCELLED',
+                'Transaction 69 resolved as PAYMENT CANCELLED',
             ],
             [
                 CpmsHelper::PAYMENT_IN_PROGRESS,
                 PaymentEntity::STATUS_FAILED,
-                'Transaction resolved as PAYMENT FAILED',
+                'Transaction 69 resolved as PAYMENT FAILED',
+            ],
+            [
+                CpmsHelper::PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED,
+                PaymentEntity::STATUS_FAILED,
+                'Transaction 69 resolved as PAYMENT FAILED',
             ],
         ];
     }
@@ -271,6 +294,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
         $payment->setReference($guid);
+        $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
 
         $command = Cmd::create($data);
 

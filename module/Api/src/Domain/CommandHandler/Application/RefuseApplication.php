@@ -17,6 +17,10 @@ use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Refuse;
 use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask as CloseFeeDueTaskCmd;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Class RefuseApplication
@@ -25,8 +29,10 @@ use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class RefuseApplication extends AbstractCommandHandler implements TransactionedInterface
+class RefuseApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     public $repoServiceName = 'Application';
 
     public $extraRepos = ['LicenceVehicle'];
@@ -55,9 +61,17 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
                     )
                 )
             );
+        }
 
+        if ($application->isPublishable()) {
             $result->merge($this->publishApplication($application));
-            $result->merge($this->closeTexTask($application));
+            $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
+        }
+
+        // If Internal user close tasks
+        if ($this->isInternalUser()) {
+            $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
+            $result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
         }
 
         $result->merge(
@@ -125,24 +139,6 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
                 [
                     'id' => $application->getId(),
                     'trafficArea' => $application->getTrafficArea()->getId(),
-                ]
-            )
-        );
-    }
-
-    /**
-     * Close any TEX tasks on the application
-     *
-     * @param Application $application
-     *
-     * @return Result
-     */
-    protected function closeTexTask(Application $application)
-    {
-        return $this->handleSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::create(
-                [
-                    'id' => $application->getId(),
                 ]
             )
         );

@@ -335,8 +335,10 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $otherLicences = [];
 
-        $section26Vehicle = new Vehicle();
-        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([$section26Vehicle]);
+        $vehcile = new Vehicle();
+        $vehcile->setId(123);
+
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([$vehcile]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
             ->andReturn($licence)
@@ -344,19 +346,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             ->with('ABC123')
             ->andReturn($otherLicences);
 
-        /** @var Vehicle $savedVehicle */
-        $savedVehicle = null;
         /** @var LicenceVehicle $savedLicenceVehicle */
         $savedLicenceVehicle = null;
-
-        $this->repoMap['Vehicle']->shouldReceive('save')
-            ->with(m::type(Vehicle::class))
-            ->andReturnUsing(
-                function (Vehicle $vehicle) use (&$savedVehicle) {
-                    $vehicle->setId(123);
-                    $savedVehicle = $vehicle;
-                }
-            );
 
         $this->repoMap['LicenceVehicle']->shouldReceive('save')
             ->with(m::type(LicenceVehicle::class))
@@ -382,12 +373,9 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
 
-        $this->assertInstanceOf(Vehicle::class, $savedVehicle);
+        $this->assertInstanceOf(Vehicle::class, $vehcile);
         $this->assertInstanceOf(LicenceVehicle::class, $savedLicenceVehicle);
-
-        $this->assertSame($savedVehicle, $savedLicenceVehicle->getVehicle());
-        $this->assertEquals('ABC123', $savedVehicle->getVrm());
-        $this->assertEquals(100, $savedVehicle->getPlatedWeight());
+        $this->assertSame($vehcile, $savedLicenceVehicle->getVehicle());
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertEquals('2015-01-01', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d'));
@@ -413,7 +401,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $licence->shouldReceive('getActiveVehicles')
             ->andReturn($activeVehicles);
 
-        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
             ->andReturn($licence);
@@ -491,7 +479,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $otherLicences = [$licence];
 
-        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
             ->andReturn($licence)
@@ -569,7 +557,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $licence->shouldReceive('getActiveVehicles')
             ->andReturn($activeVehicles);
 
-        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->once()->andReturn([]);
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
             ->andReturn($licence);

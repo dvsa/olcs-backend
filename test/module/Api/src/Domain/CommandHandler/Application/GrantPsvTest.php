@@ -32,6 +32,10 @@ class GrantPsvTest extends CommandHandlerTestCase
         $this->sut = new GrantPsv();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
 
+        $this->mockedSmServices = [
+            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+        ];
+
         parent::setUp();
     }
 
@@ -53,6 +57,8 @@ class GrantPsvTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
+
+        $this->setupIsInternalUser(false);
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
@@ -106,6 +112,91 @@ class GrantPsvTest extends CommandHandlerTestCase
                 'CreateDiscRecords',
                 'ProcessApplicationOperatingCentres',
                 'CommonGrant'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals(Licence::LICENCE_STATUS_VALID, $licence->getStatus()->getId());
+        $this->assertEquals(ApplicationEntity::APPLICATION_STATUS_VALID, $application->getStatus()->getId());
+    }
+
+
+    public function testHandleCommandCloseTasks()
+    {
+        $data = [
+            'id' => 111
+        ];
+
+        $command = Cmd::create($data);
+
+        $this->setupIsInternalUser(true);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setTotAuthVehicles(10);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setId(111);
+        $application->setLicence($licence);
+        $application->shouldReceive('isSpecialRestricted')
+            ->andReturn(false);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->once()
+            ->with($application);
+
+        $result1 = new Result();
+        $result1->addMessage('CreateSnapshot');
+        $this->expectedSideEffect(CreateSnapshot::class, ['id' => 111, 'event' => CreateSnapshot::ON_GRANT], $result1);
+
+        $result2 = new Result();
+        $result2->addMessage('CopyApplicationDataToLicence');
+        $this->expectedSideEffect(CopyApplicationDataToLicence::class, $data, $result2);
+
+        $result3 = new Result();
+        $result3->addMessage('CreateDiscRecords');
+        $discData = $data;
+        $discData['currentTotAuth'] = 10;
+        $this->expectedSideEffect(CreateDiscRecords::class, $discData, $result3);
+
+        $result4 = new Result();
+        $result4->addMessage('ProcessApplicationOperatingCentres');
+        $this->expectedSideEffect(ProcessApplicationOperatingCentres::class, $data, $result4);
+
+        $result5 = new Result();
+        $result5->addMessage('CommonGrant');
+        $this->expectedSideEffect(CommonGrant::class, $data, $result5);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            ['id' => 111],
+            (new Result())->addMessage('CLOSE_TEX_TASK')
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask::class,
+            ['id' => 111],
+            (new Result())->addMessage('CLOSE_FEEDUE_TASK')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'CreateSnapshot',
+                'Application status updated',
+                'Licence status updated',
+                'CopyApplicationDataToLicence',
+                'CreateDiscRecords',
+                'ProcessApplicationOperatingCentres',
+                'CLOSE_TEX_TASK',
+                'CLOSE_FEEDUE_TASK',
+                'CommonGrant',
             ]
         ];
 

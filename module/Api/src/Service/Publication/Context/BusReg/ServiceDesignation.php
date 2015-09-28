@@ -19,7 +19,7 @@ final class ServiceDesignation extends AbstractContext
         $services = [$busReg->getServiceNo()];
         $otherServices = $busReg->getOtherServices();
 
-        if ($otherServices->count()) {
+        if (!$otherServices->isEmpty()) {
             foreach ($otherServices as $otherService) {
                 /** @var BusRegOtherService $otherService */
                 $services[] = $otherService->getServiceNo();

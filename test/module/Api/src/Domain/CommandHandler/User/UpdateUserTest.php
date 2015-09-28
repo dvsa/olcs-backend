@@ -60,7 +60,7 @@ class UpdateUserTest extends CommandHandlerTestCase
         $data = [
             'id' => 111,
             'version' => 1,
-            'userType' => UserEntity::USER_TYPE_SELF_SERVICE,
+            'userType' => UserEntity::USER_TYPE_OPERATOR,
             'team' => 1,
             'licenceNumber' => '',
             'loginId' => 'login_id',
@@ -162,7 +162,7 @@ class UpdateUserTest extends CommandHandlerTestCase
         $data = [
             'id' => 111,
             'version' => 1,
-            'userType' => UserEntity::USER_TYPE_SELF_SERVICE,
+            'userType' => UserEntity::USER_TYPE_OPERATOR,
             'team' => 1,
             'licenceNumber' => $licenceNumber,
             'loginId' => 'login_id',

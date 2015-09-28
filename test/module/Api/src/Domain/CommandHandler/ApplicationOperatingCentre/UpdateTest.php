@@ -20,6 +20,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationOperatingCentre\Update as Com
 use Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Update Test
@@ -36,6 +38,7 @@ class UpdateTest extends CommandHandlerTestCase
         $this->mockRepo('OperatingCentre', Repository\OperatingCentre::class);
 
         $this->mockedSmServices['OperatingCentreHelper'] = m::mock(OperatingCentreHelper::class);
+        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
 
         parent::setUp();
     }
@@ -53,22 +56,25 @@ class UpdateTest extends CommandHandlerTestCase
             'id' => 111,
             'version' => 1,
             'address' => [
-                'addressLine1' => '123 Street'
+                'addressLine1' => '123 Street',
+                'postcode' => 'SM1 7ZZ',
             ]
         ];
         $command = Cmd::create($data);
 
-        /** @var OperatingCentre $oc */
+        /* @var $oc OperatingCentre */
         $oc = m::mock(OperatingCentre::class)->makePartial();
+        $oc->setId(333);
+        $oc->setAddress(new \Dvsa\Olcs\Api\Entity\ContactDetails\Address());
 
-        /** @var Application $application */
-        $application = m::mock(Application::class)->makePartial();
+        $application = $this->getTestingApplication();
         $application->setId(222);
 
-        /** @var ApplicationOperatingCentre $aoc */
+        /* @var $aoc ApplicationOperatingCentre */
         $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
         $aoc->setApplication($application);
         $aoc->setOperatingCentre($oc);
+        $application->addOperatingCentres($aoc);
 
         $this->repoMap['ApplicationOperatingCentre']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
@@ -76,7 +82,7 @@ class UpdateTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['OperatingCentreHelper']->shouldReceive('validate')
             ->once()
-            ->with($application, $command)
+            ->with($application, $command, false)
             ->shouldReceive('saveDocuments')
             ->once()
             ->with($application, $oc, $this->repoMap['Document'])
@@ -92,7 +98,7 @@ class UpdateTest extends CommandHandlerTestCase
             'addressLine3' => null,
             'addressLine4' => null,
             'town' => null,
-            'postcode' => null,
+            'postcode' => 'SM1 7ZZ',
             'countryCode' => null,
             'contactType' => null
         ];
@@ -108,12 +114,25 @@ class UpdateTest extends CommandHandlerTestCase
         $result2->addMessage('UpdateApplicationCompletion');
         $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result2);
 
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(false)
+            ->once();
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\SetDefaultTrafficAreaAndEnforcementArea::class,
+            ['id' => 222, 'operatingCentre' => 333],
+            (new Result())->addMessage('SET_TA')
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
                 'SaveAddress',
+                'SET_TA',
                 'UpdateApplicationCompletion'
             ]
         ];

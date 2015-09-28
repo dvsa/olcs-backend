@@ -232,6 +232,15 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
         return $application;
     }
+    private function getApplicationState5()
+    {
+        $application = $this->newApplication();
+
+        $application->setAuthSignature(true);
+
+        return $application;
+    }
+
 
     private function getLicenceState1()
     {
@@ -799,7 +808,33 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 ],
                 'N',
                 []
-            ]
+            ],
+            'Decalrations Internal unchanged' => [
+                'declarationsInternal',
+                $this->getApplicationState3(),
+                $this->getLicenceState2(),
+                [
+                    'DeclarationsInternal' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                ],
+                [
+                    'DeclarationsInternal' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                ],
+                'N',
+                []
+            ],
+            'Decalrations Internal authSignature set' => [
+                'declarationsInternal',
+                $this->getApplicationState5(),
+                $this->getLicenceState2(),
+                [
+                    'DeclarationsInternal' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                ],
+                [
+                    'DeclarationsInternal' => UpdateVariationCompletion::STATUS_UPDATED,
+                ],
+                'N',
+                []
+            ],
         ];
     }
 }

@@ -50,6 +50,8 @@ class Fee extends AbstractFee
 
     const DEFAULT_INVOICE_CUSTOMER_NAME = 'Miscellaneous payment';
     const DEFAULT_INVOICE_ADDRESS_LINE = 'Miscellaneous payment';
+    // CPMS enforces 'valid' postcodes :(
+    const DEFAULT_POSTCODE = 'LS9 6NF';
 
     public function __construct(FeeType $feeType, $amount, RefData $feeStatus)
     {
@@ -130,29 +132,6 @@ class Fee extends AbstractFee
                 self::STATUS_CANCELLED,
             ]
         );
-    }
-
-    /**
-     * @todo OLCS-10407 this currently assumes only one transaction against a
-     * fee, will need updating when part payments are allowed
-     */
-    public function getReceivedAmount()
-    {
-        $ft = $this->getLatestFeeTransaction();
-        if ($ft) {
-            return $ft->getAmount();
-        }
-    }
-
-    /**
-     * @todo OLCS-10425 will remove the need for this method
-     */
-    public function getReceivedDate()
-    {
-        $transaction = $this->getLatestTransaction();
-        if ($transaction) {
-            return $transaction->getCompletedDate();
-        }
     }
 
     public function getPaymentMethod()
@@ -236,20 +215,20 @@ class Fee extends AbstractFee
      */
     public function getOutstandingAmount()
     {
-        $amount = (float) $this->getAmount();
+        $amount = (int) ($this->getAmount() * 100);
 
         $ftSum = 0;
         $this->getFeeTransactions()->forAll(
             function ($key, $feeTransaction) use (&$ftSum) {
                 unset($key); // unused
                 if ($feeTransaction->getTransaction()->isComplete()) {
-                    $ftSum += (float) $feeTransaction->getAmount();
-                    return true;
+                    $ftSum += (int) ($feeTransaction->getAmount() * 100);
                 }
+                return true;
             }
         );
 
-        return number_format(($amount - $ftSum), 2, '.', '');
+        return number_format(($amount - $ftSum) / 100, 2, '.', '');
     }
 
     /**
@@ -372,7 +351,42 @@ class Fee extends AbstractFee
         $default
             ->setAddressLine1(self::DEFAULT_INVOICE_ADDRESS_LINE)
             ->setTown(self::DEFAULT_INVOICE_ADDRESS_LINE)
-            ->setPostcode(self::DEFAULT_INVOICE_ADDRESS_LINE);
+            ->setPostcode(self::DEFAULT_POSTCODE);
         return $default;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPaid()
+    {
+        return $this->getFeeStatus()->getId() === self::STATUS_PAID;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isBalancingFee()
+    {
+        return in_array(
+            $this->getFeeType()->getFeeType()->getId(),
+            [FeeType::FEE_TYPE_ADJUSTMENT]
+        );
+    }
+
+    /**
+     * Get the 'sales person reference', also known as 'cost centre reference'
+     * for a fee. This is either a traffic area code or one of:
+     *  - 'IR' for IRFO fees
+     *  - 'MGB' for misc. GB fees
+     *  - 'MNI' for misc. NI fees
+     *  - 'MR' for misc. IRFO fees
+     *
+     * @return string
+     * @todo OLCS-6845, currently hard-coded traffic area code
+     */
+    public function getSalesPersonReference()
+    {
+        return \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE;
     }
 }

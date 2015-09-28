@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Publication;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
+use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 
 /**
  * PublicationPoliceData Entity
@@ -21,5 +23,29 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PublicationPoliceData extends AbstractPublicationPoliceData
 {
+    /**
+     * Creates a new entity
+     *
+     * @param PublicationLinkEntity $publicationLink
+     * @param PersonEntity $person
+     */
+    public function __construct(PublicationLinkEntity $publicationLink, PersonEntity $person)
+    {
+        $this->create($publicationLink, $person);
+    }
 
+    /**
+     * Creates a new entity
+     *
+     * @param PublicationLink $publicationLink
+     * @param PersonEntity $person
+     */
+    private function create(PublicationLinkEntity $publicationLink, PersonEntity $person)
+    {
+        $this->publicationLink = $publicationLink;
+        $this->person = $person;
+        $this->birthDate = $person->getBirthDate();
+        $this->forename = $person->getForename();
+        $this->familyName = $person->getFamilyName();
+    }
 }

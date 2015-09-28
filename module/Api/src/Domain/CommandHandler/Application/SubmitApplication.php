@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\Application\S4;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as Cmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -49,12 +50,34 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
 
         $result->merge($this->createTask($application));
 
-        if ($application->isNew()) {
+        if ($this->shouldPublishApplication($application)) {
             $result->merge($this->createPublication($application));
             $result->merge($this->createTexTask($application));
         }
 
         return $result;
+    }
+
+    /**
+     * Should the application be published
+     *
+     * @param ApplicationEntity $application
+     *
+     * @return boolean
+     */
+    private function shouldPublishApplication(ApplicationEntity $application)
+    {
+        // Exclude for PSV variation applications
+        if ($application->isVariation() && $application->isPsv()) {
+            return false;
+        }
+
+        // Dont publish if application is associated with an S4 whoose outcome is empty or approved
+        if ($application->hasActiveS4()) {
+            return false;
+        }
+
+        return $application->isPublishable();
     }
 
     /**

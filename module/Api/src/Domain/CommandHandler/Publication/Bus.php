@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEnt
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedBusReg as UnpublishedBusRegQry;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Bus command handler
@@ -137,6 +138,7 @@ class Bus extends AbstractCommandHandler implements TransactionedInterface, Publ
 
             //if previous publication is found, remove it
             if ($publicationLink->getId() !== null) {
+                $this->clearPoliceData($publicationLink);
                 $this->getRepo()->delete($publicationLink);
             }
         }

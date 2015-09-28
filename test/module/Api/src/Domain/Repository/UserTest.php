@@ -52,16 +52,30 @@ class UserTest extends RepositoryTestCase
         $sut = m::mock(Repo::class);
 
         $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
-        $mockQi = m::mock(\Dvsa\Olcs\Transfer\Query\QueryInterface::class);
+        $query = \Dvsa\Olcs\Api\Domain\Query\User\UserListSelfserve::create(
+            [
+                'localAuthority' => 11,
+                'partnerContactDetails' => 22,
+                'organisation' => 43,
+            ]
+        );
 
-        $mockQi->shouldReceive('getOrganisation')->with()->twice()->andReturn(43);
+        $mockQb->shouldReceive('andWhere')->with('localAuthority')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('u.localAuthority', ':localAuthority')->once()
+            ->andReturn('localAuthority');
+        $mockQb->shouldReceive('setParameter')->with('localAuthority', 11)->once();
+
+        $mockQb->shouldReceive('andWhere')->with('partnerContactDetails')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('u.partnerContactDetails', ':partnerContactDetails')->once()
+            ->andReturn('partnerContactDetails');
+        $mockQb->shouldReceive('setParameter')->with('partnerContactDetails', 22)->once();
 
         $mockQb->shouldReceive('join')
             ->with('u.organisationUsers', 'ou', \Doctrine\ORM\Query\Expr\Join::WITH, 'ou.organisation = :organisation')
             ->once();
         $mockQb->shouldReceive('setParameter')->with('organisation', 43)->once();
 
-        $sut->applyListFilters($mockQb, $mockQi);
+        $sut->applyListFilters($mockQb, $query);
     }
 
     /**

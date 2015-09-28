@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Bus;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\ByLicenceRoute;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\Olcs\Transfer\Query\Bus\ByLicenceRoute as Qry;
+use Dvsa\Olcs\Api\Domain\Query\Bus\ByLicenceRoute as Qry;
 use Doctrine\ORM\Query;
 use Mockery as m;
 

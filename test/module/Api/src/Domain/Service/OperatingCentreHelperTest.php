@@ -520,4 +520,42 @@ class OperatingCentreHelperTest extends MockeryTestCase
             ]
         ];
     }
+
+    public function testValidateConfirmations()
+    {
+        $data = [
+            'noOfVehiclesRequired' => 10,
+            'noOfTrailersRequired' => 11,
+            'adPlaced' => 'Y',
+            'adPlacedIn' => 'Foo',
+            'adPlacedDate' => '2015-01-01',
+            'sufficientParking' => '',
+            'permission' => ''
+        ];
+        $entity = m::mock()
+            ->shouldReceive('isPsv')
+            ->andReturn(false)
+            ->shouldReceive('isGoods')
+            ->andReturn(false)
+            ->getMock();
+
+        $this->setExpectedException(ValidationException::class);
+        $command = CreateOperatingCentre::create($data);
+        $this->sut->validate($entity, $command, true);
+
+        $errors = [
+            'sufficientParking' => [
+                [
+                    'ERR_OC_SUFFICIENT_PARKING' => 'ERR_OC_SUFFICIENT_PARKING'
+                ]
+            ],
+            'permission' => [
+                [
+                    'ERR_OC_PERMISSION' => 'ERR_OC_PERMISSION'
+                ]
+            ]
+        ];
+
+        $this->assertEquals($errors, $this->sut->getMessages());
+    }
 }

@@ -27,7 +27,7 @@ final class CreateUser extends AbstractCommandHandler implements TransactionedIn
 
         $data = $command->getArrayCopy();
 
-        if (($command->getUserType() === User::USER_TYPE_SELF_SERVICE) && (!empty($data['licenceNumber']))) {
+        if (($command->getUserType() === User::USER_TYPE_OPERATOR) && (!empty($data['licenceNumber']))) {
             // fetch licence by licence number
             $licence = $this->getRepo('Licence')->fetchByLicNo($data['licenceNumber']);
 

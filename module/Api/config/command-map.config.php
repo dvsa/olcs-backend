@@ -105,6 +105,9 @@ return [
     TransferCommand\Application\DeleteTaxiPhv::class => CommandHandler\Application\DeleteTaxiPhv::class,
     Command\Application\CreateTexTask::class => CommandHandler\Application\CreateTexTask::class,
     Command\Application\CloseTexTask::class => CommandHandler\Application\CloseTexTask::class,
+    Command\Application\CloseFeeDueTask::class => CommandHandler\Application\CloseFeeDueTask::class,
+    TransferCommand\Application\UpdateAuthSignature::class => CommandHandler\Application\UpdateAuthSignature::class,
+    TransferCommand\Application\Publish::class => CommandHandler\Application\Publish::class,
 
     Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
     TransferCommand\Application\UpdatePsvVehicles::class => CommandHandler\Application\UpdatePsvVehicles::class,
@@ -220,6 +223,7 @@ return [
     // Transfer - Organisation
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
     TransferCommand\Organisation\TransferTo::class => CommandHandler\Organisation\TransferTo::class,
+    Command\Organisation\ChangeBusinessType::class => CommandHandler\Organisation\ChangeBusinessType::class,
 
     // Transfer - OtherLicence
     TransferCommand\OtherLicence\UpdateOtherLicence::class => CommandHandler\OtherLicence\UpdateOtherLicence::class,
@@ -256,6 +260,9 @@ return [
     TransferCommand\Correspondence\AccessCorrespondence::class
         => CommandHandler\Correspondence\AccessCorrespondence::class,
 
+    // Domain - Correspondence
+    Command\Correspondence\ProcessInboxDocuments::class => CommandHandler\Correspondence\ProcessInboxDocuments::class,
+
     // Transfer - IRFO
     TransferCommand\Irfo\UpdateIrfoDetails::class => CommandHandler\Irfo\UpdateIrfoDetails::class,
     TransferCommand\Irfo\CreateIrfoGvPermit::class => CommandHandler\Irfo\CreateIrfoGvPermit::class,
@@ -276,11 +283,16 @@ return [
 
     // Transfer - My Account
     TransferCommand\MyAccount\UpdateMyAccount::class => CommandHandler\MyAccount\UpdateMyAccount::class,
+    TransferCommand\MyAccount\UpdateMyAccountSelfserve::class
+        => CommandHandler\MyAccount\UpdateMyAccountSelfserve::class,
 
     // Transfer - User
     TransferCommand\User\CreateUser::class => CommandHandler\User\CreateUser::class,
     TransferCommand\User\UpdateUser::class => CommandHandler\User\UpdateUser::class,
     TransferCommand\User\DeleteUser::class => CommandHandler\User\DeleteUser::class,
+    TransferCommand\User\CreateUserSelfserve::class => CommandHandler\User\CreateUserSelfserve::class,
+    TransferCommand\User\UpdateUserSelfserve::class => CommandHandler\User\UpdateUserSelfserve::class,
+    TransferCommand\User\DeleteUserSelfserve::class => CommandHandler\User\DeleteUserSelfserve::class,
     TransferCommand\User\CreatePartner::class => CommandHandler\User\CreatePartner::class,
     TransferCommand\User\UpdatePartner::class => CommandHandler\User\UpdatePartner::class,
     TransferCommand\User\DeletePartner::class => CommandHandler\User\DeletePartner::class,
@@ -573,6 +585,8 @@ return [
     AppCompCommand\UpdateTaxiPhvStatus::class => AppCompCommandHandler\UpdateTaxiPhvStatus::class,
     AppCompCommand\UpdateCommunityLicencesStatus::class => AppCompCommandHandler\UpdateCommunityLicencesStatus::class,
     AppCompCommand\UpdateBusinessDetailsStatus::class => AppCompCommandHandler\UpdateBusinessDetailsStatus::class,
+    AppCompCommand\UpdateDeclarationsInternalStatus::class =>
+        AppCompCommandHandler\UpdateDeclarationsInternalStatus::class,
 
     // Domain - CommunityLic
     Command\CommunityLic\GenerateBatch::class => CommandHandler\CommunityLic\GenerateBatch::class,
@@ -585,7 +599,9 @@ return [
 
     // Domain - Document
     Command\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
-    Command\Document\GenerateAndUploadDocument::class => CommandHandler\Document\GenerateAndUploadDocument::class,
+    Command\Document\GenerateAndStore::class => CommandHandler\Document\GenerateAndStore::class,
+    TransferCommand\Document\GenerateAndStore::class => CommandHandler\Document\GenerateAndStore::class,
+    TransferCommand\Document\Upload::class => CommandHandler\Document\Upload::class,
 
     // Domain - PrintScheduler
     Command\PrintScheduler\EnqueueFile::class => CommandHandler\PrintScheduler\EnqueueFile::class,
@@ -613,6 +629,8 @@ return [
         CommandHandler\TransportManagerApplication\UpdateForResponsibilities::class,
     TransferCommand\TransportManagerApplication\DeleteForResponsibilities::class =>
         CommandHandler\TransportManagerApplication\DeleteForResponsibilities::class,
+    TransferCommand\TransportManagerApplication\SendTmApplication::class =>
+        CommandHandler\Email\SendTmApplication::class,
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
@@ -628,6 +646,7 @@ return [
     TransferCommand\TmEmployment\DeleteList::class => CommandHandler\TmEmployment\DeleteList::class,
     TransferCommand\TmEmployment\Create::class => CommandHandler\TmEmployment\Create::class,
     TransferCommand\TmEmployment\Update::class => CommandHandler\TmEmployment\Update::class,
+    Command\TransportManagerApplication\Snapshot::class => CommandHandler\TransportManagerApplication\Snapshot::class,
 
     // Transfer - Scan
     TransferCommand\Scan\CreateDocument::class => CommandHandler\Scan\CreateDocument::class,
@@ -649,7 +668,6 @@ return [
         => CommandHandler\LicenceVehicle\DeleteUnlicensedOperatorLicenceVehicle::class,
     TransferCommand\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class
         => CommandHandler\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class,
-
 
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,

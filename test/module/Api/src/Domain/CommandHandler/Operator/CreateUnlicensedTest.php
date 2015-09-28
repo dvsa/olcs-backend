@@ -56,7 +56,10 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
 
         $this->references = [
             TrafficAreaEntity::class => [
-                'N' => m::mock(TrafficAreaEntity::class)->makePartial(),
+                'N' => m::mock(TrafficAreaEntity::class)->makePartial()
+                    ->shouldReceive('getIsNi')
+                    ->andReturn(true)
+                    ->getMock(),
             ],
             ContactDetailsEntity::class => [
                 1 => m::mock(ContactDetailsEntity::class)->makePartial(),

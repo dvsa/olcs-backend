@@ -59,4 +59,24 @@ trait AuthAwareTrait
     {
         return $this->authService->getIdentity()->getUser();
     }
+
+    /**
+     * Does the current user have the Internal user role
+     *
+     * @return bool
+     */
+    public function isInternalUser()
+    {
+        return ($this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER));
+    }
+
+    /**
+     * Does the current user have the External user role
+     *
+     * @return bool
+     */
+    public function isExternalUser()
+    {
+        return ($this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER));
+    }
 }

@@ -57,6 +57,16 @@ class User extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
+        if (method_exists($query, 'getLocalAuthority') && !empty($query->getLocalAuthority())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
+                ->setParameter('localAuthority', $query->getLocalAuthority());
+        }
+
+        if (method_exists($query, 'getPartnerContactDetails') && !empty($query->getPartnerContactDetails())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.partnerContactDetails', ':partnerContactDetails'))
+                ->setParameter('partnerContactDetails', $query->getPartnerContactDetails());
+        }
+
         // filter by organisation if it has been specified
         if ($query->getOrganisation()) {
             $qb->join('u.organisationUsers', 'ou', Expr\Join::WITH, 'ou.organisation = :organisation');

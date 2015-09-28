@@ -11,12 +11,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
-use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -227,5 +229,67 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
             $this->assertEquals($data, $cmdDataToMatch, get_class($cmd) . ' has unexpected data');
         }
+    }
+
+    protected function setupIsInternalUser($isInternalUser = true)
+    {
+        $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
+            ->once()->atLeast()
+            ->andReturn($isInternalUser);
+    }
+
+    /**
+     * Get an Application Entity to be used in tests
+     *
+     * @param null|Licence        $licence     If null a new Licence is created
+     * @param null|string|RefData $status      If null application status is set to VALID
+     * @param null|0|1            $isVariation If null set to 0 (new application)
+     *
+     * @return Application
+     */
+    protected function getTestingApplication(Licence $licence = null, $status = null, $isVariation = 0)
+    {
+        if ($licence === null) {
+            $licence = $this->getTestingLicence();
+        }
+
+        if ($status === null) {
+            $status = new RefData(Application::APPLICATION_STATUS_VALID);
+        } elseif (is_string($status)) {
+            $status = new RefData($status);
+        }
+
+        $application = new Application($licence, $status, $isVariation);
+
+        return $application;
+    }
+
+    /**
+     * Get an Licence Entity to be used in tests
+     *
+     * @param null|Organisation   $organisation If null a new Organisation is created
+     * @param null|string|RefData $status       If null licence status is set to VALID
+     *
+     * @return Licence
+     */
+    protected function getTestingLicence(
+        Organisation $organisation = null,
+        $status = null
+    ) {
+        if ($organisation === null) {
+            $organisation = new Organisation();
+        }
+
+        if ($status === null) {
+            $status = new RefData(Licence::LICENCE_STATUS_VALID);
+        } elseif (is_string($status)) {
+            $status = new RefData($status);
+        }
+
+        $licence = new Licence($organisation, $status);
+
+        return $licence;
     }
 }

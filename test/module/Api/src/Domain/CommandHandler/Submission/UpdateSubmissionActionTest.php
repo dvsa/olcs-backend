@@ -98,4 +98,33 @@ class UpdateSubmissionActionTest extends CommandHandlerTestCase
             $savedSubmissionAction->getReasons()[0]
         );
     }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleInvalidCommand()
+    {
+        $data = [
+            'id' => 1,
+            'version' => 1,
+            'actionTypes' => ['sub_st_rec_ptr'],
+            'reasons' => [],
+            'isDecision' => 'N',
+            'comment' => 'testing',
+        ];
+
+        $command = Cmd::create($data);
+
+        /** @var SubmissionActionEntity $savedSubmissionAction */
+        $submissionAction = m::mock(SubmissionActionEntity::class)->makePartial();
+        $submissionAction->setId(1);
+        $submissionAction->setIsDecision('N');
+
+        $this->repoMap['SubmissionAction']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($submissionAction);
+
+        $this->sut->handleCommand($command);
+    }
 }

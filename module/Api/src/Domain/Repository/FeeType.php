@@ -92,12 +92,7 @@ class FeeType extends AbstractRepository
     }
 
     /**
-     * @param RefDataEntity $feeType
-     * @param RefDataEntity $goodsOrPsv
-     * @param RefDataEntity $licenceType
-     * @param \DateTime $date
-     * @param mixed $trafficArea traffic area entity or id
-     *
+     * @param RefDataEntity $irfoFeeType
      * @return \Dvsa\Olcs\Api\Entity\Fee\FeeType
      * @throws Exception\NotFoundException
      */
@@ -108,8 +103,30 @@ class FeeType extends AbstractRepository
         $qb->andWhere($qb->expr()->eq('ft.irfoFeeType', ':irfoFeeType'));
 
         $qb->addOrderBy('ft.effectiveFrom', 'DESC')
-            ->setParameter('feeType', 'IRFOGVPERMIT')
+            ->setParameter('feeType', Entity::FEE_TYPE_IRFOGVPERMIT)
             ->setParameter('irfoFeeType', $irfoFeeType)
+            ->setMaxResults(1);
+
+        $results = $qb->getQuery()->execute();
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('FeeType not found');
+        }
+
+        return $results[0];
+    }
+
+    /**
+     * @return \Dvsa\Olcs\Api\Entity\Fee\FeeType
+     * @throws Exception\NotFoundException
+     */
+    public function fetchLatestForOverpayment()
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq('ft.feeType', ':feeType'));
+
+        $qb->orderBy('ft.effectiveFrom', 'DESC')
+            ->setParameter('feeType', Entity::FEE_TYPE_ADJUSTMENT)
             ->setMaxResults(1);
 
         $results = $qb->getQuery()->execute();

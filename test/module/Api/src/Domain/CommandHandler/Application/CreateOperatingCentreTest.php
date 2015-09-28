@@ -20,6 +20,8 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\CreateOperatingCentre as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Create Operating Centre Test
@@ -37,6 +39,7 @@ class CreateOperatingCentreTest extends CommandHandlerTestCase
         $this->mockRepo('ApplicationOperatingCentre', Repository\ApplicationOperatingCentre::class);
 
         $this->mockedSmServices['OperatingCentreHelper'] = m::mock(OperatingCentreHelper::class);
+        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
 
         parent::setUp();
     }
@@ -73,7 +76,7 @@ class CreateOperatingCentreTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['OperatingCentreHelper']->shouldReceive('validate')
             ->once()
-            ->with($application, $command)
+            ->with($application, $command, false)
             ->shouldReceive('createOperatingCentre')
             ->once()
             ->with($command, $this->commandHandler, m::type(Result::class), $this->repoMap['OperatingCentre'])
@@ -104,6 +107,11 @@ class CreateOperatingCentreTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('UpdateApplicationCompletion');
         $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result1);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(false);
 
         $result = $this->sut->handleCommand($command);
 

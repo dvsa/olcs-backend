@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 
 /**
  * BusReg Entity
@@ -28,14 +29,13 @@ use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
  *        @ORM\Index(name="ix_bus_reg_revert_status", columns={"revert_status"}),
  *        @ORM\Index(name="ix_bus_reg_reg_no", columns={"reg_no"}),
  *        @ORM\Index(name="fk_bus_reg_parent_id_bus_reg_id", columns={"parent_id"}),
- *        @ORM\Index(name="fk_bus_reg_operating_centre1", columns={"operating_centre_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_bus_reg_olbs_key", columns={"olbs_key"})
  *    }
  * )
  */
-class BusReg extends AbstractBusReg
+class BusReg extends AbstractBusReg implements ContextProviderInterface
 {
     const STATUS_NEW = 'breg_s_new';
     const STATUS_VAR = 'breg_s_var';
@@ -894,5 +894,10 @@ class BusReg extends AbstractBusReg
     {
         return (!empty(self::$grantStatusMap[$this->status->getId()]))
             ? self::$grantStatusMap[$this->status->getId()] : null;
+    }
+
+    public function getContextValue()
+    {
+        return $this->getLicence()->getLicNo();
     }
 }

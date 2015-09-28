@@ -8,8 +8,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
-use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Curtail as CommandHandler;

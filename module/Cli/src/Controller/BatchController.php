@@ -109,6 +109,20 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * @return ConsoleModel
+     */
+    public function processInboxDocumentsAction()
+    {
+        return $this->handleExitStatus(
+            $this->handleCommand(
+                [
+                    Command\Correspondence\ProcessInboxDocuments::create([]),
+                ]
+            )
+        );
+    }
+
+    /**
      * @return boolean
      */
     private function isVerbose()

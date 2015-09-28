@@ -269,4 +269,11 @@ class CasesEntityTest extends EntityTester
 
         $this->assertEquals($expected, $this->entity->getCalculatedBundleValues());
     }
+
+    public function testGetContextValue()
+    {
+        $this->entity->setId(111);
+
+        $this->assertEquals(111, $this->entity->getContextValue());
+    }
 }

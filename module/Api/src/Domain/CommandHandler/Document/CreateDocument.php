@@ -13,9 +13,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\CreateDocument as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as CreateDocumentSpecificCmd;
 
 /**
  * Create Document
+ *
+ * Determine whether document is internal/external then create document record
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
@@ -25,21 +28,18 @@ final class CreateDocument extends AbstractCommandHandler implements AuthAwareIn
 
     protected $repoServiceName = 'Document';
 
+    /**
+     * @param Cmd $command
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command)
     {
-        /* @var $command Cmd */
+        $params = $command->getArrayCopy();
 
         if ($command->getIsExternal() === null) {
-            $isExternal = $this->isGranted(Permission::SELFSERVE_USER);
-        } else {
-            $isExternal = $command->getIsExternal();
+            $params['isExternal'] = $this->isGranted(Permission::SELFSERVE_USER);
         }
 
-        $params = $command->getArrayCopy();
-        $params['isExternal'] = $isExternal;
-
-        return $this->handleSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific::create($params)
-        );
+        return $this->handleSideEffect(CreateDocumentSpecificCmd::create($params));
     }
 }

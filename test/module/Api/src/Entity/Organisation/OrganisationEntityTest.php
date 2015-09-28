@@ -8,6 +8,11 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\User\User as User;
+use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Organisation Entity Unit Tests
@@ -102,12 +107,7 @@ class OrganisationEntityTest extends EntityTester
      */
     public function testUpdateOrganisation($isIrfo, $lastName, $expectedName)
     {
-         $organisation = m::mock(Entity::class)->makePartial();
-
-         $mockBusinessType = m::mock()
-             ->shouldReceive('getId')
-            ->andReturn('type')
-            ->getMock();
+        $organisation = m::mock(Entity::class)->makePartial();
 
         $organisation->updateOrganisation(
             'name',
@@ -115,7 +115,6 @@ class OrganisationEntityTest extends EntityTester
             'fname',
             $lastName,
             $isIrfo,
-            $mockBusinessType,
             'nob',
             ['cpid']
         );
@@ -124,7 +123,6 @@ class OrganisationEntityTest extends EntityTester
         $this->assertEquals($organisation->getName(), $expectedName);
         $this->assertEquals($organisation->getCompanyOrLlpNo(), '12345678');
         $this->assertEquals($organisation->getIsIrfo(), $isIrfo);
-        $this->assertEquals($organisation->getType()->getId(), 'type');
         $this->assertEquals($organisation->getNatureOfBusiness(), 'nob');
     }
 
@@ -304,6 +302,37 @@ class OrganisationEntityTest extends EntityTester
             );
 
         $this->assertEquals(['foo'], $organisation->getLinkedLicences()->toArray());
+    }
 
+    public function testGetContextValue()
+    {
+        $entity = new Entity();
+        $entity->setId(111);
+
+        $this->assertEquals(111, $entity->getContextValue());
+    }
+
+    public function testGetAdminEmailAddresses()
+    {
+        $emailAddress = 'foo@bar.com';
+        /* @var $organisation Entity */
+        $organisation = $this->instantiate($this->entityClass);
+
+        $contactType = new RefData(ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS);
+        $user = new User(User::USER_TYPE_INTERNAL);
+        $contactDetails = new ContactDetails($contactType);
+        $contactDetails->setEmailAddress($emailAddress);
+        $user->setContactDetails($contactDetails);
+
+        $organisationUser = new OrganisationUser();
+        $organisationUser->setUser($user);
+        $organisationUser->setOrganisation($organisation);
+        $organisationUser->setIsAdministrator('Y');
+
+        $collection = new ArrayCollection();
+        $collection->add($organisationUser);
+        $organisation->addOrganisationUsers($collection);
+
+        $this->assertEquals([$emailAddress], $organisation->getAdminEmailAddresses());
     }
 }

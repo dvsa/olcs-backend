@@ -118,7 +118,12 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
 
         $savedVehicle = null;
 
-        $this->repoMap['Vehicle']->shouldReceive('save')
+        $this->repoMap['Vehicle']
+            ->shouldReceive('fetchByVrm')
+            ->with('AA11AAA')
+            ->andReturn([])
+            ->once()
+            ->shouldReceive('save')
             ->once()
             ->with(m::type(Entity\Vehicle\Vehicle::class))
             ->andReturnUsing(
@@ -192,7 +197,12 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
 
         $savedVehicle = null;
 
-        $this->repoMap['Vehicle']->shouldReceive('save')
+        $this->repoMap['Vehicle']
+            ->shouldReceive('fetchByVrm')
+            ->with('AA11AAA')
+            ->andReturn([])
+            ->once()
+            ->shouldReceive('save')
             ->once()
             ->with(m::type(Entity\Vehicle\Vehicle::class))
             ->andReturnUsing(
@@ -214,6 +224,72 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
                     $licenceVehicle->setId(321);
                     $this->assertEquals(date('Y-m-d'), $licenceVehicle->getSpecifiedDate()->format('Y-m-d'));
                     $this->assertSame($savedVehicle, $licenceVehicle->getVehicle());
+                    $this->assertSame($licence, $licenceVehicle->getLicence());
+                }
+            );
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->with(Entity\User\Permission::INTERNAL_USER, null)
+            ->andReturn(false);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'vehicle' => 123,
+                'licenceVehicle' => 321
+            ],
+            'messages' => [
+                'Vehicle created',
+                'Licence Vehicle created'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandVehicleExistsOnOtherLicence()
+    {
+        $command = Cmd::create(
+            [
+                'licence' => 111,
+                'vrm' => 'AA11AAA',
+                'makeModel' => 'Foo',
+                'isNovelty' => 'Y',
+                'type' => 'small'
+            ]
+        );
+
+        $activeVehicles = new ArrayCollection();
+
+        /** @var Entity\Licence\Licence $licence */
+        $licence = m::mock(Entity\Licence\Licence::class)->makePartial();
+        $licence->setId(111);
+        $licence->shouldReceive('getActiveVehicles')
+            ->with(false)
+            ->andReturn($activeVehicles);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')
+            ->with(111)
+            ->andReturn($licence);
+
+        $mockVehicle = m::mock(Entity\Vehicle\Vehicle::class)
+            ->shouldReceive('getId')->once()->andReturn(123)->getMock();
+
+        $this->repoMap['Vehicle']
+            ->shouldReceive('fetchByVrm')
+            ->with('AA11AAA')
+            ->andReturn([$mockVehicle])
+            ->once();
+
+        $this->repoMap['LicenceVehicle']->shouldReceive('save')
+            ->once()
+            ->with(m::type(Entity\Licence\LicenceVehicle::class))
+            ->andReturnUsing(
+                function (Entity\Licence\LicenceVehicle $licenceVehicle) use ($licence, &$mockVehicle) {
+                    $licenceVehicle->setId(321);
+                    $this->assertEquals(date('Y-m-d'), $licenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+                    $this->assertSame($mockVehicle, $licenceVehicle->getVehicle());
                     $this->assertSame($licence, $licenceVehicle->getLicence());
                 }
             );

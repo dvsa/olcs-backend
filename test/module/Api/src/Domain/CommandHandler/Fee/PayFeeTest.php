@@ -35,6 +35,10 @@ class PayFeeTest extends CommandHandlerTestCase
         $this->mockRepo('Fee', FeeRepo::class);
         $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
 
+        $this->mockedSmServices = [
+            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+        ];
+
         parent::setUp();
     }
 
@@ -427,6 +431,8 @@ class PayFeeTest extends CommandHandlerTestCase
     {
         $command = PayFeeCommand::create(['id' => 111]);
 
+        $this->setupIsInternalUser(false);
+
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
         $application->setId(222);
@@ -437,7 +443,7 @@ class PayFeeTest extends CommandHandlerTestCase
         $application
             ->shouldReceive('isGoods')
             ->andReturn(true)
-            ->once()
+            ->twice()
             ->getMock();
         $endResult = new Result();
         $endResult->addMessage('EndInterim');
@@ -459,6 +465,53 @@ class PayFeeTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'EndInterim'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandCancelApplicationTasks()
+    {
+        $command = PayFeeCommand::create(['id' => 111]);
+
+        $this->setupIsInternalUser(true);
+
+        /* @var $application Application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(222);
+        $application->setIsVariation(false);
+        $application->setStatus($this->refData[Application::APPLICATION_STATUS_UNDER_CONSIDERATION]);
+        $application->setInterimStatus($this->refData[Application::INTERIM_STATUS_INFORCE]);
+        $application->setInterimStatus($this->refData[Application::INTERIM_STATUS_INFORCE]);
+
+        $application->shouldReceive('isGoods')->once()->andReturn(true);
+
+        /** @var FeeEntity $fee */
+        $fee = m::mock(FeeEntity::class)->makePartial();
+        $fee->setApplication($application);
+        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn(FeeType::FEE_TYPE_GRANT);
+
+        $this->repoMap['Fee']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($fee);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            ['id' => 222],
+            (new Result())->addMessage('CLOSE_TEX_TASK')
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask::class,
+            ['id' => 222],
+            (new Result())->addMessage('CLOSE_FEEDUE_TASK')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'CLOSE_TEX_TASK',
+                'CLOSE_FEEDUE_TASK',
             ]
         ];
 

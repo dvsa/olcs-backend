@@ -9,7 +9,6 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
 use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\ProcessReminder as Cmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\Olcs\Transfer\Command\ContinuationDetail\Update as UpdateContinuationDetail;
 
 /**
  * Continuation Checklist Reminder Generate Letter Queue Consumer
@@ -26,6 +25,6 @@ class ContinuationChecklistReminderGenerateLetter extends AbstractConsumer
      */
     public function getCommandData(QueueEntity $item)
     {
-        return ['id' => $item->getEntityId()];
+        return ['id' => $item->getEntityId(), 'user' => $item->getCreatedBy()->getId()];
     }
 }

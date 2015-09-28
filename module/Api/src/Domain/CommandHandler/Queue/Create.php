@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Create Queue item
@@ -21,17 +22,20 @@ final class Create extends AbstractCommandHandler
 {
     protected $repoServiceName = 'Queue';
 
-    public function handleCommand(CommandInterface $query)
+    public function handleCommand(CommandInterface $command)
     {
         $queue = new QueueEntity();
-        $queue->validateQueue($query->getType(), $query->getStatus());
+        $queue->validateQueue($command->getType(), $command->getStatus());
         $queue->setType(
-            $this->getRepo()->getRefdataReference($query->getType())
+            $this->getRepo()->getRefdataReference($command->getType())
         );
         $queue->setStatus(
-            $this->getRepo()->getRefdataReference($query->getStatus())
+            $this->getRepo()->getRefdataReference($command->getStatus())
         );
-        $queue->setEntityId($query->getEntityId());
+        $queue->setEntityId($command->getEntityId());
+        if ($command->getUser()) {
+            $queue->setCreatedBy($this->getRepo()->getReference(UserEntity::class, $command->getUser()));
+        }
         $this->getRepo()->save($queue);
 
         $result = new Result();

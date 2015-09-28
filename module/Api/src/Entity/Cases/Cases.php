@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\CloseableInterface;
 use Dvsa\Olcs\Api\Entity\ReopenableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 
 /**
  * Cases Entity
@@ -30,7 +31,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
  *    }
  * )
  */
-class Cases extends AbstractCases implements CloseableInterface, ReopenableInterface
+class Cases extends AbstractCases implements CloseableInterface, ReopenableInterface, ContextProviderInterface
 {
     const LICENCE_CASE_TYPE = 'case_t_lic';
     const IMPOUNDING_CASE_TYPE = 'case_t_imp';
@@ -351,5 +352,10 @@ class Cases extends AbstractCases implements CloseableInterface, ReopenableInter
                 )
             );
         return $this->getConditionUndertakings()->matching($criteria);
+    }
+
+    public function getContextValue()
+    {
+        return $this->getId();
     }
 }

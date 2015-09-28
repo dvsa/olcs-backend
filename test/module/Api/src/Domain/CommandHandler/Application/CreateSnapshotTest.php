@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateSnapshot;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
@@ -30,19 +31,9 @@ class CreateSnapshotTest extends CommandHandlerTestCase
         $this->sut = new CreateSnapshot();
         $this->mockRepo('Application', Application::class);
 
-        $this->mockedSmServices['FileUploader'] = m::mock();
         $this->mockedSmServices['ReviewSnapshot'] = m::mock();
 
         parent::setUp();
-    }
-
-    protected function initReferences()
-    {
-        $this->refData = [];
-
-        $this->references = [];
-
-        parent::initReferences();
     }
 
     /**
@@ -85,19 +76,9 @@ class CreateSnapshotTest extends CommandHandlerTestCase
             ->with($application)
             ->andReturn('<markup>');
 
-        $file = m::mock();
-        $file->shouldReceive('getIdentifier')
-            ->andReturn('ABC123456789');
-
-        $this->mockedSmServices['FileUploader']->shouldReceive('setFile')
-            ->with(['content' => '<markup>'])
-            ->shouldReceive('upload')
-            ->andReturn($file);
-
         $expectedData = [
+            'content' => base64_encode('<markup>'),
             'filename' => $fileName,
-            'identifier' => 'ABC123456789',
-            'size' => null,
             'application' => 111,
             'busReg' => null,
             'case' => null,
@@ -119,7 +100,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
         ];
         $result1 = new Result();
         $result1->addMessage('Document created');
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $expectedData, $result1);
+        $this->expectedSideEffect(Upload::class, $expectedData, $result1);
 
         $result = $this->sut->handleCommand($command);
 
@@ -127,7 +108,6 @@ class CreateSnapshotTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'Snapshot generated',
-                'Snapshot uploaded',
                 'Document created'
             ]
         ];
@@ -164,15 +144,6 @@ class CreateSnapshotTest extends CommandHandlerTestCase
         $this->mockedSmServices['ReviewSnapshot']->shouldReceive('generate')
             ->with($application)
             ->andReturn('<markup>');
-
-        $file = m::mock();
-        $file->shouldReceive('getIdentifier')
-            ->andReturn('ABC123456789');
-
-        $this->mockedSmServices['FileUploader']->shouldReceive('setFile')
-            ->with(['content' => '<markup>'])
-            ->shouldReceive('upload')
-            ->andReturn($file);
 
         $this->sut->handleCommand($command);
     }

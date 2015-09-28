@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Mockery as m;
 use Doctrine\ORM\Query;
@@ -398,5 +399,55 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertSame($this->refData[OrganisationEntity::ORG_TYPE_SOLE_TRADER], $organisation->getType());
+    }
+
+    public function testHandleCommandWhenCanChangeWithChangeLicence()
+    {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn(true);
+
+        $data = [
+            'id' => 11,
+            'version' => 1,
+            'licence' => 111,
+            'businessType' => OrganisationEntity::ORG_TYPE_SOLE_TRADER
+        ];
+
+        /** @var OrganisationEntity $organisation */
+        $organisation = m::mock(OrganisationEntity::class)->makePartial();
+        $organisation->setId(11);
+        $organisation->setType($this->refData[OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY]);
+
+        $organisation->shouldReceive('hasInforceLicences')
+            ->andReturn(false);
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['Organisation']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($organisation);
+
+        $this->assertSame($this->refData[OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY], $organisation->getType());
+
+        $result1 = new Result();
+        $data = [
+            'id' => 11,
+            'businessType' => OrganisationEntity::ORG_TYPE_SOLE_TRADER,
+            'confirm' => false
+        ];
+        $this->expectedSideEffect(ChangeBusinessType::class, $data, $result1);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Business type updated'
+            ]
+        ];
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertEquals($expected, $result->toArray());
     }
 }

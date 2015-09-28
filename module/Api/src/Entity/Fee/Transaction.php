@@ -12,7 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  *    indexes={
  *        @ORM\Index(name="ix_transaction_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_transaction_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_transaction_transaction_status", columns={"status"})
+ *        @ORM\Index(name="ix_transaction_transaction_status", columns={"status"}),
+ *        @ORM\Index(name="ix_transaction_transaction_type", columns={"type"}),
+ *        @ORM\Index(name="ix_transaction_waive_recommender_user_id",
+ *     columns={"waive_recommender_user_id"}),
+ *        @ORM\Index(name="ix_transaction_processed_by_user_id", columns={"processed_by_user_id"}),
+ *        @ORM\Index(name="ix_transaction_payment_method", columns={"payment_method"})
  *    }
  * )
  */
@@ -74,5 +79,32 @@ class Transaction extends AbstractTransaction
         return [
             'amount' => $this->getTotalAmount(),
         ];
+    }
+
+    /**
+     * Small helper to get array of feeTransaction IDs, useful for logging
+     */
+    public function getFeeTransactionIds()
+    {
+        $ftIds = [];
+
+        if (!empty($this->getFeeTransactions())) {
+            $ftIds = array_map(
+                function ($ft) {
+                    return $ft->getId();
+                },
+                $this->getFeeTransactions()->toArray()
+            );
+        }
+
+        return $ftIds;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isWaive()
+    {
+        return $this->getType()->getId() === self::TYPE_WAIVE;
     }
 }

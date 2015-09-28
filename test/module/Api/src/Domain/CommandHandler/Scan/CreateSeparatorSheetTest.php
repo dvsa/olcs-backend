@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Scan;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Scan\CreateSeparatorSheet as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -20,11 +21,6 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
  */
 class CreateSeparatorSheetTest extends CommandHandlerTestCase
 {
-    /**
-     * @var \Dvsa\Olcs\Api\Service\Document\DocumentGenerator
-     */
-    protected $mockDocGen;
-
     public function setUp()
     {
         $this->sut = new CommandHandler();
@@ -39,18 +35,12 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->mockRepo('SubCategory', \Dvsa\Olcs\Api\Domain\Repository\SubCategory::class);
         $this->mockRepo('SubCategoryDescription', \Dvsa\Olcs\Api\Domain\Repository\SubCategoryDescription::class);
 
-        $this->mockDocGen = m::mock(\Dvsa\Olcs\Api\Service\Document\DocumentGenerator::class);
-        $this->mockedSmServices = [
-            'DocumentGenerator' => $this->mockDocGen
-        ];
-
         parent::setUp();
     }
 
     protected function initReferences()
     {
-        $this->refData = [
-        ];
+        $this->refData = [];
 
         $this->categoryReferences = [
             1 => m::mock(\Dvsa\Olcs\Api\Entity\System\Category::class),
@@ -158,10 +148,13 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->repoMap['Category']->shouldReceive('fetchById')->with(9)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(234)->once()->andReturn($subCategory);
 
-        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
-            'Scanning_SeparatorSheet',
-            [],
-            [
+        $result1 = new Result();
+        $result1->addMessage('Create Document');
+        $result1->addId('identifier', 'ABCDEFG');
+        $dtoData = [
+            'template' => 'Scanning_SeparatorSheet',
+            'query' => [],
+            'knownValues' => [
                 'DOC_CATEGORY_ID_SCAN'       => 9,
                 'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
                 'LICENCE_NUMBER_SCAN'        => 'LIC001',
@@ -173,32 +166,14 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
                 'DOC_DESCRIPTION_ID_SCAN'    => 74,
                 'DOC_DESCRIPTION_NAME_SCAN'  => 'DESCRIPTION',
-            ]
-        )->once()->andReturn('CONTENT');
-
-        $date = new DateTime();
-        $fileName = $date->format('YmdHis') . '_Scanning_Separator.rtf';
-
-        $file = new \Dvsa\Olcs\Api\Service\File\File();
-        $file->setIdentifier('ABCDEFG');
-        $file->setSize(100);
-
-        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents', $fileName)->once()
-            ->andReturn($file);
-
-        $docResult = new Result();
-        $docResult->addMessage('Create Document');
-        $data = [
-            'identifier' => 'ABCDEFG',
+            ],
             'description' => 'Scanning separator',
-            'filename' => $fileName,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => SubCategory::DOC_SUB_CATEGORY_SCANNING_SEPARATOR,
             'isExternal' => false,
-            'isScan' => false,
-            'size' => 100
+            'isScan' => false
         ];
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $docResult);
+        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $result1);
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
@@ -211,7 +186,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['scan' => 74], $result->getIds());
+        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -254,10 +229,13 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->repoMap['Category']->shouldReceive('fetchById')->with(9)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(234)->once()->andReturn($subCategory);
 
-        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
-            'Scanning_SeparatorSheet',
-            [],
-            [
+        $result1 = new Result();
+        $result1->addMessage('Create Document');
+        $result1->addId('identifier', 'ABCDEFG');
+        $dtoData = [
+            'template' => 'Scanning_SeparatorSheet',
+            'query' => [],
+            'knownValues' => [
                 'DOC_CATEGORY_ID_SCAN'       => 9,
                 'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
                 'LICENCE_NUMBER_SCAN'        => 'LIC001',
@@ -269,32 +247,14 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
                 'DOC_DESCRIPTION_ID_SCAN'    => 74,
                 'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
-            ]
-        )->once()->andReturn('CONTENT');
-
-        $date = new DateTime();
-        $fileName = $date->format('YmdHis') . '_Scanning_Separator.rtf';
-
-        $file = new \Dvsa\Olcs\Api\Service\File\File();
-        $file->setIdentifier('ABCDEFG');
-        $file->setSize(100);
-
-        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents', $fileName)->once()
-            ->andReturn($file);
-
-        $docResult = new Result();
-        $docResult->addMessage('Create Document');
-        $data = [
-            'identifier' => 'ABCDEFG',
+            ],
             'description' => 'Scanning separator',
-            'filename' => $fileName,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => SubCategory::DOC_SUB_CATEGORY_SCANNING_SEPARATOR,
             'isExternal' => false,
-            'isScan' => false,
-            'size' => 100
+            'isScan' => false
         ];
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $docResult);
+        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $result1);
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
@@ -307,7 +267,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['scan' => 74], $result->getIds());
+        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -350,10 +310,13 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->repoMap['Category']->shouldReceive('fetchById')->with(1)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(92)->once()->andReturn($subCategory);
 
-        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
-            'Scanning_SeparatorSheet',
-            [],
-            [
+        $result1 = new Result();
+        $result1->addMessage('Create Document');
+        $result1->addId('identifier', 'ABCDEFG');
+        $dtoData = [
+            'template' => 'Scanning_SeparatorSheet',
+            'query' => [],
+            'knownValues' => [
                 'DOC_CATEGORY_ID_SCAN'       => 1,
                 'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
                 'LICENCE_NUMBER_SCAN'        => 'LIC001',
@@ -365,32 +328,14 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
                 'DOC_DESCRIPTION_ID_SCAN'    => 74,
                 'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
-            ]
-        )->once()->andReturn('CONTENT');
-
-        $date = new DateTime();
-        $fileName = $date->format('YmdHis') . '_Scanning_Separator.rtf';
-
-        $file = new \Dvsa\Olcs\Api\Service\File\File();
-        $file->setIdentifier('ABCDEFG');
-        $file->setSize(100);
-
-        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents', $fileName)->once()
-            ->andReturn($file);
-
-        $docResult = new Result();
-        $docResult->addMessage('Create Document');
-        $data = [
-            'identifier' => 'ABCDEFG',
+            ],
             'description' => 'Scanning separator',
-            'filename' => $fileName,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => SubCategory::DOC_SUB_CATEGORY_SCANNING_SEPARATOR,
             'isExternal' => false,
-            'isScan' => false,
-            'size' => 100
+            'isScan' => false
         ];
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $docResult);
+        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $result1);
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
@@ -403,7 +348,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['scan' => 74], $result->getIds());
+        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -446,10 +391,13 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->repoMap['Category']->shouldReceive('fetchById')->with(7)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(92)->once()->andReturn($subCategory);
 
-        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
-            'Scanning_SeparatorSheet',
-            [],
-            [
+        $result1 = new Result();
+        $result1->addMessage('Create Document');
+        $result1->addId('identifier', 'ABCDEFG');
+        $dtoData = [
+            'template' => 'Scanning_SeparatorSheet',
+            'query' => [],
+            'knownValues' => [
                 'DOC_CATEGORY_ID_SCAN'       => 7,
                 'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
                 'LICENCE_NUMBER_SCAN'        => 'LIC001',
@@ -461,32 +409,14 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
                 'DOC_DESCRIPTION_ID_SCAN'    => 74,
                 'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
-            ]
-        )->once()->andReturn('CONTENT');
-
-        $date = new DateTime();
-        $fileName = $date->format('YmdHis') . '_Scanning_Separator.rtf';
-
-        $file = new \Dvsa\Olcs\Api\Service\File\File();
-        $file->setIdentifier('ABCDEFG');
-        $file->setSize(100);
-
-        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents', $fileName)->once()
-            ->andReturn($file);
-
-        $docResult = new Result();
-        $docResult->addMessage('Create Document');
-        $data = [
-            'identifier' => 'ABCDEFG',
+            ],
             'description' => 'Scanning separator',
-            'filename' => $fileName,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => SubCategory::DOC_SUB_CATEGORY_SCANNING_SEPARATOR,
             'isExternal' => false,
-            'isScan' => false,
-            'size' => 100
+            'isScan' => false
         ];
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $docResult);
+        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $result1);
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
@@ -499,7 +429,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['scan' => 74], $result->getIds());
+        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -549,10 +479,13 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->repoMap['Category']->shouldReceive('fetchById')->with(2)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(92)->once()->andReturn($subCategory);
 
-        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
-            'Scanning_SeparatorSheet',
-            [],
-            [
+        $result1 = new Result();
+        $result1->addMessage('Create Document');
+        $result1->addId('identifier', 'ABCDEFG');
+        $dtoData = [
+            'template' => 'Scanning_SeparatorSheet',
+            'query' => [],
+            'knownValues' => [
                 'DOC_CATEGORY_ID_SCAN'       => 2,
                 'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
                 'LICENCE_NUMBER_SCAN'        => 'LIC001',
@@ -564,32 +497,14 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
                 'DOC_DESCRIPTION_ID_SCAN'    => 74,
                 'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
-            ]
-        )->once()->andReturn('CONTENT');
-
-        $date = new DateTime();
-        $fileName = $date->format('YmdHis') . '_Scanning_Separator.rtf';
-
-        $file = new \Dvsa\Olcs\Api\Service\File\File();
-        $file->setIdentifier('ABCDEFG');
-        $file->setSize(100);
-
-        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents', $fileName)->once()
-            ->andReturn($file);
-
-        $docResult = new Result();
-        $docResult->addMessage('Create Document');
-        $data = [
-            'identifier' => 'ABCDEFG',
+            ],
             'description' => 'Scanning separator',
-            'filename' => $fileName,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => SubCategory::DOC_SUB_CATEGORY_SCANNING_SEPARATOR,
             'isExternal' => false,
-            'isScan' => false,
-            'size' => 100
+            'isScan' => false
         ];
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $docResult);
+        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $result1);
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
@@ -602,7 +517,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['scan' => 74], $result->getIds());
+        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -645,10 +560,13 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->repoMap['Category']->shouldReceive('fetchById')->with(8)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(92)->once()->andReturn($subCategory);
 
-        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
-            'Scanning_SeparatorSheet',
-            [],
-            [
+        $result1 = new Result();
+        $result1->addMessage('Create Document');
+        $result1->addId('identifier', 'ABCDEFG');
+        $dtoData = [
+            'template' => 'Scanning_SeparatorSheet',
+            'query' => [],
+            'knownValues' => [
                 'DOC_CATEGORY_ID_SCAN'       => 8,
                 'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
                 'LICENCE_NUMBER_SCAN'        => 'Unknown',
@@ -660,32 +578,14 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
                 'DOC_DESCRIPTION_ID_SCAN'    => 74,
                 'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
-            ]
-        )->once()->andReturn('CONTENT');
-
-        $date = new DateTime();
-        $fileName = $date->format('YmdHis') . '_Scanning_Separator.rtf';
-
-        $file = new \Dvsa\Olcs\Api\Service\File\File();
-        $file->setIdentifier('ABCDEFG');
-        $file->setSize(100);
-
-        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents', $fileName)->once()
-            ->andReturn($file);
-
-        $docResult = new Result();
-        $docResult->addMessage('Create Document');
-        $data = [
-            'identifier' => 'ABCDEFG',
+            ],
             'description' => 'Scanning separator',
-            'filename' => $fileName,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => SubCategory::DOC_SUB_CATEGORY_SCANNING_SEPARATOR,
             'isExternal' => false,
-            'isScan' => false,
-            'size' => 100
+            'isScan' => false
         ];
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $docResult);
+        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $result1);
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
@@ -698,7 +598,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['scan' => 74], $result->getIds());
+        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -737,10 +637,13 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->repoMap['Category']->shouldReceive('fetchById')->with(5)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(92)->once()->andReturn($subCategory);
 
-        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
-            'Scanning_SeparatorSheet',
-            [],
-            [
+        $result1 = new Result();
+        $result1->addMessage('Create Document');
+        $result1->addId('identifier', 'ABCDEFG');
+        $dtoData = [
+            'template' => 'Scanning_SeparatorSheet',
+            'query' => [],
+            'knownValues' => [
                 'DOC_CATEGORY_ID_SCAN'       => 5,
                 'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
                 'LICENCE_NUMBER_SCAN'        => 'Unknown',
@@ -752,32 +655,14 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
                 'DOC_DESCRIPTION_ID_SCAN'    => 74,
                 'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
-            ]
-        )->once()->andReturn('CONTENT');
-
-        $date = new DateTime();
-        $fileName = $date->format('YmdHis') . '_Scanning_Separator.rtf';
-
-        $file = new \Dvsa\Olcs\Api\Service\File\File();
-        $file->setIdentifier('ABCDEFG');
-        $file->setSize(100);
-
-        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents', $fileName)->once()
-            ->andReturn($file);
-
-        $docResult = new Result();
-        $docResult->addMessage('Create Document');
-        $data = [
-            'identifier' => 'ABCDEFG',
+            ],
             'description' => 'Scanning separator',
-            'filename' => $fileName,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => SubCategory::DOC_SUB_CATEGORY_SCANNING_SEPARATOR,
             'isExternal' => false,
-            'isScan' => false,
-            'size' => 100
+            'isScan' => false
         ];
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $docResult);
+        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $result1);
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
@@ -790,7 +675,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['scan' => 74], $result->getIds());
+        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 
@@ -842,10 +727,13 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->repoMap['Category']->shouldReceive('fetchById')->with(3)->once()->andReturn($category);
         $this->repoMap['SubCategory']->shouldReceive('fetchById')->with(92)->once()->andReturn($subCategory);
 
-        $this->mockDocGen->shouldReceive('generateFromTemplate')->with(
-            'Scanning_SeparatorSheet',
-            [],
-            [
+        $result1 = new Result();
+        $result1->addMessage('Create Document');
+        $result1->addId('identifier', 'ABCDEFG');
+        $dtoData = [
+            'template' => 'Scanning_SeparatorSheet',
+            'query' => [],
+            'knownValues' => [
                 'DOC_CATEGORY_ID_SCAN'       => 3,
                 'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME',
                 'LICENCE_NUMBER_SCAN'        => 'LIC001',
@@ -857,32 +745,14 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME',
                 'DOC_DESCRIPTION_ID_SCAN'    => 74,
                 'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1',
-            ]
-        )->once()->andReturn('CONTENT');
-
-        $date = new DateTime();
-        $fileName = $date->format('YmdHis') . '_Scanning_Separator.rtf';
-
-        $file = new \Dvsa\Olcs\Api\Service\File\File();
-        $file->setIdentifier('ABCDEFG');
-        $file->setSize(100);
-
-        $this->mockDocGen->shouldReceive('uploadGeneratedContent')->with('CONTENT', 'documents', $fileName)->once()
-            ->andReturn($file);
-
-        $docResult = new Result();
-        $docResult->addMessage('Create Document');
-        $data = [
-            'identifier' => 'ABCDEFG',
+            ],
             'description' => 'Scanning separator',
-            'filename' => $fileName,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => SubCategory::DOC_SUB_CATEGORY_SCANNING_SEPARATOR,
             'isExternal' => false,
-            'isScan' => false,
-            'size' => 100
+            'isScan' => false
         ];
-        $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $docResult);
+        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $result1);
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
@@ -895,7 +765,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['scan' => 74], $result->getIds());
+        $this->assertSame(['identifier' => 'ABCDEFG', 'scan' => 74], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID 74 created'], $result->getMessages());
     }
 }

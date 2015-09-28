@@ -27,7 +27,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_application_status", columns={"status"}),
  *        @ORM\Index(name="ix_application_interim_status", columns={"interim_status"}),
  *        @ORM\Index(name="ix_application_withdrawn_reason", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="ix_application_goods_or_psv", columns={"goods_or_psv"})
+ *        @ORM\Index(name="ix_application_goods_or_psv", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="ix_application_applied_via", columns={"applied_via"})
  *    }
  * )
  */
@@ -43,6 +44,25 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="yesnonull", name="administration", nullable=true)
      */
     protected $administration;
+
+    /**
+     * Applied via
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="applied_via", referencedColumnName="id", nullable=false)
+     */
+    protected $appliedVia;
+
+    /**
+     * Auth signature
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="auth_signature", nullable=false, options={"default": 0})
+     */
+    protected $authSignature = 0;
 
     /**
      * Bankrupt
@@ -835,6 +855,52 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getAdministration()
     {
         return $this->administration;
+    }
+
+    /**
+     * Set the applied via
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $appliedVia
+     * @return Application
+     */
+    public function setAppliedVia($appliedVia)
+    {
+        $this->appliedVia = $appliedVia;
+
+        return $this;
+    }
+
+    /**
+     * Get the applied via
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getAppliedVia()
+    {
+        return $this->appliedVia;
+    }
+
+    /**
+     * Set the auth signature
+     *
+     * @param boolean $authSignature
+     * @return Application
+     */
+    public function setAuthSignature($authSignature)
+    {
+        $this->authSignature = $authSignature;
+
+        return $this;
+    }
+
+    /**
+     * Get the auth signature
+     *
+     * @return boolean
+     */
+    public function getAuthSignature()
+    {
+        return $this->authSignature;
     }
 
     /**

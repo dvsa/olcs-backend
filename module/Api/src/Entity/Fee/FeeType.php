@@ -42,4 +42,5 @@ class FeeType extends AbstractFeeType
     const FEE_TYPE_IRFOPSVANN = 'IRFOPSVANN';
     const FEE_TYPE_IRFOPSVCOPY = 'IRFOPSVCOPY';
     const FEE_TYPE_IRFOGVPERMIT = 'IRFOGVPERMIT';
+    const FEE_TYPE_ADJUSTMENT = 'ADJUSTMENT';
 }

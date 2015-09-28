@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Organisation;
 
+use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType as ChangeBusinessTypeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -78,10 +79,20 @@ final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwa
             return $result;
         }
 
-        // If we have got here then we CAN change the business type and we ARE changing the business type
-        $organisation->setType($this->getRepo()->getRefdataReference($command->getBusinessType()));
+        // Need to handle differently for internal "L/V" (SS and "A" just get updated here and now)
+        if ($command->getApplication() === null && $this->isInternalUser()) {
+            $data = [
+                'id' => $organisation->getId(),
+                'businessType' => $command->getBusinessType(),
+                'confirm' => $command->getConfirm()
+            ];
 
-        $this->getRepo()->save($organisation);
+            $this->handleSideEffect(ChangeBusinessTypeCmd::create($data));
+        } else {
+
+            $organisation->setType($this->getRepo()->getRefdataReference($command->getBusinessType()));
+            $this->getRepo()->save($organisation);
+        }
 
         $result->addMessage('Business type updated');
 

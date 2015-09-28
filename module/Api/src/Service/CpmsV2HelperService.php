@@ -3,6 +3,9 @@
 /**
  * Cpms Version 2 Helper Service
  *
+ * Note: CPMS has been known to reject ints as 'missing', so we cast
+ * some fields (ID's, etc.) to strings
+ *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 namespace Dvsa\Olcs\Api\Service;
@@ -23,7 +26,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     // CPMS' preferred date format (note: this changed around 03/2015)
     const DATE_FORMAT = 'Y-m-d';
 
-    // @TODO product ref shouldn't have to come from a whitelist...
     const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
 
     // @TODO this is a dummy value for testing purposes as cost_centre is now
@@ -44,6 +46,11 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     protected $cpmsClient;
 
     /**
+     * @var \Dvsa\Olcs\Api\Service\FeesHelperService
+     */
+    protected $feesHelper;
+
+    /**
      * @param ServiceLocatorInterface $serviceLocator
      * @return self
      */
@@ -51,6 +58,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     {
         $this->cpmsClient = $serviceLocator->get('cpms\service\api');
         $this->logger = $serviceLocator->get('Logger');
+        $this->feesHelper = $serviceLocator->get('FeesHelperService');
         return $this;
     }
 
@@ -115,7 +123,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * Determine the status of a payment/transaction
      *
      * @param string $receiptReference
-     * @return int status code
+     * @return int status code|null
      */
     public function getPaymentStatus($receiptReference)
     {
@@ -133,7 +141,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
-        return $response['payment_status']['code'];
+        if (isset($response['payment_status']['code'])) {
+            return $response['payment_status']['code'];
+        }
     }
 
     /**
@@ -147,7 +157,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      *
-     * @todo batch_number
      * @todo $payer appears to be no longer required, but retained to keep the
      * interface the same as v1
      */
@@ -161,15 +170,21 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $extraParams = [
             'slip_number' => (string) $slipNo,
-            'batch_number' => '',
+            'batch_number' => (string) $slipNo,
             'receipt_date' => $this->formatDate($receiptDate),
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
         ];
         $params = $this->getParametersForFees($fees, $extraParams);
 
+        $allocations = $this->feesHelper->allocatePayments($amount, $fees);
+
         foreach ($fees as $fee) {
-            $params['payment_data'][] = $this->getPaymentDataForFee($fee);
+            $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
+            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
+            if (!empty($paymentData)) {
+                $params['payment_data'][] = $paymentData;
+            }
         }
 
         $response = $this->send($method, $endPoint, $scope, $params);
@@ -189,9 +204,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param string $chequeDate (from DateSelect)
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
-     *
-     * @todo API docs aren't clear which fields should go top level or in payment_data
-     * @todo batch_number
      */
     public function recordChequePayment($fees, $amount, $receiptDate, $payer, $slipNo, $chequeNo, $chequeDate)
     {
@@ -201,9 +213,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $extraParams = [
             'cheque_date' => $this->formatDate($chequeDate),
-            'cheque_number' => (string)$chequeNo,
+            'cheque_number' => (string) $chequeNo,
             'slip_number' => (string) $slipNo,
-            'batch_number' => '',
+            'batch_number' => (string) $slipNo,
             'receipt_date' => $this->formatDate($receiptDate),
             'name_on_cheque' => $payer,
             'scope' => $scope,
@@ -211,8 +223,14 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         ];
         $params = $this->getParametersForFees($fees, $extraParams);
 
+        $allocations = $this->feesHelper->allocatePayments($amount, $fees);
+
         foreach ($fees as $fee) {
-            $params['payment_data'][] = $this->getPaymentDataForFee($fee);
+            $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
+            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
+            if (!empty($paymentData)) {
+                $params['payment_data'][] = $paymentData;
+            }
         }
 
         $response = $this->send($method, $endPoint, $scope, $params);
@@ -232,7 +250,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      *
-     * @todo batch_number
      * @todo $payer appears to be no longer required, but retained to keep the
      * interface the same as v1
      */
@@ -247,15 +264,21 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $extraParams = [
             'postal_order_number' => (string) $poNo,
             'slip_number' => (string) $slipNo,
-            'batch_number' => '',
+            'batch_number' => (string) $slipNo,
             'receipt_date' => $this->formatDate($receiptDate),
             'scope' => $scope,
             'total_amount' => $this->formatAmount($amount),
         ];
         $params = $this->getParametersForFees($fees, $extraParams);
 
+        $allocations = $this->feesHelper->allocatePayments($amount, $fees);
+
         foreach ($fees as $fee) {
-            $params['payment_data'][] = $this->getPaymentDataForFee($fee);
+            $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
+            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
+            if (!empty($paymentData)) {
+                $params['payment_data'][] = $paymentData;
+            }
         }
 
         $response = $this->send($method, $endPoint, $scope, $params);
@@ -320,9 +343,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     {
         $totalAmount = 0;
         foreach ($fees as $fee) {
-            $totalAmount += (float)$fee->getOutstandingAmount();
+            $totalAmount += (int) ($fee->getOutstandingAmount() * 100);
         }
-        return $this->formatAmount($totalAmount);
+        return $this->formatAmount($totalAmount / 100);
     }
 
     /**
@@ -385,18 +408,24 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @param Fee $fee
      * @param array $extraPayment data
-     * @return array
+     * @return array|null (will return null if we don't want to include a fee,
+     * e.g. overpayment balancing fees)
      *
      * @todo 'product_reference' should be $fee->getFeeType()->getDescription()
      * but CPMS has a whitelist and responds  {"code":104,"message":"product_reference is invalid"}
+     * @todo 'sales_person_reference'
      */
     protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [])
     {
+        if ($fee->isBalancingFee()) {
+            return;
+        }
+
         $commonPaymentData = [
             'line_identifier' => (string) $fee->getInvoiceLineNo(),
             'amount' => $this->formatAmount($fee->getAmount()),
             'allocated_amount' => $this->formatAmount(
-                // will change when we do under/overpayment
+                // may be overridden if under/overpayment
                 $fee->getOutstandingAmount()
             ),
             // all fees are currently zero rated
@@ -414,7 +443,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'rule_start_date' => $this->formatDate($fee->getRuleStartDate()),
             'deferment_period' => (string) $fee->getDefermentPeriod(),
             // 'country_code' ('GB' or 'NI') is optional and deliberately omitted
-            'sales_person_reference' => '', // @todo
+            'sales_person_reference' => $fee->getSalesPersonReference(),
         ];
 
         return array_merge($commonPaymentData, $extraPaymentData);
@@ -435,8 +464,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $totalAmount = $this->getTotalAmountFromFees($fees);
         $firstFee = reset($fees);
         $commonParams = [
-            // Note: CPMS has been known to reject ints as 'missing', so we cast
-            // some fields to strings
             'customer_reference' => (string) $this->getCustomerReference($fees),
             'payment_data' => [],
             'cost_centre' => self::COST_CENTRE,
@@ -444,9 +471,26 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'customer_name' => $firstFee->getCustomerNameForInvoice(),
             'customer_manager_name' => $firstFee->getCustomerNameForInvoice(),
             'customer_address' => $this->formatAddress($firstFee->getCustomerAddressForInvoice()),
+            'refund_overpayment' => $this->isOverpayment($fees),
         ];
 
         return array_merge($commonParams, $extraParams);
+    }
+
+    /**
+     * Determine if an array of fees contains an overpayment
+     *
+     * @return boolean
+     */
+    protected function isOverpayment($fees)
+    {
+        foreach ($fees as $fee) {
+            if ($fee->isBalancingFee()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
