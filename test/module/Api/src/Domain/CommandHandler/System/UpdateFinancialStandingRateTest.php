@@ -60,6 +60,9 @@ class UpdateFinancialStandingRateTest extends CommandHandlerTestCase
             ->once()
             ->with($command, 1, $version)
             ->andReturn($mockRate)
+            ->shouldReceive('fetchByCategoryTypeAndDate')
+            ->once()
+            ->andReturn([])
             ->shouldReceive('save')
             ->once()
             ->with($mockRate);
@@ -100,5 +103,49 @@ class UpdateFinancialStandingRateTest extends CommandHandlerTestCase
 
         $this->assertEquals(['financialStandingRate' => $id], $response->getIds());
         $this->assertEquals(['Financial Standing Rate updated'], $response->getMessages());
+    }
+
+    public function testHandleCommandDuplicateDetected()
+    {
+        $id = 69;
+        $version = 2;
+
+        $params = [
+            'id' => $id,
+            'version' => $version,
+            'goodsOrPsv' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+            'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            'firstVehicleRate' => '1000.01',
+            'additionalVehicleRate' => '100.01',
+            'effectiveFrom' => '2015-09-10',
+        ];
+
+        $command = Command::create($params);
+
+        $mockRate = m::mock(Entity::class)
+            ->shouldReceive('getId')
+            ->andReturn($id)
+            ->getMock();
+
+        $mockExisting = m::mock(Entity::class)
+            ->shouldReceive('getId')
+            ->andReturn(99)
+            ->getMock();
+
+        $this->repoMap['FinancialStandingRate']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, 1, $version)
+            ->andReturn($mockRate)
+            ->shouldReceive('fetchByCategoryTypeAndDate')
+            ->once()
+            ->with(Licence::LICENCE_CATEGORY_GOODS_VEHICLE, Licence::LICENCE_TYPE_STANDARD_NATIONAL, '2015-09-10')
+            ->andReturn([$mockExisting])
+            ->shouldReceive('save')
+            ->never();
+
+        $this->setExpectedException(ValidationException::class);
+
+        $response = $this->sut->handleCommand($command);
     }
 }
