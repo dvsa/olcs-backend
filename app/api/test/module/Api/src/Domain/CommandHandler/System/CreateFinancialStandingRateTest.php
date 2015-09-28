@@ -33,6 +33,12 @@ class CreateFinancialStandingRateTest extends CommandHandlerTestCase
             Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
         ];
 
+        $this->references = [
+            Entity::class => [
+                99 => m::mock(Entity::class),
+            ],
+        ];
+
         parent::initReferences();
     }
 
@@ -51,6 +57,9 @@ class CreateFinancialStandingRateTest extends CommandHandlerTestCase
         $newId = 69;
         $savedRate = null;
         $this->repoMap['FinancialStandingRate']
+            ->shouldReceive('fetchByCategoryTypeAndDate')
+            ->once()
+            ->andReturn([])
             ->shouldReceive('save')
             ->once()
             ->andReturnUsing(
@@ -71,5 +80,36 @@ class CreateFinancialStandingRateTest extends CommandHandlerTestCase
         $this->assertEquals('100.01', $savedRate->getAdditionalVehicleRate());
         $this->assertInstanceOf(\DateTime::class, $savedRate->getEffectiveFrom());
         $this->assertEquals('2015-09-10', $savedRate->getEffectiveFrom()->format('Y-m-d'));
+    }
+
+    public function testHandleCommandDuplicateDetected()
+    {
+        $params = [
+            'goodsOrPsv' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+            'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            'firstVehicleRate' => '1000.01',
+            'additionalVehicleRate' => '100.01',
+            'effectiveFrom' => '2015-09-10',
+        ];
+
+        $command = Command::create($params);
+
+        $newId = 69;
+        $savedRate = null;
+        $this->repoMap['FinancialStandingRate']
+            ->shouldReceive('fetchByCategoryTypeAndDate')
+            ->once()
+            ->with(Licence::LICENCE_CATEGORY_GOODS_VEHICLE, Licence::LICENCE_TYPE_STANDARD_NATIONAL, '2015-09-10')
+            ->andReturn(
+                [
+                    $this->mapReference(Entity::class, 99),
+                ]
+            )
+            ->shouldReceive('save')
+            ->never();
+
+        $this->setExpectedException(ValidationException::class);
+
+        $response = $this->sut->handleCommand($command);
     }
 }
