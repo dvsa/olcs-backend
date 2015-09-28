@@ -5,19 +5,29 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus;
 
+use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Bus
  */
-class BusRegWithDocuments extends AbstractQueryHandler
+class BusRegWithDocuments extends AbstractQueryHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'Bus';
 
     public function handleQuery(QueryInterface $query)
     {
+        /** @var BusReg $busReg */
         $busReg = $this->getRepo()->fetchUsingId($query);
+
+        $currentUser = $this->getCurrentUser();
 
         return $this->result(
             $busReg,
@@ -34,12 +44,15 @@ class BusRegWithDocuments extends AbstractQueryHandler
                 'subsidised',
                 'otherServices',
                 'variationReasons',
-                'npPublicationNo',
-                //'documents'
+                'npPublicationNo'
             ],
             [
                 'npPublicationNo' => $busReg->getLicence()->determineNpNumber(),
-                //'documents' => $busReg->fetchDocumentsByLocalAuthority($query->getLocalAuthority())
+                'txcInboxEntries' => $this->resultList(
+                    $busReg->fetchLatestUnreadBusRegDocumentsByLocalAuthority(
+                        $currentUser->getLocalAuthority()
+                    )
+                )
             ]
         );
     }
