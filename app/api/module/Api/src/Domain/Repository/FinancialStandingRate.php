@@ -64,4 +64,26 @@ class FinancialStandingRate extends AbstractRepository
 
         return $results;
     }
+
+    /**
+     * @param string $goodsOrPsv
+     * @param string $licenceType
+     * @param string $date
+     *
+     * @return Entity
+     */
+    public function fetchByCategoryTypeAndDate($goodsOrPsv, $licenceType, $date)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq($this->alias.'.goodsOrPsv', ':goodsOrPsv'));
+        $qb->andWhere($qb->expr()->eq($this->alias.'.licenceType', ':licenceType'));
+        $qb->andWhere($qb->expr()->eq($this->alias.'.effectiveFrom', ':date'));
+
+        $qb->setParameter('goodsOrPsv', $goodsOrPsv);
+        $qb->setParameter('licenceType', $licenceType);
+        $qb->setParameter('date', $date);
+
+        return $qb->getQuery()->getResult();
+    }
 }
