@@ -23,5 +23,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TxcInbox extends AbstractTxcInbox
 {
+    const SUBCATEGORY_EBSR = 36; // to-do sub category is 'EBSR' TBC
+    const SUBCATEGORY_TRANSXCHANGE_FILE = 107;
+    const SUBCATEGORY_TRANSXCHANGE_PDF = 108;
 
 }

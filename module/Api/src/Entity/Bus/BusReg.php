@@ -6,12 +6,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as BusShortNoticeEntity;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
+use Doctrine\Common\Collections\Criteria;
+
 
 /**
  * BusReg Entity
@@ -899,5 +903,64 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     public function getContextValue()
     {
         return $this->getLicence()->getLicNo();
+    }
+
+    /**
+     * Fetch Bus reg documents. If localAuthority is set, filter by local authority and file_read = 0.
+     * If not set, add WHERE local authority IS NULL to retrieve the organisation record (?!)
+     *
+     * @note Each busReg set of documents will have a record for all 3 documents stored against each local authority.
+     * PLUS one record where local authority IS NULL.
+     *
+     * @param $id
+     * @param null $localAuthority
+     * @return array
+     */
+    public function fetchUnreadDocumentsByLocalAuthority($localAuthority)
+    {
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+
+        if (empty($localAuthority)) {
+            $criteria->where($expr->isNull('localAuthority'));
+        } else {
+            $criteria->where($expr->eq('localAuthority', $localAuthority));
+            $criteria->andWhere($expr->eq('fileRead', 'Y'));
+        }
+
+        $criteria->orderBy(['id' => 'DESC']);
+
+        return $this->getTxcDocuments()->matching($criteria);
+    }
+
+    /**
+     * Fetch the latest unread route, pdf and zip document for a bus reg
+     *
+     * @param $localAuthority
+     * @return array
+     */
+    public function fetchLatestUnreadBusRegDocumentsByLocalAuthority($localAuthority)
+    {
+        $documents = new ArrayCollection();
+        $txcInboxEntries = $this->fetchUnreadDocumentsByLocalAuthority($localAuthority);
+
+        if (isset($txcInboxEntries[0]) && $txcInboxEntries[0] instanceof TxcInbox) {
+            if ($txcInboxEntries[0]->getRouteDocument() instanceof Document) {
+                $route = $txcInboxEntries[0]->getRouteDocument();
+                $route->setIdentifier('route');
+                $documents->add($route);
+            }
+            if ($txcInboxEntries[0]->getPdfDocument() instanceof Document) {
+                $pdf = $txcInboxEntries[0]->getPdfDocument();
+                $pdf->setIdentifier('pdf');
+                $documents->add($pdf);
+            }
+            if ($txcInboxEntries[0]->getZipDocument() instanceof Document) {
+                $zip = $txcInboxEntries[0]->getZipDocument();
+                $zip->setIdentifier('zip');
+                $documents->add($zip);
+            }
+        }
+        return $documents;
     }
 }
