@@ -77,4 +77,27 @@ class FinancialStandingRateTest extends RepositoryTestCase
 
         $this->assertEquals('RESULT', $result);
     }
+
+    public function testByCategoryTypeAndDate()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+
+        $results = $this->sut->fetchByCategoryTypeAndDate('lcat_gv', 'ltyp_sn', '2015-09-28');
+
+        $this->assertEquals(['RESULTS'], $results);
+
+        $expectedQuery = 'BLAH AND fsr.goodsOrPsv = [[lcat_gv]] AND '
+            . 'fsr.licenceType = [[ltyp_sn]] AND fsr.effectiveFrom = [[2015-09-28]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }
