@@ -94,8 +94,6 @@ class CreateFinancialStandingRateTest extends CommandHandlerTestCase
 
         $command = Command::create($params);
 
-        $newId = 69;
-        $savedRate = null;
         $this->repoMap['FinancialStandingRate']
             ->shouldReceive('fetchByCategoryTypeAndDate')
             ->once()
@@ -110,6 +108,6 @@ class CreateFinancialStandingRateTest extends CommandHandlerTestCase
 
         $this->setExpectedException(ValidationException::class);
 
-        $response = $this->sut->handleCommand($command);
+        $this->sut->handleCommand($command);
     }
 }
