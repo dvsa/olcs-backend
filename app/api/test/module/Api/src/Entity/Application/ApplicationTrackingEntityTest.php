@@ -64,7 +64,7 @@ class ApplicationTrackingEntityTest extends EntityTester
             'taxiPhvStatus' => 14,
             'transportManagersStatus' => 15,
             'typeOfLicenceStatus' => 16,
-            'undertakingsStatus' => 17,
+            'declarationsInternalStatus' => 17,
             'vehiclesDeclarationsStatus' => 18,
             'vehiclesPsvStatus' => 19,
             'vehiclesStatus' => 20,
@@ -88,7 +88,7 @@ class ApplicationTrackingEntityTest extends EntityTester
         $this->assertEquals(14, $sut->getTaxiPhvStatus());
         $this->assertEquals(15, $sut->getTransportManagersStatus());
         $this->assertEquals(16, $sut->getTypeOfLicenceStatus());
-        $this->assertEquals(17, $sut->getUndertakingsStatus());
+        $this->assertEquals(17, $sut->getDeclarationsInternalStatus());
         $this->assertEquals(18, $sut->getVehiclesDeclarationsStatus());
         $this->assertEquals(19, $sut->getVehiclesPsvStatus());
         $this->assertEquals(20, $sut->getVehiclesStatus());

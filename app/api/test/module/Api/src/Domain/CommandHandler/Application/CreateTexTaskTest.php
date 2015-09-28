@@ -71,7 +71,7 @@ class CreateTexTaskTest extends CommandHandlerTestCase
             \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask::class,
             [
                 'category' => \Dvsa\Olcs\Api\Entity\System\Category::CATEGORY_APPLICATION,
-                'subCategory' => \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_TIME_EXPIRED,
+                'subCategory' => \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_TIME_EXPIRED,
                 'description' => 'OOO Time Expired',
                 'licence' => 426,
                 'application' => 32,
@@ -117,7 +117,7 @@ class CreateTexTaskTest extends CommandHandlerTestCase
             \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask::class,
             [
                 'category' => \Dvsa\Olcs\Api\Entity\System\Category::CATEGORY_APPLICATION,
-                'subCategory' => \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_TIME_EXPIRED,
+                'subCategory' => \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_TIME_EXPIRED,
                 'description' => 'OOO Time Expired',
                 'licence' => 426,
                 'application' => 32,
@@ -174,7 +174,7 @@ class CreateTexTaskTest extends CommandHandlerTestCase
             \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask::class,
             [
                 'category' => \Dvsa\Olcs\Api\Entity\System\Category::CATEGORY_APPLICATION,
-                'subCategory' => \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_TIME_EXPIRED,
+                'subCategory' => \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_TIME_EXPIRED,
                 'description' => 'OOO Time Expired',
                 'licence' => 426,
                 'application' => 32,

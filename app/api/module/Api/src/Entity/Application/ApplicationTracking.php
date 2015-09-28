@@ -44,7 +44,7 @@ class ApplicationTracking extends AbstractApplicationTracking
         'TaxiPhv',
         'TransportManagers',
         'TypeOfLicence',
-        'Undertakings',
+        'DeclarationsInternal',
         'VehiclesDeclarations',
         'VehiclesPsv',
         'Vehicles',

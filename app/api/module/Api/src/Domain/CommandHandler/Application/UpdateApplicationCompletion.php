@@ -46,7 +46,8 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
         'undertakings',
         'vehiclesDeclarations',
         'vehiclesPsv',
-        'vehicles'
+        'vehicles',
+        'declarationsInternal',
     ];
 
     public function handleCommand(CommandInterface $command)
@@ -61,7 +62,7 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
 
         $completion = $application->getApplicationCompletion();
         // always reset decalration(undertakings) section, unless that it is the section just completed
-        if ($command->getSection() !== 'undertakings') {
+        if ($command->getSection() !== 'undertakings' && $command->getSection() !== 'declarationsInternal') {
             $application->setDeclarationConfirmation('N');
         }
 

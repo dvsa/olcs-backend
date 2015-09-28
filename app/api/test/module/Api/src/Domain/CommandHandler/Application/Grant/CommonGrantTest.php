@@ -49,6 +49,7 @@ class CommonGrantTest extends CommandHandlerTestCase
 
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setId(333);
+        $licence->shouldReceive('isRestricted')->andReturn(false);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
@@ -111,6 +112,7 @@ class CommonGrantTest extends CommandHandlerTestCase
 
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setId(333);
+        $licence->shouldReceive('isRestricted')->andReturn(false);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
@@ -171,6 +173,143 @@ class CommonGrantTest extends CommandHandlerTestCase
                 'PrintLicence',
                 'Schedule41',
                 'ProcessDuplicateVehicles',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandRestricted()
+    {
+        $data = [
+            'id' => 111
+        ];
+
+        $command = CommonGrantCmd::create($data);
+
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setId(333);
+        $licence->shouldReceive('isRestricted')->andReturn(true);
+        $licence->shouldReceive('isPsv')->andReturn(false);
+        $licence->shouldReceive('setEstablishmentCd')->once()->with(null);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setLicence($licence);
+        $application->shouldReceive('isGoods')
+            ->andReturn(false);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->once()
+            ->with($application);
+
+        $result1 = new Result();
+        $result1->addMessage('CancelAllInterimFees');
+        $this->expectedSideEffect(CancelAllInterimFees::class, $data, $result1);
+
+        $result2 = new Result();
+        $result2->addMessage('GrantConditionUndertaking');
+        $this->expectedSideEffect(GrantConditionUndertaking::class, $data, $result2);
+
+        $result3 = new Result();
+        $result3->addMessage('GrantCommunityLicence');
+        $this->expectedSideEffect(GrantCommunityLicence::class, $data, $result3);
+
+        $result4 = new Result();
+        $result4->addMessage('GrantTransportManager');
+        $this->expectedSideEffect(GrantTransportManager::class, $data, $result4);
+
+        $result5 = new Result();
+        $result5->addMessage('GrantPeople');
+        $this->expectedSideEffect(GrantPeople::class, $data, $result5);
+
+        $result6 = new Result();
+        $result6->addMessage('PrintLicence');
+        $this->expectedSideEffect(PrintLicence::class, ['id' => 333], $result6);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'CancelAllInterimFees',
+                'GrantConditionUndertaking',
+                'GrantCommunityLicence',
+                'GrantTransportManager',
+                'GrantPeople',
+                'PrintLicence'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandPsvRestricted()
+    {
+        $data = [
+            'id' => 111
+        ];
+
+        $command = CommonGrantCmd::create($data);
+
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setId(333);
+        $licence->shouldReceive('isRestricted')->andReturn(true);
+        $licence->shouldReceive('isPsv')->andReturn(true);
+        $licence->shouldReceive('setEstablishmentCd')->once()->with(null);
+        $licence->shouldReceive('setTotAuthLargeVehicles')->once()->with(0);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setLicence($licence);
+        $application->shouldReceive('isGoods')->andReturn(false);
+        $application->shouldReceive('setTotAuthLargeVehicles')->once()->with(0);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->once()
+            ->with($application);
+
+        $result1 = new Result();
+        $result1->addMessage('CancelAllInterimFees');
+        $this->expectedSideEffect(CancelAllInterimFees::class, $data, $result1);
+
+        $result2 = new Result();
+        $result2->addMessage('GrantConditionUndertaking');
+        $this->expectedSideEffect(GrantConditionUndertaking::class, $data, $result2);
+
+        $result3 = new Result();
+        $result3->addMessage('GrantCommunityLicence');
+        $this->expectedSideEffect(GrantCommunityLicence::class, $data, $result3);
+
+        $result4 = new Result();
+        $result4->addMessage('GrantTransportManager');
+        $this->expectedSideEffect(GrantTransportManager::class, $data, $result4);
+
+        $result5 = new Result();
+        $result5->addMessage('GrantPeople');
+        $this->expectedSideEffect(GrantPeople::class, $data, $result5);
+
+        $result6 = new Result();
+        $result6->addMessage('PrintLicence');
+        $this->expectedSideEffect(PrintLicence::class, ['id' => 333], $result6);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'CancelAllInterimFees',
+                'GrantConditionUndertaking',
+                'GrantCommunityLicence',
+                'GrantTransportManager',
+                'GrantPeople',
+                'PrintLicence'
             ]
         ];
 

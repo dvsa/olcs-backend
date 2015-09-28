@@ -267,14 +267,14 @@ class LicenceEntityTest extends EntityTester
     /**
      * @dataProvider trafficAreaProvider
      */
-    public function testGetSerialNoPrefixFromTrafficArea($trafficArea, $expected)
+    public function testGetSerialNoPrefixFromTrafficArea($isNi, $expected)
     {
         $sut = m::mock(Entity::class)->makePartial();
         $sut->shouldReceive('getTrafficArea')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getId')
-                ->andReturn($trafficArea)
+                ->shouldReceive('getIsNi')
+                ->andReturn($isNi)
                 ->once()
                 ->getMock()
             )
@@ -287,8 +287,8 @@ class LicenceEntityTest extends EntityTester
     public function trafficAreaProvider()
     {
         return [
-            [TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE, CommunityLicEntity::PREFIX_NI],
-            [TrafficAreaEntity::NORTH_WESTERN_TRAFFIC_AREA_CODE, CommunityLicEntity::PREFIX_GB],
+            [true, CommunityLicEntity::PREFIX_NI],
+            [false, CommunityLicEntity::PREFIX_GB],
         ];
     }
 
@@ -366,6 +366,9 @@ class LicenceEntityTest extends EntityTester
 
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
+
+        $this->assertNull($licence->isGoods());
+
         $licence->setGoodsOrPsv($goodsOrPsv);
 
         $this->assertTrue($licence->isGoods());
@@ -390,6 +393,9 @@ class LicenceEntityTest extends EntityTester
 
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
+
+        $this->assertNull($licence->isPsv());
+
         $licence->setGoodsOrPsv($goodsOrPsv);
 
         $this->assertTrue($licence->isPsv());
@@ -414,6 +420,9 @@ class LicenceEntityTest extends EntityTester
 
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
+
+        $this->assertNull($licence->isSpecialRestricted());
+
         $licence->setLicenceType($licenceType);
 
         $this->assertTrue($licence->isSpecialRestricted());
@@ -554,6 +563,8 @@ class LicenceEntityTest extends EntityTester
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
 
+        $this->assertNull($licence->isRestricted());
+
         $licenceType = m::mock(RefData::class)->makePartial();
         $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
         $licence->setLicenceType($licenceType);
@@ -572,6 +583,8 @@ class LicenceEntityTest extends EntityTester
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
 
+        $this->assertNull($licence->isStandardInternational());
+
         $licenceType = m::mock(RefData::class)->makePartial();
         $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
         $licence->setLicenceType($licenceType);
@@ -589,6 +602,8 @@ class LicenceEntityTest extends EntityTester
     {
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
+
+        $this->assertNull($licence->isStandardNational());
 
         $licenceType = m::mock(RefData::class)->makePartial();
         $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL);
@@ -679,7 +694,6 @@ class LicenceEntityTest extends EntityTester
         $this->assertEquals(4, $licence->getTotAuthSmallVehicles());
         $this->assertEquals(5, $licence->getTotAuthMediumVehicles());
         $this->assertEquals(3, $licence->getTotAuthLargeVehicles());
-        $this->assertEquals('Y', $licence->getNiFlag());
     }
 
     public function testGetPsvDiscsNotCeased()
@@ -1080,5 +1094,13 @@ class LicenceEntityTest extends EntityTester
             ['ltyp_sbp', 'SBP'],
             ['XXXX', null],
         ];
+    }
+
+    public function testGetContextValue()
+    {
+        $entity = $this->instantiate(Entity::class);
+        $entity->setLicNo(111);
+
+        $this->assertEquals(111, $entity->getContextValue());
     }
 }

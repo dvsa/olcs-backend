@@ -33,7 +33,7 @@ final class CreateTexTask extends AbstractCommandHandler implements AuthAwareInt
 
         $taskData = [
             'category' => Category::CATEGORY_APPLICATION,
-            'subCategory' => Category::TASK_SUB_CATEGORY_TIME_EXPIRED,
+            'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_TIME_EXPIRED,
             'description' => 'OOO Time Expired',
             'licence' => $application->getLicence()->getId(),
             'application' => $application->getId(),

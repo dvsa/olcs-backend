@@ -10,11 +10,13 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\Licence\TmNominatedTask;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\GrantTransportManager;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
@@ -126,6 +128,7 @@ class GrantTransportManagerTest extends CommandHandlerTestCase
 
         /** @var TransportManagerApplication $tma */
         $tma = m::mock(TransportManagerApplication::class)->makePartial();
+        $tma->setId(111);
         $tma->setAction('A');
         $tma->setTransportManager($tm);
         $tma->setOtherLicences($otherLicences);
@@ -153,6 +156,14 @@ class GrantTransportManagerTest extends CommandHandlerTestCase
 
         $this->repoMap['OtherLicence']->shouldReceive('save')
             ->once();
+
+        $result = new Result();
+        $data = [
+            'entityId' => 111,
+            'type' => Queue::TYPE_TM_SNAPSHOT,
+            'status' => Queue::STATUS_QUEUED
+        ];
+        $this->expectedSideEffect(Create::class, $data, $result);
 
         $result = $this->sut->handleCommand($command);
 

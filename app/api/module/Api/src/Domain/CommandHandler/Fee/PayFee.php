@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Pay Fee (handles fee side effects)
+ * Pay Fee (handles fee side effects, doesn't actually change fee status)
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
@@ -18,14 +18,20 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence as ContinueLicenceCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask as CloseFeeDueTaskCmd;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
- * Pay Fee (handles fee side effects)
+ * Pay Fee (handles fee side effects, doesn't actually change fee status)
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class PayFee extends AbstractCommandHandler implements TransactionedInterface
+final class PayFee extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'Fee';
     protected $extraRepos = ['ContinuationDetail'];
 
@@ -36,8 +42,30 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         $this->maybeProcessApplicationFee($fee);
         $this->maybeProcessGrantingFee($fee);
         $this->maybeContinueLicence($fee);
+        $this->maybeCancelApplicationTasks($fee);
 
         return $this->result;
+    }
+
+    /**
+     * close Fee and TEX tasks, when pays the grant fee on a new goods application;
+     *
+     * @param Fee $fee
+     */
+    protected function maybeCancelApplicationTasks(Fee $fee)
+    {
+        $application = $fee->getApplication();
+
+        // if New Application and Grant Fee
+        if ($application &&
+            $application->isGoods() &&
+            $application->isNew() &&
+            $this->isInternalUser() &&
+            $fee->getFeeType()->getFeeType()->getId() === FeeType::FEE_TYPE_GRANT
+        ) {
+            $this->result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
+            $this->result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
+        }
     }
 
     protected function maybeProcessApplicationFee(Fee $fee)

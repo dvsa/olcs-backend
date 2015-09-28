@@ -19,7 +19,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_publication_police_data_publication_link_id",
      *     columns={"publication_link_id"}),
  *        @ORM\Index(name="ix_publication_police_data_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_publication_police_data_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_publication_police_data_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_publication_police_data_person_id", columns={"person_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_publication_police_data_olbs_key", columns={"olbs_key"})
@@ -125,11 +126,25 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     protected $olbsKey;
 
     /**
+     * Person
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Person\Person
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Person\Person", fetch="LAZY")
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
+     */
+    protected $person;
+
+    /**
      * Publication link
      *
      * @var \Dvsa\Olcs\Api\Entity\Publication\PublicationLink
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationLink", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationLink",
+     *     fetch="LAZY",
+     *     inversedBy="policeDatas"
+     * )
      * @ORM\JoinColumn(name="publication_link_id", referencedColumnName="id", nullable=false)
      */
     protected $publicationLink;
@@ -372,6 +387,29 @@ abstract class AbstractPublicationPoliceData implements BundleSerializableInterf
     public function getOlbsKey()
     {
         return $this->olbsKey;
+    }
+
+    /**
+     * Set the person
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person
+     * @return PublicationPoliceData
+     */
+    public function setPerson($person)
+    {
+        $this->person = $person;
+
+        return $this;
+    }
+
+    /**
+     * Get the person
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Person\Person
+     */
+    public function getPerson()
+    {
+        return $this->person;
     }
 
     /**

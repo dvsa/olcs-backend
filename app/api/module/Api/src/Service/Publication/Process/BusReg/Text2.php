@@ -27,7 +27,7 @@ final class Text2 implements ProcessInterface
 
         $licence = $organisation->getName();
 
-        if ($tradingNames->count()) {
+        if (!$tradingNames->isEmpty()) {
             $latestTradingName = $tradingNames->last();
             $licence .= " " . sprintf($this->tradingAs, $latestTradingName->getName());
         }

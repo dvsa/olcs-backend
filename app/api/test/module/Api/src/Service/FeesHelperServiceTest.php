@@ -172,7 +172,6 @@ class FeesHelperServiceTest extends MockeryTestCase
 
     public function testGetOutstandingFeesForBrandNewApplication()
     {
-        // $this->markTestIncomplete();
         $applicationId = 69;
         $licenceId = 7;
 
@@ -210,19 +209,167 @@ class FeesHelperServiceTest extends MockeryTestCase
     }
 
     /**
+     * @param string $amount
+     * @param array $fees array of FeeEntity
+     * @param array $expected allocated amounts e.g. ['97' => '12.45', '98' => '0.05']
+     * @dataProvider allocateProvider()
+     */
+    public function testAllocatePayments($amount, $fees, $expected)
+    {
+        $this->assertSame($expected, $this->sut->allocatePayments($amount, $fees));
+    }
+
+    public function allocateProvider()
+    {
+        return [
+            [
+                '0.00',
+                [
+                    $this->getStubFee('10', '99.99'),
+                    $this->getStubFee('11', '100.01'),
+                ],
+                [
+                    '10' => '0.00',
+                    '11' => '0.00',
+                ]
+            ],
+            [
+                '200.00',
+                [
+                    $this->getStubFee('10', '99.99'),
+                    $this->getStubFee('11', '100.01'),
+                ],
+                [
+                    '10' => '99.99',
+                    '11' => '100.01',
+                ]
+            ],
+            [
+                '200.00',
+                [
+                    $this->getStubFee('10', '99.99', '2015-09-04'),
+                    $this->getStubFee('11', '50.01', '2015-09-02'),
+                    $this->getStubFee('12', '100.00', '2015-09-03'),
+                    $this->getStubFee('13', '100.00', '2015-09-05'),
+                ],
+                [
+                    '11' => '50.01',
+                    '12' => '100.00',
+                    '10' => '49.99',
+                    '13' => '0.00',
+                ]
+            ],
+            [
+                '200.00',
+                [
+                    // check tie-break on same invoicedDate
+                    $this->getStubFee('1', '100.00', '2015-09-03'),
+                    $this->getStubFee('2', '100.00', '2015-09-02'),
+                    $this->getStubFee('3', '100.00', '2015-09-02'),
+                    $this->getStubFee('4', '100.00', '2015-09-02'),
+                ],
+                [
+                    '2' => '100.00',
+                    '3' => '100.00',
+                    '4' => '0.00',
+                    '1' => '0.00',
+                ]
+            ]
+        ];
+    }
+
+    public function testAllocatePaymentsOverPaymentThrowsException()
+    {
+        $amount = '500';
+        $fees = [
+            $this->getStubFee('10', '99.99', '2015-09-04'),
+            $this->getStubFee('11', '50.01', '2015-09-02'),
+            $this->getStubFee('12', '100.00', '2015-09-03'),
+            $this->getStubFee('13', '100.00', '2015-09-05'),
+        ];
+
+        $this->setExpectedException(\Dvsa\Olcs\Api\Service\Exception::class, 'Overpayments not permitted');
+
+        $this->sut->allocatePayments($amount, $fees);
+    }
+
+    public function testGetMinPaymentForFees()
+    {
+        $fees = [
+            $this->getStubFee('1', '5.00', '2015-09-03'),
+            $this->getStubFee('2', '10.00', '2015-09-01'),
+            $this->getStubFee('3', '15.00', '2015-09-02'),
+        ];
+
+        // minimum is total of fee2 + fee3 then 0.01 allocated to fee1
+        $this->assertEquals('25.01', $this->sut->getMinPaymentForFees($fees));
+    }
+
+    public function testGetTotalOutstanding()
+    {
+         $fees = [
+            $this->getStubFee('1', '99.99'),
+            $this->getStubFee('1', '99.99'),
+        ];
+
+        $this->assertEquals('199.98', $this->sut->getTotalOutstanding($fees));
+    }
+
+    /**
+     * @param string $amount
+     * @param array $fees array of FeeEntity
+     * @param string $expected formatted amount
+     * @dataProvider overpaymentProvider()
+     */
+    public function testGetOverpaymentAmount($amount, $fees, $expected)
+    {
+        $this->assertSame($expected, $this->sut->getOverpaymentAmount($amount, $fees));
+    }
+
+    public function overpaymentProvider()
+    {
+        return [
+            'no fees' => [
+                '0.00',
+                [],
+                '0.00',
+            ],
+            'underpayment' => [
+                '0.00',
+                [
+                    $this->getStubFee('10', '99.99'),
+                    $this->getStubFee('11', '100.01'),
+                ],
+                '-200.00',
+            ],
+            'overpayment' => [
+                '250',
+                [
+                    $this->getStubFee('10', '99.99'),
+                    $this->getStubFee('11', '100.01'),
+                ],
+                '50.00',
+            ],
+        ];
+    }
+
+    /**
      * Helper function to generate a stub fee entity
      *
      * @param int $id
      * @param string $amount
      * @return FeeEntity
      */
-    private function getStubFee($id, $amount)
+    private function getStubFee($id, $amount, $invoicedDate = '2015-09-10')
     {
-        $status = new RefData();
-        $feeType = new FeeTypeEntity();
-
-        $fee = new FeeEntity($feeType, $amount, $status);
-        $fee->setId($id);
+        $fee = m::mock(FeeEntity::class)->makePartial()
+            ->setId($id)
+            ->setAmount($amount);
+        $fee
+            ->shouldReceive('getOutstandingAmount')
+            ->andReturn($amount)
+            ->shouldReceive('getInvoicedDate')
+            ->andReturn(new \DateTime($invoicedDate));
 
         return $fee;
     }

@@ -14,5 +14,12 @@
 
     if (isset($freetext)) { ?>
         <p><?php echo $freetext; ?></p>
-    <?php } ?>
+    <?php
+    }
+
+    if (isset($markup)) {
+        echo $markup;
+    }
+
+    ?>
 </div>

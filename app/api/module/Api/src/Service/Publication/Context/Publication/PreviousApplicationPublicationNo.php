@@ -38,10 +38,10 @@ final class PreviousApplicationPublicationNo extends AbstractContext
         //these statuses we check by licence id
         if (in_array($appStatus, $checkByLicence)) {
             $params['licence'] = $publication->getLicence()->getId();
-            $query = PreviousPublicationByApplication::create($params);
+            $query = PreviousPublicationByLicence::create($params);
         } else {
             $params['application'] = $publication->getApplication()->getId();
-            $query = PreviousPublicationByLicence::create($params);
+            $query = PreviousPublicationByApplication::create($params);
         }
 
         /** @var PublicationLink $previousPublication */

@@ -19,21 +19,27 @@ use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask as CloseFeeDueTaskCmd;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Grant Psv
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class GrantPsv extends AbstractCommandHandler implements TransactionedInterface
+final class GrantPsv extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'Application';
 
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
 
-        /** @var ApplicationEntity $application */
+        /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($command);
 
         $result->merge($this->createSnapshot($application->getId()));
@@ -58,6 +64,12 @@ final class GrantPsv extends AbstractCommandHandler implements TransactionedInte
 
         if (!$application->isSpecialRestricted()) {
             $result->merge($this->proxyCommand($command, ProcessApplicationOperatingCentres::class));
+        }
+
+        // If Internal user grants PSV application or variation
+        if ($this->isInternalUser()) {
+            $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
+            $result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
         }
 
         $result->merge($this->proxyCommand($command, CommonGrant::class));

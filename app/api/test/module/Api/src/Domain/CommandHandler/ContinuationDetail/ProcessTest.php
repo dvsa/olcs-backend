@@ -3,10 +3,10 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ContinuationDetail;
 
 use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process as Command;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\Process as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
@@ -14,7 +14,6 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Dvsa\Olcs\Api\Service\Document\DocumentGenerator as DocGenerator;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -32,8 +31,6 @@ class ProcessTest extends CommandHandlerTestCase
         $this->mockRepo('Document', \Dvsa\Olcs\Api\Domain\Repository\Document::class);
         $this->mockRepo('Fee', \Dvsa\Olcs\Api\Domain\Repository\Fee::class);
         $this->mockRepo('FeeType', \Dvsa\Olcs\Api\Domain\Repository\FeeType::class);
-
-        $this->mockedSmServices['DocumentGenerator'] = m::mock(DocGenerator::class);
 
         parent::setUp();
     }
@@ -98,7 +95,6 @@ class ProcessTest extends CommandHandlerTestCase
     {
         $id = 69;
         $licenceId = 7;
-        $storedFileId = 99;
         $documentId = 101;
         $organisationId = 1;
         $licNo = 'OB1234567';
@@ -120,7 +116,6 @@ class ProcessTest extends CommandHandlerTestCase
         $continuationDetail->getLicence()
             ->setGoodsOrPsv($this->mapRefData(Licence::LICENCE_CATEGORY_PSV))
             ->setLicenceType($this->mapRefData(Licence::LICENCE_TYPE_SPECIAL_RESTRICTED))
-            ->setNiFlag('N')
             ->setOrganisation($this->mapReference(Organisation::class, $organisationId))
             ->setTrafficArea($this->mapReference(TrafficArea::class, 'B'))
             ->setLicNo($licNo);
@@ -131,55 +126,40 @@ class ProcessTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($continuationDetail);
 
-        $storedFile = m::mock(\Dvsa\Olcs\Api\Service\File\File::class)->makePartial();
-        $storedFile
-            ->setIdentifier($storedFileId)
-            ->setSize(12345);
-        $this->mockedSmServices['DocumentGenerator']
-            ->shouldReceive('generateAndStore')
-            ->with(
-                'PSVSRChecklist',
-                [
-                    'licence' => $licenceId,
-                    'goodsOrPsv' => Licence::LICENCE_CATEGORY_PSV,
-                    'licenceType' => Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
-                    'niFlag' => 'N',
-                    'organisation' => $organisationId,
-                ]
-            )
-            ->once()
-            ->andReturn($storedFile);
-
         $docResult = new Result();
-        $docResult
-            ->addId('document', 101)
-            ->addMessage('Document dispatched');
-        $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument::class,
-            [
-                'identifier' => $storedFileId,
-                'size' => 12345,
-                'description' => 'Continuation checklist',
-                'filename' => 'PSVSRChecklist.rtf',
+        $docResult->addId('document', 101);
+        $docResult->addMessage('Document dispatched');
+
+        $dtoData = [
+            'template' => 'PSVSRChecklist',
+            'query' => [
                 'licence' => $licenceId,
-                'category' => Category::CATEGORY_LICENSING,
-                'subCategory' => Category::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
-                'isReadOnly'  => 'Y',
-                'isExternal'  => false,
-                'isScan' => false,
-                'application' => null,
-                'busReg' => null,
-                'case' => null,
-                'irfoOrganisation' => null,
-                'submission' => null,
-                'trafficArea' => null,
-                'transportManager' => null,
-                'operatingCentre' => null,
-                'opposition' => null,
-                'issuedDate' => null,
+                'goodsOrPsv' => Licence::LICENCE_CATEGORY_PSV,
+                'licenceType' => Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                'niFlag' => 'N',
+                'organisation' => $organisationId,
             ],
-            $docResult
-        );
+            'description' => 'Continuation checklist',
+            'licence' => $licenceId,
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
+            'isReadOnly'  => 'Y',
+            'isExternal'  => false,
+            'isScan' => false,
+            'application' => null,
+            'busReg' => null,
+            'case' => null,
+            'irfoOrganisation' => null,
+            'submission' => null,
+            'trafficArea' => null,
+            'transportManager' => null,
+            'operatingCentre' => null,
+            'opposition' => null,
+            'issuedDate' => null,
+            'dispatch' => true
+        ];
+
+        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $docResult);
 
         $document = m::mock();
         $this->repoMap['Document']

@@ -44,6 +44,7 @@ class Application extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
+        /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($query);
 
         return $this->result(
@@ -70,6 +71,8 @@ class Application extends AbstractQueryHandler
                 'outstandingFeeTotal' => $this->getOutstandingFeeTotal($application),
                 'variationCompletion' => $application->getVariationCompletion(),
                 'canCreateCase' => $application->canCreateCase(),
+                'existingPublication' => !$application->getPublicationLinks()->isEmpty(),
+                'isPublishable' => $application->isPublishable(),
             ]
         );
     }
@@ -82,10 +85,10 @@ class Application extends AbstractQueryHandler
 
         if (is_array($outstandingFees)) {
             foreach ($outstandingFees as $fee) {
-                $total += $fee->getAmount();
+                $total += $fee->getOutstandingAmount();
             }
         }
 
-        return number_format($total, 2, null, null);
+        return number_format($total, 2, '.', null);
     }
 }

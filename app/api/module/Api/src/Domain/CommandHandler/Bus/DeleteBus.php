@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface as Repository;
 use Dvsa\Olcs\Api\Entity as Entities;
 use Dvsa\Olcs\Transfer\Command\AbstractDeleteCommand as DeleteCommand;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Transfer\Query\Bus\PreviousVariationByRouteNo;
+use Dvsa\Olcs\Api\Domain\Query\Bus\PreviousVariationByRouteNo;
 
 /**
  * Delete Bus

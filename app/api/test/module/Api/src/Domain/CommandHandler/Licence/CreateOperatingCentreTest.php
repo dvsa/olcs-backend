@@ -72,7 +72,10 @@ class CreateOperatingCentreTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('isGranted')
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(false);
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
@@ -86,7 +89,7 @@ class CreateOperatingCentreTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['OperatingCentreHelper']->shouldReceive('validate')
             ->once()
-            ->with($licence, $command)
+            ->with($licence, $command, false)
             ->shouldReceive('createOperatingCentre')
             ->once()
             ->with($command, $this->commandHandler, m::type(Result::class), $this->repoMap['OperatingCentre'])

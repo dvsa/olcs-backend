@@ -23,16 +23,15 @@ final class CloseTexTask extends AbstractCommandHandler implements Transactioned
         /* @var $application Application */
         $application = $this->getRepo()->fetchUsingId($command);
 
-        $taskIdsToClose = [];
+        $tasks = $application->getOpenTasksForCategory(
+            Category::CATEGORY_APPLICATION,
+            Category::TASK_SUB_CATEGORY_APPLICATION_TIME_EXPIRED
+        );
 
+        $taskIdsToClose = [];
         /* @var $task Task */
-        // If a 'TEX' task already exists that is linked to the current application, set the status to 'Closed' and
-        foreach ($application->getTasks() as $task) {
-            if ($task->getCategory()->getId() === Category::CATEGORY_APPLICATION &&
-                $task->getSubCategory()->getId() === Category::TASK_SUB_CATEGORY_TIME_EXPIRED
-            ) {
-                $taskIdsToClose[] = $task->getId();
-            }
+        foreach ($tasks as $task) {
+            $taskIdsToClose[] = $task->getId();
         };
 
         return $this->handleSideEffect(

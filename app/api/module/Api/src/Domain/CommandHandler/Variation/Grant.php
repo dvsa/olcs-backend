@@ -40,6 +40,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 
     public function handleCommand(CommandInterface $command)
     {
+        /* @var $command Cmd */
         $result = new Result();
 
         /** @var ApplicationEntity $application */
@@ -47,6 +48,13 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $licence = $application->getLicence();
 
         $result->merge($this->createSnapshot($command->getId()));
+
+        // this must be called before anything is changed as it needs to know the differences
+        // between application and licence
+        if ($application->isPublishable()) {
+            $result->merge($this->publishApplication($application));
+            $result->merge($this->closeTexTask($application));
+        }
 
         $this->updateStatusAndDate($application, ApplicationEntity::APPLICATION_STATUS_VALID);
         $this->getRepo()->save($application);
@@ -164,5 +172,43 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         }
 
         $result->addMessage($vehicles->count() . ' Goods Disc(s) replaced');
+    }
+
+    /**
+     * Close any TEX tasks on the application
+     *
+     * @param ApplicationEntity $application
+     *
+     * @return Result
+     */
+    protected function closeTexTask(ApplicationEntity $application)
+    {
+        return $this->handleSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::create(
+                [
+                    'id' => $application->getId(),
+                ]
+            )
+        );
+    }
+
+    /**
+     * Publish the application
+     *
+     * @param ApplicationEntity $application
+     *
+     * @return Result
+     */
+    protected function publishApplication(ApplicationEntity $application)
+    {
+        return $this->handleSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\Application::create(
+                [
+                    'id' => $application->getId(),
+                    'trafficArea' => $application->getTrafficArea()->getId(),
+                    'publicationSection' => \Dvsa\Olcs\Api\Entity\Publication\PublicationSection::VAR_GRANTED_SECTION,
+                ]
+            )
+        );
     }
 }

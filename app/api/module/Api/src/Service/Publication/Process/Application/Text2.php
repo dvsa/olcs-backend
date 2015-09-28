@@ -112,7 +112,7 @@ final class Text2 extends AbstractText1 implements ProcessInterface
 
         $text = $organisation->getName();
 
-        if ($tradingNames->count()) {
+        if (!$tradingNames->isEmpty()) {
             $latestTradingName = $tradingNames->last();
             $text .= " " . sprintf($this->tradingAs, $latestTradingName->getName());
         }

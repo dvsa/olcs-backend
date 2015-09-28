@@ -19,18 +19,18 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as Cmd;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Create Task
  *
+ * @NOTE This command is used by the scanning service which does not currently have authentication. I have removed
+ * AuthAware as it was only being used for createBy and modifiedBy columns which should eventually be handled
+ * generically
+ *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateTask extends AbstractCommandHandler implements AuthAwareInterface
+final class CreateTask extends AbstractCommandHandler
 {
-    use AuthAwareTrait;
-
     protected $repoServiceName = 'Task';
 
     protected $extraRepos = ['TaskAllocationRule', 'SystemParameter'];
@@ -175,8 +175,6 @@ final class CreateTask extends AbstractCommandHandler implements AuthAwareInterf
         $task->setIsClosed($command->getIsClosed());
         $task->setUrgent($command->getUrgent());
 
-        $task->setCreatedBy($this->getCurrentUser());
-        $task->setLastModifiedBy($this->getCurrentUser());
         $task->setLastModifiedOn(new DateTime());
 
         return $task;

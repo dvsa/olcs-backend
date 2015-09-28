@@ -64,6 +64,7 @@ return [
     TransferQuery\Application\GetList::class => QueryHandler\Application\GetList::class,
     TransferQuery\Application\OperatingCentres::class => QueryHandler\Application\OperatingCentres::class,
     TransferQuery\Application\PsvVehicles::class => QueryHandler\Application\PsvVehicles::class,
+    TransferQuery\Application\Publish::class => QueryHandler\Application\Publish::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -187,7 +188,7 @@ return [
     TransferQuery\Bus\BusRegDecision::class => QueryHandler\Bus\BusRegDecision::class,
     TransferQuery\Bus\ShortNoticeByBusReg::class => QueryHandler\Bus\ShortNoticeByBusReg::class,
     TransferQuery\Bus\RegistrationHistoryList::class => QueryHandler\Bus\RegistrationHistoryList::class,
-    TransferQuery\Bus\ByLicenceRoute::class => QueryHandler\Bus\ByLicenceRoute::class,
+    Query\Bus\ByLicenceRoute::class => QueryHandler\Bus\ByLicenceRoute::class,
 
     // Trailer
     TransferQuery\Licence\Trailers::class => QueryHandler\Licence\Trailers::class,
@@ -217,6 +218,8 @@ return [
     TransferQuery\User\PartnerList::class => QueryHandler\User\PartnerList::class,
     TransferQuery\User\User::class => QueryHandler\User\User::class,
     TransferQuery\User\UserList::class => QueryHandler\User\UserList::class,
+    TransferQuery\User\UserSelfserve::class => QueryHandler\User\UserSelfserve::class,
+    TransferQuery\User\UserListSelfserve::class => QueryHandler\User\UserListSelfserve::class,
 
     // Workshop
     TransferQuery\Workshop\Workshop::class => QueryHandler\Workshop\Workshop::class,
@@ -237,6 +240,7 @@ return [
     TransferQuery\Document\Document::class => QueryHandler\Document\Document::class,
     TransferQuery\Document\Letter::class => QueryHandler\Document\Letter::class,
     TransferQuery\Document\DocumentList::class => QueryHandler\Document\DocumentList::class,
+    TransferQuery\Document\Download::class => QueryHandler\Document\Download::class,
 
     // Transport Manager Application
     TransferQuery\TransportManagerApplication\GetDetails::class
@@ -245,6 +249,7 @@ return [
         => QueryHandler\TransportManagerApplication\GetList::class,
     TransferQuery\TransportManagerApplication\GetForResponsibilities::class
         => QueryHandler\TransportManagerApplication\GetForResponsibilities::class,
+    TransferQuery\TransportManagerApplication\Review::class => QueryHandler\TransportManagerApplication\Review::class,
 
     // Transport Manager Licence
     TransferQuery\TransportManagerLicence\GetForResponsibilities::class
@@ -258,9 +263,6 @@ return [
 
     // Bus Reg History View
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
-
-    // Scan
-    TransferQuery\Scan\GetSingle::class => QueryHandler\Scan\GetSingle::class,
 
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,

@@ -51,13 +51,17 @@ final class CreatePsvVehicle extends AbstractCommandHandler implements Transacti
 
         $this->checkIfVrmAlreadyExistsOnLicence($application->getLicence(), $command->getVrm());
 
-        $vehicle = new Vehicle();
-        $vehicle->setVrm($command->getVrm());
-        $vehicle->setMakeModel($command->getMakeModel());
-        $vehicle->setIsNovelty($command->getIsNovelty());
-        $vehicle->setPsvType($this->getRepo()->getRefdataReference($this->typeMap[$command->getType()]));
-
-        $this->getRepo('Vehicle')->save($vehicle);
+        $existedVehicle = $this->getRepo('Vehicle')->fetchByVrm($command->getVrm());
+        if (count($existedVehicle)) {
+            $vehicle = $existedVehicle[0];
+        } else {
+            $vehicle = new Vehicle();
+            $vehicle->setVrm($command->getVrm());
+            $vehicle->setMakeModel($command->getMakeModel());
+            $vehicle->setIsNovelty($command->getIsNovelty());
+            $vehicle->setPsvType($this->getRepo()->getRefdataReference($this->typeMap[$command->getType()]));
+            $this->getRepo('Vehicle')->save($vehicle);
+        }
 
         $this->result->addMessage('Vehicle created');
         $this->result->addId('vehicle', $vehicle->getId());

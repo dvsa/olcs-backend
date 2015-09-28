@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
+use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -21,35 +22,62 @@ use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
  */
 class DocumentGeneratorTest extends MockeryTestCase
 {
-    public function testGenerateFromTemplateWithEmptyQuery()
+    protected $sut;
+
+    protected $contentStore;
+    protected $document;
+    protected $queryHandlerManager;
+    protected $fileUploader;
+    protected $namingService;
+
+    public function setUp()
     {
+        $this->sut = new DocumentGenerator();
+
+        $this->contentStore = m::mock();
+        $this->document = m::mock();
+        $this->queryHandlerManager = m::mock();
+        $this->fileUploader = m::mock();
+        $this->namingService = m::mock(NamingService::class);
+
         $sm = m::mock('Zend\ServiceManager\ServiceLocatorInterface')
             ->shouldReceive('get')
             ->with('ContentStore')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('read')
-                ->with('/templates/x.rtf')
-                ->andReturn('file')
-                ->getMock()
-            )
+            ->andReturn($this->contentStore)
             ->shouldReceive('get')
             ->with('Document')
-            ->andReturn(
-                m::mock()
+            ->andReturn($this->document)
+            ->shouldReceive('get')
+            ->with('QueryHandlerManager')
+            ->andReturn($this->queryHandlerManager)
+            ->shouldReceive('get')
+            ->with('FileUploader')
+            ->andReturn($this->fileUploader)
+            ->shouldReceive('get')
+            ->with('DocumentNamingService')
+            ->andReturn($this->namingService)
+            ->getMock();
+
+        $this->sut->createService($sm);
+    }
+
+    public function testGenerateFromTemplateWithEmptyQuery()
+    {
+        $this->contentStore->shouldReceive('read')
+            ->with('x')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/x.rtf')
+            ->andReturn('file');
+
+        $this->document
                 ->shouldReceive('getBookmarkQueries')
                 ->with('file', [])
                 ->andReturn([])
                 ->shouldReceive('populateBookmarks')
-                ->with('file', [])
-                ->getMock()
-            )
-            ->getMock();
+                ->with('file', []);
 
-        $helper = new DocumentGenerator();
-        $helper->setServiceLocator($sm);
-
-        $helper->generateFromTemplate('x');
+        $this->sut->generateFromTemplate('x');
     }
 
     public function testGenerateFromTemplateWithQuery()
@@ -62,169 +90,187 @@ class DocumentGeneratorTest extends MockeryTestCase
             ]
         ];
 
-        $sm = m::mock('Zend\ServiceManager\ServiceLocatorInterface')
-            ->shouldReceive('get')
-            ->with('ContentStore')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('read')
-                ->with('/templates/x.rtf')
-                ->andReturn('file')
-                ->getMock()
-            )
-            ->shouldReceive('get')
-            ->with('QueryHandlerManager')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('handleQuery')
-                ->once()
-                ->with($query['a'])
-                ->andReturn(['a' => 1])
-                ->shouldReceive('handleQuery')
-                ->once()
-                ->with($query['b'][0])
-                ->andReturn(['b' => 1])
-                ->shouldReceive('handleQuery')
-                ->once()
-                ->with($query['b'][1])
-                ->andReturn(['b' => 2])
-                ->getMock()
-            )
-            ->shouldReceive('get')
-            ->with('Document')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getBookmarkQueries')
-                ->with('file', ['y' => 1])
-                ->andReturn($query)
-                ->shouldReceive('populateBookmarks')
-                ->with('file', ['a' => ['a' => 1], 'b' => [['b' => 1], ['b' => 2]], 'z' => 2])
-                ->getMock()
-            )
-            ->getMock();
+        $this->contentStore->shouldReceive('read')
+            ->with('x')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/x.rtf')
+            ->andReturn('file');
 
-        $helper = new DocumentGenerator();
-        $helper->setServiceLocator($sm);
+        $this->document->shouldReceive('getBookmarkQueries')
+            ->with('file', ['y' => 1])
+            ->andReturn($query)
+            ->shouldReceive('populateBookmarks')
+            ->with('file', ['a' => ['a' => 1], 'b' => [['b' => 1], ['b' => 2]], 'z' => 2]);
 
-        $helper->generateFromTemplate('x', ['y' => 1], ['z' => 2]);
+        $this->queryHandlerManager->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['a'])
+            ->andReturn(['a' => 1])
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['b'][0])
+            ->andReturn(['b' => 1])
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['b'][1])
+            ->andReturn(['b' => 2]);
+
+        $this->sut->generateFromTemplate('x', ['y' => 1], ['z' => 2]);
+    }
+
+    public function testGenerateFromTemplateWithQueryFailedQuery()
+    {
+        $this->setExpectedException('\Exception');
+
+        $query = [
+            'a' => m::mock(QueryInterface::class),
+            'b' => [
+                m::mock(QueryInterface::class),
+                m::mock(QueryInterface::class)
+            ]
+        ];
+
+        $this->contentStore->shouldReceive('read')
+            ->with('x')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/x.rtf')
+            ->andReturn('file');
+
+        $this->document->shouldReceive('getBookmarkQueries')
+            ->with('file', ['y' => 1])
+            ->andReturn($query)
+            ->shouldReceive('populateBookmarks')
+            ->with('file', ['a' => ['a' => 1], 'b' => [['b' => 1], ['b' => 2]], 'z' => 2]);
+
+        $this->queryHandlerManager->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['a'])
+            ->andThrow('\Exception');
+
+        $this->sut->generateFromTemplate('x', ['y' => 1], ['z' => 2]);
+    }
+
+    public function testGenerateFromTemplateWithQueryWithLicence()
+    {
+        $query = [
+            'a' => m::mock(QueryInterface::class),
+            'b' => [
+                m::mock(QueryInterface::class),
+                m::mock(QueryInterface::class)
+            ]
+        ];
+
+        $this->contentStore->shouldReceive('read')
+            ->with('x')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/x.rtf')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/GB/x.rtf')
+            ->andReturn('file');
+
+        $this->document->shouldReceive('getBookmarkQueries')
+            ->with('file', ['y' => 1, 'licence' => 111])
+            ->andReturn($query)
+            ->shouldReceive('populateBookmarks')
+            ->with('file', ['a' => ['a' => 1], 'b' => [['b' => 1], ['b' => 2]], 'z' => 2]);
+
+        $this->queryHandlerManager->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['a'])
+            ->andReturn(['a' => 1])
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['b'][0])
+            ->andReturn(['b' => 1])
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['b'][1])
+            ->andReturn(['b' => 2])
+            ->shouldReceive('handleQuery')
+            ->with(m::type(LicenceBundle::class))
+            ->andReturn(['niFlag' => 'N']);
+
+        $this->sut->generateFromTemplate('x', ['y' => 1, 'licence' => 111], ['z' => 2]);
+    }
+
+    public function testGenerateFromTemplateWithQueryWithApplication()
+    {
+        $query = [
+            'a' => m::mock(QueryInterface::class),
+            'b' => [
+                m::mock(QueryInterface::class),
+                m::mock(QueryInterface::class)
+            ]
+        ];
+
+        $this->contentStore->shouldReceive('read')
+            ->with('x')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/x.rtf')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/NI/x.rtf')
+            ->andReturn('file');
+
+        $this->document->shouldReceive('getBookmarkQueries')
+            ->with('file', ['y' => 1, 'application' => 111])
+            ->andReturn($query)
+            ->shouldReceive('populateBookmarks')
+            ->with('file', ['a' => ['a' => 1], 'b' => [['b' => 1], ['b' => 2]], 'z' => 2]);
+
+        $this->queryHandlerManager->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['a'])
+            ->andReturn(['a' => 1])
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['b'][0])
+            ->andReturn(['b' => 1])
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['b'][1])
+            ->andReturn(['b' => 2])
+            ->shouldReceive('handleQuery')
+            ->with(m::type(ApplicationBundle::class))
+            ->andReturn(['niFlag' => 'Y']);
+
+        $this->sut->generateFromTemplate('x', ['y' => 1, 'application' => 111], ['z' => 2]);
+    }
+
+    public function testGenerateFromTemplateWithQueryWithApplicationWithoutTemplate()
+    {
+        $this->setExpectedException('\Exception');
+
+        $this->contentStore->shouldReceive('read')
+            ->with('x')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/x.rtf')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/NI/x.rtf')
+            ->andReturn(null);
+
+        $this->queryHandlerManager->shouldReceive('handleQuery')
+            ->with(m::type(ApplicationBundle::class))
+            ->andReturn(['niFlag' => 'Y']);
+
+        $this->sut->generateFromTemplate('x', ['y' => 1, 'application' => 111], ['z' => 2]);
     }
 
     public function testUploadGeneratedContent()
     {
-        $sm = m::mock('Zend\ServiceManager\ServiceLocatorInterface')
-            ->shouldReceive('get')
-            ->with('FileUploader')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('setFile')
-                ->with(['content' => 'foo'])
-                ->shouldReceive('upload')
-                ->with('docs', 'bar')
-                ->andReturn('result')
-                ->getMock()
-            )
-            ->getMock();
-
-        $helper = new DocumentGenerator();
-        $helper->setServiceLocator($sm);
-
-        $helper->uploadGeneratedContent('foo', 'docs', 'bar');
-    }
-
-    public function testGenerateAndStore()
-    {
-        /**
-         * Mocking the SUT here is okay because this method is just a wrapper for
-         * other public methods which are tested individually
-         */
-        $helper = m::mock(DocumentGenerator::class)
-            ->makePartial();
-
-        $helper->shouldReceive('addTemplatePrefix')
-            ->with([], 'template')
-            ->andReturn('prefix-template')
-            ->shouldReceive('generateFromTemplate')
-            ->with('prefix-template', [], [])
-            ->andReturn('content')
-            ->shouldReceive('uploadGeneratedContent')
-            ->with('content', 'documents')
+        $this->fileUploader->shouldReceive('setFile')
+            ->with(['content' => 'foo'])
+            ->shouldReceive('upload')
+            ->with('docs')
             ->andReturn('result');
 
-        $this->assertEquals('result', $helper->generateAndStore('template'));
-    }
-
-    public function testAddTemplatePrefixWithNoMatchingKey()
-    {
-        $helper = new DocumentGenerator();
-
-        $this->assertEquals('template', $helper->addTemplatePrefix([], 'template'));
-    }
-
-    /**
-     * @dataProvider templatePrefixProvider
-     */
-    public function testAddTemplatePrefixWithMatchingKey($niFlag, $prefix)
-    {
-        $sm = m::mock('Zend\ServiceManager\ServiceLocatorInterface')
-            ->shouldReceive('get')
-            ->with('QueryHandlerManager')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('handleQuery')
-                ->with(m::type(LicenceBundle::class))
-                ->andReturn(
-                    [
-                        'niFlag' => $niFlag
-                    ]
-                )
-                ->getMock()
-            )
-            ->getMock();
-
-        $helper = new DocumentGenerator();
-        $helper->setServiceLocator($sm);
-
-        $this->assertEquals(
-            $prefix . '/template',
-            $helper->addTemplatePrefix(['licence' => 123], 'template')
-        );
-    }
-
-    /**
-     * @dataProvider templatePrefixProvider
-     */
-    public function testAddTemplatePrefixWithMatchingKeyApplication($niFlag, $prefix)
-    {
-        $sm = m::mock('Zend\ServiceManager\ServiceLocatorInterface')
-            ->shouldReceive('get')
-            ->with('QueryHandlerManager')
-            ->andReturn(
-                m::mock()
-                    ->shouldReceive('handleQuery')
-                    ->with(m::type(ApplicationBundle::class))
-                    ->andReturn(
-                        [
-                            'niFlag' => $niFlag
-                        ]
-                    )
-                    ->getMock()
-            )
-            ->getMock();
-
-        $helper = new DocumentGenerator();
-        $helper->setServiceLocator($sm);
-
-        $this->assertEquals(
-            $prefix . '/template',
-            $helper->addTemplatePrefix(['application' => 123], 'template')
-        );
-    }
-
-    public function templatePrefixProvider()
-    {
-        return [
-            ['N', 'GB'],
-            ['Y', 'NI']
-        ];
+        $this->sut->uploadGeneratedContent('foo', 'docs');
     }
 }

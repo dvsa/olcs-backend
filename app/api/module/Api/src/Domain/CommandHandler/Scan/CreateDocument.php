@@ -4,93 +4,127 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Scan;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
+use Dvsa\Olcs\Api\Entity\PrintScan\Scan;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Transfer\Command\Document\Upload;
+use Dvsa\Olcs\Transfer\Command\Scan\CreateDocument as Cmd;
 
 /**
  * CreateDocument
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class CreateDocument extends AbstractCommandHandler implements TransactionedInterface
+final class CreateDocument extends AbstractCommandHandler implements TransactionedInterface, UploaderAwareInterface
 {
+    use UploaderAwareTrait;
+
+    const INVALID_MIME = 'SCAN_INVALID_MIME';
+    const SCAN_NOT_FOUND = 'SCAN_NOT_FOUND';
+
     protected $repoServiceName = 'Scan';
 
+    /**
+     * Allowed mime types;
+     */
+    private $validMimeTypes = ['application/pdf'];
+
+    /**
+     * @param Cmd $command
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
-        /* @var $command \Dvsa\Olcs\Transfer\Command\Scan\CreateDocument */
+        $content = $this->validateFile($command);
 
-        $result = new Result();
+        $scan = $this->findScanById($command->getScanId());
 
-        /* @var $scan \Dvsa\Olcs\Api\Entity\PrintScan\Scan */
-        $scan = $this->getRepo()->fetchById($command->getScanId());
+        $this->result->merge($this->generateDocument($scan, $command, $content));
 
-        // create document
-        $result->merge(
-            $this->handleSideEffect($this->getCreateDocumentCommand($command, $scan))
-        );
-
-        // create task
-        $result->merge(
+        $this->result->merge(
             $this->handleSideEffect($this->getCreateTaskCommand($scan))
         );
 
-        $result->addId('scan', $scan->getId());
-        $result->addMessage("Scan ID {$scan->getId()} document created");
+        $this->result->addId('scan', $scan->getId());
+        $this->result->addMessage("Scan ID {$scan->getId()} document created");
 
         // delete the scan record
         $this->getRepo()->delete($scan);
 
-        return $result;
+        return $this->result;
+    }
+
+    protected function validateFile(Cmd $command)
+    {
+        $content = base64_decode($command->getContent());
+
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->buffer($content);
+
+        if (!$this->isValidMimeType($mime)) {
+            throw new ValidationException([self::INVALID_MIME => $mime]);
+        }
+
+        return $content;
     }
 
     /**
-     * Get the command for CreateDocument
-     *
-     * @param \Dvsa\Olcs\Transfer\Command\Scan\CreateDocument $command
-     * @param \Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan
-     *
-     * @return \Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific
+     * @param $scanId
+     * @return Scan
+     * @throws ValidationException
      */
-    protected function getCreateDocumentCommand(
-        \Dvsa\Olcs\Transfer\Command\Scan\CreateDocument $command,
-        \Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan
-    ) {
-        $params = [
-            'identifier'    => $command->getFileIdentifier(),
+    protected function findScanById($scanId)
+    {
+        try {
+            return $this->getRepo()->fetchById($scanId);
+        } catch (NotFoundException $ex) {
+            throw new ValidationException([self::SCAN_NOT_FOUND => self::SCAN_NOT_FOUND]);
+        }
+    }
+
+    protected function isValidMimeType($mime)
+    {
+        return in_array($mime, $this->validMimeTypes);
+    }
+
+    protected function generateDocument(Scan $scan, Cmd $command, $content)
+    {
+        $data = [
+            'content'       => base64_encode($content),
+            'filename'      => $command->getFilename(),
             'description'   => $scan->getDescription(),
-            'filename'      => $command->getFileName(),
-            'isExternal'     => false,
+            'isExternal'    => false,
             'isReadOnly'    => true,
-            'isScan'        => true,
-            'issuedDate'    => (new DateTime())->format(\DateTime::W3C),
-            'size'          => $command->getFileSize(),
+            'isScan'        => true
         ];
 
         if ($scan->getLicence()) {
-            $params['licence'] = $scan->getLicence()->getId();
+            $data['licence'] = $scan->getLicence()->getId();
         }
         if ($scan->getBusReg()) {
-            $params['busReg'] = $scan->getBusReg()->getId();
+            $data['busReg'] = $scan->getBusReg()->getId();
         }
         if ($scan->getCase()) {
-            $params['case'] = $scan->getCase()->getId();
+            $data['case'] = $scan->getCase()->getId();
         }
         if ($scan->getTransportManager()) {
-            $params['transportManager'] = $scan->getTransportManager()->getId();
+            $data['transportManager'] = $scan->getTransportManager()->getId();
         }
         if ($scan->getCategory()) {
-            $params['category'] = $scan->getCategory()->getId();
+            $data['category'] = $scan->getCategory()->getId();
         }
         if ($scan->getSubCategory()) {
-            $params['subCategory'] = $scan->getSubCategory()->getId();
+            $data['subCategory'] = $scan->getSubCategory()->getId();
         }
         if ($scan->getIrfoOrganisation()) {
-            $params['irfoOrganisation'] = $scan->getIrfoOrganisation()->getId();
+            $data['irfoOrganisation'] = $scan->getIrfoOrganisation()->getId();
         }
 
-        return \Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific::create($params);
+        return $this->handleSideEffect(Upload::create($data));
     }
 
     /**

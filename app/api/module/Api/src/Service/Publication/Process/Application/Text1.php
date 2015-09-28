@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
  */
 final class Text1 implements ProcessInterface
 {
-    protected $previousPublication = '(Previous Publication:(%s))';
+    protected $previousPublication = '(%s)';
 
     /**
      * @param PublicationLink $publication
@@ -22,11 +22,12 @@ final class Text1 implements ProcessInterface
      */
     public function process(PublicationLink $publication, ImmutableArrayObject $context)
     {
+        $application = $publication->getApplication();
         $licence = $publication->getLicence();
-        $text = $licence->getLicNo() . $licence->getLicenceTypeShortCode();
+        $text = $licence->getLicNo() .' '. $application->getLicenceTypeShortCode();
 
         if ($context->offsetExists('previousPublication')) {
-            $text .= ' ' . sprintf($this->previousPublication, $context->offsetGet('previousPublication'));
+            $text .= "\n" . sprintf($this->previousPublication, $context->offsetGet('previousPublication'));
         }
 
         $publication->setText1($text);

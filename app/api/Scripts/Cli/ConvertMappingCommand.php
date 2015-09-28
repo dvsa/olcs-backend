@@ -45,6 +45,20 @@ class ConvertMappingCommand extends DoctrineConvertMappingCommand
                 $em->getConnection()->getSchemaManager(), $this->mappingConfig
             );
 
+            if (isset($this->mappingConfig['classNameForTable'])) {
+                foreach ($this->mappingConfig['classNameForTable'] as $table => $class) {
+                    $databaseDriver->setClassNameForTable($table, $class);
+                }
+            }
+
+            if (isset($this->mappingConfig['fieldNameForColumn'])) {
+                foreach ($this->mappingConfig['fieldNameForColumn'] as $table => $fields) {
+                    foreach ($fields as $column => $field) {
+                        $databaseDriver->setFieldNameForColumn($table, $column, $field);
+                    }
+                }
+            }
+
             $em->getConfiguration()->setMetadataDriverImpl(
                 $databaseDriver
             );

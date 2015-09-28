@@ -7,11 +7,9 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
-use Dvsa\Olcs\DocumentShare\Data\Object\File;
-use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\PrintLicence;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
@@ -31,18 +29,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
         $this->sut = new PrintLicence();
         $this->mockRepo('Licence', Licence::class);
 
-        $this->mockedSmServices['DocumentGenerator'] = m::mock(DocumentGenerator::class);
-
         parent::setUp();
-    }
-
-    protected function initReferences()
-    {
-        $this->refData = [];
-
-        $this->references = [];
-
-        parent::initReferences();
     }
 
     public function testHandleCommandGoods()
@@ -51,31 +38,22 @@ class PrintLicenceTest extends CommandHandlerTestCase
 
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setId(111);
         $licence->shouldReceive('isGoods')->andReturn(true);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command)
             ->andReturn($licence);
 
-        $storedFile = m::mock(File::class);
-        $storedFile->shouldReceive('getIdentifier')
-            ->andReturn('ABC123');
-
-        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateAndStore')
-            ->once()
-            ->with('GV_LICENCE_V1', ['licence' => 111])
-            ->andReturn($storedFile);
-
         $data = [
-            'identifier' => 'ABC123',
+            'template' => 'GV_LICENCE_V1',
+            'query' => ['licence' => 111],
             'description' => 'GV Licence',
-            'filename' => 'GV_Licence.rtf',
             'licence' => 111,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
             'isReadOnly' => true,
             'isExternal' => false,
-            'size' => null,
             'application' => null,
             'busReg' => null,
             'case' => null,
@@ -86,19 +64,19 @@ class PrintLicenceTest extends CommandHandlerTestCase
             'operatingCentre' => null,
             'opposition' => null,
             'isScan' => 0,
-            'issuedDate' => null
+            'issuedDate' => null,
+            'dispatch' => true
         ];
         $result1 = new Result();
-        $result1->addMessage('Document dispatched');
-        $this->expectedSideEffect(DispatchDocument::class, $data, $result1);
+        $result1->addMessage('GenerateAndStore');
+        $this->expectedSideEffect(GenerateAndStore::class, $data, $result1);
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Document generated',
-                'Document dispatched'
+                'GenerateAndStore'
             ]
         ];
 
@@ -111,6 +89,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
 
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setId(111);
         $licence->shouldReceive('isGoods')->andReturn(false);
         $licence->shouldReceive('isSpecialRestricted')->andReturn(true);
 
@@ -118,25 +97,15 @@ class PrintLicenceTest extends CommandHandlerTestCase
             ->with($command)
             ->andReturn($licence);
 
-        $storedFile = m::mock(File::class);
-        $storedFile->shouldReceive('getIdentifier')
-            ->andReturn('ABC123');
-
-        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateAndStore')
-            ->once()
-            ->with('PSVSRLicence', ['licence' => 111])
-            ->andReturn($storedFile);
-
         $data = [
-            'identifier' => 'ABC123',
+            'template' => 'PSVSRLicence',
+            'query' => ['licence' => 111],
             'description' => 'PSV-SR Licence',
-            'filename' => 'PSV-SR_Licence.rtf',
             'licence' => 111,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
             'isReadOnly' => true,
             'isExternal' => false,
-            'size' => null,
             'application' => null,
             'busReg' => null,
             'case' => null,
@@ -147,19 +116,19 @@ class PrintLicenceTest extends CommandHandlerTestCase
             'operatingCentre' => null,
             'opposition' => null,
             'isScan' => 0,
-            'issuedDate' => null
+            'issuedDate' => null,
+            'dispatch' => true
         ];
         $result1 = new Result();
-        $result1->addMessage('Document dispatched');
-        $this->expectedSideEffect(DispatchDocument::class, $data, $result1);
+        $result1->addMessage('GenerateAndStore');
+        $this->expectedSideEffect(GenerateAndStore::class, $data, $result1);
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Document generated',
-                'Document dispatched'
+                'GenerateAndStore'
             ]
         ];
 
@@ -172,6 +141,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
 
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setId(111);
         $licence->shouldReceive('isGoods')->andReturn(false);
         $licence->shouldReceive('isSpecialRestricted')->andReturn(false);
 
@@ -179,25 +149,15 @@ class PrintLicenceTest extends CommandHandlerTestCase
             ->with($command)
             ->andReturn($licence);
 
-        $storedFile = m::mock(File::class);
-        $storedFile->shouldReceive('getIdentifier')
-            ->andReturn('ABC123');
-
-        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateAndStore')
-            ->once()
-            ->with('PSV_LICENCE_V1', ['licence' => 111])
-            ->andReturn($storedFile);
-
         $data = [
-            'identifier' => 'ABC123',
+            'template' => 'PSV_LICENCE_V1',
+            'query' => ['licence' => 111],
             'description' => 'PSV Licence',
-            'filename' => 'PSV_Licence.rtf',
             'licence' => 111,
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
             'isReadOnly' => true,
             'isExternal' => false,
-            'size' => null,
             'application' => null,
             'busReg' => null,
             'case' => null,
@@ -208,19 +168,19 @@ class PrintLicenceTest extends CommandHandlerTestCase
             'operatingCentre' => null,
             'opposition' => null,
             'isScan' => 0,
-            'issuedDate' => null
+            'issuedDate' => null,
+            'dispatch' => true
         ];
         $result1 = new Result();
-        $result1->addMessage('Document dispatched');
-        $this->expectedSideEffect(DispatchDocument::class, $data, $result1);
+        $result1->addMessage('GenerateAndStore');
+        $this->expectedSideEffect(GenerateAndStore::class, $data, $result1);
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Document generated',
-                'Document dispatched'
+                'GenerateAndStore'
             ]
         ];
 

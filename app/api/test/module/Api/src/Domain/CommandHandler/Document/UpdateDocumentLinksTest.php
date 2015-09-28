@@ -66,7 +66,7 @@ class UpdateDocumentLinksTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                'Document linked'
+                'Document linked to Application: 123'
             ]
         ];
 

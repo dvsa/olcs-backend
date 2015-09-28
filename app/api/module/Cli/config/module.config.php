@@ -1,5 +1,7 @@
 <?php
 
+use \Dvsa\Olcs\Api\Entity\Queue\Queue;
+
 return [
     'console' => [
         'router' => [
@@ -49,6 +51,15 @@ return [
                         ],
                     ],
                 ],
+                'process-inbox' => [
+                    'options' => [
+                        'route' => 'process-inbox [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'processInboxDocuments'
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
@@ -74,11 +85,17 @@ return [
     ],
     'message_consumer_manager' => [
         'invokables' => [
-            'que_typ_ch_initial' => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\InitialDataLoad::class,
-            'que_typ_ch_compare' => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\Compare::class,
-            'que_typ_cont_checklist' => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklist::class,
-            'que_typ_cont_check_rem_gen_let' =>
-                Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklistReminderGenerateLetter::class,
+            Queue::TYPE_COMPANIES_HOUSE_INITIAL
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\InitialDataLoad::class,
+            Queue::TYPE_COMPANIES_HOUSE_COMPARE
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\Compare::class,
+            Queue::TYPE_CONT_CHECKLIST
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklist::class,
+            Queue::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklistReminderGenerateLetter::class,
+            Queue::TYPE_TM_SNAPSHOT
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\Snapshot::class,
+
         ],
         'factories' => [
             'que_typ_cpid_export_csv'

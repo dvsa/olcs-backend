@@ -1046,6 +1046,10 @@ class ApplicationEntityTest extends EntityTester
 
         $licenceType = m::mock(RefData::class);
         $goodsOrPsv = m::mock(RefData::class);
+        $trafficArea = m::mock(TrafficArea::class)
+            ->shouldReceive('getIsNi')
+            ->andReturn(true)
+            ->getMock();
 
         $licence->setLicenceType($licenceType);
         $licence->setGoodsOrPsv($goodsOrPsv);
@@ -1054,7 +1058,7 @@ class ApplicationEntityTest extends EntityTester
         $licence->setTotAuthSmallVehicles(7);
         $licence->setTotAuthMediumVehicles(8);
         $licence->setTotAuthLargeVehicles(9);
-        $licence->setNiFlag('Y');
+        $licence->setTrafficArea($trafficArea);
 
         $this->entity->copyInformationFromLicence($licence);
 
@@ -2460,5 +2464,113 @@ class ApplicationEntityTest extends EntityTester
             ['', ''],
             [null, '']
         ];
+    }
+
+    /**
+     * @dataProvider dpTestGetLicenceTypeShortCode
+     * @param string $licenceType
+     * @param string $shortCode
+     */
+    public function testGetLicenceTypeShortCode($licenceType, $shortCode)
+    {
+        $licence = new Licence(new Organisation(), new RefData());
+        $application = new Entity($licence, new RefData(), false);
+        $application->setLicenceType((new RefData())->setId($licenceType));
+
+        $this->assertSame($shortCode, $application->getLicenceTypeShortCode());
+    }
+
+    public function dpTestGetLicenceTypeShortCode()
+    {
+        return [
+            ['ltyp_r', 'R'],
+            ['ltyp_si', 'SI'],
+            ['ltyp_sn', 'SN'],
+            ['ltyp_sr', 'SR'],
+            ['XXXX', null],
+        ];
+    }
+
+    public function testGetContextValue()
+    {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setLicNo(111);
+
+        $entity = $this->instantiate(Entity::class);
+
+        $entity->setLicence($licence);
+
+        $this->assertEquals(111, $entity->getContextValue());
+    }
+
+    public function testIsPublishableNewApplication()
+    {
+        $licence = new Licence(new Organisation(), new RefData());
+        $application = new Entity($licence, new RefData(), false);
+        /* @var $application Entity */
+
+        $this->assertTrue($application->isPublishable());
+    }
+
+    public function testIsPublishableFalse()
+    {
+        $licence = new Licence(new Organisation(), new RefData());
+        $licence->setLicenceType(new RefData('Foo'));
+        $application = new Entity($licence, new RefData(), true);
+        /* @var $application Entity */
+        $application->setLicenceType(new RefData('Bar'));
+
+        $this->assertFalse($application->isPublishable());
+    }
+
+    public function testIsPublishableNewOc()
+    {
+        $licence = new Licence(new Organisation(), new RefData());
+        $application = new Entity($licence, new RefData(), true);
+        /* @var $application Entity */
+
+        $aoc = $this->instantiate(ApplicationOperatingCentre::class);
+        /* @var $aoc ApplicationOperatingCentre */
+        $aoc->setAction('A');
+
+        $application->addOperatingCentres($aoc);
+
+        $this->assertTrue($application->isPublishable());
+    }
+
+    public function testIsPublishableOcIncrease()
+    {
+        $licence = new Licence(new Organisation(), new RefData());
+        $application = new Entity($licence, new RefData(), true);
+        /* @var $application Entity */
+
+        $oc = new OperatingCentre();
+        $oc->setId(1066);
+
+        $loc = $this->instantiate(\Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre::class);
+        $loc->setNoOfVehiclesRequired(9);
+        $loc->setOperatingCentre($oc);
+        $licence->addOperatingCentres($loc);
+
+        $aoc = $this->instantiate(ApplicationOperatingCentre::class);
+        /* @var $aoc ApplicationOperatingCentre */
+        $aoc->setAction('U');
+        $aoc->setOperatingCentre($oc);
+        $aoc->setNoOfVehiclesRequired(10);
+        $application->addOperatingCentres($aoc);
+
+        $this->assertTrue($application->isPublishable());
+    }
+
+    public function testIsPublishableUpgrade()
+    {
+        $licence = new Licence(new Organisation(), new RefData());
+        $licence->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $application = new Entity($licence, new RefData(), true);
+        /* @var $application Entity */
+        $application->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL));
+
+        $this->assertTrue($application->isPublishable());
     }
 }

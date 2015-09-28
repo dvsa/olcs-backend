@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee;
 use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateGrantFee;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -19,7 +20,6 @@ use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateGrantFee as Cmd;
-use Dvsa\Olcs\Api\Service\Document\DocumentGenerator as DocGenerator;
 
 /**
  * Create Grant Fee Test
@@ -32,8 +32,6 @@ class CreateGrantFeeTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateGrantFee();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
-
-        $this->mockedSmServices['DocumentGenerator'] = m::mock(DocGenerator::class);
 
         parent::setUp();
     }
@@ -65,16 +63,6 @@ class CreateGrantFeeTest extends CommandHandlerTestCase
             'licence' => 222
         ];
 
-        $file = m::mock();
-        $file->shouldReceive('getIdentifier')
-            ->andReturn('12345678')
-            ->shouldReceive('getSize')
-            ->andReturn(100);
-
-        $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateAndStore')
-            ->with('FEE_REQ_GRANT_GV', $params)
-            ->andReturn($file);
-
         $dtoData = ['id' => 111, 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANT, 'description' => 'Grant fee due'];
         $result1 = new Result();
         $result1->addId('fee', 123);
@@ -82,10 +70,9 @@ class CreateGrantFeeTest extends CommandHandlerTestCase
         $this->expectedSideEffect(CreateApplicationFee::class, $dtoData, $result1);
 
         $docData = [
-            'identifier' => '12345678',
-            'size' => 100,
+            'template' => 'FEE_REQ_GRANT_GV',
+            'query' => $params,
             'description' => 'Goods Grant Fee Request',
-            'filename'    => 'Goods_Grant_Fee_Request.rtf',
             'application' => 111,
             'licence'     => 222,
             'category'    => Category::CATEGORY_LICENSING,
@@ -105,8 +92,8 @@ class CreateGrantFeeTest extends CommandHandlerTestCase
             'metadata' => null
         ];
         $result2 = new Result();
-        $result2->addMessage('DispatchDocument');
-        $this->expectedSideEffect(DispatchDocument::class, $docData, $result2);
+        $result2->addMessage('GenerateAndStore');
+        $this->expectedSideEffect(GenerateAndStore::class, $docData, $result2);
 
         $result = $this->sut->handleCommand($command);
 
@@ -116,7 +103,7 @@ class CreateGrantFeeTest extends CommandHandlerTestCase
             ],
             'messages' => [
                 'CreateApplicationFee',
-                'DispatchDocument'
+                'GenerateAndStore'
             ]
         ];
 

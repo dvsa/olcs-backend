@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
 use Dvsa\Olcs\Transfer\Query\Licence\Overview as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as BusRegSearchViewRepository;
 
 /**
  * Overview Test
@@ -34,6 +35,7 @@ class OverviewTest extends QueryHandlerTestCase
         $this->mockRepo('Licence', LicenceRepo::class);
         $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockRepo('TrafficArea', TrafficAreaRepo::class);
+        $this->mockRepo('BusRegSearchView', BusRegSearchViewRepository::class);
 
         parent::setUp();
     }
@@ -69,6 +71,10 @@ class OverviewTest extends QueryHandlerTestCase
             ->with($query)
             ->once()
             ->andReturn($mockLicence);
+
+        $this->repoMap['BusRegSearchView']
+            ->shouldReceive('fetchCount')
+            ->andReturn('4');
 
         $this->repoMap['Application']
             ->shouldReceive('fetchActiveForOrganisation')
@@ -116,6 +122,7 @@ class OverviewTest extends QueryHandlerTestCase
                 ],
                 'tradingName' => 'Foo plc',
                 'complaintsCount' => 5,
+                'busCount' => '4',
             ],
             $result->serialize()
         );

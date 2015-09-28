@@ -13,6 +13,8 @@ use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -21,7 +23,6 @@ use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
-use Dvsa\Olcs\Api\Service\Submission\SubmissionCommentService;
 
 /**
  * Abstract Command Handler
@@ -125,6 +126,14 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         if ($this instanceof \Dvsa\Olcs\Api\Domain\TranslatorAwareInterface) {
             $translator = $mainServiceLocator->get('translator');
             $this->setTranslator($translator);
+        }
+
+        if ($this instanceof UploaderAwareInterface) {
+            $this->setUploader($mainServiceLocator->get('FileUploader'));
+        }
+
+        if ($this instanceof NamingServiceAwareInterface) {
+            $this->setNamingService($mainServiceLocator->get('DocumentNamingService'));
         }
     }
 

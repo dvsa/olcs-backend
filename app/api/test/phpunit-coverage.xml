@@ -8,6 +8,9 @@
         <testsuite name="Cli">
             <directory>./module/Cli</directory>
         </testsuite>
+        <testsuite name="DocumentShare">
+            <directory>./module/DocumentShare</directory>
+        </testsuite>
         <testsuite name="CompaniesHouse">
             <directory>./module/CompaniesHouse</directory>
         </testsuite>
@@ -41,12 +44,14 @@
                 <file>../module/Olcs/Db/Module.php</file>
                 <file>../module/Api/src/Module.php</file>
                 <file>../module/Cli/src/Module.php</file>
+                <file>../module/DocumentShare/src/Module.php</file>
                 <file>../module/Email/src/Module.php</file>
                 <file>../module/CompaniesHouse/src/Module.php</file>
                 <file>../module/Snapshot/src/Module.php</file>
                 <file>../module/Address/src/Module.php</file>
                 <directory>../module/Email/config</directory>
                 <directory>../module/Cli/config</directory>
+                <directory>../module/DocumentShare/config</directory>
                 <directory>../module/CompaniesHouse/config</directory>
                 <directory>../module/Snapshot/config</directory>
                 <directory>../module/Address/config</directory>
@@ -61,4 +66,18 @@
              yui="true" highlight="true" lowUpperBound="50"
              highLowerBound="80"/>
     </logging>
+    <listeners>
+        <listener class="SpeedTrapListener" file="SpeedTrapListener.php" >
+            <arguments>
+                <array>
+                    <element key="slowThreshold">
+                        <integer>500</integer>
+                    </element>
+                    <element key="reportLength">
+                        <integer>5</integer>
+                    </element>
+                </array>
+            </arguments>
+        </listener>
+    </listeners>
 </phpunit>

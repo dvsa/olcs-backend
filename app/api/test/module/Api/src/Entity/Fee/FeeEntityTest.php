@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -214,9 +215,7 @@ class FeeEntityTest extends EntityTester
 
     public function testCompatibilityGetMethods()
     {
-        $this->assertNull($this->sut->getReceivedAmount());
         $this->assertNull($this->sut->getLatestPaymentRef());
-        $this->assertNull($this->sut->getReceivedDate());
         $this->assertNull($this->sut->getPaymentMethod());
         $this->assertNull($this->sut->getProcessedBy());
         $this->assertNull($this->sut->getPayer());
@@ -260,8 +259,6 @@ class FeeEntityTest extends EntityTester
         $this->sut->getFeeTransactions()->add($ft3);
         $this->sut->getFeeTransactions()->add($ft4);
 
-        $this->assertEquals('1234.56', $this->sut->getReceivedAmount());
-        $this->assertEquals('2015-09-01', $this->sut->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals($paymentMethod, $this->sut->getPaymentMethod());
         $this->assertEquals('bob', $this->sut->getProcessedBy());
         $this->assertEquals('payer', $this->sut->getPayer());
@@ -553,10 +550,79 @@ class FeeEntityTest extends EntityTester
                     'addressLine3' => null,
                     'addressLine4' => null,
                     'town' => 'Miscellaneous payment',
-                    'postcode' => 'Miscellaneous payment',
+                    // hardcoded to DVSA office, CPMS api enforces a valid postcode
+                    'postcode' => 'LS9 6NF',
                     'countryCode' => null,
                 ],
             ],
+        ];
+    }
+
+    /**
+     * @param string $status
+     * @param boolean $expected
+     *
+     * @dataProvider isPaidProvider
+     */
+    public function testIsPaid($status, $expected)
+    {
+        $feeStatus = m::mock(RefData::class)->makePartial();
+        $feeStatus->setId($status);
+        $this->sut->setFeeStatus($feeStatus);
+
+        $this->assertEquals($expected, $this->sut->isPaid());
+    }
+
+    public function isPaidProvider()
+    {
+        return [
+            [Entity::STATUS_PAID, true],
+            [Entity::STATUS_CANCELLED, false],
+            [Entity::STATUS_OUTSTANDING, false],
+            ['invalid', false],
+        ];
+    }
+
+    /**
+     * @param string $type
+     * @param boolean $expected
+     *
+     * @dataProvider isBalancingFeeProvider
+     */
+    public function testIsBalancingFee($type, $expected)
+    {
+        $feeTypeType = new RefData($type);
+        $feeType = new FeeType();
+        $feeType->setFeeType($feeTypeType);
+
+        $this->sut->setFeeType($feeType);
+
+        $this->assertEquals($expected, $this->sut->isBalancingFee());
+    }
+
+    public function isBalancingFeeProvider()
+    {
+        return [
+            [FeeType::FEE_TYPE_APP, false],
+            [FeeType::FEE_TYPE_VAR, false],
+            [FeeType::FEE_TYPE_GRANT, false],
+            [FeeType::FEE_TYPE_CONT, false],
+            [FeeType::FEE_TYPE_VEH, false],
+            [FeeType::FEE_TYPE_GRANTINT, false],
+            [FeeType::FEE_TYPE_INTVEH, false],
+            [FeeType::FEE_TYPE_DUP, false],
+            [FeeType::FEE_TYPE_ANN, false],
+            [FeeType::FEE_TYPE_GRANTVAR, false],
+            [FeeType::FEE_TYPE_BUSAPP, false],
+            [FeeType::FEE_TYPE_BUSVAR, false],
+            [FeeType::FEE_TYPE_GVANNVEH, false],
+            [FeeType::FEE_TYPE_INTUPGRADEVEH, false],
+            [FeeType::FEE_TYPE_INTAMENDED, false],
+            [FeeType::FEE_TYPE_IRFOPSVAPP, false],
+            [FeeType::FEE_TYPE_IRFOPSVANN, false],
+            [FeeType::FEE_TYPE_IRFOPSVCOPY, false],
+            [FeeType::FEE_TYPE_IRFOGVPERMIT, false],
+            [FeeType::FEE_TYPE_ADJUSTMENT, true],
         ];
     }
 }

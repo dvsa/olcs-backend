@@ -1622,4 +1622,17 @@ class BusRegEntityTest extends EntityTester
         $shortNotice->setUnforseenDetail('any value');
         $this->assertEquals(true, $this->entity->isGrantable());
     }
+
+    public function testGetContextValue()
+    {
+        /** @var LicenceEntity $licence */
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setLicNo(111);
+
+        $entity = new Entity();
+
+        $entity->setLicence($licence);
+
+        $this->assertEquals(111, $entity->getContextValue());
+    }
 }

@@ -44,28 +44,32 @@ class CloseTexTaskTest extends CommandHandlerTestCase
         $categoryOther->setId('foo');
 
         $subCategoryTex = new \Dvsa\Olcs\Api\Entity\System\SubCategory();
-        $subCategoryTex->setId(\Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_TIME_EXPIRED);
+        $subCategoryTex->setId(\Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_TIME_EXPIRED);
 
         $subCategoryOther = new \Dvsa\Olcs\Api\Entity\System\SubCategory();
         $subCategoryOther->setId('bar');
 
         $task1 = new \Dvsa\Olcs\Api\Entity\Task\Task($categoryApplication, $subCategoryTex);
-        $task1->setId(1);
+        $task1->setId(1)
+            ->setIsClosed('N');
         $task2 = new \Dvsa\Olcs\Api\Entity\Task\Task($categoryOther, $subCategoryTex);
-        $task2->setId(2);
+        $task2->setId(2)
+            ->setIsClosed('N');
         $task3 = new \Dvsa\Olcs\Api\Entity\Task\Task($categoryApplication, $subCategoryOther);
-        $task3->setId(3);
+        $task3->setId(3)
+            ->setIsClosed('N');
         $task4 = new \Dvsa\Olcs\Api\Entity\Task\Task($categoryOther, $subCategoryOther);
-        $task4->setId(4);
+        $task4->setId(4)
+            ->setIsClosed('N');
         $task5 = new \Dvsa\Olcs\Api\Entity\Task\Task($categoryApplication, $subCategoryTex);
-        $task5->setId(5);
+        $task5->setId(5)
+            ->setIsClosed('N');
 
         $application = new \Dvsa\Olcs\Api\Entity\Application\Application(
             m::mock(\Dvsa\Olcs\Api\Entity\Licence\Licence::class),
             new \Dvsa\Olcs\Api\Entity\System\RefData(),
             1
         );
-
         $application->addTasks(
             new \Doctrine\Common\Collections\ArrayCollection([$task1, $task2, $task3, $task4, $task5])
         );

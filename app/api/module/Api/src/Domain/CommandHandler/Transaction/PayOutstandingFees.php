@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCommand;
@@ -19,16 +20,18 @@ use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
+use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Pay Outstanding Fees
- * (initiates a CPMS payment which is a two-step process)
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
@@ -46,7 +49,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Transaction';
 
-    protected $extraRepos = ['Fee'];
+    protected $extraRepos = ['Fee', 'FeeType'];
 
     /**
      * There are three valid use cases for this command
@@ -57,9 +60,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-
-        // @todo remove
-        // $result->addMessage('Using API helper version ' . $this->getCpmsService()->getVersion());
 
         if (!empty($command->getOrganisationId())) {
             $fees = $this->getOutstandingFeesForOrganisation($command);
@@ -86,11 +86,17 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             }
         } catch (CpmsResponseException $e) {
             // rethrow as Domain exception
-            throw new RuntimeException('Error from CPMS service', $e->getCode(), $e);
+            throw new RuntimeException(
+                'Error from CPMS service: ' . json_encode($e->getResponse()),
+                $e->getCode(),
+                $e
+            );
         }
     }
 
     /**
+     * Initiates a CPMS card payment which is a two-step process
+     *
      * @param CommandInterface $command
      * @param array $feesToPay
      * @param Result $result
@@ -136,6 +142,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     }
 
     /**
+     * Cash/cheque/PO payment
+     *
      * @param CommandInterface $command
      * @param array $fees
      * @param Result $result
@@ -144,7 +152,11 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     protected function immediatePayment($command, $fees, $result)
     {
-        $this->checkAmountMatchesTotalDue($command->getReceived(), $fees);
+        $this->validateAmount($command->getReceived(), $fees);
+
+        // work out the allocation of the payment amount to fees, will create
+        // balancing entry to handle any overpayment
+        $allocations = $this->allocatePayments($command->getReceived(), $fees, $result);
 
         // fire off to relevant CPMS method to record payment
         $response = $this->recordPaymentInCpms($command, $fees);
@@ -168,35 +180,34 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             ->setChequePoNumber($chequePoNumber);
 
         // create feeTransaction record(s)
-        $feeTransactions = new ArrayCollection();
-        $transaction->setFeeTransactions($feeTransactions);
         foreach ($fees as $fee) {
+            $allocatedAmount = $allocations[$fee->getId()];
+            $markAsPaid = ($allocatedAmount === $fee->getOutstandingAmount());
             $feeTransaction = new FeeTransactionEntity();
             $feeTransaction
                 ->setFee($fee)
-                ->setAmount($fee->getOutstandingAmount())
+                ->setAmount($allocatedAmount)
                 ->setTransaction($transaction); // needed for cascade persist to work
-            $feeTransactions->add($feeTransaction);
+            $transaction->getFeeTransactions()->add($feeTransaction);
 
-            // Update fee status, we need to call save() rather than rely on cascade persist
-            // at this level of nesting.
-            $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID));
-            $this->getRepo('Fee')->save($fee);
-
-            // trigger side effects
-            $result->merge(
-                $this->getCommandHandler()->handleCommand(PayFeeCmd::create(['id' => $fee->getId()]))
-            );
+            if ($markAsPaid) {
+                $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID));
+                $method = $this->getRepo()->getRefdataReference($command->getPaymentMethod())->getDescription();
+                $result->addMessage('Fee ID ' . $fee->getId() . ' updated as paid by ' . $method);
+                // We need to call save() on the fee, it won't cascade persist from the transaction
+                $this->getRepo('Fee')->save($fee);
+                $result->merge($this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()])));
+            }
         }
 
-        // persist
+        // persist transaction
         $this->getRepo()->save($transaction);
 
-        $method = $this->getRepo()->getRefdataReference($command->getPaymentMethod())->getDescription();
         $result
             ->addId('transaction', $transaction->getId())
-            ->addMessage('Transaction record created')
-            ->addMessage('Fee(s) updated as paid by ' . $method);
+            ->addMessage('Transaction record created: ' . $transaction->getReference())
+            ->addId('feeTransaction', $transaction->getFeeTransactionIds())
+            ->addMessage('FeeTransaction record(s) created');
 
         return $result;
     }
@@ -247,8 +258,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         parent::createService($serviceLocator);
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->feesHelper = $mainServiceLocator->get('FeesHelperService');
+        $this->feesHelper = $serviceLocator->getServiceLocator()->get('FeesHelperService');
         return $this;
     }
 
@@ -273,17 +283,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                         'paymentMethod' => $ft->getTransaction()->getPaymentMethod()->getId(),
                     ]
                 );
-                $this->getCommandHandler()->handleCommand($dto);
+                $result->merge($this->getCommandHandler()->handleCommand($dto));
 
                 // check payment status
                 $transaction = $this->getRepo()->fetchById($transactionId);
-                $result->addMessage(
-                    sprintf(
-                        'transaction %d resolved as %s',
-                        $transactionId,
-                        $transaction->getStatus()->getDescription()
-                    )
-                );
 
                 if ($transaction->isPaid()) {
                     $paid = true;
@@ -316,20 +319,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     }
 
     /**
-     * @param array $fees
-     * return float
-     */
-    protected function getTotalAmountFromFees($fees)
-    {
-        $totalAmount = 0;
-        foreach ($fees as $fee) {
-            $totalAmount += (float)$fee->getOutstandingAmount();
-        }
-        return $totalAmount;
-    }
-
-    /**
-     * Partial payments are not supported for cash/cheque/PO payments.
+     * Partial payments are supported for cash/cheque/PO payments but amount
+     * must not result in a zero allocation to any fee.
      * The form validation will normally catch any mismatch but it relies on a
      * hidden field so we have a secondary check here in the service layer.
      *
@@ -337,17 +328,12 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      * @param array $fees
      * @return null
      * @throws ValidationException
-     *
-     * @note We compare the formatted amounts as comparing floats for equality
-     * doesn't work!!
-     * @see http://php.net/manual/en/language.types.float.php
      */
-    protected function checkAmountMatchesTotalDue($amount, $fees)
+    protected function validateAmount($amount, $fees)
     {
-        $amount    = $this->getCpmsService()->formatAmount($amount);
-        $totalFees = $this->getCpmsService()->formatAmount($this->getTotalAmountFromFees($fees));
-        if ($amount !== $totalFees) {
-            throw new ValidationException(["Amount must match the fee(s) due"]);
+        $minAmount = $this->feesHelper->getMinPaymentForFees($fees);
+        if ($amount < $minAmount) {
+            throw new ValidationException([sprintf("Amount must be at least %1\$.2f", $minAmount)]);
         }
     }
 
@@ -368,5 +354,79 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             }
         }
         return $fees;
+    }
+
+    /**
+     * @param string $receivedAmount
+     * @param array $fees - passed by reference as we may need to append
+     * @param Result $result
+     * @return array
+     */
+    protected function allocatePayments($receivedAmount, &$fees, $result)
+    {
+        $feeResult = $this->maybeCreateOverpaymentFee($receivedAmount, $fees);
+
+        if ($feeResult->getId('fee')) {
+            // an overpayment balancing fee was created, add it to the list
+            $fees[] = $this->getRepo('Fee')->fetchById($feeResult->getId('fee'));
+        }
+
+        $result->merge($feeResult);
+
+        try {
+            // work out the allocation of the payment amount to fees
+            $allocations = $this->feesHelper->allocatePayments($receivedAmount, $fees);
+        } catch (ServiceException $e) {
+            // if there is an allocation error, rethrow as Domain exception
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        return $allocations;
+    }
+
+    /**
+     * @param string $receivedAmount
+     * @param array $fees
+     * @return Result
+     */
+    protected function maybeCreateOverpaymentFee($receivedAmount, $fees)
+    {
+        $overpaymentAmount = $this->feesHelper->getOverpaymentAmount($receivedAmount, $fees);
+
+        if ($overpaymentAmount > 0) {
+
+            // sort fees
+            $fees = $this->feesHelper->sortFeesByInvoiceDate($fees);
+
+            // get IDs for description
+            $feeIds = array_map(
+                function ($fee) {
+                    return $fee->getId();
+                },
+                $fees
+            );
+
+            // we get licenceId, applicationId, irfoGvPermit, busReg from the first existing fee
+            $existingFee = reset($fees);
+
+            // get correct feeType
+            $feeType = $this->getRepo('FeeType')->fetchLatestForOverpayment();
+
+            $dtoData = [
+                'amount'       => $overpaymentAmount,
+                'invoicedDate' => (new DateTime())->format(\DateTime::W3C),
+                'feeType'      => $feeType->getId(),
+                'description'  => 'Overpayment on fees: ' . implode(', ', $feeIds),
+                'licence'      => $existingFee->getLicence(),
+                'application'  => $existingFee->getApplication(),
+                'busReg'       => $existingFee->getBusReg(),
+                'irfoGvPermit' => $existingFee->getIrfoGvPermit(),
+            ];
+
+            return $this->handleSideEffect(CreateFeeCmd::create($dtoData));
+        }
+
+        // if no overpayment, return empty result
+        return new Result();
     }
 }

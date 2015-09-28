@@ -45,8 +45,9 @@ class VariationTest extends QueryHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application
             ->setId($applicationId)
-            ->shouldReceive('serialize')
-            ->andReturn(['foo' => 'bar']);
+            ->shouldReceive('getPublicationLinks')->with()->once()
+                ->andReturn(new \Doctrine\Common\Collections\ArrayCollection())
+            ->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -75,7 +76,9 @@ class VariationTest extends QueryHandlerTestCase
             'sections' => ['bar', 'cake'],
             'outstandingFeeTotal' => '100.00',
             'variationCompletion' => null,
-            'canCreateCase' => false
+            'canCreateCase' => false,
+            'existingPublication' => false,
+            'isPublishable' => true,
         ];
 
         $this->assertEquals($expected, $result->serialize());
@@ -86,6 +89,8 @@ class VariationTest extends QueryHandlerTestCase
         $mock = m::mock(FeeEntity::class)->makePartial();
         $mock
             ->setAmount($amount)
+            ->shouldReceive('getOutstandingAmount')
+            ->andReturn($amount)
             ->shouldReceive('serialize')
             ->andReturn(['amount' => $amount]);
         return $mock;

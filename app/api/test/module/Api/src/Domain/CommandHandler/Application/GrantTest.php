@@ -108,7 +108,7 @@ class GrantTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
-            ['id' => 111, 'trafficArea' => 'TA'],
+            ['id' => 111, 'trafficArea' => 'TA', 'publicationSection' => 4],
             new Result()
         );
         $this->expectedSideEffect(
@@ -161,7 +161,7 @@ class GrantTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
-            ['id' => 111, 'trafficArea' => 'TA'],
+            ['id' => 111, 'trafficArea' => 'TA', 'publicationSection' => 4],
             new Result()
         );
         $this->expectedSideEffect(

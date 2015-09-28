@@ -19,6 +19,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceOperatingCentre\Update as Command
 use Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Update Test
@@ -35,6 +37,7 @@ class UpdateTest extends CommandHandlerTestCase
         $this->mockRepo('OperatingCentre', Repository\OperatingCentre::class);
 
         $this->mockedSmServices['OperatingCentreHelper'] = m::mock(OperatingCentreHelper::class);
+        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
 
         parent::setUp();
     }
@@ -75,7 +78,7 @@ class UpdateTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['OperatingCentreHelper']->shouldReceive('validate')
             ->once()
-            ->with($licence, $command)
+            ->with($licence, $command, false)
             ->shouldReceive('saveDocuments')
             ->once()
             ->with($licence, $oc, $this->repoMap['Document'])
@@ -98,6 +101,12 @@ class UpdateTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('SaveAddress');
         $this->expectedSideEffect(SaveAddress::class, $data, $result1);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(false)
+            ->once();
 
         $result = $this->sut->handleCommand($command);
 

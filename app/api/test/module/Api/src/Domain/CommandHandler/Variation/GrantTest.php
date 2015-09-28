@@ -66,8 +66,9 @@ class GrantTest extends CommandHandlerTestCase
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
         $licence->setTotAuthVehicles(10);
+        $licence->setTrafficArea((new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea())->setId('TA'));
 
-        /** @var ApplicationEntity $application */
+        /* @var $application ApplicationEntity */
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
         $application->setId(111);
@@ -80,6 +81,9 @@ class GrantTest extends CommandHandlerTestCase
             ->andReturn(true)
             ->once()
             ->shouldReceive('isVariation')
+            ->andReturn(true)
+            ->once()
+            ->shouldReceive('isPublishable')
             ->andReturn(true)
             ->once()
             ->getMock();
@@ -98,6 +102,23 @@ class GrantTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('CreateSnapshot');
         $this->expectedSideEffect(CreateSnapshot::class, ['id' => 111, 'event' => CreateSnapshot::ON_GRANT], $result1);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
+            [
+                'id' => 111,
+                'trafficArea' => 'TA',
+                'publicationSection' => \Dvsa\Olcs\Api\Entity\Publication\PublicationSection::VAR_GRANTED_SECTION,
+            ],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            [
+                'id' => 111,
+            ],
+            new Result()
+        );
 
         $result2 = new Result();
         $result2->addMessage('CreateDiscRecords');
@@ -149,7 +170,9 @@ class GrantTest extends CommandHandlerTestCase
         $application->setId(111);
         $application->setLicence($licence);
         $application->shouldReceive('isGoods')
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('isPublishable')
+            ->andReturn(false);
 
         /** @var GoodsDisc $goodsDisc1 */
         $goodsDisc1 = m::mock(GoodsDisc::class)->makePartial();
@@ -249,6 +272,8 @@ class GrantTest extends CommandHandlerTestCase
         $application->setId(111);
         $application->setLicence($licence);
         $application->shouldReceive('isGoods')
+            ->andReturn(false)
+            ->shouldReceive('isPublishable')
             ->andReturn(false);
 
         /** @var PsvDisc $psvDisc */

@@ -136,17 +136,6 @@ class Document implements ServiceLocatorAwareInterface
     }
 
     /**
-     * @param $id
-     * @param $filename
-     * @param $path
-     * @return mixed
-     */
-    public function download($id, $filename, $path)
-    {
-        return $this->getUploader()->download($id, $filename, $path);
-    }
-
-    /**
      * Returns a document timestamp
      *
      * @return string

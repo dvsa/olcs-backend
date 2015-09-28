@@ -109,6 +109,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
                 [
                     'id' => $application->getId(),
                     'trafficArea' => $application->getTrafficArea()->getId(),
+                    'publicationSection' => \Dvsa\Olcs\Api\Entity\Publication\PublicationSection::APP_GRANTED_SECTION,
                 ]
             )
         );

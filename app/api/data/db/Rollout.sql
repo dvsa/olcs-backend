@@ -1608,6 +1608,11 @@ INSERT INTO `fee_type` (`id`, `is_miscellaneous`, `accrual_rule`, `created_by`, 
 (20052,1,'acr_immediate',NULL,NULL,NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'COURT',0.00,10.00,'2014-04-01 10:30:07','Court fee','2014-04-01 10:30:07',1),
 (20053,1,'acr_immediate',NULL,NULL,NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'MISC',0.00,10.00,'2014-04-01 10:30:07','Other miscellaneous','2014-04-01 10:30:07',1);
 
+-- adjustment fee types
+INSERT INTO `fee_type` (`id`, `is_miscellaneous`, `accrual_rule`, `created_by`, `goods_or_psv`, `last_modified_by`, `licence_type`, `traffic_area_id`, `annual_value`, `effective_from`, `expire_fee_with_licence`, `fee_type`, `five_year_value`, `fixed_value`, `created_on`, `description`, `last_modified_on`, `version`) VALUES
+(20100,0,'acr_immediate',NULL,NULL,NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'ADJUSTMENT',0.00,0.00,'2014-04-01 10:30:07','Overpayment','2014-04-01 10:30:07',1);
+
+
 INSERT INTO `fee_type` (`id`, `accrual_rule`, `created_by`, `fee_type`, `irfo_fee_type`, `description`, `goods_or_psv`, `last_modified_by`, `licence_type`, `traffic_area_id`, `annual_value`, `created_on`, `effective_from`, `expire_fee_with_licence`, `five_year_value`, `fixed_value`, `is_miscellaneous`, `last_modified_on`, `version`)
 VALUES
 	(10050, 'acr_immediate', NULL, 'IRFOGVPERMIT', 'irfo_fee_type_1', 'IRFO GV ECMT 100% Permit Fee', 'lcat_gv', NULL, NULL, NULL, 0.00, NULL, '1995-01-01 00:00:00', 0, 0.00, 121.00, 0, NULL, 1),

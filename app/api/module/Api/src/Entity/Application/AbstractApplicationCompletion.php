@@ -117,6 +117,15 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     protected $createdOn;
 
     /**
+     * Declarations internal status
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="declarations_internal_status", nullable=true)
+     */
+    protected $declarationsInternalStatus;
+
+    /**
      * Discs status
      *
      * @var int
@@ -496,6 +505,29 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     public function getCreatedOn()
     {
         return $this->createdOn;
+    }
+
+    /**
+     * Set the declarations internal status
+     *
+     * @param int $declarationsInternalStatus
+     * @return ApplicationCompletion
+     */
+    public function setDeclarationsInternalStatus($declarationsInternalStatus)
+    {
+        $this->declarationsInternalStatus = $declarationsInternalStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the declarations internal status
+     *
+     * @return int
+     */
+    public function getDeclarationsInternalStatus()
+    {
+        return $this->declarationsInternalStatus;
     }
 
     /**

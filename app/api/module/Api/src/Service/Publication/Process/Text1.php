@@ -97,11 +97,11 @@ class Text1 implements ProcessInterface
         $licence = "\n" . sprintf(
             '%s %s '. "\n" . '%s',
             $licence->getLicNo(),
-            $licence->getLicenceType()->getOlbsKey(),
+            $licence->getLicenceTypeShortCode(),
             $organisation->getName()
         );
 
-        if ($tradingNames->count()) {
+        if (!$tradingNames->isEmpty()) {
             $latestTradingName = $tradingNames->last();
             $licence .= "\n" . sprintf($this->tradingAs, $latestTradingName->getName());
         }
@@ -134,7 +134,7 @@ class Text1 implements ProcessInterface
          * @var PersonEntity $person
          * @var OrganisationPersonEntity $organisationPerson
          */
-        if ($organisationPersons->count()) {
+        if (!$organisationPersons->isEmpty()) {
             foreach ($organisationPersons as $organisationPerson) {
                 $person = $organisationPerson->getPerson();
                 $persons[] = strtoupper(sprintf('%s %s', $person->getForename(), $person->getFamilyName()));

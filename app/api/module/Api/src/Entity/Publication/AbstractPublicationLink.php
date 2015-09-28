@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -257,6 +259,33 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Police data
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData",
+     *     mappedBy="publicationLink",
+     *     cascade={"persist"},
+     *     orphanRemoval=true
+     * )
+     */
+    protected $policeDatas;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
+        $this->policeDatas = new ArrayCollection();
+    }
 
     /**
      * Set the application
@@ -739,6 +768,66 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the police data
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $policeDatas
+     * @return PublicationLink
+     */
+    public function setPoliceDatas($policeDatas)
+    {
+        $this->policeDatas = $policeDatas;
+
+        return $this;
+    }
+
+    /**
+     * Get the police datas
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPoliceDatas()
+    {
+        return $this->policeDatas;
+    }
+
+    /**
+     * Add a police datas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $policeDatas
+     * @return PublicationLink
+     */
+    public function addPoliceDatas($policeDatas)
+    {
+        if ($policeDatas instanceof ArrayCollection) {
+            $this->policeDatas = new ArrayCollection(
+                array_merge(
+                    $this->policeDatas->toArray(),
+                    $policeDatas->toArray()
+                )
+            );
+        } elseif (!$this->policeDatas->contains($policeDatas)) {
+            $this->policeDatas->add($policeDatas);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a police datas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $policeDatas
+     * @return PublicationLink
+     */
+    public function removePoliceDatas($policeDatas)
+    {
+        if ($this->policeDatas->contains($policeDatas)) {
+            $this->policeDatas->removeElement($policeDatas);
+        }
+
+        return $this;
     }
 
     /**

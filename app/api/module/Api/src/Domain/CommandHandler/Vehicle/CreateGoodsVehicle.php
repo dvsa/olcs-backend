@@ -72,11 +72,15 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
             }
         }
 
-        $vehicle = new Vehicle();
-        $vehicle->setVrm($command->getVrm());
-        $vehicle->setPlatedWeight($command->getPlatedWeight());
-
-        $this->getRepo('Vehicle')->save($vehicle);
+        $existedVehicle = $this->getRepo('Vehicle')->fetchByVrm($command->getVrm());
+        if (count($existedVehicle)) {
+            $vehicle = $existedVehicle[0];
+        } else {
+            $vehicle = new Vehicle();
+            $vehicle->setVrm($command->getVrm());
+            $vehicle->setPlatedWeight($command->getPlatedWeight());
+            $this->getRepo('Vehicle')->save($vehicle);
+        }
 
         $result->addId('vehicle', $vehicle->getId());
         $result->addMessage('Vehicle created');

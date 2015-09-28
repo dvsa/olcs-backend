@@ -17,14 +17,19 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\CreateOperatingCentre as Cmd;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Create Operating Centre
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateOperatingCentre extends AbstractCommandHandler implements TransactionedInterface
+final class CreateOperatingCentre extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'Application';
 
     protected $extraRepos = [
@@ -55,7 +60,7 @@ final class CreateOperatingCentre extends AbstractCommandHandler implements Tran
         /** @var Application $application */
         $application = $this->getRepo()->fetchById($command->getApplication());
 
-        $this->helper->validate($application, $command);
+        $this->helper->validate($application, $command, $this->isGranted(Permission::SELFSERVE_USER));
 
         // Create an OC record
         $operatingCentre = $this->helper->createOperatingCentre(

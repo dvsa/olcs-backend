@@ -7,8 +7,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Service;
 
-use Dvsa\Olcs\Api\Service\CpmsV2HelperService as Sut;
-use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -16,9 +14,12 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\CpmsResponseException;
+use Dvsa\Olcs\Api\Service\CpmsV2HelperService as Sut;
+use Dvsa\Olcs\Api\Service\FeesHelperService;
 use Dvsa\OlcsTest\Api\MockLoggerTrait;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * CPMS Version 2 Helper Service Test
@@ -39,6 +40,11 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
      */
     protected $sut;
 
+    /**
+     * @var \Dvsa\Olcs\Api\Service\FeesHelperService
+     */
+    protected $feesHelper;
+
     public function setUp()
     {
         // Mock the CPMS client
@@ -52,13 +58,15 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             )
             ->getMock();
 
+        $this->feesHelper = m::mock(FeesHelperService::class);
+
         // Create service with mocked dependencies
-        $this->sut = $this->createService($this->cpmsClient, $this->mockLogger());
+        $this->sut = $this->createService($this->cpmsClient, $this->mockLogger(), $this->feesHelper);
 
         return parent::setUp();
     }
 
-    private function createService($api, $logger)
+    private function createService($api, $logger, $feesHelper)
     {
         $sm = m::mock('\Zend\ServiceManager\ServiceLocatorInterface');
         $sm
@@ -67,7 +75,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn($api)
             ->shouldReceive('get')
             ->with('Logger')
-            ->andReturn($logger);
+            ->andReturn($logger)
+            ->shouldReceive('get')
+            ->with('FeesHelperService')
+            ->andReturn($feesHelper);
 
         $sut = new Sut();
         return $sut->createService($sm);
@@ -112,7 +123,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ],
                 [
                     'line_identifier' => '1',
@@ -138,7 +149,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ]
             ],
             'cost_centre' => '12345,67890',
@@ -156,6 +167,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'redirect_uri' => $redirectUrl,
             'disable_redirection' => true,
             'scope' => 'CARD',
+            'refund_overpayment' => false,
         ];
 
         $response = ['receipt_reference' => 'guid_123'];
@@ -183,7 +195,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->sut->initiateCardRequest('http://olcs-selfserve/foo', []);
     }
 
-    public function testRecordCashPayment()
+    public function testRecordCashPaymentWithOverpayment()
     {
         $orgId = 99;
 
@@ -193,8 +205,17 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $amount      = '1000';  // doesn't need to match fee total
 
         $fees = [
-            $this->getStubFee(1, 525.25, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-08-29'),
-            $this->getStubFee(2, 125.25, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25', $orgId, '2015-08-30'),
+            $this->getStubFee(1, 500.00, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-08-29'),
+            $this->getStubFee(2, 100.00, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25', $orgId, '2015-08-30'),
+            $this->getStubFee(
+                3,
+                400.00,
+                FeeEntity::ACCRUAL_RULE_IMMEDIATE,
+                null,
+                $orgId,
+                '2015-08-30',
+                FeeTypeEntity::FEE_TYPE_ADJUSTMENT
+            ),
         ];
 
         $now = (new DateTime())->format('Y-m-d');
@@ -204,9 +225,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'payment_data' => [
                 [
                     'line_identifier' => '1',
-                    'amount' => '525.25',
-                    'allocated_amount' => '525.25',
-                    'net_amount' => '525.25',
+                    'amount' => '500.00',
+                    'allocated_amount' => '500.00',
+                    'net_amount' => '500.00',
                     'tax_amount' => '0.00',
                     'tax_code' => 'Z',
                     'tax_rate' => '0',
@@ -226,13 +247,13 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ],
                 [
                     'line_identifier' => '1',
-                    'amount' => '125.25',
-                    'allocated_amount' => '125.25',
-                    'net_amount' => '125.25',
+                    'amount' => '100.00',
+                    'allocated_amount' => '100.00',
+                    'net_amount' => '100.00',
                     'tax_amount' => '0.00',
                     'tax_code' => 'Z',
                     'tax_rate' => '0',
@@ -252,7 +273,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ]
             ],
             'cost_centre' => '12345,67890',
@@ -268,9 +289,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 'postcode' => 'LS9 6NF',
             ],
             'slip_number' => '12345',
-            'batch_number' => '',
+            'batch_number' => '12345',
             'receipt_date' => '2015-09-10',
             'scope' => 'CASH',
+            'refund_overpayment' => true,
         ];
 
          $response = [
@@ -283,6 +305,17 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->with('/api/payment/cash', 'CASH', $expectedParams)
             ->once()
             ->andReturn($response);
+
+        $this->feesHelper
+            ->shouldReceive('allocatePayments')
+            ->with('1000.00', $fees)
+            ->andReturn(
+                [
+                    1 => '500.00',
+                    2 => '100.00',
+                    3 => '400.00',
+                ]
+            );
 
         $result = $this->sut->recordCashPayment($fees, $amount, $receiptDate, null, $slipNo);
 
@@ -335,7 +368,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ],
                 [
                     'line_identifier' => '1',
@@ -361,7 +394,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ]
             ],
             'cost_centre' => '12345,67890',
@@ -377,12 +410,13 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 'postcode' => 'LS9 6NF',
             ],
             'slip_number' => '12345',
-            'batch_number' => '',
+            'batch_number' => '12345',
             'receipt_date' => '2015-09-10',
             'scope' => 'CHEQUE',
             'cheque_number' => '0098765',
             'cheque_date' => '2015-09-01',
             'name_on_cheque' => $payer,
+            'refund_overpayment' => false,
         ];
 
          $response = [
@@ -395,6 +429,16 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->with('/api/payment/cheque', 'CHEQUE', $expectedParams)
             ->once()
             ->andReturn($response);
+
+        $this->feesHelper
+            ->shouldReceive('allocatePayments')
+            ->with('1000.00', $fees)
+            ->andReturn(
+                [
+                    1 => '525.25',
+                    2 => '125.25'
+                ]
+            );
 
         $result = $this->sut->recordChequePayment(
             $fees,
@@ -454,7 +498,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ],
                 [
                     'line_identifier' => '1',
@@ -480,7 +524,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => '',
+                    'sales_person_reference' => 'B',
                 ]
             ],
             'cost_centre' => '12345,67890',
@@ -496,10 +540,11 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 'postcode' => 'LS9 6NF',
             ],
             'slip_number' => '12345',
-            'batch_number' => '',
+            'batch_number' => '12345',
             'receipt_date' => '2015-09-10',
             'scope' => 'POSTAL_ORDER',
             'postal_order_number' => '00666666',
+            'refund_overpayment' => false,
         ];
 
          $response = [
@@ -512,6 +557,16 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->with('/api/payment/postal-order', 'POSTAL_ORDER', $expectedParams)
             ->once()
             ->andReturn($response);
+
+         $this->feesHelper
+            ->shouldReceive('allocatePayments')
+            ->with('1000.00', $fees)
+            ->andReturn(
+                [
+                    1 => '525.25',
+                    2 => '125.25'
+                ]
+            );
 
         $result = $this->sut->recordPostalOrderPayment(
             $fees,
@@ -540,7 +595,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $accrualRule = null,
         $licenceStartDate = null,
         $organisationId = null,
-        $invoicedDate = null
+        $invoicedDate = null,
+        $feeTypeId = null
     ) {
         $status = new RefData();
         $rule = new RefData();
@@ -550,7 +606,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $feeType = new FeeTypeEntity();
         $feeType
             ->setAccrualRule($rule)
-            ->setDescription('fee type description');
+            ->setDescription('fee type description')
+            ->setFeeType((new RefData($feeTypeId)));
 
         $organisation = new OrganisationEntity();
         $organisation

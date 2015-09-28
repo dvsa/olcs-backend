@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Organisation;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
@@ -24,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  *    }
  * )
  */
-class Organisation extends AbstractOrganisation
+class Organisation extends AbstractOrganisation implements ContextProviderInterface
 {
     const ORG_TYPE_PARTNERSHIP = 'org_t_p';
     const ORG_TYPE_OTHER = 'org_t_pa';
@@ -107,14 +108,12 @@ class Organisation extends AbstractOrganisation
         $firstName,
         $lastName,
         $isIrfo,
-        $businessType,
         $natureOfBusiness,
         $cpid
     ) {
         $this->setCpid($cpid);
-        $this->setType($businessType);
         $this->setNatureOfBusiness($natureOfBusiness);
-        if ($isIrfo === 'Y' || $this->getType()->getId() === self::ORG_TYPE_IRFO) {
+        if ($isIrfo === 'Y' || ($this->getType() !== null && $this->getType()->getId() === self::ORG_TYPE_IRFO)) {
             $this->isIrfo = 'Y';
         } else {
             $this->isIrfo = 'N';
@@ -251,5 +250,23 @@ class Organisation extends AbstractOrganisation
         );
 
         return $this->getLicences()->matching($criteria);
+    }
+
+    public function getAdminEmailAddresses()
+    {
+        $users = [];
+
+        /** @var OrganisationUser $orgUser */
+        foreach ($this->getAdminOrganisationUsers() as $orgUser) {
+            if ($orgUser->getUser()->getContactDetails()->getEmailAddress() !== null) {
+                $users[] = $orgUser->getUser()->getContactDetails()->getEmailAddress();
+            }
+        }
+        return $users;
+    }
+
+    public function getContextValue()
+    {
+        return $this->getId();
     }
 }
