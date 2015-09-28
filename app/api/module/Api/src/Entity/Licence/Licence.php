@@ -262,7 +262,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface
     {
         $trafficArea = $this->getTrafficArea();
 
-        if ($trafficArea && $trafficArea->getId() === TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE) {
+        if ($trafficArea && $trafficArea->getIsNi()) {
             return CommunityLicEntity::PREFIX_NI;
         }
 
@@ -382,34 +382,64 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         return ($this->getConditionUndertakings()->matching($criteria)->count() > 0);
     }
 
+    /**
+     * @return boolean|null
+     */
     public function isGoods()
     {
-        return $this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_GOODS_VEHICLE;
+        if (!empty($this->getGoodsOrPsv())) {
+            return $this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_GOODS_VEHICLE;
+        }
     }
 
+    /**
+     * @return boolean|null
+     */
     public function isPsv()
     {
-        return $this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV;
+        if (!empty($this->getGoodsOrPsv())) {
+            return $this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV;
+        }
     }
 
+    /**
+     * @return boolean|null
+     */
     public function isSpecialRestricted()
     {
-        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED;
+        if (!empty($this->getLicenceType())) {
+            return $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED;
+        }
     }
 
+    /**
+     * @return boolean|null
+     */
     public function isRestricted()
     {
-        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_RESTRICTED;
+        if (!empty($this->getLicenceType())) {
+            return $this->getLicenceType()->getId() === self::LICENCE_TYPE_RESTRICTED;
+        }
     }
 
+    /**
+     * @return boolean|null
+     */
     public function isStandardInternational()
     {
-        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_INTERNATIONAL;
+        if (!empty($this->getLicenceType())) {
+            return $this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_INTERNATIONAL;
+        }
     }
 
+    /**
+     * @return boolean|null
+     */
     public function isStandardNational()
     {
-        return $this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_NATIONAL;
+        if (!empty($this->getLicenceType())) {
+            return $this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_NATIONAL;
+        }
     }
 
     /**
@@ -485,7 +515,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         $this->setTotAuthSmallVehicles($application->getTotAuthSmallVehicles());
         $this->setTotAuthMediumVehicles($application->getTotAuthMediumVehicles());
         $this->setTotAuthLargeVehicles($application->getTotAuthLargeVehicles());
-        $this->setNiFlag($application->getNiFlag());
     }
 
     public function getOcForInspectionRequest()
@@ -747,5 +776,31 @@ class Licence extends AbstractLicence implements ContextProviderInterface
     public function getContextValue()
     {
         return $this->getLicNo();
+    }
+
+    /**
+     * Determine NI ('is Northern Ireland') flag from traffic area, replaces
+     * deprecated 'ni_flag' database column
+     *
+     * @return string 'Y'|'N'
+     */
+    public function getNiFlag()
+    {
+        $trafficArea = $this->getTrafficArea();
+        if ($trafficArea && $trafficArea->getIsNi()) {
+            return 'Y';
+        }
+
+        return 'N';
+    }
+
+    /**
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'niFlag' => $this->getNiFlag(),
+        ];
     }
 }

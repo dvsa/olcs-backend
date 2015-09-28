@@ -40,6 +40,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
             LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
+            LicenceEntity::LICENCE_CATEGORY_PSV,
             \Dvsa\Olcs\Api\Entity\Application\S4::STATUS_APPROVED,
         ];
 
@@ -318,6 +319,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $application->setLicenceType($this->mapRefdata(LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED));
         $application->setS4s(new \Doctrine\Common\Collections\ArrayCollection());
         $application->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
+        $application->setGoodsOrPsv($this->mapRefdata(LicenceEntity::LICENCE_CATEGORY_PSV));
 
         $expectedTargetCompletionDate = clone $now;
         $expectedTargetCompletionDate->modify('+9 week');

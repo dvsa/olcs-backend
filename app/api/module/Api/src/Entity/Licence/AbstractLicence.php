@@ -242,15 +242,6 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     protected $licenceType;
 
     /**
-     * Ni flag
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="ni_flag", nullable=true)
-     */
-    protected $niFlag;
-
-    /**
      * Olbs key
      *
      * @var int
@@ -1187,29 +1178,6 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     public function getLicenceType()
     {
         return $this->licenceType;
-    }
-
-    /**
-     * Set the ni flag
-     *
-     * @param string $niFlag
-     * @return Licence
-     */
-    public function setNiFlag($niFlag)
-    {
-        $this->niFlag = $niFlag;
-
-        return $this;
-    }
-
-    /**
-     * Get the ni flag
-     *
-     * @return string
-     */
-    public function getNiFlag()
-    {
-        return $this->niFlag;
     }
 
     /**

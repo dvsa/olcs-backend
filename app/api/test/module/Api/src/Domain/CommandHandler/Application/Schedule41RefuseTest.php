@@ -50,62 +50,40 @@ class Schedule41RefuseTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $this->repoMap['Application']
-            ->shouldReceive('fetchById')
-            ->once()
-            ->andReturn(
-                m::mock(Application::class)
-                    ->shouldReceive('getS4s')
-                    ->once()
-                    ->andReturn(
-                        m::mock()->shouldReceive('matching')
-                            ->andReturn(
-                                [
-                                    m::mock(S4::class)
-                                        ->shouldReceive('getId')
-                                        ->times(3)
-                                        ->andReturn(1)
-                                        ->getMock()
-                                ]
-                            )
-                            ->getMock()
-                    )
-                    ->shouldReceive('getLicence')
-                    ->andReturn(
-                        m::mock()
-                            ->shouldReceive('getOperatingCentres')->getMock()
-                    )
-                    ->getMock()
-            );
+        $application = $this->getTestingApplication();
+
+        $this->repoMap['Application']->shouldReceive('fetchById')->once()->andReturn($application);
+
+        $s4 = new S4($application, $application->getLicence());
+        $s4->setId(2309);
+        $application->addS4s($s4);
+
+        $loc = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre(
+            $application->getLicence(),
+            new \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre()
+        );
+        $s4->setLicence($this->getTestingLicence());
+        $s4->getLicence()->addOperatingCentres($loc);
 
         $this->expectedSideEffect(
             RefuseS4::class,
-            [
-                'id' => 1,
-            ],
+            ['id' => 2309],
             new Result()
         );
-
         $this->expectedSideEffect(
             DeleteApplicationOperatingCentre::class,
-            [
-                's4' => 1,
-            ],
+            ['s4' => 2309],
             new Result()
         );
-
         $this->expectedSideEffect(
             DeleteConditionUndertakingS4::class,
-            [
-                's4' => 1,
-            ],
+            ['s4' => 2309],
             new Result()
         );
-
         $this->expectedSideEffect(
             DisassociateS4::class,
             [
-                'licenceOperatingCentres' => null
+                'licenceOperatingCentres' => $s4->getLicence()->getOperatingCentres()
             ],
             new Result()
         );

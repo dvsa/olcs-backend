@@ -62,7 +62,8 @@ class CorrespondenceInbox extends AbstractRepository
             ->with('lou.user', 'louu')
             ->with('louu.contactDetails', 'louucd')
             ->with('document', 'd')
-            ->with('d.continuationDetails', 'cd');
+            ->with('d.continuationDetails', 'cd')
+            ->with('cd.checklistDocument', 'cdd');
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.accessed', 0));
         $qb->andWhere($qb->expr()->gte($this->alias . '.createdOn', ':minDate'));
@@ -76,6 +77,7 @@ class CorrespondenceInbox extends AbstractRepository
         // had been reached
         $qb->andWhere($qb->expr()->isNull($this->alias . '.printed'));
         $qb->andWhere($qb->expr()->isNotNull('l.id'));
+        $qb->andWhere($qb->expr()->eq('l.translateToWelsh', 0));
 
         $qb->setParameter('minDate', $minDate);
         $qb->setParameter('maxDate', $maxDate);

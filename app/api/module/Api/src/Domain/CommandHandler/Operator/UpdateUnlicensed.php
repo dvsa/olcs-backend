@@ -74,12 +74,9 @@ final class UpdateUnlicensed extends AbstractCommandHandler
      */
     private function updateLicence(LicenceEntity $licence, CommandInterface $command)
     {
-        $niFlag = $command->getTrafficArea() === TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE ? 'Y' : 'N';
-
         $licence
             ->setTrafficArea($this->getRepo()->getReference(TrafficAreaEntity::class, $command->getTrafficArea()))
-            ->setGoodsOrPsv($this->getRepo()->getRefdataReference($command->getOperatorType()))
-            ->setNiFlag($niFlag);
+            ->setGoodsOrPsv($this->getRepo()->getRefdataReference($command->getOperatorType()));
 
         // update licence number
         $licNoNumericPart = filter_var($licence->getLicNo(), FILTER_SANITIZE_NUMBER_INT);

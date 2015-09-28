@@ -67,46 +67,17 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
      */
     private function shouldPublishApplication(ApplicationEntity $application)
     {
-        // don't publish on submit if new special restricted
-        if ($application->isNew() && $application->isSpecialRestricted()) {
-            return false;
-        }
-
         // Exclude for PSV variation applications
         if ($application->isVariation() && $application->isPsv()) {
             return false;
         }
 
         // Dont publish if application is associated with an S4 whoose outcome is empty or approved
-        if ($this->hasBlankApprovedS4($application)) {
+        if ($application->hasActiveS4()) {
             return false;
         }
 
-        // If variation, check it is publishable
-        if ($application->isVariation() && !$application->isVariationPublishable()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Has the application got a blank or approved S4 attached
-     *
-     * @param ApplicationEntity $application
-     * 
-     * @return boolean
-     */
-    private function hasBlankApprovedS4(ApplicationEntity $application)
-    {
-        foreach ($application->getS4s() as $s4) {
-            /* @var $s4 S4 */
-            if ($s4->getOutcome() === null || $s4->getOutcome()->getId() === S4::STATUS_APPROVED) {
-                return true;
-            }
-        }
-
-        return false;
+        return $application->isPublishable();
     }
 
     /**

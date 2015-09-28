@@ -20,7 +20,9 @@ return [
             'DateService' => \Dvsa\Olcs\Api\Service\Date::class,
             'RestrictionService' => \Dvsa\Olcs\Api\Service\Lva\RestrictionService::class,
             'SectionConfig' =>  \Dvsa\Olcs\Api\Service\Lva\SectionConfig::class,
-            'AddressFormatter' => \Dvsa\Olcs\Api\Service\Helper\FormatAddress::class
+            'AddressFormatter' => \Dvsa\Olcs\Api\Service\Helper\FormatAddress::class,
+            'VariationPublishValidationService' =>
+                \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService::class,
         ],
         'factories' => [
             'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
@@ -32,6 +34,8 @@ return [
             'VariationOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper::class,
             'SectionAccessService' => \Dvsa\Olcs\Api\Service\Lva\SectionAccessService::class,
             'ApplicationGrantValidationService' => \Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService::class,
+            'ApplicationPublishValidationService' =>
+                \Dvsa\Olcs\Api\Service\Lva\Application\PublishValidationService::class,
             'ContentStore' => \Dvsa\Olcs\DocumentShare\Service\ClientFactory::class,
             'IdentityProvider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,

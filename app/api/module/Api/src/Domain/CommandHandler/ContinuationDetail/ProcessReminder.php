@@ -26,7 +26,7 @@ final class ProcessReminder extends AbstractCommandHandler implements Transactio
         $continuationDetail = $this->getRepo()->fetchWithLicence($command->getId());
 
         $result = new Result();
-        $result->merge($this->generateDocument($continuationDetail));
+        $result->merge($this->generateDocument($continuationDetail, $command->getUser()));
         $result->addMessage('Continuation checklist reminder letter generated');
 
         return $result;
@@ -36,7 +36,7 @@ final class ProcessReminder extends AbstractCommandHandler implements Transactio
      * @param ContinuationDetailEntity $continuationDetail
      * @return Result
      */
-    protected function generateDocument(ContinuationDetailEntity $continuationDetail)
+    protected function generateDocument(ContinuationDetailEntity $continuationDetail, $userId)
     {
         $template = $this->getTemplateName($continuationDetail);
         $licence = $continuationDetail->getLicence();
@@ -44,7 +44,8 @@ final class ProcessReminder extends AbstractCommandHandler implements Transactio
         $data = [
             'template' => $template,
             'query' => [
-                'licence' => $licence->getId()
+                'licence' => $licence->getId(),
+                'user' => $userId
             ],
             'description' => 'Checklist reminder',
             'licence' => $continuationDetail->getLicence()->getId(),

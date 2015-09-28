@@ -51,7 +51,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 
         // this must be called before anything is changed as it needs to know the differences
         // between application and licence
-        if ($application->isVariationPublishable()) {
+        if ($application->isPublishable()) {
             $result->merge($this->publishApplication($application));
             $result->merge($this->closeTexTask($application));
         }
