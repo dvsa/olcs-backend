@@ -52,10 +52,18 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
      */
     public function handleCommand(CommandInterface $command)
     {
-        /** @var ApplicationOperatingCentre $aoc */
+        /* @var $aoc ApplicationOperatingCentre */
         $aoc = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $application = $aoc->getApplication();
+
+        // if only one OC on licence then allow reseting of TA
+        if ($application->getOperatingCentres()->count() === 1) {
+            // if postcode has changed
+            if ($command->getAddress()['postcode'] !== $aoc->getOperatingCentre()->getAddress()->getPostcode()) {
+                $application->getLicence()->setTrafficArea(null);
+            }
+        }
 
         $this->helper->validate($application, $command, $this->isGranted(Permission::SELFSERVE_USER));
 
@@ -75,6 +83,15 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
             $command,
             $this->getRepo('ApplicationOperatingCentre')
         );
+
+        if ($application->getTrafficArea() === null) {
+            $data = ['id' => $application->getId(), 'operatingCentre' => $operatingCentre->getId()];
+            $this->result->merge(
+                $this->handleSideEffect(
+                    \Dvsa\Olcs\Api\Domain\Command\Application\SetDefaultTrafficAreaAndEnforcementArea::create($data)
+                )
+            );
+        }
 
         $completionData = ['id' => $application->getId(), 'section' => 'operatingCentres'];
         $this->result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($completionData)));

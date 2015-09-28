@@ -30,8 +30,10 @@ class UpdateTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
         $this->mockRepo('PrivateHireLicence', \Dvsa\Olcs\Api\Domain\Repository\PrivateHireLicence::class);
         $this->mockRepo('ContactDetails', \Dvsa\Olcs\Api\Domain\Repository\ContactDetails::class);
+        $this->mockRepo('AdminAreaTrafficArea', \Dvsa\Olcs\Api\Domain\Repository\AdminAreaTrafficArea::class);
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            'AddressService' => m::mock(\Dvsa\Olcs\Address\Service\AddressInterface::class)
         ];
 
         parent::setUp();
@@ -76,6 +78,9 @@ class UpdateTest extends CommandHandlerTestCase
             ->setContactDetails($cd);
 
         $this->repoMap['PrivateHireLicence']->shouldReceive('fetchUsingId')->once()->andReturn($phl);
+
+        $this->mockedSmServices['AddressService']->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('S1 4QT', $this->repoMap['AdminAreaTrafficArea'])->once()->andReturn(null);
 
         $this->repoMap['PrivateHireLicence']->shouldReceive('save')->once()->andReturnUsing(
             function (\Dvsa\Olcs\Api\Entity\Licence\PrivateHireLicence $savePhl) use ($params) {
@@ -122,5 +127,167 @@ class UpdateTest extends CommandHandlerTestCase
 
         $this->assertSame(['privateHireLicence' => 564], $response->getIds());
         $this->assertSame(['PrivateHireLicence ID 564 updated'], $response->getMessages());
+    }
+
+    public function testHandleCommandTrafficAreaUpdate()
+    {
+        $params =[
+            'id' => 323,
+            'version' => 323,
+            'privateHireLicenceNo' => 'TOPDOG 1',
+            'councilName' => 'Leeds',
+            'address' => [
+                'addressLine1' => 'LINE 1',
+                'addressLine2' => 'LINE 2',
+                'addressLine3' => 'LINE 3',
+                'addressLine4' => 'LINE 4',
+                'town' => 'TOWN',
+                'postcode' => 'S1 4QT',
+                'countryCode' => 'CC',
+            ],
+            'lva' => 'licence',
+            'licence' => 1
+        ];
+        $command = Command::create($params);
+
+        $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea->setId('TA');
+
+        $licence = $this->getTestingLicence()->setId(323);
+        $cd = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(new \Dvsa\Olcs\Api\Entity\System\RefData());
+        $cd->setAddress(new \Dvsa\Olcs\Api\Entity\ContactDetails\Address());
+        $phl = new \Dvsa\Olcs\Api\Entity\Licence\PrivateHireLicence();
+        $phl->setId(564)
+            ->setContactDetails($cd);
+        $phl->setLicence($licence);
+
+        $this->repoMap['PrivateHireLicence']->shouldReceive('fetchUsingId')->once()->andReturn($phl);
+
+        $this->mockedSmServices['AddressService']->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('S1 4QT', $this->repoMap['AdminAreaTrafficArea'])->once()->andReturn($trafficArea);
+
+        $this->repoMap['PrivateHireLicence']->shouldReceive('save')->once();
+
+        $this->repoMap['ContactDetails']->shouldReceive('save')->once();
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->andReturn(false);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea::class,
+            ['id' => 323, 'version' => 1, 'trafficArea' => 'TA'],
+            new Result()
+        );
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandTrafficAreaWithOnePhl()
+    {
+        $params =[
+            'id' => 323,
+            'version' => 323,
+            'privateHireLicenceNo' => 'TOPDOG 1',
+            'councilName' => 'Leeds',
+            'address' => [
+                'addressLine1' => 'LINE 1',
+                'addressLine2' => 'LINE 2',
+                'addressLine3' => 'LINE 3',
+                'addressLine4' => 'LINE 4',
+                'town' => 'TOWN',
+                'postcode' => 'S1 4QT',
+                'countryCode' => 'CC',
+            ],
+            'lva' => 'licence',
+            'licence' => 1
+        ];
+        $command = Command::create($params);
+
+        $trafficArea1 = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea1->setId('TA1');
+
+        $trafficArea2 = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea2->setId('TA2');
+
+        $licence = $this->getTestingLicence()->setId(323)->setTrafficArea($trafficArea2);
+        $cd = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(new \Dvsa\Olcs\Api\Entity\System\RefData());
+        $cd->setAddress(new \Dvsa\Olcs\Api\Entity\ContactDetails\Address());
+        $phl = new \Dvsa\Olcs\Api\Entity\Licence\PrivateHireLicence();
+        $phl->setId(564)
+            ->setContactDetails($cd);
+        $phl->setLicence($licence);
+        $licence->addPrivateHireLicences($phl);
+
+        $this->repoMap['PrivateHireLicence']->shouldReceive('fetchUsingId')->once()->andReturn($phl);
+
+        $this->mockedSmServices['AddressService']->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('S1 4QT', $this->repoMap['AdminAreaTrafficArea'])->once()->andReturn($trafficArea1);
+
+        $this->repoMap['PrivateHireLicence']->shouldReceive('save')->once();
+
+        $this->repoMap['ContactDetails']->shouldReceive('save')->once();
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->andReturn(false);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea::class,
+            ['id' => 323, 'version' => 1, 'trafficArea' => 'TA1'],
+            new Result()
+        );
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandTrafficAreaValidationError()
+    {
+        $params =[
+            'id' => 323,
+            'version' => 323,
+            'privateHireLicenceNo' => 'TOPDOG 1',
+            'councilName' => 'Leeds',
+            'address' => [
+                'addressLine1' => 'LINE 1',
+                'addressLine2' => 'LINE 2',
+                'addressLine3' => 'LINE 3',
+                'addressLine4' => 'LINE 4',
+                'town' => 'TOWN',
+                'postcode' => 'S1 4QT',
+                'countryCode' => 'CC',
+            ],
+            'lva' => 'licence',
+            'licence' => 1
+        ];
+        $command = Command::create($params);
+
+        $trafficArea1 = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea1->setId('TA1');
+
+        $trafficArea2 = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea2->setId('TA2');
+
+        $licence = $this->getTestingLicence()->setId(323)->setTrafficArea($trafficArea2);
+        $cd = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(new \Dvsa\Olcs\Api\Entity\System\RefData());
+        $cd->setAddress(new \Dvsa\Olcs\Api\Entity\ContactDetails\Address());
+        $phl = new \Dvsa\Olcs\Api\Entity\Licence\PrivateHireLicence();
+        $phl->setId(564)->setContactDetails($cd);
+        $phl->setLicence($licence);
+        $licence->addPrivateHireLicences($phl);
+        $phl2 = new \Dvsa\Olcs\Api\Entity\Licence\PrivateHireLicence();
+        $licence->addPrivateHireLicences($phl2);
+
+        $this->repoMap['PrivateHireLicence']->shouldReceive('fetchUsingId')->once()->andReturn($phl);
+
+        $this->mockedSmServices['AddressService']->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('S1 4QT', $this->repoMap['AdminAreaTrafficArea'])->once()->andReturn($trafficArea1);
+
+        try {
+            $this->sut->handleCommand($command);
+            $this->fail('Exception should have been thrown');
+        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
+            $this->assertArrayHasKey('PHL_INVALID_TA', $e->getMessages());
+        }
     }
 }
