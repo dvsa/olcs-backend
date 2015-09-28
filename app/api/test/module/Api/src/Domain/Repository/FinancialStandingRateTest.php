@@ -26,7 +26,7 @@ class FinancialStandingRateTest extends RepositoryTestCase
         $this->setUpSut(RateRepo::class);
     }
 
-    public function testGetRatesInEffect()
+    public function testFetchRatesInEffect()
     {
         $date = m::mock('\DateTime');
         $date->shouldReceive('format')->andReturn('2015-06-04');
@@ -73,7 +73,7 @@ class FinancialStandingRateTest extends RepositoryTestCase
             ->with(FinancialStandingRate::class)
             ->andReturn($repo);
 
-        $result = $this->sut->getRatesInEffect($date);
+        $result = $this->sut->fetchRatesInEffect($date);
 
         $this->assertEquals('RESULT', $result);
     }
