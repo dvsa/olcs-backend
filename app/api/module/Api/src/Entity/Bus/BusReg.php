@@ -946,19 +946,13 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
 
         if (isset($txcInboxEntries[0]) && $txcInboxEntries[0] instanceof TxcInbox) {
             if ($txcInboxEntries[0]->getRouteDocument() instanceof Document) {
-                $route = $txcInboxEntries[0]->getRouteDocument();
-                $route->setIdentifier('route');
-                $documents->add($route);
+                $documents->add($txcInboxEntries[0]->getRouteDocument());
             }
             if ($txcInboxEntries[0]->getPdfDocument() instanceof Document) {
-                $pdf = $txcInboxEntries[0]->getPdfDocument();
-                $pdf->setIdentifier('pdf');
-                $documents->add($pdf);
+                $documents->add($txcInboxEntries[0]->getPdfDocument());
             }
             if ($txcInboxEntries[0]->getZipDocument() instanceof Document) {
-                $zip = $txcInboxEntries[0]->getZipDocument();
-                $zip->setIdentifier('zip');
-                $documents->add($zip);
+                $documents->add($txcInboxEntries[0]->getZipDocument());
             }
         }
         return $documents;

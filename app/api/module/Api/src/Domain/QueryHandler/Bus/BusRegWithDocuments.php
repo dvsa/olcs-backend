@@ -29,6 +29,16 @@ class BusRegWithDocuments extends AbstractQueryHandler implements AuthAwareInter
 
         $currentUser = $this->getCurrentUser();
 
+        $txcInboxEntries = null;
+
+        if ($this->isGranted('selfserve-ebsr-documents')) {
+            $txcInboxEntries = $this->resultList(
+                $busReg->fetchLatestUnreadBusRegDocumentsByLocalAuthority(
+                    $currentUser->getLocalAuthority()
+                )
+            );
+        }
+
         return $this->result(
             $busReg,
             [
@@ -48,11 +58,7 @@ class BusRegWithDocuments extends AbstractQueryHandler implements AuthAwareInter
             ],
             [
                 'npPublicationNo' => $busReg->getLicence()->determineNpNumber(),
-                'txcInboxEntries' => $this->resultList(
-                    $busReg->fetchLatestUnreadBusRegDocumentsByLocalAuthority(
-                        $currentUser->getLocalAuthority()
-                    )
-                )
+                'txcInboxEntries' => $txcInboxEntries
             ]
         );
     }
