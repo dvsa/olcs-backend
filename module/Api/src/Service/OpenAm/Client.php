@@ -21,23 +21,17 @@ class Client implements ClientInterface
     private $httpClient;
 
     /**
-     * @var string
+     * @var Request
      */
-    private $apiUsername;
-
-    /**
-     * @var string
-     */
-    private $apiPassword;
+    private $templateRequest;
 
     /**
      * @param HttpClient $httpClient
      */
-    public function __construct(HttpClient $httpClient, $apiUsername, $apiPassword)
+    public function __construct(HttpClient $httpClient, Request $templateRequest)
     {
         $this->httpClient = $httpClient;
-        $this->apiUsername = $apiUsername;
-        $this->apiPassword = $apiPassword;
+        $this->templateRequest = $templateRequest;
     }
 
     /**
@@ -72,6 +66,48 @@ class Client implements ClientInterface
         }
     }
 
+    public function updateUser($username, $emailAddress = null, $commonName = null, $surName = null)
+    {
+        $payload = [];
+
+        if ($emailAddress !== null) {
+            $payload[] = [
+                'operation' => 'replace',
+                'field' => 'emailAddress',
+                'value' => $emailAddress
+            ];
+        }
+
+        if ($commonName !== null) {
+            $payload[] = [
+                'operation' => 'replace',
+                'field' => 'commonName',
+                'value' => $commonName
+            ];
+        }
+
+        if ($surName !== null) {
+            $payload[] = [
+                'operation' => 'replace',
+                'field' => 'surName',
+                'value' => $surName
+            ];
+        }
+
+        if (count($payload) === 0) {
+            return;
+        }
+
+        $request = $this->createRequest('/users/' . $username, Request::METHOD_PATCH);
+        $request->setContent(json_encode($payload));
+
+        $response = $this->httpClient->send();
+
+        if (!$response->isSuccess()) {
+            throw new FailedRequestException($response);
+        }
+    }
+
     /**
      * @param $path
      * @param $method
@@ -79,14 +115,9 @@ class Client implements ClientInterface
      */
     private function createRequest($path, $method)
     {
-        $request = $this->httpClient->getRequest();
+        $request = clone $this->templateRequest;
         $request->setMethod($method);
         $request->getUri()->setPath($path);
-
-        $headers = $request->getHeaders();
-        $headers->addHeader(new Accept('application/json'));
-        $headers->addHeaderLine('X-OpenIDM-Username', $this->apiUsername);
-        $headers->addHeaderLine('X-OpenIDM-Password', $this->apiPassword);
 
         return $request;
     }

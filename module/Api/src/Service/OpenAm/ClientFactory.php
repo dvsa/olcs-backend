@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
 use Zend\Http\Client as HttpClient;
+use Zend\Http\Header\Accept;
+use Zend\Http\Request;
 use Zend\ServiceManager\Exception\RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -33,6 +35,12 @@ class ClientFactory implements FactoryInterface
         }
         $httpClient = new HttpClient($config['openam']['uri'], $options);
 
-        return new Client($httpClient, $config['openam']['username'], $config['openam']['password']);
+        $request = new Request();
+        $headers = $request->getHeaders();
+        $headers->addHeader(new Accept('application/json'));
+        $headers->addHeaderLine('X-OpenIDM-Username', $config['openam']['username']);
+        $headers->addHeaderLine('X-OpenIDM-Password', $config['openam']['password']);
+
+        return new Client($httpClient, $request);
     }
 }
