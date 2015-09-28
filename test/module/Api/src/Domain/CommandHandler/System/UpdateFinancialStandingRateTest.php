@@ -146,6 +146,6 @@ class UpdateFinancialStandingRateTest extends CommandHandlerTestCase
 
         $this->setExpectedException(ValidationException::class);
 
-        $response = $this->sut->handleCommand($command);
+        $this->sut->handleCommand($command);
     }
 }
