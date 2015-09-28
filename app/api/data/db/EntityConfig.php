@@ -1338,7 +1338,13 @@ return array(
     'txc_inbox' => array(
         'file_read' => array(
             'type' => 'yesnonull'
-        )
+        ),
+        'bus_reg_id' => array(
+            'inversedBy' => array(
+                'entity' => 'BusReg',
+                'property' => 'txcDocument'
+            )
+        ),
     ),
     'public_holiday' => array(
         'is_england' => array(
