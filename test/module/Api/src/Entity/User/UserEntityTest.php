@@ -534,9 +534,9 @@ class UserEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider isAdministratorProvider
+     * @dataProvider getPermissionProvider
      */
-    public function testIsAdministrator($userType, $roleIds, $expected)
+    public function testGetPermission($userType, $roleIds, $expected)
     {
         $roles = array_map(
             function ($id) {
@@ -562,53 +562,77 @@ class UserEntityTest extends EntityTester
 
         $entity = Entity::create($userType, $data);
 
-        $this->assertEquals($expected, $entity->isAdministrator());
+        $this->assertEquals($expected, $entity->getPermission());
     }
 
-    public function isAdministratorProvider()
+    public function getPermissionProvider()
     {
         return [
             // local authority - admin
             [
                 Entity::USER_TYPE_LOCAL_AUTHORITY,
-                Entity::getRolesByUserType(Entity::USER_TYPE_LOCAL_AUTHORITY, true),
-                true
+                Entity::getRolesByUserType(Entity::USER_TYPE_LOCAL_AUTHORITY, Entity::PERMISSION_ADMIN),
+                Entity::PERMISSION_ADMIN
             ],
             // local authority - user
             [
                 Entity::USER_TYPE_LOCAL_AUTHORITY,
-                Entity::getRolesByUserType(Entity::USER_TYPE_LOCAL_AUTHORITY),
-                false
+                Entity::getRolesByUserType(Entity::USER_TYPE_LOCAL_AUTHORITY, Entity::PERMISSION_USER),
+                Entity::PERMISSION_USER
             ],
             // operator - admin
             [
                 Entity::USER_TYPE_OPERATOR,
-                Entity::getRolesByUserType(Entity::USER_TYPE_OPERATOR, true),
-                true
+                Entity::getRolesByUserType(Entity::USER_TYPE_OPERATOR, Entity::PERMISSION_ADMIN),
+                Entity::PERMISSION_ADMIN
             ],
             // operator - user
             [
                 Entity::USER_TYPE_OPERATOR,
-                Entity::getRolesByUserType(Entity::USER_TYPE_OPERATOR),
-                false
+                Entity::getRolesByUserType(Entity::USER_TYPE_OPERATOR, Entity::PERMISSION_USER),
+                Entity::PERMISSION_USER
+            ],
+            // operator - tm
+            [
+                Entity::USER_TYPE_OPERATOR,
+                Entity::getRolesByUserType(Entity::USER_TYPE_OPERATOR, Entity::PERMISSION_TM),
+                Entity::PERMISSION_TM
+            ],
+            // operator - admin with tm role
+            [
+                Entity::USER_TYPE_OPERATOR,
+                array_merge(
+                    Entity::getRolesByUserType(Entity::USER_TYPE_OPERATOR, Entity::PERMISSION_ADMIN),
+                    Entity::getRolesByUserType(Entity::USER_TYPE_OPERATOR, Entity::PERMISSION_TM)
+                ),
+                Entity::PERMISSION_ADMIN
+            ],
+            // operator - user with tm role
+            [
+                Entity::USER_TYPE_OPERATOR,
+                array_merge(
+                    Entity::getRolesByUserType(Entity::USER_TYPE_OPERATOR, Entity::PERMISSION_USER),
+                    Entity::getRolesByUserType(Entity::USER_TYPE_OPERATOR, Entity::PERMISSION_TM)
+                ),
+                Entity::PERMISSION_USER
             ],
             // partner - admin
             [
                 Entity::USER_TYPE_PARTNER,
-                Entity::getRolesByUserType(Entity::USER_TYPE_PARTNER, true),
-                true
+                Entity::getRolesByUserType(Entity::USER_TYPE_PARTNER, Entity::PERMISSION_ADMIN),
+                Entity::PERMISSION_ADMIN
             ],
             // partner - user
             [
                 Entity::USER_TYPE_PARTNER,
-                Entity::getRolesByUserType(Entity::USER_TYPE_PARTNER),
-                false
+                Entity::getRolesByUserType(Entity::USER_TYPE_PARTNER, Entity::PERMISSION_USER),
+                Entity::PERMISSION_USER
             ],
             // internal - user
             [
                 Entity::USER_TYPE_INTERNAL,
-                Entity::getRolesByUserType(Entity::USER_TYPE_INTERNAL),
-                false
+                Entity::getRolesByUserType(Entity::USER_TYPE_INTERNAL, Entity::PERMISSION_USER),
+                null
             ],
         ];
     }

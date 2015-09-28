@@ -40,7 +40,6 @@ class UserListSelfserveTest extends QueryHandlerTestCase
 
         $user = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $user->setId(74);
-        $user->shouldReceive('isAdministrator')->andReturn(false);
 
         $this->repoMap['User']->shouldReceive('fetchList')->andReturn([$user]);
         $this->repoMap['User']->shouldReceive('fetchCount')->andReturn('COUNT');

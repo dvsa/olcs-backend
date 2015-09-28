@@ -27,6 +27,10 @@ use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
  */
 class User extends AbstractUser
 {
+    const PERMISSION_ADMIN = 'admin';
+    const PERMISSION_USER = 'user';
+    const PERMISSION_TM = 'tm';
+
     const USER_TYPE_INTERNAL = 'internal';
     const USER_TYPE_LOCAL_AUTHORITY = 'local-authority';
     const USER_TYPE_OPERATOR = 'operator';
@@ -35,16 +39,17 @@ class User extends AbstractUser
 
     private static $userTypeToRoles = [
         self::USER_TYPE_LOCAL_AUTHORITY => [
-            'admin' => [RoleEntity::ROLE_LOCAL_AUTHORITY_ADMIN],
-            'user' => [RoleEntity::ROLE_LOCAL_AUTHORITY_USER],
+            self::PERMISSION_ADMIN => [RoleEntity::ROLE_LOCAL_AUTHORITY_ADMIN],
+            self::PERMISSION_USER => [RoleEntity::ROLE_LOCAL_AUTHORITY_USER],
         ],
         self::USER_TYPE_OPERATOR => [
-            'admin' => [RoleEntity::ROLE_OPERATOR_ADMIN],
-            'user' => [RoleEntity::ROLE_OPERATOR_USER],
+            self::PERMISSION_ADMIN => [RoleEntity::ROLE_OPERATOR_ADMIN],
+            self::PERMISSION_USER => [RoleEntity::ROLE_OPERATOR_USER],
+            self::PERMISSION_TM => [RoleEntity::ROLE_OPERATOR_TM],
         ],
         self::USER_TYPE_PARTNER => [
-            'admin' => [RoleEntity::ROLE_PARTNER_ADMIN],
-            'user' => [RoleEntity::ROLE_PARTNER_USER],
+            self::PERMISSION_ADMIN => [RoleEntity::ROLE_PARTNER_ADMIN],
+            self::PERMISSION_USER => [RoleEntity::ROLE_PARTNER_USER],
         ],
     ];
 
@@ -59,18 +64,6 @@ class User extends AbstractUser
     {
         parent::__construct();
         $this->userType = $userType;
-    }
-
-    /**
-     * Gets calculated values
-     *
-     * @return array
-     */
-    public function getCalculatedBundleValues()
-    {
-        return [
-            'isAdministrator' => $this->isAdministrator() ? 'Y' : 'N',
-        ];
     }
 
     /**
@@ -318,14 +311,43 @@ class User extends AbstractUser
     /**
      * @return bool
      */
-    public function isAdministrator()
+    private function isAdministrator()
     {
-        // is admin if has "operator-admin" role
+        // is admin if has roles for admin permission
+        return $this->hasRoles(
+            self::getRolesByUserType($this->getUserType(), self::PERMISSION_ADMIN)
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function getPermission()
+    {
+        if (empty(self::$userTypeToRoles[$this->getUserType()])) {
+            return null;
+        }
+
+        foreach (self::$userTypeToRoles[$this->getUserType()] as $permission => $roles) {
+            if ($this->hasRoles($roles)) {
+                return $permission;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array $roles
+     * @return bool
+     */
+    private function hasRoles(array $roles)
+    {
         return !$this->roles->isEmpty() && !empty(
             array_intersect(
-                // list of admin roles for given user type
-                self::getRolesByUserType($this->getUserType(), true),
-                // list of roles selected
+                // list of roles to check for
+                $roles,
+                // user's roles
                 array_map(
                     function ($role) {
                         return $role->getId();
@@ -338,15 +360,13 @@ class User extends AbstractUser
 
     /**
      * @param string $userType
-     * @param bool $isAdmin
+     * @param string $permission
      * @return array
      */
-    public static function getRolesByUserType($userType, $isAdmin = false)
+    public static function getRolesByUserType($userType, $permission)
     {
-        $key = $isAdmin ? 'admin' : 'user';
-
-        if (!empty(self::$userTypeToRoles[$userType][$key])) {
-            return self::$userTypeToRoles[$userType][$key];
+        if (!empty(self::$userTypeToRoles[$userType][$permission])) {
+            return self::$userTypeToRoles[$userType][$permission];
         }
 
         return [];

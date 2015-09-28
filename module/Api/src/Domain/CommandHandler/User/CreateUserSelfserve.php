@@ -56,11 +56,8 @@ final class CreateUserSelfserve extends AbstractCommandHandler implements AuthAw
                 throw new BadRequestException('User type must be provided');
         }
 
-        // populate roles based on the user type and isAdministrator flag
-        $data['roles'] = User::getRolesByUserType(
-            $data['userType'],
-            ($data['isAdministrator'] === 'Y') ? true : false
-        );
+        // populate roles based on the user type and permission
+        $data['roles'] = User::getRolesByUserType($data['userType'], $data['permission']);
 
         $user = User::create(
             $data['userType'],
