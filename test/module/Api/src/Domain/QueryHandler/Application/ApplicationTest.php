@@ -46,8 +46,9 @@ class ApplicationTest extends QueryHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application
             ->setId($applicationId)
-            ->shouldReceive('serialize')
-            ->andReturn(['foo' => 'bar']);
+            ->shouldReceive('getPublicationLinks')->with()->once()
+                ->andReturn(new \Doctrine\Common\Collections\ArrayCollection())
+            ->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -77,7 +78,9 @@ class ApplicationTest extends QueryHandlerTestCase
             'sections' => ['bar', 'cake'],
             'outstandingFeeTotal' => '166.70',
             'variationCompletion' => null,
-            'canCreateCase' => false
+            'canCreateCase' => false,
+            'existingPublication' => false,
+            'isPublishable' => true,
         ];
 
         $this->assertEquals($expected, $result->serialize());

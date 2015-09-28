@@ -95,7 +95,6 @@ class ProcessTest extends CommandHandlerTestCase
     {
         $id = 69;
         $licenceId = 7;
-        $storedFileId = 99;
         $documentId = 101;
         $organisationId = 1;
         $licNo = 'OB1234567';
@@ -117,7 +116,6 @@ class ProcessTest extends CommandHandlerTestCase
         $continuationDetail->getLicence()
             ->setGoodsOrPsv($this->mapRefData(Licence::LICENCE_CATEGORY_PSV))
             ->setLicenceType($this->mapRefData(Licence::LICENCE_TYPE_SPECIAL_RESTRICTED))
-            ->setNiFlag('N')
             ->setOrganisation($this->mapReference(Organisation::class, $organisationId))
             ->setTrafficArea($this->mapReference(TrafficArea::class, 'B'))
             ->setLicNo($licNo);

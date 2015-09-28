@@ -25,6 +25,7 @@ class Module
         /* @var $translator \Zend\I18n\Translator\Translator */
         $translator = $sm->get('translator');
         $translator->setLocale('en_GB');
+        $translator->setFallbackLocale('en_GB');
         $translator->addTranslationFilePattern('phparray', __DIR__ . '/../config/language', '%s.php', 'snapshot');
 
         $events = $e->getApplication()->getEventManager();

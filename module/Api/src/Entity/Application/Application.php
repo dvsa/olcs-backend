@@ -556,6 +556,18 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     /**
      * @return boolean
      */
+    public function isStandardNational()
+    {
+        if ($this->getLicenceType() !== null) {
+            return $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_NATIONAL;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return boolean
+     */
     public function isStandardInternational()
     {
         if ($this->getLicenceType() !== null) {
@@ -1031,6 +1043,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $activeS4s;
     }
 
+    /**
+     * Does this application have an active S4 attached
+     *
+     * @return bool
+     */
+    public function hasActiveS4()
+    {
+        return count($this->getActiveS4s()) > 0;
+    }
+
     public function canHaveLargeVehicles()
     {
         $allowLargeVehicles = [
@@ -1429,32 +1451,39 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * Is the variation in state where it should be published
+     * Is this application publishable
      *
-     * @return bool
+     * @return boolean
      */
-    public function isVariationPublishable()
+    public function isPublishable()
     {
-        // must be a variation
-        if (!$this->isVariation()) {
+        if ($this->isNew()) {
+            // It is a new Goods or PSV application
+            // Excluding PSV special restricted
+            if ($this->isPsv() && $this->isSpecialRestricted()) {
+                return false;
+            }
+
+            return true;
+        } else {
+            // It is a Goods or PSV variation
+            // An operating centre has been added;
+            if ($this->hasNewOperatingCentre()) {
+                return true;
+            }
+
+            // An operating centre has been updated and either the OC vehicles or trailers have increased;
+            if ($this->hasIncreaseInOperatingCentre()) {
+                return true;
+            }
+
+            // A major upgrade has taken place
+            // (ie restricted to standard national or restricted to standard international)
+            if ($this->isRealUpgrade()) {
+                return true;
+            }
+
             return false;
         }
-
-        // An operating centre has been added;
-        if ($this->hasNewOperatingCentre()) {
-            return true;
-        }
-
-        // An operating centre has been updated and either the OC vehicles or trailers have increased;
-        if ($this->hasIncreaseInOperatingCentre()) {
-            return true;
-        }
-
-        // A major upgrade has taken place (ie restricted to standard national or restricted to standard international)
-        if ($this->isRealUpgrade()) {
-            return true;
-        }
-
-        return false;
     }
 }

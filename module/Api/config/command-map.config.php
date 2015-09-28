@@ -107,6 +107,7 @@ return [
     Command\Application\CloseTexTask::class => CommandHandler\Application\CloseTexTask::class,
     Command\Application\CloseFeeDueTask::class => CommandHandler\Application\CloseFeeDueTask::class,
     TransferCommand\Application\UpdateAuthSignature::class => CommandHandler\Application\UpdateAuthSignature::class,
+    TransferCommand\Application\Publish::class => CommandHandler\Application\Publish::class,
 
     Command\Task\CreateTranslateToWelshTask::class => CommandHandler\Task\CreateTranslateToWelshTask::class,
     TransferCommand\Application\UpdatePsvVehicles::class => CommandHandler\Application\UpdatePsvVehicles::class,
@@ -632,6 +633,8 @@ return [
         CommandHandler\TransportManagerApplication\UpdateForResponsibilities::class,
     TransferCommand\TransportManagerApplication\DeleteForResponsibilities::class =>
         CommandHandler\TransportManagerApplication\DeleteForResponsibilities::class,
+    TransferCommand\TransportManagerApplication\SendTmApplication::class =>
+        CommandHandler\Email\SendTmApplication::class,
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,

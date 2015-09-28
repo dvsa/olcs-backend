@@ -1046,6 +1046,10 @@ class ApplicationEntityTest extends EntityTester
 
         $licenceType = m::mock(RefData::class);
         $goodsOrPsv = m::mock(RefData::class);
+        $trafficArea = m::mock(TrafficArea::class)
+            ->shouldReceive('getIsNi')
+            ->andReturn(true)
+            ->getMock();
 
         $licence->setLicenceType($licenceType);
         $licence->setGoodsOrPsv($goodsOrPsv);
@@ -1054,7 +1058,7 @@ class ApplicationEntityTest extends EntityTester
         $licence->setTotAuthSmallVehicles(7);
         $licence->setTotAuthMediumVehicles(8);
         $licence->setTotAuthLargeVehicles(9);
-        $licence->setNiFlag('Y');
+        $licence->setTrafficArea($trafficArea);
 
         $this->entity->copyInformationFromLicence($licence);
 
@@ -2500,16 +2504,16 @@ class ApplicationEntityTest extends EntityTester
         $this->assertEquals(111, $entity->getContextValue());
     }
 
-    public function testIsVariationPublishableNewApplication()
+    public function testIsPublishableNewApplication()
     {
         $licence = new Licence(new Organisation(), new RefData());
         $application = new Entity($licence, new RefData(), false);
         /* @var $application Entity */
 
-        $this->assertFalse($application->isVariationPublishable());
+        $this->assertTrue($application->isPublishable());
     }
 
-    public function testIsVariationPublishableFalse()
+    public function testIsPublishableFalse()
     {
         $licence = new Licence(new Organisation(), new RefData());
         $licence->setLicenceType(new RefData('Foo'));
@@ -2517,10 +2521,10 @@ class ApplicationEntityTest extends EntityTester
         /* @var $application Entity */
         $application->setLicenceType(new RefData('Bar'));
 
-        $this->assertFalse($application->isVariationPublishable());
+        $this->assertFalse($application->isPublishable());
     }
 
-    public function testIsVariationPublishableNewOc()
+    public function testIsPublishableNewOc()
     {
         $licence = new Licence(new Organisation(), new RefData());
         $application = new Entity($licence, new RefData(), true);
@@ -2532,10 +2536,10 @@ class ApplicationEntityTest extends EntityTester
 
         $application->addOperatingCentres($aoc);
 
-        $this->assertTrue($application->isVariationPublishable());
+        $this->assertTrue($application->isPublishable());
     }
 
-    public function testIsVariationPublishableOcIncrease()
+    public function testIsPublishableOcIncrease()
     {
         $licence = new Licence(new Organisation(), new RefData());
         $application = new Entity($licence, new RefData(), true);
@@ -2556,10 +2560,10 @@ class ApplicationEntityTest extends EntityTester
         $aoc->setNoOfVehiclesRequired(10);
         $application->addOperatingCentres($aoc);
 
-        $this->assertTrue($application->isVariationPublishable());
+        $this->assertTrue($application->isPublishable());
     }
 
-    public function testIsVariationPublishableUpgrade()
+    public function testIsPublishableUpgrade()
     {
         $licence = new Licence(new Organisation(), new RefData());
         $licence->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
@@ -2567,6 +2571,6 @@ class ApplicationEntityTest extends EntityTester
         /* @var $application Entity */
         $application->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL));
 
-        $this->assertTrue($application->isVariationPublishable());
+        $this->assertTrue($application->isPublishable());
     }
 }

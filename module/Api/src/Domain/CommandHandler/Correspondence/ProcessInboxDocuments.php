@@ -52,7 +52,10 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
         foreach ($emailList as $row) {
             $licence = $row->getLicence();
             $organisation = $licence->getOrganisation();
-            $isContinuation = !empty($row->getDocument()->getContinuationDetails());
+            $continuationsDetails = $row->getDocument()->getContinuationDetails();
+            $isContinuation = count($row->getDocument()->getContinuationDetails()) &&
+                $continuationsDetails[0]->getChecklistDocument();
+
             $users = $organisation->getAdminEmailAddresses();
 
             // edge case; we expect to find email addresses otherwise we wouldn't
@@ -74,7 +77,7 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
             $message->setTranslateToWelsh(false);
             $this->sendEmailTemplate(
                 $message,
-                'licensing-information-' . $emailType,
+                'email-inbox-reminder-' . $emailType,
                 [
                     'licNo' => $licence->getLicNo(),
                     // @NOTE the http://selfserve part gets replaced

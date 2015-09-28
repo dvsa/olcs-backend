@@ -16,5 +16,13 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class ProcessReminder extends AbstractIdOnlyCommand
 {
+    public $user;
 
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 }
