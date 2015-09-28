@@ -9,8 +9,10 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as Entity;
+use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
  * PublicationLink
@@ -21,6 +23,20 @@ class PublicationLink extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    public function delete($entity)
+    {
+        /** @var Entity $entity */
+        if ($entity->getPublication()->getPubStatus()->getId() !== PublicationEntity::PUB_NEW_STATUS) {
+            throw new ForbiddenException('Only unpublished entries may be deleted');
+        }
+
+        parent::delete($entity);
+    }
+
+    /**
+     * @param int $busRegId
+     * @return array
+     */
     public function fetchByBusRegId($busRegId)
     {
         $qb = $this->createQueryBuilder();
@@ -30,6 +46,26 @@ class PublicationLink extends AbstractRepository
         )->setParameter('busReg', $busRegId);
 
         return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+    }
+
+    /**
+     * Applies filters
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if (method_exists($query, 'getTransportManager')) {
+            $qb->andWhere(
+                $qb->expr()->eq($this->alias . '.transportManager', ':transportManager')
+            )->setParameter('transportManager', $query->getTransportManager());
+        }
+
+        if (method_exists($query, 'getLicence')) {
+            $qb->andWhere(
+                $qb->expr()->eq($this->alias . '.licence', ':licence')
+            )->setParameter('licence', $query->getLicence());
+        }
     }
 
     /**
