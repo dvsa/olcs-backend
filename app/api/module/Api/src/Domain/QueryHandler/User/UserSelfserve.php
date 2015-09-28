@@ -28,7 +28,7 @@ class UserSelfserve extends AbstractQueryHandler
                 ],
             ],
             [
-                'isAdministrator' => $user->isAdministrator() ? 'Y' : 'N'
+                'permission' => $user->getPermission()
             ]
         );
     }
