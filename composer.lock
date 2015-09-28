@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "eaf281f7bb8e20c616ee7c61dde7bd62",
+    "hash": "75eb8df9a5a82085a81bc1506290a63f",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -48,20 +48,14 @@
         },
         {
             "name": "cpms/client",
-            "version": "dev-master",
+            "version": "v2.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.inf.mgt.mtpdvsa:cpms/cpms-client.git",
-                "reference": "35cf709c9a08d926577e7bc4f3b2ce057d646d51"
-            },
-            "dist": {
-                "type": "tar",
-                "url": "http://satis.inf.mgt.mtpdvsa/dist/cpms-client-dev-master-db3a8b.tar",
-                "reference": "35cf709c9a08d926577e7bc4f3b2ce057d646d51",
-                "shasum": "a4ec92665e2e64cba3b755327fbe6624b4d211e6"
+                "reference": "0cfc2e2a3ed2d307fef0f4af490dce9171252ef3"
             },
             "require": {
-                "zendframework/zendframework": "<2.4.0"
+                "zendframework/zendframework": "<2.5"
             },
             "require-dev": {
                 "phpunit/phpunit": "4.0.*"
@@ -86,7 +80,7 @@
                 "proprietary"
             ],
             "description": "CPMS Common Client Module",
-            "time": "2015-05-14 10:27:34"
+            "time": "2015-08-19 12:20:41"
         },
         {
             "name": "doctrine/annotations",
@@ -987,7 +981,7 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/companies-house.git",
-                "reference": "ae8b3ea0113fadee716dcd49fca4ac3192a0afa7"
+                "reference": "a5d0ad0374f3b171c9d46a836c18a16acf25ffe2"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -999,33 +993,7 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2014-09-30 07:55:08"
-        },
-        {
-            "name": "olcs/dvsa/document-share",
-            "version": "dev-develop",
-            "source": {
-                "type": "git",
-                "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-document-share.git",
-                "reference": "29cd4b6988a841bf008e7d79c52c31b3a67ad3e9"
-            },
-            "require": {
-                "php": ">=5.4.0",
-                "zendframework/zend-http": "~2.3.0",
-                "zendframework/zend-servicemanager": "~2.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.1.*",
-                "squizlabs/php_codesniffer": "2.0.*@dev"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Dvsa\\Olcs\\DocumentShare\\": "src/"
-                }
-            },
-            "description": "API wrapper for the document share solution",
-            "time": "2015-08-19 15:57:40"
+            "time": "2015-09-23 16:08:31"
         },
         {
             "name": "olcs/olcs-logging",
@@ -1066,7 +1034,7 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.inf.mgt.mtpdvsa:olcs/olcs-transfer.git",
-                "reference": "21b3a7f42e03707e6ffe209253e90cf64459ff0b"
+                "reference": "9ee24c5dc9584a2fe3fad656cd759408ad89b7e2"
             },
             "require": {
                 "php": ">=5.4",
@@ -1084,7 +1052,7 @@
                 }
             },
             "description": "OLCS Transfer",
-            "time": "2015-09-15 14:54:28"
+            "time": "2015-09-28 13:55:47"
         },
         {
             "name": "olcs/olcs-utils",
@@ -1263,17 +1231,17 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.7.4",
+            "version": "v2.7.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Console.git",
-                "reference": "9ff9032151186bd66ecee727d728f1319f52d1d8"
+                "url": "https://github.com/symfony/console.git",
+                "reference": "06cb17c013a82f94a3d840682b49425cd00a2161"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://satis.inf.mgt.mtpdvsa/dist/symfony-console-9ff9032151186bd66ecee727d728f1319f52d1d8-zip-5a3cbd.tar",
-                "reference": "9ff9032151186bd66ecee727d728f1319f52d1d8",
-                "shasum": "49f237c6427b0dfc40be64a3088ad2772d4318ee"
+                "url": "http://satis.inf.mgt.mtpdvsa/dist/symfony-console-06cb17c013a82f94a3d840682b49425cd00a2161-zip-3267bf.tar",
+                "reference": "06cb17c013a82f94a3d840682b49425cd00a2161",
+                "shasum": "4c66b0ee670d38b4f1ff5c33c7d37196af018e0b"
             },
             "require": {
                 "php": ">=5.3.9"
@@ -1316,7 +1284,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2015-09-03 11:40:38"
+            "time": "2015-09-25 08:32:23"
         },
         {
             "name": "symfony/filesystem",
@@ -1324,7 +1292,7 @@
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Filesystem.git",
+                "url": "https://github.com/symfony/filesystem.git",
                 "reference": "823c035b1a5c13a4924e324d016eb07e70f94735"
             },
             "dist": {
@@ -2657,17 +2625,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.7.4",
+            "version": "v2.7.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Yaml.git",
-                "reference": "2dc7b06c065df96cc686c66da2705e5e18aef661"
+                "url": "https://github.com/symfony/yaml.git",
+                "reference": "31cb2ad0155c95b88ee55fe12bc7ff92232c1770"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://satis.inf.mgt.mtpdvsa/dist/symfony-yaml-2dc7b06c065df96cc686c66da2705e5e18aef661-zip-f4eabc.tar",
-                "reference": "2dc7b06c065df96cc686c66da2705e5e18aef661",
-                "shasum": "4d8a29cbe23a85c2d334c438495209d0cf9a5189"
+                "url": "http://satis.inf.mgt.mtpdvsa/dist/symfony-yaml-31cb2ad0155c95b88ee55fe12bc7ff92232c1770-zip-66e211.tar",
+                "reference": "31cb2ad0155c95b88ee55fe12bc7ff92232c1770",
+                "shasum": "a01849dc81c042da475c2a5ba7a2729d326b630d"
             },
             "require": {
                 "php": ">=5.3.9"
@@ -2702,7 +2670,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2015-08-24 07:13:45"
+            "time": "2015-09-14 14:14:09"
         }
     ],
     "aliases": [],
@@ -2712,9 +2680,7 @@
         "olcs/olcs-transfer": 20,
         "olcs/olcs-utils": 20,
         "olcs/olcs-logging": 20,
-        "olcs/autoload": 20,
-        "cpms/client": 20,
-        "olcs/dvsa/document-share": 20
+        "olcs/autoload": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
