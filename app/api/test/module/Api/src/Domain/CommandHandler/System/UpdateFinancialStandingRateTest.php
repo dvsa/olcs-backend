@@ -140,7 +140,7 @@ class UpdateFinancialStandingRateTest extends CommandHandlerTestCase
             ->shouldReceive('fetchByCategoryTypeAndDate')
             ->once()
             ->with(Licence::LICENCE_CATEGORY_GOODS_VEHICLE, Licence::LICENCE_TYPE_STANDARD_NATIONAL, '2015-09-10')
-            ->andReturn([$mockExisting])
+            ->andReturn([$mockRate, $mockExisting])
             ->shouldReceive('save')
             ->never();
 
