@@ -266,7 +266,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="open_date", nullable=true)
+     * @ORM\Column(type="datetime", name="open_date", nullable=false)
      */
     protected $openDate;
 

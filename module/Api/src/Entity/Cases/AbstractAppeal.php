@@ -45,7 +45,7 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="appeal_no", length=20, nullable=false)
+     * @ORM\Column(type="string", name="appeal_no", length=20, nullable=true)
      */
     protected $appealNo;
 

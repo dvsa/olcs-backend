@@ -1,16 +1,16 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Entity\Irfo;
+namespace Dvsa\OlcsTest\Api\Entity\Elastic;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\Irfo\IrfoTransitCountry as Entity;
+use Dvsa\Olcs\Api\Entity\Elastic\ElasticUpdate as Entity;
 
 /**
- * IrfoTransitCountry Entity Unit Tests
+ * ElasticUpdate Entity Unit Tests
  *
  * Initially auto-generated but won't be overridden
  */
-class IrfoTransitCountryEntityTest extends EntityTester
+class ElasticUpdateEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

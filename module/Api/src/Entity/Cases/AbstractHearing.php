@@ -210,9 +210,9 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     /**
      * Witness count
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="witness_count", nullable=true)
+     * @ORM\Column(type="boolean", name="witness_count", nullable=true)
      */
     protected $witnessCount;
 
@@ -633,7 +633,7 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     /**
      * Set the witness count
      *
-     * @param int $witnessCount
+     * @param boolean $witnessCount
      * @return Hearing
      */
     public function setWitnessCount($witnessCount)
@@ -646,7 +646,7 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     /**
      * Get the witness count
      *
-     * @return int
+     * @return boolean
      */
     public function getWitnessCount()
     {

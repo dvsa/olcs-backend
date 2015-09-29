@@ -180,7 +180,7 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
      *     targetEntity="Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre",
      *     fetch="LAZY"
      * )
-     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
      */
     protected $operatingCentre;
 
