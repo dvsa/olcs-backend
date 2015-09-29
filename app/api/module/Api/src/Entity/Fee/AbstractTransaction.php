@@ -93,7 +93,7 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="gateway_url", length=255, nullable=true)
+     * @ORM\Column(type="string", name="gateway_url", length=1000, nullable=true)
      */
     protected $gatewayUrl;
 
