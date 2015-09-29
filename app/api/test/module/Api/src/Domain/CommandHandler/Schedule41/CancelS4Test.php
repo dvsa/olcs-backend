@@ -1,26 +1,24 @@
 <?php
 
-/**
- * RefuseS4Test.php
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Schedule41;
 
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Schedule41\RefuseS4;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Schedule41\CancelS4;
 use Dvsa\Olcs\Api\Domain\Repository\S4;
 use Dvsa\Olcs\Api\Entity\Application\S4 as S4Entity;
-use Dvsa\Olcs\Api\Domain\Command\Schedule41\RefuseS4 as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4 as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
 /**
- * Class RefuseS4Test
- * @package Dvsa\OlcsTest\Api\Domain\CommandHandler\Schedule41
+ * Class CancelS4Test
+ *
+ * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class RefuseS4Test extends CommandHandlerTestCase
+class CancelS4Test extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new RefuseS4();
+        $this->sut = new CancelS4();
         $this->mockRepo('S4', S4::class);
 
         parent::setUp();
@@ -29,7 +27,7 @@ class RefuseS4Test extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            S4Entity::STATUS_REFUSED
+            S4Entity::STATUS_CANCELLED
         ];
 
         $this->references = [
@@ -63,7 +61,7 @@ class RefuseS4Test extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['id' => ['s4' => 1], 'messages' => ['S4 Refused.']], $result->toArray());
-        $this->assertSame(S4Entity::STATUS_REFUSED, $this->references[S4Entity::class][1]->getOutcome()->getId());
+        $this->assertSame(['id' => ['s4' => 1], 'messages' => ['S4 Cancelled.']], $result->toArray());
+        $this->assertSame(S4Entity::STATUS_CANCELLED, $this->references[S4Entity::class][1]->getOutcome()->getId());
     }
 }

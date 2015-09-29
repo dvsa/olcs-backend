@@ -13,7 +13,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Licence\NotTakenUp;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
@@ -41,8 +40,6 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /* @var $application Application */
         $application = $this->getRepo()->fetchById($command->getId());
 
@@ -51,9 +48,9 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
 
         $this->getRepo()->save($application);
 
-        $result->merge($this->createSnapshot($command->getId()));
+        $this->result->merge($this->createSnapshot($command->getId()));
 
-        $result->merge(
+        $this->result->merge(
             $this->handleSideEffect(
                 NotTakenUp::create(
                     [
@@ -63,7 +60,7 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
             )
         );
 
-        $result->merge(
+        $this->result->merge(
             $this->handleSideEffect(
                 CeaseGoodsDiscs::create(
                     [
@@ -74,7 +71,7 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
         );
         $this->clearLicenceVehicleSpecifiedDatesAndInterimApp($application->getLicence()->getLicenceVehicles());
 
-        $result->merge(
+        $this->result->merge(
             $this->handleSideEffect(
                 RemoveLicenceVehicle::create(
                     [
@@ -86,7 +83,7 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
 
         $transportManagers = $application->getTransportManagers()->toArray();
         if (!empty($transportManagers)) {
-            $result->merge(
+            $this->result->merge(
                 $this->handleSideEffect(
                     Delete::create(
                         [
@@ -104,7 +101,7 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
 
         $communityLicences = $application->getLicence()->getCommunityLics()->toArray();
         if (!empty($communityLicences)) {
-            $result->merge(
+            $this->result->merge(
                 $this->handleSideEffect(
                     ReturnAllCommunityLicences::create(
                         [
@@ -119,12 +116,12 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
             $application->isGoods() &&
             $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
         ) {
-            $result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
+            $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
         }
 
         if ($application->isNew()) {
             // Publish new application
-            $result->merge(
+            $this->result->merge(
                 $this->handleSideEffect(
                     \Dvsa\Olcs\Transfer\Command\Publication\Application::create(
                         [
@@ -138,13 +135,15 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
 
         // If Internal user close tasks
         if ($application->isNew() && $application->isGoods() && $this->isInternalUser()) {
-            $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
-            $result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
+            $this->result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
+            $this->result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
         }
 
-        $result->addMessage('Application ' . $application->getId() . ' set to not taken up.');
+        $this->cancelS4($application);
 
-        return $result;
+        $this->result->addMessage('Application ' . $application->getId() . ' set to not taken up.');
+
+        return $this->result;
     }
 
     protected function createSnapshot($applicationId)
@@ -159,6 +158,26 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
             $licenceVehilce->setSpecifiedDate(null);
             $licenceVehilce->setInterimApplication(null);
             $this->getRepo('LicenceVehicle')->save($licenceVehilce);
+        }
+    }
+
+    /**
+     * Cancel any S4's attached to the application
+     *
+     * @param Application $application
+     */
+    protected function cancelS4(Application $application)
+    {
+        // Refuse any S4's attached to the application
+        if ($application->isGoods()) {
+            foreach ($application->getS4s() as $s4) {
+                /* @var $s4 \Dvsa\Olcs\Api\Entity\Application\S4 */
+                $this->result->merge(
+                    $this->handleSideEffect(
+                        \Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4::create(['id' => $s4->getId()])
+                    )
+                );
+            }
         }
     }
 }

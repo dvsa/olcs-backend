@@ -22,6 +22,7 @@ class S4 extends AbstractS4
 {
     const STATUS_APPROVED = 's4_sts_approved';
     const STATUS_REFUSED = 's4_sts_refused';
+    const STATUS_CANCELLED = 's4_sts_cancelled';
 
     public function __construct(Application $application, Licence $licence)
     {
