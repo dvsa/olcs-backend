@@ -925,7 +925,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
             $criteria->where($expr->isNull('localAuthority'));
         } else {
             $criteria->where($expr->eq('localAuthority', $localAuthority));
-            $criteria->andWhere($expr->eq('fileRead', 'Y'));
+            $criteria->andWhere($expr->eq('fileRead', 'N'));
         }
 
         $criteria->orderBy(['id' => 'DESC']);
