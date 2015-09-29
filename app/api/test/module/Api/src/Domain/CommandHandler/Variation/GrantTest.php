@@ -280,7 +280,7 @@ class GrantTest extends CommandHandlerTestCase
         $psvDisc = m::mock(PsvDisc::class)->makePartial();
         $psvDisc->setId(123);
 
-        $psvDiscs = [$psvDisc];
+        $psvDiscs = new ArrayCollection([$psvDisc]);
 
         $licence->shouldReceive('copyInformationFromApplication')
             ->with($application)
