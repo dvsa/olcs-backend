@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_s4_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_s4_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_s4_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_s4_outcome_ref_data_id", columns={"outcome"})
+ *        @ORM\Index(name="ix_s4_outcome", columns={"outcome"})
  *    }
  * )
  */

@@ -32,8 +32,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_user_transport_manager_id", columns={"transport_manager_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="pid_UNIQUE", columns={"pid"}),
- *        @ORM\UniqueConstraint(name="login_id_UNIQUE", columns={"login_id"})
+ *        @ORM\UniqueConstraint(name="uk_user_pid", columns={"pid"}),
+ *        @ORM\UniqueConstraint(name="uk_user_login_id", columns={"login_id"})
  *    }
  * )
  */
