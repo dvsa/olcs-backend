@@ -8008,5 +8008,18 @@ VALUES
 
 COMMIT;
 
+CREATE  OR REPLACE VIEW bus_reg_history_view AS
+SELECT
+   `eh`.`id` AS `id`,
+   `br1`.`id` AS `bus_reg_id`,
+   `br2`.`id` AS `id2`,
+   `eh`.`event_datetime` AS `event_datetime`,
+   `eh`.`event_history_type_id` AS `event_history_type_id`,
+   `eh`.`event_data` AS `event_data`,
+   `eh`.`user_id` AS `user_id`,
+   `br2`.`reg_no` AS `reg_no`
+FROM ((`bus_reg` `br1` join `bus_reg` `br2` on((`br2`.`reg_no` like `br1`.`reg_no`))) join `event_history` `eh` on((`eh`.`bus_reg_id` = `br2`.`id`)));
+
+
 
 SET foreign_key_checks = 1;
