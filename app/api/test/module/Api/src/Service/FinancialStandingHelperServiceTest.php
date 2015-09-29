@@ -34,7 +34,7 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
         $mockRatesRepo = m::mock();
 
         $mockRatesRepo
-            ->shouldReceive('getRatesInEffect')
+            ->shouldReceive('fetchRatesInEffect')
             ->andReturnUsing([$this, 'getStubRates']);
 
         // Create service with mocked dependencies

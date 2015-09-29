@@ -81,6 +81,7 @@ class CorrespondenceInboxTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('louu.contactDetails', 'louucd')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('document', 'd')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('d.continuationDetails', 'cd')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('cd.checklistDocument', 'cdd')->once()->andReturnSelf();
 
         $qb->shouldReceive('expr->eq')->with('m.accessed', 0)->once()->andReturn('condition1');
         $qb->shouldReceive('andWhere')->with('condition1')->once()->andReturnSelf();
@@ -101,6 +102,9 @@ class CorrespondenceInboxTest extends RepositoryTestCase
 
         $qb->shouldReceive('expr->isNotNull')->with('l.id')->once()->andReturn('condition6');
         $qb->shouldReceive('andWhere')->with('condition6')->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')->with('l.translateToWelsh', 0)->once()->andReturn('condition7');
+        $qb->shouldReceive('andWhere')->with('condition7')->once()->andReturnSelf();
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($qb);
         $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['result']);

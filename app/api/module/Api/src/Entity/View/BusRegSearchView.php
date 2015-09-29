@@ -15,6 +15,9 @@
 namespace Dvsa\Olcs\Api\Entity\View;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 
 /**
  * Bus Reg List View
@@ -22,8 +25,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(readOnly=true)
  * @ORM\Table(name="bus_reg_search_view")
  */
-class BusRegSearchView
+class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
 {
+    use BundleSerializableTrait;
+
     /**
      * Id
      *

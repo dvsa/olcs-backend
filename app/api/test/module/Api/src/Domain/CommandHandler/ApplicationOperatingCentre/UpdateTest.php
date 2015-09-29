@@ -56,22 +56,25 @@ class UpdateTest extends CommandHandlerTestCase
             'id' => 111,
             'version' => 1,
             'address' => [
-                'addressLine1' => '123 Street'
+                'addressLine1' => '123 Street',
+                'postcode' => 'SM1 7ZZ',
             ]
         ];
         $command = Cmd::create($data);
 
-        /** @var OperatingCentre $oc */
+        /* @var $oc OperatingCentre */
         $oc = m::mock(OperatingCentre::class)->makePartial();
+        $oc->setId(333);
+        $oc->setAddress(new \Dvsa\Olcs\Api\Entity\ContactDetails\Address());
 
-        /** @var Application $application */
-        $application = m::mock(Application::class)->makePartial();
+        $application = $this->getTestingApplication();
         $application->setId(222);
 
-        /** @var ApplicationOperatingCentre $aoc */
+        /* @var $aoc ApplicationOperatingCentre */
         $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
         $aoc->setApplication($application);
         $aoc->setOperatingCentre($oc);
+        $application->addOperatingCentres($aoc);
 
         $this->repoMap['ApplicationOperatingCentre']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
@@ -95,7 +98,7 @@ class UpdateTest extends CommandHandlerTestCase
             'addressLine3' => null,
             'addressLine4' => null,
             'town' => null,
-            'postcode' => null,
+            'postcode' => 'SM1 7ZZ',
             'countryCode' => null,
             'contactType' => null
         ];
@@ -117,12 +120,19 @@ class UpdateTest extends CommandHandlerTestCase
             ->andReturn(false)
             ->once();
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\SetDefaultTrafficAreaAndEnforcementArea::class,
+            ['id' => 222, 'operatingCentre' => 333],
+            (new Result())->addMessage('SET_TA')
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
                 'SaveAddress',
+                'SET_TA',
                 'UpdateApplicationCompletion'
             ]
         ];

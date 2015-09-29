@@ -264,6 +264,9 @@ return [
     // Bus Reg History View
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
 
+    // Bus Reg Search View
+    TransferQuery\Bus\SearchViewList::class => QueryHandler\Bus\SearchViewList::class,
+
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
