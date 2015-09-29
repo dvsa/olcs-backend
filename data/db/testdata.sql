@@ -719,7 +719,7 @@ VALUES
     NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', NULL, 0),
     (100,100,'D',NULL,4,NULL,NULL,NULL,0,'lcat_psv','PD1001001','lsts_not_submitted','ltyp_sn','2010-01-12','2010-01-12','2010-01-12','',0,4,NULL,NULL,
     NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),2, '2016-01-01 10:00:00', NULL, 0),
-    (110,75,'D',NULL,4,8,21,21,4,'lcat_psv','PD2737280','lsts_not_submitted','ltyp_r','2010-01-12','2010-01-12',
+    (110,75,'D',NULL,4,8,21,21,4,'lcat_psv','PD2737280','lsts_valid','ltyp_r','2010-01-12','2010-01-12',
     '2010-01-12','',0,10,5,5,NULL,NULL,
     NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', 4, 0),
     (114,104,'B',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'OB1534567','lsts_not_submitted',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
