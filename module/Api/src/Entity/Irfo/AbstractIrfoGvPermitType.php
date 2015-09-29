@@ -82,7 +82,7 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_fee_type", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="irfo_fee_type", referencedColumnName="id", nullable=false)
      */
     protected $irfoFeeType;
 
