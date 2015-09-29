@@ -66,6 +66,8 @@ class Overview extends AbstractQueryHandler
             )
         );
 
+        $appCriteria = Criteria::create()->where(Criteria::expr()->eq('isVariation', false));
+
         $applications = $this->getOtherApplicationsFromLicence($licence);
         $trafficAreas = $this->getRepo('TrafficArea')->getValueOptions();
 
@@ -94,6 +96,9 @@ class Overview extends AbstractQueryHandler
                 'changeOfEntitys',
                 'trafficArea',
                 'gracePeriods',
+                'applications' => [
+                    'criteria' => $appCriteria
+                ]
             ],
             [
                 'busCount' => $busRegCount,

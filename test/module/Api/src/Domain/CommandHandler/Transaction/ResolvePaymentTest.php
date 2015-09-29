@@ -118,7 +118,6 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $payment->setId($paymentId);
         $payment->setReference($guid);
         $payment->setFeeTransactions($this->references[FeePaymentEntity::class]);
-        $payment->setStatus($this->refData[PaymentEntity::STATUS_PAID]);
         $payment->setType($this->refData[PaymentEntity::TYPE_PAYMENT]);
 
         $command = Cmd::create($data);
@@ -136,15 +135,26 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->with($guid)
             ->andReturn(CpmsHelper::PAYMENT_SUCCESS);
 
-        $this->repoMap['Transaction']
-            ->shouldReceive('save')
+        $payment
+            ->shouldReceive('setStatus')
             ->once()
-            ->with($payment);
+            ->with($this->refData[PaymentEntity::STATUS_PAID])
+            ->passthru()
+            ->andReturnSelf()
+            ->globally()
+            ->ordered();
 
         $this->repoMap['Fee']
             ->shouldReceive('save')
             ->once()
-            ->with($fee);
+            ->with($fee)
+            ->globally()
+            ->ordered();
+
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->once()
+            ->with($payment);
 
         $updateData = ['id' => 22];
         $result2 = new Result();

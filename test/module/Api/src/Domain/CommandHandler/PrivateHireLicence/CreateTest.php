@@ -31,8 +31,10 @@ class CreateTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
         $this->mockRepo('PrivateHireLicence', \Dvsa\Olcs\Api\Domain\Repository\PrivateHireLicence::class);
         $this->mockRepo('ContactDetails', \Dvsa\Olcs\Api\Domain\Repository\ContactDetails::class);
+        $this->mockRepo('AdminAreaTrafficArea', \Dvsa\Olcs\Api\Domain\Repository\AdminAreaTrafficArea::class);
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            'AddressService' => m::mock(\Dvsa\Olcs\Address\Service\AddressInterface::class)
         ];
 
         parent::setUp();
@@ -72,6 +74,9 @@ class CreateTest extends CommandHandlerTestCase
             'lva' => 'licence'
         ];
         $command = Command::create($params);
+
+        $this->mockedSmServices['AddressService']->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('S1 4QT', $this->repoMap['AdminAreaTrafficArea'])->once()->andReturn(null);
 
         $this->repoMap['ContactDetails']->shouldReceive('save')->once()->andReturnUsing(
             function (\Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $cd) use ($params) {
@@ -126,5 +131,88 @@ class CreateTest extends CommandHandlerTestCase
 
         $this->assertSame(['address' => 45, 'contactDetails' => 648, 'privateHireLicence' => 7], $response->getIds());
         $this->assertSame(['PrivateHireLicence created'], $response->getMessages());
+    }
+
+    public function testHandleCommandUpdateTrafficArea()
+    {
+        $params =[
+            'licence' => 323,
+            'privateHireLicenceNo' => 'TOPDOG 1',
+            'councilName' => 'Leeds',
+            'address' => [
+                'addressLine1' => 'LINE 1',
+                'addressLine2' => 'LINE 2',
+                'addressLine3' => 'LINE 3',
+                'addressLine4' => 'LINE 4',
+                'town' => 'TOWN',
+                'postcode' => 'S1 4QT',
+                'countryCode' => 'CC',
+            ],
+            'lva' => 'licence'
+        ];
+        $command = Command::create($params);
+
+        $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea->setId('TA');
+
+        $this->mockedSmServices['AddressService']->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('S1 4QT', $this->repoMap['AdminAreaTrafficArea'])->once()->andReturn($trafficArea);
+
+        $this->repoMap['ContactDetails']->shouldReceive('save')->once();
+
+        $this->repoMap['PrivateHireLicence']->shouldReceive('save')->once();
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(false);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea::class,
+            ['id' => 323, 'version' => 1, 'trafficArea' => 'TA'],
+            new Result()
+        );
+
+        $response = $this->sut->handleCommand($command);
+
+        $this->assertSame(['PrivateHireLicence created'], $response->getMessages());
+    }
+
+    public function testHandleCommandUpdateTrafficAreaValidationError()
+    {
+        $params =[
+            'licence' => 323,
+            'privateHireLicenceNo' => 'TOPDOG 1',
+            'councilName' => 'Leeds',
+            'address' => [
+                'addressLine1' => 'LINE 1',
+                'addressLine2' => 'LINE 2',
+                'addressLine3' => 'LINE 3',
+                'addressLine4' => 'LINE 4',
+                'town' => 'TOWN',
+                'postcode' => 'S1 4QT',
+                'countryCode' => 'CC',
+            ],
+            'lva' => 'licence'
+        ];
+        $command = Command::create($params);
+
+        $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea->setId('TA');
+
+        $trafficArea2 = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea2->setId('TA2');
+
+        $this->references[Licence::class][323]->setTrafficArea($trafficArea2);
+
+        $this->mockedSmServices['AddressService']->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('S1 4QT', $this->repoMap['AdminAreaTrafficArea'])->once()->andReturn($trafficArea);
+
+        try {
+            $this->sut->handleCommand($command);
+            $this->fail('Exception should have been thrown');
+        } catch (\Dvsa\Olcs\Api\Domain\Exception\ValidationException $e) {
+            $this->assertArrayHasKey('PHL_INVALID_TA', $e->getMessages());
+        }
     }
 }

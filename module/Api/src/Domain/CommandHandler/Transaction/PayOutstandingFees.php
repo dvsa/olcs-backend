@@ -406,27 +406,61 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 $fees
             );
 
-            // we get licenceId, applicationId, irfoGvPermit, busReg from the first existing fee
+            // we get licenceId, applicationId, busRegId, irfoGvPermitId,from the first existing fee
             $existingFee = reset($fees);
+            $ids = $this->getIdsFromFee($existingFee);
 
             // get correct feeType
             $feeType = $this->getRepo('FeeType')->fetchLatestForOverpayment();
 
-            $dtoData = [
-                'amount'       => $overpaymentAmount,
-                'invoicedDate' => (new DateTime())->format(\DateTime::W3C),
-                'feeType'      => $feeType->getId(),
-                'description'  => 'Overpayment on fees: ' . implode(', ', $feeIds),
-                'licence'      => $existingFee->getLicence(),
-                'application'  => $existingFee->getApplication(),
-                'busReg'       => $existingFee->getBusReg(),
-                'irfoGvPermit' => $existingFee->getIrfoGvPermit(),
-            ];
+            $dtoData = array_merge(
+                [
+                    'amount'       => $overpaymentAmount,
+                    'invoicedDate' => (new DateTime())->format(\DateTime::W3C),
+                    'feeType'      => $feeType->getId(),
+                    'description'  => 'Overpayment on fees: ' . implode(', ', $feeIds),
+                ],
+                $ids
+            );
 
             return $this->handleSideEffect(CreateFeeCmd::create($dtoData));
         }
 
         // if no overpayment, return empty result
         return new Result();
+    }
+
+    /**
+     * @param FeeEntity $existingFee
+     * @return array
+     */
+    private function getIdsFromFee($existingFee)
+    {
+        $licenceId = null;
+        if ($existingFee->getLicence()) {
+            $licenceId = $existingFee->getLicence()->getId();
+        }
+
+        $applicationId = null;
+        if ($existingFee->getApplication()) {
+            $applicationId = $existingFee->getApplication()->getId();
+        }
+
+        $busRegId = null;
+        if ($existingFee->getBusReg()) {
+            $busRegId = $existingFee->getBusReg()->getId();
+        }
+
+        $irfoGvPermitId = null;
+        if ($existingFee->getIrfoGvPermit()) {
+            $irfoGvPermitId = $existingFee->getIrfoGvPermit()->getId();
+        }
+
+        return [
+            'licence'      => $licenceId,
+            'application'  => $applicationId,
+            'busReg'       => $busRegId,
+            'irfoGvPermit' => $irfoGvPermitId,
+        ];
     }
 }
