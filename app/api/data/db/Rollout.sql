@@ -4760,22 +4760,22 @@ VALUES
     (706, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/GV_Duplicate_vehicle_letter.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV Duplicate vehicle letter', 0, NULL, '2015-01-01 00:00:00', 1),
     (707, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/GV_Duplicate_vehicle_letter.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV Duplicate vehicle letter (NI)', 0, NULL, '2015-01-01 00:00:00', 1);
 
-INSERT INTO `role` (`id`, `role`, `code`, `description`) VALUES
-    (1, 'internal-limited-read-only', '', 'Internal - Limited read only'), -- internal only
-    (2, 'internal-read-only', '', 'Internal - Read only'), -- internal only
-    (3, 'internal-case-worker', '', 'Internal - Case worker'), -- internal only
-    (4, 'internal-admin', '', 'Internal - Admin'), -- internal only
+INSERT INTO `role` (`id`, `role`, `description`) VALUES
+    (1, 'internal-limited-read-only', 'Internal - Limited read only'), -- internal only
+    (2, 'internal-read-only', 'Internal - Read only'), -- internal only
+    (3, 'internal-case-worker', 'Internal - Case worker'), -- internal only
+    (4, 'internal-admin', 'Internal - Admin'), -- internal only
 
-    (5, 'operator-admin', '', 'Operator - Admin'), -- selfserve
-    (6, 'operator-user', '', 'Operator - User'), -- selfserve
-    (7, 'operator-tm', '', 'Operator - Transport Manager'), -- selfserve
-    (8, 'operator-ebsr', '', 'Operator - EBSR'), -- selfserve
+    (5, 'operator-admin', 'Operator - Admin'), -- selfserve
+    (6, 'operator-user', 'Operator - User'), -- selfserve
+    (7, 'operator-tm', 'Operator - Transport Manager'), -- selfserve
+    (8, 'operator-ebsr', 'Operator - EBSR'), -- selfserve
 
-    (9, 'partner-admin', '', 'Partner - Admin'), -- selfserve
-    (10, 'partner-user', '', 'Partner - User'), -- selfserve
+    (9, 'partner-admin', 'Partner - Admin'), -- selfserve
+    (10, 'partner-user', 'Partner - User'), -- selfserve
 
-    (11, 'local-authority-admin', '', 'Local Authority administrator'), -- selfserve
-    (12, 'local-authority-user', '', 'Local Authority user'); -- selfserve
+    (11, 'local-authority-admin', 'Local Authority administrator'), -- selfserve
+    (12, 'local-authority-user', 'Local Authority user'); -- selfserve
 
 -- @TODO Added some some code values to temporarily fix strict mode errors
 INSERT INTO `permission` (`id`, `name`, `code`) VALUES
