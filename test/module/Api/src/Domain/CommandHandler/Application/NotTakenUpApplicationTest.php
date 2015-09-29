@@ -83,6 +83,11 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $application->setId(1);
         $application->setLicence($licence);
 
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($application, $licence);
+        $s4->setId(2909);
+        $application->shouldReceive('getS4s')->with()->once()
+            ->andReturn(new \Doctrine\Common\Collections\ArrayCollection([$s4]));
+
         $application->shouldReceive('getTransportManagers->toArray')
             ->once()
             ->andReturn(
@@ -105,7 +110,6 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             ->once()
             ->shouldReceive('isGoods')
             ->andReturn(true)
-            ->twice()
             ->getMock();
         $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
 
@@ -168,6 +172,11 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             ['id' => 1, 'trafficArea' => 'TA'],
             new Result()
         );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4::class,
+            ['id' => 2909],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 
@@ -200,6 +209,11 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
         $application->setId(1);
         $application->setLicence($licence);
 
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($application, $licence);
+        $s4->setId(2909);
+        $application->shouldReceive('getS4s')->with()->once()
+            ->andReturn(new \Doctrine\Common\Collections\ArrayCollection([$s4]));
+
         $application->shouldReceive('getTransportManagers->toArray')
             ->once()
             ->andReturn(
@@ -222,7 +236,6 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             ->once()
             ->shouldReceive('isGoods')
             ->andReturn(true)
-            ->twice()
             ->getMock();
         $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
 
@@ -295,6 +308,11 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             \Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask::class,
             ['id' => 1],
             (new Result())->addMessage('CLOSE_FEEDUE_TASK')
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4::class,
+            ['id' => 2909],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);

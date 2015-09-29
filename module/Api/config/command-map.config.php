@@ -498,14 +498,11 @@ return [
         => CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertakingS4::class,
 
     // Domain - Schedule41
-    Command\Schedule41\CreateS4::class
-        => CommandHandler\Schedule41\CreateS4::class,
-    Command\Schedule41\ApproveS4::class
-        => CommandHandler\Schedule41\ApproveS4::class,
-    Command\Schedule41\ResetS4::class
-        => CommandHandler\Schedule41\ResetS4::class,
-    Command\Schedule41\RefuseS4::class
-        => CommandHandler\Schedule41\RefuseS4::class,
+    Command\Schedule41\CreateS4::class => CommandHandler\Schedule41\CreateS4::class,
+    Command\Schedule41\ApproveS4::class => CommandHandler\Schedule41\ApproveS4::class,
+    Command\Schedule41\ResetS4::class => CommandHandler\Schedule41\ResetS4::class,
+    Command\Schedule41\RefuseS4::class => CommandHandler\Schedule41\RefuseS4::class,
+    Command\Schedule41\CancelS4::class => CommandHandler\Schedule41\CancelS4::class,
 
     // Domain - Bus
     Command\Bus\CreateBusFee::class => CommandHandler\Bus\CreateBusFee::class,
