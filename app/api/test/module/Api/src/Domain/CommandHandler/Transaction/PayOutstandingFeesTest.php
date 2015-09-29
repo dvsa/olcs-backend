@@ -453,6 +453,22 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $feeIds = [99];
         $fee1 = $this->getStubFee(99, 99.99);
         $transactionId = 69;
+        $applicationId = 100;
+        $licenceId = 101;
+
+        $fee1->setApplication(
+            m::mock(ApplicationEntity::class)
+                ->shouldReceive('getId')
+                ->andReturn($applicationId)
+                ->getMock()
+        );
+
+        $fee1->setLicence(
+            m::mock(LicenceEntity::class)
+                ->shouldReceive('getId')
+                ->andReturn($licenceId)
+                ->getMock()
+        );
 
         $data = [
             'feeIds' => $feeIds,
@@ -491,8 +507,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'invoicedDate' => $now,
             'feeType'      => $overpaymentTypeId,
             'description'  => 'Overpayment on fees: 99',
-            'licence'      => null,
-            'application'  => null,
+            'licence'      => $licenceId,
+            'application'  => $applicationId,
             'busReg'       => null,
             'irfoGvPermit' => null,
         ];

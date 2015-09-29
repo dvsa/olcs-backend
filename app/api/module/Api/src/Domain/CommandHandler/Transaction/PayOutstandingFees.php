@@ -406,8 +406,12 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 $fees
             );
 
-            // we get licenceId, applicationId, irfoGvPermit, busReg from the first existing fee
-            $existingFee = reset($fees);
+            // we get licenceId, applicationId, busRegId, irfoGvPermitId,from the first existing fee
+            $existingFee    = reset($fees);
+            $licenceId      = $existingFee->getLicence() ? $existingFee->getLicence()->getId() : null;
+            $applicationId  = $existingFee->getApplication() ? $existingFee->getApplication()->getId() : null;
+            $busRegId       = $existingFee->getBusReg() ? $existingFee->getBusReg()->getId() : null;
+            $irfoGvPermitId = $existingFee->getIrfoGvPermit() ? $existingFee->getIrfoGvPermit()->getId() : null;
 
             // get correct feeType
             $feeType = $this->getRepo('FeeType')->fetchLatestForOverpayment();
@@ -417,10 +421,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 'invoicedDate' => (new DateTime())->format(\DateTime::W3C),
                 'feeType'      => $feeType->getId(),
                 'description'  => 'Overpayment on fees: ' . implode(', ', $feeIds),
-                'licence'      => $existingFee->getLicence(),
-                'application'  => $existingFee->getApplication(),
-                'busReg'       => $existingFee->getBusReg(),
-                'irfoGvPermit' => $existingFee->getIrfoGvPermit(),
+                'licence'      => $licenceId,
+                'application'  => $applicationId,
+                'busReg'       => $busRegId,
+                'irfoGvPermit' => $irfoGvPermitId,
             ];
 
             return $this->handleSideEffect(CreateFeeCmd::create($dtoData));
