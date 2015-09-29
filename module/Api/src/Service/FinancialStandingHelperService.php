@@ -149,7 +149,7 @@ class FinancialStandingHelperService implements FactoryInterface
         // we only make one call to look up standing rates
         if (is_null($this->rates)) {
             $date = new \DateTime();
-            $this->rates = $this->ratesRepo->getRatesInEffect($date);
+            $this->rates = $this->ratesRepo->fetchRatesInEffect($date);
         }
         return $this->rates;
     }
