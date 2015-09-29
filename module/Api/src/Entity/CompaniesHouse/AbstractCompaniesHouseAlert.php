@@ -18,9 +18,9 @@ use Doctrine\Common\Collections\Collection;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="companies_house_alert",
  *    indexes={
- *        @ORM\Index(name="ix_companies_house_alert_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_companies_house_alert_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_companies_house_alert_organisation_id", columns={"organisation_id"})
+ *        @ORM\Index(name="fk_companies_house_alert_organisation1_idx", columns={"organisation_id"}),
+ *        @ORM\Index(name="fk_companies_house_alert_user1_idx", columns={"created_by"}),
+ *        @ORM\Index(name="fk_companies_house_alert_user2_idx", columns={"last_modified_by"})
  *    }
  * )
  */

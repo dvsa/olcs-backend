@@ -21,9 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_fee_type_goods_or_psv", columns={"goods_or_psv"}),
  *        @ORM\Index(name="ix_fee_type_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_fee_type_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_fee_type_ref_data1_idx", columns={"accrual_rule"}),
- *        @ORM\Index(name="fk_fee_type_ref_data2_idx", columns={"fee_type"}),
- *        @ORM\Index(name="fk_fee_type_ref_data3_idx", columns={"irfo_fee_type"})
+ *        @ORM\Index(name="ix_fee_type_accrual_rule", columns={"accrual_rule"}),
+ *        @ORM\Index(name="ix_fee_type_fee_type", columns={"fee_type"}),
+ *        @ORM\Index(name="ix_fee_type_irfo_fee_type", columns={"irfo_fee_type"})
  *    }
  * )
  */
@@ -49,6 +49,15 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
      * @ORM\Column(type="decimal", name="annual_value", precision=10, scale=2, nullable=true)
      */
     protected $annualValue;
+
+    /**
+     * Cost centre ref
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="cost_centre_ref", length=12, nullable=true)
+     */
+    protected $costCentreRef;
 
     /**
      * Created by
@@ -260,6 +269,29 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     public function getAnnualValue()
     {
         return $this->annualValue;
+    }
+
+    /**
+     * Set the cost centre ref
+     *
+     * @param string $costCentreRef
+     * @return FeeType
+     */
+    public function setCostCentreRef($costCentreRef)
+    {
+        $this->costCentreRef = $costCentreRef;
+
+        return $this;
+    }
+
+    /**
+     * Get the cost centre ref
+     *
+     * @return string
+     */
+    public function getCostCentreRef()
+    {
+        return $this->costCentreRef;
     }
 
     /**

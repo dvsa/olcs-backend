@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\MappedSuperclass
  * @ORM\Table(name="event_history_type",
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="event_code_UNIQUE", columns={"event_code"})
+ *        @ORM\UniqueConstraint(name="uk_event_history_type_event_code", columns={"event_code"})
  *    }
  * )
  */

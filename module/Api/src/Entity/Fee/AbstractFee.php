@@ -28,7 +28,7 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_fee_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_fee_irfo_gv_permit_id", columns={"irfo_gv_permit_id"}),
  *        @ORM\Index(name="ix_fee_fee_status", columns={"fee_status"}),
- *        @ORM\Index(name="fk_fee_irfo_psv_auth1_idx", columns={"irfo_psv_auth_id"})
+ *        @ORM\Index(name="ix_fee_irfo_psv_auth_id", columns={"irfo_psv_auth_id"})
  *    }
  * )
  */
@@ -133,7 +133,7 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="invoice_line_no", nullable=false, options={"default": 1})
+     * @ORM\Column(type="smallint", name="invoice_line_no", nullable=true, options={"default": 1})
      */
     protected $invoiceLineNo = 1;
 
@@ -154,24 +154,6 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      * @ORM\Column(type="yesnonull", name="irfo_fee_exempt", nullable=true)
      */
     protected $irfoFeeExempt;
-
-    /**
-     * Irfo fee id
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="irfo_fee_id", length=10, nullable=true)
-     */
-    protected $irfoFeeId;
-
-    /**
-     * Irfo file no
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="irfo_file_no", length=10, nullable=true)
-     */
-    protected $irfoFileNo;
 
     /**
      * Irfo gv permit
@@ -556,52 +538,6 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     public function getIrfoFeeExempt()
     {
         return $this->irfoFeeExempt;
-    }
-
-    /**
-     * Set the irfo fee id
-     *
-     * @param string $irfoFeeId
-     * @return Fee
-     */
-    public function setIrfoFeeId($irfoFeeId)
-    {
-        $this->irfoFeeId = $irfoFeeId;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo fee id
-     *
-     * @return string
-     */
-    public function getIrfoFeeId()
-    {
-        return $this->irfoFeeId;
-    }
-
-    /**
-     * Set the irfo file no
-     *
-     * @param string $irfoFileNo
-     * @return Fee
-     */
-    public function setIrfoFileNo($irfoFileNo)
-    {
-        $this->irfoFileNo = $irfoFileNo;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo file no
-     *
-     * @return string
-     */
-    public function getIrfoFileNo()
-    {
-        return $this->irfoFileNo;
     }
 
     /**

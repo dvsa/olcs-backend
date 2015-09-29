@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_appeal_outcome", columns={"outcome"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="case_id_UNIQUE", columns={"case_id"}),
+ *        @ORM\UniqueConstraint(name="uk_appeal_case_id", columns={"case_id"}),
  *        @ORM\UniqueConstraint(name="uk_appeal_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
