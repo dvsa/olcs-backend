@@ -28,8 +28,8 @@ TRUNCATE TABLE `event_history_type`;
 TRUNCATE TABLE `event_history`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
-TRUNCATE TABLE `fee_transaction`;
-TRUNCATE TABLE `transaction`;
+TRUNCATE TABLE `fee_txn`;
+TRUNCATE TABLE `txn`;
 TRUNCATE TABLE `grace_period`;
 TRUNCATE TABLE `hint_question`;
 TRUNCATE TABLE `licence`;
@@ -640,7 +640,7 @@ VALUES
 (97,20051,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 12:34:56','Photocopying charge',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
 (98,20052,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 13:45:01','Court fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1);
 
-INSERT INTO `transaction` (
+INSERT INTO `txn` (
     `id`,
     `reference`,
     `type`,
@@ -657,8 +657,8 @@ VALUES
     (10002,'OLCS-2345-3456','trt_bounce','pay_s_pd','2015-09-01','fpm_cheque','',NULL,NULL,1),
     (10003,'OLCS-3456-4567','trt_payment','pay_s_pd','2015-09-02','fpm_cash','',NULL,NULL,1);
 
-INSERT INTO `fee_transaction`
-    (`fee_id`,`transaction_id`,`amount`)
+INSERT INTO `fee_txn`
+    (`fee_id`,`txn_id`,`amount`)
 VALUES
     (97,10001,100.00),
     (97,10002,-100.00),
@@ -2037,7 +2037,7 @@ INSERT INTO `fee`
     (`id`,`fee_status`,`fee_type_id`,`application_id`,`licence_id`,`amount`,`invoiced_date`,`description`)
     VALUES
     (96,'lfs_pd',338,8,212,254.40,'2015-03-27 00:00:00','GV/SN Application Fee for application 8');
-INSERT INTO `transaction` (
+INSERT INTO `txn` (
     `id`,
     `reference`,
     `type`,
@@ -2050,8 +2050,8 @@ INSERT INTO `transaction` (
     `processed_by_user_id`
 ) VALUES
     (10004,'','trt_waive','pay_s_pd','2015-08-26','fpm_waive','Waive OK for fee 96','2015-08-25',1,1);
-INSERT INTO `fee_transaction`
-    (`fee_id`,`transaction_id`,`amount`)
+INSERT INTO `fee_txn`
+    (`fee_id`,`txn_id`,`amount`)
     VALUES
     (96,10004,254.40);
 INSERT INTO `phone_contact` (`id`,    `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (12,127,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
