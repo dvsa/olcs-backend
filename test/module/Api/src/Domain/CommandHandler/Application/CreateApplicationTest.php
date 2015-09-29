@@ -48,6 +48,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
     {
         $this->refData = [
             Licence::LICENCE_STATUS_NOT_SUBMITTED,
+            Licence::LICENCE_STATUS_UNDER_CONSIDERATION,
             ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED,
             ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
             ApplicationEntity::APPLIED_VIA_PHONE,
@@ -71,11 +72,11 @@ class CreateApplicationTest extends CommandHandlerTestCase
     public function testHandleCommandMinimal()
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->times(3)
+            ->times(4)
             ->with(Permission::INTERNAL_USER, null)
             ->andReturn(false)
             ->shouldReceive('isGranted')
-            ->once()
+            ->twice()
             ->with(Permission::SELFSERVE_USER, null)
             ->andReturn(true);
 
@@ -126,16 +127,19 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->assertNull($app->getLicence()->getTrafficArea());
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider environmentProvider
+     */
+    public function testHandleCommand($isInternal, $isExternal, $licenceStatus, $appliedVia)
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->times(3)
+            ->times(4)
             ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(true)
+            ->andReturn($isInternal)
             ->shouldReceive('isGranted')
-            ->once()
+            ->twice()
             ->with(Permission::SELFSERVE_USER, null)
-            ->andReturn(false);
+            ->andReturn($isExternal);
 
         $command = Cmd::create(
             [
@@ -161,11 +165,13 @@ class CreateApplicationTest extends CommandHandlerTestCase
                 }
             );
 
-        $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::class,
-            ['id' => 22],
-            new Result()
-        );
+        if ($isInternal) {
+            $this->expectedSideEffect(
+                \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::class,
+                ['id' => 22],
+                new Result()
+            );
+        }
 
         $result1 = new Result();
         $result1->addId('fee', 44);
@@ -204,9 +210,13 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->assertInstanceOf(ApplicationTracking::class, $app->getApplicationTracking());
         $this->assertInstanceOf(Licence::class, $app->getLicence());
         $this->assertSame($this->references[Organisation::class][11], $app->getLicence()->getOrganisation());
-        $this->assertSame($this->refData[Licence::LICENCE_STATUS_NOT_SUBMITTED], $app->getLicence()->getStatus());
-        $this->assertSame($this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION], $app->getStatus());
-        $this->assertSame($this->refData[ApplicationEntity::APPLIED_VIA_PHONE], $app->getAppliedVia());
+        $this->assertSame($this->refData[$licenceStatus], $app->getLicence()->getStatus());
+        if ($isInternal) {
+            $this->assertSame(
+                $this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION], $app->getStatus()
+            );
+        }
+        $this->assertSame($this->refData[$appliedVia], $app->getAppliedVia());
 
         $this->assertInstanceOf('\DateTime', $app->getReceivedDate());
         $this->assertEquals('2015-01-01', $app->getReceivedDate()->format('Y-m-d'));
@@ -218,5 +228,13 @@ class CreateApplicationTest extends CommandHandlerTestCase
             $this->references[TrafficArea::class][TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE],
             $app->getLicence()->getTrafficArea()
         );
+    }
+
+    public function environmentProvider()
+    {
+        return [
+            [true, false, Licence::LICENCE_STATUS_UNDER_CONSIDERATION, ApplicationEntity::APPLIED_VIA_PHONE],
+            [false, true, Licence::LICENCE_STATUS_NOT_SUBMITTED, ApplicationEntity::APPLIED_VIA_SELFSERVE]
+        ];
     }
 }
