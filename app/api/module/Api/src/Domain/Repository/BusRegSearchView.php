@@ -4,6 +4,10 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\View\BusRegSearchView as Entity;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as ListQueryObject;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
  * BusRegSearchView
@@ -36,5 +40,22 @@ class BusRegSearchView extends AbstractRepository
         }
 
         return $results[0];
+    }
+
+    /**
+     *
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        /** @var ListQueryObject $query */
+
+        if (!empty($query->getStatus())) {
+
+            $qb->andWhere($qb->expr()->eq($this->alias . '.busRegStatus', ':status'))
+                ->setParameter('status', $query->getStatus());
+        }
+
     }
 }
