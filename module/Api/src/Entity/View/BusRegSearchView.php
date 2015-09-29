@@ -121,6 +121,15 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     protected $busRegStatus;
 
     /**
+     * Bus Reg Status Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="bus_reg_status_desc")
+     */
+    protected $busRegStatusDesc;
+
+    /**
      * Route Number
      *
      * @var string
@@ -321,6 +330,22 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     public function setBusRegStatus($busRegStatus)
     {
         $this->busRegStatus = $busRegStatus;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBusRegStatusDesc()
+    {
+        return $this->busRegStatusDesc;
+    }
+
+    /**
+     * @param string $busRegStatusDesc
+     */
+    public function setBusRegStatusDesc($busRegStatusDesc)
+    {
+        $this->busRegStatusDesc = $busRegStatusDesc;
     }
 
     /**
