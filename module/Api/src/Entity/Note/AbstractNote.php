@@ -20,7 +20,6 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_note_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_note_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_note_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_note_user_id", columns={"user_id"}),
  *        @ORM\Index(name="ix_note_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_note_note_type", columns={"note_type"}),
  *        @ORM\Index(name="ix_note_bus_reg_id", columns={"bus_reg_id"}),
@@ -190,16 +189,6 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManager;
-
-    /**
-     * User
-     *
-     * @var \Dvsa\Olcs\Api\Entity\User\User
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
-     */
-    protected $user;
 
     /**
      * Version
@@ -577,29 +566,6 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     public function getTransportManager()
     {
         return $this->transportManager;
-    }
-
-    /**
-     * Set the user
-     *
-     * @param \Dvsa\Olcs\Api\Entity\User\User $user
-     * @return Note
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get the user
-     *
-     * @return \Dvsa\Olcs\Api\Entity\User\User
-     */
-    public function getUser()
-    {
-        return $this->user;
     }
 
     /**

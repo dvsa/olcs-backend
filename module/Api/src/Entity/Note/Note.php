@@ -34,4 +34,12 @@ class Note extends AbstractNote
     const NOTE_TYPE_ORGANISATION = 'note_t_org';
     const NOTE_TYPE_PERSON = 'note_t_person';
     const NOTE_TYPE_TRANSPORT_MANAGER = 'note_t_tm';
+
+    public function getCalculatedBundleValues()
+    {
+        return [
+            // user_id dropped fro schema, see OLCS-9892
+            'user' => $this->getCreatedBy(),
+        ];
+    }
 }
