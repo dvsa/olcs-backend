@@ -37,7 +37,11 @@ class TxcInbox extends AbstractRepository
      *
      * @return array of Entity
      */
-    public function fetchUnreadListForLocalAuthority($localAuthority)
+    public function fetchUnreadListForLocalAuthority(
+        $localAuthority,
+        $ebsrSubmissionType = null,
+        $ebsrSubmissionStatus = null
+    )
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
@@ -56,6 +60,16 @@ class TxcInbox extends AbstractRepository
             $qb->where($qb->expr()->eq($this->alias . '.fileRead', '0'));
             $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
                 ->setParameter('localAuthority', $localAuthority);
+        }
+
+        if (!empty($ebsrSubmissionType)) {
+            $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionType', ':ebsrSubmissionType'))
+                ->setParameter('ebsrSubmissionType', $ebsrSubmissionType);
+        }
+
+        if (!empty($ebsrSubmissionStatus)) {
+            $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
+                ->setParameter('ebsrSubmissionStatus', $ebsrSubmissionStatus);
         }
 
         return $qb->getQuery()->getResult();
