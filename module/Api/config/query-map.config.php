@@ -209,6 +209,10 @@ return [
     // Publication
     TransferQuery\Publication\Recipient::class => QueryHandler\Publication\Recipient::class,
     TransferQuery\Publication\RecipientList::class => QueryHandler\Publication\RecipientList::class,
+    TransferQuery\Publication\PublicationLinkTmList::class => QueryHandler\Publication\PublicationLinkByTm::class,
+    TransferQuery\Publication\PublicationLinkLicenceList::class
+        => QueryHandler\Publication\PublicationLinkByLicence::class,
+    TransferQuery\Publication\PublicationLink::class => QueryHandler\Publication\PublicationLink::class,
 
     // My Account
     TransferQuery\MyAccount\MyAccount::class => QueryHandler\MyAccount\MyAccount::class,
