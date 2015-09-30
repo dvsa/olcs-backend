@@ -121,7 +121,12 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
     private function createLicenceObject(Cmd $command)
     {
         $organisation = $this->getRepo()->getReference(Organisation::class, $command->getOrganisation());
-        $status = $this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_NOT_SUBMITTED);
+        if ($this->isGranted(Permission::INTERNAL_USER)) {
+            $status = $this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_UNDER_CONSIDERATION);
+        }
+        if ($this->isGranted(Permission::SELFSERVE_USER)) {
+            $status = $this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_NOT_SUBMITTED);
+        }
 
         $licence = new Licence($organisation, $status);
 
