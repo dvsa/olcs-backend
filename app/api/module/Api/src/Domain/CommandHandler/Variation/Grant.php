@@ -120,6 +120,9 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $criteria->andWhere($criteria->expr()->isNull('ceasedDate'));
 
         $psvDiscs = $licence->getPsvDiscs()->matching($criteria);
+        if (!count($psvDiscs)) {
+            return;
+        }
 
         $ids = array_map(
             function (PsvDisc $v) {
