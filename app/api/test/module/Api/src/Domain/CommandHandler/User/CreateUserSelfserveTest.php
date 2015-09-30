@@ -59,7 +59,7 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
                     'familyName' => 'updated familyName',
                 ],
             ],
-            'isAdministrator' => 'Y',
+            'permission' => UserEntity::PERMISSION_ADMIN,
         ];
 
         $command = Cmd::create($data);

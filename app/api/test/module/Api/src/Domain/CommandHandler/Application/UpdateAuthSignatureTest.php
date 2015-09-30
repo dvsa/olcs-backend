@@ -43,7 +43,7 @@ class UpdateAuthSignatureTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class,
-            ['id' => 1066, 'section' => 'declarationsInternal'],
+            ['id' => 1066, 'section' => 'undertakings'],
             (new Result())->addMessage('UPDATE_APP_COMPLETION')
         );
 

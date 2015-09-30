@@ -8070,8 +8070,11 @@ CREATE VIEW bus_reg_search_view AS
         br1.finish_point AS `finish_point`,
         '2015-01-01' AS `date_1st_reg`,
         CASE WHEN br1.status = 'breg_s_registered' And end_date <= Now()
+        THEN 'breg_s_expired'
+        ELSE rd_bus_status.id END as bus_reg_status,
+        CASE WHEN br1.status = 'breg_s_registered' And end_date <= Now()
         THEN 'Expired'
-        ELSE rd_bus_status.description END as bus_reg_status,
+        ELSE rd_bus_status.description END as bus_reg_status_desc,
         br1.route_no,
         br1.variation_no
     FROM bus_reg AS br1

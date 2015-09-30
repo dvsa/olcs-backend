@@ -51,6 +51,12 @@ class BusRegSearchView extends AbstractRepository
     {
         /** @var ListQueryObject $query */
 
+        if (!empty($query->getLicId())) {
+
+            $qb->andWhere($qb->expr()->eq($this->alias . '.licId', ':licence'))
+                ->setParameter('licence', $query->getLicId());
+        }
+
         if (!empty($query->getStatus())) {
 
             $qb->andWhere($qb->expr()->eq($this->alias . '.busRegStatus', ':status'))
