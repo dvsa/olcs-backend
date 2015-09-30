@@ -41,8 +41,7 @@ class TxcInbox extends AbstractRepository
         $localAuthority,
         $ebsrSubmissionType = null,
         $ebsrSubmissionStatus = null
-    )
-    {
+    ) {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
 
