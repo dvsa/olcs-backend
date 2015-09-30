@@ -35,7 +35,18 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
 
         $localAuthority = $currentUser->getLocalAuthority();
 
-        $txcInboxEntries = $repo->fetchUnreadListForLocalAuthority($localAuthority);
+        $txcInboxEntries = $repo->fetchUnreadListForLocalAuthority(
+            $localAuthority,
+            $query->getEbsrSubmissionType(),
+            $query->getEbsrSubmissionStatus()
+        );
+
+        //if (!empty($query->getEbsrSubmissionType())) {
+            $typeCriteria = Criteria::create();
+            $typeCriteria->where(
+                $typeCriteria->expr()->in('version', [2])
+            );
+        //}
 
         return [
             'result' => $this->resultList(
@@ -50,8 +61,7 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
                             'organisation'
                         ],
                         'otherServices'
-                    ],
-
+                    ]
                 ]
             ),
             'count' => count($txcInboxEntries)
