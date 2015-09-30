@@ -29,4 +29,35 @@ class TxcInbox extends AbstractRepository
 
         return $doctrineQb->getQuery()->getResult();
     }
+
+    /**
+     * Fetch a list for a licence, filtered to include only not fulfilled and not draft
+     *
+     * @param int $licenceId
+     *
+     * @return array of Entity
+     */
+    public function fetchUnreadListForLocalAuthority($localAuthority)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('m.busReg', 'b')
+            ->with('b.ebsrSubmissions', 'e')
+            ->with('b.licence', 'l')
+            ->with('b.otherServices')
+            ->with('l.organisation');
+
+        if (empty($localAuthority)) {
+            $qb->where($qb->expr()->isNull($this->alias . '.localAuthority', ':localAuthority'));
+        } else {
+            $qb->where($qb->expr()->eq($this->alias . '.fileRead', '0'));
+            $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
+                ->setParameter('localAuthority', $localAuthority);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }
