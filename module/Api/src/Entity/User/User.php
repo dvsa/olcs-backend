@@ -45,6 +45,11 @@ class User extends AbstractUser
             self::PERMISSION_USER => [RoleEntity::ROLE_OPERATOR_USER],
             self::PERMISSION_TM => [RoleEntity::ROLE_OPERATOR_TM],
         ],
+        self::USER_TYPE_TRANSPORT_MANAGER => [
+            self::PERMISSION_ADMIN => [RoleEntity::ROLE_OPERATOR_ADMIN],
+            self::PERMISSION_USER => [RoleEntity::ROLE_OPERATOR_USER],
+            self::PERMISSION_TM => [RoleEntity::ROLE_OPERATOR_TM],
+        ],
         self::USER_TYPE_PARTNER => [
             self::PERMISSION_ADMIN => [RoleEntity::ROLE_PARTNER_ADMIN],
             self::PERMISSION_USER => [RoleEntity::ROLE_PARTNER_USER],
@@ -135,7 +140,12 @@ class User extends AbstractUser
             $this->transportManager = null;
             $this->partnerContactDetails = null;
             $this->localAuthority = null;
-            $this->populateOrganisationUsers();
+
+            if (!in_array($userType, [self::USER_TYPE_OPERATOR, self::USER_TYPE_TRANSPORT_MANAGER])) {
+                // reset org users only if switching to a user type which does not populate the value anyway
+                // otherwise Operator->TM or TM->Operator fails as collection is empty
+                $this->populateOrganisationUsers();
+            }
         }
 
         return $this;
@@ -181,6 +191,7 @@ class User extends AbstractUser
         if (isset($data['transportManager'])) {
             $this->transportManager = $data['transportManager'];
         }
+        $this->updateOrganisationUsers($data);
 
         return $this;
     }
@@ -217,20 +228,7 @@ class User extends AbstractUser
      */
     private function updateOperator(array $data)
     {
-        if (isset($data['organisations'])) {
-            // update list of organisations
-            $this->populateOrganisationUsers($data['organisations']);
-        } else {
-            // update isAdministrator flag only
-            $orgs = array_map(
-                function ($organisationUser) {
-                    return $organisationUser->getOrganisation();
-                },
-                $this->getOrganisationUsers()->toArray()
-            );
-
-            $this->populateOrganisationUsers($orgs);
-        }
+        $this->updateOrganisationUsers($data);
 
         return $this;
     }
@@ -256,6 +254,31 @@ class User extends AbstractUser
             }
         }
         return $this->userType;
+    }
+
+
+    /**
+     * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     * @return User
+     */
+    private function updateOrganisationUsers(array $data)
+    {
+        if (isset($data['organisations'])) {
+            // update list of organisations
+            $this->populateOrganisationUsers($data['organisations']);
+        } else {
+            // update isAdministrator flag only
+            $orgs = array_map(
+                function ($organisationUser) {
+                    return $organisationUser->getOrganisation();
+                },
+                $this->getOrganisationUsers()->toArray()
+            );
+
+            $this->populateOrganisationUsers($orgs);
+        }
+
+        return $this;
     }
 
     /**

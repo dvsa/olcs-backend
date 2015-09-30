@@ -20,7 +20,7 @@ final class UpdateUser extends AbstractCommandHandler implements TransactionedIn
 {
     protected $repoServiceName = 'User';
 
-    protected $extraRepos = ['ContactDetails', 'Licence'];
+    protected $extraRepos = ['Application', 'ContactDetails', 'Licence'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -39,6 +39,12 @@ final class UpdateUser extends AbstractCommandHandler implements TransactionedIn
                 // unlink any organisation
                 $data['organisations'] = [];
             }
+        } elseif (($command->getUserType() === User::USER_TYPE_TRANSPORT_MANAGER) && (!empty($data['application']))) {
+            // fetch application by id
+            $application = $this->getRepo('Application')->fetchWithLicenceAndOrg($data['application']);
+
+            // link with the organisation
+            $data['organisations'] = [$application->getLicence()->getOrganisation()];
         }
 
         $user = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
