@@ -515,6 +515,7 @@ VALUES
     (143,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Department of Work and Pensions',NULL,'2000-04-02 00:00:00',
     NULL,1),
     (144,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Home Office',NULL,'2000-04-02 00:00:00',NULL,1),
+    (164,'ct_user',7,87,4,1,NULL,0,'operator.tm@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (165,'ct_user',7,84,4,1,NULL,0,'operator.admin@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (166,'ct_user',26,82,4,1,NULL,0,'operator.user@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (167,'ct_user',NULL,NULL,4,1,NULL,0,'partner.admin@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
@@ -956,6 +957,7 @@ INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `birth_place`, `ti
     (84,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Phil','Jowitt',NULL,NULL,NULL,1,NULL),
     (85,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Kevin','Rooney',NULL,NULL,NULL,1,NULL),
     (86,NULL,NULL,'Zurich','title_mrs','1975-04-15 00:00:00','Sarah','Thompson',NULL,NULL,NULL,1,NULL),
+    (87,NULL,NULL,'Zurich','title_mr','1975-04-15 00:00:00','Tom','Smith',NULL,NULL,NULL,1,NULL),
     (90,1,1,'Aldershot','title_mr','1960-02-01 00:00:00','ABDOU','BONOMI',NULL,NULL,NULL,1,NULL);
 
 INSERT INTO `disqualification` (
@@ -1190,6 +1192,7 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
     (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-22 11:00:00','kevinrooney',132, NULL, NULL, NULL),
     (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00','sarahthompson',133, NULL, NULL, NULL),
     (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','anotheruser',114, NULL, NULL, NULL),
+    (19,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','operator-tm',164, NULL, NULL, NULL),
     (20,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','operator-admin',165, NULL, NULL, NULL),
     (21,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','operator-user',166, NULL, NULL, NULL),
     (22,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','partner-admin',167, NULL, NULL, 140),
@@ -1200,10 +1203,12 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
     (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00','abdou.bonomi2',140, NULL, NULL, NULL);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator`) VALUES
+    (1, 19, 0),
     (1, 20, 1),
     (1, 21, 0);
 
 INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
+    (19, 7),
     (20, 5),
     (21, 6),
     (22, 9),
