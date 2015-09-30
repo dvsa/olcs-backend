@@ -80,13 +80,6 @@ class Schedule41RefuseTest extends CommandHandlerTestCase
             ['s4' => 2309],
             new Result()
         );
-        $this->expectedSideEffect(
-            DisassociateS4::class,
-            [
-                'licenceOperatingCentres' => $s4->getLicence()->getOperatingCentres()
-            ],
-            new Result()
-        );
 
         $this->sut->handleCommand($command);
     }
