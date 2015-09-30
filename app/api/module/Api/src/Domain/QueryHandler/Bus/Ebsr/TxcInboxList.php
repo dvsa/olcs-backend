@@ -5,16 +5,22 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 
+use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as Repository;
 use Doctrine\ORM\Query as DoctrineQuery;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * TxcInboxList
  */
-class TxcInboxList extends AbstractQueryHandler
+class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'TxcInbox';
 
     /**
@@ -25,20 +31,30 @@ class TxcInboxList extends AbstractQueryHandler
         /** @var Repository $repo */
         $repo = $this->getRepo();
 
+        $currentUser = $this->getCurrentUser();
+
+        $localAuthority = $currentUser->getLocalAuthority();
+
+        $txcInboxEntries = $repo->fetchUnreadListForLocalAuthority($localAuthority);
+
         return [
             'result' => $this->resultList(
-                $repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT),
+                $txcInboxEntries,
                 [
-                    'busReg'  => [
-                        'ebsrSubmissions',
+                    'busReg' => [
+                        'ebsrSubmissions' => [
+                            'ebsrSubmissionType',
+                            'ebsrSubmissionStatus'
+                        ],
                         'licence' => [
                             'organisation'
                         ],
                         'otherServices'
-                    ]
+                    ],
+
                 ]
             ),
-            'count' => $repo->fetchCount($query)
+            'count' => count($txcInboxEntries)
         ];
     }
 }
