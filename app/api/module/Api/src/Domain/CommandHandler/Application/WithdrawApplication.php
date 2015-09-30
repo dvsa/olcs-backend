@@ -9,7 +9,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -39,8 +38,6 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /* @var $application Application */
         $application = $this->getRepo()->fetchById($command->getId());
 
@@ -50,10 +47,10 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
         $this->getRepo()->save($application);
 
-        $result->merge($this->createSnapshot($command->getId()));
+        $this->result->merge($this->createSnapshot($command->getId()));
 
         if ($application->isNew()) {
-            $result->merge(
+            $this->result->merge(
                 $this->handleSideEffect(
                     Withdraw::create(
                         [
@@ -65,17 +62,17 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
         }
 
         if ($application->isPublishable()) {
-            $result->merge($this->publishApplication($application));
-            $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
+            $this->result->merge($this->publishApplication($application));
+            $this->result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
         }
 
         // If Internal user close tasks
         if ($this->isInternalUser()) {
-            $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
-            $result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
+            $this->result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
+            $this->result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
         }
 
-        $result->merge(
+        $this->result->merge(
             $this->handleSideEffect(
                 CeaseGoodsDiscs::create(
                     [
@@ -88,7 +85,7 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
         $communityLicences = $application->getLicence()->getCommunityLics()->toArray();
         if (!empty($communityLicences)) {
-            $result->merge(
+            $this->result->merge(
                 $this->handleSideEffect(
                     ReturnAllCommunityLicences::create(
                         [
@@ -103,12 +100,14 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
             $application->isGoods() &&
             $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
             ) {
-            $result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
+            $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
         }
 
-        $result->addMessage('Application ' . $application->getId() . ' withdrawn.');
+        $this->cancelS4($application);
 
-        return $result;
+        $this->result->addMessage('Application ' . $application->getId() . ' withdrawn.');
+
+        return $this->result;
     }
 
     protected function createSnapshot($applicationId)
@@ -143,5 +142,25 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
                 ]
             )
         );
+    }
+
+    /**
+     * Cancel any S4's attached to the application
+     *
+     * @param Application $application
+     */
+    protected function cancelS4(Application $application)
+    {
+        // Refuse any S4's attached to the application
+        if ($application->isGoods()) {
+            foreach ($application->getS4s() as $s4) {
+                /* @var $s4 \Dvsa\Olcs\Api\Entity\Application\S4 */
+                $this->result->merge(
+                    $this->handleSideEffect(
+                        \Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4::create(['id' => $s4->getId()])
+                    )
+                );
+            }
+        }
     }
 }
