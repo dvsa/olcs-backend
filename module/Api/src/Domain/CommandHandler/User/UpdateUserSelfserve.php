@@ -30,11 +30,8 @@ final class UpdateUserSelfserve extends AbstractCommandHandler implements Transa
 
         $user = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
 
-        // populate roles based on the user type and isAdministrator flag
-        $data['roles'] = User::getRolesByUserType(
-            $user->getUserType(),
-            ($data['isAdministrator'] === 'Y') ? true : false
-        );
+        // populate roles based on the user type and permission
+        $data['roles'] = User::getRolesByUserType($user->getUserType(), $data['permission']);
 
         $user->update(
             $this->getRepo()->populateRefDataReference($data)
