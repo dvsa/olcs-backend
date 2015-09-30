@@ -14,28 +14,35 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as TransportManagerAppli
 final class TransportManagers extends AbstractContext
 {
     /**
-     * @param PublicationLink $publication
+     * @param PublicationLink $publicationLink
      * @param \ArrayObject $context
      * @return \ArrayObject
      */
-    public function provide(PublicationLink $publication, \ArrayObject $context)
+    public function provide(PublicationLink $publicationLink, \ArrayObject $context)
     {
-        $tmData = $publication->getApplication()->getTransportManagers();
+        $tmData = $publicationLink->getApplication()->getTransportManagers();
 
         $newTmData = [];
+        $applicationTransportManagers = [];
 
         /**
          * @var TransportManagerApplicationEntity $tm
          */
-        foreach ($tmData as $tm) {
-            $forename = $tm->getTransportManager()->getHomeCd()->getPerson()->getForename();
-            $familyName = $tm->getTransportManager()->getHomeCd()->getPerson()->getFamilyName();
+        foreach ($tmData as $tma) {
+            $newTmData[] = $tma->getTransportManager()->getHomeCd()->getPerson()->getFullName();
 
-            $newTmData[] = trim($forename . ' ' . $familyName);
+            if ($tma->getAction() === 'A' || $tma->getAction() === 'U') {
+                $applicationTransportManagers[] = $tma->getTransportManager();
+            }
         }
 
+        // contains a string of comma seperated TM's that are attached to the application
         if (!empty($newTmData)) {
             $context->offsetSet('transportManagers', implode(', ', $newTmData));
+        }
+        // contains an array of TM entities that have been added/updated on the application
+        if (!empty($applicationTransportManagers)) {
+            $context->offsetSet('applicationTransportManagers', $applicationTransportManagers);
         }
 
         return $context;
