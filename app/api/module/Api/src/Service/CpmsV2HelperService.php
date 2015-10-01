@@ -336,13 +336,14 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * Download report by reference
      *
      * @param string $reference
+     * @param string $token
      * @return array
      */
-    public function downloadReport($reference)
+    public function downloadReport($reference, $token)
     {
-        $endPoint = '/api/payment/report/'.$reference.'/download';
+        $url = '/api/report/'.$reference.'/download?token='.$token;
 
-        return $this->send('get', $endPoint, ApiService::SCOPE_REPORT, []);
+        return $this->send('get', $url, ApiService::SCOPE_REPORT, []);
     }
 
     /**

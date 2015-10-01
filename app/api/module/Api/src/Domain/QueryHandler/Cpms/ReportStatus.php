@@ -32,8 +32,11 @@ class ReportStatus extends AbstractQueryHandler implements CpmsAwareInterface
         // @todo handle 404?
         if (isset($data['completed']) && $data['completed']) {
             $result = [
+                // we only really need to return token and extension, we
+                // already know what the download url will be based on the reference
                 'completed' => $data['completed'],
                 'token' => $this->parseToken($data),
+                'extension' => isset($data['file_extension']) ? $data['file_extension'] : null,
             ];
         }
 
