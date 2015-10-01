@@ -31,7 +31,6 @@ TRUNCATE TABLE `fee`;
 TRUNCATE TABLE `fee_transaction`;
 TRUNCATE TABLE `transaction`;
 TRUNCATE TABLE `grace_period`;
-TRUNCATE TABLE `hint_question`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
 TRUNCATE TABLE `licence_no_gen`;
@@ -1181,26 +1180,25 @@ INSERT INTO `tm_case_decision_rehab` (`tm_case_decision_id`,`rehab_measure_id`) 
 INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_id`,`unfitness_reason_id`) VALUES
   (1,'tm_unfit_inn');
 
-INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`,
-`last_successful_login_date`,`login_id`,`contact_details_id`,
+INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `login_id`,`contact_details_id`,
 `local_authority_id`,`transport_manager_id`,`partner_contact_details_id`) VALUES
-    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-01-26 09:00:00','loggedinuser',101, NULL, NULL, NULL),
-    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-25 23:00:00','johnspellman',105, NULL, NULL, NULL),
-    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-23 15:00:00','stevefox',106, NULL, NULL, NULL),
-    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-06-19 14:00:00','amywrigg',130, NULL, NULL, NULL),
-    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-05-15 17:00:00','philjowitt',131, NULL, NULL, NULL),
-    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-02-22 11:00:00','kevinrooney',132, NULL, NULL, NULL),
-    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-03-27 00:00:00','sarahthompson',133, NULL, NULL, NULL),
-    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','anotheruser',114, NULL, NULL, NULL),
-    (19,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','operator-tm',164, NULL, NULL, NULL),
-    (20,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','operator-admin',165, NULL, NULL, NULL),
-    (21,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','operator-user',166, NULL, NULL, NULL),
-    (22,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','partner-admin',167, NULL, NULL, 140),
-    (23,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','partner-user',168, NULL, NULL, 140),
-    (24,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','local-authority-admin',169, 1, NULL, NULL),
-    (25,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','2013-12-27 00:00:00','local-authority-user',170, 1, NULL, NULL),
-    (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00','abdou.bonomi',140, NULL, NULL, NULL),
-    (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','2010-03-31 19:00:00','abdou.bonomi2',140, NULL, NULL, NULL);
+    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','loggedinuser',101, NULL, NULL, NULL),
+    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','johnspellman',105, NULL, NULL, NULL),
+    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','stevefox',106, NULL, NULL, NULL),
+    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','amywrigg',130, NULL, NULL, NULL),
+    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','philjowitt',131, NULL, NULL, NULL),
+    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','kevinrooney',132, NULL, NULL, NULL),
+    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','sarahthompson',133, NULL, NULL, NULL),
+    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','anotheruser',114, NULL, NULL, NULL),
+    (19,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','operator-tm',164, NULL, NULL, NULL),
+    (20,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','operator-admin',165, NULL, NULL, NULL),
+    (21,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','operator-user',166, NULL, NULL, NULL),
+    (22,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','partner-admin',167, NULL, NULL, 140),
+    (23,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','partner-user',168, NULL, NULL, 140),
+    (24,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','local-authority-admin',169, 1, NULL, NULL),
+    (25,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','local-authority-user',170, 1, NULL, NULL),
+    (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','abdou.bonomi',140, NULL, NULL, NULL),
+    (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','abdou.bonomi2',140, NULL, NULL, NULL);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator`) VALUES
     (1, 19, 0),
@@ -1937,13 +1935,6 @@ VALUES
 
 
 -- End: Event History Test Data
-
-INSERT INTO `hint_question` (`id`,`created_by`,`last_modified_by`,`category_no`,`hint_question`,`created_on`,
-`last_modified_on`,`version`)
-  VALUES
-    (1,1,1,1,'What is your favourite colour?', '2015-03-27 00:00:00',null,1),
-    (2,1,1,1,'What is your Mother\'s maiden name?', '2015-03-27 00:00:00',null,1),
-    (3,1,1,1,'What is your memorable date?', '2015-03-27 00:00:00',null,1);
 
 -- Start: Application 7 - new Goods Vehicle Standard National application ready to submit
 BEGIN;
