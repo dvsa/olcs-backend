@@ -24,7 +24,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_hearing_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_hearing_presiding_tc_id", columns={"presiding_tc_id"}),
  *        @ORM\Index(name="ix_hearing_hearing_type", columns={"hearing_type"}),
- *        @ORM\Index(name="ix_hearing_outcome", columns={"outcome"})
+ *        @ORM\Index(name="fk_hearing_ref_data1_idx", columns={"outcome"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_hearing_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
