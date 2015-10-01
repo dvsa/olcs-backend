@@ -15,9 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\MappedSuperclass
  * @ORM\Table(name="companies_house_alert_reason",
  *    indexes={
- *        @ORM\Index(name="fk_companies_house_alert_reason_companies_house_alert1_idx",
+ *        @ORM\Index(name="ix_companies_house_alert_reason_companies_house_alert_id",
      *     columns={"companies_house_alert_id"}),
- *        @ORM\Index(name="fk_companies_house_alert_reason_ref_data1_idx", columns={"reason_type"})
+ *        @ORM\Index(name="ix_companies_house_alert_reason_reason_type", columns={"reason_type"})
  *    }
  * )
  */

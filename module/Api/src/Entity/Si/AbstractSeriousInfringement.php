@@ -34,7 +34,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\UniqueConstraint(name="uk_serious_infringement_olbs_key_olbs_type",
      *     columns={"olbs_key","olbs_type"}),
  *        @ORM\UniqueConstraint(name="uk_serious_infringement_workflow_id", columns={"workflow_id"}),
- *        @ORM\UniqueConstraint(name="notification_number_UNIQUE", columns={"notification_number"})
+ *        @ORM\UniqueConstraint(name="uk_serious_infringement_notification_number",
+     *     columns={"notification_number"})
  *    }
  * )
  */
