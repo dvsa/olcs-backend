@@ -16,16 +16,16 @@ return array(
      // Postcode/Address service
     'address' => [
         'client' => [
-            // URI eg http://postcode.cit.olcs.mgt.mtpdvsa/ *Environment specific*
+            // URI e.g. http://postcode.cit.olcs.mgt.mtpdvsa/ *Environment specific*
             'baseuri' => 'http://postcode.cit.olcs.mgt.mtpdvsa/'
         ]
     ],
 
     // Elastic search
     'elastic_search' => array(
-        // Hostname eg elasticsearch-dev.olcs.mgt.mtpdvsa *Environment specific*
+        // Hostname e.g. elasticsearch-dev.olcs.mgt.mtpdvsa *Environment specific*
         'host'=> 'elasticsearch-dev.olcs.mgt.mtpdvsa',
-        // Port, eg 9200
+        // Port, e.g. 9200
         'port'=> '9200'
     ),
 
@@ -110,14 +110,14 @@ return array(
         ],
     ],
 
-    // Email service (this will be depricated in the future)
+    // Email service (this will be deprecated in the future)
     'email' => array(
         'client' => array(
-            // Email service URI eg http://demo_dvsa-email.web03.olcs.mgt.mtpdvsa *Environment specific*
+            // Email service URI e.g. http://demo_dvsa-email.web03.olcs.mgt.mtpdvsa *Environment specific*
             'baseuri' => 'http://demo_dvsa-email.web03.olcs.mgt.mtpdvsa',
-            // Debuging option forces all email to be sent to an address
+            // Debugging option forces all email to be sent to an address
             // 'send_all_mail_to' => 'terry.valtech@gmail.com',
-            // Selfserve/external URI eg http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa *Environment specific*
+            // Selfserve/external URI e.g. http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa *Environment specific*
             'selfserve_uri' => 'http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa',
         ),
     ),
@@ -132,7 +132,7 @@ return array(
             'options' => array(
                 //CPMS API version to use
                 'version' => 2,
-                // CPMS hostname eg 'payment-service.psqa-ap01.ps.npm' *Environment specific*
+                // CPMS hostname e.g. 'payment-service.psqa-ap01.ps.npm' *Environment specific*
                 'domain' => 'payment-service.psqa-ap01.ps.npm', // QA
             ),
         ),
@@ -141,6 +141,7 @@ return array(
     // CPMS service authentication - used by CpmsIdentityProvider service
     'cpms_credentials' => array(
         // CPMS user ID *Environment specific*
+        // (this can be left as is, will be deprecated in the future once authentication is implemented)
         'user_id' => '1234',
         // CPMS client ID *Environment specific*
         'client_id' => 'OLCS',
