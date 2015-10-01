@@ -63,9 +63,12 @@ class UserEntityTest extends EntityTester
 
     public function testCreateInternal()
     {
+        $role = m::mock(RoleEntity::class)->makePartial();
+        $role->setId(RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY);
+
         $data = [
             'loginId' => 'loginId',
-            'roles' => [m::mock(RoleEntity::class)],
+            'roles' => [$role],
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -93,10 +96,13 @@ class UserEntityTest extends EntityTester
 
     public function testUpdateInternal()
     {
+        $role = m::mock(RoleEntity::class)->makePartial();
+        $role->setId(RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY);
+
         $data = [
             'userType' => Entity::USER_TYPE_INTERNAL,
             'loginId' => 'loginId',
-            'roles' => [m::mock(RoleEntity::class)],
+            'roles' => [$role],
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -141,16 +147,19 @@ class UserEntityTest extends EntityTester
 
     public function testCreateTransportManager()
     {
+        $adminRole = m::mock(RoleEntity::class)->makePartial();
+        $adminRole->setId(RoleEntity::ROLE_OPERATOR_ADMIN);
+
         $data = [
             'loginId' => 'loginId',
-            'roles' => [m::mock(RoleEntity::class)],
+            'roles' => [$adminRole],
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
             'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
             'localAuthority' => m::mock(LocalAuthorityEntity::class),
             'organisations' => [
-                m::mock(OrganisationEntity::class)
+                m::mock(OrganisationEntity::class)->makePartial()
             ],
         ];
 
@@ -166,22 +175,26 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['transportManager'], $entity->getTransportManager());
         $this->assertEquals(null, $entity->getPartnerContactDetails());
         $this->assertEquals(null, $entity->getLocalAuthority());
-        $this->assertEquals(0, $entity->getOrganisationUsers()->count());
+        $this->assertEquals(1, $entity->getOrganisationUsers()->count());
+        $this->assertEquals('Y', $entity->getOrganisationUsers()->first()->getIsAdministrator());
     }
 
     public function testUpdateTransportManager()
     {
+        $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
+        $nonAdminRole->setId(RoleEntity::ROLE_OPERATOR_USER);
+
         $data = [
             'userType' => Entity::USER_TYPE_TRANSPORT_MANAGER,
             'loginId' => 'loginId',
-            'roles' => [m::mock(RoleEntity::class)],
+            'roles' => [$nonAdminRole],
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
             'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
             'localAuthority' => m::mock(LocalAuthorityEntity::class),
             'organisations' => [
-                m::mock(OrganisationEntity::class)
+                m::mock(OrganisationEntity::class)->makePartial()
             ],
         ];
 
@@ -214,14 +227,18 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['transportManager'], $entity->getTransportManager());
         $this->assertEquals(null, $entity->getPartnerContactDetails());
         $this->assertEquals(null, $entity->getLocalAuthority());
-        $this->assertEquals(0, $entity->getOrganisationUsers()->count());
+        $this->assertEquals(1, $entity->getOrganisationUsers()->count());
+        $this->assertEquals('N', $entity->getOrganisationUsers()->first()->getIsAdministrator());
     }
 
     public function testCreatePartner()
     {
+        $role = m::mock(RoleEntity::class)->makePartial();
+        $role->setId(RoleEntity::ROLE_PARTNER_USER);
+
         $data = [
             'loginId' => 'loginId',
-            'roles' => [m::mock(RoleEntity::class)],
+            'roles' => [$role],
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -249,10 +266,13 @@ class UserEntityTest extends EntityTester
 
     public function testUpdatePartner()
     {
+        $role = m::mock(RoleEntity::class)->makePartial();
+        $role->setId(RoleEntity::ROLE_PARTNER_USER);
+
         $data = [
             'userType' => Entity::USER_TYPE_PARTNER,
             'loginId' => 'loginId',
-            'roles' => [m::mock(RoleEntity::class)],
+            'roles' => [$role],
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -265,7 +285,7 @@ class UserEntityTest extends EntityTester
 
         // create an object of different type first
         $entity = Entity::create(
-            Entity::USER_TYPE_TRANSPORT_MANAGER,
+            Entity::USER_TYPE_LOCAL_AUTHORITY,
             [
                 'loginId' => 'currentLoginId',
                 'accountDisabled' => 'Y',
@@ -297,9 +317,12 @@ class UserEntityTest extends EntityTester
 
     public function testCreateLocalAuthority()
     {
+        $role = m::mock(RoleEntity::class)->makePartial();
+        $role->setId(RoleEntity::ROLE_LOCAL_AUTHORITY_USER);
+
         $data = [
             'loginId' => 'loginId',
-            'roles' => [m::mock(RoleEntity::class)],
+            'roles' => [$role],
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -327,10 +350,13 @@ class UserEntityTest extends EntityTester
 
     public function testUpdateLocalAuthority()
     {
+        $role = m::mock(RoleEntity::class)->makePartial();
+        $role->setId(RoleEntity::ROLE_LOCAL_AUTHORITY_USER);
+
         $data = [
             'userType' => Entity::USER_TYPE_LOCAL_AUTHORITY,
             'loginId' => 'loginId',
-            'roles' => [m::mock(RoleEntity::class)],
+            'roles' => [$role],
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -343,7 +369,7 @@ class UserEntityTest extends EntityTester
 
         // create an object of different type first
         $entity = Entity::create(
-            Entity::USER_TYPE_TRANSPORT_MANAGER,
+            Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
                 'accountDisabled' => 'Y',
@@ -410,6 +436,7 @@ class UserEntityTest extends EntityTester
     public function testUpdateOperator()
     {
         $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
+        $nonAdminRole->setId(RoleEntity::ROLE_OPERATOR_USER);
 
         $data = [
             'userType' => Entity::USER_TYPE_OPERATOR,
@@ -427,7 +454,7 @@ class UserEntityTest extends EntityTester
 
         // create an object of different type first
         $entity = Entity::create(
-            Entity::USER_TYPE_TRANSPORT_MANAGER,
+            Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
                 'accountDisabled' => 'Y',
@@ -464,6 +491,7 @@ class UserEntityTest extends EntityTester
         $adminRole->setId(RoleEntity::ROLE_OPERATOR_ADMIN);
 
         $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
+        $nonAdminRole->setId(RoleEntity::ROLE_OPERATOR_USER);
 
         $data = [
             'userType' => Entity::USER_TYPE_OPERATOR,
@@ -491,6 +519,72 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(Entity::USER_TYPE_OPERATOR, $entity->getUserType());
         $this->assertEquals(1, $entity->getOrganisationUsers()->count());
         $this->assertEquals('Y', $entity->getOrganisationUsers()->first()->getIsAdministrator());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testCreateThrowsInvalidRoleException()
+    {
+        $role = m::mock(RoleEntity::class)->makePartial();
+        $role->setId(RoleEntity::ROLE_INTERNAL_ADMIN);
+
+        $data = [
+            'loginId' => 'loginId',
+            'roles' => [$role],
+            'accountDisabled' => 'Y',
+            'team' => m::mock(TeamEntity::class),
+            'transportManager' => m::mock(TransportManagerEntity::class),
+            'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
+            'localAuthority' => m::mock(LocalAuthorityEntity::class),
+            'organisations' => [
+                m::mock(OrganisationEntity::class)->makePartial()
+            ],
+        ];
+
+        Entity::create(Entity::USER_TYPE_OPERATOR, $data);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testUpdateThrowsInvalidRoleException()
+    {
+        $role = m::mock(RoleEntity::class)->makePartial();
+        $role->setId(RoleEntity::ROLE_INTERNAL_ADMIN);
+
+        $data = [
+            'userType' => Entity::USER_TYPE_OPERATOR,
+            'loginId' => 'loginId',
+            'roles' => [$role],
+            'accountDisabled' => 'N',
+            'team' => m::mock(TeamEntity::class),
+            'transportManager' => m::mock(TransportManagerEntity::class),
+            'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
+            'localAuthority' => m::mock(LocalAuthorityEntity::class),
+            'organisations' => [
+                m::mock(OrganisationEntity::class)->makePartial()
+            ],
+        ];
+
+        // create an object of different type first
+        $entity = Entity::create(
+            Entity::USER_TYPE_PARTNER,
+            [
+                'loginId' => 'currentLoginId',
+                'accountDisabled' => 'Y',
+                'team' => m::mock(TeamEntity::class),
+                'transportManager' => m::mock(TransportManagerEntity::class),
+                'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
+                'localAuthority' => m::mock(LocalAuthorityEntity::class),
+                'organisations' => [
+                    m::mock(OrganisationEntity::class)
+                ],
+            ]
+        );
+
+        // update the entity
+        $entity->update($data);
     }
 
     /**

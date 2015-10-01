@@ -20,7 +20,7 @@ final class UpdateUser extends AbstractCommandHandler implements TransactionedIn
 {
     protected $repoServiceName = 'User';
 
-    protected $extraRepos = ['ContactDetails', 'Licence'];
+    protected $extraRepos = ['Application', 'ContactDetails', 'Licence'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -28,17 +28,18 @@ final class UpdateUser extends AbstractCommandHandler implements TransactionedIn
 
         $data = $command->getArrayCopy();
 
-        if (($command->getUserType() === User::USER_TYPE_OPERATOR) && (isset($data['licenceNumber']))) {
-            if (!empty($data['licenceNumber'])) {
-                // fetch licence by licence number
-                $licence = $this->getRepo('Licence')->fetchByLicNo($data['licenceNumber']);
+        if (($command->getUserType() === User::USER_TYPE_OPERATOR) && (!empty($data['licenceNumber']))) {
+            // fetch licence by licence number
+            $licence = $this->getRepo('Licence')->fetchByLicNo($data['licenceNumber']);
 
-                // link with the organisation
-                $data['organisations'] = [$licence->getOrganisation()];
-            } else {
-                // unlink any organisation
-                $data['organisations'] = [];
-            }
+            // link with the organisation
+            $data['organisations'] = [$licence->getOrganisation()];
+        } elseif (($command->getUserType() === User::USER_TYPE_TRANSPORT_MANAGER) && (!empty($data['application']))) {
+            // fetch application by id
+            $application = $this->getRepo('Application')->fetchWithLicenceAndOrg($data['application']);
+
+            // link with the organisation
+            $data['organisations'] = [$application->getLicence()->getOrganisation()];
         }
 
         $user = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
