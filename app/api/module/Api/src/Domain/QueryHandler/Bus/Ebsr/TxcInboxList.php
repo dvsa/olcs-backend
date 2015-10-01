@@ -41,13 +41,6 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
             $query->getEbsrSubmissionStatus()
         );
 
-        //if (!empty($query->getEbsrSubmissionType())) {
-            $typeCriteria = Criteria::create();
-            $typeCriteria->where(
-                $typeCriteria->expr()->in('version', [2])
-            );
-        //}
-
         return [
             'result' => $this->resultList(
                 $txcInboxEntries,
