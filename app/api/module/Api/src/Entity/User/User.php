@@ -94,14 +94,6 @@ class User extends AbstractUser
             $this->roles = new ArrayCollection($data['roles']);
         }
 
-        if (isset($data['memorableWord'])) {
-            $this->memorableWord = $data['memorableWord'];
-        }
-
-        if (isset($data['mustResetPassword'])) {
-            $this->mustResetPassword = $data['mustResetPassword'];
-        }
-
         if (isset($data['accountDisabled'])) {
             $this->updateAccountDisabled($data['accountDisabled']);
         }

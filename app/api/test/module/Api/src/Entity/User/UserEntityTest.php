@@ -66,8 +66,6 @@ class UserEntityTest extends EntityTester
         $data = [
             'loginId' => 'loginId',
             'roles' => [m::mock(RoleEntity::class)],
-            'memorableWord' => 'aWord',
-            'mustResetPassword' => 'Y',
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -82,8 +80,6 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
-        $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
-        $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
 
@@ -101,8 +97,6 @@ class UserEntityTest extends EntityTester
             'userType' => Entity::USER_TYPE_INTERNAL,
             'loginId' => 'loginId',
             'roles' => [m::mock(RoleEntity::class)],
-            'memorableWord' => 'aWord',
-            'mustResetPassword' => 'Y',
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -134,8 +128,6 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
-        $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
-        $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertEquals(null, $entity->getLockedDate());
 
@@ -152,8 +144,6 @@ class UserEntityTest extends EntityTester
         $data = [
             'loginId' => 'loginId',
             'roles' => [m::mock(RoleEntity::class)],
-            'memorableWord' => 'aWord',
-            'mustResetPassword' => 'Y',
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -168,8 +158,6 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
-        $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
-        $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
 
@@ -187,8 +175,6 @@ class UserEntityTest extends EntityTester
             'userType' => Entity::USER_TYPE_TRANSPORT_MANAGER,
             'loginId' => 'loginId',
             'roles' => [m::mock(RoleEntity::class)],
-            'memorableWord' => 'aWord',
-            'mustResetPassword' => 'Y',
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -220,8 +206,6 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
-        $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
-        $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertEquals(null, $entity->getLockedDate());
 
@@ -238,8 +222,6 @@ class UserEntityTest extends EntityTester
         $data = [
             'loginId' => 'loginId',
             'roles' => [m::mock(RoleEntity::class)],
-            'memorableWord' => 'aWord',
-            'mustResetPassword' => 'Y',
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -254,8 +236,6 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
-        $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
-        $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
 
@@ -273,8 +253,6 @@ class UserEntityTest extends EntityTester
             'userType' => Entity::USER_TYPE_PARTNER,
             'loginId' => 'loginId',
             'roles' => [m::mock(RoleEntity::class)],
-            'memorableWord' => 'aWord',
-            'mustResetPassword' => 'Y',
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -306,8 +284,6 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
-        $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
-        $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertEquals(null, $entity->getLockedDate());
 
@@ -324,8 +300,6 @@ class UserEntityTest extends EntityTester
         $data = [
             'loginId' => 'loginId',
             'roles' => [m::mock(RoleEntity::class)],
-            'memorableWord' => 'aWord',
-            'mustResetPassword' => 'Y',
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -340,8 +314,6 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
-        $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
-        $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
 
@@ -359,8 +331,6 @@ class UserEntityTest extends EntityTester
             'userType' => Entity::USER_TYPE_LOCAL_AUTHORITY,
             'loginId' => 'loginId',
             'roles' => [m::mock(RoleEntity::class)],
-            'memorableWord' => 'aWord',
-            'mustResetPassword' => 'Y',
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -392,8 +362,6 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
-        $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
-        $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertEquals(null, $entity->getLockedDate());
 
@@ -413,8 +381,6 @@ class UserEntityTest extends EntityTester
         $data = [
             'loginId' => 'loginId',
             'roles' => [$adminRole],
-            'memorableWord' => 'aWord',
-            'mustResetPassword' => 'Y',
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -429,8 +395,6 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
-        $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
-        $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
 
@@ -451,8 +415,6 @@ class UserEntityTest extends EntityTester
             'userType' => Entity::USER_TYPE_OPERATOR,
             'loginId' => 'loginId',
             'roles' => [$nonAdminRole],
-            'memorableWord' => 'aWord',
-            'mustResetPassword' => 'Y',
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -484,8 +446,6 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
-        $this->assertEquals($data['memorableWord'], $entity->getMemorableWord());
-        $this->assertEquals($data['mustResetPassword'], $entity->getMustResetPassword());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertEquals(null, $entity->getLockedDate());
 
