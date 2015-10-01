@@ -380,4 +380,6 @@ return [
     TransferQuery\System\FinancialStandingRate::class => QueryHandler\System\FinancialStandingRate::class,
     TransferQuery\System\FinancialStandingRateList::class => QueryHandler\System\FinancialStandingRateList::class,
 
+    // Cpms
+    TransferQuery\Cpms\ReportList::class => QueryHandler\Cpms\ReportList::class,
 ];
