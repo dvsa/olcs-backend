@@ -293,7 +293,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function getReportList()
     {
-        return $this->send('get', '/api/report', ApiService::SCOPE_QUERY_TXN, []);
+        return $this->send('get', '/api/report', ApiService::SCOPE_REPORT, []);
     }
 
     /**

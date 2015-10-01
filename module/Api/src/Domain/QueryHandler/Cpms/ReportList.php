@@ -23,11 +23,17 @@ class ReportList extends AbstractQueryHandler implements CpmsAwareInterface
 
     public function handleQuery(QueryInterface $query)
     {
-        $data = $this->getCpmsService()->getReportList();
+        $result = [];
+        $count = 0;
 
+        $data = $this->getCpmsService()->getReportList();
+        if (isset($data['items'])) {
+            $result = $data['items'];
+            $count = count($result);
+        }
         return [
-            'result' => $data,
-            'count' => 0,
+            'result' => $result,
+            'count' => $count,
         ];
     }
 }
