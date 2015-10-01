@@ -157,7 +157,6 @@ return [
     'AdminAreaTrafficArea' => 'TrafficArea',
     'TrafficArea' => 'TrafficArea',
     'TrafficAreaEnforcementArea' => 'TrafficArea',
-    'HintQuestion' => 'User',
     'Permission' => 'User',
     'Role' => 'User',
     'RolePermission' => 'User',
