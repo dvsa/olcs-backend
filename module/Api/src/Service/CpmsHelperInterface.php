@@ -114,12 +114,21 @@ interface CpmsHelperInterface
     public function requestReport($reportCode, \DateTime $start, \DateTime $end);
 
     /**
-     * Download report by reference
+     * Check report status by reference
      *
      * @param string $reference
      * @return array
      */
-    public function downloadReport($reference);
+    public function getReportStatus($reference);
+
+    /**
+     * Download report by reference
+     *
+     * @param string $reference
+     * @param string $token
+     * @return array
+     */
+    public function downloadReport($reference, $token);
 
     /**
      * @param mixed $amount

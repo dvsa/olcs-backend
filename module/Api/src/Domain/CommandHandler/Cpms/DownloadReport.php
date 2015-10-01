@@ -35,7 +35,7 @@ final class DownloadReport extends AbstractCommandHandler implements CpmsAwareIn
         $reference = $command->getReference()
         $reference = 'OLCS-15-20151001-135021-FB3115D4';
 
-        $data = $this->getCpmsService()->downloadReport($reference);
+        $data = $this->getCpmsService()->downloadReport($reference, $token);
 
         // @todo create document with downloaded data
 

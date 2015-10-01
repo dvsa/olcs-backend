@@ -407,12 +407,24 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
-     * Download report by reference
+     * Check report status by reference
      *
      * @param string $reference
      * @return array
      */
-    public function downloadReport($reference)
+    public function getReportStatus($reference)
+    {
+        throw new \Exception(sprintf("%s not implemented in version %d", __METHOD__, $this->getVersion()));
+    }
+
+    /**
+     * Download report by reference
+     *
+     * @param string $reference
+     * @param string $token
+     * @return array
+     */
+    public function downloadReport($reference, $token)
     {
         throw new \Exception(sprintf("%s not implemented in version %d", __METHOD__, $this->getVersion()));
     }
