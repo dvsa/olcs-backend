@@ -12,24 +12,39 @@
  * credentials from accidentally being committed into version control.
  */
 return array(
+
+     // Postcode/Address service
     'address' => [
         'client' => [
+            // URI eg http://postcode.cit.olcs.mgt.mtpdvsa/ *Environment specific*
             'baseuri' => 'http://postcode.cit.olcs.mgt.mtpdvsa/'
         ]
     ],
+
+    // Elastic search
     'elastic_search' => array(
+        // Hostname eg elasticsearch-dev.olcs.mgt.mtpdvsa *Environment specific*
         'host'=> 'elasticsearch-dev.olcs.mgt.mtpdvsa',
+        // Port, eg 9200
         'port'=> '9200'
     ),
+
+    // Doctrine
     'doctrine' => array(
         'connection' => array(
             'orm_default' => array(
                 'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
+                // Database connection details
                 'params' => array(
+                    // *Environment specific*
                     'host' => 'localhost',
+                    // *Environment specific*
                     'port' => '3306',
+                    // *Environment specific*
                     'user' => 'olcs_be',
+                    // *Environment specific*
                     'password' => 'password',
+                    // *Environment specific*
                     'dbname' => 'olcs_be',
                 )
             )
@@ -48,40 +63,88 @@ return array(
             )
         ),
     ),
+
+    // Companies house XML gateway credentials
     'companies_house_credentials' => array(
+        // Companies house XML gateway userID *Environment specific*
+        'userId'     => 'XMLGatewayTestUserID',
+        // Companies house XML gateway password *Environment specific*
         'password'   => 'XMLGatewayTestPassword',
-        'userId'     => 'XMLGatewayTestUserID'
     ),
-    // Set the following if you need to go via a proxy to get to Companies House
+
+    // Set the following if you need to go via a proxy to get to Companies house XML gateway
+    // *Environment specific*
     // 'companies_house_connection' => array(
     //    'proxy'      => 'proxy.gw.npm:80'
     // ),
+
+    // Document service
     'document_share' => array(
-        'http' => array(
-            'adapter' => 'Zend\Http\Client\Adapter\Curl'
-        ),
         'client' => array(
+            // Document service URI *Environment specific*
             'baseuri' => 'http://fs01.olcs.mgt.mtpdvsa:8080/hfs/',
+            // Document service user ID *Environment specific*
             'uuid' => 'uD12345',
+            // Document service workspace "olcs"
             'workspace' => 'olcs'
         ),
     ),
+
+    // Companies house RESTful API
     'companies_house' => [
         'http' => [
-            // Set the following if you need to go via a proxy to get to Companies House
+            // Set the following if you need to go via a proxy to get to Companies House RESTful API
+            // *Environment specific*
             // 'curloptions' => [
             //     CURLOPT_PROXY => 'http://fp01.inf.mgt.mtpdvsa:3128',
-            //     CURLOPT_PROXYPORT => 3128,
             // ],
         ],
         'auth' => [
-            // Companies House API key
-            // (register one at https://developer.companieshouse.gov.uk/)
-            'username' => 'changeme',
+            // Companies House API key (register one at https://developer.companieshouse.gov.uk/) *Environment specific*
+            'username' => '',
+            // Leave this empty
             'password' => '',
         ],
         'client' => [
             'baseuri' => 'https://api.companieshouse.gov.uk/',
         ],
     ],
+
+    // Email service (this will be depricated in the future)
+    'email' => array(
+        'client' => array(
+            // Email service URI eg http://demo_dvsa-email.web03.olcs.mgt.mtpdvsa *Environment specific*
+            'baseuri' => 'http://demo_dvsa-email.web03.olcs.mgt.mtpdvsa',
+            // Debuging option forces all email to be sent to an address
+            // 'send_all_mail_to' => 'terry.valtech@gmail.com',
+            // Selfserve/external URI eg http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa *Environment specific*
+            'selfserve_uri' => 'http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa',
+        ),
+    ),
+
+    // CPMS service
+    'cpms_api' => array(
+        'logger_alias' => 'Logger', // Zend logger service manager alias - use 'Logger' for the main OLCS log
+        'identity_provider' => 'CpmsIdentityProvider', // Should implement CpmsClient\Authenticate\IdentityProviderInterface
+        'enable_cache' => true,
+        'cache_storage' => 'array',
+        'rest_client' => array(
+            'options' => array(
+                //CPMS API version to use
+                'version' => 2,
+                // CPMS hostname eg 'payment-service.psqa-ap01.ps.npm' *Environment specific*
+                'domain' => 'payment-service.psqa-ap01.ps.npm', // QA
+            ),
+        ),
+    ),
+
+    // CPMS service authentication - used by CpmsIdentityProvider service
+    'cpms_credentials' => array(
+        // CPMS user ID *Environment specific*
+        'user_id' => '1234',
+        // CPMS client ID *Environment specific*
+        'client_id' => 'OLCS',
+        // CPMS Client secret *Environment specific*
+        'client_secret' => 'f7c3cd7d55c0dc0f3bcadc68d2867beedc28b463'
+    ),
 );
