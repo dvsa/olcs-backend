@@ -41,7 +41,7 @@ class GenericController extends AbstractRestfulController
         try {
             $result = $this->handleQuery($dto);
 
-            if ($result instanceof Result) {
+            if ($result instanceof Result || !isset($result['result'])) {
                 // we sometimes still get a single result if we're not retrieving by id
                 return $this->response()->singleResult($result);
             }

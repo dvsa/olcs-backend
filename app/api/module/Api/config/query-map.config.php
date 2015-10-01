@@ -382,4 +382,5 @@ return [
 
     // Cpms
     TransferQuery\Cpms\ReportList::class => QueryHandler\Cpms\ReportList::class,
+    TransferQuery\Cpms\ReportStatus::class => QueryHandler\Cpms\ReportStatus::class,
 ];
