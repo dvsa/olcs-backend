@@ -320,6 +320,19 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Check report status by reference
+     *
+     * @param string $reference
+     * @return array
+     */
+    public function getReportStatus($reference)
+    {
+        $endPoint = '/api/report/'.$reference.'/status';
+
+        return $this->send('get', $endPoint, ApiService::SCOPE_REPORT, []);
+    }
+
+    /**
      * Download report by reference
      *
      * @param string $reference
