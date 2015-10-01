@@ -807,4 +807,8 @@ return [
 
     // Domain - Licence
     Command\Licence\ProcessContinuationNotSought::class => CommandHandler\Licence\ProcessContinuationNotSought::class,
+
+    // Transfer - CPMS
+    TransferCommand\Cpms\RequestReport::class => CommandHandler\Cpms\RequestReport::class,
+    TransferCommand\Cpms\DownloadReport::class => CommandHandler\Cpms\DownloadReport::class,
 ];

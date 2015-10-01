@@ -26,6 +26,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     // CPMS' preferred date format (note: this changed around 03/2015)
     const DATE_FORMAT = 'Y-m-d';
 
+    const DATETIME_FORMAT = 'Y-m-d H:i:s';
+
     const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
 
     // @TODO this is a dummy value for testing purposes as cost_centre is now
@@ -297,6 +299,40 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Request report creation
+     *
+     * @param string $reportCode
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
+    public function requestReport($reportCode, \DateTime $start, \DateTime $end)
+    {
+        $params = [
+            'report_code' => (string) $reportCode,
+            'filters' => [
+                'from' => $this->formatDateTime($start),
+                'to' => $this->formatDateTime($end),
+            ],
+        ];
+
+        return $this->send('post', '/api/report', ApiService::SCOPE_REPORT, $params);
+    }
+
+    /**
+     * Download report by reference
+     *
+     * @param string $reference
+     * @return array
+     */
+    public function downloadReport($reference)
+    {
+        $endPoint = '/api/payment/report/'.$reference.'/download';
+
+        return $this->send('get', $endPoint, ApiService::SCOPE_REPORT, []);
+    }
+
+    /**
      * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
      */
@@ -326,6 +362,22 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
                 $date = new DateTime($date);
             }
             return $date->format(self::DATE_FORMAT);
+        }
+    }
+
+    /**
+     * Format a date/time as required by CPMS report filter fields
+     *
+     * @param string|DateTime $dateTime
+     * @return string
+     */
+    protected function formatDateTime($dateTime)
+    {
+        if (!is_null($dateTime)) {
+            if (is_string($dateTime)) {
+                $date = new DateTime($dateTime);
+            }
+            return $dateTime->format(self::DATETIME_FORMAT);
         }
     }
 

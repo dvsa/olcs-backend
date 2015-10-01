@@ -394,6 +394,30 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Request report creation
+     *
+     * @param string $reportCode
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
+    public function requestReport($reportCode, \DateTime $start, \DateTime $end)
+    {
+        throw new \Exception(sprintf("%s not implemented in version %d", __METHOD__, $this->getVersion()));
+    }
+
+    /**
+     * Download report by reference
+     *
+     * @param string $reference
+     * @return array
+     */
+    public function downloadReport($reference)
+    {
+        throw new \Exception(sprintf("%s not implemented in version %d", __METHOD__, $this->getVersion()));
+    }
+
+    /**
      * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
      */

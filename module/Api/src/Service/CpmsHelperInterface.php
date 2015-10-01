@@ -104,6 +104,24 @@ interface CpmsHelperInterface
     public function getReportList();
 
     /**
+     * Request report creation
+     *
+     * @param string $reportCode
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
+    public function requestReport($reportCode, \DateTime $start, \DateTime $end);
+
+    /**
+     * Download report by reference
+     *
+     * @param string $reference
+     * @return array
+     */
+    public function downloadReport($reference);
+
+    /**
      * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
      */
