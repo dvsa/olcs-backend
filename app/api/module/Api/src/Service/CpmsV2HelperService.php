@@ -287,6 +287,16 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Get a list of available reports
+     *
+     * @return array
+     */
+    public function getReportList()
+    {
+        return $this->send('get', '/api/report', ApiService::SCOPE_QUERY_TXN, []);
+    }
+
+    /**
      * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
      */
@@ -503,6 +513,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     protected function send($method, $endPoint, $scope, $params)
     {
+        $method = strtolower($method);
+
         $this->debug(
             "CPMS $scope request",
             [

@@ -384,6 +384,16 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Get a list of available reports
+     *
+     * @return array
+     */
+    public function getReportList()
+    {
+        throw new \Exception(sprintf("%s not implemented in version %d", __METHOD__, $this->getVersion()));
+    }
+
+    /**
      * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
      */
