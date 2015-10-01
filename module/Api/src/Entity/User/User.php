@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\User;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 
@@ -35,6 +36,45 @@ class User extends AbstractUser
     const USER_TYPE_PARTNER = 'partner';
     const USER_TYPE_TRANSPORT_MANAGER = 'transport-manager';
 
+    /**
+     * List of all roles available by user type
+     *
+     * @var array
+     */
+    private static $rolesAvailableByUserType = [
+        self::USER_TYPE_LOCAL_AUTHORITY => [
+            RoleEntity::ROLE_LOCAL_AUTHORITY_ADMIN,
+            RoleEntity::ROLE_LOCAL_AUTHORITY_USER,
+        ],
+        self::USER_TYPE_OPERATOR => [
+            RoleEntity::ROLE_OPERATOR_ADMIN,
+            RoleEntity::ROLE_OPERATOR_USER,
+            RoleEntity::ROLE_OPERATOR_TM,
+            RoleEntity::ROLE_OPERATOR_EBSR,
+        ],
+        self::USER_TYPE_TRANSPORT_MANAGER => [
+            RoleEntity::ROLE_OPERATOR_ADMIN,
+            RoleEntity::ROLE_OPERATOR_USER,
+            RoleEntity::ROLE_OPERATOR_TM,
+            RoleEntity::ROLE_OPERATOR_EBSR,
+        ],
+        self::USER_TYPE_PARTNER => [
+            RoleEntity::ROLE_PARTNER_ADMIN,
+            RoleEntity::ROLE_PARTNER_USER,
+        ],
+        self::USER_TYPE_INTERNAL => [
+            RoleEntity::ROLE_INTERNAL_ADMIN,
+            RoleEntity::ROLE_INTERNAL_CASE_WORKER,
+            RoleEntity::ROLE_INTERNAL_READ_ONLY,
+            RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY,
+        ],
+    ];
+
+    /**
+     * List of roles by user type and permission
+     *
+     * @var array
+     */
     private static $userTypeToRoles = [
         self::USER_TYPE_LOCAL_AUTHORITY => [
             self::PERMISSION_ADMIN => [RoleEntity::ROLE_LOCAL_AUTHORITY_ADMIN],
@@ -96,7 +136,7 @@ class User extends AbstractUser
         }
 
         if (isset($data['roles'])) {
-            $this->roles = new ArrayCollection($data['roles']);
+            $this->updateRoles($data['roles']);
         }
 
         if (isset($data['accountDisabled'])) {
@@ -147,6 +187,42 @@ class User extends AbstractUser
                 $this->populateOrganisationUsers();
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @param array $roles
+     * @return User
+     */
+    private function updateRoles(array $roles)
+    {
+        if (!empty($roles)) {
+            // check if there are any roles available for the user type
+            if (empty(self::$rolesAvailableByUserType[$this->getUserType()])) {
+                throw new ValidationException(['The roles selected are not available to this user type']);
+            }
+
+            $rolesAvailable = array_intersect(
+                // user's roles selected
+                array_map(
+                    function ($role) {
+                        return $role->getId();
+                    },
+                    $roles
+                ),
+                // list of roles available for the user type
+                self::$rolesAvailableByUserType[$this->getUserType()]
+            );
+
+            // make sure that all selected roles are available to this user type
+            if (count($roles) !== count($rolesAvailable)) {
+                throw new ValidationException(['The roles selected are not available to this user type']);
+            }
+        }
+
+        // set the new roles
+        $this->roles = new ArrayCollection($roles);
 
         return $this;
     }
