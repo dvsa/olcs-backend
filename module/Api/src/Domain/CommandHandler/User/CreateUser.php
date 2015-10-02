@@ -5,25 +5,33 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Create User
  */
-final class CreateUser extends AbstractCommandHandler implements TransactionedInterface
+final class CreateUser extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'User';
 
     protected $extraRepos = ['Application', 'ContactDetails', 'Licence'];
 
     public function handleCommand(CommandInterface $command)
     {
-        // TODO - OLCS-10516 - User management restrictions
+        if (!$this->isGranted(Permission::INTERNAL_ADMIN)) {
+            throw new ForbiddenException('You do not have permission to manage the record');
+        }
 
         $data = $command->getArrayCopy();
 
