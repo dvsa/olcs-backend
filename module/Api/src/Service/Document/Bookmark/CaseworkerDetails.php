@@ -59,9 +59,6 @@ class CaseworkerDetails extends DynamicBookmark
             array_filter(
                 [
                     Formatter\Name::format($details['person']),
-                    $this->data['jobTitle'],
-                    $this->data['divisionGroup'],
-                    $this->data['departmentName'],
                     $taName,
                     Formatter\Address::format($address),
                     'Direct Line: ' . $directDial,
