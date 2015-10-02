@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as Entity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\Doc\DocTemplate as DocTemplateEntity;
+use Mockery as m;
 
 /**
  * Publication Entity Unit Tests
@@ -22,18 +25,39 @@ class PublicationEntityTest extends EntityTester
     protected $entityClass = Entity::class;
 
     /**
+     * Test creating a publication
+     */
+    public function testCreate()
+    {
+        $trafficArea = m::mock(TrafficAreaEntity::class);
+        $pubStatus = m::mock(RefData::class);
+        $docTemplate = m::mock(DocTemplateEntity::class);
+        $pubDate = new \DateTime('2015-12-25 00:00:00'); //14 days later
+        $pubType = 'A&D';
+        $publicationNo = 111;
+
+        $entity = new Entity($trafficArea, $pubStatus, $docTemplate, $pubDate, $pubType, $publicationNo);
+
+        $this->assertEquals($trafficArea, $entity->getTrafficArea());
+        $this->assertEquals($pubStatus, $entity->getPubStatus());
+        $this->assertEquals($docTemplate, $entity->getDocTemplate());
+        $this->assertEquals($pubDate, $entity->getPubDate());
+        $this->assertEquals($pubType, $entity->getPubType());
+        $this->assertEquals($publicationNo, $entity->getPublicationNo());
+    }
+
+    /**
      * Tests getting the next publication date
      */
     public function testGetNextPublicationDate()
     {
-        $pubDate = new \DateTime();
+        $pubDate = '2015-12-11';
+        $newPubDate  = '2015-12-25'; // +14 days
 
-        $entity = new Entity();
+        $entity = $this->instantiate(Entity::class);
         $entity->setPubDate($pubDate);
 
-        $newPubDate = $entity->getNextPublicationDate();
-
-        $this->assertEquals($pubDate->add(new \DateInterval('P14D')), $newPubDate);
+        $this->assertEquals($entity->getNextPublicationDate()->format('Y-m-d'), $newPubDate);
     }
 
     /**
@@ -44,7 +68,7 @@ class PublicationEntityTest extends EntityTester
      */
     public function testGetNextPublicationDateThrowsException()
     {
-        $entity = new Entity();
+        $entity = $this->instantiate(Entity::class);
         $entity->getNextPublicationDate();
     }
 
@@ -53,23 +77,26 @@ class PublicationEntityTest extends EntityTester
      */
     public function testPublish()
     {
-        $entity = new Entity();
+        $entity = $this->instantiate(Entity::class);
         $entity->setPubStatus(new RefData(Entity::PUB_GENERATED_STATUS));
+        $printedStatus = new RefData(Entity::PUB_PRINTED_STATUS);
 
-        $entity->publish();
+        $entity->publish($printedStatus);
         $this->assertEquals($entity::PUB_PRINTED_STATUS, $entity->getPubStatus()->getId());
     }
 
     /**
      * @dataProvider notGeneratedStatusProvider
+     * @param string $pubStatus
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testPublishThrowsException($pubStatus)
     {
-        $entity = new Entity();
+        $entity = $this->instantiate(Entity::class);
         $entity->setPubStatus(new RefData($pubStatus));
+        $printedStatus = new RefData(Entity::PUB_PRINTED_STATUS);
 
-        $entity->publish();
+        $entity->publish($printedStatus);
     }
 
     /**
@@ -90,25 +117,28 @@ class PublicationEntityTest extends EntityTester
      */
     public function testGenerate()
     {
-        $entity = new Entity();
+        $entity = $this->instantiate(Entity::class);
         $entity->setPubStatus(new RefData(Entity::PUB_NEW_STATUS));
+        $generateStatus = new RefData(Entity::PUB_GENERATED_STATUS);
         $document = new DocumentEntity(1);
 
-        $entity->generate($document);
+        $entity->generate($document, $generateStatus);
         $this->assertEquals($entity::PUB_GENERATED_STATUS, $entity->getPubStatus()->getId());
     }
 
     /**
      * @dataProvider notNewStatusProvider
+     * @param string $pubStatus
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testGenerateThrowsException($pubStatus)
     {
-        $entity = new Entity();
+        $entity = $this->instantiate(Entity::class);
         $entity->setPubStatus(new RefData($pubStatus));
+        $generateStatus = new RefData(Entity::PUB_GENERATED_STATUS);
         $document = new DocumentEntity(1);
 
-        $entity->generate($document);
+        $entity->generate($document, $generateStatus);
     }
 
     /**
@@ -128,10 +158,12 @@ class PublicationEntityTest extends EntityTester
      * Test that isNew function only returns new if the status is new
      *
      * @dataProvider isNewPublicationStatusProvider
+     * @param $pubStatus
+     * @param $isNew
      */
     public function testIsNew($pubStatus, $isNew)
     {
-        $entity = new Entity();
+        $entity = $this->instantiate(Entity::class);
         $entity->setPubStatus(new RefData($pubStatus));
 
         $this->assertEquals($isNew, $entity->isNew());
