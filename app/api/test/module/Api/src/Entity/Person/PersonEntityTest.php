@@ -74,4 +74,14 @@ class PersonEntityTest extends EntityTester
 
         $this->assertSame(['disqualificationStatus' => 'STATUS'], $person->getCalculatedBundleValues());
     }
+
+    public function testGetFullName()
+    {
+        $person = new Entity();
+        $person->setForename('Foo');
+        $person->setFamilyName('Bar');
+
+        $this->assertSame('Foo Bar', $person->getFullName());
+
+    }
 }
