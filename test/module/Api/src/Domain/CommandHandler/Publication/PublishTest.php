@@ -26,6 +26,13 @@ class PublishTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
+    protected function initReferences()
+    {
+        $this->refData = [PublicationEntity::PUB_PRINTED_STATUS];
+
+        parent::initReferences();
+    }
+
     public function testHandleCommand()
     {
         $id = 11;
@@ -36,13 +43,26 @@ class PublishTest extends CommandHandlerTestCase
         $publicationEntity = m::mock(PublicationEntity::class)->makePartial();
         $publicationEntity->setId($id);
         $publicationEntity->setPubStatus(new RefData(PublicationEntity::PUB_GENERATED_STATUS));
-        $publicationEntity->shouldReceive('publish')->once()->andReturnSelf();
+        $publicationEntity->shouldReceive('publish')
+            ->once()
+            ->with($this->refData[PublicationEntity::PUB_PRINTED_STATUS])
+            ->andReturnSelf();
 
         $this->repoMap['Publication']
             ->shouldReceive('fetchUsingId')
             ->once()
             ->with($command)
             ->andReturn($publicationEntity);
+
+        $this->repoMap['Publication']->shouldReceive('save')
+            ->once()
+            ->with(m::type(PublicationEntity::class))
+            ->andReturnUsing(
+                function (PublicationEntity $publicationEntity) use (&$savedPublication) {
+                    $publicationEntity->setId(11);
+                    $savedPublication = $publicationEntity;
+                }
+            );
 
         $result = $this->sut->handleCommand($command);
 
