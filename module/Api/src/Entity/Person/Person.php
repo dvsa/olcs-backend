@@ -87,4 +87,14 @@ class Person extends AbstractPerson
     {
         return ['disqualificationStatus' => $this->getDisqualificationStatus()];
     }
+
+    /**
+     * Get full name "forename familyname"
+     *
+     * @return string
+     */
+    public function getFullName()
+    {
+        return trim($this->getForename() .' '. $this->getFamilyName());
+    }
 }

@@ -39,8 +39,6 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /* @var $application Application */
         $application = $this->getRepo()->fetchById($command->getId());
 
@@ -49,10 +47,10 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
 
         $this->getRepo()->save($application);
 
-        $result->merge($this->createSnapshot($command->getId()));
+        $this->result->merge($this->createSnapshot($command->getId()));
 
         if ($application->isNew()) {
-            $result->merge(
+            $this->result->merge(
                 $this->handleSideEffect(
                     Refuse::create(
                         [
@@ -64,17 +62,17 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
         }
 
         if ($application->isPublishable()) {
-            $result->merge($this->publishApplication($application));
-            $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
+            $this->result->merge($this->publishApplication($application));
+            $this->result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
         }
 
         // If Internal user close tasks
         if ($this->isInternalUser()) {
-            $result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
-            $result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
+            $this->result->merge($this->handleSideEffect(CloseTexTaskCmd::create(['id' => $application->getId()])));
+            $this->result->merge($this->handleSideEffect(CloseFeeDueTaskCmd::create(['id' => $application->getId()])));
         }
 
-        $result->merge(
+        $this->result->merge(
             $this->handleSideEffect(
                 CeaseGoodsDiscs::create(
                     [
@@ -87,7 +85,7 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
 
         $communityLicences = $application->getLicence()->getCommunityLics()->toArray();
         if (!empty($communityLicences)) {
-            $result->merge(
+            $this->result->merge(
                 $this->handleSideEffect(
                     ReturnAllCommunityLicences::create(
                         [
@@ -102,12 +100,14 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
             $application->isGoods() &&
             $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
         ) {
-            $result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
+            $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
         }
 
-        $result->addMessage('Application ' . $application->getId() . ' refused.');
+        $this->cancelS4($application);
 
-        return $result;
+        $this->result->addMessage('Application ' . $application->getId() . ' refused.');
+
+        return $this->result;
     }
 
     protected function createSnapshot($applicationId)
@@ -142,5 +142,25 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
                 ]
             )
         );
+    }
+
+    /**
+     * Cancel any S4's attached to the application
+     *
+     * @param Application $application
+     */
+    protected function cancelS4(Application $application)
+    {
+        // Refuse any S4's attached to the application
+        if ($application->isGoods()) {
+            foreach ($application->getS4s() as $s4) {
+                /* @var $s4 \Dvsa\Olcs\Api\Entity\Application\S4 */
+                $this->result->merge(
+                    $this->handleSideEffect(
+                        \Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4::create(['id' => $s4->getId()])
+                    )
+                );
+            }
+        }
     }
 }
