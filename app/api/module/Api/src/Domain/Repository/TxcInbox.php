@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as Entity;
+use Doctrine\ORM\Query;
 
 /**
  * TxcInbox
@@ -30,6 +31,31 @@ class TxcInbox extends AbstractRepository
         return $doctrineQb->getQuery()->getResult();
     }
 
+    public function fetchListForLocalAuthorityByBusReg($busReg, $localAuthorityId, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata();
+
+        if (empty($localAuthorityId)) {
+            $qb->where($qb->expr()->isNull($this->alias . '.localAuthority', ':localAuthority'));
+        } else {
+            $qb->where($qb->expr()->eq($this->alias . '.fileRead', '0'));
+            $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
+                ->setParameter('localAuthority', $localAuthorityId);
+        }
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('busReg', 'b');
+
+        $qb->andWhere($qb->expr()->eq('b.id', ':busReg'))
+            ->setParameter('busReg', $busReg);
+
+        return $qb->getQuery()->getResult($hydrateMode);
+    }
+
     /**
      * Fetch a list for a licence, filtered to include only not fulfilled and not draft
      *
@@ -40,7 +66,8 @@ class TxcInbox extends AbstractRepository
     public function fetchUnreadListForLocalAuthority(
         $localAuthority,
         $ebsrSubmissionType = null,
-        $ebsrSubmissionStatus = null
+        $ebsrSubmissionStatus = null,
+        $hydrateMode = Query::HYDRATE_OBJECT
     ) {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
@@ -71,6 +98,6 @@ class TxcInbox extends AbstractRepository
                 ->setParameter('ebsrSubmissionStatus', $ebsrSubmissionStatus);
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getResult($hydrateMode);
     }
 }
