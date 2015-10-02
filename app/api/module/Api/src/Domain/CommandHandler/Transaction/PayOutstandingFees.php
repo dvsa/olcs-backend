@@ -25,10 +25,12 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 
 /**
  * Pay Outstanding Fees
@@ -197,6 +199,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 // We need to call save() on the fee, it won't cascade persist from the transaction
                 $this->getRepo('Fee')->save($fee);
                 $result->merge($this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()])));
+            } else {
+                // Generate Insufficient Fee Request letter
+                $result->merge($this->generateInsufficientFeeRequestLetter($fee));
             }
         }
 
@@ -462,5 +467,29 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             'busReg'       => $busRegId,
             'irfoGvPermit' => $irfoGvPermitId,
         ];
+    }
+
+    private function generateInsufficientFeeRequestLetter(Fee $fee)
+    {
+        $dtoData = [
+            'template' => 'FEE_REQ_INSUFFICIENT',
+            'query' => [
+                'fee' => $fee->getId(),
+                'application' => $fee->getApplication()->getId(),
+                'licence' => $fee->getApplication()->getLicence()->getId()
+            ],
+            'knownValues' => [
+                'outstandingAmount' => $fee->getOutstandingFeeAmount()
+            ],
+            'description' => 'Insufficient Fee Request',
+            'application' => $fee->getApplication()->getId(),
+            'licence'     => $fee->getApplication()->getLicence()->getId(),
+            'category'    => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::DOC_SUB_CATEGORY_FEE_REQUEST,
+            'isExternal'  => false,
+            'dispatch'    => true
+        ];
+
+        return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
 }
