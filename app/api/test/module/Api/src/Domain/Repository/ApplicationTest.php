@@ -380,6 +380,45 @@ class ApplicationTest extends RepositoryTestCase
         $this->assertEquals('RESULT', $result);
     }
 
+    public function testFetchWithLicenceAndOrg()
+    {
+        $applicationId = 1;
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $qb->shouldReceive('getQuery->getResult')
+            ->andReturn(['RESULT']);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('licence', 'l')
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('l.organisation', 'l_org')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('byId')
+            ->with($applicationId)
+            ->once()
+            ->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Application::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchWithLicenceAndOrg($applicationId);
+        $this->assertEquals('RESULT', $result);
+    }
+
     public function testFetchWithLicenceNotFound()
     {
         $applicationId = 1;

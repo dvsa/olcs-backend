@@ -71,8 +71,13 @@ final class Text3 implements ProcessInterface
      */
     private function addTransportManagerText(ImmutableArrayObject $context)
     {
-        if ($context->offsetExists('transportManagers')) {
-            $this->addText('Transport Manager(s): '. $context->offsetGet('transportManagers'));
+        if ($context->offsetExists('applicationTransportManagers')) {
+            $tmNames = [];
+            foreach ($context->offsetGet('applicationTransportManagers') as $transportManager) {
+                /* @var $transportManager \Dvsa\Olcs\Api\Entity\Tm\TransportManager */
+                $tmNames[] = $transportManager->getHomeCd()->getPerson()->getFullName();
+            }
+            $this->addText('Transport Manager(s): '. implode(', ', $tmNames));
         }
     }
 
