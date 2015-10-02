@@ -10,8 +10,10 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as Repository;
-use Dvsa\OlcsTest\Api\Entity\Bus as BusEntity;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Txc Inbox by bus reg
@@ -29,6 +31,10 @@ class TxcInboxByBusReg extends AbstractQueryHandler implements AuthAwareInterfac
 
         $currentUser = $this->getCurrentUser();
 
+        if (!($this->isGranted(Permission::SELFSERVE_EBSR_DOCUMENTS))) {
+            throw new ForbiddenException();
+        }
+        
         $localAuthority = $currentUser->getLocalAuthority();
 
         $localAuthorityId = null;
@@ -41,7 +47,7 @@ class TxcInboxByBusReg extends AbstractQueryHandler implements AuthAwareInterfac
         // is applied
         $txcInboxResults = $repo->fetchListForLocalAuthorityByBusReg($query->getBusReg(), $localAuthorityId);
 
-        if (!isset($txcInboxResults[0]) || !($txcInboxResults[0]->getBusReg() instanceof BusEntity)) {
+        if (!isset($txcInboxResults[0]) || !($txcInboxResults[0]->getBusReg() instanceof BusRegEntity)) {
             throw new NotFoundException();
         }
 
