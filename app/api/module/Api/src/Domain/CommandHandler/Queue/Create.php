@@ -36,6 +36,11 @@ final class Create extends AbstractCommandHandler
         if ($command->getUser()) {
             $queue->setCreatedBy($this->getRepo()->getReference(UserEntity::class, $command->getUser()));
         }
+
+        if ($command->getOptions()) {
+            $queue->setOptions($command->getOptions());
+        }
+
         $this->getRepo()->save($queue);
 
         $result = new Result();
