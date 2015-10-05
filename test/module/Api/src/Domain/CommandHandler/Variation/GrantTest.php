@@ -338,4 +338,75 @@ class GrantTest extends CommandHandlerTestCase
 
         $this->assertEquals(ApplicationEntity::APPLICATION_STATUS_VALID, $application->getStatus()->getId());
     }
+
+    public function testHandleCommandUpgradePsvNoPsvDiscs()
+    {
+        $data = [
+            'id' => 111
+        ];
+
+        $command = Cmd::create($data);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setId(222);
+        $licence->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $licence->setTotAuthVehicles(10);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
+        $application->setId(111);
+        $application->setLicence($licence);
+        $application->shouldReceive('isGoods')
+            ->andReturn(false)
+            ->shouldReceive('isPublishable')
+            ->andReturn(false);
+
+        $licence->shouldReceive('copyInformationFromApplication')
+            ->with($application)
+            ->shouldReceive('getPsvDiscs->matching')
+            ->andReturn(null);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->once()
+            ->with($application);
+
+        $result1 = new Result();
+        $result1->addMessage('CreateSnapshot');
+        $this->expectedSideEffect(CreateSnapshot::class, ['id' => 111, 'event' => CreateSnapshot::ON_GRANT], $result1);
+
+        $result2 = new Result();
+        $result2->addMessage('CreateDiscRecords');
+        $discData = $data;
+        $discData['currentTotAuth'] = 10;
+        $this->expectedSideEffect(CreateDiscRecords::class, $discData, $result2);
+
+        $result3 = new Result();
+        $result3->addMessage('ProcessApplicationOperatingCentres');
+        $this->expectedSideEffect(ProcessApplicationOperatingCentres::class, $data, $result3);
+
+        $result4 = new Result();
+        $result4->addMessage('CommonGrant');
+        $this->expectedSideEffect(CommonGrant::class, $data, $result4);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'CreateSnapshot',
+                'CreateDiscRecords',
+                'ProcessApplicationOperatingCentres',
+                'CommonGrant'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals(ApplicationEntity::APPLICATION_STATUS_VALID, $application->getStatus()->getId());
+    }
 }
