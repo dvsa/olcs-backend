@@ -4818,7 +4818,8 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (32, 'selfserve-search-vehicle-external', 'SSVEX'),
     (33, 'selfserve-nav-dashboard', 'SSNVD'),
     (34, 'selfserve-nav-manage-users', 'SSNVU'),
-    (35, 'can-manage-user-selfserve', 'MUSS');
+    (35, 'can-manage-user-selfserve', 'MUSS'),
+    (36, 'can-manage-user-internal', 'MUINT');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     -- set each role to it's respective permission
@@ -4913,7 +4914,10 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
 
     (5, 35), -- operator-admin = can-manage-user-selfserve
     (9, 35), -- partner-admin = can-manage-user-selfserve
-    (11, 35); -- local-authority-admin = can-manage-user-selfserve
+    (11, 35), -- local-authority-admin = can-manage-user-selfserve
+
+    (3, 36), -- internal-case-worker = can-manage-user-internal
+    (4, 36); -- internal-admin = can-manage-user-internal
 
 INSERT INTO `financial_standing_rate` (
     `id`,

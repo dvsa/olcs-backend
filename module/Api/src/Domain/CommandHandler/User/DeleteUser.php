@@ -28,7 +28,7 @@ final class DeleteUser extends AbstractCommandHandler implements AuthAwareInterf
 
     public function handleCommand(CommandInterface $command)
     {
-        if (!$this->isGranted(Permission::INTERNAL_ADMIN)) {
+        if (!$this->isGranted(Permission::CAN_MANAGE_USER_INTERNAL)) {
             throw new ForbiddenException('You do not have permission to manage the record');
         }
 
