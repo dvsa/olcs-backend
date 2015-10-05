@@ -33,6 +33,8 @@ use Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Entity\System\Category;
 
 /**
  * Pay Outstanding Fees Test
@@ -1017,5 +1019,136 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $fee->setId($id);
 
         return $fee;
+    }
+
+    public function testHandleCommandChequePaymentInsufficientFee()
+    {
+        // set up data
+        $feeIds = [99];
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fee1->setLicence(
+            m::mock(Licence::class)->shouldReceive('getId')->andReturn(22)->getMock()
+        );
+        $fee1->setApplication(
+            m::mock(ApplicationEntity::class)->shouldReceive('getId')->andReturn(33)->getMock()
+        );
+        $fees = [$fee1];
+        $transactionId = 69;
+        $feeTransactionId = 123;
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => FeeEntity::METHOD_CHEQUE,
+            'receiptDate' => '2015-06-17',
+            'payer' => 'Dan',
+            'slipNo' => '12345',
+            'received' => '10.00',
+            'chequeNo' => '23456',
+            'chequeDate' => '2015-06-10',
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('recordChequePayment')
+            ->once()
+            ->with($fees, '10.00', '2015-06-17', 'Dan', '12345', '23456', '2015-06-10')
+            ->andReturn(
+                [
+                    'code' => CpmsHelper::RESPONSE_SUCCESS,
+                    'receipt_reference' => 'OLCS-1234-CHEQUE',
+                ]
+            );
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(0.01);
+
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->with('10.00', $fees)
+            ->andReturn(
+                [
+                    99 => '10.00',
+                ]
+            );
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getOverpaymentAmount')
+            ->with('10.00', $fees)
+            ->andReturn('0.00');
+
+        $docData = [
+            'template' => 'FEE_REQ_INSUFFICIENT',
+            'query' => [
+                'fee' => 99,
+                'licence' => 22
+            ],
+            'knownValues' => [
+                'INSUFFICIENT_FEE_TABLE' => [
+                    'receivedAmount' => '10',
+                    'outstandingAmount' => '89.99'
+                ]
+            ],
+            'description' => 'Insufficient Fee Request',
+            'licence'     => 22,
+            'application' => 33,
+            'category'    => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::DOC_SUB_CATEGORY_FEE_REQUEST,
+            'isExternal'  => false,
+            'dispatch'    => true
+        ];
+        $this->expectedSideEffect(GenerateAndStore::class, $docData, new Result());
+
+        $savedTransaction = null;
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->andReturnUsing(
+                function ($transaction) use (&$savedTransaction, $transactionId, $feeTransactionId) {
+                    $savedTransaction = $transaction;
+                    $savedTransaction->setId($transactionId);
+                    $savedTransaction->getFeeTransactions()->forAll(
+                        function ($key, $ft) use ($feeTransactionId) {
+                            unset($key);
+                            $ft->setId($feeTransactionId);
+                        }
+                    );
+                }
+            );
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'transaction' => $transactionId,
+                'feeTransaction' => [$feeTransactionId],
+            ],
+            'messages' => [
+                'Transaction record created: OLCS-1234-CHEQUE',
+                'FeeTransaction record(s) created',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+        $this->assertEquals('2015-06-17', $savedTransaction->getCompletedDate()->format('Y-m-d'));
+        $this->assertEquals('OLCS-1234-CHEQUE', $savedTransaction->getReference());
+        $this->assertEquals(FeeEntity::METHOD_CHEQUE, $savedTransaction->getPaymentMethod()->getId());
+        $this->assertEquals('Dan', $savedTransaction->getPayerName());
+        $this->assertEquals('12345', $savedTransaction->getPayingInSlipNumber());
+        $this->assertEquals('bob', $savedTransaction->getProcessedByUser()->getLoginId());
+        $this->assertEquals('10.00', $savedTransaction->getFeeTransactions()->first()->getAmount());
+        $this->assertEquals(PaymentEntity::STATUS_PAID, $savedTransaction->getStatus()->getId());
+        $this->assertEquals(PaymentEntity::TYPE_PAYMENT, $savedTransaction->getType()->getId());
+        $this->assertEquals('23456', $savedTransaction->getChequePoNumber());
+        $this->assertEquals('2015-06-10', $savedTransaction->getChequePoDate()->format('Y-m-d'));
     }
 }

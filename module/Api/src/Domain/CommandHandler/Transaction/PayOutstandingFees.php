@@ -201,7 +201,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 $result->merge($this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()])));
             } else {
                 // Generate Insufficient Fee Request letter
-                $result->merge($this->generateInsufficientFeeRequestLetter($fee));
+                $result->merge($this->generateInsufficientFeeRequestLetter($fee, $allocatedAmount));
             }
         }
 
@@ -469,26 +469,36 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         ];
     }
 
-    private function generateInsufficientFeeRequestLetter(Fee $fee)
+    private function generateInsufficientFeeRequestLetter(FeeEntity $fee, $allocatedAmount)
     {
+
+        // we need to calculate actual outstanding fee, because new transaction is not saved
+        // on this step, so $fee->getOutstandingFeeAmount() will return the previous value
+        $actualOutstandingAmount = $fee->getOutstandingAmount() - $allocatedAmount;
+        $receivedAmount = $fee->getAmount() - $actualOutstandingAmount;
+
         $dtoData = [
             'template' => 'FEE_REQ_INSUFFICIENT',
             'query' => [
                 'fee' => $fee->getId(),
-                'application' => $fee->getApplication()->getId(),
-                'licence' => $fee->getApplication()->getLicence()->getId()
+                'licence' => $fee->getLicence()->getId()
             ],
             'knownValues' => [
-                'outstandingAmount' => $fee->getOutstandingFeeAmount()
+                'INSUFFICIENT_FEE_TABLE' => [
+                    'receivedAmount' => $receivedAmount,
+                    'outstandingAmount' => $actualOutstandingAmount
+                ]
             ],
             'description' => 'Insufficient Fee Request',
-            'application' => $fee->getApplication()->getId(),
-            'licence'     => $fee->getApplication()->getLicence()->getId(),
+            'licence'     => $fee->getLicence()->getId(),
             'category'    => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_FEE_REQUEST,
             'isExternal'  => false,
             'dispatch'    => true
         ];
+        if ($fee->getApplication()) {
+            $dtoData['application'] = $fee->getApplication()->getId();
+        }
 
         return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
