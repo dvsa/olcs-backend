@@ -35,6 +35,54 @@ class TxcInboxTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
+    public function testFetchListForLocalAuthorityByBusRegLocalAuthority()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('busReg', 'b')->once()->andReturnSelf();
+
+        $qb->shouldReceive('where')->with('m.fileRead = 0')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchListForLocalAuthorityByBusReg(2, 4));
+
+        $expectedQuery = 'BLAH AND b.id = [[2]] AND m.localAuthority = [[4]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchListForLocalAuthorityByBusRegOperator()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('busReg', 'b')->once()->andReturnSelf();
+
+        $qb->shouldReceive('where')->with('m.fileRead = 0')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchListForLocalAuthorityByBusReg(2, null));
+
+        $expectedQuery = 'BLAH AND b.id = [[2]] AND m.localAuthority IS NULL';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
     public function testFetchUnreadListForLocalAuthority()
     {
         $qb = $this->createMockQb('BLAH');

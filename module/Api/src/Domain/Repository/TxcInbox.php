@@ -31,27 +31,31 @@ class TxcInbox extends AbstractRepository
         return $doctrineQb->getQuery()->getResult();
     }
 
+    /**
+     * @param int $busReg
+     * @param int $localAuthorityId
+     * @param int $hydrateMode
+     * @return array
+     */
     public function fetchListForLocalAuthorityByBusReg($busReg, $localAuthorityId, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata();
+            ->withRefdata()
+            ->with('busReg', 'b');
+
+        $qb->where($qb->expr()->eq($this->alias . '.fileRead', '0'));
+        $qb->andWhere($qb->expr()->eq('b.id', ':busReg'))
+            ->setParameter('busReg', $busReg);
 
         if (empty($localAuthorityId)) {
-            $qb->where($qb->expr()->isNull($this->alias . '.localAuthority', ':localAuthority'));
+            $qb->andWhere($qb->expr()->isNull($this->alias . '.localAuthority', ':localAuthority'));
         } else {
-            $qb->where($qb->expr()->eq($this->alias . '.fileRead', '0'));
             $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
                 ->setParameter('localAuthority', $localAuthorityId);
         }
-
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->with('busReg', 'b');
-
-        $qb->andWhere($qb->expr()->eq('b.id', ':busReg'))
-            ->setParameter('busReg', $busReg);
 
         return $qb->getQuery()->getResult($hydrateMode);
     }
