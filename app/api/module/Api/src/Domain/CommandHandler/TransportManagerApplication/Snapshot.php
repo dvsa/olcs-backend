@@ -57,6 +57,12 @@ final class Snapshot extends AbstractCommandHandler implements TransactionedInte
 
     protected function generateDocument($content, TransportManagerApplication $tma)
     {
+        $description = sprintf(
+            'TM%s snapshot for application %s (at grant)',
+            $tma->getTransportManager()->getId(),
+            $tma->getApplication()->getId()
+        );
+
         $data = [
             'content' => base64_encode(trim($content)),
             'filename' => 'TM Snapshot.html',
@@ -67,6 +73,7 @@ final class Snapshot extends AbstractCommandHandler implements TransactionedInte
             'transportManager' => $tma->getTransportManager()->getId(),
             'application' => $tma->getApplication()->getId(),
             'licence' => $tma->getApplication()->getLicence()->getId(),
+            'description' => $description
         ];
 
         return $this->handleSideEffect(Upload::create($data));
