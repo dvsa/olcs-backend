@@ -10,8 +10,10 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\DeleteUser as Sut;
+use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\User\DeleteUser as Cmd;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Class Delete User Test
@@ -23,6 +25,10 @@ class DeleteUserTest extends CommandHandlerTestCase
         $this->sut = new Sut();
         $this->mockRepo('User', UserRepo::class);
         $this->mockRepo('Task', TaskRepo::class);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
@@ -37,6 +43,11 @@ class DeleteUserTest extends CommandHandlerTestCase
         $tasks = [];
 
         $command = Cmd::create($data);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::INTERNAL_ADMIN, null)
+            ->andReturn(true);
 
         $userEntity = m::mock(UserEntity::class)->makePartial();
         $userEntity->setId(1);
@@ -85,6 +96,11 @@ class DeleteUserTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::INTERNAL_ADMIN, null)
+            ->andReturn(true);
+
         $userEntity = m::mock(UserEntity::class)->makePartial();
         $userEntity->setId(1);
 
@@ -100,6 +116,32 @@ class DeleteUserTest extends CommandHandlerTestCase
             ->with($userId, true)
             ->once()
             ->andReturn($tasks);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testHandleCommandThrowsIncorrectPermissionException()
+    {
+        $data = [
+            'id' => 111,
+            'version' => 1,
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::INTERNAL_ADMIN, null)
+            ->andReturn(false);
+
+        $this->repoMap['User']
+            ->shouldReceive('fetchUsingId')
+            ->never()
+            ->shouldReceive('delete')
+            ->never();
+
+        $command = Cmd::create($data);
 
         $this->sut->handleCommand($command);
     }

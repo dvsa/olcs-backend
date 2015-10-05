@@ -15,11 +15,13 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\User\CreateUser as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Create User Test
@@ -33,6 +35,10 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->mockRepo('Application', Application::class);
         $this->mockRepo('ContactDetails', ContactDetails::class);
         $this->mockRepo('Licence', Licence::class);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
@@ -96,6 +102,11 @@ class CreateUserTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::INTERNAL_ADMIN, null)
+            ->andReturn(true);
 
         $this->repoMap['User']
             ->shouldReceive('populateRefDataReference')
@@ -200,6 +211,11 @@ class CreateUserTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::INTERNAL_ADMIN, null)
+            ->andReturn(true);
+
         $this->repoMap['User']
             ->shouldReceive('populateRefDataReference')
             ->once()
@@ -265,5 +281,31 @@ class CreateUserTest extends CommandHandlerTestCase
             $data['contactDetails']['emailAddress'],
             $savedUser->getContactDetails()->getEmailAddress()
         );
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testHandleCommandThrowsIncorrectPermissionException()
+    {
+        $data = [
+            'id' => 111,
+            'version' => 1,
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::INTERNAL_ADMIN, null)
+            ->andReturn(false);
+
+        $this->repoMap['User']
+            ->shouldReceive('fetchById')
+            ->never()
+            ->shouldReceive('save')
+            ->never();
+
+        $command = Cmd::create($data);
+
+        $this->sut->handleCommand($command);
     }
 }

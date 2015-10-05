@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
+use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Query\User\UserList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -36,13 +37,18 @@ class UserListSelfserveTest extends QueryHandlerTestCase
 
     public function commonHandleQueryTest()
     {
-        $query = Query::create(['QUERY']);
-
         $user = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $user->setId(74);
 
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, null)
+            ->andReturn(true);
+
         $this->repoMap['User']->shouldReceive('fetchList')->andReturn([$user]);
         $this->repoMap['User']->shouldReceive('fetchCount')->andReturn('COUNT');
+
+        $query = Query::create(['QUERY']);
 
         $result = $this->sut->handleQuery($query);
 
@@ -146,5 +152,20 @@ class UserListSelfserveTest extends QueryHandlerTestCase
             ->andReturn($currentUser);
 
         $this->commonHandleQueryTest();
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testHandleQueryThrowsIncorrectPermissionException()
+    {
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, null)
+            ->andReturn(false);
+
+        $query = Query::create(['QUERY']);
+
+        $this->sut->handleQuery($query);
     }
 }
