@@ -5,7 +5,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\ResultList;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr\TxcInboxByBusReg;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
@@ -67,7 +66,6 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
         $mockLicence->shouldReceive('determineNpNumber')->andReturn('333');
 
         $mockResult = new TxcInboxEntity();
-        $busReg = new BusRegEntity();
         $busReg = m::mock(BusRegEntity::class)->makePartial();
         $busReg->shouldReceive('isLatestVariation')->andReturn(false);
 
@@ -81,16 +79,10 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
 
         $mockResult->setBusReg($busReg);
 
-/*        $mockResult->shouldReceive('fetchListForLocalAuthorityByBusReg')
-            ->once()
-            ->andReturn([0 => ['bar']]);
-        $mockResult->shouldReceive('getLicence')->once()->andReturn($mockLicence);
-*/
         $this->repoMap['TxcInbox']->shouldReceive('fetchListForLocalAuthorityByBusReg')
             ->with($query->getBusReg(), NULL)
             ->andReturn([0 => $mockResult]);
 
-        $result = $this->sut->handleQuery($query);
-
+        $this->sut->handleQuery($query);
     }
 }

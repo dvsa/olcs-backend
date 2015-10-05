@@ -155,6 +155,13 @@ class RepositoryTestCase extends MockeryTestCase
         return $this->qb;
     }
 
+    public function mockIsNull($where)
+    {
+        $this->query .= $where . ' IS NULL';
+
+        return $this->qb;
+    }
+
     public function mockOrWhere($where)
     {
         $this->query .= ' OR ' . $where;
