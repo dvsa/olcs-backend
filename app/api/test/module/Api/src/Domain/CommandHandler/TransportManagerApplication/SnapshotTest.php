@@ -65,7 +65,7 @@ class SnapshotTest extends CommandHandlerTestCase
         $result->addMessage('Upload');
         $data = [
             'content' => base64_encode('<markup>'),
-            'filename' => 'TM Snapshot.html',
+            'filename' => 'TM222 snapshot for application 333 (at grant).html',
             'category' => Category::CATEGORY_TRANSPORT_MANAGER,
             'subCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_TM1_ASSISTED_DIGITAL,
             'isExternal' => false,
