@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Cpms Report Status Queue Consumer
+ * Cpms Report Download Queue Consumer
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
@@ -23,11 +23,11 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Retry as RetryCmd;
 
 
 /**
- * Cpms Report Status Queue Consumer
+ * Cpms Report Download Queue Consumer
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class ReportStatus implements MessageConsumerInterface, ServiceLocatorAwareInterface
+class ReportDownload implements MessageConsumerInterface, ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
 
