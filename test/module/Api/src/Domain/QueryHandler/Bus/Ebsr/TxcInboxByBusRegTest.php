@@ -33,11 +33,14 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    private function getCurrentUser($localAuthority = null)
+    private function getCurrentUser($localAuthorityId = null)
     {
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
         $mockUser->shouldReceive('getUser')
             ->andReturnSelf();
+
+        $localAuthority = new \Dvsa\Olcs\Api\Entity\Bus\LocalAuthority();
+        $localAuthority->setId($localAuthorityId);
 
         $mockUser->shouldReceive('getLocalAuthority')
             ->andReturn($localAuthority);
@@ -80,7 +83,7 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
         $mockResult->setBusReg($busReg);
 
         $this->repoMap['TxcInbox']->shouldReceive('fetchListForLocalAuthorityByBusReg')
-            ->with($query->getBusReg(), NULL)
+            ->with($query->getBusReg(), 4)
             ->andReturn([0 => $mockResult]);
 
         $this->sut->handleQuery($query);
@@ -130,7 +133,7 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
             ->andReturn(true);
 
         $this->repoMap['TxcInbox']->shouldReceive('fetchListForLocalAuthorityByBusReg')
-            ->with($query->getBusReg(), NULL)
+            ->with($query->getBusReg(), 4)
             ->andReturnNull();
 
         $this->sut->handleQuery($query);
