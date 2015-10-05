@@ -27,7 +27,7 @@ class User extends AbstractQueryHandler implements AuthAwareInterface
 
     public function handleQuery(QueryInterface $query)
     {
-        if (!$this->isGranted(Permission::INTERNAL_ADMIN)) {
+        if (!$this->isGranted(Permission::CAN_MANAGE_USER_INTERNAL)) {
             throw new ForbiddenException('You do not have permission to manage the record');
         }
 

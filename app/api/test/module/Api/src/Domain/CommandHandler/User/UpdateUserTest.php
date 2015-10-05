@@ -107,7 +107,7 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(PermissionEntity::INTERNAL_ADMIN, null)
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
         /** @var TeamEntity $user */
@@ -215,7 +215,7 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(PermissionEntity::INTERNAL_ADMIN, null)
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
         /** @var ContactDetailsEntity $contactDetails */
@@ -336,7 +336,7 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(PermissionEntity::INTERNAL_ADMIN, null)
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
         /** @var ContactDetailsEntity $contactDetails */
@@ -428,7 +428,7 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(PermissionEntity::INTERNAL_ADMIN, null)
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(false);
 
         $this->repoMap['User']

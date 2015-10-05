@@ -27,5 +27,6 @@ class Permission extends AbstractPermission
     const PARTNER_USER = 'partner-user';
     const SELFSERVE_USER = 'selfserve-user';
     const CAN_UPDATE_LICENCE_LICENCE_TYPE = 'can-update-licence-licence-type';
+    const CAN_MANAGE_USER_INTERNAL = 'can-manage-user-internal';
     const CAN_MANAGE_USER_SELFSERVE = 'can-manage-user-selfserve';
 }

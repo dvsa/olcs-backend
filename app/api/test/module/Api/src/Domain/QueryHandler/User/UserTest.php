@@ -40,7 +40,7 @@ class UserTest extends QueryHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(PermissionEntity::INTERNAL_ADMIN, null)
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
@@ -61,7 +61,7 @@ class UserTest extends QueryHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(PermissionEntity::INTERNAL_ADMIN, null)
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(false);
 
         $query = Query::create(['QUERY']);
