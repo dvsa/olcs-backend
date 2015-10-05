@@ -41,7 +41,7 @@ class Queue extends AbstractQueue
     const TYPE_CPID_EXPORT_CSV = 'que_typ_cpid_export_csv';
     const TYPE_CONT_CHECKLIST = 'que_typ_cont_checklist';
     const TYPE_TM_SNAPSHOT = 'que_typ_tm_snapshot';
-    const TYPE_CPMS_REPORT_STATUS = 'que_typ_cpms_report_status';
+    const TYPE_CPMS_REPORT_DOWNLOAD = 'que_typ_cpms_report_download';
 
     protected $types = [
         self::TYPE_COMPANIES_HOUSE_INITIAL,
@@ -50,7 +50,7 @@ class Queue extends AbstractQueue
         self::TYPE_CPID_EXPORT_CSV,
         self::TYPE_CONT_CHECKLIST,
         self::TYPE_TM_SNAPSHOT,
-        self::TYPE_CPMS_REPORT_STATUS,
+        self::TYPE_CPMS_REPORT_DOWNLOAD,
     ];
 
     public function incrementAttempts()
