@@ -46,13 +46,13 @@ class TxcInbox extends AbstractRepository
             ->withRefdata()
             ->with('busReg', 'b');
 
-        $qb->where($qb->expr()->eq($this->alias . '.fileRead', '0'));
-        $qb->andWhere($qb->expr()->eq('b.id', ':busReg'))
+        $qb->where($qb->expr()->eq('b.id', ':busReg'))
             ->setParameter('busReg', $busReg);
 
         if (empty($localAuthorityId)) {
             $qb->andWhere($qb->expr()->isNull($this->alias . '.localAuthority', ':localAuthority'));
         } else {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.fileRead', '0'));
             $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
                 ->setParameter('localAuthority', $localAuthorityId);
         }
