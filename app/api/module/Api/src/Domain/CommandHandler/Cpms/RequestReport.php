@@ -33,10 +33,8 @@ final class RequestReport extends AbstractCommandHandler implements CpmsAwareInt
     {
         $result = new Result();
 
-        $end = new DateTime('now');
-
-        $start = clone $end;
-        $start->sub(new \DateInterval('P1D'));
+        $start = new \DateTime($command->getStart());
+        $end = new \DateTime($command->getEnd());
 
         $data = $this->getCpmsService()->requestReport($command->getReportCode(), $start, $end);
 
