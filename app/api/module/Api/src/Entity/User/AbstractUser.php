@@ -91,24 +91,6 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     protected $deletedDate;
 
     /**
-     * Department name
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="department_name", length=100, nullable=true)
-     */
-    protected $departmentName;
-
-    /**
-     * Division group
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="division_group", length=100, nullable=true)
-     */
-    protected $divisionGroup;
-
-    /**
      * Identifier - Id
      *
      * @var int
@@ -118,15 +100,6 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
-
-    /**
-     * Job title
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="job_title", length=100, nullable=true)
-     */
-    protected $jobTitle;
 
     /**
      * Last modified by
@@ -390,52 +363,6 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     }
 
     /**
-     * Set the department name
-     *
-     * @param string $departmentName
-     * @return User
-     */
-    public function setDepartmentName($departmentName)
-    {
-        $this->departmentName = $departmentName;
-
-        return $this;
-    }
-
-    /**
-     * Get the department name
-     *
-     * @return string
-     */
-    public function getDepartmentName()
-    {
-        return $this->departmentName;
-    }
-
-    /**
-     * Set the division group
-     *
-     * @param string $divisionGroup
-     * @return User
-     */
-    public function setDivisionGroup($divisionGroup)
-    {
-        $this->divisionGroup = $divisionGroup;
-
-        return $this;
-    }
-
-    /**
-     * Get the division group
-     *
-     * @return string
-     */
-    public function getDivisionGroup()
-    {
-        return $this->divisionGroup;
-    }
-
-    /**
      * Set the id
      *
      * @param int $id
@@ -456,29 +383,6 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set the job title
-     *
-     * @param string $jobTitle
-     * @return User
-     */
-    public function setJobTitle($jobTitle)
-    {
-        $this->jobTitle = $jobTitle;
-
-        return $this;
-    }
-
-    /**
-     * Get the job title
-     *
-     * @return string
-     */
-    public function getJobTitle()
-    {
-        return $this->jobTitle;
     }
 
     /**
