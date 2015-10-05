@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cpms;
 
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
@@ -14,15 +15,18 @@ use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Cpms\RequestReport as Cmd;
-
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 /**
  * Request Cpms Report
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class RequestReport extends AbstractCommandHandler implements CpmsAwareInterface
+final class RequestReport extends AbstractCommandHandler implements AuthAwareInterface, CpmsAwareInterface
 {
-    use CpmsAwareTrait;
+    use CpmsAwareTrait,
+        AuthAwareTrait;
 
     /**
      * @param Cmd $command
@@ -38,8 +42,19 @@ final class RequestReport extends AbstractCommandHandler implements CpmsAwareInt
 
         $data = $this->getCpmsService()->requestReport($command->getReportCode(), $start, $end);
 
-        // @todo we'll probably stick the reference number on a queue then return the queue
-        // message id. For now, just return the reference.
+        $queueCmd = CreateQueueCmd::create(
+            [
+                'type' => Queue::TYPE_CPMS_REPORT_STATUS,
+                'status' => Queue::STATUS_QUEUED,
+                'user' => $this->getCurrentUser()->getId(),
+                'options' => json_encode(
+                    [
+                        'reference' => $data['reference'],
+                    ]
+                ),
+            ]
+        );
+        $result->merge($this->handleSideEffect($queueCmd));
 
         $result->addMessage('Report requested');
         $result->addId('cpmsReport', $data['reference']);
