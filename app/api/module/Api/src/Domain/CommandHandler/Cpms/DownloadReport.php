@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Cpms\DownloadReport as Cmd;
 
@@ -40,10 +41,24 @@ final class DownloadReport extends AbstractCommandHandler implements CpmsAwareIn
 
         // var_dump($data); exit;
         // @todo create document with downloaded data here
-        $documentId = '666';
+        $uploadData = [
+            'content' => base64_encode(trim($data)),
+            'filename' => 'Daily balance report' . $extension ? ('.'.$extension) : '',
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::DOC_SUB_CATEGORY_FINANCIAL_REPORTS,
+            // 'isExternal' => false,
+            // 'isScan' => false,
+            // 'transportManager' => $tma->getTransportManager()->getId(),
+            // 'application' => $tma->getApplication()->getId(),
+            // 'licence' => $tma->getApplication()->getLicence()->getId(),
+        ];
+
+        $command = \Dvsa\Olcs\Transfer\Command\Document\Upload::create($uploadData);
+        $this->handleSideEffect($command);
+        // $documentId = '666';
 
         $result->addMessage('Report downloaded');
-        $result->addId('document', $documentId);
+        // $result->addId('document', $documentId);
 
         return $result;
     }
