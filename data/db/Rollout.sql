@@ -4796,8 +4796,6 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (13, 'selfserve-tm', 'STM'),
     (14, 'selfserve-tm-dashboard', 'STMD'),
 
-    (15, 'selfserve-manage-user', 'SSMU'),
-
     -- add a permission for each role
     (16, 'internal-limited-read-only', 'INTL'),
     (17, 'internal-read-only', 'INTR'),
@@ -4816,9 +4814,8 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
     (31, 'selfserve-search-person', 'SSSPN'),
     (32, 'selfserve-search-vehicle-external', 'SSVEX'),
     (33, 'selfserve-nav-dashboard', 'SSNVD'),
-    (34, 'selfserve-nav-manage-users', 'SSNVU'),
-    (35, 'can-manage-user-selfserve', 'MUSS'),
-    (36, 'can-manage-user-internal', 'MUINT');
+    (34, 'can-manage-user-selfserve', 'MUSS'),
+    (35, 'can-manage-user-internal', 'MUINT');
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     -- set each role to it's respective permission
@@ -4883,7 +4880,6 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (11, 10), -- LA admin sees ebsr docs
     (12, 10), -- LA user sees ebsr docs
     (7, 14), -- operator TM has selfserve dashboard
-    (5, 15), -- "operator-admin" can access "selfserve-manage-user"
 
     (3, 28), -- internal users can update licence licence type
     (4, 28), -- internal users can update licence licence type
@@ -4906,16 +4902,12 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (6, 33), -- operator-user = selfserve-nav-dashboard
     (7, 33), -- operator-tm = selfserve-nav-dashboard
 
-    (5, 34), -- operator-admin = selfserve-nav-manage-users
-    (9, 34), -- partner-admin = selfserve-nav-manage-users
-    (11, 34), -- la-admin = selfserve-nav-manage-users
+    (5, 34), -- operator-admin = can-manage-user-selfserve
+    (9, 34), -- partner-admin = can-manage-user-selfserve
+    (11, 34), -- local-authority-admin = can-manage-user-selfserve
 
-    (5, 35), -- operator-admin = can-manage-user-selfserve
-    (9, 35), -- partner-admin = can-manage-user-selfserve
-    (11, 35), -- local-authority-admin = can-manage-user-selfserve
-
-    (3, 36), -- internal-case-worker = can-manage-user-internal
-    (4, 36); -- internal-admin = can-manage-user-internal
+    (3, 35), -- internal-case-worker = can-manage-user-internal
+    (4, 35); -- internal-admin = can-manage-user-internal
 
 INSERT INTO `financial_standing_rate` (
     `id`,
