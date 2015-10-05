@@ -95,7 +95,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklistReminderGenerateLetter::class,
             Queue::TYPE_TM_SNAPSHOT
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\Snapshot::class,
-
+            Queue::TYPE_CPMS_REPORT_STATUS
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportStatus::class,
         ],
         'factories' => [
             'que_typ_cpid_export_csv'

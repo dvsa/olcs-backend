@@ -11,6 +11,9 @@ use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Cpms Report Status
@@ -23,11 +26,11 @@ class ReportStatus extends AbstractQueryHandler implements CpmsAwareInterface
 
     public function handleQuery(QueryInterface $query)
     {
-        $result = [
-            'completed' => false,
-        ];
-
         $data = $this->getCpmsService()->getReportStatus($query->getReference());
+
+        if (empty($data)) {
+            throw new NotFoundException();
+        }
 
         if (isset($data['completed']) && $data['completed']) {
             $result = [
@@ -37,12 +40,17 @@ class ReportStatus extends AbstractQueryHandler implements CpmsAwareInterface
                 'token' => $this->parseToken($data),
                 'extension' => isset($data['file_extension']) ? $data['file_extension'] : null,
             ];
+
+            // @todo can remove this
+            $result['debug'] = $data;
+
+            return $result;
         }
 
-        // @todo can remove this
-        $result['debug'] = $data;
-
-        return $result;
+        // if report is not ready throw a NotReadyException which results in a 503 response
+        $ex = new NotReadyException("Report is not ready yet");
+        $ex->setRetryAfter(60); // seconds
+        throw $ex;
     }
 
     /**

@@ -26,6 +26,8 @@ class GenericController extends AbstractRestfulController
             return $this->response()->singleResult($result);
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
+        } catch (Exception\NotReadyException $ex) {
+            return $this->response()->notReady($ex->getRetryAfter());
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
@@ -54,6 +56,8 @@ class GenericController extends AbstractRestfulController
 
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
+        } catch (Exception\NotReadyException $ex) {
+            return $this->response()->notReady($ex->getRetryAfter());
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {

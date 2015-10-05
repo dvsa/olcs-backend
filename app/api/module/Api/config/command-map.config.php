@@ -750,6 +750,7 @@ return [
     // Domain - Queue
     QueueCommand\Complete::class => QueueCommandHandler\Complete::class,
     QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
+    QueueCommand\Retry::class => QueueCommandHandler\Retry::class,
     QueueCommand\Create::class => QueueCommandHandler\Create::class,
 
     // Transfer - TmCaseDecision
