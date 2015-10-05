@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Fee
@@ -72,10 +73,10 @@ class Fee extends AbstractRepository
      * (only those associated to a valid licence or in progress application)
      *
      * @param int $organisationId Organisation ID
-     *
+     * @param bool $hideExpired
      * @return array
      */
-    public function fetchOutstandingFeesByOrganisationId($organisationId)
+    public function fetchOutstandingFeesByOrganisationId($organisationId, $hideExpired = false)
     {
         $doctrineQb = $this->createQueryBuilder();
 
@@ -91,6 +92,12 @@ class Fee extends AbstractRepository
 
         $this->whereOutstandingFee($doctrineQb);
         $this->whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId);
+
+        if ($hideExpired) {
+            $doctrineQb
+                ->andWhere($doctrineQb->expr()->gte('l.expiryDate', ':today'))
+                ->setParameter('today', new DateTime());
+        }
 
         return $doctrineQb->getQuery()->getResult();
     }
