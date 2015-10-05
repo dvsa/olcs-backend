@@ -65,6 +65,7 @@ return [
     TransferQuery\Application\OperatingCentres::class => QueryHandler\Application\OperatingCentres::class,
     TransferQuery\Application\PsvVehicles::class => QueryHandler\Application\PsvVehicles::class,
     TransferQuery\Application\Publish::class => QueryHandler\Application\Publish::class,
+    TransferQuery\Application\Schedule41Approve::class => QueryHandler\Application\Schedule41Approve::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,

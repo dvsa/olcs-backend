@@ -27,6 +27,13 @@ class PublicationSection extends AbstractPublicationSection
     const VAR_GRANTED_SECTION = 8;
     const VAR_REFUSED_SECTION = 9;
 
+    const SCHEDULE_1_NI_NEW = 29;
+    const SCHEDULE_4_NEW = 16;
+    const SCHEDULE_1_NI_UNTRUE = 30;
+    const SCHEDULE_4_UNTRUE = 17;
+    const SCHEDULE_1_NI_TRUE = 31;
+    const SCHEDULE_4_TRUE = 18;
+
     const LIC_SURRENDERED_SECTION = 10;
     const LIC_TERMINATED_SECTION = 11;
     const LIC_REVOKED_SECTION = 12;
