@@ -9,6 +9,8 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
 use Dvsa\Olcs\Api\Domain\Command\Queue\Complete as CompleteCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Failed as FailedCmd;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Retry as RetryCmd;
+use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -18,6 +20,7 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
  * Abstract Queue Consumer
  *
  * @author Dan Eggleston <dan@stolenegg.com>
+ * @todo refactor into AbstractCommandConsumer, leave success/failed/retry in main Abstract
  */
 abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLocatorAwareInterface
 {
