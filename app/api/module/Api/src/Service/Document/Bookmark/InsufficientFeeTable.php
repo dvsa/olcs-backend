@@ -29,27 +29,26 @@ class InsufficientFeeTable extends DynamicBookmark
         $rows = [];
         $rows[] = [
             'COL1_BMK1' => self::RTF_BOLD_START . 'Fee description' . self::RTF_BOLD_END,
-            'COL1_BMK2' => self::RFT_BOLD_START . 'Amount' . self::RTF_BOLD_END,
-            'COL1_BMK3' => ''
+            'COL2_BMK2' => self::RTF_BOLD_START . 'Amount' . self::RTF_BOLD_END,
         ];
 
         $rows[] = [
-            'COL1_BMK1' => $this->data['fee']['description'],
-            'COL1_BMK2' => '£',
-            'COL1_BMK3' => $this->data['fee']['amount']
+            'COL1_BMK1' => $this->data['description'],
+            'COL2_BMK1' => '£',
+            'COL2_BMK2' => number_format($this->data['amount'], 2)
         ];
 
         $rows[] = [
             'COL1_BMK1' => 'Amount RECEIVED',
-            'COL1_BMK2' => '£',
-            'COL1_BMK3' => $this->data['outstandingAmount']
+            'COL2_BMK1' => '£',
+            'COL2_BMK2' => number_format($this->data['receivedAmount'], 2)
         ];
 
         $rows[] = [
             'COL1_BMK1' => self::RTF_BOLD_START . 'BALANCE NOW DUE' . self::RTF_BOLD_END,
-            'COL1_BMK2' => self::RTF_BOLD_START . '£' . self::RTF_BOLD_END,
-            'COL1_BMK3' => self::RTF_BOLD_START . ((float) $this->data['fee']['amount'] -
-                (float) $this->data['outstandingAmount']) . self::RTF_BOLD_END
+            'COL2_BMK1' => self::RTF_BOLD_START . '£' . self::RTF_BOLD_END,
+            'COL2_BMK2' => self::RTF_BOLD_START .
+                number_format($this->data['outstandingAmount'], 2) . self::RTF_BOLD_END
         ];
 
         $snippet = $this->getSnippet('TABLE_INSUFFICIENT_FEE');

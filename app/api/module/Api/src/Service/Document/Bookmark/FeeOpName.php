@@ -37,10 +37,10 @@ class FeeOpName extends DynamicBookmark
             $organisation['tradingNames']
         );
 
+        $tradingNames = trim($tradingNames, ', ');
         if (strlen($tradingNames) > 0) {
-            $tradingNames = substr($tradingNames, 0, -1);
             $tradingNames = 'TA ' . $tradingNames;
-            if (strlen($tradingNames > 40)) {
+            if (strlen($tradingNames) > 40) {
                 $tradingNames = substr($tradingNames, 0, 37) . '...';
             }
         }
