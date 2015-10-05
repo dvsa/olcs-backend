@@ -21,8 +21,6 @@ final class DeleteUnlicensedOperatorLicenceVehicle extends AbstractCommandHandle
 {
     protected $repoServiceName = 'LicenceVehicle';
 
-    protected $extraRepos = ['Vehicle'];
-
     /**
      * Delete Unlicensed Licence Vehicle
      *
@@ -36,19 +34,14 @@ final class DeleteUnlicensedOperatorLicenceVehicle extends AbstractCommandHandle
     {
         $licenceVehicle = $this->getRepo('LicenceVehicle')->fetchUsingId($command);
         $licenceVehicleId = $licenceVehicle->getId();
-        $this->getRepo('LicenceVehicle')->delete($licenceVehicle);
 
-        $vehicle = $licenceVehicle->getVehicle();
-        $vehicleId = $vehicle->getId();
-        $this->getRepo('Vehicle')->delete($vehicle);
+        $this->getRepo('LicenceVehicle')->delete($licenceVehicle);
 
         $result = new Result();
 
         $result
             ->addId('licenceVehicle', $licenceVehicleId)
-            ->addMessage('LicenceVehicle deleted')
-            ->addId('vehicle', $vehicleId)
-            ->addMessage('Vehicle deleted');
+            ->addMessage('LicenceVehicle deleted');
 
         return $result;
     }
