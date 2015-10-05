@@ -72,7 +72,7 @@ class CreateTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals(['Queue created'], $result->getMessages());
-        $this->assertEquals(1, $result->getId('queue1'));
+        $this->assertEquals(1, $result->getId('queue'));
         $this->assertEquals($savedQueue->getId(), 1);
         $this->assertEquals(
             $savedQueue->getType(),

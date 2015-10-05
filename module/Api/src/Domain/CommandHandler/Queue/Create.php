@@ -44,7 +44,7 @@ final class Create extends AbstractCommandHandler
         $this->getRepo()->save($queue);
 
         $result = new Result();
-        $result->addId('queue' . $queue->getId(), $queue->getId());
+        $result->addId('queue', $queue->getId(), true);
         $result->addMessage('Queue created');
         return $result;
     }
