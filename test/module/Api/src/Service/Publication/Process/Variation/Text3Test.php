@@ -108,16 +108,30 @@ class Text3Test extends MockeryTestCase
 
     public function testTransportManagers()
     {
+        $person1 = new \Dvsa\Olcs\Api\Entity\Person\Person();
+        $person1->setForename('John')->setFamilyName('Jones');
+        $cd1 = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(new RefData());
+        $cd1->setPerson($person1);
+        $tm1 = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
+        $tm1->setHomeCd($cd1);
+
+        $person2 = new \Dvsa\Olcs\Api\Entity\Person\Person();
+        $person2->setForename('Fred')->setFamilyName('Smith');
+        $cd2 = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(new RefData());
+        $cd2->setPerson($person2);
+        $tm2 = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
+        $tm2->setHomeCd($cd2);
+
         $publicationLink = $this->getPublicationLink(Organisation::ORG_TYPE_LLP);
         $context = new ImmutableArrayObject(
             [
-                'transportManagers' => 'TRANSPORT_MANAGERS'
+                'applicationTransportManagers' => [$tm1, $tm2]
             ]
         );
 
         $this->sut->process($publicationLink, $context);
 
-        $expectedText3 = "Transport Manager(s): TRANSPORT_MANAGERS";
+        $expectedText3 = "Transport Manager(s): John Jones, Fred Smith";
 
         $this->assertSame($expectedText3, $publicationLink->getText3());
     }

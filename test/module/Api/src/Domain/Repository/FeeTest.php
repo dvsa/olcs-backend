@@ -11,6 +11,7 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\Fee\FeeList as FeeListQry;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Fee test
@@ -82,6 +83,10 @@ class FeeTest extends RepositoryTestCase
         /** @var QueryBuilder $qb */
         $mockQb = m::mock(QueryBuilder::class);
 
+        $mockQb->shouldReceive('expr->gte')->with('l.expiryDate', ':today')->once()->andReturn('condition');
+        $mockQb->shouldReceive('andWhere')->with('condition')->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('today', m::type(DateTime::class))->andReturnSelf();
+
         $this->em
             ->shouldReceive('getRepository->createQueryBuilder')
             ->with('f')
@@ -111,7 +116,7 @@ class FeeTest extends RepositoryTestCase
 
         $this->assertSame(
             'result',
-            $this->sut->fetchOutstandingFeesByOrganisationId($organisationId)
+            $this->sut->fetchOutstandingFeesByOrganisationId($organisationId, true)
         );
     }
 
