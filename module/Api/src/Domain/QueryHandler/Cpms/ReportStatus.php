@@ -29,7 +29,6 @@ class ReportStatus extends AbstractQueryHandler implements CpmsAwareInterface
 
         $data = $this->getCpmsService()->getReportStatus($query->getReference());
 
-        // @todo handle 404?
         if (isset($data['completed']) && $data['completed']) {
             $result = [
                 // we only really need to return token and extension, we
@@ -39,6 +38,9 @@ class ReportStatus extends AbstractQueryHandler implements CpmsAwareInterface
                 'extension' => isset($data['file_extension']) ? $data['file_extension'] : null,
             ];
         }
+
+        // @todo can remove this
+        $result['debug'] = $data;
 
         return $result;
     }
