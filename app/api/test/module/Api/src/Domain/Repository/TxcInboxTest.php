@@ -65,8 +65,6 @@ class TxcInboxTest extends RepositoryTestCase
 
         $this->mockCreateQueryBuilder($qb);
 
-        $mockWhere = m::mock();
-
         $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('busReg', 'b')->once()->andReturnSelf();
