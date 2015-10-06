@@ -77,7 +77,7 @@ class DocumentSearchViewTest extends RepositoryTestCase
 
         $expected = '{QUERY} AND m.isExternal = [[1]] '
             . 'AND m.category = 11 '
-            . 'AND m.documentSubCategory = 22 '
+            . 'AND m.documentSubCategory IN 22 '
             . 'AND (m.licenceId = :licence OR m.tmId = :tm OR m.caseId = :case '
             . 'OR m.irfoOrganisationId = :irfoOrganisation)';
 
