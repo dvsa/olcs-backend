@@ -2143,4 +2143,127 @@ INSERT INTO `licence_vehicle` (`licence_id`,`vehicle_id`) VALUES
     (702, 12),
     (702, 13);
 
+-- OLCS-10506 organisation, licence and contact details for submission test data --
+INSERT INTO `organisation` (`id`,`lead_tc_area_id`,`name`,`type`,`is_unlicensed`,`nature_of_business`) VALUES
+  (130,'B','Big Trucks Ltd','org_t_rc', 0, 'Traffic Management');
+
+INSERT INTO `licence` (`id`,`correspondence_cd_id`,`organisation_id`,`goods_or_psv`,`licence_type`,`status`,`lic_no`) VALUES
+  (99,181,130,'lcat_gv','ltyp_r','lsts_consideration','OB111111');
+
+INSERT INTO `contact_details` (`id`,`address_id`,`contact_type`,`email_address`) VALUES
+  (181,283,'ct_corr','contact@bigtrucksltd.com');
+
+INSERT INTO `address` (`id`,`saon_desc`,`paon_desc`,`street`,`locality`,`town`,`postcode`,`country_code`) VALUES
+  (283,'Address Line 1','Address Line 2','Address Line 3','Address Line 4','Address Line 5','LS9 6NF','GB');
+
+INSERT INTO `phone_contact` (`id`,`contact_details_id`,`phone_contact_type`,`phone_number`) VALUES
+  (30,181,'phone_t_tel','012345'),
+  (31,181,'phone_t_home','012346'),
+  (32,181,'phone_t_mobile','012347'),
+  (33,181,'phone_t_fax','012348');
+
+-- OLCS-10506 vehicles
+INSERT INTO `vehicle` (`id`,`vrm`,`plated_weight`,`psv_type`,`created_on`) VALUES
+  (20,'ABC123','750',NULL,'2015-07-16'),
+  (21,'ABC124','895',NULL,'2015-07-17'),
+  (22,'ABC125',NULL,'vhl_t_a','2015-07-16'),
+  (23,'ABC126',NULL,'vhl_t_b','2015-07-17'),
+  (24,'ABC127',NULL,'vhl_t_c','2015-07-18');
+
+INSERT INTO `licence_vehicle` (`licence_id`,`vehicle_id`) VALUES
+  (99, 20),
+  (99, 21),
+  (99, 22),
+  (99, 23),
+  (99, 24);
+
+-- OLCS-10506 Cases
+INSERT INTO `cases` (`id`,`case_type`,`erru_case_type`,`licence_id`,`application_id`,`transport_manager_id`,
+                     `last_modified_by`,`created_by`,`ecms_no`,`open_date`,`closed_date`,`description`,`is_impounding`,
+                     `erru_originating_authority`,`erru_transport_undertaking_name`,`erru_vrm`,`annual_test_history`,`prohibition_note`,
+                     `conviction_note`,`penalties_note`,`deleted_date`,`created_on`,`last_modified_on`,`version`)
+VALUES
+  (85,'case_t_lic',NULL,99,NULL,NULL,NULL,NULL,'E123456','2012-03-21',NULL,'New application for Operating Centre',0,
+   NULL,NULL,
+   NULL,'Annual test history for case 99','prohibition test notes','Nothing found',NULL,NULL,
+   '2013-11-12 12:27:33',NULL,1);
+
+-- OLCS-10506 comments
+INSERT INTO `submission_section_comment` VALUES
+  (1,NULL,NULL,1,'case-outline','New application for Operating Centre','2015-10-05 15:51:20',NULL,1),
+  (2,NULL,NULL,1,'conviction-fpn-offence-history','<p>Nothing found</p>','2015-10-05 15:51:20','2015-10-05 16:28:23',3),
+  (3,NULL,NULL,1,'introduction','<p><strong>1) To                                                                                                                                    From:
+</strong></p>\n<p><strong>2) To                                                                                                                                     Date: </strong></p>\n<h1><strong>ENVIRONMENTAL SUBMISSION</strong></h1>\n<p><strong>Not for disclosure to any third parties without the specific consent of the traffic commissioner</strong></p>','2015-10-05 15:52:45','2015-10-05 15:55:23',5),
+  (4,NULL,NULL,1,'previous-history','<h2><strong>RELEVANT SITE HISTORY:</strong></h2>\n<p>The condition that vehicles will not be left unattended on the A64 York Road has been attached to licences in the past as larger vehicles using the site had to wait on the by-pass if the gates to the operating centre were not manned at the time of their arrival. The conditions related to larger vehicles, and their operating hours were restricted to the time that the gate was manned for safety reasons.</p>\n<p>In 2008 the gates were moved back which allowed any size of authorised vehicle to pull off the road whilst the gates were unattended.</p>\n<p>It was decided that the site should still be subject to the waiting restriction on the by-pass. Operators at the site were flagged for review and in January 2011 all operators at the site became subject to this condition.</p>\n<p>In 2012 two applications from Rob’s Transport Ltd (OB999999, no longerat the site) and John Smith Transport Ltd were granted within several days of each other. Due to the large number of additional vehicles the Traffic Commissioner requested that a TE revisit the site to assess capacity. The TE reported that the land owner allocates each operator a specific number of parking spaces so there is always room for vehicles to safely manoeuvre within the site. The John Smith Transport Ltd application (for 15 vehicles and 15 trailers) was granted subject to the restrictions above.</p>\n<p>Rob’s Transport Ltd had an additional condition undertaking attached in respect of the parking area and the Traffic Commissioner decided that parking plans should be obtained and form part of the authorised o/c description for each operator that came up for review and for new applications. Since then applications granted at the site have specified two conditions and an undertaking in respect of the parking area. The most recent application was granted in March 2015 with the same 2 conditions and undertaking attached.</p>\n<p>As part of the John’s Trucks application it was noted that some of the operators at the site were not parking in the areas detailed in their undertaking. This included the parking area for this applicant as it was the same are as specified on OB2222222 Trucky Truck Transport Services Ltd.</p>\n<p>That has now been resolved as the parking plan for Trucky Truck Transport Services Ltd has been updated under Section 17(4)(f) of the Act to take the form of the master plan provided by the site owner, this is the same as the plan this applicant has provided.</p>','2015-10-05 16:00:39','2015-10-05 16:11:08',2),
+  (5,NULL,NULL,1,'local-licence-history','<p>No previous licence history</p>','2015-10-05 16:12:29',NULL,1),
+  (6,NULL,NULL,1,'environmental-complaints','<p>We have not received any opposition</p>','2015-10-05 16:14:50',NULL,1),
+  (7,NULL,NULL,1,'statements','<p><strong>APPLICANT’S COMMENTS:</strong> </p>\n<p>The applicant has confirmed they would agree to the restrictions in place at the operating centre being attached to the licence, if required by the Traffic Commissioner.</p>','2015-10-05 16:19:10',NULL,1),
+  (8,NULL,NULL,1,'maps','<p>Ariel view of the operating centre:</p>','2015-10-05 16:20:07',NULL,1),
+  (9,NULL,NULL,1,'advertisement','<p>31 October 2015, Yorkshire Evening Post - The advert is in time, correctly worded and the newspaper circulates in the vicinity of the operating centre.</p>','2015-10-05 16:24:05',NULL,1),
+  (10,NULL,NULL,1,'financial-information','<p>£18,400 is required. </p>\n<p>Financial evidence provided shows access to more than the amount required to support the application.</p>','2015-10-05 16:24:30',NULL,1),
+  (11,NULL,NULL,1,'fitness-and-repute','<p>Nothing found</p>','2015-10-05 16:25:43',NULL,1),
+  (12,NULL,NULL,1,'interim','<p>Interim authority has been requested.</p>\n<p>OOR    21 Nov 2014</p>\n<p>OOO    14 Jan 2015</p>','2015-10-05 16:30:07',NULL,1),
+  (13,NULL,NULL,1,'maintenance-tachographs-hours','<p><strong>APPLICANT’S RESPONSES:</strong></p>\n<p><strong>Hours of Operation:</strong></p>\n<p>Monday to Friday:       0800 - 1700    </p>\n<p>Saturday:   
+                 no operation               </p>\n<p>Sunday:                      no operation   </p>\n<p>           </p>\n<p><strong>Hours of Maintenance: </strong></p>\n<p>Maintenance work will not be carried out at the ope
+rating centre.</p>','2015-10-05 16:31:33',NULL,1),
+  (14,NULL,NULL,1,'operating-centres','<p><strong>PRESENT USAGE OF O/C:</strong></p>\n<p>There are 2 operators currently for this operating centre and 2 ongoing applications:</p>\n<p>All the operators are subject to restrictions, the ones detailed below have all the relevant restrictions for this operating centre and there are 4 with only one condition, these have been flagged for review.</p>\n<p> </p>\n<p>OB1234567     John Smith Transport Ltd                                10V, 10T</p>','2015-10-05 16:38:15',NULL,1),
+  (15,NULL,NULL,1,'conditions-and-undertakings','<p>The following 3 operators are only subject to the condition detailed below, they have been flagged for review:</p>
+<ol><li><strong>Authorised vehicles shall not be left unattended on the A64 Yor Road at any time</strong>.</li>\n</ol>
+<p>OB6666666     Steve’s Trucks                         2v 0t    (Review Nov 2015)</p>
+<p>OH7777777     John’s Trucks                          6v 0t    (Review Dec 2015)</p>
+<p>OH8888888     Dave’s Trucks Limited            12v 2t  (Review Sep 2016)</p>','2015-10-05 16:14:50',NULL,1),
+  (16,NULL,NULL,1,'intelligence-unit-check','<p><i>I have completed all IU checks necessary for this new application. There are no matches with the intelligence database to suggest that additional action is required. I am therefore returning the matter to you to process in the normal manner.</i></p>','2015-10-05 16:38:15',NULL,1),
+  (17,NULL,NULL,1,'case-summary', '<p><strong>APPLICATION TYPE:</strong></p>
+<p>GV79 – Conditions at operating centre</p>
+<p><strong>COMPANY DIRECTORS:</strong></p>
+<ul><li>Phil Jowitt</li>
+<li>John Spellman</li>
+</ul><p><strong>ECMS CHECK:</strong></p>
+<p>No issues</p>','2015-10-05 15:51:20',NULL,1);
+
+-- OLCS-10506 add Operating centre details
+
+INSERT INTO `address` (`id`,`country_code`,`saon_desc`,`paon_desc`, `postcode`, `town`)
+VALUES (284, 'GB', 'Hillcrest House', '386 Harehills Lane', 'LS9 6NF', 'Leeds');
+
+INSERT INTO `operating_centre` (`id`,`address_id`) VALUES ('75', '284');
+
+INSERT INTO `licence_operating_centre` (`id`,`licence_id`,`operating_centre_id`,`ad_placed`,`ad_placed_date`,
+  `ad_placed_in`,`no_of_trailers_required`,`no_of_vehicles_required`, `permission`, `sufficient_parking`)
+VALUES (5, 99, 75, 1, '2015-10-31', 'Yorkshire Evening Post', 0, 10, 1, 1);
+
+-- OLCS-10506 conditions and undertakings
+INSERT INTO `condition_undertaking` VALUES
+  (12,'cav_case',NULL,NULL,'cat_oc',85,'cdt_con',NULL,NULL,NULL,99,75,NULL,NULL,'2015-10-06 08:52:32','2015-10-06 08:53:41',0,1,NULL,'Authorised vehicles shall not be left unattended on the A64 York road any time.',NULL,NULL,2),(13,'cav_lic',NULL,NULL,'cat_oc',NULL,'cdt_con',NULL,NULL,NULL,99,75,NULL,NULL, '2015-10-06 08:54:06',NULL,0,1,'2015-10-06 08:56:12','Authorised vehicles shall not be left unattended on the A64 York road any time.',NULL,NULL,2),(14,'cav_lic',NULL,NULL,'cat_oc',NULL,'cdt_con',NULL,NULL,NULL,99,75,NULL,NULL,'2015-10-06 08:55:09',NULL,0,1,NULL,'Authorised vehicles and trailers must at all times enter and exit the operating centre in a forward gear',NULL,NULL,1),
+  (15,'cav_lic',NULL,NULL,'cat_oc',NULL,'cdt_und',NULL,NULL,NULL,99,75,NULL,NULL,'2015-10-06 08:57:18',NULL,0,0,NULL, 'Authorised vehicles and trailers must only be parked in the designated area identified on the plan.',NULL,NULL,1),
+  (16,'cav_lic',NULL,NULL,'cat_oc',NULL,'cdt_und',NULL,NULL, NULL,99,75,NULL,NULL,'2015-10-06 08:58:48',NULL,0,1, NULL,'The operator will keep vehicles and trailers in that part of Hillcrest House marked “Parking Area” on the plan agreed by the traffic commissioner and not on any other part of Hillcrest House.',NULL,NULL,1);
+
+-- OLCS-10506 test submission
+INSERT INTO `submission` (`id`,`case_id`, `created_by`, `last_modified_by`, `submission_type`, `created_on`,
+                          `data_snapshot`, `last_modified_on`, `version`)
+VALUES
+  ('1', '85', 3, 3, 'submission_type_o_env', '2015-10-05 15:51:20', '{"introduction":{"data":[]},
+  "case-summary":{"data":{"overview":{"id":85,"caseType":"Licence","ecmsNo":"E123456","organisationName":"Big Trucks
+  Ltd","isMlh":false,"organisationType":"Limited Company","businessType":null,"disqualificationStatus":"None",
+  "licNo":"OB111111","licenceStartDate":"","licenceType":"Restricted","goodsOrPsv":"Goods Vehicle",
+  "licenceStatus":"Under Consideration","totAuthorisedVehicles":10,"totAuthorisedTrailers":null,"vehiclesInPossession":10,"trailersInPossession":null,"serviceStandardDate":""}}},"case-outline":{"data":{"text":"New application for Operating Centre"}},"most-serious-infringement":{"data":{"overview":{"id":"","notificationNumber":"","siCategory":"","siCategoryType":"","infringementDate":"","checkDate":"","isMemberState":""}}},"outstanding-applications":{"data":{"tables":{"outstanding-applications":[]}}},"people":{"data":{"tables":{"people":[]}}},"operating-centres":{"data":{"tables":{"operating-centres":[{"id":75,"version":1,"totAuthVehicles":10,"totAuthTrailers":0,"OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}}]}}},"conditions-and-undertakings":{"data":{"tables":{"undertakings":[{"id":16,"version":1,"createdOn":"2015-10-06T08:58:48+0100","parentId":"OB111111","addedVia":"Licence","isFulfilled":"Y","isDraft":"N","attachedTo":"Operating Centre","notes":"The operator will keep vehicles and trailers in that pa\nrt of Hillcrest House marked \u201cParking Area\u201d on the plan agreed by the traffic commissioner and not on any other part of Hillcrest House.","OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}},{"id":15,"version":1,"createdOn":"2015-10-06T08:57:18+0100","parentId":"OB111111","addedVia":"Licence","isFulfilled":"N","isDraft":"N","attachedTo":"Operating Centre","notes":"Authorised vehicles and trailers must only be parked in the designated area identified on the plan.","OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}}],"conditions":[{"id":14,"version":1,"createdOn":"2015-10-06T08:55:09+0100","parentId":"OB111111","addedVia":"Licence","isFulfilled":"Y","isDraft":"N","attachedTo":"Operating Centre","notes":"Authorised vehicles and trailers must at all times enter and exit the\noperating centre in a forward gear","OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}},{"id":13,"version":2,"createdOn":"2015-10-06T08:54:06+0100","parentId":"OB111111","addedVia":"Licence","isFulfilled":"Y","isDraft":"N","attachedTo":"Operating Centre","notes":"Authorised vehicles shall not be left unattended on the\n A64 York road any time.","OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}}]}}},"intelligence-unit-check":{"data":[]},"interim":{"data":[]},"advertisement":{"data":[]},"auth-requested-applied-for":{"data":{"tables":{"auth-requested-applied-for":[]}}},"transport-managers":{"data":{"tables":{"transport-managers":[]}}},"continuous-effective-control":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"local-licence-history":{"data":[]},"conviction-fpn-offence-history":{"data":{"tables":{"conviction-fpn-offence-history":[]},"text":"test comments"}},"other-issues":{"data":[]},"te-reports":{"data":[]},"site-plans":{"data":[]},"planning-permission":{"data":[]},"applicants-comments":{"data":[]},"visibility-access-egress-size":{"data":[]},"environmental-complaints":{"data":{"tables":{"environmental-complaints":[]}}},"oppositions":{"data":{"tables":{"oppositions":[]}}},"financial-information":{"data":[]},"maps":{"data":[]},"annex":{"data":[]}}', '2015-10-05 15:51:20', 1);
+
+-- OLCS-10506 submission section files
+INSERT INTO `document` VALUES (809,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,148,1,NULL,NULL,'2015-10-06
+08:43:20',NULL,'site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png',0,NULL,0,'2015-10-06 08:43:20','2015-10-06 08:43:20',NULL,NULL,NULL,388800,2),(810,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,122,
+1,NULL,NULL,'2015-10-06 09:00:15',NULL,'parking-area-undertaking.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png',0,NULL,0,'2015-10-06 09:00:15','2015-10-06 09:00:15',NULL,NULL,NULL,112024,2),
+(811,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,122,1,NULL,NULL,'2015-10-06 09:01:41',NULL,
+ 'parking-area-undertaking2.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090135__parking-area-undertaking2.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090135__parking-area-undertaking2.png',0,NULL,0,'2015-10-06 09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,64316,2),
+  (812,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,156,1,NULL,NULL,'2015-10-06 09:01:41',NULL,
+   'ariel-view-operating-centre.png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre
+   .png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre.png',0,NULL,0,'2015-10-06
+   09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,342832,2);
+
+-- OLCS-10506 recommendation / decision
+INSERT INTO `submission_action` VALUES
+  (3,NULL,NULL,1,'CASE WORKER RECOMMENDATION & LEGISLATION:\r\n\r\nThe applicant has provided a site plan that confirms they are not parking in any area which is supposed to be occupied by any other operator.\r\n\r\nI therefore recommend the application is granted under Section 13 of the Goods Vehicle (Licensing of Operators) Act 1995 with the following conditions and undertaking attached:\r\n\r\nConditions under section 21 of the act\r\n\r\n1.	Authorised vehicles shall not be left unattended on the A64 York Road at any time\r\n2.	Vehicles authorised under this licence will enter and leave the operating centre in forward gear only\r\n\r\nUndertaking under section 13C(7) of the Act\r\n\r\nThe Operator will keep vehicles in that part of Hillcrest House marked \"Parking Area\" on the plan agreed by the Traffic Commissioner and not on any other part of Hillcrest House.','2015-10-06 13:38:32',0,'2015-10-06 13:41:23',2),
+  (4,NULL,NULL,1,'Team Leaders Recommendation\r\n\r\nI agree with Steve’s recommendation.\r\n\r\nBob Submission\r\n01/05/2015','2015-10-06 13:39:40',0,NULL,1),
+  (5,NULL,NULL,1,'TRAFFIC COMMISSIONER’S DECISION:\r\n\r\nPlease proceed as recommended for the reasons you give.\r\nSB/TC/13 5 15','2015-10-06 13:42:17',1,NULL,1);
+INSERT INTO `submission_action_reason` (`submission_action_id`, `reason_id`) VALUES (3,122),(4,122),(5,122);
+
 SET foreign_key_checks = 1;
