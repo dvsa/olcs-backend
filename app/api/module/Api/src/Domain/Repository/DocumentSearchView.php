@@ -35,9 +35,9 @@ class DocumentSearchView extends AbstractReadonlyRepository
             );
         }
 
-        if ($query->getDocumentSubCategory() !== null) {
+        if (!empty($query->getDocumentSubCategory())) {
             $qb->andWhere(
-                $qb->expr()->eq('m.documentSubCategory', $query->getDocumentSubCategory())
+                $qb->expr()->in('m.documentSubCategory', $query->getDocumentSubCategory())
             );
         }
 
