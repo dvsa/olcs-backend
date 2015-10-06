@@ -33,21 +33,16 @@ class ReportStatus extends AbstractQueryHandler implements CpmsAwareInterface
         }
 
         if (isset($data['completed']) && $data['completed']) {
-            $result = [
+            return [
                 // we only really need to return token and extension, we
                 // already know what the download url will be based on the reference
                 'completed' => $data['completed'],
                 'token' => $this->parseToken($data),
                 'extension' => isset($data['file_extension']) ? $data['file_extension'] : null,
             ];
-
-            // @todo can remove this
-            $result['debug'] = $data;
-
-            return $result;
         }
 
-        // if report is not ready throw a NotReadyException which results in a 503 response
+        // If report is not ready throw a NotReadyException which results in a 503 response
         $ex = new NotReadyException("Report is not ready yet");
         $ex->setRetryAfter(60); // seconds
         throw $ex;
