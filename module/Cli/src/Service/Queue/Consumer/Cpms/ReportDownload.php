@@ -21,6 +21,8 @@ use Dvsa\Olcs\Transfer\Query\Cpms\ReportStatus as ReportStatusQry;
  */
 class ReportDownload extends AbstractConsumer
 {
+    const MAX_ATTEMPTS = 10;
+
     /**
      * Process the message item
      *
@@ -29,6 +31,10 @@ class ReportDownload extends AbstractConsumer
      */
     public function processMessage(QueueEntity $item)
     {
+        if ($item->getAttempts() > self::MAX_ATTEMPTS) {
+            return $this->failed($item, 'Maximum attempts exceeded');
+        }
+
         $options = (array) json_decode($item->getOptions());
         $reference = $options['reference'];
 
