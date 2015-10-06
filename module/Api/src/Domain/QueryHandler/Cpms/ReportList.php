@@ -21,6 +21,9 @@ class ReportList extends AbstractQueryHandler implements CpmsAwareInterface
 {
     use CpmsAwareTrait;
 
+    /**
+     * @inheritdoc
+     */
     public function handleQuery(QueryInterface $query)
     {
         $result = [];

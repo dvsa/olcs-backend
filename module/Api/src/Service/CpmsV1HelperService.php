@@ -24,12 +24,8 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
     // CPMS' preferred date format (note: this changed around 03/2015)
     const DATE_FORMAT = 'Y-m-d';
 
-    // @TODO product ref shouldn't have to come from a whitelist...
     const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
 
-    // @TODO this is a dummy value for testing purposes as cost_centre is now
-    // a required parameter in cpms/payment-service. Awaiting further info on
-    // what OLCS should pass for this field.
     const COST_CENTRE = '12345,67890';
 
     protected $logger;
@@ -387,6 +383,7 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
      * Get a list of available reports
      *
      * @return array
+     * @inheritdoc
      */
     public function getReportList()
     {
@@ -400,6 +397,7 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
      * @param DateTime $start
      * @param DateTime $end
      * @return array
+     * @inheritdoc
      */
     public function requestReport($reportCode, \DateTime $start, \DateTime $end)
     {
@@ -411,6 +409,7 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @param string $reference
      * @return array
+     * @inheritdoc
      */
     public function getReportStatus($reference)
     {
@@ -423,6 +422,7 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
      * @param string $reference
      * @param string $token
      * @return array
+     * @inheritdoc
      */
     public function downloadReport($reference, $token)
     {
