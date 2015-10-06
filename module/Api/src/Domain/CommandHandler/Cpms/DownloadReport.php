@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Cpms\DownloadReport as Cmd;
+use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 
 /**
  * Download Cpms Report
@@ -36,29 +37,24 @@ final class DownloadReport extends AbstractCommandHandler implements CpmsAwareIn
         $reference = $command->getReference();
         $token = $command->getToken();
         $extension = $command->getExtension();
+        $filename = sprintf(
+            'Daily Balance Report%s',
+            $command->getExtension() ? ('.'.$command->getExtension()) : ''
+        );
 
         $data = $this->getCpmsService()->downloadReport($reference, $token);
+        $result->addMessage('Report downloaded');
 
-        // var_dump($data); exit;
-        // @todo create document with downloaded data here
         $uploadData = [
-            'content' => base64_encode(trim($data)),
-            'filename' => 'Daily balance report' . $extension ? ('.'.$extension) : '',
-            'category' => Category::CATEGORY_LICENSING,
+            'content'     => base64_encode(trim($data)),
+            'filename'    => $filename,
+            'category'    => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_FINANCIAL_REPORTS,
-            // 'isExternal' => false,
-            // 'isScan' => false,
-            // 'transportManager' => $tma->getTransportManager()->getId(),
-            // 'application' => $tma->getApplication()->getId(),
-            // 'licence' => $tma->getApplication()->getLicence()->getId(),
+            'isExternal'  => false,
         ];
 
-        $command = \Dvsa\Olcs\Transfer\Command\Document\Upload::create($uploadData);
-        $this->handleSideEffect($command);
-        // $documentId = '666';
-
-        $result->addMessage('Report downloaded');
-        // $result->addId('document', $documentId);
+        $command = UploadCmd::create($uploadData);
+        $result->merge($this->handleSideEffect($command));
 
         return $result;
     }

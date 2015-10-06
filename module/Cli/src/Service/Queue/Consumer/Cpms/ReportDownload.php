@@ -56,21 +56,22 @@ class ReportDownload implements MessageConsumerInterface, ServiceLocatorAwareInt
         }
 
         $msg = vsprintf(
-            'Download using reference %s and token %s, extension %s',
+            'Download using reference %s and token %s and extension %s',
             [$reference, $result['token'], $result['extension']]
         );
 
         $command = DownloadReportCmd::create(
             [
                 'reference' => $reference,
-                'token' => $result['token']
+                'token' => $result['token'],
+                'extension' => $result['extension'],
             ]
         );
         $downloadResult = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
 
         $messages = array_merge([$msg], $downloadResult->getMessages());
 
-        return $this->success($item, implode(', ', $messages));
+        return $this->success($item, implode('|', $messages));
     }
 
     /**
