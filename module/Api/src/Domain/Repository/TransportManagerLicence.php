@@ -22,12 +22,15 @@ class TransportManagerLicence extends AbstractRepository
 
     protected $entity = Entity::class;
 
-    public function fetchForLicence($licence = null)
+    /**
+     * @param int $licenceId
+     */
+    public function fetchForLicence($licenceId)
     {
         $qb = $this->createQueryBuilder();
 
         $qb->where($qb->expr()->eq($this->alias . '.licence', ':licenceId'));
-        $qb->setParameter('licenceId', $licence->getId());
+        $qb->setParameter('licenceId', $licenceId);
 
         return $qb->getQuery()->getResult();
     }
