@@ -210,8 +210,8 @@ return [
     TransferQuery\Publication\Recipient::class => QueryHandler\Publication\Recipient::class,
     TransferQuery\Publication\RecipientList::class => QueryHandler\Publication\RecipientList::class,
     TransferQuery\Publication\PublicationLinkTmList::class => QueryHandler\Publication\PublicationLinkByTm::class,
-    TransferQuery\Publication\PublicationLinkLicenceList::class
-        => QueryHandler\Publication\PublicationLinkByLicence::class,
+    TransferQuery\Publication\PublicationLinkList::class
+        => QueryHandler\Publication\PublicationLinkList::class,
     TransferQuery\Publication\PublicationLink::class => QueryHandler\Publication\PublicationLink::class,
     TransferQuery\Publication\PendingList::class => QueryHandler\Publication\PendingList::class,
 

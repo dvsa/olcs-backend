@@ -7,10 +7,10 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Publication;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Publication\PublicationLinkByLicence;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Publication\PublicationLinkList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
-use Dvsa\Olcs\Transfer\Query\Publication\PublicationLinkLicenceList as Qry;
+use Dvsa\Olcs\Transfer\Query\Publication\PublicationLinkList as Qry;
 use Mockery as m;
 
 /**
@@ -18,11 +18,11 @@ use Mockery as m;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class PublicationLinkByLicenceTest extends QueryHandlerTestCase
+class PublicationLinkListTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new PublicationLinkByLicence();
+        $this->sut = new PublicationLinkList();
         $this->mockRepo('PublicationLink', PublicationLinkRepo::class);
 
         parent::setUp();
