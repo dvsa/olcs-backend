@@ -7,30 +7,20 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms;
 
-// use Dvsa\Olcs\Api\Domain\Command\Cpms\ReportStatus as Cmd;
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
 use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumer;
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
-use Dvsa\Olcs\Transfer\Query\Cpms\ReportStatus as ReportStatusQry;
 use Dvsa\Olcs\Transfer\Command\Cpms\DownloadReport as DownloadReportCmd;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Queue\Complete as CompleteCmd;
-use Dvsa\Olcs\Api\Domain\Command\Queue\Failed as FailedCmd;
-use Dvsa\Olcs\Api\Domain\Command\Queue\Retry as RetryCmd;
-
+use Dvsa\Olcs\Transfer\Query\Cpms\ReportStatus as ReportStatusQry;
 
 /**
  * Cpms Report Download Queue Consumer
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class ReportDownload implements MessageConsumerInterface, ServiceLocatorAwareInterface
+class ReportDownload extends AbstractConsumer
 {
-    use ServiceLocatorAwareTrait;
-
     /**
      * Process the message item
      *
@@ -60,11 +50,13 @@ class ReportDownload implements MessageConsumerInterface, ServiceLocatorAwareInt
             [$reference, $result['token'], $result['extension']]
         );
 
+        $extension = $result['extension'] ? ('.'.$result['extension']) : '';
+        $filename = 'Daily Balance Report' . $extension;
         $command = DownloadReportCmd::create(
             [
                 'reference' => $reference,
-                'token' => $result['token'],
-                'extension' => $result['extension'],
+                'token'     => $result['token'],
+                'filename'  => $filename,
             ]
         );
         $downloadResult = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
@@ -72,52 +64,5 @@ class ReportDownload implements MessageConsumerInterface, ServiceLocatorAwareInt
         $messages = array_merge([$msg], $downloadResult->getMessages());
 
         return $this->success($item, implode('|', $messages));
-    }
-
-    /**
-     * Called when processing the message was successful
-     *
-     * @param QueueEntity $item
-     * @return string
-     */
-    protected function success(QueueEntity $item, $message = null)
-    {
-        $command = CompleteCmd::create(['item' => $item]);
-        $this->getServiceLocator()->get('CommandHandlerManager')
-            ->handleCommand($command);
-
-        return 'Successfully processed message: '
-            . $item->getId() . ' ' . $item->getOptions()
-            . ($message ? ' ' . $message : '');
-    }
-
-    /**
-     * Requeue the message
-     *
-     * @param QueueEntity $item
-     * @param string $retryAfter (seconds)
-     * @return string
-     */
-    protected function retry(QueueEntity $item, $retryAfter)
-    {
-        $command = RetryCmd::create(['item' => $item, 'retryAfter' => $retryAfter]);
-        $this->getServiceLocator()->get('CommandHandlerManager')
-            ->handleCommand($command);
-
-        return 'Requeued message: '
-            . $item->getId() . ' ' . $item->getOptions()
-            . ' for retry in ' .  $retryAfter;
-    }
-
-    /**
-     * Mark the message as failed
-     *
-     * @param QueueEntity $item
-     * @param string $reason
-     * @return string
-     */
-    protected function failed(QueueEntity $item, $reason = null)
-    {
-        var_dump($reason);
     }
 }

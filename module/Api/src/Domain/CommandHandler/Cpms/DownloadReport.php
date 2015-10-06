@@ -34,20 +34,12 @@ final class DownloadReport extends AbstractCommandHandler implements CpmsAwareIn
     {
         $result = new Result();
 
-        $reference = $command->getReference();
-        $token = $command->getToken();
-        $extension = $command->getExtension();
-        $filename = sprintf(
-            'Daily Balance Report%s',
-            $command->getExtension() ? ('.'.$command->getExtension()) : ''
-        );
-
-        $data = $this->getCpmsService()->downloadReport($reference, $token);
+        $data = $this->getCpmsService()->downloadReport($command->getReference(), $command->getToken());
         $result->addMessage('Report downloaded');
 
         $uploadData = [
             'content'     => base64_encode(trim($data)),
-            'filename'    => $filename,
+            'filename'    => $command->getFilename(),
             'category'    => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_FINANCIAL_REPORTS,
             'isExternal'  => false,

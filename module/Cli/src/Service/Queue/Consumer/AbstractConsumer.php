@@ -10,8 +10,6 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Complete as CompleteCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Failed as FailedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Retry as RetryCmd;
-use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
-use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
@@ -20,50 +18,10 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
  * Abstract Queue Consumer
  *
  * @author Dan Eggleston <dan@stolenegg.com>
- * @todo refactor into AbstractCommandConsumer, leave success/failed/retry in main Abstract
  */
 abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
-
-    /**
-     * @var string the command to handle processing
-     */
-    protected $commandName = 'override_me';
-
-    /**
-     * @param QueueEntity $item
-     * @return array
-     */
-    abstract public function getCommandData(QueueEntity $item);
-
-    /**
-     * Process the message item
-     *
-     * @param QueueEntity $item
-     * @return string
-     */
-    public function processMessage(QueueEntity $item)
-    {
-        $commandClass = $this->commandName;
-        $commandData = $this->getCommandData($item);
-        $command = $commandClass::create($commandData);
-
-        try {
-            $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
-        } catch (DomainException $e) {
-            $message = !empty($e->getMessages()) ? implode(', ', $e->getMessages()) : $e->getMessage();
-            return $this->failed($item, $message);
-        } catch (\Exception $e) {
-            return $this->failed($item, $e->getMessage());
-        }
-
-        $message = null;
-        if (!empty($result->getMessages())) {
-            $message = implode(', ', $result->getMessages());
-        }
-        return $this->success($item, $message);
-    }
 
     /**
      * Called when processing the message was successful
@@ -98,5 +56,23 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
         return 'Failed to process message: '
             . $item->getId() . ' ' . $item->getOptions()
             . ' ' .  $reason;
+    }
+
+    /**
+     * Requeue the message
+     *
+     * @param QueueEntity $item
+     * @param string $retryAfter (seconds)
+     * @return string
+     */
+    protected function retry(QueueEntity $item, $retryAfter)
+    {
+        $command = RetryCmd::create(['item' => $item, 'retryAfter' => $retryAfter]);
+        $this->getServiceLocator()->get('CommandHandlerManager')
+            ->handleCommand($command);
+
+        return 'Requeued message: '
+            . $item->getId() . ' ' . $item->getOptions()
+            . ' for retry in ' .  $retryAfter;
     }
 }
