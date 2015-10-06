@@ -55,7 +55,8 @@ class VariationUndertakingsReviewServiceTest extends MockeryTestCase
             [
                 [
                     'isGoods' => false,
-                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL]
+                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
+                    'isInternal' => true
                 ],
                 [
                     'markup' => 'markup-application_undertakings_PSV430-translated'
@@ -72,7 +73,8 @@ class VariationUndertakingsReviewServiceTest extends MockeryTestCase
                     'licenceType' => [
                         'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
                     ],
-                    'niFlag' => 'Y'
+                    'niFlag' => 'Y',
+                    'isInternal' => true
                 ],
                 [
                     'markup' => 'markup-application_undertakings_GV80A-NI-translated'
@@ -89,7 +91,8 @@ class VariationUndertakingsReviewServiceTest extends MockeryTestCase
                     'licenceType' => [
                         'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
                     ],
-                    'niFlag' => 'N'
+                    'niFlag' => 'N',
+                    'isInternal' => true
                 ],
                 [
                     'markup' => 'markup-application_undertakings_GV80A-translated'
@@ -106,7 +109,8 @@ class VariationUndertakingsReviewServiceTest extends MockeryTestCase
                     'licenceType' => [
                         'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
                     ],
-                    'niFlag' => 'Y'
+                    'niFlag' => 'Y',
+                    'isInternal' => true
                 ],
                 [
                     'markup' => 'markup-application_undertakings_GV81-NI-translated'
@@ -123,7 +127,8 @@ class VariationUndertakingsReviewServiceTest extends MockeryTestCase
                     'licenceType' => [
                         'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
                     ],
-                    'niFlag' => 'N'
+                    'niFlag' => 'N',
+                    'isInternal' => true
                 ],
                 [
                     'markup' => 'markup-application_undertakings_GV81-translated'

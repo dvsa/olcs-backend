@@ -73,6 +73,7 @@ class GeneratorTest extends MockeryTestCase
             'id' => 111,
             'isGoods' => true,
             'isSpecialRestricted' => false,
+            'isInternal' => true,
             'licence' => [
                 'organisation' => [
                     'name' => 'Foo ltd'
@@ -144,7 +145,7 @@ class GeneratorTest extends MockeryTestCase
                 }
             );
 
-        $this->assertEquals('markup', $this->sut->generate($this->application));
+        $this->assertEquals('markup', $this->sut->generate($this->application, true));
     }
 
     public function testGenerateApplication()
@@ -157,6 +158,7 @@ class GeneratorTest extends MockeryTestCase
             'id' => 111,
             'isGoods' => true,
             'isSpecialRestricted' => false,
+            'isInternal' => true,
             'licence' => [
                 'organisation' => [
                     'name' => 'Foo ltd'
@@ -231,7 +233,7 @@ class GeneratorTest extends MockeryTestCase
                 }
             );
 
-        $this->assertEquals('markup', $this->sut->generate($this->application));
+        $this->assertEquals('markup', $this->sut->generate($this->application, true));
     }
 
     public function testGenerateApplicationWithMappedSection()
@@ -244,6 +246,7 @@ class GeneratorTest extends MockeryTestCase
             'id' => 111,
             'isGoods' => true,
             'isSpecialRestricted' => false,
+            'isInternal' => true,
             'licence' => [
                 'organisation' => [
                     'name' => 'Foo ltd'
@@ -318,6 +321,6 @@ class GeneratorTest extends MockeryTestCase
                 }
             );
 
-        $this->assertEquals('markup', $this->sut->generate($this->application));
+        $this->assertEquals('markup', $this->sut->generate($this->application, true));
     }
 }
