@@ -16,11 +16,13 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUser as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Update User Test
@@ -34,6 +36,10 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockRepo('Application', Application::class);
         $this->mockRepo('ContactDetails', ContactDetails::class);
         $this->mockRepo('Licence', Licence::class);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
@@ -98,6 +104,11 @@ class UpdateUserTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true);
 
         /** @var TeamEntity $user */
         $team = m::mock(Team::class)->makePartial();
@@ -201,6 +212,11 @@ class UpdateUserTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true);
 
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
@@ -318,6 +334,11 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true);
+
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('update')
@@ -393,5 +414,31 @@ class UpdateUserTest extends CommandHandlerTestCase
             $contactDetails,
             $savedUser->getContactDetails()
         );
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testHandleCommandThrowsIncorrectPermissionException()
+    {
+        $data = [
+            'id' => 111,
+            'version' => 1,
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(false);
+
+        $this->repoMap['User']
+            ->shouldReceive('fetchById')
+            ->never()
+            ->shouldReceive('save')
+            ->never();
+
+        $command = Cmd::create($data);
+
+        $this->sut->handleCommand($command);
     }
 }
