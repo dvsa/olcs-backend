@@ -18,6 +18,7 @@ use Dvsa\Olcs\Transfer\Command\Cpms\RequestReport as Cmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+
 /**
  * Request Cpms Report
  *
@@ -31,7 +32,6 @@ final class RequestReport extends AbstractCommandHandler implements AuthAwareInt
     /**
      * @param Cmd $command
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
-     * @todo we may want to pass in start/end as command params
      */
     public function handleCommand(CommandInterface $command)
     {

@@ -30,9 +30,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
     const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
 
-    // @TODO this is a dummy value for testing purposes as cost_centre is now
-    // a required parameter in cpms/payment-service. Awaiting further info on
-    // what OLCS should pass for this field.
+    // @todo OLCS-6845
+    // this is a dummy value for testing purposes
     const COST_CENTRE = '12345,67890';
 
     const TAX_CODE = 'Z';
@@ -389,7 +388,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     {
         if (!is_null($dateTime)) {
             if (is_string($dateTime)) {
-                $date = new DateTime($dateTime);
+                $dateTime = new DateTime($dateTime);
             }
             return $dateTime->format(self::DATETIME_FORMAT);
         }
@@ -489,7 +488,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @todo 'product_reference' should be $fee->getFeeType()->getDescription()
      * but CPMS has a whitelist and responds  {"code":104,"message":"product_reference is invalid"}
-     * @todo 'sales_person_reference'
+     * @todo OLCS-6845 'sales_person_reference'
      */
     protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [])
     {
