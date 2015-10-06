@@ -128,7 +128,7 @@ class LicenceTest extends CommandHandlerTestCase
         $this->repoMap['Publication']->shouldReceive('fetchLatestForTrafficAreaAndType')->with('T', 'A&D')->once()
             ->andReturn($publication);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+        $this->setExpectedException(\RuntimeException::class);
 
         $this->sut->handleCommand($command);
     }
