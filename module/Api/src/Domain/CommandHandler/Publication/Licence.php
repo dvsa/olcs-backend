@@ -83,7 +83,7 @@ class Licence extends AbstractCommandHandler implements TransactionedInterface, 
             return $map[$licence->getStatus()->getId()];
         }
 
-        throw new ForbiddenException('Could not match to a publication section');
+        throw new \RuntimeException('Could not match to a publication section');
     }
 
     /**

@@ -157,7 +157,7 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
             return $map[$application->getStatus()->getId()];
         }
 
-        throw new ForbiddenException('Could not match to a publication section');
+        throw new \RuntimeException('Could not match to a publication section');
     }
 
     /**
