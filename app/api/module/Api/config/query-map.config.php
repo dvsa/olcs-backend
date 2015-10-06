@@ -209,6 +209,10 @@ return [
     // Publication
     TransferQuery\Publication\Recipient::class => QueryHandler\Publication\Recipient::class,
     TransferQuery\Publication\RecipientList::class => QueryHandler\Publication\RecipientList::class,
+    TransferQuery\Publication\PublicationLinkTmList::class => QueryHandler\Publication\PublicationLinkByTm::class,
+    TransferQuery\Publication\PublicationLinkLicenceList::class
+        => QueryHandler\Publication\PublicationLinkByLicence::class,
+    TransferQuery\Publication\PublicationLink::class => QueryHandler\Publication\PublicationLink::class,
 
     // My Account
     TransferQuery\MyAccount\MyAccount::class => QueryHandler\MyAccount\MyAccount::class,
@@ -263,6 +267,9 @@ return [
 
     // Bus Reg History View
     TransferQuery\Bus\HistoryList::class => QueryHandler\Bus\HistoryList::class,
+
+    // Bus Reg Search View
+    TransferQuery\Bus\SearchViewList::class => QueryHandler\Bus\SearchViewList::class,
 
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,

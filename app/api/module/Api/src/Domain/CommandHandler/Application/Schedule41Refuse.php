@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Schedule41\RefuseS4;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\LicenceOperatingCentre\DisassociateS4;
 
 /**
  * Schedule41Refuse Command Handler
@@ -64,16 +63,6 @@ class Schedule41Refuse extends AbstractCommandHandler
                     DeleteConditionUndertakingS4::create(
                         [
                             's4' => $s4->getId()
-                        ]
-                    )
-                )
-            );
-            // remove s4 marker from donor licence
-            $result->merge(
-                $this->handleSideEffect(
-                    DisassociateS4::create(
-                        [
-                            'licenceOperatingCentres' => $s4->getLicence()->getOperatingCentres()
                         ]
                     )
                 )

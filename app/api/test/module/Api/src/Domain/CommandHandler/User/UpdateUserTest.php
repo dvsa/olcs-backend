@@ -9,16 +9,20 @@ use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUser as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
+use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\User;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUser as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Update User Test
@@ -29,8 +33,13 @@ class UpdateUserTest extends CommandHandlerTestCase
     {
         $this->sut = new Sut();
         $this->mockRepo('User', User::class);
+        $this->mockRepo('Application', Application::class);
         $this->mockRepo('ContactDetails', ContactDetails::class);
         $this->mockRepo('Licence', Licence::class);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
@@ -95,6 +104,11 @@ class UpdateUserTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true);
 
         /** @var TeamEntity $user */
         $team = m::mock(Team::class)->makePartial();
@@ -199,6 +213,11 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true);
+
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('update')
@@ -268,5 +287,158 @@ class UpdateUserTest extends CommandHandlerTestCase
             $contactDetails,
             $savedUser->getContactDetails()
         );
+    }
+
+    public function testHandleCommandForTm()
+    {
+        $userId = 111;
+        $applicationId = 3;
+
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'userType' => UserEntity::USER_TYPE_TRANSPORT_MANAGER,
+            'application' => $applicationId,
+            'transport_manager' => 1,
+            'loginId' => 'login_id',
+            'contactDetails' => [
+                'emailAddress' => 'test1@test.me',
+                'person' => [
+                    'title' => m::mock(RefData::class),
+                    'forename' => 'updated forename',
+                    'familyName' => 'updated familyName',
+                    'birthDate' => '1975-12-12',
+                ],
+                'address' => [
+                    'addressLine1' => 'a12',
+                    'addressLine2' => 'a23',
+                    'addressLine3' => 'a34',
+                    'addressLine4' => 'a45',
+                    'town' => 'town',
+                    'postcode' => 'LS1 2AB',
+                    'countryCode' => m::mock(Country::class),
+                ],
+                'phoneContacts' => [
+                    [
+                        'phoneContactType' => m::mock(RefData::class),
+                        'phoneNumber' => '111',
+                    ],
+                    [
+                        'id' => 999,
+                        'phoneContactType' => m::mock(RefData::class),
+                        'phoneNumber' => '222',
+                    ]
+                ],
+            ],
+        ];
+
+        $command = Cmd::create($data);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true);
+
+        /** @var ContactDetailsEntity $contactDetails */
+        $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
+        $contactDetails->shouldReceive('update')
+            ->once()
+            ->with($data['contactDetails'])
+            ->andReturnSelf();
+
+        /** @var TeamEntity $user */
+        $team = m::mock(Team::class)->makePartial();
+
+        /** @var UserEntity $user */
+        $user = m::mock(UserEntity::class)->makePartial();
+        $user->setId($userId);
+        $user->setTeam($team);
+        $user->setContactDetails($contactDetails);
+        $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
+
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->once()
+            ->with($userId, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($user)
+            ->shouldReceive('populateRefDataReference')
+            ->once()
+            ->andReturn($data);
+
+        $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
+            ->once()
+            ->with($data['contactDetails'])
+            ->andReturn($data['contactDetails']);
+
+        /** @var LicenceEntity $licence */
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->shouldReceive('getOrganisation')
+            ->once();
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->shouldReceive('getLicence')
+            ->once()
+            ->andReturn($licence);
+
+        $this->repoMap['Application']->shouldReceive('fetchWithLicenceAndOrg')
+            ->once()
+            ->with($applicationId)
+            ->andReturn($application);
+
+        /** @var UserEntity $savedUser */
+        $savedUser = null;
+
+        $this->repoMap['User']->shouldReceive('save')
+            ->once()
+            ->with(m::type(UserEntity::class))
+            ->andReturnUsing(
+                function (UserEntity $user) use (&$savedUser) {
+                    $savedUser = $user;
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'user' => $userId,
+            ],
+            'messages' => [
+                'User updated successfully'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertSame(
+            $contactDetails,
+            $savedUser->getContactDetails()
+        );
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testHandleCommandThrowsIncorrectPermissionException()
+    {
+        $data = [
+            'id' => 111,
+            'version' => 1,
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(false);
+
+        $this->repoMap['User']
+            ->shouldReceive('fetchById')
+            ->never()
+            ->shouldReceive('save')
+            ->never();
+
+        $command = Cmd::create($data);
+
+        $this->sut->handleCommand($command);
     }
 }

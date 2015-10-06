@@ -111,7 +111,7 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
      *
      * @return array
      */
-    protected function getTmApplicationsValid()
+    protected function getTmApplicationsValid($countVariations = false)
     {
         $applicationStatuses = [
             \Dvsa\Olcs\Api\Entity\Application\Application::APPLICATION_STATUS_GRANTED,
@@ -122,7 +122,7 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
         /* @var $tma TransportManagerApplication */
         foreach ($this->getTmApplications() as $tma) {
             // only new apps are counted
-            if ($tma->getApplication()->getIsVariation()) {
+            if (!$countVariations && $tma->getApplication()->getIsVariation()) {
                 continue;
             }
 
@@ -216,7 +216,7 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
     public function isSiQualificationRequired($niFlag)
     {
         /* @var $tma TransportManagerApplication */
-        foreach ($this->getTmApplicationsValid() as $tma) {
+        foreach ($this->getTmApplicationsValid(true) as $tma) {
             // check niFlag
             if ($tma->getApplication()->getNiFlag() != $niFlag) {
                 continue;

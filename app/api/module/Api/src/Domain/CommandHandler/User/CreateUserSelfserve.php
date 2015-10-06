@@ -11,7 +11,9 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -28,7 +30,9 @@ final class CreateUserSelfserve extends AbstractCommandHandler implements AuthAw
 
     public function handleCommand(CommandInterface $command)
     {
-        // TODO - OLCS-10516 - User management restrictions
+        if (!$this->isGranted(Permission::CAN_MANAGE_USER_SELFSERVE)) {
+            throw new ForbiddenException('You do not have permission to manage the record');
+        }
 
         $data = $command->getArrayCopy();
 
@@ -56,11 +60,8 @@ final class CreateUserSelfserve extends AbstractCommandHandler implements AuthAw
                 throw new BadRequestException('User type must be provided');
         }
 
-        // populate roles based on the user type and isAdministrator flag
-        $data['roles'] = User::getRolesByUserType(
-            $data['userType'],
-            ($data['isAdministrator'] === 'Y') ? true : false
-        );
+        // populate roles based on the user type and permission
+        $data['roles'] = User::getRolesByUserType($data['userType'], $data['permission']);
 
         $user = User::create(
             $data['userType'],

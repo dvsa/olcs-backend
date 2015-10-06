@@ -284,7 +284,8 @@ return [
             ]
         ],
         'assertion_map' => [
-            'can-update-licence-licence-type' => \Dvsa\Olcs\Api\Assertion\Licence\UpdateLicenceType::class
+            'can-update-licence-licence-type' => \Dvsa\Olcs\Api\Assertion\Licence\UpdateLicenceType::class,
+            'can-manage-user-selfserve' => \Dvsa\Olcs\Api\Assertion\User\ManageUserSelfserve::class,
         ]
     ],
     'publication_context' => [
@@ -343,7 +344,9 @@ return [
         Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class =>
             Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class,
         Dvsa\Olcs\Api\Service\Publication\Process\Police::class =>
-            Dvsa\Olcs\Api\Service\Publication\Process\Police::class
+            Dvsa\Olcs\Api\Service\Publication\Process\Police::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class,
     ],
     'publications' => [
         'ApplicationPublication' => array(
@@ -370,11 +373,13 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Context\Variation\ConditionUndertaking::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Variation\OperatingCentres::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\People::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers::class,
             ],
             'process' => [
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Variation\Text2::class,
-                Dvsa\Olcs\Api\Service\Publication\Process\Variation\Text3::class
+                Dvsa\Olcs\Api\Service\Publication\Process\Variation\Text3::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class,
             ],
         ),
         'HearingPublication' => array(

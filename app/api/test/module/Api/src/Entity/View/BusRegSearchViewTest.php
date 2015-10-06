@@ -35,7 +35,8 @@ class BusRegSearchViewTest extends \PHPUnit_Framework_TestCase
             'organisationName' => 'Leeds city council',
             'startPoint' => 'Leeds',
             'finishPoint' => 'Doncaster',
-            'busRegStatus' => 'Registered',
+            'busRegStatus' => 'bus_s_reg',
+            'busRegStatusDesc' => 'Registered',
             'routeNo' => '15711',
             'variationNo' => '6'
         ];

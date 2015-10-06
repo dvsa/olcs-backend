@@ -128,7 +128,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             function (PsvDisc $v) {
                 return $v->getId();
             },
-            $psvDiscs
+            $psvDiscs->toArray()
         );
 
         $params = ['licence' => $licence->getId(), 'ids' => $ids];

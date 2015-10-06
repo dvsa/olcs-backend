@@ -5,10 +5,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
@@ -16,29 +20,34 @@ use Doctrine\ORM\Query;
 /**
  * Update User
  */
-final class UpdateUser extends AbstractCommandHandler implements TransactionedInterface
+final class UpdateUser extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'User';
 
-    protected $extraRepos = ['ContactDetails', 'Licence'];
+    protected $extraRepos = ['Application', 'ContactDetails', 'Licence'];
 
     public function handleCommand(CommandInterface $command)
     {
-        // TODO - OLCS-10516 - User management restrictions
+        if (!$this->isGranted(Permission::CAN_MANAGE_USER_INTERNAL)) {
+            throw new ForbiddenException('You do not have permission to manage the record');
+        }
 
         $data = $command->getArrayCopy();
 
-        if (($command->getUserType() === User::USER_TYPE_OPERATOR) && (isset($data['licenceNumber']))) {
-            if (!empty($data['licenceNumber'])) {
-                // fetch licence by licence number
-                $licence = $this->getRepo('Licence')->fetchByLicNo($data['licenceNumber']);
+        if (($command->getUserType() === User::USER_TYPE_OPERATOR) && (!empty($data['licenceNumber']))) {
+            // fetch licence by licence number
+            $licence = $this->getRepo('Licence')->fetchByLicNo($data['licenceNumber']);
 
-                // link with the organisation
-                $data['organisations'] = [$licence->getOrganisation()];
-            } else {
-                // unlink any organisation
-                $data['organisations'] = [];
-            }
+            // link with the organisation
+            $data['organisations'] = [$licence->getOrganisation()];
+        } elseif (($command->getUserType() === User::USER_TYPE_TRANSPORT_MANAGER) && (!empty($data['application']))) {
+            // fetch application by id
+            $application = $this->getRepo('Application')->fetchWithLicenceAndOrg($data['application']);
+
+            // link with the organisation
+            $data['organisations'] = [$application->getLicence()->getOrganisation()];
         }
 
         $user = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());

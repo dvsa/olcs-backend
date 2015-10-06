@@ -60,7 +60,7 @@ final class Upload extends AbstractCommandHandler implements
         $description = implode($parts);
         $category = null;
         $subCategory = null;
-        $entity = $this->determineEntityFromCommand($command);
+        $entity = $this->determineEntityFromCommand($command->getArrayCopy());
 
         if ($command->getCategory() !== null) {
             $category = $this->getRepo()->getCategoryReference($command->getCategory());
