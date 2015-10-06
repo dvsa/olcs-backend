@@ -35,7 +35,7 @@ class OutstandingFeesTest extends QueryHandlerTestCase
     {
         $organisationId = 69;
 
-        $query = Qry::create(['id' => $organisationId]);
+        $query = Qry::create(['id' => $organisationId, 'hideExpired' => false]);
 
         $mockOrganisation = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface')
             ->shouldReceive('getId')
@@ -57,7 +57,7 @@ class OutstandingFeesTest extends QueryHandlerTestCase
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByOrganisationId')
             ->once()
-            ->with($organisationId)
+            ->with($organisationId, false)
             ->andReturn($fees);
 
         $result = $this->sut->handleQuery($query);

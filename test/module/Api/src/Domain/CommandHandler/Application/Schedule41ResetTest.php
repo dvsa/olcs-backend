@@ -7,17 +7,17 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Schedule41\ApproveS4;
 use Dvsa\Olcs\Api\Domain\Command\Schedule41\ResetS4;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Schedule41Reset;
 use Dvsa\Olcs\Api\Entity\Application\S4;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Schedule41Approve;
 use Dvsa\Olcs\Transfer\Command\Application\Schedule41Approve as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection;
 
 /**
  * Class Schedule41ResetTest
@@ -44,38 +44,180 @@ class Schedule41ResetTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'id' => 1,
+            'id' => 510,
         ];
 
         $command = Cmd::create($data);
 
-        $this->repoMap['Application']
-            ->shouldReceive('fetchById')
+        $publication = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication->setPubStatus(new RefData(\Dvsa\Olcs\Api\Entity\Publication\Publication::PUB_NEW_STATUS));
+        $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink1
+            ->setId(11)
+            ->setPublicationSection((new PublicationSection())->setId(PublicationSection:: APP_NEW_SECTION))
+            ->setPublication($publication);
+        $publicationLink2 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink2
+            ->setId(12)
+            ->setPublicationSection((new PublicationSection())->setId(PublicationSection:: SCHEDULE_4_NEW))
+            ->setPublication($publication);
+
+        $application = m::mock(Application::class)
+            ->shouldReceive('getId')->with()->andReturn(510)
+            ->shouldReceive('getPublicationLinks')->with()->andReturn(
+                new ArrayCollection([$publicationLink1, $publicationLink2])
+            )
+            ->shouldReceive('getS4s')
             ->once()
             ->andReturn(
-                m::mock(Application::class)
-                    ->shouldReceive('getS4s')
-                    ->once()
+                m::mock()->shouldReceive('matching')
                     ->andReturn(
-                        m::mock()->shouldReceive('matching')
-                            ->andReturn(
-                                [
-                                    m::mock(S4::class)
-                                        ->shouldReceive('getId')
-                                        ->once()
-                                        ->andReturn(1)
-                                        ->getMock()
-                                ]
-                            )
-                            ->getMock()
-                    )->getMock()
-            );
+                        [
+                            m::mock(S4::class)
+                                ->shouldReceive('getId')
+                                ->once()
+                                ->andReturn(1)
+                                ->getMock()
+                        ]
+                    )
+                    ->getMock()
+            )->getMock();
+
+        $this->repoMap['Application']->shouldReceive('fetchById')->with(510)->once()->andReturn($application);
 
         $this->expectedSideEffect(
             ResetS4::class,
-            [
-                'id' => 1,
-            ],
+            ['id' => 1],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            ['id' => 510],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\DeletePublicationLink::class,
+            ['id' => 12],
+            new Result()
+        );
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandPublished()
+    {
+        $data = [
+            'id' => 510,
+        ];
+
+        $command = Cmd::create($data);
+
+        $publication = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication->setPubStatus(new RefData(\Dvsa\Olcs\Api\Entity\Publication\Publication::PUB_PRINTED_STATUS));
+        $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink1
+            ->setId(11)
+            ->setPublicationSection((new PublicationSection())->setId(PublicationSection:: APP_NEW_SECTION))
+            ->setPublication($publication);
+        $publicationLink2 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink2
+            ->setId(12)
+            ->setPublicationSection((new PublicationSection())->setId(PublicationSection:: SCHEDULE_4_NEW))
+            ->setPublication($publication);
+
+        $application = m::mock(Application::class)
+            ->shouldReceive('getId')->with()->andReturn(510)
+            ->shouldReceive('getPublicationLinks')->with()->andReturn(
+                new ArrayCollection([$publicationLink1, $publicationLink2])
+            )
+            ->shouldReceive('getS4s')
+            ->once()
+            ->andReturn(
+                m::mock()->shouldReceive('matching')
+                    ->andReturn(
+                        [
+                            m::mock(S4::class)
+                                ->shouldReceive('getId')
+                                ->once()
+                                ->andReturn(1)
+                                ->getMock()
+                        ]
+                    )
+                    ->getMock()
+            )->getMock();
+
+        $this->repoMap['Application']->shouldReceive('fetchById')->with(510)->once()->andReturn($application);
+
+        $this->expectedSideEffect(
+            ResetS4::class,
+            ['id' => 1],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            ['id' => 510],
+            new Result()
+        );
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandGenerated()
+    {
+        $data = [
+            'id' => 510,
+        ];
+
+        $command = Cmd::create($data);
+
+        $publication = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication->setPubStatus(new RefData(\Dvsa\Olcs\Api\Entity\Publication\Publication::PUB_GENERATED_STATUS));
+        $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink1
+            ->setId(11)
+            ->setPublicationSection((new PublicationSection())->setId(PublicationSection:: APP_NEW_SECTION))
+            ->setPublication($publication);
+        $publicationLink2 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink2
+            ->setId(12)
+            ->setPublicationSection((new PublicationSection())->setId(PublicationSection:: SCHEDULE_4_NEW))
+            ->setPublication($publication);
+
+        $application = m::mock(Application::class)
+            ->shouldReceive('getId')->with()->andReturn(510)
+            ->shouldReceive('getPublicationLinks')->with()->andReturn(
+                new ArrayCollection([$publicationLink1, $publicationLink2])
+            )
+            ->shouldReceive('getS4s')
+            ->once()
+            ->andReturn(
+                m::mock()->shouldReceive('matching')
+                    ->andReturn(
+                        [
+                            m::mock(S4::class)
+                                ->shouldReceive('getId')
+                                ->once()
+                                ->andReturn(1)
+                                ->getMock()
+                        ]
+                    )
+                    ->getMock()
+            )->getMock();
+
+        $this->repoMap['Application']->shouldReceive('fetchById')->with(510)->once()->andReturn($application);
+
+        $this->expectedSideEffect(
+            ResetS4::class,
+            ['id' => 1],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            ['id' => 510],
             new Result()
         );
 

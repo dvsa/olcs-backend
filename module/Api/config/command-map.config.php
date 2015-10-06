@@ -280,6 +280,10 @@ return [
     TransferCommand\Publication\CreateRecipient::class => CommandHandler\Publication\CreateRecipient::class,
     TransferCommand\Publication\UpdateRecipient::class => CommandHandler\Publication\UpdateRecipient::class,
     TransferCommand\Publication\DeleteRecipient::class => CommandHandler\Publication\DeleteRecipient::class,
+    TransferCommand\Publication\Publish::class => CommandHandler\Publication\Publish::class,
+    TransferCommand\Publication\Generate::class => CommandHandler\Publication\Generate::class,
+    TransferCommand\Publication\DeletePublicationLink::class => CommandHandler\Publication\DeletePublicationLink::class,
+    TransferCommand\Publication\UpdatePublicationLink::class => CommandHandler\Publication\UpdatePublicationLink::class,
 
     // Transfer - My Account
     TransferCommand\MyAccount\UpdateMyAccount::class => CommandHandler\MyAccount\UpdateMyAccount::class,
@@ -498,14 +502,11 @@ return [
         => CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertakingS4::class,
 
     // Domain - Schedule41
-    Command\Schedule41\CreateS4::class
-        => CommandHandler\Schedule41\CreateS4::class,
-    Command\Schedule41\ApproveS4::class
-        => CommandHandler\Schedule41\ApproveS4::class,
-    Command\Schedule41\ResetS4::class
-        => CommandHandler\Schedule41\ResetS4::class,
-    Command\Schedule41\RefuseS4::class
-        => CommandHandler\Schedule41\RefuseS4::class,
+    Command\Schedule41\CreateS4::class => CommandHandler\Schedule41\CreateS4::class,
+    Command\Schedule41\ApproveS4::class => CommandHandler\Schedule41\ApproveS4::class,
+    Command\Schedule41\ResetS4::class => CommandHandler\Schedule41\ResetS4::class,
+    Command\Schedule41\RefuseS4::class => CommandHandler\Schedule41\RefuseS4::class,
+    Command\Schedule41\CancelS4::class => CommandHandler\Schedule41\CancelS4::class,
 
     // Domain - Bus
     Command\Bus\CreateBusFee::class => CommandHandler\Bus\CreateBusFee::class,

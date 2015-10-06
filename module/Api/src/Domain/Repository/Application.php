@@ -99,6 +99,22 @@ class Application extends AbstractRepository
         return $res[0];
     }
 
+    public function fetchWithLicenceAndOrg($applicationId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->with('l.organisation', 'l_org')
+            ->byId($applicationId);
+
+        $res = $qb->getQuery()->getResult();
+        if (!$res) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+        return $res[0];
+    }
+
     public function fetchWithTmLicences($applicationId)
     {
         $qb = $this->createQueryBuilder();

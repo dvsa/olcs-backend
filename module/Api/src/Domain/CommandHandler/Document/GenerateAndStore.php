@@ -62,7 +62,7 @@ final class GenerateAndStore extends AbstractCommandHandler implements
             'rtf',
             $this->getRepo()->getCategoryReference($command->getCategory()),
             $this->getRepo()->getSubCategoryReference($command->getSubCategory()),
-            $this->determineEntityFromCommand($command)
+            $this->determineEntityFromCommand($queryData)
         );
 
         $file = $this->getDocumentGenerator()->uploadGeneratedContent($document, $fileName);

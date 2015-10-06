@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Publication;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -130,5 +131,25 @@ class PublicationLink extends AbstractPublicationLink
         $this->publication = $publication;
         $this->publicationSection = $publicationSection;
         $this->trafficArea = $trafficArea;
+    }
+
+    /**
+     * Updates text fields on the publication link
+     *
+     * @param string $text1
+     * @param string $text2
+     * @param string $text3
+     *
+     * @throws ForbiddenException
+     */
+    public function updateText($text1, $text2, $text3)
+    {
+        if (!$this->publication->isNew()) {
+            throw new ForbiddenException('Only publications with status of New may be edited');
+        }
+
+        $this->text1 = $text1;
+        $this->text2 = $text2;
+        $this->text3 = $text3;
     }
 }

@@ -15,6 +15,9 @@
 namespace Dvsa\Olcs\Api\Entity\View;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 
 /**
  * Bus Reg List View
@@ -22,8 +25,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(readOnly=true)
  * @ORM\Table(name="bus_reg_search_view")
  */
-class BusRegSearchView
+class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
 {
+    use BundleSerializableTrait;
+
     /**
      * Id
      *
@@ -114,6 +119,15 @@ class BusRegSearchView
      * @ORM\Column(type="string", name="bus_reg_status")
      */
     protected $busRegStatus;
+
+    /**
+     * Bus Reg Status Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="bus_reg_status_desc")
+     */
+    protected $busRegStatusDesc;
 
     /**
      * Route Number
@@ -316,6 +330,22 @@ class BusRegSearchView
     public function setBusRegStatus($busRegStatus)
     {
         $this->busRegStatus = $busRegStatus;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBusRegStatusDesc()
+    {
+        return $this->busRegStatusDesc;
+    }
+
+    /**
+     * @param string $busRegStatusDesc
+     */
+    public function setBusRegStatusDesc($busRegStatusDesc)
+    {
+        $this->busRegStatusDesc = $busRegStatusDesc;
     }
 
     /**

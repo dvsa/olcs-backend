@@ -25,10 +25,12 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 
 /**
  * Pay Outstanding Fees
@@ -197,6 +199,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 // We need to call save() on the fee, it won't cascade persist from the transaction
                 $this->getRepo('Fee')->save($fee);
                 $result->merge($this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()])));
+            } else {
+                // Generate Insufficient Fee Request letter
+                $result->merge($this->generateInsufficientFeeRequestLetter($fee, $allocatedAmount));
             }
         }
 
@@ -462,5 +467,39 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             'busReg'       => $busRegId,
             'irfoGvPermit' => $irfoGvPermitId,
         ];
+    }
+
+    private function generateInsufficientFeeRequestLetter(FeeEntity $fee, $allocatedAmount)
+    {
+
+        // we need to calculate actual outstanding fee, because new transaction is not saved
+        // on this step, so $fee->getOutstandingFeeAmount() will return the previous value
+        $actualOutstandingAmount = $fee->getOutstandingAmount() - $allocatedAmount;
+        $receivedAmount = $fee->getAmount() - $actualOutstandingAmount;
+
+        $dtoData = [
+            'template' => 'FEE_REQ_INSUFFICIENT',
+            'query' => [
+                'fee' => $fee->getId(),
+                'licence' => $fee->getLicence()->getId()
+            ],
+            'knownValues' => [
+                'INSUFFICIENT_FEE_TABLE' => [
+                    'receivedAmount' => $receivedAmount,
+                    'outstandingAmount' => $actualOutstandingAmount
+                ]
+            ],
+            'description' => 'Insufficient Fee Request',
+            'licence'     => $fee->getLicence()->getId(),
+            'category'    => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::DOC_SUB_CATEGORY_FEE_REQUEST,
+            'isExternal'  => false,
+            'dispatch'    => true
+        ];
+        if ($fee->getApplication()) {
+            $dtoData['application'] = $fee->getApplication()->getId();
+        }
+
+        return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
 }

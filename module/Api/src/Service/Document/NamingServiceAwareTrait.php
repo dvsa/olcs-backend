@@ -40,30 +40,30 @@ trait NamingServiceAwareTrait
     /**
      * @param $command
      */
-    public function determineEntityFromCommand($command)
+    public function determineEntityFromCommand(array $data)
     {
-        if ($command->getCase() !== null) {
-            return $this->getRepo()->getReference(Cases::class, $command->getCase());
+        if (!empty($data['case'])) {
+            return $this->getRepo()->getReference(Cases::class, $data['case']);
         }
 
-        if ($command->getApplication() !== null) {
-            return $this->getRepo()->getReference(Application::class, $command->getApplication());
+        if (!empty($data['application'])) {
+            return $this->getRepo()->getReference(Application::class, $data['application']);
         }
 
-        if ($command->getTransportManager() !== null) {
-            return $this->getRepo()->getReference(TransportManager::class, $command->getTransportManager());
+        if (!empty($data['transportManager'])) {
+            return $this->getRepo()->getReference(TransportManager::class, $data['transportManager']);
         }
 
-        if ($command->getBusReg() !== null) {
-            return $this->getRepo()->getReference(BusReg::class, $command->getBusReg());
+        if (!empty($data['busReg'])) {
+            return $this->getRepo()->getReference(BusReg::class, $data['busReg']);
         }
 
-        if ($command->getLicence() !== null) {
-            return $this->getRepo()->getReference(Licence::class, $command->getLicence());
+        if (!empty($data['licence'])) {
+            return $this->getRepo()->getReference(Licence::class, $data['licence']);
         }
 
-        if ($command->getIrfoOrganisation() !== null) {
-            return $this->getRepo()->getReference(Organisation::class, $command->getIrfoOrganisation());
+        if (!empty($data['irfoOrganisation'])) {
+            return $this->getRepo()->getReference(Organisation::class, $data['irfoOrganisation']);
         }
 
         return null;

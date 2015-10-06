@@ -18,12 +18,18 @@ use Rbac\Role\RoleInterface;
  */
 class Role extends AbstractRole implements RoleInterface
 {
-    const ROLE_LOCAL_AUTHORITY_ADMIN = 11;
-    const ROLE_LOCAL_AUTHORITY_USER = 12;
+    const ROLE_INTERNAL_LIMITED_READ_ONLY = 1;
+    const ROLE_INTERNAL_READ_ONLY = 2;
+    const ROLE_INTERNAL_CASE_WORKER = 3;
+    const ROLE_INTERNAL_ADMIN = 4;
     const ROLE_OPERATOR_ADMIN = 5;
     const ROLE_OPERATOR_USER = 6;
+    const ROLE_OPERATOR_TM = 7;
+    const ROLE_OPERATOR_EBSR = 8;
     const ROLE_PARTNER_ADMIN = 9;
     const ROLE_PARTNER_USER = 10;
+    const ROLE_LOCAL_AUTHORITY_ADMIN = 11;
+    const ROLE_LOCAL_AUTHORITY_USER = 12;
 
     /**
      * Get the name of the role.
