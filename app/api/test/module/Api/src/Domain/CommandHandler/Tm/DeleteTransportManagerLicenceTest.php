@@ -45,6 +45,7 @@ class DeleteTransportManagerLicenceTest extends CommandHandlerTestCase
         $this->repoMap['TransportManagerLicence']
             ->shouldReceive('fetchForLicence')
             ->once()
+            ->with(7)
             ->andReturn(
                 [
                     m::mock(TransportManagerLicence::class)->makePartial()
