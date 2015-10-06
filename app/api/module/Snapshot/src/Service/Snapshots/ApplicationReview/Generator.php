@@ -204,6 +204,10 @@ class Generator extends AbstractGenerator
         'community_licences'
     ];
 
+    protected $sectionMap = [
+        'declarations_internal' => 'undertakings'
+    ];
+
     protected $lva;
 
     public function __construct()
@@ -221,6 +225,8 @@ class Generator extends AbstractGenerator
     {
         $sections = $this->getServiceLocator()->get('SectionAccessService')->getAccessibleSections($application);
         $sections = array_keys($sections);
+
+        $sections = $this->mapSections($sections);
 
         // Set the NI Locale
         $this->getServiceLocator()->get('Utils\NiTextTranslation')->setLocaleForNiFlag($application->getNiFlag());
@@ -254,6 +260,26 @@ class Generator extends AbstractGenerator
 
         // Generate readonly markup
         return $this->generateReadonly($config);
+    }
+
+    /**
+     * Maps sections to their alternative
+     *
+     * This was added when the internal only version of the undertakings section was added, this method maps the
+     * duplicate section for the snapshot
+     *
+     * @param $sections
+     * @return mixed
+     */
+    protected function mapSections($sections)
+    {
+        foreach ($sections as $k => $v) {
+            if (isset($this->sectionMap[$v])) {
+                $sections[$k] = $this->sectionMap[$v];
+            }
+        }
+
+        return $sections;
     }
 
     protected function buildReadonlyConfigForSections($sections, $reviewData)
