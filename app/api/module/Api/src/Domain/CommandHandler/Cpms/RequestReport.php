@@ -44,7 +44,7 @@ final class RequestReport extends AbstractCommandHandler implements AuthAwareInt
 
         $queueCmd = CreateQueueCmd::create(
             [
-                'type' => Queue::TYPE_CPMS_REPORT_STATUS,
+                'type' => Queue::TYPE_CPMS_REPORT_DOWNLOAD,
                 'status' => Queue::STATUS_QUEUED,
                 'user' => $this->getCurrentUser()->getId(),
                 'options' => json_encode(
