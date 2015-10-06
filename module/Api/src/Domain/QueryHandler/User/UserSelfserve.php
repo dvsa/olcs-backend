@@ -32,9 +32,17 @@ class UserSelfserve extends AbstractQueryHandler implements AuthAwareInterface
         return $this->result(
             $user,
             [
+                'transportManager',
+                'localAuthority',
+                'partnerContactDetails',
                 'roles',
                 'contactDetails' => [
-                    'person'
+                    'person',
+                    'address' => ['countryCode'],
+                    'phoneContacts' => ['phoneContactType']
+                ],
+                'organisationUsers' => [
+                    'organisation',
                 ],
             ],
             [
