@@ -34,19 +34,19 @@ class InsufficientFeeTable extends DynamicBookmark
 
         $rows[] = [
             'COL1_BMK1' => $this->data['description'],
-            'COL2_BMK1' => '£',
+            'COL2_BMK1' => "\'a3",
             'COL2_BMK2' => number_format($this->data['amount'], 2)
         ];
 
         $rows[] = [
             'COL1_BMK1' => 'Amount RECEIVED',
-            'COL2_BMK1' => '£',
+            'COL2_BMK1' => "\'a3",
             'COL2_BMK2' => number_format($this->data['receivedAmount'], 2)
         ];
 
         $rows[] = [
             'COL1_BMK1' => self::RTF_BOLD_START . 'BALANCE NOW DUE' . self::RTF_BOLD_END,
-            'COL2_BMK1' => self::RTF_BOLD_START . '£' . self::RTF_BOLD_END,
+            'COL2_BMK1' => self::RTF_BOLD_START . "\'a3" . self::RTF_BOLD_END,
             'COL2_BMK2' => self::RTF_BOLD_START .
                 number_format($this->data['outstandingAmount'], 2) . self::RTF_BOLD_END
         ];
