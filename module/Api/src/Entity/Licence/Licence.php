@@ -809,10 +809,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface
 
     /**
      * Returns the latest publication by type from a licence
-     *
-     * @param $licence
-     * @param $type string
-     * @return array|null
+     * @param $type
+     * @return mixed
      */
     public function getLatestPublicationByType($type)
     {
@@ -833,10 +831,18 @@ class Licence extends AbstractLicence implements ContextProviderInterface
                 return $pLink->getPublication();
             }
         }
+
     }
 
+    /**
+     * @return int|null
+     */
     public function determineNpNumber()
     {
-        return $this->getLatestPublicationByType('N&P')->getPublicationNo();
+        $latestNpPublication = $this->getLatestPublicationByType(PublicationEntity::PUB_TYPE_N_P);
+        if ($latestNpPublication instanceof PublicationEntity) {
+            return $latestNpPublication->getPublicationNo();
+        }
+        return null;
     }
 }
