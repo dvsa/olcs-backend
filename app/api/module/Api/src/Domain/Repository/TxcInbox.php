@@ -50,7 +50,7 @@ class TxcInbox extends AbstractRepository
             ->setParameter('busReg', $busReg);
 
         if (empty($localAuthorityId)) {
-            $qb->andWhere($qb->expr()->isNull($this->alias . '.localAuthority', ':localAuthority'));
+            $qb->andWhere($qb->expr()->isNull($this->alias . '.localAuthority'));
         } else {
             $qb->andWhere($qb->expr()->eq($this->alias . '.fileRead', '0'));
             $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
@@ -85,7 +85,7 @@ class TxcInbox extends AbstractRepository
             ->with('l.organisation');
 
         if (empty($localAuthority)) {
-            $qb->where($qb->expr()->isNull($this->alias . '.localAuthority', ':localAuthority'));
+            $qb->where($qb->expr()->isNull($this->alias . '.localAuthority'));
         } else {
             $qb->where($qb->expr()->eq($this->alias . '.fileRead', '0'));
             $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
