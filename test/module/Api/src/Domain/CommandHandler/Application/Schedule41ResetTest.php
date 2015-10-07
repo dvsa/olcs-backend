@@ -49,7 +49,7 @@ class Schedule41ResetTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $publication = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
         $publication->setPubStatus(new RefData(\Dvsa\Olcs\Api\Entity\Publication\Publication::PUB_NEW_STATUS));
         $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
         $publicationLink1
@@ -114,7 +114,7 @@ class Schedule41ResetTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $publication = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
         $publication->setPubStatus(new RefData(\Dvsa\Olcs\Api\Entity\Publication\Publication::PUB_PRINTED_STATUS));
         $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
         $publicationLink1
@@ -173,7 +173,7 @@ class Schedule41ResetTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $publication = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
         $publication->setPubStatus(new RefData(\Dvsa\Olcs\Api\Entity\Publication\Publication::PUB_GENERATED_STATUS));
         $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
         $publicationLink1
