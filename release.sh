@@ -7,6 +7,7 @@ DBPASSWORD=$(php -r "\$config=require('config/autoload/local.php'); echo \$confi
 mysqldump -u$DBUSER -p$DBPASSWORD $DBNAME --complete-insert --no-create-info > data.sql
 
 tar -czf ../release/olcs-backend/$VERSION.tar.gz \
-composer.phar composer.json composer.lock config module public data/autoload data/cache vendor \
+composer.phar composer.json composer.lock init_autoloader.php \
+config module public data/autoload data/cache vendor \
 data.sql olcs-etl/olcs_schema.sql \
 --exclude="config/autoload/local.php" --exclude="config/autoload/local.php.dist"
