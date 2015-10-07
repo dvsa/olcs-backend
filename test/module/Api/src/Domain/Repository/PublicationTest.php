@@ -113,4 +113,33 @@ class PublicationTest extends RepositoryTestCase
 
         return $mockQb;
     }
+
+    public function testFetchPendingList()
+    {
+        $results = [0 => m::mock(PublicationEntity::class)];
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->in')->with('m.pubStatus', ':pubStatus')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('pubStatus', [PublicationEntity::PUB_NEW_STATUS, PublicationEntity::PUB_GENERATED_STATUS])
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')
+            ->andReturn($results);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($mockQb)->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = $this->getMockRepo($mockQb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(PublicationEntity::class)
+            ->andReturn($repo);
+
+        $this->sut->fetchPendingList();
+    }
 }

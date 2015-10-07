@@ -519,6 +519,7 @@ return [
     // Domain - Publications
     Command\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,
     Command\Publication\PiDecision::class => CommandHandler\Publication\PiHearing::class,
+    Command\Publication\CreateNextPublication::class => CommandHandler\Publication\CreateNextPublication::class,
 
     // Domain - Discs
     Command\Discs\CeaseGoodsDiscs::class => CommandHandler\Discs\CeaseGoodsDiscs::class,
