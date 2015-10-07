@@ -381,17 +381,12 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * Format a date/time as required by CPMS report filter fields
      *
-     * @param string|DateTime $dateTime
+     * @param DateTime $dateTime
      * @return string
      */
-    protected function formatDateTime($dateTime)
+    protected function formatDateTime(\DateTime $dateTime)
     {
-        if (!is_null($dateTime)) {
-            if (is_string($dateTime)) {
-                $dateTime = new DateTime($dateTime);
-            }
-            return $dateTime->format(self::DATETIME_FORMAT);
-        }
+        return $dateTime->format(self::DATETIME_FORMAT);
     }
 
     /**

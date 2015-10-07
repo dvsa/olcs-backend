@@ -23,6 +23,9 @@ class ReportDownload extends AbstractConsumer
 {
     const MAX_ATTEMPTS = 10;
 
+    // parameterize this if/when we ever do other reports
+    const FILENAME = 'Daily Balance Report';
+
     /**
      * Process the message item
      *
@@ -42,13 +45,8 @@ class ReportDownload extends AbstractConsumer
 
         try {
             $result = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($query);
-        } catch (NotReadyException $e) {
-            return $this->retry($item, $e->getRetryAfter());
-        } catch (DomainException $e) {
-            $message = !empty($e->getMessages()) ? implode(', ', $e->getMessages()) : $e->getMessage();
-            return $this->failed($item, $message);
         } catch (\Exception $e) {
-            return $this->failed($item, $e->getMessage());
+            return $this->handleException($e, $item);
         }
 
         $msg = vsprintf(
@@ -57,7 +55,7 @@ class ReportDownload extends AbstractConsumer
         );
 
         $extension = $result['extension'] ? ('.'.$result['extension']) : '';
-        $filename = 'Daily Balance Report' . $extension;
+        $filename = self::FILENAME . $extension;
         $command = DownloadReportCmd::create(
             [
                 'reference' => $reference,
@@ -65,10 +63,28 @@ class ReportDownload extends AbstractConsumer
                 'filename'  => $filename,
             ]
         );
-        $downloadResult = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
+        try {
+            $downloadResult = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
+        } catch (\Exception $e) {
+            return $this->handleException($e, $item);
+        }
 
         $messages = array_merge([$msg], $downloadResult->getMessages());
 
         return $this->success($item, implode('|', $messages));
+    }
+
+    protected function handleException(\Exception $e, QueueEntity $item)
+    {
+        if ($e instanceof NotReadyException) {
+            return $this->retry($item, $e->getRetryAfter());
+        }
+
+        if ($e instanceof DomainException) {
+            $message = !empty($e->getMessages()) ? implode(', ', $e->getMessages()) : $e->getMessage();
+            return $this->failed($item, $message);
+        }
+
+        return $this->failed($item, $e->getMessage());
     }
 }

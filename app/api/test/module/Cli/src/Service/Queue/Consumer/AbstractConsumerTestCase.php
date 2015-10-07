@@ -23,6 +23,7 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
     protected $sut;
     protected $sm;
     protected $chm;
+    protected $qhm;
     protected $consumerClass = 'override_me';
 
     public function setUp()
@@ -31,6 +32,9 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
 
         $this->chm = m::mock();
         $this->sm->setService('CommandHandlerManager', $this->chm);
+
+        $this->qhm = m::mock();
+        $this->sm->setService('QueryHandlerManager', $this->qhm);
 
         $consumerClass = $this->consumerClass;
         $this->sut = new $consumerClass();
@@ -53,7 +57,7 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
                             is_a($cmd, $class)
                             &&
                             $cmd->getArrayCopy() == $expectedDtoData
-                        );
+                        );;
                         return $matched;
                     }
                 )
@@ -85,5 +89,59 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
             )
             ->once()
             ->andThrow(new $exceptionClass($exceptionMsg));
+    }
+
+    /**
+     * @param string $class expected Query class name
+     * @param array $expectedDtoData
+     * @param array $result to be returned by $response->getResult()
+     */
+    protected function expectQuery($class, $expectedDtoData, $result)
+    {
+        $this->qhm
+            ->shouldReceive('handleQuery')
+            ->with(
+                m::on(
+                    function ($qry) use ($expectedDtoData, $class) {
+                        $matched = (
+                            is_a($qry, $class)
+                            &&
+                            $qry->getArrayCopy() == $expectedDtoData
+                        );
+                        return $matched;
+                    }
+                )
+            )
+            ->once()
+            ->andReturn($result);
+    }
+
+    /**
+     * @param string $class
+     * @param array $expectedDtoData
+     * @param string|Exception $exception
+     */
+    protected function expectQueryException($class, $expectedDtoData, $exception, $exceptionMsg = '')
+    {
+        if (is_string($exception)) {
+            $exception = new $exception($exceptionMsg);
+        }
+
+        $this->qhm
+            ->shouldReceive('handleQuery')
+            ->with(
+                m::on(
+                    function ($qry) use ($expectedDtoData, $class) {
+                        $matched = (
+                            is_a($qry, $class)
+                            &&
+                            $qry->getArrayCopy() == $expectedDtoData
+                        );
+                        return $matched;
+                    }
+                )
+            )
+            ->once()
+            ->andThrow($exception);
     }
 }

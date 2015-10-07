@@ -383,7 +383,7 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
      * Get a list of available reports
      *
      * @return array
-     * @inheritdoc
+     * @codeCoverageIgnore deprecated class will be removed
      */
     public function getReportList()
     {
@@ -398,6 +398,7 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
      * @param DateTime $end
      * @return array
      * @inheritdoc
+     * @codeCoverageIgnore deprecated class will be removed
      */
     public function requestReport($reportCode, \DateTime $start, \DateTime $end)
     {
@@ -410,6 +411,7 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
      * @param string $reference
      * @return array
      * @inheritdoc
+     * @codeCoverageIgnore deprecated class will be removed
      */
     public function getReportStatus($reference)
     {
@@ -423,6 +425,7 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
      * @param string $token
      * @return array
      * @inheritdoc
+     * @codeCoverageIgnore deprecated class will be removed
      */
     public function downloadReport($reference, $token)
     {
