@@ -1781,9 +1781,9 @@ class ApplicationEntityTest extends EntityTester
         $publicationSection4 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
         $publicationSection4->setId(4);
 
-        $publication1 = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
         $publication1->setPubDate('2014-07-29');
-        $publication2 = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication2 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
         $publication2->setPubDate('2014-07-30');
 
         $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();

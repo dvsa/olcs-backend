@@ -31,7 +31,9 @@ final class Publish extends AbstractCommandHandler implements TransactionedInter
          * @var PublishCommand $command
          */
         $publication = $this->getRepo()->fetchUsingId($command);
-        $publication->publish();
+        $refData = $this->getRepo()->getRefdataReference(PublicationEntity::PUB_PRINTED_STATUS);
+        $publication->publish($refData);
+        $this->getRepo()->save($publication);
 
         $result = new Result();
         $result->addId('Publication', $publication->getId());

@@ -46,4 +46,17 @@ class Publication extends AbstractRepository
 
         return $result[0];
     }
+
+    public function fetchPendingList()
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere(
+            $qb->expr()->in($this->alias . '.pubStatus', ':pubStatus')
+        )->setParameter('pubStatus', [Entity::PUB_NEW_STATUS, Entity::PUB_GENERATED_STATUS]);
+
+        $this->getQueryBuilder()->modifyQuery($qb);
+
+        return $qb->getQuery()->getResult();
+    }
 }
