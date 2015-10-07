@@ -190,7 +190,6 @@ return [
     TransferQuery\Bus\ShortNoticeByBusReg::class => QueryHandler\Bus\ShortNoticeByBusReg::class,
     TransferQuery\Bus\RegistrationHistoryList::class => QueryHandler\Bus\RegistrationHistoryList::class,
     Query\Bus\ByLicenceRoute::class => QueryHandler\Bus\ByLicenceRoute::class,
-    TransferQuery\Bus\BusRegWithDocuments::class => QueryHandler\Bus\BusRegWithDocuments::class,
 
     // Bus - Ebsr
     TransferQuery\Ebsr\SubmissionList::class => QueryHandler\Ebsr\SubmissionList::class,
