@@ -101,9 +101,6 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
         );
 
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
-            ->shouldReceive('getIdentity')
-            ->once()
-            ->andReturn($this->getCurrentUser())
             ->shouldReceive('isGranted')
             ->with(Permission::SELFSERVE_EBSR_DOCUMENTS, null)
             ->once()->atLeast()
