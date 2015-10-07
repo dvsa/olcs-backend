@@ -9,8 +9,10 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as Entity;
+use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
  * PublicationLink
