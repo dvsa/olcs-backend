@@ -263,7 +263,7 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="waive_recommendation_date", nullable=true)
+     * @ORM\Column(type="datetime", name="waive_recommendation_date", nullable=true)
      */
     protected $waiveRecommendationDate;
 
