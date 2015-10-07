@@ -27,7 +27,8 @@ final class Retry extends AbstractCommandHandler implements TransactionedInterfa
      */
     public function handleCommand(CommandInterface $command)
     {
-        $processAfter = new DateTime('+'.$command->getRetryAfter().' seconds');
+        $processAfter = new DateTime();
+        $processAfter->add(new \DateInterval(sprintf('PT%dS', $command->getRetryAfter())));
 
         $item = $command->getItem();
         $item->setStatus($this->getRepo()->getRefdataReference(QueueEntity::STATUS_QUEUED));
