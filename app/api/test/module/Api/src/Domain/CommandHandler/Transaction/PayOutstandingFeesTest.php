@@ -8,6 +8,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -24,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
@@ -33,8 +35,6 @@ use Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
-use Dvsa\Olcs\Api\Entity\System\Category;
 
 /**
  * Pay Outstanding Fees Test
@@ -1002,25 +1002,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * Helper function to generate a stub fee entity
-     *
-     * @param int $id
-     * @param string $amount
-     * @return FeeEntity
-     */
-    private function getStubFee($id, $amount, $typeId = null)
-    {
-        $status = new RefData();
-        $feeType = new FeeTypeEntity();
-        $feeType->setFeeType(new RefData($typeId));
-
-        $fee = new FeeEntity($feeType, $amount, $status);
-        $fee->setId($id);
-
-        return $fee;
-    }
-
     public function testHandleCommandChequePaymentInsufficientFee()
     {
         // set up data
@@ -1150,5 +1131,29 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->assertEquals(PaymentEntity::TYPE_PAYMENT, $savedTransaction->getType()->getId());
         $this->assertEquals('23456', $savedTransaction->getChequePoNumber());
         $this->assertEquals('2015-06-10', $savedTransaction->getChequePoDate()->format('Y-m-d'));
+    }
+
+    public function testHandleCommandCancelPendingWaive()
+    {
+        $this->markTestIncomplete('@todo');
+    }
+
+    /**
+     * Helper function to generate a stub fee entity
+     *
+     * @param int $id
+     * @param string $amount
+     * @return FeeEntity
+     */
+    private function getStubFee($id, $amount, $typeId = null)
+    {
+        $status = new RefData();
+        $feeType = new FeeTypeEntity();
+        $feeType->setFeeType(new RefData($typeId));
+
+        $fee = new FeeEntity($feeType, $amount, $status);
+        $fee->setId($id);
+
+        return $fee;
     }
 }
