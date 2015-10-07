@@ -8,6 +8,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
@@ -31,6 +32,7 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
 use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Api\Service\FeesHelperService as FeesHelper;
+use Dvsa\Olcs\Transfer\Command\Fee\RejectWaive as RejectWaiveCmd;
 use Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -95,6 +97,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             FeeEntity::METHOD_CASH => m::mock(RefData::class)->makePartial()->setDescription('Cash'),
             FeeEntity::METHOD_CHEQUE => m::mock(RefData::class)->makePartial()->setDescription('Cheque'),
             FeeEntity::METHOD_POSTAL_ORDER => m::mock(RefData::class)->makePartial()->setDescription('Postal Order'),
+            FeeEntity::METHOD_WAIVE,
             FeeEntity::STATUS_PAID,
             LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
@@ -305,7 +308,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
     public function testHandleCommandWithFeeIds()
     {
         // set up data
-        $organisationId = 77;
         $feeIds = [99, 100, 101];
         $cpmsRedirectUrl = 'https://olcs-selfserve/foo';
 
@@ -322,18 +324,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
-
-        // mocks
-        $licence = m::mock();
-        $organisation = m::mock();
-        $licence
-            ->shouldReceive('getOrganisation')
-            ->andReturn($organisation)
-            ->getMock();
-        $organisation
-            ->shouldReceive('getId')
-            ->andReturn($organisationId);
-        $fee1->setLicence($licence);
 
         // expectations
         $this->repoMap['Fee']
@@ -382,8 +372,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         // set up data
         $cpmsRedirectUrl = 'https://olcs-selfserve/foo';
         $applicationId = 69;
-        $organisationId = 77;
-        $licenceId = 7;
 
         $paymentId = 999; // payment to be created
 
@@ -398,14 +386,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
-
-        // mocks/set up references
-        $organisation = $this->mapReference(OrganisationEntity::class, $organisationId);
-        $licence = $this->mapReference(LicenceEntity::class, $licenceId);
-        $licence->setOrganisation($organisation);
-        $application = $this->mapReference(ApplicationEntity::class, $applicationId);
-        $application->setLicence($licence);
-        $applicationFee->setLicence($licence);
 
         // expectations
         $this->mockFeesHelperService
@@ -1135,7 +1115,103 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
     public function testHandleCommandCancelPendingWaive()
     {
-        $this->markTestIncomplete('@todo');
+        // set up data
+        $feeIds = [99];
+        $cpmsRedirectUrl = 'https://olcs-selfserve/foo';
+
+        $paymentId = 999; // payment to be created
+
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fees = [$fee1];
+
+        // add an outstanding waive transaction
+        $waive = m::mock(PaymentEntity::class);
+        $waive->shouldReceive('getType->getId')->andReturn(PaymentEntity::TYPE_WAIVE);
+        $waive->shouldReceive('isOutstanding')->andReturn(true);
+        $waive->shouldReceive('getId')->andReturn(123);
+        $waive->shouldReceive('getPaymentMethod')->andReturn($this->mapRefData(FeeEntity::METHOD_WAIVE));
+        $waive->shouldReceive('isPaid')->andReturn(false);
+        $waive->shouldReceive('isComplete')->andReturn(false);
+        $waiveFeeTransaction = m::mock(FeePaymentEntity::class)
+            ->shouldReceive('getTransaction')
+            ->andReturn($waive)
+            ->getMock();
+        $fee1->setFeeTransactions(new ArrayCollection([$waiveFeeTransaction]));
+
+        $data = [
+            'feeIds' => $feeIds,
+            'cpmsRedirectUrl' => $cpmsRedirectUrl,
+            'paymentMethod' => FeeEntity::METHOD_CARD_OFFLINE,
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('initiateCardRequest')
+            ->once()
+            ->with($cpmsRedirectUrl, $fees);
+
+        /** @var PaymentEntity $savedPayment */
+        $savedPayment = null;
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(PaymentEntity::class))
+            ->andReturnUsing(
+                function (PaymentEntity $payment) use (&$savedPayment, $paymentId) {
+                    $payment->setId($paymentId);
+                    $savedPayment = $payment;
+                }
+            );
+
+        $resolveResult = new Result();
+        $resolveResult->addMessage('Waive transaction 123 not resolved');
+        $this->expectedSideEffect(
+            ResolvePaymentCommand::class,
+            [
+                'id' => 123,
+                'paymentMethod' => FeeEntity::METHOD_WAIVE,
+            ],
+            $resolveResult
+        );
+        $this->repoMap['Transaction']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with(123)
+            ->andReturn($waive);
+
+        $rejectResult = new Result();
+        $rejectResult->addMessage('Waive transaction cancelled', $paymentId);
+        $this->expectedSideEffect(
+            RejectWaiveCmd::class,
+            ['id' => 99],
+            $rejectResult
+        );
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'transaction' => $paymentId,
+            ],
+            'messages' => [
+                'Waive transaction 123 not resolved',
+                'Waive transaction cancelled',
+                'Transaction record created',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals(PaymentEntity::STATUS_OUTSTANDING, $savedPayment->getStatus()->getId());
     }
 
     /**
