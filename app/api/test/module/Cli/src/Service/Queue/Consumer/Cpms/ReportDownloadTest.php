@@ -105,12 +105,6 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $item->setOptions('{"reference":"OLCS-1234-ABCD"}');
 
         $expectedQryData = ['reference' => 'OLCS-1234-ABCD'];
-        $qryResult = [
-            'completed' => true,
-            'token' => 'secrettoken',
-            'extension' => 'csv',
-        ];
-
         $expectedException = new \Dvsa\Olcs\Api\Domain\Exception\NotReadyException('try again later');
         $expectedException->setRetryAfter(60);
         $this->expectQueryException(
@@ -140,11 +134,6 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $item->setOptions('{"reference":"OLCS-1234-ABCD"}');
 
         $expectedQryData = ['reference' => 'OLCS-1234-ABCD'];
-        $qryResult = [
-            'completed' => true,
-            'token' => 'secrettoken',
-            'extension' => 'csv',
-        ];
         $this->expectQueryException(
             \Dvsa\Olcs\Transfer\Query\Cpms\ReportStatus::class,
             $expectedQryData,
