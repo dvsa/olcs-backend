@@ -32,6 +32,8 @@ class TxcInbox extends AbstractRepository
     }
 
     /**
+     * Fetch a list of unread docs filtered by local authority, submission type and status for a given bus reg id
+     *
      * @param int $busReg
      * @param int $localAuthorityId
      * @param int $hydrateMode
@@ -61,11 +63,13 @@ class TxcInbox extends AbstractRepository
     }
 
     /**
-     * Fetch a list for a licence, filtered to include only not fulfilled and not draft
+     * Fetch a list of unread docs filtered by local authority, submission type and status
      *
-     * @param int $licenceId
-     *
-     * @return array of Entity
+     * @param $localAuthority
+     * @param null $ebsrSubmissionType
+     * @param null $ebsrSubmissionStatus
+     * @param int $hydrateMode
+     * @return array
      */
     public function fetchUnreadListForLocalAuthority(
         $localAuthority,
