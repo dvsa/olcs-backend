@@ -31,6 +31,7 @@ use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Transfer\Command\Fee\RejectWaive as RejectWaiveCmd;
 
 /**
  * Pay Outstanding Fees
@@ -122,10 +123,13 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             ->setType($this->getRepo()->getRefdataReference(TransactionEntity::TYPE_PAYMENT))
             ->setPaymentMethod($this->getRepo()->getRefdataReference($command->getPaymentMethod()));
 
-        // create feeTransaction record(s)
+        // create feeTransaction record(s) and cancel any pending waives
         $feeTransactions = new ArrayCollection();
         $transaction->setFeeTransactions($feeTransactions);
         foreach ($feesToPay as $fee) {
+
+            $result->merge($this->maybeCancelPendingWaive($fee));
+
             $feeTransaction = new FeeTransactionEntity();
             $feeTransaction
                 ->setFee($fee)
@@ -181,8 +185,11 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             ->setChequePoDate($chequeDate) // note we don't actually capture date for PO's
             ->setChequePoNumber($chequePoNumber);
 
-        // create feeTransaction record(s)
+        // create feeTransaction record(s) and cancel any pending waives
         foreach ($fees as $fee) {
+
+            $result->merge($this->maybeCancelPendingWaive($fee));
+
             $allocatedAmount = $allocations[$fee->getId()];
             $markAsPaid = ($allocatedAmount === $fee->getOutstandingAmount());
             $feeTransaction = new FeeTransactionEntity();
@@ -501,5 +508,20 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         }
 
         return $this->handleSideEffect(GenerateAndStore::create($dtoData));
+    }
+
+    /**
+     * If there is an outstanding waive transaction for a fee, reject it
+     */
+    private function maybeCancelPendingWaive(FeeEntity $fee)
+    {
+        $result = new Result();
+
+        if ($fee->getOutstandingWaiveTransaction()) {
+            $rejectCmd = RejectWaiveCmd::create(['id' => $fee->getId()]);
+            $result->merge($this->handleSideEffect($rejectCmd));
+        }
+
+        return $result;
     }
 }
