@@ -190,6 +190,9 @@ return [
     TransferQuery\Bus\RegistrationHistoryList::class => QueryHandler\Bus\RegistrationHistoryList::class,
     Query\Bus\ByLicenceRoute::class => QueryHandler\Bus\ByLicenceRoute::class,
 
+    // Bus - Ebsr
+    TransferQuery\Ebsr\SubmissionList::class => QueryHandler\Ebsr\SubmissionList::class,
+
     // Trailer
     TransferQuery\Licence\Trailers::class => QueryHandler\Licence\Trailers::class,
     TransferQuery\Trailer\Trailer::class => QueryHandler\Trailer\Trailer::class,
