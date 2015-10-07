@@ -36,25 +36,12 @@ final class UpdateTxcInbox extends AbstractCommandHandler implements Transaction
         $count = 0;
         /** @var TxcInbox $txcInbox */
         foreach ($txcInboxRecords as $txcInbox) {
-            $result->merge($this->updateFileRead($txcInbox));
+            $txcInbox->setFileRead('Y');
+            $this->getRepo()->save($txcInbox);
             $count++;
         }
 
         $result->addMessage($count . ' records updated');
-
-        return $result;
-    }
-
-    /**
-     * @param TxcInbox $txcInbox
-     * @return Result
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    private function updateFileRead(TxcInbox $txcInbox)
-    {
-        $result = new Result();
-        $txcInbox->setFileRead('Y');
-        $this->getRepo()->save($txcInbox);
 
         return $result;
     }
