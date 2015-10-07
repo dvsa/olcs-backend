@@ -57,7 +57,7 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
                             is_a($cmd, $class)
                             &&
                             $cmd->getArrayCopy() == $expectedDtoData
-                        );;
+                        );
                         return $matched;
                     }
                 )
