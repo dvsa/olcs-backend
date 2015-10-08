@@ -1,10 +1,12 @@
 <p>Thank you for your EBSR application received on <?php echo $this->submissionDate ?> for the
-following local bus service - <?php echo $this->registrationNumber; ?> - between
+    following local bus service - <?php echo $this->registrationNumber; ?> - between
     <?php echo $this->origin; ?> and <?php echo $this->destination; ?> with service number
-    <?php echo $this->lineName; ?> to come
-into effect on <?php echo $this->startDate; ?>.</p>
+    <?php echo $this->lineName; ?> came into effect on <?php echo $this->startDate; ?>.</p>
 
-<p>Your application has been received and will be processed as soon as possible.
+<p>We would remind you that you must continue to operate the service until the cancellation date mentioned above.
+    If you do not, you could face disciplinary action by the Traffic Commissioner.</p>
+
+<p>Notice of this cancellation application will appear in "Notices and Proceedings" issue number <?php echo $this->publicationId; ?>.
     We have copied this e-mail to the following local authorities: <?php echo $this->localAuthoritys; ?>.</p>
 
 <p>Please do not reply directly to this e-mail by using the ‘Reply’
