@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Send Ebsr Received Email Test
+ * Send Ebsr Cancelled Email Test
  *
  * @author Craig R <uk@valtech.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrReceived as CommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrCancelled as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Ebsr\SubmissionCreate as SubmissionCreateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -20,12 +20,12 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Query\Ebsr\EbsrSubmission as EbsrSubmissionQuery;
 
 /**
- * Send Ebsr Received Email Test
+ * Send Ebsr Cancelled Email Test
  *
  * @author Craig R <uk@valtech.co.uk>
  */
-class SendEbsrReceivedTest extends SendEbsrEmailTestAbstract
+class SendEbsrCancelledTest extends SendEbsrEmailTestAbstract
 {
-    protected $template = 'ebsr-received';
-    protected $sutClass = '\Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrReceived';
+    protected $template = 'ebsr-cancelled';
+    protected $sutClass = '\Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrCancelled';
 }

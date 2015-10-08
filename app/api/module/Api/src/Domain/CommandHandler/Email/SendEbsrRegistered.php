@@ -14,7 +14,7 @@ use Doctrine\ORM\Query;
  *
  * @author Craig R <uk@valtech.co.uk>
  */
-final class SendEbsrReceived extends SendEbsrAbstract
+final class SendEbsrRegistered extends SendEbsrAbstract
 {
-    protected $template = 'ebsr-received';
+    protected $template = 'ebsr-registered';
 }
