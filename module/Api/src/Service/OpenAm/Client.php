@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\OpenAm;
 use Zend\Http\Client as HttpClient;
 use Zend\Http\Header\Accept;
 use Zend\Http\Request;
+use Zend\Uri\Http as Uri;
 
 /**
  * Class Client
@@ -59,7 +60,7 @@ class Client implements ClientInterface
         $request = $this->createRequest('/users?_action=create', Request::METHOD_POST);
         $request->setContent(json_encode($payload));
 
-        $response = $this->httpClient->send();
+        $response = $this->httpClient->send($request);
 
         if (!$response->isSuccess()) {
             throw new FailedRequestException($response);
@@ -101,7 +102,7 @@ class Client implements ClientInterface
         $request = $this->createRequest('/users/' . $username, Request::METHOD_PATCH);
         $request->setContent(json_encode($payload));
 
-        $response = $this->httpClient->send();
+        $response = $this->httpClient->send($request);
 
         if (!$response->isSuccess()) {
             throw new FailedRequestException($response);
@@ -117,7 +118,7 @@ class Client implements ClientInterface
     {
         $request = clone $this->templateRequest;
         $request->setMethod($method);
-        $request->getUri()->setPath($path);
+        $request->setUri(Uri::merge($request->getUriString(), $path));
 
         return $request;
     }

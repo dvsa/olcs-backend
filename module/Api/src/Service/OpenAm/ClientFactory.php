@@ -33,13 +33,16 @@ class ClientFactory implements FactoryInterface
         if (isset($config['openam']['http_client_options'])) {
             $options = $config['openam']['http_client_options'];
         }
-        $httpClient = new HttpClient($config['openam']['uri'], $options);
+
+        $httpClient = new HttpClient('', $options);
 
         $request = new Request();
         $headers = $request->getHeaders();
-        $headers->addHeader(new Accept('application/json'));
+        $headers->addHeaderLine('Accept', 'application/json');
+        $headers->addHeaderLine('Content-Type', 'application/json');
         $headers->addHeaderLine('X-OpenIDM-Username', $config['openam']['username']);
         $headers->addHeaderLine('X-OpenIDM-Password', $config['openam']['password']);
+        $request->setUri($config['openam']['uri']);
 
         return new Client($httpClient, $request);
     }
