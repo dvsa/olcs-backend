@@ -19,8 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_irfo_gv_permit_type_irfo_country_id", columns={"irfo_country_id"}),
  *        @ORM\Index(name="ix_irfo_gv_permit_type_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_irfo_gv_permit_type_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_irfo_gv_permit_type_irfo_fee_type_ref_data1_idx1",
-     *     columns={"irfo_fee_type"})
+ *        @ORM\Index(name="ix_irfo_gv_permit_type_irfo_fee_type", columns={"irfo_fee_type"})
  *    }
  * )
  */
@@ -83,7 +82,7 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_fee_type", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="irfo_fee_type", referencedColumnName="id", nullable=false)
      */
     protected $irfoFeeType;
 

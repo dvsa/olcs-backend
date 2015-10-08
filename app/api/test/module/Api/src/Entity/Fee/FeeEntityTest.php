@@ -306,14 +306,14 @@ class FeeEntityTest extends EntityTester
     public function outstandingWaiveTransactionProvider()
     {
         $transaction1 = m::mock(Transaction::class);
-        $transaction1->shouldReceive('getStatus->getId')
-            ->andReturn(Transaction::STATUS_CANCELLED);
+        $transaction1->shouldReceive('isOutstanding')
+            ->andReturn(false);
         $transaction1->shouldReceive('getType->getId')
             ->andReturn(Transaction::TYPE_WAIVE);
 
         $transaction2 = m::mock(Transaction::class);
-        $transaction2->shouldReceive('getStatus->getId')
-            ->andReturn(Transaction::STATUS_OUTSTANDING);
+        $transaction2->shouldReceive('isOutstanding')
+            ->andReturn(true);
         $transaction2->shouldReceive('getType->getId')
             ->andReturn(Transaction::TYPE_WAIVE);
 

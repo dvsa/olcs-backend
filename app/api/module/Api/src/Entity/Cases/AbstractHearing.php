@@ -24,7 +24,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_hearing_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_hearing_presiding_tc_id", columns={"presiding_tc_id"}),
  *        @ORM\Index(name="ix_hearing_hearing_type", columns={"hearing_type"}),
- *        @ORM\Index(name="ix_hearing_outcome", columns={"outcome"})
+ *        @ORM\Index(name="fk_hearing_ref_data1_idx", columns={"outcome"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_hearing_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -210,9 +210,9 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     /**
      * Witness count
      *
-     * @var int
+     * @var boolean
      *
-     * @ORM\Column(type="integer", name="witness_count", nullable=true)
+     * @ORM\Column(type="boolean", name="witness_count", nullable=true)
      */
     protected $witnessCount;
 
@@ -633,7 +633,7 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     /**
      * Set the witness count
      *
-     * @param int $witnessCount
+     * @param boolean $witnessCount
      * @return Hearing
      */
     public function setWitnessCount($witnessCount)
@@ -646,7 +646,7 @@ abstract class AbstractHearing implements BundleSerializableInterface, JsonSeria
     /**
      * Get the witness count
      *
-     * @return int
+     * @return boolean
      */
     public function getWitnessCount()
     {

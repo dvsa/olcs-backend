@@ -28,8 +28,8 @@ TRUNCATE TABLE `event_history_type`;
 TRUNCATE TABLE `event_history`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
-TRUNCATE TABLE `fee_transaction`;
-TRUNCATE TABLE `transaction`;
+TRUNCATE TABLE `fee_txn`;
+TRUNCATE TABLE `txn`;
 TRUNCATE TABLE `grace_period`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
@@ -600,9 +600,7 @@ INSERT INTO `fee` (
 `invoice_line_no`,
 `invoiced_date`,
 `description`,
-`irfo_fee_id`,
 `irfo_fee_exempt`,
-`irfo_file_no`,
 `irfo_gv_permit_id`,
 `created_by`,
 `last_modified_by`,
@@ -611,35 +609,35 @@ INSERT INTO `fee` (
 `version`
 )
 VALUES
-(7,1,'lfs_ot',NULL,NULL,NULL,7,NULL,250.00,1,'2013-11-25 00:00:00','Application fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(30,1,'lfs_pd',NULL,NULL,NULL,110,NULL,251.00,1,'2013-11-22 00:00:00','Application fee',NULL,NULL,NULL,NULL,1,2,NULL,NULL,1),
-(41,1,'lfs_ot',NULL,NULL,NULL,110,NULL,150.00,1,'2013-11-21 00:00:00','Grant fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(54,1,'lfs_ot',NULL,NULL,NULL,110,NULL,250.00,1,'2013-11-12 00:00:00','Application fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(63,1,'lfs_ot',NULL,NULL,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(75,1,'lfs_ot',NULL,NULL,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(76,1,'lfs_ot',NULL,1,NULL,110,NULL,250.50,1,'2013-11-25 00:00:00','Application fee 1',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(77,1,'lfs_ot',NULL,1,NULL,110,NULL,251.75,1,'2013-11-22 00:00:00','Application fee 2',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(78,1,'lfs_ot',NULL,1,NULL,110,NULL,150.00,1,'2013-11-21 00:00:00','Grant fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,3),
-(79,1,'lfs_ot',NULL,1,NULL,110,NULL,250.00,1,'2013-11-12 00:00:00','Application fee 3',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(80,1,'lfs_pd',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 4',NULL,NULL,NULL,NULL,1,2,NULL,NULL,1),
-(81,1,'lfs_ot',NULL,1,NULL,110,NULL,1250.00,1,'2013-11-10 00:00:00','Application fee 5',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(82,1,'lfs_ot',NULL,1,NULL,30,NULL,500.00,1,'2013-10-23 00:00:00','Bus route 1',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(83,1,'lfs_ot',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 4',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(84,1,'lfs_ot',NULL,1,NULL,110,NULL,1250.00,1,'2013-11-10 00:00:00','Application fee 5',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(85,1,'lfs_ot',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 4',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(86,1,'lfs_ot',NULL,1,NULL,110,NULL,1250.00,1,'2013-11-10 00:00:00','Application fee 5',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(87,1,'lfs_pd',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 6',NULL,NULL,NULL,NULL,1,2,NULL,NULL,1),
-(88,1,'lfs_cn',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 7',NULL,NULL,NULL,NULL,1,2,NULL,NULL,1),
-(89,1,'lfs_pd',NULL,3,NULL,210,NULL,254.40,1,'2013-11-10 00:00:00','Application fee 8',NULL,NULL,NULL,NULL,1,2,NULL,NULL,1),
-(90,188,'lfs_ot',NULL,1,3,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Application Fee PD2737280/3 Variation 0',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(91,189,'lfs_ot',NULL,1,8,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 1',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(92,189,'lfs_ot',NULL,1,9,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 2',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(93,189,'lfs_ot',NULL,1,10,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 3',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(94,189,'lfs_ot',NULL,1,11,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 4',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(97,20051,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 12:34:56','Photocopying charge',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(98,20052,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 13:45:01','Court fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1);
+(7,1,'lfs_ot',NULL,NULL,NULL,7,NULL,250.00,1,'2013-11-25 00:00:00','Application fee',NULL,NULL,1,NULL,NULL,NULL,1),
+(30,1,'lfs_pd',NULL,NULL,NULL,110,NULL,251.00,1,'2013-11-22 00:00:00','Application fee',NULL,NULL,1,2,NULL,NULL,1),
+(41,1,'lfs_ot',NULL,NULL,NULL,110,NULL,150.00,1,'2013-11-21 00:00:00','Grant fee',NULL,NULL,1,NULL,NULL,NULL,1),
+(54,1,'lfs_ot',NULL,NULL,NULL,110,NULL,250.00,1,'2013-11-12 00:00:00','Application fee',NULL,NULL,1,NULL,NULL,NULL,1),
+(63,1,'lfs_ot',NULL,NULL,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee',NULL,NULL,1,NULL,NULL,NULL,1),
+(75,1,'lfs_ot',NULL,NULL,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee',NULL,NULL,1,NULL,NULL,NULL,1),
+(76,1,'lfs_ot',NULL,1,NULL,110,NULL,250.50,1,'2013-11-25 00:00:00','Application fee 1',NULL,NULL,1,NULL,NULL,NULL,2),
+(77,1,'lfs_ot',NULL,1,NULL,110,NULL,251.75,1,'2013-11-22 00:00:00','Application fee 2',NULL,NULL,1,NULL,NULL,NULL,2),
+(78,1,'lfs_ot',NULL,1,NULL,110,NULL,150.00,1,'2013-11-21 00:00:00','Grant fee',NULL,NULL,1,NULL,NULL,NULL,3),
+(79,1,'lfs_ot',NULL,1,NULL,110,NULL,250.00,1,'2013-11-12 00:00:00','Application fee 3',NULL,NULL,1,NULL,NULL,NULL,2),
+(80,1,'lfs_pd',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 4',NULL,NULL,1,2,NULL,NULL,1),
+(81,1,'lfs_ot',NULL,1,NULL,110,NULL,1250.00,1,'2013-11-10 00:00:00','Application fee 5',NULL,NULL,1,NULL,NULL,NULL,2),
+(82,1,'lfs_ot',NULL,1,NULL,30,NULL,500.00,1,'2013-10-23 00:00:00','Bus route 1',NULL,NULL,1,NULL,NULL,NULL,2),
+(83,1,'lfs_ot',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 4',NULL,NULL,1,NULL,NULL,NULL,1),
+(84,1,'lfs_ot',NULL,1,NULL,110,NULL,1250.00,1,'2013-11-10 00:00:00','Application fee 5',NULL,NULL,1,NULL,NULL,NULL,2),
+(85,1,'lfs_ot',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 4',NULL,NULL,1,NULL,NULL,NULL,1),
+(86,1,'lfs_ot',NULL,1,NULL,110,NULL,1250.00,1,'2013-11-10 00:00:00','Application fee 5',NULL,NULL,1,NULL,NULL,NULL,2),
+(87,1,'lfs_pd',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 6',NULL,NULL,1,2,NULL,NULL,1),
+(88,1,'lfs_cn',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 7',NULL,NULL,1,2,NULL,NULL,1),
+(89,1,'lfs_pd',NULL,3,NULL,210,NULL,254.40,1,'2013-11-10 00:00:00','Application fee 8',NULL,NULL,1,2,NULL,NULL,1),
+(90,188,'lfs_ot',NULL,1,3,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Application Fee PD2737280/3 Variation 0',NULL,NULL,1,NULL,NULL,NULL,1),
+(91,189,'lfs_ot',NULL,1,8,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 1',NULL,NULL,1,NULL,NULL,NULL,1),
+(92,189,'lfs_ot',NULL,1,9,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 2',NULL,NULL,1,NULL,NULL,NULL,1),
+(93,189,'lfs_ot',NULL,1,10,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 3',NULL,NULL,1,NULL,NULL,NULL,1),
+(94,189,'lfs_ot',NULL,1,11,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 4',NULL,NULL,1,NULL,NULL,NULL,1),
+(97,20051,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 12:34:56','Photocopying charge',NULL,NULL,1,NULL,NULL,NULL,1),
+(98,20052,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 13:45:01','Court fee',NULL,NULL,1,NULL,NULL,NULL,1);
 
-INSERT INTO `transaction` (
+INSERT INTO `txn` (
     `id`,
     `reference`,
     `type`,
@@ -656,8 +654,8 @@ VALUES
     (10002,'OLCS-2345-3456','trt_bounce','pay_s_pd','2015-09-01','fpm_cheque','',NULL,NULL,1),
     (10003,'OLCS-3456-4567','trt_payment','pay_s_pd','2015-09-02','fpm_cash','',NULL,NULL,1);
 
-INSERT INTO `fee_transaction`
-    (`fee_id`,`transaction_id`,`amount`)
+INSERT INTO `fee_txn`
+    (`fee_id`,`txn_id`,`amount`)
 VALUES
     (97,10001,100.00),
     (97,10002,-100.00),
@@ -833,25 +831,24 @@ INSERT INTO `note` (
   `comment`,
   `priority`,
   `created_on`,
-  `version`,
-  `user_id`
+  `version`
 )
 VALUES
-(1,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1, 1),
-(2,  'note_t_lic',  NULL, 4, 7,   28, NULL, NULL, NULL, 'This is a licence note', 1, '2011-10-03 00:00:00', 1, 1),
-(3,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1, 1),
-(4,  'note_t_app',  NULL, 3, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1, 1),
-(5,  'note_t_lic',  NULL, 5, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-03 00:00:00', 1, 1),
-(6,  'note_t_case', NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a case note',    0, '2011-10-03 00:00:00', 1, 1),
-(7,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1, 1),
-(8,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2012-10-10 00:00:00', 1, 1),
-(9,  'note_t_bus',  1,    3, 110, 75, NULL, NULL, NULL, 'This is a bus reg note', 0, '2012-10-10 00:00:00', 1, 1),
-(10, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1, 1),
-(11, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-13 00:00:00', 1, 1),
-(12, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-15 00:00:00', 1, 1),
-(13, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-12 00:00:00', 1, 1),
-(14, 'note_t_tm',   NULL, 3,NULL,NULL,NULL, 3,    NULL, 'This is a TM note',      0, '2011-10-12 00:00:00', 1, 1),
-(15, 'note_t_org',  NULL, 3,NULL,NULL,NULL, NULL, 101,  'This is a organisation note', 0, '2011-10-12 00:00:00', 1, 1);
+(1,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
+(2,  'note_t_lic',  NULL, 4, 7,   28, NULL, NULL, NULL, 'This is a licence note', 1, '2011-10-03 00:00:00', 1),
+(3,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
+(4,  'note_t_app',  NULL, 3, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
+(5,  'note_t_lic',  NULL, 5, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-03 00:00:00', 1),
+(6,  'note_t_case', NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a case note',    0, '2011-10-03 00:00:00', 1),
+(7,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1),
+(8,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2012-10-10 00:00:00', 1),
+(9,  'note_t_bus',  1,    3, 110, 75, NULL, NULL, NULL, 'This is a bus reg note', 0, '2012-10-10 00:00:00', 1),
+(10, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1),
+(11, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-13 00:00:00', 1),
+(12, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-15 00:00:00', 1),
+(13, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-12 00:00:00', 1),
+(14, 'note_t_tm',   NULL, 3,NULL,NULL,NULL, 3,    NULL, 'This is a TM note',      0, '2011-10-12 00:00:00', 1),
+(15, 'note_t_org',  NULL, 3,NULL,NULL,NULL, NULL, 101,  'This is a organisation note', 0, '2011-10-12 00:00:00', 1);
 
 
 INSERT INTO `operating_centre` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
@@ -2028,7 +2025,7 @@ INSERT INTO `fee`
     (`id`,`fee_status`,`fee_type_id`,`application_id`,`licence_id`,`amount`,`invoiced_date`,`description`)
     VALUES
     (96,'lfs_pd',338,8,212,254.40,'2015-03-27 00:00:00','GV/SN Application Fee for application 8');
-INSERT INTO `transaction` (
+INSERT INTO `txn` (
     `id`,
     `reference`,
     `type`,
@@ -2041,8 +2038,8 @@ INSERT INTO `transaction` (
     `processed_by_user_id`
 ) VALUES
     (10004,'','trt_waive','pay_s_pd','2015-08-26','fpm_waive','Waive OK for fee 96','2015-08-25',1,1);
-INSERT INTO `fee_transaction`
-    (`fee_id`,`transaction_id`,`amount`)
+INSERT INTO `fee_txn`
+    (`fee_id`,`txn_id`,`amount`)
     VALUES
     (96,10004,254.40);
 INSERT INTO `phone_contact` (`id`,    `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (12,127,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
@@ -2136,6 +2133,7 @@ INSERT INTO `vehicle` (`id`,`vrm`,`plated_weight`,`psv_type`,`created_on`) VALUE
     (11,'ABC125',NULL,'vhl_t_a','2015-07-16'),
     (12,'ABC126',NULL,'vhl_t_b','2015-07-17'),
     (13,'ABC127',NULL,'vhl_t_c','2015-07-18');
+
 INSERT INTO `licence_vehicle` (`licence_id`,`vehicle_id`) VALUES
     (701, 9),
     (701, 10),
@@ -2146,6 +2144,11 @@ INSERT INTO `licence_vehicle` (`licence_id`,`vehicle_id`) VALUES
 -- OLCS-10506 organisation, licence and contact details for submission test data --
 INSERT INTO `organisation` (`id`,`lead_tc_area_id`,`name`,`type`,`is_unlicensed`,`nature_of_business`) VALUES
   (130,'B','Big Trucks Ltd','org_t_rc', 0, 'Traffic Management');
+
+INSERT INTO `organisation_person` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
+                                   `person_id`, `organisation_id`) VALUES
+  (9,NULL,NULL,NULL,NULL,1,82,130),
+  (10,NULL,NULL,NULL,NULL,1,84,130);
 
 INSERT INTO `licence` (`id`,`correspondence_cd_id`,`organisation_id`,`goods_or_psv`,`licence_type`,`status`,`lic_no`) VALUES
   (99,181,130,'lcat_gv','ltyp_r','lsts_consideration','OB111111');
@@ -2189,11 +2192,11 @@ VALUES
    '2013-11-12 12:27:33',NULL,1);
 
 -- OLCS-10506 comments
-INSERT INTO `submission_section_comment` VALUES
-  (1,NULL,NULL,1,'case-outline','New application for Operating Centre','2015-10-05 15:51:20',NULL,1),
+INSERT INTO `submission_section_comment` (`id`, `created_by`, `last_modified_by`, `submission_id`, `submission_section`, `comment`, `created_on`, `last_modified_on`, `version`) VALUES
+  (1,NULL,NULL,1,'case-outline','<p><strong>APPLICATION TYPE:</strong></p><br><p>GV79 - Conditions at operating centre</p>','2015-10-05 15:51:20',NULL,1),
   (2,NULL,NULL,1,'conviction-fpn-offence-history','<p>Nothing found</p>','2015-10-05 15:51:20','2015-10-05 16:28:23',3),
-  (3,NULL,NULL,1,'introduction','<p><strong>1) To                                                                                                                                    From:
-</strong></p>\n<p><strong>2) To                                                                                                                                     Date: </strong></p>\n<h1><strong>ENVIRONMENTAL SUBMISSION</strong></h1>\n<p><strong>Not for disclosure to any third parties without the specific consent of the traffic commissioner</strong></p>','2015-10-05 15:52:45','2015-10-05 15:55:23',5),
+  (3,NULL,NULL,1,'introduction','<h1><strong>ENVIRONMENTAL SUBMISSION</strong></h1>
+<p><strong>Not for disclosure to any third parties without the specific consent of the traffic commissioner</strong></p>','2015-10-05 15:52:45','2015-10-05 15:55:23',5),
   (4,NULL,NULL,1,'previous-history','<h2><strong>RELEVANT SITE HISTORY:</strong></h2>\n<p>The condition that vehicles will not be left unattended on the A64 York Road has been attached to licences in the past as larger vehicles using the site had to wait on the by-pass if the gates to the operating centre were not manned at the time of their arrival. The conditions related to larger vehicles, and their operating hours were restricted to the time that the gate was manned for safety reasons.</p>\n<p>In 2008 the gates were moved back which allowed any size of authorised vehicle to pull off the road whilst the gates were unattended.</p>\n<p>It was decided that the site should still be subject to the waiting restriction on the by-pass. Operators at the site were flagged for review and in January 2011 all operators at the site became subject to this condition.</p>\n<p>In 2012 two applications from Rob’s Transport Ltd (OB999999, no longerat the site) and John Smith Transport Ltd were granted within several days of each other. Due to the large number of additional vehicles the Traffic Commissioner requested that a TE revisit the site to assess capacity. The TE reported that the land owner allocates each operator a specific number of parking spaces so there is always room for vehicles to safely manoeuvre within the site. The John Smith Transport Ltd application (for 15 vehicles and 15 trailers) was granted subject to the restrictions above.</p>\n<p>Rob’s Transport Ltd had an additional condition undertaking attached in respect of the parking area and the Traffic Commissioner decided that parking plans should be obtained and form part of the authorised o/c description for each operator that came up for review and for new applications. Since then applications granted at the site have specified two conditions and an undertaking in respect of the parking area. The most recent application was granted in March 2015 with the same 2 conditions and undertaking attached.</p>\n<p>As part of the John’s Trucks application it was noted that some of the operators at the site were not parking in the areas detailed in their undertaking. This included the parking area for this applicant as it was the same are as specified on OB2222222 Trucky Truck Transport Services Ltd.</p>\n<p>That has now been resolved as the parking plan for Trucky Truck Transport Services Ltd has been updated under Section 17(4)(f) of the Act to take the form of the master plan provided by the site owner, this is the same as the plan this applicant has provided.</p>','2015-10-05 16:00:39','2015-10-05 16:11:08',2),
   (5,NULL,NULL,1,'local-licence-history','<p>No previous licence history</p>','2015-10-05 16:12:29',NULL,1),
   (6,NULL,NULL,1,'environmental-complaints','<p>We have not received any opposition</p>','2015-10-05 16:14:50',NULL,1),
@@ -2206,20 +2209,41 @@ INSERT INTO `submission_section_comment` VALUES
   (13,NULL,NULL,1,'maintenance-tachographs-hours','<p><strong>APPLICANT’S RESPONSES:</strong></p>\n<p><strong>Hours of Operation:</strong></p>\n<p>Monday to Friday:       0800 - 1700    </p>\n<p>Saturday:   
                  no operation               </p>\n<p>Sunday:                      no operation   </p>\n<p>           </p>\n<p><strong>Hours of Maintenance: </strong></p>\n<p>Maintenance work will not be carried out at the ope
 rating centre.</p>','2015-10-05 16:31:33',NULL,1),
-  (14,NULL,NULL,1,'operating-centres','<p><strong>PRESENT USAGE OF O/C:</strong></p>\n<p>There are 2 operators currently for this operating centre and 2 ongoing applications:</p>\n<p>All the operators are subject to restrictions, the ones detailed below have all the relevant restrictions for this operating centre and there are 4 with only one condition, these have been flagged for review.</p>\n<p> </p>\n<p>OB1234567     John Smith Transport Ltd                                10V, 10T</p>','2015-10-05 16:38:15',NULL,1),
-  (15,NULL,NULL,1,'conditions-and-undertakings','<p>The following 3 operators are only subject to the condition detailed below, they have been flagged for review:</p>
-<ol><li><strong>Authorised vehicles shall not be left unattended on the A64 Yor Road at any time</strong>.</li>\n</ol>
-<p>OB6666666     Steve’s Trucks                         2v 0t    (Review Nov 2015)</p>
+  (14,NULL,NULL,1,'conditions-and-undertakings','<p><strong>PRESENT USAGE OF O/C:</strong></p>
+<p>There are 2 operators currently for this operating centre and 2 ongoing applications:</p>
+<p>All the operators are subject to restrictions, the ones detailed below have all the relevant restrictions for this operating centre and there are 4 with only one condition, these have been flagged for review.</p>
+<p> </p>
+<p><strong>OB1234567     John Smith Transport Ltd                                10V, 10T</strong></p>
+<p>Conditions:</p>
+<ol><li><strong>Authorised vehicles shall not be left unattended on the A64 York road any time. </strong></li>
+<li><strong>Authorised vehicles and trailers must at all times enter and exit the operating centre in a forward gear</strong></li>
+</ol><p> Undertaking:</p>
+<ol><li><strong>Authorised vehicles and trailers must only be parked in the designated area identified on the plan -
+See John Smith Transport Ltd parking area attachement below.</strong></li>
+</ol><p> </p>
+<p> </p>
+<p><strong>OH1021000     Little Trucks Ltd                                               4V, 0T</strong></p>
+<p>Conditions:</p>
+<ol><li><strong>Authorised vehicles shall not be left unattended on the A64 York Road at any time. </strong></li>
+<li><strong>Vehicles authorised under this licence will enter and leave the operating centre in forward gear only.</strong></li>
+</ol><p>Undertaking:</p>
+<ol><li><strong>The operator will keep vehicles and trailers in that part of Hillcrest House marked “Parking Area” on the plan agreed by the traffic commissioner and not on any other part of Hillcrest House. See Little Trucks Ltd parking area attachement below.</strong></li>
+</ol>
+<p>The following 3 operators are only subject to the condition detailed below, they have been flagged for review:</p>
+<ol><li><strong>Authorised vehicles shall not be left unattended on the A64 Yor Road at any time</strong>.</li>
+</ol><p>OB6666666     Steve’s Trucks                         2v 0t    (Review Nov 2015)</p>
 <p>OH7777777     John’s Trucks                          6v 0t    (Review Dec 2015)</p>
 <p>OH8888888     Dave’s Trucks Limited            12v 2t  (Review Sep 2016)</p>','2015-10-05 16:14:50',NULL,1),
   (16,NULL,NULL,1,'intelligence-unit-check','<p><i>I have completed all IU checks necessary for this new application. There are no matches with the intelligence database to suggest that additional action is required. I am therefore returning the matter to you to process in the normal manner.</i></p>','2015-10-05 16:38:15',NULL,1),
-  (17,NULL,NULL,1,'case-summary', '<p><strong>APPLICATION TYPE:</strong></p>
-<p>GV79 – Conditions at operating centre</p>
-<p><strong>COMPANY DIRECTORS:</strong></p>
-<ul><li>Phil Jowitt</li>
-<li>John Spellman</li>
-</ul><p><strong>ECMS CHECK:</strong></p>
-<p>No issues</p>','2015-10-05 15:51:20',NULL,1);
+  (17,NULL,NULL,1,'case-summary', '<p><strong>ECMS CHECK:</strong></p>
+  <p>No issues</p>','2015-10-05 15:51:20',NULL,1),
+  (18,NULL,NULL,1,'annex', '<p><strong>Hours of Operation:</strong></p>
+<p>Monday to Friday:       0800 - 1700    </p>
+<p>Saturday:                    no operation               </p>
+<p>Sunday:                       no operation   </p>
+<p>           </p>
+<p><strong>Hours of Maintenance: </strong></p>
+<p>Maintenance work will not be carried out at the operating centre.</p>','2015-10-05 15:51:20',NULL,1);
 
 -- OLCS-10506 add Operating centre details
 
@@ -2233,34 +2257,36 @@ INSERT INTO `licence_operating_centre` (`id`,`licence_id`,`operating_centre_id`,
 VALUES (5, 99, 75, 1, '2015-10-31', 'Yorkshire Evening Post', 0, 10, 1, 1);
 
 -- OLCS-10506 conditions and undertakings
-INSERT INTO `condition_undertaking` VALUES
+INSERT INTO `condition_undertaking` (`id`, `added_via`, `application_id`, `approval_user_id`, `attached_to`, `case_id`, `condition_type`, `created_by`, `last_modified_by`, `lic_condition_variation_id`, `licence_id`, `operating_centre_id`, `s4_id`, `action`, `created_on`, `deleted_date`, `is_draft`, `is_fulfilled`, `last_modified_on`, `notes`, `olbs_key`, `olbs_type`, `version`) VALUES
   (12,'cav_case',NULL,NULL,'cat_oc',85,'cdt_con',NULL,NULL,NULL,99,75,NULL,NULL,'2015-10-06 08:52:32','2015-10-06 08:53:41',0,1,NULL,'Authorised vehicles shall not be left unattended on the A64 York road any time.',NULL,NULL,2),(13,'cav_lic',NULL,NULL,'cat_oc',NULL,'cdt_con',NULL,NULL,NULL,99,75,NULL,NULL, '2015-10-06 08:54:06',NULL,0,1,'2015-10-06 08:56:12','Authorised vehicles shall not be left unattended on the A64 York road any time.',NULL,NULL,2),(14,'cav_lic',NULL,NULL,'cat_oc',NULL,'cdt_con',NULL,NULL,NULL,99,75,NULL,NULL,'2015-10-06 08:55:09',NULL,0,1,NULL,'Authorised vehicles and trailers must at all times enter and exit the operating centre in a forward gear',NULL,NULL,1),
   (15,'cav_lic',NULL,NULL,'cat_oc',NULL,'cdt_und',NULL,NULL,NULL,99,75,NULL,NULL,'2015-10-06 08:57:18',NULL,0,0,NULL, 'Authorised vehicles and trailers must only be parked in the designated area identified on the plan.',NULL,NULL,1),
-  (16,'cav_lic',NULL,NULL,'cat_oc',NULL,'cdt_und',NULL,NULL, NULL,99,75,NULL,NULL,'2015-10-06 08:58:48',NULL,0,1, NULL,'The operator will keep vehicles and trailers in that part of Hillcrest House marked “Parking Area” on the plan agreed by the traffic commissioner and not on any other part of Hillcrest House.',NULL,NULL,1);
+  (16,'cav_lic',NULL,NULL,'cat_oc',NULL,'cdt_und',NULL,NULL, NULL,99,75,NULL,NULL,'2015-10-06 08:58:48',NULL,0,1,
+   NULL,'The operator will keep vehicles and trailers in that part of Hillcrest House marked "Parking Area" on the plan agreed by the traffic commissioner and not on any other part of Hillcrest House.',NULL,NULL,1);
 
 -- OLCS-10506 test submission
 INSERT INTO `submission` (`id`,`case_id`, `created_by`, `last_modified_by`, `submission_type`, `created_on`,
                           `data_snapshot`, `last_modified_on`, `version`)
 VALUES
   ('1', '85', 3, 3, 'submission_type_o_env', '2015-10-05 15:51:20', '{"introduction":{"data":[]},
-  "case-summary":{"data":{"overview":{"id":85,"caseType":"Licence","ecmsNo":"E123456","organisationName":"Big Trucks
-  Ltd","isMlh":false,"organisationType":"Limited Company","businessType":null,"disqualificationStatus":"None",
-  "licNo":"OB111111","licenceStartDate":"","licenceType":"Restricted","goodsOrPsv":"Goods Vehicle",
-  "licenceStatus":"Under Consideration","totAuthorisedVehicles":10,"totAuthorisedTrailers":null,"vehiclesInPossession":10,"trailersInPossession":null,"serviceStandardDate":""}}},"case-outline":{"data":{"text":"New application for Operating Centre"}},"most-serious-infringement":{"data":{"overview":{"id":"","notificationNumber":"","siCategory":"","siCategoryType":"","infringementDate":"","checkDate":"","isMemberState":""}}},"outstanding-applications":{"data":{"tables":{"outstanding-applications":[]}}},"people":{"data":{"tables":{"people":[]}}},"operating-centres":{"data":{"tables":{"operating-centres":[{"id":75,"version":1,"totAuthVehicles":10,"totAuthTrailers":0,"OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}}]}}},"conditions-and-undertakings":{"data":{"tables":{"undertakings":[{"id":16,"version":1,"createdOn":"2015-10-06T08:58:48+0100","parentId":"OB111111","addedVia":"Licence","isFulfilled":"Y","isDraft":"N","attachedTo":"Operating Centre","notes":"The operator will keep vehicles and trailers in that pa\nrt of Hillcrest House marked \u201cParking Area\u201d on the plan agreed by the traffic commissioner and not on any other part of Hillcrest House.","OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}},{"id":15,"version":1,"createdOn":"2015-10-06T08:57:18+0100","parentId":"OB111111","addedVia":"Licence","isFulfilled":"N","isDraft":"N","attachedTo":"Operating Centre","notes":"Authorised vehicles and trailers must only be parked in the designated area identified on the plan.","OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}}],"conditions":[{"id":14,"version":1,"createdOn":"2015-10-06T08:55:09+0100","parentId":"OB111111","addedVia":"Licence","isFulfilled":"Y","isDraft":"N","attachedTo":"Operating Centre","notes":"Authorised vehicles and trailers must at all times enter and exit the\noperating centre in a forward gear","OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}},{"id":13,"version":2,"createdOn":"2015-10-06T08:54:06+0100","parentId":"OB111111","addedVia":"Licence","isFulfilled":"Y","isDraft":"N","attachedTo":"Operating Centre","notes":"Authorised vehicles shall not be left unattended on the\n A64 York road any time.","OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}}]}}},"intelligence-unit-check":{"data":[]},"interim":{"data":[]},"advertisement":{"data":[]},"auth-requested-applied-for":{"data":{"tables":{"auth-requested-applied-for":[]}}},"transport-managers":{"data":{"tables":{"transport-managers":[]}}},"continuous-effective-control":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"local-licence-history":{"data":[]},"conviction-fpn-offence-history":{"data":{"tables":{"conviction-fpn-offence-history":[]},"text":"test comments"}},"other-issues":{"data":[]},"te-reports":{"data":[]},"site-plans":{"data":[]},"planning-permission":{"data":[]},"applicants-comments":{"data":[]},"visibility-access-egress-size":{"data":[]},"environmental-complaints":{"data":{"tables":{"environmental-complaints":[]}}},"oppositions":{"data":{"tables":{"oppositions":[]}}},"financial-information":{"data":[]},"maps":{"data":[]},"annex":{"data":[]}}', '2015-10-05 15:51:20', 1);
+  "case-summary":{"data":{"overview":{"id":85,"caseType":"Licence","ecmsNo":"E123456","organisationName":"Big Trucks Ltd","isMlh":false,"organisationType":"Limited Company","businessType":"Traffic Management",
+  "disqualificationStatus":"None","licNo":"OB111111","licenceStartDate":"","licenceType":"Restricted",
+  "goodsOrPsv":"Goods Vehicle","licenceStatus":"Under Consideration","totAuthorisedVehicles":10,
+  "totAuthorisedTrailers":null,"vehiclesInPossession":10,"trailersInPossession":null,"serviceStandardDate":""}}},"case-outline":{"data":{"text":"New application for Operating Centre"}},"most-serious-infringement":{"data":{"overview":{"id":"","notificationNumber":"","siCategory":"","siCategoryType":"","infringementDate":"","checkDate":"","isMemberState":""}}},"outstanding-applications":{"data":{"tables":{"outstanding-applications":[]}}},"people":{"data":{"tables":{"people":[{"id":82,"title":"Mr","familyName":"Fox","forename":"Steve","birthDate":"1994-04-15"},{"id":84,"title":"Mr","familyName":"Jowitt","forename":"Phil","birthDate":"1994-04-15"}]}}},"operating-centres":{"data":{"tables":{"operating-centres":[{"id":75,"version":1,"totAuthVehicles":10,"totAuthTrailers":0,"OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}}]}}},"conditions-and-undertakings":{"data":{"tables":{"undertakings":[{"id":16,"version":1,"createdOn":"2015-10-06T08:58:48+0100","parentId":"OB111111","addedVia":"Licence","isFulfilled":"Y","isDraft":"N","attachedTo":"Operating Centre","notes":"The operator will keep vehicles and trailers in that pa\nrt of Hillcrest House marked \u201cParking Area\u201d on the plan agreed by the traffic commissioner and not on any other part of Hillcrest House.","OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}},{"id":15,"version":1,"createdOn":"2015-10-06T08:57:18+0100","parentId":"OB111111","addedVia":"Licence","isFulfilled":"N","isDraft":"N","attachedTo":"Operating Centre","notes":"Authorised vehicles and trailers must only be parked in the designated area identified on the plan.","OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}}],"conditions":[{"id":14,"version":1,"createdOn":"2015-10-06T08:55:09+0100","parentId":"OB111111","addedVia":"Licence","isFulfilled":"Y","isDraft":"N","attachedTo":"Operating Centre","notes":"Authorised vehicles and trailers must at all times enter and exit the operating centre in a forward gear","OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}},{"id":13,"version":2,"createdOn":"2015-10-06T08:54:06+0100","parentId":"OB111111","addedVia":"Licence","isFulfilled":"Y","isDraft":"N","attachedTo":"Operating Centre","notes":"Authorised vehicles shall not be left unattended on the\n A64 York road any time.","OcAddress":{"addressLine1":"Hillcrest House","addressLine2":"386 Harehills Lane","addressLine3":null,"addressLine4":null,"town":"Leeds","postcode":"LS9 6NF","countryCode":"GB"}}]}}},"intelligence-unit-check":{"data":[]},"interim":{"data":[]},"advertisement":{"data":[]},"auth-requested-applied-for":{"data":{"tables":{"auth-requested-applied-for":[]}}},"transport-managers":{"data":{"tables":{"transport-managers":[]}}},"continuous-effective-control":{"data":[]},"fitness-and-repute":{"data":[]},"previous-history":{"data":[]},"local-licence-history":{"data":[]},"conviction-fpn-offence-history":{"data":{"tables":{"conviction-fpn-offence-history":[]},"text":"test comments"}},"other-issues":{"data":[]},"te-reports":{"data":[]},"site-plans":{"data":[]},"planning-permission":{"data":[]},"applicants-comments":{"data":[]},"visibility-access-egress-size":{"data":[]},"environmental-complaints":{"data":{"tables":{"environmental-complaints":[]}}},"oppositions":{"data":{"tables":{"oppositions":[]}}},"financial-information":{"data":[]},"maps":{"data":[]},"annex":{"data":[]}}', '2015-10-05 15:51:20', 1);
 
 -- OLCS-10506 submission section files
-INSERT INTO `document` VALUES (809,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,148,1,NULL,NULL,'2015-10-06
-08:43:20',NULL,'site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png',0,NULL,0,'2015-10-06 08:43:20','2015-10-06 08:43:20',NULL,NULL,NULL,388800,2),(810,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,122,
-1,NULL,NULL,'2015-10-06 09:00:15',NULL,'parking-area-undertaking.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png',0,NULL,0,'2015-10-06 09:00:15','2015-10-06 09:00:15',NULL,NULL,NULL,112024,2),
-(811,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,122,1,NULL,NULL,'2015-10-06 09:01:41',NULL,
- 'parking-area-undertaking2.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090135__parking-area-undertaking2.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090135__parking-area-undertaking2.png',0,NULL,0,'2015-10-06 09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,64316,2),
-  (812,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,156,1,NULL,NULL,'2015-10-06 09:01:41',NULL,
-   'ariel-view-operating-centre.png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre
-   .png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre.png',0,NULL,0,'2015-10-06
-   09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,342832,2);
+INSERT INTO `document` (`id`, `application_id`, `bus_reg_id`, `case_id`, `category_id`, `created_by`,
+                        `irfo_organisation_id`, `last_modified_by`, `licence_id`, `operating_centre_id`, `opposition_id`, `sub_category_id`, `submission_id`, `traffic_area_id`, `transport_manager_id`, `created_on`, `deleted_date`, `description`, `filename`, `document_store_id`, `is_external`, `is_read_only`, `is_scan`, `issued_date`, `last_modified_on`, `metadata`, `olbs_key`, `olbs_type`, `size`, `version`) VALUES
+  (809,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,148,1,NULL,NULL,'2015-10-06 08:43:20',NULL, 'site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png','documents/Submission/Site_plans/2015/10/20151006084312__site-plan-parking-area.png',0,NULL,0,'2015-10-06 08:43:20','2015-10-06 08:43:20',NULL,NULL,NULL,388800,2),
+  (810,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,122,1,NULL,NULL,'2015-10-06 09:00:15',NULL,
+   'John-Smith-Transport-Ltd-parking-area.png',
+   'documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090008__parking-area-undertaking.png',0,NULL,0,'2015-10-06 09:00:15','2015-10-06 09:00:15',NULL,NULL,NULL,112024,2),
+  (811,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,122,1,NULL,NULL,'2015-10-06 09:01:41',NULL,
+   'Little-Trucks-Ltd-parking-area.png','documents/Submission/Conditions_and_undertakings/2015/10
+   /20151006090135__parking-area-undertaking2.png','documents/Submission/Conditions_and_undertakings/2015/10/20151006090135__parking-area-undertaking2.png',0,NULL,0,'2015-10-06 09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,64316,2),
+  (812,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,156,1,NULL,NULL,'2015-10-06 09:01:41',NULL,'ariel-view-operating-centre.png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre.png','documents/Submission/Maps/2015/10/20151006142959__ariel-view-operating-centre.png',0,NULL,0,'2015-10-06 09:01:41','2015-10-06 09:01:41',NULL,NULL,NULL,342832,2);
 
 -- OLCS-10506 recommendation / decision
-INSERT INTO `submission_action` VALUES
+INSERT INTO `submission_action` (`id`, `created_by`, `last_modified_by`, `submission_id`, `comment`, `created_on`, `is_decision`, `last_modified_on`, `version`) VALUES
   (3,NULL,NULL,1,'CASE WORKER RECOMMENDATION & LEGISLATION:\r\n\r\nThe applicant has provided a site plan that confirms they are not parking in any area which is supposed to be occupied by any other operator.\r\n\r\nI therefore recommend the application is granted under Section 13 of the Goods Vehicle (Licensing of Operators) Act 1995 with the following conditions and undertaking attached:\r\n\r\nConditions under section 21 of the act\r\n\r\n1.	Authorised vehicles shall not be left unattended on the A64 York Road at any time\r\n2.	Vehicles authorised under this licence will enter and leave the operating centre in forward gear only\r\n\r\nUndertaking under section 13C(7) of the Act\r\n\r\nThe Operator will keep vehicles in that part of Hillcrest House marked \"Parking Area\" on the plan agreed by the Traffic Commissioner and not on any other part of Hillcrest House.','2015-10-06 13:38:32',0,'2015-10-06 13:41:23',2),
   (4,NULL,NULL,1,'Team Leaders Recommendation\r\n\r\nI agree with Steve’s recommendation.\r\n\r\nBob Submission\r\n01/05/2015','2015-10-06 13:39:40',0,NULL,1),
   (5,NULL,NULL,1,'TRAFFIC COMMISSIONER’S DECISION:\r\n\r\nPlease proceed as recommended for the reasons you give.\r\nSB/TC/13 5 15','2015-10-06 13:42:17',1,NULL,1);

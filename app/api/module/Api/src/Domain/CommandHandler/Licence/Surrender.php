@@ -121,9 +121,33 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
             }
         }
 
+        //
+        if (!($licence->getStatus()->getId() === Licence::LICENCE_STATUS_TERMINATED &&
+                $licence->isPsv() &&
+                $licence->isSpecialRestricted())
+        ) {
+            $result->merge($this->publish($licence));
+        }
+
         $this->getRepo()->save($licence);
         $result->addMessage("Licence ID {$licence->getId()} surrendered");
 
         return $result;
+    }
+
+    /**
+     * Publish the licence
+     *
+     * @param Licence $licence
+     *
+     * @return Result
+     */
+    private function publish(Licence $licence)
+    {
+        return $this->handleSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Publication\Licence::create(
+                ['id' => $licence->getId()]
+            )
+        );
     }
 }

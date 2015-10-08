@@ -1822,6 +1822,7 @@ VALUES
  ,(1,  168, 0, 0, 0, 0, 'Scanning separator')
  ,(1,  169, 0, 1, 0, 0, 'Business details change')
  ,( 1, 170, 1, 0, 0, 0, 'CPID')
+ ,( 1, 180, 1, 0, 0, 0, 'Financial reports')
  ,( 999999, 999999, 1, 1, 1, 0, 'Not yet implemented (remove before go live)');
 
 
@@ -4760,21 +4761,21 @@ VALUES
     (706, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/GB/GV_Duplicate_vehicle_letter.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV Duplicate vehicle letter', 0, NULL, '2015-01-01 00:00:00', 1),
     (707, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/GV_Duplicate_vehicle_letter.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV Duplicate vehicle letter (NI)', 0, NULL, '2015-01-01 00:00:00', 1);
 
-INSERT INTO `role` (`id`, `role`, `code`, `description`) VALUES
-    (1, 'internal-limited-read-only', '', 'Internal - Limited read only'), -- internal only
-    (2, 'internal-read-only', '', 'Internal - Read only'), -- internal only
-    (3, 'internal-case-worker', '', 'Internal - Case worker'), -- internal only
-    (4, 'internal-admin', '', 'Internal - Admin'), -- internal only
+INSERT INTO `role` (`id`, `role`, `description`) VALUES
+    (1, 'internal-limited-read-only', 'Internal - Limited read only'), -- internal only
+    (2, 'internal-read-only', 'Internal - Read only'), -- internal only
+    (3, 'internal-case-worker', 'Internal - Case worker'), -- internal only
+    (4, 'internal-admin', 'Internal - Admin'), -- internal only
 
-    (5, 'operator-admin', '', 'Operator - Admin'), -- selfserve
-    (6, 'operator-user', '', 'Operator - User'), -- selfserve
-    (7, 'operator-tm', '', 'Operator - Transport Manager'), -- selfserve
+    (5, 'operator-admin', 'Operator - Admin'), -- selfserve
+    (6, 'operator-user', 'Operator - User'), -- selfserve
+    (7, 'operator-tm', 'Operator - Transport Manager'), -- selfserve
 
-    (9, 'partner-admin', '', 'Partner - Admin'), -- selfserve
-    (10, 'partner-user', '', 'Partner - User'), -- selfserve
+    (9, 'partner-admin', 'Partner - Admin'), -- selfserve
+    (10, 'partner-user', 'Partner - User'), -- selfserve
 
-    (11, 'local-authority-admin', '', 'Local Authority administrator'), -- selfserve
-    (12, 'local-authority-user', '', 'Local Authority user'); -- selfserve
+    (11, 'local-authority-admin', 'Local Authority administrator'), -- selfserve
+    (12, 'local-authority-user', 'Local Authority user'); -- selfserve
 
 -- @TODO Added some some code values to temporarily fix strict mode errors
 INSERT INTO `permission` (`id`, `name`, `code`) VALUES
@@ -7942,160 +7943,6 @@ INSERT INTO `ext_translations` (`id`, `locale`, `object_class`, `field`, `foreig
 VALUES
 	(1, 'cy-gb', 'Olcs\\Db\\Entity\\RefData', 'description', 'org_t_rc', 'Welsh Version of Registered Company\n');
 
-DROP TABLE IF EXISTS task_search_view;
-DROP VIEW IF EXISTS task_search_view;
-
-CREATE VIEW task_search_view AS
-   SELECT t.id,
-       t.assigned_to_team_id,
-       t.application_id,
-       t.assigned_to_user_id,
-       cat.description category_name,
-       tsc.sub_category_name task_sub_type,
-       t.sub_category_id task_sub_category_id,
-       t.description,
-       te.name as team_name,
-       coalesce(concat(s.id, '/', c.id), c.id, br.reg_no, l.lic_no, irfo.id, tm.id, 'Unlinked') link_display,
-       coalesce(submission_id, t.irfo_organisation_id,t.bus_reg_id,t.application_id,t.case_id,t.licence_id,t.transport_manager_id) link_id,
-       case when t.irfo_organisation_id is not null then 'IRFO Organisation'
-            when t.bus_reg_id is not null then 'Bus Registration'
-            when t.application_id is not null then 'Application'
-            when t.submission_id is not null then 'Submission'
-            when t.case_id is not null then 'Case'
-            when t.licence_id is not null then 'Licence'
-            when t.transport_manager_id is not null then 'Transport Manager'
-            else 'Unlinked' end link_type,
-      coalesce(concat('Submission:', s.id), o.name, irfo.name, tmp.family_name, concat('Case:', c.id), 'Unlinked') name_display,
-      l.lic_no,
-      l.id lic_id,
-      tm.id tm_id,
-      t.irfo_organisation_id irfo_organisation_id,
-      irfo.name irfo_op_name,
-      o.name op_name,
-      tmp.family_name,
-      c.id case_id,
-      br.id bus_reg_id,
-      t.action_date action_date,
-      t.urgent urgent,
-      t.is_closed is_closed,
-      t.category_id category_id,
-      tsc.sub_category_name task_sub_category_name,
-      concat(ifnull(cdp.family_name,''), ', ', ifnull(cdp.forename,'')) user_name,
-     (select count(ll.id) from licence ll where ll.organisation_id = o.id and ll.status = 'lsts_valid') licence_count,
-      s.id submission_id
-    FROM `task` t
-   inner join (category cat, sub_category tsc) on (cat.id = t.category_id and tsc.id = t.sub_category_id)
-   left join (licence l inner join organisation o) on (t.licence_id = l.id and l.organisation_id = o.id)
-   left join organisation irfo on (t.irfo_organisation_id = irfo.id)
-   left join (transport_manager tm inner join person tmp inner join contact_details tmcd)
-     on (t.transport_manager_id = tm.id and tmp.id = tmcd.person_id and tmcd.id = tm.home_cd_id)
-   left join cases c on (t.case_id = c.id)
-   left join bus_reg br on (t.bus_reg_id = br.id)
-   left join user u on (t.assigned_to_user_id = u.id)
-   left join contact_details cd on (u.contact_details_id = cd.id)
-   left join person cdp on (cd.person_id = cdp.id)
-   left join team te on (t.assigned_to_team_id = te.id)
-   left join submission s on (t.submission_id = s.id)
-;
-
-DROP TABLE IF EXISTS document_search_view;
-DROP VIEW IF EXISTS document_search_view;
-
-CREATE VIEW document_search_view AS
-    SELECT d.id, d.issued_date, d.category_id, d.sub_category_id, d.description,
-        d.document_store_id, d.id document_id,
-        cat.description category_name, dsc.sub_category_name document_sub_category_name, d.filename,
-		d.is_external, d.deleted_date,
-        coalesce(c.id, br.reg_no, l.lic_no, tm.id, org.id, 'Unlinked') id_col,
-        l.lic_no, l.id licence_id, tmp.family_name, c.id case_id, br.id bus_reg_id, tm.id tm_id, ci.id ci_id, org.id irfo_organisation_id
-    FROM `document` d
-    INNER JOIN (category cat, sub_category dsc) ON (cat.id = d.category_id AND dsc.id = d.sub_category_id)
-    LEFT JOIN licence l ON d.licence_id = l.id
-    LEFT JOIN (transport_manager tm, person tmp, contact_details tmcd)
-        ON (d.transport_manager_id = tm.id AND tmp.id = tmcd.person_id AND tmcd.id = tm.home_cd_id)
-    LEFT JOIN cases c ON d.case_id = c.id
-    LEFT JOIN bus_reg br ON d.bus_reg_id = br.id
-    LEFT JOIN correspondence_inbox ci ON d.id = ci.document_id
-    LEFT JOIN organisation org ON d.irfo_organisation_id = org.id;
-
-DROP TABLE IF EXISTS vehicle_history_view;
-DROP VIEW IF EXISTS vehicle_history_view;
-
-CREATE VIEW vehicle_history_view AS
-    SELECT
-        d.id,
-        v.id as vehicle_id,
-        v.vrm,
-        l.lic_no,
-        vl.specified_date,
-        vl.removal_date,
-        d.disc_no,
-        d.issued_date,
-        d.ceased_date
-    from
-        vehicle v
-    inner join licence_vehicle vl on vl.vehicle_id = v.id
-    left outer join goods_disc d on vl.id = d.licence_vehicle_id
-    inner join licence l on vl.licence_id = l.id;
-
--- Bus reg search view
-DROP TABLE IF EXISTS bus_reg_search_view;
-DROP VIEW IF EXISTS bus_reg_search_view;
-
-CREATE VIEW bus_reg_search_view AS
-    SELECT
-        br1.id AS `id`,
-        IFNULL(CONCAT(br1.service_no, '(',
-                      (SELECT GROUP_CONCAT(COALESCE(service_no,'NULL'),'') AS other FROM bus_reg_other_service
-                      WHERE bus_reg_id = br1.id),
-                      ')'), br1.service_no) as `service_no`,
-        br1.reg_no AS `reg_no`,
-        lic.id AS `lic_id`,
-        lic.lic_no AS `lic_no`,
-        rd_lic_status.description AS `lic_status`,
-        org.name AS `organisation_name`,
-        br1.start_point AS `start_point`,
-        br1.finish_point AS `finish_point`,
-        '2015-01-01' AS `date_1st_reg`,
-        CASE WHEN br1.status = 'breg_s_registered' And end_date <= Now()
-        THEN 'breg_s_expired'
-        ELSE rd_bus_status.id END as bus_reg_status,
-        CASE WHEN br1.status = 'breg_s_registered' And end_date <= Now()
-        THEN 'Expired'
-        ELSE rd_bus_status.description END as bus_reg_status_desc,
-        br1.route_no,
-        br1.variation_no
-    FROM bus_reg AS br1
-        INNER JOIN licence lic ON lic.id = br1.licence_id
-        INNER JOIN organisation AS org ON org.id = lic.organisation_ID
-        INNER JOIN ref_data AS rd_lic_status ON (rd_lic_status.id = lic.status)
-        INNER JOIN ref_data AS rd_bus_status ON (rd_bus_status.id = br1.status)
-    WHERE br1.variation_no =
-          coalesce((
-                       SELECT MAX(variation_no) FROM bus_reg br2
-                       WHERE
-                           (br2.reg_no = br1.reg_no
-                            AND br2.status NOT IN('breg_s_refused','breg_s_withdrawn')
-                            AND (br2.end_date is null or br2.end_date > Now())
-                            AND br2.deleted_date is null))
-          , 0)
-            AND br1.deleted_date is null;
-
--- Bus reg history view
-DROP TABLE IF EXISTS bus_reg_history_view;
-DROP VIEW IF EXISTS bus_reg_history_view;
-
-CREATE VIEW `bus_reg_history_view` AS
-    SELECT
-   `eh`.`id` AS `id`,
-   `br1`.`id` AS `bus_reg_id`,
-   `br2`.`id` AS `id2`,
-   `eh`.`event_datetime` AS `event_datetime`,
-   `eh`.`event_history_type_id` AS `event_history_type_id`,
-   `eh`.`event_data` AS `event_data`,
-   `eh`.`user_id` AS `user_id`,
-   `br2`.`reg_no` AS `reg_no`
-FROM ((`bus_reg` `br1` join `bus_reg` `br2` on((`br2`.`reg_no` like `br1`.`reg_no`))) join `event_history` `eh` on((`eh`.`bus_reg_id` = `br2`.`id`)));
 
 INSERT INTO `irfo_country` (`id`, `description`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`)
 VALUES
@@ -8149,6 +7996,19 @@ VALUES
 (7,'Own A/C (21)','21',NULL,NULL,NULL,NULL,1);
 
 COMMIT;
+
+CREATE  OR REPLACE VIEW bus_reg_history_view AS
+SELECT
+   `eh`.`id` AS `id`,
+   `br1`.`id` AS `bus_reg_id`,
+   `br2`.`id` AS `id2`,
+   `eh`.`event_datetime` AS `event_datetime`,
+   `eh`.`event_history_type_id` AS `event_history_type_id`,
+   `eh`.`event_data` AS `event_data`,
+   `eh`.`user_id` AS `user_id`,
+   `br2`.`reg_no` AS `reg_no`
+FROM ((`bus_reg` `br1` join `bus_reg` `br2` on((`br2`.`reg_no` like `br1`.`reg_no`))) join `event_history` `eh` on((`eh`.`bus_reg_id` = `br2`.`id`)));
+
 
 
 SET foreign_key_checks = 1;
