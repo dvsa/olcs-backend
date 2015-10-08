@@ -29,7 +29,10 @@ class MyAccount extends AbstractQueryHandler implements AuthAwareInterface
                     'person' => ['title'],
                     'address' => ['countryCode'],
                     'phoneContacts' => ['phoneContactType']
-                ]
+                ],
+                'organisationUsers' => [
+                    'organisation',
+                ],
             ]
         );
     }
