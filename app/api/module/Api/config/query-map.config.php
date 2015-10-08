@@ -192,7 +192,8 @@ return [
     Query\Bus\ByLicenceRoute::class => QueryHandler\Bus\ByLicenceRoute::class,
 
     // Bus - Ebsr
-    TransferQuery\Ebsr\SubmissionList::class => QueryHandler\Ebsr\SubmissionList::class,
+    TransferQuery\Bus\Ebsr\TxcInboxList::class => QueryHandler\Bus\Ebsr\TxcInboxList::class,
+    TransferQuery\Bus\Ebsr\TxcInboxByBusReg::class => QueryHandler\Bus\Ebsr\TxcInboxByBusReg::class,
 
     // Trailer
     TransferQuery\Licence\Trailers::class => QueryHandler\Licence\Trailers::class,
