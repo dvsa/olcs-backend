@@ -30,21 +30,6 @@ class Overview extends AbstractQueryHandler
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
 
-        // Here we get the bus reg list - all we need is a count...
-
-        // BusRegSearchView query object
-        $busRegSearchViewParams = [
-            'licId' => $licence->getId(),
-            'page' => 1,
-            'sort' => 'regNo',
-            'order' => 'DESC',
-            'limit' => 10
-        ];
-        $query = SearchViewListQuery::create($busRegSearchViewParams);
-        /** @var BusRegSearchViewRepository $busRegSearchViewRepo */
-        $busRegSearchViewRepo = $this->getRepo('BusRegSearchView');
-        $busRegCount = $busRegSearchViewRepo->fetchCount($query);
-
         $discCriteria = Criteria::create();
         $discCriteria
             ->where($discCriteria->expr()->isNull('ceasedDate'));
@@ -101,7 +86,7 @@ class Overview extends AbstractQueryHandler
                 ]
             ],
             [
-                'busCount' => $busRegCount,
+                'busCount' => $this->getBusRegCount($licenceId),
                 'currentApplications' => $this->resultList($applications),
                 'openCases' => $this->resultList($licence->getOpenCases(), ['publicInquirys']),
                 'tradingName' => $licence->getTradingName(),
@@ -118,5 +103,28 @@ class Overview extends AbstractQueryHandler
     {
         $organisationId = $licence->getOrganisation()->getId();
         return $this->getRepo('Application')->fetchActiveForOrganisation($organisationId);
+    }
+
+    /**
+     * @todo, this is horrendously slow. Need a better way of getting
+     * a bus reg count for a licence :(
+     */
+    protected function getBusRegCount($licenceId)
+    {
+        // Here we get the bus reg list - all we need is a count...
+
+        // BusRegSearchView query object
+        $busRegSearchViewParams = [
+            'licId' => $licence->getId(),
+            'page' => 1,
+            'sort' => 'regNo',
+            'order' => 'DESC',
+            'limit' => 10
+        ];
+        $query = SearchViewListQuery::create($busRegSearchViewParams);
+        /** @var BusRegSearchViewRepository $busRegSearchViewRepo */
+        $busRegSearchViewRepo = $this->getRepo('BusRegSearchView');
+
+        return $busRegSearchViewRepo->fetchCount($query);
     }
 }
