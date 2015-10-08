@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\CreateUser as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
@@ -37,7 +38,8 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->mockRepo('Licence', Licence::class);
 
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            UserInterface::class => m::mock(UserInterface::class)
         ];
 
         parent::setUp();
@@ -107,6 +109,11 @@ class CreateUserTest extends CommandHandlerTestCase
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
+             ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName', 'internal');
 
         $this->repoMap['User']
             ->shouldReceive('fetchByLoginId')
@@ -221,6 +228,11 @@ class CreateUserTest extends CommandHandlerTestCase
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
+            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName', 'internal');
 
         $this->repoMap['User']
             ->shouldReceive('fetchByLoginId')

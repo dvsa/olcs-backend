@@ -43,6 +43,9 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
      */
     protected $repoManager;
 
+    /**
+     * @var \Mockery\MockInterface[]
+     */
     protected $repoMap = [];
 
     protected $sideEffects = [];
@@ -59,6 +62,9 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
     private $initRefdata = false;
 
+    /**
+     * @var \Mockery\MockInterface[]
+     */
     protected $mockedSmServices = [];
 
     protected $queryHandler;

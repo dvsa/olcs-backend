@@ -272,7 +272,7 @@ class OrganisationEntityTest extends EntityTester
         $organisation = $this->instantiate($this->entityClass);
 
         $contactType = new RefData(ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS);
-        $user = new User(User::USER_TYPE_INTERNAL);
+        $user = new User('pid', User::USER_TYPE_INTERNAL);
         $contactDetails = new ContactDetails($contactType);
         $contactDetails->setEmailAddress($emailAddress);
         $user->setContactDetails($contactDetails);
