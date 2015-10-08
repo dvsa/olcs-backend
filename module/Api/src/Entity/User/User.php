@@ -158,7 +158,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
         }
 
         // each type may have different update
-        switch($this->getUserType()) {
+        switch ($this->getUserType()) {
             case self::USER_TYPE_INTERNAL:
                 $this->updateInternal($data);
                 break;

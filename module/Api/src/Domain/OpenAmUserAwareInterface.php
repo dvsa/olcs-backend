@@ -1,6 +1,7 @@
 <?php
 
 namespace Dvsa\Olcs\Api\Domain;
+
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 
 /**

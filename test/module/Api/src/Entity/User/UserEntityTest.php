@@ -116,7 +116,7 @@ class UserEntityTest extends EntityTester
         // create an object of different type first
         $entity = Entity::create(
             'pid',
-             Entity::USER_TYPE_PARTNER,
+            Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
                 'accountDisabled' => 'Y',
@@ -202,7 +202,7 @@ class UserEntityTest extends EntityTester
         // create an object of different type first
         $entity = Entity::create(
             'pid',
-             Entity::USER_TYPE_PARTNER,
+            Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
                 'accountDisabled' => 'Y',
@@ -288,7 +288,7 @@ class UserEntityTest extends EntityTester
         // create an object of different type first
         $entity = Entity::create(
             'pid',
-             Entity::USER_TYPE_LOCAL_AUTHORITY,
+            Entity::USER_TYPE_LOCAL_AUTHORITY,
             [
                 'loginId' => 'currentLoginId',
                 'accountDisabled' => 'Y',
@@ -373,7 +373,7 @@ class UserEntityTest extends EntityTester
         // create an object of different type first
         $entity = Entity::create(
             'pid',
-             Entity::USER_TYPE_PARTNER,
+            Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
                 'accountDisabled' => 'Y',
@@ -459,7 +459,7 @@ class UserEntityTest extends EntityTester
         // create an object of different type first
         $entity = Entity::create(
             'pid',
-             Entity::USER_TYPE_PARTNER,
+            Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
                 'accountDisabled' => 'Y',
@@ -506,7 +506,7 @@ class UserEntityTest extends EntityTester
 
         $entity = Entity::create(
             'pid',
-             Entity::USER_TYPE_OPERATOR,
+            Entity::USER_TYPE_OPERATOR,
             [
                 'loginId' => 'currentLoginId',
                 'roles' => [$nonAdminRole],
@@ -576,7 +576,7 @@ class UserEntityTest extends EntityTester
         // create an object of different type first
         $entity = Entity::create(
             'pid',
-             Entity::USER_TYPE_PARTNER,
+            Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
                 'accountDisabled' => 'Y',
