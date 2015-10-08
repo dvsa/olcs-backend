@@ -24,12 +24,8 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
     // CPMS' preferred date format (note: this changed around 03/2015)
     const DATE_FORMAT = 'Y-m-d';
 
-    // @TODO product ref shouldn't have to come from a whitelist...
     const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
 
-    // @TODO this is a dummy value for testing purposes as cost_centre is now
-    // a required parameter in cpms/payment-service. Awaiting further info on
-    // what OLCS should pass for this field.
     const COST_CENTRE = '12345,67890';
 
     protected $logger;
@@ -381,6 +377,59 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
         }
 
         throw new CpmsResponseException('Invalid payment response: '.json_encode($response));
+    }
+
+    /**
+     * Get a list of available reports
+     *
+     * @return array
+     * @codeCoverageIgnore deprecated class will be removed
+     */
+    public function getReportList()
+    {
+        throw new \Exception(sprintf("%s not implemented in version %d", __METHOD__, $this->getVersion()));
+    }
+
+    /**
+     * Request report creation
+     *
+     * @param string $reportCode
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     * @inheritdoc
+     * @codeCoverageIgnore deprecated class will be removed
+     */
+    public function requestReport($reportCode, \DateTime $start, \DateTime $end)
+    {
+        throw new \Exception(sprintf("%s not implemented in version %d", __METHOD__, $this->getVersion()));
+    }
+
+    /**
+     * Check report status by reference
+     *
+     * @param string $reference
+     * @return array
+     * @inheritdoc
+     * @codeCoverageIgnore deprecated class will be removed
+     */
+    public function getReportStatus($reference)
+    {
+        throw new \Exception(sprintf("%s not implemented in version %d", __METHOD__, $this->getVersion()));
+    }
+
+    /**
+     * Download report by reference
+     *
+     * @param string $reference
+     * @param string $token
+     * @return array
+     * @inheritdoc
+     * @codeCoverageIgnore deprecated class will be removed
+     */
+    public function downloadReport($reference, $token)
+    {
+        throw new \Exception(sprintf("%s not implemented in version %d", __METHOD__, $this->getVersion()));
     }
 
     /**

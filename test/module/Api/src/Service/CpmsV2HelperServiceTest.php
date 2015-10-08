@@ -639,4 +639,81 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         return $fee;
     }
+
+    public function testGetReportList()
+    {
+        $response = ['stuff'];
+
+        $this->cpmsClient
+            ->shouldReceive('get')
+            ->with('/api/report', 'REPORT', [])
+            ->once()
+            ->andReturn($response);
+
+        $result = $this->sut->getReportList();
+
+        $this->assertSame($response, $result);
+    }
+
+    public function testRequestReport()
+    {
+        $code = 'ABC123';
+        $start = new \DateTime('2015-10-07 08:57:00');
+        $end = new \DateTime('2015-10-08 08:56:59');
+
+        $expectedParams =  [
+            'report_code' => $code,
+            'filters' => [
+                'from' => '2015-10-07 08:57:00',
+                'to' => '2015-10-08 08:56:59',
+            ],
+        ];
+
+        $response = ['stuff'];
+
+        $this->cpmsClient
+            ->shouldReceive('post')
+            ->with('/api/report', 'REPORT', $expectedParams)
+            ->once()
+            ->andReturn($response);
+
+        $result = $this->sut->requestReport($code, $start, $end);
+
+        $this->assertSame($response, $result);
+    }
+
+    public function testGetReportStatus()
+    {
+        $reference = 'OLCS-1234-FOO';
+
+        $response = ['stuff'];
+
+        $this->cpmsClient
+            ->shouldReceive('get')
+            ->with('/api/report/OLCS-1234-FOO/status', 'REPORT', [])
+            ->once()
+            ->andReturn($response);
+
+        $result = $this->sut->getReportStatus($reference);
+
+        $this->assertSame($response, $result);
+    }
+
+    public function testDownloadReport()
+    {
+        $reference = 'OLCS-1234-FOO';
+        $token = 'secretsquirrel';
+
+        $response = "foo,bar,csv,data";
+
+        $this->cpmsClient
+            ->shouldReceive('get')
+            ->with('/api/report/OLCS-1234-FOO/download?token=secretsquirrel', 'REPORT', [])
+            ->once()
+            ->andReturn($response);
+
+        $result = $this->sut->downloadReport($reference, $token);
+
+        $this->assertSame($response, $result);
+    }
 }

@@ -1845,7 +1845,7 @@ class ApplicationEntityTest extends EntityTester
         $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
         $publicationSection1->setId(1);
 
-        $publication1 = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
         $publication1->setPubDate('2015-10-05');
 
         $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
@@ -1874,7 +1874,7 @@ class ApplicationEntityTest extends EntityTester
         $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
         $publicationSection1->setId(16);
 
-        $publication1 = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
         $publication1->setPubDate('2015-10-05');
 
         $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
@@ -1935,7 +1935,7 @@ class ApplicationEntityTest extends EntityTester
         $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
         $publicationSection1->setId(3);
 
-        $publication1 = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
         $publication1->setPubDate('2015-10-05');
 
         $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
@@ -1999,7 +1999,7 @@ class ApplicationEntityTest extends EntityTester
         $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
         $publicationSection1->setId(17);
 
-        $publication1 = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
         $publication1->setPubDate('2015-10-05');
 
         $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();

@@ -30,7 +30,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"publication_section_id"}),
  *        @ORM\Index(name="ix_publication_link_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_publication_link_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_publication_link_transport_manager1_idx",
+ *        @ORM\Index(name="ix_publication_link_transport_manager_id",
      *     columns={"transport_manager_id"})
  *    },
  *    uniqueConstraints={

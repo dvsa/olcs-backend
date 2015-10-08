@@ -65,6 +65,7 @@ return [
     TransferQuery\Application\OperatingCentres::class => QueryHandler\Application\OperatingCentres::class,
     TransferQuery\Application\PsvVehicles::class => QueryHandler\Application\PsvVehicles::class,
     TransferQuery\Application\Publish::class => QueryHandler\Application\Publish::class,
+    TransferQuery\Application\Schedule41Approve::class => QueryHandler\Application\Schedule41Approve::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -189,6 +190,9 @@ return [
     TransferQuery\Bus\ShortNoticeByBusReg::class => QueryHandler\Bus\ShortNoticeByBusReg::class,
     TransferQuery\Bus\RegistrationHistoryList::class => QueryHandler\Bus\RegistrationHistoryList::class,
     Query\Bus\ByLicenceRoute::class => QueryHandler\Bus\ByLicenceRoute::class,
+
+    // Bus - Ebsr
+    TransferQuery\Ebsr\SubmissionList::class => QueryHandler\Ebsr\SubmissionList::class,
 
     // Trailer
     TransferQuery\Licence\Trailers::class => QueryHandler\Licence\Trailers::class,
@@ -381,4 +385,7 @@ return [
     TransferQuery\System\FinancialStandingRate::class => QueryHandler\System\FinancialStandingRate::class,
     TransferQuery\System\FinancialStandingRateList::class => QueryHandler\System\FinancialStandingRateList::class,
 
+    // Cpms
+    TransferQuery\Cpms\ReportList::class => QueryHandler\Cpms\ReportList::class,
+    TransferQuery\Cpms\ReportStatus::class => QueryHandler\Cpms\ReportStatus::class,
 ];

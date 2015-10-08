@@ -50,7 +50,8 @@ class CreateTest extends CommandHandlerTestCase
                 'status' => QueueEntity::STATUS_QUEUED,
                 'type' => QueueEntity::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER,
                 'entityId' => 1,
-                'user' => 2
+                'user' => 2,
+                'options' => '{"foo":"bar"}',
             ]
         );
 
@@ -62,9 +63,6 @@ class CreateTest extends CommandHandlerTestCase
             ->andReturnUsing(
                 function (QueueEntity $queue) use (&$savedQueue) {
                     $queue->setId(1);
-                    $queue->setCreatedBy($this->references[UserEntity::class][2]);
-                    $queue->setType($this->refData[QueueEntity::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER]);
-                    $queue->setStatus($this->refData[QueueEntity::STATUS_QUEUED]);
                     $savedQueue = $queue;
                 }
             );
@@ -72,7 +70,7 @@ class CreateTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals(['Queue created'], $result->getMessages());
-        $this->assertEquals(1, $result->getId('queue1'));
+        $this->assertEquals(1, $result->getId('queue'));
         $this->assertEquals($savedQueue->getId(), 1);
         $this->assertEquals(
             $savedQueue->getType(),
@@ -85,6 +83,10 @@ class CreateTest extends CommandHandlerTestCase
         $this->assertEquals(
             $savedQueue->getCreatedBy(),
             $this->references[UserEntity::class][2]
+        );
+        $this->assertEquals(
+            $savedQueue->getOptions(),
+            '{"foo":"bar"}'
         );
     }
 }

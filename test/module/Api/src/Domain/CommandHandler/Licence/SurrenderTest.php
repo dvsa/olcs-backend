@@ -112,6 +112,78 @@ class SurrenderTest extends CommandHandlerTestCase
             ],
             new Result()
         );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Publication\Licence::class,
+            ['id' => 532],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(["Licence ID 532 surrendered"], $result->getMessages());
+    }
+
+    public function testHandleCommandPsvSpecialRestricted()
+    {
+        $command = Command::create(['id' => 532, 'terminated' => true]);
+
+        $licence = new LicenceEntity(
+            m::mock(\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class),
+            m::mock(\Dvsa\Olcs\Api\Entity\System\RefData::class)
+        );
+        $licence->setId(532);
+        $licence->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_PSV]);
+        $licence->setLicenceType(new RefData(LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED));
+        $licence->setCommunityLics(
+            new ArrayCollection(
+                [
+                    new CommunityLic(),
+                    new CommunityLic()
+                ]
+            )
+        );
+
+        $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($licence);
+        $status = LicenceEntity::LICENCE_STATUS_TERMINATED;
+        $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
+            function (LicenceEntity $saveLicence) use ($status) {
+                $this->assertSame($this->refData[$status]->getId(), $saveLicence->getStatus()->getId());
+                $this->assertInstanceOf(\DateTime::class, $saveLicence->getSurrenderedDate());
+                $this->assertSame(
+                    (new \DateTime())->format('Y-m-d'),
+                    $saveLicence->getSurrenderedDate()->format('Y-m-d')
+                );
+            }
+        );
+
+        $ceaseDiscsResult = new Result();
+        $this->expectedSideEffect(
+            CeasePsvDiscs::class,
+            array('discs' => null),
+            $ceaseDiscsResult
+        );
+
+        $removeVehicleResult = new Result();
+        $this->expectedSideEffect(
+            RemoveLicenceVehicle::class,
+            array('licenceVehicles' => new ArrayCollection(), 'id' => null),
+            $removeVehicleResult
+        );
+
+        $removeTmResult = new Result();
+        $this->expectedSideEffect(
+            DeleteTransportManagerLicence::class,
+            array('licence' => $licence, 'id' => null),
+            $removeTmResult
+        );
+
+        $this->expectedSideEffect(
+            ReturnAllCommunityLicences::class,
+            [
+                'id' => 532
+            ],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 
@@ -185,6 +257,11 @@ class SurrenderTest extends CommandHandlerTestCase
             \Dvsa\Olcs\Transfer\Command\Application\RefuseApplication::class,
             ['id' => 567],
             (new Result())->addMessage('UNDER_CONSIDERATION')
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Publication\Licence::class,
+            ['id' => 532],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);

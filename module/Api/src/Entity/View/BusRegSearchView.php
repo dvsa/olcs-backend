@@ -116,7 +116,7 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="bus_reg_status")
+     * @ORM\Column(type="string", name="bus_reg_status_id")
      */
     protected $busRegStatus;
 
@@ -125,7 +125,7 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="bus_reg_status_desc")
+     * @ORM\Column(type="string", name="bus_reg_status")
      */
     protected $busRegStatusDesc;
 
