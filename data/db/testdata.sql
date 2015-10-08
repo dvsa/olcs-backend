@@ -137,9 +137,9 @@ issued_date,document_store_id) VALUES
     (681,7,null,'Test document 11','testdocument11.txt',0,1,1,'2014-08-14 14:00:00',''),
     (682,7,null,'Test document 12','testdocument12.xls',1,1,2,'2014-08-28 14:03:00',''),
 
-    (800,110,2,'Test bus transxchange','transxchange.zip',1,3,107,'2014-08-28 14:03:00',''),
-    (801,110,2,'Test bus transxchange PDF','transxchange.pdf',1,3,108,'2014-08-28 14:03:00',''),
-    (802,110,2,'Test bus route','route.jpg',1,3,36,'2014-08-28 14:03:00',''),
+    (800,110,2,'Test bus transxchange','transxchange.zip',1,3,107,'2014-08-28 14:03:00','documents/ebsr/2015/09/28/20150928145132__pb00000092-newapp.zip'),
+    (801,110,2,'Test bus transxchange PDF','transxchange.pdf',1,3,108,'2014-08-28 14:03:00','documents/ebsr/2015/09/28/20150928155523__transxchange.pdf'),
+    (802,110,2,'Test bus route','route.jpg',1,3,36,'2014-08-28 14:03:00','documents/ebsr/2015/09/28/20150928145035__basingstoke2.JPG'),
 
     (803,110,2,'Test bus transxchange for LA 2','transxchange_LA2.zip',1,3,107,
     '2014-08-28 14:03:00',''),

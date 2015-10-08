@@ -3,8 +3,6 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as Entity;
-use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * EbsrSubmission
@@ -30,27 +28,5 @@ class EbsrSubmission extends AbstractRepository
             ->setParameter('organisaion', $organisation);
 
         return $doctrineQb->getQuery()->getResult();
-    }
-
-    /**
-     * Applies filters
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
-     *
-     * @return QueryBuilder
-     */
-    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
-    {
-        if (method_exists($query, 'getEbsrSubmissionType') && $query->getEbsrSubmissionType()) {
-            $qb->andWhere(
-                $qb->expr()->eq($this->alias . '.ebsrSubmissionType', ':ebsrSubmissionType')
-            )->setParameter('ebsrSubmissionType', $query->getEbsrSubmissionType());
-        }
-
-        if (method_exists($query, 'getEbsrSubmissionStatus') && $query->getEbsrSubmissionStatus()) {
-            $qb->andWhere(
-                $qb->expr()->eq($this->alias . '.ebsrSubmissionStatus', ':ebsrSubmissionStatus')
-            )->setParameter('ebsrSubmissionStatus', $query->getEbsrSubmissionStatus());
-        }
     }
 }
