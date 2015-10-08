@@ -42,7 +42,12 @@ class RevokeTest extends CommandHandlerTestCase
 
     protected function initReferences()
     {
-        $this->refData = ['lsts_revoked', 'lcat_psv', 'lcat_gv'];
+        $this->refData = [
+            LicenceEntity::LICENCE_STATUS_REVOKED,
+            LicenceEntity::LICENCE_CATEGORY_PSV,
+            LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+            LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
+        ];
 
         $this->references = [
 
@@ -61,6 +66,84 @@ class RevokeTest extends CommandHandlerTestCase
         );
         $licence->setId(532);
         $licence->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_PSV]);
+        $licence->setCommunityLics(
+            new ArrayCollection(
+                [
+                    new CommunityLic(),
+                    new CommunityLic()
+                ]
+            )
+        );
+
+        $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($licence);
+        $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
+            function (LicenceEntity $saveLicence) {
+                $this->assertSame($this->refData['lsts_revoked'], $saveLicence->getStatus());
+                $this->assertInstanceOf(\DateTime::class, $saveLicence->getRevokedDate());
+                $this->assertSame((new \DateTime())->format('Y-m-d'), $saveLicence->getRevokedDate()->format('Y-m-d'));
+            }
+        );
+
+        $ceaseDiscsResult = new Result();
+        $this->expectedSideEffect(
+            CeasePsvDiscs::class,
+            array('discs' => new ArrayCollection()),
+            $ceaseDiscsResult
+        );
+
+        $removeVehicleResult = new Result();
+        $this->expectedSideEffect(
+            RemoveLicenceVehicle::class,
+            array('licenceVehicles' => new ArrayCollection(), 'id' => null),
+            $removeVehicleResult
+        );
+
+        $removeTmResult = new Result();
+        $this->expectedSideEffect(
+            DeleteTransportManagerLicence::class,
+            array('licence' => $licence, 'id' => null),
+            $removeTmResult
+        );
+
+        $removeRulesResult = new Result();
+        $this->expectedSideEffect(
+            RemoveLicenceStatusRulesForLicence::class,
+            [
+                'licence' => $licence
+            ],
+            $removeRulesResult
+        );
+
+        $this->expectedSideEffect(
+            ReturnAllCommunityLicences::class,
+            [
+                'id' => 532
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Publication\Licence::class,
+            ['id' => 532],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(["Licence ID 532 revoked"], $result->getMessages());
+    }
+
+    public function testHandleCommandPsvSpecialRestricted()
+    {
+        $command = Command::create(['id' => 532]);
+
+        $licence = new LicenceEntity(
+            m::mock(\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class),
+            m::mock(\Dvsa\Olcs\Api\Entity\System\RefData::class)
+        );
+        $licence->setId(532);
+        $licence->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_PSV]);
+        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED]);
         $licence->setCommunityLics(
             new ArrayCollection(
                 [
@@ -172,6 +255,12 @@ class RevokeTest extends CommandHandlerTestCase
             $removeRulesResult
         );
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Publication\Licence::class,
+            ['id' => 532],
+            new Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 revoked"], $result->getMessages());
@@ -229,6 +318,11 @@ class RevokeTest extends CommandHandlerTestCase
             \Dvsa\Olcs\Transfer\Command\Application\RefuseApplication::class,
             ['id' => 567],
             (new Result())->addMessage('UNDER_CONSIDERATION')
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Publication\Licence::class,
+            ['id' => 532],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);

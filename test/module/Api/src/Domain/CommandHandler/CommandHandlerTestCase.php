@@ -290,6 +290,10 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
         $licence = new Licence($organisation, $status);
 
+        $ta = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $ta->setId('T');
+        $licence->setTrafficArea($ta);
+
         return $licence;
     }
 }

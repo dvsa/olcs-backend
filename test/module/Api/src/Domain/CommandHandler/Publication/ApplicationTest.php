@@ -307,7 +307,7 @@ class ApplicationTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     * @expectedException \RuntimeException
      */
     public function testInvalidSectionIdException()
     {
