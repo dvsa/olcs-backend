@@ -28,8 +28,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_bus_reg_withdrawn_reason", columns={"withdrawn_reason"}),
  *        @ORM\Index(name="ix_bus_reg_status", columns={"status"}),
  *        @ORM\Index(name="ix_bus_reg_revert_status", columns={"revert_status"}),
- *        @ORM\Index(name="ix_bus_reg_reg_no", columns={"reg_no"}),
- *        @ORM\Index(name="fk_bus_reg_parent_id_bus_reg_id", columns={"parent_id"})
+ *        @ORM\Index(name="ix_bus_reg_reg_no_variation_no", columns={"reg_no","variation_no"}),
+ *        @ORM\Index(name="ix_bus_reg_parent_id", columns={"parent_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_bus_reg_olbs_key", columns={"olbs_key"})
@@ -731,6 +731,15 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     protected $ebsrSubmissions;
 
     /**
+     * Txc document
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox", mappedBy="busReg")
+     */
+    protected $txcDocuments;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -747,6 +756,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
         $this->otherServices = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->ebsrSubmissions = new ArrayCollection();
+        $this->txcDocuments = new ArrayCollection();
     }
 
     /**
@@ -2544,6 +2554,66 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     {
         if ($this->ebsrSubmissions->contains($ebsrSubmissions)) {
             $this->ebsrSubmissions->removeElement($ebsrSubmissions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the txc document
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $txcDocuments
+     * @return BusReg
+     */
+    public function setTxcDocuments($txcDocuments)
+    {
+        $this->txcDocuments = $txcDocuments;
+
+        return $this;
+    }
+
+    /**
+     * Get the txc documents
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTxcDocuments()
+    {
+        return $this->txcDocuments;
+    }
+
+    /**
+     * Add a txc documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $txcDocuments
+     * @return BusReg
+     */
+    public function addTxcDocuments($txcDocuments)
+    {
+        if ($txcDocuments instanceof ArrayCollection) {
+            $this->txcDocuments = new ArrayCollection(
+                array_merge(
+                    $this->txcDocuments->toArray(),
+                    $txcDocuments->toArray()
+                )
+            );
+        } elseif (!$this->txcDocuments->contains($txcDocuments)) {
+            $this->txcDocuments->add($txcDocuments);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a txc documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $txcDocuments
+     * @return BusReg
+     */
+    public function removeTxcDocuments($txcDocuments)
+    {
+        if ($this->txcDocuments->contains($txcDocuments)) {
+            $this->txcDocuments->removeElement($txcDocuments);
         }
 
         return $this;

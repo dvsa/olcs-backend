@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as Entity;
+use Doctrine\ORM\Query;
 
 /**
  * TxcInbox
@@ -24,9 +25,87 @@ class TxcInbox extends AbstractRepository
     {
         $doctrineQb = $this->createQueryBuilder();
 
-        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.organisation', ':organisaion'))
-            ->setParameter('organisaion', $organisation);
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.organisation', ':organisation'))
+            ->setParameter('organisation', $organisation);
 
         return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch a list of unread docs filtered by local authority, submission type and status for a given bus reg id
+     *
+     * @param int $busReg
+     * @param int $localAuthorityId
+     * @param int $hydrateMode
+     * @return array
+     */
+    public function fetchListForLocalAuthorityByBusReg($busReg, $localAuthorityId, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('busReg', 'b');
+
+        $qb->where($qb->expr()->eq('b.id', ':busReg'))
+            ->setParameter('busReg', $busReg);
+
+        if (empty($localAuthorityId)) {
+            $qb->andWhere($qb->expr()->isNull($this->alias . '.localAuthority'));
+        } else {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.fileRead', '0'));
+            $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
+                ->setParameter('localAuthority', $localAuthorityId);
+        }
+
+        return $qb->getQuery()->getResult($hydrateMode);
+    }
+
+    /**
+     * Fetch a list of unread docs filtered by local authority, submission type and status
+     *
+     * @param $localAuthority
+     * @param null $ebsrSubmissionType
+     * @param null $ebsrSubmissionStatus
+     * @param int $hydrateMode
+     * @return array
+     */
+    public function fetchUnreadListForLocalAuthority(
+        $localAuthority,
+        $ebsrSubmissionType = null,
+        $ebsrSubmissionStatus = null,
+        $hydrateMode = Query::HYDRATE_OBJECT
+    ) {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('m.busReg', 'b')
+            ->with('b.ebsrSubmissions', 'e')
+            ->with('b.licence', 'l')
+            ->with('b.otherServices')
+            ->with('l.organisation');
+
+        if (empty($localAuthority)) {
+            $qb->where($qb->expr()->isNull($this->alias . '.localAuthority'));
+        } else {
+            $qb->where($qb->expr()->eq($this->alias . '.fileRead', '0'));
+            $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
+                ->setParameter('localAuthority', $localAuthority);
+        }
+
+        if (!empty($ebsrSubmissionType)) {
+            $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionType', ':ebsrSubmissionType'))
+                ->setParameter('ebsrSubmissionType', $ebsrSubmissionType);
+        }
+
+        if (!empty($ebsrSubmissionStatus)) {
+            $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionStatus', ':ebsrSubmissionStatus'))
+                ->setParameter('ebsrSubmissionStatus', $ebsrSubmissionStatus);
+        }
+
+        return $qb->getQuery()->getResult($hydrateMode);
     }
 }

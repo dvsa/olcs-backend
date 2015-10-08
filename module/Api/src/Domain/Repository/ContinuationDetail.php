@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * ContinuationDetail
@@ -136,7 +137,9 @@ class ContinuationDetail extends AbstractRepository
             ->with('l.goodsOrPsv', 'lgp')
             ->with('l.organisation', 'lo')
             ->with('l.fees', 'lf')
-            ->with('lf.feeType', 'lfft');
+            ->with('lf.feeType', 'lfft')
+            ->with('lfft.feeType', 'lfftft')
+            ->with('lf.feeStatus', 'lffs');
 
         $qb->andWhere($qb->expr()->in('l.status', ':licenceStatuses'))
             ->setParameter(
@@ -149,20 +152,6 @@ class ContinuationDetail extends AbstractRepository
             );
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.received', 0));
-
-        $qb->andWhere(
-            $qb->expr()->orX(
-                $qb->expr()->not(
-                    $qb->expr()->andX(
-                        $qb->expr()->eq('lfft.feeType', ':feeType'),
-                        $qb->expr()->in('lf.feeStatus', ':feeStatus')
-                    )
-                ),
-                $qb->expr()->isNull('lf.id')
-            )
-        );
-        $qb->setParameter('feeType', FeeTypeEntity::FEE_TYPE_CONT);
-        $qb->setParameter('feeStatus', [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED]);
 
         if ($ids) {
             $this->getQueryBuilder()
@@ -178,7 +167,28 @@ class ContinuationDetail extends AbstractRepository
                 ->setParameter('year', $year);
         }
 
-        return $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        return $this->filterByFee(
+            $qb->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY),
+            FeeTypeEntity::FEE_TYPE_CONT,
+            [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED]
+        );
+    }
+
+    protected function filterByFee($entities, $feeType, $feeStatuses)
+    {
+        $filtered = [];
+        foreach ($entities as $entity) {
+            if (isset($entity['licence']['fees'])) {
+                foreach ($entity['licence']['fees'] as $fee) {
+                    if ($fee['feeType']['feeType']['id'] === $feeType &&
+                        array_search($fee['feeStatus']['id'], $feeStatuses) !== false) {
+                        continue 2;
+                    }
+                }
+            }
+            $filtered[] = $entity;
+        }
+        return $filtered;
     }
 
     public function fetchDetails($continuationId, $licenceStatuses, $licNo, $method, $status)

@@ -97,7 +97,7 @@ class UpdateTest extends CommandHandlerTestCase
                     ->with(1)
                     ->shouldreceive('getId')
                     ->andReturn($id)
-                    ->shouldReceive('setUser')
+                    ->shouldReceive('setCreatedBy')
                     ->with(m::type(Entity\User\User::class))
                     ->getMock()
             )

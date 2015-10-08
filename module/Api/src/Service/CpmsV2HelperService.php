@@ -26,11 +26,12 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     // CPMS' preferred date format (note: this changed around 03/2015)
     const DATE_FORMAT = 'Y-m-d';
 
+    const DATETIME_FORMAT = 'Y-m-d H:i:s';
+
     const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
 
-    // @TODO this is a dummy value for testing purposes as cost_centre is now
-    // a required parameter in cpms/payment-service. Awaiting further info on
-    // what OLCS should pass for this field.
+    // @todo OLCS-6845
+    // this is a dummy value for testing purposes
     const COST_CENTRE = '12345,67890';
 
     const TAX_CODE = 'Z';
@@ -287,6 +288,64 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Get a list of available reports
+     *
+     * @return array
+     */
+    public function getReportList()
+    {
+        return $this->send('get', '/api/report', ApiService::SCOPE_REPORT, []);
+    }
+
+    /**
+     * Request report creation
+     *
+     * @param string $reportCode
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
+    public function requestReport($reportCode, \DateTime $start, \DateTime $end)
+    {
+        $params = [
+            'report_code' => (string) $reportCode,
+            'filters' => [
+                'from' => $this->formatDateTime($start),
+                'to' => $this->formatDateTime($end),
+            ],
+        ];
+
+        return $this->send('post', '/api/report', ApiService::SCOPE_REPORT, $params);
+    }
+
+    /**
+     * Check report status by reference
+     *
+     * @param string $reference
+     * @return array
+     */
+    public function getReportStatus($reference)
+    {
+        $endPoint = '/api/report/'.$reference.'/status';
+
+        return $this->send('get', $endPoint, ApiService::SCOPE_REPORT, []);
+    }
+
+    /**
+     * Download report by reference
+     *
+     * @param string $reference
+     * @param string $token
+     * @return array
+     */
+    public function downloadReport($reference, $token)
+    {
+        $url = '/api/report/'.$reference.'/download?token='.$token;
+
+        return $this->send('get', $url, ApiService::SCOPE_REPORT, []);
+    }
+
+    /**
      * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
      */
@@ -317,6 +376,17 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             }
             return $date->format(self::DATE_FORMAT);
         }
+    }
+
+    /**
+     * Format a date/time as required by CPMS report filter fields
+     *
+     * @param DateTime $dateTime
+     * @return string
+     */
+    protected function formatDateTime(\DateTime $dateTime)
+    {
+        return $dateTime->format(self::DATETIME_FORMAT);
     }
 
     /**
@@ -413,7 +483,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @todo 'product_reference' should be $fee->getFeeType()->getDescription()
      * but CPMS has a whitelist and responds  {"code":104,"message":"product_reference is invalid"}
-     * @todo 'sales_person_reference'
+     * @todo OLCS-6845 'sales_person_reference'
      */
     protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [])
     {
@@ -503,6 +573,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     protected function send($method, $endPoint, $scope, $params)
     {
+        $method = strtolower($method);
+
         $this->debug(
             "CPMS $scope request",
             [

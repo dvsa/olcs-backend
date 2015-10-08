@@ -8,14 +8,14 @@ use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ElasticUpdates Abstract Entity
+ * ElasticUpdate Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
- * @ORM\Table(name="elastic_updates")
+ * @ORM\Table(name="elastic_update")
  */
-abstract class AbstractElasticUpdates implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractElasticUpdate implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
 
@@ -61,7 +61,7 @@ abstract class AbstractElasticUpdates implements BundleSerializableInterface, Js
      * Set the id
      *
      * @param int $id
-     * @return ElasticUpdates
+     * @return ElasticUpdate
      */
     public function setId($id)
     {
@@ -84,7 +84,7 @@ abstract class AbstractElasticUpdates implements BundleSerializableInterface, Js
      * Set the index name
      *
      * @param string $indexName
-     * @return ElasticUpdates
+     * @return ElasticUpdate
      */
     public function setIndexName($indexName)
     {
@@ -107,7 +107,7 @@ abstract class AbstractElasticUpdates implements BundleSerializableInterface, Js
      * Set the previous runtime
      *
      * @param int $previousRuntime
-     * @return ElasticUpdates
+     * @return ElasticUpdate
      */
     public function setPreviousRuntime($previousRuntime)
     {
@@ -130,7 +130,7 @@ abstract class AbstractElasticUpdates implements BundleSerializableInterface, Js
      * Set the runtime
      *
      * @param int $runtime
-     * @return ElasticUpdates
+     * @return ElasticUpdate
      */
     public function setRuntime($runtime)
     {

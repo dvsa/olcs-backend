@@ -3,7 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as Repo;
+use Dvsa\Olcs\Transfer\Query\Ebsr\SubmissionList as SubmissionListQry;
 
 /**
  * EbsrSubmissionTest
@@ -33,6 +35,5 @@ class EbsrSubmissionTest extends RepositoryTestCase
 
         $expectedQuery = 'BLAH AND m.organisation = [[ORG1]]';
         $this->assertEquals($expectedQuery, $this->query);
-
     }
 }

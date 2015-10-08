@@ -109,4 +109,9 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
     {
         return vsprintf($this->translate($translationKey), $arguments);
     }
+
+    protected function isInternal($data)
+    {
+        return $data['isInternal'];
+    }
 }

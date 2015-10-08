@@ -22,8 +22,8 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_publication_pub_status", columns={"pub_status"}),
  *        @ORM\Index(name="ix_publication_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_publication_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_publication_document1_idx", columns={"document_id"}),
- *        @ORM\Index(name="fk_publication_doc_template1_idx", columns={"doc_template_id"})
+ *        @ORM\Index(name="ix_publication_document_id", columns={"document_id"}),
+ *        @ORM\Index(name="ix_publication_doc_template_id", columns={"doc_template_id"})
  *    }
  * )
  */

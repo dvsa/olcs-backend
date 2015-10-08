@@ -29,7 +29,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_opposition_status", columns={"status"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="ux_olbs_key", columns={"olbs_key","olbs_type"})
+ *        @ORM\UniqueConstraint(name="uk_opposition_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
  *    }
  * )
  */

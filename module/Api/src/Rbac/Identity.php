@@ -30,7 +30,6 @@ class Identity implements IdentityInterface
         20 => ['operator-admin'],
         21 => ['operator-user'],
         7 => ['operator-tm'],
-        8 => ['operator-ebsr'],
         22 => ['partner-admin'],
         23 => ['partner-user'],
         24 => ['local-authority-admin'],

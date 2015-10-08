@@ -33,7 +33,7 @@ class Bus extends AbstractQueryHandler
                 'localAuthoritys',
                 'subsidised',
                 'otherServices',
-                'variationReasons',
+                'variationReasons'
             ]
         );
     }
