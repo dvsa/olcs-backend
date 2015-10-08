@@ -297,6 +297,7 @@ return [
     TransferCommand\User\CreateUser::class => CommandHandler\User\CreateUser::class,
     TransferCommand\User\UpdateUser::class => CommandHandler\User\UpdateUser::class,
     TransferCommand\User\DeleteUser::class => CommandHandler\User\DeleteUser::class,
+    TransferCommand\User\RegisterUserSelfserve::class => CommandHandler\User\RegisterUserSelfserve::class,
     TransferCommand\User\CreateUserSelfserve::class => CommandHandler\User\CreateUserSelfserve::class,
     TransferCommand\User\UpdateUserSelfserve::class => CommandHandler\User\UpdateUserSelfserve::class,
     TransferCommand\User\DeleteUserSelfserve::class => CommandHandler\User\DeleteUserSelfserve::class,
