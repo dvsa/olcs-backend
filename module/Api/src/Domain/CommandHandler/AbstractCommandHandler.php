@@ -10,13 +10,16 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\OpenAmClientAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\RandomAwareInterface;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
+use Dvsa\Olcs\Api\Service\OpenAm\ClientInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -135,6 +138,14 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         if ($this instanceof NamingServiceAwareInterface) {
             $this->setNamingService($mainServiceLocator->get('DocumentNamingService'));
+        }
+
+        if ($this instanceof OpenAmClientAwareInterface) {
+            $this->setOpenAmClient($mainServiceLocator->get(ClientInterface::class));
+        }
+
+        if ($this instanceof RandomAwareInterface) {
+            $this->setRandomGenerator((new \RandomLib\Factory())->getMediumStrengthGenerator());
         }
 
         if ($this instanceof TransExchangeAwareInterface) {
