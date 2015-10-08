@@ -12,16 +12,6 @@ class PeopleTest extends SubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\People';
 
-    protected $expectedResult = [
-        'id' => 66,
-        'notificationNumber' => 'not no 123',
-        'siCategory' => 'si_cat-desc',
-        'siCategoryType' => 'si_cat_type-desc',
-        'infringementDate' => '2014-05-05',
-        'checkDate' => '2014-01-01',
-        'isMemberState' => true
-    ];
-
     /**
      * Filter provider
      *
@@ -40,7 +30,8 @@ class PeopleTest extends SubmissionSectionTest
                             'title' => 'title-desc',
                             'forename' => 'fn1',
                             'familyName' => 'sn1',
-                            'birthDate' => '01/01/1977'
+                            'birthDate' => '01/01/1977',
+                            'disqualificationStatus' => 'None'
                         ]
                     ]
                 ]
