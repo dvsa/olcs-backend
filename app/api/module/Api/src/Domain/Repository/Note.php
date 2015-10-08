@@ -18,6 +18,8 @@ class Note extends AbstractRepository
 {
     protected $entity = NoteHistoryEntity::class;
 
+    protected $alias = 'n';
+
     /**
      * @param QueryBuilder $qb
      * @param NoteDTO $query
@@ -52,7 +54,7 @@ class Note extends AbstractRepository
         }
 
         if ($query->getUser() !== null) {
-            $qb->andWhere($this->alias . '.user = :userId');
+            $qb->andWhere($this->alias . '.createdBy = :userId');
             $qb->setParameter('userId', $query->getUser());
         }
 
@@ -66,7 +68,7 @@ class Note extends AbstractRepository
             $qb->setParameter('noteTypeId', $query->getNoteType());
         }
 
-        $this->getQueryBuilder()->modifyQuery($qb)->withUser()->withBusReg()->withCase();
+        $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy()->withBusReg()->withCase();
     }
 
     /**

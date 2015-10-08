@@ -52,13 +52,13 @@ class InsufficientFeeTableTest extends MockeryTestCase
 
         $expectedRowTwo = [
             'COL1_BMK1' => 'desc',
-            'COL2_BMK1' => '£',
+            'COL2_BMK1' => "\'a3",
             'COL2_BMK2' => '100.00'
         ];
 
         $expectedRowThree = [
             'COL1_BMK1' => 'Amount RECEIVED',
-            'COL2_BMK1' => '£',
+            'COL2_BMK1' => "\'a3",
             'COL2_BMK2' => '20.00'
         ];
 
@@ -66,7 +66,7 @@ class InsufficientFeeTableTest extends MockeryTestCase
             'COL1_BMK1' =>
                 InsufficientFeeTable::RTF_BOLD_START . 'BALANCE NOW DUE' . InsufficientFeeTable::RTF_BOLD_END,
             'COL2_BMK1' =>
-                InsufficientFeeTable::RTF_BOLD_START . '£' . InsufficientFeeTable::RTF_BOLD_END,
+                InsufficientFeeTable::RTF_BOLD_START . "\'a3" . InsufficientFeeTable::RTF_BOLD_END,
             'COL2_BMK2' =>
                 InsufficientFeeTable::RTF_BOLD_START . '80.00' . InsufficientFeeTable::RTF_BOLD_END
         ];

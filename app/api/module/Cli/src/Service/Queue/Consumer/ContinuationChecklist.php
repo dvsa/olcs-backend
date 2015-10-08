@@ -18,7 +18,7 @@ use Dvsa\Olcs\Transfer\Command\ContinuationDetail\Update as UpdateContinuationDe
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class ContinuationChecklist extends AbstractConsumer
+class ContinuationChecklist extends AbstractCommandConsumer
 {
     protected $commandName = Cmd::class;
 

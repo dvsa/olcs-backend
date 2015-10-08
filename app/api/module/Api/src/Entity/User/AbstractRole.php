@@ -28,15 +28,6 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     use BundleSerializableTrait;
 
     /**
-     * Code
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="code", length=5, nullable=false)
-     */
-    protected $code;
-
-    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -143,29 +134,6 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     {
         $this->users = new ArrayCollection();
         $this->rolePermissions = new ArrayCollection();
-    }
-
-    /**
-     * Set the code
-     *
-     * @param string $code
-     * @return Role
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * Get the code
-     *
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
     }
 
     /**

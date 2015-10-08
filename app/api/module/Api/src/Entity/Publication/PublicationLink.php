@@ -134,6 +134,26 @@ class PublicationLink extends AbstractPublicationLink
     }
 
     /**
+     * Create a publicaction link for a licence
+     *
+     * @param LicenceEntity $licence
+     * @param PublicationEntity $publication
+     * @param PublicationSectionEntity $publicationSection
+     * @param TrafficAreaEntity $trafficArea
+     */
+    public function createLicence(
+        LicenceEntity $licence,
+        PublicationEntity $publication,
+        PublicationSectionEntity $publicationSection,
+        TrafficAreaEntity $trafficArea
+    ) {
+        $this->licence = $licence;
+        $this->publication = $publication;
+        $this->publicationSection = $publicationSection;
+        $this->trafficArea = $trafficArea;
+    }
+
+    /**
      * Updates text fields on the publication link
      *
      * @param string $text1

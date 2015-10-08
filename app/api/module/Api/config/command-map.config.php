@@ -158,6 +158,9 @@ return [
     TransferCommand\Bus\RefuseBusRegByShortNotice::class => CommandHandler\Bus\RefuseBusRegByShortNotice::class,
     TransferCommand\Bus\GrantBusReg::class => CommandHandler\Bus\GrantBusReg::class,
 
+    //Ebsr
+    TransferCommand\Bus\Ebsr\UpdateTxcInbox::class => CommandHandler\Bus\Ebsr\UpdateTxcInbox::class,
+
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
     TransferCommand\Licence\UpdateAddresses::class => CommandHandler\Licence\UpdateAddresses::class,
@@ -520,6 +523,7 @@ return [
     Command\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,
     Command\Publication\PiDecision::class => CommandHandler\Publication\PiHearing::class,
     Command\Publication\CreateNextPublication::class => CommandHandler\Publication\CreateNextPublication::class,
+    Command\Publication\Licence::class => CommandHandler\Publication\Licence::class,
 
     // Domain - Discs
     Command\Discs\CeaseGoodsDiscs::class => CommandHandler\Discs\CeaseGoodsDiscs::class,
@@ -751,6 +755,7 @@ return [
     // Domain - Queue
     QueueCommand\Complete::class => QueueCommandHandler\Complete::class,
     QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
+    QueueCommand\Retry::class => QueueCommandHandler\Retry::class,
     QueueCommand\Create::class => QueueCommandHandler\Create::class,
 
     // Transfer - TmCaseDecision
@@ -808,4 +813,8 @@ return [
 
     // Domain - Licence
     Command\Licence\ProcessContinuationNotSought::class => CommandHandler\Licence\ProcessContinuationNotSought::class,
+
+    // Transfer - CPMS
+    TransferCommand\Cpms\RequestReport::class => CommandHandler\Cpms\RequestReport::class,
+    TransferCommand\Cpms\DownloadReport::class => CommandHandler\Cpms\DownloadReport::class,
 ];

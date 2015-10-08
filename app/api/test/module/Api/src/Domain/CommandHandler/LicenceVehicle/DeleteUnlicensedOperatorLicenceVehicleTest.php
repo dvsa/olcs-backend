@@ -29,7 +29,6 @@ class DeleteUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('LicenceVehicle', LicenceVehicleRepo::class);
-        $this->mockRepo('Vehicle', VehicleRepo::class);
 
         parent::setUp();
     }
@@ -37,7 +36,6 @@ class DeleteUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $id = 69;
-        $vehicleId = 99;
 
         $command = Cmd::create(
             [
@@ -46,7 +44,6 @@ class DeleteUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
         );
 
         $licenceVehicle = m::mock(LicenceVehicleEntity::class);
-        $vehicle = m::mock(VehicleEntity::class);
 
         $this->repoMap['LicenceVehicle']
             ->shouldReceive('fetchUsingId')
@@ -57,22 +54,10 @@ class DeleteUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
             ->shouldReceive('getId')
             ->once()
             ->andReturn($id);
-        $licenceVehicle
-            ->shouldReceive('getVehicle')
-            ->once()
-            ->andReturn($vehicle);
-        $vehicle
-            ->shouldReceive('getId')
-            ->andReturn($vehicleId);
 
         $this->repoMap['LicenceVehicle']
             ->shouldReceive('delete')
             ->with($licenceVehicle)
-            ->once();
-
-        $this->repoMap['Vehicle']
-            ->shouldReceive('delete')
-            ->with($vehicle)
             ->once();
 
         $result = $this->sut->handleCommand($command);
@@ -80,7 +65,6 @@ class DeleteUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
         $this->assertEquals(
             [
                 'licenceVehicle' => $id,
-                'vehicle' => $vehicleId,
             ],
             $result->getIds()
         );
@@ -88,7 +72,6 @@ class DeleteUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
         $this->assertEquals(
             [
                 'LicenceVehicle deleted',
-                'Vehicle deleted',
             ],
             $result->getMessages()
         );

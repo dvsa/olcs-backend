@@ -58,6 +58,10 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
             $this->setUploader($mainServiceLocator->get('FileUploader'));
         }
 
+        if ($this instanceof \Dvsa\Olcs\Api\Domain\CpmsAwareInterface) {
+            $this->setCpmsService($mainServiceLocator->get('CpmsHelperService'));
+        }
+
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
 
         $this->extraRepos[] = $this->repoServiceName;

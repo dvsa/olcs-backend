@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Application\Review;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Transfer\Query\Application\Review as Qry;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Review Test
@@ -29,6 +31,13 @@ class ReviewTest extends QueryHandlerTestCase
         $this->mockRepo('Application', ApplicationRepo::class);
 
         $this->mockedSmServices['ReviewSnapshot'] = m::mock();
+        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->once()->atLeast()
+            ->andReturn(true);
 
         parent::setUp();
     }
@@ -45,7 +54,7 @@ class ReviewTest extends QueryHandlerTestCase
             ->andReturn($application);
 
         $this->mockedSmServices['ReviewSnapshot']->shouldReceive('generate')
-            ->with($application)
+            ->with($application, true)
             ->andReturn('<foo>');
 
         $expected = [

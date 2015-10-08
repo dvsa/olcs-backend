@@ -32,8 +32,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_licence_correspondence_cd_id", columns={"correspondence_cd_id"}),
  *        @ORM\Index(name="ix_licence_establishment_cd_id", columns={"establishment_cd_id"}),
  *        @ORM\Index(name="ix_licence_transport_consultant_cd_id",
-     *     columns={"transport_consultant_cd_id"}),
- *        @ORM\Index(name="ix_licence_status_organisation_id", columns={"status","organisation_id"})
+     *     columns={"transport_consultant_cd_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_licence_lic_no", columns={"lic_no"}),

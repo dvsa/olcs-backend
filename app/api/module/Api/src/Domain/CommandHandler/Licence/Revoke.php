@@ -132,9 +132,30 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
             }
         }
 
+        // Exclude PSV Special Restricted licences
+        if (!($licence->isPsv() && $licence->isSpecialRestricted())) {
+            $result->merge($this->publish($licence));
+        }
+
         $this->getRepo()->save($licence);
         $result->addMessage("Licence ID {$licence->getId()} revoked");
 
         return $result;
+    }
+
+    /**
+     * Publish the licence
+     *
+     * @param Licence $licence
+     *
+     * @return Result
+     */
+    private function publish(Licence $licence)
+    {
+        return $this->handleSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Publication\Licence::create(
+                ['id' => $licence->getId()]
+            )
+        );
     }
 }
