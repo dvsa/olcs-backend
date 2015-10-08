@@ -31,6 +31,7 @@ class Transaction extends AbstractQueryHandler
                     'fee',
                 ],
                 'processedByUser',
+                'waiveRecommenderUser',
             ],
             [
                 'fees' => $this->flattenFees($transaction),
