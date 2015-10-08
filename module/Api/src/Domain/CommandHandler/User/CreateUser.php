@@ -11,6 +11,10 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\OpenAmClientAwareInterface;
+use Dvsa\Olcs\Api\Domain\OpenAmClientAwareTrait;
+use Dvsa\Olcs\Api\Domain\RandomAwareInterface;
+use Dvsa\Olcs\Api\Domain\RandomAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
@@ -19,8 +23,14 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 /**
  * Create User
  */
-final class CreateUser extends AbstractUserCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class CreateUser extends AbstractCommandHandler implements
+    TransactionedInterface,
+    OpenAmClientAwareInterface,
+    RandomAwareInterface,
+    AuthAwareInterface
 {
+    use OpenAmClientAwareTrait;
+    use RandomAwareTrait;
     use AuthAwareTrait;
 
     protected $repoServiceName = 'User';
@@ -32,6 +42,7 @@ final class CreateUser extends AbstractUserCommandHandler implements AuthAwareIn
         if (!$this->isGranted(Permission::CAN_MANAGE_USER_INTERNAL)) {
             throw new ForbiddenException('You do not have permission to manage the record');
         }
+        /** @var \Dvsa\Olcs\Transfer\Command\User\CreateUser $command */
 
         $data = $command->getArrayCopy();
 
@@ -52,7 +63,10 @@ final class CreateUser extends AbstractUserCommandHandler implements AuthAwareIn
             $data['organisations'] = [$application->getLicence()->getOrganisation()];
         }
 
+        $pid = $this->generatePid();
+
         $user = User::create(
+            $pid,
             $command->getUserType(),
             $this->getRepo()->populateRefDataReference($data)
         );
@@ -69,10 +83,30 @@ final class CreateUser extends AbstractUserCommandHandler implements AuthAwareIn
 
         $this->getRepo()->save($user);
 
+        $this->getOpenAmClient()->registerUser(
+            $command->getLoginId(),
+            $pid,
+            $command->getContactDetails()['emailAddress'],
+            $command->getContactDetails()['person']['familyName'],
+            $command->getContactDetails()['person']['forename'],
+            'internal',
+            $this->generatePassword()
+        );
+
         $result = new Result();
         $result->addId('user', $user->getId());
         $result->addMessage('User created successfully');
 
         return $result;
+    }
+
+    private function generatePid()
+    {
+        return $this->getRandomGenerator()->generateString(32, '0123456789abcdef');
+    }
+
+    private function generatePassword()
+    {
+        return $this->getRandomGenerator()->generateString(12);
     }
 }

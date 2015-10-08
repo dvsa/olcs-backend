@@ -104,10 +104,11 @@ class User extends AbstractUser implements OrganisationProviderInterface
      */
     protected $userType = null;
 
-    public function __construct($userType)
+    public function __construct($pid, $userType)
     {
         parent::__construct();
         $this->userType = $userType;
+        $this->pid = $pid;
     }
 
     /**
@@ -115,9 +116,9 @@ class User extends AbstractUser implements OrganisationProviderInterface
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
      * @return User
      */
-    public static function create($userType, $data)
+    public static function create($pid, $userType, $data)
     {
-        $user = new static($userType);
+        $user = new static($pid, $userType);
         $user->update($data);
 
         return $user;
