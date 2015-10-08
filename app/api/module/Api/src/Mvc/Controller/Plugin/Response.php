@@ -28,6 +28,20 @@ class Response extends AbstractPlugin
         return $response;
     }
 
+    /**
+     * @param string $retryAfter number of seconds
+     */
+    public function notReady($retryAfter = null)
+    {
+        $response = $this->getController()->getResponse();
+        $response->setStatusCode(HttpResponse::STATUS_CODE_503);
+        if ($retryAfter) {
+            $response->getHeaders()->addHeaders(['Retry-After' => $retryAfter]);
+        }
+
+        return $response;
+    }
+
     public function error($code, array $messages = [])
     {
         $response = $this->getController()->getResponse();

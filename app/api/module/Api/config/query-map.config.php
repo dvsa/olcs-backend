@@ -213,6 +213,7 @@ return [
     TransferQuery\Publication\PublicationLinkLicenceList::class
         => QueryHandler\Publication\PublicationLinkByLicence::class,
     TransferQuery\Publication\PublicationLink::class => QueryHandler\Publication\PublicationLink::class,
+    TransferQuery\Publication\PendingList::class => QueryHandler\Publication\PendingList::class,
 
     // My Account
     TransferQuery\MyAccount\MyAccount::class => QueryHandler\MyAccount\MyAccount::class,
@@ -380,4 +381,7 @@ return [
     TransferQuery\System\FinancialStandingRate::class => QueryHandler\System\FinancialStandingRate::class,
     TransferQuery\System\FinancialStandingRateList::class => QueryHandler\System\FinancialStandingRateList::class,
 
+    // Cpms
+    TransferQuery\Cpms\ReportList::class => QueryHandler\Cpms\ReportList::class,
+    TransferQuery\Cpms\ReportStatus::class => QueryHandler\Cpms\ReportStatus::class,
 ];

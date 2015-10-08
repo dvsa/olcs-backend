@@ -62,7 +62,7 @@ class PrepareContinuationsTest extends CommandHandlerTestCase
             ->getMock();
 
         $queueLettersResult = new Result();
-        $queueLettersResult->addId('queue1', 1);
+        $queueLettersResult->addId('queue', 1);
         $queueLettersResult->addMessage('Queue created');
 
         $params = [
@@ -78,6 +78,6 @@ class PrepareContinuationsTest extends CommandHandlerTestCase
             'All letters queued'
         ];
         $this->assertEquals($messages, $result->getMessages());
-        $this->assertEquals(['queue1' => 1], $result->getIds());
+        $this->assertEquals(['queue' => 1], $result->getIds());
     }
 }

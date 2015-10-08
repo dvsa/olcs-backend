@@ -19,6 +19,11 @@ class People extends AbstractQueryHandler
         /* @var $organisation \Dvsa\Olcs\Api\Entity\Organisation\Organisation */
         $organisation =  $this->getRepo()->fetchUsingId($query);
 
+        $licence = null;
+        if ($organisation->isUnlicensed()) {
+            $licence = $this->result($organisation->getLicences()->first())->serialize();
+        }
+
         return $this->result(
             $organisation,
             [
@@ -33,6 +38,7 @@ class People extends AbstractQueryHandler
             [
                 'isSoleTrader' => $organisation->isSoleTrader(),
                 'isDisqualified' => $organisation->getDisqualifications()->count() > 0,
+                'licence' => $licence
             ]
         );
     }

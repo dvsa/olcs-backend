@@ -27,6 +27,13 @@ class PublicationSection extends AbstractPublicationSection
     const VAR_GRANTED_SECTION = 8;
     const VAR_REFUSED_SECTION = 9;
 
+    const SCHEDULE_1_NI_NEW = 29;
+    const SCHEDULE_4_NEW = 16;
+    const SCHEDULE_1_NI_UNTRUE = 30;
+    const SCHEDULE_4_UNTRUE = 17;
+    const SCHEDULE_1_NI_TRUE = 31;
+    const SCHEDULE_4_TRUE = 18;
+
     const LIC_SURRENDERED_SECTION = 10;
     const LIC_TERMINATED_SECTION = 11;
     const LIC_REVOKED_SECTION = 12;
@@ -44,4 +51,23 @@ class PublicationSection extends AbstractPublicationSection
     const BUS_VAR_SHORT_SECTION = 24;
     const BUS_CANCEL_SECTION = 25;
     const BUS_CANCEL_SHORT_SECTION = 26;
+
+    /**
+     * Is this publication section part of section 3 (section 3 is Schedule 41)
+     *
+     * @return bool
+     */
+    public function isSection3()
+    {
+        $section3Sections = [
+            self::SCHEDULE_1_NI_NEW,
+            self::SCHEDULE_1_NI_TRUE,
+            self::SCHEDULE_1_NI_UNTRUE,
+            self::SCHEDULE_4_NEW,
+            self::SCHEDULE_4_TRUE,
+            self::SCHEDULE_4_UNTRUE,
+        ];
+
+        return in_array($this->getId(), $section3Sections);
+    }
 }

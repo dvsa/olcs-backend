@@ -36,6 +36,18 @@ class ResultTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['application' => 222, 'licence' => 333], $this->sut->getIds());
     }
 
+    public function testResultIdMultiple()
+    {
+        $this->sut->addId('application', 111);
+        $this->sut->addId('licence', 333);
+        $this->sut->addId('application', 222, true);
+
+        $this->assertEquals(333, $this->sut->getId('licence'));
+        $this->assertEquals([111,222], $this->sut->getId('application'));
+
+        $this->assertEquals(['application' => [111, 222], 'licence' => 333], $this->sut->getIds());
+    }
+
     public function testResultMessage()
     {
         $this->sut->addMessage('foo');
@@ -48,11 +60,13 @@ class ResultTest extends PHPUnit_Framework_TestCase
     {
         $this->sut->addId('foo', 111);
         $this->sut->addId('bar', 222);
+        $this->sut->addId('baz', 333, true);
+        $this->sut->addId('baz', 444, true);
         $this->sut->addMessage('foo was successful');
         $this->sut->addMessage('bar failed');
 
         $expected = [
-            'id' => ['foo' => 111, 'bar' => 222],
+            'id' => ['foo' => 111, 'bar' => 222, 'baz' => [333, 444]],
             'messages' => ['foo was successful', 'bar failed']
         ];
 
