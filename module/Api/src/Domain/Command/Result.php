@@ -29,9 +29,30 @@ final class Result
      */
     private $flags = [];
 
-    public function addId($name, $id)
+    /**
+     * @param string $name
+     * @param int $id
+     * @param boolean $multiple whether to allow multiple IDs of same type,
+     * the default behaviour is that subsequent IDs just override the first one
+     */
+    public function addId($name, $id, $multiple = false)
     {
+        if ($multiple) {
+            if (isset($this->ids[$name])) {
+                if (!is_array($this->ids[$name])) {
+                    $current = $this->ids[$name];
+                    $this->ids[$name] = array($current);
+                }
+                array_push($this->ids[$name], $id);
+            } else {
+                $this->ids[$name] = $id;
+            }
+
+            return $this;
+        }
+
         $this->ids[$name] = $id;
+
         return $this;
     }
 

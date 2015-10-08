@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class ContinuationChecklistReminderGenerateLetter extends AbstractConsumer
+class ContinuationChecklistReminderGenerateLetter extends AbstractCommandConsumer
 {
     protected $commandName = Cmd::class;
 

@@ -24,6 +24,8 @@ final class Create extends AbstractCommand
 
     protected $user;
 
+    protected $options;
+
     /**
      * @return mixed
      */
@@ -54,5 +56,15 @@ final class Create extends AbstractCommand
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Gets the value of options.
+     *
+     * @return mixed
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

@@ -751,6 +751,7 @@ return [
     // Domain - Queue
     QueueCommand\Complete::class => QueueCommandHandler\Complete::class,
     QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
+    QueueCommand\Retry::class => QueueCommandHandler\Retry::class,
     QueueCommand\Create::class => QueueCommandHandler\Create::class,
 
     // Transfer - TmCaseDecision
@@ -808,4 +809,8 @@ return [
 
     // Domain - Licence
     Command\Licence\ProcessContinuationNotSought::class => CommandHandler\Licence\ProcessContinuationNotSought::class,
+
+    // Transfer - CPMS
+    TransferCommand\Cpms\RequestReport::class => CommandHandler\Cpms\RequestReport::class,
+    TransferCommand\Cpms\DownloadReport::class => CommandHandler\Cpms\DownloadReport::class,
 ];
