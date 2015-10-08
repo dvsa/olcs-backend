@@ -382,6 +382,24 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class,
             ],
         ),
+        'Schedule41TruePublication' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\People::class,
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\Schedule41\Text1::class,
+            ],
+        ),
+        'Schedule41UntruePublication' => array(
+            'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Variation\Text2::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Schedule41\Text3::class
+            ],
+        ),
         'HearingPublication' => array(
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData::class,

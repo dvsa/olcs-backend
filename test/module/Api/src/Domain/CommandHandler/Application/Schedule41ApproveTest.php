@@ -39,47 +39,85 @@ class Schedule41ApproveTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dataProviderTestHandleCommand
+     */
+    public function testHandleCommand($expectedSection, $isNew, $isNi, $isTrueS4)
     {
         $data = [
             'id' => 1,
-            'isTrueS4' => false
+            'trueS4' => $isTrueS4 ? 'Y' : 'N',
         ];
 
         $command = Cmd::create($data);
 
-        $this->repoMap['Application']
-            ->shouldReceive('fetchById')
-            ->once()
-            ->andReturn(
-                m::mock(Application::class)
-                    ->shouldReceive('getS4s')
-                    ->once()
-                    ->andReturn(
-                        m::mock()->shouldReceive('matching')
-                            ->andReturn(
-                                [
-                                    m::mock(S4::class)
-                                        ->shouldReceive('getId')
-                                        ->once()
-                                        ->andReturn(1)
-                                        ->getMock()
-                                ]
-                            )
+        $application = m::mock(Application::class);
+        $application->shouldReceive('getS4s')->with()->once()->andReturn(
+            m::mock()->shouldReceive('matching')->once()->andReturn(
+                new \Doctrine\Common\Collections\ArrayCollection(
+                    [
+                        m::mock(S4::class)
+                            ->shouldReceive('getId')
+                            ->once()
+                            ->andReturn(14)
                             ->getMock()
-                    )->getMock()
-            );
+                    ]
+                )
+            )
+            ->getMock()
+        );
+        $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea->setIsNi($isNi);
+        $trafficArea->setId('B');
+        $application->shouldReceive('getTrafficArea')->with()->andReturn($trafficArea);
+        $application->shouldReceive('isNew')->with()->andReturn($isNew);
+        $application->shouldReceive('getId')->with()->andReturn(1);
+
+        $this->repoMap['Application']->shouldReceive('fetchById')->with(1)->once()->andReturn($application);
 
         $this->expectedSideEffect(
             ApproveS4::class,
             [
-                'id' => 1,
-                'isTrueS4' => null,
+                'id' => 14,
+                'isTrueS4' => $isTrueS4 ? 'Y' : 'N',
                 'status' => null
             ],
             new Result()
         );
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
+            [
+                'id' => 1,
+                'trafficArea' => 'B',
+                'publicationSection' => $expectedSection
+            ],
+            new Result()
+        );
+
+        if (!$isTrueS4) {
+            $this->expectedSideEffect(
+                \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::class,
+                ['id' => 1],
+                new Result()
+            );
+        }
+
         $this->sut->handleCommand($command);
+    }
+
+    public function dataProviderTestHandleCommand()
+    {
+        return [
+            // expectedSection, isNew, isNi, isTrueS4
+            'New application' => [16, true, false, true],
+            'New application2' => [16, true, false, false],
+            'New application NI' => [29, true, true, true],
+            'New application2 NI' => [29, true, true, false],
+            'Variation untrue S4' => [17, false, false, false],
+            'Variation untrue S4 NI' => [30, false, true, false],
+            'Variation true S4' => [18, false, false, true],
+            'Variation true S4 NI' => [31, false, true, true],
+        ];
     }
 }
