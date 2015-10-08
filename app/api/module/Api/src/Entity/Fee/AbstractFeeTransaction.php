@@ -14,18 +14,16 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="fee_transaction",
+ * @ORM\Table(name="fee_txn",
  *    indexes={
- *        @ORM\Index(name="ix_fee_transaction_transaction_id", columns={"transaction_id"}),
- *        @ORM\Index(name="ix_fee_transaction_fee_id", columns={"fee_id"}),
- *        @ORM\Index(name="ix_fee_transaction_reversed_fee_transaction_id",
-     *     columns={"reversed_fee_transaction_id"}),
- *        @ORM\Index(name="ix_fee_transaction_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_fee_transaction_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_fee_txn_txn_id", columns={"txn_id"}),
+ *        @ORM\Index(name="ix_fee_txn_fee_id", columns={"fee_id"}),
+ *        @ORM\Index(name="ix_fee_txn_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_fee_txn_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_fee_txn_reversed_fee_txn_id", columns={"reversed_fee_txn_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_fee_transaction_fee_id_transaction_id",
-     *     columns={"fee_id","transaction_id"})
+ *        @ORM\UniqueConstraint(name="uk_fee_txn_fee_id_txn_id", columns={"fee_id","txn_id"})
  *    }
  * )
  */
@@ -112,7 +110,7 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
      * @var \Dvsa\Olcs\Api\Entity\Fee\FeeTransaction
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Fee\FeeTransaction", fetch="LAZY")
-     * @ORM\JoinColumn(name="reversed_fee_transaction_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="reversed_fee_txn_id", referencedColumnName="id", nullable=true)
      */
     protected $reversedFeeTransaction;
 
@@ -127,7 +125,7 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
      *     cascade={"persist"},
      *     inversedBy="feeTransactions"
      * )
-     * @ORM\JoinColumn(name="transaction_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="txn_id", referencedColumnName="id", nullable=false)
      */
     protected $transaction;
 
