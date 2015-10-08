@@ -32,7 +32,11 @@ final class Cases extends AbstractQueryHandler
                 'appeal' => ['outcome'],
                 'stays' => ['outcome', 'stayType'],
                 'legacyOffences',
-                'transportManager',
+                'transportManager' => array(
+                    'homeCd' => array(
+                        'person'
+                    )
+                ),
                 'licence' => array(
                     'licenceType',
                     'status',

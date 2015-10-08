@@ -914,15 +914,21 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             return self::NOT_APPLICABLE;
         }
 
-        if ($this->isGoods() && $this->isVariation()) {
-            // It is a goods variation and 0 operating centres have been added;
-            if ($this->getOperatingCentresAdded()->count() === 0) {
-                return self::NOT_APPLICABLE;
-            }
+        // if not publishable NOT APPLICABLE
+        if (!$this->isPublishable()) {
+            return self::NOT_APPLICABLE;
+        }
 
+        // if S41 AND true AND approved AND without licence upgrade then NA
+        if ($this->hasApprovedTrueS4() && !$this->isRealUpgrade()) {
+            return self::NOT_APPLICABLE;
+        }
+
+        if ($this->isGoods() && $this->isVariation()) {
+            // It is a goods variation and 0 operating centres have been added; AND
             // It is a goods variation and 0 operating centres have been updated with an increase
             // of vehicles or trailers
-            if (!$this->hasIncreaseInOperatingCentre()) {
+            if ($this->getOperatingCentresAdded()->count() === 0 && !$this->hasIncreaseInOperatingCentre()) {
                 return self::NOT_APPLICABLE;
             }
         }
@@ -998,11 +1004,19 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     private function getLatestPublication()
     {
-        $latestPublication = null;
-        /* @var $publicationLink \Dvsa\Olcs\Api\Entity\Publication\PublicationLink */
+         $publicationSections = [
+            \Dvsa\Olcs\Api\Entity\Publication\PublicationSection::APP_NEW_SECTION,
+            \Dvsa\Olcs\Api\Entity\Publication\PublicationSection::VAR_NEW_SECTION,
+            \Dvsa\Olcs\Api\Entity\Publication\PublicationSection::SCHEDULE_4_NEW,
+            \Dvsa\Olcs\Api\Entity\Publication\PublicationSection::SCHEDULE_4_UNTRUE,
+            \Dvsa\Olcs\Api\Entity\Publication\PublicationSection::SCHEDULE_1_NI_NEW,
+            \Dvsa\Olcs\Api\Entity\Publication\PublicationSection::SCHEDULE_1_NI_UNTRUE,
+        ];
 
+        $latestPublication = null;
         foreach ($this->getPublicationLinks() as $publicationLink) {
-            if (!in_array($publicationLink->getPublicationSection()->getId(), [1, 3])) {
+            /* @var $publicationLink \Dvsa\Olcs\Api\Entity\Publication\PublicationLink */
+            if (!in_array($publicationLink->getPublicationSection()->getId(), $publicationSections)) {
                 continue;
             }
             /** @var PublicationEntity $latestPublication */
@@ -1051,6 +1065,23 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     public function hasActiveS4()
     {
         return count($this->getActiveS4s()) > 0;
+    }
+
+    /**
+     * Does this application have any approved true S4s
+     *
+     * @return bool
+     */
+    public function hasApprovedTrueS4()
+    {
+        /* @var $s4 S4 */
+        foreach ($this->getS4s() as $s4) {
+            if ($s4->getOutcome()->getId() === S4::STATUS_APPROVED && $s4->getIsTrueS4() === 'Y') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function canHaveLargeVehicles()

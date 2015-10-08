@@ -42,7 +42,7 @@ class QueueTest extends CommandHandlerTestCase
         $command = Command::create($data);
 
         $queueLettersResult = new Result();
-        $queueLettersResult->addId('queue1', 1);
+        $queueLettersResult->addId('queue', 1);
         $queueLettersResult->addMessage('Queue created');
 
         $params = [
@@ -59,7 +59,7 @@ class QueueTest extends CommandHandlerTestCase
             'All letters queued'
         ];
         $this->assertEquals($messages, $result->getMessages());
-        $this->assertEquals(['queue1' => 1], $result->getIds());
+        $this->assertEquals(['queue' => 1], $result->getIds());
     }
 
     protected function mockAuthService()

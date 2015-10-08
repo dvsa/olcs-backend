@@ -233,4 +233,91 @@ class GeneratorTest extends MockeryTestCase
 
         $this->assertEquals('markup', $this->sut->generate($this->application));
     }
+
+    public function testGenerateApplicationWithMappedSection()
+    {
+        $expectedData = [
+            'sections' => [
+                'vehicles',
+                'undertakings'
+            ],
+            'id' => 111,
+            'isGoods' => true,
+            'isSpecialRestricted' => false,
+            'licence' => [
+                'organisation' => [
+                    'name' => 'Foo ltd'
+                ],
+                'licNo' => 'AB12345678'
+            ]
+        ];
+
+        $mockVehicles = m::mock();
+        $mockVehicles->shouldReceive('getConfigFromData')
+            ->with($expectedData)
+            ->andReturn(['bar' => 'foo']);
+
+        $mockUndertakings = m::mock();
+        $mockUndertakings->shouldReceive('getConfigFromData')
+            ->with($expectedData)
+            ->andReturn(['undertakings' => 'foo']);
+
+        $this->sm->setService('Review\ApplicationVehicles', $mockVehicles);
+        $this->sm->setService('Review\ApplicationUndertakings', $mockUndertakings);
+
+        $this->application->setIsVariation(false);
+        $this->application->setNiFlag('Y');
+        $this->application->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->shouldReceive('isSpecialRestricted')
+            ->andReturn(false)
+            ->shouldReceive('serialize')
+            ->once()
+            ->andReturn($expectedData);
+
+        $sections = [
+            'vehicles' => 'bar',
+            'community_licences' => 'test',
+            'declarations_internal' => 'foo',
+        ];
+
+        $this->niTranslation->shouldReceive('setLocaleForNiFlag')
+            ->once()
+            ->with('Y');
+
+        $this->sectionAccessService->shouldReceive('getAccessibleSections')
+            ->with($this->application)
+            ->andReturn($sections);
+
+        $this->viewRenderer->shouldReceive('render')
+            ->once()
+            ->with(m::type(ViewModel::class))
+            ->andReturnUsing(
+                function (ViewModel $viewModel) {
+
+                    $expected = [
+                        'reviewTitle' => 'application-review-title-gv',
+                        'subTitle' => 'Foo ltd AB12345678/111',
+                        'sections' => [
+                            [
+                                'header' => 'review-vehicles',
+                                'config' => ['bar' => 'foo']
+                            ],
+                            [
+                                'header' => 'review-undertakings',
+                                'config' => ['undertakings' => 'foo']
+                            ]
+                        ]
+                    ];
+
+                    $this->assertEquals('layout/review', $viewModel->getTemplate());
+                    $this->assertTrue($viewModel->terminate());
+                    $this->assertEquals($expected, $viewModel->getVariables());
+
+                    return 'markup';
+                }
+            );
+
+        $this->assertEquals('markup', $this->sut->generate($this->application));
+    }
 }

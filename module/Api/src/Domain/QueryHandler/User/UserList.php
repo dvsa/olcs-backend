@@ -22,6 +22,8 @@ class UserList extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
+        // TODO - restrict access to this query
+
         /** @var LegacyOffence $repo */
         $repo = $this->getRepo();
 

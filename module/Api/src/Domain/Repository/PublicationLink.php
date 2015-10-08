@@ -23,16 +23,6 @@ class PublicationLink extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function delete($entity)
-    {
-        /** @var Entity $entity */
-        if ($entity->getPublication()->getPubStatus()->getId() !== PublicationEntity::PUB_NEW_STATUS) {
-            throw new ForbiddenException('Only unpublished entries may be deleted');
-        }
-
-        parent::delete($entity);
-    }
-
     /**
      * @param int $busRegId
      * @return array

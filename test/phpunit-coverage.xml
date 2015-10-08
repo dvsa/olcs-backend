@@ -66,18 +66,4 @@
              yui="true" highlight="true" lowUpperBound="50"
              highLowerBound="80"/>
     </logging>
-    <listeners>
-        <listener class="SpeedTrapListener" file="SpeedTrapListener.php" >
-            <arguments>
-                <array>
-                    <element key="slowThreshold">
-                        <integer>500</integer>
-                    </element>
-                    <element key="reportLength">
-                        <integer>5</integer>
-                    </element>
-                </array>
-            </arguments>
-        </listener>
-    </listeners>
 </phpunit>

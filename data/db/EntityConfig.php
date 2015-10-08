@@ -618,8 +618,12 @@ return array(
                 'property' => 'licenceVehicle'
             ),
             'cascade' => array(
-                'persist'
+                'persist',
+                'remove',
             ),
+            // we can't lazy-load this or we get optimistic lock errors on
+            // deletion (or cascade remove)
+            'fetch' => 'EAGER',
         ),
         'removal' => array(
             'type' => 'yesnonull'

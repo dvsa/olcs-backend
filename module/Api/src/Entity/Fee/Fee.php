@@ -202,7 +202,7 @@ class Fee extends AbstractFee
                 return (
                     $transaction->getType()->getId() === Transaction::TYPE_WAIVE
                     &&
-                    $transaction->getStatus()->getId() === Transaction::STATUS_OUTSTANDING
+                    $transaction->isOutstanding()
                 );
             }
         )->first(); // there should only ever be one!

@@ -8,6 +8,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -24,11 +26,13 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
 use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Api\Service\FeesHelperService as FeesHelper;
+use Dvsa\Olcs\Transfer\Command\Fee\RejectWaive as RejectWaiveCmd;
 use Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -93,6 +97,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             FeeEntity::METHOD_CASH => m::mock(RefData::class)->makePartial()->setDescription('Cash'),
             FeeEntity::METHOD_CHEQUE => m::mock(RefData::class)->makePartial()->setDescription('Cheque'),
             FeeEntity::METHOD_POSTAL_ORDER => m::mock(RefData::class)->makePartial()->setDescription('Postal Order'),
+            FeeEntity::METHOD_WAIVE,
             FeeEntity::STATUS_PAID,
             LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
@@ -303,7 +308,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
     public function testHandleCommandWithFeeIds()
     {
         // set up data
-        $organisationId = 77;
         $feeIds = [99, 100, 101];
         $cpmsRedirectUrl = 'https://olcs-selfserve/foo';
 
@@ -320,18 +324,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
-
-        // mocks
-        $licence = m::mock();
-        $organisation = m::mock();
-        $licence
-            ->shouldReceive('getOrganisation')
-            ->andReturn($organisation)
-            ->getMock();
-        $organisation
-            ->shouldReceive('getId')
-            ->andReturn($organisationId);
-        $fee1->setLicence($licence);
 
         // expectations
         $this->repoMap['Fee']
@@ -380,8 +372,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         // set up data
         $cpmsRedirectUrl = 'https://olcs-selfserve/foo';
         $applicationId = 69;
-        $organisationId = 77;
-        $licenceId = 7;
 
         $paymentId = 999; // payment to be created
 
@@ -396,14 +386,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
-
-        // mocks/set up references
-        $organisation = $this->mapReference(OrganisationEntity::class, $organisationId);
-        $licence = $this->mapReference(LicenceEntity::class, $licenceId);
-        $licence->setOrganisation($organisation);
-        $application = $this->mapReference(ApplicationEntity::class, $applicationId);
-        $application->setLicence($licence);
-        $applicationFee->setLicence($licence);
 
         // expectations
         $this->mockFeesHelperService
@@ -998,6 +980,238 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
 
         $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandChequePaymentInsufficientFee()
+    {
+        // set up data
+        $feeIds = [99];
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fee1->setLicence(
+            m::mock(Licence::class)->shouldReceive('getId')->andReturn(22)->getMock()
+        );
+        $fee1->setApplication(
+            m::mock(ApplicationEntity::class)->shouldReceive('getId')->andReturn(33)->getMock()
+        );
+        $fees = [$fee1];
+        $transactionId = 69;
+        $feeTransactionId = 123;
+
+        $data = [
+            'feeIds' => $feeIds,
+            'paymentMethod' => FeeEntity::METHOD_CHEQUE,
+            'receiptDate' => '2015-06-17',
+            'payer' => 'Dan',
+            'slipNo' => '12345',
+            'received' => '10.00',
+            'chequeNo' => '23456',
+            'chequeDate' => '2015-06-10',
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('recordChequePayment')
+            ->once()
+            ->with($fees, '10.00', '2015-06-17', 'Dan', '12345', '23456', '2015-06-10')
+            ->andReturn(
+                [
+                    'code' => CpmsHelper::RESPONSE_SUCCESS,
+                    'receipt_reference' => 'OLCS-1234-CHEQUE',
+                ]
+            );
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getMinPaymentForFees')
+            ->with($fees)
+            ->andReturn(0.01);
+
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->with('10.00', $fees)
+            ->andReturn(
+                [
+                    99 => '10.00',
+                ]
+            );
+
+        $this->mockFeesHelperService
+            ->shouldReceive('getOverpaymentAmount')
+            ->with('10.00', $fees)
+            ->andReturn('0.00');
+
+        $docData = [
+            'template' => 'FEE_REQ_INSUFFICIENT',
+            'query' => [
+                'fee' => 99,
+                'licence' => 22
+            ],
+            'knownValues' => [
+                'INSUFFICIENT_FEE_TABLE' => [
+                    'receivedAmount' => '10',
+                    'outstandingAmount' => '89.99'
+                ]
+            ],
+            'description' => 'Insufficient Fee Request',
+            'licence'     => 22,
+            'application' => 33,
+            'category'    => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::DOC_SUB_CATEGORY_FEE_REQUEST,
+            'isExternal'  => false,
+            'dispatch'    => true
+        ];
+        $this->expectedSideEffect(GenerateAndStore::class, $docData, new Result());
+
+        $savedTransaction = null;
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->andReturnUsing(
+                function ($transaction) use (&$savedTransaction, $transactionId, $feeTransactionId) {
+                    $savedTransaction = $transaction;
+                    $savedTransaction->setId($transactionId);
+                    $savedTransaction->getFeeTransactions()->forAll(
+                        function ($key, $ft) use ($feeTransactionId) {
+                            unset($key);
+                            $ft->setId($feeTransactionId);
+                        }
+                    );
+                }
+            );
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'transaction' => $transactionId,
+                'feeTransaction' => [$feeTransactionId],
+            ],
+            'messages' => [
+                'Transaction record created: OLCS-1234-CHEQUE',
+                'FeeTransaction record(s) created',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+        $this->assertEquals('2015-06-17', $savedTransaction->getCompletedDate()->format('Y-m-d'));
+        $this->assertEquals('OLCS-1234-CHEQUE', $savedTransaction->getReference());
+        $this->assertEquals(FeeEntity::METHOD_CHEQUE, $savedTransaction->getPaymentMethod()->getId());
+        $this->assertEquals('Dan', $savedTransaction->getPayerName());
+        $this->assertEquals('12345', $savedTransaction->getPayingInSlipNumber());
+        $this->assertEquals('bob', $savedTransaction->getProcessedByUser()->getLoginId());
+        $this->assertEquals('10.00', $savedTransaction->getFeeTransactions()->first()->getAmount());
+        $this->assertEquals(PaymentEntity::STATUS_PAID, $savedTransaction->getStatus()->getId());
+        $this->assertEquals(PaymentEntity::TYPE_PAYMENT, $savedTransaction->getType()->getId());
+        $this->assertEquals('23456', $savedTransaction->getChequePoNumber());
+        $this->assertEquals('2015-06-10', $savedTransaction->getChequePoDate()->format('Y-m-d'));
+    }
+
+    public function testHandleCommandCancelPendingWaive()
+    {
+        // set up data
+        $feeIds = [99];
+        $cpmsRedirectUrl = 'https://olcs-selfserve/foo';
+
+        $paymentId = 999; // payment to be created
+
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fees = [$fee1];
+
+        // add an outstanding waive transaction
+        $waive = m::mock(PaymentEntity::class);
+        $waive->shouldReceive('getType->getId')->andReturn(PaymentEntity::TYPE_WAIVE);
+        $waive->shouldReceive('isOutstanding')->andReturn(true);
+        $waive->shouldReceive('getId')->andReturn(123);
+        $waive->shouldReceive('getPaymentMethod')->andReturn($this->mapRefData(FeeEntity::METHOD_WAIVE));
+        $waive->shouldReceive('isPaid')->andReturn(false);
+        $waive->shouldReceive('isComplete')->andReturn(false);
+        $waiveFeeTransaction = m::mock(FeePaymentEntity::class)
+            ->shouldReceive('getTransaction')
+            ->andReturn($waive)
+            ->getMock();
+        $fee1->setFeeTransactions(new ArrayCollection([$waiveFeeTransaction]));
+
+        $data = [
+            'feeIds' => $feeIds,
+            'cpmsRedirectUrl' => $cpmsRedirectUrl,
+            'paymentMethod' => FeeEntity::METHOD_CARD_OFFLINE,
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('initiateCardRequest')
+            ->once()
+            ->with($cpmsRedirectUrl, $fees);
+
+        /** @var PaymentEntity $savedPayment */
+        $savedPayment = null;
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(PaymentEntity::class))
+            ->andReturnUsing(
+                function (PaymentEntity $payment) use (&$savedPayment, $paymentId) {
+                    $payment->setId($paymentId);
+                    $savedPayment = $payment;
+                }
+            );
+
+        $resolveResult = new Result();
+        $resolveResult->addMessage('Waive transaction 123 not resolved');
+        $this->expectedSideEffect(
+            ResolvePaymentCommand::class,
+            [
+                'id' => 123,
+                'paymentMethod' => FeeEntity::METHOD_WAIVE,
+            ],
+            $resolveResult
+        );
+        $this->repoMap['Transaction']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with(123)
+            ->andReturn($waive);
+
+        $rejectResult = new Result();
+        $rejectResult->addMessage('Waive transaction cancelled', $paymentId);
+        $this->expectedSideEffect(
+            RejectWaiveCmd::class,
+            ['id' => 99],
+            $rejectResult
+        );
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'transaction' => $paymentId,
+            ],
+            'messages' => [
+                'Waive transaction 123 not resolved',
+                'Waive transaction cancelled',
+                'Transaction record created',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals(PaymentEntity::STATUS_OUTSTANDING, $savedPayment->getStatus()->getId());
     }
 
     /**

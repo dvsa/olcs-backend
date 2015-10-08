@@ -248,6 +248,11 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
             return true;
         }
 
+        return $this->hasActuallyUpdatedOperatingCentres();
+    }
+
+    protected function hasActuallyUpdatedOperatingCentres()
+    {
         if ($this->application->getOperatingCentres()->count() > 0) {
             return true;
         }
@@ -590,7 +595,7 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
         }
 
         // If auth hasn't changed, and we are not downgrading
-        if ($this->application->hasAuthChanged() === false && $this->application->isPsvDowngrade() === false) {
+        if (!$this->hasActuallyUpdatedOperatingCentres() && $this->application->isPsvDowngrade() === false) {
             $this->markSectionUnchanged('operating_centres');
         }
     }
