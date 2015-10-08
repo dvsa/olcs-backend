@@ -32,6 +32,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
     const PERMISSION_TM = 'tm';
 
     const USER_TYPE_INTERNAL = 'internal';
+    const USER_TYPE_ANON = 'anon';
     const USER_TYPE_LOCAL_AUTHORITY = 'local-authority';
     const USER_TYPE_OPERATOR = 'operator';
     const USER_TYPE_PARTNER = 'partner';
@@ -69,6 +70,9 @@ class User extends AbstractUser implements OrganisationProviderInterface
             RoleEntity::ROLE_INTERNAL_READ_ONLY,
             RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY,
         ],
+        self::USER_TYPE_ANON => [
+            RoleEntity::ROLE_ANON
+        ]
     ];
 
     /**
@@ -120,6 +124,14 @@ class User extends AbstractUser implements OrganisationProviderInterface
     {
         $user = new static($pid, $userType);
         $user->update($data);
+
+        return $user;
+    }
+
+    public static function anon()
+    {
+        $user =  new static('', self::USER_TYPE_ANON);
+        $user->update(['roles' => [RoleEntity::anon()]]);
 
         return $user;
     }

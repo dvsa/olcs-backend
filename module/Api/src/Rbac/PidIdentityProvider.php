@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Rbac;
 
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Zend\Http\Header\GenericHeader;
 use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Identity\IdentityInterface;
@@ -62,10 +63,9 @@ class PidIdentityProvider implements IdentityProviderInterface
             $user = $this->authenticate();
             if ($user === null) {
                 //change value to false so that we don't keep trying to auth an invalid user within the same request.
-                $this->identity = false;
+                $this->identity = new Identity(User::anon());
             } else {
-                $this->identity = new Identity();
-                $this->identity->setUser($user);
+                $this->identity = new Identity($user);
             }
         }
 
