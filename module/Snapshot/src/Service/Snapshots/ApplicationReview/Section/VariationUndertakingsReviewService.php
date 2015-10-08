@@ -19,16 +19,21 @@ class VariationUndertakingsReviewService extends AbstractReviewService
 {
     const GV81 = 'markup-application_undertakings_GV81';
     const GV81_STANDARD = 'markup-application_undertakings_GV81-Standard';
+    const GV81_DECLARE = 'markup-application_undertakings_GV81-declare';
 
     const GV81NI = 'markup-application_undertakings_GV81-NI';
     const GV81NI_STANDARD = 'markup-application_undertakings_GV81-NI-Standard';
+    const GV81NI_DECLARE = 'markup-application_undertakings_GV81-NI-declare';
 
     const GV80A = 'markup-application_undertakings_GV80A';
+    const GV80A_DECLARE = 'markup-application_undertakings_GV80A-declare';
 
     const GV80ANI = 'markup-application_undertakings_GV80A-NI';
+    const GV80ANI_DECALRE = 'markup-application_undertakings_GV80A-NI-declare';
 
     const PSV430 = 'markup-application_undertakings_PSV430';
     const PSV430_STANDARD = 'markup-application_undertakings_PSV430-Standard';
+    const PSV430_DECLARE = 'markup-application_undertakings_PSV430-declare';
 
     const SIGNATURE = 'markup-application_undertakings_signature';
 
@@ -58,10 +63,10 @@ class VariationUndertakingsReviewService extends AbstractReviewService
 
         if ($this->isUpgrade($data)) {
             if (ValueHelper::isOn($data['niFlag'])) {
-                return $this->getNiGv80A();
+                return $this->getNiGv80A($data);
             }
 
-            return $this->getGv80A();
+            return $this->getGv80A($data);
         }
 
         if (ValueHelper::isOn($data['niFlag'])) {
@@ -74,9 +79,11 @@ class VariationUndertakingsReviewService extends AbstractReviewService
     private function getGv81(array $data)
     {
         $isStandard = $this->isStandard($data);
+        $isInternal = $this->isInternal($data);
 
         $additionalParts = [
-            $this->translate(self::SIGNATURE),
+            $isInternal ? $this->translate(self::GV81_DECLARE) : '',
+            $isInternal ? $this->translate(self::SIGNATURE) : '',
             $isStandard ? $this->translate(self::GV81_STANDARD) : ''
         ];
 
@@ -86,25 +93,35 @@ class VariationUndertakingsReviewService extends AbstractReviewService
     private function getGv81Ni(array $data)
     {
         $isStandard = $this->isStandard($data);
+        $isInternal = $this->isInternal($data);
 
         $additionalParts = [
-            $this->translate(self::SIGNATURE),
+            $isInternal ? $this->translate(self::GV81NI_DECLARE) : '',
+            $isInternal ? $this->translate(self::SIGNATURE) : '',
             $isStandard ? $this->translate(self::GV81NI_STANDARD) : ''
         ];
 
         return $this->translateReplace(self::GV81NI, $additionalParts);
     }
 
-    private function getGv80A()
+    private function getGv80A(array $data)
     {
-        $additionalParts = [$this->translate(self::SIGNATURE)];
+        $isInternal = $this->isInternal($data);
+        $additionalParts = [
+            $isInternal ? $this->translate(self::GV80A_DECLARE) : '',
+            $isInternal ? $this->translate(self::SIGNATURE) : ''
+        ];
 
         return $this->translateReplace(self::GV80A, $additionalParts);
     }
 
-    private function getNiGv80A()
+    private function getNiGv80A(array $data)
     {
-        $additionalParts = [$this->translate(self::SIGNATURE)];
+        $isInternal = $this->isInternal($data);
+        $additionalParts = [
+            $isInternal ? $this->translate(self::GV80ANI_DECALRE) : '',
+            $isInternal ? $this->translate(self::SIGNATURE) : ''
+        ];
 
         return $this->translateReplace(self::GV80ANI, $additionalParts);
     }
@@ -112,9 +129,10 @@ class VariationUndertakingsReviewService extends AbstractReviewService
     private function getPsv430(array $data)
     {
         $isStandard = $this->isStandard($data);
-
+        $isInternal = $this->isInternal($data);
         $additionalParts = [
-            $this->translate(self::SIGNATURE),
+            $isInternal ? $this->translate(self::PSV430_DECLARE) : '',
+            $isInternal ? $this->translate(self::SIGNATURE) : '',
             $isStandard ? $this->translate(self::PSV430_STANDARD) : ''
         ];
 
