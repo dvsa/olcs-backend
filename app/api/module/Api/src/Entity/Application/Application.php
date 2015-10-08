@@ -1076,7 +1076,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     {
         /* @var $s4 S4 */
         foreach ($this->getS4s() as $s4) {
-            if ($s4->getOutcome()->getId() === S4::STATUS_APPROVED && $s4->getIsTrueS4() === 'Y') {
+            if ($s4->getOutcome() && $s4->getOutcome()->getId() === S4::STATUS_APPROVED && $s4->getIsTrueS4() === 'Y') {
                 return true;
             }
         }
