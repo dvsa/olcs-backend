@@ -53,13 +53,27 @@ class LicenceTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
+    private function getPublication()
+    {
+        $publication = new PublicationEntity(
+            new TrafficAreaEntity(),
+            new RefData(),
+            new \Dvsa\Olcs\Api\Entity\Doc\DocTemplate(),
+            'PUB_DATE',
+            'PU_TYPE',
+            'PUB_NO'
+        );
+
+        return $publication;
+    }
+
     public function testHandleCommand()
     {
         $command = Cmd::Create(
             ['id' => 510]
         );
 
-        $publication = new PublicationEntity();
+        $publication = $this->getPublication();
 
         $licence = $this->getTestingLicence();
         $licence->getStatus()->setId(LicenceEntity::LICENCE_STATUS_REVOKED);
@@ -87,7 +101,7 @@ class LicenceTest extends CommandHandlerTestCase
             ['id' => 510]
         );
 
-        $publication = new PublicationEntity();
+        $publication = $this->getPublication();
 
         $licence = $this->getTestingLicence();
         $licence->getStatus()->setId(LicenceEntity::LICENCE_STATUS_REVOKED);
@@ -116,7 +130,7 @@ class LicenceTest extends CommandHandlerTestCase
             ['id' => 510]
         );
 
-        $publication = new PublicationEntity();
+        $publication = $this->getPublication();
 
         $licence = $this->getTestingLicence();
         $licence->getStatus()->setId(LicenceEntity::LICENCE_STATUS_VALID);
