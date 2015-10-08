@@ -28,6 +28,7 @@ final class People extends AbstractSection
             $data[$i]['title'] = $personEntity->getTitle()->getDescription();
             $data[$i]['familyName'] = $personEntity->getFamilyName();
             $data[$i]['forename'] = $personEntity->getForename();
+            $data[$i]['disqualificationStatus'] = $personEntity->getDisqualificationStatus();
             $data[$i]['birthDate'] = $this->formatDate($personEntity->getBirthDate());
 
             $persons->next();
