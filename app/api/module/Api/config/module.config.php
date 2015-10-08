@@ -347,8 +347,17 @@ return [
             Dvsa\Olcs\Api\Service\Publication\Process\Police::class,
         Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class =>
             Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class,
+        Dvsa\Olcs\Api\Service\Publication\Process\Licence\Text1::class =>
+            Dvsa\Olcs\Api\Service\Publication\Process\Licence\Text1::class,
     ],
     'publications' => [
+        'LicencePublication' => array(
+            'context' => [
+            ],
+            'process' => [
+                Dvsa\Olcs\Api\Service\Publication\Process\Licence\Text1::class,
+            ],
+        ),
         'ApplicationPublication' => array(
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\BusNote::class,
