@@ -4762,20 +4762,20 @@ VALUES
     (707, NULL, NULL, NULL, NULL, NULL, NULL, 999999, NULL, NULL, 999999, 1, NULL, 1, NULL, '/templates/NI/GV_Duplicate_vehicle_letter.rtf', 0, NULL, NULL, '2015-01-01 00:00:00', NULL, 'GV Duplicate vehicle letter (NI)', 0, NULL, '2015-01-01 00:00:00', 1);
 
 INSERT INTO `role` (`id`, `role`, `description`) VALUES
-    (1, 'internal-limited-read-only', 'Internal - Limited read only'), -- internal only
-    (2, 'internal-read-only', 'Internal - Read only'), -- internal only
-    (3, 'internal-case-worker', 'Internal - Case worker'), -- internal only
-    (4, 'internal-admin', 'Internal - Admin'), -- internal only
+    (21, 'internal-limited-read-only', 'Internal - Limited read only'), -- internal only
+    (22, 'internal-read-only', 'Internal - Read only'), -- internal only
+    (23, 'internal-case-worker', 'Internal - Case worker'), -- internal only
+    (24, 'internal-admin', 'Internal - Admin'), -- internal only
 
-    (5, 'operator-admin', 'Operator - Admin'), -- selfserve
-    (6, 'operator-user', 'Operator - User'), -- selfserve
-    (7, 'operator-tm', 'Operator - Transport Manager'), -- selfserve
+    (25, 'operator-admin', 'Operator - Admin'), -- selfserve
+    (26, 'operator-user', 'Operator - User'), -- selfserve
+    (27, 'operator-tm', 'Operator - Transport Manager'), -- selfserve
 
-    (9, 'partner-admin', 'Partner - Admin'), -- selfserve
-    (10, 'partner-user', 'Partner - User'), -- selfserve
+    (29, 'partner-admin', 'Partner - Admin'), -- selfserve
+    (30, 'partner-user', 'Partner - User'), -- selfserve
 
-    (11, 'local-authority-admin', 'Local Authority administrator'), -- selfserve
-    (12, 'local-authority-user', 'Local Authority user'); -- selfserve
+    (31, 'local-authority-admin', 'Local Authority administrator'), -- selfserve
+    (32, 'local-authority-user', 'Local Authority user'); -- selfserve
 
 -- @TODO Added some some code values to temporarily fix strict mode errors
 INSERT INTO `permission` (`id`, `name`, `code`) VALUES
@@ -4817,87 +4817,87 @@ INSERT INTO `permission` (`id`, `name`, `code`) VALUES
 
 INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     -- set each role to it's respective permission
-    (1, 16),
-    (2, 17),
-    (3, 18),
-    (5, 20),
-    (6, 21),
-    (7, 22),
-    (9, 24),
-    (10, 25),
-    (11, 26),
-    (12, 27),
-    (1, 7), -- all internal roles are internal users
-    (2, 7), -- all internal roles are internal users
-    (3, 7), -- all internal roles are internal users
-    (4, 7), -- all internal roles are internal users
-    (1, 6), -- all internal roles have internal view
-    (2, 6), -- all internal roles have internal view
-    (3, 6), -- all internal roles have internal view
-    (4, 6), -- all internal roles have internal view
-    (2, 2), -- internal read only sees docs
-    (2, 3), -- internal read only sees case
-    (2, 4), -- internal read only sees notes
-    (3, 2), -- internal case worker sees docs
-    (3, 3), -- internal case worker sees case
-    (3, 4), -- internal case worker sees notes
-    (3, 5), -- internal case worker can edit
-    (4, 2), -- internal admin sees docs
-    (4, 3), -- internal admin sees case
-    (4, 4), -- internal admin sees notes
-    (4, 5), -- internal admin can edit
-    (4, 1), -- internal admin is admin,
+    (21, 16),
+    (22, 17),
+    (23, 18),
+    (25, 20),
+    (26, 21),
+    (27, 22),
+    (29, 24),
+    (30, 25),
+    (31, 26),
+    (32, 27),
+    (21, 7), -- all internal roles are internal users
+    (22, 7), -- all internal roles are internal users
+    (23, 7), -- all internal roles are internal users
+    (24, 7), -- all internal roles are internal users
+    (21, 6), -- all internal roles have internal view
+    (22, 6), -- all internal roles have internal view
+    (23, 6), -- all internal roles have internal view
+    (24, 6), -- all internal roles have internal view
+    (22, 2), -- internal read only sees docs
+    (22, 3), -- internal read only sees case
+    (22, 4), -- internal read only sees notes
+    (23, 2), -- internal case worker sees docs
+    (23, 3), -- internal case worker sees case
+    (23, 4), -- internal case worker sees notes
+    (23, 5), -- internal case worker can edit
+    (24, 2), -- internal admin sees docs
+    (24, 3), -- internal admin sees case
+    (24, 4), -- internal admin sees notes
+    (24, 5), -- internal admin can edit
+    (24, 1), -- internal admin is admin,
 
-    (5, 8), -- all selfserve roles are selfserve users
-    (6, 8), -- all selfserve roles are selfserve users
-    (7, 8), -- all selfserve roles are selfserve users
-    (9, 8), -- all selfserve roles are selfserve users
-    (10, 8), -- all selfserve roles are selfserve users
-    (11, 8), -- all selfserve roles are selfserve users
-    (12, 8), -- all selfserve roles are selfserve users
+    (25, 8), -- all selfserve roles are selfserve users
+    (26, 8), -- all selfserve roles are selfserve users
+    (27, 8), -- all selfserve roles are selfserve users
+    (29, 8), -- all selfserve roles are selfserve users
+    (30, 8), -- all selfserve roles are selfserve users
+    (31, 8), -- all selfserve roles are selfserve users
+    (32, 8), -- all selfserve roles are selfserve users
 
-    (5, 11), -- operator admin has access to lva
-    (6, 11), -- operator user has access to lva
+    (25, 11), -- operator admin has access to lva
+    (26, 11), -- operator user has access to lva
 
-    (5, 12), -- operator admin has selfserve admin role
+    (25, 12), -- operator admin has selfserve admin role
 
-    (5, 13), -- operator admin has access to tm
-    (6, 13), -- operator user has access to tm
-    (7, 13), -- operator tm has access to tm
+    (25, 13), -- operator admin has access to tm
+    (26, 13), -- operator user has access to tm
+    (27, 13), -- operator tm has access to tm
 
-    (5, 9), -- operator admin sees ebsr
-    (6, 9), -- operator user sees ebsr
-    (11, 9), -- LA admin sees ebsr
-    (12, 9), -- LA user sees ebsr
-    (5, 10), -- operator admin sees ebsr docs
-    (6, 10), -- operator user sees ebsr docs
-    (11, 10), -- LA admin sees ebsr docs
-    (12, 10), -- LA user sees ebsr docs
-    (7, 14), -- operator TM has selfserve dashboard
+    (25, 9), -- operator admin sees ebsr
+    (26, 9), -- operator user sees ebsr
+    (31, 9), -- LA admin sees ebsr
+    (32, 9), -- LA user sees ebsr
+    (25, 10), -- operator admin sees ebsr docs
+    (26, 10), -- operator user sees ebsr docs
+    (31, 10), -- LA admin sees ebsr docs
+    (32, 10), -- LA user sees ebsr docs
+    (27, 14), -- operator TM has selfserve dashboard
 
-    (3, 28), -- internal users can update licence licence type
-    (4, 28), -- internal users can update licence licence type
-    (5, 28), -- selfserve users can update licence licence type
-    (6, 28), -- selfserve users can update licence licence type
+    (23, 28), -- internal users can update licence licence type
+    (24, 28), -- internal users can update licence licence type
+    (25, 28), -- selfserve users can update licence licence type
+    (26, 28), -- selfserve users can update licence licence type
 
-    (9, 30), -- partner-admin
-    (9, 31), -- partner-admin
-    (9, 32), -- partner-admin
+    (29, 30), -- partner-admin
+    (29, 31), -- partner-admin
+    (29, 32), -- partner-admin
 
-    (10, 30), -- partner-user
-    (10, 31), -- partner-user
-    (10, 32), -- partner-user
+    (30, 30), -- partner-user
+    (30, 31), -- partner-user
+    (30, 32), -- partner-user
 
-    (5, 33), -- operator-admin = selfserve-nav-dashboard
-    (6, 33), -- operator-user = selfserve-nav-dashboard
-    (7, 33), -- operator-tm = selfserve-nav-dashboard
+    (25, 33), -- operator-admin = selfserve-nav-dashboard
+    (26, 33), -- operator-user = selfserve-nav-dashboard
+    (27, 33), -- operator-tm = selfserve-nav-dashboard
 
-    (5, 34), -- operator-admin = can-manage-user-selfserve
-    (9, 34), -- partner-admin = can-manage-user-selfserve
-    (11, 34), -- local-authority-admin = can-manage-user-selfserve
+    (25, 34), -- operator-admin = can-manage-user-selfserve
+    (29, 34), -- partner-admin = can-manage-user-selfserve
+    (31, 34), -- local-authority-admin = can-manage-user-selfserve
 
-    (3, 35), -- internal-case-worker = can-manage-user-internal
-    (4, 35); -- internal-admin = can-manage-user-internal
+    (23, 35), -- internal-case-worker = can-manage-user-internal
+    (24, 35); -- internal-admin = can-manage-user-internal
 
 INSERT INTO `financial_standing_rate` (
     `id`,
