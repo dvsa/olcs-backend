@@ -8,14 +8,14 @@
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumer as GenericAbstractConsumer;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer;
 
 /**
  * Abstract Companies House Queue Consumer
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-abstract class AbstractConsumer extends GenericAbstractConsumer
+abstract class AbstractConsumer extends AbstractCommandConsumer
 {
     /**
      * @param QueueEntity $item
