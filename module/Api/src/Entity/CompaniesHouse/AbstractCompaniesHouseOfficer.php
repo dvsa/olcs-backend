@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="companies_house_officer",
  *    indexes={
- *        @ORM\Index(name="fk_companies_house_officer_companies_house_company1_idx",
+ *        @ORM\Index(name="ix_companies_house_officer_companies_house_company_id",
      *     columns={"companies_house_company_id"})
  *    }
  * )

@@ -100,6 +100,16 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
     protected $subject;
 
     /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="version", nullable=false, options={"default": 1})
+     * @ORM\Version
+     */
+    protected $version = 1;
+
+    /**
      * Set the email status
      *
      * @param string $emailStatus
@@ -281,6 +291,29 @@ abstract class AbstractInspectionEmail implements BundleSerializableInterface, J
     public function getSubject()
     {
         return $this->subject;
+    }
+
+    /**
+     * Set the version
+     *
+     * @param int $version
+     * @return InspectionEmail
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
     }
 
 

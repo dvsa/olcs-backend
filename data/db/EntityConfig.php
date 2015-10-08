@@ -14,17 +14,16 @@ return array(
                 'skipManyToMany' => true
             ]
         ],
-// @todo uncomment this when schema updated
-//        'classNameForTable' => [
-//            'txn' => 'Transaction',
-//            'fee_txn' => 'FeeTransaction'
-//        ],
-//        'fieldNameForColumn' => [
-//            'fee_txn' => [
-//                'txn_id' => 'transaction',
-//                'reversed_fee_txn_id' => 'reversedFeeTransaction'
-//            ]
-//        ]
+       'classNameForTable' => [
+           'txn' => 'Transaction',
+           'fee_txn' => 'FeeTransaction'
+       ],
+       'fieldNameForColumn' => [
+           'fee_txn' => [
+               'txn_id' => 'transaction',
+               'reversed_fee_txn_id' => 'reversedFeeTransaction'
+           ]
+       ]
     ),
     'namespaces' => include(__DIR__ . '/../../module/Api/config/namespace.config.php'),
     'organisation' => array(
@@ -1456,9 +1455,7 @@ return array(
             )
         )
     ),
-    'fee_transaction' => array(
-    // @todo uncomment this when schema updated
-    //'fee_txn' => array(
+    'fee_txn' => array(
         'fee_id' => array(
             'inversedBy' => array(
                 'entity' => 'Fee',
@@ -1471,9 +1468,7 @@ return array(
                 'persist'
             ),
         ),
-        'transaction_id' => array(
-        // @todo uncomment this when schema updated
-        //'txn_id' => array(
+        'txn_id' => array(
             'inversedBy' => array(
                 'entity' => 'Transaction',
                 'property' => 'feeTransaction',

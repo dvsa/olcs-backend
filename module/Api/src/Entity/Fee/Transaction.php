@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Transaction Entity
  *
  * @ORM\Entity
- * @ORM\Table(name="transaction",
+ * @ORM\Table(name="txn",
  *    indexes={
  *        @ORM\Index(name="ix_transaction_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_transaction_last_modified_by", columns={"last_modified_by"}),

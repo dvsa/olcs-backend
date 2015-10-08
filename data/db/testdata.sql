@@ -28,8 +28,8 @@ TRUNCATE TABLE `event_history_type`;
 TRUNCATE TABLE `event_history`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
-TRUNCATE TABLE `fee_transaction`;
-TRUNCATE TABLE `transaction`;
+TRUNCATE TABLE `fee_txn`;
+TRUNCATE TABLE `txn`;
 TRUNCATE TABLE `grace_period`;
 TRUNCATE TABLE `licence`;
 TRUNCATE TABLE `licence_vehicle`;
@@ -600,9 +600,7 @@ INSERT INTO `fee` (
 `invoice_line_no`,
 `invoiced_date`,
 `description`,
-`irfo_fee_id`,
 `irfo_fee_exempt`,
-`irfo_file_no`,
 `irfo_gv_permit_id`,
 `created_by`,
 `last_modified_by`,
@@ -611,35 +609,35 @@ INSERT INTO `fee` (
 `version`
 )
 VALUES
-(7,1,'lfs_ot',NULL,NULL,NULL,7,NULL,250.00,1,'2013-11-25 00:00:00','Application fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(30,1,'lfs_pd',NULL,NULL,NULL,110,NULL,251.00,1,'2013-11-22 00:00:00','Application fee',NULL,NULL,NULL,NULL,1,2,NULL,NULL,1),
-(41,1,'lfs_ot',NULL,NULL,NULL,110,NULL,150.00,1,'2013-11-21 00:00:00','Grant fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(54,1,'lfs_ot',NULL,NULL,NULL,110,NULL,250.00,1,'2013-11-12 00:00:00','Application fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(63,1,'lfs_ot',NULL,NULL,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(75,1,'lfs_ot',NULL,NULL,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(76,1,'lfs_ot',NULL,1,NULL,110,NULL,250.50,1,'2013-11-25 00:00:00','Application fee 1',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(77,1,'lfs_ot',NULL,1,NULL,110,NULL,251.75,1,'2013-11-22 00:00:00','Application fee 2',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(78,1,'lfs_ot',NULL,1,NULL,110,NULL,150.00,1,'2013-11-21 00:00:00','Grant fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,3),
-(79,1,'lfs_ot',NULL,1,NULL,110,NULL,250.00,1,'2013-11-12 00:00:00','Application fee 3',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(80,1,'lfs_pd',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 4',NULL,NULL,NULL,NULL,1,2,NULL,NULL,1),
-(81,1,'lfs_ot',NULL,1,NULL,110,NULL,1250.00,1,'2013-11-10 00:00:00','Application fee 5',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(82,1,'lfs_ot',NULL,1,NULL,30,NULL,500.00,1,'2013-10-23 00:00:00','Bus route 1',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(83,1,'lfs_ot',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 4',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(84,1,'lfs_ot',NULL,1,NULL,110,NULL,1250.00,1,'2013-11-10 00:00:00','Application fee 5',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(85,1,'lfs_ot',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 4',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(86,1,'lfs_ot',NULL,1,NULL,110,NULL,1250.00,1,'2013-11-10 00:00:00','Application fee 5',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,2),
-(87,1,'lfs_pd',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 6',NULL,NULL,NULL,NULL,1,2,NULL,NULL,1),
-(88,1,'lfs_cn',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 7',NULL,NULL,NULL,NULL,1,2,NULL,NULL,1),
-(89,1,'lfs_pd',NULL,3,NULL,210,NULL,254.40,1,'2013-11-10 00:00:00','Application fee 8',NULL,NULL,NULL,NULL,1,2,NULL,NULL,1),
-(90,188,'lfs_ot',NULL,1,3,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Application Fee PD2737280/3 Variation 0',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(91,189,'lfs_ot',NULL,1,8,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 1',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(92,189,'lfs_ot',NULL,1,9,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 2',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(93,189,'lfs_ot',NULL,1,10,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 3',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(94,189,'lfs_ot',NULL,1,11,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 4',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(97,20051,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 12:34:56','Photocopying charge',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1),
-(98,20052,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 13:45:01','Court fee',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,1);
+(7,1,'lfs_ot',NULL,NULL,NULL,7,NULL,250.00,1,'2013-11-25 00:00:00','Application fee',NULL,NULL,1,NULL,NULL,NULL,1),
+(30,1,'lfs_pd',NULL,NULL,NULL,110,NULL,251.00,1,'2013-11-22 00:00:00','Application fee',NULL,NULL,1,2,NULL,NULL,1),
+(41,1,'lfs_ot',NULL,NULL,NULL,110,NULL,150.00,1,'2013-11-21 00:00:00','Grant fee',NULL,NULL,1,NULL,NULL,NULL,1),
+(54,1,'lfs_ot',NULL,NULL,NULL,110,NULL,250.00,1,'2013-11-12 00:00:00','Application fee',NULL,NULL,1,NULL,NULL,NULL,1),
+(63,1,'lfs_ot',NULL,NULL,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee',NULL,NULL,1,NULL,NULL,NULL,1),
+(75,1,'lfs_ot',NULL,NULL,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee',NULL,NULL,1,NULL,NULL,NULL,1),
+(76,1,'lfs_ot',NULL,1,NULL,110,NULL,250.50,1,'2013-11-25 00:00:00','Application fee 1',NULL,NULL,1,NULL,NULL,NULL,2),
+(77,1,'lfs_ot',NULL,1,NULL,110,NULL,251.75,1,'2013-11-22 00:00:00','Application fee 2',NULL,NULL,1,NULL,NULL,NULL,2),
+(78,1,'lfs_ot',NULL,1,NULL,110,NULL,150.00,1,'2013-11-21 00:00:00','Grant fee',NULL,NULL,1,NULL,NULL,NULL,3),
+(79,1,'lfs_ot',NULL,1,NULL,110,NULL,250.00,1,'2013-11-12 00:00:00','Application fee 3',NULL,NULL,1,NULL,NULL,NULL,2),
+(80,1,'lfs_pd',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 4',NULL,NULL,1,2,NULL,NULL,1),
+(81,1,'lfs_ot',NULL,1,NULL,110,NULL,1250.00,1,'2013-11-10 00:00:00','Application fee 5',NULL,NULL,1,NULL,NULL,NULL,2),
+(82,1,'lfs_ot',NULL,1,NULL,30,NULL,500.00,1,'2013-10-23 00:00:00','Bus route 1',NULL,NULL,1,NULL,NULL,NULL,2),
+(83,1,'lfs_ot',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 4',NULL,NULL,1,NULL,NULL,NULL,1),
+(84,1,'lfs_ot',NULL,1,NULL,110,NULL,1250.00,1,'2013-11-10 00:00:00','Application fee 5',NULL,NULL,1,NULL,NULL,NULL,2),
+(85,1,'lfs_ot',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 4',NULL,NULL,1,NULL,NULL,NULL,1),
+(86,1,'lfs_ot',NULL,1,NULL,110,NULL,1250.00,1,'2013-11-10 00:00:00','Application fee 5',NULL,NULL,1,NULL,NULL,NULL,2),
+(87,1,'lfs_pd',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 6',NULL,NULL,1,2,NULL,NULL,1),
+(88,1,'lfs_cn',NULL,1,NULL,110,NULL,250.00,1,'2013-11-10 00:00:00','Application fee 7',NULL,NULL,1,2,NULL,NULL,1),
+(89,1,'lfs_pd',NULL,3,NULL,210,NULL,254.40,1,'2013-11-10 00:00:00','Application fee 8',NULL,NULL,1,2,NULL,NULL,1),
+(90,188,'lfs_ot',NULL,1,3,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Application Fee PD2737280/3 Variation 0',NULL,NULL,1,NULL,NULL,NULL,1),
+(91,189,'lfs_ot',NULL,1,8,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 1',NULL,NULL,1,NULL,NULL,NULL,1),
+(92,189,'lfs_ot',NULL,1,9,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 2',NULL,NULL,1,NULL,NULL,NULL,1),
+(93,189,'lfs_ot',NULL,1,10,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 3',NULL,NULL,1,NULL,NULL,NULL,1),
+(94,189,'lfs_ot',NULL,1,11,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 4',NULL,NULL,1,NULL,NULL,NULL,1),
+(97,20051,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 12:34:56','Photocopying charge',NULL,NULL,1,NULL,NULL,NULL,1),
+(98,20052,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 13:45:01','Court fee',NULL,NULL,1,NULL,NULL,NULL,1);
 
-INSERT INTO `transaction` (
+INSERT INTO `txn` (
     `id`,
     `reference`,
     `type`,
@@ -656,8 +654,8 @@ VALUES
     (10002,'OLCS-2345-3456','trt_bounce','pay_s_pd','2015-09-01','fpm_cheque','',NULL,NULL,1),
     (10003,'OLCS-3456-4567','trt_payment','pay_s_pd','2015-09-02','fpm_cash','',NULL,NULL,1);
 
-INSERT INTO `fee_transaction`
-    (`fee_id`,`transaction_id`,`amount`)
+INSERT INTO `fee_txn`
+    (`fee_id`,`txn_id`,`amount`)
 VALUES
     (97,10001,100.00),
     (97,10002,-100.00),
@@ -833,25 +831,24 @@ INSERT INTO `note` (
   `comment`,
   `priority`,
   `created_on`,
-  `version`,
-  `user_id`
+  `version`
 )
 VALUES
-(1,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1, 1),
-(2,  'note_t_lic',  NULL, 4, 7,   28, NULL, NULL, NULL, 'This is a licence note', 1, '2011-10-03 00:00:00', 1, 1),
-(3,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1, 1),
-(4,  'note_t_app',  NULL, 3, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1, 1),
-(5,  'note_t_lic',  NULL, 5, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-03 00:00:00', 1, 1),
-(6,  'note_t_case', NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a case note',    0, '2011-10-03 00:00:00', 1, 1),
-(7,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1, 1),
-(8,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2012-10-10 00:00:00', 1, 1),
-(9,  'note_t_bus',  1,    3, 110, 75, NULL, NULL, NULL, 'This is a bus reg note', 0, '2012-10-10 00:00:00', 1, 1),
-(10, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1, 1),
-(11, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-13 00:00:00', 1, 1),
-(12, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-15 00:00:00', 1, 1),
-(13, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-12 00:00:00', 1, 1),
-(14, 'note_t_tm',   NULL, 3,NULL,NULL,NULL, 3,    NULL, 'This is a TM note',      0, '2011-10-12 00:00:00', 1, 1),
-(15, 'note_t_org',  NULL, 3,NULL,NULL,NULL, NULL, 101,  'This is a organisation note', 0, '2011-10-12 00:00:00', 1, 1);
+(1,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
+(2,  'note_t_lic',  NULL, 4, 7,   28, NULL, NULL, NULL, 'This is a licence note', 1, '2011-10-03 00:00:00', 1),
+(3,  'note_t_app',  NULL, 2, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
+(4,  'note_t_app',  NULL, 3, 7,   28, 1,    NULL, NULL, 'This is an app note',    0, '2011-10-03 00:00:00', 1),
+(5,  'note_t_lic',  NULL, 5, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-03 00:00:00', 1),
+(6,  'note_t_case', NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a case note',    0, '2011-10-03 00:00:00', 1),
+(7,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1),
+(8,  'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2012-10-10 00:00:00', 1),
+(9,  'note_t_bus',  1,    3, 110, 75, NULL, NULL, NULL, 'This is a bus reg note', 0, '2012-10-10 00:00:00', 1),
+(10, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-14 00:00:00', 1),
+(11, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-13 00:00:00', 1),
+(12, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-15 00:00:00', 1),
+(13, 'note_t_lic',  NULL, 3, 7,   28, NULL, NULL, NULL, 'This is a licence note', 0, '2011-10-12 00:00:00', 1),
+(14, 'note_t_tm',   NULL, 3,NULL,NULL,NULL, 3,    NULL, 'This is a TM note',      0, '2011-10-12 00:00:00', 1),
+(15, 'note_t_org',  NULL, 3,NULL,NULL,NULL, NULL, 101,  'This is a organisation note', 0, '2011-10-12 00:00:00', 1);
 
 
 INSERT INTO `operating_centre` (`id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `version`,
@@ -2028,7 +2025,7 @@ INSERT INTO `fee`
     (`id`,`fee_status`,`fee_type_id`,`application_id`,`licence_id`,`amount`,`invoiced_date`,`description`)
     VALUES
     (96,'lfs_pd',338,8,212,254.40,'2015-03-27 00:00:00','GV/SN Application Fee for application 8');
-INSERT INTO `transaction` (
+INSERT INTO `txn` (
     `id`,
     `reference`,
     `type`,
@@ -2041,8 +2038,8 @@ INSERT INTO `transaction` (
     `processed_by_user_id`
 ) VALUES
     (10004,'','trt_waive','pay_s_pd','2015-08-26','fpm_waive','Waive OK for fee 96','2015-08-25',1,1);
-INSERT INTO `fee_transaction`
-    (`fee_id`,`transaction_id`,`amount`)
+INSERT INTO `fee_txn`
+    (`fee_id`,`txn_id`,`amount`)
     VALUES
     (96,10004,254.40);
 INSERT INTO `phone_contact` (`id`,    `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (12,127,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
