@@ -36,6 +36,8 @@ class User extends AbstractUser
     const USER_TYPE_PARTNER = 'partner';
     const USER_TYPE_TRANSPORT_MANAGER = 'transport-manager';
 
+    const ERROR_ADMIN_USER_ALREADY_EXISTS = 'err_admin_user_already_exists';
+
     /**
      * List of all roles available by user type
      *
