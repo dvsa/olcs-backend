@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
+use Dvsa\Olcs\Api\Domain\Command\Variation\EndInterim;
 
 /**
  * Revoke a licence
@@ -100,6 +101,8 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
                 )
             );
         }
+
+        $result->merge($this->handleSideEffect(EndInterim::create(['licenceId' => $licence->getId()])));
 
         foreach ($licence->getApplications() as $application) {
             if ($application->getIsVariation()) {
