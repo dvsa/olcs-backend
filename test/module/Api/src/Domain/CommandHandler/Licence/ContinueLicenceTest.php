@@ -139,9 +139,6 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $continuationDetail = new ContinuationDetail();
         $continuationDetail->setTotAuthVehicles(434);
-        $continuationDetail->setTotAuthSmallVehicles(400);
-        $continuationDetail->setTotAuthMediumVehicles(30);
-        $continuationDetail->setTotAuthLargeVehicles(4);
         $continuationDetail->setTotPsvDiscs(7);
 
         $this->repoMap['Licence']->shouldReceive('fetchById')->with(717, Query::HYDRATE_OBJECT, 654)
@@ -155,9 +152,6 @@ class ContinueLicenceTest extends CommandHandlerTestCase
                 $this->assertEquals(new \DateTime('2020-07-17'), $saveLicence->getExpiryDate());
                 $this->assertEquals(new \DateTime('2020-12-04'), $saveLicence->getReviewDate());
                 $this->assertEquals(434, $saveLicence->getTotAuthVehicles());
-                $this->assertEquals(400, $saveLicence->getTotAuthSmallVehicles());
-                $this->assertEquals(30, $saveLicence->getTotAuthMediumVehicles());
-                $this->assertEquals(4, $saveLicence->getTotAuthLargeVehicles());
             }
         );
 
@@ -198,9 +192,6 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $continuationDetail = new ContinuationDetail();
         $continuationDetail->setTotAuthVehicles(434);
-        $continuationDetail->setTotAuthSmallVehicles(400);
-        $continuationDetail->setTotAuthMediumVehicles(30);
-        $continuationDetail->setTotAuthLargeVehicles(4);
         $continuationDetail->setTotPsvDiscs(7);
         $continuationDetail->setTotCommunityLicences(34);
 
@@ -215,9 +206,6 @@ class ContinueLicenceTest extends CommandHandlerTestCase
                 $this->assertEquals(new \DateTime('2020-07-17'), $saveLicence->getExpiryDate());
                 $this->assertEquals(new \DateTime('2020-12-04'), $saveLicence->getReviewDate());
                 $this->assertEquals(434, $saveLicence->getTotAuthVehicles());
-                $this->assertEquals(400, $saveLicence->getTotAuthSmallVehicles());
-                $this->assertEquals(30, $saveLicence->getTotAuthMediumVehicles());
-                $this->assertEquals(4, $saveLicence->getTotAuthLargeVehicles());
             }
         );
 
