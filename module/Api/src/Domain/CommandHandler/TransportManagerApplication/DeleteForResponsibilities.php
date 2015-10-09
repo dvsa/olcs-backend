@@ -39,7 +39,7 @@ final class DeleteForResponsibilities extends AbstractDeleteCommandHandler imple
         /** @var Application $application */
         foreach ($applications as $application) {
 
-            $completionData = ['id' => $application->getId(),'section' => 'transportManagers'];
+            $completionData = ['id' => $application->getId(), 'section' => 'transportManagers'];
             $result->merge($this->handleSideEffect(UpdateApplicationCompletion::create($completionData)));
         }
 
