@@ -96,7 +96,7 @@ final class CreateUserSelfserve extends AbstractCommandHandler implements
             $command->getContactDetails()['emailAddress'],
             $command->getContactDetails()['person']['forename'],
             $command->getContactDetails()['person']['familyName'],
-            Client::REALM_INTERNAL
+            Client::REALM_SELFSERVE
         );
 
         $result = new Result();

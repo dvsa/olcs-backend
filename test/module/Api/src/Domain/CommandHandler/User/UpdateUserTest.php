@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUser as Sut;
@@ -38,7 +39,8 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockRepo('Licence', Licence::class);
 
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            UserInterface::class => m::mock(UserInterface::class)
         ];
 
         parent::setUp();
@@ -110,6 +112,9 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
+            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName');
+
         /** @var TeamEntity $user */
         $team = m::mock(Team::class)->makePartial();
 
@@ -118,6 +123,7 @@ class UpdateUserTest extends CommandHandlerTestCase
         $user->setId($userId);
         $user->setLoginId($data['loginId']);
         $user->setTeam($team);
+        $user->setLoginId('login_id');
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 
         $this->repoMap['User']->shouldReceive('fetchById')
@@ -219,6 +225,9 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
+            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName');
+
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('update')
@@ -234,6 +243,7 @@ class UpdateUserTest extends CommandHandlerTestCase
         $user->setId($userId);
         $user->setLoginId($data['loginId']);
         $user->setTeam($team);
+        $user->setLoginId('login_id');
         $user->setContactDetails($contactDetails);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 
@@ -341,6 +351,9 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
+            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName');
+
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('update')
@@ -356,6 +369,7 @@ class UpdateUserTest extends CommandHandlerTestCase
         $user->setId($userId);
         $user->setLoginId($data['loginId']);
         $user->setTeam($team);
+        $user->setLoginId('login_id');
         $user->setContactDetails($contactDetails);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 

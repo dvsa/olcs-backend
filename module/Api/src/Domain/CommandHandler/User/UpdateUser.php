@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
@@ -20,9 +22,13 @@ use Doctrine\ORM\Query;
 /**
  * Update User
  */
-final class UpdateUser extends AbstractUserCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class UpdateUser extends AbstractCommandHandler implements
+    AuthAwareInterface,
+    TransactionedInterface,
+    OpenAmUserAwareInterface
 {
-    use AuthAwareTrait;
+    use AuthAwareTrait,
+        OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
 
@@ -49,7 +55,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements AuthAwareIn
             // link with the organisation
             $data['organisations'] = [$application->getLicence()->getOrganisation()];
         }
-
+        /** @var User $user */
         $user = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
 
         // validate username
@@ -79,6 +85,13 @@ final class UpdateUser extends AbstractUserCommandHandler implements AuthAwareIn
         }
 
         $this->getRepo()->save($user);
+
+        $this->getOpenAmUser()->updateUser(
+            $user->getLoginId(),
+            $command->getContactDetails()['emailAddress'],
+            $command->getContactDetails()['person']['forename'],
+            $command->getContactDetails()['person']['familyName']
+        );
 
         $result = new Result();
         $result->addId('user', $user->getId());

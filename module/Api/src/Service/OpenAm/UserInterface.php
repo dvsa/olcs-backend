@@ -20,4 +20,6 @@ interface UserInterface
      * @return string
      */
     public function reservePid();
+
+    public function updateUser($username, $emailAddress = null, $commonName = null, $surName = null);
 }

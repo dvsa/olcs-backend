@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserve as Sut;
@@ -29,7 +30,8 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $this->mockRepo('ContactDetails', ContactDetails::class);
 
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            UserInterface::class => m::mock(UserInterface::class)
         ];
 
         parent::setUp();
@@ -75,6 +77,9 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $user)
             ->andReturn(true);
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
+            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName');
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -165,6 +170,9 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $user)
             ->andReturn(true);
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
+            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName');
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()

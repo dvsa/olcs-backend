@@ -68,6 +68,11 @@ class User implements UserInterface
         );
     }
 
+    public function updateUser($username, $emailAddress = null, $commonName = null, $surName = null)
+    {
+        $this->openAmClient->updateUser($username, $emailAddress, $commonName, $surName);
+    }
+
     private function generatePid()
     {
         return $this->randomGenerator->generateString(32, '0123456789abcdef');
