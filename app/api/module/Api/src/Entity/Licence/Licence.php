@@ -54,8 +54,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
     const ERROR_TRANSFER_TOT_AUTH = 'LIC_TRAN_1';
     const ERROR_TRANSFER_OVERLAP_ONE = 'LIC_TRAN_2';
     const ERROR_TRANSFER_OVERLAP_MANY = 'LIC_TRAN_3';
-    const ERROR_SUM_AUTHORITY_3 = 'LIC_AUTH_3';
-    const ERROR_SUM_AUTHORITY_2 = 'LIC_AUTH_2';
 
     const LICENCE_CATEGORY_GOODS_VEHICLE = 'lcat_gv';
     const LICENCE_CATEGORY_PSV = 'lcat_psv';
@@ -689,47 +687,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
                 )
             );
         return $this->getApplications()->matching($criteria);
-    }
-
-    public function validateTotalAuthority(
-        $totAuthVehicles,
-        $totAuthSmallVehicles,
-        $totAuthMediumVehicles,
-        $totAuthLargeVehicles
-    ) {
-        if ($this->isPsv() && ($this->isStandardNational() || $this->isStandardInternational())) {
-            if (
-                (int)$totAuthVehicles !==
-                ((int)$totAuthSmallVehicles + (int)$totAuthMediumVehicles + (int)$totAuthLargeVehicles)
-            ) {
-                throw new ValidationException(
-                    [
-                        'totAuthVehicles' => [
-                            [
-                                self::ERROR_SUM_AUTHORITY_3 => 'The sum of small, medium and large ' .
-                                    'vehicles does not match the total number of vehicles'
-                            ]
-                        ]
-                    ]
-                );
-            }
-        }
-        if ($this->isPsv() && $this->isRestricted()) {
-            if (
-                (int)$totAuthVehicles !== ((int)$totAuthSmallVehicles + (int)$totAuthMediumVehicles)
-            ) {
-                throw new ValidationException(
-                    [
-                        'totAuthVehicles' => [
-                            [
-                                self::ERROR_SUM_AUTHORITY_2 => 'The sum of small and medium ' .
-                                    'vehicles does not match the total number of vehicles'
-                            ]
-                        ]
-                    ]
-                );
-            }
-        }
     }
 
     /**

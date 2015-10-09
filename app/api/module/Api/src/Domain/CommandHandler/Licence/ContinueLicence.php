@@ -83,18 +83,8 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
             return;
         }
 
-        $licence->validateTotalAuthority(
-            $continuationDetail->getTotAuthVehicles(),
-            $continuationDetail->getTotAuthSmallVehicles(),
-            $continuationDetail->getTotAuthMediumVehicles(),
-            $continuationDetail->getTotAuthLargeVehicles()
-        );
-
         // Update the vehicle authorisation to the value entered
         $licence->setTotAuthVehicles($continuationDetail->getTotAuthVehicles());
-        $licence->setTotAuthSmallVehicles($continuationDetail->getTotAuthSmallVehicles());
-        $licence->setTotAuthMediumVehicles($continuationDetail->getTotAuthMediumVehicles());
-        $licence->setTotAuthLargeVehicles($continuationDetail->getTotAuthLargeVehicles());
 
         // Void any discs
         $result->merge(
