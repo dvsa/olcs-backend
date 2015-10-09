@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Licence
@@ -277,6 +279,24 @@ class Licence extends AbstractRepository
             ->setParameter('expiryTo', $endDate);
         $qb->andWhere($qb->expr()->eq('ta.id', ':trafficArea'))
             ->setParameter('trafficArea', $trafficArea);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function fetchWithVariationsAndInterimInforce($licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('applications', 'a')
+            ->with('a.interimStatus', 'ais')
+            ->byId($licenceId);
+        $qb->andWhere($qb->expr()->eq('a.isVariation', true));
+        $qb->andWhere($qb->expr()->eq('a.status', ':applicationStatus'));
+        $qb->andWhere($qb->expr()->eq('a.interimStatus', ':interimStatus'));
+        $qb->setParameter('applicationStatus', ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION);
+        $qb->setParameter('interimStatus', ApplicationEntity::INTERIM_STATUS_INFORCE);
 
         return $qb->getQuery()->getResult();
     }

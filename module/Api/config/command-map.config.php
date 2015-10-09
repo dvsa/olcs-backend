@@ -814,6 +814,9 @@ return [
     // Domain - Licence
     Command\Licence\ProcessContinuationNotSought::class => CommandHandler\Licence\ProcessContinuationNotSought::class,
 
+    // Domain - Variation
+    Command\Variation\EndInterim::class => CommandHandler\Variation\EndInterim::class,
+
     // Transfer - CPMS
     TransferCommand\Cpms\RequestReport::class => CommandHandler\Cpms\RequestReport::class,
     TransferCommand\Cpms\DownloadReport::class => CommandHandler\Cpms\DownloadReport::class,
