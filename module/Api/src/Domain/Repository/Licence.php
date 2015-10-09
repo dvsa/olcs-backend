@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Doctrine\Common\Collections\Criteria;
 
 /**
  * Licence

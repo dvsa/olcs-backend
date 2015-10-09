@@ -3,7 +3,7 @@
 /**
  * End interim for variations
  *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Command\Variation;
 
@@ -13,7 +13,7 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 /**
  * End interim for variations
  *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 final class EndInterim extends AbstractCommand
 {
