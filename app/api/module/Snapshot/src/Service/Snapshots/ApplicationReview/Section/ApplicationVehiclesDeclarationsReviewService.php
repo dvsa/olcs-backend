@@ -99,7 +99,7 @@ class ApplicationVehiclesDeclarationsReviewService extends AbstractReviewService
         $multiItems['15f'][] = $this->addSection15f1($data);
 
         if ($data['psvLimousines'] === 'Y' &&
-            ($data['totAuthSmallVehicles'] > 0 || $data['totAuthMediumVehicles'] > 0)) {
+            ($data['totAuthLargeVehicles'] > 0 || $data['totAuthMediumVehicles'] > 0)) {
             $multiItems['15g'][] = $this->addSection15g();
         } else {
             $multiItems['15f'][] = $this->addSection15f2();
