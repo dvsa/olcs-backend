@@ -638,6 +638,7 @@ INSERT INTO `category` (id,description,is_doc_category,is_task_category,is_scan_
     (9,'Application',1,1,1,1,'task_at_simple'),
     (10,'Submission',0,1,0,1,'task_at_simple'),
     (11,'Publication',0,0,0,1,NULL),
+    (99,'ETL',0,0,0,1,NULL),
     (999999,'Templates (remove before go live)',0,0,0,0,NULL);
 
 INSERT INTO `pi_definition`
@@ -1720,7 +1721,7 @@ INSERT INTO `fee_type` (`id`, `is_miscellaneous`, `accrual_rule`, `created_by`, 
 (20100,0,'acr_immediate',NULL,NULL,NULL,NULL,NULL,0.00,'2015-03-31 23:59:59',0,'ADJUSTMENT',0.00,0.00,'2014-04-01 10:30:07','Overpayment','2014-04-01 10:30:07',1);
 
 
-INSERT INTO sub_category (category_id, id, is_doc, is_task, is_scan, is_free_text, sub_category_name)
+INSERT INTO `sub_category` (`category_id`, `id`, `is_doc`, `is_task`, `is_scan`, `is_free_text`, `sub_category_name`)
 VALUES
   ( 9,   2, 1, 1, 1, 0, 'Address Change Assisted Digital')
  ,( 9,   3, 1, 1, 0, 0, 'Address Change Digital')
@@ -1887,18 +1888,20 @@ VALUES
  ,(10, 162, 0, 0, 0, 0, 'Responsibilities')
  ,(10, 163, 0, 0, 0, 0, 'Other employment')
  ,(10, 164, 0, 0, 0, 0, 'Previous history')
- ,(9,  165, 0, 0, 0, 0, 'Change to taxi/phv digital')
- ,(1,  166, 0, 0, 0, 0, 'Discs')
- ,(1,  167, 0, 0, 0, 0, 'Community licence')
- ,(1,  168, 0, 0, 0, 0, 'Scanning separator')
- ,(1,  169, 0, 1, 0, 0, 'Business details change')
+-- (end subcategories for submission section attachments)
+
+ ,( 9, 165, 0, 0, 0, 0, 'Change to taxi/phv digital')
+ ,( 1, 166, 0, 0, 0, 0, 'Discs')
+ ,( 1, 167, 0, 0, 0, 0, 'Community licence')
+ ,( 1, 168, 0, 0, 0, 0, 'Scanning separator')
+ ,( 1, 169, 0, 1, 0, 0, 'Business details change')
  ,( 1, 170, 1, 0, 0, 0, 'CPID')
  ,( 1, 180, 1, 0, 0, 0, 'Financial reports')
- ,( 999999, 999999, 1, 1, 1, 0, 'Not yet implemented (remove before go live)');
+ ,(11,   1, 0, 0, 0, 0, 'ETL')
 
+ ,(999999, 999999, 1, 1, 1, 0, 'Not yet implemented (remove before go live)');
 
-INSERT INTO sub_category_description
-  (sub_category_id, description)
+INSERT INTO `sub_category_description` (`sub_category_id`, `description`)
 VALUES
   (  2, 'Address Change')
  ,(  3, 'Address Change')
