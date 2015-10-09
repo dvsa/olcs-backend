@@ -65,6 +65,8 @@ class Overview extends AbstractQueryHandler
                 'goodsOrPsv',
                 'organisation' => [
                     'licences' => [
+                        // @todo we can probably trim this down and just return
+                        // licence count much more efficiently
                         'criteria' => $statusCriteria,
                         'status',
                     ],

@@ -25,7 +25,6 @@ class Transaction extends AbstractTransaction
 {
     const STATUS_OUTSTANDING = 'pay_s_os';
     const STATUS_CANCELLED = 'pay_s_cn';
-    const STATUS_LEGACY = 'pay_s_leg';
     const STATUS_FAILED = 'pay_s_fail';
     // 'paid' and 'complete' are synonymous
     const STATUS_PAID = 'pay_s_pd';
