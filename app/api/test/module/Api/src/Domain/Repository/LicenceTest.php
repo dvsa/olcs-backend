@@ -391,4 +391,23 @@ class LicenceTest extends RepositoryTestCase
 
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+    public function testFetchWithVariationsAndInterimInforce()
+    {
+        $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->once()->with($qb)->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('trafficArea', 'ta')->once()->andReturnSelf();
+
+    }
 }
+/*
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('applications', 'a')
+            ->with('a.interimStatus', 'ais')
+            ->byId($licenceId);
+ */

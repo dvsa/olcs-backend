@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
+use Dvsa\Olcs\Api\Domain\Command\Variation\EndInterim;
 
 /**
  * Surrender a licence
@@ -97,6 +98,8 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
                 )
             );
         }
+
+        $result->merge($this->handleSideEffect(EndInterim::create(['licenceId' => $licence->getId()])));
 
         foreach ($licence->getApplications() as $application) {
             if ($application->getIsVariation()) {
