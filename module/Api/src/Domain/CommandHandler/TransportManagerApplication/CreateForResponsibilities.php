@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -47,6 +48,10 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements
 
         $result->addId('transportManagerApplication', $tmApplication->getId());
         $result->addMessage('Transport Manager Application created successfully');
+
+        $completionData = ['id' => $application->getId(),'section' => 'transportManagers'];
+        $result->merge($this->handleSideEffect(UpdateApplicationCompletion::create($completionData)));
+
         return $result;
     }
 
