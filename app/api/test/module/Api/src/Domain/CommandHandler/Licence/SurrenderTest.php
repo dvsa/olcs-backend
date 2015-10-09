@@ -22,6 +22,7 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Variation\EndInterim;
 
 /**
  * RevokeTest
@@ -118,6 +119,12 @@ class SurrenderTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedSideEffect(
+            EndInterim::class,
+            ['licenceId' => 532],
+            new Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 surrendered"], $result->getMessages());
@@ -182,6 +189,11 @@ class SurrenderTest extends CommandHandlerTestCase
             [
                 'id' => 532
             ],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            EndInterim::class,
+            ['licenceId' => 532],
             new Result()
         );
 
@@ -261,6 +273,11 @@ class SurrenderTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Publication\Licence::class,
             ['id' => 532],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            EndInterim::class,
+            ['licenceId' => 532],
             new Result()
         );
 

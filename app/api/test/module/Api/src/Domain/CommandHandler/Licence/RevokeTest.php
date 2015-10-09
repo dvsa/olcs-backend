@@ -24,6 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Variation\EndInterim;
 
 /**
  * RevokeTest
@@ -82,6 +83,12 @@ class RevokeTest extends CommandHandlerTestCase
                 $this->assertInstanceOf(\DateTime::class, $saveLicence->getRevokedDate());
                 $this->assertSame((new \DateTime())->format('Y-m-d'), $saveLicence->getRevokedDate()->format('Y-m-d'));
             }
+        );
+
+        $this->expectedSideEffect(
+            EndInterim::class,
+            ['licenceId' => 532],
+            new Result()
         );
 
         $ceaseDiscsResult = new Result();
@@ -200,6 +207,12 @@ class RevokeTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedSideEffect(
+            EndInterim::class,
+            ['licenceId' => 532],
+            new Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 revoked"], $result->getMessages());
@@ -258,6 +271,12 @@ class RevokeTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Publication\Licence::class,
             ['id' => 532],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            EndInterim::class,
+            ['licenceId' => 532],
             new Result()
         );
 
@@ -322,6 +341,11 @@ class RevokeTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Publication\Licence::class,
             ['id' => 532],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            EndInterim::class,
+            ['licenceId' => 532],
             new Result()
         );
 

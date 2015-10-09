@@ -225,7 +225,7 @@ class Generator extends AbstractGenerator
         $this->sharedBundles['vehicles_psv']['licenceVehicles']['criteria'] = $notRemovedCriteria;
     }
 
-    public function generate(Application $application, $isInternal)
+    public function generate(Application $application, $isInternal = true)
     {
         $sections = $this->getServiceLocator()->get('SectionAccessService')->getAccessibleSections($application);
         $sections = array_keys($sections);

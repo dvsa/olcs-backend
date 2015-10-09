@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Doctrine\DBAL\LockMode;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 
 /**
  * Licence test
@@ -390,5 +391,45 @@ class LicenceTest extends RepositoryTestCase
             . 'INNER JOIN m.fees f INNER JOIN f.feeType ft AND f.feeStatus = [[lfs_ot]] AND ft.feeType = [[CONT]]';
 
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchWithVariationsAndInterimInforce()
+    {
+        $licenceId = 1;
+        $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->once()->with($qb)->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('applications', 'a')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('a.interimStatus', 'ais')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('byId')->with($licenceId)->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')->with('a.isVariation', true)->once()->andReturn('condVar');
+        $qb->shouldReceive('andWhere')->with('condVar')->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')->with('a.status', ':applicationStatus')->once()->andReturn('condApp');
+        $qb->shouldReceive('andWhere')->with('condApp')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')
+            ->with('applicationStatus', ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION)
+            ->once()
+            ->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')->with('a.interimStatus', ':interimStatus')->once()->andReturn('condInt');
+        $qb->shouldReceive('andWhere')->with('condInt')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')
+            ->with('interimStatus', ApplicationEntity::INTERIM_STATUS_INFORCE)
+            ->once()
+            ->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getResult')->andReturn(['result']);
+
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+        $this->em->shouldReceive('getRepository')
+            ->with(Licence::class)
+            ->andReturn($repo);
+
+        $this->assertEquals(['result'], $this->sut->fetchWithVariationsAndInterimInforce($licenceId));
     }
 }
