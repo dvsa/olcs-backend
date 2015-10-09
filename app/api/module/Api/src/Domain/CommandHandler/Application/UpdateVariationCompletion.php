@@ -134,7 +134,7 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
             $this->markSectionUnchanged($section);
         } elseif (!$this->isUpdated($section)) {
             $this->markSectionUpdated($section);
-            if ($section !== 'undertakings') {
+            if ($section !== 'undertakings' && $section !== 'declarations_internal') {
                 $this->resetUndertakings();
             }
         }

@@ -90,7 +90,11 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
         $this->assertExpectedStatuses($expectedStatuses, $ac);
-        $this->assertEquals($expectedDeclarationConfirmation, $application->getDeclarationConfirmation());
+        if ($section !== 'declarationsInternal') {
+            $this->assertEquals($expectedDeclarationConfirmation, $application->getDeclarationConfirmation());
+        } else {
+            $this->assertEquals($expectedDeclarationConfirmation, $application->getAuthSignature());
+        }
     }
 
     private function assertExpectedStatuses(array $expectedStatuses, ApplicationCompletionEntity $ac)
@@ -819,7 +823,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 [
                     'DeclarationsInternal' => UpdateVariationCompletion::STATUS_UNCHANGED,
                 ],
-                'N',
+                0,
                 []
             ],
             'Decalrations Internal authSignature set' => [
@@ -832,7 +836,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 [
                     'DeclarationsInternal' => UpdateVariationCompletion::STATUS_UPDATED,
                 ],
-                'N',
+                1,
                 []
             ],
         ];
