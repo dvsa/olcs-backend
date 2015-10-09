@@ -27,12 +27,16 @@ class UpdateUndertakingsStatusTest extends AbstractUpdateStatusTestCase
     {
         $this->sut = new UpdateUndertakingsStatus();
         $this->command = Cmd::create(['id' => 111]);
+        $this->mockedSmServices = [
+            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
 
     public function testHandleCommandWithChange()
     {
+        $this->setupIsInternalUser(false);
         $this->applicationCompletion->setUndertakingsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setDeclarationConfirmation('N');
@@ -42,6 +46,7 @@ class UpdateUndertakingsStatusTest extends AbstractUpdateStatusTestCase
 
     public function testHandleCommandWithoutChange()
     {
+        $this->setupIsInternalUser(false);
         $this->applicationCompletion->setUndertakingsStatus(ApplicationCompletionEntity::STATUS_INCOMPLETE);
 
         $this->application->setDeclarationConfirmation('N');
@@ -51,10 +56,22 @@ class UpdateUndertakingsStatusTest extends AbstractUpdateStatusTestCase
 
     public function testHandleCommand()
     {
+        $this->setupIsInternalUser(false);
         $this->applicationCompletion->setUndertakingsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setDeclarationConfirmation('Y');
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
+    }
+
+    public function testHandleCommandForInternalUser()
+    {
+        $this->setupIsInternalUser();
+        $this->applicationCompletion->setDeclarationsInternalStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
+
+        $this->application->setAuthSignature('Y');
+
+        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
+
     }
 }
