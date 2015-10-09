@@ -25,6 +25,8 @@ class Correspondence extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    protected $alias = 'co';
+
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         $this->getQueryBuilder()->modifyQuery($qb)->with('licence', 'l');
@@ -43,5 +45,21 @@ class Correspondence extends AbstractRepository
             ->byId($id)
             ->with('document')
             ->with('licence');
+    }
+
+    public function getUnreadCountForOrganisation($organisationId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->join('co.licence', 'l');
+        $qb->where($qb->expr()->eq('l.organisation', ':organisationId'));
+        $qb->andWhere($qb->expr()->eq('co.accessed', ':accessed'));
+        $qb->setParameter(':organisationId', $organisationId);
+        $qb->setParameter(':accessed', 'N');
+
+        $query = $qb->getQuery();
+
+        $paginator = $this->getPaginator($query);
+        return $paginator->count();
     }
 }
