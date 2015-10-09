@@ -61,7 +61,6 @@ class TransactionEntityTest extends EntityTester
         return [
             [Entity::STATUS_OUTSTANDING, true],
             [Entity::STATUS_CANCELLED, false],
-            [Entity::STATUS_LEGACY, false],
             [Entity::STATUS_FAILED, false],
             [Entity::STATUS_PAID, false],
             ['invalid', false],
@@ -119,7 +118,6 @@ class TransactionEntityTest extends EntityTester
         return [
             [Entity::STATUS_OUTSTANDING, false],
             [Entity::STATUS_CANCELLED, false],
-            [Entity::STATUS_LEGACY, false],
             [Entity::STATUS_FAILED, false],
             [Entity::STATUS_PAID, true],
             [Entity::STATUS_COMPLETE, true],
