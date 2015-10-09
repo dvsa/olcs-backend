@@ -26,6 +26,14 @@ class Identity implements IdentityInterface
     }
 
     /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
      * Get the list of roles of this identity
      *
      * @return string[]|\Rbac\Role\RoleInterface[]
