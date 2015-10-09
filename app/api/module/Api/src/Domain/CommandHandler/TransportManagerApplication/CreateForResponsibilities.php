@@ -49,7 +49,7 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements
         $result->addId('transportManagerApplication', $tmApplication->getId());
         $result->addMessage('Transport Manager Application created successfully');
 
-        $completionData = ['id' => $application->getId(),'section' => 'transportManagers'];
+        $completionData = ['id' => $application->getId(), 'section' => 'transportManagers'];
         $result->merge($this->handleSideEffect(UpdateApplicationCompletion::create($completionData)));
 
         return $result;
