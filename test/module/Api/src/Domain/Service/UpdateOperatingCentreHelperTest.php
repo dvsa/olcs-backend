@@ -87,7 +87,6 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
     public function testValidatePsv($canHaveLargeVehicles, $isRestricted, $data, $expected)
     {
         $entity = m::mock();
-        $entity->shouldReceive('canHaveLargeVehicles')->andReturn($canHaveLargeVehicles);
         $entity->shouldReceive('isRestricted')->andReturn($isRestricted);
 
         $this->sut->validatePsv($entity, UpdateOperatingCentres::create($data));
@@ -344,35 +343,14 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
                 false,
                 false,
                 [
-                    'totAuthSmallVehicles' => 3,
-                    'totAuthMediumVehicles' => 3,
-                    'totAuthLargeVehicles' => 3,
                     'totAuthVehicles' => 9,
                 ],
                 []
-            ],
-            'Can have large, incorrect sum' => [
-                true,
-                false,
-                [
-                    'totAuthSmallVehicles' => 3,
-                    'totAuthMediumVehicles' => 3,
-                    'totAuthLargeVehicles' => 3,
-                    'totAuthVehicles' => 15,
-                ],
-                [
-                    'totAuthVehicles' => [
-                        ['ERR_OC_PSV_SUM_1A' => 'ERR_OC_PSV_SUM_1A']
-                    ]
-                ]
             ],
             'Restricted too many' => [
                 true,
                 true,
                 [
-                    'totAuthSmallVehicles' => 3,
-                    'totAuthMediumVehicles' => 3,
-                    'totAuthLargeVehicles' => 3,
                     'totAuthVehicles' => 9,
                 ],
                 [
@@ -381,21 +359,6 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
                     ]
                 ]
             ],
-            'Cant have large, incorrect sum' => [
-                false,
-                false,
-                [
-                    'totAuthSmallVehicles' => 3,
-                    'totAuthMediumVehicles' => 3,
-                    'totAuthLargeVehicles' => 3,
-                    'totAuthVehicles' => 15,
-                ],
-                [
-                    'totAuthVehicles' => [
-                        ['ERR_OC_PSV_SUM_1B' => 'ERR_OC_PSV_SUM_1B']
-                    ]
-                ]
-            ]
         ];
     }
 }
