@@ -151,7 +151,7 @@ class VehiclesSpecifiedTest extends MockeryTestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('getSnippet')
-            ->with('CHECKLIST_3CELL_TABLE')
+            ->with('CHECKLIST_2CELL_TABLE')
             ->andReturn('snippet')
             ->once()
             ->getMock();
@@ -162,33 +162,21 @@ class VehiclesSpecifiedTest extends MockeryTestCase
                     [
                         'vehicle' => [
                             'vrm' => 'VRM1',
-                            'psvType' => [
-                                'id' => Vehicle::PSV_TYPE_SMALL
-                            ]
                         ]
                     ],
                     [
                         'vehicle' => [
                             'vrm' => 'VRM4',
-                            'psvType' => [
-                                'id' => Vehicle::PSV_TYPE_MEDIUM
-                            ]
                         ]
                     ],
                     [
                         'vehicle' => [
                             'vrm' => 'VRM3',
-                            'psvType' => [
-                                'id' => Vehicle::PSV_TYPE_MEDIUM
-                            ]
                         ]
                     ],
                     [
                         'vehicle' => [
                             'vrm' => 'VRM4',
-                            'psvType' => [
-                                'id' => Vehicle::PSV_TYPE_LARGE
-                            ]
                         ]
                     ],
                 ],
@@ -200,28 +188,23 @@ class VehiclesSpecifiedTest extends MockeryTestCase
 
         $header = [
             'BOOKMARK1' => 'Registration mark',
-            'BOOKMARK2' => 'Vehicle type',
-            'BOOKMARK3' => 'To continue to be specified on licence (Y/N)'
+            'BOOKMARK2' => 'To continue to be specified on licence (Y/N)'
         ];
         $row1 = [
             'BOOKMARK1' => 'VRM1',
-            'BOOKMARK2' => 'Max 8 seats',
-            'BOOKMARK3' => ''
+            'BOOKMARK2' => ''
         ];
         $row2 = [
             'BOOKMARK1' => 'VRM3',
-            'BOOKMARK2' => '9 to 16 seats',
-            'BOOKMARK3' => ''
+            'BOOKMARK2' => ''
         ];
         $row3 = [
             'BOOKMARK1' => 'VRM4',
-            'BOOKMARK2' => 'Over 16 seats',
-            'BOOKMARK3' => ''
+            'BOOKMARK2' => ''
         ];
         $row4 = [
             'BOOKMARK1' => 'VRM4',
-            'BOOKMARK2' => '9 to 16 seats',
-            'BOOKMARK3' => ''
+            'BOOKMARK2' => ''
         ];
         $emptyRow = [
             'BOOKMARK1' => '',
