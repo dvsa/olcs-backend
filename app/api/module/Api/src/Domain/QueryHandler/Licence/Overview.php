@@ -88,7 +88,7 @@ class Overview extends AbstractQueryHandler
                 ]
             ],
             [
-                'busCount' => $this->getBusRegCount($licenceId),
+                'busCount' => $this->getBusRegCount($licence),
                 'currentApplications' => $this->resultList($applications),
                 'openCases' => $this->resultList($licence->getOpenCases(), ['publicInquirys']),
                 'tradingName' => $licence->getTradingName(),
@@ -111,7 +111,7 @@ class Overview extends AbstractQueryHandler
      * @todo, this is horrendously slow. Need a better way of getting
      * a bus reg count for a licence, or speed up the view query! :(
      */
-    protected function getBusRegCount($licenceId)
+    protected function getBusRegCount($licence)
     {
         // Here we get the bus reg list - all we need is a count...
 
