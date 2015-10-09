@@ -67,7 +67,8 @@ final class CreateNewUser extends AbstractCommandHandler implements Transactione
         $transportManager = $this->createTransportManager($contactDetails);
         $this->result->addId('transportManagerId', $transportManager->getId());
 
-        $transportManagerApplication = $this->createTransportManagerApplication($transportManager, $application);
+        $transportManagerApplication = $this->createTmApplication($transportManager, $application, $command);
+
         $this->result->addId('transportManagerApplicationId', $transportManagerApplication->getId());
 
         if ($command->getHasEmail() === 'Y') {
@@ -154,15 +155,20 @@ final class CreateNewUser extends AbstractCommandHandler implements Transactione
      * @param Application $application
      * @return TransportManagerApplication
      */
-    protected function createTransportManagerApplication(TransportManager $transportManager, Application $application)
+    protected function createTmApplication(TransportManager $transportManager, Application $application, Cmd $command)
     {
         $transportManagerApplication = new TransportManagerApplication();
         $transportManagerApplication->setTransportManager($transportManager);
         $transportManagerApplication->setApplication($application);
         $transportManagerApplication->setAction('A');
-        $transportManagerApplication->setTmApplicationStatus(
-            $this->getRepo()->getRefdataReference(TransportManagerApplication::STATUS_INCOMPLETE)
-        );
+
+        if ($command->getHasEmail() === 'Y') {
+            $status = $this->getRepo()->getRefdataReference(TransportManagerApplication::STATUS_INCOMPLETE);
+        } else {
+            $status = $this->getRepo()->getRefdataReference(TransportManagerApplication::STATUS_POSTAL_APPLICATION);
+        }
+
+        $transportManagerApplication->setTmApplicationStatus($status);
 
         $this->getRepo('TransportManagerApplication')->save($transportManagerApplication);
 
@@ -200,14 +206,14 @@ final class CreateNewUser extends AbstractCommandHandler implements Transactione
         $users = $repo->fetchByLoginId($username);
 
         if (!empty($users)) {
-            throw new ValidationException([self::ERR_USERNAME_EXISTS => self::ERR_USERNAME_EXISTS]);
+            throw new ValidationException(['username' => [self::ERR_USERNAME_EXISTS]]);
         }
     }
 
     protected function validateEmailAddress($emailAddress)
     {
         if (empty($emailAddress)) {
-            throw new ValidationException([self::ERR_EMAIL_REQUIRED => self::ERR_EMAIL_REQUIRED]);
+            throw new ValidationException(['emailAddress' => [self::ERR_EMAIL_REQUIRED]]);
         }
     }
 }
