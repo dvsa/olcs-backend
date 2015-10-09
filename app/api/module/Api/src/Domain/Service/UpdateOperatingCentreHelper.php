@@ -21,8 +21,6 @@ class UpdateOperatingCentreHelper implements FactoryInterface
 {
     protected $messages = [];
 
-    const ERR_OC_PSV_SUM_1A = 'ERR_OC_PSV_SUM_1A'; // with large
-    const ERR_OC_PSV_SUM_1B = 'ERR_OC_PSV_SUM_1B'; // without large
     const ERR_OC_R_1 = 'ERR_OC_R_1'; // restricted-too-many
     const ERR_OC_V_1 = 'ERR_OC_V_1'; // 1-operating-centre
     const ERR_OC_V_2 = 'ERR_OC_V_2'; // too-low
@@ -111,19 +109,6 @@ class UpdateOperatingCentreHelper implements FactoryInterface
     {
         if ($entity->isRestricted() && $command->getTotAuthVehicles() > 2) {
             $this->addMessage('totAuthVehicles', self::ERR_OC_R_1);
-        }
-
-        $sum = (int)$command->getTotAuthSmallVehicles()
-            + (int)$command->getTotAuthMediumVehicles()
-            + (int)$command->getTotAuthLargeVehicles();
-
-        if ($sum != $command->getTotAuthVehicles()) {
-            if ($entity->canHaveLargeVehicles()) {
-                $message = self::ERR_OC_PSV_SUM_1A;
-            } else {
-                $message = self::ERR_OC_PSV_SUM_1B;
-            }
-            $this->addMessage('totAuthVehicles', $message);
         }
     }
 
