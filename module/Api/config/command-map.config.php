@@ -373,6 +373,9 @@ return [
     TransferCommand\Submission\RefreshSubmissionSections::class =>
         CommandHandler\Submission\RefreshSubmissionSections::class,
 
+    TransferCommand\Submission\AssignSubmission::class =>
+        CommandHandler\Submission\AssignSubmission::class,
+
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
     Command\Document\CreateDocumentSpecific::class => CommandHandler\Document\CreateDocumentSpecific::class,
