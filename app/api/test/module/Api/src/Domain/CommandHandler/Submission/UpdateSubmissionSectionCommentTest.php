@@ -51,6 +51,9 @@ class UpdateSubmissionSectionCommentTest extends CommandHandlerTestCase
         $submissionSectionComment = m::mock(SubmissionSectionCommentEntity::class)->makePartial();
         $submissionSectionComment->setId(1);
 
+        $submissionSection = $this->refData['case-summary'];
+        $submissionSectionComment->shouldReceive('getSubmissionSection')->andReturn($submissionSection);
+
         $this->repoMap['SubmissionSectionComment']->shouldReceive('fetchUsingId')
             ->once()
             ->with($command, Query::HYDRATE_OBJECT, 1)
@@ -75,6 +78,7 @@ class UpdateSubmissionSectionCommentTest extends CommandHandlerTestCase
         $expected = [
             'id' => [
                 'submissionSectionComment' => 1,
+                'submissionSection' => 'case-summary'
             ],
             'messages' => [
                 'Submission section comment updated successfully'
