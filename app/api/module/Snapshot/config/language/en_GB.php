@@ -144,6 +144,7 @@ return [
     'application-review-type-of-licence-licence-type' => 'What type of licence do you want to apply for?',
     'application-review-type-of-licence-operator-location' => 'Where do you operate from?',
     'application-review-type-of-licence-operator-type' => 'What type of operator are you?',
+    'application-review-vehicles-declarations-vs' => 'Which sizes of vehicles do you intend to operate',
     'application-review-vehicles-declarations-15b1' => 'Do you intend to operate small vehicles as a small part of a
         large bus business as detailed by Section 79A of the Public Passenger Vehicles Act (as amended by Section 265 of
         the Transport Act 2000)?',

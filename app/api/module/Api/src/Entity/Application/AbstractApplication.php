@@ -28,7 +28,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_application_interim_status", columns={"interim_status"}),
  *        @ORM\Index(name="ix_application_withdrawn_reason", columns={"withdrawn_reason"}),
  *        @ORM\Index(name="ix_application_goods_or_psv", columns={"goods_or_psv"}),
- *        @ORM\Index(name="ix_application_applied_via", columns={"applied_via"})
+ *        @ORM\Index(name="ix_application_applied_via", columns={"applied_via"}),
+ *        @ORM\Index(name="ix_application_psv_which_vehicle_sizes",
+     *     columns={"psv_which_vehicle_sizes"})
  *    }
  * )
  */
@@ -499,6 +501,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="string", name="psv_small_vhl_notes", length=4000, nullable=true)
      */
     protected $psvSmallVhlNotes;
+
+    /**
+     * Psv which vehicle sizes
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="psv_which_vehicle_sizes", referencedColumnName="id", nullable=true)
+     */
+    protected $psvWhichVehicleSizes;
 
     /**
      * Received date
@@ -1959,6 +1971,29 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getPsvSmallVhlNotes()
     {
         return $this->psvSmallVhlNotes;
+    }
+
+    /**
+     * Set the psv which vehicle sizes
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $psvWhichVehicleSizes
+     * @return Application
+     */
+    public function setPsvWhichVehicleSizes($psvWhichVehicleSizes)
+    {
+        $this->psvWhichVehicleSizes = $psvWhichVehicleSizes;
+
+        return $this;
+    }
+
+    /**
+     * Get the psv which vehicle sizes
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getPsvWhichVehicleSizes()
+    {
+        return $this->psvWhichVehicleSizes;
     }
 
     /**
