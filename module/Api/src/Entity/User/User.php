@@ -52,13 +52,11 @@ class User extends AbstractUser
             RoleEntity::ROLE_OPERATOR_ADMIN,
             RoleEntity::ROLE_OPERATOR_USER,
             RoleEntity::ROLE_OPERATOR_TM,
-            RoleEntity::ROLE_OPERATOR_EBSR,
         ],
         self::USER_TYPE_TRANSPORT_MANAGER => [
             RoleEntity::ROLE_OPERATOR_ADMIN,
             RoleEntity::ROLE_OPERATOR_USER,
             RoleEntity::ROLE_OPERATOR_TM,
-            RoleEntity::ROLE_OPERATOR_EBSR,
         ],
         self::USER_TYPE_PARTNER => [
             RoleEntity::ROLE_PARTNER_ADMIN,
