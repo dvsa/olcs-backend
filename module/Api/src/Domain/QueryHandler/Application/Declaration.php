@@ -26,7 +26,13 @@ class Declaration extends AbstractQueryHandler
 
         return $this->result(
             $application,
-            [],
+            [
+                'licence' => [
+                    'organisation' => [
+                        'type'
+                    ]
+                ]
+            ],
             [
                 'canHaveInterimLicence' => $application->canHaveInterimLicence(),
                 'isLicenceUpgrade' => $application->isLicenceUpgrade(),
