@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationUndertakingsReviewService;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -38,7 +38,7 @@ class DeclarationUndertakings extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        /* @var $application \Dvsa\Olcs\Api\Entity\Application\Application */
+        /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($query);
 
         return $this->result(
@@ -56,7 +56,7 @@ class DeclarationUndertakings extends AbstractQueryHandler
         );
     }
 
-    protected function getUndertakings(Application $application)
+    protected function getUndertakings(ApplicationEntity $application)
     {
         $data = $application->serialize();
         $data['isGoods'] = $application->isGoods();
