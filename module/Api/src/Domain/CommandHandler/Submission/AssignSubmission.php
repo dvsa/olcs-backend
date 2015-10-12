@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
  * Assign Submission
  */
 final class AssignSubmission extends AbstractCommandHandler implements AuthAwareInterface,
-    SubmissionGeneratorAwareInterface
+ SubmissionGeneratorAwareInterface
 {
     use SubmissionGeneratorAwareTrait;
     use AuthAwareTrait;
