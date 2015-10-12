@@ -23,6 +23,7 @@ class Identity implements IdentityInterface
      * @var array
      */
     protected $usersRoles = [
+        // test (Rollout.sql) users
         1 => ['internal-limited-read-only'],
         2 => ['internal-read-only'],
         3 => ['internal-case-worker'],
@@ -34,8 +35,10 @@ class Identity implements IdentityInterface
         23 => ['partner-user'],
         24 => ['local-authority-admin'],
         25 => ['local-authority-user'],
-        13588 => ['internal-admin'],
-        13876 => ['operator-admin'],
+
+        // ETL users
+        336 => ['internal-admin'],
+        542 => ['operator-admin'],
     ];
 
     public function setUser(User $user)
