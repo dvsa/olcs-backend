@@ -51,7 +51,7 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
         ];
     }
 
-    private function getMarkup($data)
+    public function getMarkup($data)
     {
         if ($this->isPsv($data)) {
             if ($data['licenceType']['id'] === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED) {
