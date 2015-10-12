@@ -190,15 +190,6 @@ class TaskSearchView
     protected $assignedToTeam;
 
     /**
-     * Licence Count
-     *
-     * @var string
-     *
-     * @ORM\Column(type="integer", name="licence_count")
-     */
-    protected $licenceCount;
-
-    /**
      * Licence ID
      *
      * This may not be the same as the link_id ,e.g. for application tasks
@@ -472,16 +463,6 @@ class TaskSearchView
     public function getAssignedToTeam()
     {
         return $this->assignedToTeam;
-    }
-
-    /**
-     * Get the number of licences relating to a task
-     *
-     * @return int
-     */
-    public function getLicenceCount()
-    {
-        return $this->licenceCount;
     }
 
     /**
