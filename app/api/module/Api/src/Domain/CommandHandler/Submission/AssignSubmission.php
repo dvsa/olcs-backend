@@ -47,19 +47,15 @@ final class AssignSubmission extends AbstractCommandHandler implements AuthAware
      */
     private function updateSubmission(Cmd $command)
     {
-
         $submission = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        if ($command->getRecipientUser() !== null) {
-            $submission->setRecipientUser(
-                $this->getRepo()->getReference(UserEntity::class, $command->getRecipientUser())
-            );
-        }
+        $submission->setRecipientUser(
+            $this->getRepo()->getReference(UserEntity::class, $command->getRecipientUser())
+        );
 
         $currentUser = $this->getCurrentUser();
 
         $submission->setSenderUser($currentUser);
-
 
         if ($command->getUrgent() !== null) {
             $submission->setUrgent($command->getUrgent());
