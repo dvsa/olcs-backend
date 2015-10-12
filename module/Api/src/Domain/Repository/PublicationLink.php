@@ -51,10 +51,16 @@ class PublicationLink extends AbstractRepository
             )->setParameter('transportManager', $query->getTransportManager());
         }
 
-        if (method_exists($query, 'getLicence')) {
+        if (method_exists($query, 'getLicence') && $query->getLicence()) {
             $qb->andWhere(
                 $qb->expr()->eq($this->alias . '.licence', ':licence')
             )->setParameter('licence', $query->getLicence());
+        }
+
+        if (method_exists($query, 'getApplication') && $query->getApplication()) {
+            $qb->andWhere(
+                $qb->expr()->eq($this->alias . '.application', ':application')
+            )->setParameter('application', $query->getApplication());
         }
     }
 

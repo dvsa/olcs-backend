@@ -15,7 +15,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Doctrine\ORM\EntityRepository;
-use Dvsa\Olcs\Transfer\Query\Publication\PublicationLinkLicenceList;
+use Dvsa\Olcs\Transfer\Query\Publication\PublicationLinkList;
 use Dvsa\Olcs\Transfer\Query\Publication\PublicationLinkTmList;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedBusReg;
@@ -427,12 +427,31 @@ class PublicationLinkTest extends RepositoryTestCase
 
         $licence = 22;
 
-        $query = PublicationLinkLicenceList::create(['licence' => $licence]);
+        $query = PublicationLinkList::create(['licence' => $licence]);
 
         $mockQb = m::mock(QueryBuilder::class);
         $mockQb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturnSelf();
         $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('licence', $licence)->once()->andReturnSelf();
+
+        $sut->applyListFilters($mockQb, $query);
+    }
+
+    /**
+     * Tests the applciation list filter is applied correctly
+     */
+    public function testApplyListFiltersApplication()
+    {
+        $sut = m::mock(PublicationLinkRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $application = 610;
+
+        $query = PublicationLinkList::create(['application' => $application]);
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->eq')->with('m.application', ':application')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('application', $application)->once()->andReturnSelf();
 
         $sut->applyListFilters($mockQb, $query);
     }
