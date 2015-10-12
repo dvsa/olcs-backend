@@ -5,18 +5,18 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Publication;
 use Doctrine\ORM\Query as DoctrineQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Transfer\Query\Publication\PublicationLinkLicenceList;
+use Dvsa\Olcs\Transfer\Query\Publication\PublicationLinkList as Query;
 
 /**
- * PublicationLinkByLicence
+ * PublicationLinkList
  */
-final class PublicationLinkByLicence extends AbstractQueryHandler
+final class PublicationLinkList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'PublicationLink';
 
     public function handleQuery(QueryInterface $query)
     {
-        /** @var PublicationLinkLicenceList $query */
+        /* @var $query Query */
         $repo = $this->getRepo();
 
         return [
