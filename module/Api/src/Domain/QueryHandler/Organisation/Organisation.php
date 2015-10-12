@@ -19,7 +19,6 @@ class Organisation extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Organisation';
 
-
     public function handleQuery(QueryInterface $query)
     {
         /* @var $organisation \Dvsa\Olcs\Api\Entity\Organisation\Organisation */
