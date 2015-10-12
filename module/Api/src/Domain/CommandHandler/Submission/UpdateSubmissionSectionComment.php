@@ -27,6 +27,7 @@ final class UpdateSubmissionSectionComment extends AbstractCommandHandler
 
         $result = new Result();
         $result->addId('submissionSectionComment', $submissionSectionComment->getId());
+        $result->addId('submissionSection', $submissionSectionComment->getSubmissionSection()->getId());
         $result->addMessage('Submission section comment updated successfully');
 
         return $result;
