@@ -30,6 +30,7 @@ final class UpdateVehicleDeclaration extends AbstractCommandHandler implements T
         // This data is validated by the front end form, if that is incorrect/fails then the
         // updateApplicationCompletion will handle it by setting the section to incomplete
 
+        $application->setPsvWhichVehicleSizes($this->getRepo()->getRefdataReference($command->getPsvVehicleSize()));
         $application->setPsvNoSmallVhlConfirmation($command->getPsvNoSmallVhlConfirmation());
         $application->setPsvOperateSmallVhl($command->getPsvOperateSmallVhl());
         $application->setPsvSmallVhlConfirmation($command->getPsvSmallVhlConfirmation());

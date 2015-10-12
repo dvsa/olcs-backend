@@ -30,7 +30,9 @@ use Zend\Filter\Word\UnderscoreToCamelCase;
  *        @ORM\Index(name="ix_application_status", columns={"status"}),
  *        @ORM\Index(name="ix_application_interim_status", columns={"interim_status"}),
  *        @ORM\Index(name="ix_application_withdrawn_reason", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="ix_application_goods_or_psv", columns={"goods_or_psv"})
+ *        @ORM\Index(name="ix_application_goods_or_psv", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="ix_application_applied_via", columns={"applied_via"}),
+ *        @ORM\Index(name="ix_application_psv_which_vehicle_sizes", columns={"psv_which_vehicle_sizes"})
  *    }
  * )
  */
@@ -85,6 +87,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     const APPLIED_VIA_SELFSERVE = 'applied_via_selfserve';
     const APPLIED_VIA_POST = 'applied_via_post';
     const APPLIED_VIA_PHONE = 'applied_via_phone';
+
+    const PSV_VEHICLE_SIZE_SMALL = 'psvvs_small';
+    const PSV_VEHICLE_SIZE_MEDIUM_LARGE = 'psvvs_medium_large';
+    const PSV_VEHICLE_SIZE_BOTH = 'psvvs_both';
 
     /**
      * Publication No
@@ -1517,5 +1523,38 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
             return false;
         }
+    }
+
+    /**
+     * Is the PSV Size set to Small
+     *
+     * @return bool
+     */
+    public function isPsvVehicleSizeSmall()
+    {
+        return !empty($this->getPsvWhichVehicleSizes()) &&
+            $this->getPsvWhichVehicleSizes()->getId() === self::PSV_VEHICLE_SIZE_SMALL;
+    }
+
+    /**
+     * Is the PSV Size set to Medium/Large
+     *
+     * @return bool
+     */
+    public function isPsvVehicleSizeMediumLarge()
+    {
+        return !empty($this->getPsvWhichVehicleSizes()) &&
+            $this->getPsvWhichVehicleSizes()->getId() === self::PSV_VEHICLE_SIZE_MEDIUM_LARGE;
+    }
+
+    /**
+     * Is the PSV Size set to Both
+     *
+     * @return bool
+     */
+    public function isPsvVehicleSizeBoth()
+    {
+        return !empty($this->getPsvWhichVehicleSizes()) &&
+            $this->getPsvWhichVehicleSizes()->getId() === self::PSV_VEHICLE_SIZE_BOTH;
     }
 }
