@@ -27,7 +27,7 @@ function handleFatal()
     }
 }
 
-$profile = 1;//getenv("XHPROF_ENABLE") == 1;
+$profile = getenv("XHPROF_ENABLE") == 1;
 
 if ($profile) {
     xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
