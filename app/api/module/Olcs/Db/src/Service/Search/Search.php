@@ -122,8 +122,6 @@ class Search
             }
         }
 
-        error_log(json_encode($elasticaQuery->getQuery()), 3, '/tmp/craig.tmp');
-
         //Search on the index.
         $es = new \Elastica\Search($this->getClient());
 
