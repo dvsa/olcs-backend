@@ -41,15 +41,13 @@ class User implements UserInterface
     /**
      * @param $loginId
      * @param $emailAddress
-     * @param $firstName
-     * @param $lastName
      * @param $realm
      * @return void
      * @throws FailedRequestException
      *
      * @TODO add email sending.
      */
-    public function registerUser($loginId, $emailAddress, $firstName, $lastName, $realm)
+    public function registerUser($loginId, $emailAddress, $realm)
     {
         $pid = $this->reservedPid;
         if ($pid === null) {
@@ -61,14 +59,14 @@ class User implements UserInterface
             $loginId,
             $pid,
             $emailAddress,
-            $lastName,
-            $firstName,
+            $loginId,
+            $loginId,
             $realm,
             $this->generatePassword()
         );
     }
 
-    public function updateUser($username, $emailAddress = null, $commonName = null, $surName = null, $enabled = null)
+    public function updateUser($username, $emailAddress = null, $enabled = null)
     {
         $payload = [];
 
@@ -77,22 +75,6 @@ class User implements UserInterface
                 'operation' => 'replace',
                 'field' => 'emailAddress',
                 'value' => $emailAddress
-            ];
-        }
-
-        if ($commonName !== null) {
-            $payload[] = [
-                'operation' => 'replace',
-                'field' => 'commonName',
-                'value' => $commonName
-            ];
-        }
-
-        if ($surName !== null) {
-            $payload[] = [
-                'operation' => 'replace',
-                'field' => 'surName',
-                'value' => $surName
             ];
         }
 
@@ -129,6 +111,6 @@ class User implements UserInterface
 
     private function generatePassword()
     {
-        return $this->randomGenerator->generateString(12);
+        return 'password';//$this->randomGenerator->generateString(12);
     }
 }

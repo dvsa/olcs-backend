@@ -113,7 +113,7 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
-            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName', 'internal');
+            ->with('login_id', 'test1@test.me', 'internal');
 
         $this->repoMap['User']
             ->shouldReceive('populateRefDataReference')
@@ -216,7 +216,7 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
-             ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName', 'selfserve');
+             ->with('login_id', 'test1@test.me', 'selfserve');
 
         $this->repoMap['User']
             ->shouldReceive('fetchByLoginId')
@@ -335,7 +335,7 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
-            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName', 'selfserve');
+            ->with('login_id', 'test1@test.me', 'selfserve');
 
         $this->repoMap['User']
             ->shouldReceive('fetchByLoginId')

@@ -87,8 +87,6 @@ final class CreateUser extends AbstractCommandHandler implements
         $this->getOpenAmUser()->registerUser(
             $command->getLoginId(),
             $command->getContactDetails()['emailAddress'],
-            $command->getContactDetails()['person']['forename'],
-            $command->getContactDetails()['person']['familyName'],
             $realm
         );
 

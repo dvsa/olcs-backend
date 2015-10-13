@@ -12,7 +12,7 @@ interface UserInterface
      * @return string
      * @throws FailedRequestException
      */
-    public function registerUser($loginId, $emailAddress, $firstName, $lastName, $realm);
+    public function registerUser($loginId, $emailAddress, $realm);
 
     /**
      * Generate and reserve a Pid for a user
@@ -21,7 +21,7 @@ interface UserInterface
      */
     public function reservePid();
 
-    public function updateUser($username, $emailAddress = null, $commonName = null, $surName = null, $enabled = null);
+    public function updateUser($username, $emailAddress = null, $enabled = null);
 
     public function disableUser($username);
 }

@@ -73,7 +73,7 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
-            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName', 'selfserve');
+            ->with('login_id', 'test1@test.me', 'selfserve');
 
         $command = Cmd::create($data);
 

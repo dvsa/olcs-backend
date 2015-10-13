@@ -209,8 +209,6 @@ final class CreateNewUser extends AbstractCommandHandler implements Transactione
         $this->getOpenAmUser()->registerUser(
             $command->getUsername(),
             $command->getEmailAddress(),
-            $command->getFirstName(),
-            $command->getFamilyName(),
             Client::REALM_SELFSERVE
         );
 

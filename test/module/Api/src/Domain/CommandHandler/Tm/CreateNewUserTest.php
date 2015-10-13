@@ -195,7 +195,7 @@ class CreateNewUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
-            ->with('Foo', 'foo@bar.com', 'Bob', 'Barker', 'selfserve');
+            ->with('Foo', 'foo@bar.com', 'selfserve');
 
         $this->repoMap['User']->shouldReceive('fetchByLoginId')
             ->with('Foo')

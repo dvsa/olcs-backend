@@ -79,7 +79,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
             ->andReturn(true);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName');
+            ->with('login_id', 'test1@test.me');
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -172,7 +172,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
             ->andReturn(true);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName');
+            ->with('login_id', 'test1@test.me');
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
