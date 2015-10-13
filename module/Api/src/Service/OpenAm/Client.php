@@ -67,40 +67,10 @@ class Client implements ClientInterface
         }
     }
 
-    public function updateUser($username, $emailAddress = null, $commonName = null, $surName = null)
+    public function updateUser($username, $updates)
     {
-        $payload = [];
-
-        if ($emailAddress !== null) {
-            $payload[] = [
-                'operation' => 'replace',
-                'field' => 'emailAddress',
-                'value' => $emailAddress
-            ];
-        }
-
-        if ($commonName !== null) {
-            $payload[] = [
-                'operation' => 'replace',
-                'field' => 'commonName',
-                'value' => $commonName
-            ];
-        }
-
-        if ($surName !== null) {
-            $payload[] = [
-                'operation' => 'replace',
-                'field' => 'surName',
-                'value' => $surName
-            ];
-        }
-
-        if (count($payload) === 0) {
-            return;
-        }
-
         $request = $this->createRequest('/users/' . $username, Request::METHOD_PATCH);
-        $request->setContent(json_encode($payload));
+        $request->setContent(json_encode($updates));
 
         $response = $this->httpClient->send($request);
 

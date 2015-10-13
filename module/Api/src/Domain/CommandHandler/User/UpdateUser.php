@@ -90,7 +90,8 @@ final class UpdateUser extends AbstractCommandHandler implements
             $user->getLoginId(),
             $command->getContactDetails()['emailAddress'],
             $command->getContactDetails()['person']['forename'],
-            $command->getContactDetails()['person']['familyName']
+            $command->getContactDetails()['person']['familyName'],
+            $command->getAccountDisabled()
         );
 
         $result = new Result();

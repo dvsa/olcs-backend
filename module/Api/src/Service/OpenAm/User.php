@@ -68,9 +68,58 @@ class User implements UserInterface
         );
     }
 
-    public function updateUser($username, $emailAddress = null, $commonName = null, $surName = null)
+    public function updateUser($username, $emailAddress = null, $commonName = null, $surName = null, $enabled = null)
     {
-        $this->openAmClient->updateUser($username, $emailAddress, $commonName, $surName);
+        $payload = [];
+
+        if ($emailAddress !== null) {
+            $payload[] = [
+                'operation' => 'replace',
+                'field' => 'emailAddress',
+                'value' => $emailAddress
+            ];
+        }
+
+        if ($commonName !== null) {
+            $payload[] = [
+                'operation' => 'replace',
+                'field' => 'commonName',
+                'value' => $commonName
+            ];
+        }
+
+        if ($surName !== null) {
+            $payload[] = [
+                'operation' => 'replace',
+                'field' => 'surName',
+                'value' => $surName
+            ];
+        }
+
+        if ($enabled !== null) {
+            $payload[] = [
+                'operation' => 'replace',
+                'field' => 'olcsInActive',
+                'value' => $enabled
+            ];
+        }
+
+        if (count($payload) === 0) {
+            return;
+        }
+
+        $this->openAmClient->updateUser($username, $payload);
+    }
+
+    public function disableUser($username)
+    {
+        $payload[] = [
+            'operation' => 'replace',
+            'field' => 'olcsInActive',
+            'value' => true
+        ];
+
+        $this->openAmClient->updateUser($username, $payload);
     }
 
     private function generatePid()

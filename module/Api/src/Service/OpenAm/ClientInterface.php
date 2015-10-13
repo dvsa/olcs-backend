@@ -1,6 +1,7 @@
 <?php
 
 namespace Dvsa\Olcs\Api\Service\OpenAm;
+use Zend\Http\Request;
 
 /**
  * Class Client
@@ -19,4 +20,6 @@ interface ClientInterface
      * @throws FailedRequestException
      */
     public function registerUser($username, $pid, $emailAddress, $surname, $commonName, $realm, $password);
+
+    public function updateUser($username, $updates);
 }

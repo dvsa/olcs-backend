@@ -21,5 +21,7 @@ interface UserInterface
      */
     public function reservePid();
 
-    public function updateUser($username, $emailAddress = null, $commonName = null, $surName = null);
+    public function updateUser($username, $emailAddress = null, $commonName = null, $surName = null, $enabled = null);
+
+    public function disableUser($username);
 }
