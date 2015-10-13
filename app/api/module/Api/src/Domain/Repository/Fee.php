@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Fee
@@ -100,6 +101,24 @@ class Fee extends AbstractRepository
         }
 
         return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * @param int $organisationId
+     * @return int
+     */
+    public function getOutstandingFeeCountByOrganisationId($organisationId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $this->whereOutstandingFee($doctrineQb);
+        $this->whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId);
+
+        $query = $doctrineQb->getQuery();
+
+        $paginator = $this->getPaginator($query);
+
+        return $paginator->count();
     }
 
     /**
@@ -295,9 +314,7 @@ class Fee extends AbstractRepository
         $doctrineQb
             ->leftJoin('f.application', 'a')
             ->leftJoin('f.licence', 'l')
-            ->leftJoin('a.licence', 'al')
-            ->andWhere(
-                $doctrineQb->expr()->orX(
+            ->leftJoin('a.licence', 'al', Join::WITH, $doctrineQb->expr()->orX(
                     $doctrineQb->expr()->eq('l.organisation', ':organisationId'),
                     $doctrineQb->expr()->eq('al.organisation', ':organisationId')
                 )

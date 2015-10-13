@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox as Entity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Class Correspondence
@@ -51,8 +52,7 @@ class Correspondence extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->join('co.licence', 'l');
-        $qb->where($qb->expr()->eq('l.organisation', ':organisationId'));
+        $qb->join('co.licence', 'l', Join::WITH, $qb->expr()->eq('l.organisation', ':organisationId'));
         $qb->andWhere($qb->expr()->eq('co.accessed', ':accessed'));
         $qb->setParameter(':organisationId', $organisationId);
         $qb->setParameter(':accessed', 'N');
