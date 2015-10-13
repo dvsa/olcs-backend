@@ -80,7 +80,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
     protected function fetchByX($fetchBy, $args)
     {
-        $qb = $this->createFetchByXQuery($fetchBy, $args);
+        $qb = $this->createFetchByXxQuery($fetchBy, $args);
 
         if (empty($args[1])) {
             $hydrateMode = Query::HYDRATE_OBJECT;
@@ -93,7 +93,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
     protected function fetchOneByX($fetchBy, $args)
     {
-        $qb = $this->createFetchByXQuery($fetchBy, $args);
+        $qb = $this->createFetchByXxQuery($fetchBy, $args);
 
         if (empty($args[1])) {
             $hydrateMode = Query::HYDRATE_OBJECT;
@@ -104,7 +104,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         return $qb->getQuery()->getSingleResult($hydrateMode);
     }
 
-    protected function createFetchByXQuery($fetchBy, $args)
+    protected function createFetchByXxQuery($fetchBy, $args)
     {
         // If the property doesn't exist
         if (!property_exists($this->entity, $fetchBy)) {
