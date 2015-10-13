@@ -38,7 +38,7 @@ abstract class AbstractDeleteCommandHandler extends AbstractCommandHandler imple
         return $this->doDelete($ids);
     }
 
-    private function doDelete(array $ids)
+    protected function doDelete(array $ids)
     {
         $result = new Result();
         foreach ($ids as $id) {

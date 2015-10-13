@@ -55,7 +55,8 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
             [
                 [
                     'isGoods' => false,
-                    'licenceType' => ['id' => Licence::LICENCE_TYPE_SPECIAL_RESTRICTED]
+                    'licenceType' => ['id' => Licence::LICENCE_TYPE_SPECIAL_RESTRICTED],
+                    'isInternal' => true
                 ],
                 [
                     'markup' => 'markup-application_undertakings_PSV356-translated'
@@ -64,7 +65,8 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
             [
                 [
                     'isGoods' => false,
-                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL]
+                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
+                    'isInternal' => true
                 ],
                 [
                     'markup' => 'markup-application_undertakings_PSV421-translated'
@@ -74,7 +76,8 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                 [
                     'isGoods' => true,
                     'niFlag' => 'Y',
-                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL]
+                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
+                    'isInternal' => true
                 ],
                 [
                     'markup' => 'markup-application_undertakings_GV79-NI-translated'
@@ -84,7 +87,8 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                 [
                     'isGoods' => true,
                     'niFlag' => 'N',
-                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL]
+                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
+                    'isInternal' => true
                 ],
                 [
                     'markup' => 'markup-application_undertakings_GV79-translated'

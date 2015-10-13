@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Transaction Entity
  *
  * @ORM\Entity
- * @ORM\Table(name="transaction",
+ * @ORM\Table(name="txn",
  *    indexes={
  *        @ORM\Index(name="ix_transaction_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_transaction_last_modified_by", columns={"last_modified_by"}),
@@ -25,7 +25,6 @@ class Transaction extends AbstractTransaction
 {
     const STATUS_OUTSTANDING = 'pay_s_os';
     const STATUS_CANCELLED = 'pay_s_cn';
-    const STATUS_LEGACY = 'pay_s_leg';
     const STATUS_FAILED = 'pay_s_fail';
     // 'paid' and 'complete' are synonymous
     const STATUS_PAID = 'pay_s_pd';

@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -16,6 +17,8 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
+use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 
 /**
  * Licence Entity
@@ -802,5 +805,44 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         return [
             'niFlag' => $this->getNiFlag(),
         ];
+    }
+
+    /**
+     * Returns the latest publication by type from a licence
+     * @param $type
+     * @return mixed
+     */
+    public function getLatestPublicationByType($type)
+    {
+        $iterator = $this->getPublicationLinks()->getIterator();
+
+        $iterator->uasort(
+            function ($a, $b) {
+                /** @var PublicationLinkEntity $a */
+                /** @var PublicationLinkEntity $b */
+                return strtotime($b->getPublication()->getPubDate()) -
+                    strtotime($a->getPublication()->getPubDate());
+            }
+        );
+        $publicationLinks = new ArrayCollection(iterator_to_array($iterator));
+
+        foreach ($publicationLinks as $pLink) {
+            if ($pLink->getPublication()->getPubType() == $type) {
+                return $pLink->getPublication();
+            }
+        }
+
+    }
+
+    /**
+     * @return int|null
+     */
+    public function determineNpNumber()
+    {
+        $latestNpPublication = $this->getLatestPublicationByType(PublicationEntity::PUB_TYPE_N_P);
+        if ($latestNpPublication instanceof PublicationEntity) {
+            return $latestNpPublication->getPublicationNo();
+        }
+        return null;
     }
 }

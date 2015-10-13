@@ -83,7 +83,8 @@ final class TransportManagers extends AbstractSection
         $thisRow['licNo'] = $licenceNo;
         $thisRow['id'] = $transportManager->getId();
         $thisRow['version'] = $transportManager->getVersion();
-        $thisRow['tmType'] = $transportManager->getTmType()->getDescription();
+        $thisRow['tmType'] = !empty($transportManager->getTmType()) ?
+            $transportManager->getTmType()->getDescription() : '';
 
         $thisRow += $this->extractPersonData($transportManager);
 

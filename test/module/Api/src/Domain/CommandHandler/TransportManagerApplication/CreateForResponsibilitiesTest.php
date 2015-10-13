@@ -7,6 +7,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\CreateForResponsibilities as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportManagerLicenceRepo;
@@ -72,6 +74,8 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
         );
 
         $mockApplication = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(111)
             ->shouldReceive('getLicenceType')
             ->andReturn(
                 m::mock()
@@ -126,6 +130,11 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
                 }
             );
 
+        $result = new Result();
+        $result->addMessage('UpdateApplicationCompletion');
+        $data = ['id' => 111, 'section' => 'transportManagers'];
+        $this->expectedSideEffect(UpdateApplicationCompletion::class, $data, $result);
+
         $res = $this->sut->handleCommand($command);
         $this->assertEquals(
             [
@@ -133,7 +142,8 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
                     'transportManagerApplication' => 111
                 ],
                 'messages' => [
-                    'Transport Manager Application created successfully'
+                    'Transport Manager Application created successfully',
+                    'UpdateApplicationCompletion'
                 ]
             ],
             $res->toArray()

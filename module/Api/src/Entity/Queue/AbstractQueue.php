@@ -18,11 +18,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="queue",
  *    indexes={
- *        @ORM\Index(name="fk_queue_ref_data1_idx", columns={"type"}),
- *        @ORM\Index(name="fk_queue_ref_data2_idx", columns={"status"}),
- *        @ORM\Index(name="fk_queue_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_queue_user2_idx", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_queue_next", columns={"status","created_on","process_after_date"})
+ *        @ORM\Index(name="ix_queue_type", columns={"type"}),
+ *        @ORM\Index(name="ix_queue_status", columns={"status"}),
+ *        @ORM\Index(name="ix_queue_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_queue_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_queue_status_created_on_process_after_date",
+     *     columns={"status","created_on","process_after_date"})
  *    }
  * )
  */

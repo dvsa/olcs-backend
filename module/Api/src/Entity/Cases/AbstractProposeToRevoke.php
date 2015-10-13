@@ -24,7 +24,7 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_propose_to_revoke_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="case_id_UNIQUE", columns={"case_id"})
+ *        @ORM\UniqueConstraint(name="uk_propose_to_revoke_case_id", columns={"case_id"})
  *    }
  * )
  */

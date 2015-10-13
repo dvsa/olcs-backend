@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
+use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
@@ -22,9 +23,18 @@ use Mockery as m;
  */
 class UserTest extends RepositoryTestCase
 {
+    private $roleRepo;
+
     public function setUp()
     {
         $this->setUpSut(Repo::class);
+
+        $this->roleRepo = m::mock();
+
+        $sm = m::mock(RepositoryServiceManager::class);
+        $sm->shouldReceive('get')->once()->with('Role')->andReturn($this->roleRepo);
+
+        $this->sut->initService($sm);
     }
 
     public function testBuildDefaultQuery()
@@ -122,14 +132,14 @@ class UserTest extends RepositoryTestCase
         $transportManagerId = 2;
         $partnerContactDetailsId = 3;
         $localAuthorityId = 4;
-        $roleId = 100;
+        $role = 'foo-role';
 
         $data = [
             'team' => $teamId,
             'transportManager' => $transportManagerId,
             'partnerContactDetails' => $partnerContactDetailsId,
             'localAuthority' => $localAuthorityId,
-            'roles' => [$roleId]
+            'roles' => [$role]
         ];
 
         $teamEntity = m::mock(TeamEntity::class);
@@ -157,9 +167,9 @@ class UserTest extends RepositoryTestCase
             ->andReturn($localAuthorityEntity);
 
         $roleEntity = m::mock(RoleEntity::class);
-        $this->em->shouldReceive('getReference')
+        $this->roleRepo->shouldReceive('fetchOneByRole')
             ->once()
-            ->with(RoleEntity::class, $roleId)
+            ->with($role)
             ->andReturn($roleEntity);
 
         $result = $this->sut->populateRefDataReference($data);

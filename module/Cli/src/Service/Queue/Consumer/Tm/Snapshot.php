@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm;
 
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumer;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot as Cmd;
 
@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Snapshot extends AbstractConsumer
+class Snapshot extends AbstractCommandConsumer
 {
     protected $commandName = Cmd::class;
 

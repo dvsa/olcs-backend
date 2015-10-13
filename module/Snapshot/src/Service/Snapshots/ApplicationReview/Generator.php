@@ -204,6 +204,10 @@ class Generator extends AbstractGenerator
         'community_licences'
     ];
 
+    protected $displayedAlwaysVariationSections = [
+        'undertakings'
+    ];
+
     protected $sectionMap = [
         'declarations_internal' => 'undertakings'
     ];
@@ -221,7 +225,7 @@ class Generator extends AbstractGenerator
         $this->sharedBundles['vehicles_psv']['licenceVehicles']['criteria'] = $notRemovedCriteria;
     }
 
-    public function generate(Application $application)
+    public function generate(Application $application, $isInternal = true)
     {
         $sections = $this->getServiceLocator()->get('SectionAccessService')->getAccessibleSections($application);
         $sections = array_keys($sections);
@@ -250,7 +254,8 @@ class Generator extends AbstractGenerator
             [
                 'sections' => $sections,
                 'isGoods' => $application->isGoods(),
-                'isSpecialRestricted' => $application->isSpecialRestricted()
+                'isSpecialRestricted' => $application->isSpecialRestricted(),
+                'isInternal' => $isInternal
             ]
         );
 
@@ -345,7 +350,8 @@ class Generator extends AbstractGenerator
 
             $getter = 'get' . ucfirst($filter->filter($section)) . 'Status';
 
-            if ($completion->$getter() !== Application::VARIATION_STATUS_UPDATED) {
+            if (array_search($section, $this->displayedAlwaysVariationSections) === false &&
+                $completion->$getter() !== Application::VARIATION_STATUS_UPDATED) {
                 unset($sections[$key]);
             }
         }

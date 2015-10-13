@@ -65,6 +65,7 @@ return [
     TransferQuery\Application\OperatingCentres::class => QueryHandler\Application\OperatingCentres::class,
     TransferQuery\Application\PsvVehicles::class => QueryHandler\Application\PsvVehicles::class,
     TransferQuery\Application\Publish::class => QueryHandler\Application\Publish::class,
+    TransferQuery\Application\Schedule41Approve::class => QueryHandler\Application\Schedule41Approve::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -190,6 +191,10 @@ return [
     TransferQuery\Bus\RegistrationHistoryList::class => QueryHandler\Bus\RegistrationHistoryList::class,
     Query\Bus\ByLicenceRoute::class => QueryHandler\Bus\ByLicenceRoute::class,
 
+    // Bus - Ebsr
+    TransferQuery\Bus\Ebsr\TxcInboxList::class => QueryHandler\Bus\Ebsr\TxcInboxList::class,
+    TransferQuery\Bus\Ebsr\TxcInboxByBusReg::class => QueryHandler\Bus\Ebsr\TxcInboxByBusReg::class,
+
     // Trailer
     TransferQuery\Licence\Trailers::class => QueryHandler\Licence\Trailers::class,
     TransferQuery\Trailer\Trailer::class => QueryHandler\Trailer\Trailer::class,
@@ -210,9 +215,10 @@ return [
     TransferQuery\Publication\Recipient::class => QueryHandler\Publication\Recipient::class,
     TransferQuery\Publication\RecipientList::class => QueryHandler\Publication\RecipientList::class,
     TransferQuery\Publication\PublicationLinkTmList::class => QueryHandler\Publication\PublicationLinkByTm::class,
-    TransferQuery\Publication\PublicationLinkLicenceList::class
-        => QueryHandler\Publication\PublicationLinkByLicence::class,
+    TransferQuery\Publication\PublicationLinkList::class
+        => QueryHandler\Publication\PublicationLinkList::class,
     TransferQuery\Publication\PublicationLink::class => QueryHandler\Publication\PublicationLink::class,
+    TransferQuery\Publication\PendingList::class => QueryHandler\Publication\PendingList::class,
 
     // My Account
     TransferQuery\MyAccount\MyAccount::class => QueryHandler\MyAccount\MyAccount::class,
@@ -380,4 +386,7 @@ return [
     TransferQuery\System\FinancialStandingRate::class => QueryHandler\System\FinancialStandingRate::class,
     TransferQuery\System\FinancialStandingRateList::class => QueryHandler\System\FinancialStandingRateList::class,
 
+    // Cpms
+    TransferQuery\Cpms\ReportList::class => QueryHandler\Cpms\ReportList::class,
+    TransferQuery\Cpms\ReportStatus::class => QueryHandler\Cpms\ReportStatus::class,
 ];

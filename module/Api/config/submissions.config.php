@@ -97,6 +97,14 @@ return [
             'outstanding-applications',
             'people'
         ],
+        'submission_type_o_ni_tru' => [
+            'introduction',
+            'case-summary',
+            'case-outline',
+            'most-serious-infringement',
+            'outstanding-applications',
+            'people'
+        ],
     ],
     'sections' => [
         'factories' => [
