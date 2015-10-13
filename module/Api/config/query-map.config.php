@@ -49,6 +49,7 @@ return [
     TransferQuery\Application\PreviousConvictions::class => QueryHandler\Application\PreviousConvictions::class,
     TransferQuery\Application\Safety::class => QueryHandler\Application\Safety::class,
     TransferQuery\Application\Declaration::class => QueryHandler\Application\Declaration::class,
+    TransferQuery\Application\DeclarationUndertakings::class => QueryHandler\Application\DeclarationUndertakings::class,
     TransferQuery\Application\LicenceHistory::class => QueryHandler\Application\LicenceHistory::class,
     TransferQuery\Application\TransportManagers::class => QueryHandler\Application\TransportManagers::class,
     TransferQuery\Application\GoodsVehicles::class => QueryHandler\Application\GoodsVehicles::class,

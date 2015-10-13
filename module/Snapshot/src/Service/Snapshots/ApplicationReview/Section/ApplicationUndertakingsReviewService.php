@@ -13,6 +13,8 @@ use Dvsa\Olcs\Utils\Helper\ValueHelper;
 /**
  * Application Undertakings Review Service
  *
+ * @NOTE This is also re-used in Dvsa\Olcs\Api\Domain\QueryHandler\Application\DeclarationUndertakings
+ *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 class ApplicationUndertakingsReviewService extends AbstractReviewService
@@ -51,7 +53,7 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
         ];
     }
 
-    private function getMarkup($data)
+    public function getMarkup($data)
     {
         if ($this->isPsv($data)) {
             if ($data['licenceType']['id'] === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED) {
