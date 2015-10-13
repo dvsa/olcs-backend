@@ -22,7 +22,7 @@ class Dashboard extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Organisation';
 
-    protected $extraRepos = ['Correspondence', 'Fee'];
+    protected $extraRepos = ['Correspondence', 'Fee', 'Application'];
 
     public function handleQuery(QueryInterface $query)
     {
@@ -71,49 +71,28 @@ class Dashboard extends AbstractQueryHandler
      */
     protected function filter($organisation)
     {
-        /**
-         * Restrict the types of licence we display
-         */
-        $displayLicenceStatus = [
-            LicenceEntity::LICENCE_STATUS_VALID,
-            LicenceEntity::LICENCE_STATUS_CURTAILED,
-            LicenceEntity::LICENCE_STATUS_SUSPENDED
-        ];
+        $licences = $organisation->getActiveLicences();
 
-        /**
-         * Restrict the types of applications / variations we display
-         */
-        $displayApplicationStatus = [
-            ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
-            ApplicationEntity::APPLICATION_STATUS_GRANTED,
-            ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED
-        ];
+        $applications = $this->getRepo('Application')->fetchByOrganisationIdAndStatuses(
+            $organisation->getId(),
+            [
+                ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                ApplicationEntity::APPLICATION_STATUS_GRANTED,
+                ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED
+            ]
+        );
 
-        $applications = [];
         $variations = [];
-        $licences = [];
-
-        if (!empty($organisation->getLicences())) {
-
-            foreach ($organisation->getLicences() as $licence) {
-
-                if (in_array($licence->getStatus()->getId(), $displayLicenceStatus)) {
-                    $licences[$licence->getId()] = $licence;
-                }
-
-                foreach ($licence->getApplications() as $application) {
-                    if (in_array($application->getStatus()->getId(), $displayApplicationStatus)) {
-                        if ($application->isVariation()) {
-                            $variations[$application->getId()] = $application;
-                        } else {
-                            $applications[$application->getId()] = $application;
-                        }
-                    }
-                }
+        $newApplications = [];
+        foreach ($applications as $application) {
+            if ($application->isVariation()) {
+                $variations[] = $application;
+            } else {
+                $newApplications[] = $application;
             }
         }
 
-        return array($licences, $applications, $variations);
+        return array($licences, $newApplications, $variations);
     }
 
     /**

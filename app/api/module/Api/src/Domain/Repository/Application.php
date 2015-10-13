@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Application
@@ -51,6 +52,22 @@ class Application extends AbstractRepository
         $qb
             ->andWhere($qb->expr()->eq('l.organisation', ':organisationId'))
             ->andWhere($qb->expr()->in($this->alias . '.status', $activeStatuses))
+            ->setParameter('organisationId', $organisationId);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function fetchByOrganisationIdAndStatuses($organisationId, $statuses)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata();
+
+        $qb
+            ->innerJoin('a.licence', 'l', Join::WITH, $qb->expr()->eq('l.organisation', ':organisationId'))
+            ->andWhere($qb->expr()->in($this->alias . '.status', $statuses))
             ->setParameter('organisationId', $organisationId);
 
         return $qb->getQuery()->execute();
