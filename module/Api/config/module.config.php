@@ -226,6 +226,7 @@ return [
             'EbsrSubmission' => RepositoryFactory::class,
             'TxcInbox' => RepositoryFactory::class,
             'OrganisationUser' => RepositoryFactory::class,
+            'Role' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\User\User as Entity;
@@ -26,6 +27,21 @@ class User extends AbstractRepository
 {
     protected $entity = Entity::class;
     protected $alias = 'u';
+
+    /**
+     * @var Role
+     */
+    protected $roleRepo;
+
+    /**
+     * Called from the factory to allow additional services to be injected
+     *
+     * @param RepositoryServiceManager $serviceManager
+     */
+    public function initService(RepositoryServiceManager $serviceManager)
+    {
+        $this->roleRepo = $serviceManager->get('Role');
+    }
 
     /**
      * @param QueryBuilder $qb
@@ -115,8 +131,8 @@ class User extends AbstractRepository
 
         if (isset($data['roles'])) {
             $data['roles'] = array_map(
-                function ($roleId) {
-                    return $this->getReference(RoleEntity::class, $roleId);
+                function ($role) {
+                    return $this->roleRepo->fetchOneByRole($role);
                 },
                 $data['roles']
             );
