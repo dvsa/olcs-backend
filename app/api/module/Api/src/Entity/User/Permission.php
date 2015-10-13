@@ -30,4 +30,5 @@ class Permission extends AbstractPermission
     const CAN_MANAGE_USER_INTERNAL = 'can-manage-user-internal';
     const CAN_MANAGE_USER_SELFSERVE = 'can-manage-user-selfserve';
     const SELFSERVE_EBSR_DOCUMENTS = 'selfserve-ebsr-documents';
+    const CAN_READ_USER_SELFSERVE = 'can-read-user-selfserve';
 }
