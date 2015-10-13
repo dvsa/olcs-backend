@@ -20,7 +20,7 @@ class OutstandingFees extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Organisation';
 
-    protected $extraRepos = ['Fee'];
+    protected $extraRepos = ['Fee', 'Correspondence'];
 
     public function handleQuery(QueryInterface $query)
     {
@@ -43,8 +43,18 @@ class OutstandingFees extends AbstractQueryHandler
                             'transaction'
                         ]
                     ]
-                )
+                ),
+                'correspondenceCount' => $this->getCorrespondenceCount($organisation->getId()),
             ]
         );
+    }
+
+    /**
+     * @param int $organisationId
+     * @return int
+     */
+    protected function getCorrespondenceCount($organisationId)
+    {
+        return $this->getRepo('Correspondence')->getUnreadCountForOrganisation($organisationId);
     }
 }
