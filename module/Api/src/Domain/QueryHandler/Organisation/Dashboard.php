@@ -131,8 +131,6 @@ class Dashboard extends AbstractQueryHandler
      */
     protected function getFeeCount($organisationId)
     {
-        $result = $this->getRepo('Fee')->fetchOutstandingFeesByOrganisationId($organisationId);
-
-        return count($result);
+        return $this->getRepo('Fee')->getOutstandingFeeCountByOrganisationId($organisationId);
     }
 }
