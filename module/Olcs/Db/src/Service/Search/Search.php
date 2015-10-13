@@ -67,7 +67,7 @@ class Search
         } else {
             $elasticaQueryString  = new Query\Match();
             $elasticaQueryString->setField('_all', $query);
-            $elasticaQueryBool->addShould($elasticaQueryString);
+            $elasticaQueryBool->addMust($elasticaQueryString);
 
             $elasticaQueryBool = $this->processDateRanges($elasticaQueryBool);
 
@@ -81,7 +81,7 @@ class Search
 
                     $elasticaQueryString = new Query\Match();
                     $elasticaQueryString->setField($field, $value);
-                    $elasticaQueryBool->addShould($elasticaQueryString);
+                    $elasticaQueryBool->addMust($elasticaQueryString);
                 }
             }
 
@@ -121,6 +121,8 @@ class Search
                 $elasticaQuery->addAggregation($terms);
             }
         }
+
+        error_log(json_encode($elasticaQuery->getQuery()), 3, '/tmp/craig.tmp');
 
         //Search on the index.
         $es = new \Elastica\Search($this->getClient());
