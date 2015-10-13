@@ -81,10 +81,50 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
             );
         }
 
-        // switch configuration if its a variation
-        $publicationConfig = $application->isNew() ? 'ApplicationPublication' : 'VariationPublication';
+        $publicationConfig = $this->getPublicationConfig($application, $pubSection);
 
         return $this->createPublication($publicationConfig, $publicationLink, []);
+    }
+
+    /**
+     * Get the publication config section to use
+     *
+     * @param ApplicationEntity $application
+     * @param int $publicationSection
+     *
+     * @return string
+     */
+    private function getPublicationConfig(ApplicationEntity $application, $publicationSection)
+    {
+        if ($this->isSchedule41Section($publicationSection)) {
+            // if S4 is a trueS4, (uses first S4 as in reality it is only possible to have one S4 per application)
+            return ($application->getS4s()->first()->getIsTrueS4() === 'Y') ?
+                'Schedule41TruePublication' :
+                'Schedule41UntruePublication';
+        }
+
+        return $application->isNew() ? 'ApplicationPublication' : 'VariationPublication';
+    }
+
+    /**
+     * Is the publication section a Schedule41 section
+     *
+     * @param int $publicationSection
+     *
+     * @return bool
+     */
+    private function isSchedule41Section($publicationSection)
+    {
+        $schedule41Sections = [
+            PublicationSectionEntity::SCHEDULE_1_NI_NEW,
+            PublicationSectionEntity::SCHEDULE_1_NI_TRUE,
+            PublicationSectionEntity::SCHEDULE_1_NI_UNTRUE,
+            PublicationSectionEntity::SCHEDULE_4_NEW,
+            PublicationSectionEntity::SCHEDULE_4_TRUE,
+            PublicationSectionEntity::SCHEDULE_4_UNTRUE,
+        ];
+
+        return in_array($publicationSection, $schedule41Sections);
     }
 
     /**
@@ -117,7 +157,7 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
             return $map[$application->getStatus()->getId()];
         }
 
-        throw new ForbiddenException('Could not match to a publication section');
+        throw new \RuntimeException('Could not match to a publication section');
     }
 
     /**

@@ -27,7 +27,7 @@ final class UpdateAuthSignature extends AbstractCommandHandler implements Transa
         $result->merge(
             $this->getCommandHandler()->handleCommand(
                 \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::create(
-                    ['id' => $command->getId(), 'section' => 'undertakings']
+                    ['id' => $command->getId(), 'section' => 'declarationsInternal']
                 )
             )
         );

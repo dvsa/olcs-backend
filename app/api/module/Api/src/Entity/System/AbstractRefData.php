@@ -18,6 +18,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="ix_ref_data_parent_id", columns={"parent_id"}),
  *        @ORM\Index(name="ix_ref_data_ref_data_category_id", columns={"ref_data_category_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_ref_data_ref_data_category_id_olbs_key",
+     *     columns={"ref_data_category_id","olbs_key"})
  *    }
  * )
  */
@@ -81,6 +85,16 @@ abstract class AbstractRefData implements BundleSerializableInterface, JsonSeria
      * @ORM\Column(type="string", name="ref_data_category_id", length=32, nullable=false)
      */
     protected $refDataCategoryId;
+
+    /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="version", nullable=false, options={"default": 1})
+     * @ORM\Version
+     */
+    protected $version = 1;
 
     /**
      * Set the description
@@ -218,6 +232,29 @@ abstract class AbstractRefData implements BundleSerializableInterface, JsonSeria
     public function getRefDataCategoryId()
     {
         return $this->refDataCategoryId;
+    }
+
+    /**
+     * Set the version
+     *
+     * @param int $version
+     * @return RefData
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
     }
 
 

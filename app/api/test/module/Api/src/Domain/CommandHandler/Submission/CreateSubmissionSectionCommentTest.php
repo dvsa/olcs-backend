@@ -71,6 +71,7 @@ class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
         $expected = [
             'id' => [
                 'submissionSectionComment' => 111,
+                'submissionSection' => 'case-summary'
             ],
             'messages' => [
                 'Submission section comment created successfully'

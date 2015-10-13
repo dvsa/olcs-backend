@@ -97,6 +97,40 @@ interface CpmsHelperInterface
     public function recordPostalOrderPayment($fees, $amount, $receiptDate, $payer, $slipNo, $poNo);
 
     /**
+     * Get a list of available reports
+     *
+     * @return array
+     */
+    public function getReportList();
+
+    /**
+     * Request report creation
+     *
+     * @param string $reportCode
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
+    public function requestReport($reportCode, \DateTime $start, \DateTime $end);
+
+    /**
+     * Check report status by reference
+     *
+     * @param string $reference
+     * @return array
+     */
+    public function getReportStatus($reference);
+
+    /**
+     * Download report by reference
+     *
+     * @param string $reference
+     * @param string $token
+     * @return array
+     */
+    public function downloadReport($reference, $token);
+
+    /**
      * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
      */

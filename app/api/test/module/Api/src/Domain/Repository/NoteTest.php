@@ -31,7 +31,7 @@ class NoteTest extends RepositoryTestCase
         );
         $this->assertEquals(['RESULTS'], $this->sut->fetchByOrganisation('ORG1'));
 
-        $expectedQuery = 'BLAH AND m.organisation = [[ORG1]]';
+        $expectedQuery = 'BLAH AND n.organisation = [[ORG1]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
@@ -49,7 +49,7 @@ class NoteTest extends RepositoryTestCase
         );
         $this->assertEquals(['RESULTS'], $this->sut->fetchByTransportManager('TM1'));
 
-        $expectedQuery = 'BLAH AND m.transportManager = [[TM1]]';
+        $expectedQuery = 'BLAH AND n.transportManager = [[TM1]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 }

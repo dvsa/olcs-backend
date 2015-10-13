@@ -15,7 +15,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Doctrine\ORM\EntityRepository;
-use Dvsa\Olcs\Transfer\Query\Publication\PublicationLinkLicenceList;
+use Dvsa\Olcs\Transfer\Query\Publication\PublicationLinkList;
 use Dvsa\Olcs\Transfer\Query\Publication\PublicationLinkTmList;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedBusReg;
@@ -427,7 +427,7 @@ class PublicationLinkTest extends RepositoryTestCase
 
         $licence = 22;
 
-        $query = PublicationLinkLicenceList::create(['licence' => $licence]);
+        $query = PublicationLinkList::create(['licence' => $licence]);
 
         $mockQb = m::mock(QueryBuilder::class);
         $mockQb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturnSelf();
@@ -437,49 +437,22 @@ class PublicationLinkTest extends RepositoryTestCase
         $sut->applyListFilters($mockQb, $query);
     }
 
-    public function testDelete()
-    {
-        $publication = m::mock(PublicationEntity::class);
-        $publication->shouldReceive('getPubStatus->getId')->andReturn(PublicationEntity::PUB_NEW_STATUS);
-        $publicationLink = new PublicationLinkEntity();
-        $publicationLink->setPublication($publication);
-
-        $this->em->shouldReceive('remove')
-            ->once()
-            ->with($publicationLink)
-            ->shouldReceive('flush')
-            ->once();
-
-        $this->sut->delete($publicationLink);
-    }
-
     /**
-     * Tests delete throws the correct exception
-     *
-     * @param $pubStatus
-     * @dataProvider deleteExceptionStatusProvider
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     * Tests the applciation list filter is applied correctly
      */
-    public function testDeleteThrowsException($pubStatus)
+    public function testApplyListFiltersApplication()
     {
-        $publication = m::mock(PublicationEntity::class);
-        $publication->shouldReceive('getPubStatus->getId')->andReturn($pubStatus);
-        $publicationLink = new PublicationLinkEntity();
-        $publicationLink->setPublication($publication);
+        $sut = m::mock(PublicationLinkRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $this->sut->delete($publicationLink);
-    }
+        $application = 610;
 
-    /**
-     * Provides statuses where a publication link should not be deletable
-     *
-     * @return array
-     */
-    public function deleteExceptionStatusProvider()
-    {
-        return [
-            [PublicationEntity::PUB_GENERATED_STATUS],
-            [PublicationEntity::PUB_PRINTED_STATUS]
-        ];
+        $query = PublicationLinkList::create(['application' => $application]);
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->eq')->with('m.application', ':application')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('application', $application)->once()->andReturnSelf();
+
+        $sut->applyListFilters($mockQb, $query);
     }
 }

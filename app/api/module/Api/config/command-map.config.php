@@ -158,6 +158,9 @@ return [
     TransferCommand\Bus\RefuseBusRegByShortNotice::class => CommandHandler\Bus\RefuseBusRegByShortNotice::class,
     TransferCommand\Bus\GrantBusReg::class => CommandHandler\Bus\GrantBusReg::class,
 
+    //Ebsr
+    TransferCommand\Bus\Ebsr\UpdateTxcInbox::class => CommandHandler\Bus\Ebsr\UpdateTxcInbox::class,
+
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
     TransferCommand\Licence\UpdateAddresses::class => CommandHandler\Licence\UpdateAddresses::class,
@@ -294,6 +297,7 @@ return [
     TransferCommand\User\CreateUser::class => CommandHandler\User\CreateUser::class,
     TransferCommand\User\UpdateUser::class => CommandHandler\User\UpdateUser::class,
     TransferCommand\User\DeleteUser::class => CommandHandler\User\DeleteUser::class,
+    TransferCommand\User\RegisterUserSelfserve::class => CommandHandler\User\RegisterUserSelfserve::class,
     TransferCommand\User\CreateUserSelfserve::class => CommandHandler\User\CreateUserSelfserve::class,
     TransferCommand\User\UpdateUserSelfserve::class => CommandHandler\User\UpdateUserSelfserve::class,
     TransferCommand\User\DeleteUserSelfserve::class => CommandHandler\User\DeleteUserSelfserve::class,
@@ -369,6 +373,9 @@ return [
         CommandHandler\Submission\FilterSubmissionSections::class,
     TransferCommand\Submission\RefreshSubmissionSections::class =>
         CommandHandler\Submission\RefreshSubmissionSections::class,
+
+    TransferCommand\Submission\AssignSubmission::class =>
+        CommandHandler\Submission\AssignSubmission::class,
 
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
@@ -519,6 +526,8 @@ return [
     // Domain - Publications
     Command\Publication\PiHearing::class => CommandHandler\Publication\PiHearing::class,
     Command\Publication\PiDecision::class => CommandHandler\Publication\PiHearing::class,
+    Command\Publication\CreateNextPublication::class => CommandHandler\Publication\CreateNextPublication::class,
+    Command\Publication\Licence::class => CommandHandler\Publication\Licence::class,
 
     // Domain - Discs
     Command\Discs\CeaseGoodsDiscs::class => CommandHandler\Discs\CeaseGoodsDiscs::class,
@@ -707,6 +716,7 @@ return [
 
     // Transfer - TransportManager
     TransferCommand\Tm\Create::class => CommandHandler\Tm\Create::class,
+    TransferCommand\Tm\CreateNewUser::class => CommandHandler\Tm\CreateNewUser::class,
     TransferCommand\Tm\Update::class => CommandHandler\Tm\Update::class,
     TransferCommand\Tm\Remove::class => CommandHandler\Tm\Remove::class,
     TransferCommand\Tm\Merge::class => CommandHandler\Tm\Merge::class,
@@ -750,6 +760,7 @@ return [
     // Domain - Queue
     QueueCommand\Complete::class => QueueCommandHandler\Complete::class,
     QueueCommand\Failed::class => QueueCommandHandler\Failed::class,
+    QueueCommand\Retry::class => QueueCommandHandler\Retry::class,
     QueueCommand\Create::class => QueueCommandHandler\Create::class,
 
     // Transfer - TmCaseDecision
@@ -807,4 +818,11 @@ return [
 
     // Domain - Licence
     Command\Licence\ProcessContinuationNotSought::class => CommandHandler\Licence\ProcessContinuationNotSought::class,
+
+    // Domain - Variation
+    Command\Variation\EndInterim::class => CommandHandler\Variation\EndInterim::class,
+
+    // Transfer - CPMS
+    TransferCommand\Cpms\RequestReport::class => CommandHandler\Cpms\RequestReport::class,
+    TransferCommand\Cpms\DownloadReport::class => CommandHandler\Cpms\DownloadReport::class,
 ];

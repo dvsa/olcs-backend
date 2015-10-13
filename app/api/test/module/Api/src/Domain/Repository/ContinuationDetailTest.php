@@ -108,6 +108,8 @@ EOT;
         $this->queryBuilder->shouldReceive('with')->with('l.organisation', 'lo')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('l.fees', 'lf')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('lf.feeType', 'lfft')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('lfft.feeType', 'lfftft')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('lf.feeStatus', 'lffs')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('expr->in')->with('l.status', ':licenceStatuses')->once()->andReturn('conditionLic');
         $mockQb->shouldReceive('andWhere')->with('conditionLic')->once()->andReturnSelf();
@@ -125,40 +127,6 @@ EOT;
 
         $mockQb->shouldReceive('expr->eq')->with('m.received', 0)->once()->andReturn('conditionReceived');
         $mockQb->shouldReceive('andWhere')->with('conditionReceived')->once()->andReturnSelf();
-
-        $mockQb->shouldReceive('expr->eq')
-            ->with('lfft.feeType', ':feeType')
-            ->once()
-            ->andReturn('conditionType');
-        $mockQb->shouldReceive('expr->in')
-            ->with('lf.feeStatus', ':feeStatus')
-            ->once()
-            ->andReturn('conditionStatus');
-        $mockQb->shouldReceive('expr->andX')
-            ->with('conditionType', 'conditionStatus')
-            ->once()
-            ->andReturn('conditionAndX');
-        $mockQb->shouldReceive('expr->not')
-            ->with('conditionAndX')
-            ->once()
-            ->andReturn('conditionNot');
-        $mockQb->shouldReceive('expr->isNull')
-            ->with('lf.id')
-            ->once()->
-            andReturn('conditionIsNull');
-        $mockQb->shouldReceive('expr->orX')
-            ->with('conditionNot', 'conditionIsNull')
-            ->once()
-            ->andReturn('conditionOrX');
-        $mockQb->shouldReceive('andWhere')->with('conditionOrX')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')
-            ->with('feeType', FeeTypeEntity::FEE_TYPE_CONT)
-            ->once()
-            ->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')
-            ->with('feeStatus', [FeeEntity::STATUS_OUTSTANDING, FeeEntity::STATUS_WAIVE_RECOMMENDED])
-            ->once()
-            ->andReturnSelf();
 
         $this->queryBuilder->shouldReceive('filterByIds')->with([1])->once()->andReturnSelf();
 
@@ -188,12 +156,52 @@ EOT;
             ->once()
             ->andReturn($mockQb);
 
+        $result = [
+            [
+                'licence' => [
+                    'fees' => [
+                        [
+                            'feeStatus' => [
+                                'id' => FeeEntity::STATUS_OUTSTANDING
+                            ],
+                            'feeType' => [
+                                'feeType' => [
+                                    'id' => FeeTypeEntity::FEE_TYPE_APP
+                                ]
+                            ]
+                        ],
+                        [
+                            'feeStatus' => [
+                                'id' => FeeEntity::STATUS_OUTSTANDING
+                            ],
+                            'feeType' => [
+                                'feeType' => [
+                                    'id' => FeeTypeEntity::FEE_TYPE_CONT
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'licence' => [
+                    'fees' => []
+                ]
+            ]
+        ];
+        $expected = [
+            [
+                'licence' => [
+                    'fees' => []
+                ]
+            ]
+        ];
         $mockQb->shouldReceive('getQuery->getResult')
             ->with(\Doctrine\ORM\Query::HYDRATE_ARRAY)
             ->once()
-            ->andReturn(['result']);
+            ->andReturn($result);
 
-        $this->sut->fetchChecklistReminders(1, 2016, [1]);
+        $this->assertEquals($expected, $this->sut->fetchChecklistReminders(1, 2016, [1]));
     }
 
     /**

@@ -38,7 +38,14 @@ class ApplicationEntityTest extends EntityTester
 
     public function setUp()
     {
+        $organisation = new Organisation();
+
+        $licence = new Licence($organisation, new RefData(Licence::LICENCE_STATUS_NOT_SUBMITTED));
+        $licence->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+
         $this->entity = $this->instantiate($this->entityClass);
+        $this->entity->setLicence($licence);
+        $this->entity->setLicenceType($licence->getLicenceType());
     }
 
     public function dataProviderTestHasUpgrade()
@@ -1725,6 +1732,7 @@ class ApplicationEntityTest extends EntityTester
         $oc->setId(821);
 
         $licence = new Licence(new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(), new RefData());
+        $licence->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
         $this->entity->setLicence($licence);
 
         $loc = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $oc);
@@ -1735,10 +1743,6 @@ class ApplicationEntityTest extends EntityTester
         $aoc->setAction('U');
         $aoc->setNoOfVehiclesRequired(23);
         $this->entity->addOperatingCentres($aoc);
-
-        $aoc2 = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
-        $aoc2->setAction('A');
-        $this->entity->addOperatingCentres($aoc2);
 
         $oorDate = $this->entity->getOutOfOppositionDate();
 
@@ -1781,9 +1785,9 @@ class ApplicationEntityTest extends EntityTester
         $publicationSection4 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
         $publicationSection4->setId(4);
 
-        $publication1 = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
         $publication1->setPubDate('2014-07-29');
-        $publication2 = new \Dvsa\Olcs\Api\Entity\Publication\Publication();
+        $publication2 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
         $publication2->setPubDate('2014-07-30');
 
         $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
@@ -1803,6 +1807,240 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertEquals(new \DateTime('2014-08-20'), $oorDate);
     }
+
+    /**
+     * https://jira.i-env.net/browse/OLCS-10588 Scenario 1
+     */
+    public function testGetOutOfOppositionDateOlcs10588Scenario1()
+    {
+        $this->entity->setIsVariation(false);
+        $this->entity->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    /**
+     * https://jira.i-env.net/browse/OLCS-10588 Scenario 2
+     */
+    public function testGetOutOfOppositionDateOlcs10588Scenario2()
+    {
+        $this->entity->setIsVariation(false);
+        $this->entity->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_PSV));
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    /**
+     * https://jira.i-env.net/browse/OLCS-10588 Scenario 3
+     */
+    public function testGetOutOfOppositionDateOlcs10588Scenario3()
+    {
+        $this->entity->setIsVariation(false);
+        $this->entity->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+
+        $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
+        $publicationSection1->setId(1);
+
+        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
+        $publication1->setPubDate('2015-10-05');
+
+        $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink1->setPublicationSection($publicationSection1)
+            ->setPublication($publication1);
+
+        $this->entity->addPublicationLinks($publicationLink1);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals(new \DateTime('2015-10-26'), $oorDate);
+    }
+
+    /**
+     * https://jira.i-env.net/browse/OLCS-10588 Scenario 4
+     */
+    public function testGetOutOfOppositionDateOlcs10588Scenario4()
+    {
+        $this->entity->setIsVariation(false);
+        $this->entity->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+
+        $s4 = new S4($this->entity, $this->entity->getLicence());
+        $s4->setOutcome(new RefData(S4::STATUS_APPROVED));
+        $this->entity->addS4s($s4);
+
+        $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
+        $publicationSection1->setId(16);
+
+        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
+        $publication1->setPubDate('2015-10-05');
+
+        $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink1->setPublicationSection($publicationSection1)
+            ->setPublication($publication1);
+
+        $this->entity->addPublicationLinks($publicationLink1);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals(new \DateTime('2015-10-26'), $oorDate);
+    }
+
+    /**
+     * https://jira.i-env.net/browse/OLCS-10588 Scenario 5
+     */
+    public function testGetOutOfOppositionDateOlcs10588Scenario5()
+    {
+        $this->entity->setIsVariation(true);
+        $this->entity->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_PSV));
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    /**
+     * https://jira.i-env.net/browse/OLCS-10588 Scenario 6
+     */
+    public function testGetOutOfOppositionDateOlcs10588Scenario6()
+    {
+        $this->entity->setIsVariation(true);
+        $this->entity->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+
+        $tma = new \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication();
+        $tma->setAction('A');
+
+        $this->entity->addTransportManagers($tma);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+    /**
+     * https://jira.i-env.net/browse/OLCS-10588 Scenario 7
+     */
+    public function testGetOutOfOppositionDateOlcs10588Scenario7()
+    {
+        $this->entity->setIsVariation(true);
+        $this->entity->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+
+        $aoc = new ApplicationOperatingCentre($this->entity, new OperatingCentre());
+        $aoc->setAction('A');
+        $aoc->setNoOfVehiclesRequired(2);
+        $this->entity->addOperatingCentres($aoc);
+
+        $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
+        $publicationSection1->setId(3);
+
+        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
+        $publication1->setPubDate('2015-10-05');
+
+        $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink1->setPublicationSection($publicationSection1)
+            ->setPublication($publication1);
+
+        $this->entity->addPublicationLinks($publicationLink1);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals(new \DateTime('2015-10-26'), $oorDate);
+    }
+
+    /**
+     * https://jira.i-env.net/browse/OLCS-10588 Scenario 8
+     */
+    public function testGetOutOfOppositionDateOlcs10588Scenario8()
+    {
+        $this->entity->setIsVariation(true);
+        $this->entity->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+
+        $oc = new OperatingCentre();
+        $oc->setId(610);
+
+        $loc = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($this->entity->getLicence(), $oc);
+        $loc->setNoOfVehiclesRequired(1);
+        $this->entity->getLicence()->addOperatingCentres($loc);
+
+        $aoc = new ApplicationOperatingCentre($this->entity, $oc);
+        $aoc->setAction('U');
+        $aoc->setNoOfVehiclesRequired(2);
+        $this->entity->addOperatingCentres($aoc);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Unknown', $oorDate);
+    }
+
+    /**
+     * https://jira.i-env.net/browse/OLCS-10588 Scenario 9
+     */
+    public function testGetOutOfOppositionDateOlcs10588Scenario9()
+    {
+        $this->entity->setIsVariation(true);
+        $this->entity->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+
+        $s4 = new S4($this->entity, $this->entity->getLicence());
+        $s4->setOutcome(new RefData(S4::STATUS_APPROVED));
+        $s4->setIsTrueS4('N');
+        $this->entity->addS4s($s4);
+
+        $oc = new OperatingCentre();
+        $oc->setId(610);
+
+        $aoc = new ApplicationOperatingCentre($this->entity, $oc);
+        $aoc->setAction('A');
+        $aoc->setS4($s4);
+        $aoc->setNoOfVehiclesRequired(2);
+        $this->entity->addOperatingCentres($aoc);
+
+        $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
+        $publicationSection1->setId(17);
+
+        $publication1 = m::mock(\Dvsa\Olcs\Api\Entity\Publication\Publication::class)->makePartial();
+        $publication1->setPubDate('2015-10-05');
+
+        $publicationLink1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationLink();
+        $publicationLink1->setPublicationSection($publicationSection1)
+            ->setPublication($publication1);
+
+        $this->entity->addPublicationLinks($publicationLink1);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals(new \DateTime('2015-10-26'), $oorDate);
+    }
+
+    /**
+     * https://jira.i-env.net/browse/OLCS-10588 Scenario 10
+     */
+    public function testGetOutOfOppositionDateOlcs10588Scenario10()
+    {
+        $this->entity->setIsVariation(true);
+        $this->entity->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+
+        $s4 = new S4($this->entity, $this->entity->getLicence());
+        $s4->setIsTrueS4('Y');
+        $s4->setOutcome(new RefData(S4::STATUS_APPROVED));
+        $this->entity->addS4s($s4);
+
+        $oc = new OperatingCentre();
+        $oc->setId(610);
+
+        $aoc = new ApplicationOperatingCentre($this->entity, $oc);
+        $aoc->setAction('A');
+        $aoc->setS4($s4);
+        $aoc->setNoOfVehiclesRequired(2);
+        $this->entity->addOperatingCentres($aoc);
+
+        $oorDate = $this->entity->getOutOfOppositionDate();
+
+        $this->assertEquals('Not applicable', $oorDate);
+    }
+
+
 
     /**
      * @dataProvider canHaveLargeVehicleProvider

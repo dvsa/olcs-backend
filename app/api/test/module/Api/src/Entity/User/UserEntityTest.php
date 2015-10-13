@@ -64,7 +64,7 @@ class UserEntityTest extends EntityTester
     public function testCreateInternal()
     {
         $role = m::mock(RoleEntity::class)->makePartial();
-        $role->setId(RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY);
+        $role->setRole(RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY);
 
         $data = [
             'loginId' => 'loginId',
@@ -97,7 +97,7 @@ class UserEntityTest extends EntityTester
     public function testUpdateInternal()
     {
         $role = m::mock(RoleEntity::class)->makePartial();
-        $role->setId(RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY);
+        $role->setRole(RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY);
 
         $data = [
             'userType' => Entity::USER_TYPE_INTERNAL,
@@ -148,7 +148,7 @@ class UserEntityTest extends EntityTester
     public function testCreateTransportManager()
     {
         $adminRole = m::mock(RoleEntity::class)->makePartial();
-        $adminRole->setId(RoleEntity::ROLE_OPERATOR_ADMIN);
+        $adminRole->setRole(RoleEntity::ROLE_OPERATOR_ADMIN);
 
         $data = [
             'loginId' => 'loginId',
@@ -182,7 +182,7 @@ class UserEntityTest extends EntityTester
     public function testUpdateTransportManager()
     {
         $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
-        $nonAdminRole->setId(RoleEntity::ROLE_OPERATOR_USER);
+        $nonAdminRole->setRole(RoleEntity::ROLE_OPERATOR_USER);
 
         $data = [
             'userType' => Entity::USER_TYPE_TRANSPORT_MANAGER,
@@ -234,7 +234,7 @@ class UserEntityTest extends EntityTester
     public function testCreatePartner()
     {
         $role = m::mock(RoleEntity::class)->makePartial();
-        $role->setId(RoleEntity::ROLE_PARTNER_USER);
+        $role->setRole(RoleEntity::ROLE_PARTNER_USER);
 
         $data = [
             'loginId' => 'loginId',
@@ -267,7 +267,7 @@ class UserEntityTest extends EntityTester
     public function testUpdatePartner()
     {
         $role = m::mock(RoleEntity::class)->makePartial();
-        $role->setId(RoleEntity::ROLE_PARTNER_USER);
+        $role->setRole(RoleEntity::ROLE_PARTNER_USER);
 
         $data = [
             'userType' => Entity::USER_TYPE_PARTNER,
@@ -318,7 +318,7 @@ class UserEntityTest extends EntityTester
     public function testCreateLocalAuthority()
     {
         $role = m::mock(RoleEntity::class)->makePartial();
-        $role->setId(RoleEntity::ROLE_LOCAL_AUTHORITY_USER);
+        $role->setRole(RoleEntity::ROLE_LOCAL_AUTHORITY_USER);
 
         $data = [
             'loginId' => 'loginId',
@@ -351,7 +351,7 @@ class UserEntityTest extends EntityTester
     public function testUpdateLocalAuthority()
     {
         $role = m::mock(RoleEntity::class)->makePartial();
-        $role->setId(RoleEntity::ROLE_LOCAL_AUTHORITY_USER);
+        $role->setRole(RoleEntity::ROLE_LOCAL_AUTHORITY_USER);
 
         $data = [
             'userType' => Entity::USER_TYPE_LOCAL_AUTHORITY,
@@ -402,7 +402,7 @@ class UserEntityTest extends EntityTester
     public function testCreateOperator()
     {
         $adminRole = m::mock(RoleEntity::class)->makePartial();
-        $adminRole->setId(RoleEntity::ROLE_OPERATOR_ADMIN);
+        $adminRole->setRole(RoleEntity::ROLE_OPERATOR_ADMIN);
 
         $data = [
             'loginId' => 'loginId',
@@ -436,7 +436,7 @@ class UserEntityTest extends EntityTester
     public function testUpdateOperator()
     {
         $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
-        $nonAdminRole->setId(RoleEntity::ROLE_OPERATOR_USER);
+        $nonAdminRole->setRole(RoleEntity::ROLE_OPERATOR_USER);
 
         $data = [
             'userType' => Entity::USER_TYPE_OPERATOR,
@@ -488,10 +488,10 @@ class UserEntityTest extends EntityTester
     public function testUpdateOperatorIsAdministratorOnly()
     {
         $adminRole = m::mock(RoleEntity::class)->makePartial();
-        $adminRole->setId(RoleEntity::ROLE_OPERATOR_ADMIN);
+        $adminRole->setRole(RoleEntity::ROLE_OPERATOR_ADMIN);
 
         $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
-        $nonAdminRole->setId(RoleEntity::ROLE_OPERATOR_USER);
+        $nonAdminRole->setRole(RoleEntity::ROLE_OPERATOR_USER);
 
         $data = [
             'userType' => Entity::USER_TYPE_OPERATOR,
@@ -527,7 +527,7 @@ class UserEntityTest extends EntityTester
     public function testCreateThrowsInvalidRoleException()
     {
         $role = m::mock(RoleEntity::class)->makePartial();
-        $role->setId(RoleEntity::ROLE_INTERNAL_ADMIN);
+        $role->setRole(RoleEntity::ROLE_INTERNAL_ADMIN);
 
         $data = [
             'loginId' => 'loginId',
@@ -551,7 +551,7 @@ class UserEntityTest extends EntityTester
     public function testUpdateThrowsInvalidRoleException()
     {
         $role = m::mock(RoleEntity::class)->makePartial();
-        $role->setId(RoleEntity::ROLE_INTERNAL_ADMIN);
+        $role->setRole(RoleEntity::ROLE_INTERNAL_ADMIN);
 
         $data = [
             'userType' => Entity::USER_TYPE_OPERATOR,
@@ -595,7 +595,7 @@ class UserEntityTest extends EntityTester
         $roles = array_map(
             function ($id) {
                 $role = m::mock(RoleEntity::class)->makePartial();
-                $role->setId($id);
+                $role->setRole($id);
 
                 return $role;
             },

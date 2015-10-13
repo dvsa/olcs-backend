@@ -16,16 +16,16 @@ use Doctrine\Common\Collections\Collection;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="transaction",
+ * @ORM\Table(name="txn",
  *    indexes={
- *        @ORM\Index(name="ix_transaction_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_transaction_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_transaction_transaction_status", columns={"status"}),
- *        @ORM\Index(name="ix_transaction_transaction_type", columns={"type"}),
- *        @ORM\Index(name="ix_transaction_waive_recommender_user_id",
-     *     columns={"waive_recommender_user_id"}),
- *        @ORM\Index(name="ix_transaction_processed_by_user_id", columns={"processed_by_user_id"}),
- *        @ORM\Index(name="ix_transaction_payment_method", columns={"payment_method"})
+ *        @ORM\Index(name="ix_txn_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_txn_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_txn_status", columns={"status"}),
+ *        @ORM\Index(name="ix_txn_waive_recommender_user_id", columns={"waive_recommender_user_id"}),
+ *        @ORM\Index(name="ix_txn_processed_by_user_id", columns={"processed_by_user_id"}),
+ *        @ORM\Index(name="ix_txn_olbs_key", columns={"olbs_key"}),
+ *        @ORM\Index(name="ix_txn_payment_method", columns={"payment_method"}),
+ *        @ORM\Index(name="ix_txn_type", columns={"type"})
  *    }
  * )
  */
@@ -38,7 +38,7 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="cheque_po_date", nullable=true)
+     * @ORM\Column(type="date", name="cheque_po_date", nullable=true)
      */
     protected $chequePoDate;
 
@@ -56,7 +56,7 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="comment", length=255, nullable=true)
+     * @ORM\Column(type="string", name="comment", length=1000, nullable=true)
      */
     protected $comment;
 
@@ -93,7 +93,7 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="gateway_url", length=255, nullable=true)
+     * @ORM\Column(type="string", name="gateway_url", length=1000, nullable=true)
      */
     protected $gatewayUrl;
 
@@ -137,6 +137,15 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     protected $legacyChoice;
 
     /**
+     * Legacy guid
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="legacy_guid", length=255, nullable=true)
+     */
+    protected $legacyGuid;
+
+    /**
      * Legacy method
      *
      * @var int
@@ -153,6 +162,24 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="smallint", name="legacy_status", nullable=true)
      */
     protected $legacyStatus;
+
+    /**
+     * Olbs key
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
+     */
+    protected $olbsKey;
+
+    /**
+     * Olbs type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="olbs_type", length=45, nullable=true)
+     */
+    protected $olbsType;
 
     /**
      * Payer name
@@ -530,6 +557,29 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     }
 
     /**
+     * Set the legacy guid
+     *
+     * @param string $legacyGuid
+     * @return Transaction
+     */
+    public function setLegacyGuid($legacyGuid)
+    {
+        $this->legacyGuid = $legacyGuid;
+
+        return $this;
+    }
+
+    /**
+     * Get the legacy guid
+     *
+     * @return string
+     */
+    public function getLegacyGuid()
+    {
+        return $this->legacyGuid;
+    }
+
+    /**
      * Set the legacy method
      *
      * @param int $legacyMethod
@@ -573,6 +623,52 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     public function getLegacyStatus()
     {
         return $this->legacyStatus;
+    }
+
+    /**
+     * Set the olbs key
+     *
+     * @param int $olbsKey
+     * @return Transaction
+     */
+    public function setOlbsKey($olbsKey)
+    {
+        $this->olbsKey = $olbsKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the olbs key
+     *
+     * @return int
+     */
+    public function getOlbsKey()
+    {
+        return $this->olbsKey;
+    }
+
+    /**
+     * Set the olbs type
+     *
+     * @param string $olbsType
+     * @return Transaction
+     */
+    public function setOlbsType($olbsType)
+    {
+        $this->olbsType = $olbsType;
+
+        return $this;
+    }
+
+    /**
+     * Get the olbs type
+     *
+     * @return string
+     */
+    public function getOlbsType()
+    {
+        return $this->olbsType;
     }
 
     /**

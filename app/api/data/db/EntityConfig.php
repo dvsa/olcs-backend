@@ -14,17 +14,16 @@ return array(
                 'skipManyToMany' => true
             ]
         ],
-// @todo uncomment this when schema updated
-//        'classNameForTable' => [
-//            'txn' => 'Transaction',
-//            'fee_txn' => 'FeeTransaction'
-//        ],
-//        'fieldNameForColumn' => [
-//            'fee_txn' => [
-//                'txn_id' => 'transaction',
-//                'reversed_fee_txn_id' => 'reversedFeeTransaction'
-//            ]
-//        ]
+       'classNameForTable' => [
+           'txn' => 'Transaction',
+           'fee_txn' => 'FeeTransaction'
+       ],
+       'fieldNameForColumn' => [
+           'fee_txn' => [
+               'txn_id' => 'transaction',
+               'reversed_fee_txn_id' => 'reversedFeeTransaction'
+           ]
+       ]
     ),
     'namespaces' => include(__DIR__ . '/../../module/Api/config/namespace.config.php'),
     'organisation' => array(
@@ -619,8 +618,12 @@ return array(
                 'property' => 'licenceVehicle'
             ),
             'cascade' => array(
-                'persist'
+                'persist',
+                'remove',
             ),
+            // we can't lazy-load this or we get optimistic lock errors on
+            // deletion (or cascade remove)
+            'fetch' => 'EAGER',
         ),
         'removal' => array(
             'type' => 'yesnonull'
@@ -1335,7 +1338,13 @@ return array(
     'txc_inbox' => array(
         'file_read' => array(
             'type' => 'yesnonull'
-        )
+        ),
+        'bus_reg_id' => array(
+            'inversedBy' => array(
+                'entity' => 'BusReg',
+                'property' => 'txcDocument'
+            )
+        ),
     ),
     'public_holiday' => array(
         'is_england' => array(
@@ -1452,9 +1461,7 @@ return array(
             )
         )
     ),
-    'fee_transaction' => array(
-    // @todo uncomment this when schema updated
-    //'fee_txn' => array(
+    'fee_txn' => array(
         'fee_id' => array(
             'inversedBy' => array(
                 'entity' => 'Fee',
@@ -1467,9 +1474,7 @@ return array(
                 'persist'
             ),
         ),
-        'transaction_id' => array(
-        // @todo uncomment this when schema updated
-        //'txn_id' => array(
+        'txn_id' => array(
             'inversedBy' => array(
                 'entity' => 'Transaction',
                 'property' => 'feeTransaction',

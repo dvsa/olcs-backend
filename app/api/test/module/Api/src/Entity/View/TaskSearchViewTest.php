@@ -39,7 +39,6 @@ class TaskSearchViewTest extends \PHPUnit_Framework_TestCase
             'id' => 69,
             'irfoOpName' => 'irfoop',
             'isClosed' => 1,
-            'licenceCount' => 99,
             'licenceId' => 8,
             'licenceNo' => 'LICNO',
             'linkDisplay' => 'linky',

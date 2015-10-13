@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_statement_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_statement_contact_type", columns={"contact_type"}),
  *        @ORM\Index(name="ix_statement_statement_type", columns={"statement_type"}),
- *        @ORM\Index(name="fk_statement_contact_details1_idx",
+ *        @ORM\Index(name="ix_statement_requestors_contact_details_id",
      *     columns={"requestors_contact_details_id"}),
  *        @ORM\Index(name="ix_statement_licence_type", columns={"licence_type"})
  *    },

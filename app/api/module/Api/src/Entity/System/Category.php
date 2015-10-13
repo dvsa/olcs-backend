@@ -63,4 +63,5 @@ class Category extends AbstractCategory
     const DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE = 74;
     const DOC_SUB_CATEGORY_CPID = 170;
     const DOC_SUB_CATEGORY_DISCS = 166;
+    const DOC_SUB_CATEGORY_FINANCIAL_REPORTS = 180;
 }

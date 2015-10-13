@@ -16,7 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_vehicle",
  *    indexes={
- *        @ORM\Index(name="ix_irfo_vehicle_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
  *        @ORM\Index(name="ix_irfo_vehicle_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_irfo_vehicle_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_irfo_vehicle_irfo_gv_permit_id", columns={"irfo_gv_permit_id"})
@@ -114,16 +113,6 @@ abstract class AbstractIrfoVehicle implements BundleSerializableInterface, JsonS
      * @ORM\JoinColumn(name="irfo_gv_permit_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoGvPermit;
-
-    /**
-     * Irfo psv auth
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth", fetch="LAZY")
-     * @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id", nullable=true)
-     */
-    protected $irfoPsvAuth;
 
     /**
      * Last modified by
@@ -377,29 +366,6 @@ abstract class AbstractIrfoVehicle implements BundleSerializableInterface, JsonS
     public function getIrfoGvPermit()
     {
         return $this->irfoGvPermit;
-    }
-
-    /**
-     * Set the irfo psv auth
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth $irfoPsvAuth
-     * @return IrfoVehicle
-     */
-    public function setIrfoPsvAuth($irfoPsvAuth)
-    {
-        $this->irfoPsvAuth = $irfoPsvAuth;
-
-        return $this;
-    }
-
-    /**
-     * Get the irfo psv auth
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth
-     */
-    public function getIrfoPsvAuth()
-    {
-        return $this->irfoPsvAuth;
     }
 
     /**

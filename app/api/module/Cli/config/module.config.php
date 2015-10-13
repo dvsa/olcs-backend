@@ -95,7 +95,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklistReminderGenerateLetter::class,
             Queue::TYPE_TM_SNAPSHOT
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\Snapshot::class,
-
+            Queue::TYPE_CPMS_REPORT_DOWNLOAD
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportDownload::class,
         ],
         'factories' => [
             'que_typ_cpid_export_csv'
@@ -104,7 +105,7 @@ return [
     ],
     'queue' => [
         //'isLongRunningProcess' => true,
-        'runFor' => 60
+        'runFor' => 60,
     ],
     'file-system' => [
         'path' => '/tmp'

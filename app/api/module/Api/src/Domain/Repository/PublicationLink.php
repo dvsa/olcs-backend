@@ -23,16 +23,6 @@ class PublicationLink extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function delete($entity)
-    {
-        /** @var Entity $entity */
-        if ($entity->getPublication()->getPubStatus()->getId() !== PublicationEntity::PUB_NEW_STATUS) {
-            throw new ForbiddenException('Only unpublished entries may be deleted');
-        }
-
-        parent::delete($entity);
-    }
-
     /**
      * @param int $busRegId
      * @return array
@@ -61,10 +51,16 @@ class PublicationLink extends AbstractRepository
             )->setParameter('transportManager', $query->getTransportManager());
         }
 
-        if (method_exists($query, 'getLicence')) {
+        if (method_exists($query, 'getLicence') && $query->getLicence()) {
             $qb->andWhere(
                 $qb->expr()->eq($this->alias . '.licence', ':licence')
             )->setParameter('licence', $query->getLicence());
+        }
+
+        if (method_exists($query, 'getApplication') && $query->getApplication()) {
+            $qb->andWhere(
+                $qb->expr()->eq($this->alias . '.application', ':application')
+            )->setParameter('application', $query->getApplication());
         }
     }
 
