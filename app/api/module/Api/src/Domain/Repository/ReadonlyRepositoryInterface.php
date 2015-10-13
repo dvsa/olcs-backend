@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
@@ -22,6 +23,13 @@ use Doctrine\ORM\QueryBuilder;
  */
 interface ReadonlyRepositoryInterface
 {
+    /**
+     * Called from the factory to allow additional services to be injected
+     *
+     * @param RepositoryServiceManager $serviceManager
+     */
+    public function initService(RepositoryServiceManager $serviceManager);
+
     public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null);
 
     public function fetchById($id, $hydrateMode = Query::HYDRATE_OBJECT, $version = null);
