@@ -101,7 +101,6 @@ class FeeTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('with')
-            //->withAnyArgs()
             ->andReturnSelf()
             ->shouldReceive('order')
             ->with('invoicedDate', 'ASC')
