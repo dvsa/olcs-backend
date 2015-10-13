@@ -314,7 +314,9 @@ class Fee extends AbstractRepository
         $doctrineQb
             ->leftJoin('f.application', 'a')
             ->leftJoin('f.licence', 'l')
-            ->leftJoin('a.licence', 'al', Join::WITH, $doctrineQb->expr()->orX(
+            ->leftJoin('a.licence', 'al')
+            ->andWhere(
+                $doctrineQb->expr()->orX(
                     $doctrineQb->expr()->eq('l.organisation', ':organisationId'),
                     $doctrineQb->expr()->eq('al.organisation', ':organisationId')
                 )
