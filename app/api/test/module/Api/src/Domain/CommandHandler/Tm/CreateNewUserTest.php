@@ -44,6 +44,7 @@ class CreateNewUserTest extends CommandHandlerTestCase
         $this->mockRepo('TransportManager', Repository\TransportManager::class);
         $this->mockRepo('TransportManagerApplication', Repository\TransportManagerApplication::class);
         $this->mockRepo('Address', Repository\Address::class);
+        $this->mockRepo('Role', Repository\Role::class);
 
         parent::setUp();
     }
@@ -55,12 +56,6 @@ class CreateNewUserTest extends CommandHandlerTestCase
             TransportManager::TRANSPORT_MANAGER_STATUS_CURRENT,
             TransportManagerApplication::STATUS_INCOMPLETE,
             TransportManagerApplication::STATUS_POSTAL_APPLICATION
-        ];
-
-        $this->references = [
-            Role::class => [
-                Role::ROLE_OPERATOR_TM => m::mock(Role::class)
-            ]
         ];
 
         parent::initReferences();
@@ -277,6 +272,13 @@ class CreateNewUserTest extends CommandHandlerTestCase
                 }
             );
 
+        $role = m::mock(Role::class)->makePartial();
+        $role->setRole(Role::ROLE_OPERATOR_TM);
+
+        $this->repoMap['Role']->shouldReceive('fetchOneByRole')
+            ->with(Role::ROLE_OPERATOR_TM)
+            ->andReturn($role);
+
         $this->repoMap['User']->shouldReceive('save')->once()
             ->with(m::type(User::class))
             ->andReturnUsing(
@@ -285,10 +287,7 @@ class CreateNewUserTest extends CommandHandlerTestCase
                     $this->assertSame($savedContactDetails[0], $user->getContactDetails());
                     $this->assertEquals('Foo', $user->getLoginId());
                     $this->assertCount(1, $user->getRoles());
-                    $this->assertSame(
-                        $this->references[Role::class][Role::ROLE_OPERATOR_TM],
-                        $user->getRoles()->first()
-                    );
+                    $this->assertEquals(Role::ROLE_OPERATOR_TM, $user->getRoles()->first()->getRole());
                     $this->assertSame($savedTm, $user->getTransportManager());
                 }
             );
