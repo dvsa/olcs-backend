@@ -52,14 +52,12 @@ class Correspondence extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
+        $qb->select('COUNT(co)');
         $qb->join('co.licence', 'l', Join::WITH, $qb->expr()->eq('l.organisation', ':organisationId'));
         $qb->andWhere($qb->expr()->eq('co.accessed', ':accessed'));
         $qb->setParameter(':organisationId', $organisationId);
         $qb->setParameter(':accessed', 'N');
 
-        $query = $qb->getQuery();
-
-        $paginator = $this->getPaginator($query);
-        return $paginator->count();
+        return $qb->getQuery()->getSingleScalarResult();
     }
 }
