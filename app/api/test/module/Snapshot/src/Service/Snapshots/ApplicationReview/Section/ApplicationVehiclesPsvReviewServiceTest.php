@@ -89,53 +89,33 @@ class ApplicationVehiclesPsvReviewServiceTest extends MockeryTestCase
                     'licenceVehicles' => [
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_SMALL
-                                ],
                                 'vrm' => 'SM10QWE',
                                 'makeModel' => 'Foo Bar',
-                                'isNovelty' => 'Y'
                             ]
                         ],
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_SMALL
-                                ],
                                 'vrm' => 'SM11QWE',
                                 'makeModel' => 'Foo Bar',
-                                'isNovelty' => 'N'
                             ]
                         ],
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_MEDIUM
-                                ],
                                 'vrm' => 'ME10QWE'
                             ]
                         ],
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_MEDIUM
-                                ],
                                 'vrm' => 'ME11QWE'
                             ]
                         ],
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_LARGE
-                                ],
                                 'vrm' => 'LG10QWE'
                             ]
                         ],
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_LARGE
-                                ],
                                 'vrm' => 'LG11QWE'
                             ]
                         ]

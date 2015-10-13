@@ -18,8 +18,4 @@ use Dvsa\Olcs\Api\Entity;
  */
 class PsvVehicles extends \Dvsa\Olcs\Api\Domain\QueryHandler\Application\PsvVehicles
 {
-    protected function hasBreakdown(Entity\Application\Application $application)
-    {
-        return $application->hasPsvBreakdown();
-    }
 }

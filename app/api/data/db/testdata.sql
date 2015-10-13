@@ -1222,16 +1222,16 @@ INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
     (8, 3); -- anotheruser=internal-case-worker
 
 INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`,
-    `certificate_no`, `vi_action`, `psv_type`, `created_on`,
+    `certificate_no`, `vi_action`, `created_on`,
     `last_modified_on`, `version`, `section_26`) VALUES
-    (1,NULL,4,'VRM1',7200,'CERT10001',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
-    (2,NULL,6,'VRM2',3500,'CERT10002',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
-    (3,NULL,5,'VRM3',3800,'CERT10003',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
-    (4,NULL,1,'VRM4',6800,'CERT10004',NULL,'vhl_t_a','2010-01-12 00:00:00','2014-02-20 00:00:00',1, 1),
-    (5,NULL,4,'VRM1',7200,'CERT10005',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
-    (6,NULL,6,'VRM2',3500,'CERT10006',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
-    (7,NULL,5,'VRM3',3800,'CERT10007',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
-    (8,NULL,1,'VRM4',6800,'CERT10008',NULL,NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0);
+    (1,NULL,4,'VRM1',7200,'CERT10001',NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
+    (2,NULL,6,'VRM2',3500,'CERT10002',NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
+    (3,NULL,5,'VRM3',3800,'CERT10003',NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
+    (4,NULL,1,'VRM4',6800,'CERT10004',NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 1),
+    (5,NULL,4,'VRM1',7200,'CERT10005',NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
+    (6,NULL,6,'VRM2',3500,'CERT10006',NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
+    (7,NULL,5,'VRM3',3800,'CERT10007',NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0),
+    (8,NULL,1,'VRM4',6800,'CERT10008',NULL,'2010-01-12 00:00:00','2014-02-20 00:00:00',1, 0);
 
 -- Cases
 INSERT INTO `cases` (`id`,`case_type`,`erru_case_type`,`licence_id`,`application_id`,`transport_manager_id`,
@@ -2127,12 +2127,12 @@ INSERT INTO `phone_contact` (`id`,`contact_details_id`,`phone_contact_type`,`pho
     (19,146,'phone_t_mobile','012347'),
     (20,146,'phone_t_fax','012348');
 -- vehicles for unlicensed operators
-INSERT INTO `vehicle` (`id`,`vrm`,`plated_weight`,`psv_type`,`created_on`) VALUES
-    (9,'ABC123','750',NULL,'2015-07-16'),
-    (10,'ABC124','895',NULL,'2015-07-17'),
-    (11,'ABC125',NULL,'vhl_t_a','2015-07-16'),
-    (12,'ABC126',NULL,'vhl_t_b','2015-07-17'),
-    (13,'ABC127',NULL,'vhl_t_c','2015-07-18');
+INSERT INTO `vehicle` (`id`,`vrm`,`plated_weight`,`created_on`) VALUES
+    (9,'ABC123','750','2015-07-16'),
+    (10,'ABC124','895','2015-07-17'),
+    (11,'ABC125',NULL,'2015-07-16'),
+    (12,'ABC126',NULL,'2015-07-17'),
+    (13,'ABC127',NULL,'2015-07-18');
 
 INSERT INTO `licence_vehicle` (`licence_id`,`vehicle_id`) VALUES
     (701, 9),
@@ -2166,12 +2166,12 @@ INSERT INTO `phone_contact` (`id`,`contact_details_id`,`phone_contact_type`,`pho
   (33,181,'phone_t_fax','012348');
 
 -- OLCS-10506 vehicles
-INSERT INTO `vehicle` (`id`,`vrm`,`plated_weight`,`psv_type`,`created_on`) VALUES
-  (20,'ABC123','750',NULL,'2015-07-16'),
-  (21,'ABC124','895',NULL,'2015-07-17'),
-  (22,'ABC125',NULL,'vhl_t_a','2015-07-16'),
-  (23,'ABC126',NULL,'vhl_t_b','2015-07-17'),
-  (24,'ABC127',NULL,'vhl_t_c','2015-07-18');
+INSERT INTO `vehicle` (`id`,`vrm`,`plated_weight`,`created_on`) VALUES
+  (20,'ABC123','750','2015-07-16'),
+  (21,'ABC124','895','2015-07-17'),
+  (22,'ABC125',NULL,'2015-07-16'),
+  (23,'ABC126',NULL,'2015-07-17'),
+  (24,'ABC127',NULL,'2015-07-18');
 
 INSERT INTO `licence_vehicle` (`licence_id`,`vehicle_id`) VALUES
   (99, 20),
