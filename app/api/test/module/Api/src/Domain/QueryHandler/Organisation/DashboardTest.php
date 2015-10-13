@@ -9,6 +9,9 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Dashboard;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
+use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Correspondence as CorrespondenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Transfer\Query\Organisation\Dashboard as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -29,6 +32,9 @@ class DashboardTest extends QueryHandlerTestCase
     {
         $this->sut = new Dashboard();
         $this->mockRepo('Organisation', OrganisationRepo::class);
+        $this->mockRepo('Application', ApplicationRepo::class);
+        $this->mockRepo('Correspondence', CorrespondenceRepo::class);
+        $this->mockRepo('Fee', FeeRepo::class);
 
         parent::setUp();
     }
@@ -44,27 +50,22 @@ class DashboardTest extends QueryHandlerTestCase
 
         $mockOrganisation = m::mock(OrganisationEntity::class)
             ->makePartial()
-            ->setId($organisationId)
-            ->shouldReceive('serialize')->andReturn(['id' => $organisationId])
+            ->setId($organisationId);
+        $mockOrganisation
+            ->shouldReceive('serialize')->once()->andReturn(['id' => $organisationId])
             ->getMock();
 
         $mockLicence = m::mock(LicenceEntity::class)
             ->makePartial()
             ->setId($licenceId);
         $mockLicence
-            ->shouldReceive('getStatus->getId')
-            ->andReturn(LicenceEntity::LICENCE_STATUS_VALID);
-        $mockLicence
-            ->shouldReceive('serialize')->andReturn(['id' => $licenceId]);
+            ->shouldReceive('serialize')->once()->andReturn(['id' => $licenceId]);
 
         $mockApplication = m::mock(ApplicationEntity::class)
             ->makePartial()
             ->setId($applicationId);
         $mockApplication
-            ->shouldReceive('getStatus->getId')
-            ->andReturn(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION);
-        $mockApplication
-            ->shouldReceive('serialize')->andReturn(['id' => $applicationId]);
+            ->shouldReceive('serialize')->once()->andReturn(['id' => $applicationId]);
 
         $mockVariation = m::mock(ApplicationEntity::class)
             ->makePartial()
@@ -76,21 +77,42 @@ class DashboardTest extends QueryHandlerTestCase
         $mockVariation
             ->shouldReceive('serialize')->andReturn(['id' => $variationId]);
 
-        $applications = new ArrayCollection();
-        $applications->add($mockApplication);
-        $applications->add($mockVariation);
-        $mockLicence->setApplications($applications);
-
         $licences = new ArrayCollection();
         $licences->add($mockLicence);
 
-        $mockOrganisation->setLicences($licences);
+        $mockOrganisation
+            ->shouldReceive('getActiveLicences')
+            ->once()
+            ->andReturn($licences);
 
         $this->repoMap['Organisation']
             ->shouldReceive('fetchUsingId')
             ->with($query)
             ->once()
             ->andReturn($mockOrganisation);
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchByOrganisationIdAndStatuses')
+            ->with(
+                $organisationId,
+                [
+                    ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                    ApplicationEntity::APPLICATION_STATUS_GRANTED,
+                    ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED
+                ]
+            )
+            ->once()
+            ->andReturn([$mockApplication, $mockVariation]);
+
+        $this->repoMap['Correspondence']
+            ->shouldReceive('getUnreadCountForOrganisation')
+            ->with($organisationId)
+            ->andReturn(99);
+
+        $this->repoMap['Fee']
+            ->shouldReceive('getOutstandingFeeCountByOrganisationId')
+            ->with($organisationId)
+            ->andReturn(123);
 
         $result = $this->sut->handleQuery($query);
 
@@ -108,6 +130,8 @@ class DashboardTest extends QueryHandlerTestCase
                 'variations' =>[
                     [ 'id' => 2],
                 ],
+                'correspondenceCount' => 99,
+                'feeCount' => 123,
             ],
         ];
 
