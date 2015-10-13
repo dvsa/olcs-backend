@@ -40,9 +40,7 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
 
     protected function initReferences()
     {
-        $this->refData = [
-            Entity\Vehicle\Vehicle::PSV_TYPE_SMALL
-        ];
+        $this->refData = [];
 
         parent::initReferences();
     }
@@ -93,8 +91,6 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
                 'application' => 111,
                 'vrm' => 'AA11AAA',
                 'makeModel' => 'Foo',
-                'isNovelty' => 'Y',
-                'type' => 'small',
                 'receivedDate' => '2015-01-01'
             ]
         );
@@ -141,8 +137,6 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
                     $vehicle->setId(123);
                     $this->assertEquals('AA11AAA', $vehicle->getVrm());
                     $this->assertEquals('Foo', $vehicle->getMakeModel());
-                    $this->assertEquals('Y', $vehicle->getIsNovelty());
-                    $this->assertSame($this->refData[Entity\Vehicle\Vehicle::PSV_TYPE_SMALL], $vehicle->getPsvType());
                 }
             );
 
@@ -195,8 +189,6 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
                 'application' => 111,
                 'vrm' => 'AA11AAA',
                 'makeModel' => 'Foo',
-                'isNovelty' => 'Y',
-                'type' => 'small',
                 'receivedDate' => '2015-01-01'
             ]
         );
@@ -234,8 +226,6 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
                     $vehicle->setId(123);
                     $this->assertEquals('AA11AAA', $vehicle->getVrm());
                     $this->assertEquals('Foo', $vehicle->getMakeModel());
-                    $this->assertEquals('Y', $vehicle->getIsNovelty());
-                    $this->assertSame($this->refData[Entity\Vehicle\Vehicle::PSV_TYPE_SMALL], $vehicle->getPsvType());
                 }
             );
 
@@ -288,8 +278,6 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
                 'application' => 111,
                 'vrm' => 'AA11AAA',
                 'makeModel' => 'Foo',
-                'isNovelty' => 'Y',
-                'type' => 'small',
                 'receivedDate' => '2015-01-01'
             ]
         );

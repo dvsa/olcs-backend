@@ -76,27 +76,6 @@ class LicenceVehicle extends AbstractRepository
 
     /**
      * @param ApplicationEntity|LicenceEntity $entity
-     * @param $psvType
-     * @return mixed
-     */
-    public function getPsvVehiclesByType($entity, $psvType, $includeRemoved = false)
-    {
-        $licenceVehicles = $this->getAllPsvVehicles($entity, $includeRemoved);
-
-        $type = $this->getRefdataReference($psvType);
-
-        /** @var Entity $licenceVehicle */
-        foreach ($licenceVehicles as $licenceVehicle) {
-            if ($licenceVehicle->getVehicle()->getPsvType() !== $type) {
-                $licenceVehicles->removeElement($licenceVehicle);
-            }
-        }
-
-        return $licenceVehicles;
-    }
-
-    /**
-     * @param ApplicationEntity|LicenceEntity $entity
      */
     public function getAllPsvVehicles($entity, $includeRemoved = false)
     {

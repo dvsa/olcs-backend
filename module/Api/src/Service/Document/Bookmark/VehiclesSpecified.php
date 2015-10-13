@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
 use Doctrine\Common\Collections\Criteria;
 
@@ -22,9 +21,7 @@ class VehiclesSpecified extends DynamicBookmark
         $criteria->andWhere($criteria->expr()->neq('specifiedDate', null));
         $bundle = [
             'licenceVehicles' => [
-                'vehicle' => [
-                    'psvType'
-                ],
+                'vehicle',
                 'criteria' => $criteria
             ]
         ];
