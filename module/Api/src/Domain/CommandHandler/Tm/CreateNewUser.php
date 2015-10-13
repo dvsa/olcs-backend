@@ -41,7 +41,8 @@ final class CreateNewUser extends AbstractCommandHandler implements Transactione
         'Person',
         'TransportManager',
         'TransportManagerApplication',
-        'Address'
+        'Address',
+        'Role'
     ];
 
     /**
@@ -186,7 +187,7 @@ final class CreateNewUser extends AbstractCommandHandler implements Transactione
     {
         $userData = [
             'roles' => [
-                $this->getRepo()->getReference(Role::class, Role::ROLE_OPERATOR_TM)
+                $this->getRepo('Role')->fetchOneByRole(Role::ROLE_OPERATOR_TM)
             ],
             'loginId' => $username,
             'transportManager' => $transportManager
