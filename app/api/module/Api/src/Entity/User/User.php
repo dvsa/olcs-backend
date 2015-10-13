@@ -207,7 +207,7 @@ class User extends AbstractUser
                 // user's roles selected
                 array_map(
                     function ($role) {
-                        return $role->getId();
+                        return $role->getRole();
                     },
                     $roles
                 ),
@@ -439,7 +439,7 @@ class User extends AbstractUser
                 // user's roles
                 array_map(
                     function ($role) {
-                        return $role->getId();
+                        return $role->getRole();
                     },
                     $this->roles->toArray()
                 )
