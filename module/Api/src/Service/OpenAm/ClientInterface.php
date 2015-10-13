@@ -1,6 +1,7 @@
 <?php
 
 namespace Dvsa\Olcs\Api\Service\OpenAm;
+
 use Zend\Http\Request;
 
 /**

@@ -78,12 +78,18 @@ final class CreateUser extends AbstractCommandHandler implements
 
         $this->getRepo()->save($user);
 
+        $realm = Client::REALM_SELFSERVE;
+
+        if ($user->getUserType() === User::USER_TYPE_INTERNAL) {
+            $realm = Client::REALM_INTERNAL;
+        }
+
         $this->getOpenAmUser()->registerUser(
             $command->getLoginId(),
             $command->getContactDetails()['emailAddress'],
             $command->getContactDetails()['person']['forename'],
             $command->getContactDetails()['person']['familyName'],
-            Client::REALM_INTERNAL
+            $realm
         );
 
         $result = new Result();

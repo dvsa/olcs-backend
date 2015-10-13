@@ -63,6 +63,109 @@ class CreateUserTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
+    public function testHandleCommandInternalUser()
+    {
+        $userId = 111;
+        $licenceNumber = 'LIC123';
+
+        $data = [
+            'userType' => UserEntity::USER_TYPE_INTERNAL,
+            'team' => 1,
+            'licenceNumber' => $licenceNumber,
+            'loginId' => 'login_id',
+            'contactDetails' => [
+                'emailAddress' => 'test1@test.me',
+                'person' => [
+                    'title' => m::mock(RefData::class),
+                    'forename' => 'updated forename',
+                    'familyName' => 'updated familyName',
+                    'birthDate' => '1975-12-12',
+                ],
+                'address' => [
+                    'addressLine1' => 'a12',
+                    'addressLine2' => 'a23',
+                    'addressLine3' => 'a34',
+                    'addressLine4' => 'a45',
+                    'town' => 'town',
+                    'postcode' => 'LS1 2AB',
+                    'countryCode' => m::mock(Country::class),
+                ],
+                'phoneContacts' => [
+                    [
+                        'phoneContactType' => m::mock(RefData::class),
+                        'phoneNumber' => '111',
+                    ],
+                    [
+                        'phoneContactType' => m::mock(RefData::class),
+                        'phoneNumber' => '222',
+                    ]
+                ],
+            ],
+        ];
+
+        $command = Cmd::create($data);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true);
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
+            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName', 'internal');
+
+        $this->repoMap['User']
+            ->shouldReceive('populateRefDataReference')
+            ->once()
+            ->andReturn($data);
+
+        $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
+            ->once()
+            ->with($data['contactDetails'])
+            ->andReturn($data['contactDetails']);
+
+        /** @var UserEntity $savedUser */
+        $savedUser = null;
+
+        $this->repoMap['User']->shouldReceive('save')
+            ->once()
+            ->with(m::type(UserEntity::class))
+            ->andReturnUsing(
+                function (UserEntity $user) use (&$savedUser, $userId) {
+                    $user->setId($userId);
+                    $savedUser = $user;
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'user' => $userId,
+            ],
+            'messages' => [
+                'User created successfully'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertInstanceOf(ContactDetailsEntity::class, $savedUser->getContactDetails());
+        $this->assertEquals(
+            UserEntity::USER_TYPE_INTERNAL,
+            $savedUser->getUserType()
+        );
+        $this->assertEquals(
+            ContactDetailsEntity::CONTACT_TYPE_USER,
+            $savedUser->getContactDetails()->getContactType()->getId()
+        );
+        $this->assertEquals(
+            $data['contactDetails']['emailAddress'],
+            $savedUser->getContactDetails()->getEmailAddress()
+        );
+    }
+
     public function testHandleCommand()
     {
         $userId = 111;
@@ -113,7 +216,7 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
-             ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName', 'internal');
+             ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName', 'selfserve');
 
         $this->repoMap['User']
             ->shouldReceive('fetchByLoginId')
@@ -232,7 +335,7 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
-            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName', 'internal');
+            ->with('login_id', 'test1@test.me', 'updated forename', 'updated familyName', 'selfserve');
 
         $this->repoMap['User']
             ->shouldReceive('fetchByLoginId')

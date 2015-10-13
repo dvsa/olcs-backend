@@ -697,4 +697,24 @@ class UserEntityTest extends EntityTester
             ],
         ];
     }
+
+    public function testAnon()
+    {
+        $user = Entity::anon();
+
+        $role = $user->getRoles()->current();
+
+        $this->assertEquals(1, $user->getRoles()->count());
+        $this->assertInstanceOf(RoleEntity::class, $role);
+        $this->assertEquals(RoleEntity::ROLE_ANON, $role->getId());
+        $this->assertEquals('anon', $user->getLoginId());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testAnonUsernameReserved()
+    {
+        Entity::create('123456', Entity::USER_TYPE_INTERNAL, ['loginId' => 'anon']);
+    }
 }
