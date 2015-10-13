@@ -111,14 +111,14 @@ class Fee extends AbstractRepository
     {
         $doctrineQb = $this->createQueryBuilder();
 
+        $doctrineQb->select('COUNT(f)');
         $this->whereOutstandingFee($doctrineQb);
+
+        // @todo this is still slow, might be better doing 2 queries rather
+        // than an OR
         $this->whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId);
 
-        $query = $doctrineQb->getQuery();
-
-        $paginator = $this->getPaginator($query);
-
-        return $paginator->count();
+        return $doctrineQb->getQuery()->getSingleScalarResult();
     }
 
     /**
