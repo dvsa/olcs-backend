@@ -765,9 +765,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $this->setGoodsOrPsv($licence->getGoodsOrPsv());
         $this->setTotAuthTrailers($licence->getTotAuthTrailers());
         $this->setTotAuthVehicles($licence->getTotAuthVehicles());
-        $this->setTotAuthSmallVehicles($licence->getTotAuthSmallVehicles());
-        $this->setTotAuthMediumVehicles($licence->getTotAuthMediumVehicles());
-        $this->setTotAuthLargeVehicles($licence->getTotAuthLargeVehicles());
         $this->setNiFlag($licence->getNiFlag());
     }
 
@@ -1091,16 +1088,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return false;
     }
 
-    public function canHaveLargeVehicles()
-    {
-        $allowLargeVehicles = [
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
-        ];
-
-        return $this->isPsv() && in_array($this->getLicenceType()->getId(), $allowLargeVehicles);
-    }
-
     public function canHaveCommunityLicences()
     {
         return ($this->isStandardInternational() || ($this->isPsv() && $this->isRestricted()));
@@ -1341,9 +1328,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $comparisons = [
             'TotAuthVehicles',
             'TotAuthTrailers',
-            'TotAuthSmallVehicles',
-            'TotAuthMediumVehicles',
-            'TotAuthLargeVehicles'
         ];
 
         foreach ($comparisons as $comparison) {

@@ -568,33 +568,6 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     protected $targetCompletionDate;
 
     /**
-     * Tot auth large vehicles
-     *
-     * @var int
-     *
-     * @ORM\Column(type="smallint", name="tot_auth_large_vehicles", nullable=true)
-     */
-    protected $totAuthLargeVehicles;
-
-    /**
-     * Tot auth medium vehicles
-     *
-     * @var int
-     *
-     * @ORM\Column(type="smallint", name="tot_auth_medium_vehicles", nullable=true)
-     */
-    protected $totAuthMediumVehicles;
-
-    /**
-     * Tot auth small vehicles
-     *
-     * @var int
-     *
-     * @ORM\Column(type="smallint", name="tot_auth_small_vehicles", nullable=true)
-     */
-    protected $totAuthSmallVehicles;
-
-    /**
      * Tot auth trailers
      *
      * @var int
@@ -2132,75 +2105,6 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getTargetCompletionDate()
     {
         return $this->targetCompletionDate;
-    }
-
-    /**
-     * Set the tot auth large vehicles
-     *
-     * @param int $totAuthLargeVehicles
-     * @return Application
-     */
-    public function setTotAuthLargeVehicles($totAuthLargeVehicles)
-    {
-        $this->totAuthLargeVehicles = $totAuthLargeVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the tot auth large vehicles
-     *
-     * @return int
-     */
-    public function getTotAuthLargeVehicles()
-    {
-        return $this->totAuthLargeVehicles;
-    }
-
-    /**
-     * Set the tot auth medium vehicles
-     *
-     * @param int $totAuthMediumVehicles
-     * @return Application
-     */
-    public function setTotAuthMediumVehicles($totAuthMediumVehicles)
-    {
-        $this->totAuthMediumVehicles = $totAuthMediumVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the tot auth medium vehicles
-     *
-     * @return int
-     */
-    public function getTotAuthMediumVehicles()
-    {
-        return $this->totAuthMediumVehicles;
-    }
-
-    /**
-     * Set the tot auth small vehicles
-     *
-     * @param int $totAuthSmallVehicles
-     * @return Application
-     */
-    public function setTotAuthSmallVehicles($totAuthSmallVehicles)
-    {
-        $this->totAuthSmallVehicles = $totAuthSmallVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the tot auth small vehicles
-     *
-     * @return int
-     */
-    public function getTotAuthSmallVehicles()
-    {
-        return $this->totAuthSmallVehicles;
     }
 
     /**

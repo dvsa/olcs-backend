@@ -1062,9 +1062,6 @@ class ApplicationEntityTest extends EntityTester
         $licence->setGoodsOrPsv($goodsOrPsv);
         $licence->setTotAuthTrailers(5);
         $licence->setTotAuthVehicles(6);
-        $licence->setTotAuthSmallVehicles(7);
-        $licence->setTotAuthMediumVehicles(8);
-        $licence->setTotAuthLargeVehicles(9);
         $licence->setTrafficArea($trafficArea);
 
         $this->entity->copyInformationFromLicence($licence);
@@ -1073,9 +1070,6 @@ class ApplicationEntityTest extends EntityTester
         $this->assertEquals($goodsOrPsv, $this->entity->getGoodsOrPsv());
         $this->assertEquals(5, $this->entity->getTotAuthTrailers());
         $this->assertEquals(6, $this->entity->getTotAuthVehicles());
-        $this->assertEquals(7, $this->entity->getTotAuthSmallVehicles());
-        $this->assertEquals(8, $this->entity->getTotAuthMediumVehicles());
-        $this->assertEquals(9, $this->entity->getTotAuthLargeVehicles());
         $this->assertEquals('Y', $this->entity->getNiFlag());
     }
     public function testUseDeltasInPeopleSectionSole()
@@ -2040,24 +2034,6 @@ class ApplicationEntityTest extends EntityTester
         $this->assertEquals('Not applicable', $oorDate);
     }
 
-
-
-    /**
-     * @dataProvider canHaveLargeVehicleProvider
-     */
-    public function testCanHaveLargeVehicles($isPsv, $licenceType, $expected)
-    {
-        /** @var Entity $application */
-        $application = m::mock(Entity::class)->makePartial();
-        $application->shouldReceive('isPsv')
-            ->andReturn($isPsv);
-
-        $application->shouldReceive('getLicenceType->getId')
-            ->andReturn($licenceType);
-
-        $this->assertEquals($expected, $application->canHaveLargeVehicles());
-    }
-
     /**
      * @dataProvider canHaveCommunityLicencesProvider
      */
@@ -2229,42 +2205,6 @@ class ApplicationEntityTest extends EntityTester
                 false,
                 false
             ]
-        ];
-    }
-
-    public function canHaveLargeVehicleProvider()
-    {
-        return [
-            'PSV SN' => [
-                true,
-                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                true
-            ],
-            'PSV SI' => [
-                true,
-                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                true
-            ],
-            'GV SN' => [
-                false,
-                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                false
-            ],
-            'GV SI' => [
-                false,
-                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                false
-            ],
-            'PSV SR' => [
-                true,
-                Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
-                false
-            ],
-            'PSV R' => [
-                true,
-                Licence::LICENCE_TYPE_RESTRICTED,
-                false
-            ],
         ];
     }
 

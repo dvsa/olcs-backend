@@ -513,9 +513,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         $this->setGoodsOrPsv($application->getGoodsOrPsv());
         $this->setTotAuthTrailers($application->getTotAuthTrailers());
         $this->setTotAuthVehicles($application->getTotAuthVehicles());
-        $this->setTotAuthSmallVehicles($application->getTotAuthSmallVehicles());
-        $this->setTotAuthMediumVehicles($application->getTotAuthMediumVehicles());
-        $this->setTotAuthLargeVehicles($application->getTotAuthLargeVehicles());
     }
 
     public function getOcForInspectionRequest()
@@ -539,16 +536,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
             ->where(Criteria::expr()->isNull('ceasedDate'));
 
         return $this->getPsvDiscs()->matching($criteria);
-    }
-
-    public function canHaveLargeVehicles()
-    {
-        $allowLargeVehicles = [
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
-        ];
-
-        return $this->isPsv() && in_array($this->getLicenceType()->getId(), $allowLargeVehicles);
     }
 
     public function canHaveCommunityLicences()
