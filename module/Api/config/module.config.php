@@ -404,6 +404,7 @@ return [
         'Schedule41UntruePublication' => array(
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers::class,
             ],
             'process' => [
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class,

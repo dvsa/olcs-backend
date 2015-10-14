@@ -203,4 +203,45 @@ D12345 has been surrendered as part of this application.";
 
         $this->assertSame($expectedText, $publicationLink->getText1());
     }
+
+    public function testText1Upgrade()
+    {
+        $refDataSn = new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+        $refDataSn->setDescription('SN');
+        $refDataSi = new RefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+        $refDataSi->setDescription('SI');
+
+        $publicationLink = $this->getPublicationLink(Organisation::ORG_TYPE_LLP);
+        $publicationLink->getApplication()->setIsVariation(true);
+        $publicationLink->getApplication()->setLicenceType($refDataSi);
+        $publicationLink->getApplication()->getLicence()->setLicenceType($refDataSn);
+
+        $donorOrganisation = new Organisation();
+        $donorOrganisation->setName('DONOR_ORG');
+        $donorOrganisation->setType(new RefData(Organisation::ORG_TYPE_REGISTERED_COMPANY));
+
+        $donorLicence = new Licence($donorOrganisation, new RefData());
+        $donorLicence->setLicNo('D12345');
+        $donorLicence->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($publicationLink->getApplication(), $donorLicence);
+        $s4->setSurrenderLicence('Y');
+        $publicationLink->getApplication()->addS4s($s4);
+
+        $context = new ImmutableArrayObject(
+            [
+                'applicationPeople' => []
+            ]
+        );
+
+        $this->sut->process($publicationLink, $context);
+
+        $expectedText = "Operating Centre(s):
+Transferred from D12345 SN (DONOR_ORG ) to LIC12345 SI".
+            " (ORG_NAME ).
+D12345 has been surrendered as part of this application.
+Upgrade of Licence from SN to SI";
+
+        $this->assertSame($expectedText, $publicationLink->getText1());
+    }
 }

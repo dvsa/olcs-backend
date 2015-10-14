@@ -189,4 +189,90 @@ D12345 has been surrendered as part of this application.";
 
         $this->assertSame($expectedText, $publicationLink->getText3());
     }
+
+    public function testText3Tm()
+    {
+        $publicationLink = $this->getPublicationLink(Organisation::ORG_TYPE_LLP);
+        $publicationLink->getApplication()->getLicence()->getTrafficArea()->setIsNi(true);
+
+        $donorOrganisation = new Organisation();
+        $donorOrganisation->setName('DONOR_ORG');
+
+        $donorLicence = new Licence($donorOrganisation, new RefData());
+        $donorLicence->setLicNo('D12345');
+        $donorLicence->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $ta = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $ta->setIsNi(true);
+        $donorLicence->setTrafficArea($ta);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($publicationLink->getApplication(), $donorLicence);
+        $s4->setSurrenderLicence('Y');
+        $publicationLink->getApplication()->addS4s($s4);
+
+        $tm1 = m::mock(\Dvsa\Olcs\Api\Entity\Tm\TransportManager::class);
+        $tm1->shouldReceive('getHomeCd->getPerson->getFullName')->with()->once()->andReturn('Dave Jones');
+        $tm2 = m::mock(\Dvsa\Olcs\Api\Entity\Tm\TransportManager::class);
+        $tm2->shouldReceive('getHomeCd->getPerson->getFullName')->with()->once()->andReturn('Shirley Basey');
+
+        $context = new ImmutableArrayObject(
+            [
+                'licenceAddress' => 'LICENCE_ADDRESS',
+                'applicationTransportManagers' => [$tm1, $tm2],
+            ]
+        );
+
+        $this->sut->process($publicationLink, $context);
+
+        $expectedText = "LICENCE_ADDRESS
+Transport Manager(s): Dave Jones, Shirley Basey
+The Department has given a direction under paragraph 2 of Schedule 1(NI) that the above operating centre(s)".
+            " shall be transferred from licence D12345 held by DONOR_ORG
+D12345 has been surrendered as part of this application.";
+
+        $this->assertSame($expectedText, $publicationLink->getText3());
+    }
+
+    public function testText3LicenceUpdgrade()
+    {
+        $refDataSn = new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+        $refDataSn->setDescription('SN');
+        $refDataSi = new RefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL);
+        $refDataSi->setDescription('SI');
+
+        $publicationLink = $this->getPublicationLink(Organisation::ORG_TYPE_LLP);
+        $publicationLink->getApplication()->getLicence()->getTrafficArea()->setIsNi(true);
+        $publicationLink->getApplication()->setIsVariation(true);
+        $publicationLink->getApplication()->setLicenceType($refDataSi);
+        $publicationLink->getApplication()->getLicence()->setLicenceType($refDataSn);
+
+        $donorOrganisation = new Organisation();
+        $donorOrganisation->setName('DONOR_ORG');
+
+        $donorLicence = new Licence($donorOrganisation, new RefData());
+        $donorLicence->setLicNo('D12345');
+        $donorLicence->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $ta = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $ta->setIsNi(true);
+        $donorLicence->setTrafficArea($ta);
+
+        $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($publicationLink->getApplication(), $donorLicence);
+        $s4->setSurrenderLicence('Y');
+        $publicationLink->getApplication()->addS4s($s4);
+
+        $context = new ImmutableArrayObject(
+            [
+                'licenceAddress' => 'LICENCE_ADDRESS',
+            ]
+        );
+
+        $this->sut->process($publicationLink, $context);
+
+        $expectedText = "LICENCE_ADDRESS
+The Department has given a direction under paragraph 2 of Schedule 1(NI) that the above operating centre(s)".
+            " shall be transferred from licence D12345 held by DONOR_ORG
+D12345 has been surrendered as part of this application.
+Upgrade of Licence from SN to SI";
+
+        $this->assertSame($expectedText, $publicationLink->getText3());
+    }
 }
