@@ -56,4 +56,12 @@ class Address extends AbstractAddress
             'countryCode' => $this->getCountryCode() ? $this->getCountryCode()->getId() : null,
         ];
     }
+
+    public function isEmpty()
+    {
+        return empty(
+            $this->getAddressLine1() . $this->getAddressLine2() . $this->getAddressLine3() . $this->getAddressLine4() .
+            $this->getTown() . $this->getPostcode()
+        );
+    }
 }
