@@ -625,4 +625,40 @@ class FeeEntityTest extends EntityTester
             [FeeType::FEE_TYPE_ADJUSTMENT, true],
         ];
     }
+
+    /**
+     * @dataProvider salesPersonRefProvider
+     * @param string $trafficAreaId
+     * @param string $costCentreReference
+     * @param string $expected
+     */
+    public function testGetSalesPersonReference($trafficAreaId, $costCentreReference, $expected)
+    {
+        $licence = m::mock(Licence::class);
+        $feeType = m::mock(FeeType::class);
+
+        $licence->shouldReceive('getTrafficArea->getId')
+            ->andReturn($trafficAreaId);
+
+        $feeType->shouldReceive('getCostCentreRef')
+            ->once()
+            ->andReturn($costCentreReference);
+
+        $this->sut->setLicence($licence);
+        $this->sut->setFeeType($feeType);
+
+        $this->assertEquals($expected, $this->sut->getSalesPersonReference());
+    }
+
+    public function salesPersonRefProvider()
+    {
+        return [
+            ['B', 'TA', 'B'],
+            ['C', 'TA', 'C'],
+            ['', 'IR', 'IR'],
+            ['', 'MGB', 'MGB'],
+            ['', 'MNI', 'MNI'],
+            ['', 'MR', 'MR'],
+        ];
+    }
 }
