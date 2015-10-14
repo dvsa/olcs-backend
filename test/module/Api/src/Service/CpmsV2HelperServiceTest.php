@@ -607,7 +607,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $feeType
             ->setAccrualRule($rule)
             ->setDescription('fee type description')
-            ->setFeeType((new RefData($feeTypeId)));
+            ->setFeeType((new RefData($feeTypeId)))
+            ->setCostCentreRef('TA');
 
         $organisation = new OrganisationEntity();
         $organisation
@@ -629,6 +630,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         if (!is_null($licenceStartDate)) {
             $licence->setInForceDate($licenceStartDate);
         }
+        $licence->shouldReceive('getTrafficArea->getId')->andReturn('B');
 
         $fee = new FeeEntity($feeType, $amount, $status);
         $fee
