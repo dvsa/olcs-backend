@@ -91,4 +91,37 @@ class Schedule41ApproveTest extends QueryHandlerTestCase
         $this->assertArrayHasKey('S41_APP_APPROVE_TM', $resultArray['errors']);
         $this->assertArrayHasKey('S41_APP_APPROVE_OC', $resultArray['errors']);
     }
+
+    public function testHandleQueryErrorsVariation()
+    {
+        $query = Qry::create(['id' => 510]);
+
+        /* @var $application ApplicationEntity */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setId(510);
+        $application->setIsVariation(true);
+        $application->setLicenceType(
+            new \Dvsa\Olcs\Api\Entity\System\RefData(
+                \Dvsa\Olcs\Api\Entity\Licence\Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+            )
+        );
+
+        $applicationCompletion = new \Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion($application);
+        $application->setApplicationCompletion($applicationCompletion);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($query)->andReturn($application);
+
+        $this->mockedSmServices['FeesHelperService']->shouldReceive('getOutstandingFeesForApplication')
+            ->with(510)->once()->andReturn('ERROR');
+
+        $application->shouldReceive('serialize')->with([])->once()
+            ->andReturn(['SERIALIZED']);
+
+        $result = $this->sut->handleQuery($query);
+        $resultArray = $result->serialize();
+
+        $this->assertCount(2, $resultArray['errors']);
+        $this->assertArrayHasKey('S41_APP_OUSTANDING_FEE', $resultArray['errors']);
+        $this->assertArrayHasKey('S41_APP_APPROVE_OC', $resultArray['errors']);
+    }
 }
