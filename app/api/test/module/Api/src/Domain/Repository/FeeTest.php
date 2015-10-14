@@ -119,6 +119,34 @@ class FeeTest extends RepositoryTestCase
         );
     }
 
+    public function testGetOutstandingFeeCountByOrganisationId()
+    {
+        $organisationId = 123;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $mockQb
+            ->shouldReceive('select')
+            ->once()
+            ->with('COUNT(f)')
+            ->andReturnSelf();
+
+        $this->mockWhereOutstandingFee($mockQb);
+
+        $this->mockWhereCurrentLicenceOrApplicationFee($mockQb, $organisationId);
+
+        $mockQb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn(22);
+
+        $this->assertEquals(22, $this->sut->getOutstandingFeeCountByOrganisationId($organisationId));
+    }
+
     public function testFetchFeesByIrfoGvPermitId()
     {
         $irfoGvPermitId = 123;
