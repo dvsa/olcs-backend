@@ -44,7 +44,8 @@ class ResetApplicationTest extends CommandHandlerTestCase
     {
         $this->refData = [
             LicenceEntity::LICENCE_CATEGORY_PSV,
-            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL
+            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+            ApplicationEntity::APPLIED_VIA_POST,
         ];
 
         $this->references = [
@@ -148,6 +149,7 @@ class ResetApplicationTest extends CommandHandlerTestCase
         $application->setLicence($licence);
         $application->setTasks($tasks);
         $application->setReceivedDate($receivedDate);
+        $application->setAppliedVia($this->mapRefData(ApplicationEntity::APPLIED_VIA_POST));
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)
