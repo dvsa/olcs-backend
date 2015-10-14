@@ -29,6 +29,7 @@ final class Text1 implements ProcessInterface
         $this->addTransferredText($s4, $context);
 
         $this->addClosingText($s4);
+        $this->addUpgradeText($publicationLink);
 
         $publicationLink->setText1(implode("\n", $this->text));
     }
@@ -109,5 +110,23 @@ final class Text1 implements ProcessInterface
             'The operating centre(s) being removed from %s as part of this application.';
 
         $this->addText(sprintf($text, $s4->getLicence()->getLicNo()));
+    }
+
+    /**
+     * Add Licence upgrade text
+     *
+     * @param PublicationLink $publicationLink
+     */
+    private function addUpgradeText(PublicationLink $publicationLink)
+    {
+        if ($publicationLink->getApplication()->isVariation() && $publicationLink->getApplication()->isRealUpgrade()) {
+            $this->addText(
+                sprintf(
+                    'Upgrade of Licence from %s to %s',
+                    $publicationLink->getLicence()->getLicenceType()->getDescription(),
+                    $publicationLink->getApplication()->getLicenceType()->getDescription()
+                )
+            );
+        }
     }
 }
