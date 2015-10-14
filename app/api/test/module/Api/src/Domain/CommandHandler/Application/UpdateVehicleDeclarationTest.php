@@ -33,7 +33,7 @@ class UpdateVehicleDeclarationTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    protected function setupApplication($noSmall, $noMedium, $noLarge)
+    protected function setupApplication()
     {
         $licence = new \Dvsa\Olcs\Api\Entity\Licence\Licence(
             new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(),
@@ -48,9 +48,6 @@ class UpdateVehicleDeclarationTest extends CommandHandlerTestCase
 
         $application->setId(423);
         $application->setLicenceType($this->refData['ltyp_r']);
-        $application->setTotAuthLargeVehicles($noLarge);
-        $application->setTotAuthMediumVehicles($noMedium);
-        $application->setTotAuthSmallVehicles($noSmall);
 
         return $application;
     }
@@ -73,7 +70,7 @@ class UpdateVehicleDeclarationTest extends CommandHandlerTestCase
             ]
         );
 
-        $application = $this->setupApplication(0, 0, 0);
+        $application = $this->setupApplication();
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->once()->with($command, Query::HYDRATE_OBJECT, 32)
             ->andReturn($application)
             ->shouldReceive('save')->with($application)->once();

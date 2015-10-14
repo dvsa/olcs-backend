@@ -677,9 +677,6 @@ class LicenceEntityTest extends EntityTester
 
         $application->setTotAuthTrailers(9);
         $application->setTotAuthVehicles(12);
-        $application->setTotAuthSmallVehicles(4);
-        $application->setTotAuthMediumVehicles(5);
-        $application->setTotAuthLargeVehicles(3);
         $application->setNiFlag('Y');
 
         /** @var Entity $licence */
@@ -691,9 +688,6 @@ class LicenceEntityTest extends EntityTester
         $this->assertSame($goodsOrPsv, $licence->getGoodsOrPsv());
         $this->assertEquals(9, $licence->getTotAuthTrailers());
         $this->assertEquals(12, $licence->getTotAuthVehicles());
-        $this->assertEquals(4, $licence->getTotAuthSmallVehicles());
-        $this->assertEquals(5, $licence->getTotAuthMediumVehicles());
-        $this->assertEquals(3, $licence->getTotAuthLargeVehicles());
     }
 
     public function testGetPsvDiscsNotCeased()
@@ -716,58 +710,6 @@ class LicenceEntityTest extends EntityTester
 
         $licence->setPsvDiscs($psvDiscsCollection);
         $this->assertSame($psvDiscsNotCeasedCollection, $licence->getPsvDiscsNotCeased());
-    }
-
-    /**
-     * @dataProvider canHaveLargeVehicleProvider
-     */
-    public function testCanHaveLargeVehicles($isPsv, $licenceType, $expected)
-    {
-        /** @var Entity $licence */
-        $licence = m::mock(Entity::class)->makePartial();
-        $licence->shouldReceive('isPsv')
-            ->andReturn($isPsv);
-
-        $licence->shouldReceive('getLicenceType->getId')
-            ->andReturn($licenceType);
-
-        $this->assertEquals($expected, $licence->canHaveLargeVehicles());
-    }
-
-    public function canHaveLargeVehicleProvider()
-    {
-        return [
-            'PSV SN' => [
-                true,
-                Entity::LICENCE_TYPE_STANDARD_NATIONAL,
-                true
-            ],
-            'PSV SI' => [
-                true,
-                Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                true
-            ],
-            'GV SN' => [
-                false,
-                Entity::LICENCE_TYPE_STANDARD_NATIONAL,
-                false
-            ],
-            'GV SI' => [
-                false,
-                Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                false
-            ],
-            'PSV SR' => [
-                true,
-                Entity::LICENCE_TYPE_SPECIAL_RESTRICTED,
-                false
-            ],
-            'PSV R' => [
-                true,
-                Entity::LICENCE_TYPE_RESTRICTED,
-                false
-            ],
-        ];
     }
 
     /**

@@ -690,12 +690,6 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
      */
     protected function getTotAuthVehicles($entity)
     {
-        if ($this->isPsv()) {
-            return $entity->getTotAuthSmallVehicles()
-                + $entity->getTotAuthMediumVehicles()
-                + $entity->getTotAuthLargeVehicles();
-        }
-
         return $entity->getTotAuthVehicles();
     }
 
