@@ -67,10 +67,13 @@ class Schedule41Approve extends AbstractQueryHandler
             $errors[self::ERROR_MUST_COMPETE_OC] = 'Must complete Operating Centres';
         }
 
+        // Application is new
         // The application licence type is standard national or international and
         // the transport manager section is NOT complete
-        if (($application->isStandardNational() || $application->isStandardInternational()) &&
-            $applicationCompletion->getTransportManagersStatus() !== ApplicationCompletion::STATUS_COMPLETE) {
+        if ($application->isNew() &&
+            ($application->isStandardNational() || $application->isStandardInternational()) &&
+            $applicationCompletion->getTransportManagersStatus() !== ApplicationCompletion::STATUS_COMPLETE
+        ) {
             $errors[self::ERROR_MUST_COMPETE_TM] = 'Must complete Transport Managers';
         }
 
