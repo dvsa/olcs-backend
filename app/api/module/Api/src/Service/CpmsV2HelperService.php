@@ -483,7 +483,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @todo 'product_reference' should be $fee->getFeeType()->getDescription()
      * but CPMS has a whitelist and responds  {"code":104,"message":"product_reference is invalid"}
-     * @todo OLCS-6845 'sales_person_reference'
      */
     protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [])
     {
