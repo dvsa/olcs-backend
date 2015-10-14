@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\Criteria;
@@ -718,5 +719,23 @@ class Licence extends AbstractLicence implements ContextProviderInterface
             return $latestNpPublication->getPublicationNo();
         }
         return null;
+    }
+
+    /**
+     * @param OperatingCentre $oc
+     * @return LicenceOperatingCentre|null
+     */
+    public function getLocByOc(OperatingCentre $oc)
+    {
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->eq('operatingCentre', $oc));
+
+        $locs = $this->getOperatingCentres()->matching($criteria);
+
+        if ($locs->isEmpty()) {
+            return null;
+        }
+
+        return $locs->first();
     }
 }
