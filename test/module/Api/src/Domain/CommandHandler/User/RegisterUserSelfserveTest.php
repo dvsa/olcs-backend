@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\User\RegisterUserSelfserve as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Register User Selfserve Test
@@ -146,12 +145,11 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $org = m::mock(OrganisationEntity::class);
-        $org->shouldReceive('getAdminOrganisationUsers')->once()->andReturn(new ArrayCollection([]));
 
         $licence = m::mock(LicenceEntity::class);
         $licence->shouldReceive('getOrganisation')->andReturn($org);
 
-        $this->repoMap['Licence']->shouldReceive('fetchByLicNo')
+        $this->repoMap['Licence']->shouldReceive('fetchForUserRegistration')
             ->once()
             ->with($data['licenceNumber'])
             ->andReturn($licence);
@@ -203,41 +201,6 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         );
 
         $this->assertEquals(UserEntity::USER_TYPE_OPERATOR, $savedUser->getUserType());
-    }
-
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
-    public function testHandleCommandThrowsOrgWithAdminException()
-    {
-        $data = [
-            'loginId' => 'login_id',
-            'contactDetails' => [
-                'emailAddress' => 'test1@test.me',
-                'person' => [
-                    'forename' => 'updated forename',
-                    'familyName' => 'updated familyName',
-                ],
-            ],
-            'licenceNumber' => 'licNo',
-        ];
-
-        $command = Cmd::create($data);
-
-        $orgUser = m::mock();
-
-        $org = m::mock(OrganisationEntity::class);
-        $org->shouldReceive('getAdminOrganisationUsers')->once()->andReturn(new ArrayCollection([$orgUser]));
-
-        $licence = m::mock(LicenceEntity::class);
-        $licence->shouldReceive('getOrganisation')->andReturn($org);
-
-        $this->repoMap['Licence']->shouldReceive('fetchByLicNo')
-            ->once()
-            ->with($data['licenceNumber'])
-            ->andReturn($licence);
-
-        $this->sut->handleCommand($command);
     }
 
     /**

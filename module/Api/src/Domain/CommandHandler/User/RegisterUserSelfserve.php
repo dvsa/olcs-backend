@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\User\User;
@@ -69,19 +68,7 @@ final class RegisterUserSelfserve extends AbstractCommandHandler implements Tran
 
         if (!empty($data['licenceNumber'])) {
             // fetch licence by licence number
-            $licence = $this->getRepo('Licence')->fetchByLicNo($data['licenceNumber']);
-
-            // check if the org has any admin users already
-            if (!$licence->getOrganisation()->getAdminOrganisationUsers()->isEmpty()) {
-                throw new ValidationException(
-                    [
-                        'licenceNumber' => [
-                            User::ERROR_ADMIN_USER_ALREADY_EXISTS
-                                => 'The organisation already has registered admin users.'
-                        ]
-                    ]
-                );
-            }
+            $licence = $this->getRepo('Licence')->fetchForUserRegistration($data['licenceNumber']);
 
             // link with the organisation
             $organisations[] = $licence->getOrganisation();
