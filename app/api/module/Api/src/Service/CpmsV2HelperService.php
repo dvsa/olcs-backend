@@ -30,10 +30,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
     const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
 
-    // @todo OLCS-6845
-    // this is a dummy value for testing purposes
-    const COST_CENTRE = '12345,67890';
-
     const TAX_CODE = 'Z';
 
     /**
@@ -535,7 +531,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $commonParams = [
             'customer_reference' => (string) $this->getCustomerReference($fees),
             'payment_data' => [],
-            'cost_centre' => self::COST_CENTRE,
             'total_amount' => $this->formatAmount($totalAmount),
             'customer_name' => $firstFee->getCustomerNameForInvoice(),
             'customer_manager_name' => $firstFee->getCustomerNameForInvoice(),
