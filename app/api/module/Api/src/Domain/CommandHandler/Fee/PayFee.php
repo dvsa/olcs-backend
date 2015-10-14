@@ -7,21 +7,22 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask as CloseFeeDueTaskCmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ValidateApplication;
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence as ContinueLicenceCmd;
-use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
-use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
-use Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask as CloseFeeDueTaskCmd;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Transfer\Command\Task\CloseTasks as CloseTasksCmd;
 
 /**
  * Pay Fee (handles fee side effects, doesn't actually change fee status)
@@ -43,6 +44,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         $this->maybeProcessGrantingFee($fee);
         $this->maybeContinueLicence($fee);
         $this->maybeCancelApplicationTasks($fee);
+        $this->maybeCloseFeeTask($fee);
 
         return $this->result;
     }
@@ -139,8 +141,6 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
      * If the fee type is a interim, then check if we do need in-force processing
      *
      * @param Fee $fee
-     *
-     * @return bool Whether the licence was continued
      */
     protected function maybeProcessGrantingFee(Fee $fee)
     {
@@ -161,5 +161,20 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         }
 
         $this->result->merge($this->handleSideEffect(InForceInterim::create(['id' => $application->getId()])));
+    }
+
+    /**
+     * If the fee has an associated task, close it
+     *
+     * @param Fee $fee
+     */
+    protected function maybeCloseFeeTask(Fee $fee)
+    {
+        if ($fee->getTask()) {
+            $taskIdsToClose = array($fee->getTask()->getId());
+            $this->result->merge(
+                $this->handleSideEffect(CloseTasksCmd::create(['ids' => $taskIdsToClose]))
+            );
+        }
     }
 }
