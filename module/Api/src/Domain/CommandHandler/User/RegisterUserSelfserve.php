@@ -11,10 +11,14 @@ use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Service\OpenAm\Client;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -22,8 +26,11 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 /**
  * Register User Selfserve
  */
-final class RegisterUserSelfserve extends AbstractUserCommandHandler implements TransactionedInterface
+final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
+    TransactionedInterface,
+    OpenAmUserAwareInterface
 {
+    use OpenAmUserAwareTrait;
     protected $repoServiceName = 'User';
 
     protected $extraRepos = ['ContactDetails', 'Licence', 'Organisation'];
@@ -56,6 +63,7 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements 
         $data['roles'] = User::getRolesByUserType(User::USER_TYPE_OPERATOR, User::PERMISSION_ADMIN);
 
         $user = User::create(
+            $this->getOpenAmUser()->reservePid(),
             User::USER_TYPE_OPERATOR,
             $this->getRepo()->populateRefDataReference($data)
         );
@@ -71,6 +79,12 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements 
         );
 
         $this->getRepo()->save($user);
+
+        $this->getOpenAmUser()->registerUser(
+            $command->getLoginId(),
+            $command->getContactDetails()['emailAddress'],
+            Client::REALM_SELFSERVE
+        );
 
         $result = new Result();
 

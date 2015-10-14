@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
@@ -35,6 +36,10 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $this->mockRepo('ContactDetails', ContactDetails::class);
         $this->mockRepo('Licence', Licence::class);
         $this->mockRepo('Organisation', Organisation::class);
+
+        $this->mockedSmServices = [
+            UserInterface::class => m::mock(UserInterface::class)
+        ];
 
         parent::setUp();
     }
@@ -73,6 +78,11 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
             ->once()
             ->with($data['loginId'])
             ->andReturn([]);
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
+            ->with('login_id', 'test1@test.me', 'selfserve');
 
         /** @var OrganisationEntity $savedOrg */
         $savedOrg = null;
@@ -162,6 +172,11 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
             ->once()
             ->with($data['loginId'])
             ->andReturn([]);
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
+            ->with('login_id', 'test1@test.me', 'selfserve');
 
         $org = m::mock(OrganisationEntity::class);
 
