@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthNumber;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoPsvAuth as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as FeeCreateFee;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 
 /**
  * Create IrfoPsvAuth
@@ -49,6 +51,19 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
         $result = new Result();
         $result->addId('irfoPsvAuth', $irfoPsvAuth->getId());
         $result->addMessage('IRFO PSV Auth created successfully');
+
+        // Check if is *not* fee exempt.
+        if ($irfoPsvAuth->getIsFeeExemptApplication() !== 'Y') {
+            if (
+                in_array(
+                    $irfoPsvAuth->getStatus()->getId(),
+                    [IrfoPsvAuth::STATUS_PENDING, IrfoPsvAuth::STATUS_RENEW]
+                )
+            )
+            $result->merge($this->createApplicationFee($irfoPsvAuth));
+        } else {
+            $result->merge($this->createExemptFee($irfoPsvAuth));
+        }
 
         return $result;
     }
@@ -109,5 +124,47 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
         }
 
         return $irfoPsvAuth;
+    }
+
+    public function createApplicationFee(IrfoPsvAuth $irfoPsvAuth)
+    {
+        $irfoPsvAuthFeeType = $irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType();
+
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
+        $feeTypeRepo = $this->getRepo('FeeType');
+        $feeType = $feeTypeRepo->fetchLatestForIrfo($irfoPsvAuthFeeType);
+
+        $feeAmount = (float)$feeType->getFixedValue();
+
+        $data = [
+            'feeType' => $feeType->getId(),
+            'irfoPsvAuth' => $irfoPsvAuth->getId(),
+            'invoicedDate' => date('Y-m-d'),
+            'description' => $feeType->getDescription() . ' for IRFO permit ' . $irfoPsvAuth->getId(),
+            'amount' => $feeAmount,
+            'feeStatus' => Fee::STATUS_OUTSTANDING,
+        ];
+
+        return $this->handleSideEffect(FeeCreateFee::create($data));
+    }
+
+    public function createExemptFee(IrfoPsvAuth $irfoPsvAuth)
+    {
+        $irfoPsvAuthFeeType = $irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType();
+
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
+        $feeTypeRepo = $this->getRepo('FeeType');
+        $feeType = $feeTypeRepo->fetchLatestForIrfo($irfoPsvAuthFeeType);
+
+        $data = [
+            'irfoGvPermit' => $irfoPsvAuthFeeType->getId(),
+            'invoicedDate' => date('Y-m-d'),
+            'description' => $feeType->getDescription() . ' for IRFO permit ' . $irfoPsvAuth->getId(),
+            'feeType' => $feeType->getId(),
+            'amount' => 0,
+            'feeStatus' => Fee::STATUS_PAID,
+        ];
+
+        return $this->handleSideEffect(FeeCreateFee::create($data));
     }
 }
