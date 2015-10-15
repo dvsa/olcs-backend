@@ -53,7 +53,15 @@ class Summary extends AbstractQueryHandler
 
             if ($application->isVariation()) {
                 $criteria = Criteria::create();
-                $criteria->where($criteria->expr()->in('action', ['A', 'U']));
+                $criteria->where(
+                    $criteria->expr()->in(
+                        'action',
+                        [
+                            Entity\Application\ApplicationOperatingCentre::ACTION_ADD,
+                            Entity\Application\ApplicationOperatingCentre::ACTION_UPDATE
+                        ]
+                    )
+                );
 
                 $bundle['transportManagers']['criteria'] = $criteria;
             }
@@ -145,7 +153,7 @@ class Summary extends AbstractQueryHandler
         Entity\Application\ApplicationOperatingCentre $aoc
     ) {
         // If we are not updating the OC, then we definitely need some docs, so we need to return here
-        if ($aoc->getAction() !== 'U') {
+        if ($aoc->getAction() !== Entity\Application\ApplicationOperatingCentre::ACTION_UPDATE) {
             return true;
         }
 
