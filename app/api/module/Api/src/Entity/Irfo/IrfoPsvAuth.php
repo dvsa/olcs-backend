@@ -93,4 +93,19 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
 
         return $this;
     }
+
+    /**
+     * Populate Irfo Fee Id
+     * IR& {0,to pad to 7 chars} &[operator ID] eg "IR0001867"
+     *
+     * @return IrfoPsvAuth
+     */
+    public function populateIrfoFeeId()
+    {
+        $irfoFeeId = 'IR' . str_pad($this->getOrganisation()->getId(), 7, '0', STR_PAD_LEFT);
+
+        $this->setIrfoFeeId($irfoFeeId);
+
+        return $this;
+    }
 }
