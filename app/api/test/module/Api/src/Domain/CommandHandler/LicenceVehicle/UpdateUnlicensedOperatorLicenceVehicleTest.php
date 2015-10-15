@@ -32,13 +32,6 @@ class UpdateUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [];
-
-        parent::initReferences();
-    }
-
     public function testHandleCommandGoods()
     {
         $id = 69;

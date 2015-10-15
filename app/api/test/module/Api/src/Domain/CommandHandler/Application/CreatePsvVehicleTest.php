@@ -38,13 +38,6 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [];
-
-        parent::initReferences();
-    }
-
     public function testHandleCommandVrmExists()
     {
         $command = Cmd::create(
