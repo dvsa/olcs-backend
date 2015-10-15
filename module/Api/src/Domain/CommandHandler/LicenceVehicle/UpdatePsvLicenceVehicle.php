@@ -80,10 +80,6 @@ final class UpdatePsvLicenceVehicle extends AbstractCommandHandler implements Tr
             $licenceVehicle->getVehicle()->setMakeModel($command->getMakeModel());
         }
 
-        if ($command->getIsNovelty() !== null) {
-            $licenceVehicle->getVehicle()->setIsNovelty($command->getIsNovelty());
-        }
-
         $this->getRepo()->save($licenceVehicle);
 
         $this->result->addMessage('Updated Vehicle');

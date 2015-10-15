@@ -35,12 +35,6 @@ final class CreatePsvVehicle extends AbstractCommandHandler implements Transacti
 
     protected $extraRepos = ['Vehicle', 'LicenceVehicle'];
 
-    private $typeMap = [
-        'small' => Vehicle::PSV_TYPE_SMALL,
-        'medium' => Vehicle::PSV_TYPE_MEDIUM,
-        'large' => Vehicle::PSV_TYPE_LARGE
-    ];
-
     /**
      * @param Cmd $command
      */
@@ -58,8 +52,6 @@ final class CreatePsvVehicle extends AbstractCommandHandler implements Transacti
             $vehicle = new Vehicle();
             $vehicle->setVrm($command->getVrm());
             $vehicle->setMakeModel($command->getMakeModel());
-            $vehicle->setIsNovelty($command->getIsNovelty());
-            $vehicle->setPsvType($this->getRepo()->getRefdataReference($this->typeMap[$command->getType()]));
             $this->getRepo('Vehicle')->save($vehicle);
         }
 

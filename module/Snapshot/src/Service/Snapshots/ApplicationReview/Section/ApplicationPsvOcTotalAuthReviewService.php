@@ -39,19 +39,6 @@ class ApplicationPsvOcTotalAuthReviewService extends AbstractReviewService
             'multiItems' => [
                 [
                     [
-                        'label' => 'review-operating-centres-authorisation-vehicles-small',
-                        'value' => $data['totAuthSmallVehicles']
-                    ],
-                    [
-                        'label' => 'review-operating-centres-authorisation-vehicles-medium',
-                        'value' => $data['totAuthMediumVehicles']
-                    ],
-                    // We name the large vehicle node so we can easily remove it later if we need to
-                    'large' => [
-                        'label' => 'review-operating-centres-authorisation-vehicles-large',
-                        'value' => $data['totAuthLargeVehicles']
-                    ],
-                    [
                         'label' => 'review-operating-centres-authorisation-vehicles',
                         'value' => $data['totAuthVehicles']
                     ]
