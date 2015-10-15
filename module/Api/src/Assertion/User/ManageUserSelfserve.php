@@ -71,14 +71,8 @@ class ManageUserSelfserve implements AssertionInterface
 
     private function canManageOperator(AuthorizationService $authorizationService, User $context)
     {
-        $currentUser = $authorizationService->getIdentity()->getUser();
-
         if ($authorizationService->isGranted(Permission::OPERATOR_ADMIN)
-            && !$currentUser->getOrganisationUsers()->isEmpty()
-            && !$context->getOrganisationUsers()->isEmpty()
-            && ($currentUser->getOrganisationUsers()->first()->getOrganisation()->getId()
-                === $context->getOrganisationUsers()->first()->getOrganisation()->getId()
-            )
+            && $authorizationService->isGranted(Permission::CAN_READ_USER_SELFSERVE, $context)
         ) {
             // has related admin permission
             // and is linked to the same entity

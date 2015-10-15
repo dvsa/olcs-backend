@@ -25,7 +25,7 @@ class UserSelfserve extends AbstractQueryHandler implements AuthAwareInterface
     {
         $user = $this->getRepo()->fetchUsingId($query);
 
-        if (!$this->isGranted(Permission::CAN_MANAGE_USER_SELFSERVE, $user)) {
+        if (!$this->isGranted(Permission::CAN_READ_USER_SELFSERVE, $user)) {
             throw new ForbiddenException('You do not have permission to manage the record');
         }
 
