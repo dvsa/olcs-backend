@@ -21,10 +21,10 @@ class User implements UserInterface
     private $reservedPid;
 
     /**
-     * @param Client $openAmClient
+     * @param ClientInterface $openAmClient
      * @param Generator $randomGenerator
      */
-    public function __construct(Client $openAmClient, Generator $randomGenerator)
+    public function __construct(ClientInterface $openAmClient, Generator $randomGenerator)
     {
         $this->openAmClient = $openAmClient;
         $this->randomGenerator = $randomGenerator;
@@ -111,6 +111,6 @@ class User implements UserInterface
 
     private function generatePassword()
     {
-        return 'password';//$this->randomGenerator->generateString(12);
+        return $this->randomGenerator->generateString(12);
     }
 }
