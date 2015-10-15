@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Application
@@ -36,21 +37,25 @@ class Application extends AbstractRepository
      */
     public function fetchActiveForOrganisation($organisationId)
     {
-        /* @var \Doctrine\Orm\QueryBuilder $qb*/
-        $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata()
-            ->with('licence', 'l');
-
         $activeStatuses = [
             Entity::APPLICATION_STATUS_UNDER_CONSIDERATION,
             Entity::APPLICATION_STATUS_GRANTED,
         ];
 
+        return $this->fetchByOrganisationIdAndStatuses($organisationId, $activeStatuses);
+    }
+
+    public function fetchByOrganisationIdAndStatuses($organisationId, $statuses)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata();
+
         $qb
-            ->andWhere($qb->expr()->eq('l.organisation', ':organisationId'))
-            ->andWhere($qb->expr()->in($this->alias . '.status', $activeStatuses))
+            ->innerJoin('a.licence', 'l', Join::WITH, $qb->expr()->eq('l.organisation', ':organisationId'))
+            ->andWhere($qb->expr()->in($this->alias . '.status', $statuses))
             ->setParameter('organisationId', $organisationId);
 
         return $qb->getQuery()->execute();

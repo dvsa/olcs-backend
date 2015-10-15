@@ -66,8 +66,8 @@ if ($profile) {
     $end = microtime(true);
     $xhprof_data = xhprof_disable();
 
-    require_once "/workspace/xhprof/xhprof_lib/utils/xhprof_lib.php";
-    require_once "/workspace/xhprof/xhprof_lib/utils/xhprof_runs.php";
+    require_once __DIR__ . "../../../xhprof/xhprof_lib/utils/xhprof_lib.php";
+    require_once __DIR__ . "../../../xhprof/xhprof_lib/utils/xhprof_runs.php";
 
     $xhprof_runs = new XHProfRuns_Default();
 
@@ -79,7 +79,7 @@ if ($profile) {
     $request = $_SERVER['REQUEST_METHOD'] . " " . $uri;
 
     $content = "[olcs-backend] - %s(ms) - %s %s "
-        . "http://192.168.149.2/xhprof/xhprof_html/index.php?run=%s&source=olcs-backend\n";
+        . "http://192.168.149.12/private/xhprof/xhprof_html/index.php?run=%s&source=olcs-backend\n";
 
     $content = sprintf(
         $content,
