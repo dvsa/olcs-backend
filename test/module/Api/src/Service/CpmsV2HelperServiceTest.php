@@ -152,7 +152,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'sales_person_reference' => 'B',
                 ]
             ],
-            'cost_centre' => '12345,67890',
             'total_amount' => '650.50',
             'customer_name' => 'some organisation',
             'customer_manager_name' => 'some organisation',
@@ -276,7 +275,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'sales_person_reference' => 'B',
                 ]
             ],
-            'cost_centre' => '12345,67890',
             'total_amount' => '1000.00',
             'customer_name' => 'some organisation',
             'customer_manager_name' => 'some organisation',
@@ -397,7 +395,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'sales_person_reference' => 'B',
                 ]
             ],
-            'cost_centre' => '12345,67890',
             'total_amount' => '1000.00',
             'customer_name' => 'some organisation',
             'customer_manager_name' => 'some organisation',
@@ -527,7 +524,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'sales_person_reference' => 'B',
                 ]
             ],
-            'cost_centre' => '12345,67890',
             'total_amount' => '1000.00',
             'customer_name' => 'some organisation',
             'customer_manager_name' => 'some organisation',
