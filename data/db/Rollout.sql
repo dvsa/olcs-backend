@@ -4975,10 +4975,7 @@ INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES
     (24, 35); -- internal-admin = can-manage-user-internal
 
     (5, 36), -- operator-admin = can-read-user-selfserve
-    (6, 36), -- operator-user = can-read-user-selfserve
-
-    (3, 35), -- internal-case-worker = can-manage-user-internal
-    (4, 35); -- internal-admin = can-manage-user-internal
+    (6, 36); -- operator-user = can-read-user-selfserve
 
 INSERT INTO `financial_standing_rate` (
     `id`,
