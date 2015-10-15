@@ -7,10 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\Task\CloseTasks as CloseTasksCmd;
 
 /**
  * CancelFee
@@ -28,9 +29,25 @@ final class CancelFee extends AbstractCommandHandler
         $fee->setFeeStatus($this->getRepo()->getRefdataReference(Fee::STATUS_CANCELLED));
         $this->getRepo()->save($fee);
 
-        $result = new Result();
-        $result->addMessage('Fee '. $fee->getId() .' cancelled successfully');
+        $this->result->addMessage('Fee '. $fee->getId() .' cancelled successfully');
 
-        return $result;
+        $this->maybeCloseFeeTask($fee);
+
+        return $this->result;
+    }
+
+    /**
+     * If the fee has an associated task, close it
+     *
+     * @param Fee $fee
+     */
+    protected function maybeCloseFeeTask(Fee $fee)
+    {
+        if ($fee->getTask()) {
+            $taskIdsToClose = array($fee->getTask()->getId());
+            $this->result->merge(
+                $this->handleSideEffect(CloseTasksCmd::create(['ids' => $taskIdsToClose]))
+            );
+        }
     }
 }
