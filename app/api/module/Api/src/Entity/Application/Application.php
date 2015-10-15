@@ -30,7 +30,9 @@ use Zend\Filter\Word\UnderscoreToCamelCase;
  *        @ORM\Index(name="ix_application_status", columns={"status"}),
  *        @ORM\Index(name="ix_application_interim_status", columns={"interim_status"}),
  *        @ORM\Index(name="ix_application_withdrawn_reason", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="ix_application_goods_or_psv", columns={"goods_or_psv"})
+ *        @ORM\Index(name="ix_application_goods_or_psv", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="ix_application_applied_via", columns={"applied_via"}),
+ *        @ORM\Index(name="ix_application_psv_which_vehicle_sizes", columns={"psv_which_vehicle_sizes"})
  *    }
  * )
  */
@@ -85,6 +87,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     const APPLIED_VIA_SELFSERVE = 'applied_via_selfserve';
     const APPLIED_VIA_POST = 'applied_via_post';
     const APPLIED_VIA_PHONE = 'applied_via_phone';
+
+    const PSV_VEHICLE_SIZE_SMALL = 'psvvs_small';
+    const PSV_VEHICLE_SIZE_MEDIUM_LARGE = 'psvvs_medium_large';
+    const PSV_VEHICLE_SIZE_BOTH = 'psvvs_both';
 
     /**
      * Publication No
@@ -759,9 +765,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $this->setGoodsOrPsv($licence->getGoodsOrPsv());
         $this->setTotAuthTrailers($licence->getTotAuthTrailers());
         $this->setTotAuthVehicles($licence->getTotAuthVehicles());
-        $this->setTotAuthSmallVehicles($licence->getTotAuthSmallVehicles());
-        $this->setTotAuthMediumVehicles($licence->getTotAuthMediumVehicles());
-        $this->setTotAuthLargeVehicles($licence->getTotAuthLargeVehicles());
         $this->setNiFlag($licence->getNiFlag());
     }
 
@@ -1085,16 +1088,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return false;
     }
 
-    public function canHaveLargeVehicles()
-    {
-        $allowLargeVehicles = [
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
-        ];
-
-        return $this->isPsv() && in_array($this->getLicenceType()->getId(), $allowLargeVehicles);
-    }
-
     public function canHaveCommunityLicences()
     {
         return ($this->isStandardInternational() || ($this->isPsv() && $this->isRestricted()));
@@ -1277,76 +1270,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $this->getLicence()->getTrafficArea();
     }
 
-    public function getAvailableSmallSpaces($count)
-    {
-        return (int)$this->getTotAuthSmallVehicles() - $count;
-    }
-
-    public function getAvailableMediumSpaces($count)
-    {
-        return (int)$this->getTotAuthMediumVehicles() - $count;
-    }
-
-    public function getAvailableLargeSpaces($count)
-    {
-        return (int)$this->getTotAuthLargeVehicles() - $count;
-    }
-
-    public function isSmallAuthExceeded($count)
-    {
-        return $this->getAvailableSmallSpaces($count) < 0;
-    }
-
-    public function isMediumAuthExceeded($count)
-    {
-        return $this->getAvailableMediumSpaces($count) < 0;
-    }
-
-    public function isLargeAuthExceeded($count)
-    {
-        return $this->getAvailableLargeSpaces($count) < 0;
-    }
-
-    public function hasPsvBreakdown()
-    {
-        $sum = ((int)$this->getTotAuthSmallVehicles()
-            + (int)$this->getTotAuthMediumVehicles()
-            + (int)$this->getTotAuthLargeVehicles());
-
-        return $sum > 0;
-    }
-
-    public function shouldShowSmallTable($count)
-    {
-        if (!$this->hasPsvBreakdown()) {
-            return true;
-        }
-
-        return (int)$this->getTotAuthSmallVehicles() > 0 || $count > 0;
-    }
-
-    public function shouldShowMediumTable($count)
-    {
-        if (!$this->hasPsvBreakdown()) {
-            return true;
-        }
-
-        return (int)$this->getTotAuthMediumVehicles() > 0 || $count > 0;
-    }
-
-    public function shouldShowLargeTable($count)
-    {
-        if (!$this->canHaveLargeVehicles()) {
-            return false;
-        }
-
-        if (!$this->hasPsvBreakdown()) {
-            return true;
-        }
-
-        return (int)$this->getTotAuthLargeVehicles() > 0 || $count > 0;
-    }
-
     public function getOperatingCentresNetDelta()
     {
         $delta = 0;
@@ -1405,9 +1328,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $comparisons = [
             'TotAuthVehicles',
             'TotAuthTrailers',
-            'TotAuthSmallVehicles',
-            'TotAuthMediumVehicles',
-            'TotAuthLargeVehicles'
         ];
 
         foreach ($comparisons as $comparison) {
@@ -1517,5 +1437,38 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
             return false;
         }
+    }
+
+    /**
+     * Is the PSV Size set to Small
+     *
+     * @return bool
+     */
+    public function isPsvVehicleSizeSmall()
+    {
+        return !empty($this->getPsvWhichVehicleSizes()) &&
+            $this->getPsvWhichVehicleSizes()->getId() === self::PSV_VEHICLE_SIZE_SMALL;
+    }
+
+    /**
+     * Is the PSV Size set to Medium/Large
+     *
+     * @return bool
+     */
+    public function isPsvVehicleSizeMediumLarge()
+    {
+        return !empty($this->getPsvWhichVehicleSizes()) &&
+            $this->getPsvWhichVehicleSizes()->getId() === self::PSV_VEHICLE_SIZE_MEDIUM_LARGE;
+    }
+
+    /**
+     * Is the PSV Size set to Both
+     *
+     * @return bool
+     */
+    public function isPsvVehicleSizeBoth()
+    {
+        return !empty($this->getPsvWhichVehicleSizes()) &&
+            $this->getPsvWhichVehicleSizes()->getId() === self::PSV_VEHICLE_SIZE_BOTH;
     }
 }

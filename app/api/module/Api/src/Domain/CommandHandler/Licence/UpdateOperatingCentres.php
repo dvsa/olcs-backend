@@ -54,14 +54,7 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
         $this->validate($licence, $command);
 
-        if ($licence->isPsv()) {
-            $licence->setTotAuthSmallVehicles($command->getTotAuthSmallVehicles());
-            $licence->setTotAuthMediumVehicles($command->getTotAuthMediumVehicles());
-
-            if ($licence->canHaveLargeVehicles()) {
-                $licence->setTotAuthLargeVehicles($command->getTotAuthLargeVehicles());
-            }
-        } else {
+        if (!$licence->isPsv()) {
             $licence->setTotAuthTrailers($command->getTotAuthTrailers());
         }
 

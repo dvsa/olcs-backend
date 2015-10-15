@@ -44,7 +44,6 @@ class OperatingCentres extends AbstractQueryHandler implements AuthAwareInterfac
                 'operatingCentres' => $this->getRepo('LicenceOperatingCentre')
                     ->fetchByLicenceIdForOperatingCentres($licence->getId()),
                 'isPsv' => $licence->isPsv(),
-                'canHaveLargeVehicles' => $licence->canHaveLargeVehicles(),
                 'canHaveCommunityLicences' => $licence->canHaveCommunityLicences(),
                 'canHaveSchedule41' => false,
                 'possibleEnforcementAreas' => $this->getPossibleEnforcementAreas($licence),

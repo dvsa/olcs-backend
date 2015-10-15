@@ -52,7 +52,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $licence = m::mock(Licence::class)->makePartial();
         $licence->shouldReceive('serialize')->with($bundle)->andReturn(['foo' => 'bar']);
         $licence->shouldReceive('isPsv')->andReturn(false);
-        $licence->shouldReceive('canHaveLargeVehicles')->andReturn(true);
         $licence->shouldReceive('canHaveCommunityLicences')->andReturn(true);
         $licence->setId(111);
 
@@ -84,7 +83,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
             'requiresVariation' => true,
             'operatingCentres' => ['a', 'b'],
             'isPsv' => false,
-            'canHaveLargeVehicles' => true,
             'canHaveCommunityLicences' => true,
             'canHaveSchedule41' => false,
             'possibleEnforcementAreas' => [],
@@ -126,7 +124,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $licence = m::mock(Licence::class)->makePartial();
         $licence->shouldReceive('serialize')->with($bundle)->andReturn(['foo' => 'bar']);
         $licence->shouldReceive('isPsv')->andReturn(false);
-        $licence->shouldReceive('canHaveLargeVehicles')->andReturn(true);
         $licence->shouldReceive('canHaveCommunityLicences')->andReturn(true);
         $licence->setId(111);
         $licence->setTrafficArea($ta);
@@ -159,7 +156,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
             'requiresVariation' => true,
             'operatingCentres' => ['a', 'b'],
             'isPsv' => false,
-            'canHaveLargeVehicles' => true,
             'canHaveCommunityLicences' => true,
             'canHaveSchedule41' => false,
             'possibleEnforcementAreas' => [33 => 'EA'],

@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 
 /**
  * Application Vehicles Declarations Review Service
@@ -26,9 +27,29 @@ class ApplicationVehiclesDeclarationsReviewService extends AbstractReviewService
     {
         $subSections = [];
 
-        // All options relating to having small vehicles
-        if ($data['totAuthSmallVehicles'] > 0) {
+        $psvWhichVehicleSize = isset($data['psvWhichVehicleSizes']['id']) ? $data['psvWhichVehicleSizes']['id'] : null;
 
+        if ($psvWhichVehicleSize) {
+            $subSections[] = [
+                'mainItems' => [
+                    [
+                        'multiItems' => [
+                            [
+                                [
+                                    'label' => 'application-review-vehicles-declarations-vs',
+                                    'value' => $data['psvWhichVehicleSizes']['description']
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+        }
+
+        // All options relating to having small vehicles
+        if ($psvWhichVehicleSize === Application::PSV_VEHICLE_SIZE_SMALL ||
+            $psvWhichVehicleSize === Application::PSV_VEHICLE_SIZE_BOTH
+        ) {
             $multiItems = [];
 
             // 15b[i]
@@ -57,8 +78,7 @@ class ApplicationVehiclesDeclarationsReviewService extends AbstractReviewService
             ];
         }
 
-        if ($data['totAuthSmallVehicles'] == 0
-            && ($data['totAuthMediumVehicles'] > 0 || $data['totAuthLargeVehicles'] > 0)) {
+        if ($psvWhichVehicleSize === Application::PSV_VEHICLE_SIZE_MEDIUM_LARGE) {
 
             $subSections[] = [
                 'title' => 'application-review-vehicles-declarations-medium-title',
@@ -74,8 +94,8 @@ class ApplicationVehiclesDeclarationsReviewService extends AbstractReviewService
             ];
         }
 
-        if ($data['licenceType']['id'] === Licence::LICENCE_TYPE_RESTRICTED
-            && $data['totAuthMediumVehicles'] > 0) {
+        if ($data['licenceType']['id'] === Licence::LICENCE_TYPE_RESTRICTED &&
+            $psvWhichVehicleSize !== Application::PSV_VEHICLE_SIZE_SMALL) {
 
             $subSections[] = [
                 'title' => 'application-review-vehicles-declarations-business-title',
@@ -98,9 +118,10 @@ class ApplicationVehiclesDeclarationsReviewService extends AbstractReviewService
 
         $multiItems['15f'][] = $this->addSection15f1($data);
 
-        if ($data['psvLimousines'] === 'Y' &&
-            ($data['totAuthLargeVehicles'] > 0 || $data['totAuthMediumVehicles'] > 0)) {
-            $multiItems['15g'][] = $this->addSection15g();
+        if ($data['psvLimousines'] === 'Y') {
+            if ($psvWhichVehicleSize !== Application::PSV_VEHICLE_SIZE_SMALL) {
+                $multiItems['15g'][] = $this->addSection15g();
+            }
         } else {
             $multiItems['15f'][] = $this->addSection15f2();
         }

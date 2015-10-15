@@ -3,8 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Assertion\Licence;
 
 use Dvsa\Olcs\Api\Assertion\User\ManageUserSelfserve as Sut;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -119,24 +117,15 @@ class ManageUserSelfserveTest extends MockeryTestCase
     public function testAssertForOperator(
         $isGranted,
         $currentUserType,
-        $currentUserEntityId,
         $userType,
-        $userEntityId,
-        $expected
+        $expected,
+        $canRead
     ) {
-        $currentUserOrgUser = m::mock(OrganisationUser::class);
-        $currentUserOrgUser->shouldReceive('getOrganisation->getId')->andReturn($currentUserEntityId);
-
         $currentUser = m::mock(User::class)->makePartial();
         $currentUser->shouldReceive('getUserType')->andReturn($currentUserType);
-        $currentUser->shouldReceive('getOrganisationUsers')->andReturn(new ArrayCollection([$currentUserOrgUser]));
-
-        $userOrgUser = m::mock(OrganisationUser::class);
-        $userOrgUser->shouldReceive('getOrganisation->getId')->andReturn($userEntityId);
 
         $user = m::mock(User::class)->makePartial();
         $user->shouldReceive('getUserType')->andReturn($userType);
-        $user->shouldReceive('getOrganisationUsers')->andReturn(new ArrayCollection([$userOrgUser]));
 
         $this->auth->shouldReceive('getIdentity->getUser')->andReturn($currentUser);
 
@@ -145,6 +134,10 @@ class ManageUserSelfserveTest extends MockeryTestCase
             ->with(Permission::OPERATOR_ADMIN)
             ->andReturn($isGranted);
 
+        $this->auth->shouldReceive('isGranted')
+            ->with(Permission::CAN_READ_USER_SELFSERVE, $user)
+            ->andReturn($canRead);
+
         $this->assertEquals($expected, $this->sut->assert($this->auth, $user));
     }
 
@@ -152,13 +145,13 @@ class ManageUserSelfserveTest extends MockeryTestCase
     {
         return [
             // operator manages operator
-            [true, User::USER_TYPE_OPERATOR, 123, User::USER_TYPE_OPERATOR, 123, true],
-            [true, User::USER_TYPE_OPERATOR, 123, User::USER_TYPE_OPERATOR, 1, false],
-            [false, User::USER_TYPE_OPERATOR, 123, User::USER_TYPE_OPERATOR, 123, false],
+            [true, User::USER_TYPE_OPERATOR, User::USER_TYPE_OPERATOR, true, true],
+            [true, User::USER_TYPE_OPERATOR, User::USER_TYPE_OPERATOR, false, false],
+            [false, User::USER_TYPE_OPERATOR, User::USER_TYPE_OPERATOR, false, true],
             // operator manages TM
-            [true, User::USER_TYPE_OPERATOR, 123, User::USER_TYPE_TRANSPORT_MANAGER, 123, true],
-            [true, User::USER_TYPE_OPERATOR, 123, User::USER_TYPE_TRANSPORT_MANAGER, 1, false],
-            [false, User::USER_TYPE_OPERATOR, 123, User::USER_TYPE_TRANSPORT_MANAGER, 123, false],
+            [true, User::USER_TYPE_OPERATOR, User::USER_TYPE_TRANSPORT_MANAGER, true, true],
+            [true, User::USER_TYPE_OPERATOR, User::USER_TYPE_TRANSPORT_MANAGER, false, false],
+            [false, User::USER_TYPE_OPERATOR, User::USER_TYPE_TRANSPORT_MANAGER, false, true],
         ];
     }
 }

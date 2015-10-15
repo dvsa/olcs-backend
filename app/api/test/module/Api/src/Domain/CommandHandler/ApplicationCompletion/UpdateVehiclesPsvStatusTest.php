@@ -39,9 +39,6 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
         $this->refData = [
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
             Licence::LICENCE_TYPE_RESTRICTED,
-            Vehicle::PSV_TYPE_SMALL,
-            Vehicle::PSV_TYPE_MEDIUM,
-            Vehicle::PSV_TYPE_LARGE
         ];
 
         parent::initReferences();
@@ -74,42 +71,14 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
     }
 
-    public function testHandleCommandWithoutSmallTotAuth()
+    public function testHandleCommandTotAuthVehiclesNotSet()
     {
         $this->applicationCompletion->setVehiclesPsvStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
-
-        $this->application->setHasEnteredReg('Y');
-        $this->licence->setLicenceVehicles(['foo']);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
     }
 
-    public function testHandleCommandWithoutMedTotAuth()
-    {
-        $this->applicationCompletion->setVehiclesPsvStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
-
-        $this->application->setHasEnteredReg('Y');
-        $this->licence->setLicenceVehicles(['foo']);
-        $this->application->setTotAuthSmallVehicles(3);
-
-        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
-    }
-
-    public function testHandleCommandWithoutLargeTotAuth()
-    {
-        $this->applicationCompletion->setVehiclesPsvStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
-
-        $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
-
-        $this->application->setHasEnteredReg('Y');
-        $this->licence->setLicenceVehicles(['foo']);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(3);
-
-        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
-    }
-
-    public function testHandleCommandTooManySmall()
+    public function testHandleCommandTooMany()
     {
         $this->applicationCompletion->setVehiclesPsvStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
@@ -117,7 +86,6 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
 
         /** @var Vehicle $vehicle1 */
         $vehicle1 = m::mock(Vehicle::class)->makePartial();
-        $vehicle1->setPsvType($this->refData[Vehicle::PSV_TYPE_SMALL]);
         /** @var LicenceVehicle $licenceVehicle1 */
         $licenceVehicle1 = m::mock(LicenceVehicle::class)->makePartial();
         $licenceVehicle1->setVehicle($vehicle1);
@@ -127,59 +95,7 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
 
         $this->application->setHasEnteredReg('Y');
         $this->licence->setLicenceVehicles($licenceVehicles);
-        $this->application->setTotAuthSmallVehicles(0);
-        $this->application->setTotAuthMediumVehicles(3);
-        $this->application->setTotAuthLargeVehicles(3);
-
-        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
-    }
-
-    public function testHandleCommandTooManyMedium()
-    {
-        $this->applicationCompletion->setVehiclesPsvStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
-
-        $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
-
-        /** @var Vehicle $vehicle1 */
-        $vehicle1 = m::mock(Vehicle::class)->makePartial();
-        $vehicle1->setPsvType($this->refData[Vehicle::PSV_TYPE_MEDIUM]);
-        /** @var LicenceVehicle $licenceVehicle1 */
-        $licenceVehicle1 = m::mock(LicenceVehicle::class)->makePartial();
-        $licenceVehicle1->setVehicle($vehicle1);
-
-        $licenceVehicles = new ArrayCollection();
-        $licenceVehicles->add($licenceVehicle1);
-
-        $this->application->setHasEnteredReg('Y');
-        $this->licence->setLicenceVehicles($licenceVehicles);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(0);
-        $this->application->setTotAuthLargeVehicles(3);
-
-        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
-    }
-
-    public function testHandleCommandTooManyLarge()
-    {
-        $this->applicationCompletion->setVehiclesPsvStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
-
-        $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
-
-        /** @var Vehicle $vehicle1 */
-        $vehicle1 = m::mock(Vehicle::class)->makePartial();
-        $vehicle1->setPsvType($this->refData[Vehicle::PSV_TYPE_LARGE]);
-        /** @var LicenceVehicle $licenceVehicle1 */
-        $licenceVehicle1 = m::mock(LicenceVehicle::class)->makePartial();
-        $licenceVehicle1->setVehicle($vehicle1);
-
-        $licenceVehicles = new ArrayCollection();
-        $licenceVehicles->add($licenceVehicle1);
-
-        $this->application->setHasEnteredReg('Y');
-        $this->licence->setLicenceVehicles($licenceVehicles);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(3);
-        $this->application->setTotAuthLargeVehicles(0);
+        $this->application->setTotAuthVehicles(0);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
     }
@@ -192,7 +108,6 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
 
         /** @var Vehicle $vehicle1 */
         $vehicle1 = m::mock(Vehicle::class)->makePartial();
-        $vehicle1->setPsvType($this->refData[Vehicle::PSV_TYPE_LARGE]);
         /** @var LicenceVehicle $licenceVehicle1 */
         $licenceVehicle1 = m::mock(LicenceVehicle::class)->makePartial();
         $licenceVehicle1->setVehicle($vehicle1);
@@ -202,9 +117,7 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
 
         $this->application->setHasEnteredReg('Y');
         $this->licence->setLicenceVehicles($licenceVehicles);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(3);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setTotAuthVehicles(3);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
     }
@@ -217,8 +130,7 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
 
         /** @var Vehicle $vehicle1 */
         $vehicle1 = m::mock(Vehicle::class)->makePartial();
-        $vehicle1->setPsvType($this->refData[Vehicle::PSV_TYPE_MEDIUM]);
-        /** @var LicenceVehicle $licenceVehicle1 */
+        /* @var $licenceVehicle1 LicenceVehicle  */
         $licenceVehicle1 = m::mock(LicenceVehicle::class)->makePartial();
         $licenceVehicle1->setVehicle($vehicle1);
 
@@ -227,8 +139,7 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
 
         $this->application->setHasEnteredReg('Y');
         $this->licence->setLicenceVehicles($licenceVehicles);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(3);
+        $this->application->setTotAuthVehicles(3);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
     }

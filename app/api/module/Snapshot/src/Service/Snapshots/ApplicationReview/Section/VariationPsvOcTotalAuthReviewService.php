@@ -16,11 +16,6 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  */
 class VariationPsvOcTotalAuthReviewService extends AbstractVariationOcTotalAuthReviewService
 {
-    private $licenceTypesWithLargeVehicles = [
-        Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-        Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
-    ];
-
     private $licenceTypesWithCommunityLicences = [
         Licence::LICENCE_TYPE_RESTRICTED,
         Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
@@ -34,15 +29,6 @@ class VariationPsvOcTotalAuthReviewService extends AbstractVariationOcTotalAuthR
      */
     protected function getChangedKeys($data)
     {
-        $changedKeys = [
-            'totAuthSmallVehicles' => 'vehicles-small',
-            'totAuthMediumVehicles' => 'vehicles-medium'
-        ];
-
-        if (in_array($data['licenceType']['id'], $this->licenceTypesWithLargeVehicles)) {
-            $changedKeys['totAuthLargeVehicles'] = 'vehicles-large';
-        }
-
         $changedKeys['totAuthVehicles'] = 'vehicles';
 
         if (in_array($data['licenceType']['id'], $this->licenceTypesWithCommunityLicences)) {
