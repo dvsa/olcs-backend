@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Fee
@@ -100,6 +101,24 @@ class Fee extends AbstractRepository
         }
 
         return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * @param int $organisationId
+     * @return int
+     */
+    public function getOutstandingFeeCountByOrganisationId($organisationId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb->select('COUNT(f)');
+        $this->whereOutstandingFee($doctrineQb);
+
+        // @todo this is still slow, might be better doing 2 queries rather
+        // than an OR
+        $this->whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId);
+
+        return $doctrineQb->getQuery()->getSingleScalarResult();
     }
 
     /**
