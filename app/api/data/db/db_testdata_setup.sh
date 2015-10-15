@@ -1,12 +1,15 @@
 #!/bin/sh
 
 # drop/create db
+echo "DatabaseSetup.sql"
 mysql -uroot -ppassword < DatabaseSetup.sql
 
 # schema
+echo "olcs_schema.sql"
 mysql -uroot -ppassword olcs_be < ../../../olcs-etl/olcs_schema.sql
 
 # rollout data
+echo "Rollout.sql"
 mysql -uroot -ppassword olcs_be < Rollout.sql
 
 # refdata
