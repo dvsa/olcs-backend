@@ -26,9 +26,9 @@ class TxcInboxByBusReg extends AbstractQueryHandler implements AuthAwareInterfac
 
     public function handleQuery(QueryInterface $query)
     {
-        if (!($this->isGranted(Permission::SELFSERVE_EBSR_DOCUMENTS))) {
-            throw new ForbiddenException();
-        }
+        //if (!($this->isGranted(Permission::SELFSERVE_EBSR_DOCUMENTS))) {
+        //    throw new ForbiddenException();
+        //}
 
         /** @var Repository $repo */
         $repo = $this->getRepo();
