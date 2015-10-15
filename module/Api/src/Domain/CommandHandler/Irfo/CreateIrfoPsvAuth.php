@@ -25,7 +25,7 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
 {
     protected $repoServiceName = 'IrfoPsvAuth';
 
-    protected $extraRepos = ['IrfoPsvAuthNumber'];
+    protected $extraRepos = ['IrfoPsvAuthNumber', 'FeeType'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -35,6 +35,10 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
 
         // deal with IrfoFileNo
         $irfoPsvAuth->populateFileNo();
+
+        // deal with IrfoFeeId
+        $irfoPsvAuth->populateIrfoFeeId();
+
         $this->getRepo()->save($irfoPsvAuth);
 
         // deal with IrfoPsvAuthNumbers
@@ -137,10 +141,10 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
         $feeAmount = (float)$feeType->getFixedValue();
 
         $data = [
-            'feeType' => $feeType->getId(),
             'irfoPsvAuth' => $irfoPsvAuth->getId(),
             'invoicedDate' => date('Y-m-d'),
-            'description' => $feeType->getDescription() . ' for IRFO permit ' . $irfoPsvAuth->getId(),
+            'description' => $feeType->getDescription() . ' for IRFO PSV Auth ' . $irfoPsvAuth->getId(),
+            'feeType' => $feeType->getId(),
             'amount' => $feeAmount,
             'feeStatus' => Fee::STATUS_OUTSTANDING,
         ];
@@ -157,9 +161,9 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
         $feeType = $feeTypeRepo->fetchLatestForIrfo($irfoPsvAuthFeeType);
 
         $data = [
-            'irfoGvPermit' => $irfoPsvAuthFeeType->getId(),
+            'irfoPsvAuth' => $irfoPsvAuthFeeType->getId(),
             'invoicedDate' => date('Y-m-d'),
-            'description' => $feeType->getDescription() . ' for IRFO permit ' . $irfoPsvAuth->getId(),
+            'description' => $feeType->getDescription() . ' for IRFO PSV Auth ' . $irfoPsvAuth->getId(),
             'feeType' => $feeType->getId(),
             'amount' => 0,
             'feeStatus' => Fee::STATUS_PAID,
