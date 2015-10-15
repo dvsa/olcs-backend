@@ -54,11 +54,11 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
                 'application' => $identifier
             ];
 
-            $identifier = $this->generateDocument($template, $query);
+            $docId = $this->generateDocument($template, $query);
 
             $printQueue = EnqueueFileCommand::create(
                 [
-                    'fileIdentifier' => $identifier,
+                    'fileIdentifier' => $docId,
                     // @note not working for now, just migrated, will be implemented in future stories
                     'options' => [PrintSchedulerInterface::OPTION_DOUBLE_SIDED],
                     'jobName' => 'Community Licence'
