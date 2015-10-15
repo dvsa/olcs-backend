@@ -75,54 +75,38 @@ class VehiclesPsvReviewServiceTest extends MockeryTestCase
                     'licenceVehicles' => [
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_SMALL
-                                ],
                                 'vrm' => 'SM10QWE',
                                 'makeModel' => 'Foo Bar',
-                                'isNovelty' => 'Y'
                             ]
                         ],
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_SMALL
-                                ],
                                 'vrm' => 'SM11QWE',
                                 'makeModel' => 'Foo Bar',
-                                'isNovelty' => 'N'
                             ]
                         ],
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_MEDIUM
-                                ],
-                                'vrm' => 'ME10QWE'
+                                'vrm' => 'ME10QWE',
+                                'makeModel' => '',
                             ]
                         ],
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_MEDIUM
-                                ],
-                                'vrm' => 'ME11QWE'
+                                'vrm' => 'ME11QWE',
+                                'makeModel' => '',
                             ]
                         ],
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_LARGE
-                                ],
-                                'vrm' => 'LG10QWE'
+                                'vrm' => 'LG10QWE',
+                                'makeModel' => '',
                             ]
                         ],
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_LARGE
-                                ],
-                                'vrm' => 'LG11QWE'
+                                'vrm' => 'LG11QWE',
+                                'makeModel' => '',
                             ]
                         ]
                     ]
@@ -130,7 +114,7 @@ class VehiclesPsvReviewServiceTest extends MockeryTestCase
                 [
                     ['foo' => 'bar'],
                     [
-                        'header' => 'application-review-vehicles-psv-small-title',
+                        'header' => 'application-review-vehicles-psv-title',
                         'multiItems' => [
                             [
                                 [
@@ -139,7 +123,7 @@ class VehiclesPsvReviewServiceTest extends MockeryTestCase
                                 ],
                                 [
                                     'label' => 'application-review-vehicles-make',
-                                    'value' => 'Foo Bar (application-review-vehicles-is-novelty-translated)'
+                                    'value' => 'Foo Bar'
                                 ]
                             ],
                             [
@@ -151,39 +135,45 @@ class VehiclesPsvReviewServiceTest extends MockeryTestCase
                                     'label' => 'application-review-vehicles-make',
                                     'value' => 'Foo Bar'
                                 ]
-                            ]
-                        ]
-                    ],
-                    [
-                        'header' => 'application-review-vehicles-psv-medium-title',
-                        'multiItems' => [
+                            ],
                             [
                                 [
                                     'label' => 'application-review-vehicles-vrm',
                                     'value' => 'ME10QWE'
+                                ],
+                                [
+                                    'label' => 'application-review-vehicles-make',
+                                    'value' => ''
                                 ]
                             ],
                             [
                                 [
                                     'label' => 'application-review-vehicles-vrm',
                                     'value' => 'ME11QWE'
+                                ],
+                                [
+                                    'label' => 'application-review-vehicles-make',
+                                    'value' => ''
                                 ]
-                            ]
-                        ]
-                    ],
-                    [
-                        'header' => 'application-review-vehicles-psv-large-title',
-                        'multiItems' => [
+                            ],
                             [
                                 [
                                     'label' => 'application-review-vehicles-vrm',
                                     'value' => 'LG10QWE'
+                                ],
+                                [
+                                    'label' => 'application-review-vehicles-make',
+                                    'value' => ''
                                 ]
                             ],
                             [
                                 [
                                     'label' => 'application-review-vehicles-vrm',
                                     'value' => 'LG11QWE'
+                                ],
+                                [
+                                    'label' => 'application-review-vehicles-make',
+                                    'value' => ''
                                 ]
                             ]
                         ]
@@ -200,22 +190,14 @@ class VehiclesPsvReviewServiceTest extends MockeryTestCase
                     'licenceVehicles' => [
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_SMALL
-                                ],
                                 'vrm' => 'SM10QWE',
                                 'makeModel' => 'Foo Bar',
-                                'isNovelty' => 'Y'
                             ]
                         ],
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_SMALL
-                                ],
                                 'vrm' => 'SM11QWE',
                                 'makeModel' => 'Foo Bar',
-                                'isNovelty' => 'N'
                             ]
                         ]
                     ]
@@ -223,7 +205,7 @@ class VehiclesPsvReviewServiceTest extends MockeryTestCase
                 [
                     ['foo' => 'bar'],
                     [
-                        'header' => 'application-review-vehicles-psv-small-title',
+                        'header' => 'application-review-vehicles-psv-title',
                         'multiItems' => [
                             [
                                 [
@@ -232,7 +214,7 @@ class VehiclesPsvReviewServiceTest extends MockeryTestCase
                                 ],
                                 [
                                     'label' => 'application-review-vehicles-make',
-                                    'value' => 'Foo Bar (application-review-vehicles-is-novelty-translated)'
+                                    'value' => 'Foo Bar'
                                 ]
                             ],
                             [
@@ -259,18 +241,14 @@ class VehiclesPsvReviewServiceTest extends MockeryTestCase
                     'licenceVehicles' => [
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_LARGE
-                                ],
-                                'vrm' => 'LG10QWE'
+                                'vrm' => 'LG10QWE',
+                                'makeModel' => 'ABC',
                             ]
                         ],
                         [
                             'vehicle' => [
-                                'psvType' => [
-                                    'id' => Vehicle::PSV_TYPE_LARGE
-                                ],
-                                'vrm' => 'LG11QWE'
+                                'vrm' => 'LG11QWE',
+                                'makeModel' => 'XYZ',
                             ]
                         ]
                     ]
@@ -278,18 +256,26 @@ class VehiclesPsvReviewServiceTest extends MockeryTestCase
                 [
                     ['foo' => 'bar'],
                     [
-                        'header' => 'application-review-vehicles-psv-large-title',
+                        'header' => 'application-review-vehicles-psv-title',
                         'multiItems' => [
                             [
                                 [
                                     'label' => 'application-review-vehicles-vrm',
                                     'value' => 'LG10QWE'
+                                ],
+                                [
+                                    'label' => 'application-review-vehicles-make',
+                                    'value' => 'ABC'
                                 ]
                             ],
                             [
                                 [
                                     'label' => 'application-review-vehicles-vrm',
                                     'value' => 'LG11QWE'
+                                ],
+                                [
+                                    'label' => 'application-review-vehicles-make',
+                                    'value' => 'XYZ'
                                 ]
                             ]
                         ]

@@ -66,11 +66,6 @@ final class CommonGrant extends AbstractCommandHandler implements TransactionedI
         if ($licence->isRestricted()) {
             $licence->setEstablishmentCd(null);
 
-            if ($licence->isPsv()) {
-                $licence->setTotAuthLargeVehicles(0);
-                $application->setTotAuthLargeVehicles(0);
-            }
-
             $this->getRepo()->save($application);
         }
     }

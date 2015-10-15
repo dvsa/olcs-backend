@@ -40,9 +40,7 @@ class UnlicensedVehicles extends AbstractQueryHandler
             'result' => $this->resultList(
                 $this->getRepo('LicenceVehicle')->fetchPaginatedList($lvQuery, Query::HYDRATE_OBJECT),
                 [
-                    'vehicle' => [
-                        'psvType',
-                    ],
+                    'vehicle',
                 ]
             ),
             'count' => $this->getRepo('LicenceVehicle')->fetchPaginatedCount($lvQuery),

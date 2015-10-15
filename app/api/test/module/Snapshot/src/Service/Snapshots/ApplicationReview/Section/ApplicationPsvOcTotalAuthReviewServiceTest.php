@@ -32,9 +32,6 @@ class ApplicationPsvOcTotalAuthReviewServiceTest extends PHPUnit_Framework_TestC
     {
         $data = [
             'licenceType' => ['id' => $licenceType],
-            'totAuthSmallVehicles' => 10,
-            'totAuthMediumVehicles' => 20,
-            'totAuthLargeVehicles' => 30,
             'totAuthVehicles' => 60,
             'totCommunityLicences' => 50
         ];
@@ -52,18 +49,6 @@ class ApplicationPsvOcTotalAuthReviewServiceTest extends PHPUnit_Framework_TestC
                     'multiItems' => [
                         [
                             [
-                                'label' => 'review-operating-centres-authorisation-vehicles-small',
-                                'value' => 10
-                            ],
-                            [
-                                'label' => 'review-operating-centres-authorisation-vehicles-medium',
-                                'value' => 20
-                            ],
-                            'large' => [
-                                'label' => 'review-operating-centres-authorisation-vehicles-large',
-                                'value' => 30
-                            ],
-                            [
                                 'label' => 'review-operating-centres-authorisation-vehicles',
                                 'value' => 60
                             ]
@@ -77,18 +62,6 @@ class ApplicationPsvOcTotalAuthReviewServiceTest extends PHPUnit_Framework_TestC
                     'header' => 'review-operating-centres-authorisation-title',
                     'multiItems' => [
                         [
-                            [
-                                'label' => 'review-operating-centres-authorisation-vehicles-small',
-                                'value' => 10
-                            ],
-                            [
-                                'label' => 'review-operating-centres-authorisation-vehicles-medium',
-                                'value' => 20
-                            ],
-                            'large' => [
-                                'label' => 'review-operating-centres-authorisation-vehicles-large',
-                                'value' => 30
-                            ],
                             [
                                 'label' => 'review-operating-centres-authorisation-vehicles',
                                 'value' => 60
@@ -108,14 +81,6 @@ class ApplicationPsvOcTotalAuthReviewServiceTest extends PHPUnit_Framework_TestC
                     'multiItems' => [
                         [
                             [
-                                'label' => 'review-operating-centres-authorisation-vehicles-small',
-                                'value' => 10
-                            ],
-                            [
-                                'label' => 'review-operating-centres-authorisation-vehicles-medium',
-                                'value' => 20
-                            ],
-                            [
                                 'label' => 'review-operating-centres-authorisation-vehicles',
                                 'value' => 60
                             ],
@@ -133,14 +98,6 @@ class ApplicationPsvOcTotalAuthReviewServiceTest extends PHPUnit_Framework_TestC
                     'header' => 'review-operating-centres-authorisation-title',
                     'multiItems' => [
                         [
-                            [
-                                'label' => 'review-operating-centres-authorisation-vehicles-small',
-                                'value' => 10
-                            ],
-                            [
-                                'label' => 'review-operating-centres-authorisation-vehicles-medium',
-                                'value' => 20
-                            ],
                             [
                                 'label' => 'review-operating-centres-authorisation-vehicles',
                                 'value' => 60

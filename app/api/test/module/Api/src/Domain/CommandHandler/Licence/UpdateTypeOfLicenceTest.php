@@ -205,7 +205,6 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
 
         $this->assertCount(0, $licence->getTmLicences());
         $this->assertNull($licence->getEstablishmentCd());
-        $this->assertSame(99, $licence->getTotAuthLargeVehicles());
         $this->assertEquals($this->refData[Licence::LICENCE_TYPE_RESTRICTED], $licence->getLicenceType());
     }
 
@@ -240,7 +239,6 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
 
         $this->assertCount(0, $licence->getTmLicences());
         $this->assertNull($licence->getEstablishmentCd());
-        $this->assertSame(0, $licence->getTotAuthLargeVehicles());
         $this->assertEquals($this->refData[Licence::LICENCE_TYPE_RESTRICTED], $licence->getLicenceType());
     }
 
@@ -277,7 +275,6 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
 
         $this->assertCount(0, $licence->getTmLicences());
         $this->assertNull($licence->getEstablishmentCd());
-        $this->assertSame(99, $licence->getTotAuthLargeVehicles());
         $this->assertEquals($this->refData[Licence::LICENCE_TYPE_RESTRICTED], $licence->getLicenceType());
     }
 
@@ -312,7 +309,6 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
 
         $this->assertCount(0, $licence->getTmLicences());
         $this->assertNull($licence->getEstablishmentCd());
-        $this->assertSame(0, $licence->getTotAuthLargeVehicles());
         $this->assertEquals($this->refData[Licence::LICENCE_TYPE_RESTRICTED], $licence->getLicenceType());
     }
 
@@ -345,7 +341,6 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertNotNull($licence->getEstablishmentCd());
-        $this->assertSame(99, $licence->getTotAuthLargeVehicles());
         $this->assertEquals($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL], $licence->getLicenceType());
     }
 
@@ -378,7 +373,6 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertNotNull($licence->getEstablishmentCd());
-        $this->assertSame(99, $licence->getTotAuthLargeVehicles());
         $this->assertEquals($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL], $licence->getLicenceType());
     }
 
@@ -409,7 +403,6 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertNotNull($licence->getEstablishmentCd());
-        $this->assertSame(99, $licence->getTotAuthLargeVehicles());
         $this->assertEquals($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL], $licence->getLicenceType());
     }
 
@@ -428,7 +421,6 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setId(208);
         $licence->setLicenceType($this->refData[$licenceType]);
-        $licence->setTotAuthLargeVehicles(99);
         $goodsOrPsv = ($goods) ? Licence::LICENCE_CATEGORY_GOODS_VEHICLE : Licence::LICENCE_CATEGORY_PSV;
         $licence->setGoodsOrPsv($this->refData[$goodsOrPsv]);
 

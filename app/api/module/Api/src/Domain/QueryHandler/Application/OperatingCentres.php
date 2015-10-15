@@ -60,7 +60,6 @@ class OperatingCentres extends AbstractQueryHandler implements AuthAwareInterfac
                 'operatingCentres' => $this->getAocData($application),
                 'totCommunityLicences' => $this->getTotCommunityLicences($application),
                 'isPsv' => $application->isPsv(),
-                'canHaveLargeVehicles' => $application->canHaveLargeVehicles(),
                 'canHaveCommunityLicences' => $application->canHaveCommunityLicences(),
                 'canHaveSchedule41' => $this->canHaveSchedule41($application),
                 'possibleEnforcementAreas' => $this->getPossibleEnforcementAreas($application),
