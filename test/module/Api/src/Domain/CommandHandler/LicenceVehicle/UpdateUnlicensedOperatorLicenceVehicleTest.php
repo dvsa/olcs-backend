@@ -32,15 +32,6 @@ class UpdateUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [
-            VehicleEntity::PSV_TYPE_SMALL
-        ];
-
-        parent::initReferences();
-    }
-
     public function testHandleCommandGoods()
     {
         $id = 69;
@@ -104,7 +95,6 @@ class UpdateUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
                 'id' => $id,
                 'version' => $version,
                 'vrm' => 'ABC1234',
-                'psvType' => 'vhl_t_a',
             ]
         );
 
@@ -122,11 +112,6 @@ class UpdateUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
         $licenceVehicle
             ->shouldReceive('getVehicle->setVrm')
             ->with('ABC1234')
-            ->once();
-
-        $licenceVehicle
-            ->shouldReceive('getVehicle->setPsvType')
-            ->with($this->mapRefData('vhl_t_a'))
             ->once();
 
         $licenceVehicle

@@ -22,7 +22,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="ix_vehicle_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_vehicle_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_vehicle_psv_type", columns={"psv_type"}),
  *        @ORM\Index(name="ix_vehicle_vrm", columns={"vrm"})
  *    },
  *    uniqueConstraints={
@@ -83,15 +82,6 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     protected $id;
 
     /**
-     * Is novelty
-     *
-     * @var string
-     *
-     * @ORM\Column(type="yesnonull", name="is_novelty", nullable=true)
-     */
-    protected $isNovelty;
-
-    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -136,16 +126,6 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
      * @ORM\Column(type="integer", name="plated_weight", nullable=true)
      */
     protected $platedWeight;
-
-    /**
-     * Psv type
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="psv_type", referencedColumnName="id", nullable=true)
-     */
-    protected $psvType;
 
     /**
      * Section26
@@ -358,29 +338,6 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     }
 
     /**
-     * Set the is novelty
-     *
-     * @param string $isNovelty
-     * @return Vehicle
-     */
-    public function setIsNovelty($isNovelty)
-    {
-        $this->isNovelty = $isNovelty;
-
-        return $this;
-    }
-
-    /**
-     * Get the is novelty
-     *
-     * @return string
-     */
-    public function getIsNovelty()
-    {
-        return $this->isNovelty;
-    }
-
-    /**
      * Set the last modified by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy
@@ -493,29 +450,6 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     public function getPlatedWeight()
     {
         return $this->platedWeight;
-    }
-
-    /**
-     * Set the psv type
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $psvType
-     * @return Vehicle
-     */
-    public function setPsvType($psvType)
-    {
-        $this->psvType = $psvType;
-
-        return $this;
-    }
-
-    /**
-     * Get the psv type
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getPsvType()
-    {
-        return $this->psvType;
     }
 
     /**

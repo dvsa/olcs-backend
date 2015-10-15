@@ -35,51 +35,13 @@ final class UpdateVehiclesPsvStatus extends AbstractUpdateStatus
             return false;
         }
 
-        if ($application->getTotAuthSmallVehicles() === null) {
+        if ($application->getTotAuthVehicles() === null) {
             return false;
         }
 
-        if ($application->getTotAuthMediumVehicles() === null) {
+        if ($application->getLicence()->getActiveVehicles(false)->count() > (int) $application->getTotAuthVehicles()) {
             return false;
         }
-
-        if ($application->getLicenceType()->getId() !== Licence::LICENCE_TYPE_RESTRICTED
-            && $application->getTotAuthLargeVehicles() === null) {
-            return false;
-        }
-
-        $psvTypes = [
-            'small'  => Vehicle::PSV_TYPE_SMALL,
-            'medium' => Vehicle::PSV_TYPE_MEDIUM
-        ];
-
-        if ($application->getLicenceType()->getId() !== Licence::LICENCE_TYPE_RESTRICTED) {
-            $psvTypes['large'] = Vehicle::PSV_TYPE_LARGE;
-        }
-
-        $small = $medium = $large = 0;
-
-        /** @var LicenceVehicle $licenceVehicle */
-        foreach ($application->getLicence()->getActiveVehicles(false) as $licenceVehicle) {
-            if ($licenceVehicle->getVehicle()->getPsvType() !== null) {
-                $psvType = array_search($licenceVehicle->getVehicle()->getPsvType()->getId(), $psvTypes);
-                ${$psvType}++;
-            }
-        }
-
-        if ($small > $application->getTotAuthSmallVehicles()) {
-            return false;
-        }
-
-        if ($medium > $application->getTotAuthMediumVehicles()) {
-            return false;
-        }
-
-        if ($application->getLicenceType()->getId() !== Licence::LICENCE_TYPE_RESTRICTED
-            && $large > $application->getTotAuthLargeVehicles()) {
-            return false;
-        }
-
         return true;
     }
 }

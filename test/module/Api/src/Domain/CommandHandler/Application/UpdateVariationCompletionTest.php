@@ -230,9 +230,6 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $application->setOperatingCentres($ocCollection);
 
         $application->setTotAuthVehicles(2);
-        $application->setTotAuthSmallVehicles(0);
-        $application->setTotAuthMediumVehicles(2);
-        $application->setTotAuthLargeVehicles(0);
 
         return $application;
     }
@@ -312,9 +309,6 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $licence->setPsvDiscs($psvDiscsCollection);
 
         $licence->setTotAuthVehicles(3);
-        $licence->setTotAuthSmallVehicles(0);
-        $licence->setTotAuthMediumVehicles(3);
-        $licence->setTotAuthLargeVehicles(0);
 
         return $licence;
     }

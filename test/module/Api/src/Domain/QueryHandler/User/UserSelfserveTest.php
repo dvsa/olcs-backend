@@ -39,7 +39,7 @@ class UserSelfserveTest extends QueryHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $mockUser)
+            ->with(PermissionEntity::CAN_READ_USER_SELFSERVE, $mockUser)
             ->andReturn(true);
 
         $query = Query::create(['QUERY']);
@@ -61,7 +61,7 @@ class UserSelfserveTest extends QueryHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $mockUser)
+            ->with(PermissionEntity::CAN_READ_USER_SELFSERVE, $mockUser)
             ->andReturn(false);
 
         $query = Query::create(['QUERY']);

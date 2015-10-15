@@ -40,9 +40,6 @@ class UpdateTest extends CommandHandlerTestCase
             'status' => 'STATUS',
             'received' => 'Y',
             'totAuthVehicles' => '213',
-            'totAuthSmallVehicles' => 200,
-            'totAuthMediumVehicles' => 10,
-            'totAuthLargeVehicles' => 3,
             'totPsvDiscs' => '12',
             'totCommunityLicences' => '43',
         ];
@@ -59,9 +56,6 @@ class UpdateTest extends CommandHandlerTestCase
                 $this->assertSame($this->refData[$data['status']], $saveContinuationDetail->getStatus());
                 $this->assertSame($data['received'], $saveContinuationDetail->getReceived());
                 $this->assertSame($data['totAuthVehicles'], $saveContinuationDetail->getTotAuthVehicles());
-                $this->assertSame($data['totAuthSmallVehicles'], $saveContinuationDetail->getTotAuthSmallVehicles());
-                $this->assertSame($data['totAuthMediumVehicles'], $saveContinuationDetail->getTotAuthMediumVehicles());
-                $this->assertSame($data['totAuthLargeVehicles'], $saveContinuationDetail->getTotAuthLargeVehicles());
                 $this->assertSame($data['totPsvDiscs'], $saveContinuationDetail->getTotPsvDiscs());
                 $this->assertSame($data['totCommunityLicences'], $saveContinuationDetail->getTotCommunityLicences());
             }

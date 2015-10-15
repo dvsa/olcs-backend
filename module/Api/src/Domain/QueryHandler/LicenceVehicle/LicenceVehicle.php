@@ -41,9 +41,7 @@ class LicenceVehicle extends AbstractQueryHandler implements AuthAwareInterface
         return $this->result(
             $licenceVehicle,
             [
-                'vehicle' => [
-                    'psvType',
-                ],
+                'vehicle',
                 'goodsDiscs'
             ],
             [
