@@ -377,16 +377,17 @@ class Fee extends AbstractFee
     /**
      * Get the 'sales person reference', also known as 'cost centre reference'
      * for a fee. This is either a traffic area code or one of:
-     *  - 'IR' for IRFO fees
-     *  - 'MGB' for misc. GB fees
-     *  - 'MNI' for misc. NI fees
-     *  - 'MR' for misc. IRFO fees
      *
      * @return string
-     * @todo OLCS-6845, currently hard-coded traffic area code
      */
     public function getSalesPersonReference()
     {
-        return \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE;
+        $costCentreRef = $this->getFeeType()->getCostCentreRef();
+
+        if ($costCentreRef === FeeType::COST_CENTRE_REF_TYPE_LICENSING) {
+            return $this->getLicence()->getTrafficArea()->getId();
+        }
+
+        return $costCentreRef;
     }
 }
