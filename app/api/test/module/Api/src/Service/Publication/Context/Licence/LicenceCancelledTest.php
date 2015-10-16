@@ -1,8 +1,8 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Publication\Context\Application;
+namespace Dvsa\OlcsTest\Api\Service\Publication\Context\Licence;
 
-use Dvsa\Olcs\Api\Service\Publication\Context\Application\LicenceCancelled;
+use Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceCancelled;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
