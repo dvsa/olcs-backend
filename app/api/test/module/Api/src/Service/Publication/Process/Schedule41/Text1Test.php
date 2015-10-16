@@ -237,8 +237,8 @@ D12345 has been surrendered as part of this application.";
         $this->sut->process($publicationLink, $context);
 
         $expectedText = "Operating Centre(s):
-Transferred from D12345 SN (DONOR_ORG ) to LIC12345 SI".
-            " (ORG_NAME ).
+Transferred from D12345 SN (DONOR_ORG) to LIC12345 SI".
+            " (ORG_NAME).
 D12345 has been surrendered as part of this application.
 Upgrade of Licence from SN to SI";
 
