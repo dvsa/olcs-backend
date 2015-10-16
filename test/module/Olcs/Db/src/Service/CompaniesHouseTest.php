@@ -7,6 +7,7 @@
  */
 namespace OlcsTest\Db\Service;
 
+use OlcsTest\Bootstrap;
 use PHPUnit_Framework_TestCase;
 use Olcs\Db\Service\CompaniesHouse;
 
@@ -144,9 +145,6 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
 
-        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
-        $service->setLogger($mockLogger);
-
         $service->getList($data);
     }
 
@@ -216,9 +214,6 @@ XML;
         $service->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
-
-        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
-        $service->setLogger($mockLogger);
 
         $service->getList($data);
     }
@@ -290,9 +285,6 @@ XML;
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
 
-        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
-        $service->setLogger($mockLogger);
-
         $service->getList($data);
     }
 
@@ -359,9 +351,6 @@ XML;
         $service->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
-
-        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
-        $service->setLogger($mockLogger);
 
         $service->getList($data);
     }
@@ -435,9 +424,6 @@ XML;
         $service->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
-
-        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
-        $service->setLogger($mockLogger);
 
         $response = $service->getList($data);
 
@@ -514,9 +500,6 @@ XML;
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
 
-        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
-        $service->setLogger($mockLogger);
-
         $response = $service->getList($data);
 
         $this->assertEquals($expected, $response);
@@ -587,9 +570,6 @@ XML;
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
 
-        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
-        $service->setLogger($mockLogger);
-
         $response = $service->getList($data);
 
         $this->assertEquals($expected, $response);
@@ -650,9 +630,6 @@ XML;
         $service->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
-
-        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
-        $service->setLogger($mockLogger);
 
         $response = $service->getList($data);
 
@@ -737,9 +714,6 @@ XML;
         $service->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($mockServiceLocator));
-
-        $mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
-        $service->setLogger($mockLogger);
 
         $response = $service->getList($data);
         $this->assertEquals($expected, $response);

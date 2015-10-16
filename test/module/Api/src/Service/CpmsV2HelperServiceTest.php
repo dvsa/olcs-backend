@@ -17,7 +17,6 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Service\CpmsV2HelperService as Sut;
 use Dvsa\Olcs\Api\Service\FeesHelperService;
-use Dvsa\OlcsTest\Api\MockLoggerTrait;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -28,8 +27,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class CpmsV2HelperServiceTest extends MockeryTestCase
 {
-    use MockLoggerTrait;
-
     /**
      * @var \Mockery\MockInterface (CpmsClient\Service\ApiService)
      */
@@ -61,21 +58,18 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->feesHelper = m::mock(FeesHelperService::class);
 
         // Create service with mocked dependencies
-        $this->sut = $this->createService($this->cpmsClient, $this->mockLogger(), $this->feesHelper);
+        $this->sut = $this->createService($this->cpmsClient, $this->feesHelper);
 
         return parent::setUp();
     }
 
-    private function createService($api, $logger, $feesHelper)
+    private function createService($api, $feesHelper)
     {
         $sm = m::mock('\Zend\ServiceManager\ServiceLocatorInterface');
         $sm
             ->shouldReceive('get')
             ->with('cpms\service\api')
             ->andReturn($api)
-            ->shouldReceive('get')
-            ->with('Logger')
-            ->andReturn($logger)
             ->shouldReceive('get')
             ->with('FeesHelperService')
             ->andReturn($feesHelper);

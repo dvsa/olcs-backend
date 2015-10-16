@@ -14,9 +14,9 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\OlcsTest\Api\MockLoggerTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
+use OlcsTest\Bootstrap;
 
 /**
  * CPMS Helper Service Test
@@ -25,8 +25,6 @@ use Mockery as m;
  */
 class CpmsV1HelperServiceTest extends MockeryTestCase
 {
-    use MockLoggerTrait;
-
     /**
      * @var \Mockery\MockInterface (CpmsClient\Service\ApiService)
      */
@@ -51,21 +49,18 @@ class CpmsV1HelperServiceTest extends MockeryTestCase
             ->getMock();
 
         // Create service with mocked dependencies
-        $this->sut = $this->createService($this->cpmsClient, $this->mockLogger());
+        $this->sut = $this->createService($this->cpmsClient);
 
         return parent::setUp();
     }
 
-    private function createService($api, $logger)
+    private function createService($api)
     {
         $sm = m::mock('\Zend\ServiceManager\ServiceLocatorInterface');
         $sm
             ->shouldReceive('get')
             ->with('cpms\service\api')
-            ->andReturn($api)
-            ->shouldReceive('get')
-            ->with('Logger')
-            ->andReturn($logger);
+            ->andReturn($api);
 
         $sut = new Sut();
         return $sut->createService($sm);
