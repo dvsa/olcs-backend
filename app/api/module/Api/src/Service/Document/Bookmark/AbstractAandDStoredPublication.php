@@ -64,7 +64,7 @@ abstract class AbstractAandDStoredPublication extends DynamicBookmark
     {
         $filteredPublicationLinks = [];
 
-        foreach($publicationLinks as $publicationLink) {
+        foreach ($publicationLinks as $publicationLink) {
             if (in_array($publicationLink['publicationSection']['id'], $this->allowedSections)) {
                 $filteredPublicationLinks[] = $publicationLink;
             }
