@@ -58,13 +58,12 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
         $result->addMessage('IRFO PSV Auth created successfully');
 
         // Check if is *not* fee exempt.
-        if ($irfoPsvAuth->getIsFeeExemptApplication() !== 'Y') {
-            if (
-                in_array(
-                    $irfoPsvAuth->getStatus()->getId(),
-                    [IrfoPsvAuth::STATUS_PENDING, IrfoPsvAuth::STATUS_RENEW]
-                )
+        if ($irfoPsvAuth->getIsFeeExemptApplication() !== 'Y' &&
+            in_array(
+                $irfoPsvAuth->getStatus()->getId(),
+                [IrfoPsvAuth::STATUS_PENDING, IrfoPsvAuth::STATUS_RENEW]
             )
+        ) {
             $result->merge($this->createApplicationFee($irfoPsvAuth));
         } else {
             $result->merge($this->createExemptFee($irfoPsvAuth));

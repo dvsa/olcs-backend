@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\FeeTypeRepository;
+use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as FeeCreateFee;
@@ -37,7 +37,12 @@ class CreateIrfoGvPermitTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            IrfoGvPermitEntity::STATUS_PENDING
+            IrfoGvPermitEntity::STATUS_PENDING,
+            'fee-type-ref-data',
+            'irfo-fee-type-ref-data',
+            'fee-type-ref-data',
+            'irfo-fee-type-ref-data',
+            FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT
         ];
 
         $this->references = [
@@ -89,17 +94,18 @@ class CreateIrfoGvPermitTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->repoMap['IrfoGvPermit']->shouldReceive('getRefDataReference')
+            ->with(FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT)
+            ->andReturn($this->refData['fee-type-ref-data']);
+
         $this->references[FeeTypeEntity::class][1]->shouldReceive('getId')
             ->andReturn(1);
 
         $this->references[IrfoGvPermitType::class][22]->shouldReceive('getIrfoFeeType')
-            //->once()
             ->with()
-            ->andReturn('fee-type-ref-data');
+            ->andReturn($this->refData['fee-type-ref-data']);
 
         $this->repoMap['FeeType']->shouldReceive('fetchLatestForIrfo')
-            //->once()
-            ->with('fee-type-ref-data')
             ->andReturn($this->references[FeeTypeEntity::class][1]);
 
         $result1 = new Result();
