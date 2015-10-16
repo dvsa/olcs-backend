@@ -29,6 +29,7 @@ final class Text1 implements ProcessInterface
         $this->addTransferredText($s4, $context);
 
         $this->addClosingText($s4);
+        $this->addUpgradeText($publicationLink);
 
         $publicationLink->setText1(implode("\n", $this->text));
     }
@@ -78,20 +79,26 @@ final class Text1 implements ProcessInterface
 
         $this->addText(
             sprintf(
-                'Transferred from %s %s (%s %s) to %s %s (%s %s).',
+                'Transferred from %s %s (%s) to %s %s (%s).',
                 $s4->getLicence()->getLicNo(),
                 $s4->getLicence()->getLicenceTypeShortCode(),
-                Formatter\OrganisationName::format($s4->getLicence()->getOrganisation()),
-                Formatter\People::format(
-                    $s4->getLicence()->getOrganisation(),
-                    $organistionPeople
+                trim(
+                    Formatter\OrganisationName::format($s4->getLicence()->getOrganisation())
+                    .' '.
+                    Formatter\People::format(
+                        $s4->getLicence()->getOrganisation(),
+                        $organistionPeople
+                    )
                 ),
                 $s4->getApplication()->getLicence()->getLicNo(),
                 $s4->getApplication()->getLicenceTypeShortCode(),
-                Formatter\OrganisationName::format($s4->getApplication()->getLicence()->getOrganisation()),
-                Formatter\People::format(
-                    $s4->getApplication()->getLicence()->getOrganisation(),
-                    $context->offsetGet('applicationPeople')
+                trim(
+                    Formatter\OrganisationName::format($s4->getApplication()->getLicence()->getOrganisation())
+                    .' '.
+                    Formatter\People::format(
+                        $s4->getApplication()->getLicence()->getOrganisation(),
+                        $context->offsetGet('applicationPeople')
+                    )
                 )
             )
         );
@@ -109,5 +116,23 @@ final class Text1 implements ProcessInterface
             'The operating centre(s) being removed from %s as part of this application.';
 
         $this->addText(sprintf($text, $s4->getLicence()->getLicNo()));
+    }
+
+    /**
+     * Add Licence upgrade text
+     *
+     * @param PublicationLink $publicationLink
+     */
+    private function addUpgradeText(PublicationLink $publicationLink)
+    {
+        if ($publicationLink->getApplication()->isVariation() && $publicationLink->getApplication()->isRealUpgrade()) {
+            $this->addText(
+                sprintf(
+                    'Upgrade of Licence from %s to %s',
+                    $publicationLink->getLicence()->getLicenceType()->getDescription(),
+                    $publicationLink->getApplication()->getLicenceType()->getDescription()
+                )
+            );
+        }
     }
 }
