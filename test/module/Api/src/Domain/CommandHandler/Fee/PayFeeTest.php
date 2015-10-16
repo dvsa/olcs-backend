@@ -8,6 +8,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ValidateApplication;
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCommand;
@@ -17,9 +18,10 @@ use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Transfer\Command\Task\CloseTasks as CloseTasksCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 
 /**
  * Pay Fee Test
@@ -512,6 +514,39 @@ class PayFeeTest extends CommandHandlerTestCase
             'messages' => [
                 'CLOSE_TEX_TASK',
                 'CLOSE_FEEDUE_TASK',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWithFeeTask()
+    {
+        $command = PayFeeCommand::create(['id' => 111]);
+
+        /** @var Task $task */
+        $task = m::mock(Task::class)->makePartial();
+        $task->setId(222);
+
+        /** @var FeeEntity $fee */
+        $fee = m::mock(FeeEntity::class)->makePartial();
+        $fee->setTask($task);
+        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn(FeeType::FEE_TYPE_APP);
+
+        $this->repoMap['Fee']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($fee);
+
+        $this->expectedSideEffect(
+            CloseTasksCmd::class,
+            ['ids' => [222]],
+            (new Result())->addMessage('TASK_CLOSED')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'TASK_CLOSED',
             ]
         ];
 

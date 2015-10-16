@@ -20,6 +20,8 @@ class Correspondences extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Correspondence';
 
+    protected $extraRepos = ['Fee'];
+
     public function handleQuery(QueryInterface $query)
     {
         // Object hydration to enforce JsonSerialize.
@@ -27,8 +29,18 @@ class Correspondences extends AbstractQueryHandler
             ->fetchList($query, Query::HYDRATE_OBJECT);
 
         return [
-            'result' => $result,
-            'count' => $this->getRepo()->fetchCount($query)
+            'result' => $this->resultList($result, ['licence', 'document']),
+            'count' => $this->getRepo()->fetchCount($query),
+            'feeCount' => $this->getFeeCount($query->getOrganisation()),
         ];
+    }
+
+    /**
+     * @param int $organisationId
+     * @return int
+     */
+    protected function getFeeCount($organisationId)
+    {
+        return $this->getRepo('Fee')->getOutstandingFeeCountByOrganisationId($organisationId);
     }
 }
