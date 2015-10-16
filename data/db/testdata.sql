@@ -1202,23 +1202,23 @@ INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator
     (1, 21, 0);
 
 INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
-    (19, 7),
-    (20, 5),
-    (21, 6),
-    (22, 9),
-    (23, 10),
-    (24, 11),
-    (25, 12),
-    (12504, 3),
-    (12505, 5),
-    (1, 1), -- loggedinuser=internal-limited-read-only
-    (2, 4), -- johnspellman=internal-admin
-    (3, 4), -- stevefox=internal-admin
-    (4, 3), -- amywrigg=internal-case-worker
-    (5, 4), -- philjowitt=internal-admin
-    (6, 4), -- kevinrooney=internal-admin
-    (7, 4), -- sarahthompson=internal-admin
-    (8, 3); -- anotheruser=internal-case-worker
+    (19, 27),
+    (20, 25),
+    (21, 26),
+    (22, 29),
+    (23, 30),
+    (24, 31),
+    (25, 32),
+    (12504, 23),
+    (12505, 25),
+    (1, 21), -- loggedinuser=internal-limited-read-only
+    (2, 24), -- johnspellman=internal-admin
+    (3, 24), -- stevefox=internal-admin
+    (4, 23), -- amywrigg=internal-case-worker
+    (5, 24), -- philjowitt=internal-admin
+    (6, 24), -- kevinrooney=internal-admin
+    (7, 24), -- sarahthompson=internal-admin
+    (8, 23); -- anotheruser=internal-case-worker
 
 INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`,
     `certificate_no`, `vi_action`, `created_on`,
