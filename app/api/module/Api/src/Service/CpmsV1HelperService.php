@@ -11,6 +11,7 @@ namespace Dvsa\Olcs\Api\Service;
 use CpmsClient\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Payment as PaymentEntity;
+use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -28,14 +29,11 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
 
     const COST_CENTRE = '12345,67890';
 
-    protected $logger;
-
     protected $cpmsClient;
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->cpmsClient = $serviceLocator->get('cpms\service\api');
-        $this->logger = $serviceLocator->get('Logger');
         return $this;
     }
 
@@ -464,7 +462,7 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
 
     protected function debug($message, $data)
     {
-        return $this->logger->debug(
+        return Logger::debug(
             $message,
             [
                 'data' => array_merge(
