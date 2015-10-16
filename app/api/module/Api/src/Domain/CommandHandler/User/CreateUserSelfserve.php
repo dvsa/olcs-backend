@@ -8,7 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 /**
  * Create User Selfserve
  */
-final class CreateUserSelfserve extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class CreateUserSelfserve extends AbstractUserCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -35,6 +35,9 @@ final class CreateUserSelfserve extends AbstractCommandHandler implements AuthAw
         }
 
         $data = $command->getArrayCopy();
+
+        // validate username
+        $this->validateUsername($data['loginId']);
 
         // copy user type from the current loggedin user
         switch ($this->getCurrentUser()->getUserType()) {

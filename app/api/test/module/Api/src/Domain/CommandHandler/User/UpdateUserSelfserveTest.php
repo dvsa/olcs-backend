@@ -68,6 +68,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
+        $user->setLoginId($data['loginId']);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
@@ -156,6 +157,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
+        $user->setLoginId($data['loginId']);
         $user->setContactDetails($contactDetails);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 
@@ -234,6 +236,45 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
             ->andReturn($user);
 
         $command = Cmd::create($data);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandThrowsUsernameExistsException()
+    {
+        $userId = 111;
+
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'loginId' => 'updated login_id',
+        ];
+
+        $command = Cmd::create($data);
+
+        /** @var UserEntity $user */
+        $user = m::mock(UserEntity::class)->makePartial();
+        $user->setId($userId);
+        $user->setLoginId('loginId');
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $user)
+            ->andReturn(true);
+
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->once()
+            ->with($userId, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($user);
+
+        $this->repoMap['User']
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([m::mock(UserEntity::class)]);
 
         $this->sut->handleCommand($command);
     }

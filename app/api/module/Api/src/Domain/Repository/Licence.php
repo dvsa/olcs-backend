@@ -135,7 +135,7 @@ class Licence extends AbstractRepository
             throw new Exception\ValidationException(
                 [
                     'licenceNumber' => [
-                        'A correspondence address has not been found.'
+                        'ERR_ADDRESS_NOT_FOUND'
                     ]
                 ]
             );
@@ -146,7 +146,7 @@ class Licence extends AbstractRepository
             throw new Exception\ValidationException(
                 [
                     'licenceNumber' => [
-                        'The organisation is unlicenced.'
+                        'ERR_UNLICENCED_ORG'
                     ]
                 ]
             );
@@ -157,7 +157,7 @@ class Licence extends AbstractRepository
             throw new Exception\ValidationException(
                 [
                     'licenceNumber' => [
-                        'The organisation already has registered admin users.'
+                        'ERR_ADMIN_EXISTS'
                     ]
                 ]
             );
