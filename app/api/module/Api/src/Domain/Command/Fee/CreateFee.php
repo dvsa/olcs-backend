@@ -37,6 +37,8 @@ final class CreateFee extends AbstractCommand
 
     protected $irfoGvPermit;
 
+    protected $irfoPsvAuth;
+
     /**
      * @return mixed
      */
@@ -115,5 +117,13 @@ final class CreateFee extends AbstractCommand
     public function getIrfoGvPermit()
     {
         return $this->irfoGvPermit;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIrfoPsvAuth()
+    {
+        return $this->irfoPsvAuth;
     }
 }
