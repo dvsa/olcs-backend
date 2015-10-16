@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox as Entity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Class Correspondence
@@ -24,6 +25,8 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class Correspondence extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+    protected $alias = 'co';
 
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
@@ -43,5 +46,18 @@ class Correspondence extends AbstractRepository
             ->byId($id)
             ->with('document')
             ->with('licence');
+    }
+
+    public function getUnreadCountForOrganisation($organisationId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->select('COUNT(co)');
+        $qb->join('co.licence', 'l', Join::WITH, $qb->expr()->eq('l.organisation', ':organisationId'));
+        $qb->andWhere($qb->expr()->eq('co.accessed', ':accessed'));
+        $qb->setParameter(':organisationId', $organisationId);
+        $qb->setParameter(':accessed', 'N');
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 }

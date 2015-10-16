@@ -101,7 +101,6 @@ class FeeTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('with')
-            //->withAnyArgs()
             ->andReturnSelf()
             ->shouldReceive('order')
             ->with('invoicedDate', 'ASC')
@@ -118,6 +117,34 @@ class FeeTest extends RepositoryTestCase
             'result',
             $this->sut->fetchOutstandingFeesByOrganisationId($organisationId, true)
         );
+    }
+
+    public function testGetOutstandingFeeCountByOrganisationId()
+    {
+        $organisationId = 123;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $mockQb
+            ->shouldReceive('select')
+            ->once()
+            ->with('COUNT(f)')
+            ->andReturnSelf();
+
+        $this->mockWhereOutstandingFee($mockQb);
+
+        $this->mockWhereCurrentLicenceOrApplicationFee($mockQb, $organisationId);
+
+        $mockQb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn(22);
+
+        $this->assertEquals(22, $this->sut->getOutstandingFeeCountByOrganisationId($organisationId));
     }
 
     public function testFetchFeesByIrfoGvPermitId()

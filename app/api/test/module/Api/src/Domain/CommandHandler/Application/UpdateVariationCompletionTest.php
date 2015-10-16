@@ -17,6 +17,8 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateVariationCompletion as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Update Variation Completion Test
@@ -27,8 +29,16 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
+
         $this->sut = new UpdateVariationCompletion();
         $this->mockRepo('Application', Application::class);
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn(false);
 
         parent::setUp();
     }
