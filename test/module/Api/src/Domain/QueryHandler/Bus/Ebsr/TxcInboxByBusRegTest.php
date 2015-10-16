@@ -59,11 +59,7 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
             ->shouldReceive('getIdentity')
             ->once()
-            ->andReturn($this->getCurrentUser(4))
-            ->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_EBSR_DOCUMENTS, null)
-            ->once()->atLeast()
-            ->andReturn(true);
+            ->andReturn($this->getCurrentUser(4));
 
         $mockLicence = m::mock();
         $mockLicence->shouldReceive('determineNpNumber')->andReturn('333');
@@ -85,53 +81,6 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
         $this->repoMap['TxcInbox']->shouldReceive('fetchListForLocalAuthorityByBusReg')
             ->with($query->getBusReg(), 4)
             ->andReturn([0 => $mockResult]);
-
-        $this->sut->handleQuery($query);
-    }
-
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
-    public function testHandleQueryPermissionDenied()
-    {
-        $query = Qry::create(
-            [
-                'busReg' => 2
-            ]
-        );
-
-        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
-            ->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_EBSR_DOCUMENTS, null)
-            ->once()->atLeast()
-            ->andReturn(false);
-
-        $this->sut->handleQuery($query);
-    }
-
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
-     */
-    public function testHandleQueryNotFoundException()
-    {
-        $query = Qry::create(
-            [
-                'busReg' => 2
-            ]
-        );
-
-        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
-            ->shouldReceive('getIdentity')
-            ->once()
-            ->andReturn($this->getCurrentUser(4))
-            ->shouldReceive('isGranted')
-            ->with(Permission::SELFSERVE_EBSR_DOCUMENTS, null)
-            ->once()->atLeast()
-            ->andReturn(true);
-
-        $this->repoMap['TxcInbox']->shouldReceive('fetchListForLocalAuthorityByBusReg')
-            ->with($query->getBusReg(), 4)
-            ->andReturnNull();
 
         $this->sut->handleQuery($query);
     }
