@@ -23,7 +23,7 @@ class Identity implements IdentityInterface
      * @var array
      */
     protected $usersRoles = [
-        // test (Rollout.sql) users
+        // test (olcs_rollout_data.sql) users
         1 => ['internal-limited-read-only'],
         2 => ['internal-read-only'],
         3 => ['internal-case-worker'],
