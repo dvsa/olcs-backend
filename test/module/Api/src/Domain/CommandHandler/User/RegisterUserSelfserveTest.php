@@ -62,6 +62,12 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $this->repoMap['User']
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([]);
+
         /** @var OrganisationEntity $savedOrg */
         $savedOrg = null;
 
@@ -144,6 +150,12 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $this->repoMap['User']
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([]);
+
         $org = m::mock(OrganisationEntity::class);
 
         $licence = m::mock(LicenceEntity::class);
@@ -220,6 +232,32 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
+
+        $this->repoMap['User']
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([]);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandThrowsUsernameExistsException()
+    {
+        $data = [
+            'loginId' => 'login_id',
+        ];
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['User']
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([m::mock(UserEntity::class)]);
 
         $this->sut->handleCommand($command);
     }

@@ -6,7 +6,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
@@ -17,7 +17,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 /**
  * Register User Selfserve
  */
-final class RegisterUserSelfserve extends AbstractCommandHandler implements TransactionedInterface
+final class RegisterUserSelfserve extends AbstractUserCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'User';
 
@@ -26,6 +26,9 @@ final class RegisterUserSelfserve extends AbstractCommandHandler implements Tran
     public function handleCommand(CommandInterface $command)
     {
         $data = $command->getArrayCopy();
+
+        // validate username
+        $this->validateUsername($data['loginId']);
 
         // link with organisations
         $data['organisations'] = $this->getOrganisations($data);
