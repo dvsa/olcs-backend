@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoPsvAuth as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as FeeCreateFee;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 
 /**
  * Create IrfoPsvAuth
@@ -136,14 +137,17 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
 
         /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
         $feeTypeRepo = $this->getRepo('FeeType');
-        $feeType = $feeTypeRepo->fetchLatestForIrfo($irfoPsvAuthFeeType);
+        $feeType = $feeTypeRepo->fetchLatestForIrfo(
+            $irfoPsvAuthFeeType,
+            $this->getRepo()->getRefDataReference(FeeTypeEntity::FEE_TYPE_IRFOPSVAPP)
+        );
 
         $feeAmount = (float)$feeType->getFixedValue();
 
         $data = [
             'irfoPsvAuth' => $irfoPsvAuth->getId(),
             'invoicedDate' => date('Y-m-d'),
-            'description' => $feeType->getDescription() . ' for IRFO PSV Auth ' . $irfoPsvAuth->getId(),
+            'description' => $feeType->getDescription() . ' for Auth ' . $irfoPsvAuth->getId(),
             'feeType' => $feeType->getId(),
             'amount' => $feeAmount,
             'feeStatus' => Fee::STATUS_OUTSTANDING,
@@ -158,12 +162,15 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
 
         /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
         $feeTypeRepo = $this->getRepo('FeeType');
-        $feeType = $feeTypeRepo->fetchLatestForIrfo($irfoPsvAuthFeeType);
+        $feeType = $feeTypeRepo->fetchLatestForIrfo(
+            $irfoPsvAuthFeeType,
+            $this->getRepo()->getRefDataReference(FeeTypeEntity::FEE_TYPE_IRFOPSVAPP)
+        );
 
         $data = [
-            'irfoPsvAuth' => $irfoPsvAuthFeeType->getId(),
+            'irfoPsvAuth' => $irfoPsvAuth->getId(),
             'invoicedDate' => date('Y-m-d'),
-            'description' => $feeType->getDescription() . ' for IRFO PSV Auth ' . $irfoPsvAuth->getId(),
+            'description' => $feeType->getDescription() . ' for Auth ' . $irfoPsvAuth->getId(),
             'feeType' => $feeType->getId(),
             'amount' => 0,
             'feeStatus' => Fee::STATUS_PAID,
