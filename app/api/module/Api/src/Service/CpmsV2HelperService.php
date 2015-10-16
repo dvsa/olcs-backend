@@ -12,6 +12,7 @@ namespace Dvsa\Olcs\Api\Service;
 
 use CpmsClient\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
@@ -33,11 +34,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     const TAX_CODE = 'Z';
 
     /**
-     * @var \Zend\Log\LoggerInterface
-     */
-    protected $logger;
-
-    /**
      * @var ApiService
      */
     protected $cpmsClient;
@@ -54,7 +50,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->cpmsClient = $serviceLocator->get('cpms\service\api');
-        $this->logger = $serviceLocator->get('Logger');
         $this->feesHelper = $serviceLocator->get('FeesHelperService');
         return $this;
     }
@@ -587,7 +582,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
     protected function debug($message, $data)
     {
-        return $this->logger->debug(
+        return Logger::debug(
             $message,
             [
                 'data' => array_merge(

@@ -6,7 +6,6 @@ use Zend\Mvc\Controller\AbstractRestfulController as ZendAbstractRestfulControll
 use Zend\Mvc\Exception;
 use Zend\Mvc\MvcEvent;
 use Zend\Http\Response;
-use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use Olcs\Db\Exceptions\RestResponseException;
 use Olcs\Db\Traits\RestResponseTrait;
 
@@ -17,8 +16,7 @@ use Olcs\Db\Traits\RestResponseTrait;
  */
 abstract class AbstractController extends ZendAbstractRestfulController
 {
-    use RestResponseTrait,
-        OlcsLoggerAwareTrait;
+    use RestResponseTrait;
 
     /**
      * Handle the request
