@@ -7,13 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Cancel Licence Fees
@@ -42,14 +43,12 @@ final class CancelLicenceFees extends AbstractCommandHandler
             return $result;
         }
 
-        $status = $this->getRepo()->getRefdataReference(Fee::STATUS_CANCELLED);
-
         /** @var Fee $fee */
         foreach ($fees as $fee) {
-            $fee->setFeeStatus($status);
+            $result->merge(
+                $this->handleSideEffect(CancelFeeCmd::create(['id' => $fee->getId()]))
+            );
         }
-
-        $this->getRepo()->save($licence);
 
         $result->addMessage(count($fees) . ' fee(s) cancelled');
         return $result;
