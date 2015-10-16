@@ -111,5 +111,4 @@ class AandDStoredPublicationNumberTest extends MockeryTestCase
 
         ];
     }
-
 }
