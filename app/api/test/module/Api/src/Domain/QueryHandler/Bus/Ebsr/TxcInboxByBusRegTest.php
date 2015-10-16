@@ -84,4 +84,27 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
 
         $this->sut->handleQuery($query);
     }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
+     */
+    public function testHandleQueryNotFoundException()
+    {
+        $query = Qry::create(
+            [
+                'busReg' => 2
+            ]
+        );
+
+        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
+            ->shouldReceive('getIdentity')
+            ->once()
+            ->andReturn($this->getCurrentUser(4));
+
+        $this->repoMap['TxcInbox']->shouldReceive('fetchListForLocalAuthorityByBusReg')
+            ->with($query->getBusReg(), 4)
+            ->andReturnNull();
+
+        $this->sut->handleQuery($query);
+    }
 }
