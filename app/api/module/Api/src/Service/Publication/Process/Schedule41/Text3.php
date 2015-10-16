@@ -23,12 +23,14 @@ final class Text3 implements ProcessInterface
     public function process(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
         $this->addCorrespondanceText($context);
+        $this->addTransportManagersText($publicationLink, $context);
         $this->addOperatingCentreText($publicationLink);
 
         // Only one S4 is possible on an application, even though DB model allows multiple
         $s4 = $publicationLink->getApplication()->getS4s()->first();
         $this->addTcText($s4);
         $this->addClosingText($s4);
+        $this->addUpgradeText($publicationLink);
 
         $publicationLink->setText3(implode("\n", $this->text));
     }
@@ -53,7 +55,6 @@ final class Text3 implements ProcessInterface
     private function addCorrespondanceText(ImmutableArrayObject $context)
     {
         $this->addText($context->offsetGet('licenceAddress'));
-
     }
 
     /**
@@ -101,5 +102,41 @@ final class Text3 implements ProcessInterface
             'The operating centre(s) being removed from %s as part of this application.';
 
         $this->addText(sprintf($text, $s4->getLicence()->getLicNo()));
+    }
+
+    /**
+     * Add Licence upgrade text
+     *
+     * @param PublicationLink $publicationLink
+     */
+    private function addUpgradeText(PublicationLink $publicationLink)
+    {
+        if ($publicationLink->getApplication()->isVariation() && $publicationLink->getApplication()->isRealUpgrade()) {
+            $this->addText(
+                sprintf(
+                    'Upgrade of Licence from %s to %s',
+                    $publicationLink->getLicence()->getLicenceType()->getDescription(),
+                    $publicationLink->getApplication()->getLicenceType()->getDescription()
+                )
+            );
+        }
+    }
+
+    /**
+     * Add Transport Manager text
+     *
+     * @param ImmutableArrayObject $context
+     */
+    private function addTransportManagersText(PublicationLink $publicationLink, ImmutableArrayObject $context)
+    {
+        if ($publicationLink->getApplication()->isNew() ||
+            ($publicationLink->getApplication()->isVariation() && $publicationLink->getApplication()->isRealUpgrade())
+        ) {
+            if ($context->offsetExists('applicationTransportManagers')) {
+                $this->addText(
+                    Formatter\TransportManagers::format($context->offsetGet('applicationTransportManagers'))
+                );
+            }
+        }
     }
 }
