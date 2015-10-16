@@ -79,20 +79,26 @@ final class Text1 implements ProcessInterface
 
         $this->addText(
             sprintf(
-                'Transferred from %s %s (%s %s) to %s %s (%s %s).',
+                'Transferred from %s %s (%s) to %s %s (%s).',
                 $s4->getLicence()->getLicNo(),
                 $s4->getLicence()->getLicenceTypeShortCode(),
-                Formatter\OrganisationName::format($s4->getLicence()->getOrganisation()),
-                Formatter\People::format(
-                    $s4->getLicence()->getOrganisation(),
-                    $organistionPeople
+                trim(
+                    Formatter\OrganisationName::format($s4->getLicence()->getOrganisation())
+                    .' '.
+                    Formatter\People::format(
+                        $s4->getLicence()->getOrganisation(),
+                        $organistionPeople
+                    )
                 ),
                 $s4->getApplication()->getLicence()->getLicNo(),
                 $s4->getApplication()->getLicenceTypeShortCode(),
-                Formatter\OrganisationName::format($s4->getApplication()->getLicence()->getOrganisation()),
-                Formatter\People::format(
-                    $s4->getApplication()->getLicence()->getOrganisation(),
-                    $context->offsetGet('applicationPeople')
+                trim(
+                    Formatter\OrganisationName::format($s4->getApplication()->getLicence()->getOrganisation())
+                    .' '.
+                    Formatter\People::format(
+                        $s4->getApplication()->getLicence()->getOrganisation(),
+                        $context->offsetGet('applicationPeople')
+                    )
                 )
             )
         );
