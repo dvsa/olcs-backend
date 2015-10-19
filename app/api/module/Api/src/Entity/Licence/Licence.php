@@ -78,6 +78,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface
     const LICENCE_STATUS_TERMINATED = 'lsts_terminated';
     const LICENCE_STATUS_CONTINUATION_NOT_SOUGHT = 'lsts_cns';
     const LICENCE_STATUS_UNLICENSED = 'lsts_unlicenced'; // note, refdata misspelled
+    const LICENCE_STATUS_CANCELLED = 'lsts_cancelled';
 
     const TACH_EXT = 'tach_external';
     const TACH_INT = 'tach_internal';
