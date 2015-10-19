@@ -485,4 +485,9 @@ class User extends AbstractUser implements OrganisationProviderInterface
     {
         return $this->getOrganisationUsers()->current()->getOrganisation();
     }
+
+    protected function getCalculatedBundleValues()
+    {
+        return ['userType' => $this->getUserType()];
+    }
 }
