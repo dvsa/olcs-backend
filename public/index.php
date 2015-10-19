@@ -1,10 +1,5 @@
 <?php
 
-const ENV_DEV = 'dev';
-const ENV_PROD = 'prod';
-
-const ENV = ENV_DEV;
-
 // Ensures at the very least we send a 500 response on fatal
 register_shutdown_function('handleFatal');
 function handleFatal()
@@ -34,16 +29,8 @@ if ($profile) {
     $start = microtime(true);
 }
 
-if (ENV == ENV_DEV) {
-    error_reporting(E_ALL | E_STRICT);
-    ini_set('display_errors', 1);
-}
-
-set_error_handler(
-    function ($errno, $errstr, $errfile, $errline) {
-        throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-    }
-);
+error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors', 1);
 
 /**
  * This makes our life easier when dealing with paths. Everything is relative
