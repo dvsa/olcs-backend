@@ -77,6 +77,7 @@ class Licence extends AbstractCommandHandler implements TransactionedInterface, 
             LicenceEntity::LICENCE_STATUS_REVOKED => PublicationSectionEntity::LIC_REVOKED_SECTION,
             LicenceEntity::LICENCE_STATUS_SURRENDERED => PublicationSectionEntity::LIC_SURRENDERED_SECTION,
             LicenceEntity::LICENCE_STATUS_TERMINATED => PublicationSectionEntity::LIC_TERMINATED_SECTION,
+            LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT => PublicationSectionEntity::LIC_CNS_SECTION
         ];
 
         if (isset($map[$licence->getStatus()->getId()])) {
