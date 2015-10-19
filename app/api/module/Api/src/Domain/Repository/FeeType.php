@@ -18,7 +18,6 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
-
 /**
  * Fee Type
  *
@@ -147,14 +146,47 @@ class FeeType extends AbstractRepository
     }
 
     /**
+     * Expected use cases:
+     * application OR licence OR organisation is specified OR isMiscellaneous=1
+     *
      * @param QueryBuilder $qb
      * @param QueryInterface $query
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
+        if ($query->getEffectiveFrom()) {
+            $date = new DateTime($query->getEffectiveDate);
+        } else {
+            $date = new DateTime('now');
+        }
+        $qb->andWhere(
+            $qb->expr()->lte($this->alias.'.effectiveFrom', ':effectiveFrom')
+        );
+        $qb->setParameter('effectiveFrom', $date);
+
+        $qb->addOrderBy('ftft.id', 'ASC'); // feeType.feeType.id
+        $qb->addOrderBy($this->alias.'.effectiveFrom', 'DESC');
+
+        // NOTE we can't do the required group by with DQL here so it's done in
+        // the query handler
+
+        if ($query->getIsMiscellaneous() !== null) {
+            $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
+                ->setParameter('isMiscellaneous', $query->getIsMiscellaneous());
+        }
+
+        if ($query->getOrganisation()) {
+            //  fee_type records where: is_miscellaneous = 0
+            $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
+                ->setParameter('isMiscellaneous', 0);
+
+            // the cost_centre_ref = 'IR';
+            $qb->andWhere($qb->expr()->eq($this->alias.'.costCentreRef', ':costCentreRef'))
+                ->setParameter('costCentreRef', Entity::COST_CENTRE_REF_TYPE_IRFO);
+        }
+
         $application = null;
         $licence = null;
-
         if ($query->getLicence() !== null) {
             $licence = $this->getReference(LicenceEntity::class, $query->getLicence());
             $trafficArea = $licence->getTrafficArea();
@@ -166,7 +198,6 @@ class FeeType extends AbstractRepository
         }
 
         if ($licence || $application) {
-
             // fee_type records where: is_miscellaneous = 0
             $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
                 ->setParameter('isMiscellaneous', 0);
@@ -199,29 +230,12 @@ class FeeType extends AbstractRepository
                     )
                 );
             }
-            $niTrafficArea = $this->getReference(TrafficAreaEntity::class, TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
+            $niTrafficArea = $this->getReference(
+                TrafficAreaEntity::class,
+                TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
+            );
             $qb->setParameter('trafficArea', $niTrafficArea);
         }
-
-        if ($query->getIsMiscellaneous() !== null) {
-            $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
-                ->setParameter('isMiscellaneous', $query->getIsMiscellaneous());
-        }
-
-        if ($query->getEffectiveFrom()) {
-            $date = new DateTime($query->getEffectiveDate);
-        } else {
-            $date = new DateTime('now');
-        }
-        $qb->andWhere(
-            $qb->expr()->lte($this->alias.'.effectiveFrom', ':effectiveFrom')
-        );
-        $qb->setParameter('effectiveFrom', $date);
-
-        $qb->addOrderBy('ftft.id', 'ASC'); // feeType.feeType.id
-        $qb->addOrderBy($this->alias.'.effectiveFrom', 'DESC');
-
-        // we can't do the required group by with DQL here so it's done in query handler
     }
 
     /**
