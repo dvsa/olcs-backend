@@ -40,8 +40,6 @@ class CreateIrfoGvPermitTest extends CommandHandlerTestCase
             IrfoGvPermitEntity::STATUS_PENDING,
             'fee-type-ref-data',
             'irfo-fee-type-ref-data',
-            'fee-type-ref-data',
-            'irfo-fee-type-ref-data',
             FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT
         ];
 
