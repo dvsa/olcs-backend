@@ -30,9 +30,32 @@ class FeeTypeList extends AbstractQueryHandler
 
         $feeTypes = $repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT);
 
+        $feeTypes =$this->filterDuplicates($feeTypes);
+
         return [
             'result' => $this->resultList($feeTypes),
-            'count' => $repo->fetchCount($query),
+            'count' => count($feeTypes),
         ];
+    }
+
+    /**
+     * This is in lieu of being able to do proper groupwise max in the
+     * repository method using Doctrine
+     *
+     * @param array
+     * @return array
+     */
+    public function filterDuplicates($feeTypes)
+    {
+        $filtered = [];
+        foreach ($feeTypes as $ft)
+        {
+            $feeTypeId = $ft->getFeeType()->getId();
+            if (!isset($filtered[$feeTypeId]) || $ft->getEffectiveFrom() > $filtered[$feeTypeId]->getEffectiveFrom()) {
+                $filtered[$feeTypeId] = $ft;
+            }
+        }
+
+        return $filtered;
     }
 }
