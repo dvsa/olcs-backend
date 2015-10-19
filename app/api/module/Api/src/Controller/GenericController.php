@@ -18,7 +18,6 @@ class GenericController extends AbstractRestfulController
      */
     public function get($id)
     {
-        \Olcs\Logging\Log\Logger::debug(__FUNCTION__);
         $dto = $this->params('dto');
 
         try {
@@ -37,7 +36,6 @@ class GenericController extends AbstractRestfulController
 
     public function getList()
     {
-        \Olcs\Logging\Log\Logger::debug(__FUNCTION__);
         $dto = $this->params('dto');
 
         try {
@@ -70,7 +68,6 @@ class GenericController extends AbstractRestfulController
      */
     public function update($id, $data)
     {
-        \Olcs\Logging\Log\Logger::debug(__FUNCTION__);
         $dto = $this->params('dto');
 
         try {
@@ -92,7 +89,6 @@ class GenericController extends AbstractRestfulController
      */
     public function replaceList($data)
     {
-        \Olcs\Logging\Log\Logger::debug(__FUNCTION__);
         $dto = $this->params('dto');
 
         try {
@@ -114,7 +110,6 @@ class GenericController extends AbstractRestfulController
      */
     public function create($data)
     {
-        \Olcs\Logging\Log\Logger::debug(__FUNCTION__);
         $dto = $this->params('dto');
 
         try {
@@ -132,7 +127,6 @@ class GenericController extends AbstractRestfulController
      */
     public function delete($id)
     {
-        \Olcs\Logging\Log\Logger::debug(__FUNCTION__);
         $dto = $this->params('dto');
 
         try {
@@ -149,7 +143,6 @@ class GenericController extends AbstractRestfulController
 
     public function deleteList()
     {
-        \Olcs\Logging\Log\Logger::debug(__FUNCTION__);
         $dto = $this->params('dto');
 
         try {
@@ -169,7 +162,6 @@ class GenericController extends AbstractRestfulController
      */
     protected function handleQuery($dto)
     {
-        \Olcs\Logging\Log\Logger::debug(get_class($dto));
         $result = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
         return $result;
     }
@@ -180,7 +172,6 @@ class GenericController extends AbstractRestfulController
      */
     protected function handleCommand($dto)
     {
-        \Olcs\Logging\Log\Logger::debug(get_class($dto));
         $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
         return $result;
     }
