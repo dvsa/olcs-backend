@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Licence\ProcessContinuationNotSought as Command
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
+use Dvsa\Olcs\Api\Domain\Command\Publication\Licence as PublicationLicenceCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ProcessContinuationNotSought as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as Repo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -100,6 +101,12 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
             (new Result())->addMessage('Removed transport managers for licence')
         );
 
+        $this->expectedSideEffect(
+            PublicationLicenceCmd::class,
+            ['id' => $licenceId],
+            new Result()
+        );
+
         $response = $this->sut->handleCommand($command);
 
         $this->assertEquals(
@@ -169,6 +176,12 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
             DeleteTransportManagerLicence::class,
             ['licence' => $licenceId],
             (new Result())->addMessage('Removed transport managers for licence')
+        );
+
+        $this->expectedSideEffect(
+            PublicationLicenceCmd::class,
+            ['id' => $licenceId],
+            new Result()
         );
 
         $response = $this->sut->handleCommand($command);
