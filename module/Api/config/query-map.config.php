@@ -289,6 +289,9 @@ return [
     TransferQuery\Bus\SearchViewList::class => QueryHandler\Bus\SearchViewList::class,
 
     // Fee
+    TransferQuery\Fee\FeeTypeList::class => QueryHandler\Fee\FeeTypeList::class,
+
+    // Fee Type
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
 
