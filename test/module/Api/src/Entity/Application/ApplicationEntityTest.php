@@ -1001,7 +1001,7 @@ class ApplicationEntityTest extends EntityTester
 
         $application->setApplicationCompletion($ac);
 
-        $this->assertEquals(['businessType'], $application->getSectionsRequiringAttention());
+        $this->assertEquals(['business_type'], $application->getSectionsRequiringAttention());
     }
 
     public function testHasVariationChanges()
