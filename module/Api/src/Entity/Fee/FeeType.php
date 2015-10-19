@@ -45,4 +45,5 @@ class FeeType extends AbstractFeeType
     const FEE_TYPE_ADJUSTMENT = 'ADJUSTMENT';
 
     const COST_CENTRE_REF_TYPE_LICENSING = 'TA';
+    const COST_CENTRE_REF_TYPE_IRFO = 'IR';
 }
