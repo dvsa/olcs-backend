@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\CompaniesHouse\Service;
 
+use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -44,6 +45,9 @@ class ClientFactory implements FactoryInterface
         if (isset($authOptions['username']) && isset($authOptions['password'])) {
             $httpClient->setAuth($authOptions['username'], $authOptions['password']);
         }
+
+        $wrapper = new ClientAdapterLoggingWrapper();
+        $wrapper->wrapAdapter($httpClient);
 
         $client->setHttpClient($httpClient);
 
