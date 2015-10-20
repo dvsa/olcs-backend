@@ -8,7 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
@@ -20,7 +20,7 @@ use Doctrine\ORM\Query;
 /**
  * Update User Selfserve
  */
-final class UpdateUserSelfserve extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class UpdateUserSelfserve extends AbstractUserCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -37,6 +37,9 @@ final class UpdateUserSelfserve extends AbstractCommandHandler implements AuthAw
         }
 
         $data = $command->getArrayCopy();
+
+        // validate username
+        $this->validateUsername($data['loginId'], $user->getLoginId());
 
         // populate roles based on the user type and permission
         $data['roles'] = User::getRolesByUserType($user->getUserType(), $data['permission']);

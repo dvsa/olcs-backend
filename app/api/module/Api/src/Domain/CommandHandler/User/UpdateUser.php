@@ -8,7 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
@@ -20,7 +20,7 @@ use Doctrine\ORM\Query;
 /**
  * Update User
  */
-final class UpdateUser extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class UpdateUser extends AbstractUserCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -51,6 +51,9 @@ final class UpdateUser extends AbstractCommandHandler implements AuthAwareInterf
         }
 
         $user = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
+
+        // validate username
+        $this->validateUsername($data['loginId'], $user->getLoginId());
 
         $user->update(
             $this->getRepo()->populateRefDataReference($data)
