@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoGvPermit as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as FeeCreateFee;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 
 /**
  * Create Irfo Gv Permit
@@ -86,7 +87,10 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler implements Transac
 
         /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
         $feeTypeRepo = $this->getRepo('FeeType');
-        $feeType = $feeTypeRepo->fetchLatestForIrfo($irfoGvPermitFeeType);
+        $feeType = $feeTypeRepo->fetchLatestForIrfo(
+            $irfoGvPermitFeeType,
+            $this->getRepo()->getRefDataReference(FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT)
+        );
 
         $feeAmount = ((float)$feeType->getFixedValue() * (int)$irfoGvPermit->getNoOfCopies());
 
@@ -108,7 +112,10 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler implements Transac
 
         /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
         $feeTypeRepo = $this->getRepo('FeeType');
-        $feeType = $feeTypeRepo->fetchLatestForIrfo($irfoGvPermitFeeType);
+        $feeType = $feeTypeRepo->fetchLatestForIrfo(
+            $irfoGvPermitFeeType,
+            $this->getRepo()->getRefDataReference(FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT)
+        );
 
         $data = [
             'irfoGvPermit' => $irfoGvPermit->getId(),
