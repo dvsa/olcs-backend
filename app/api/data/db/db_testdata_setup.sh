@@ -9,8 +9,8 @@ echo "olcs_schema.sql"
 mysql -uroot -ppassword olcs_be < ../../../olcs-etl/olcs_schema.sql
 
 # rollout data
-echo "Rollout.sql"
-mysql -uroot -ppassword olcs_be < Rollout.sql
+echo "olcs_rollout_data.sql"
+mysql -uroot -ppassword olcs_be < ../../../olcs-etl/olcs_rollout_data.sql
 
 # refdata
 echo "-- this file is auto-generated - DO NOT EDIT!" > test-olcs-refdata.sql
