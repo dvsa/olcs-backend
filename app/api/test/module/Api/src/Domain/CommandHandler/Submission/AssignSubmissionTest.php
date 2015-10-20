@@ -21,6 +21,10 @@ use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
+use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
+use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * Assign Submission Test
@@ -47,6 +51,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
     {
         $this->sut = new AssignSubmission();
         $this->mockRepo('Submission', SubmissionRepo::class);
+        $this->mockRepo('User', UserRepo::class);
 
         $this->mockedSmServices = [
             SubmissionGenerator::class => m::mock(SubmissionGenerator::class),
@@ -124,10 +129,17 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         $submission = m::mock(SubmissionEntity::class)->makePartial();
         $submission->setId(1);
 
+        $submission->shouldReceive('getCase->getId')->andReturn(12)->getMock();
+        $submission->shouldReceive('getCase->getLicence->getId')->andReturn(121)->getMock();
+
         $this->repoMap['Submission']->shouldReceive('fetchUsingId')
             ->once()
             ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($submission);
+            ->andReturn($submission)
+            ->shouldReceive('fetchWithCaseAndLicenceById')
+            ->with(1)
+            ->andReturn($submission)
+            ->once();
 
         /** @var SubmissionEntity $savedSubmission */
         $savedSubmission = null;
@@ -141,14 +153,58 @@ class AssignSubmissionTest extends CommandHandlerTestCase
                 }
             );
 
+        $mockRecipientUser = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(4)
+            ->once()
+            ->shouldReceive('getTeam')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(5)
+                ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->with(4)
+            ->andReturn($mockRecipientUser);
+
+        $createTaskResult = new Result();
+        $createTaskResult->addId('task', 1);
+        $createTaskResult->addMessage('Task created successfully');
+
+        $params = [
+            'category' => TaskEntity::CATEGORY_SUBMISSION,
+            'subCategory' => TaskEntity::SUBCATEGORY_SUBMISSION_ASSIGNMENT,
+            'description' => 'Licence 121 Case 12 Submission 1',
+            'actionDate' => date('Y-m-d'),
+            'assignedToUser' => 4,
+            'assignedToTeam' => 5,
+            'assignedByUser' => 1,
+            'case' => 12,
+            'submission' => 1,
+            'licence' => 121,
+            'urgent' => 'Y',
+            'isClosed' => 0,
+            'application' => null,
+            'busReg' => null,
+            'transportManager' => null,
+            'irfoOrganisation' => null
+        ];
+        $this->expectedSideEffect(CreateTaskCmd::class, $params, $createTaskResult);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [
                 'submission' => 1,
+                'task' => 1
             ],
             'messages' => [
-                'Submission updated successfully'
+                'Submission updated successfully',
+                'Task created successfully'
             ]
         ];
 
