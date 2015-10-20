@@ -93,18 +93,19 @@ class FeeType extends AbstractRepository
 
     /**
      * @param RefDataEntity $irfoFeeType
+     * @param RefDataEntity $feeType
      * @return \Dvsa\Olcs\Api\Entity\Fee\FeeType
      * @throws Exception\NotFoundException
      */
-    public function fetchLatestForIrfo($irfoFeeType)
+    public function fetchLatestForIrfo(RefDataEntity $irfoFeeType, RefDataEntity $feeType)
     {
         $qb = $this->createQueryBuilder();
         $qb->andWhere($qb->expr()->eq('ft.feeType', ':feeType'));
         $qb->andWhere($qb->expr()->eq('ft.irfoFeeType', ':irfoFeeType'));
 
         $qb->addOrderBy('ft.effectiveFrom', 'DESC')
-            ->setParameter('feeType', Entity::FEE_TYPE_IRFOGVPERMIT)
-            ->setParameter('irfoFeeType', $irfoFeeType)
+            ->setParameter('feeType', $feeType->getId())
+            ->setParameter('irfoFeeType', $irfoFeeType->getId())
             ->setMaxResults(1);
 
         $results = $qb->getQuery()->execute();
