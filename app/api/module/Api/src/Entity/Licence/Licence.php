@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\Criteria;
@@ -54,8 +55,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
     const ERROR_TRANSFER_TOT_AUTH = 'LIC_TRAN_1';
     const ERROR_TRANSFER_OVERLAP_ONE = 'LIC_TRAN_2';
     const ERROR_TRANSFER_OVERLAP_MANY = 'LIC_TRAN_3';
-    const ERROR_SUM_AUTHORITY_3 = 'LIC_AUTH_3';
-    const ERROR_SUM_AUTHORITY_2 = 'LIC_AUTH_2';
 
     const LICENCE_CATEGORY_GOODS_VEHICLE = 'lcat_gv';
     const LICENCE_CATEGORY_PSV = 'lcat_psv';
@@ -79,6 +78,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface
     const LICENCE_STATUS_TERMINATED = 'lsts_terminated';
     const LICENCE_STATUS_CONTINUATION_NOT_SOUGHT = 'lsts_cns';
     const LICENCE_STATUS_UNLICENSED = 'lsts_unlicenced'; // note, refdata misspelled
+    const LICENCE_STATUS_CANCELLED = 'lsts_cancelled';
 
     const TACH_EXT = 'tach_external';
     const TACH_INT = 'tach_internal';
@@ -515,9 +515,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         $this->setGoodsOrPsv($application->getGoodsOrPsv());
         $this->setTotAuthTrailers($application->getTotAuthTrailers());
         $this->setTotAuthVehicles($application->getTotAuthVehicles());
-        $this->setTotAuthSmallVehicles($application->getTotAuthSmallVehicles());
-        $this->setTotAuthMediumVehicles($application->getTotAuthMediumVehicles());
-        $this->setTotAuthLargeVehicles($application->getTotAuthLargeVehicles());
     }
 
     public function getOcForInspectionRequest()
@@ -541,16 +538,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
             ->where(Criteria::expr()->isNull('ceasedDate'));
 
         return $this->getPsvDiscs()->matching($criteria);
-    }
-
-    public function canHaveLargeVehicles()
-    {
-        $allowLargeVehicles = [
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
-        ];
-
-        return $this->isPsv() && in_array($this->getLicenceType()->getId(), $allowLargeVehicles);
     }
 
     public function canHaveCommunityLicences()
@@ -579,76 +566,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
     public function getCategoryPrefix()
     {
         return LicenceNoGenEntity::getCategoryPrefix($this->getGoodsOrPsv());
-    }
-
-    public function getAvailableSmallSpaces($count)
-    {
-        return (int)$this->getTotAuthSmallVehicles() - $count;
-    }
-
-    public function getAvailableMediumSpaces($count)
-    {
-        return (int)$this->getTotAuthMediumVehicles() - $count;
-    }
-
-    public function getAvailableLargeSpaces($count)
-    {
-        return (int)$this->getTotAuthLargeVehicles() - $count;
-    }
-
-    public function isSmallAuthExceeded($count)
-    {
-        return $this->getAvailableSmallSpaces($count) < 0;
-    }
-
-    public function isMediumAuthExceeded($count)
-    {
-        return $this->getAvailableMediumSpaces($count) < 0;
-    }
-
-    public function isLargeAuthExceeded($count)
-    {
-        return $this->getAvailableLargeSpaces($count) < 0;
-    }
-
-    public function hasPsvBreakdown()
-    {
-        $sum = ((int)$this->getTotAuthSmallVehicles()
-            + (int)$this->getTotAuthMediumVehicles()
-            + (int)$this->getTotAuthLargeVehicles());
-
-        return $sum > 0;
-    }
-
-    public function shouldShowSmallTable($count)
-    {
-        if (!$this->hasPsvBreakdown()) {
-            return true;
-        }
-
-        return (int)$this->getTotAuthSmallVehicles() > 0 || $count > 0;
-    }
-
-    public function shouldShowMediumTable($count)
-    {
-        if (!$this->hasPsvBreakdown()) {
-            return true;
-        }
-
-        return (int)$this->getTotAuthMediumVehicles() > 0 || $count > 0;
-    }
-
-    public function shouldShowLargeTable($count)
-    {
-        if (!$this->canHaveLargeVehicles()) {
-            return false;
-        }
-
-        if (!$this->hasPsvBreakdown()) {
-            return true;
-        }
-
-        return (int)$this->getTotAuthLargeVehicles() > 0 || $count > 0;
     }
 
     public function allowFeePayments()
@@ -689,47 +606,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
                 )
             );
         return $this->getApplications()->matching($criteria);
-    }
-
-    public function validateTotalAuthority(
-        $totAuthVehicles,
-        $totAuthSmallVehicles,
-        $totAuthMediumVehicles,
-        $totAuthLargeVehicles
-    ) {
-        if ($this->isPsv() && ($this->isStandardNational() || $this->isStandardInternational())) {
-            if (
-                (int)$totAuthVehicles !==
-                ((int)$totAuthSmallVehicles + (int)$totAuthMediumVehicles + (int)$totAuthLargeVehicles)
-            ) {
-                throw new ValidationException(
-                    [
-                        'totAuthVehicles' => [
-                            [
-                                self::ERROR_SUM_AUTHORITY_3 => 'The sum of small, medium and large ' .
-                                    'vehicles does not match the total number of vehicles'
-                            ]
-                        ]
-                    ]
-                );
-            }
-        }
-        if ($this->isPsv() && $this->isRestricted()) {
-            if (
-                (int)$totAuthVehicles !== ((int)$totAuthSmallVehicles + (int)$totAuthMediumVehicles)
-            ) {
-                throw new ValidationException(
-                    [
-                        'totAuthVehicles' => [
-                            [
-                                self::ERROR_SUM_AUTHORITY_2 => 'The sum of small and medium ' .
-                                    'vehicles does not match the total number of vehicles'
-                            ]
-                        ]
-                    ]
-                );
-            }
-        }
     }
 
     /**
@@ -844,5 +720,23 @@ class Licence extends AbstractLicence implements ContextProviderInterface
             return $latestNpPublication->getPublicationNo();
         }
         return null;
+    }
+
+    /**
+     * @param OperatingCentre $oc
+     * @return LicenceOperatingCentre|null
+     */
+    public function getLocByOc(OperatingCentre $oc)
+    {
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->eq('operatingCentre', $oc));
+
+        $locs = $this->getOperatingCentres()->matching($criteria);
+
+        if ($locs->isEmpty()) {
+            return null;
+        }
+
+        return $locs->first();
     }
 }

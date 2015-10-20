@@ -16,6 +16,8 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Update Variation Completion
@@ -25,8 +27,12 @@ use Zend\Filter\Word\UnderscoreToCamelCase;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateVariationCompletion extends AbstractCommandHandler implements TransactionedInterface
+final class UpdateVariationCompletion extends AbstractCommandHandler implements
+    TransactionedInterface,
+    AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     const STATUS_UNCHANGED = Application::VARIATION_STATUS_UNCHANGED;
     const STATUS_UPDATED = Application::VARIATION_STATUS_UPDATED;
     const STATUS_REQUIRES_ATTENTION = Application::VARIATION_STATUS_REQUIRES_ATTENTION;
@@ -494,7 +500,9 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
     {
         $this->application->setDeclarationConfirmation('N');
 
-        $this->markSectionRequired('undertakings');
+        if (!$this->isInternalUser()) {
+            $this->markSectionRequired('undertakings');
+        }
     }
 
     /**
@@ -690,12 +698,6 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements 
      */
     protected function getTotAuthVehicles($entity)
     {
-        if ($this->isPsv()) {
-            return $entity->getTotAuthSmallVehicles()
-                + $entity->getTotAuthMediumVehicles()
-                + $entity->getTotAuthLargeVehicles();
-        }
-
         return $entity->getTotAuthVehicles();
     }
 

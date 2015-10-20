@@ -36,15 +36,6 @@ class CreateUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [
-            VehicleEntity::PSV_TYPE_SMALL
-        ];
-
-        parent::initReferences();
-    }
-
     public function testHandleCommandGoods()
     {
         $organisationId = 69;
@@ -124,7 +115,6 @@ class CreateUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
             [
                 'organisation' => $organisationId,
                 'vrm' => 'ABC1234',
-                'psvType' => 'vhl_t_a',
             ]
         );
 
@@ -158,7 +148,6 @@ class CreateUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
                 ) {
                     $savedLicenceVehicle = $licenceVehicle;
                     $this->assertEquals('ABC1234', $licenceVehicle->getVehicle()->getVrm());
-                    $this->assertEquals('vhl_t_a', $licenceVehicle->getVehicle()->getPsvType()->getId());
                     $licenceVehicle->setId($licenceVehicleId);
                     $licenceVehicle->getVehicle()->setId($vehicleId);
 

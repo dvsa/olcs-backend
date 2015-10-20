@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
 use Doctrine\Common\Collections\Criteria;
 
@@ -22,9 +21,7 @@ class VehiclesSpecified extends DynamicBookmark
         $criteria->andWhere($criteria->expr()->neq('specifiedDate', null));
         $bundle = [
             'licenceVehicles' => [
-                'vehicle' => [
-                    'psvType'
-                ],
+                'vehicle',
                 'criteria' => $criteria
             ]
         ];
@@ -36,28 +33,42 @@ class VehiclesSpecified extends DynamicBookmark
         if (empty($this->data)) {
             return '';
         }
-        $psvType = [
-            Vehicle::PSV_TYPE_SMALL => 'Max 8 seats',
-            Vehicle::PSV_TYPE_MEDIUM => '9 to 16 seats',
-            Vehicle::PSV_TYPE_LARGE => 'Over 16 seats'
-        ];
 
         $isGoods = $this->data['goodsOrPsv']['id'] === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
 
-        $header[] = [
-            'BOOKMARK1' => 'Registration mark',
-            'BOOKMARK2' => $isGoods ? 'Plated weight' : 'Vehicle type',
-            'BOOKMARK3' => 'To continue to be specified on licence (Y/N)'
-        ];
+        if ($isGoods) {
 
-        $rows = [];
-        foreach ($this->data['licenceVehicles'] as $licenceVehicle) {
-            $vehicle = $licenceVehicle['vehicle'];
-            $rows[] = [
-                'BOOKMARK1' => $vehicle['vrm'],
-                'BOOKMARK2' => $isGoods ? $vehicle['platedWeight'] : $psvType[$vehicle['psvType']['id']],
-                'BOOKMARK3' => ''
+            $header[] = [
+                'BOOKMARK1' => 'Registration mark',
+                'BOOKMARK2' => 'Plated weight',
+                'BOOKMARK3' => 'To continue to be specified on licence (Y/N)'
             ];
+
+            $rows = [];
+            foreach ($this->data['licenceVehicles'] as $licenceVehicle) {
+                $vehicle = $licenceVehicle['vehicle'];
+                $rows[] = [
+                    'BOOKMARK1' => $vehicle['vrm'],
+                    'BOOKMARK2' => $vehicle['platedWeight'],
+                    'BOOKMARK3' => '',
+                ];
+            }
+            $snippet = $this->getSnippet('CHECKLIST_3CELL_TABLE');
+        } else {
+            $header[] = [
+                'BOOKMARK1' => 'Registration mark',
+                'BOOKMARK2' => 'To continue to be specified on licence (Y/N)'
+            ];
+
+            $rows = [];
+            foreach ($this->data['licenceVehicles'] as $licenceVehicle) {
+                $vehicle = $licenceVehicle['vehicle'];
+                $rows[] = [
+                    'BOOKMARK1' => $vehicle['vrm'],
+                    'BOOKMARK2' => '',
+                ];
+            }
+            $snippet = $this->getSnippet('CHECKLIST_2CELL_TABLE');
         }
 
         $sortedVehicles = $this->sortVehicles($rows);
@@ -65,7 +76,6 @@ class VehiclesSpecified extends DynamicBookmark
         $rows = array_pad($sortedVehicles, 15, ['BOOKMARK1' => '', 'BOOKMARK2' => '', 'BOOKMARK3' => '']);
 
         $allRows = array_merge($header, $rows);
-        $snippet = $this->getSnippet('CHECKLIST_3CELL_TABLE');
         $parser  = $this->getParser();
 
         $str = '';

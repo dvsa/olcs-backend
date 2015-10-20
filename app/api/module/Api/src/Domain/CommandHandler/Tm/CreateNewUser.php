@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -28,12 +28,10 @@ use Dvsa\Olcs\Api\Domain\Repository;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateNewUser extends AbstractCommandHandler implements TransactionedInterface
+final class CreateNewUser extends AbstractUserCommandHandler implements TransactionedInterface
 {
-    const ERR_USERNAME_EXISTS = 'ERR_USERNAME_EXISTS';
     const ERR_EMAIL_REQUIRED = 'ERR_EMAIL_REQUIRED';
-
-    protected $repoServiceName = 'User';
+    const ERR_USERNAME_REQUIRED = 'ERR_USERNAME_REQUIRED';
 
     protected $extraRepos = [
         'Application',
@@ -45,6 +43,8 @@ final class CreateNewUser extends AbstractCommandHandler implements Transactione
         'Role'
     ];
 
+    protected $usernameErrorKey = 'username';
+
     /**
      * @param Cmd $command
      */
@@ -54,8 +54,8 @@ final class CreateNewUser extends AbstractCommandHandler implements Transactione
         $emailAddress = trim($command->getEmailAddress());
 
         if ($command->getHasEmail() === 'Y') {
+            $this->validateRequired($username, $emailAddress);
             $this->validateUsername($username);
-            $this->validateEmailAddress($emailAddress);
         }
 
         $application = $this->getRepo('Application')->fetchById($command->getApplication());
@@ -201,21 +201,20 @@ final class CreateNewUser extends AbstractCommandHandler implements Transactione
         return $user;
     }
 
-    protected function validateUsername($username)
+    protected function validateRequired($username, $emailAddress)
     {
-        /** @var Repository\User $repo */
-        $repo = $this->getRepo();
-        $users = $repo->fetchByLoginId($username);
+        $messages = [];
 
-        if (!empty($users)) {
-            throw new ValidationException(['username' => [self::ERR_USERNAME_EXISTS]]);
+        if (empty($username)) {
+            $messages['username'] = [self::ERR_USERNAME_REQUIRED];
         }
-    }
 
-    protected function validateEmailAddress($emailAddress)
-    {
         if (empty($emailAddress)) {
-            throw new ValidationException(['emailAddress' => [self::ERR_EMAIL_REQUIRED]]);
+            $messages['emailAddress'] = [self::ERR_EMAIL_REQUIRED];
+        }
+
+        if (!empty($messages)) {
+            throw new ValidationException($messages);
         }
     }
 }

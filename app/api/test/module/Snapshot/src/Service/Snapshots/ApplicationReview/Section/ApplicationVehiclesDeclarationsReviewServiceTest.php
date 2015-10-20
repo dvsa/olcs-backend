@@ -12,6 +12,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationVehiclesDeclarationsReviewService;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 
 /**
  * Application Vehicles Declarations Review Service Test
@@ -56,12 +57,13 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
             // Non Scottish, Non restricted licence, with small vehicles, with novelty vehicles
             [
                 [
+                    'psvWhichVehicleSizes' => [
+                        'id' => Application::PSV_VEHICLE_SIZE_BOTH,
+                        'description' => 'PSV_DESC'
+                    ],
                     'psvSmallVhlNotes' => "Foo\nBar",
                     'psvLimousines' => 'Y',
                     'psvOperateSmallVhl' => 'Y',
-                    'totAuthSmallVehicles' => 2,
-                    'totAuthMediumVehicles' => 2,
-                    'totAuthLargeVehicles' => 2,
                     'licenceType' => [
                         'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
                     ],
@@ -73,6 +75,20 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
                 ],
                 [
                     'subSections' => [
+                        [
+                            'mainItems' => [
+                                [
+                                    'multiItems' => [
+                                        [
+                                            [
+                                                'label' => 'application-review-vehicles-declarations-vs',
+                                                'value' => 'PSV_DESC'
+                                            ],
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
                         [
                             'title' => 'application-review-vehicles-declarations-small-title',
                             'mainItems' => [
@@ -120,12 +136,13 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
             // Non Scottish, Non restricted licence, with small vehicles, without novelty vehicles
             [
                 [
+                    'psvWhichVehicleSizes' => [
+                        'id' => Application::PSV_VEHICLE_SIZE_SMALL,
+                        'description' => 'PSV_DESC'
+                    ],
                     'psvSmallVhlNotes' => "Foo\nBar",
                     'psvLimousines' => 'N',
                     'psvOperateSmallVhl' => 'Y',
-                    'totAuthSmallVehicles' => 2,
-                    'totAuthMediumVehicles' => 2,
-                    'totAuthLargeVehicles' => 2,
                     'licenceType' => [
                         'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
                     ],
@@ -137,6 +154,20 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
                 ],
                 [
                     'subSections' => [
+                        [
+                            'mainItems' => [
+                                [
+                                    'multiItems' => [
+                                        [
+                                            [
+                                                'label' => 'application-review-vehicles-declarations-vs',
+                                                'value' => 'PSV_DESC'
+                                            ],
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
                         [
                             'title' => 'application-review-vehicles-declarations-small-title',
                             'mainItems' => [
@@ -183,13 +214,14 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
             // and undertakings
             [
                 [
+                    'psvWhichVehicleSizes' => [
+                        'id' => Application::PSV_VEHICLE_SIZE_SMALL,
+                        'description' => 'PSV_DESC'
+                    ],
                     'psvSmallVhlConfirmation' => 'Y',
                     'psvSmallVhlNotes' => "Foo\nBar",
                     'psvLimousines' => 'N',
                     'psvOperateSmallVhl' => 'N',
-                    'totAuthSmallVehicles' => 2,
-                    'totAuthMediumVehicles' => 2,
-                    'totAuthLargeVehicles' => 2,
                     'licenceType' => [
                         'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
                     ],
@@ -201,6 +233,20 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
                 ],
                 [
                     'subSections' => [
+                        [
+                            'mainItems' => [
+                                [
+                                    'multiItems' => [
+                                        [
+                                            [
+                                                'label' => 'application-review-vehicles-declarations-vs',
+                                                'value' => 'PSV_DESC'
+                                            ],
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
                         [
                             'title' => 'application-review-vehicles-declarations-small-title',
                             'mainItems' => [
@@ -261,13 +307,14 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
             // and undertakings
             [
                 [
+                    'psvWhichVehicleSizes' => [
+                        'id' => Application::PSV_VEHICLE_SIZE_SMALL,
+                        'description' => 'PSV_DESC'
+                    ],
                     'psvSmallVhlConfirmation' => 'Y',
                     'psvSmallVhlNotes' => "Foo\nBar",
                     'psvLimousines' => 'N',
                     'psvOperateSmallVhl' => 'Y',
-                    'totAuthSmallVehicles' => 2,
-                    'totAuthMediumVehicles' => 2,
-                    'totAuthLargeVehicles' => 2,
                     'licenceType' => [
                         'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
                     ],
@@ -279,6 +326,20 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
                 ],
                 [
                     'subSections' => [
+                        [
+                            'mainItems' => [
+                                [
+                                    'multiItems' => [
+                                        [
+                                            [
+                                                'label' => 'application-review-vehicles-declarations-vs',
+                                                'value' => 'PSV_DESC'
+                                            ],
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
                         [
                             'title' => 'application-review-vehicles-declarations-small-title',
                             'mainItems' => [
@@ -332,14 +393,15 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
             // Scottish, Non restricted licence, without small vehicles, with large vehicles, without novelty vehicles
             [
                 [
+                    'psvWhichVehicleSizes' => [
+                        'id' => Application::PSV_VEHICLE_SIZE_MEDIUM_LARGE,
+                        'description' => 'PSV_DESC'
+                    ],
                     'psvNoSmallVhlConfirmation' => 'Y',
                     'psvSmallVhlConfirmation' => 'Y',
                     'psvSmallVhlNotes' => "Foo\nBar",
                     'psvLimousines' => 'N',
                     'psvOperateSmallVhl' => 'Y',
-                    'totAuthSmallVehicles' => 0,
-                    'totAuthMediumVehicles' => 0,
-                    'totAuthLargeVehicles' => 2,
                     'licenceType' => [
                         'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
                     ],
@@ -351,6 +413,20 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
                 ],
                 [
                     'subSections' => [
+                        [
+                            'mainItems' => [
+                                [
+                                    'multiItems' => [
+                                        [
+                                            [
+                                                'label' => 'application-review-vehicles-declarations-vs',
+                                                'value' => 'PSV_DESC'
+                                            ],
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
                         [
                             'title' => 'application-review-vehicles-declarations-medium-title',
                             'mainItems' => [
@@ -391,14 +467,15 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
             // Scottish, Non restricted licence, without small vehicles, with medium vehicles, without novelty vehicles
             [
                 [
+                    'psvWhichVehicleSizes' => [
+                        'id' => Application::PSV_VEHICLE_SIZE_MEDIUM_LARGE,
+                        'description' => 'PSV_DESC'
+                    ],
                     'psvNoSmallVhlConfirmation' => 'Y',
                     'psvSmallVhlConfirmation' => 'Y',
                     'psvSmallVhlNotes' => "Foo\nBar",
                     'psvLimousines' => 'N',
                     'psvOperateSmallVhl' => 'Y',
-                    'totAuthSmallVehicles' => 0,
-                    'totAuthMediumVehicles' => 2,
-                    'totAuthLargeVehicles' => 0,
                     'licenceType' => [
                         'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
                     ],
@@ -410,6 +487,20 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
                 ],
                 [
                     'subSections' => [
+                        [
+                            'mainItems' => [
+                                [
+                                    'multiItems' => [
+                                        [
+                                            [
+                                                'label' => 'application-review-vehicles-declarations-vs',
+                                                'value' => 'PSV_DESC'
+                                            ],
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
                         [
                             'title' => 'application-review-vehicles-declarations-medium-title',
                             'mainItems' => [
@@ -451,14 +542,15 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
             // vehicles
             [
                 [
+                    'psvWhichVehicleSizes' => [
+                        'id' => Application::PSV_VEHICLE_SIZE_MEDIUM_LARGE,
+                        'description' => 'PSV_DESC'
+                    ],
                     'psvNoSmallVhlConfirmation' => 'Y',
                     'psvSmallVhlConfirmation' => 'Y',
                     'psvSmallVhlNotes' => "Foo\nBar",
                     'psvLimousines' => 'N',
                     'psvOperateSmallVhl' => 'Y',
-                    'totAuthSmallVehicles' => 0,
-                    'totAuthMediumVehicles' => 2,
-                    'totAuthLargeVehicles' => 2,
                     'licenceType' => [
                         'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
                     ],
@@ -470,6 +562,20 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
                 ],
                 [
                     'subSections' => [
+                        [
+                            'mainItems' => [
+                                [
+                                    'multiItems' => [
+                                        [
+                                            [
+                                                'label' => 'application-review-vehicles-declarations-vs',
+                                                'value' => 'PSV_DESC'
+                                            ],
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
                         [
                             'title' => 'application-review-vehicles-declarations-medium-title',
                             'mainItems' => [
@@ -511,15 +617,16 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
             // vehicles
             [
                 [
+                    'psvWhichVehicleSizes' => [
+                        'id' => Application::PSV_VEHICLE_SIZE_MEDIUM_LARGE,
+                        'description' => 'PSV_DESC'
+                    ],
                     'psvMediumVhlConfirmation' => 'Y',
                     'psvNoSmallVhlConfirmation' => 'Y',
                     'psvSmallVhlConfirmation' => 'Y',
                     'psvMediumVhlNotes' => "Foo\nBar",
                     'psvLimousines' => 'N',
                     'psvOperateSmallVhl' => 'Y',
-                    'totAuthSmallVehicles' => 0,
-                    'totAuthMediumVehicles' => 2,
-                    'totAuthLargeVehicles' => 2,
                     'licenceType' => [
                         'id' => Licence::LICENCE_TYPE_RESTRICTED
                     ],
@@ -531,6 +638,20 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
                 ],
                 [
                     'subSections' => [
+                        [
+                            'mainItems' => [
+                                [
+                                    'multiItems' => [
+                                        [
+                                            [
+                                                'label' => 'application-review-vehicles-declarations-vs',
+                                                'value' => 'PSV_DESC'
+                                            ],
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
                         [
                             'title' => 'application-review-vehicles-declarations-medium-title',
                             'mainItems' => [

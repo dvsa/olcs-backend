@@ -144,6 +144,7 @@ return [
     'application-review-type-of-licence-licence-type' => 'What type of licence do you want to apply for?',
     'application-review-type-of-licence-operator-location' => 'Where do you operate from?',
     'application-review-type-of-licence-operator-type' => 'What type of operator are you?',
+    'application-review-vehicles-declarations-vs' => 'Which sizes of vehicles do you intend to operate',
     'application-review-vehicles-declarations-15b1' => 'Do you intend to operate small vehicles as a small part of a
         large bus business as detailed by Section 79A of the Public Passenger Vehicles Act (as amended by Section 265 of
         the Transport Act 2000)?',
@@ -172,9 +173,7 @@ return [
     'application-review-vehicles-hasEnteredReg' => 'Vehicle details submitted?',
     'application-review-vehicles-is-novelty' => 'Limousine or novelty vehicle',
     'application-review-vehicles-make' => 'Make / model',
-    'application-review-vehicles-psv-large-title' => '17 or more passenger seat vehicles',
-    'application-review-vehicles-psv-medium-title' => '9 - 16 passenger seat vehicles',
-    'application-review-vehicles-psv-small-title' => 'Small vehicles',
+    'application-review-vehicles-psv-title' => 'Vehicles',
     'application-review-vehicles-vrm' => 'VRM',
     'application-review-vehicles-weight' => 'Gross plated weight (kg)',
     'variation-review-addresses-change' => 'Thank you for updating your addresses',

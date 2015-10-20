@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Address\Service;
 
+use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -26,6 +27,9 @@ class AddressFactory implements FactoryInterface
         }
 
         $client = new Client($config['address']['client']['baseuri']);
+
+        $wrapper = new ClientAdapterLoggingWrapper();
+        $wrapper->wrapAdapter($client);
 
         return new Address($client);
     }

@@ -37,14 +37,8 @@ class VariationPsvOcTotalAuthReviewServiceTest extends MockeryTestCase
     {
         $data = [
             'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
-            'totAuthSmallVehicles' => 3,
-            'totAuthMediumVehicles' => 3,
-            'totAuthLargeVehicles' => 4,
             'totAuthVehicles' => 10,
             'licence' => [
-                'totAuthSmallVehicles' => 3,
-                'totAuthMediumVehicles' => 3,
-                'totAuthLargeVehicles' => 4,
                 'totAuthVehicles' => 10
             ]
         ];
@@ -56,14 +50,8 @@ class VariationPsvOcTotalAuthReviewServiceTest extends MockeryTestCase
     {
         $data = [
             'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
-            'totAuthSmallVehicles' => 2,
-            'totAuthMediumVehicles' => 3,
-            'totAuthLargeVehicles' => 4,
             'totAuthVehicles' => 9,
             'licence' => [
-                'totAuthSmallVehicles' => 1,
-                'totAuthMediumVehicles' => 1,
-                'totAuthLargeVehicles' => 1,
                 'totAuthVehicles' => 3
             ]
         ];
@@ -72,18 +60,6 @@ class VariationPsvOcTotalAuthReviewServiceTest extends MockeryTestCase
             'header' => 'review-operating-centres-authorisation-title',
             'multiItems' => [
                 [
-                    [
-                        'label' => 'review-operating-centres-authorisation-vehicles-small',
-                        'value' => 'increased from 1 to 2'
-                    ],
-                    [
-                        'label' => 'review-operating-centres-authorisation-vehicles-medium',
-                        'value' => 'increased from 1 to 3'
-                    ],
-                    [
-                        'label' => 'review-operating-centres-authorisation-vehicles-large',
-                        'value' => 'increased from 1 to 4'
-                    ],
                     [
                         'label' => 'review-operating-centres-authorisation-vehicles',
                         'value' => 'increased from 3 to 9'
@@ -115,15 +91,9 @@ class VariationPsvOcTotalAuthReviewServiceTest extends MockeryTestCase
     {
         $data = [
             'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL],
-            'totAuthSmallVehicles' => 2,
-            'totAuthMediumVehicles' => 3,
-            'totAuthLargeVehicles' => 4,
             'totAuthVehicles' => 9,
             'totCommunityLicences' => 5,
             'licence' => [
-                'totAuthSmallVehicles' => 1,
-                'totAuthMediumVehicles' => 1,
-                'totAuthLargeVehicles' => 1,
                 'totAuthVehicles' => 3,
                 'totCommunityLicences' => 1,
             ]
@@ -133,18 +103,6 @@ class VariationPsvOcTotalAuthReviewServiceTest extends MockeryTestCase
             'header' => 'review-operating-centres-authorisation-title',
             'multiItems' => [
                 [
-                    [
-                        'label' => 'review-operating-centres-authorisation-vehicles-small',
-                        'value' => 'increased from 1 to 2'
-                    ],
-                    [
-                        'label' => 'review-operating-centres-authorisation-vehicles-medium',
-                        'value' => 'increased from 1 to 3'
-                    ],
-                    [
-                        'label' => 'review-operating-centres-authorisation-vehicles-large',
-                        'value' => 'increased from 1 to 4'
-                    ],
                     [
                         'label' => 'review-operating-centres-authorisation-vehicles',
                         'value' => 'increased from 3 to 9'

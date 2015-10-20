@@ -47,9 +47,9 @@ final class UpdateVehiclesDeclarationsStatus extends AbstractUpdateStatus
     }
 
     // 15b[i]
-    protected function validate15bi($application, $isScotland)
+    protected function validate15bi(Application $application, $isScotland)
     {
-        if ((int) $application->getTotAuthSmallVehicles() > 0 && !$isScotland) {
+        if (!$application->isPsvVehicleSizeMediumLarge() && !$isScotland) {
             if (!in_array($application->getPsvOperateSmallVhl(), ['Y', 'N'])) {
                 throw new \Exception('15bi');
             }
@@ -59,7 +59,7 @@ final class UpdateVehiclesDeclarationsStatus extends AbstractUpdateStatus
     // 15b[ii]
     protected function validate15bii($application, $isScotland)
     {
-        if ((int) $application->getTotAuthSmallVehicles() > 0 && !$isScotland &&
+        if (!$application->isPsvVehicleSizeMediumLarge() && !$isScotland &&
             $application->getPsvOperateSmallVhl() === 'Y'
             ) {
             if (empty($application->getPsvSmallVhlNotes())) {
@@ -69,16 +69,16 @@ final class UpdateVehiclesDeclarationsStatus extends AbstractUpdateStatus
     }
 
     // 15c/d
-    protected function validate15cd($application, $isScotland)
+    protected function validate15cd(Application $application, $isScotland)
     {
-        if ((int) $application->getTotAuthSmallVehicles() > 0 && !$isScotland &&
+        if (!$application->isPsvVehicleSizeMediumLarge() && !$isScotland &&
             $application->getPsvOperateSmallVhl() === 'N'
             ) {
             if ($application->getPsvSmallVhlConfirmation() !== 'Y') {
                 throw new \Exception('15c');
             }
         }
-        if ((int) $application->getTotAuthSmallVehicles() > 0 && $isScotland) {
+        if (!$application->isPsvVehicleSizeMediumLarge() && $isScotland) {
             if ($application->getPsvSmallVhlConfirmation() !== 'Y') {
                 throw new \Exception('15d');
             }
@@ -86,11 +86,9 @@ final class UpdateVehiclesDeclarationsStatus extends AbstractUpdateStatus
     }
 
     // 15e
-    protected function validate15e($application)
+    protected function validate15e(Application $application)
     {
-        if ((int) $application->getTotAuthSmallVehicles() === 0 &&
-            ((int) $application->getTotAuthMediumVehicles() > 0 || (int) $application->getTotAuthLargeVehicles() > 0)
-            ) {
+        if ($application->isPsvVehicleSizeMediumLarge()) {
             if ($application->getPsvNoSmallVhlConfirmation() !== 'Y') {
                 throw new \Exception('15e');
             }
@@ -98,10 +96,10 @@ final class UpdateVehiclesDeclarationsStatus extends AbstractUpdateStatus
     }
 
     // 8b[i]
-    protected function validate8bi($application)
+    protected function validate8bi(Application $application)
     {
         if ($application->getLicenceType()->getId() === Licence::LICENCE_TYPE_RESTRICTED &&
-            (int) $application->getTotAuthMediumVehicles() > 0
+            !$application->isPsvVehicleSizeSmall()
             ) {
             if ($application->getPsvMediumVhlConfirmation() !== 'Y') {
                 throw new \Exception('8bi');
@@ -113,7 +111,7 @@ final class UpdateVehiclesDeclarationsStatus extends AbstractUpdateStatus
     protected function validate8bii($application)
     {
         if ($application->getLicenceType()->getId() === Licence::LICENCE_TYPE_RESTRICTED &&
-            (int) $application->getTotAuthMediumVehicles() > 0
+            !$application->isPsvVehicleSizeSmall()
             ) {
             if (empty($application->getPsvMediumVhlNotes())) {
                 throw new \Exception('8bii');
@@ -140,11 +138,9 @@ final class UpdateVehiclesDeclarationsStatus extends AbstractUpdateStatus
     }
 
     // 15g
-    protected function validate15g($application)
+    protected function validate15g(Application $application)
     {
-        if ($application->getPsvLimousines() === 'Y' &&
-            ((int) $application->getTotAuthMediumVehicles() > 0 || (int) $application->getTotAuthLargeVehicles() > 0)
-            ) {
+        if ($application->getPsvLimousines() === 'Y' && !$application->isPsvVehicleSizeSmall()) {
             if ($application->getPsvOnlyLimousinesConfirmation() !== 'Y') {
                 throw new \Exception('15g');
             }

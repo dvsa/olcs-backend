@@ -328,6 +328,7 @@ class CreateNewUserTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['User']->shouldReceive('fetchByLoginId')
+            ->once()
             ->with('Foo')
             ->andReturn(['foo']);
 
@@ -350,9 +351,24 @@ class CreateNewUserTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $this->repoMap['User']->shouldReceive('fetchByLoginId')
-            ->with('Foo')
-            ->andReturn([]);
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandWithEmailWithMissingEmailAndUsername()
+    {
+        $this->setExpectedException(ValidationException::class);
+
+        $data = [
+            'application' => 111,
+            'username' => '',
+            'emailAddress' => '',
+            'hasEmail' => 'Y',
+            'firstName' => 'Bob',
+            'familyName' => 'Barker',
+            'birthDate' => '1965-01-01'
+        ];
+
+        $command = Cmd::create($data);
 
         $this->sut->handleCommand($command);
     }

@@ -10,10 +10,10 @@ namespace Olcs\Db\Service;
 
 use Doctrine\Instantiator\Instantiator;
 use Olcs\Db\Traits\LanguageAwareTrait;
+use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Olcs\Db\Traits\EntityManagerAwareTrait;
-use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
 use Olcs\Db\Utility\Paginator;
@@ -28,7 +28,6 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait,
         EntityManagerAwareTrait,
-        OlcsLoggerAwareTrait,
         LanguageAwareTrait;
 
     protected $entityNamespace = '\Dvsa\Olcs\Api\Entity\\';
@@ -120,7 +119,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     public function create($data)
     {
-        $this->getLogger()->info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        Logger::info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         $data = $this->processAddressEntity($data);
 
@@ -149,7 +148,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     public function get($id, array $data = array())
     {
-        $this->getLogger()->info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        Logger::info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         $criteria = array('id' => is_numeric($id) ? (int)$id : $id);
 
@@ -186,7 +185,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     public function getList($data)
     {
-        $this->getLogger()->info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        Logger::info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         $criteria = $this->pickValidKeys($data, $this->getValidSearchFields());
 
@@ -404,7 +403,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     public function delete($id)
     {
-        $this->getLogger()->info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        Logger::info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         $entity = $this->getEntityById($id);
 
@@ -454,7 +453,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     public function update($id, $data)
     {
-        $this->getLogger()->info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        Logger::info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         return $this->doUpdate($id, $data);
     }
@@ -469,7 +468,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface
      */
     public function patch($id, $data)
     {
-        $this->getLogger()->info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
+        Logger::info('Service execution', ['location' => __METHOD__, 'data' => func_get_args()]);
 
         return $this->doUpdate($id, $data);
     }

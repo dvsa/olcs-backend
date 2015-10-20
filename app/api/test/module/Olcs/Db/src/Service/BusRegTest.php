@@ -22,8 +22,6 @@ class BusRegTest extends TestCase
 
     protected $em;
 
-    protected $mockLogger;
-
     protected function mockHydrator()
     {
         $mockDoctrineObject = $this->getMock('\stdClass', ['hydrate']);
@@ -43,7 +41,6 @@ class BusRegTest extends TestCase
     {
         $this->sut = new BusReg();
 
-        $this->mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
         $this->sm = Bootstrap::getServiceManager();
         $this->em = $this->getMock(
             '\Doctrine\ORM\EntityManager',
@@ -63,7 +60,6 @@ class BusRegTest extends TestCase
             false
         );
 
-        $this->sut->setLogger($this->mockLogger);
         $this->sut->setServiceLocator($this->sm);
         $this->sut->setEntityManager($this->em);
 
@@ -105,8 +101,6 @@ class BusRegTest extends TestCase
         $this->em->expects($this->atLeastOnce())
             ->method('find')
             ->will($this->returnValue($mockEntity));
-
-        $this->mockLogger->expects($this->once())->method('info');
 
         $this->em->expects($this->once())
             ->method('persist')

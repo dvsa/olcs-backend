@@ -7,20 +7,21 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Exception;
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication as Cmd;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as CreateApplicationCommand;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 
 /**
  * Reset Application
@@ -57,6 +58,7 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
 
         $receivedDate = $application->getReceivedDate();
         $trafficArea = $licence->getTrafficArea();
+        $appliedVia = $application->getAppliedVia();
 
         // Need to grab this now before removing the licence
         $organisation = $application->getLicence()->getOrganisation();
@@ -70,7 +72,9 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
         $this->getRepo()->delete($application);
         $result->addMessage('Application removed');
 
-        $result->merge($this->createNewApplication($command, $organisation, $receivedDate, $trafficArea));
+        $result->merge(
+            $this->createNewApplication($command, $organisation, $receivedDate, $trafficArea, $appliedVia)
+        );
 
         return $result;
     }
@@ -79,10 +83,12 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
         Cmd $command,
         Organisation $organisation,
         $receivedDate = null,
-        TrafficArea $trafficArea = null
+        TrafficArea $trafficArea = null,
+        RefData $appliedVia = null
     ) {
         $data = $command->getArrayCopy();
         $data['organisation'] = $organisation->getId();
+        $data['appliedVia'] = $appliedVia->getId();
 
         if ($receivedDate !== null) {
             if ($receivedDate instanceof \DateTime) {

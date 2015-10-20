@@ -260,13 +260,11 @@ class CommonGrantTest extends CommandHandlerTestCase
         $licence->shouldReceive('isRestricted')->andReturn(true);
         $licence->shouldReceive('isPsv')->andReturn(true);
         $licence->shouldReceive('setEstablishmentCd')->once()->with(null);
-        $licence->shouldReceive('setTotAuthLargeVehicles')->once()->with(0);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
         $application->shouldReceive('isGoods')->andReturn(false);
-        $application->shouldReceive('setTotAuthLargeVehicles')->once()->with(0);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)

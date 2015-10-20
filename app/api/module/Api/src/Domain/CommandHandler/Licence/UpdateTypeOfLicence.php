@@ -96,11 +96,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
 
             // -Remove Establishment address
             $this->removeEstablishmentAddress($licence);
-
-            // -Set large vehicle authority to 0 (PSV only)
-            if ($licence->isPsv()) {
-                $licence->setTotAuthLargeVehicles(0);
-            }
         }
 
         if ($licence->isStandardInternational() && $newLicenceType === Licence::LICENCE_TYPE_RESTRICTED) {
@@ -110,10 +105,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
             // -Remove Establishment address
             $this->removeEstablishmentAddress($licence);
 
-            // -Set large vehicle authority to 0 (PSV only)
-            if ($licence->isPsv()) {
-                $licence->setTotAuthLargeVehicles(0);
-            }
             if ($licence->isGoods()) {
                 // -Anull community licences (Goods only)
                 // -Set community licence figure to 0 (Goods only)

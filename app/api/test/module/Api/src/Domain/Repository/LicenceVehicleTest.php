@@ -369,55 +369,6 @@ class LicenceVehicleTest extends RepositoryTestCase
         $this->assertFalse($collection->contains($unmatched1));
     }
 
-    public function testGetPsvVehiclesByType()
-    {
-        $mockType1 = m::mock(RefData::class);
-        $mockType2 = m::mock(RefData::class);
-
-        /** @var LicenceEntity $entity */
-        $entity = m::mock(LicenceEntity::class)->makePartial();
-
-        /** @var Vehicle $vehicle1 */
-        $vehicle1 = m::mock(Vehicle::class)->makePartial();
-        $vehicle1->setPsvType($mockType1);
-
-        /** @var Vehicle $vehicle2 */
-        $vehicle2 = m::mock(Vehicle::class)->makePartial();
-        $vehicle2->setPsvType($mockType2);
-
-        /** @var LicenceVehicleEntity $matched1 */
-        $matched1 = m::mock(LicenceVehicleEntity::class)->makePartial();
-        $matched1->setSpecifiedDate(new DateTime());
-        $matched1->setVehicle($vehicle1);
-
-        /** @var LicenceVehicleEntity $matched2 */
-        $matched2 = m::mock(LicenceVehicleEntity::class)->makePartial();
-        $matched2->setSpecifiedDate(new DateTime());
-        $matched2->setRemovalDate(new DateTime());
-        $matched2->setVehicle($vehicle2);
-
-        /** @var LicenceVehicleEntity $unmatched1 */
-        $unmatched1 = m::mock(LicenceVehicleEntity::class)->makePartial();
-
-        $licenceVehicles = new ArrayCollection();
-        $licenceVehicles->add($matched1);
-        $licenceVehicles->add($matched2);
-        $licenceVehicles->add($unmatched1);
-
-        $entity->setLicenceVehicles($licenceVehicles);
-
-        $this->em->shouldReceive('getReference')
-            ->with(RefData::class, Vehicle::PSV_TYPE_SMALL)
-            ->andReturn($mockType1);
-
-        /** @var ArrayCollection $collection */
-        $collection = $this->sut->getPsvVehiclesByType($entity, Vehicle::PSV_TYPE_SMALL, true);
-
-        $this->assertTrue($collection->contains($matched1));
-        $this->assertFalse($collection->contains($matched2));
-        $this->assertFalse($collection->contains($unmatched1));
-    }
-
     public function testFetchByVehicleId()
     {
         $mockQb = m::mock(QueryBuilder::class);

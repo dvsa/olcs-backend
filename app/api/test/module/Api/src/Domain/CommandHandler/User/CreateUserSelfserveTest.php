@@ -71,6 +71,12 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['User']
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([]);
+
+        $this->repoMap['User']
             ->shouldReceive('populateRefDataReference')
             ->once()
             ->andReturn($data);
@@ -205,6 +211,12 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $this->repoMap['User']
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([]);
+
         /** @var TeamEntity $user */
         $team = m::mock(Team::class)->makePartial();
 
@@ -230,6 +242,31 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
             ->andReturn(false);
 
         $command = Cmd::create(['data']);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandThrowsUsernameExistsException()
+    {
+        $data = [
+            'loginId' => 'login_id',
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, null)
+            ->andReturn(true);
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['User']
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([m::mock(UserEntity::class)]);
 
         $this->sut->handleCommand($command);
     }

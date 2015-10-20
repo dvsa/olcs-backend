@@ -11,6 +11,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateVehiclesDeclarationsStatus as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateVehiclesDeclarationsStatus;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
@@ -39,7 +40,10 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
             Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
             Licence::LICENCE_TYPE_RESTRICTED,
             Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-            Licence::LICENCE_CATEGORY_PSV
+            Licence::LICENCE_CATEGORY_PSV,
+            Application::PSV_VEHICLE_SIZE_SMALL,
+            Application::PSV_VEHICLE_SIZE_MEDIUM_LARGE,
+            Application::PSV_VEHICLE_SIZE_BOTH,
         ];
 
         $this->references = [
@@ -75,9 +79,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(3);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_BOTH]);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
     }
@@ -87,9 +89,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(3);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_BOTH]);
 
         $this->application->setPsvLimousines('Y');
 
@@ -101,9 +101,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $this->application->setTotAuthSmallVehicles(0);
-        $this->application->setTotAuthMediumVehicles(3);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_MEDIUM_LARGE]);
 
         $this->application->setPsvLimousines('Y');
         $this->application->setPsvNoLimousineConfirmation('Y');
@@ -116,9 +114,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $this->application->setTotAuthSmallVehicles(0);
-        $this->application->setTotAuthMediumVehicles(3);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_MEDIUM_LARGE]);
 
         $this->application->setPsvLimousines('Y');
         $this->application->setPsvNoLimousineConfirmation('Y');
@@ -132,9 +128,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $this->application->setTotAuthSmallVehicles(0);
-        $this->application->setTotAuthMediumVehicles(3);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_MEDIUM_LARGE]);
 
         $this->application->setPsvLimousines('Y');
         $this->application->setPsvNoLimousineConfirmation('Y');
@@ -149,9 +143,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(3);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_BOTH]);
 
         $this->application->setPsvLimousines('Y');
         $this->application->setPsvNoLimousineConfirmation('Y');
@@ -164,9 +156,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(3);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_BOTH]);
 
         $this->application->setPsvLimousines('Y');
         $this->application->setPsvNoLimousineConfirmation('Y');
@@ -181,9 +171,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(0);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_BOTH]);
 
         $this->application->setPsvLimousines('Y');
         $this->application->setPsvNoLimousineConfirmation('Y');
@@ -198,9 +186,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(0);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_BOTH]);
 
         $this->application->setPsvLimousines('Y');
         $this->application->setPsvNoLimousineConfirmation('Y');
@@ -217,9 +203,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $this->application->setTotAuthSmallVehicles(0);
-        $this->application->setTotAuthMediumVehicles(0);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_MEDIUM_LARGE]);
 
         $this->application->setPsvLimousines('Y');
         $this->application->setPsvNoLimousineConfirmation('Y');
@@ -237,9 +221,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(0);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_BOTH]);
 
         $this->application->setPsvLimousines('Y');
         $this->application->setPsvNoLimousineConfirmation('Y');
@@ -259,9 +241,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(0);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_BOTH]);
 
         $this->application->setPsvLimousines('Y');
         $this->application->setPsvNoLimousineConfirmation('Y');
@@ -279,9 +259,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(0);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_BOTH]);
 
         $this->application->setPsvLimousines('Y');
         $this->application->setPsvNoLimousineConfirmation('Y');
@@ -299,9 +277,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_RESTRICTED]);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(3);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_BOTH]);
 
         $this->application->setPsvMediumVhlConfirmation('Y');
         $this->application->setPsvMediumVhlNotes('foobar');
@@ -322,9 +298,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_RESTRICTED]);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(3);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_BOTH]);
 
         $this->application->setPsvMediumVhlNotes('foobar');
 
@@ -344,9 +318,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_RESTRICTED]);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(3);
-        $this->application->setTotAuthLargeVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_BOTH]);
 
         $this->application->setPsvMediumVhlConfirmation('Y');
 
@@ -366,9 +338,6 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
-        $this->application->setTotAuthSmallVehicles(0);
-        $this->application->setTotAuthMediumVehicles(0);
-        $this->application->setTotAuthLargeVehicles(0);
 
         $this->application->setPsvLimousines('N');
         $this->application->setPsvSmallVhlConfirmation('Y');
@@ -381,9 +350,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
-        $this->application->setTotAuthSmallVehicles(2);
-        $this->application->setTotAuthMediumVehicles(0);
-        $this->application->setTotAuthLargeVehicles(0);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_SMALL]);
 
         $this->application->setPsvOperateSmallVhl('Y');
         $this->application->setPsvSmallVhlNotes('foobar');
@@ -399,7 +366,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
-        $this->application->setTotAuthSmallVehicles(3);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_SMALL]);
 
         $this->application->setPsvOperateSmallVhl('N');
 
@@ -411,9 +378,7 @@ class UpdateVehiclesDeclarationsStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesDeclarationsStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
-        $this->application->setTotAuthSmallVehicles(3);
-        $this->application->setTotAuthMediumVehicles(0);
-        $this->application->setTotAuthLargeVehicles(0);
+        $this->application->setPsvWhichVehicleSizes($this->refData[Application::PSV_VEHICLE_SIZE_SMALL]);
 
         $this->licence->setTrafficArea($this->references[TrafficArea::class][TrafficArea::SCOTTISH_TRAFFIC_AREA_CODE]);
 

@@ -28,7 +28,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_application_interim_status", columns={"interim_status"}),
  *        @ORM\Index(name="ix_application_withdrawn_reason", columns={"withdrawn_reason"}),
  *        @ORM\Index(name="ix_application_goods_or_psv", columns={"goods_or_psv"}),
- *        @ORM\Index(name="ix_application_applied_via", columns={"applied_via"})
+ *        @ORM\Index(name="ix_application_applied_via", columns={"applied_via"}),
+ *        @ORM\Index(name="ix_application_psv_which_vehicle_sizes",
+     *     columns={"psv_which_vehicle_sizes"})
  *    }
  * )
  */
@@ -501,6 +503,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     protected $psvSmallVhlNotes;
 
     /**
+     * Psv which vehicle sizes
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="psv_which_vehicle_sizes", referencedColumnName="id", nullable=true)
+     */
+    protected $psvWhichVehicleSizes;
+
+    /**
      * Received date
      *
      * @var \DateTime
@@ -554,33 +566,6 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="datetime", name="target_completion_date", nullable=true)
      */
     protected $targetCompletionDate;
-
-    /**
-     * Tot auth large vehicles
-     *
-     * @var int
-     *
-     * @ORM\Column(type="smallint", name="tot_auth_large_vehicles", nullable=true)
-     */
-    protected $totAuthLargeVehicles;
-
-    /**
-     * Tot auth medium vehicles
-     *
-     * @var int
-     *
-     * @ORM\Column(type="smallint", name="tot_auth_medium_vehicles", nullable=true)
-     */
-    protected $totAuthMediumVehicles;
-
-    /**
-     * Tot auth small vehicles
-     *
-     * @var int
-     *
-     * @ORM\Column(type="smallint", name="tot_auth_small_vehicles", nullable=true)
-     */
-    protected $totAuthSmallVehicles;
 
     /**
      * Tot auth trailers
@@ -1962,6 +1947,29 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     }
 
     /**
+     * Set the psv which vehicle sizes
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $psvWhichVehicleSizes
+     * @return Application
+     */
+    public function setPsvWhichVehicleSizes($psvWhichVehicleSizes)
+    {
+        $this->psvWhichVehicleSizes = $psvWhichVehicleSizes;
+
+        return $this;
+    }
+
+    /**
+     * Get the psv which vehicle sizes
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getPsvWhichVehicleSizes()
+    {
+        return $this->psvWhichVehicleSizes;
+    }
+
+    /**
      * Set the received date
      *
      * @param \DateTime $receivedDate
@@ -2097,75 +2105,6 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getTargetCompletionDate()
     {
         return $this->targetCompletionDate;
-    }
-
-    /**
-     * Set the tot auth large vehicles
-     *
-     * @param int $totAuthLargeVehicles
-     * @return Application
-     */
-    public function setTotAuthLargeVehicles($totAuthLargeVehicles)
-    {
-        $this->totAuthLargeVehicles = $totAuthLargeVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the tot auth large vehicles
-     *
-     * @return int
-     */
-    public function getTotAuthLargeVehicles()
-    {
-        return $this->totAuthLargeVehicles;
-    }
-
-    /**
-     * Set the tot auth medium vehicles
-     *
-     * @param int $totAuthMediumVehicles
-     * @return Application
-     */
-    public function setTotAuthMediumVehicles($totAuthMediumVehicles)
-    {
-        $this->totAuthMediumVehicles = $totAuthMediumVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the tot auth medium vehicles
-     *
-     * @return int
-     */
-    public function getTotAuthMediumVehicles()
-    {
-        return $this->totAuthMediumVehicles;
-    }
-
-    /**
-     * Set the tot auth small vehicles
-     *
-     * @param int $totAuthSmallVehicles
-     * @return Application
-     */
-    public function setTotAuthSmallVehicles($totAuthSmallVehicles)
-    {
-        $this->totAuthSmallVehicles = $totAuthSmallVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the tot auth small vehicles
-     *
-     * @return int
-     */
-    public function getTotAuthSmallVehicles()
-    {
-        return $this->totAuthSmallVehicles;
     }
 
     /**

@@ -61,7 +61,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $application = m::mock(Application::class)->makePartial();
         $application->shouldReceive('serialize')->with($bundle)->andReturn(['foo' => 'bar']);
         $application->shouldReceive('isPsv')->andReturn(false);
-        $application->shouldReceive('canHaveLargeVehicles')->andReturn(true);
         $application->shouldReceive('canHaveCommunityLicences')->andReturn(true);
         $application->setIsVariation(false);
         $application->setId(111);
@@ -98,7 +97,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
             'operatingCentres' => ['a', 'b'],
             'totCommunityLicences' => 12,
             'isPsv' => false,
-            'canHaveLargeVehicles' => true,
             'canHaveCommunityLicences' => true,
             'canHaveSchedule41' => false,
             'possibleEnforcementAreas' => [],
@@ -147,7 +145,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $application = m::mock(Application::class)->makePartial();
         $application->shouldReceive('serialize')->with($bundle)->andReturn(['foo' => 'bar']);
         $application->shouldReceive('isPsv')->andReturn(true);
-        $application->shouldReceive('canHaveLargeVehicles')->andReturn(true);
         $application->shouldReceive('canHaveCommunityLicences')->andReturn(true);
         $application->setIsVariation(true);
         $application->setId(111);
@@ -181,7 +178,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
             'operatingCentres' => ['a', 'b'],
             'totCommunityLicences' => 12,
             'isPsv' => true,
-            'canHaveLargeVehicles' => true,
             'canHaveCommunityLicences' => true,
             'canHaveSchedule41' => false,
             'possibleEnforcementAreas' => [33 => 'EA'],
@@ -233,7 +229,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $application = m::mock(Application::class)->makePartial();
         $application->shouldReceive('serialize')->with($bundle)->andReturn(['foo' => 'bar']);
         $application->shouldReceive('isPsv')->andReturn(false);
-        $application->shouldReceive('canHaveLargeVehicles')->andReturn(true);
         $application->shouldReceive('canHaveCommunityLicences')->andReturn(true);
         $application->setIsVariation(true);
         $application->setId(111);
@@ -268,7 +263,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
             'operatingCentres' => ['a', 'b'],
             'totCommunityLicences' => 12,
             'isPsv' => false,
-            'canHaveLargeVehicles' => true,
             'canHaveCommunityLicences' => true,
             'canHaveSchedule41' => false,
             'possibleEnforcementAreas' => [33 => 'EA'],
@@ -320,7 +314,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $application = m::mock(Application::class)->makePartial();
         $application->shouldReceive('serialize')->with($bundle)->andReturn(['foo' => 'bar']);
         $application->shouldReceive('isPsv')->andReturn(false);
-        $application->shouldReceive('canHaveLargeVehicles')->andReturn(true);
         $application->shouldReceive('canHaveCommunityLicences')->andReturn(true);
         $application->shouldReceive('getActiveS4s')->andReturn(['foo']);
         $application->setIsVariation(true);
@@ -356,7 +349,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
             'operatingCentres' => ['a', 'b'],
             'totCommunityLicences' => 12,
             'isPsv' => false,
-            'canHaveLargeVehicles' => true,
             'canHaveCommunityLicences' => true,
             'canHaveSchedule41' => false,
             'possibleEnforcementAreas' => [33 => 'EA'],
@@ -408,7 +400,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $application = m::mock(Application::class)->makePartial();
         $application->shouldReceive('serialize')->with($bundle)->andReturn(['foo' => 'bar']);
         $application->shouldReceive('isPsv')->andReturn(false);
-        $application->shouldReceive('canHaveLargeVehicles')->andReturn(true);
         $application->shouldReceive('canHaveCommunityLicences')->andReturn(true);
         $application->shouldReceive('getActiveS4s')->andReturn([]);
         $application->setIsVariation(true);
@@ -444,7 +435,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
             'operatingCentres' => ['a', 'b'],
             'totCommunityLicences' => 12,
             'isPsv' => false,
-            'canHaveLargeVehicles' => true,
             'canHaveCommunityLicences' => true,
             'canHaveSchedule41' => true,
             'possibleEnforcementAreas' => [33 => 'EA'],
