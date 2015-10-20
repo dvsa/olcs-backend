@@ -4,143 +4,71 @@ namespace Dvsa\Olcs\Api\Service\Publication\Process\Application;
 
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
-use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection;
+use Dvsa\Olcs\Api\Service\Publication\Formatter;
 
 /**
  * Class Text3
  * @package Dvsa\Olcs\Api\Service\Publication\Process\Application
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-final class Text3 implements ProcessInterface
+final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractText
 {
-    /**
-     * @param PublicationLink $publication
-     * @param ImmutableArrayObject $context
-     * @return PublicationLink
-     */
-    public function process(PublicationLink $publication, ImmutableArrayObject $context)
+    public function process(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
-        $licType = $publication->getLicence()->getLicenceType();
-        $publicationSection = $publication->getPublicationSection()->getId();
+        if ($publicationLink->getPublicationSection()->getId() !== PublicationSection::APP_NEW_SECTION &&
+            $publicationLink->getPublicationSection()->getId() !== PublicationSection::APP_GRANTED_SECTION
+        ) {
+            // if not in New (received) or granted section then no text
+            $publicationLink->setText3(null);
+            return;
+        }
 
-        $text = [];
+        $this->addTextLine($context->offsetGet('licenceAddress'));
+        $this->addOperatingCentreText($publicationLink);
+        $this->addTransportManagerText($context);
+        $this->addConditionsAndUndertakingsText($context);
 
-        //GV
-        if ($licType === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE) {
-            if ($context->offsetExists('licenceCancelled')) {
-                $text = $this->getPartialData($context, $text);
-            } else {
-                switch ($publicationSection) {
-                    case PublicationSectionEntity::APP_GRANTED_SECTION:
-                        $text = $this->getPartialData($context, $text);
-                        break;
-                    case PublicationSectionEntity::APP_WITHDRAWN_SECTION:
-                    case PublicationSectionEntity::APP_REFUSED_SECTION:
-                        $text = $this->getPartialData($context, $text);
-                        break;
-                    default:
-                        $text = $this->getAllData($context, $text);
-                        break;
-                }
+        $publicationLink->setText3($this->getTextWithNewLine());
+    }
+
+    /**
+     * @param PublicationLink $publicationLink
+     */
+    private function addOperatingCentreText(PublicationLink $publicationLink)
+    {
+        foreach ($publicationLink->getApplication()->getOperatingCentres() as $aoc) {
+            /* @var $aoc \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre */
+            $this->addTextLine(
+                'Operating Centre: '. Formatter\Address::format($aoc->getOperatingCentre()->getAddress())
+            );
+            $this->addTextLine('Authorisation: '. Formatter\OcVehicleTrailer::format($aoc));
+        }
+    }
+
+    /**
+     * @param ImmutableArrayObject $context
+     */
+    private function addTransportManagerText(ImmutableArrayObject $context)
+    {
+        if ($context->offsetExists('applicationTransportManagers')) {
+            $tmNames = [];
+            foreach ($context->offsetGet('applicationTransportManagers') as $transportManager) {
+                /* @var $transportManager \Dvsa\Olcs\Api\Entity\Tm\TransportManager */
+                $tmNames[] = $transportManager->getHomeCd()->getPerson()->getFullName();
             }
-        } else {
-            //PSV
-            $text = $this->getAllData($context, $text);
+            $this->addTextLine('Transport Manager(s): '. implode(', ', $tmNames));
         }
-
-        $publication->setText3(implode("\n", $text));
-
-        return $publication;
-    }
-
-    public function getAllData(ImmutableArrayObject $context, $text)
-    {
-        $text = $this->addLicenceAddress($context, $text);
-        $text = $this->addBusNote($context, $text);
-        $text = $this->getPartialData($context, $text);
-
-        return $text;
-    }
-
-    public function getPartialData(ImmutableArrayObject $context, $text)
-    {
-        $text = $this->addOcDetails($context, $text);
-        $text = $this->addConditionUndertaking($context, $text);
-
-        return $text;
     }
 
     /**
-     * Adds oc details, including authorisation and tm
-     *
      * @param ImmutableArrayObject $context
-     * @param array $text
-     * @return array
      */
-    private function addOcDetails(ImmutableArrayObject $context, $text)
+    private function addConditionsAndUndertakingsText(ImmutableArrayObject $context)
     {
-        //operating centre address
-        if ($context->offsetExists('operatingCentres')) {
-            foreach ($context->offsetGet('operatingCentres') as $oc) {
-                $text[] = $oc;
-            }
+        $textLines = $context->offsetGet('conditionUndertaking');
+        foreach ($textLines as $text) {
+            $this->addTextLine($text);
         }
-
-        //transport managers
-        if ($context->offsetExists('transportManagers')) {
-            $text[] = 'Transport Manager(s): ' . $context->offsetGet('transportManagers');
-        }
-
-        return $text;
-    }
-
-    /**
-     * Adds condition and undertaking
-     *
-     * @param ImmutableArrayObject $context
-     * @param array $text
-     * @return array
-     */
-    private function addConditionUndertaking(ImmutableArrayObject $context, $text)
-    {
-        //conditions and undertakings
-        $conditionUndertaking = $context->offsetGet('conditionUndertaking');
-
-        foreach ($conditionUndertaking as $cuString) {
-            $text[] = $cuString;
-        }
-
-        return $text;
-    }
-
-    /**
-     * Adds licence address
-     *
-     * @param ImmutableArrayObject $context
-     * @param array $text
-     * @return array
-     */
-    private function addLicenceAddress(ImmutableArrayObject $context, $text)
-    {
-        $text[] = $context->offsetGet('licenceAddress');
-        return $text;
-    }
-
-    /**
-     * If we have a bus note, add it in
-     *
-     * @param ImmutableArrayObject $context
-     * @param array $text
-     * @return array
-     */
-    private function addBusNote(ImmutableArrayObject $context, $text)
-    {
-        if ($context->offsetExists('busNote')) {
-            $text[] = $context->offsetGet('busNote');
-        }
-
-        return $text;
     }
 }

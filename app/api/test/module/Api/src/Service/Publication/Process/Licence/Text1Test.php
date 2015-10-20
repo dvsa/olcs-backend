@@ -1,12 +1,11 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Publication\Process\Application;
+namespace Dvsa\OlcsTest\Api\Service\Publication\Process\Licence;
 
-use Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1 as ApplicationText1;
+use Dvsa\Olcs\Api\Service\Publication\Process\Licence\Text1 as LicenceText1;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -20,7 +19,7 @@ class Text1Test extends MockeryTestCase
 {
     public function testProcess()
     {
-        $sut = new ApplicationText1();
+        $sut = new LicenceText1();
 
         $input = [
             'previousPublication' => 9876
@@ -28,47 +27,41 @@ class Text1Test extends MockeryTestCase
 
         $licence = new Licence(new Organisation(), new RefData());
         $licence->setLicNo('OB12345');
-
-        $application = new Application($licence, new RefData(), false);
-        $application->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL));
-        $application->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $licence->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $licence->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
 
         $publicationLink = new PublicationLink();
         $publicationLink->setLicence($licence);
-        $publicationLink->setApplication($application);
 
         $sut->process($publicationLink, new ImmutableArrayObject($input));
 
-        $expectedString = "OB12345 SI\n(9876)";
+        $expectedString = "OB12345 SN\n(9876)";
         $this->assertEquals($expectedString, $publicationLink->getText1());
     }
 
     public function testProcessNoPreviousPublication()
     {
-        $sut = new ApplicationText1();
+        $sut = new LicenceText1();
 
         $input = [];
 
         $licence = new Licence(new Organisation(), new RefData());
         $licence->setLicNo('OB12345');
-
-        $application = new Application($licence, new RefData(), false);
-        $application->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL));
-        $application->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $licence->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $licence->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
 
         $publicationLink = new PublicationLink();
         $publicationLink->setLicence($licence);
-        $publicationLink->setApplication($application);
 
         $sut->process($publicationLink, new ImmutableArrayObject($input));
 
-        $expectedString = "OB12345 SI";
+        $expectedString = "OB12345 SN";
         $this->assertEquals($expectedString, $publicationLink->getText1());
     }
 
     public function testProcessNotGoods()
     {
-        $sut = new ApplicationText1();
+        $sut = new LicenceText1();
 
         $input = [
             'previousPublication' => 9876
@@ -78,17 +71,12 @@ class Text1Test extends MockeryTestCase
         $licence->setLicNo('OB12345');
         $licence->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
 
-        $application = new Application($licence, new RefData(), false);
-        $application->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL));
-        $application->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_PSV));
-
         $publicationLink = new PublicationLink();
         $publicationLink->setLicence($licence);
-        $publicationLink->setApplication($application);
 
         $sut->process($publicationLink, new ImmutableArrayObject($input));
 
-        $expectedString = "OB12345 SI";
+        $expectedString = "OB12345 SN";
         $this->assertEquals($expectedString, $publicationLink->getText1());
     }
 }

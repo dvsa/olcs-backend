@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Publication\Process\Application;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection;
 
 /**
  * Class PoliceTest
@@ -21,7 +22,18 @@ class PoliceTest extends MockeryTestCase
         $person2 = new \Dvsa\Olcs\Api\Entity\Person\Person();
         $person3 = new \Dvsa\Olcs\Api\Entity\Person\Person();
 
+        $licence = new \Dvsa\Olcs\Api\Entity\Licence\Licence(
+            new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(),
+            new \Dvsa\Olcs\Api\Entity\System\RefData()
+        );
+        $application = new \Dvsa\Olcs\Api\Entity\Application\Application(
+            $licence,
+            new \Dvsa\Olcs\Api\Entity\System\RefData(),
+            true
+        );
+
         $publicationLink = new PublicationLink();
+        $publicationLink->setApplication($application);
         $publicationLink->addPoliceDatas(
             new \Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData($publicationLink, $person1)
         );
@@ -36,6 +48,55 @@ class PoliceTest extends MockeryTestCase
         $this->assertSame($publicationLink->getPoliceDatas()[1]->getPerson(), $person3);
     }
 
+    /**
+     * @dataProvider dataProviderTestProcessNewApplication
+     */
+    public function testProcessNewApplication($expectTmAdded, $sectionId)
+    {
+        $sut = new \Dvsa\Olcs\Api\Service\Publication\Process\Application\Police();
+
+        $tm1 = $this->setupTransportManager();
+
+        $licence = new \Dvsa\Olcs\Api\Entity\Licence\Licence(
+            new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(),
+            new \Dvsa\Olcs\Api\Entity\System\RefData()
+        );
+        $application = new \Dvsa\Olcs\Api\Entity\Application\Application(
+            $licence,
+            new \Dvsa\Olcs\Api\Entity\System\RefData(),
+            false
+        );
+
+        $publicationSection = new PublicationSection();
+        $publicationSection->setId($sectionId);
+
+        $publicationLink = new PublicationLink();
+        $publicationLink->setApplication($application);
+        $publicationLink->setPublicationSection($publicationSection);
+
+        $input = [
+            'applicationTransportManagers' => [$tm1],
+        ];
+        $sut->process($publicationLink, new ImmutableArrayObject($input));
+
+        if ($expectTmAdded) {
+            $this->assertSame($publicationLink->getPoliceDatas()->count(), 1);
+        } else {
+            $this->assertSame($publicationLink->getPoliceDatas()->count(), 0);
+        }
+    }
+
+    public function dataProviderTestProcessNewApplication()
+    {
+        return [
+            [true, PublicationSection::APP_NEW_SECTION],
+            [true, PublicationSection::APP_GRANTED_SECTION],
+            [false, PublicationSection::APP_GRANT_NOT_TAKEN_SECTION],
+            [false, PublicationSection::APP_REFUSED_SECTION],
+            [false, PublicationSection::APP_WITHDRAWN_SECTION],
+        ];
+    }
+
     public function testProcessTransportManagers()
     {
         $sut = new \Dvsa\Olcs\Api\Service\Publication\Process\Application\Police();
@@ -46,7 +107,18 @@ class PoliceTest extends MockeryTestCase
         $tm2 = $this->setupTransportManager();
         $tm3 = $this->setupTransportManager();
 
+        $licence = new \Dvsa\Olcs\Api\Entity\Licence\Licence(
+            new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(),
+            new \Dvsa\Olcs\Api\Entity\System\RefData()
+        );
+        $application = new \Dvsa\Olcs\Api\Entity\Application\Application(
+            $licence,
+            new \Dvsa\Olcs\Api\Entity\System\RefData(),
+            true
+        );
+
         $publicationLink = new PublicationLink();
+        $publicationLink->setApplication($application);
         $publicationLink->addPoliceDatas(
             new \Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData($publicationLink, $person1)
         );

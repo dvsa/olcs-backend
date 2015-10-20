@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Command\Publication\Licence as PublicationLicenceCmd;
 
 /**
  * Process Continuation Not Sought
@@ -36,6 +37,9 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler
 
         $discsCommand = $this->createDiscsCommand($licence);
 
+        // Set status to CNS
+        $licence->setStatus($this->getRepo()->getRefdataReference(Entity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT));
+
         $result->merge(
             $this->handleSideEffects(
                 [
@@ -46,13 +50,13 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler
                     // Expire community licences that are of status 'Pending', 'Active' or 'Suspended'
                     ExpireComLics::create(['id' => $licence->getId()]),
                     // Void any discs associated to vehicles linked to the licence
-                    $discsCommand
+                    $discsCommand,
+                    // Create publication for a licence
+                    PublicationLicenceCmd::create(['id' => $licence->getId()])
                 ]
             )
         );
 
-        // Set status to CNS
-        $licence->setStatus($this->getRepo()->getRefdataReference(Entity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT));
         $this->getRepo()->save($licence);
         $result->addMessage('Licence updated');
 
