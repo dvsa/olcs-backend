@@ -62,10 +62,6 @@ final class CreateUnlicensedOperatorLicenceVehicle extends AbstractCommandHandle
             $vehicle->setPlatedWeight($command->getPlatedWeight());
         }
 
-        if (!empty($command->getPsvType())) {
-            $vehicle->setPsvType($this->getRepo()->getRefdataReference($command->getPsvType()));
-        }
-
         return new LicenceVehicle($licence, $vehicle);
     }
 }

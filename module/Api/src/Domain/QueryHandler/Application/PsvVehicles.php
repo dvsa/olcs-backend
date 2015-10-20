@@ -36,19 +36,14 @@ class PsvVehicles extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        /** @var Entity\Application\Application $application */
+        /* @var $application Entity\Application\Application */
         $application = $this->getRepo()->fetchUsingId($query);
 
         $flags = $this->helper->getCommonQueryFlags($application, $query);
 
         $flags['canTransfer'] = false;
-        $flags['hasBreakdown'] = $this->hasBreakdown($application);
+        $flags['hasBreakdown'] = (int) $application->getTotAuthVehicles() > 0;
 
         return $this->result($application, [], $flags);
-    }
-
-    protected function hasBreakdown(Entity\Application\Application $application)
-    {
-        return false;
     }
 }

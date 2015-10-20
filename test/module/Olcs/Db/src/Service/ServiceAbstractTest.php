@@ -29,8 +29,6 @@ class ServiceAbstractTest extends MockeryTestCase
 
     protected $em;
 
-    protected $mockLogger;
-
     protected function setUp()
     {
         $this->sut = $this->getMockForAbstractClass(
@@ -39,7 +37,6 @@ class ServiceAbstractTest extends MockeryTestCase
             'Foo'
         );
 
-        $this->mockLogger = $this->getMock('\Zend\Log\Logger', ['info']);
         $this->sm = Bootstrap::getServiceManager();
         $this->em = $this->getMock(
             '\Doctrine\ORM\EntityManager',
@@ -59,7 +56,6 @@ class ServiceAbstractTest extends MockeryTestCase
             false
         );
 
-        $this->sut->setLogger($this->mockLogger);
         $this->sut->setServiceLocator($this->sm);
         $this->sut->setEntityManager($this->em);
     }
@@ -97,8 +93,6 @@ class ServiceAbstractTest extends MockeryTestCase
             'foo' => 'bar'
         );
 
-        $this->mockLogger->expects($this->once())->method('info');
-
         $mockDoctrineObject = $this->mockHydrator();
 
         $mockDoctrineObject->expects($this->once())
@@ -135,8 +129,6 @@ class ServiceAbstractTest extends MockeryTestCase
         $hydrationData = array(
             'foo' => 'bar'
         );
-
-        $this->mockLogger->expects($this->once())->method('info');
 
         $mockDoctrineObject = $this->mockHydrator();
         $mockDoctrineObject->expects($this->once())
@@ -178,8 +170,6 @@ class ServiceAbstractTest extends MockeryTestCase
             'foo' => 'bar',
             'address' => $addressId
         );
-
-        $this->mockLogger->expects($this->once())->method('info');
 
         $mockDoctrineObject = $this->mockHydrator();
         $mockDoctrineObject->expects($this->once())
@@ -237,8 +227,6 @@ class ServiceAbstractTest extends MockeryTestCase
             'address' => $addressId
         );
 
-        $this->mockLogger->expects($this->once())->method('info');
-
         $mockDoctrineObject = $this->mockHydrator();
         $mockDoctrineObject->expects($this->once())
             ->method('hydrate')
@@ -277,8 +265,6 @@ class ServiceAbstractTest extends MockeryTestCase
         $expectedParms = array(
             'foo' => 'bar'
         );
-
-        $this->mockLogger->expects($this->once())->method('info');
 
         $language = 'en-gb';
 
@@ -365,8 +351,6 @@ class ServiceAbstractTest extends MockeryTestCase
             'name' => 'foo'
         );
 
-        $this->mockLogger->expects($this->once())->method('info');
-
         $language = 'en-gb';
 
         $mockQuery = m::mock()
@@ -448,8 +432,6 @@ class ServiceAbstractTest extends MockeryTestCase
             'bundle' => '[INVALID JSON]'
         );
 
-        $this->mockLogger->expects($this->once())->method('info');
-
         $this->sut->get($id, $data);
     }
 
@@ -475,8 +457,6 @@ class ServiceAbstractTest extends MockeryTestCase
             'id' => 7,
             'name' => 'foo'
         );
-
-        $this->mockLogger->expects($this->once())->method('info');
 
         $language = 'en-gb';
 
@@ -568,8 +548,6 @@ class ServiceAbstractTest extends MockeryTestCase
         $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
         $id = 5;
 
-        $this->mockLogger->expects($this->once())->method('info');
-
         $this->em->expects($this->once())
             ->method('find')
             ->with('\OlcsTest\Db\Service\Stubs\EntityStub', $id)
@@ -585,8 +563,6 @@ class ServiceAbstractTest extends MockeryTestCase
     {
         $this->sut->setEntityName('\OlcsTest\Db\Service\Stubs\EntityStub');
         $id = 5;
-
-        $this->mockLogger->expects($this->once())->method('info');
 
         $mockEntity = m::mock();
 
@@ -615,8 +591,6 @@ class ServiceAbstractTest extends MockeryTestCase
 
         $data = array();
 
-        $this->mockLogger->expects($this->once())->method('info');
-
         $this->sut->update($id, $data);
     }
 
@@ -638,8 +612,6 @@ class ServiceAbstractTest extends MockeryTestCase
         $this->em->expects($this->once())
             ->method('find')
             ->will($this->returnValue($mockEntity));
-
-        $this->mockLogger->expects($this->once())->method('info');
 
         $this->assertFalse($this->sut->update($id, $data));
     }
@@ -672,8 +644,6 @@ class ServiceAbstractTest extends MockeryTestCase
         $this->em->expects($this->once())
             ->method('find')
             ->will($this->returnValue($mockEntity));
-
-        $this->mockLogger->expects($this->once())->method('info');
 
         $this->em->expects($this->once())
             ->method('persist')
@@ -715,8 +685,6 @@ class ServiceAbstractTest extends MockeryTestCase
             ->method('find')
             ->will($this->returnValue($mockEntity));
 
-        $this->mockLogger->expects($this->once())->method('info');
-
         $this->em->expects($this->once())
             ->method('persist')
             ->will($this->returnValue($mockEntity));
@@ -735,10 +703,7 @@ class ServiceAbstractTest extends MockeryTestCase
     {
         $id = 7;
 
-        $data = array(
-        );
-
-        $this->mockLogger->expects($this->once())->method('info');
+        $data = array();
 
         $this->sut->patch($id, $data);
     }
@@ -761,8 +726,6 @@ class ServiceAbstractTest extends MockeryTestCase
         $this->em->expects($this->once())
             ->method('find')
             ->will($this->returnValue($mockEntity));
-
-        $this->mockLogger->expects($this->once())->method('info');
 
         $this->assertFalse($this->sut->patch($id, $data));
     }
@@ -833,8 +796,6 @@ class ServiceAbstractTest extends MockeryTestCase
                 )
             )
         );
-
-        $this->mockLogger->expects($this->once())->method('info');
 
         $mockDoctrineObject = $this->mockHydrator();
 
@@ -953,8 +914,6 @@ class ServiceAbstractTest extends MockeryTestCase
         );
 
         $mockChild = m::mock('\OlcsTest\Db\Service\Stubs\EntityStub')->makePartial();
-
-        $this->mockLogger->expects($this->once())->method('info');
 
         $this->em->expects($this->once())
             ->method('find')
@@ -1090,8 +1049,6 @@ class ServiceAbstractTest extends MockeryTestCase
         $this->em->expects($this->once())
             ->method('find')
             ->will($this->returnValue($mockEntity));
-
-        $this->mockLogger->expects($this->once())->method('info');
 
         $mockDoctrineObject = $this->mockHydrator();
 

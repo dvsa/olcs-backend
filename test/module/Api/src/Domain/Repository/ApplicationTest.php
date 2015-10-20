@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Application test
  *
@@ -311,6 +312,9 @@ class ApplicationTest extends RepositoryTestCase
             ->with('a.status', ['apsts_consideration', 'apsts_granted']);
 
         $qb
+            ->shouldReceive('innerJoin')
+            ->with('a.licence', 'l', 'WITH', m::any())
+            ->andReturnSelf()
             ->shouldReceive('andWhere')
             ->andReturnSelf()
             ->shouldReceive('setParameter')
@@ -324,10 +328,6 @@ class ApplicationTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('withRefdata')
             ->once()
-            ->andReturnSelf()
-            ->shouldReceive('with')
-            ->once()
-            ->with('licence', 'l')
             ->andReturnSelf();
 
         /** @var EntityRepository $repo */

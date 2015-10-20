@@ -2,11 +2,11 @@
 
 namespace Olcs\Db\Controller;
 
+use Olcs\Logging\Log\Logger;
 use Zend\Mvc\Controller\AbstractRestfulController as ZendAbstractRestfulController;
 use Zend\Mvc\Exception;
 use Zend\Mvc\MvcEvent;
 use Zend\Http\Response;
-use Olcs\Db\Traits\LoggerAwareTrait as OlcsLoggerAwareTrait;
 use Olcs\Db\Exceptions\RestResponseException;
 use Olcs\Db\Traits\RestResponseTrait;
 
@@ -17,8 +17,7 @@ use Olcs\Db\Traits\RestResponseTrait;
  */
 abstract class AbstractController extends ZendAbstractRestfulController
 {
-    use RestResponseTrait,
-        OlcsLoggerAwareTrait;
+    use RestResponseTrait;
 
     /**
      * Handle the request
@@ -29,7 +28,25 @@ abstract class AbstractController extends ZendAbstractRestfulController
      */
     public function onDispatch(MvcEvent $e)
     {
-        $this->doDispatch($e);
+        $data = [
+            'data' => [
+                'content' => $e->getRequest()->getContent()
+            ]
+        ];
+
+        Logger::debug('*** Legacy Api Controller ***: ' . get_class($this), $data);
+
+        $response = $this->doDispatch($e);
+
+        $data = [
+            'data' => [
+                'response' => (array)$response
+            ]
+        ];
+
+        Logger::debug('*** Legacy Api Controller Response ***', $data);
+
+        return $response;
     }
 
     public function doDispatch(MvcEvent $e)

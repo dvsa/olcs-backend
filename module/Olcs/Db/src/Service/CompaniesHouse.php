@@ -10,6 +10,7 @@
 namespace Olcs\Db\Service;
 
 use Olcs\Db\Exceptions\RestResponseException;
+use Olcs\Logging\Log\Logger;
 use Zend\Http\Response;
 use CompaniesHouse\CHXmlGateway;
 
@@ -77,7 +78,7 @@ class CompaniesHouse extends ServiceAbstract
 
         $this->setTransactionId($transactionId);
 
-        $this->getLogger()->info(
+        Logger::info(
             'Companies House request',
             [
                 'data' => compact('requestType', 'method', 'value', 'transactionId')
@@ -86,7 +87,7 @@ class CompaniesHouse extends ServiceAbstract
 
         try {
             $result = $this->$method($this->getNewGateway(), $value);
-            $this->getLogger()->info('Companies House response', ['data' => compact('result')]);
+            Logger::info('Companies House response', ['data' => compact('result')]);
         } catch (\Exception $ex) {
             throw new RestResponseException($ex->getMessage(), Response::STATUS_CODE_500);
         }

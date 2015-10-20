@@ -2,6 +2,7 @@
 
 namespace OlcsTest;
 
+use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Mockery as m;
 
@@ -26,6 +27,17 @@ class Bootstrap
         $config = include dirname(__DIR__) . '/config/application.config.php';
 
         self::$config = $config;
+
+        self::setupLogger();
+    }
+
+    public static function setupLogger()
+    {
+        $logWriter = new \Zend\Log\Writer\Mock();
+        $logger = new \Zend\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
     }
 
     public static function getServiceManager()

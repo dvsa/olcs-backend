@@ -61,9 +61,7 @@ class Generator extends AbstractGenerator
         ],
         'vehicles_psv' => [
             'licenceVehicles' => [
-                'vehicle' => [
-                    'psvType'
-                ]
+                'vehicle'
             ]
         ],
         'convictions_penalties' => [

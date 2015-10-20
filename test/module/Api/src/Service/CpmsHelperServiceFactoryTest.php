@@ -10,7 +10,6 @@ namespace Dvsa\OlcsTest\Api\Service;
 use Dvsa\Olcs\Api\Service\CpmsHelperServiceFactory as Sut;
 use Dvsa\Olcs\Api\Service\CpmsV1HelperService as V1;
 use Dvsa\Olcs\Api\Service\CpmsV2HelperService as V2;
-use Dvsa\OlcsTest\Api\MockLoggerTrait;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -21,8 +20,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class CpmsHelperServiceFactoryTest extends MockeryTestCase
 {
-    use MockLoggerTrait;
-
     /**
      * @param array $config
      * @param string $expectedServiceClass
@@ -31,7 +28,6 @@ class CpmsHelperServiceFactoryTest extends MockeryTestCase
      */
     public function testCreateService($config, $expectedServiceClass, $requiresFeesHelper)
     {
-
         $mockCpmsClient = m::mock()
             ->shouldReceive('getOptions')
             ->andReturn(
@@ -42,8 +38,6 @@ class CpmsHelperServiceFactoryTest extends MockeryTestCase
             )
             ->getMock();
 
-        $mockLogger = $this->mockLogger();
-
         $mockFeesHelper = m::mock();
 
         $sm = m::mock('\Zend\ServiceManager\ServiceLocatorInterface');
@@ -52,10 +46,6 @@ class CpmsHelperServiceFactoryTest extends MockeryTestCase
             ->with('cpms\service\api')
             ->once()
             ->andReturn($mockCpmsClient)
-            ->shouldReceive('get')
-            ->with('Logger')
-            ->once()
-            ->andReturn($mockLogger)
             ->shouldReceive('get')
             ->with('Config')
             ->once()

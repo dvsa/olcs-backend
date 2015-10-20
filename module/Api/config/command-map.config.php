@@ -56,6 +56,7 @@ return [
     TransferCommand\Application\CreateSnapshot::class => CommandHandler\Application\CreateSnapshot::class,
     TransferCommand\Application\Grant::class => CommandHandler\Application\Grant::class,
     TransferCommand\Application\UndoGrant::class => CommandHandler\Application\UndoGrant::class,
+    TransferCommand\Application\CancelApplication::class => CommandHandler\Application\CancelApplication::class,
     Command\Application\GrantGoods::class => CommandHandler\Application\GrantGoods::class,
     Command\Application\GrantPsv::class => CommandHandler\Application\GrantPsv::class,
     Command\Application\CreateGrantFee::class => CommandHandler\Application\CreateGrantFee::class,

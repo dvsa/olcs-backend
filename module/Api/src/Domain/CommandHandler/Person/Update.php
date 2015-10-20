@@ -26,9 +26,11 @@ final class Update extends AbstractCommandHandler
     {
         /* @var $person Person */
         $person = $this->getRepo()->fetchUsingId($command);
+
         if ($command->getDob()) {
             $person->setBirthDate(new \DateTime($command->getDob()));
         }
+
         $this->getRepo()->save($person);
 
         $result = new Result();

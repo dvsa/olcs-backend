@@ -45,4 +45,14 @@ class AddressEntityTest extends EntityTester
         $this->assertEquals('postcode', $address->getPostcode());
         $this->assertSame($country, $address->getCountryCode());
     }
+
+    public function testIsEmpty()
+    {
+        $address = new Address();
+
+        $this->assertEquals(true, $address->isEmpty());
+
+        $address->updateAddress('address 1');
+        $this->assertEquals(false, $address->isEmpty());
+    }
 }

@@ -38,15 +38,6 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         if ($command->getTotAuthVehicles()) {
             $continuationDetail->setTotAuthVehicles($command->getTotAuthVehicles());
         }
-        if ($command->getTotAuthSmallVehicles()) {
-            $continuationDetail->setTotAuthSmallVehicles($command->getTotAuthSmallVehicles());
-        }
-        if ($command->getTotAuthMediumVehicles()) {
-            $continuationDetail->setTotAuthMediumVehicles($command->getTotAuthMediumVehicles());
-        }
-        if ($command->getTotAuthLargeVehicles()) {
-            $continuationDetail->setTotAuthLargeVehicles($command->getTotAuthLargeVehicles());
-        }
         if ($command->getTotCommunityLicences()) {
             $continuationDetail->setTotCommunityLicences($command->getTotCommunityLicences());
         }

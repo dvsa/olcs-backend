@@ -16,6 +16,8 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 
 /**
  * Licence
@@ -119,6 +121,49 @@ class Licence extends AbstractRepository
         }
 
         return $results[0];
+    }
+
+    public function fetchForUserRegistration($licNo)
+    {
+        $licence = $this->fetchByLicNo($licNo);
+
+        // check if it has a correspondence address
+        if (!($licence->getCorrespondenceCd() instanceof ContactDetailsEntity)
+            || !($licence->getCorrespondenceCd()->getAddress() instanceof AddressEntity)
+            || $licence->getCorrespondenceCd()->getAddress()->isEmpty()
+        ) {
+            throw new Exception\ValidationException(
+                [
+                    'licenceNumber' => [
+                        'ERR_ADDRESS_NOT_FOUND'
+                    ]
+                ]
+            );
+        }
+
+        // check if the org is not unlicenced
+        if ($licence->getOrganisation()->getIsUnlicensed()) {
+            throw new Exception\ValidationException(
+                [
+                    'licenceNumber' => [
+                        'ERR_UNLICENCED_ORG'
+                    ]
+                ]
+            );
+        }
+
+        // check if the org has any admin users already
+        if (!$licence->getOrganisation()->getAdminOrganisationUsers()->isEmpty()) {
+            throw new Exception\ValidationException(
+                [
+                    'licenceNumber' => [
+                        'ERR_ADMIN_EXISTS'
+                    ]
+                ]
+            );
+        }
+
+        return $licence;
     }
 
     public function fetchByVrm($vrm)

@@ -12,6 +12,7 @@ namespace Dvsa\Olcs\Api\Service;
 
 use CpmsClient\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
@@ -30,16 +31,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
     const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
 
-    // @todo OLCS-6845
-    // this is a dummy value for testing purposes
-    const COST_CENTRE = '12345,67890';
-
     const TAX_CODE = 'Z';
-
-    /**
-     * @var \Zend\Log\LoggerInterface
-     */
-    protected $logger;
 
     /**
      * @var ApiService
@@ -58,7 +50,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->cpmsClient = $serviceLocator->get('cpms\service\api');
-        $this->logger = $serviceLocator->get('Logger');
         $this->feesHelper = $serviceLocator->get('FeesHelperService');
         return $this;
     }
@@ -483,7 +474,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @todo 'product_reference' should be $fee->getFeeType()->getDescription()
      * but CPMS has a whitelist and responds  {"code":104,"message":"product_reference is invalid"}
-     * @todo OLCS-6845 'sales_person_reference'
      */
     protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [])
     {
@@ -536,7 +526,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $commonParams = [
             'customer_reference' => (string) $this->getCustomerReference($fees),
             'payment_data' => [],
-            'cost_centre' => self::COST_CENTRE,
             'total_amount' => $this->formatAmount($totalAmount),
             'customer_name' => $firstFee->getCustomerNameForInvoice(),
             'customer_manager_name' => $firstFee->getCustomerNameForInvoice(),
@@ -593,7 +582,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
     protected function debug($message, $data)
     {
-        return $this->logger->debug(
+        return Logger::debug(
             $message,
             [
                 'data' => array_merge(

@@ -43,7 +43,7 @@ class PsvVehiclesQueryHelperTest extends MockeryTestCase
         $this->sut->createService($sm);
     }
 
-    public function testGetCommonQueryFlags()
+    public function testGetCommonQueryFlagsLicence()
     {
         $query = Qry::create(
             [
@@ -52,109 +52,45 @@ class PsvVehiclesQueryHelperTest extends MockeryTestCase
             ]
         );
 
-        /** @var Entity\Licence\Licence|m\MockInterface $licence */
+        /* @var $licence Entity\Licence\Licence|m\MockInterface */
         $licence = m::mock(Entity\Licence\Licence::class)->makePartial();
         $licence->setId(111);
-        $licence->shouldReceive('canHaveLargeVehicles')->andReturn(true);
-        $licence->shouldReceive('shouldShowSmallTable')
-            ->with(1)
-            ->andReturn(true)
-            ->shouldReceive('shouldShowMediumTable')
-            ->with(1)
-            ->andReturn(true)
-            ->shouldReceive('shouldShowLargeTable')
-            ->with(1)
-            ->andReturn(true)
-            ->shouldReceive('isSmallAuthExceeded')
-            ->with(1)
-            ->andReturn(true)
-            ->shouldReceive('isMediumAuthExceeded')
-            ->with(1)
-            ->andReturn(true)
-            ->shouldReceive('isLargeAuthExceeded')
-            ->with(1)
-            ->andReturn(true)
-            ->shouldReceive('getAvailableSmallSpaces')
-            ->with(1)
-            ->andReturn(9)
-            ->shouldReceive('getAvailableMediumSpaces')
-            ->with(1)
-            ->andReturn(8)
-            ->shouldReceive('getAvailableLargeSpaces')
-            ->with(1)
-            ->andReturn(7);
+        $licence->setTotAuthVehicles(3);
 
-        $smallVehicle = m::mock(Entity\Licence\LicenceVehicle::class)->makePartial();
-        $smallVehicle->shouldReceive('serialize')
+        $vehicle1 = m::mock(Entity\Licence\LicenceVehicle::class)->makePartial();
+        $vehicle1->shouldReceive('serialize')
             ->with(['vehicle'])
-            ->andReturn(['type' => 'small']);
+            ->andReturn(['VEHICLE1']);
 
-        $mediumVehicle = m::mock(Entity\Licence\LicenceVehicle::class)->makePartial();
-        $mediumVehicle->shouldReceive('serialize')
+        $vehicle2 = m::mock(Entity\Licence\LicenceVehicle::class)->makePartial();
+        $vehicle2->shouldReceive('serialize')
             ->with(['vehicle'])
-            ->andReturn(['type' => 'medium']);
+            ->andReturn(['VEHICLE2']);
 
-        $largeVehicle = m::mock(Entity\Licence\LicenceVehicle::class)->makePartial();
-        $largeVehicle->shouldReceive('serialize')
-            ->with(['vehicle'])
-            ->andReturn(['type' => 'large']);
+        $vehicles = new ArrayCollection();
+        $vehicles->add($vehicle1);
+        $vehicles->add($vehicle2);
 
-        $smallVehicles = new ArrayCollection();
-        $smallVehicles->add($smallVehicle);
-
-        $mediumVehicles = new ArrayCollection();
-        $mediumVehicles->add($mediumVehicle);
-
-        $largeVehicles = new ArrayCollection();
-        $largeVehicles->add($largeVehicle);
-
-        $this->licenceVehicleRepo->shouldReceive('getPsvVehiclesByType')
-            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_SMALL)
-            ->andReturn($smallVehicles)
-            ->shouldReceive('getPsvVehiclesByType')
-            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM)
-            ->andReturn($mediumVehicles)
-            ->shouldReceive('getPsvVehiclesByType')
-            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_LARGE)
-            ->andReturn($largeVehicles)
-            ->shouldReceive('getPsvVehiclesByType')
-            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_SMALL, true)
-            ->andReturn($smallVehicles)
-            ->shouldReceive('getPsvVehiclesByType')
-            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM, true)
-            ->andReturn($mediumVehicles)
-            ->shouldReceive('getPsvVehiclesByType')
-            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_LARGE, true)
-            ->andReturn($largeVehicles);
+        $this->licenceVehicleRepo->shouldReceive('getAllPsvVehicles')->with($licence)->once()
+            ->andReturn($vehicles)
+            ->shouldReceive('getAllPsvVehicles')->with($licence, true)->once()
+            ->andReturn($vehicles);
 
         $return = $this->sut->getCommonQueryFlags($licence, $query);
 
         $expected = [
-            'showSmallTable' => true,
-            'showMediumTable' => true,
-            'showLargeTable' => true,
-            'smallAuthExceeded' => true,
-            'mediumAuthExceeded' => true,
-            'largeAuthExceeded' => true,
-            'availableSmallSpaces' => 9,
-            'availableMediumSpaces' => 8,
-            'availableLargeSpaces' => 7,
-            'small' => [
-                ['type' => 'small']
+            'vehicles' => [
+                ['VEHICLE1'],
+                ['VEHICLE2']
             ],
-            'medium' => [
-                ['type' => 'medium']
-            ],
-            'large' => [
-                ['type' => 'large']
-            ],
-            'total' => 3
+            'availableSpaces' => 1,
+            'total' => 2
         ];
 
         $this->assertEquals($expected, $return);
     }
 
-    public function testHandleQueryWithoutLargeVehicles()
+    public function testGetCommonQueryFlagsApplication()
     {
         $query = Qry::create(
             [
@@ -163,86 +99,38 @@ class PsvVehiclesQueryHelperTest extends MockeryTestCase
             ]
         );
 
-        /** @var Entity\Licence\Licence|m\MockInterface $licence */
-        $licence = m::mock(Entity\Licence\Licence::class)->makePartial();
-        $licence->setId(111);
-        $licence->shouldReceive('canHaveLargeVehicles')->andReturn(false);
-        $licence->shouldReceive('shouldShowSmallTable')
-            ->with(1)
-            ->andReturn(true)
-            ->shouldReceive('shouldShowMediumTable')
-            ->with(1)
-            ->andReturn(true)
-            ->shouldReceive('shouldShowLargeTable')
-            ->with(0)
-            ->andReturn(true)
-            ->shouldReceive('isSmallAuthExceeded')
-            ->with(1)
-            ->andReturn(true)
-            ->shouldReceive('isMediumAuthExceeded')
-            ->with(1)
-            ->andReturn(true)
-            ->shouldReceive('isLargeAuthExceeded')
-            ->with(0)
-            ->andReturn(true)
-            ->shouldReceive('getAvailableSmallSpaces')
-            ->with(1)
-            ->andReturn(9)
-            ->shouldReceive('getAvailableMediumSpaces')
-            ->with(1)
-            ->andReturn(8)
-            ->shouldReceive('getAvailableLargeSpaces')
-            ->with(0)
-            ->andReturn(7);
+        /* @var $application Entity\Application\Application|m\MockInterface */
+        $application = m::mock(Entity\Application\Application::class)->makePartial();
+        $application->setId(111);
+        $application->setTotAuthVehicles(10);
 
-        $smallVehicle = m::mock(Entity\Licence\LicenceVehicle::class)->makePartial();
-        $smallVehicle->shouldReceive('serialize')
+        $vehicle1 = m::mock(Entity\Licence\LicenceVehicle::class)->makePartial();
+        $vehicle1->shouldReceive('serialize')
             ->with(['vehicle'])
-            ->andReturn(['type' => 'small']);
+            ->andReturn(['VEHICLE1']);
 
-        $mediumVehicle = m::mock(Entity\Licence\LicenceVehicle::class)->makePartial();
-        $mediumVehicle->shouldReceive('serialize')
+        $vehicle2 = m::mock(Entity\Licence\LicenceVehicle::class)->makePartial();
+        $vehicle2->shouldReceive('serialize')
             ->with(['vehicle'])
-            ->andReturn(['type' => 'medium']);
+            ->andReturn(['VEHICLE2']);
 
-        $smallVehicles = new ArrayCollection();
-        $smallVehicles->add($smallVehicle);
+        $vehicles = new ArrayCollection();
+        $vehicles->add($vehicle1);
+        $vehicles->add($vehicle2);
 
-        $mediumVehicles = new ArrayCollection();
-        $mediumVehicles->add($mediumVehicle);
+        $this->licenceVehicleRepo->shouldReceive('getAllPsvVehicles')->with($application)->once()
+            ->andReturn($vehicles)
+            ->shouldReceive('getAllPsvVehicles')->with($application, false)->once()
+            ->andReturn($vehicles);
 
-        $this->licenceVehicleRepo->shouldReceive('getPsvVehiclesByType')
-            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_SMALL)
-            ->andReturn($smallVehicles)
-            ->shouldReceive('getPsvVehiclesByType')
-            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM)
-            ->andReturn($mediumVehicles)
-            ->shouldReceive('getPsvVehiclesByType')
-            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_SMALL, false)
-            ->andReturn($smallVehicles)
-            ->shouldReceive('getPsvVehiclesByType')
-            ->with($licence, Entity\Vehicle\Vehicle::PSV_TYPE_MEDIUM, false)
-            ->andReturn($mediumVehicles);
-
-        $return = $this->sut->getCommonQueryFlags($licence, $query);
+        $return = $this->sut->getCommonQueryFlags($application, $query);
 
         $expected = [
-            'showSmallTable' => true,
-            'showMediumTable' => true,
-            'showLargeTable' => true,
-            'smallAuthExceeded' => true,
-            'mediumAuthExceeded' => true,
-            'largeAuthExceeded' => true,
-            'availableSmallSpaces' => 9,
-            'availableMediumSpaces' => 8,
-            'availableLargeSpaces' => 7,
-            'small' => [
-                ['type' => 'small']
+            'vehicles' => [
+                ['VEHICLE1'],
+                ['VEHICLE2']
             ],
-            'medium' => [
-                ['type' => 'medium']
-            ],
-            'large' => [],
+            'availableSpaces' => 8,
             'total' => 2
         ];
 
