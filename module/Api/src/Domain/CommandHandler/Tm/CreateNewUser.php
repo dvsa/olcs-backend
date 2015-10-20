@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Repository;
 
 /**
  * Create New User
@@ -30,6 +31,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 final class CreateNewUser extends AbstractUserCommandHandler implements TransactionedInterface
 {
     const ERR_EMAIL_REQUIRED = 'ERR_EMAIL_REQUIRED';
+    const ERR_USERNAME_REQUIRED = 'ERR_USERNAME_REQUIRED';
 
     protected $extraRepos = [
         'Application',
@@ -52,8 +54,8 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
         $emailAddress = trim($command->getEmailAddress());
 
         if ($command->getHasEmail() === 'Y') {
+            $this->validateRequired($username, $emailAddress);
             $this->validateUsername($username);
-            $this->validateEmailAddress($emailAddress);
         }
 
         $application = $this->getRepo('Application')->fetchById($command->getApplication());
@@ -199,10 +201,20 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
         return $user;
     }
 
-    protected function validateEmailAddress($emailAddress)
+    protected function validateRequired($username, $emailAddress)
     {
+        $messages = [];
+
+        if (empty($username)) {
+            $messages['username'] = [self::ERR_USERNAME_REQUIRED];
+        }
+
         if (empty($emailAddress)) {
-            throw new ValidationException(['emailAddress' => [self::ERR_EMAIL_REQUIRED]]);
+            $messages['emailAddress'] = [self::ERR_EMAIL_REQUIRED];
+        }
+
+        if (!empty($messages)) {
+            throw new ValidationException($messages);
         }
     }
 }
