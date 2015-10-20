@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\DocumentShare\Service;
 
+use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -41,6 +42,11 @@ class ClientFactory implements FactoryInterface
         }
 
         $client = new Client();
+
+        $wrapper = new ClientAdapterLoggingWrapper();
+        $wrapper->wrapAdapter($httpClient);
+        $wrapper->setShouldLogData(false);
+
         $client->setHttpClient($httpClient);
         $client->setRequestTemplate($request);
 
