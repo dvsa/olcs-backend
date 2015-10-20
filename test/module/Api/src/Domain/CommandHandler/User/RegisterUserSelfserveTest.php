@@ -6,12 +6,16 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\RegisterUserSelfserve as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\User\RegisterUserSelfserve as Cmd;
@@ -135,6 +139,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
     public function testHandleCommandWithLicence()
     {
         $userId = 111;
+        $licId = 222;
 
         $data = [
             'loginId' => 'login_id',
@@ -159,6 +164,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $org = m::mock(OrganisationEntity::class);
 
         $licence = m::mock(LicenceEntity::class);
+        $licence->shouldReceive('getId')->andReturn($licId);
         $licence->shouldReceive('getOrganisation')->andReturn($org);
 
         $this->repoMap['Licence']->shouldReceive('fetchForUserRegistration')
@@ -188,6 +194,18 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
                     $savedUser = $user;
                 }
             );
+
+        $this->expectedSideEffect(
+            GenerateAndStore::class,
+            [],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            EnqueueFileCommand::class,
+            [],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 
