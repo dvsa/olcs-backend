@@ -201,17 +201,6 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
         return $user;
     }
 
-    protected function validateUsername($username)
-    {
-        /** @var Repository\User $repo */
-        $repo = $this->getRepo();
-        $users = $repo->fetchByLoginId($username);
-
-        if (!empty($users)) {
-            throw new ValidationException(['username' => [self::ERR_USERNAME_EXISTS]]);
-        }
-    }
-
     protected function validateRequired($username, $emailAddress)
     {
         $messages = [];
