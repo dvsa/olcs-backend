@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Email\Service;
 
+use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -39,6 +40,10 @@ class ClientFactory implements FactoryInterface
         $httpOptions = $this->getOptions($serviceLocator, 'http');
         $httpClient = new HttpClient();
         $httpClient->setOptions($httpOptions);
+
+        $wrapper = new ClientAdapterLoggingWrapper();
+        $wrapper->wrapAdapter($httpClient);
+
         $client->setHttpClient($httpClient);
 
         $clientOptions = $this->getOptions($serviceLocator, 'client');
