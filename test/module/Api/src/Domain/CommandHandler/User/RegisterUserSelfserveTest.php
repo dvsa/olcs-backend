@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\User\RegisterUserSelfserve as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Register User Selfserve Test
@@ -62,6 +61,12 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
+
+        $this->repoMap['User']
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([]);
 
         /** @var OrganisationEntity $savedOrg */
         $savedOrg = null;
@@ -145,13 +150,18 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $this->repoMap['User']
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([]);
+
         $org = m::mock(OrganisationEntity::class);
-        $org->shouldReceive('getAdminOrganisationUsers')->once()->andReturn(new ArrayCollection([]));
 
         $licence = m::mock(LicenceEntity::class);
         $licence->shouldReceive('getOrganisation')->andReturn($org);
 
-        $this->repoMap['Licence']->shouldReceive('fetchByLicNo')
+        $this->repoMap['Licence']->shouldReceive('fetchForUserRegistration')
             ->once()
             ->with($data['licenceNumber'])
             ->andReturn($licence);
@@ -206,41 +216,6 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
-    public function testHandleCommandThrowsOrgWithAdminException()
-    {
-        $data = [
-            'loginId' => 'login_id',
-            'contactDetails' => [
-                'emailAddress' => 'test1@test.me',
-                'person' => [
-                    'forename' => 'updated forename',
-                    'familyName' => 'updated familyName',
-                ],
-            ],
-            'licenceNumber' => 'licNo',
-        ];
-
-        $command = Cmd::create($data);
-
-        $orgUser = m::mock();
-
-        $org = m::mock(OrganisationEntity::class);
-        $org->shouldReceive('getAdminOrganisationUsers')->once()->andReturn(new ArrayCollection([$orgUser]));
-
-        $licence = m::mock(LicenceEntity::class);
-        $licence->shouldReceive('getOrganisation')->andReturn($org);
-
-        $this->repoMap['Licence']->shouldReceive('fetchByLicNo')
-            ->once()
-            ->with($data['licenceNumber'])
-            ->andReturn($licence);
-
-        $this->sut->handleCommand($command);
-    }
-
-    /**
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testHandleCommandThrowsIncorrectOrgException()
@@ -257,6 +232,32 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
+
+        $this->repoMap['User']
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([]);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandThrowsUsernameExistsException()
+    {
+        $data = [
+            'loginId' => 'login_id',
+        ];
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['User']
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([m::mock(UserEntity::class)]);
 
         $this->sut->handleCommand($command);
     }

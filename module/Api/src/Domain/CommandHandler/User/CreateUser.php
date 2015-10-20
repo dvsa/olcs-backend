@@ -8,7 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
@@ -19,7 +19,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 /**
  * Create User
  */
-final class CreateUser extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class CreateUser extends AbstractUserCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -34,6 +34,9 @@ final class CreateUser extends AbstractCommandHandler implements AuthAwareInterf
         }
 
         $data = $command->getArrayCopy();
+
+        // validate username
+        $this->validateUsername($data['loginId']);
 
         if (($command->getUserType() === User::USER_TYPE_OPERATOR) && (!empty($data['licenceNumber']))) {
             // fetch licence by licence number

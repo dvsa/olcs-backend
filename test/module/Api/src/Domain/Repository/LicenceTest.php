@@ -19,6 +19,10 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Doctrine\DBAL\LockMode;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Licence test
@@ -30,7 +34,7 @@ class LicenceTest extends RepositoryTestCase
 {
     public function setUp()
     {
-        $this->setUpSut(LicenceRepo::class);
+        $this->setUpSut(LicenceRepo::class, true);
     }
 
     public function testFetchSafetyDetailsUsingId()
@@ -174,6 +178,105 @@ class LicenceTest extends RepositoryTestCase
         $this->setExpectedException(NotFoundException::class);
 
         $this->sut->fetchByLicNo('LIC0001');
+    }
+
+    public function testFetchForUserRegistration()
+    {
+        $licNo = 'LIC0001';
+
+        $address = m::mock(AddressEntity::class)->makePartial();
+        $address->setAddressLine1('a1');
+
+        $cd = m::mock(ContactDetailsEntity::class)->makePartial();
+        $cd->setAddress($address);
+
+        $org = m::mock(OrganisationEntity::class)->makePartial();
+        $org->setOrganisationUsers(new ArrayCollection([]));
+
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setCorrespondenceCd($cd);
+        $licence->setOrganisation($org);
+
+        $this->sut->shouldReceive('fetchByLicNo')->with($licNo)->once()->andReturn($licence);
+
+        $this->assertSame($licence, $this->sut->fetchForUserRegistration($licNo));
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testFetchForUserRegistrationThrowsIncorrectAddressException()
+    {
+        $licNo = 'LIC0001';
+
+        $address = m::mock(AddressEntity::class)->makePartial();
+
+        $cd = m::mock(ContactDetailsEntity::class)->makePartial();
+        $cd->setAddress($address);
+
+        $org = m::mock(OrganisationEntity::class)->makePartial();
+        $org->setOrganisationUsers(new ArrayCollection([]));
+
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setCorrespondenceCd($cd);
+        $licence->setOrganisation($org);
+
+        $this->sut->shouldReceive('fetchByLicNo')->with($licNo)->once()->andReturn($licence);
+
+        $this->sut->fetchForUserRegistration($licNo);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testFetchForUserRegistrationThrowsUnlicencedException()
+    {
+        $licNo = 'LIC0001';
+
+        $address = m::mock(AddressEntity::class)->makePartial();
+        $address->setAddressLine1('a1');
+
+        $cd = m::mock(ContactDetailsEntity::class)->makePartial();
+        $cd->setAddress($address);
+
+        $org = m::mock(OrganisationEntity::class)->makePartial();
+        $org->setOrganisationUsers(new ArrayCollection([]));
+        $org->setIsUnlicensed(true);
+
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setCorrespondenceCd($cd);
+        $licence->setOrganisation($org);
+
+        $this->sut->shouldReceive('fetchByLicNo')->with($licNo)->once()->andReturn($licence);
+
+        $this->sut->fetchForUserRegistration($licNo);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testFetchForUserRegistrationThrowsAdminUsersException()
+    {
+        $licNo = 'LIC0001';
+
+        $address = m::mock(AddressEntity::class)->makePartial();
+        $address->setAddressLine1('a1');
+
+        $cd = m::mock(ContactDetailsEntity::class)->makePartial();
+        $cd->setAddress($address);
+
+        $orgUser = m::mock();
+
+        $org = m::mock(OrganisationEntity::class)->makePartial();
+        $org->shouldReceive('getAdminOrganisationUsers')->once()->andReturn(new ArrayCollection([$orgUser]));
+
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setCorrespondenceCd($cd);
+        $licence->setOrganisation($org);
+
+        $this->sut->shouldReceive('fetchByLicNo')->with($licNo)->once()->andReturn($licence);
+
+        $this->sut->fetchForUserRegistration($licNo);
     }
 
     public function testFetchByVrm()
