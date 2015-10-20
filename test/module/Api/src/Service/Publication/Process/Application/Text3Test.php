@@ -6,13 +6,10 @@ use Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3 as ApplicationTe
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson as OrganisationPersonEntity;
-use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
-use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
 
 /**
@@ -22,103 +19,149 @@ use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
 class Text3Test extends MockeryTestCase
 {
     /**
-     * @dataProvider processTestProvider
-     *
-     * @param string $licenceType
-     * @param string $publicationSection
-     * @param array $licenceCancelled
-     * @param string $calledFunction
-     *
-     * @group publicationFilter
-     *
-     * Test the application bus note filter
+     * @dataProvider dataProviderTestProcessSection
      */
-    public function testProcess($licenceType, $publicationSection, $licenceCancelled, $calledFunction)
+    public function testProcessSection($expectTextSet, $sectionId)
     {
         $sut = new ApplicationText3();
 
-        $busNote = 'bus note';
-        $licenceAddress = 'Licence address';
-        $conditionUndertaking1 = 'condition undertaking 1';
-        $conditionUndertaking2 = 'condition undertaking 2';
-        $conditionUndertaking = [
-            0 => $conditionUndertaking1,
-            1 => $conditionUndertaking2,
-        ];
-        $transportManagers = 'transport managers';
-        $operatingCentre1 = 'operating centre 1';
-        $operatingCentre2 = 'operating centre 2';
-        $operatingCentres = [
-            0 => $operatingCentre1,
-            1 => $operatingCentre2,
-        ];
+        $organisation = new Organisation();
+        $licence = new Licence($organisation, new RefData());
+        $application = new \Dvsa\Olcs\Api\Entity\Application\Application($licence, new RefData(), false);
 
-        $initialData = [
-            'licenceAddress' => $licenceAddress,
-            'publicationSection' => $publicationSection,
-            'busNote' => $busNote,
-            'operatingCentres' => $operatingCentres,
-            'transportManagers' => $transportManagers,
-            'conditionUndertaking' => $conditionUndertaking
+        $publicationSection = new PublicationSection();
+        $publicationSection->setId($sectionId);
+
+        $publicationLink = new PublicationLink();
+        $publicationLink->setApplication($application);
+        $publicationLink->setPublicationSection($publicationSection);
+
+        $input = [
+            'licenceAddress' => 'LICENCE_ADDRESS',
+            'conditionUndertaking' => [],
         ];
 
-        $inputData = array_merge($initialData, $licenceCancelled);
+        $sut->process($publicationLink, new ImmutableArrayObject($input));
 
-        $publicationLink = m::mock(PublicationLink::class)->makePartial();
-        $publicationLink->shouldReceive('getLicence->getLicenceType')->andReturn($licenceType);
-        $publicationLink->shouldReceive('getPublicationSection->getId')->andReturn($publicationSection);
+        if ($expectTextSet) {
+            $this->assertSame('LICENCE_ADDRESS', $publicationLink->getText3());
+        } else {
+            $this->assertNull($publicationLink->getText3());
+        }
+    }
 
-        $context = new ImmutableArrayObject($inputData);
-        $output = $sut->process($publicationLink, $context);
+    public function dataProviderTestProcessSection()
+    {
+        return [
+            [true, PublicationSection::APP_NEW_SECTION],
+            [true, PublicationSection::APP_GRANTED_SECTION],
+            [false, PublicationSection::APP_GRANT_NOT_TAKEN_SECTION],
+            [false, PublicationSection::APP_REFUSED_SECTION],
+            [false, PublicationSection::APP_WITHDRAWN_SECTION],
+        ];
+    }
 
-        $this->assertEquals(
-            implode("\n", $sut->$calledFunction($context, [])),
-            $output->getText3()
+    public function testProcessOc()
+    {
+        $sut = new ApplicationText3();
+
+        $organisation = new Organisation();
+        $licence = new Licence($organisation, new RefData());
+        $application = new \Dvsa\Olcs\Api\Entity\Application\Application($licence, new RefData(), false);
+
+        $address = new \Dvsa\Olcs\Api\Entity\ContactDetails\Address();
+        $address->setAddressLine1('ADDRESS1');
+        $oc = new \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre();
+        $oc->setAddress($address);
+        $aoc = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre($application, $oc);
+        $aoc->setNoOfVehiclesRequired(5);
+        $aoc->setNoOfTrailersRequired(7);
+        $application->addOperatingCentres($aoc);
+
+        $publicationSection = new PublicationSection();
+        $publicationSection->setId(PublicationSection::APP_GRANTED_SECTION);
+
+        $publicationLink = new PublicationLink();
+        $publicationLink->setApplication($application);
+        $publicationLink->setPublicationSection($publicationSection);
+
+        $input = [
+            'licenceAddress' => 'LICENCE_ADDRESS',
+            'conditionUndertaking' => [],
+        ];
+
+        $sut->process($publicationLink, new ImmutableArrayObject($input));
+
+        $this->assertSame(
+            "LICENCE_ADDRESS\nOperating Centre: ADDRESS1\nAuthorisation: 5 vehicle(s), 7 trailer(s)",
+            $publicationLink->getText3()
         );
     }
 
-    /**
-     * @return array
-     */
-    public function processTestProvider()
+    public function testProcessTransportManagers()
     {
-        return [
-            [
-                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
-                PublicationSectionEntity::APP_GRANTED_SECTION,
-                [],
-                'getPartialData'
-            ],
-            [
-                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
-                PublicationSectionEntity::APP_WITHDRAWN_SECTION,
-                [],
-                'getPartialData'
-            ],
-            [
-                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
-                PublicationSectionEntity::APP_REFUSED_SECTION,
-                [],
-                'getPartialData'
-            ],
-            [
-                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
-                'some_section',
-                [],
-                'getAllData'
-            ],
-            [
-                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
-                'some_section',
-                ['licenceCancelled' => ''],
-                'getPartialData'
-            ],
-            [
-                LicenceEntity::LICENCE_CATEGORY_PSV,
-                'some_section',
-                [],
-                'getAllData'
-            ]
+        $sut = new ApplicationText3();
+
+        $organisation = new Organisation();
+        $licence = new Licence($organisation, new RefData());
+        $application = new \Dvsa\Olcs\Api\Entity\Application\Application($licence, new RefData(), false);
+
+        $tm1 = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
+        $tm1->setHomeCd(new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(new RefData()));
+        $tm1->getHomeCd()->setPerson(new \Dvsa\Olcs\Api\Entity\Person\Person());
+        $tm1->getHomeCd()->getPerson()->setForename('Mandy')->setFamilyName('Smith');
+
+        $publicationSection = new PublicationSection();
+        $publicationSection->setId(PublicationSection::APP_GRANTED_SECTION);
+
+        $publicationLink = new PublicationLink();
+        $publicationLink->setApplication($application);
+        $publicationLink->setPublicationSection($publicationSection);
+
+        $input = [
+            'licenceAddress' => 'LICENCE_ADDRESS',
+            'conditionUndertaking' => [],
+            'applicationTransportManagers' => [$tm1],
         ];
+
+        $sut->process($publicationLink, new ImmutableArrayObject($input));
+
+        $this->assertSame(
+            "LICENCE_ADDRESS\nTransport Manager(s): Mandy Smith",
+            $publicationLink->getText3()
+        );
+    }
+
+    public function testProcessConditionsAndUndertakings()
+    {
+        $sut = new ApplicationText3();
+
+        $organisation = new Organisation();
+        $licence = new Licence($organisation, new RefData());
+        $application = new \Dvsa\Olcs\Api\Entity\Application\Application($licence, new RefData(), false);
+
+        $tm1 = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
+        $tm1->setHomeCd(new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(new RefData()));
+        $tm1->getHomeCd()->setPerson(new \Dvsa\Olcs\Api\Entity\Person\Person());
+        $tm1->getHomeCd()->getPerson()->setForename('Mandy')->setFamilyName('Smith');
+
+        $publicationSection = new PublicationSection();
+        $publicationSection->setId(PublicationSection::APP_GRANTED_SECTION);
+
+        $publicationLink = new PublicationLink();
+        $publicationLink->setApplication($application);
+        $publicationLink->setPublicationSection($publicationSection);
+
+        $input = [
+            'licenceAddress' => 'LICENCE_ADDRESS',
+            'conditionUndertaking' => ['CU_LINE1', 'CU_LINE2'],
+        ];
+
+        $sut->process($publicationLink, new ImmutableArrayObject($input));
+
+        $this->assertSame(
+            "LICENCE_ADDRESS\nCU_LINE1\nCU_LINE2",
+            $publicationLink->getText3()
+        );
     }
 }

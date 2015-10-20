@@ -16,21 +16,20 @@ final class Text1 implements ProcessInterface
     protected $previousPublication = '(%s)';
 
     /**
-     * @param PublicationLink $publication
+     * @param PublicationLink $publicationLink
      * @param ImmutableArrayObject $context
-     * @return PublicationLink
      */
-    public function process(PublicationLink $publication, ImmutableArrayObject $context)
+    public function process(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
-        $application = $publication->getApplication();
-        $licence = $publication->getLicence();
-        $text = $licence->getLicNo() .' '. $application->getLicenceTypeShortCode();
+        $text = $publicationLink->getLicence()->getLicNo() .' '.
+            $publicationLink->getApplication()->getLicenceTypeShortCode();
 
-        if ($context->offsetExists('previousPublication')) {
+        if ($publicationLink->getApplication()->isGoods() &&
+            $context->offsetExists('previousPublication')
+        ) {
             $text .= "\n" . sprintf($this->previousPublication, $context->offsetGet('previousPublication'));
         }
 
-        $publication->setText1($text);
-        return $publication;
+        $publicationLink->setText1($text);
     }
 }

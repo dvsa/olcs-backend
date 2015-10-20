@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain;
 
+use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -29,9 +30,23 @@ class CommandHandlerManager extends AbstractPluginManager implements CommandHand
         }
     }
 
-    public function handleCommand(CommandInterface $query)
+    public function handleCommand(CommandInterface $command)
     {
-        return $this->get(get_class($query))->handleCommand($query);
+        $commandHandler = $this->get(get_class($command));
+
+        Logger::debug(
+            'Command Received: ' . get_class($command),
+            ['data' => ['commandData' => $command->getArrayCopy()]]
+        );
+
+        $response = $commandHandler->handleCommand($command);
+
+        Logger::debug(
+            'Command Handler Response: ' . get_class($commandHandler),
+            ['data' => ['response' => (array)$response]]
+        );
+
+        return $response;
     }
 
     public function validatePlugin($plugin)

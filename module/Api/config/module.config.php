@@ -355,26 +355,34 @@ return [
     'publications' => [
         'LicencePublication' => array(
             'context' => [
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\BusNote::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousLicencePublicationNo::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\People::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\TransportManagers::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceCancelled::class,
             ],
             'process' => [
                 Dvsa\Olcs\Api\Service\Publication\Process\Licence\Text1::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Licence\Text2::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Licence\Text3::class,
+                Dvsa\Olcs\Api\Service\Publication\Process\Licence\Police::class,
             ],
         ),
         'ApplicationPublication' => array(
             'context' => [
-                Dvsa\Olcs\Api\Service\Publication\Context\Application\BusNote::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousApplicationPublicationNo::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\ConditionUndertaking::class,
-                Dvsa\Olcs\Api\Service\Publication\Context\Application\LicenceCancelled::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\OperatingCentres::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\People::class,
             ],
             'process' => [
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Text1::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class,
-                Dvsa\Olcs\Api\Service\Publication\Process\Police::class
+                Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class
             ],
         ),
         'VariationPublication' => array(

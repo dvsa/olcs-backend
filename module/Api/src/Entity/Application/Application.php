@@ -738,11 +738,13 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $data = $completion->serialize([]);
         $sections = [];
 
+        $filter = new CamelCaseToUnderscore();
+
         foreach ($data as $key => $value) {
             if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches)
                 && (int)$value === self::VARIATION_STATUS_REQUIRES_ATTENTION
             ) {
-                $sections[] = $matches[1];
+                $sections[] = strtolower($filter->filter($matches[1]));
             }
         }
 

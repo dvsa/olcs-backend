@@ -206,7 +206,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 // We need to call save() on the fee, it won't cascade persist from the transaction
                 $this->getRepo('Fee')->save($fee);
                 $result->merge($this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()])));
-            } else {
+            } elseif ($fee->getLicence()) {
                 // Generate Insufficient Fee Request letter
                 $result->merge($this->generateInsufficientFeeRequestLetter($fee, $allocatedAmount));
             }
