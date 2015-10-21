@@ -8,18 +8,19 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Fee\Fee;
-use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as Cmd;
 
 /**
  * Create Fee
@@ -80,6 +81,11 @@ final class CreateFee extends AbstractCommandHandler
 
         if ($command->getIrfoPsvAuth() !== null) {
             $fee->setIrfoPsvAuth($this->getRepo()->getReference(IrfoPsvAuth::class, $command->getIrfoPsvAuth()));
+        }
+
+        if ($command->getUser() !== null) {
+
+            $fee->setCreatedBy($this->getRepo()->getReference(User::class, $command->getUser()));
         }
 
         $fee->setDescription($command->getDescription());
