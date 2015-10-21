@@ -39,6 +39,7 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler
 
         // Set status to CNS
         $licence->setStatus($this->getRepo()->getRefdataReference(Entity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT));
+        $this->getRepo()->save($licence);
 
         $result->merge(
             $this->handleSideEffects(
@@ -57,7 +58,6 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler
             )
         );
 
-        $this->getRepo()->save($licence);
         $result->addMessage('Licence updated');
 
         return $result;
