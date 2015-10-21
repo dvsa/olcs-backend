@@ -50,7 +50,7 @@ class FeeType extends AbstractFeeType
     public function getCalculatedBundleValues()
     {
         return [
-            'displayValue' => $this->getDisplayValue(),
+            'displayValue' => $this->getAmount(),
         ];
     }
 
@@ -58,7 +58,7 @@ class FeeType extends AbstractFeeType
      * AC from OLCS-10611
      * @return string amount
      */
-    public function getDisplayValue()
+    public function getAmount()
     {
         return $this->getFixedValue() > 0 ? $this->getFixedValue() : $this->getFiveYearValue();
     }
