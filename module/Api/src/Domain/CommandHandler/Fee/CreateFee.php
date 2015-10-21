@@ -59,14 +59,6 @@ final class CreateFee extends AbstractCommandHandler
             $fee->setTask($this->getRepo()->getReference(Task::class, $command->getTask()));
         }
 
-        if ($command->getApplication() !== null) {
-            $fee->setApplication($this->getRepo()->getReference(Application::class, $command->getApplication()));
-        }
-
-        if ($command->getBusReg() !== null) {
-            $fee->setBusReg($this->getRepo()->getReference(BusReg::class, $command->getBusReg()));
-        }
-
         if ($command->getLicence() !== null) {
             $fee->setLicence($this->getRepo()->getReference(Licence::class, $command->getLicence()));
         }
@@ -83,12 +75,39 @@ final class CreateFee extends AbstractCommandHandler
             $fee->setIrfoPsvAuth($this->getRepo()->getReference(IrfoPsvAuth::class, $command->getIrfoPsvAuth()));
         }
 
+        if ($command->getApplication() !== null) {
+            $application = $this->getRepo()->getReference(Application::class, $command->getApplication());
+            $fee->setApplication($application);
+            if (!$fee->getLicence()) {
+                // if licence id wasn't specified, link the application's licence
+                $fee->setLicence($application->getLicence());
+            }
+        }
+
+        if ($command->getBusReg() !== null) {
+            $busReg = $this->getRepo()->getReference(BusReg::class, $command->getBusReg());
+            $fee->setBusReg($busReg);
+            if (!$fee->getLicence()) {
+                // if licence id wasn't specified, link the bus reg's licence
+                $fee->setLicence($busReg->getLicence());
+            }
+        }
+
         if ($command->getUser() !== null) {
 
             $fee->setCreatedBy($this->getRepo()->getReference(User::class, $command->getUser()));
         }
 
-        $fee->setDescription($command->getDescription());
+        if ($command->getDescription() !== null) {
+            $fee->setDescription($command->getDescription());
+        } else {
+            $fee->setDescription($feeType->getDescription());
+        }
+
+        // if amount is null, we should use the amount from the feeType
+        if (is_null($fee->getAmount())) {
+            $fee->setAmount($feeType->getAmount());
+        }
 
         return $fee;
     }
