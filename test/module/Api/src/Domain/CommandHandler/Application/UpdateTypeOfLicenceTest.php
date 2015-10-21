@@ -170,12 +170,15 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
     public function testHandleCommandWithAllowedUpdate()
     {
         // Params
-        $command = $this->getCommand('Y', Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL, Licence::LICENCE_CATEGORY_PSV);
+        $command = $this->getCommand(
+            'Y',
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+        );
 
         $application = $this->getApplication(
             'Y',
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_CATEGORY_PSV
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE
         );
 
         // Expectations
@@ -183,7 +186,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             ->once()
             ->with(
                 'Y',
-                $this->mapRefData(Licence::LICENCE_CATEGORY_PSV),
+                $this->mapRefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE),
                 $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL)
             )
             ->shouldReceive('getLicence')
@@ -297,7 +300,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         ];
     }
 
-    protected function getCommand($niFlag, $licenceType, $operatorType, $confirm = false)
+    protected function getCommand($niFlag, $licenceType, $operatorType = null, $confirm = false)
     {
         $data = [
             'id' => 111,
