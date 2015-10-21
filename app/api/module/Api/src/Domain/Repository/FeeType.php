@@ -154,11 +154,12 @@ class FeeType extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        if ($query->getEffectiveFrom()) {
-            $date = new DateTime($query->getEffectiveDate);
+        if ($query->getEffectiveDate()) {
+            $date = new DateTime($query->getEffectiveDate());
         } else {
             $date = new DateTime('now');
         }
+
         $qb->andWhere(
             $qb->expr()->lte($this->alias.'.effectiveFrom', ':effectiveFrom')
         );
