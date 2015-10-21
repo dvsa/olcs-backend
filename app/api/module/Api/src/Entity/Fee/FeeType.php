@@ -46,4 +46,20 @@ class FeeType extends AbstractFeeType
 
     const COST_CENTRE_REF_TYPE_LICENSING = 'TA';
     const COST_CENTRE_REF_TYPE_IRFO = 'IR';
+
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'displayValue' => $this->getDisplayValue(),
+        ];
+    }
+
+    /**
+     * AC from OLCS-10611
+     * @return string amount
+     */
+    public function getDisplayValue()
+    {
+        return $this->getFixedValue() > 0 ? $this->getFixedValue() : $this->getFiveYearValue();
+    }
 }
