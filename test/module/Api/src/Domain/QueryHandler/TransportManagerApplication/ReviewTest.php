@@ -28,6 +28,8 @@ class ReviewTest extends QueryHandlerTestCase
         $this->mockRepo('TransportManagerApplication', Repo::class);
 
         $this->mockedSmServices['TmReviewSnapshot'] = m::mock(Generator::class);
+        $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class] =
+            m::mock(\ZfcRbac\Service\AuthorizationService::class);
 
         parent::setUp();
     }
@@ -44,8 +46,11 @@ class ReviewTest extends QueryHandlerTestCase
 
         $this->mockedSmServices['TmReviewSnapshot']->shouldReceive('generate')
             ->once()
-            ->with($tma)
+            ->with($tma, true)
             ->andReturn('<markup>');
+
+        $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class]->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()->andReturn(true);
 
         $this->assertEquals(['markup' => '<markup>'], $this->sut->handleQuery($query));
     }
