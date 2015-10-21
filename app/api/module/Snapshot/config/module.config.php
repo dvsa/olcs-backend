@@ -65,6 +65,8 @@ return [
             'Review\TransportManagerPreviousConviction'
                 => TmReview\TransportManagerPreviousConvictionReviewService::class,
             'Review\TransportManagerPreviousLicence' => TmReview\TransportManagerPreviousLicenceReviewService::class,
+            'Review\TransportManagerDeclaration' => TmReview\TransportManagerDeclarationReviewService::class,
+            'Review\TransportManagerSignature' => TmReview\TransportManagerSignatureReviewService::class,
         ],
     ],
     'view_manager' => [

@@ -302,4 +302,7 @@ return [
     'tm-review-responsibility-tue' => 'Tuesday',
     'tm-review-responsibility-wed' => 'Wednesday',
     'tm-review-title' => 'Transport manager form',
+    'tm-review-return-address' => 'Office of the Traffic Commissioner, The Central Licensing Office, Hillcrest House '.
+        '386 Harehills Lane, Leeds, LS9 6NF',
+    'tm-review-declaration' => 'Declaration',
 ];
