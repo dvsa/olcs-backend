@@ -9,6 +9,14 @@ use Dvsa\Olcs\Api\Domain\Command\Queue as QueueCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Queue as QueueCommandHandler;
 
 return [
+    // Transfer - Audit
+    TransferCommand\Audit\ReadApplication::class => CommandHandler\Audit\ReadApplication::class,
+    TransferCommand\Audit\ReadLicence::class => CommandHandler\Audit\ReadLicence::class,
+    TransferCommand\Audit\ReadOrganisation::class => CommandHandler\Audit\ReadOrganisation::class,
+    TransferCommand\Audit\ReadTransportManager::class => CommandHandler\Audit\ReadTransportManager::class,
+    TransferCommand\Audit\ReadBusReg::class => CommandHandler\Audit\ReadBusReg::class,
+    TransferCommand\Audit\ReadCase::class => CommandHandler\Audit\ReadCase::class,
+
     // Transfer - Application
     TransferCommand\Application\UpdateTypeOfLicence::class => CommandHandler\Application\UpdateTypeOfLicence::class,
     TransferCommand\Application\CreateApplication::class => CommandHandler\Application\CreateApplication::class,

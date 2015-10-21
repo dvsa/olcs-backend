@@ -16,7 +16,7 @@ class ResultList extends Result
      */
     private $objects;
 
-    public function __construct($objects, array $bundle = [])
+    public function __construct($objects, array $bundle = [], array $values = [])
     {
         if ($objects instanceof Collection) {
             $objects = $objects->toArray();
@@ -24,6 +24,7 @@ class ResultList extends Result
 
         $this->objects = $objects;
         $this->bundle = $bundle;
+        $this->values = $values;
     }
 
     /**
@@ -34,7 +35,9 @@ class ResultList extends Result
         $list = [];
 
         foreach ($this->objects as $object) {
-            $list[] = $object->serialize($this->bundle);
+            $data = $object->serialize($this->bundle);
+            $data = array_merge($data, $this->values);
+            $list[] = $data;
         }
 
         return $list;

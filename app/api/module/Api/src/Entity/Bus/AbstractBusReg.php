@@ -700,6 +700,15 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     protected $otherServices;
 
     /**
+     * Read audit
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusRegReadAudit", mappedBy="busReg")
+     */
+    protected $readAudits;
+
+    /**
      * Short notice
      *
      * @var \Dvsa\Olcs\Api\Entity\Bus\BusShortNotice
@@ -754,6 +763,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
         $this->localAuthoritys = new ArrayCollection();
         $this->busServiceTypes = new ArrayCollection();
         $this->otherServices = new ArrayCollection();
+        $this->readAudits = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->ebsrSubmissions = new ArrayCollection();
         $this->txcDocuments = new ArrayCollection();
@@ -2411,6 +2421,66 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     {
         if ($this->otherServices->contains($otherServices)) {
             $this->otherServices->removeElement($otherServices);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the read audit
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return BusReg
+     */
+    public function setReadAudits($readAudits)
+    {
+        $this->readAudits = $readAudits;
+
+        return $this;
+    }
+
+    /**
+     * Get the read audits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getReadAudits()
+    {
+        return $this->readAudits;
+    }
+
+    /**
+     * Add a read audits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return BusReg
+     */
+    public function addReadAudits($readAudits)
+    {
+        if ($readAudits instanceof ArrayCollection) {
+            $this->readAudits = new ArrayCollection(
+                array_merge(
+                    $this->readAudits->toArray(),
+                    $readAudits->toArray()
+                )
+            );
+        } elseif (!$this->readAudits->contains($readAudits)) {
+            $this->readAudits->add($readAudits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a read audits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return BusReg
+     */
+    public function removeReadAudits($readAudits)
+    {
+        if ($this->readAudits->contains($readAudits)) {
+            $this->readAudits->removeElement($readAudits);
         }
 
         return $this;
