@@ -47,6 +47,15 @@ class FeeType extends AbstractFeeType
     const COST_CENTRE_REF_TYPE_LICENSING = 'TA';
     const COST_CENTRE_REF_TYPE_IRFO = 'IR';
 
+    /**
+     * Alias of getIsMiscellaneous
+     * @return bool
+     */
+    public function isMiscellaneous()
+    {
+        return $this->getIsMiscellaneous();
+    }
+
     public function getCalculatedBundleValues()
     {
         return [
