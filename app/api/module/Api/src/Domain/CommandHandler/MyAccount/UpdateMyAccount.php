@@ -8,7 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\MyAccount;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -17,7 +17,7 @@ use Doctrine\ORM\Query;
 /**
  * Update MyAccount
  */
-final class UpdateMyAccount extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class UpdateMyAccount extends AbstractUserCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
     use AuthAwareTrait;
 
@@ -27,16 +27,19 @@ final class UpdateMyAccount extends AbstractCommandHandler implements AuthAwareI
 
     public function handleCommand(CommandInterface $command)
     {
+        $data = $command->getArrayCopy();
+
         $user = $this->getRepo()->fetchById(
             $this->getCurrentUser()->getId(),
             Query::HYDRATE_OBJECT,
             $command->getVersion()
         );
 
+        // validate username
+        $this->validateUsername($data['loginId'], $user->getLoginId());
+
         $user->update(
-            $this->getRepo()->populateRefDataReference(
-                $command->getArrayCopy()
-            )
+            $this->getRepo()->populateRefDataReference($data)
         );
 
         if ($user->getContactDetails() instanceof ContactDetails) {
