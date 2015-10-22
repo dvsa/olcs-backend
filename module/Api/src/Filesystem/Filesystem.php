@@ -29,11 +29,7 @@ class Filesystem extends BaseFileSystem
 
         $lock->release();
 
-        register_shutdown_function(
-            function () use ($dirname, $this) {
-                $this->remove($dirname);
-            }
-        );
+        $this->cleanupTmp($dirname);
 
         return $dirname;
     }
@@ -56,6 +52,20 @@ class Filesystem extends BaseFileSystem
 
         $lock->release();
 
+        $this->cleanupTmp($filename);
+
         return $filename;
+    }
+
+    /**
+     * @param $name
+     */
+    private function cleanupTmp($name)
+    {
+        register_shutdown_function(
+            function () use ($name) {
+                $this->remove($name);
+            }
+        );
     }
 }
