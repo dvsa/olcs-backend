@@ -28,53 +28,6 @@ class OrganisationEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
-    public function testJsonSerialize()
-    {
-        /** @var Entity $organisation */
-        $organisation = $this->instantiate($this->entityClass);
-
-        $organisation->setId(111);
-
-        $values = $organisation->jsonSerialize();
-
-        $expectedKeys = [
-            'hasInforceLicences',
-            'allowEmail',
-            'companyCertSeen',
-            'companyOrLlpNo',
-            'confirmShareTrailerInfo',
-            'confirmShareVehicleInfo',
-            'contactDetails',
-            'cpid',
-            'createdBy',
-            'createdOn',
-            'deletedDate',
-            'id',
-            'irfoContactDetails',
-            'irfoName',
-            'irfoNationality',
-            'isIrfo',
-            'isUnlicensed',
-            'lastModifiedBy',
-            'lastModifiedOn',
-            'leadTcArea',
-            'name',
-            'natureOfBusiness',
-            'type',
-            'version',
-            'viAction',
-            'disqualifications',
-            'irfoPartners',
-            'licences',
-            'organisationPersons',
-            'organisationUsers',
-            'tradingNames',
-        ];
-
-        $this->assertEquals($expectedKeys, array_keys($values));
-        $this->assertFalse($values['hasInforceLicences']);
-    }
-
     public function testHasInforceLicences()
     {
         /** @var Entity $organisation */
