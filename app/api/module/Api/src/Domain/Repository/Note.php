@@ -11,7 +11,6 @@ use Dvsa\Olcs\Transfer\Query\Processing\NoteList as NoteDTO;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CaseRepository;
 use Doctrine\ORM\Query;
-use Doctrine\Common\Collections\Criteria;
 
 /**
  * Note
