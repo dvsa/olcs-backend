@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as Cmd;
+use Dvsa\Olcs\Transfer\Command\Fee\CreateFee as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -34,7 +34,9 @@ final class CreateFee extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
-        $this->validate($command);
+        $feeType = $this->getRepo()->getReference(FeeType::class, $command->getFeeType());
+
+        $this->validate($command, $feeType);
 
         $fee = $this->createFeeObject($command);
 
@@ -115,27 +117,29 @@ final class CreateFee extends AbstractCommandHandler
         return $fee;
     }
 
-    private function validate(Cmd $command)
+    private function validate(Cmd $command, $feeType)
     {
-        if (is_null($command->getLicence())
-            && is_null($command->getApplication())
-            && is_null($command->getBusReg())
-            && is_null($command->getTask())
-            && is_null($command->getIrfoGvPermit())
-            && is_null($command->getIrfoPsvAuth())
+        if ($feeType->isMiscellaneous()) {
+            // misc fees don't need linked entities
+            return true;
+        }
+
+        if (empty($command->getLicence())
+            && empty($command->getApplication())
+            && empty($command->getBusReg())
+            && empty($command->getTask())
+            && empty($command->getIrfoGvPermit())
+            && empty($command->getIrfoPsvAuth())
         ) {
-            throw new ValidationException(
-                [
-                    'Fee must be linked to an entity',
-                ]
-            );
+            throw new ValidationException(['Fee must be linked to an entity']);
         }
 
         if ($command->getIrfoGvPermit() && $command->getIrfoPsvAuth()) {
+            $msg = 'Fee must be linked to a either GV Permit or PSV Authorisation but not both';
             throw new ValidationException(
                 [
-                    'irfoGvPermit' => 'Fee must be linked to a GV Permit or PSV Auth but not both',
-                    'irfoPsvAuth' => 'Fee must be linked to a GV Permit or PSV Auth but not both',
+                    'irfoGvPermit' => [$msg],
+                    'irfoPsvAuth' => [$msg],
                 ]
             );
         }
