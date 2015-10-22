@@ -11,6 +11,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
@@ -33,6 +34,8 @@ final class CreateFee extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
+        $this->validate($command);
+
         $fee = $this->createFeeObject($command);
 
         $this->getRepo()->save($fee);
@@ -110,5 +113,33 @@ final class CreateFee extends AbstractCommandHandler
         }
 
         return $fee;
+    }
+
+    private function validate(Cmd $command)
+    {
+        if (is_null($command->getLicence())
+            && is_null($command->getApplication())
+            && is_null($command->getBusReg())
+            && is_null($command->getTask())
+            && is_null($command->getIrfoGvPermit())
+            && is_null($command->getIrfoPsvAuth())
+        ) {
+            throw new ValidationException(
+                [
+                    'Fee must be linked to an entity',
+                ]
+            );
+        }
+
+        if ($command->getIrfoGvPermit() && $command->getIrfoPsvAuth()) {
+            throw new ValidationException(
+                [
+                    'irfoGvPermit' => 'Fee must be linked to a GV Permit or PSV Auth but not both',
+                    'irfoPsvAuth' => 'Fee must be linked to a GV Permit or PSV Auth but not both',
+                ]
+            );
+        }
+
+        return true;
     }
 }
