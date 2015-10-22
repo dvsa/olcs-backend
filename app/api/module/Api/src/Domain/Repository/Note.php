@@ -6,10 +6,12 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteHistoryEntity;
+use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 use Dvsa\Olcs\Transfer\Query\Processing\NoteList as NoteDTO;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CaseRepository;
 use Doctrine\ORM\Query;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Note
@@ -103,5 +105,39 @@ class Note extends AbstractRepository
             ->setParameter('transportManager', $transportManager);
 
         return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch the latest note for application / licence with given not type
+     *
+     * @param int $licence
+     * @param int $application
+     * @param string $noteType
+     *
+     * @return array
+     */
+    public function fetchForOverview($licence = null, $application = null, $noteType = NoteEntity::NOTE_TYPE_CASE)
+    {
+        $qb = $this->createQueryBuilder();
+
+        if ($application !== null) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.application', ':applicationId'));
+            $qb->setParameter('applicationId', $application);
+        }
+
+        if ($licence !== null) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licenceId'));
+            $qb->setParameter('licenceId', $licence);
+        }
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.noteType', ':noteTypeId'));
+        $qb->setParameter('noteTypeId', $noteType);
+
+        $qb->orderBy($this->alias . '.priority', 'DESC');
+        $qb->addOrderBy($this->alias . '.createdOn', 'DESC');
+        $qb->setMaxResults(1);
+
+        $res = $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        return count($res) ? $res[0] : [];
     }
 }
