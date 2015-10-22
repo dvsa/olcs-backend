@@ -26,19 +26,6 @@ abstract class AbstractReadAudit extends AbstractCommandHandler implements Trans
 
     protected $entityRepo = null;
 
-    /**
-     * Grab an entity by id
-     *
-     * @param $id
-     * @return mixed
-     */
-    protected function getEntity($id)
-    {
-        $this->extraRepos[] = $this->entityRepo;
-
-        return $this->getRepo($this->entityRepo)->fetchById($id);
-    }
-
     public function handleCommand(CommandInterface $command)
     {
         if ($this->doesRecordExist($command)) {
@@ -50,6 +37,19 @@ abstract class AbstractReadAudit extends AbstractCommandHandler implements Trans
 
         $this->result->addMessage('Audit record created');
         return $this->result;
+    }
+
+    /**
+     * Grab an entity by id
+     *
+     * @param $id
+     * @return mixed
+     */
+    protected function getEntity($id)
+    {
+        $this->extraRepos[] = $this->entityRepo;
+
+        return $this->getRepo($this->entityRepo)->fetchById($id);
     }
 
     protected function doesRecordExist($command)
