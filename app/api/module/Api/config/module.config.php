@@ -532,17 +532,28 @@ return [
             'uri' => 'http://localhost:8080/txc/publisherService',
             'options' => ['timeout' => 30],
             'templates' => [
+<<<<<<< HEAD
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::GENERATE_DOCS_TEMPLATE =>
                     '../data/ebsr/txc_template.xml',
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::REQUEST_MAP_TEMPLATE =>
                     '../data/ebsr/requestmap_template.xml'
+=======
+                'Standard' => '../data/ebsr/txc_template.xml',
+                'RequestMap' => '../data/ebsr/requestmap_template.xml'
+>>>>>>> Squashed commit of the following:
             ]
         ],
     ],
     'xsd_mappings' =>[
+<<<<<<< HEAD
         'http://www.w3.org/2001/xml.xsd' => __DIR__ . '/../data/ebsr/xsd/xml.xsd',
         'http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd' =>
             __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.1/TransXChange_registration.xsd'
+=======
+        'http://www.w3.org/2001/xml.xsd' => __DIR__ . '/../../../data/ebsr/xsd/xml.xsd',
+        'http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd' =>
+            __DIR__ . '/../../../data/ebsr/xsd/TransXChange_schema_2.1/TransXChange_registration.xsd'
+>>>>>>> Squashed commit of the following:
     ],
     'validators' => [
         'invokables' => [
@@ -555,10 +566,15 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class
         ],
+<<<<<<< HEAD
         'factories' => [
             \Olcs\XmlTools\Validator\Xsd::class => \Olcs\XmlTools\Validator\XsdFactory::class,
         ],
         'aliases' => [
+=======
+        'aliases' => [
+            'Xsd' => 'Olcs\XmlTools\Validator\Xsd',
+>>>>>>> Squashed commit of the following:
             'Structure\Operator' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
             'Structure\Registration' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration::class,
             'Structure\ServiceClassification' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification::class,
@@ -569,19 +585,35 @@ return [
         'invokables' => [
             \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class =>
                 \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class,
+<<<<<<< HEAD
             \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class =>
                 \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class,
             Olcs\XmlTools\Filter\ParseXml::class => Olcs\XmlTools\Filter\ParseXml::class,
             Olcs\XmlTools\Filter\MapXmlFile::class => Olcs\XmlTools\Filter\MapXmlFile::class,
         ],
         'delegators' => [
+=======
+            \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class =>
+                \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class,
+            \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class =>
+                \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class
+        ],
+        'delegators' => [
+            \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class =>
+                [Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmpDelegatorFactory::class],
+>>>>>>> Squashed commit of the following:
             \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class =>
                 [Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmpDelegatorFactory::class]
         ],
         'aliases' => [
             'DecompressUploadToTmp' => \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class,
             'DecompressToTmp' => \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class,
+<<<<<<< HEAD
             'XmlFromDir' => \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class
+=======
+            'XmlFromDir' => \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class,
+            'MapXmlFile' => Olcs\XmlTools\Filter\MapXmlFile::class,
+>>>>>>> Squashed commit of the following:
         ]
     ],
 ];
