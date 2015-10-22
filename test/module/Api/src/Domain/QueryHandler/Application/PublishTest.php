@@ -36,6 +36,8 @@ class PublishTest extends QueryHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setIsVariation(false);
 
+        $application->shouldReceive('hasActiveS4')->with()->once()->andReturn(true);
+
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($query)->andReturn($application);
 
         $this->mockedSmServices['ApplicationPublishValidationService']->shouldReceive('validate')->with($application)
@@ -51,6 +53,7 @@ class PublishTest extends QueryHandlerTestCase
             'SERIALIZED',
             'errors' => ['ERROR'],
             'existingPublication' => false,
+            'hasActiveS4' => true,
         ];
 
         $this->assertEquals($expected, $result->serialize());

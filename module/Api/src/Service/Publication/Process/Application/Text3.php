@@ -39,6 +39,12 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
     {
         foreach ($publicationLink->getApplication()->getOperatingCentres() as $aoc) {
             /* @var $aoc \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre */
+
+            // don't include OC's that are part of an S4
+            if (!empty($aoc->getS4())) {
+                continue;
+            }
+
             $this->addTextLine(
                 'Operating Centre: '. Formatter\Address::format($aoc->getOperatingCentre()->getAddress())
             );
