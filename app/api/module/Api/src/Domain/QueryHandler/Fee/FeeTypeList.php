@@ -5,10 +5,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Fee;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepo;
 use Doctrine\ORM\Query as DoctrineQuery;
+use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepo;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -23,6 +24,8 @@ class FeeTypeList extends AbstractQueryHandler
 
     protected $repoServiceName = 'FeeType';
 
+    protected $extraRepos = ['IrfoGvPermit', 'IrfoPsvAuth'];
+
     public function handleQuery(QueryInterface $query)
     {
         /** @var FeeTypeRepo $repo */
@@ -30,11 +33,20 @@ class FeeTypeList extends AbstractQueryHandler
 
         $feeTypes = $repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT);
 
-        $feeTypes =$this->filterDuplicates($feeTypes);
+        $feeTypes = $this->filterDuplicates($feeTypes);
+
+        $valueOptions = [];
+        foreach ($feeTypes as $ft) {
+            $valueOptions['feeType'][$ft->getId()] = $ft->getDescription();
+        }
+
+        $valueOptions['irfoGvPermit'] = $this->getIrfoGvPermitValueOptions($query);
+        $valueOptions['irfoPsvAuth'] = $this->getIrfoPsvAuthValueOptions($query);
 
         return [
             'result' => $this->resultList($feeTypes),
             'count' => count($feeTypes),
+            'valueOptions' => $valueOptions,
         ];
     }
 
@@ -58,5 +70,43 @@ class FeeTypeList extends AbstractQueryHandler
         }
 
         return $filtered;
+    }
+
+    private function getIrfoGvPermitValueOptions($query)
+    {
+        $valueOptions = [];
+        if ($query->getOrganisation() !== null) {
+            $organisation = $this->getRepo()->getReference(OrganisationEntity::class, $query->getOrganisation());
+
+            $irfoGvPermits = $this->getRepo('IrfoGvPermit')->fetchByOrganisation($organisation);
+
+            foreach ($irfoGvPermits  as $irfoGvPermit) {
+                $valueOptions[$irfoGvPermit->getId()] = sprintf(
+                    '%d (%s)',
+                    $irfoGvPermit->getId(),
+                    $irfoGvPermit->getIrfoGvPermitType()->getDescription()
+                );
+            }
+        }
+        return $valueOptions;
+    }
+
+    private function getIrfoPsvAuthValueOptions($query)
+    {
+        $valueOptions = [];
+        if ($query->getOrganisation() !== null) {
+            $organisation = $this->getRepo()->getReference(OrganisationEntity::class, $query->getOrganisation());
+
+            $irfoPsvAuths = $this->getRepo('IrfoPsvAuth')->fetchByOrganisation($organisation);
+
+            foreach ($irfoPsvAuths  as $irfoPsvAuth) {
+                $valueOptions[$irfoPsvAuth->getId()] = sprintf(
+                    '%d (%s)',
+                    $irfoPsvAuth->getId(),
+                    $irfoPsvAuth->getIrfoPsvAuthType()->getDescription()
+                );
+            }
+        }
+        return $valueOptions;
     }
 }
