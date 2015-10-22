@@ -50,7 +50,8 @@ class FeeTypeList extends AbstractQueryHandler
         $filtered = [];
         foreach ($feeTypes as $ft)
         {
-            $feeTypeId = $ft->getFeeType()->getId();
+            // if IRFO, we group by irfoFeeType id rather than feeType id
+            $feeTypeId = $ft->getIrfoFeeType() ? $ft->getIrfoFeeType()->getId() : $ft->getFeeType()->getId();
             if (!isset($filtered[$feeTypeId]) || $ft->getEffectiveFrom() > $filtered[$feeTypeId]->getEffectiveFrom()) {
                 $filtered[$feeTypeId] = $ft;
             }
