@@ -102,6 +102,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      * @param RefData $status
      * @param RefData $revertStatus
      * @param RefData $subsidised
+     * @param BusNoticePeriodEntity $busNoticePeriod
+     * @param string $isTxcApp
+     *
      * @return BusReg
      */
     public static function createNew(
@@ -109,7 +112,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
         RefData $status,
         RefData $revertStatus,
         RefData $subsidised,
-        BusNoticePeriodEntity $busNoticePeriod
+        BusNoticePeriodEntity $busNoticePeriod,
+        $isTxcApp = 'N'
     ) {
         // get default data
         $data = array_merge(
@@ -141,6 +145,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
         $busReg->setRevertStatus($revertStatus);
         $busReg->setSubsidised($subsidised);
         $busReg->setBusNoticePeriod($busNoticePeriod);
+        $busReg->setIsTxcApp($isTxcApp);
 
         // set default short notice
         $busShortNotice = new BusShortNoticeEntity();
@@ -610,7 +615,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      */
     private function isGrantableBasedOnRequiredFields()
     {
-        // mendatory fields which needs to be marked as Yes
+        // mandatory fields which needs to be marked as Yes
         $yesFields = [
             'timetableAcceptable',
             'mapSupplied',
@@ -633,7 +638,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
             }
         }
 
-        // mendatory fields which can't be empty
+        // mandatory fields which can't be empty
         $nonEmptyFields = [
             'effectiveDate',
             'receivedDate',
@@ -648,7 +653,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
             }
         }
 
-        // mendatory collections which can't be empty
+        // mandatory collections which can't be empty
         $nonEmptyCollections = [
             'busServiceTypes',
             'trafficAreas',
@@ -740,6 +745,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      *
      * @param RefData $status
      * @param string $reason
+     * @throws BadRequestException
      * @return BusReg
      */
     public function cancelByAdmin(RefData $status, $reason)
@@ -761,6 +767,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      *
      * @param RefData $status
      * @param RefData $reason
+     * @throws BadRequestException
      * @return BusReg
      */
     public function withdraw(RefData $status, RefData $reason)
@@ -782,6 +789,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      *
      * @param RefData $status
      * @param string $reason
+     * @throws BadRequestException
      * @return BusReg
      */
     public function refuse(RefData $status, $reason)
@@ -865,6 +873,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      *
      * @param RefData $status
      * @param array $variationReasons
+     * @throws BadRequestException
      * @return BusReg
      */
     public function grant(RefData $status, $variationReasons = null)

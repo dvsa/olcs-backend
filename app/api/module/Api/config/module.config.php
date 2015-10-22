@@ -65,7 +65,26 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\SubmissionGeneratorFactory::class,
 
             \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager::class =>
-                \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManagerFactory::class
+                \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManagerFactory::class,
+
+            \Dvsa\Olcs\Api\Service\Ebsr\TransExchange\Client::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\TransExchange\Client::class,
+
+            'TransExchangeXml' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangeXmlFactory::class,
+            'TransExchangePublisherXml' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangePublisherXmlFactory::class,
+
+            'EbsrStandardRequestTemplate' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\TransExchange\TemplateFactory::class,
+
+            'EbsrRequestMapTemplate' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\TransExchange\TemplateFactory::class,
+
+            Olcs\XmlTools\Validator\Xsd::class =>
+                Olcs\XmlTools\Validator\XsdFactory::class,
+            'EbsrFileStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\FileStructureInputFactory::class,
+            'EbsrXmlStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class
         ],
     ],
     'file_uploader' => [
@@ -511,5 +530,61 @@ return [
             ],
         ),
     ],
-    'submissions' => require(__DIR__ . '/submissions.config.php')
+    'submissions' => require(__DIR__ . '/submissions.config.php'),
+    'ebsr' => [
+        'transexchange_publisher' => [
+            'uri' => 'http://localhost:8080/txc/publisherService',
+            'options' => ['timeout' => 30],
+            'templates' => [
+                'Standard' => '../data/ebsr/txc_template.xml',
+                'RequestMap' => '../data/ebsr/requestmap_template.xml'
+            ]
+        ],
+    ],
+    'xsd_mappings' =>[
+        'http://www.w3.org/2001/xml.xsd' => __DIR__ . '/../../../data/ebsr/xsd/xml.xsd',
+        'http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd' =>
+            __DIR__ . '/../../../data/ebsr/xsd/TransXChange_schema_2.1/TransXChange_registration.xsd'
+    ],
+    'validators' => [
+        'invokables' => [
+            \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class
+        ],
+        'aliases' => [
+            'Xsd' => 'Olcs\XmlTools\Validator\Xsd',
+            'Structure\Operator' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
+            'Structure\Registration' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration::class,
+            'Structure\ServiceClassification' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification::class,
+            'Structure\SupportingDocuments' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class
+        ]
+    ],
+    'filters' => [
+        'invokables' => [
+            \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class =>
+                \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class,
+            \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class =>
+                \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class,
+            \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class =>
+                \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class
+        ],
+        'delegators' => [
+            \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class =>
+                [Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmpDelegatorFactory::class],
+            \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class =>
+                [Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmpDelegatorFactory::class]
+        ],
+        'aliases' => [
+            'DecompressUploadToTmp' => \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class,
+            'DecompressToTmp' => \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class,
+            'XmlFromDir' => \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class,
+            'MapXmlFile' => Olcs\XmlTools\Filter\MapXmlFile::class,
+        ]
+    ],
 ];
