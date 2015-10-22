@@ -52,7 +52,7 @@ trait AuthAwareTrait
         $identity = $this->authService->getIdentity();
 
         if ($identity) {
-            return $identity->getUser()->getOrganisationUsers()->current();
+            return $identity->getUser()->getOrganisationUsers()->current()->getOrganisation();
         }
     }
 
