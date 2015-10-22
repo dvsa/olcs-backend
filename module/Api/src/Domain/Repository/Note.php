@@ -29,27 +29,27 @@ class Note extends AbstractRepository
         /** @var \Dvsa\Olcs\Transfer\Query\Processing\NoteList $query */
 
         if ($query->getCase() !== null) {
-            $qb->andWhere($this->alias . '.case = :caseId');
+            $qb->orWhere($this->alias . '.case = :caseId');
             $qb->setParameter('caseId', $query->getCase());
         }
 
         if ($query->getCasesMultiple() !== null && count($query->getCasesMultiple()) > 0) {
-            $qb->andWhere($this->alias . '.case IN (:casesMultiple)');
+            $qb->orWhere($this->alias . '.case IN (:casesMultiple)');
             $qb->setParameter('casesMultiple', $query->getCasesMultiple());
         }
 
         if ($query->getLicence() !== null) {
-            $qb->andWhere($this->alias . '.licence = :licenceId');
+            $qb->orWhere($this->alias . '.licence = :licenceId');
             $qb->setParameter('licenceId', $query->getLicence());
         }
 
         if ($query->getOrganisation() !== null) {
-            $qb->andWhere($this->alias . '.organisation = :organisationId');
+            $qb->orWhere($this->alias . '.organisation = :organisationId');
             $qb->setParameter('organisationId', $query->getOrganisation());
         }
 
         if ($query->getTransportManager() !== null) {
-            $qb->andWhere($this->alias . '.transportManager = :transportManagerId');
+            $qb->orWhere($this->alias . '.transportManager = :transportManagerId');
             $qb->setParameter('transportManagerId', $query->getTransportManager());
         }
 
@@ -59,7 +59,7 @@ class Note extends AbstractRepository
         }
 
         if ($query->getApplication() !== null) {
-            $qb->andWhere($this->alias . '.application = :applicationId');
+            $qb->orWhere($this->alias . '.application = :applicationId');
             $qb->setParameter('applicationId', $query->getApplication());
         }
 
@@ -68,7 +68,7 @@ class Note extends AbstractRepository
             $qb->setParameter('noteTypeId', $query->getNoteType());
         }
 
-        $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy()->withBusReg()->withCase();
+        $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy()->withBusReg()->withCase()->withApplication();
     }
 
     /**
