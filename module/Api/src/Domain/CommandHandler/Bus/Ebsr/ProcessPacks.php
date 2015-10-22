@@ -29,8 +29,6 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
-use Dvsa\Olcs\Api\Domain\TransExchangeAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Doctrine\ORM\Query;
 
@@ -38,11 +36,10 @@ use Doctrine\ORM\Query;
  * Process Ebsr packs
  */
 final class ProcessPacks extends AbstractCommandHandler
-    implements AuthAwareInterface, TransactionedInterface, UploaderAwareInterface, TransExchangeAwareInterface
+    implements AuthAwareInterface, TransactionedInterface, UploaderAwareInterface
 {
     use AuthAwareTrait;
     use UploaderAwareTrait;
-    use TransExchangeAwareTrait;
 
     protected $repoServiceName = 'bus';
 
@@ -52,10 +49,7 @@ final class ProcessPacks extends AbstractCommandHandler
 
     protected $busRegInput;
 
-    /**
-     * @var \Dvsa\Olcs\Api\Filesystem\Filesystem
-     */
-    protected $fileSystem;
+    protected $fileProcessor;
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -63,6 +57,7 @@ final class ProcessPacks extends AbstractCommandHandler
 
         $this->xmlStructure = $mainServiceLocator->get('EbsrXmlStructure');
         $this->busRegInput = $mainServiceLocator->get('EbsrBusRegInput');
+        $this->fileProcessor = new FileProcessor($this->getUploader(), new Filesystem(), new Decompress('zip'), '/tmp');
 
         return parent::createService($serviceLocator);
     }
@@ -88,8 +83,7 @@ final class ProcessPacks extends AbstractCommandHandler
             $result->addId('ebsrSubmission_' . $ebsrSubmission->getId(), $ebsrSubmission->getId());
             $result->addMessage('Ebsr submission added');
 
-            $fileProcessor = new FileProcessor($this->getUploader(), new Filesystem(), new Decompress('zip'), '/tmp');
-            $xmlFilename = $fileProcessor->fetchXmlFileNameFromDocumentStore($document->getIdentifier());
+            $xmlFilename = $this->fileProcessor->fetchXmlFileNameFromDocumentStore($document->getIdentifier());
 
             $this->xmlStructure->setValue($xmlFilename);
 
