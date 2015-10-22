@@ -60,8 +60,7 @@ class FeeTypeList extends AbstractQueryHandler
     public function filterDuplicates($feeTypes)
     {
         $filtered = [];
-        foreach ($feeTypes as $ft)
-        {
+        foreach ($feeTypes as $ft) {
             // if IRFO, we group by irfoFeeType id rather than feeType id
             $feeTypeId = $ft->getIrfoFeeType() ? $ft->getIrfoFeeType()->getId() : $ft->getFeeType()->getId();
             if (!isset($filtered[$feeTypeId]) || $ft->getEffectiveFrom() > $filtered[$feeTypeId]->getEffectiveFrom()) {
@@ -80,7 +79,7 @@ class FeeTypeList extends AbstractQueryHandler
 
             $irfoGvPermits = $this->getRepo('IrfoGvPermit')->fetchByOrganisation($organisation);
 
-            foreach ($irfoGvPermits  as $irfoGvPermit) {
+            foreach ($irfoGvPermits as $irfoGvPermit) {
                 $valueOptions[$irfoGvPermit->getId()] = sprintf(
                     '%d (%s)',
                     $irfoGvPermit->getId(),
@@ -99,7 +98,7 @@ class FeeTypeList extends AbstractQueryHandler
 
             $irfoPsvAuths = $this->getRepo('IrfoPsvAuth')->fetchByOrganisation($organisation);
 
-            foreach ($irfoPsvAuths  as $irfoPsvAuth) {
+            foreach ($irfoPsvAuths as $irfoPsvAuth) {
                 $valueOptions[$irfoPsvAuth->getId()] = sprintf(
                     '%d (%s)',
                     $irfoPsvAuth->getId(),
