@@ -2,53 +2,63 @@
 
 ini_set('memory_limit', -1);
 
-$users = [1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23, 24, 25, 12504, 12505];
+// Config
+{
+    $users = [1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23, 24, 25, 12504, 12505];
+    $entities = [1, 2, 6, 3, 7, 8];
+    $iterations = 9000000;
+    $table = 'application_read_audit';
+    $field = 'application_id';
+}
 
-$applications = [1, 2, 6, 3, 7, 8];
+// Generation
+{
+    $output = 'TRUNCATE TABLE `' . $table . '`;';
 
-$output = 'TRUNCATE TABLE `application_read_audit`;';
+    $rows = [];
 
-$rows = [];
+    $keys = [];
 
-$keys = [];
+    for ($i = 0; $i < $iterations; $i++) {
 
-for ($i = 0; $i < 9000000; $i++) {
+        $user = $users[array_rand($users)];
+        $entity = $entities[array_rand($entities)];
+        $date = date('Y-m-d', rand(strtotime('-50 year'), time()));
 
-    $user = $users[array_rand($users)];
-    $application = $applications[array_rand($applications)];
-    $date = date('Y-m-d', rand(strtotime('-50 year'), time()));
+        if (isset($keys[$user . '-' . $entity . '-' . $date])) {
 
-    if (isset($keys[$user . '-' . $application . '-' . $date])) {
+            $skip = true;
 
-        $skip = true;
+            foreach ($users as $user) {
+                if (!isset($keys[$user . '-' . $entity . '-' . $date])) {
+                    $skip = false;
+                    break;
+                }
+            }
 
-        foreach ($users as $user) {
-            if (!isset($keys[$user . '-' . $application . '-' . $date])) {
-                $skip = false;
-                break;
+            if ($skip) {
+                continue;
             }
         }
 
-        if ($skip) {
-            continue;
+        $keys[$user . '-' . $entity . '-' . $date] = '1';
+
+        $rows[] = sprintf(
+            '(%s, %s, \'%s\')',
+            $user,
+            $application,
+            $date
+        );
+
+        if ($i % 10000 == 0) {
+            $output .= 'INSERT INTO `' . $table . '` (`user_id`, `' . $field . '`, `created_on`) VALUES '
+                . implode(",\n", $rows) . ";\n";
+            $rows = [];
         }
     }
 
-    $keys[$user . '-' . $application . '-' . $date] = '1';
+    $output .= 'INSERT INTO `' . $table . '` (`user_id`, `' . $field . '`, `created_on`) VALUES '
+        . implode(",\n", $rows) . ";\n";
 
-    $rows[] = sprintf(
-        '(%s, %s, \'%s\')',
-        $user,
-        $application,
-        $date
-    );
-
-    if ($i % 10000 == 0) {
-        $output .= 'INSERT INTO `application_read_audit` (`user_id`, `application_id`, `created_on`) VALUES ' . implode(",\n", $rows) . ";\n";
-        $rows = [];
-    }
+    file_put_contents(__DIR__ . '/create_audit_test.sql', $output);
 }
-
-$output .= 'INSERT INTO `application_read_audit` (`user_id`, `application_id`, `created_on`) VALUES ' . implode(",\n", $rows) . ";\n";
-
-file_put_contents(__DIR__ . '/create_audit_test.sql', $output);
