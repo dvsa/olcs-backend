@@ -77,7 +77,7 @@ final class ProcessRequestMap extends AbstractCommandHandler
         $submission = $ebsrSubmissions->first();
         $file = $this->getUploader()->download($submission->getDocument()->getIdentifier());
 
-        $xmlFilename = $this->fileStructure->filter($file);
+        $xmlFilename = $this->fileStructure->getValue($file);
         $template = $this->createRequestMapTemplate($xmlFilename, $command->getScale());
         $mapContent = $this->getTransExchange()->makeRequest($template);
 
