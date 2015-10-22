@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 
 /**
  * Application
@@ -21,6 +22,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class Application extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
+    protected $extraRepos = ['Note'];
 
     /**
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
@@ -46,7 +48,7 @@ class Application extends AbstractQueryHandler
     {
         /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($query);
-
+        $latestNote = $this->getRepo('Note')->fetchForOverview(null, $query->getId(), NoteEntity::NOTE_TYPE_CASE);
         return $this->result(
             $application,
             [
@@ -73,6 +75,7 @@ class Application extends AbstractQueryHandler
                 'canCreateCase' => $application->canCreateCase(),
                 'existingPublication' => !$application->getPublicationLinks()->isEmpty(),
                 'isPublishable' => $application->isPublishable(),
+                'latestNote' => $latestNote
             ]
         );
     }
