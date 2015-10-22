@@ -1655,13 +1655,16 @@ INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`person_id`,`c
     (5,3,77,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
     (6,3,78,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
 
-INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`, `in_force_date`, `created_on`)
+INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`,
+                              `in_force_date`, `expiry_date`, `created_on`)
 VALUES
-    (101, 1, 'irfo_perm_s_approved', 2014, '2015-03-10', NOW());
+    (101, 1, 'irfo_perm_s_approved', 2014, '2015-03-10', '2016-03-09', NOW());
 
-INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `journey_frequency`, `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`, `in_force_date`, `created_on`, `irfo_fee_id`)
-VALUES
-    (101, 1, 'irfo_auth_s_approved', 'psv_freq_daily', '17/1', 'From', 'To', 3, '2015-03-10',  NOW(), 'FeeId');
+INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `journey_frequency`,
+                             `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`,
+                             `in_force_date`, `created_on`, `expiry_date`, `renewal_date`, `irfo_fee_id`)
+VALUES (101, 1, 'irfo_auth_s_approved', 'psv_freq_daily', '17/1', 'From', 'To', 3, '2015-03-10',  NOW(), '2016-03-09',
+     '2016-03-09', 'FeeId');
 
 INSERT INTO `irfo_permit_stock` (`serial_no`, `irfo_country_id`, `status`, `valid_for_year`, `created_on`)
 VALUES
