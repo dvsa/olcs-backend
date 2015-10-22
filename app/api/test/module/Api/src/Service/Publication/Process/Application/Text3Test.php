@@ -98,6 +98,44 @@ class Text3Test extends MockeryTestCase
         );
     }
 
+    public function testProcessOcS4Ignored()
+    {
+        $sut = new ApplicationText3();
+
+        $organisation = new Organisation();
+        $licence = new Licence($organisation, new RefData());
+        $application = new \Dvsa\Olcs\Api\Entity\Application\Application($licence, new RefData(), false);
+
+        $address = new \Dvsa\Olcs\Api\Entity\ContactDetails\Address();
+        $address->setAddressLine1('ADDRESS1');
+        $oc = new \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre();
+        $oc->setAddress($address);
+        $aoc = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre($application, $oc);
+        $aoc->setNoOfVehiclesRequired(5);
+        $aoc->setNoOfTrailersRequired(7);
+        $aoc->setS4(m::mock(\Dvsa\Olcs\Api\Entity\Application\S4::class));
+        $application->addOperatingCentres($aoc);
+
+        $publicationSection = new PublicationSection();
+        $publicationSection->setId(PublicationSection::APP_GRANTED_SECTION);
+
+        $publicationLink = new PublicationLink();
+        $publicationLink->setApplication($application);
+        $publicationLink->setPublicationSection($publicationSection);
+
+        $input = [
+            'licenceAddress' => 'LICENCE_ADDRESS',
+            'conditionUndertaking' => [],
+        ];
+
+        $sut->process($publicationLink, new ImmutableArrayObject($input));
+
+        $this->assertSame(
+            "LICENCE_ADDRESS",
+            $publicationLink->getText3()
+        );
+    }
+
     public function testProcessTransportManagers()
     {
         $sut = new ApplicationText3();

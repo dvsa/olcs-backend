@@ -73,6 +73,45 @@ class OperatingCentresTest extends MockeryTestCase
         );
     }
 
+    public function testProvideS4Ignored()
+    {
+        $publicationLink = $this->getPublicationLink();
+        $context = new \ArrayObject();
+
+        $mockAddressFormatter = m::mock(FormatAddress::class);
+        $this->sut->setAddressFormatter($mockAddressFormatter);
+
+        $operatingCentre43 = $this->getOperatingCentre(43);
+        $operatingCentre82 = $this->getOperatingCentre(82);
+        $operatingCentre653 = $this->getOperatingCentre(653);
+
+        $this->addApplicationOperatingCentre($publicationLink, 'A', 12, 3, $operatingCentre43);
+        $this->addApplicationOperatingCentre($publicationLink, 'A', 0, 2, $operatingCentre82);
+        $this->addApplicationOperatingCentre($publicationLink, 'A', 4234, 0, $operatingCentre653);
+
+        $s4 = m::mock(\Dvsa\Olcs\Api\Entity\Application\S4::class);
+        $publicationLink->getApplication()->getOperatingCentres()[1]->setS4($s4);
+
+        $mockAddressFormatter->shouldReceive('format')->with($operatingCentre43->getAddress())->once()
+            ->andReturn('ADDRESS43_FORMATTED');
+        $mockAddressFormatter->shouldReceive('format')->with($operatingCentre653->getAddress())->once()
+            ->andReturn('ADDRESS653_FORMATTED');
+
+        $this->sut->provide($publicationLink, $context);
+
+        $this->assertSame(
+            [
+                'operatingCentres' => [
+                    "New operating centre: ADDRESS43_FORMATTED\n".
+                        "New authorisation at this operating centre will be: 12 vehicle(s), 3 trailer(s)",
+                    "New operating centre: ADDRESS653_FORMATTED\n".
+                        "New authorisation at this operating centre will be: 4234 vehicle(s)",
+                ]
+            ],
+            $context->getArrayCopy()
+        );
+    }
+
     public function testProvideUpdated()
     {
         $publicationLink = $this->getPublicationLink();

@@ -50,8 +50,9 @@ class Publish extends AbstractQueryHandler
             $application,
             [],
             [
-                'errors' => $validationService->validate($application),
+                'hasActiveS4' => $application->hasActiveS4(),
                 'existingPublication' => !$application->getPublicationLinks()->isEmpty(),
+                'errors' => $validationService->validate($application),
             ]
         );
     }

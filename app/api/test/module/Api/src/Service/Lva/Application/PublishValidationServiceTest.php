@@ -46,7 +46,6 @@ class PublishValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestC
 
         $application->shouldReceive('getApplicationCompletion')->with()->once()->andReturn($applicationCompletion);
         $this->feesHelperService->shouldReceive('getOutstandingFeesForApplication')->with(2409)->once()->andReturn([]);
-        $application->shouldReceive('hasActiveS4')->with()->once()->andReturn(false);
         $application->shouldReceive('isPublishable')->with()->once()->andReturn(true);
 
         $result = $this->sut->validate($application);
@@ -68,16 +67,14 @@ class PublishValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestC
         $application->shouldReceive('getApplicationCompletion')->with()->once()->andReturn($applicationCompletion);
         $this->feesHelperService->shouldReceive('getOutstandingFeesForApplication')->with(2409)->once()
             ->andReturn(['foo']);
-        $application->shouldReceive('hasActiveS4')->with()->once()->andReturn(true);
         $application->shouldReceive('isPublishable')->with()->once()->andReturn(false);
 
         $result = $this->sut->validate($application);
 
-        $this->assertCount(5, $result);
+        $this->assertCount(4, $result);
         $this->assertArrayHasKey(PublishValidationService::ERROR_MUST_COMPETE_OC, $result);
         $this->assertArrayHasKey(PublishValidationService::ERROR_MUST_COMPETE_TM, $result);
         $this->assertArrayHasKey(PublishValidationService::ERROR_OUSTANDING_FEE, $result);
-        $this->assertArrayHasKey(PublishValidationService::ERROR_S4, $result);
         $this->assertArrayHasKey(PublishValidationService::ERROR_NOT_PUBLISHABLE, $result);
     }
 }
