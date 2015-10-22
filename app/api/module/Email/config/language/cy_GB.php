@@ -9,4 +9,5 @@ return array(
     'email.transport-manager-complete-digital-form.subject' => 'WELSH You’ve been named as a Transport Manager',
     'email.transport-manager-submitted-form.subject'
         => 'WELSH A Transport Manager has submitted their details for review',
+    'email.transport-manager-confirmed.subject' => 'WELSH Your details have been confirmed',
 );
