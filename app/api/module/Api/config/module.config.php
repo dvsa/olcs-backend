@@ -93,6 +93,7 @@ return [
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
+            'withApplication' => QueryPartial\WithApplicationFactory::class,
             'withBusReg' => QueryPartial\WithBusRegFactory::class,
             'withContactDetails' => QueryPartial\WithContactDetailsFactory::class,
             'withCase' => QueryPartial\WithCaseFactory::class,
