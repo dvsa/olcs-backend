@@ -84,8 +84,8 @@ final class ProcessPacks extends AbstractCommandHandler
             $result->addMessage('Ebsr submission added');
 
             $file = $this->getUploader()->download($document->getIdentifier());
-            $xmlFilename = $this->fileStructure->filter($file);
-            $ebsrData = $this->xmlStructure->filter($xmlFilename);
+            $xmlFilename = $this->fileStructure->getValue($file);
+            $ebsrData = $this->xmlStructure->getValue($xmlFilename);
 
             //decide what to do based on txcAppType
             switch ($ebsrData['txcAppType']) {
