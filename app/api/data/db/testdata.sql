@@ -1657,7 +1657,7 @@ INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`person_id`,`c
 
 INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`, `in_force_date`, `created_on`)
 VALUES
-    (101, 1, 'irfo_perm_s_appreoved', 2014, '2015-03-10', NOW());
+    (101, 1, 'irfo_perm_s_approved', 2014, '2015-03-10', NOW());
 
 INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `journey_frequency`, `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`, `in_force_date`, `created_on`, `irfo_fee_id`)
 VALUES
