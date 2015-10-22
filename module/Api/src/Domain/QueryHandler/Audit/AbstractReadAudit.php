@@ -1,27 +1,23 @@
 <?php
 
 /**
- * History
+ * Abstract Read Audit
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Audit;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * History
+ * Abstract Read Audit
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class History extends AbstractQueryHandler
+abstract class AbstractReadAudit extends AbstractQueryHandler
 {
-    protected $repoServiceName = 'ApplicationReadAudit';
-
     public function handleQuery(QueryInterface $query)
     {
         return [
@@ -33,10 +29,6 @@ class History extends AbstractQueryHandler
                             'person'
                         ]
                     ]
-                ],
-                [
-                    'eventHistoryType' => ['description' => 'Read'],
-                    'eventData' => 'Not applicable'
                 ]
             ),
             'count' => $this->getRepo()->fetchCount($query),

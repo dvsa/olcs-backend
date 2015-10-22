@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Abstract Read Audit
@@ -30,5 +32,29 @@ abstract class AbstractReadAudit extends AbstractRepository
         $qb->setParameter(':date', $date);
 
         return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * Override to add additional data to the default fetchList() method
+     * @param QueryBuilder $qb
+     * @inheritdoc
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $qb->innerJoin($this->alias . '.user', 'u');
+        $qb->innerJoin('u.contactDetails', 'cd');
+        $qb->innerJoin('cd.person', 'p');
+    }
+
+    /**
+     * Applies filters
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        $qb->andWhere($qb->expr()->eq($this->alias . '.' . $this->entityProperty, ':byEntity'))
+            ->setParameter('byEntity', $query->getId())
+            ->orderBy($this->alias . '.createdOn', 'DESC');
     }
 }
