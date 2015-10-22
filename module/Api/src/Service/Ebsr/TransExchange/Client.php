@@ -95,7 +95,7 @@ class Client implements FactoryInterface
         /**
          * @var MapXmlFile $filter
          */
-        $filter = $serviceLocator->get('FilterManager')->get('MapXmlFile');
+        $filter = $serviceLocator->get('FilterManager')->get(MapXmlFile::class);
         $filter->setMapping($serviceLocator->get('TransExchangePublisherXml'));
 
         $this->setXmlFilter($filter);

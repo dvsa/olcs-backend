@@ -23,6 +23,7 @@ return [
             'AddressFormatter' => \Dvsa\Olcs\Api\Service\Helper\FormatAddress::class,
             'VariationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService::class,
+            \Dvsa\Olcs\Api\Filesystem\Filesystem::class => \Dvsa\Olcs\Api\Filesystem\Filesystem::class
         ],
         'factories' => [
             'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
@@ -572,7 +573,9 @@ return [
             \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class =>
                 \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class,
             \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class =>
-                \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class
+                \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class,
+            Olcs\XmlTools\Filter\ParseXml::class => Olcs\XmlTools\Filter\ParseXml::class,
+            Olcs\XmlTools\Filter\MapXmlFile::class => Olcs\XmlTools\Filter\MapXmlFile::class,
         ],
         'delegators' => [
             \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class =>
@@ -583,8 +586,7 @@ return [
         'aliases' => [
             'DecompressUploadToTmp' => \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class,
             'DecompressToTmp' => \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class,
-            'XmlFromDir' => \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class,
-            'MapXmlFile' => Olcs\XmlTools\Filter\MapXmlFile::class,
+            'XmlFromDir' => \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class
         ]
     ],
 ];

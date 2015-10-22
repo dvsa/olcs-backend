@@ -25,9 +25,9 @@ class XmlStructureInputFactory implements FactoryInterface
         $service = new Input('dom_document');
 
         $filterChain = $service->getFilterChain();
-        $filterChain->attach($serviceLocator->get(ParseXml::class));
+        $filterChain->attach($serviceLocator->get('FilterManager')->get(ParseXml::class));
 
-        $xsdValidator = $serviceLocator->get(Xsd::class);
+        $xsdValidator = $serviceLocator->get('ValidatorManager')->get(Xsd::class);
         $xsdValidator->setXsd('http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd');
 
         $validatorchain = $service->getValidatorChain();
