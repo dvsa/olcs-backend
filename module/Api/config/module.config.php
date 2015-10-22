@@ -71,9 +71,9 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\TransExchange\Client::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchange\Client::class,
 
-            'TransExchangeXml' =>
+            'TransExchangeXmlMapping' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangeXmlFactory::class,
-            'TransExchangePublisherXml' =>
+            'TransExchangePublisherXmlMapping' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangePublisherXmlFactory::class,
 
             'EbsrStandardRequestTemplate' =>
@@ -82,10 +82,9 @@ return [
             'EbsrRequestMapTemplate' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchange\TemplateFactory::class,
 
-            Olcs\XmlTools\Validator\Xsd::class =>
-                Olcs\XmlTools\Validator\XsdFactory::class,
             'EbsrFileStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\FileStructureInputFactory::class,
-            'EbsrXmlStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class
+            'EbsrXmlStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class,
+            'EbsrBusRegInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory::class
         ],
     ],
     'file_uploader' => [
@@ -543,9 +542,9 @@ return [
         ],
     ],
     'xsd_mappings' =>[
-        'http://www.w3.org/2001/xml.xsd' => __DIR__ . '/../../../data/ebsr/xsd/xml.xsd',
+        'http://www.w3.org/2001/xml.xsd' => __DIR__ . '/../data/ebsr/xsd/xml.xsd',
         'http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd' =>
-            __DIR__ . '/../../../data/ebsr/xsd/TransXChange_schema_2.1/TransXChange_registration.xsd'
+            __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.1/TransXChange_registration.xsd'
     ],
     'validators' => [
         'invokables' => [
@@ -558,8 +557,10 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class
         ],
+        'factories' => [
+            \Olcs\XmlTools\Validator\Xsd::class => \Olcs\XmlTools\Validator\XsdFactory::class,
+        ],
         'aliases' => [
-            'Xsd' => 'Olcs\XmlTools\Validator\Xsd',
             'Structure\Operator' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
             'Structure\Registration' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration::class,
             'Structure\ServiceClassification' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification::class,
@@ -570,16 +571,12 @@ return [
         'invokables' => [
             \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class =>
                 \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class,
-            \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class =>
-                \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class,
             \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class =>
                 \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class,
             Olcs\XmlTools\Filter\ParseXml::class => Olcs\XmlTools\Filter\ParseXml::class,
             Olcs\XmlTools\Filter\MapXmlFile::class => Olcs\XmlTools\Filter\MapXmlFile::class,
         ],
         'delegators' => [
-            \Dvsa\Olcs\Api\Filesystem\Filter\DecompressUploadToTmp::class =>
-                [Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmpDelegatorFactory::class],
             \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class =>
                 [Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmpDelegatorFactory::class]
         ],
