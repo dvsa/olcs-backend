@@ -8,6 +8,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
+use Dvsa\Olcs\Api\Filesystem\Filesystem;
+use Zend\Filter\Decompress;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
@@ -45,19 +48,21 @@ final class ProcessPacks extends AbstractCommandHandler
 
     protected $extraRepos = ['Document', 'EbsrSubmission', 'Licence', 'BusRegOtherService'];
 
-    /**
-     * @var
-     */
-    protected $fileStructure;
-
     protected $xmlStructure;
+
+    protected $busRegInput;
+
+    /**
+     * @var \Dvsa\Olcs\Api\Filesystem\Filesystem
+     */
+    protected $fileSystem;
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->fileStructure = $mainServiceLocator->get('EbsrFileStructure');
         $this->xmlStructure = $mainServiceLocator->get('EbsrXmlStructure');
+        $this->busRegInput = $mainServiceLocator->get('EbsrBusRegInput');
 
         return parent::createService($serviceLocator);
     }
@@ -83,9 +88,20 @@ final class ProcessPacks extends AbstractCommandHandler
             $result->addId('ebsrSubmission_' . $ebsrSubmission->getId(), $ebsrSubmission->getId());
             $result->addMessage('Ebsr submission added');
 
-            $file = $this->getUploader()->download($document->getIdentifier());
-            $xmlFilename = $this->fileStructure->getValue($file);
-            $ebsrData = $this->xmlStructure->getValue($xmlFilename);
+            $fileProcessor = new FileProcessor($this->getUploader(), new Filesystem(), new Decompress('zip'), '/tmp');
+            $xmlFilename = $fileProcessor->fetchXmlFileNameFromDocumentStore($document->getIdentifier());
+
+            $this->xmlStructure->setValue($xmlFilename);
+
+            if (!$this->xmlStructure->isValid()) {
+                //we'll need to abort here and return messages
+                $messages = $this->xmlStructure->getMessages();
+            }
+
+            $ebsrDoc = $this->xmlStructure->getValue();
+
+            $this->busRegInput->setValue($ebsrDoc);
+            $ebsrData = $this->busRegInput->getValue();
 
             //decide what to do based on txcAppType
             switch ($ebsrData['txcAppType']) {
