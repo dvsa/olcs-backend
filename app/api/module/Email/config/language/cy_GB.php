@@ -6,5 +6,5 @@ return array(
     'email.inbox-reminder.standard.subject' => 'WELSH Operator licensing information - Reminder',
     'email.licensing-information.continuation.subject' => 'Parhad/terfyn trwydded gweithredwr',
     'email.licensing-information.standard.subject' => 'Gwybodaeth trwyddedu gweithredwr',
-    'email.transport-manager-complete-digital-form.subject' => 'WELSH Request for transport manager details',
+    'email.transport-manager-complete-digital-form.subject' => 'WELSH You’ve been named as a Transport Manager',
 );
