@@ -77,7 +77,6 @@ class CreateFeeTest extends CommandHandlerTestCase
             'description' => 'Some fee'
         ];
 
-
         $this->mapReference(FeeType::class, 99)
             ->shouldReceive('isMiscellaneous')
             ->andReturn(false);
@@ -138,7 +137,7 @@ class CreateFeeTest extends CommandHandlerTestCase
             ->andReturn('123.45');
 
         $this->mapReference(Application::class, 22)
-            ->setLicence($this->mapReference(Licence::class,33));
+            ->setLicence($this->mapReference(Licence::class, 33));
 
         /** @var FeeEntity $savedFee */
         $savedFee = null;
@@ -194,7 +193,7 @@ class CreateFeeTest extends CommandHandlerTestCase
             ->andReturn('123.45');
 
         $this->mapReference(BusReg::class, 44)
-            ->setLicence($this->mapReference(Licence::class,33));
+            ->setLicence($this->mapReference(Licence::class, 33));
 
         /** @var FeeEntity $savedFee */
         $savedFee = null;

@@ -566,7 +566,8 @@ return [
         => CommandHandler\Organisation\CpidOrganisationExport::class,
 
     // Domain - Fee
-    // @todo replace references to CreateFee with TransferCommand version
+    // @todo we could replace references to the internal CreateFee command
+    // with the TransferCommand version
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
     Command\Fee\CancelIrfoGvPermitFees::class => CommandHandler\Fee\CancelIrfoGvPermitFees::class,

@@ -109,10 +109,6 @@ class FeeTypeListTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['organisation' => 123]);
 
-        $feeTypeRefData = m::mock(RefData::class)
-            ->shouldReceive('getId')
-            ->andReturn(99)
-            ->getMock();
         $irfoFeeTypeRefData = m::mock(RefData::class)
             ->shouldReceive('getId')
             ->andReturn(101)
