@@ -37,7 +37,7 @@ class CasesReadAuditTest extends RepositoryTestCase
 
         $this->assertEquals(['foo'], $this->sut->fetchOne($userId, $entityId, $date));
 
-        $expected = '{{QUERY}} AND m.user = [[111]] AND m.cases = [[222]] AND m.createdOn = [[2015-01-05]]';
+        $expected = '{{QUERY}} AND m.user = [[111]] AND m.case = [[222]] AND m.createdOn = [[2015-01-05]]';
 
         $this->assertEquals($expected, $this->query);
     }
