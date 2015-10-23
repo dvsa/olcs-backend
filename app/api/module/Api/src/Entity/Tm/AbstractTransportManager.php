@@ -307,6 +307,18 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     protected $tmLicences;
 
     /**
+     * Read audit
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerReadAudit",
+     *     mappedBy="transportManager"
+     * )
+     */
+    protected $readAudits;
+
+    /**
      * User
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -333,6 +345,7 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
         $this->qualifications = new ArrayCollection();
         $this->tmApplications = new ArrayCollection();
         $this->tmLicences = new ArrayCollection();
+        $this->readAudits = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
 
@@ -1248,6 +1261,66 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
     {
         if ($this->tmLicences->contains($tmLicences)) {
             $this->tmLicences->removeElement($tmLicences);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the read audit
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return TransportManager
+     */
+    public function setReadAudits($readAudits)
+    {
+        $this->readAudits = $readAudits;
+
+        return $this;
+    }
+
+    /**
+     * Get the read audits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getReadAudits()
+    {
+        return $this->readAudits;
+    }
+
+    /**
+     * Add a read audits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return TransportManager
+     */
+    public function addReadAudits($readAudits)
+    {
+        if ($readAudits instanceof ArrayCollection) {
+            $this->readAudits = new ArrayCollection(
+                array_merge(
+                    $this->readAudits->toArray(),
+                    $readAudits->toArray()
+                )
+            );
+        } elseif (!$this->readAudits->contains($readAudits)) {
+            $this->readAudits->add($readAudits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a read audits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return TransportManager
+     */
+    public function removeReadAudits($readAudits)
+    {
+        if ($this->readAudits->contains($readAudits)) {
+            $this->readAudits->removeElement($readAudits);
         }
 
         return $this;

@@ -150,7 +150,6 @@ return [
     'TmEmployment' => 'Tm',
     'TmQualification' => 'Tm',
     'TmMerge' => 'Tm',
-    'TmQualification' => 'Tm',
     'TransportManager' => 'Tm',
     'TransportManagerApplication' => 'Tm',
     'TransportManagerLicence' => 'Tm',
@@ -164,4 +163,10 @@ return [
     'User' => 'User',
     'GoodsDisc' => 'Vehicle',
     'Vehicle' => 'Vehicle',
+    'ApplicationReadAudit' => 'Application',
+    'LicenceReadAudit' => 'Licence',
+    'CasesReadAudit' => 'Cases',
+    'OrganisationReadAudit' => 'Organisation',
+    'BusRegReadAudit' => 'Bus',
+    'TransportManagerReadAudit' => 'Tm',
 ];

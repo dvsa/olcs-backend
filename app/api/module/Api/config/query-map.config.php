@@ -9,6 +9,14 @@ use Dvsa\Olcs\Api\Domain\Query\Queue as QueueQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Queue as QueueQueryHandler;
 
 return [
+    // Audit
+    TransferQuery\Audit\ReadApplication::class => QueryHandler\Audit\ReadApplication::class,
+    TransferQuery\Audit\ReadLicence::class => QueryHandler\Audit\ReadLicence::class,
+    TransferQuery\Audit\ReadOrganisation::class => QueryHandler\Audit\ReadOrganisation::class,
+    TransferQuery\Audit\ReadCase::class => QueryHandler\Audit\ReadCase::class,
+    TransferQuery\Audit\ReadTransportManager::class => QueryHandler\Audit\ReadTransportManager::class,
+    TransferQuery\Audit\ReadBusReg::class => QueryHandler\Audit\ReadBusReg::class,
+
     // Bookmarks
     BookmarkQuery\LicenceBundle::class => BookmarkQueryHandler\LicenceBundle::class,
     BookmarkQuery\TransportManagerBundle::class => BookmarkQueryHandler\TransportManagerBundle::class,

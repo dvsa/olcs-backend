@@ -1729,4 +1729,52 @@ return array(
             'type' => 'json_array'
         ),
     ),
+    'application_read_audit' => array(
+        'application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Application',
+                'property' => 'readAudit'
+            )
+        )
+    ),
+    'licence_read_audit' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'readAudit'
+            )
+        )
+    ),
+    'bus_reg_read_audit' => array(
+        'bus_reg_id' => array(
+            'inversedBy' => array(
+                'entity' => 'BusReg',
+                'property' => 'readAudit'
+            )
+        )
+    ),
+    'transport_manager_read_audit' => array(
+        'transport_manager_id' => array(
+            'inversedBy' => array(
+                'entity' => 'TransportManager',
+                'property' => 'readAudit'
+            )
+        )
+    ),
+    'cases_read_audit' => array(
+        'case_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Cases',
+                'property' => 'readAudit'
+            )
+        )
+    ),
+    'organisation_read_audit' => array(
+        'organisation_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Organisation',
+                'property' => 'readAudit'
+            )
+        )
+    )
 );

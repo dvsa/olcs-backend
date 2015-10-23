@@ -228,6 +228,12 @@ return [
             'TxcInbox' => RepositoryFactory::class,
             'OrganisationUser' => RepositoryFactory::class,
             'Role' => RepositoryFactory::class,
+            'ApplicationReadAudit' => RepositoryFactory::class,
+            'LicenceReadAudit' => RepositoryFactory::class,
+            'OrganisationReadAudit' => RepositoryFactory::class,
+            'BusRegReadAudit' => RepositoryFactory::class,
+            'TransportManagerReadAudit' => RepositoryFactory::class,
+            'CasesReadAudit' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
