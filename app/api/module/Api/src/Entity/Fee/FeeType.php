@@ -53,7 +53,7 @@ class FeeType extends AbstractFeeType
      */
     public function isMiscellaneous()
     {
-        return $this->getIsMiscellaneous();
+        return (bool) $this->getIsMiscellaneous();
     }
 
     public function getCalculatedBundleValues()
