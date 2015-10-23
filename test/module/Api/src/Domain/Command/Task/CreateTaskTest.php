@@ -33,8 +33,10 @@ class CreateTaskTest extends PHPUnit_Framework_TestCase
             'licence' => 666,
             'busReg' => 123,
             'case' => 124,
+            'submission' => 765,
             'transportManager' => 125,
             'irfoOrganisation' => 126,
+            'assignedByUser' => 7
 
         ];
 
@@ -54,6 +56,8 @@ class CreateTaskTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(124, $command->getCase());
         $this->assertEquals(125, $command->getTransportManager());
         $this->assertEquals(126, $command->getIrfoOrganisation());
+        $this->assertEquals(765, $command->getSubmission());
+        $this->assertEquals(7, $command->getAssignedByUser());
 
         $this->assertEquals(
             [
@@ -69,8 +73,10 @@ class CreateTaskTest extends PHPUnit_Framework_TestCase
                 'licence' => 666,
                 'busReg' => 123,
                 'case' => 124,
+                'submission' => 765,
                 'transportManager' => 125,
                 'irfoOrganisation' => 126,
+                'assignedByUser' => 7
             ],
             $command->getArrayCopy()
         );
