@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
-use Dvsa\Olcs\Api\Service\Ebsr\TransExchange\Client as TransExchangeClient;
+use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient as TransExchangeClient;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
