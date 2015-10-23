@@ -18,5 +18,5 @@ class CasesReadAudit extends AbstractReadAudit
 {
     protected $entity = Entity::class;
 
-    protected $entityProperty = 'cases';
+    protected $entityProperty = 'case';
 }
