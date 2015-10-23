@@ -7,6 +7,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Zend\Http\Client as RestClient;
 
+/**
+ * Class TransExchangeClientFactory
+ * @package Dvsa\Olcs\Api\Service\Ebsr
+ */
 class TransExchangeClientFactory implements FactoryInterface
 {
     /**

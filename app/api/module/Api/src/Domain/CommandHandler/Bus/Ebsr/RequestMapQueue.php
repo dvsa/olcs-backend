@@ -22,7 +22,7 @@ use Zend\Serializer\Adapter\Json as ZendJson;
  */
 final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareInterface
 {
-    use AuthAwareTrait
+    use AuthAwareTrait;
 
     protected $repoServiceName = 'bus';
 

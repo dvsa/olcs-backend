@@ -75,5 +75,4 @@ class FileProcessor implements FileProcessorInterface
 
         return $xml;
     }
-
 }
