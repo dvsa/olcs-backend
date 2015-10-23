@@ -21,13 +21,13 @@ class TransExchangeClientFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config')['ebsr'];
+        $config = $serviceLocator->get('Config');
 
-        if (!isset($config['transexchange_publisher'])) {
+        if (!isset($config['ebsr']['transexchange_publisher'])) {
             throw new \RuntimeException('Missing transexchange_publisher config');
         }
 
-        $config = $config['transexchange_publisher'];
+        $config = $config['ebsr']['transexchange_publisher'];
 
         $httpClient = new RestClient($config['uri'], $config['options']);
 
