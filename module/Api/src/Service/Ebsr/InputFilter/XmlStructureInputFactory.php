@@ -7,7 +7,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Olcs\XmlTools\Validator\Xsd;
 use Olcs\XmlTools\Filter\ParseXml;
 
-
 /**
  * Class FileStructureInputFactory
  * @package Olcs\Ebsr\InputFilter

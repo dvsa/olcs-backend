@@ -7,7 +7,15 @@
  */
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
+/**
+ * Interface FileProcessorInterface
+ * @package Dvsa\Olcs\Api\Service\Ebsr
+ */
 interface FileProcessorInterface
 {
+    /**
+     * @param $identifier
+     * @return string
+     */
     public function fetchXmlFileNameFromDocumentStore($identifier);
 }

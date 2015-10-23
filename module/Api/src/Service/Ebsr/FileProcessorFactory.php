@@ -6,8 +6,16 @@ use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Class FileProcessorFactory
+ * @package Dvsa\Olcs\Api\Service\Ebsr
+ */
 class FileProcessorFactory implements FactoryInterface
 {
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return FileProcessor
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');

@@ -29,8 +29,10 @@ use Dvsa\Olcs\Api\Domain\Exception;
 /**
  * Request new Ebsr map
  */
-final class ProcessRequestMap extends AbstractCommandHandler
-    implements TransactionedInterface, UploaderAwareInterface, TransExchangeAwareInterface
+final class ProcessRequestMap extends AbstractCommandHandler implements
+    TransactionedInterface,
+    UploaderAwareInterface,
+    TransExchangeAwareInterface
 {
     use UploaderAwareTrait;
     use TransExchangeAwareTrait;
@@ -89,7 +91,9 @@ final class ProcessRequestMap extends AbstractCommandHandler
         $submission = $ebsrSubmissions->first();
 
         try {
-            $xmlFilename = $this->fileProcesor->fetchXmlFileNameFromDocumentStore($submission->getDocument()->getIdentifier());
+            $xmlFilename = $this->fileProcesor->fetchXmlFileNameFromDocumentStore(
+                $submission->getDocument()->getIdentifier()
+            );
 
             $template = $this->createRequestMapTemplate($command->getTemplate(), $xmlFilename, $command->getScale());
             $documents = $this->getTransExchange()->makeRequest($template);
@@ -124,7 +128,6 @@ final class ProcessRequestMap extends AbstractCommandHandler
 
             throw $e;
         }
-
 
         return $result;
     }
