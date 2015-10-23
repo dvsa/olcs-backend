@@ -29,6 +29,8 @@ class Summary extends AbstractQueryHandler
 
     protected $repoServiceName = 'Application';
 
+    protected $extraRepos = ['Fee'];
+
     public function handleQuery(QueryInterface $query)
     {
         /** @var Entity\Application\Application $application */
@@ -67,7 +69,9 @@ class Summary extends AbstractQueryHandler
             }
         }
 
-        return $this->result($application, $bundle, ['actions' => $actions]);
+        $reference = $this->getLatestReference($application->getId());
+
+        return $this->result($application, $bundle, ['actions' => $actions, 'reference' => $reference]);
     }
 
     protected function determineActions(Entity\Application\Application $application)
@@ -240,5 +244,14 @@ class Summary extends AbstractQueryHandler
         $tms = $application->getTransportManagers()->matching($criteria);
 
         return $tms->isEmpty() === false;
+    }
+
+    protected function getLatestReference($applicationId)
+    {
+        $latestFee = $this->getRepo('Fee')->fetchLatestFeeByApplicationId($applicationId);
+        if ($latestFee) {
+            return $latestFee->getLatestPaymentRef();
+        }
+        return '';
     }
 }
