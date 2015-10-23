@@ -9,8 +9,10 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 use Dvsa\Olcs\Transfer\Query\Application\Application as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -27,6 +29,7 @@ class ApplicationTest extends QueryHandlerTestCase
     {
         $this->sut = new Application();
         $this->mockRepo('Application', ApplicationRepo::class);
+        $this->mockRepo('Note', NoteRepo::class);
 
         $this->mockedSmServices = [
             'FeesHelperService' => m::mock(),
@@ -55,6 +58,10 @@ class ApplicationTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($application);
 
+        $this->repoMap['Note']->shouldReceive('fetchForOverview')
+            ->with(null, 111, NoteEntity::NOTE_TYPE_CASE)
+            ->andReturn('latest note');
+
         $sections = ['bar', 'cake'];
 
         $this->mockedSmServices['SectionAccessService']->shouldReceive('getAccessibleSections')
@@ -81,6 +88,7 @@ class ApplicationTest extends QueryHandlerTestCase
             'canCreateCase' => false,
             'existingPublication' => false,
             'isPublishable' => true,
+            'latestNote' => 'latest note'
         ];
 
         $this->assertEquals($expected, $result->serialize());
