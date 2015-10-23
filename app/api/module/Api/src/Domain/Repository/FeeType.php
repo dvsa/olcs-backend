@@ -240,7 +240,6 @@ class FeeType extends AbstractRepository
     }
 
     /**
-     *
      * @param QueryBuilder $qb
      * @param QueryInterface $query
      */
