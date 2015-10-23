@@ -6,14 +6,20 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\RegisterUserSelfserve as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\User\RegisterUserSelfserve as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
@@ -135,6 +141,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
     public function testHandleCommandWithLicence()
     {
         $userId = 111;
+        $licId = 222;
 
         $data = [
             'loginId' => 'login_id',
@@ -159,6 +166,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $org = m::mock(OrganisationEntity::class);
 
         $licence = m::mock(LicenceEntity::class);
+        $licence->shouldReceive('getId')->andReturn($licId);
         $licence->shouldReceive('getOrganisation')->andReturn($org);
 
         $this->repoMap['Licence']->shouldReceive('fetchForUserRegistration')
@@ -188,6 +196,38 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
                     $savedUser = $user;
                 }
             );
+
+        $identifier = 333;
+        $generateAndStoreResult = new Result();
+        $generateAndStoreResult->addId('identifier', $identifier);
+
+        $this->expectedSideEffect(
+            GenerateAndStore::class,
+            [
+                'template' => 'SELF_SERVICE_NEW_PASSWORD',
+                'query' => [
+                    'licence' => $licId
+                ],
+                'knownValues' => [
+                    'SELF_SERVICE_PASSWORD' => 'GENERATED_PASSWORD_HERE'
+                ],
+                'description' => 'Self service new password letter',
+                'category' => CategoryEntity::CATEGORY_APPLICATION,
+                'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_APPLICATION_OTHER_DOCUMENTS,
+                'isExternal' => false,
+                'isScan' => false
+            ],
+            $generateAndStoreResult
+        );
+
+        $this->expectedSideEffect(
+            EnqueueFileCommand::class,
+            [
+                'fileIdentifier' => $identifier,
+                'jobName' => 'New temporary password'
+            ],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 
