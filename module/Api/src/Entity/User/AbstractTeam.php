@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Team Abstract Entity
@@ -14,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="team",
  *    indexes={
  *        @ORM\Index(name="ix_team_traffic_area_id", columns={"traffic_area_id"}),
@@ -47,6 +49,15 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      */
     protected $createdOn;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
 
     /**
      * Description
@@ -169,6 +180,29 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
     public function getCreatedOn()
     {
         return $this->createdOn;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate
+     * @return Team
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate()
+    {
+        return $this->deletedDate;
     }
 
     /**
