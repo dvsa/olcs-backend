@@ -61,7 +61,7 @@ class CasesReadAuditTest extends RepositoryTestCase
         $this->assertEquals(['result'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expected = '{{QUERY}} INNER JOIN m.user u INNER JOIN u.contactDetails cd '
-            . 'INNER JOIN cd.person p AND m.cases = [[111]] ORDER BY m.createdOn DESC';
+            . 'INNER JOIN cd.person p AND m.case = [[111]] ORDER BY m.createdOn DESC';
 
         $this->assertEquals($expected, $this->query);
     }
