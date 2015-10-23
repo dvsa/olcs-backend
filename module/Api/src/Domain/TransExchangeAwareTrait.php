@@ -2,7 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
-use Dvsa\Olcs\Api\Service\Ebsr\TransExchange\Client as TransExchangeClient;
+use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient as TransExchangeClient;
+use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientInterface;
 
 /**
  * TransExchange Aware Trait
@@ -12,20 +13,20 @@ use Dvsa\Olcs\Api\Service\Ebsr\TransExchange\Client as TransExchangeClient;
 trait TransExchangeAwareTrait
 {
     /**
-     * @var TransExchangeClient
+     * @var \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientInterface
      */
     private $transExchange;
 
     /**
-     * @param TransExchangeClient $transExchange
+     * @param TransExchangeClientInterface $transExchange
      */
-    public function setTransExchange(TransExchangeClient $transExchange)
+    public function setTransExchange(TransExchangeClientInterface $transExchange)
     {
         $this->transExchange = $transExchange;
     }
 
     /**
-     * @return TransExchangeClient
+     * @return TransExchangeClientInterface
      */
     public function getTransExchange()
     {

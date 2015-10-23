@@ -7,50 +7,66 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
-use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapCmd;
+use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap as RequestMapCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareTrait;
+use Olcs\XmlTools\Xml\TemplateBuilder;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
  * Request new Ebsr map
  */
 final class ProcessRequestMap extends AbstractCommandHandler
-    implements AuthAwareInterface, TransactionedInterface, UploaderAwareInterface, TransExchangeAwareInterface
+    implements TransactionedInterface, UploaderAwareInterface, TransExchangeAwareInterface
 {
-    use AuthAwareTrait;
     use UploaderAwareTrait;
     use TransExchangeAwareTrait;
 
     protected $repoServiceName = 'bus';
 
-    protected $template;
+    protected $templatePaths;
 
     /**
-     * @var
+     * @var TemplateBuilder
      */
-    protected $fileStructure;
+    protected $templateBuilder;
+
+    /**
+     * @var FileProcessorInterface
+     */
+    protected $fileProcesor;
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->fileStructure = $mainServiceLocator->get('EbsrFileStructure');
+        $this->fileProcesor = $mainServiceLocator->get(FileProcessorInterface::class);
 
-        $this->template = $mainServiceLocator->get('EbsrRequestMapTemplate');
+        if (!isset($config['transexchange_publisher'])) {
+            throw new \RuntimeException('Missing transexchange_publisher config');
+        }
+
+        $config = $config['transexchange_publisher'];
+        if (!isset($config['templates'])) {
+            throw new \RuntimeException('Missing templates');
+        }
+
+        $this->templatePaths = $config['templates'];
+
+        $this->templateBuilder = new TemplateBuilder();
 
         return parent::createService($serviceLocator);
     }
@@ -69,24 +85,46 @@ final class ProcessRequestMap extends AbstractCommandHandler
         $busReg = $this->getRepo()->fetchUsingId($command);
         $ebsrSubmissions = $busReg->getEbsrSubmissions();
 
-        if ($ebsrSubmissions->isEmpty()) {
-            //throw exception
-        }
-
         /** @var EbsrSubmissionEntity $submission */
         $submission = $ebsrSubmissions->first();
-        $file = $this->getUploader()->download($submission->getDocument()->getIdentifier());
 
-        $xmlFilename = $this->fileStructure->getValue($file);
-        $template = $this->createRequestMapTemplate($xmlFilename, $command->getScale());
-        $mapContent = $this->getTransExchange()->makeRequest($template);
+        try {
+            $xmlFilename = $this->fileProcesor->fetchXmlFileNameFromDocumentStore($submission->getDocument()->getIdentifier());
 
-        $this->handleSideEffects(
-            [
-                $this->generateDocument($mapContent, $busReg, basename($xmlFilename)),
-                $this->createTaskCommand($busReg->getEbsrSubmissions()->first())
-            ]
-        );
+            $template = $this->createRequestMapTemplate($command->getTemplate(), $xmlFilename, $command->getScale());
+            $documents = $this->getTransExchange()->makeRequest($template);
+
+            if (!isset($documents['files'])) {
+                throw new Exception\RunTimeException('Invalid response from transXchange publisher');
+            }
+
+            foreach ($documents['files'] as $document) {
+                $result->merge(
+                    $this->handleSideEffect($this->generateDocument(file_get_contents($document), $busReg, $document))
+                );
+            }
+
+            if ($command->getUser() !== null) {
+                $result->merge(
+                    $this->handleSideEffect(
+                        $this->createTaskCommand($busReg, $command->getUser())
+                    )
+                );
+            }
+
+        } catch (\Exception $e) {
+            if ($command->getUser() !== null) {
+                //@TODO handle case where there is no user... eg it's been uploaded by an operator
+                $result->merge(
+                    $this->handleSideEffect(
+                        $this->createFailedTaskCommand($busReg, $command->getUser())
+                    )
+                );
+            }
+
+            throw $e;
+        }
+
 
         return $result;
     }
@@ -96,7 +134,7 @@ final class ProcessRequestMap extends AbstractCommandHandler
      * @param $scale
      * @return ProcessRequestMap
      */
-    private function createRequestMapTemplate($xmlFilename, $scale)
+    private function createRequestMapTemplate($template, $xmlFilename, $scale)
     {
         $dir = dirname($xmlFilename);
 
@@ -107,9 +145,7 @@ final class ProcessRequestMap extends AbstractCommandHandler
             'RouteScale' => $scale
         ];
 
-        $this->template->setVariables($substitutions);
-
-        return $this->template;
+        return $this->templateBuilder->buildTemplate($this->templatePaths[$template], $substitutions);
     }
 
     /**
@@ -126,7 +162,7 @@ final class ProcessRequestMap extends AbstractCommandHandler
             'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
             'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_OTHER_DOCUMENTS,
             'filename' => $filename,
-            'description' => 'Ebsr Map'
+            'description' => 'TransXchange file'
         ];
 
         return UploadCmd::create($data);
@@ -136,17 +172,36 @@ final class ProcessRequestMap extends AbstractCommandHandler
      * @param BusRegEntity $busReg
      * @return CreateTaskCmd
      */
-    private function createTaskCommand(BusRegEntity $busReg)
+    private function createTaskCommand(BusRegEntity $busReg, $userId)
     {
-        $currentUser = $this->getCurrentUser();
-
         $actionDate = date('Y-m-d H:i:s');
         $data = [
             'category' => TaskEntity::CATEGORY_BUS,
             'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
             'description' => 'New route map available: [' . $busReg->getRegNo() . ']',
             'actionDate' => $actionDate,
-            'assignedToUser' => $currentUser->getId(),
+            'assignedToUser' => $userId,
+            'assignedToTeam' => 6,
+            'busReg' => $busReg->getId(),
+            'licence' => $busReg->getLicence()->getId(),
+        ];
+
+        return CreateTaskCmd::create($data);
+    }
+
+    /**
+     * @param BusRegEntity $busReg
+     * @return CreateTaskCmd
+     */
+    private function createFailedTaskCommand(BusRegEntity $busReg, $userId)
+    {
+        $actionDate = date('Y-m-d H:i:s');
+        $data = [
+            'category' => TaskEntity::CATEGORY_BUS,
+            'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
+            'description' => 'Route map generation for: [' . $busReg->getRegNo() . '] failed',
+            'actionDate' => $actionDate,
+            'assignedToUser' => $userId,
             'assignedToTeam' => 6,
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),

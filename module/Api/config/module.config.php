@@ -68,21 +68,17 @@ return [
             \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManagerFactory::class,
 
-            \Dvsa\Olcs\Api\Service\Ebsr\TransExchange\Client::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\TransExchange\Client::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientFactory::class,
 
             'TransExchangeXmlMapping' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangeXmlFactory::class,
             'TransExchangePublisherXmlMapping' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangePublisherXmlFactory::class,
 
-            'EbsrStandardRequestTemplate' =>
-                \Dvsa\Olcs\Api\Service\Ebsr\TransExchange\TemplateFactory::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\FileProcessor::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\FileProcessorFactory::class,
 
-            'EbsrRequestMapTemplate' =>
-                \Dvsa\Olcs\Api\Service\Ebsr\TransExchange\TemplateFactory::class,
-
-            'EbsrFileStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\FileStructureInputFactory::class,
             'EbsrXmlStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class,
             'EbsrBusRegInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory::class
         ],
@@ -536,8 +532,10 @@ return [
             'uri' => 'http://localhost:8080/txc/publisherService',
             'options' => ['timeout' => 30],
             'templates' => [
-                'Standard' => '../data/ebsr/txc_template.xml',
-                'RequestMap' => '../data/ebsr/requestmap_template.xml'
+                \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::GENERATE_DOCS_TEMPLATE =>
+                    '../data/ebsr/txc_template.xml',
+                \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::REQUEST_MAP_TEMPLATE =>
+                    '../data/ebsr/requestmap_template.xml'
             ]
         ],
     ],
