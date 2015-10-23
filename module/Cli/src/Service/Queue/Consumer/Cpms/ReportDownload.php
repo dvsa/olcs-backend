@@ -23,9 +23,6 @@ class ReportDownload extends AbstractConsumer
 {
     const MAX_ATTEMPTS = 10;
 
-    // parameterize this if/when we ever do other reports
-    const FILENAME = 'Daily Balance Report';
-
     /**
      * Process the message item
      *
@@ -55,7 +52,7 @@ class ReportDownload extends AbstractConsumer
         );
 
         $extension = $result['extension'] ? ('.'.$result['extension']) : '';
-        $filename = self::FILENAME . $extension;
+        $filename = $options['name'] . $extension;
         $command = DownloadReportCmd::create(
             [
                 'reference' => $reference,

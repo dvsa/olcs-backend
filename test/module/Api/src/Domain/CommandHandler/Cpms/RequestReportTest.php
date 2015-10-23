@@ -56,6 +56,7 @@ class RequestReportTest extends CommandHandlerTestCase
         $reportCode = 'FOO';
         $start = '2015-10-07 12:34:56';
         $end = '2015-10-08 12:34:55';
+        $filename = 'FILENAME';
 
         // expectations
         $this->mockCpmsService
@@ -68,6 +69,7 @@ class RequestReportTest extends CommandHandlerTestCase
                     $this->assertEquals($end, $endDatetime->format('Y-m-d H:i:s'));
                     return [
                         'reference' => 'OLCS-1234-FOO',
+                        'code' => \Dvsa\Olcs\Api\Service\CpmsHelperInterface::RESPONSE_SUCCESS,
                     ];
                 }
             );
@@ -82,7 +84,7 @@ class RequestReportTest extends CommandHandlerTestCase
                 'type' => Queue::TYPE_CPMS_REPORT_DOWNLOAD,
                 'status' => Queue::STATUS_QUEUED,
                 'user' => 123,
-                'options' => '{"reference":"OLCS-1234-FOO"}',
+                'options' => '{"reference":"OLCS-1234-FOO","name":"FILENAME"}',
             ],
             $queueResult
         );
@@ -93,6 +95,7 @@ class RequestReportTest extends CommandHandlerTestCase
                 'reportCode' => $reportCode,
                 'start' => $start,
                 'end' => $end,
+                'name' => $filename,
             ]
         );
         $result = $this->sut->handleCommand($command);
@@ -100,5 +103,47 @@ class RequestReportTest extends CommandHandlerTestCase
         // assertions
         $this->assertEquals(['Queue created', 'Report requested'], $result->getMessages());
         $this->assertEquals(['queue' => 99, 'cpmsReport' => 'OLCS-1234-FOO'], $result->getIds());
+    }
+
+    public function testHandleCommandErrorFromCpms()
+    {
+        $reportCode = 'FOO';
+        $start = '2015-10-07 12:34:56';
+        $end = '2015-10-08 12:34:55';
+        $filename = 'FILENAME';
+
+        // expectations
+        $this->mockCpmsService
+            ->shouldReceive('requestReport')
+            ->once()
+            ->with($reportCode, m::type(\DateTime::class), m::type(\DateTime::class))
+            ->andReturnUsing(
+                function ($code, $startDatetime, $endDatetime) use ($start, $end) {
+                    $this->assertEquals($start, $startDatetime->format('Y-m-d H:i:s'));
+                    $this->assertEquals($end, $endDatetime->format('Y-m-d H:i:s'));
+                    return [
+                        'message' => 'MESSAGE',
+                        'code' => 'XXX',
+
+                    ];
+                }
+            );
+
+        // invoke
+        $command = Cmd::create(
+            [
+                'reportCode' => $reportCode,
+                'start' => $start,
+                'end' => $end,
+                'name' => $filename,
+            ]
+        );
+
+        try {
+            $this->sut->handleCommand($command);
+            $this->fail('Exception should have been thrown');
+        } catch (\Dvsa\Olcs\Api\Domain\Exception\BadRequestException $e) {
+            $this->assertSame(['MESSAGE'], $e->getMessages());
+        }
     }
 }

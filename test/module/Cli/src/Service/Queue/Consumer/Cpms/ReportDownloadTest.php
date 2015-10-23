@@ -26,7 +26,7 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $item = new QueueEntity();
         $item->setId(99);
         $item->setAttempts(1);
-        $item->setOptions('{"reference":"OLCS-1234-ABCD"}');
+        $item->setOptions('{"reference":"OLCS-1234-ABCD", "name": "FILENAME"}');
 
         $expectedQryData = ['reference' => 'OLCS-1234-ABCD'];
         $qryResult = [
@@ -43,7 +43,7 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $expectedCmdData = [
             'reference' => 'OLCS-1234-ABCD',
             'token'     => 'secrettoken',
-            'filename'  => 'Daily Balance Report.csv',
+            'filename'  => 'FILENAME.csv',
         ];
         $cmdResult = new Result();
         $cmdResult
@@ -71,8 +71,9 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $result = $this->sut->processMessage($item);
 
         $this->assertEquals(
-            'Successfully processed message: 99 {"reference":"OLCS-1234-ABCD"} Download using reference OLCS-1234-ABCD'
-            . ' and token secrettoken and extension csv|Report downloaded|File uploaded|Document created',
+            'Successfully processed message: 99 {"reference":"OLCS-1234-ABCD", "name": "FILENAME"} Download using '
+            . 'reference OLCS-1234-ABCD and token secrettoken and extension csv|Report downloaded|File '
+            . 'uploaded|Document created',
             $result
         );
     }
@@ -159,7 +160,7 @@ class ReportDownloadTest extends AbstractConsumerTestCase
     {
         $item = new QueueEntity();
         $item->setId(99);
-        $item->setOptions('{"reference":"OLCS-1234-ABCD"}');
+        $item->setOptions('{"reference":"OLCS-1234-ABCD", "name": "FILENAME"}');
 
         $expectedQryData = ['reference' => 'OLCS-1234-ABCD'];
         $qryResult = [
@@ -176,7 +177,7 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $expectedCmdData = [
             'reference' => 'OLCS-1234-ABCD',
             'token'     => 'secrettoken',
-            'filename'  => 'Daily Balance Report.csv',
+            'filename'  => 'FILENAME.csv',
         ];
         $this->expectCommandException(
             \Dvsa\Olcs\Transfer\Command\Cpms\DownloadReport::class,
@@ -194,7 +195,7 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $result = $this->sut->processMessage($item);
 
         $this->assertEquals(
-            'Failed to process message: 99 {"reference":"OLCS-1234-ABCD"} backend fail',
+            'Failed to process message: 99 {"reference":"OLCS-1234-ABCD", "name": "FILENAME"} backend fail',
             $result
         );
     }
