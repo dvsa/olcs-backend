@@ -39,18 +39,20 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
     private function getOwnerLabel(TransportManagerApplication $tma)
     {
         $map = [
-            Organisation::ORG_TYPE_LLP => 'Director\'s signature',
-            Organisation::ORG_TYPE_REGISTERED_COMPANY => 'Director\'s signature',
-            Organisation::ORG_TYPE_PARTNERSHIP => 'Partner\'s signature',
-            Organisation::ORG_TYPE_SOLE_TRADER => 'Owner\'s signature',
+            Organisation::ORG_TYPE_LLP => 'directors-signature',
+            Organisation::ORG_TYPE_REGISTERED_COMPANY => 'directors-signature',
+            Organisation::ORG_TYPE_PARTNERSHIP => 'partners-signature',
+            Organisation::ORG_TYPE_SOLE_TRADER => 'owners-signature',
         ];
 
         $organisationType = $tma->getApplication()->getLicence()->getOrganisation()->getType()->getId();
 
         if (isset($map[$organisationType])) {
-            return $map[$organisationType];
+            $label = $map[$organisationType];
+        } else {
+            $label = 'responsible-person-signature';
         }
 
-        return 'A responsible person\'s signature';
+        return $this->translate($label);
     }
 }

@@ -31,7 +31,7 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
     /**
      * @dataProvider provider
      */
-    public function testGetConfig($organistionTypeId, $expected)
+    public function testGetConfig($organistionTypeId, $label)
     {
         $mockTranslator = m::mock();
         $this->sm->setService('translator', $mockTranslator);
@@ -41,21 +41,25 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
         $mockTranslator->shouldReceive('translate')->with('tm-review-return-address', 'snapshot')->once()
             ->andReturn('ADDRESS');
 
+        $mockTranslator->shouldReceive('translate')->with($label, 'snapshot')->once()
+            ->andReturn($label .'translated');
+
         $tma = m::mock(TransportManagerApplication::class);
         $tma->shouldReceive('getApplication->getLicence->getOrganisation->getType->getId')->with()->once()
             ->andReturn($organistionTypeId);
 
+        $expected = $label .'translated_ADDRESS';
         $this->assertEquals(['markup' => $expected], $this->sut->getConfig($tma));
     }
 
     public function provider()
     {
         return [
-            ['foobar', 'A responsible person\'s signature_ADDRESS'],
-            [Organisation::ORG_TYPE_LLP, 'Director\'s signature_ADDRESS'],
-            [Organisation::ORG_TYPE_REGISTERED_COMPANY, 'Director\'s signature_ADDRESS'],
-            [Organisation::ORG_TYPE_PARTNERSHIP, 'Partner\'s signature_ADDRESS'],
-            [Organisation::ORG_TYPE_SOLE_TRADER, 'Owner\'s signature_ADDRESS'],
+            ['foobar', 'responsible-person-signature'],
+            [Organisation::ORG_TYPE_LLP, 'directors-signature'],
+            [Organisation::ORG_TYPE_REGISTERED_COMPANY, 'directors-signature'],
+            [Organisation::ORG_TYPE_PARTNERSHIP, 'partners-signature'],
+            [Organisation::ORG_TYPE_SOLE_TRADER, 'owners-signature'],
         ];
     }
 }
