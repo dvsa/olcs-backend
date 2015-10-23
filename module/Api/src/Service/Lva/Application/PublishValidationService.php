@@ -17,7 +17,6 @@ class PublishValidationService implements \Zend\ServiceManager\FactoryInterface
     const ERROR_MUST_COMPETE_OC = 'APP-PUB-OC';
     const ERROR_MUST_COMPETE_TM = 'APP-PUB-TM';
     const ERROR_OUSTANDING_FEE = 'APP-PUB-OUSTANDING-FEE';
-    const ERROR_S4 = 'APP-PUB-S4';
     const ERROR_NOT_PUBLISHABLE = 'APP-PUB-NOT-PUBLISHABLE';
 
     /**
@@ -60,11 +59,6 @@ class PublishValidationService implements \Zend\ServiceManager\FactoryInterface
         // There is an outstanding application fee;
         if (!empty($this->feesHelper->getOutstandingFeesForApplication($application->getId()))) {
             $errors[self::ERROR_OUSTANDING_FEE] = 'There is an outstanding application fee';
-        }
-
-        // There is an schedule 4/1 record with statuses blank or Approved;
-        if ($application->hasActiveS4()) {
-            $errors[self::ERROR_S4] = 'There is an associated blank or approved S4';
         }
 
         if (!$application->isPublishable()) {
