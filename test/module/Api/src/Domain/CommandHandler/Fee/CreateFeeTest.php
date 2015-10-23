@@ -43,7 +43,8 @@ class CreateFeeTest extends CommandHandlerTestCase
 
         $this->references = [
             FeeType::class => [
-                FeeType::FEE_TYPE_APP => m::mock(FeeType::class)
+                99 => m::mock(FeeType::class),
+                101 => m::mock(FeeType::class)
             ],
             Task::class => [
                 11 => m::mock(Task::class)
@@ -65,7 +66,7 @@ class CreateFeeTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'feeType' => FeeType::FEE_TYPE_APP,
+            'feeType' => 99,
             'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
             'amount' => 10.5,
             'task' => 11,
@@ -75,6 +76,11 @@ class CreateFeeTest extends CommandHandlerTestCase
             'invoicedDate' => '2015-01-01',
             'description' => 'Some fee'
         ];
+
+
+        $this->mapReference(FeeType::class, 99)
+            ->shouldReceive('isMiscellaneous')
+            ->andReturn(false);
 
         /** @var FeeEntity $savedFee */
         $savedFee = null;
@@ -112,6 +118,118 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->assertSame($this->references[Task::class][11], $savedFee->getTask());
         $this->assertEquals(10.5, $savedFee->getAmount());
         $this->assertSame($this->refData[FeeEntity::STATUS_OUTSTANDING], $savedFee->getFeeStatus());
-        $this->assertSame($this->references[FeeType::class][FeeType::FEE_TYPE_APP], $savedFee->getFeeType());
+        $this->assertSame($this->references[FeeType::class][99], $savedFee->getFeeType());
+    }
+
+    public function testHandleCommandForApplicationFee()
+    {
+        $data = [
+            'feeType' => 101,
+            'application' => 22,
+            'invoicedDate' => '2015-01-01',
+        ];
+
+        $this->mapReference(FeeType::class, 101)
+            ->shouldReceive('isMiscellaneous')
+            ->andReturn(true)
+            ->shouldReceive('getDescription')
+            ->andReturn('some fee type')
+            ->shouldReceive('getAmount')
+            ->andReturn('123.45');
+
+        $this->mapReference(Application::class, 22)
+            ->setLicence($this->mapReference(Licence::class,33));
+
+        /** @var FeeEntity $savedFee */
+        $savedFee = null;
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['Fee']->shouldReceive('save')
+            ->once()
+            ->with(m::type(FeeEntity::class))
+            ->andReturnUsing(
+                function (FeeEntity $fee) use (&$savedFee) {
+                    $fee->setId(111);
+                    $savedFee = $fee;
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'fee' => 111,
+            ],
+            'messages' => [
+                'Fee created successfully'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals('some fee type', $savedFee->getDescription());
+        $this->assertEquals('2015-01-01', $savedFee->getInvoicedDate()->format('Y-m-d'));
+        $this->assertSame($this->references[Licence::class][33], $savedFee->getLicence());
+        $this->assertSame($this->references[Application::class][22], $savedFee->getApplication());
+        $this->assertEquals('123.45', $savedFee->getAmount());
+        $this->assertSame($this->refData[FeeEntity::STATUS_OUTSTANDING], $savedFee->getFeeStatus());
+        $this->assertSame($this->references[FeeType::class][101], $savedFee->getFeeType());
+    }
+
+    public function testHandleCommandForBusRegFee()
+    {
+        $data = [
+            'feeType' => 101,
+            'busReg' => 44,
+            'invoicedDate' => '2015-01-01',
+        ];
+
+        $this->mapReference(FeeType::class, 101)
+            ->shouldReceive('isMiscellaneous')
+            ->andReturn(true)
+            ->shouldReceive('getDescription')
+            ->andReturn('some fee type')
+            ->shouldReceive('getAmount')
+            ->andReturn('123.45');
+
+        $this->mapReference(BusReg::class, 44)
+            ->setLicence($this->mapReference(Licence::class,33));
+
+        /** @var FeeEntity $savedFee */
+        $savedFee = null;
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['Fee']->shouldReceive('save')
+            ->once()
+            ->with(m::type(FeeEntity::class))
+            ->andReturnUsing(
+                function (FeeEntity $fee) use (&$savedFee) {
+                    $fee->setId(111);
+                    $savedFee = $fee;
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'fee' => 111,
+            ],
+            'messages' => [
+                'Fee created successfully'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals('some fee type', $savedFee->getDescription());
+        $this->assertEquals('2015-01-01', $savedFee->getInvoicedDate()->format('Y-m-d'));
+        $this->assertSame($this->references[Licence::class][33], $savedFee->getLicence());
+        $this->assertSame($this->references[BusReg::class][44], $savedFee->getBusReg());
+        $this->assertEquals('123.45', $savedFee->getAmount());
+        $this->assertSame($this->refData[FeeEntity::STATUS_OUTSTANDING], $savedFee->getFeeStatus());
+        $this->assertSame($this->references[FeeType::class][101], $savedFee->getFeeType());
     }
 }
