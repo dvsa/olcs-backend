@@ -43,7 +43,14 @@ final class ProcessPacks extends AbstractCommandHandler
 
     protected $repoServiceName = 'bus';
 
-    protected $extraRepos = ['Document', 'EbsrSubmission', 'Licence', 'BusRegOtherService'];
+    protected $extraRepos = [
+        'Document',
+        'EbsrSubmission',
+        'Licence',
+        'BusRegOtherService',
+        'TrafficArea',
+        'LocalAuthority'
+    ];
 
     protected $xmlStructure;
 
@@ -299,11 +306,15 @@ final class ProcessPacks extends AbstractCommandHandler
     private function processLocalAuthority($localAuthority)
     {
         $result = new ArrayCollection();
+
         if (!empty($localAuthority)) {
-            foreach ($localAuthority as $la) {
-                $result->add($this->getRepo()->getReference(LocalAuthorityEntity::class, $la));
+            $laList = $this->getRepo('LocalAuthority')->fetchByTxcName($localAuthority);
+
+            foreach ($laList as $la) {
+                $result->add($la);
             }
         }
+
         return $result;
     }
 
@@ -316,11 +327,15 @@ final class ProcessPacks extends AbstractCommandHandler
     private function processTrafficAreas($trafficAreas)
     {
         $result = new ArrayCollection();
+
         if (!empty($trafficAreas)) {
-            foreach ($trafficAreas as $ta) {
-                $result->add($this->getRepo()->getReference(TrafficAreaEntity::class, $ta));
+            $taList = $this->getRepo('TrafficArea')->fetchByTxcName($trafficAreas);
+
+            foreach ($taList as $ta) {
+                $result->add($ta);
             }
         }
+
         return $result;
     }
 }
