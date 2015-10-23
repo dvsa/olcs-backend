@@ -18,4 +18,56 @@ class FeeTypeEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    protected $sut;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->sut = $this->instantiate($this->entityClass);
+    }
+
+    public function testIsMiscellaneous()
+    {
+        $this->assertFalse($this->sut->isMiscellaneous());
+
+        $this->sut->setIsMiscellaneous(true);
+
+        $this->assertTrue($this->sut->isMiscellaneous());
+    }
+
+    /**
+     * @param string $fixedValue
+     * @param string $fiveYearValue
+     * @param array $expected
+     * @dataProvider bundleDataProvider
+     */
+    public function testGetCalculatedBundleValues($fixedValue, $fiveYearValue, $expected)
+    {
+        $this->sut->setFixedValue($fixedValue);
+        $this->sut->setFiveYearValue($fiveYearValue);
+
+        $this->assertEquals($expected, $this->sut->getCalculatedBundleValues());
+    }
+
+    public function bundleDataProvider()
+    {
+        return [
+            [
+                '10.00',
+                null,
+                [
+                    'displayValue' => '10.00',
+                ]
+            ],
+            [
+                null,
+                '50.00',
+                [
+                    'displayValue' => '50.00',
+                ]
+            ],
+        ];
+    }
 }
