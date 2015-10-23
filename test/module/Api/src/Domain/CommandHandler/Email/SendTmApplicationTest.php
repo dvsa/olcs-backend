@@ -51,13 +51,14 @@ class SendTmApplicationTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 863]);
 
-        $person = new \Dvsa\Olcs\Api\Entity\Person\Person();
-        $person->setForename('FORENAME');
         $hcd = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(m::mock(RefData::class));
         $hcd->setEmailAddress('EMAIL');
-        $hcd->setPerson($person);
         $tm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
         $tm->setHomeCd($hcd);
+
+        $user = new \Dvsa\Olcs\Api\Entity\User\User('TYPE');
+        $user->setLoginId('username1');
+        $tm->addUsers($user);
 
         $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
         $organisation->setName('ORGANISATION');
@@ -82,10 +83,10 @@ class SendTmApplicationTest extends CommandHandlerTestCase
             m::type(\Dvsa\Olcs\Email\Data\Message::class),
             'transport-manager-complete-digital-form',
             [
-                'name' => 'FORENAME',
                 'organisation' => 'ORGANISATION',
                 'reference' => 'LIC01/442',
-                'signInLink' => 'http://selfserve/'. $uriPart .'/442/transport-managers/details/75/edit-details/'
+                'username' => 'username1',
+                'isNi' => false,
             ],
             null
         );

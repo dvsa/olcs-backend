@@ -1,20 +1,22 @@
 <h2>WELSH</h2>
 
-<p>Hi <?php echo $this->name ?>,</p>
-
+<p>Hello,</p>
 <p>
-    <strong><?php echo $this->organisation ?></strong> have named you as a Transport Manager on the Vehicle Operator Licence
-    <strong><?php echo $this->reference ?></strong>.
+    <?php echo $this->organisation ?> has named you as a Transport Manager on Vehicle Operator Licence <?php echo $this->reference ?>.
 </p>
-
 <p>
-    <a href="<?php echo $this->signInLink?>">Sign in to my account</a>
+    Before we can consider their application, you’ll need to submit your details to us.
 </p>
-
 <p>
-    Experiencing problems?<br>
-    If you are unable to access the form online using the link above, this help guide provides answers to
-    frequently asked questions. You can also contact us at <a href="mailto:assisted.digital@otc.gsi.gov.uk">assisted.digital@otc.gsi.gov.uk</a>
-    If for whatever reason you are unable to complete the Transport Manager form online, you can download a
-    paper copy of the <a href="https://www.gov.uk/government/publications/application-to-add-a-transport-manager-to-a-licence-tm1">TM1 form here</a>. You will need to complete the TM1 form and mail it to us.
+    To do that sign in online with your username (<?php echo $this->username ?>) and password.
+</p>
+<p>
+    <b>Having problems?</b><br>
+    <?php
+    $url = ($this->isNi) ?
+        'http://www.doeni.gov.uk/index/information/foi/recent-releases/publications-details.htm?docid=9994' :
+        'https://www.gov.uk/government/publications/application-to-add-a-transport-manager-to-a-licence-tm1';
+    ?>
+    For advice see the <a href="<?php echo $url ?>">Transport Manager help guide</a> or
+    <a href="mailto:assisted.digital@otc.gsi.gov.uk">email us</a>.
 </p>
