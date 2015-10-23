@@ -8,18 +8,19 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Fee\CreateFee;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Fee;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task;
-use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Mockery as m;
 
 /**
  * Create Fee Test
@@ -236,5 +237,50 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->assertEquals('123.45', $savedFee->getAmount());
         $this->assertSame($this->refData[FeeEntity::STATUS_OUTSTANDING], $savedFee->getFeeStatus());
         $this->assertSame($this->references[FeeType::class][101], $savedFee->getFeeType());
+    }
+
+    public function testValidateMiscFeeType()
+    {
+        $feeType = m::mock(FeeType::class)
+            ->shouldReceive('isMiscellaneous')
+            ->andReturn(true)
+            ->getMock();
+
+        $command = Cmd::create([]);
+
+        $this->assertTrue($this->sut->validate($command, $feeType));
+    }
+
+    public function testValidateNoLinkedEntity()
+    {
+        $feeType = m::mock(FeeType::class)
+            ->shouldReceive('isMiscellaneous')
+            ->andReturn(false)
+            ->getMock();
+
+        $command = Cmd::create([]);
+
+        $this->setExpectedException(ValidationException::class);
+
+        $this->sut->validate($command, $feeType);
+    }
+
+    public function testValidateIrfoBoth()
+    {
+        $feeType = m::mock(FeeType::class)
+            ->shouldReceive('isMiscellaneous')
+            ->andReturn(false)
+            ->getMock();
+
+        $command = Cmd::create(
+            [
+                'irfoGvPermit' => 1,
+                'irfoPsvAuth' => 2,
+            ]
+        );
+
+        $this->setExpectedException(ValidationException::class);
+
+        $this->sut->validate($command, $feeType);
     }
 }
