@@ -99,7 +99,6 @@ final class CreateFee extends AbstractCommandHandler
         }
 
         if ($command->getUser() !== null) {
-
             $fee->setCreatedBy($this->getRepo()->getReference(User::class, $command->getUser()));
         }
 
