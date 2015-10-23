@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as Repo;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
@@ -105,6 +106,7 @@ class FeeTypeTest extends RepositoryTestCase
         $this->em
             ->shouldReceive('getReference')
             ->with(TrafficAreaEntity::class, 'N')
+            ->once()
             ->andReturn('NI_TRAFFIC_AREA');
 
         $this->sut->shouldReceive('fetchPaginatedList')
@@ -129,7 +131,7 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
-    public function testFetchListForLicence()
+    public function testFetchListForLicenceNi()
     {
         $licenceId = 99;
 
@@ -143,7 +145,7 @@ class FeeTypeTest extends RepositoryTestCase
             ->getMock();
         $mockTa = m::mock(TrafficAreaEntity::class)
             ->shouldReceive('getIsNi')
-            ->andReturn(false)
+            ->andReturn(true)
             ->getMock();
         $mockLicence
             ->shouldReceive('getTrafficArea')
@@ -181,6 +183,7 @@ class FeeTypeTest extends RepositoryTestCase
         $this->em
             ->shouldReceive('getReference')
             ->with(TrafficAreaEntity::class, 'N')
+            ->once()
             ->andReturn('NI_TRAFFIC_AREA');
 
         $this->sut->shouldReceive('fetchPaginatedList')
@@ -200,13 +203,16 @@ class FeeTypeTest extends RepositoryTestCase
          . ' AND ft.costCentreRef != [[IR]]'
          . ' AND ft.goodsOrPsv = [[GOODS_OR_PSV]]'
          . ' AND ft.licenceType = [[LICENCE_TYPE]]'
-         . ' AND (ft.trafficArea != [[NI_TRAFFIC_AREA]] OR ft.trafficArea IS NULL)';
+         . ' AND ft.trafficArea = [[NI_TRAFFIC_AREA]]';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
 
     public function testFetchListForOrganisation()
     {
+        $now = new DateTime();
+        $expectedDate = $now->format(DateTime::W3C);
+
         $organisationId = 99;
 
         $qb = $this->createMockQb('QUERY');
@@ -233,26 +239,68 @@ class FeeTypeTest extends RepositoryTestCase
             ->once()
             ->with('ft.effectiveFrom', 'DESC');
 
-        $this->em
-            ->shouldReceive('getReference')
-            ->with(TrafficAreaEntity::class, 'N')
-            ->andReturn('NI_TRAFFIC_AREA');
-
         $this->sut->shouldReceive('fetchPaginatedList')
             ->andReturn(['RESULTS']);
 
         $queryDto = FeeTypeListQry::create(
             [
                 'organisation' => $organisationId,
-                'effectiveDate' => '2014-10-26',
             ]
         );
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expectedQuery = 'QUERY'
-         . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+01:00]]'
+         . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
          . ' AND ft.isMiscellaneous = [[0]]'
          . ' AND ft.costCentreRef = [[IR]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchListMiscellaneous()
+    {
+        $now = new DateTime();
+        $expectedDate = $now->format(DateTime::W3C);
+
+        $organisationId = 99;
+
+        $qb = $this->createMockQb('QUERY');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('feeType', 'ftft')
+            ->once()
+            ->andReturnSelf();
+
+        $qb
+            ->shouldReceive('addOrderBy')
+            ->once()
+            ->with('ftft.id', 'ASC')
+            ->shouldReceive('addOrderBy')
+            ->once()
+            ->with('ft.effectiveFrom', 'DESC');
+
+        $this->sut->shouldReceive('fetchPaginatedList')
+            ->andReturn(['RESULTS']);
+
+        $queryDto = FeeTypeListQry::create(
+            [
+                'isMiscellaneous' => 1,
+            ]
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
+
+        $expectedQuery = 'QUERY'
+         . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
+         . ' AND ft.isMiscellaneous = [[1]]';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
