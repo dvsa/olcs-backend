@@ -40,9 +40,13 @@ final class CreateTask extends AbstractCommand
 
     protected $case;
 
+    protected $submission;
+
     protected $transportManager;
 
     protected $irfoOrganisation;
+
+    protected $assignedByUser;
 
     /**
      * @return mixed
@@ -143,6 +147,14 @@ final class CreateTask extends AbstractCommand
     /**
      * @return int
      */
+    public function getSubmission()
+    {
+        return $this->submission;
+    }
+
+    /**
+     * @return int
+     */
     public function getTransportManager()
     {
         return $this->transportManager;
@@ -154,5 +166,13 @@ final class CreateTask extends AbstractCommand
     public function getIrfoOrganisation()
     {
         return $this->irfoOrganisation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAssignedByUser()
+    {
+        return $this->assignedByUser;
     }
 }

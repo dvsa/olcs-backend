@@ -146,6 +146,15 @@ final class CreateTask extends AbstractCommandHandler
             );
         }
 
+        if ($command->getSubmission() !== null) {
+            $task->setSubmission(
+                $this->getRepo()->getReference(
+                    \Dvsa\Olcs\Api\Entity\Submission\Submission::class,
+                    $command->getSubmission()
+                )
+            );
+        }
+
         if ($command->getTransportManager() !== null) {
             $task->setTransportManager(
                 $this->getRepo()->getReference(
@@ -160,6 +169,15 @@ final class CreateTask extends AbstractCommandHandler
                 $this->getRepo()->getReference(
                     \Dvsa\Olcs\Api\Entity\Organisation\Organisation::class,
                     $command->getIrfoOrganisation()
+                )
+            );
+        }
+
+        if ($command->getAssignedByUser() !== null) {
+            $task->setAssignedByUser(
+                $this->getRepo()->getReference(
+                    \Dvsa\Olcs\Api\Entity\User\User::class,
+                    $command->getAssignedByUser()
                 )
             );
         }
