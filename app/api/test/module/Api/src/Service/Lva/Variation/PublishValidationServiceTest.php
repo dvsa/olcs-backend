@@ -30,7 +30,6 @@ class PublishValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestC
         /* @var $application ApplicationEntity  */
         $application = m::mock(ApplicationEntity::class)->makePartial();
 
-        $application->shouldReceive('hasActiveS4')->with()->once()->andReturn(false);
         $application->shouldReceive('isPublishable')->with()->once()->andReturn(true);
 
         $result = $this->sut->validate($application);
@@ -43,13 +42,11 @@ class PublishValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestC
         /* @var $application ApplicationEntity  */
         $application = m::mock(ApplicationEntity::class)->makePartial();
 
-        $application->shouldReceive('hasActiveS4')->with()->once()->andReturn(true);
         $application->shouldReceive('isPublishable')->with()->once()->andReturn(false);
 
         $result = $this->sut->validate($application);
 
-        $this->assertCount(2, $result);
-        $this->assertArrayHasKey(PublishValidationService::ERROR_S4, $result);
+        $this->assertCount(1, $result);
         $this->assertArrayHasKey(PublishValidationService::ERROR_NOT_PUBLISHABLE, $result);
     }
 }
