@@ -88,7 +88,7 @@ class ReadCaseTest extends CommandHandlerTestCase
             ->andReturnUsing(
                 function (CasesReadAudit $record) use ($user, $entity) {
                     $this->assertSame($user, $record->getUser());
-                    $this->assertSame($entity, $record->getCases());
+                    $this->assertSame($entity, $record->getCase());
                 }
             );
 

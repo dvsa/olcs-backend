@@ -16,13 +16,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="cases_read_audit",
  *    indexes={
- *        @ORM\Index(name="ix_audit_read_cases_cases_id", columns={"cases_id"}),
- *        @ORM\Index(name="ix_audit_read_cases_user_id", columns={"user_id"}),
- *        @ORM\Index(name="ix_audit_read_cases_created_on", columns={"created_on"})
+ *        @ORM\Index(name="ix_cases_read_audit_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_cases_read_audit_user_id", columns={"user_id"}),
+ *        @ORM\Index(name="ix_cases_read_audit_created_on", columns={"created_on"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_audit_read_cases_cases_id_user_id_created_on",
-     *     columns={"cases_id","user_id","created_on"})
+ *        @ORM\UniqueConstraint(name="uk_cases_read_audit_case_id_user_id_created_on",
+     *     columns={"case_id","user_id","created_on"})
  *    }
  * )
  */
@@ -31,7 +31,7 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
     use BundleSerializableTrait;
 
     /**
-     * Cases
+     * Case
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
      *
@@ -40,9 +40,9 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
      *     fetch="LAZY",
      *     inversedBy="readAudits"
      * )
-     * @ORM\JoinColumn(name="cases_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
-    protected $cases;
+    protected $case;
 
     /**
      * Created on
@@ -75,26 +75,26 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
     protected $user;
 
     /**
-     * Set the cases
+     * Set the case
      *
-     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $cases
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Cases $case
      * @return CasesReadAudit
      */
-    public function setCases($cases)
+    public function setCase($case)
     {
-        $this->cases = $cases;
+        $this->case = $case;
 
         return $this;
     }
 
     /**
-     * Get the cases
+     * Get the case
      *
      * @return \Dvsa\Olcs\Api\Entity\Cases\Cases
      */
-    public function getCases()
+    public function getCase()
     {
-        return $this->cases;
+        return $this->case;
     }
 
     /**

@@ -16,12 +16,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="licence_read_audit",
  *    indexes={
- *        @ORM\Index(name="ix_audit_read_licence_licence_id", columns={"licence_id"}),
- *        @ORM\Index(name="ix_audit_read_licence_user_id", columns={"user_id"}),
- *        @ORM\Index(name="ix_audit_read_licence_created_on", columns={"created_on"})
+ *        @ORM\Index(name="ix_licence_read_audit_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_licence_read_audit_user_id", columns={"user_id"}),
+ *        @ORM\Index(name="ix_licence_read_audit_created_on", columns={"created_on"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_audit_read_licence_licence_id_user_id_created_on",
+ *        @ORM\UniqueConstraint(name="uk_licence_read_audit_licence_id_user_id_created_on",
      *     columns={"licence_id","user_id","created_on"})
  *    }
  * )

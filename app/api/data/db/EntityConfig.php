@@ -1762,7 +1762,7 @@ return array(
         )
     ),
     'cases_read_audit' => array(
-        'cases_id' => array(
+        'case_id' => array(
             'inversedBy' => array(
                 'entity' => 'Cases',
                 'property' => 'readAudit'

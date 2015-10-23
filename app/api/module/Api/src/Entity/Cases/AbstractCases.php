@@ -347,7 +347,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\CasesReadAudit", mappedBy="cases")
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\CasesReadAudit", mappedBy="case")
      */
     protected $readAudits;
 
