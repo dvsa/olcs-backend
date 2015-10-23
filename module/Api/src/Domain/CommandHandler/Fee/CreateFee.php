@@ -116,7 +116,7 @@ final class CreateFee extends AbstractCommandHandler
         return $fee;
     }
 
-    private function validate(Cmd $command, $feeType)
+    public function validate(Cmd $command, $feeType)
     {
         if ($feeType->isMiscellaneous()) {
             // misc fees don't need linked entities
