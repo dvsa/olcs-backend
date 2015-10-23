@@ -18,6 +18,8 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\User\RegisterUserSelfserve as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
@@ -195,15 +197,35 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
                 }
             );
 
+        $identifier = 333;
+        $generateAndStoreResult = new Result();
+        $generateAndStoreResult->addId('identifier', $identifier);
+
         $this->expectedSideEffect(
             GenerateAndStore::class,
-            [],
-            new Result()
+            [
+                'template' => 'SELF_SERVICE_NEW_PASSWORD',
+                'query' => [
+                    'licence' => $licId
+                ],
+                'knownValues' => [
+                    'SELF_SERVICE_PASSWORD' => 'GENERATED_PASSWORD_HERE'
+                ],
+                'description' => 'Self service new password letter',
+                'category' => CategoryEntity::CATEGORY_APPLICATION,
+                'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_APPLICATION_OTHER_DOCUMENTS,
+                'isExternal' => false,
+                'isScan' => false
+            ],
+            $generateAndStoreResult
         );
 
         $this->expectedSideEffect(
             EnqueueFileCommand::class,
-            [],
+            [
+                'fileIdentifier' => $identifier,
+                'jobName' => 'New temporary password'
+            ],
             new Result()
         );
 
