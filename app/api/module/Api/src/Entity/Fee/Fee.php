@@ -375,6 +375,22 @@ class Fee extends AbstractFee
     }
 
     /**
+     * @return boolean
+     */
+    public function isNewApplicationFee()
+    {
+        return $this->getFeeType()->getFeeType()->getId() === FeeType::FEE_TYPE_APP;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isVariationFee()
+    {
+        return $this->getFeeType()->getFeeType()->getId() === FeeType::FEE_TYPE_VAR;
+    }
+
+    /**
      * Get the 'sales person reference', also known as 'cost centre reference'
      * for a fee. This is either a traffic area code or one of:
      *

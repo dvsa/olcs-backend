@@ -94,11 +94,9 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
         $result = new Result();
 
         foreach ($application->getFees() as $fee) {
-            if ($fee->getFeeType()->getFeeType()->getId() === FeeType::FEE_TYPE_VAR) {
-                if ($fee->isFullyOutstanding()) {
-                    // only cancel and recreate variation fee if it is fully outstanding
-                    $result->merge($this->cancelAndRecreateVariationFee($fee, $application));
-                }
+            if ($fee->isVariationFee() && $fee->isFullyOutstanding()) {
+                // only cancel and recreate variation fee if it is fully outstanding
+                $result->merge($this->cancelAndRecreateVariationFee($fee, $application));
             }
         }
 
