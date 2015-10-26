@@ -156,8 +156,7 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
     protected function shouldCreateFee(LicenceEntity $licence)
     {
         // If PSV and not SR then we don't need to create a fee
-        if ($licence->isPsv()
-            && $licence->getLicenceType()->getId() !== LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED) {
+        if ($licence->isPsv() && !$licence->isSpecialRestricted()) {
             return false;
         }
 
