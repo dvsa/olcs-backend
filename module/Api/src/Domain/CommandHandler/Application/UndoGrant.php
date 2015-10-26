@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\Criteria;
-use Dvsa\Olcs\Api\Domain\Command\Licence\CancelLicenceFees;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -45,10 +45,32 @@ final class UndoGrant extends AbstractCommandHandler implements TransactionedInt
         $this->updateStatusAndDate($licence, Licence::LICENCE_STATUS_UNDER_CONSIDERATION);
         $this->getRepo()->save($application);
 
-        $result->merge($this->handleSideEffect(CancelLicenceFees::create(['id' => $licence->getId()])));
+        $result->merge($this->maybeCancelFees($application));
+
         $count = $this->closeGrantTask($application);
 
         $result->addMessage($count . ' Task(s) closed');
+
+        return $result;
+    }
+
+    /**
+     * Cancel GRANT fees that are fully outstanding as per OLCS-11026
+     *
+     * @param ApplicationEntity $application
+     * @return Result
+     */
+    private function maybeCancelFees(ApplicationEntity $application)
+    {
+        $result = new Result();
+
+        foreach ($application->getOutstandingGrantFees() as $fee) {
+            if ($fee->isFullyOutstanding()) {
+                $result->merge(
+                    $this->handleSideEffect(CancelFee::create(['id' => $fee->getId()]))
+                );
+            }
+        }
 
         return $result;
     }
