@@ -1520,13 +1520,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     public function hasOutstandingGrantFee()
     {
         return !empty($this->getOutstandingGrantFees());
-        // foreach ($this->getFees() as $fee) {
-        //     if ($fee->isGrantFee() && $fee->isOutstanding()) {
-        //         return true;
-        //     }
-        // }
-
-        // return false;
     }
 
     /**

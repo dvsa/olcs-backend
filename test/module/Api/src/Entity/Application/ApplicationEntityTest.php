@@ -2594,4 +2594,24 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertTrue($application->isPublishable());
     }
+
+    public function testHasOutstandingGrantFee()
+    {
+        $application = $this->instantiate(Entity::class);
+
+        $this->assertFalse($application->hasOutstandingGrantFee());
+
+        $fee = m::mock()
+            ->shouldReceive('isGrantFee')
+            ->andReturn(true)
+            ->shouldReceive('isOutstanding')
+            ->andReturn(true)
+            ->shouldReceive('getId')
+            ->andReturn(99)
+            ->getMock();
+
+        $application->setFees(new ArrayCollection([$fee]));
+
+        $this->assertTrue($application->hasOutstandingGrantFee());
+    }
 }
