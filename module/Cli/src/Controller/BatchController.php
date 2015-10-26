@@ -22,6 +22,20 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class BatchController extends AbstractConsoleController
 {
+    /**
+     * @return \Zend\View\Model\ConsoleModel
+     */
+    public function inspectionRequestEmailAction()
+    {
+        return $this->handleExitStatus(
+            $this->handleCommand(
+                [
+                    \Dvsa\Olcs\Email\Domain\Command\ProcessInspectionRequestEmail::create([]),
+                ]
+            )
+        );
+    }
+
     public function duplicateVehicleWarningAction()
     {
         return $this->handleExitStatus(
