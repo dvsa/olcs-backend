@@ -390,4 +390,12 @@ class Fee extends AbstractFee
 
         return $costCentreRef;
     }
+
+    /**
+     * @return bool
+     */
+    public function isPartPaid()
+    {
+        return $this->getOutstandingAmount() < $this->getAmount();
+    }
 }
