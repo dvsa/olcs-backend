@@ -7,12 +7,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
+use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
@@ -1472,5 +1474,43 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     {
         return !empty($this->getPsvWhichVehicleSizes()) &&
             $this->getPsvWhichVehicleSizes()->getId() === self::PSV_VEHICLE_SIZE_BOTH;
+    }
+
+    /**
+     * @return FeeEntity|null
+     */
+    public function getLatestOutstandingApplicationFee()
+    {
+        if ($this->isVariation()) {
+            $feeTypeFeeTypeId = FeeTypeEntity::FEE_TYPE_VAR;
+        } else {
+            $feeTypeFeeTypeId = FeeTypeEntity::FEE_TYPE_APP;
+        }
+
+        $criteria = Criteria::create()
+            ->orderBy(['invoicedDate' => Criteria::DESC]);
+
+        foreach ($this->getFees()->matching($criteria) as $fee) {
+            if ($fee->getFeeStatus()->getId() === FeeEntity::STATUS_OUTSTANDING
+                && $fee->getFeeType()->getFeeType()->getId() === $feeTypeFeeTypeId) {
+                return $fee;
+            }
+        }
+    }
+
+    /**
+     * @return FeeEntity|null
+     */
+    public function getLatestOutstandingInterimFee()
+    {
+        $criteria = Criteria::create()
+            ->orderBy(['invoicedDate' => Criteria::DESC]);
+
+        foreach ($this->getFees()->matching($criteria) as $fee) {
+            if ($fee->getFeeStatus()->getId() === FeeEntity::STATUS_OUTSTANDING
+                && $fee->getFeeType()->getFeeType()->getId() === FeeTypeEntity::FEE_TYPE_GRANTINT) {
+                return $fee;
+            }
+        }
     }
 }

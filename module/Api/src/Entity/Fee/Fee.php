@@ -398,4 +398,9 @@ class Fee extends AbstractFee
     {
         return $this->getOutstandingAmount() < $this->getAmount();
     }
+
+    public function isFullyOutstanding()
+    {
+        return $this->getFeeStatus()->getId() === self::STATUS_OUTSTANDING && !$this->isPartPaid();
+    }
 }
