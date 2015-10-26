@@ -110,18 +110,6 @@ return array(
         ],
     ],
 
-    // Email service (this will be deprecated in the future)
-    'email' => array(
-        'client' => array(
-            // Email service URI e.g. http://demo_dvsa-email.web03.olcs.mgt.mtpdvsa *Environment specific*
-            'baseuri' => 'http://demo_dvsa-email.web03.olcs.mgt.mtpdvsa',
-            // Debugging option forces all email to be sent to an address
-            // 'send_all_mail_to' => 'terry.valtech@gmail.com',
-            // Selfserve/external URI e.g. http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa *Environment specific*
-            'selfserve_uri' => 'http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa',
-        ),
-    ),
-
     // CPMS service
     'cpms_api' => array(
         'logger_alias' => 'Logger', // Zend logger service manager alias - use 'Logger' for the main OLCS log
@@ -148,4 +136,5 @@ return array(
         // CPMS Client secret *Environment specific*
         'client_secret' => 'f7c3cd7d55c0dc0f3bcadc68d2867beedc28b463'
     ),
+
 );
