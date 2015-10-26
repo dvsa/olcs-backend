@@ -1491,7 +1491,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             ->orderBy(['invoicedDate' => Criteria::DESC]);
 
         foreach ($this->getFees()->matching($criteria) as $fee) {
-            if ($fee->getFeeStatus()->getId() === FeeEntity::STATUS_OUTSTANDING
+            if ($fee->isOutstanding()
                 && $fee->getFeeType()->getFeeType()->getId() === $feeTypeFeeTypeId) {
                 return $fee;
             }
@@ -1507,10 +1507,25 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             ->orderBy(['invoicedDate' => Criteria::DESC]);
 
         foreach ($this->getFees()->matching($criteria) as $fee) {
-            if ($fee->getFeeStatus()->getId() === FeeEntity::STATUS_OUTSTANDING
+            if ($fee->isOutstanding()
                 && $fee->getFeeType()->getFeeType()->getId() === FeeTypeEntity::FEE_TYPE_GRANTINT) {
                 return $fee;
             }
         }
     }
+
+    /**
+     * @return bool
+     */
+    public function hasOutstandingGrantFee()
+    {
+        foreach ($this->getFees() as $fee) {
+            if ($fee->isGrantFee() && $fee->isOutstanding()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

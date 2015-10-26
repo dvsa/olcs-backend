@@ -391,6 +391,14 @@ class Fee extends AbstractFee
     }
 
     /**
+     * @return boolean
+     */
+    public function isGrantFee()
+    {
+        return $this->getFeeType()->getFeeType()->getId() === FeeType::FEE_TYPE_GRANT;
+    }
+
+    /**
      * Get the 'sales person reference', also known as 'cost centre reference'
      * for a fee. This is either a traffic area code or one of:
      *
@@ -418,5 +426,10 @@ class Fee extends AbstractFee
     public function isFullyOutstanding()
     {
         return $this->getFeeStatus()->getId() === self::STATUS_OUTSTANDING && !$this->isPartPaid();
+    }
+
+    public function isOutstanding()
+    {
+        return $this->getFeeStatus()->getId() === self::STATUS_OUTSTANDING;
     }
 }
