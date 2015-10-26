@@ -208,7 +208,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     private function applicationFeeNotPaid(Application $application)
     {
         foreach ($application->getFees() as $fee) {
-            if ($fee->getFeeType()->getFeeType()->getId() === FeeType::FEE_TYPE_APP) {
+            if ($fee->isNewApplicationFee()) {
                 if ($fee->isPaid() || $fee->isPartPaid()) {
                     return false;
                 }
