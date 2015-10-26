@@ -7,14 +7,15 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCmd;
 
 /**
  * Create Grant Fee
@@ -30,17 +31,28 @@ final class CreateGrantFee extends AbstractCommandHandler implements Transaction
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
-        $this->result->merge($this->createApplicationFee($command->getId()));
+        $this->result->merge($this->maybeCreateApplicationFee($application));
 
         $this->result->merge($this->generateDocument($application));
 
         return $this->result;
     }
 
-    protected function createApplicationFee($applicationId)
+    /**
+     * Create a grant fee only if one doesn't already exist for the application
+     *
+     * @param ApplicationEntity $application
+     * @return Result
+     */
+    protected function maybeCreateApplicationFee(ApplicationEntity $application)
     {
+        if ($application->hasOutstandingGrantFee()) {
+            // bail out if a grant fee already exists
+            return new Result();
+        }
+
         $data = [
-            'id' => $applicationId,
+            'id' => $application->getId(),
             'feeTypeFeeType' => FeeType::FEE_TYPE_GRANT,
             'description' => 'Grant fee due'
         ];
