@@ -46,9 +46,6 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
         if ($command->getSubmit() === 'Y') {
             // could validate the TMA here?
             $tma->setDeclarationConfirmation('Y');
-            $tma->setTmApplicationStatus(
-                $this->getRepo()->getRefdataReference(TransportManagerApplication::STATUS_AWAITING_SIGNATURE)
-            );
         }
 
         $this->getRepo()->save($tma);
