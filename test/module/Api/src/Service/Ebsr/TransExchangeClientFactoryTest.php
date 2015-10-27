@@ -49,16 +49,12 @@ class TransExchangeClientFactoryTest extends TestCase
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn(['ebsr'=>$config]);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
-        $mockSl->shouldReceive('get')->with('Olcs\Ebsr\Data\Mapping\TransExchangePublisherXmlMapping')->andReturn($mockSpec);
+        $mockSl->shouldReceive('get')->with('TransExchangePublisherXmlMapping')->andReturn($mockSpec);
         $mockSl->shouldReceive('get')->with(MapXmlFile::class)->andReturn($mockFilter);
 
         $sut = new TransExchangeClientFactory();
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf(TransExchangeClient::class, $service);
-        $this->assertInstanceOf(RestClient::class, $service->getRestClient());
-        $this->assertEquals('http://localhost:8080/txc/', (string) $service->getRestClient()->getUri());
-        $this->assertEquals('~', $service->getRestClient()->getArgSeparator());
-        $this->assertSame($mockFilter, $service->getXmlFilter());
     }
 }
