@@ -367,6 +367,69 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->assertEquals(PaymentEntity::STATUS_OUTSTANDING, $savedPayment->getStatus()->getId());
     }
 
+    public function testHandleCommandWithStoredCard()
+    {
+        // set up data
+        $feeIds = [99, 100, 101];
+        $cpmsRedirectUrl = 'https://olcs-selfserve/foo';
+
+        $paymentId = 999; // payment to be created
+
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fee2 = $this->getStubFee(101, 99.99);
+        $fees = [$fee1, $fee2];
+
+        $data = [
+            'feeIds' => $feeIds,
+            'cpmsRedirectUrl' => $cpmsRedirectUrl,
+            'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
+            'storedCardReference' => 'STORED_CARD',
+        ];
+
+        $command = Cmd::create($data);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingFeesByIds')
+            ->once()
+            ->with($feeIds)
+            ->andReturn($fees);
+
+        $this->mockCpmsService
+            ->shouldReceive('initiateStoredCardRequest')
+            ->once()
+            ->with($cpmsRedirectUrl, $fees, 'STORED_CARD');
+
+        /** @var PaymentEntity $savedPayment */
+        $savedPayment = null;
+        $this->repoMap['Transaction']
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(PaymentEntity::class))
+            ->andReturnUsing(
+                function (PaymentEntity $payment) use (&$savedPayment, $paymentId) {
+                    $payment->setId($paymentId);
+                    $savedPayment = $payment;
+                }
+            );
+
+        // assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'transaction' => $paymentId,
+            ],
+            'messages' => [
+                'Transaction record created',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals(PaymentEntity::STATUS_OUTSTANDING, $savedPayment->getStatus()->getId());
+    }
+
     public function testHandleCommandWithApplicationId()
     {
         // set up data
