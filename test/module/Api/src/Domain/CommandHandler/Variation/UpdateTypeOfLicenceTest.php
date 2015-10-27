@@ -8,20 +8,24 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee as CreateApplicationFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\UpdateTypeOfLicence;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\RequiresVariationException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Repository\Application;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\Variation\UpdateTypeOfLicence as Cmd;
-use Dvsa\Olcs\Api\Domain\Repository\Application;
-use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Exception\RequiresVariationException;
 
 /**
  * Update Type of Licence Test
@@ -159,10 +163,21 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
         $licence->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
 
+        $fee = m::mock(Fee::class)
+            ->shouldReceive('getId')
+            ->andReturn(222)
+            ->shouldReceive('isVariationFee')
+            ->andReturn(true)
+            ->shouldReceive('isFullyOutstanding')
+            ->andReturn(true)
+            ->getMock();
+
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
         $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $application->setFees([$fee]);
+        $application->setId(111);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence)
@@ -173,11 +188,24 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $sideEffectData = ['id' => 111, 'section' => 'typeOfLicence'];
         $this->expectedSideEffect(UpdateApplicationCompletion::class, $sideEffectData, $result1);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->repoMap['Application']
+            ->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($application)
             ->shouldReceive('save')
             ->once($application);
+
+        $result2 = new Result();
+        $result2->addMessage('fee 222 cancelled');
+        $this->expectedSideEffect(CancelFeeCmd::class, ['id' => 222], $result2);
+
+        $result3 = new Result();
+        $result3->addMessage('fee 333 created');
+        $createFeeData = [
+            'id' => 111,
+            'feeTypeFeeType' => FeeType::FEE_TYPE_VAR,
+        ];
+        $this->expectedSideEffect(CreateApplicationFeeCmd::class, $createFeeData, $result3);
 
         $result = $this->sut->handleCommand($command);
 
@@ -185,7 +213,9 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'Application saved successfully',
-                'section updated'
+                'section updated',
+                'fee 222 cancelled',
+                'fee 333 created',
             ]
         ];
 

@@ -100,8 +100,6 @@ class FeesHelperServiceTest extends MockeryTestCase
         // mocks
         $goodsOrPsv = $this->refData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE);
         $licenceType = $this->refData(LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL);
-        $appFeeTypeFeeType = $this->refData(FeeTypeEntity::FEE_TYPE_APP);
-        $interimFeeTypeFeeType = $this->refData(FeeTypeEntity::FEE_TYPE_GRANTINT);
         $application = m::mock(ApplicationEntity::class)
             ->makePartial()
             ->setId($applicationId)
@@ -110,12 +108,6 @@ class FeesHelperServiceTest extends MockeryTestCase
         $trafficArea = m::mock(TrafficAreaEntity::class)
             ->makePartial()
             ->setId($trafficAreaId);
-        $appFeeType = m::mock(FeeTypeEntity::class)
-            ->makePartial()
-            ->setId($applicationFeeTypeId);
-        $interimFeeType = m::mock(FeeTypeEntity::class)
-            ->makePartial()
-            ->setId($interimFeeTypeId);
         $licence = m::mock(LicenceEntity::class)
             ->makePartial()
             ->setId($licenceId)
@@ -129,40 +121,14 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->with($applicationId)
             ->andReturn($application);
 
-        $this->feeTypeRepo
-            ->shouldReceive('getRefdataReference')
-            ->with(FeeTypeEntity::FEE_TYPE_APP)
-            ->andReturn($appFeeTypeFeeType)
-            ->shouldReceive('getRefdataReference')
-            ->with(FeeTypeEntity::FEE_TYPE_GRANTINT)
-            ->andReturn($interimFeeTypeFeeType)
-            ->shouldReceive('fetchLatest')
+        $application
+            ->shouldReceive('getLatestOutstandingApplicationFee')
             ->once()
-            ->with($appFeeTypeFeeType, $goodsOrPsv, $licenceType, m::type(\DateTime::class), $trafficAreaId)
-            ->andReturn($appFeeType)
-            ->shouldReceive('fetchLatest')
-            ->once()
-            ->with($interimFeeTypeFeeType, $goodsOrPsv, $licenceType, m::type(\DateTime::class), $trafficAreaId)
-            ->andReturn($interimFeeType);
-
-        $this->feeRepo
-            ->shouldReceive('fetchLatestFeeByTypeStatusesAndApplicationId')
-            ->once()
-            ->with(
-                $applicationFeeTypeId,
-                [FeeEntity::STATUS_OUTSTANDING],
-                $applicationId
-            )
             ->andReturn($applicationFee);
 
-        $this->feeRepo
-            ->shouldReceive('fetchLatestFeeByTypeStatusesAndApplicationId')
+        $application
+            ->shouldReceive('getLatestOutstandingInterimFee')
             ->once()
-            ->with(
-                $interimFeeTypeId,
-                [FeeEntity::STATUS_OUTSTANDING],
-                $applicationId
-            )
             ->andReturn($interimFee);
 
         $result = $this->sut->getOutstandingFeesForApplication($applicationId);
@@ -176,8 +142,6 @@ class FeesHelperServiceTest extends MockeryTestCase
         $licenceId = 7;
 
         // mocks
-        $appFeeTypeFeeType = $this->refData(FeeTypeEntity::FEE_TYPE_APP);
-        $interimFeeTypeFeeType = $this->refData(FeeTypeEntity::FEE_TYPE_GRANTINT);
         $application = m::mock(ApplicationEntity::class)
             ->makePartial()
             ->setId($applicationId)
@@ -195,13 +159,14 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->with($applicationId)
             ->andReturn($application);
 
-        $this->feeTypeRepo
-            ->shouldReceive('getRefdataReference')
-            ->with(FeeTypeEntity::FEE_TYPE_APP)
-            ->andReturn($appFeeTypeFeeType)
-            ->shouldReceive('getRefdataReference')
-            ->with(FeeTypeEntity::FEE_TYPE_GRANTINT)
-            ->andReturn($interimFeeTypeFeeType);
+        $application
+            ->shouldReceive('getLatestOutstandingApplicationFee')
+            ->once()
+            ->andReturn(null);
+
+        $application
+            ->shouldReceive('getLatestOutstandingInterimFee')
+            ->never(); // only called for Goods
 
         $result = $this->sut->getOutstandingFeesForApplication($applicationId);
 

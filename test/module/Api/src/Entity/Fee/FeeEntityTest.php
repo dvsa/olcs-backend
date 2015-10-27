@@ -409,6 +409,76 @@ class FeeEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider partPaidProvider
+     */
+    public function testIsPartPaid($feeAmount, $feeTransactions, $expected)
+    {
+        $this->sut->setAmount($feeAmount);
+        $this->sut->setFeeTransactions($feeTransactions);
+        $this->assertEquals($expected, $this->sut->isPartPaid());
+    }
+
+    public function partPaidProvider()
+    {
+        return [
+            'no transactions' => [
+                '1234.56',
+                new ArrayCollection(),
+                false,
+            ],
+            'one complete transaction' => [
+                '1234.56',
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction('1234.56', '2015-09-01', '2015-09-02'),
+                    ]
+                ),
+                true, // fully paid IS part paid
+            ],
+            'one pending transaction' => [
+                '1234.56',
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction(
+                            '1234.56',
+                            '2015-09-01',
+                            '2015-09-02 12:34:56',
+                            Transaction::STATUS_OUTSTANDING
+                        ),
+                    ]
+                ),
+                false,
+            ],
+            'two complete one refund one pending' => [
+                '1234.56',
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction('1000', '2015-09-01', '2015-09-02'),
+                        $this->getStubFeeTransaction('300', '2015-09-01', '2015-09-02'),
+                        $this->getStubFeeTransaction('-100', '2015-09-01', '2015-09-02'),
+                        $this->getStubFeeTransaction(
+                            '34.56',
+                            '2015-09-01',
+                            '2015-09-02',
+                            Transaction::STATUS_OUTSTANDING
+                        ),
+                    ]
+                ),
+                true,
+            ],
+            'one overpayment' => [
+                '1234.56',
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction('2000', '2015-09-01', '2015-09-02'),
+                    ]
+                ),
+                true,
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider getOrganisationProvider
      */
     public function testGetOrganisation($licence, $irfoGvPermit, $expected)

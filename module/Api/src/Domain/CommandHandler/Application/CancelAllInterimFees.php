@@ -30,11 +30,9 @@ final class CancelAllInterimFees extends AbstractCommandHandler implements Trans
 
         /* @var $fee \Dvsa\Olcs\Api\Entity\Fee\Fee */
         foreach ($fees as $fee) {
-            $result->merge(
-                $this->getCommandHandler()->handleCommand(
-                    CancelFee::create(['id' => $fee->getId()])
-                )
-            );
+            if ($fee->isFullyOutstanding()) {
+                $result->merge($this->handleSideEffect(CancelFee::create(['id' => $fee->getId()])));
+            }
         }
 
         $result->addMessage('CancelAllInterimFees success');

@@ -35,9 +35,18 @@ class CancelAllInterimFeesTest extends CommandHandlerTestCase
 
         $this->references = [
             FeeEntity::class => [
-                23 => m::mock(FeeEntity::class),
-                24 => m::mock(FeeEntity::class),
+                23 => m::mock(FeeEntity::class)
+                    ->shouldReceive('isFullyOutstanding')
+                    ->andReturn(true)
+                    ->getMock(),
+                24 => m::mock(FeeEntity::class)
+                    ->shouldReceive('isFullyOutstanding')
+                    ->andReturn(true)
+                    ->getMock(),
                 25 => m::mock(FeeEntity::class)
+                    ->shouldReceive('isFullyOutstanding')
+                    ->andReturn(false)
+                    ->getMock(),
             ]
         ];
 
@@ -57,7 +66,6 @@ class CancelAllInterimFeesTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(\Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee::class, ['id' => 23], new Result());
         $this->expectedSideEffect(\Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee::class, ['id' => 24], new Result());
-        $this->expectedSideEffect(\Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee::class, ['id' => 25], new Result());
 
         $command = \Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee::create(['id' => 542]);
         $result = $this->sut->handleCommand($command);

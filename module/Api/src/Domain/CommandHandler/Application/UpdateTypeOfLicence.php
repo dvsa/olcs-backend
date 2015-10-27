@@ -14,6 +14,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence as Cmd;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication as ResetApplicationCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCommand;
@@ -74,7 +75,10 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
             $sideEffects[] = $this->createCreateApplicationFeeCommand($application);
             $sideEffects[] = $this->createGenerateLicenceNumberCommand($application);
 
-        } elseif ($this->licenceTypeWillChange($application, $command)) {
+        } elseif (
+            $this->licenceTypeWillChange($application, $command)
+            && $this->applicationFeeNotPaid($application)
+        ) {
 
             $sideEffects[] = $this->createCancelLicenceFeesCommand($application->getLicence());
             $sideEffects[] = $this->createCreateApplicationFeeCommand($application);
@@ -195,5 +199,22 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     private function licenceTypeWillChange(Application $application, Cmd $command)
     {
         return $application->getLicenceType() !== $this->getRepo()->getRefdataReference($command->getLicenceType());
+    }
+
+    /**
+     * Check that the application does NOT have a paid or part-paid new
+     * application fee (OLCS-10762)
+     */
+    private function applicationFeeNotPaid(Application $application)
+    {
+        foreach ($application->getFees() as $fee) {
+            if ($fee->isNewApplicationFee()) {
+                if ($fee->isPaid() || $fee->isPartPaid()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
