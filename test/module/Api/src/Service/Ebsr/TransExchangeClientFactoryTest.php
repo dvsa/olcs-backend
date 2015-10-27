@@ -49,8 +49,8 @@ class TransExchangeClientFactoryTest extends TestCase
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn(['ebsr'=>$config]);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
-        $mockSl->shouldReceive('get')->with('Olcs\Ebsr\Data\Mapping\TransExchangePublisherXml')->andReturn($mockSpec);
-        $mockSl->shouldReceive('get')->with('MapXmlFile')->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with('Olcs\Ebsr\Data\Mapping\TransExchangePublisherXmlMapping')->andReturn($mockSpec);
+        $mockSl->shouldReceive('get')->with(MapXmlFile::class)->andReturn($mockFilter);
 
         $sut = new TransExchangeClientFactory();
         $service = $sut->createService($mockSl);

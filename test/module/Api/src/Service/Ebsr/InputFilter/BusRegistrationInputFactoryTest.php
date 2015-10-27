@@ -34,6 +34,7 @@ class BusRegistrationInputFactoryTest extends TestCase
 
         $mockSl->shouldReceive('get')->with(MapXmlFile::class)->andReturn($mockMapFilter);
         $mockSl->shouldReceive('get')->with('InjectIsTxcApp')->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with('InjectReceivedDate')->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with('IsScottishRules')->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with('Format\Subsidy')->andReturn($mockFilter);
 
@@ -45,7 +46,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
-        $this->assertCount(3, $service->getFilterChain());
+        $this->assertCount(5, $service->getFilterChain());
         $this->assertCount(2, $service->getValidatorChain());
 
         foreach ($service->getValidatorChain()->getValidators() as $validator) {
