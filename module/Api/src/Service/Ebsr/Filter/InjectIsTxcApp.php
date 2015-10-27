@@ -21,10 +21,10 @@ class InjectIsTxcApp extends AbstractFilter
     public function filter($value)
     {
         $value['isTxcApp'] = 'Y';
-        $value['ebsrRefresh'] = 0;
+        $value['ebsrRefresh'] = 'N';
 
         if (isset($value['txcAppType']) && $value['txcAppType'] == 'nonChargeableChange') {
-            $value['ebsrRefresh'] = 1;
+            $value['ebsrRefresh'] = 'Y';
         }
 
         return $value;
