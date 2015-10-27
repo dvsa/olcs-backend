@@ -185,4 +185,26 @@ class UserTest extends RepositoryTestCase
             $result
         );
     }
+
+    public function testFetchForRemindUsername()
+    {
+        $qb = $this->createMockQb('[QUERY]');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchForRemindUsername('ABC123', 'test@test.me'));
+
+        $expectedQuery = '[QUERY] '
+            . 'INNER JOIN u.contactDetails cd AND cd.emailAddress = [[test@test.me]] '
+            . 'INNER JOIN u.organisationUsers ou '
+            . 'INNER JOIN ou.organisation o '
+            . 'INNER JOIN o.licences l AND l.licNo = [[ABC123]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }

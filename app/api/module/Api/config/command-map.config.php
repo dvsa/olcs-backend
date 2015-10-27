@@ -307,6 +307,7 @@ return [
     TransferCommand\User\UpdateUser::class => CommandHandler\User\UpdateUser::class,
     TransferCommand\User\DeleteUser::class => CommandHandler\User\DeleteUser::class,
     TransferCommand\User\RegisterUserSelfserve::class => CommandHandler\User\RegisterUserSelfserve::class,
+    TransferCommand\User\RemindUsernameSelfserve::class => CommandHandler\User\RemindUsernameSelfserve::class,
     TransferCommand\User\CreateUserSelfserve::class => CommandHandler\User\CreateUserSelfserve::class,
     TransferCommand\User\UpdateUserSelfserve::class => CommandHandler\User\UpdateUserSelfserve::class,
     TransferCommand\User\DeleteUserSelfserve::class => CommandHandler\User\DeleteUserSelfserve::class,
@@ -659,6 +660,8 @@ return [
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
     Command\Email\CreateCorrespondenceRecord::class => CommandHandler\Email\CreateCorrespondenceRecord::class,
     Command\Email\SendContinuationNotSought::class => CommandHandler\Email\SendContinuationNotSought::class,
+    Command\Email\SendUsernameSingle::class => CommandHandler\Email\SendUsernameSingle::class,
+    Command\Email\SendUsernameMultiple::class => CommandHandler\Email\SendUsernameMultiple::class,
 
     // Person
     TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,
