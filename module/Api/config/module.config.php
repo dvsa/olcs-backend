@@ -143,6 +143,7 @@ return [
             'BusRegOtherService' => RepositoryFactory::class,
             'BusNoticePeriod' => RepositoryFactory::class,
             'BusShortNotice' => RepositoryFactory::class,
+            'BusServiceType' => RepositoryFactory::class,
             'LocalAuthority' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
             'GracePeriod' => RepositoryFactory::class,
