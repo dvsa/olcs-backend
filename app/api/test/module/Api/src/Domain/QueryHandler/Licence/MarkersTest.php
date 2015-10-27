@@ -66,7 +66,7 @@ class MarkersTest extends QueryHandlerTestCase
             ->andReturn([$mockContinuationDetail]);
         $this->repoMap['Note']
             ->shouldReceive('fetchForOverview')
-            ->with(716, null, NoteEntity::NOTE_TYPE_CASE)
+            ->with(716)
             ->once()
             ->andReturn('latest note');
 
@@ -108,7 +108,7 @@ class MarkersTest extends QueryHandlerTestCase
             ->andReturn([]);
         $this->repoMap['Note']
             ->shouldReceive('fetchForOverview')
-            ->with(716, null, NoteEntity::NOTE_TYPE_CASE)
+            ->with(716)
             ->once()
             ->andReturn('latest note');
 

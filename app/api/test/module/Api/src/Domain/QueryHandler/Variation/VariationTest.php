@@ -50,6 +50,14 @@ class VariationTest extends QueryHandlerTestCase
             ->setId($applicationId)
             ->shouldReceive('getPublicationLinks')->with()->once()
                 ->andReturn(new \Doctrine\Common\Collections\ArrayCollection())
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(222)
+                    ->once()
+                    ->getMock()
+            )
             ->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
 
@@ -58,7 +66,7 @@ class VariationTest extends QueryHandlerTestCase
             ->andReturn($application);
 
         $this->repoMap['Note']->shouldReceive('fetchForOverview')
-            ->with(null, 111, NoteEntity::NOTE_TYPE_CASE)
+            ->with(222)
             ->andReturn('latest note');
 
         $sections = ['bar', 'cake'];
