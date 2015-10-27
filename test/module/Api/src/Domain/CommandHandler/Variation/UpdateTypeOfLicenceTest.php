@@ -163,6 +163,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
         $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $application->setFees([]);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence)
@@ -173,7 +174,8 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $sideEffectData = ['id' => 111, 'section' => 'typeOfLicence'];
         $this->expectedSideEffect(UpdateApplicationCompletion::class, $sideEffectData, $result1);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->repoMap['Application']
+            ->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($application)
             ->shouldReceive('save')

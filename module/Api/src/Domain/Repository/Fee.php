@@ -186,7 +186,7 @@ class Fee extends AbstractRepository
 
         $this->whereOutstandingFee($doctrineQb);
 
-        if (!is_null($minInvoiceDate)) {
+        if (!is_null($after)) {
             $doctrineQb
                 ->andWhere($doctrineQb->expr()->gte($this->alias.'.invoicedDate', ':after'))
                 ->setParameter('after', $after);
