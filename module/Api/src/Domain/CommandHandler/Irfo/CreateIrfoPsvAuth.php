@@ -80,7 +80,7 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
     {
         $organisation = $this->getRepo()->getReference(Organisation::class, $command->getOrganisation());
         $type = $this->getRepo()->getReference(IrfoPsvAuthType::class, $command->getIrfoPsvAuthType());
-        $status = $this->getRepo()->getRefdataReference($command->getStatus());
+        $status = $this->getRepo()->getRefdataReference($this->determineStatus());
 
         $irfoPsvAuth = new IrfoPsvAuth($organisation, $type, $status);
 
@@ -176,5 +176,10 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
         ];
 
         return $this->handleSideEffect(FeeCreateFee::create($data));
+    }
+
+    private function determineStatus()
+    {
+        return IrfoPsvAuth::STATUS_PENDING;
     }
 }
