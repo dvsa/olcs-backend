@@ -485,7 +485,9 @@ class TransportManagerEntityTest extends EntityTester
                 'requireSiNiQualification' => false,
                 'associatedOrganisationCount' => 0,
                 'associatedTotalAuthVehicles' => 0,
-                'isDetached' => true
+                'isDetached' => true,
+                'requireSiGbQualificationOnVariation' => false,
+                'requireSiNiQualificationOnVariation' => false,
             ],
             $entity->getCalculatedBundleValues()
         );
@@ -497,5 +499,49 @@ class TransportManagerEntityTest extends EntityTester
         $entity->setId(111);
 
         $this->assertEquals(111, $entity->getContextValue());
+    }
+
+    /**
+     * @dataProvider dpNiFlag
+     */
+    public function testIsSiQualificationRequiredOnVariation($niFlag)
+    {
+        $entity = new Entity();
+
+        $org1 = new Organisation();
+        $org1->setId(101);
+        $org2 = new Organisation();
+        $org2->setId(102);
+
+        $lic1 = new Licence($org1, $this->getRefData(Licence::LICENCE_STATUS_VALID));
+        $lic1->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $lic1->setId(1);
+        $lic2 = new Licence($org2, $this->getRefData(Licence::LICENCE_STATUS_VALID));
+        $lic2->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $lic2->setId(2);
+        $lic3 = new Licence($org2, $this->getRefData(Licence::LICENCE_STATUS_VALID));
+        $lic3->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $lic3->setId(3);
+
+        $app1 = new Application($lic1, $this->getRefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION), 0);
+        $app1->setNiFlag($niFlag)->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+        $app1->setIsVariation(true);
+        $app2 = new Application($lic2, $this->getRefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION), 0);
+        $app2->setNiFlag($niFlag)->setLicenceType($this->getRefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL));
+        $app2->setIsVariation(true);
+        $app3 = new Application($lic3, $this->getRefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION), 0);
+        $app3->setNiFlag($niFlag);
+        $app3->setIsVariation(true);
+
+        $lic1->setApplications(new \Doctrine\Common\Collections\ArrayCollection([$app1]));
+        $lic2->setApplications(new \Doctrine\Common\Collections\ArrayCollection([$app2]));
+        $lic3->setApplications(new \Doctrine\Common\Collections\ArrayCollection([$app3]));
+
+        $tml1 = new TransportManagerLicence($lic1, $entity);
+        $tml2 = new TransportManagerLicence($lic2, $entity);
+        $tml3 = new TransportManagerLicence($lic3, $entity);
+        $entity->addTmLicences(new \Doctrine\Common\Collections\ArrayCollection([$tml3, $tml1, $tml2]));
+
+        $this->assertSame($niFlag === 'N', $entity->isSiQualificationRequiredOnVariation($niFlag));
     }
 }

@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Dvsa\Olcs\Transfer\Query\InspectionRequest\ApplicationInspectionRequestList;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * TransportManager Entity
@@ -245,6 +246,34 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
         return false;
     }
 
+    /**
+     * Is an SI Qualification required for this TM
+     *
+     * @param string $niFlag 'N' = GB, 'Y' = NI
+     *
+     * @return boolean
+     */
+    public function isSiQualificationRequiredOnVariation($niFlag)
+    {
+        $tmLicences = $this->getTmLicencesValid();
+        foreach ($tmLicences as $tml) {
+            // check niFlag
+            if ($tml->getLicence()->getNiFlag() != $niFlag) {
+                continue;
+            }
+
+            $variations = $tml->getLicence()->getVariations();
+            foreach ($variations as $variation) {
+                // only SI
+                if (!$variation->isStandardInternational()) {
+                    continue;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function isDetached()
     {
         $applicationStatuses = [
@@ -285,7 +314,9 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
             'requireSiNiQualification' => $this->isSiQualificationRequired('Y'),
             'associatedOrganisationCount' => count($this->getAssociatedOrganisations()),
             'associatedTotalAuthVehicles' => $this->getTotAuthVehicles(),
-            'isDetached' => $this->isDetached()
+            'isDetached' => $this->isDetached(),
+            'requireSiGbQualificationOnVariation' => $this->isSiQualificationRequiredOnVariation('N'),
+            'requireSiNiQualificationOnVariation' => $this->isSiQualificationRequiredOnVariation('Y'),
         ];
     }
 
