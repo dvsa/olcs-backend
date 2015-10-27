@@ -123,12 +123,12 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
     protected function getSignature($data)
     {
         $titles = [
-            Organisation::ORG_TYPE_REGISTERED_COMPANY => $this->translate('undertakings_directors_signature'),
-            Organisation::ORG_TYPE_LLP => $this->translate('undertakings_directors_signature'),
-            Organisation::ORG_TYPE_PARTNERSHIP => $this->translate('undertakings_partners_signature'),
-            Organisation::ORG_TYPE_SOLE_TRADER => $this->translate('undertakings_owners_signature'),
-            Organisation::ORG_TYPE_OTHER => $this->translate('undertakings_responsiblepersons_signature'),
-            Organisation::ORG_TYPE_IRFO => $this->translate('undertakings_responsiblepersons_signature')
+            Organisation::ORG_TYPE_REGISTERED_COMPANY => 'undertakings_directors_signature',
+            Organisation::ORG_TYPE_LLP => 'undertakings_directors_signature',
+            Organisation::ORG_TYPE_PARTNERSHIP => 'undertakings_partners_signature',
+            Organisation::ORG_TYPE_SOLE_TRADER => 'undertakings_owners_signature',
+            Organisation::ORG_TYPE_OTHER => 'undertakings_responsiblepersons_signature',
+            Organisation::ORG_TYPE_IRFO => 'undertakings_responsiblepersons_signature'
         ];
         $addresses = [
             'Y' => self::SIGNATURE_ADDRESS_NI,
@@ -138,7 +138,7 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
         $address = $this->translate($addresses[$data['niFlag']]);
 
         $additionalParts = [
-            $title,
+            $this->translate($title),
             $address
         ];
         return $this->translateReplace(self::SIGNATURE, $additionalParts);
