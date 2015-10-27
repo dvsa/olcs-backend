@@ -155,8 +155,8 @@ class Fee extends AbstractRepository
         $this->whereOutstandingFee($doctrineQb);
 
         $doctrineQb
-            ->innerJoin('f.feeType', 'ft')
-            ->andWhere($doctrineQb->expr()->eq('f.application', ':application'))
+            ->innerJoin($this->alias.'.feeType', 'ft')
+            ->andWhere($doctrineQb->expr()->eq($this->alias.'.application', ':application'))
             ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeType'))
             ->setParameter('application', $applicationId)
             ->setParameter('feeType', RefDataEntity::FEE_TYPE_GRANT);
@@ -168,21 +168,30 @@ class Fee extends AbstractRepository
      * Fetch outstanding continuation fees for a licence
      *
      * @param int $licenceId
+     * @param DateTime $after if specified, only return fees with invoicedDate
+     * after this value
      *
      * @return array
      */
-    public function fetchOutstandingContinuationFeesByLicenceId($licenceId)
+    public function fetchOutstandingContinuationFeesByLicenceId($licenceId, $after = null)
     {
         $doctrineQb = $this->createQueryBuilder();
 
         $doctrineQb
-            ->innerJoin('f.feeType', 'ft')
-            ->andWhere($doctrineQb->expr()->eq('f.licence', ':licence'))
+            ->innerJoin($this->alias.'.feeType', 'ft')
+            ->andWhere($doctrineQb->expr()->eq($this->alias.'.licence', ':licence'))
             ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeType'))
             ->setParameter('licence', $licenceId)
             ->setParameter('feeType', RefDataEntity::FEE_TYPE_CONT);
 
         $this->whereOutstandingFee($doctrineQb);
+
+        if (!is_null($minInvoiceDate)) {
+            $doctrineQb
+                ->andWhere($doctrineQb->expr()->gte($this->alias.'.invoicedDate', ':after'))
+                ->setParameter('after', $after);
+        }
+
 
         return $doctrineQb->getQuery()->getResult();
     }
@@ -293,7 +302,7 @@ class Fee extends AbstractRepository
      */
     private function whereOutstandingFee($doctrineQb)
     {
-        $doctrineQb->andWhere($doctrineQb->expr()->eq('f.feeStatus', ':feeStatus'));
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias.'.feeStatus', ':feeStatus'));
 
         $doctrineQb->setParameter('feeStatus', $this->getRefdataReference(Entity::STATUS_OUTSTANDING));
     }
@@ -312,8 +321,8 @@ class Fee extends AbstractRepository
     private function whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId)
     {
         $doctrineQb
-            ->leftJoin('f.application', 'a')
-            ->leftJoin('f.licence', 'l')
+            ->leftJoin($this->alias.'.application', 'a')
+            ->leftJoin($this->alias.'.licence', 'l')
             ->leftJoin('a.licence', 'al')
             ->andWhere(
                 $doctrineQb->expr()->orX(
@@ -329,8 +338,8 @@ class Fee extends AbstractRepository
             )
             ->andWhere(
                 $doctrineQb->expr()->orX(
-                    $doctrineQb->expr()->isNotNull('f.licence'),
-                    $doctrineQb->expr()->isNotNull('f.application')
+                    $doctrineQb->expr()->isNotNull($this->alias.'.licence'),
+                    $doctrineQb->expr()->isNotNull($this->alias.'.application')
                 )
             )
             ->setParameter('organisationId', $organisationId)

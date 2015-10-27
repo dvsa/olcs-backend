@@ -160,7 +160,12 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
             return false;
         }
 
-        $results = $this->getRepo('Fee')->fetchOutstandingContinuationFeesByLicenceId($licence->getId());
+        // check for fees less than three months old
+        $after = (new DateTime('now'))->sub(new \DateInterval('P3M'));
+        $results = $this->getRepo('Fee')->fetchOutstandingContinuationFeesByLicenceId(
+            $licence->getId(),
+            $after
+        );
 
         return empty($results);
     }
