@@ -32,6 +32,7 @@ class BusRegistrationInputFactory implements FactoryInterface
         $filterChain->attach($serviceLocator->get('FilterManager')->get('InjectReceivedDate'));
         $filterChain->attach($serviceLocator->get('FilterManager')->get('IsScottishRules'));
         $filterChain->attach($serviceLocator->get('FilterManager')->get('Format\Subsidy'));
+        $filterChain->attach($serviceLocator->get('FilterManager')->get('Format\Via'));
 
         $validatorChain = $service->getValidatorChain();
         $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\EffectiveDate'));
