@@ -100,8 +100,6 @@ class FeesHelperServiceTest extends MockeryTestCase
         // mocks
         $goodsOrPsv = $this->refData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE);
         $licenceType = $this->refData(LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL);
-        $appFeeTypeFeeType = $this->refData(FeeTypeEntity::FEE_TYPE_APP);
-        $interimFeeTypeFeeType = $this->refData(FeeTypeEntity::FEE_TYPE_GRANTINT);
         $application = m::mock(ApplicationEntity::class)
             ->makePartial()
             ->setId($applicationId)
@@ -110,12 +108,6 @@ class FeesHelperServiceTest extends MockeryTestCase
         $trafficArea = m::mock(TrafficAreaEntity::class)
             ->makePartial()
             ->setId($trafficAreaId);
-        $appFeeType = m::mock(FeeTypeEntity::class)
-            ->makePartial()
-            ->setId($applicationFeeTypeId);
-        $interimFeeType = m::mock(FeeTypeEntity::class)
-            ->makePartial()
-            ->setId($interimFeeTypeId);
         $licence = m::mock(LicenceEntity::class)
             ->makePartial()
             ->setId($licenceId)
@@ -150,8 +142,6 @@ class FeesHelperServiceTest extends MockeryTestCase
         $licenceId = 7;
 
         // mocks
-        $appFeeTypeFeeType = $this->refData(FeeTypeEntity::FEE_TYPE_APP);
-        $interimFeeTypeFeeType = $this->refData(FeeTypeEntity::FEE_TYPE_GRANTINT);
         $application = m::mock(ApplicationEntity::class)
             ->makePartial()
             ->setId($applicationId)
@@ -169,7 +159,7 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->with($applicationId)
             ->andReturn($application);
 
-       $application
+        $application
             ->shouldReceive('getLatestOutstandingApplicationFee')
             ->once()
             ->andReturn(null);
