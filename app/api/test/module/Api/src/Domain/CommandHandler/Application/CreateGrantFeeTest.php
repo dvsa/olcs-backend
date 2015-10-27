@@ -52,6 +52,9 @@ class CreateGrantFeeTest extends CommandHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setId(111);
         $application->setLicence($licence);
+        $application
+            ->shouldReceive('hasOutstandingGrantFee')
+            ->andReturn(false);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -105,6 +108,37 @@ class CreateGrantFeeTest extends CommandHandlerTestCase
                 'CreateApplicationFee',
                 'GenerateAndStore'
             ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandExistingGrantFee()
+    {
+        $data = [
+            'id' => 111
+        ];
+
+        $command = Cmd::create($data);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setId(111);
+        $application
+            ->shouldReceive('hasOutstandingGrantFee')
+            ->andReturn(true);
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            // no-op
+            'id' => [],
+            'messages' => []
         ];
 
         $this->assertEquals($expected, $result->toArray());

@@ -33,7 +33,11 @@ final class CreateGrantFee extends AbstractCommandHandler implements Transaction
 
         $this->result->merge($this->maybeCreateApplicationFee($application));
 
-        $this->result->merge($this->generateDocument($application));
+        $feeCreated = !empty($this->result->getId('fee'));
+
+        if ($feeCreated) {
+            $this->result->merge($this->generateDocument($application));
+        }
 
         return $this->result;
     }
