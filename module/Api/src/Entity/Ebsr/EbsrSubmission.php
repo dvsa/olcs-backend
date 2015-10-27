@@ -49,4 +49,8 @@ class EbsrSubmission extends AbstractEbsrSubmission
         $this->document = $document;
         $this->submittedDate = $submittedDate;
     }
+
+    public function updateStatus(RefData $ebsrSubmissionStatus){
+        $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
+    }
 }
