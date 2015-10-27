@@ -118,7 +118,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
      */
     public function isGrantable()
     {
-        if (in_array($this->getStatus()->getId(), [self::STATUS_GRANTED, self::STATUS_RENEW, self::STATUS_PENDING])) {
+        if (in_array($this->getStatus()->getId(), [self::STATUS_RENEW, self::STATUS_PENDING])) {
             return true;
         }
         return false;
