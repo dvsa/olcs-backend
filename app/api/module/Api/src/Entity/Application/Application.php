@@ -1537,5 +1537,4 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
         return $grantFees;
     }
-
 }

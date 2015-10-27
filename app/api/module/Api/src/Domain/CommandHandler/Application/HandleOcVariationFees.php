@@ -47,7 +47,6 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
         return $this->result;
     }
 
-// @todo check this
     private function maybeCreateVariationFee(Application $application)
     {
         $fees = $this->getRepo('Fee')->fetchOutstandingFeesByApplicationId($application->getId());
