@@ -24,13 +24,20 @@ final class UpdateIrfoPsvAuth extends AbstractCommandHandler implements Transact
 
     protected $extraRepos = ['IrfoPsvAuthNumber'];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $irfoPsvAuth->update(
             $this->getRepo()->getReference(IrfoPsvAuthType::class, $command->getIrfoPsvAuthType()),
-            $this->getRepo()->getRefdataReference($command->getStatus()),
+            $this->getRepo()->getRefdataReference($this->determineStatus($command->getAction())),
             $command->getValidityPeriod(),
             new \DateTime($command->getInForceDate()),
             $command->getServiceRouteFrom(),
@@ -125,5 +132,22 @@ final class UpdateIrfoPsvAuth extends AbstractCommandHandler implements Transact
         }
 
         return $reduced;
+    }
+
+    /**
+     * Determine status based on action being performed.
+     *
+     * @param $action
+     * @return string
+     */
+    private function determineStatus($action)
+    {
+        switch ($action)
+        {
+            case 'grant':
+                return IrfoPsvAuth::STATUS_GRANTED;
+            default:
+                return IrfoPsvAuth::STATUS_PENDING;
+        }
     }
 }

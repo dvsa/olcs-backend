@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -17,6 +18,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Fee
@@ -245,6 +247,47 @@ class Fee extends AbstractRepository
         $doctrineQb
             ->andWhere($doctrineQb->expr()->eq($this->alias . '.irfoGvPermit', ':irfoGvPermitId'))
             ->setParameter('irfoGvPermitId', $irfoGvPermitId);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch Application fee by irfoPsvAuthId
+     *
+     * @param int $irfoPsvAuthId
+     *
+     * @return array
+     */
+    public function fetchApplicationFeeByPsvAuthId($irfoPsvAuthId)
+    {
+        $fees = $this->fetchFeesByPsvAuthIdAndType($irfoPsvAuthId, RefDataEntity::FEE_TYPE_IRFOPSVAPP);
+
+        if (count($fees) > 0) {
+            return $fees[0];
+        }
+        return null;
+    }
+
+    /**
+     * Fetch fees by irfoPsvAuthId
+     *
+     * @param int $irfoPsvAuthId
+     *
+     * @return array
+     */
+    public function fetchFeesByPsvAuthIdAndType($irfoPsvAuthId, $feeTypeFeeType)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($doctrineQb)
+            ->withRefdata();
+        $this->getQueryBuilder()->withRefdata()->order('invoicedDate', 'DESC');
+        $doctrineQb->join($this->alias . '.feeType', 'ft')
+            ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeTypeFeeType'))
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.irfoPsvAuth', ':irfoPsvAuthId'))
+            ->setParameter('irfoPsvAuthId', $irfoPsvAuthId)
+            ->setParameter('feeTypeFeeType', $this->getRefdataReference($feeTypeFeeType));
 
         return $doctrineQb->getQuery()->getResult();
     }

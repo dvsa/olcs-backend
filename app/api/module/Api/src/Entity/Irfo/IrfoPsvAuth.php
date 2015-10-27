@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Irfo;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -63,7 +64,6 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
         $copiesRequiredTotal
     ) {
         $this->irfoPsvAuthType = $type;
-        $this->status = $status;
         $this->validityPeriod = $validityPeriod;
         $this->inForceDate = $inForceDate;
         $this->serviceRouteFrom = $serviceRouteFrom;
@@ -74,6 +74,8 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
 
         // deal with IrfoFileNo
         $this->populateFileNo();
+
+        $this->updateStatus($status);
 
         return $this;
     }
@@ -107,5 +109,40 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
         $this->setIrfoFeeId($irfoFeeId);
 
         return $this;
+    }
+
+    /**
+     * Can this entity change status to granted.
+     *
+     * @return bool
+     */
+    public function isGrantable()
+    {
+        if (in_array($this->getStatus()->getId(), [self::STATUS_GRANTED, self::STATUS_RENEW, self::STATUS_PENDING])) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Updates the status of the entity. Only 'granted' logic implemented.
+     *
+     * @param RefData $status
+     * @throws BadRequestException
+     */
+    private function updateStatus(RefData $status)
+    {
+        switch($status->getId())
+        {
+            case self::STATUS_GRANTED:
+                if ($this->isGrantable()) {
+                    $this->status = $status;
+                } else {
+                    throw new BadRequestException('Status ' . $status->getId() . ' not permitted');
+                }
+                break;
+            default:
+                $this->status = $status;
+        }
     }
 }
