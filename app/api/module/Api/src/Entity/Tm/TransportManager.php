@@ -264,12 +264,8 @@ class TransportManager extends AbstractTransportManager implements ContextProvid
 
             $variations = $tml->getLicence()->getVariations();
             foreach ($variations as $variation) {
-                if (!$variation->getLicenceType()) {
-                    continue;
-                }
                 // only SI
-                if ($variation->getLicenceType()->getId() !==
-                    Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
+                if (!$variation->isStandardInternational()) {
                     continue;
                 }
                 return true;
