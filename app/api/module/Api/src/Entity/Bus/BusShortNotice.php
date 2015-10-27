@@ -169,4 +169,17 @@ class BusShortNotice extends AbstractBusShortNotice
 
         return $hasShortNoticeDetails;
     }
+
+    /**
+     * Populate properties from data
+     *
+     * @param array $data
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
+    public function fromData($data)
+    {
+        foreach ($data as $key => $value) {
+            $this->{'set' . ucwords($key)}($value);
+        }
+    }
 }
