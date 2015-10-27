@@ -2,12 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\Submit as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
+use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Email\Service\Client;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 
 /**
@@ -28,7 +29,6 @@ class SubmitTest extends CommandHandlerTestCase
         );
 
         $this->mockedSmServices = [
-            Client::class => m::mock(Client::class),
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
         ];
 
@@ -134,8 +134,12 @@ class SubmitTest extends CommandHandlerTestCase
 
             }
         );
-        $this->mockedSmServices[Client::class]->shouldReceive('sendEmail')
-            ->with(m::type(\Dvsa\Olcs\Email\Data\Message::class))->once();
+
+        $result = new Result();
+        $data = [
+            'to' => 'email1'
+        ];
+        $this->expectedSideEffect(SendEmail::class, $data, $result);
 
         $this->sut->handleCommand($command);
     }
@@ -185,8 +189,12 @@ class SubmitTest extends CommandHandlerTestCase
 
             }
         );
-        $this->mockedSmServices[Client::class]->shouldReceive('sendEmail')
-            ->with(m::type(\Dvsa\Olcs\Email\Data\Message::class))->once();
+
+        $result = new Result();
+        $data = [
+            'to' => 'email1'
+        ];
+        $this->expectedSideEffect(SendEmail::class, $data, $result);
 
         $this->sut->handleCommand($command);
     }
