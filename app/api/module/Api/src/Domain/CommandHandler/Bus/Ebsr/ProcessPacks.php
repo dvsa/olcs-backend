@@ -8,8 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
-use Dvsa\Olcs\Api\Filesystem\Filesystem;
+use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Zend\Filter\Decompress;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -65,7 +64,7 @@ final class ProcessPacks extends AbstractCommandHandler
 
         $this->xmlStructure = $mainServiceLocator->get('EbsrXmlStructure');
         $this->busRegInput = $mainServiceLocator->get('EbsrBusRegInput');
-        $this->fileProcessor = $mainServiceLocator->get(FileProcessor::class);
+        $this->fileProcessor = $mainServiceLocator->get(FileProcessorInterface::class);
 
         return parent::createService($serviceLocator);
     }
