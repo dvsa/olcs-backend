@@ -25,7 +25,7 @@ class Markers extends AbstractQueryHandler
             $this->result($continuationDetail, ['continuation', 'licence'])->serialize() :
             null;
 
-        $latestNote = $this->getRepo('Note')->fetchForOverview($query->getId(), null, NoteEntity::NOTE_TYPE_CASE);
+        $latestNote = $this->getRepo('Note')->fetchForOverview($query->getId());
 
         return $this->result(
             $licence,
