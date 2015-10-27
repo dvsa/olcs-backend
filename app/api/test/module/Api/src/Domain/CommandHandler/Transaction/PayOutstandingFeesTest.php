@@ -333,7 +333,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->andReturn($fees);
 
         $this->mockCpmsService
-            ->shouldReceive('initiateCardRequest')
+            ->shouldReceive('initiateCnpRequest')
             ->once()
             ->with($cpmsRedirectUrl, $fees);
 
@@ -382,7 +382,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $data = [
             'applicationId' => $applicationId,
             'cpmsRedirectUrl' => $cpmsRedirectUrl,
-            'paymentMethod' => FeeEntity::METHOD_CARD_OFFLINE,
+            'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
         ];
 
         $command = Cmd::create($data);
@@ -1141,7 +1141,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $data = [
             'feeIds' => $feeIds,
             'cpmsRedirectUrl' => $cpmsRedirectUrl,
-            'paymentMethod' => FeeEntity::METHOD_CARD_OFFLINE,
+            'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
         ];
 
         $command = Cmd::create($data);

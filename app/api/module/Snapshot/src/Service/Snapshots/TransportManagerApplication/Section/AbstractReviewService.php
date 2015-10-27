@@ -69,6 +69,11 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
         return $this->getServiceLocator()->get('translator')->translate($string, 'snapshot');
     }
 
+    protected function translateReplace($translationKey, array $arguments)
+    {
+        return vsprintf($this->translate($translationKey), $arguments);
+    }
+
     protected function formatYesNo($value)
     {
         return $value === 'Y' ? 'Yes' : 'No';

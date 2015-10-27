@@ -12,14 +12,19 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Generator;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Review
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Review extends AbstractQueryHandler
+class Review extends AbstractQueryHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'TransportManagerApplication';
 
     /**
@@ -39,7 +44,9 @@ class Review extends AbstractQueryHandler
         /** @var TransportManagerApplication $tma */
         $tma = $this->getRepo()->fetchUsingId($query);
 
-        $markup = $this->reviewSnapshotService->generate($tma);
+        $isInternalUser = $this->isGranted(Permission::INTERNAL_USER);
+
+        $markup = $this->reviewSnapshotService->generate($tma, $isInternalUser);
 
         return ['markup' => $markup];
     }
