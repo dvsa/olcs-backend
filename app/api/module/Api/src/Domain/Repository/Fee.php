@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\Query;
 
 /**
  * Fee
@@ -458,5 +459,22 @@ class Fee extends AbstractRepository
             ->setParameter('id', $busRegId);
 
         return $qb->getQuery()->getArrayResult();
+    }
+
+    public function fetchLatestFeeByApplicationId($applicationId)
+    {
+        $qb = $this->createQueryBuilder();
+        $this->getQueryBuilder()
+            ->withRefdata()
+            ->with('feeTransactions', 'ft')
+            ->with('ft.transaction', 't')
+            ->order('invoicedDate', 'DESC');
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.application', ':application'))
+            ->setParameter('application', $applicationId)
+            ->setMaxResults(1);
+
+        $results = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+        return count($results) ? $results[0] : [];
     }
 }
