@@ -742,7 +742,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface
 
     public function getVariations()
     {
-        $criteria = Criteria::create()->andwhere(Criteria::expr()->eq('isVariation', true));
+        $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('isVariation', true));
         return $this->getApplications()->matching($criteria);
     }
 }
