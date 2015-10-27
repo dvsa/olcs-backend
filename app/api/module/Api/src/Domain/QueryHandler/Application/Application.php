@@ -48,7 +48,7 @@ class Application extends AbstractQueryHandler
     {
         /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($query);
-        $latestNote = $this->getRepo('Note')->fetchForOverview(null, $query->getId(), NoteEntity::NOTE_TYPE_CASE);
+        $latestNote = $this->getRepo('Note')->fetchForOverview($application->getLicence()->getId());
         return $this->result(
             $application,
             [

@@ -115,7 +115,7 @@ class Note extends AbstractRepository
      *
      * @return array
      */
-    public function fetchForOverview($licence = null, $application = null, $noteType = NoteEntity::NOTE_TYPE_CASE)
+    public function fetchForOverview($licence = null, $application = null, $noteType = null)
     {
         $qb = $this->createQueryBuilder();
 
@@ -129,8 +129,10 @@ class Note extends AbstractRepository
             $qb->setParameter('licenceId', $licence);
         }
 
-        $qb->andWhere($qb->expr()->eq($this->alias . '.noteType', ':noteTypeId'));
-        $qb->setParameter('noteTypeId', $noteType);
+        if ($noteType !== null) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.noteType', ':noteTypeId'));
+            $qb->setParameter('noteTypeId', $noteType);
+        }
 
         $qb->orderBy($this->alias . '.priority', 'DESC');
         $qb->addOrderBy($this->alias . '.createdOn', 'DESC');
