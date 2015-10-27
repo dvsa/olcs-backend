@@ -1196,6 +1196,9 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
     (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','abdou.bonomi',140, NULL, NULL, NULL),
     (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','abdou.bonomi2',140, NULL, NULL, NULL);
 
+# Make every user row have a PID
+UPDATE `user` SET pid = SHA(id);
+
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator`) VALUES
     (1, 19, 0),
     (1, 20, 1),
