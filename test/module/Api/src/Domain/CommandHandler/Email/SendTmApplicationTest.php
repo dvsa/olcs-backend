@@ -87,6 +87,7 @@ class SendTmApplicationTest extends CommandHandlerTestCase
                 'reference' => 'LIC01/442',
                 'username' => 'username1',
                 'isNi' => false,
+                'signInLink' => 'http://selfserve/'. $uriPart .'/442/transport-managers/details/75/edit-details/'
             ],
             null
         );
