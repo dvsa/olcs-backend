@@ -567,10 +567,17 @@ class FeeTest extends RepositoryTestCase
                 ->andReturn(['RESULTS'])
                 ->getMock()
         );
-        $this->assertEquals(['RESULTS'], $this->sut->fetchOutstandingContinuationFeesByLicenceId(716));
+
+        $after = new \DateTime('2015-09-22');
+        $expectedAfterStr = $after->format(\DateTime::W3C);
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->fetchOutstandingContinuationFeesByLicenceId(716, $after)
+        );
 
         $expectedQuery = 'BLAH INNER JOIN f.feeType ft AND f.licence = [[716]] AND '
-            . 'ft.feeType = [[CONT]] AND f.feeStatus = [[ot]]';
+            . 'ft.feeType = [[CONT]] AND f.feeStatus = [[ot]]'
+            . ' AND f.invoicedDate >= [['.$expectedAfterStr.']]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 }
