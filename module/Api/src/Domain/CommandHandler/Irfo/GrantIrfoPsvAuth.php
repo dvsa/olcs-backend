@@ -68,7 +68,10 @@ final class GrantIrfoPsvAuth extends AbstractCommandHandler implements Transacti
      */
     private function createOutstandingAnnualFee(IrfoPsvAuth $irfoPsvAuth)
     {
-        $irfoFeeType = $this->getIrfoFeeType($irfoPsvAuth, FeeTypeEntity::FEE_TYPE_IRFOPSVANN);
+        $irfoFeeType = $this->getRepo('FeeType')->getLatestIrfoFeeType(
+            $irfoPsvAuth,
+            $this->getRepo()->getRefdataReference(FeeTypeEntity::FEE_TYPE_IRFOPSVANN)
+        );
 
         $feeAmount = (float) ($irfoPsvAuth->getValidityPeriod() *  $irfoFeeType->getFixedValue());
 
@@ -94,7 +97,10 @@ final class GrantIrfoPsvAuth extends AbstractCommandHandler implements Transacti
      */
     private function createExemptAnnualFee(IrfoPsvAuth $irfoPsvAuth)
     {
-        $irfoFeeType = $this->getIrfoFeeType($irfoPsvAuth, FeeTypeEntity::FEE_TYPE_IRFOPSVANN);
+        $irfoFeeType = $this->getRepo('FeeType')->getLatestIrfoFeeType(
+            $irfoPsvAuth,
+            $this->getRepo()->getRefdataReference(FeeTypeEntity::FEE_TYPE_IRFOPSVANN)
+        );
 
         $data = [
             'irfoPsvAuth' => $irfoPsvAuth->getId(),
@@ -116,7 +122,10 @@ final class GrantIrfoPsvAuth extends AbstractCommandHandler implements Transacti
      */
     private function createCopiesFee(IrfoPsvAuth $irfoPsvAuth)
     {
-        $irfoFeeType = $this->getIrfoFeeType($irfoPsvAuth, FeeTypeEntity::FEE_TYPE_IRFOPSVCOPY);
+        $irfoFeeType = $this->getRepo('FeeType')->getLatestIrfoFeeType(
+            $irfoPsvAuth,
+            $this->getRepo()->getRefdataReference(FeeTypeEntity::FEE_TYPE_IRFOPSVCOPY)
+        );
 
         $feeAmount = (float) $irfoFeeType->getFixedValue() * $irfoPsvAuth->getCopiesRequired();
 
@@ -130,29 +139,5 @@ final class GrantIrfoPsvAuth extends AbstractCommandHandler implements Transacti
         ];
 
         return $this->handleSideEffect(FeeCreateFee::create($data));
-    }
-
-
-    /**
-     * Get the fee type based on IrfoPsvAuth and fee type string
-     *
-     * @param IrfoPsvAuth $irfoPsvAuth
-     * @param $feeType
-     * @return FeeTypeEntity
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    private function getIrfoFeeType(IrfoPsvAuth $irfoPsvAuth, $feeType)
-    {
-        $irfoPsvAuthFeeType = $irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType();
-
-        /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
-        $feeTypeRepo = $this->getRepo('FeeType');
-        $irfoFeeType = $feeTypeRepo->fetchLatestForIrfo(
-            $irfoPsvAuthFeeType,
-            $this->getRepo()->getRefDataReference($feeType)
-        );
-
-        return $irfoFeeType;
     }
 }
