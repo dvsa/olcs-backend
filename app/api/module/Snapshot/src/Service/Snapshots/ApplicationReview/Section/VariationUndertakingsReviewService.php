@@ -83,7 +83,7 @@ class VariationUndertakingsReviewService extends AbstractReviewService
 
         $additionalParts = [
             $isInternal ? $this->translate(self::GV81_DECLARE) : '',
-            $isInternal ? $this->translate(self::SIGNATURE) : '',
+            $isInternal ? $this->getSignature($data) : '',
             $isStandard ? $this->translate(self::GV81_STANDARD) : ''
         ];
 
@@ -97,7 +97,7 @@ class VariationUndertakingsReviewService extends AbstractReviewService
 
         $additionalParts = [
             $isInternal ? $this->translate(self::GV81NI_DECLARE) : '',
-            $isInternal ? $this->translate(self::SIGNATURE) : '',
+            $isInternal ? $this->getSignature($data) : '',
             $isStandard ? $this->translate(self::GV81NI_STANDARD) : ''
         ];
 
@@ -109,7 +109,7 @@ class VariationUndertakingsReviewService extends AbstractReviewService
         $isInternal = $this->isInternal($data);
         $additionalParts = [
             $isInternal ? $this->translate(self::GV80A_DECLARE) : '',
-            $isInternal ? $this->translate(self::SIGNATURE) : ''
+            $isInternal ? $this->getSignature($data) : ''
         ];
 
         return $this->translateReplace(self::GV80A, $additionalParts);
@@ -120,7 +120,7 @@ class VariationUndertakingsReviewService extends AbstractReviewService
         $isInternal = $this->isInternal($data);
         $additionalParts = [
             $isInternal ? $this->translate(self::GV80ANI_DECALRE) : '',
-            $isInternal ? $this->translate(self::SIGNATURE) : ''
+            $isInternal ? $this->getSignature($data) : ''
         ];
 
         return $this->translateReplace(self::GV80ANI, $additionalParts);
@@ -132,7 +132,7 @@ class VariationUndertakingsReviewService extends AbstractReviewService
         $isInternal = $this->isInternal($data);
         $additionalParts = [
             $isInternal ? $this->translate(self::PSV430_DECLARE) : '',
-            $isInternal ? $this->translate(self::SIGNATURE) : '',
+            $isInternal ? $this->getSignature($data) : '',
             $isStandard ? $this->translate(self::PSV430_STANDARD) : ''
         ];
 

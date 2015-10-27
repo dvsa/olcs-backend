@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 use Dvsa\Olcs\Snapshot\Service\Formatter\Address;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * Abstract Review Service
@@ -21,6 +22,10 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
  */
 abstract class AbstractReviewService implements ReviewServiceInterface, ServiceLocatorAwareInterface
 {
+    const SIGNATURE = 'markup-application_undertakings_signature';
+    const SIGNATURE_ADDRESS_GB = 'markup-application_undertakings_signature_address_gb';
+    const SIGNATURE_ADDRESS_NI = 'markup-application_undertakings_signature_address_ni';
+
     use ServiceLocatorAwareTrait;
 
     protected function formatText($text)
@@ -113,5 +118,29 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
     protected function isInternal($data)
     {
         return $data['isInternal'];
+    }
+
+    protected function getSignature($data)
+    {
+        $titles = [
+            Organisation::ORG_TYPE_REGISTERED_COMPANY => $this->translate('undertakings_directors_signature'),
+            Organisation::ORG_TYPE_LLP => $this->translate('undertakings_directors_signature'),
+            Organisation::ORG_TYPE_PARTNERSHIP => $this->translate('undertakings_partners_signature'),
+            Organisation::ORG_TYPE_SOLE_TRADER => $this->translate('undertakings_owners_signature'),
+            Organisation::ORG_TYPE_OTHER => $this->translate('undertakings_responsiblepersons_signature'),
+            Organisation::ORG_TYPE_IRFO => $this->translate('undertakings_responsiblepersons_signature')
+        ];
+        $addresses = [
+            'Y' => self::SIGNATURE_ADDRESS_NI,
+            'N' => self::SIGNATURE_ADDRESS_GB
+        ];
+        $title = $titles[$data['licence']['organisation']['type']['id']];
+        $address = $this->translate($addresses[$data['niFlag']]);
+
+        $additionalParts = [
+            $title,
+            $address
+        ];
+        return $this->translateReplace(self::SIGNATURE, $additionalParts);
     }
 }
