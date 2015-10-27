@@ -284,6 +284,8 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             ->shouldReceive('getFeeType->getFeeType->getId')
             ->andReturn(FeeTypeEntity::FEE_TYPE_APP);
         $appFee
+            ->shouldReceive('isNewApplicationFee')
+            ->andReturn(true)
             ->shouldReceive('isPaid')
             ->andReturn(false)
             ->shouldReceive('isPartPaid')
