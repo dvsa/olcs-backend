@@ -1,136 +1,133 @@
 <?php
-namespace Olcs\Email\Service;
-
-use Olcs\Email\Service\Email as EmailService;
-use Zend\Mail\Transport\Null as NullTransport;
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
- * EmailTest
+ * Email Test
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
  */
-class EmailTest extends TestCase
+namespace Dvsa\OlcsTest\Email\Service;
+
+use Dvsa\Olcs\Email\Service\Email;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Zend\Mail\Message;
+use Zend\Mime\Part;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Mail\Transport\TransportInterface;
+
+/**
+ * Email Test
+ *
+ * @author Rob Caiger <rob@clocal.co.uk>
+ */
+class EmailTest extends MockeryTestCase
 {
-    private $mailService;
+    /**
+     * @var Email
+     */
+    private $sut;
 
-    protected function setUp()
+    public function setUp()
     {
-        $this->mailService = new EmailService();
+        $this->sut = new Email();
     }
 
-    public function testSendWithNullAdapter()
+    public function testCreateServiceMissingConfig()
     {
-        $transport = new NullTransport();
+        $this->setExpectedException(\Zend\Mail\Exception\RuntimeException::class);
 
-        $this->mailService->setMailTransport($transport);
+        $config = [];
 
-        $data = [
-            'fromEmail' => 'some@email.com',
-            'fromName'  => 'Fred Smith',
-            'to'        => 'to@some-email.com',
-            'subject'   => 'Some Subject',
-            'body'      => 'Some body'
-        ];
+        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm->shouldReceive('get')->with('Config')->andReturn($config);
 
-        $this->assertTrue(
-            $this->mailService->send(
-                $data['fromEmail'],
-                $data['fromName'],
-                $data['to'],
-                $data['subject'],
-                $data['body']
-            )
-        );
-
-        $this->assertEquals(1, $transport->getLastMessage()->getFrom()->count());
-        $this->assertEquals($data['fromEmail'], $transport->getLastMessage()->getFrom()->current()->getEmail());
-        $this->assertEquals($data['fromName'], $transport->getLastMessage()->getFrom()->current()->getName());
-        $this->assertEquals(1, $transport->getLastMessage()->getTo()->count());
-        $this->assertEquals($data['subject'], $transport->getLastMessage()->getSubject());
-        $this->assertEquals($data['body'], $transport->getLastMessage()->getBody());
-    }
-
-    public function testSendHtmlWithNullAdapter()
-    {
-        $transport = new NullTransport();
-
-        $this->mailService->setMailTransport($transport);
-
-        $data = [
-            'fromEmail' => 'some@email.com',
-            'fromName'  => 'Fred Smith',
-            'to'        => 'to@some-email.com',
-            'subject'   => 'Some Subject',
-            'body'      => 'Some body',
-            'html'      => '1',
-        ];
-
-        $this->assertTrue(
-            $this->mailService->send(
-                $data['fromEmail'],
-                $data['fromName'],
-                $data['to'],
-                $data['subject'],
-                $data['body'],
-                $data['html']
-            )
-        );
-
-        $this->assertEquals(1, $transport->getLastMessage()->getFrom()->count());
-        $this->assertEquals(1, $transport->getLastMessage()->getTo()->count());
-        $this->assertEquals($data['subject'], $transport->getLastMessage()->getSubject());
-
-        $this->assertInstanceOf('\Zend\Mime\Message', $transport->getLastMessage()->getBody());
-        $this->assertEquals($data['body'], $transport->getLastMessage()->getBody()->getPartContent(0));
-    }
-
-    public function testSendCorrectlyDealsWithException()
-    {
-        $transport = m::mock('Zend\Mail\Transport\Null');
-        $transport->shouldReceive('send')->andThrow('Zend\Mail\Transport\Exception\RuntimeException', 'My message');
-
-        $this->mailService->setMailTransport($transport);
-
-        $data = [
-            'fromEmail' => 'some@email.com',
-            'fromName'  => 'Fred Smith',
-            'to'        => 'to@some-email.com',
-            'subject'   => 'Some Subject',
-            'body'      => 'Some body'
-        ];
-
-        $this->assertEquals(
-            'My message',
-            $this->mailService->send(
-                $data['fromEmail'],
-                $data['fromName'],
-                $data['to'],
-                $data['subject'],
-                $data['body']
-            )
-        );
-    }
-
-    public function testCreateServiceThrowsException()
-    {
-        $sl = new \Zend\ServiceManager\ServiceManager();
-        $sl->setService('Config', []);
-
-        $this->setExpectedException('Zend\Mail\Exception\RuntimeException', 'No mail config found');
-
-        $this->mailService->createService($sl);
+        $this->sut->createService($sm);
     }
 
     public function testCreateService()
     {
-        $data = ['mail' => ['connection_class' => 'plain']];
+        $config = [
+            'mail' => []
+        ];
 
-        $sl = new \Zend\ServiceManager\ServiceManager();
-        $sl->setService('Config', $data);
+        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm->shouldReceive('get')->with('Config')->andReturn($config);
 
-        $this->assertInstanceOf(
-            'Zend\Mail\Transport\Sendmail',
-            $this->mailService->createService($sl)->getMailTransport()
-        );
+        $service = $this->sut->createService($sm);
+
+        $this->assertSame($this->sut, $service);
+
+        $transport = $this->sut->getMailTransport();
+
+        $this->assertInstanceOf(TransportInterface::class, $transport);
+    }
+
+    public function testSendHtml()
+    {
+        $transport = m::mock(TransportInterface::class);
+
+        $this->sut->setMailTransport($transport);
+
+        $transport->shouldReceive('send')
+            ->once()
+            ->with(m::type(Message::class))
+            ->andReturnUsing(
+                function (Message $message) {
+
+                    $content = $message->toString();
+
+                    $parts = explode("\r\n", $content);
+
+                    array_shift($parts);
+
+                    $expected = [
+                        'From: foo <foo@bar.com>',
+                        'To: bar@foo.com',
+                        'Subject: Subject',
+                        'MIME-Version: 1.0',
+                        'Content-Type: text/html',
+                        'Content-Transfer-Encoding: 8bit',
+                        '',
+                        'This is the content'
+                    ];
+
+                    $this->assertEquals($expected, $parts);
+                }
+            );
+
+        $this->sut->send('foo@bar.com', 'foo', 'bar@foo.com', 'Subject', 'This is the content', true);
+    }
+
+    public function testSend()
+    {
+        $transport = m::mock(TransportInterface::class);
+
+        $this->sut->setMailTransport($transport);
+
+        $transport->shouldReceive('send')
+            ->once()
+            ->with(m::type(Message::class))
+            ->andReturnUsing(
+                function (Message $message) {
+
+                    $content = $message->toString();
+
+                    $parts = explode("\r\n", $content);
+
+                    array_shift($parts);
+
+                    $expected = [
+                        'From: foo <foo@bar.com>',
+                        'To: bar@foo.com',
+                        'Subject: Subject',
+                        '',
+                        'This is the content'
+                    ];
+
+                    $this->assertEquals($expected, $parts);
+                }
+            );
+
+        $this->sut->send('foo@bar.com', 'foo', 'bar@foo.com', 'Subject', 'This is the content', false);
     }
 }

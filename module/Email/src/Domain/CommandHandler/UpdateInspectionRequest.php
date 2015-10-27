@@ -77,7 +77,7 @@ final class UpdateInspectionRequest extends AbstractCommandHandler
             $description = 'Unsatisfactory inspection request: ID %s';
         }
 
-        $description = sprintf($description, $inspectionRequest['id']);
+        $description = sprintf($description, $inspectionRequest->getId());
 
         $licId = null;
         if ($inspectionRequest->getLicence()) {

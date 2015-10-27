@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox;
@@ -15,13 +16,13 @@ use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Email\Data\Message;
+use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\CreateCorrespondenceRecord as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Email\CreateCorrespondenceRecord as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox as CorrespondenceInboxRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\Olcs\Email\Service\Client;
 
 /**
  * Create Correspondence Record Test
@@ -36,8 +37,7 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
         $this->mockRepo('CorrespondenceInbox', CorrespondenceInboxRepo::class);
 
         $this->mockedSmServices = [
-            TemplateRenderer::class => m::mock(TemplateRenderer::class),
-            Client::class => m::mock(Client::class),
+            TemplateRenderer::class => m::mock(TemplateRenderer::class)
         ];
 
         parent::setUp();
@@ -113,14 +113,12 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
                 null
             );
 
-        $this->mockedSmServices[Client::class]->shouldReceive('sendEmail')
-            ->once()
-            ->with(m::type(Message::class))
-            ->andReturnUsing(
-                function (Message $message) {
-                    $this->assertEquals(['foo@bar.com'], $message->getTo());
-                }
-            );
+        $result = new Result();
+        $data = [
+            'to' => ['foo@bar.com']
+        ];
+
+        $this->expectedSideEffect(SendEmail::class, $data, $result);
 
         $result = $this->sut->handleCommand($command);
 
