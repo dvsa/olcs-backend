@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as BusShortNoticeEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService as BusRegOtherServiceEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusServiceType as BusServiceTypeEntity;
@@ -104,6 +105,14 @@ final class ProcessPacks extends AbstractCommandHandler
             $this->busRegInput->setValue($ebsrDoc);
             $ebsrData = $this->busRegInput->getValue();
 
+            $ebsrSubmission->updateStatus(
+                $this->getRepo()->getRefdataReference(EbsrSubmissionEntity::VALIDATED_STATUS)
+            );
+
+            $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
+
+            $ebsrData = $this->processEbsrInformation($ebsrData);
+
             //decide what to do based on txcAppType
             switch ($ebsrData['txcAppType']) {
                 case 'new':
@@ -116,29 +125,23 @@ final class ProcessPacks extends AbstractCommandHandler
                     $busReg = $this->createVar($ebsrData);
             }
 
-            $sideEffects = [];
+            $busReg->fromData($this->prepareBusRegData($ebsrData));
+            //$busReg = $this->processServiceNumbers($busReg, $ebsrData['otherServiceNumbers']);
 
-            //store any supporting documents
-            if (isset($ebsrData['documents'])) {
-                foreach ($ebsrData['documents'] as $content) {
-                    $sideEffects[] = $this->persistSupportingDocument(
-                        $content,
-                        $busReg,
-                        basename($document),
-                        'Supporting document'
-                    );
-                }
+            if (!empty($ebsrData['busShortNotice'])) {
+                $busReg->getShortNotice()->fromData($ebsrData['busShortNotice']);
             }
 
-            //store a new map if present
-            if (isset($ebsrData['map'])) {
-                $sideEffects[] = $this->persistSupportingDocument(
-                    $ebsrData['map'],
-                    $busReg,
-                    basename($document),
-                    'Schematic map'
-                );
-            }
+            $this->getRepo()->save($busReg);
+
+            $sideEffects = $this->persistDocuments($ebsrData, $busReg, $document);
+
+            $ebsrSubmission->updateStatus(
+                $this->getRepo()->getRefdataReference(EbsrSubmissionEntity::PROCESSED_STATUS)
+            );
+            $ebsrSubmission->setBusReg($busReg);
+
+            $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
 
             $result->merge($this->handleSideEffects($sideEffects));
         }
@@ -146,6 +149,55 @@ final class ProcessPacks extends AbstractCommandHandler
         return $result;
     }
 
+    private function prepareBusRegData($ebsrData)
+    {
+        //@todo add mappings in here shortly
+        $busRegData = $ebsrData;
+        unset($busRegData['documents']);
+    }
+
+    /**
+     * @param array $ebsrData
+     * @param BusRegEntity $busReg
+     * @param DocumentEntity $document
+     * @return array
+     */
+    private function persistDocuments(array $ebsrData, BusRegEntity $busReg, DocumentEntity $document)
+    {
+        $sideEffects = [];
+
+        //store any supporting documents
+        if (isset($ebsrData['documents'])) {
+            foreach ($ebsrData['documents'] as $content) {
+                $sideEffects[] = $this->persistSupportingDocument(
+                    $content,
+                    $busReg,
+                    basename($document),
+                    'Supporting document'
+                );
+            }
+        }
+
+        //store a new map if present
+        if (isset($ebsrData['map'])) {
+            $sideEffects[] = $this->persistSupportingDocument(
+                $ebsrData['map'],
+                $busReg,
+                basename($document),
+                'Schematic map'
+            );
+        }
+
+        return $sideEffects;
+    }
+
+    /**
+     * @param OrganisationEntity $organisation
+     * @param DocumentEntity $document
+     * @param $submissionType
+     * @return EbsrSubmissionEntity
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     private function createEbsrSubmission(OrganisationEntity $organisation, DocumentEntity $document, $submissionType)
     {
         return new EbsrSubmissionEntity(
@@ -157,6 +209,13 @@ final class ProcessPacks extends AbstractCommandHandler
         );
     }
 
+    /**
+     * @param string $content
+     * @param BusRegEntity $busReg
+     * @param string $filename
+     * @param string $description
+     * @return UploadCmd
+     */
     private function persistSupportingDocument($content, BusRegEntity $busReg, $filename, $description)
     {
         $data = [
@@ -182,18 +241,13 @@ final class ProcessPacks extends AbstractCommandHandler
     {
         $licence = $this->getRepo('Licence')->fetchByLicNo($ebsrData['licNo']);
 
-        $subsidised = (isset($ebsrData['subsidised']) ? $ebsrData['subsidised'] : BusRegEntity::SUBSIDY_NO);
-
-        $busReg = BusRegEntity::createNew(
+        return BusRegEntity::createNew(
             $licence,
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_NEW),
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_NEW),
-            $this->getRepo()->getRefdataReference($subsidised),
-            $this->getRepo()->getReference(BusNoticePeriodEntity::class, BusNoticePeriodEntity::NOTICE_PERIOD_OTHER),
-            'Y'
+            $ebsrData['subsidised'],
+            $ebsrData['busNoticePeriod']
         );
-
-        $busReg = $this->addEbsrInformation($busReg, $ebsrData);
     }
 
     /**
@@ -206,12 +260,10 @@ final class ProcessPacks extends AbstractCommandHandler
     {
         $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['licNo'] . '/' . $ebsrData['routeNo']);
 
-        $busReg->createVariation(
+        return $busReg->createVariation(
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_CANCEL),
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_CANCEL)
         );
-
-        $busReg = $this->addEbsrInformation($busReg, $ebsrData);
     }
 
     /**
@@ -224,26 +276,28 @@ final class ProcessPacks extends AbstractCommandHandler
     {
         $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['licNo'] . '/' . $ebsrData['routeNo']);
 
-        $busReg->createVariation(
+        return $busReg->createVariation(
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_CANCEL),
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_CANCEL)
         );
-
-        $busReg = $this->addEbsrInformation($busReg, $ebsrData);
     }
 
-    private function addEbsrInformation(BusRegEntity $busReg, array $ebsrData)
+    /**
+     * @param array $ebsrData
+     * @return array
+     */
+    private function processEbsrInformation(array $ebsrData)
     {
-        $la = $this->processLocalAuthority($ebsrData['localAuthorities']);
-        $busReg->setLocalAuthoritys($la);
+        $subsidised = (isset($ebsrData['subsidised']) ? $ebsrData['subsidised'] : BusRegEntity::SUBSIDY_NO);
+        $ebsrData['subsidised'] = $this->getRepo()->getRefdataReference($subsidised);
+        $ebsrData['localAuthoritys'] = $this->processLocalAuthority($ebsrData['localAuthorities']);
+        $ebsrData['trafficAreas'] = $this->processTrafficAreas($ebsrData['trafficAreas']);
+        $ebsrData['busServiceTypes'] = $this->processServiceTypes($ebsrData['serviceClassifications']);
+        $ebsrData['busNoticePeriod'] = $this->getRepo()->getReference(
+            BusNoticePeriodEntity::class, $ebsrData['busNoticePeriod']
+        );
 
-        $ta = $this->processTrafficAreas($ebsrData['trafficAreas']);
-        $busReg->setTrafficAreas($ta);
-
-        $serviceTypes = $this->processServiceTypes($ebsrData['serviceClassifications']);
-        $busReg->setBusServiceTypes($serviceTypes);
-
-        $this->processServiceNumbers($busReg, $ebsrData['serviceNumbers']);
+        return $ebsrData;
     }
 
     /**
@@ -269,25 +323,6 @@ final class ProcessPacks extends AbstractCommandHandler
      */
     private function processServiceNumbers(BusRegEntity $busReg, array $serviceNumbers)
     {
-        //makes it easier to find keys we're removing
-        $flipServiceNumbers = array_flip($serviceNumbers);
-
-        //numbers we're removing
-        /**  @var BusRegOtherServiceEntity $otherServiceEntity */
-        foreach ($busReg->getOtherServices() as $otherServiceEntity) {
-            if (!isset($flipServiceNumbers[$otherServiceEntity->getServiceNo()])) {
-                $this->getRepo('BusRegOtherService')->delete($otherServiceEntity);
-            }
-        }
-
-        //check for elements we already have
-        //@todo do this more accurately
-        foreach ($serviceNumbers as  $key => $number) {
-            if ($busReg->getOtherServices()->contains($number)) {
-                unset ($serviceNumbers[$key]);
-            }
-        }
-
         foreach ($serviceNumbers as $number) {
             $otherServiceEntity = new BusRegOtherServiceEntity();
             $otherServiceEntity->setBusReg($busReg);
@@ -310,6 +345,7 @@ final class ProcessPacks extends AbstractCommandHandler
         if (!empty($localAuthority)) {
             $laList = $this->getRepo('LocalAuthority')->fetchByTxcName($localAuthority);
 
+            /** @var LocalAuthorityEntity $la */
             foreach ($laList as $la) {
                 $result->add($la);
             }
@@ -331,6 +367,7 @@ final class ProcessPacks extends AbstractCommandHandler
         if (!empty($trafficAreas)) {
             $taList = $this->getRepo('TrafficArea')->fetchByTxcName($trafficAreas);
 
+            /** @var TrafficAreaEntity $ta */
             foreach ($taList as $ta) {
                 $result->add($ta);
             }
