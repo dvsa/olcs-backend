@@ -57,16 +57,16 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
 
         // Created by, might not have a value
         if ($tma->getCreatedBy()) {
-            // check if the TMA creator email address is alreay in the "to list", if not then add it
+            // check if the TMA creator email address is already in the "to list", if not then add it
             $tmaCreatorEmailAddress = $tma->getCreatedBy()->getContactDetails()->getEmailAddress();
-            if (array_search($tmaCreatorEmailAddress, $toEmailAddresses) === false) {
+            if (!empty($tmaCreatorEmailAddress) && array_search($tmaCreatorEmailAddress, $toEmailAddresses) === false) {
                 $toEmailAddresses[] = $tmaCreatorEmailAddress;
             }
         }
 
         foreach ($toEmailAddresses as $to) {
             $message = new \Dvsa\Olcs\Email\Data\Message($to, 'email.transport-manager-submitted-form.subject');
-            $message->setTranslateToWelsh($tma->getApplication()->getNiFlag());
+            $message->setTranslateToWelsh($tma->getApplication()->getLicence()->getTranslateToWelsh());
             $this->sendEmailTemplate(
                 $message,
                 'transport-manager-submitted-form',
