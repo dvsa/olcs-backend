@@ -29,6 +29,7 @@ class BusRegistrationInputFactory implements FactoryInterface
         $filterChain = $service->getFilterChain();
         $filterChain->attach($mapXmlFile);
         $filterChain->attach($serviceLocator->get('FilterManager')->get('InjectIsTxcApp'));
+        $filterChain->attach($serviceLocator->get('FilterManager')->get('InjectReceivedDate'));
         $filterChain->attach($serviceLocator->get('FilterManager')->get('IsScottishRules'));
         $filterChain->attach($serviceLocator->get('FilterManager')->get('Format\Subsidy'));
 
