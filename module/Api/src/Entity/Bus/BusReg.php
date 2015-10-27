@@ -112,8 +112,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
         RefData $status,
         RefData $revertStatus,
         RefData $subsidised,
-        BusNoticePeriodEntity $busNoticePeriod,
-        $isTxcApp = 'N'
+        BusNoticePeriodEntity $busNoticePeriod
     ) {
         // get default data
         $data = array_merge(
@@ -145,7 +144,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
         $busReg->setRevertStatus($revertStatus);
         $busReg->setSubsidised($subsidised);
         $busReg->setBusNoticePeriod($busNoticePeriod);
-        $busReg->setIsTxcApp($isTxcApp);
 
         // set default short notice
         $busShortNotice = new BusShortNoticeEntity();
@@ -238,7 +236,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      * @param array $data
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
-    private function fromData($data)
+    public function fromData($data)
     {
         foreach ($data as $key => $value) {
             $this->{'set' . ucwords($key)}($value);
