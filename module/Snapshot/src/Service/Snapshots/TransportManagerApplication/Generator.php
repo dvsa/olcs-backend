@@ -20,11 +20,14 @@ use Zend\View\Model\ViewModel;
  */
 class Generator extends AbstractGenerator
 {
-    public function generate(TransportManagerApplication $tma)
+    public function generate(TransportManagerApplication $tma, $isInternalUser = false)
     {
         $application = $tma->getApplication();
         $licence = $application->getLicence();
         $organisation = $licence->getOrganisation();
+
+        // Set the NI Locale
+        $this->getServiceLocator()->get('Utils\NiTextTranslation')->setLocaleForNiFlag($application->getNiFlag());
 
         $subTitle = sprintf(
             '%s %s/%s',
@@ -40,6 +43,14 @@ class Generator extends AbstractGenerator
         $sections[] = $this->getOtherEmploymentDetailsReviewSection($tma);
         $sections[] = $this->getPreviousConvictionDetailsReviewSection($tma);
         $sections[] = $this->getPreviousLicenceDetailsReviewSection($tma);
+        $sections[] = $this->getDeclarationReviewSection($tma);
+
+        // add signature block if internal user or if TMA status is Op signed
+        if ($isInternalUser ||
+            $tma->getTmApplicationStatus()->getId() === TransportManagerApplication::STATUS_OPERATOR_SIGNED
+        ) {
+            $sections[] = $this->getSignatureReviewSection($tma);
+        }
 
         return $this->generateReadonly(
             [
@@ -90,6 +101,21 @@ class Generator extends AbstractGenerator
         return [
             'header' => 'tm-review-previous-licence',
             'config' => $this->getServiceLocator()->get('Review\TransportManagerPreviousLicence')->getConfig($tma)
+        ];
+    }
+
+    protected function getDeclarationReviewSection(TransportManagerApplication $tma)
+    {
+        return [
+            'header' => 'tm-review-declaration',
+            'config' => $this->getServiceLocator()->get('Review\TransportManagerDeclaration')->getConfig($tma)
+        ];
+    }
+
+    protected function getSignatureReviewSection(TransportManagerApplication $tma)
+    {
+        return [
+            'config' => $this->getServiceLocator()->get('Review\TransportManagerSignature')->getConfig($tma)
         ];
     }
 }

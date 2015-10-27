@@ -105,6 +105,37 @@ class User extends AbstractRepository
     }
 
     /**
+     * Get a list of users by licence number and email address
+     *
+     * @param string $licNo
+     * @param string $emailAddress
+     *
+     * @return array
+     */
+    public function fetchForRemindUsername($licNo, $emailAddress)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            // match by email address
+            ->innerJoin($this->alias . '.contactDetails', 'cd')
+            ->andWhere($qb->expr()->eq('cd.emailAddress', ':emailAddress'))
+            ->setParameter('emailAddress', $emailAddress)
+
+            // match by licence number
+            ->innerJoin($this->alias . '.organisationUsers', 'ou')
+            ->innerJoin('ou.organisation', 'o')
+            ->innerJoin('o.licences', 'l')
+            ->andWhere($qb->expr()->eq('l.licNo', ':licNo'))
+            ->setParameter('licNo', $licNo);
+
+        $query = $qb->getQuery();
+        $query->execute();
+
+        return $query->getResult();
+    }
+
+    /**
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
      * @return array
      */
