@@ -65,7 +65,7 @@ final class ProcessPacks extends AbstractCommandHandler
 
         $this->xmlStructure = $mainServiceLocator->get('EbsrXmlStructure');
         $this->busRegInput = $mainServiceLocator->get('EbsrBusRegInput');
-        $this->fileProcessor = new FileProcessor($this->getUploader(), new Filesystem(), new Decompress('zip'), '/tmp');
+        $this->fileProcessor = $mainServiceLocator->get(FileProcessor::class);
 
         return parent::createService($serviceLocator);
     }

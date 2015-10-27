@@ -23,7 +23,6 @@ return [
             'AddressFormatter' => \Dvsa\Olcs\Api\Service\Helper\FormatAddress::class,
             'VariationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService::class,
-            \Dvsa\Olcs\Api\Filesystem\Filesystem::class => \Dvsa\Olcs\Api\Filesystem\Filesystem::class
         ],
         'factories' => [
             'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
@@ -572,10 +571,6 @@ return [
     ],
     'filters' => [
         'invokables' => [
-            \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class =>
-                \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class,
-            \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class =>
-                \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class =>
@@ -589,13 +584,7 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
         ],
-        'delegators' => [
-            \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class =>
-                [Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmpDelegatorFactory::class]
-        ],
         'aliases' => [
-            'DecompressToTmp' => \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class,
-            'XmlFromDir' => \Dvsa\Olcs\Api\Filesystem\Filter\XmlFromDir::class,
             'IsScottishRules' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
             'InjectReceivedDate' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class,
             'InjectIsTxcApp' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class,
