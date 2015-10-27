@@ -87,8 +87,6 @@ class FeesHelperServiceTest extends MockeryTestCase
 
     public function testGetOutstandingFeesForApplication()
     {
-        $this->markTestIncomplete('todo update this');
-
         $applicationId = 69;
         $licenceId = 7;
         $applicationFeeTypeId = 123;
@@ -131,40 +129,14 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->with($applicationId)
             ->andReturn($application);
 
-        $this->feeTypeRepo
-            ->shouldReceive('getRefdataReference')
-            ->with(FeeTypeEntity::FEE_TYPE_APP)
-            ->andReturn($appFeeTypeFeeType)
-            ->shouldReceive('getRefdataReference')
-            ->with(FeeTypeEntity::FEE_TYPE_GRANTINT)
-            ->andReturn($interimFeeTypeFeeType)
-            ->shouldReceive('fetchLatest')
+        $application
+            ->shouldReceive('getLatestOutstandingApplicationFee')
             ->once()
-            ->with($appFeeTypeFeeType, $goodsOrPsv, $licenceType, m::type(\DateTime::class), $trafficAreaId)
-            ->andReturn($appFeeType)
-            ->shouldReceive('fetchLatest')
-            ->once()
-            ->with($interimFeeTypeFeeType, $goodsOrPsv, $licenceType, m::type(\DateTime::class), $trafficAreaId)
-            ->andReturn($interimFeeType);
-
-        $this->feeRepo
-            ->shouldReceive('fetchLatestFeeByTypeStatusesAndApplicationId')
-            ->once()
-            ->with(
-                $applicationFeeTypeId,
-                [FeeEntity::STATUS_OUTSTANDING],
-                $applicationId
-            )
             ->andReturn($applicationFee);
 
-        $this->feeRepo
-            ->shouldReceive('fetchLatestFeeByTypeStatusesAndApplicationId')
+        $application
+            ->shouldReceive('getLatestOutstandingInterimFee')
             ->once()
-            ->with(
-                $interimFeeTypeId,
-                [FeeEntity::STATUS_OUTSTANDING],
-                $applicationId
-            )
             ->andReturn($interimFee);
 
         $result = $this->sut->getOutstandingFeesForApplication($applicationId);
@@ -174,8 +146,6 @@ class FeesHelperServiceTest extends MockeryTestCase
 
     public function testGetOutstandingFeesForBrandNewApplication()
     {
-        $this->markTestIncomplete('todo update this');
-
         $applicationId = 69;
         $licenceId = 7;
 
@@ -199,13 +169,14 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->with($applicationId)
             ->andReturn($application);
 
-        $this->feeTypeRepo
-            ->shouldReceive('getRefdataReference')
-            ->with(FeeTypeEntity::FEE_TYPE_APP)
-            ->andReturn($appFeeTypeFeeType)
-            ->shouldReceive('getRefdataReference')
-            ->with(FeeTypeEntity::FEE_TYPE_GRANTINT)
-            ->andReturn($interimFeeTypeFeeType);
+       $application
+            ->shouldReceive('getLatestOutstandingApplicationFee')
+            ->once()
+            ->andReturn(null);
+
+        $application
+            ->shouldReceive('getLatestOutstandingInterimFee')
+            ->never(); // only called for Goods
 
         $result = $this->sut->getOutstandingFeesForApplication($applicationId);
 
