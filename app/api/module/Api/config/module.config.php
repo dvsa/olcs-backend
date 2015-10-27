@@ -586,6 +586,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
         ],
         'delegators' => [
             \Dvsa\Olcs\Api\Filesystem\Filter\DecompressToTmp::class =>
@@ -598,6 +600,7 @@ return [
             'InjectReceivedDate' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class,
             'InjectIsTxcApp' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class,
             'Format\Subsidy' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class,
+            'Format\Via' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
         ]
     ],
 ];
