@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateInterim;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -18,9 +19,9 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateInterim as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Grant Interim Test
@@ -167,8 +168,6 @@ class UpdateInterimTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequestedNo()
     {
-        $this->markTestIncomplete('todo');
-
         $application = m::mock(ApplicationEntity::class)->makePartial();
 
         $data = [
@@ -220,32 +219,41 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $application->setOperatingCentres($ocs);
         $application->setLicenceVehicles($lvs);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->repoMap['Application']
+            ->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($application)
             ->shouldReceive('save')
             ->with($application);
 
         /** @var Fee $fee */
-        $fee = m::mock(Fee::class)->makePartial();
+        $fee = m::mock(Fee::class)
+            ->shouldReceive('getId')
+            ->andReturn(222)
+            ->shouldReceive('isFullyOutstanding')
+            ->andReturn(true)
+            ->getMock();
 
-        $fees = [
-            $fee
-        ];
+        $fees = [$fee];
 
-        $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchInterimFeesByApplicationId')
             ->with(111, true)
-            ->andReturn($fees)
-            ->shouldReceive('save')
-            ->once()
-            ->with($fee);
+            ->andReturn($fees);
+
+        $this->expectedSideEffect(
+            CancelFee::class,
+            ['id' => 222],
+            (new Result())->addMessage('fee 222 cancelled')
+        );
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Interim data reset'
+                'Interim data reset',
+                'fee 222 cancelled',
             ]
         ];
 
@@ -255,8 +263,6 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $this->assertEquals('N', $oc2->getIsInterim());
         $this->assertNull($lv1->getInterimApplication());
         $this->assertNull($lv2->getInterimApplication());
-
-        $this->assertSame($this->refData[Fee::STATUS_CANCELLED], $fee->getFeeStatus());
 
         $this->assertNull($application->getInterimReason());
         $this->assertNull($application->getInterimStart());
@@ -401,7 +407,6 @@ class UpdateInterimTest extends CommandHandlerTestCase
 
     public function testHandleCommandGranted()
     {
-        $this->markTestIncomplete('todo');
         $application = m::mock(ApplicationEntity::class)->makePartial();
 
         $data = [
@@ -454,32 +459,41 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $application->setLicenceVehicles($lvs);
         $application->setInterimStatus($this->refData[ApplicationEntity::INTERIM_STATUS_GRANTED]);
 
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+        $this->repoMap['Application']
+            ->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($application)
             ->shouldReceive('save')
             ->with($application);
 
         /** @var Fee $fee */
-        $fee = m::mock(Fee::class)->makePartial();
+        $fee = m::mock(Fee::class)
+            ->shouldReceive('getId')
+            ->andReturn(222)
+            ->shouldReceive('isFullyOutstanding')
+            ->andReturn(true)
+            ->getMock();
 
-        $fees = [
-            $fee
-        ];
+        $fees = [$fee];
 
-        $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchInterimFeesByApplicationId')
             ->with(111, true)
-            ->andReturn($fees)
-            ->shouldReceive('save')
-            ->once()
-            ->with($fee);
+            ->andReturn($fees);
+
+        $this->expectedSideEffect(
+            CancelFee::class,
+            ['id' => 222],
+            (new Result())->addMessage('fee 222 cancelled')
+        );
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Interim data reset'
+                'Interim data reset',
+                'fee 222 cancelled',
             ]
         ];
 
@@ -489,8 +503,6 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $this->assertEquals('N', $oc2->getIsInterim());
         $this->assertNull($lv1->getInterimApplication());
         $this->assertNull($lv2->getInterimApplication());
-
-        $this->assertSame($this->refData[Fee::STATUS_CANCELLED], $fee->getFeeStatus());
 
         $this->assertNull($application->getInterimReason());
         $this->assertNull($application->getInterimStart());
