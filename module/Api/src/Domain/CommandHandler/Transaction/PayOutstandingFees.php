@@ -111,6 +111,12 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         // fire off to CPMS
         if ($command->getPaymentMethod() === FeeEntity::METHOD_CARD_OFFLINE) {
             $response = $this->getCpmsService()->initiateCnpRequest($command->getCpmsRedirectUrl(), $feesToPay);
+        } elseif ($command->getStoredCardReference()) {
+            $response = $this->getCpmsService()->initiateStoredCardRequest(
+                $command->getCpmsRedirectUrl(),
+                $feesToPay,
+                $command->getStoredCardReference()
+            );
         } else {
             $response = $this->getCpmsService()->initiateCardRequest($command->getCpmsRedirectUrl(), $feesToPay);
         }
