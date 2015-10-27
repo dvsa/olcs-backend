@@ -103,7 +103,7 @@ class SubmitTest extends CommandHandlerTestCase
         $tma->shouldReceive('getApplication->getLicence->getOrganisation->getAdminEmailAddresses')->with()->once()
             ->andReturn(['email1']);
 
-        $tma->shouldReceive('getApplication->getNiFlag')->with()->once()->andReturn('Y');
+        $tma->shouldReceive('getApplication->getLicence->getTranslateToWelsh')->with()->once()->andReturn('Y');
         $tma->shouldReceive('getTransportManager->getHomeCd->getPerson->getFullName')->with()->once()
             ->andReturn('Bob Smith');
         $tma->shouldReceive('getApplication->getLicence->getLicNo')->with()->once()->andReturn('LIC01');
@@ -154,7 +154,7 @@ class SubmitTest extends CommandHandlerTestCase
         $tma->shouldReceive('getApplication->getLicence->getOrganisation->getAdminEmailAddresses')->with()->once()
             ->andReturn([]);
 
-        $tma->shouldReceive('getApplication->getNiFlag')->with()->once()->andReturn('Y');
+        $tma->shouldReceive('getApplication->getLicence->getTranslateToWelsh')->with()->once()->andReturn('Y');
         $tma->shouldReceive('getTransportManager->getHomeCd->getPerson->getFullName')->with()->once()
             ->andReturn('Bob Smith');
         $tma->shouldReceive('getApplication->getLicence->getLicNo')->with()->once()->andReturn('LIC01');
