@@ -130,24 +130,27 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
         return $irfoPsvAuth;
     }
 
+    /**
+     * Creates outstanding application fee
+     *
+     * @param IrfoPsvAuth $irfoPsvAuth
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function createApplicationFee(IrfoPsvAuth $irfoPsvAuth)
     {
-        $irfoPsvAuthFeeType = $irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType();
-
-        /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
-        $feeTypeRepo = $this->getRepo('FeeType');
-        $feeType = $feeTypeRepo->fetchLatestForIrfo(
-            $irfoPsvAuthFeeType,
-            $this->getRepo()->getRefDataReference(FeeTypeEntity::FEE_TYPE_IRFOPSVAPP)
+        $irfoFeeType = $this->getRepo('FeeType')->getLatestIrfoFeeType(
+            $irfoPsvAuth,
+            $this->getRepo()->getRefdataReference(FeeTypeEntity::FEE_TYPE_IRFOPSVAPP)
         );
 
-        $feeAmount = (float)$feeType->getFixedValue();
+        $feeAmount = (float) $irfoFeeType->getFixedValue();
 
         $data = [
             'irfoPsvAuth' => $irfoPsvAuth->getId(),
             'invoicedDate' => date('Y-m-d'),
-            'description' => $feeType->getDescription() . ' for Auth ' . $irfoPsvAuth->getId(),
-            'feeType' => $feeType->getId(),
+            'description' => $irfoFeeType->getDescription() . ' for Auth ' . $irfoPsvAuth->getId(),
+            'feeType' => $irfoFeeType->getId(),
             'amount' => $feeAmount,
             'feeStatus' => Fee::STATUS_OUTSTANDING,
         ];
@@ -155,22 +158,25 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
         return $this->handleSideEffect(FeeCreateFee::create($data));
     }
 
+    /**
+     * Creates exempt fee for 0 amount. Marked as PAID
+     *
+     * @param IrfoPsvAuth $irfoPsvAuth
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function createExemptFee(IrfoPsvAuth $irfoPsvAuth)
     {
-        $irfoPsvAuthFeeType = $irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType();
-
-        /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
-        $feeTypeRepo = $this->getRepo('FeeType');
-        $feeType = $feeTypeRepo->fetchLatestForIrfo(
-            $irfoPsvAuthFeeType,
-            $this->getRepo()->getRefDataReference(FeeTypeEntity::FEE_TYPE_IRFOPSVAPP)
+        $irfoFeeType = $this->getRepo('FeeType')->getLatestIrfoFeeType(
+            $irfoPsvAuth,
+            $this->getRepo()->getRefdataReference(FeeTypeEntity::FEE_TYPE_IRFOPSVAPP)
         );
 
         $data = [
             'irfoPsvAuth' => $irfoPsvAuth->getId(),
             'invoicedDate' => date('Y-m-d'),
-            'description' => $feeType->getDescription() . ' for Auth ' . $irfoPsvAuth->getId(),
-            'feeType' => $feeType->getId(),
+            'description' => $irfoFeeType->getDescription() . ' for Auth ' . $irfoPsvAuth->getId(),
+            'feeType' => $irfoFeeType->getId(),
             'amount' => 0,
             'feeStatus' => Fee::STATUS_PAID,
         ];
@@ -178,6 +184,11 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
         return $this->handleSideEffect(FeeCreateFee::create($data));
     }
 
+    /**
+     * Determine status
+     *
+     * @return string
+     */
     private function determineStatus()
     {
         return IrfoPsvAuth::STATUS_PENDING;
