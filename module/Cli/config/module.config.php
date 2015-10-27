@@ -60,6 +60,15 @@ return [
                         ],
                     ],
                 ],
+                'inspection-request-email' => [
+                    'options' => [
+                        'route' => 'inspection-request-email [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'inspectionRequestEmail'
+                        ],
+                    ],
+                ],
             ]
         ]
     ],

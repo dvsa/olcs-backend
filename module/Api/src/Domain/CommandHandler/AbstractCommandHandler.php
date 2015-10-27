@@ -108,7 +108,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         }
 
         if ($this instanceof \Dvsa\Olcs\Api\Domain\EmailAwareInterface) {
-            $this->setEmailService($mainServiceLocator->get(\Dvsa\Olcs\Email\Service\Client::class));
             $this->setTemplateRendererService(
                 $mainServiceLocator->get(\Dvsa\Olcs\Email\Service\TemplateRenderer::class)
             );

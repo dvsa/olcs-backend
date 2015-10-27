@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendUsernameMultiple as Sut;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUsernameMultiple as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
@@ -14,8 +15,8 @@ use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Email\Data\Message;
+use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\Olcs\Email\Service\Client;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -31,7 +32,6 @@ class SendUsernameMultipleTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
-            Client::class => m::mock(Client::class),
         ];
 
         parent::setUp();
@@ -108,9 +108,17 @@ class SendUsernameMultipleTest extends CommandHandlerTestCase
                 null
             );
 
-        $this->mockedSmServices[Client::class]->shouldReceive('sendEmail')
-            ->twice()
-            ->with(m::type(Message::class));
+        $result = new Result();
+        $data = [
+            'to' => 'u1@bar.com'
+        ];
+        $this->expectedSideEffect(SendEmail::class, $data, $result);
+
+        $result = new Result();
+        $data = [
+            'to' => 'u2@bar.com'
+        ];
+        $this->expectedSideEffect(SendEmail::class, $data, $result);
 
         $result = $this->sut->handleCommand($command);
 
