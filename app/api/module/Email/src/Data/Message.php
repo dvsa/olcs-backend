@@ -1,6 +1,7 @@
 <?php
 
 namespace Dvsa\Olcs\Email\Data;
+
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 
 /**

@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Correspondence;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Correspondence\ProcessInboxDocuments as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Correspondence\ProcessInboxDocuments as Command;
@@ -28,8 +29,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
         $this->mockRepo('CorrespondenceInbox', CorrespondenceInboxRepo::class);
 
         $this->mockedSmServices = [
-            TemplateRenderer::class => m::mock(TemplateRenderer::class),
-            Client::class => m::mock(Client::class),
+            TemplateRenderer::class => m::mock(TemplateRenderer::class)
         ];
 
         parent::setUp();
@@ -115,14 +115,12 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
                 null
             );
 
-        $this->mockedSmServices[Client::class]->shouldReceive('sendEmail')
-            ->once()
-            ->with(m::type(Message::class))
-            ->andReturnUsing(
-                function (Message $message) {
-                    $this->assertEquals(['foo@bar.com'], $message->getTo());
-                }
-            );
+        $result = new Result();
+        $data = [
+            'to' => ['foo@bar.com']
+        ];
+
+        $this->expectedSideEffect(SendEmail::class, $data, $result);
 
         $params = [
             'fileIdentifier' => 'id',

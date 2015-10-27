@@ -1,7 +1,8 @@
 <?php
-namespace Olcs\Email\Service;
 
-use Olcs\Email\Service\Imap as ImapService;
+namespace Dvsa\OlcsTest\Email\Service;
+
+use Dvsa\Olcs\Email\Service\Imap as ImapService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 

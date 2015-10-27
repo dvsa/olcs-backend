@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Email\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Email\Domain\Command\UpdateInspectionRequest;
+use Dvsa\Olcs\Email\Domain\Command\UpdateInspectionRequest as UpdateInspectionRequestCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -57,6 +57,8 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
+        $this->getMailbox()->connect(self::MAILBOX_ID);
+
         // get list of pending emails
         $emails = $this->getEmailList();
 
@@ -114,7 +116,7 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
     protected function getEmailList()
     {
         $this->outputLine('Checking mailbox...');
-        return $this->getMailbox()->connect(self::MAILBOX_ID)->getMessages();
+        return $this->getMailbox()->getMessages();
     }
 
     /**
@@ -126,7 +128,7 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
     protected function getEmail($id)
     {
         $this->outputLine('==Retrieving email ' . $id);
-        return $this->getMailbox()->connect(self::MAILBOX_ID)->getMessage($id);
+        return $this->getMailbox()->getMessage($id);
     }
 
     /**
@@ -137,7 +139,7 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
     protected function deleteEmail($id)
     {
         $this->outputLine('==Deleting email '.$id);
-        return $this->getMailbox()->connect(self::MAILBOX_ID)->removeMessage($id);
+        return $this->getMailbox()->removeMessage($id);
     }
 
     /**
@@ -178,13 +180,14 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
         ];
 
         try {
-            $this->handleSideEffect(UpdateInspectionRequest::create($data));
+            $this->handleSideEffect(UpdateInspectionRequestCmd::create($data));
             return true;
         } catch (NotFoundException $ex) {
             Logger::warn('==Unable to find the inspection request from the email subject line: ' . $emailSubject);
+            return false;
+        } catch (\Exception $ex) {
+            return false;
         }
-
-        return false;
     }
 
     protected function outputLine($message)

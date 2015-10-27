@@ -12,7 +12,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail as Cmd;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 use Zend\I18n\Translator\TranslatorInterface;
-use Dvas\Olcs\Email\Service\Email as EmailService;
+use Dvsa\Olcs\Email\Service\Email as EmailService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -236,10 +236,7 @@ class SendEmail extends AbstractCommandHandler
      */
     protected function translate($message, $locale = 'en_GB')
     {
-        if ($this->getTranslator()) {
-            return $this->getTranslator()->translate($message, 'email', $locale);
-        }
-        return $message;
+        return $this->getTranslator()->translate($message, 'email', $locale);
     }
 
     /**
