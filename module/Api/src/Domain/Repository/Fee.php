@@ -192,7 +192,6 @@ class Fee extends AbstractRepository
                 ->setParameter('after', $after);
         }
 
-
         return $doctrineQb->getQuery()->getResult();
     }
 
