@@ -53,7 +53,7 @@ final class OperatorApprove extends AbstractCommandHandler implements Transactio
             $tma->getTransportManager()->getHomeCd()->getEmailAddress(),
             'email.transport-manager-confirmed.subject'
         );
-        $message->setTranslateToWelsh($tma->getApplication()->getNiFlag());
+        $message->setTranslateToWelsh($tma->getApplication()->getLicence()->getTranslateToWelsh());
 
         $this->sendEmailTemplate(
             $message,
