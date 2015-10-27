@@ -93,7 +93,7 @@ class OperatorApproveTest extends CommandHandlerTestCase
     private function assertEmailSent($tma)
     {
         $tma->shouldReceive('getTransportManager->getHomeCd->getEmailAddress')->with()->once()->andReturn('email1');
-        $tma->shouldReceive('getApplication->getNiFlag')->with()->once()->andReturn('Y');
+        $tma->shouldReceive('getApplication->getLicence->getTranslateToWelsh')->with()->once()->andReturn('Y');
         $tma->shouldReceive('getApplication->getLicence->getOrganisation->getName')->with()->once()
             ->andReturn('ORG_NAME');
         $tma->shouldReceive('getApplication->getLicence->getLicNo')->with()->once()->andReturn('LIC01');
