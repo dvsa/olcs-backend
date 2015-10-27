@@ -143,6 +143,7 @@ return [
             'BusRegOtherService' => RepositoryFactory::class,
             'BusNoticePeriod' => RepositoryFactory::class,
             'BusShortNotice' => RepositoryFactory::class,
+            'LocalAuthority' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
             'GracePeriod' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,
@@ -580,6 +581,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class,
         ],
