@@ -239,7 +239,12 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     public function fromData($data)
     {
         foreach ($data as $key => $value) {
-            $this->{'set' . ucwords($key)}($value);
+            //@to-do temporary for testing, will use a map to ensure this later
+            $method = 'set' . ucwords($key);
+
+            if (method_exists($this, $method)) {
+                $this->{$method}($value);
+            }
         }
     }
 
