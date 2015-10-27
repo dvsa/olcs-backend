@@ -7,4 +7,6 @@ return array(
     'email.licensing-information.continuation.subject' => 'Parhad/terfyn trwydded gweithredwr',
     'email.licensing-information.standard.subject' => 'Gwybodaeth trwyddedu gweithredwr',
     'email.transport-manager-complete-digital-form.subject' => 'WELSH You’ve been named as a Transport Manager',
+    'email.transport-manager-submitted-form.subject'
+        => 'WELSH A Transport Manager has submitted their details for review',
 );
