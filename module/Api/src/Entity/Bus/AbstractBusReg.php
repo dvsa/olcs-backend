@@ -28,10 +28,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_bus_reg_withdrawn_reason", columns={"withdrawn_reason"}),
  *        @ORM\Index(name="ix_bus_reg_status", columns={"status"}),
  *        @ORM\Index(name="ix_bus_reg_revert_status", columns={"revert_status"}),
- *        @ORM\Index(name="ix_bus_reg_reg_no_variation_no", columns={"reg_no","variation_no"}),
  *        @ORM\Index(name="ix_bus_reg_parent_id", columns={"parent_id"})
  *    },
  *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_bus_reg_reg_no_variation_no", columns={"reg_no","variation_no"}),
  *        @ORM\UniqueConstraint(name="uk_bus_reg_olbs_key", columns={"olbs_key"})
  *    }
  * )
