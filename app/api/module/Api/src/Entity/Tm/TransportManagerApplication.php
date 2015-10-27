@@ -46,6 +46,10 @@ class TransportManagerApplication extends AbstractTransportManagerApplication
     const ERROR_SAT = 'err_sat';
     const ERROR_SUN = 'err_sun';
 
+    const TYPE_INTERNAL = 'tm_t_i';
+    const TYPE_EXTERNAL = 'tm_t_e';
+    const TYPE_BOTH = 'tm_t_b';
+
     public function updateTransportManagerApplication(
         $application,
         $transportManager,
@@ -164,5 +168,25 @@ class TransportManagerApplication extends AbstractTransportManagerApplication
         $weeklyHours += (int) $this->getHoursSun();
 
         return $weeklyHours;
+    }
+
+    /**
+     * Is the TM type External
+     *
+     * @return bool
+     */
+    public function isTypeExternal()
+    {
+        return $this->getTmType() !== null && $this->getTmType()->getId() === self::TYPE_EXTERNAL;
+    }
+
+    /**
+     * Is the TM type Internal
+     *
+     * @return bool
+     */
+    public function isTypeInternal()
+    {
+        return $this->getTmType() !== null && $this->getTmType()->getId() === self::TYPE_INTERNAL;
     }
 }
