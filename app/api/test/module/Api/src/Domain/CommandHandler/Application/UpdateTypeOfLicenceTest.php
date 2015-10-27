@@ -7,20 +7,23 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTypeOfLicence;
-use Dvsa\Olcs\Api\Domain\Repository\Application;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence as Cmd;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication as ResetApplicationCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber as GenerateLicenceNumberCommand;
+use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication as ResetApplicationCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Domain\Command\Licence\CancelLicenceFees;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTypeOfLicence;
+use Dvsa\Olcs\Api\Domain\Repository\Application;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Update Type Of Licence Test
@@ -241,6 +244,78 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    public function testHandleCommandWithPartPaidApplicationFee()
+    {
+        // Params
+        $command = $this->getCommand('N', Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL, Licence::LICENCE_CATEGORY_PSV);
+
+        $application = $this->getApplication(
+            'N',
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_CATEGORY_PSV
+        );
+
+        // Expectations
+        $application->shouldReceive('updateTypeOfLicence')
+            ->once()
+            ->with(
+                'N',
+                $this->mapRefData(Licence::LICENCE_CATEGORY_PSV),
+                $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL)
+            )
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock(Licence::class)
+                ->shouldReceive('getId')
+                ->andReturn(222)
+                ->getMock()
+            );
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->once()
+            ->with($application);
+
+        $appFee = m::mock(FeeEntity::class);
+        $appFee
+            ->shouldReceive('getFeeType->getFeeType->getId')
+            ->andReturn(FeeTypeEntity::FEE_TYPE_APP);
+        $appFee
+            ->shouldReceive('isNewApplicationFee')
+            ->andReturn(true)
+            ->shouldReceive('isPaid')
+            ->andReturn(false)
+            ->shouldReceive('isPartPaid')
+            ->andReturn(true);
+        $application->setFees(new ArrayCollection([$appFee]));
+
+        $result = new Result();
+        $result->addMessage('section1 updated');
+        $result->addMessage('section2 updated');
+        $this->expectedSideEffect(
+            UpdateApplicationCompletionCommand::class,
+            ['id' => 111, 'section' => 'typeOfLicence'],
+            $result
+        );
+
+        // Assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'section1 updated',
+                'section2 updated',
+                'Application saved successfully'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
     public function requireReset()
     {
         $this->initReferences();
@@ -318,6 +393,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $application->setNiFlag($niFlag);
         $application->setLicenceType($this->mapRefData($licenceType));
         $application->setGoodsOrPsv($this->mapRefData($operatorType));
+        $application->setFees([]);
 
         return $application;
     }

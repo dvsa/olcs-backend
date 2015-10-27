@@ -66,72 +66,20 @@ class FeesHelperService implements FactoryInterface
         $application = $this->applicationRepo->fetchById($applicationId);
 
         // get application fee
-        $applicationFee = $this->getLatestOutstandingApplicationFeeForApplication($application);
+        $applicationFee = $application->getLatestOutstandingApplicationFee();
         if (!empty($applicationFee)) {
             $outstandingFees[] = $applicationFee;
         }
 
         // get interim fee if applicable
         if ($application->isGoods()) {
-            $interimFee = $this->getLatestOutstandingInterimFeeForApplication($application);
+            $interimFee = $application->getLatestOutstandingInterimFee();
             if (!empty($interimFee)) {
                 $outstandingFees[] = $interimFee;
             }
         }
 
         return $outstandingFees;
-    }
-
-    /**
-     * @param ApplicationEntity $application
-     * @return FeeEntity
-     */
-    protected function getLatestOutstandingApplicationFeeForApplication(ApplicationEntity $application)
-    {
-        if ($application->isVariation()) {
-            $feeTypeFeeTypeId = FeeTypeEntity::FEE_TYPE_VAR;
-        } else {
-            $feeTypeFeeTypeId = FeeTypeEntity::FEE_TYPE_APP;
-        }
-
-        return $this->getLatestOutstandingFeeForApplicationByType($application, $feeTypeFeeTypeId);
-    }
-
-    /**
-     * @param ApplicationEntity $application
-     * @return FeeEntity
-     */
-    protected function getLatestOutstandingInterimFeeForApplication(ApplicationEntity $application)
-    {
-        return $this->getLatestOutstandingFeeForApplicationByType($application, FeeTypeEntity::FEE_TYPE_GRANTINT);
-    }
-
-    /**
-     * @param ApplicationEntity $application
-     * @param string $feeTypeFeeTypeId
-     * @return FeeEntity
-     */
-    protected function getLatestOutstandingFeeForApplicationByType($application, $feeTypeFeeTypeId)
-    {
-        if (is_null($application->getLicenceType())) {
-            return;
-        }
-
-        $applicationDate = new \DateTime($application->getApplicationDate());
-
-        $feeType = $this->feeTypeRepo->fetchLatest(
-            $this->feeTypeRepo->getRefdataReference($feeTypeFeeTypeId),
-            $application->getGoodsOrPsv(),
-            $application->getLicenceType(),
-            $applicationDate,
-            $application->getFeeTrafficAreaId()
-        );
-
-        return $this->feeRepo->fetchLatestFeeByTypeStatusesAndApplicationId(
-            $feeType->getId(),
-            [FeeEntity::STATUS_OUTSTANDING],
-            $application->getId()
-        );
     }
 
     /**
