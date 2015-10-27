@@ -7,13 +7,14 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendTmApplication as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendTmApplication as Command;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
+use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\Olcs\Email\Service\Client;
 use Mockery as m;
 
 /**
@@ -29,8 +30,7 @@ class SendTmApplicationTest extends CommandHandlerTestCase
         $this->mockRepo('TransportManagerApplication', TransportManagerApplicationRepo::class);
 
         $this->mockedSmServices = [
-            TemplateRenderer::class => m::mock(TemplateRenderer::class),
-            Client::class => m::mock(Client::class),
+            TemplateRenderer::class => m::mock(TemplateRenderer::class)
         ];
 
         parent::setUp();
@@ -91,13 +91,14 @@ class SendTmApplicationTest extends CommandHandlerTestCase
             null
         );
 
-        $this->mockedSmServices[Client::class]->shouldReceive('sendEmail')->once()->andReturnUsing(
-            function (\Dvsa\Olcs\Email\Data\Message $message) {
-                $this->assertSame('EMAIL', $message->getTo());
-                $this->assertSame('email.transport-manager-complete-digital-form.subject', $message->getSubject());
-                $this->assertSame('en_GB', $message->getLocale());
-            }
-        );
+        $result = new Result();
+        $data = [
+            'to' => 'EMAIL',
+            'locale' => 'en_GB',
+            'subject' => 'email.transport-manager-complete-digital-form.subject'
+        ];
+
+        $this->expectedSideEffect(SendEmail::class, $data, $result);
 
         $result = $this->sut->handleCommand($command);
 

@@ -7,6 +7,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\InspectionRequest;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\InspectionRequest as InspectionRequestRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -16,7 +18,6 @@ use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\Olcs\Email\Service\Client;
 use Dvsa\Olcs\Api\Domain\CommandHandler\InspectionRequest\SendInspectionRequest;
 
 /**
@@ -188,7 +189,6 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
-            Client::class => m::mock(Client::class),
             AuthorizationService::class => m::mock(AuthorizationService::class)
         ];
 
@@ -215,7 +215,7 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             ->andReturn($mockUser);
     }
 
-    public function testHanldeCommandAndPopulateForLicenceRequest()
+    public function testHandleCommandAndPopulateForLicenceRequest()
     {
         $inspectionRequestId = 189781;
         $inspectionRequest = [
@@ -352,16 +352,14 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             null
         );
 
-        $this->mockedSmServices[Client::class]->shouldReceive('sendEmail')->once()->andReturnUsing(
-            function (\Dvsa\Olcs\Email\Data\Message $message) use ($inspectionRequestId) {
-                $this->assertSame('foo@bar.com', $message->getTo());
-                $this->assertSame(
-                    "[ Maintenance Inspection ] REQUEST={$inspectionRequestId},STATUS=",
-                    $message->getSubject()
-                );
-                $this->assertSame('en_GB', $message->getLocale());
-            }
-        );
+        $result = new Result();
+        $data = [
+            'to' => 'foo@bar.com',
+            'locale' => 'en_GB',
+            'subject' => "[ Maintenance Inspection ] REQUEST={$inspectionRequestId},STATUS="
+        ];
+
+        $this->expectedSideEffect(SendEmail::class, $data, $result);
 
         $result = $this->sut->handleCommand($command);
 
@@ -374,7 +372,7 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
         $this->assertEquals($expectedResult, $result->toArray());
     }
 
-    public function testHanldeCommandAndPopulateForApplicationRequest()
+    public function testHandleCommandAndPopulateForApplicationRequest()
     {
         $inspectionRequestId = 189781;
         $inspectionRequest = [
@@ -545,16 +543,14 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             null
         );
 
-        $this->mockedSmServices[Client::class]->shouldReceive('sendEmail')->once()->andReturnUsing(
-            function (\Dvsa\Olcs\Email\Data\Message $message) use ($inspectionRequestId) {
-                $this->assertSame('foo@bar.com', $message->getTo());
-                $this->assertSame(
-                    "[ Maintenance Inspection ] REQUEST={$inspectionRequestId},STATUS=",
-                    $message->getSubject()
-                );
-                $this->assertSame('en_GB', $message->getLocale());
-            }
-        );
+        $result = new Result();
+        $data = [
+            'to' => 'foo@bar.com',
+            'locale' => 'en_GB',
+            'subject' => "[ Maintenance Inspection ] REQUEST={$inspectionRequestId},STATUS="
+        ];
+
+        $this->expectedSideEffect(SendEmail::class, $data, $result);
 
         $result = $this->sut->handleCommand($command);
 

@@ -7,13 +7,13 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrCancelled as CommandHandler;
+use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Transfer\Command\Ebsr\SubmissionCreate as SubmissionCreateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\Olcs\Email\Service\Client as EmailClient;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Doctrine\ORM\Query;
@@ -41,7 +41,6 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
-            EmailClient::class => m::mock(EmailClient::class),
         ];
 
         parent::setUp();
@@ -73,7 +72,6 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
         $ebsrSubmissionEntity->shouldReceive('getOrganisationEmailAddress')->andReturn('EMAIL');
         $ebsrSubmissionEntity->shouldReceive('getLocalAuthoritys')->andReturn($la);
 
-
         $this->repoMap['EbsrSubmission']
             ->shouldReceive('fetchUsingId')
             ->with(m::type(EbsrSubmissionQuery::class), Query::HYDRATE_OBJECT, null)
@@ -96,13 +94,14 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
             null
         );
 
-        $this->mockedSmServices[EmailClient::class]->shouldReceive('sendEmail')->once()->andReturnUsing(
-            function (\Dvsa\Olcs\Email\Data\Message $message) {
-                $this->assertSame('EMAIL', $message->getTo());
-                $this->assertSame('email.' . $this->template . '.subject', $message->getSubject());
-                $this->assertSame('en_GB', $message->getLocale());
-            }
-        );
+        $result = new Result();
+        $data = [
+            'to' => 'EMAIL',
+            'locale' => 'en_GB',
+            'subject' => 'email.' . $this->template . '.subject'
+        ];
+
+        $this->expectedSideEffect(SendEmail::class, $data, $result);
 
         $result = $this->sut->handleCommand($command);
 
