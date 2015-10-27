@@ -75,7 +75,7 @@ return [
             'TransExchangePublisherXmlMapping' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangePublisherXmlFactory::class,
 
-            \Dvsa\Olcs\Api\Service\Ebsr\FileProcessor::class =>
+            \Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\FileProcessorFactory::class,
 
             'EbsrXmlStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class,
