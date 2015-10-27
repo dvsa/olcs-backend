@@ -277,6 +277,8 @@ return [
         => QueryHandler\TransportManagerLicence\GetForResponsibilities::class,
     TransferQuery\TransportManagerLicence\GetList::class
         => QueryHandler\TransportManagerLicence\GetList::class,
+    TransferQuery\TransportManagerLicence\GetListByVariation::class
+        => QueryHandler\TransportManagerLicence\GetListByVariation::class,
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
