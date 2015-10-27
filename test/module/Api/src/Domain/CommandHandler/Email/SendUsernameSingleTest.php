@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendUsernameSingle as Sut;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUsernameSingle as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
@@ -13,8 +14,8 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Email\Data\Message;
+use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\Olcs\Email\Service\Client;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -31,7 +32,6 @@ class SendUsernameSingleTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
-            Client::class => m::mock(Client::class),
         ];
 
         parent::setUp();
@@ -83,14 +83,11 @@ class SendUsernameSingleTest extends CommandHandlerTestCase
                 null
             );
 
-        $this->mockedSmServices[Client::class]->shouldReceive('sendEmail')
-            ->once()
-            ->with(m::type(Message::class))
-            ->andReturnUsing(
-                function (Message $message) use ($emailAddress) {
-                    $this->assertEquals($emailAddress, $message->getTo());
-                }
-            );
+        $result = new Result();
+        $data = [
+            'to' => $emailAddress
+        ];
+        $this->expectedSideEffect(SendEmail::class, $data, $result);
 
         $result = $this->sut->handleCommand($command);
 

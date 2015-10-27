@@ -137,4 +137,27 @@ return array(
         'client_secret' => 'f7c3cd7d55c0dc0f3bcadc68d2867beedc28b463'
     ),
 
+    // Email config
+    'email' => array(
+        // Debugging option forces all email to be sent to an address
+        // 'send_all_mail_to' => 'terry.valtech@gmail.com',
+        // Selfserve/external URI e.g. http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa *Environment specific*
+        'selfserve_uri' => 'http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa',
+    ),
+    'mail' => array(),
+    'mailboxes' => array(
+        // IMAP connection to a the mailbox for reading inspection request emails
+        'inspection_request' => array(
+            // IMAP hostname *Environment specific*
+            'host'     => 'mail01.olcs.mgt.mtpdvsa',
+            // IMAP user *Environment specific*
+            'user'     => 'olcsemail',
+            // IMAP password *Environment specific*
+            'password' => '74398f7g39',
+            // IMAP port 993 *Environment specific*
+            'port'     => 993,
+            'ssl'      => 'SSL',
+        ),
+    ),
+
 );
