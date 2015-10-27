@@ -56,7 +56,15 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                 [
                     'isGoods' => false,
                     'licenceType' => ['id' => Licence::LICENCE_TYPE_SPECIAL_RESTRICTED],
-                    'isInternal' => true
+                    'isInternal' => true,
+                    'licence' => [
+                        'organisation' => [
+                            'type' => [
+                                'id' => 'org_t_rc'
+                            ]
+                        ]
+                    ],
+                    'niFlag' => 'N'
                 ],
                 [
                     'markup' => 'markup-application_undertakings_PSV356-translated'
@@ -66,7 +74,15 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                 [
                     'isGoods' => false,
                     'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
-                    'isInternal' => true
+                    'isInternal' => true,
+                    'licence' => [
+                        'organisation' => [
+                            'type' => [
+                                'id' => 'org_t_rc'
+                            ]
+                        ]
+                    ],
+                    'niFlag' => 'N'
                 ],
                 [
                     'markup' => 'markup-application_undertakings_PSV421-translated'
@@ -77,7 +93,14 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                     'isGoods' => true,
                     'niFlag' => 'Y',
                     'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
-                    'isInternal' => true
+                    'isInternal' => true,
+                    'licence' => [
+                        'organisation' => [
+                            'type' => [
+                                'id' => 'org_t_rc'
+                            ]
+                        ]
+                    ],
                 ],
                 [
                     'markup' => 'markup-application_undertakings_GV79-NI-translated'
@@ -88,7 +111,14 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                     'isGoods' => true,
                     'niFlag' => 'N',
                     'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
-                    'isInternal' => true
+                    'isInternal' => true,
+                    'licence' => [
+                        'organisation' => [
+                            'type' => [
+                                'id' => 'org_t_rc'
+                            ]
+                        ]
+                    ],
                 ],
                 [
                     'markup' => 'markup-application_undertakings_GV79-translated'

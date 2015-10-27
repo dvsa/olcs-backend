@@ -9,7 +9,6 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Utils\Helper\ValueHelper;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * Application Undertakings Review Service
@@ -33,10 +32,6 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
     const PSV421_DECLARE = 'markup-application_undertakings_PSV421-declare';
 
     const PSV356 = 'markup-application_undertakings_PSV356';
-
-    const SIGNATURE = 'markup-application_undertakings_signature';
-    const SIGNATURE_ADDRESS_GB = 'markup-application_undertakings_signature_address_gb';
-    const SIGNATURE_ADDRESS_NI = 'markup-application_undertakings_signature_address_ni';
 
     private $standardOptions = [
         Licence::LICENCE_TYPE_STANDARD_NATIONAL,
@@ -129,29 +124,5 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
     private function isStandard(array $data)
     {
         return in_array($data['licenceType']['id'], $this->standardOptions);
-    }
-
-    private function getSignature($data)
-    {
-        $titles = [
-            Organisation::ORG_TYPE_REGISTERED_COMPANY => $this->translate('undertakings_directors_signature'),
-            Organisation::ORG_TYPE_LLP => $this->translate('undertakings_directors_signature'),
-            Organisation::ORG_TYPE_PARTNERSHIP => $this->translate('undertakings_partners_signature'),
-            Organisation::ORG_TYPE_SOLE_TRADER => $this->translate('undertakings_owners_signature'),
-            Organisation::ORG_TYPE_OTHER => $this->translate('undertakings_responsiblepersons_signature'),
-            Organisation::ORG_TYPE_IRFO => $this->translate('undertakings_responsiblepersons_signature')
-        ];
-        $addresses = [
-            'Y' => self::SIGNATURE_ADDRESS_NI,
-            'N' => self::SIGNATURE_ADDRESS_GB
-        ];
-        $title = $titles[$data['licence']['organisation']['type']['id']];
-        $address = $this->translate($addresses[$data['niFlag']]);
-
-        $additionalParts = [
-            $title,
-            $address
-        ];
-        return $this->translateReplace(self::SIGNATURE, $additionalParts);
     }
 }
