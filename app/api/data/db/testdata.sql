@@ -1085,9 +1085,7 @@ VALUES
 INSERT INTO `transport_manager_application` (`id`, `application_id`, `tm_application_status`, `created_by`, `last_modified_by`, `tm_type`, `transport_manager_id`, `action`, `additional_information`, `created_on`, `deleted_date`, `hours_fri`, `hours_mon`, `hours_sat`, `hours_sun`, `hours_thu`, `hours_tue`, `hours_wed`, `last_modified_on`, `olbs_key`, `version`)
 VALUES
 	(1, 1, 'tmap_st_incomplete', NULL, NULL, 'tm_t_i', 1, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 1, 1, 1, NULL, NULL, 1),
-	(2, 7, 'tmap_st_awaiting_signature', NULL, NULL, 'tm_t_i', 1, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 2, 2, 2, NULL,
-	NULL, 1),
-  (3, 1, 'tmap_st_tm_signed', NULL, NULL, 'tm_t_i', 3, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 3, 4, 5, NULL,
+	(3, 1, 'tmap_st_tm_signed', NULL, NULL, 'tm_t_i', 3, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 3, 4, 5, NULL,
   NULL, 1),
 	(4, 7, 'tmap_st_postal_application', NULL, NULL, 'tm_t_i', 3, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 6, 7, 8, NULL,
 	NULL, 1),
