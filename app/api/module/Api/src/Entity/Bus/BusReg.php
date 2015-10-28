@@ -239,7 +239,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     public function fromData($data)
     {
         foreach ($data as $key => $value) {
-            //@to-do temporary for testing, will use a map to ensure this later
             $method = 'set' . ucwords($key);
 
             if (method_exists($this, $method)) {
@@ -914,5 +913,14 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     public function getContextValue()
     {
         return $this->getLicence()->getLicNo();
+    }
+
+    /**
+     * @param string $serviceNo
+     */
+    public function addOtherServiceNumber($serviceNo)
+    {
+        $otherServiceEntity = new BusRegOtherService($this, $serviceNo);
+        $this->otherServices->add($otherServiceEntity);
     }
 }
