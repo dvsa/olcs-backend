@@ -129,18 +129,27 @@ final class ProcessPacks extends AbstractCommandHandler implements
                     true
                 );
 
-                $result->addId(
-                    'error_messages',
-                    'Error with ',
-                    true
-                );
-
                 continue;
             }
 
             $ebsrDoc = $this->xmlStructure->getValue();
 
             $this->busRegInput->setValue($ebsrDoc);
+
+            if (!$this->busRegInput->isValid(['submissionType' => $command->getSubmissionType()])) {
+                //@todo return more specific messages
+                $invalidPacks++;
+
+                $result->addId(
+                    'error_messages',
+                    'Error with ' . $document->getDescription() . '(' . basename($xmlFilename) .
+                    '): xml file data did not meet business rules - not processed',
+                    true
+                );
+
+                continue;
+            }
+
             $ebsrData = $this->busRegInput->getValue();
 
             $ebsrSubmission->updateStatus(
