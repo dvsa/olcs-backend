@@ -8,7 +8,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class IsScottishRulesTest
- * @package OlcsTest\Ebsr\Filter
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr\Filter
  */
 class IsScottishRulesTest extends TestCase
 {

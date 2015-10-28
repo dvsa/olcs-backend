@@ -8,7 +8,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class InjectReceivedDateTest
- * @package OlcsTest\Ebsr\Filter
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr\Filter
  */
 class InjectReceivedDateTest extends TestCase
 {

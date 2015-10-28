@@ -12,8 +12,8 @@ use Zend\Http\Response;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class ClientTest
- * @package OlcsTest\Ebsr\Service
+ * Class TransExchangeClientTest
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr
  */
 class TransExchangeClientTest extends TestCase
 {

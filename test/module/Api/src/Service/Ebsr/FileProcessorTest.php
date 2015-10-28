@@ -12,8 +12,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use org\bovigo\vfs\vfsStream;
 
 /**
- * Class ClientTest
- * @package OlcsTest\Ebsr\Service
+ * Class FileProcessorTest
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr
  */
 class FileProcessorTest extends TestCase
 {

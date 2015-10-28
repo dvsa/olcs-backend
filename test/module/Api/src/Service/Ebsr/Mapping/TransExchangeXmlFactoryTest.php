@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\Mapping;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
@@ -9,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangeXmlFactory;
 
 /**
  * Class TransExchangeXmlFactoryTest
- * @package OlcsTest\Ebsr\Filter
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr\Mapping
  */
 class TransExchangeXmlFactoryTest extends TestCase
 {

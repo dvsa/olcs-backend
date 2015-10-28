@@ -8,7 +8,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class SubsidyTest
- * @package Ebsr\src\Filter\Format
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format
  */
 class SubsidyTest extends TestCase
 {

@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\Filter\Format;
 
-use Zend\Filter\Exception;
 use Zend\Filter\AbstractFilter as ZendAbstractFilter;
 
 /**
@@ -16,7 +15,6 @@ class Via extends ZendAbstractFilter
      * Returns the result of filtering $value
      *
      * @param  mixed $value
-     * @throws Exception\RuntimeException If filtering $value is impossible
      * @return mixed
      */
     public function filter($value)
