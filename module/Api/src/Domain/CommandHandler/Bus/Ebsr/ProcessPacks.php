@@ -39,8 +39,10 @@ use Doctrine\ORM\Query;
 /**
  * Process Ebsr packs
  */
-final class ProcessPacks extends AbstractCommandHandler
-    implements AuthAwareInterface, TransactionedInterface, UploaderAwareInterface
+final class ProcessPacks extends AbstractCommandHandler implements
+    AuthAwareInterface,
+    TransactionedInterface,
+    UploaderAwareInterface
 {
     use AuthAwareTrait;
     use UploaderAwareTrait;
@@ -186,8 +188,8 @@ final class ProcessPacks extends AbstractCommandHandler
             $this->handleSideEffects($sideEffects);
             $validPacks++;
 
-            $result->addMessage($document->getDescription() . '(' . basename($xmlFilename) .
-                '): file processed successfully'
+            $result->addMessage(
+                $document->getDescription() . '(' . basename($xmlFilename) . '): file processed successfully'
             );
         }
 

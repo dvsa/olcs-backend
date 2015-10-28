@@ -10,8 +10,8 @@ use Zend\Filter\Decompress;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class ClientTest
- * @package OlcsTest\Ebsr\Service
+ * Class FileProcessorFactoryTest
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr
  */
 class FileProcessorFactoryTest extends TestCase
 {
