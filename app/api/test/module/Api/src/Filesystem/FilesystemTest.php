@@ -35,8 +35,8 @@ class FilesystemTest extends TestCase
 
     public function testCleanup()
     {
-        if (!function_exists('Dvsa\OlcsTest\Api\Filesystem\register_shutdown_function')) {
-            eval('namespace Dvsa\OlcsTest\Api\Filesystem; function register_shutdown_function ($callback) { $callback(); }');
+        if (!function_exists('Dvsa\Olcs\Api\Filesystem\register_shutdown_function')) {
+            eval('namespace Dvsa\Olcs\Api\Filesystem; function register_shutdown_function ($callback) { $callback(); }');
         }
 
         vfsStream::setup('tmp');
