@@ -38,6 +38,11 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
 
         $licenceOcs = $application->getLicence()->getOperatingCentres();
 
+        // OLCS-10953: don't invoke fee logic if application was created internally
+        if ($application->createdInternally()) {
+            return $this->result;
+        }
+
         if ($this->feeApplies($applicationOcs, $licenceOcs)) {
             $this->maybeCreateVariationFee($application);
         } else {
@@ -50,7 +55,6 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
     private function maybeCreateVariationFee(Application $application)
     {
         $fees = $this->getRepo('Fee')->fetchOutstandingFeesByApplicationId($application->getId());
-
         if (empty($fees)) {
             $data = [
                 'id' => $application->getId(),
