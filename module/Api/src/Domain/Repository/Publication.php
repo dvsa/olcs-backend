@@ -47,13 +47,15 @@ class Publication extends AbstractRepository
         return $result[0];
     }
 
-    public function fetchPendingList()
+    public function fetchPendingList($query = [])
     {
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere(
             $qb->expr()->in($this->alias . '.pubStatus', ':pubStatus')
         )->setParameter('pubStatus', [Entity::PUB_NEW_STATUS, Entity::PUB_GENERATED_STATUS]);
+
+        $this->buildDefaultListQuery($qb, $query);
 
         $this->getQueryBuilder()->modifyQuery($qb);
 
