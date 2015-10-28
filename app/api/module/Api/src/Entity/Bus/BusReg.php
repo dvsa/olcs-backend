@@ -549,6 +549,42 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     }
 
     /**
+     * Populates the short notice field
+     */
+    public function populateShortNotice()
+    {
+        $this->isShortNotice = 'N';
+
+        $effectiveDate = $this->processDate($this->effectiveDate);
+        $receivedDate = $this->processDate($this->receivedDate);
+
+        if ($this->isShortNotice($effectiveDate, $receivedDate, $this->busNoticePeriod)) {
+            $this->isShortNotice = 'Y';
+        }
+    }
+
+    /**
+     * @param string $date
+     * @param string $format
+     * @param bool $zeroTime
+     * @return \DateTime|null
+     */
+    public function processDate($date, $format = 'Y-m-d', $zeroTime = true)
+    {
+        $dateTime = \DateTime::createFromFormat($format, $date);
+
+        if (!$dateTime instanceof \DateTime) {
+            return null;
+        }
+
+        if ($zeroTime) {
+            $dateTime->setTime(0, 0, 0);
+        }
+
+        return $dateTime;
+    }
+
+    /**
      * Returns whether the record is short notice refused
      *
      * @return bool
