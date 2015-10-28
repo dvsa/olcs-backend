@@ -46,6 +46,12 @@ final class SendTmApplication extends AbstractCommandHandler implements \Dvsa\Ol
                 'username' => $tma->getTransportManager()->getUsers()->isEmpty() ? 'not registered' :
                     $tma->getTransportManager()->getUsers()->first()->getLoginId(),
                 'isNi' => $tma->getApplication()->getNiFlag() === 'Y',
+                'signInLink' => sprintf(
+                    'http://selfserve/%s/%d/transport-managers/details/%d/edit-details/',
+                    ($tma->getApplication()->getIsVariation()) ? 'variation' : 'application',
+                    $tma->getApplication()->getId(),
+                    $tma->getId()
+                )
             ]
         );
 
