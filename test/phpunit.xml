@@ -32,6 +32,7 @@
         <testsuite name="Api Misc">
             <directory>./module/Api/src/Assertion</directory>
             <directory>./module/Api/src/Controller</directory>
+            <directory>./module/Api/src/Filesystem</directory>
         </testsuite>
         <testsuite name="OLD Olcs">
             <directory>./module/Olcs</directory>

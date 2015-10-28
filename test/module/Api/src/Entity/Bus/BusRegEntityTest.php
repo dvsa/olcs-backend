@@ -523,13 +523,11 @@ class BusRegEntityTest extends EntityTester
         $shortNotice = new BusShortNoticeEntity();
         $shortNotice->setId(100);
 
-        $otherService1 = new BusRegOtherServiceEntity();
+        $otherService1 = new BusRegOtherServiceEntity($licenceBusReg, 'otherService1');
         $otherService1->setId(201);
-        $otherService1->setServiceNo('otherService1');
 
-        $otherService2 = new BusRegOtherServiceEntity();
+        $otherService2 = new BusRegOtherServiceEntity($licenceBusReg, 'otherService2');
         $otherService2->setId(202);
-        $otherService2->setServiceNo('otherService2');
 
         // set up the bus reg entity based on which a variation is to be created
         $this->entity->setId($id);

@@ -27,15 +27,14 @@ class ServiceDesignationTest extends MockeryTestCase
         $serviceNo = 12345;
         $otherServiceNo = 67890;
 
-        $otherService = new BusRegOtherService();
-        $otherService->setServiceNo($otherServiceNo);
-
         $otherServices = new ArrayCollection();
-        $otherServices->add($otherService);
 
         $busReg = m::mock(BusRegEntity::class);
         $busReg->shouldReceive('getServiceNo')->andReturn($serviceNo);
         $busReg->shouldReceive('getOtherServices')->andReturn($otherServices);
+
+        $otherService = new BusRegOtherService($busReg, $otherServiceNo);
+        $otherServices->add($otherService);
 
         $publication = m::mock(PublicationLink::class);
         $publication->shouldReceive('getBusReg')->andReturn($busReg);
