@@ -43,12 +43,12 @@ class Generator extends AbstractGenerator
         $sections[] = $this->getOtherEmploymentDetailsReviewSection($tma);
         $sections[] = $this->getPreviousConvictionDetailsReviewSection($tma);
         $sections[] = $this->getPreviousLicenceDetailsReviewSection($tma);
-        $sections[] = $this->getDeclarationReviewSection($tma);
 
-        // add signature block if internal user or if TMA status is Op signed
+        // add declaration/signature block if internal user or if TMA status is Op signed
         if ($isInternalUser ||
             $tma->getTmApplicationStatus()->getId() === TransportManagerApplication::STATUS_OPERATOR_SIGNED
         ) {
+            $sections[] = $this->getDeclarationReviewSection($tma);
             $sections[] = $this->getSignatureReviewSection($tma);
         }
 

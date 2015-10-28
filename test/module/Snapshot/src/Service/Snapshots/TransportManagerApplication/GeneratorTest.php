@@ -96,9 +96,6 @@ class GeneratorTest extends MockeryTestCase
         $this->services['Review\TransportManagerPreviousLicence']
             ->shouldReceive('getConfig')->once()->with($tma)->andReturn('tmPreviousLicence');
 
-        $this->services['Review\TransportManagerDeclaration']
-            ->shouldReceive('getConfig')->once()->with($tma)->andReturn('tmDeclaration');
-
         $this->services['ViewRenderer']->shouldReceive('render')
             ->once()
             ->with(m::type(ViewModel::class))
@@ -142,10 +139,6 @@ class GeneratorTest extends MockeryTestCase
                 [
                     'header' => 'tm-review-previous-licence',
                     'config' => 'tmPreviousLicence'
-                ],
-                [
-                    'header' => 'tm-review-declaration',
-                    'config' => 'tmDeclaration'
                 ],
             ]
         ];
