@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as Entity;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Publication
@@ -47,7 +48,7 @@ class Publication extends AbstractRepository
         return $result[0];
     }
 
-    public function fetchPendingList($query = [])
+    public function fetchPendingList(QueryInterface $query)
     {
         $qb = $this->createQueryBuilder();
 
