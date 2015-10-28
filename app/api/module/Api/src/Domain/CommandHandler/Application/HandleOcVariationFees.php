@@ -55,6 +55,7 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
     private function maybeCreateVariationFee(Application $application)
     {
         $fees = $this->getRepo('Fee')->fetchOutstandingFeesByApplicationId($application->getId());
+
         if (empty($fees)) {
             $data = [
                 'id' => $application->getId(),
