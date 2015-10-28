@@ -387,8 +387,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['licNo'] . '/' . $ebsrData['routeNo']);
 
         return $busReg->createVariation(
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_CANCEL),
-            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_CANCEL)
+            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_VAR),
+            $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_VAR)
         );
     }
 
