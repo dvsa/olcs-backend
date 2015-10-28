@@ -439,5 +439,27 @@ class Fee extends AbstractFee
     public function isCancelled()
     {
         return $this->getFeeStatus()->getId() === self::STATUS_CANCELLED;
+
+    }
+
+    public function canRefund()
+    {
+        $isPaidOrOutstanding = in_array(
+            $this->getFeeStatus()->getId(),
+            [
+                self::STATUS_PAID,
+                self::STATUS_OUTSTANDING,
+            ]
+        );
+
+        $hasNonRefundedPayment = false;
+        foreach ($this->getFeeTransactions() as $ft) {
+            if ($ft->getTransaction()->isPayment() && !$ft->isRefundedOrReversed()) {
+                $hasNonRefundedPayment = true;
+                break;
+            }
+        }
+
+        return ($isPaidOrOutstanding && $hasNonRefundedPayment);
     }
 }

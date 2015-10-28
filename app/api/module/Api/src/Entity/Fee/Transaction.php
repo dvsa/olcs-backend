@@ -106,4 +106,12 @@ class Transaction extends AbstractTransaction
     {
         return $this->getType()->getId() === self::TYPE_WAIVE;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isPayment()
+    {
+        return $this->getType()->getId() === self::TYPE_PAYMENT;
+    }
 }

@@ -59,7 +59,10 @@ class Fee extends AbstractQueryHandler
             'slipNo' => $fee->getSlipNo(),
             'chequePoNumber' => $fee->getChequePoNumber(),
             'waiveReason' => $fee->getWaiveReason(),
+
             'hasOutstandingWaiveTransaction' => !empty($fee->getOutstandingWaiveTransaction()),
+
+            'canRefund' => $fee->canRefund(),
         ];
     }
 }
