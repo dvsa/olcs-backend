@@ -31,7 +31,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateNewUser extends AbstractCommandHandler implements TransactionedInterface, OpenAmUserAwareInterface
+final class CreateNewUser extends AbstractUserCommandHandler implements TransactionedInterface, OpenAmUserAwareInterface
 {
     use OpenAmUserAwareTrait;
 

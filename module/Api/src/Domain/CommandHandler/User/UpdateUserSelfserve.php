@@ -22,7 +22,7 @@ use Doctrine\ORM\Query;
 /**
  * Update User Selfserve
  */
-final class UpdateUserSelfserve extends AbstractCommandHandler implements
+final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
     AuthAwareInterface,
     TransactionedInterface,
     OpenAmUserAwareInterface

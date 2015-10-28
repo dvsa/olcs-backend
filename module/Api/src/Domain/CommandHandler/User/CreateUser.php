@@ -22,7 +22,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 /**
  * Create User
  */
-final class CreateUser extends AbstractCommandHandler implements
+final class CreateUser extends AbstractUserCommandHandler implements
     TransactionedInterface,
     OpenAmUserAwareInterface,
     AuthAwareInterface

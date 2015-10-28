@@ -22,7 +22,7 @@ use Doctrine\ORM\Query;
 /**
  * Update User
  */
-final class UpdateUser extends AbstractCommandHandler implements
+final class UpdateUser extends AbstractUserCommandHandler implements
     AuthAwareInterface,
     TransactionedInterface,
     OpenAmUserAwareInterface

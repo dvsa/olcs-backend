@@ -23,7 +23,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 /**
  * Create User Selfserve
  */
-final class CreateUserSelfserve extends AbstractCommandHandler implements
+final class CreateUserSelfserve extends AbstractUserCommandHandler implements
     AuthAwareInterface,
     TransactionedInterface,
     OpenAmUserAwareInterface
