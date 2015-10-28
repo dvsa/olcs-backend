@@ -14,9 +14,10 @@ class Filesystem extends BaseFileSystem
     /**
      * @param $path
      * @param string $prefix
+     * @param bool $cleanup
      * @return string
      */
-    public function createTmpDir($path, $prefix = '')
+    public function createTmpDir($path, $prefix = '', $cleanup = true)
     {
         $lock = new LockHandler(hash('sha256', $path));
         $lock->lock(true);
@@ -29,7 +30,9 @@ class Filesystem extends BaseFileSystem
 
         $lock->release();
 
-        $this->cleanupTmp($dirname);
+        if ($cleanup) {
+            $this->cleanupTmp($dirname);
+        }
 
         return $dirname;
     }
@@ -37,9 +40,10 @@ class Filesystem extends BaseFileSystem
     /**
      * @param $path
      * @param string $prefix
+     * @param bool $cleanup
      * @return string
      */
-    public function createTmpFile($path, $prefix = '')
+    public function createTmpFile($path, $prefix = '', $cleanup = true)
     {
         $lock = new LockHandler(hash('sha256', $path));
         $lock->lock(true);
@@ -52,7 +56,9 @@ class Filesystem extends BaseFileSystem
 
         $lock->release();
 
-        $this->cleanupTmp($filename);
+        if ($cleanup) {
+            $this->cleanupTmp($dirname);
+        }
 
         return $filename;
     }
