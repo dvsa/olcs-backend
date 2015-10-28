@@ -123,7 +123,8 @@ class CreateBusFeeTest extends CommandHandlerTestCase
             'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
             'busReg' => $busRegId,
             'irfoGvPermit' => null,
-            'irfoPsvAuth' => null
+            'irfoPsvAuth' => null,
+            'user' => null,
         ];
 
         /**
