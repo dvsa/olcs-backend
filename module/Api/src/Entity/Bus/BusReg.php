@@ -161,6 +161,15 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
         return $busReg;
     }
 
+    public function canCreateVariation()
+    {
+        if ($this->status->getId() === self::STATUS_REGISTERED) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * @param RefData $status
      * @param RefData $revertStatus
@@ -170,6 +179,10 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
         RefData $status,
         RefData $revertStatus
     ) {
+        if (!$this->canCreateVariation()) {
+            return new ForbiddenException('Can only create a variation/cancellation against a registered bus route');
+        }
+
         // create bus reg based on the previous record
         $busReg = clone $this;
 

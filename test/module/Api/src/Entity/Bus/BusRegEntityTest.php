@@ -540,6 +540,7 @@ class BusRegEntityTest extends EntityTester
         $this->entity->addVariationReasons(new RefDataEntity());
         $this->entity->addOtherServices($otherService1);
         $this->entity->addOtherServices($otherService2);
+        $this->entity->setStatus(new RefDataEntity(Entity::STATUS_REGISTERED));
 
         $busReg = $this->entity->createVariation($status, $revertStatus);
 
