@@ -76,7 +76,10 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
 
         $result->merge($this->updateApplicationCompletion($command->getId()));
 
-        $result->merge($this->handleVariationFees($application));
+        // OLCS-10953: don't invoke fee logic if application was created internally
+        if (!$application->createdInternally()) {
+            $result->merge($this->handleVariationFees($application));
+        }
 
         return $result;
     }
