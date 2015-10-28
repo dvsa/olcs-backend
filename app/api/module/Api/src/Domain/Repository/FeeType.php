@@ -272,11 +272,10 @@ class FeeType extends AbstractRepository
         } elseif ($irfoEntity instanceof IrfoGvPermitEntity) {
             $irfoFeeType = $irfoEntity->getIrfoGvPermitType()->getIrfoFeeType();
         } else {
-            throw new NotFoundException ('Irfo Fee type not found');
+            throw new NotFoundException('Irfo Fee type not found');
         }
 
         /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
-        $feeTypeRepo = $this->getRepo('FeeType');
         $feeType = $this->fetchLatestForIrfo(
             $irfoFeeType,
             $feeTypeFeeType
