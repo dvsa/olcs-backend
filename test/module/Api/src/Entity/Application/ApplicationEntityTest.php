@@ -2614,4 +2614,40 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertTrue($application->hasOutstandingGrantFee());
     }
+
+    /**
+     * @param RefData $appliedVia
+     * @param mixed $expected
+     * @dataProvider createdInternallyProvider
+     */
+    public function testCreatedInternally($appliedVia, $expected)
+    {
+        $application = $this->instantiate(Entity::class);
+
+        $application->setAppliedVia($appliedVia);
+
+        $this->assertSame($expected, $application->createdInternally());
+    }
+
+    public function createdInternallyProvider()
+    {
+        return [
+            [
+                null,
+                null,
+            ],
+            [
+                new RefData(Entity::APPLIED_VIA_POST),
+                true,
+            ],
+            [
+                new RefData(Entity::APPLIED_VIA_PHONE),
+                true,
+            ],
+            [
+                new RefData(Entity::APPLIED_VIA_SELFSERVE),
+                false,
+            ],
+        ];
+    }
 }
