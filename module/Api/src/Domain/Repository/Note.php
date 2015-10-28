@@ -68,6 +68,8 @@ class Note extends AbstractRepository
             $qb->andWhere($this->alias . '.noteType = :noteTypeId');
             $qb->setParameter('noteTypeId', $query->getNoteType());
         }
+        $qb->orderBy($this->alias . '.priority', 'DESC');
+        $qb->addOrderBy($this->alias . '.createdOn', 'DESC');
 
         $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy()->withBusReg()->withCase()->withApplication();
     }
