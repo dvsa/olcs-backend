@@ -6,6 +6,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapQueueCmd;
@@ -98,22 +99,40 @@ final class ProcessPacks extends AbstractCommandHandler
             $ebsrSubmission = $this->createEbsrSubmission($organisation, $document, $command->getSubmissionType());
             $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
             $result->addId('ebsrSubmission_' . $ebsrSubmission->getId(), $ebsrSubmission->getId());
-            $result->addMessage('Ebsr submission added');
 
             try {
                 $xmlFilename = $this->fileProcessor->fetchXmlFileNameFromDocumentStore($document->getIdentifier());
             } catch (\RuntimeException $e) {
                 $invalidPacks++;
-                $result->addMessage($e->getMessage());
+
+                $result->addId(
+                    'error_messages',
+                    'Error with ' . $document->getDescription() . ': ' . $e->getMessage() . ' - not processed',
+                    true
+                );
+
                 continue;
             }
 
             $this->xmlStructure->setValue($xmlFilename);
 
             if (!$this->xmlStructure->isValid(['xml_filename' => $xmlFilename])) {
-                //@todo return better messages
+                //@todo return more specific messages
                 $invalidPacks++;
-                $result->addMessage($this->xmlStructure->getMessages());
+
+                $result->addId(
+                    'error_messages',
+                    'Error with ' . $document->getDescription() . '(' . basename($xmlFilename) .
+                    '): xml file did not pass validation - not processed',
+                    true
+                );
+
+                $result->addId(
+                    'error_messages',
+                    'Error with ',
+                    true
+                );
+
                 continue;
             }
 
@@ -127,11 +146,27 @@ final class ProcessPacks extends AbstractCommandHandler
             );
 
             $ebsrSubmission->setLicenceNo($ebsrData['licNo']);
+            $ebsrSubmission->setVariationNo($ebsrData['variationNo']);
+            $ebsrSubmission->setRegistrationNo($ebsrData['routeNo']);
             $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
 
             $ebsrData = $this->processEbsrInformation($ebsrData);
 
-            $busReg = $this->createBusReg($ebsrData);
+            try {
+                $busReg = $this->createBusReg($ebsrData);
+            } catch (Exception\NotFoundException $e) {
+                $invalidPacks++;
+                //@todo make message specific
+                $result->addId(
+                    'error_messages',
+                    'Error with ' . $document->getDescription() .
+                    ': licence or bus registration not found - not processed',
+                    true
+                );
+
+                continue;
+            }
+
             $busSubmissions = new ArrayCollection();
             $busSubmissions->add($ebsrSubmission);
             $busReg->setEbsrSubmissions($busSubmissions);
@@ -148,8 +183,12 @@ final class ProcessPacks extends AbstractCommandHandler
 
             $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
 
-            $result->merge($this->handleSideEffects($sideEffects));
+            $this->handleSideEffects($sideEffects);
             $validPacks++;
+
+            $result->addMessage($document->getDescription() . '(' . basename($xmlFilename) .
+                '): file processed successfully'
+            );
         }
 
         $result->addId('valid', $validPacks);
