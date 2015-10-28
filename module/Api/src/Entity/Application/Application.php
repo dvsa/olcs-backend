@@ -1537,4 +1537,17 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
         return $grantFees;
     }
+
+    /**
+     * Use the applied_via value to determine whether an application was
+     * created internally or via selfserve
+     *
+     * @return bool|null
+     */
+    public function createdInternally()
+    {
+        if ($this->getAppliedVia()) {
+            return !($this->getAppliedVia()->getId() === self::APPLIED_VIA_SELFSERVE);
+        }
+    }
 }
