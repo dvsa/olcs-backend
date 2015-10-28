@@ -20,15 +20,21 @@ use Mockery as m;
  */
 class CpmsIdentityProviderFactoryTest extends MockeryTestCase
 {
+    public function setUp()
+    {
+        $this->sm = m::mock('\Zend\ServiceManager\ServiceLocatorInterface');
+
+        parent::setUp();
+    }
+
     private function createService($config)
     {
-        $sm = m::mock('\Zend\ServiceManager\ServiceLocatorInterface');
-        $sm->shouldReceive('get')
+        $this->sm->shouldReceive('get')
             ->with('Config')
             ->andReturn($config);
 
         $sut = new CpmsIdentityProviderFactory();
-        return $sut->createService($sm);
+        return $sut->createService($this->sm);
     }
 
     /**
@@ -42,19 +48,6 @@ class CpmsIdentityProviderFactoryTest extends MockeryTestCase
 
     /**
      * @expectedException        RuntimeException
-     * @expectedExceptionMessage Missing required option cpms.user_id
-     */
-    public function testCreateServiceWithMissingUserId()
-    {
-        $this->createService(
-            [
-                'cpms_credentials' => []
-            ]
-        );
-    }
-
-    /**
-     * @expectedException        RuntimeException
      * @expectedExceptionMessage Missing required option cpms.client_id
      */
     public function testCreateServiceWithMissingClientId()
@@ -62,7 +55,6 @@ class CpmsIdentityProviderFactoryTest extends MockeryTestCase
         $this->createService(
             [
                 'cpms_credentials' => [
-                    'user_id' => 1234
                 ]
             ]
         );
@@ -77,26 +69,51 @@ class CpmsIdentityProviderFactoryTest extends MockeryTestCase
         $this->createService(
             [
                 'cpms_credentials' => [
-                    'user_id'   => 1234,
                     'client_id' => 4321
                 ]
             ]
         );
     }
 
+    /**
+     * @expectedException        RuntimeException
+     * @expectedExceptionMessage The logged in user must have a PID
+     */
+    public function testCreateServiceWithMissingUserPid()
+    {
+        $mockIdentity = m::mock();
+        $mockIdentity->shouldReceive('getIdentity->getUser->getPid')->with()->once()->andReturn(null);
+        $this->sm->shouldReceive('get')->with(\ZfcRbac\Service\AuthorizationService::class)->once()
+            ->andReturn($mockIdentity);
+
+        $this->createService(
+            [
+                'cpms_credentials' => [
+                    'client_id' => 4321,
+                    'client_secret' => 'secret'
+                ]
+            ]
+        );
+    }
+
+
     public function testCreateServiceWithValidCredentials()
     {
+        $mockIdentity = m::mock();
+        $mockIdentity->shouldReceive('getIdentity->getUser->getPid')->with()->once()->andReturn('XYZ');
+        $this->sm->shouldReceive('get')->with(\ZfcRbac\Service\AuthorizationService::class)->once()
+            ->andReturn($mockIdentity);
+
         $service = $this->createService(
             [
                 'cpms_credentials' => [
-                    'user_id'   => 1234,
                     'client_id' => 4321,
                     'client_secret' => 'secret'
                 ]
             ]
         );
 
-        $this->assertEquals(1234, $service->getUserId());
+        $this->assertEquals('XYZ', $service->getUserId());
         $this->assertEquals(4321, $service->getClientId());
         $this->assertEquals('secret', $service->getClientSecret());
     }

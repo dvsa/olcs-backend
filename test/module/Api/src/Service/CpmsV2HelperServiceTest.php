@@ -175,6 +175,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $this->assertSame($response, $result);
     }
+
     public function testInitiateCnpRequest()
     {
         $orgId = 99;
@@ -273,6 +274,104 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->assertSame($response, $result);
     }
 
+    public function testInitiateStoredCardRequest()
+    {
+        $orgId = 99;
+        $redirectUrl = 'http://olcs-selfserve/foo';
+
+        $fees = [
+            $this->getStubFee(1, 525.25, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-08-29'),
+            $this->getStubFee(2, 125.25, FeeEntity::ACCRUAL_RULE_LICENCE_START, '2014-12-25', $orgId, '2015-08-30'),
+        ];
+
+        $now = (new DateTime())->format('Y-m-d');
+
+        $expectedParams = [
+            'customer_reference' => $orgId,
+            'payment_data' => [
+                [
+                    'line_identifier' => '1',
+                    'amount' => '525.25',
+                    'allocated_amount' => '525.25',
+                    'net_amount' => '525.25',
+                    'tax_amount' => '0.00',
+                    'tax_code' => 'Z',
+                    'tax_rate' => '0',
+                    'invoice_date' => '2015-08-29',
+                    'sales_reference' => '1',
+                    'product_reference' => 'GVR_APPLICATION_FEE', // hardcoded
+                    'product_description' => 'fee type description',
+                    'receiver_reference' => '99',
+                    'receiver_name' => 'some organisation',
+                    'receiver_address' => [
+                        'line_1' => 'Foo',
+                        'line_2' => null,
+                        'line_3' => null,
+                        'line_4' => null,
+                        'city' => 'Bar',
+                        'postcode' => 'LS9 6NF',
+                    ],
+                    'rule_start_date' => $now,
+                    'deferment_period' => '1',
+                    'sales_person_reference' => 'B',
+                ],
+                [
+                    'line_identifier' => '1',
+                    'amount' => '125.25',
+                    'allocated_amount' => '125.25',
+                    'net_amount' => '125.25',
+                    'tax_amount' => '0.00',
+                    'tax_code' => 'Z',
+                    'tax_rate' => '0',
+                    'invoice_date' => '2015-08-30',
+                    'sales_reference' => '2',
+                    'product_reference' => 'GVR_APPLICATION_FEE',
+                    'product_description' => 'fee type description',
+                    'receiver_reference' => '99',
+                    'receiver_name' => 'some organisation',
+                    'receiver_address' => [
+                        'line_1' => 'Foo',
+                        'line_2' => null,
+                        'line_3' => null,
+                        'line_4' => null,
+                        'city' => 'Bar',
+                        'postcode' => 'LS9 6NF',
+                    ],
+                    'rule_start_date' => '2014-12-25',
+                    'deferment_period' => '60',
+                    'sales_person_reference' => 'B',
+                ]
+            ],
+            'total_amount' => '650.50',
+            'customer_name' => 'some organisation',
+            'customer_manager_name' => 'some organisation',
+            'customer_address' =>[
+                'line_1' => 'Foo',
+                'line_2' => null,
+                'line_3' => null,
+                'line_4' => null,
+                'city' => 'Bar',
+                'postcode' => 'LS9 6NF',
+            ],
+            'redirect_uri' => $redirectUrl,
+            'disable_redirection' => true,
+            'scope' => 'STORED_CARD',
+            'refund_overpayment' => false,
+        ];
+
+        $response = ['receipt_reference' => 'guid_123'];
+
+        $this->cpmsClient
+            ->shouldReceive('post')
+            ->with('/api/payment/stored-card/STORED_CARD', 'STORED_CARD', $expectedParams)
+            ->once()
+            ->andReturn($response);
+
+        $result = $this->sut->initiateStoredCardRequest($redirectUrl, $fees, 'STORED_CARD');
+
+        $this->assertSame($response, $result);
+    }
+
     public function testInitiateCardRequestInvalidApiResponse()
     {
         $this->setExpectedException(CpmsResponseException::class, 'Invalid payment response');
@@ -283,6 +382,16 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn([]);
 
         $this->sut->initiateCardRequest('http://olcs-selfserve/foo', []);
+    }
+
+    public function testGetListStoredCards()
+    {
+        $this->cpmsClient
+            ->shouldReceive('get')
+            ->with('/api/stored-card', 'STORED_CARD', [])
+            ->andReturn(['FOO']);
+
+        $this->assertSame(['FOO'], $this->sut->getListStoredCards());
     }
 
     public function testRecordCashPaymentWithOverpayment()
