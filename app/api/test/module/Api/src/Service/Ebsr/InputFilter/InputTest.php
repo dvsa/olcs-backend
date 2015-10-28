@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\Input;
 
 /**
  * Class InputTest
- * @package OlcsTest\Ebsr\src\InputFilter
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter
  */
 class InputTest extends TestCase
 {

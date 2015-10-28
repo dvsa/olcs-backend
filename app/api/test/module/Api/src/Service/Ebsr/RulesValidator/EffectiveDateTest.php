@@ -8,7 +8,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class EffectiveDateTest
- * @package OlcsTest\Ebsr\src\Validator
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator
  */
 class EffectiveDateTest extends TestCase
 {

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator;
 
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
@@ -8,7 +7,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class ApplicationTypeTest
- * @package OlcsTest\Ebsr\Validator\Rules
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator
  */
 class ApplicationTypeTest extends TestCase
 {

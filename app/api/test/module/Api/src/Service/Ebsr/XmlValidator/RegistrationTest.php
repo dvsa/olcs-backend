@@ -8,7 +8,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class RegistrationTest
- * @package OlcsTest\Ebsr\src\Validator\Structure
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr\XmlValidator
  */
 class RegistrationTest extends TestCase
 {

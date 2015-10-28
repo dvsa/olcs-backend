@@ -8,7 +8,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class InjectIsTxcAppTest
- * @package OlcsTest\Ebsr\Filter
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr\Filter
  */
 class InjectIsTxcAppTest extends TestCase
 {

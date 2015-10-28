@@ -11,7 +11,7 @@ use Olcs\XmlTools\Validator\Xsd;
 
 /**
  * Class XmlStructureInputFactoryTest
- * @package OlcsTest\Ebsr\src\InputFilter
+ * @package Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter
  */
 class XmlStructureInputFactoryTest extends TestCase
 {
