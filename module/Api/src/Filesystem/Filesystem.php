@@ -57,7 +57,7 @@ class Filesystem extends BaseFileSystem
         $lock->release();
 
         if ($cleanup) {
-            $this->cleanupTmp($dirname);
+            $this->cleanupTmp($filename);
         }
 
         return $filename;
