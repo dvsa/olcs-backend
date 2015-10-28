@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
+use Dvsa\Olcs\Transfer\Query\Publication\PendingList;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 use Doctrine\ORM\EntityRepository;
@@ -23,7 +24,7 @@ class PublicationTest extends RepositoryTestCase
 {
     public function setUp()
     {
-        $this->setUpSut(PublicationRepo::class);
+        $this->setUpSut(PublicationRepo::class, true);
     }
 
     /**
@@ -116,6 +117,8 @@ class PublicationTest extends RepositoryTestCase
 
     public function testFetchPendingList()
     {
+        $query = m::mock(PendingList::class);
+
         $results = [0 => m::mock(PublicationEntity::class)];
 
         $mockQb = m::mock(QueryBuilder::class);
@@ -136,10 +139,12 @@ class PublicationTest extends RepositoryTestCase
         /** @var EntityRepository $repo */
         $repo = $this->getMockRepo($mockQb);
 
+        $this->sut->shouldReceive('buildDefaultListQuery')->once()->with($mockQb, $query)->andReturnSelf();
+
         $this->em->shouldReceive('getRepository')
             ->with(PublicationEntity::class)
             ->andReturn($repo);
 
-        $this->sut->fetchPendingList();
+        $this->sut->fetchPendingList($query);
     }
 }
