@@ -121,6 +121,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
         if (in_array($this->getStatus()->getId(), [self::STATUS_RENEW, self::STATUS_PENDING])) {
             return true;
         }
+
         return false;
     }
 
@@ -136,6 +137,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
         {
             case self::STATUS_GRANTED:
                 if ($this->isGrantable()) {
+
                     $this->status = $status;
                 } else {
                     throw new BadRequestException('Status ' . $status->getId() . ' not permitted');

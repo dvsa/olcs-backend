@@ -272,7 +272,7 @@ class Fee extends AbstractRepository
      * Fetch fees by irfoPsvAuthId
      *
      * @param int $irfoPsvAuthId
-     *
+     * @param $feeTypeFeeType
      * @return array
      */
     public function fetchFeesByPsvAuthIdAndType($irfoPsvAuthId, $feeTypeFeeType)
