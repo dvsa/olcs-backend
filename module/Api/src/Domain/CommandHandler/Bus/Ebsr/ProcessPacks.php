@@ -241,6 +241,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
             $busReg->getShortNotice()->fromData($ebsrData['busShortNotice']);
         }
 
+        $busReg->populateShortNotice();
         $this->processServiceNumbers($busReg, $ebsrData['otherServiceNumbers']);
 
         return $busReg;
