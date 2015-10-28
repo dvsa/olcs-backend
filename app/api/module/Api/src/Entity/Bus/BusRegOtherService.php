@@ -21,6 +21,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BusRegOtherService extends AbstractBusRegOtherService
 {
+    public function __construct(BusReg $busReg, $serviceNo)
+    {
+        $this->busReg = $busReg;
+        $this->serviceNo = $serviceNo;
+    }
+
     /**
      * Gets calculated values
      *
