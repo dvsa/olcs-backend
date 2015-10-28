@@ -294,6 +294,10 @@ return [
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
 
+    // Fee Type
+    TransferQuery\Fee\FeeType::class => QueryHandler\Fee\FeeType::class,
+    TransferQuery\Fee\FeeTypeList::class => QueryHandler\Fee\FeeTypeList::class,
+
     // Operator
     TransferQuery\Operator\BusinessDetails::class => QueryHandler\Operator\BusinessDetails::class,
     TransferQuery\Operator\UnlicensedBusinessDetails::class => QueryHandler\Operator\UnlicensedBusinessDetails::class,

@@ -45,4 +45,30 @@ class FeeType extends AbstractFeeType
     const FEE_TYPE_ADJUSTMENT = 'ADJUSTMENT';
 
     const COST_CENTRE_REF_TYPE_LICENSING = 'TA';
+    const COST_CENTRE_REF_TYPE_IRFO = 'IR';
+
+    /**
+     * Alias of getIsMiscellaneous
+     * @return bool
+     */
+    public function isMiscellaneous()
+    {
+        return (bool) $this->getIsMiscellaneous();
+    }
+
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'displayValue' => $this->getAmount(),
+        ];
+    }
+
+    /**
+     * AC from OLCS-10611
+     * @return string amount
+     */
+    public function getAmount()
+    {
+        return $this->getFixedValue() > 0 ? $this->getFixedValue() : $this->getFiveYearValue();
+    }
 }

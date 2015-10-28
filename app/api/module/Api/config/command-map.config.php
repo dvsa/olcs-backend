@@ -567,6 +567,8 @@ return [
         => CommandHandler\Organisation\CpidOrganisationExport::class,
 
     // Domain - Fee
+    // @todo we could replace references to the internal CreateFee command
+    // with the TransferCommand version
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
     Command\Fee\CancelIrfoGvPermitFees::class => CommandHandler\Fee\CancelIrfoGvPermitFees::class,
@@ -575,7 +577,7 @@ return [
     TransferCommand\Fee\RecommendWaive::class => CommandHandler\Fee\RecommendWaive::class,
     TransferCommand\Fee\RejectWaive::class => CommandHandler\Fee\RejectWaive::class,
     TransferCommand\Fee\UpdateFee::class => CommandHandler\Fee\UpdateFee::class,
-    TransferCommand\Fee\CreateMiscellaneousFee::class => CommandHandler\Fee\CreateMiscellaneousFee::class,
+    TransferCommand\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
 
     // Domain - Transaction (formerly 'Payment')
     TransferCommand\Transaction\PayOutstandingFees::class => CommandHandler\Transaction\PayOutstandingFees::class,
