@@ -89,6 +89,9 @@ final class ProcessPacks extends AbstractCommandHandler
         $packs = $command->getPacks();
         $organisation = $this->getCurrentOrganisation();
 
+        $validPacks = 0;
+        $invalidPacks = 0;
+
         foreach ($packs as $packId) {
             /** @var DocumentEntity $document */
             $document = $this->getRepo('Document')->fetchById($packId);
@@ -97,12 +100,21 @@ final class ProcessPacks extends AbstractCommandHandler
             $result->addId('ebsrSubmission_' . $ebsrSubmission->getId(), $ebsrSubmission->getId());
             $result->addMessage('Ebsr submission added');
 
-            $xmlFilename = $this->fileProcessor->fetchXmlFileNameFromDocumentStore($document->getIdentifier());
+            try {
+                $xmlFilename = $this->fileProcessor->fetchXmlFileNameFromDocumentStore($document->getIdentifier());
+            } catch (\RuntimeException $e) {
+                $invalidPacks++;
+                $result->addMessage($e->getMessage());
+                continue;
+            }
+
             $this->xmlStructure->setValue($xmlFilename);
 
-            if (!$this->xmlStructure->isValid()) {
-                //we'll need to abort here and return messages
-                $messages = $this->xmlStructure->getMessages();
+            if (!$this->xmlStructure->isValid(['xml_filename' => $xmlFilename])) {
+                //@todo return better messages
+                $invalidPacks++;
+                $result->addMessage($this->xmlStructure->getMessages());
+                continue;
             }
 
             $ebsrDoc = $this->xmlStructure->getValue();
@@ -137,7 +149,11 @@ final class ProcessPacks extends AbstractCommandHandler
             $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
 
             $result->merge($this->handleSideEffects($sideEffects));
+            $validPacks++;
         }
+
+        $result->addId('valid', $validPacks);
+        $result->addId('errors', $invalidPacks);
 
         return $result;
     }
