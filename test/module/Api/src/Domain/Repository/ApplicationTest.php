@@ -16,6 +16,8 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\DBAL\LockMode;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
@@ -495,5 +497,36 @@ class ApplicationTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('getQuery->getSingleResult')->once()->andReturn(['RESULT']);
         $this->assertEquals(['RESULT'], $this->sut->fetchWithTmLicences(1));
+    }
+
+    public function testFetchForNtu()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('a')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.trafficArea', 'lta')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('fees', 'f')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('f.feeType', 'ft')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('f.feeStatus', 'fs')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('a.status', ':appStatus')->once()->andReturn('EXPR1');
+        $mockQb->shouldReceive('setParameter')
+            ->with('appStatus', Application::APPLICATION_STATUS_GRANTED)->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('f.feeStatus', ':feeStatus')->once()->andReturn('EXPR2');
+        $mockQb->shouldReceive('setParameter')
+            ->with('feeStatus', FeeEntity::STATUS_OUTSTANDING)->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->in')->with('ft.feeType', ':feeType')->once()->andReturn('EXPR3');
+        $mockQb->shouldReceive('setParameter')
+            ->with('feeType', [FeeTypeEntity::FEE_TYPE_GRANT, FeeTypeEntity::FEE_TYPE_GRANTVAR])->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR3')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
+        $this->assertEquals(['RESULT'], $this->sut->fetchForNtu());
     }
 }

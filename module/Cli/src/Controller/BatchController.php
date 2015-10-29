@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Command;
 use Dvsa\Olcs\Api\Domain\Query;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Transfer\Command as TransferCommand;
 
 /**
  * BatchController
@@ -134,6 +135,30 @@ class BatchController extends AbstractConsoleController
                 ]
             )
         );
+    }
+
+    public function processNtuAction()
+    {
+        $dryRun = $this->isDryRun();
+        $date = new DateTime();
+        $dto = Query\Application\NotTakenUpList::create(['date' => $date]);
+        $result = $this->handleQuery($dto);
+        $this->writeVerboseMessages("{$result['count']} Application(s) found to change to NTU");
+        $applications = $result['result'];
+        $commands = [];
+        foreach ($applications as $application) {
+            $this->writeVerboseMessages("Processing Application ID {$application->getId()}");
+            $commands[] = TransferCommand\Application\NotTakenUpApplication::create(
+                [
+                    'id' => $application->getId()
+                ]
+            );
+        }
+        if (!$dryRun) {
+            return $this->handleExitStatus($this->handleCommand($commands));
+        }
+
+        return $this->handleExitStatus(0);
     }
 
     /**
