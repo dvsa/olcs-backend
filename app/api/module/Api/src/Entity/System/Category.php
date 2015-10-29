@@ -65,4 +65,6 @@ class Category extends AbstractCategory
     const DOC_SUB_CATEGORY_CPID = 170;
     const DOC_SUB_CATEGORY_DISCS = 166;
     const DOC_SUB_CATEGORY_FINANCIAL_REPORTS = 180;
+
+    const BUS_SUB_CATEGORY_OTHER_DOCUMENTS = 40;
 }

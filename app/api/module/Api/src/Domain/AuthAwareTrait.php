@@ -43,6 +43,20 @@ trait AuthAwareTrait
     }
 
     /**
+     * @note Even though this appears to be a one to one relationship, there is only ever one organisation for a user
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     */
+    public function getCurrentOrganisation()
+    {
+        $identity = $this->authService->getIdentity();
+
+        if ($identity) {
+            return $identity->getUser()->getOrganisationUsers()->current()->getOrganisation();
+        }
+    }
+
+    /**
      * @param $permission
      * @return bool
      */

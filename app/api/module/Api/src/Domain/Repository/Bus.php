@@ -57,6 +57,23 @@ class Bus extends AbstractRepository
         return $results[0];
     }
 
+    public function fetchLatestUsingRegNo($regNo, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.regNo', ':byRegNo'))
+            ->setParameter('byRegNo', $regNo);
+        $qb->addOrderBy($this->alias . '.id', 'DESC');
+
+        $results = $qb->getQuery()->getResult($hydrateMode);
+
+        if (!empty($results)) {
+            return $results[0];
+        }
+
+        return $results;
+    }
+
     /**
      * Applies filters
      * @param QueryBuilder $qb
