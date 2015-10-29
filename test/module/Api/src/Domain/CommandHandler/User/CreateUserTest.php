@@ -138,6 +138,11 @@ class CreateUserTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->repoMap['User']->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with('login_id')
+            ->andReturn(null);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
