@@ -28,7 +28,8 @@ class GetList extends AbstractQueryHandler
                 [
                     'application' => [
                         'status',
-                        'licenceType'
+                        'licenceType',
+                        'licence'
                     ],
                     'transportManager' => [
                         'homeCd' => [
