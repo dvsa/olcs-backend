@@ -33,8 +33,6 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
     protected $repoServiceName = 'Licence';
 
     /**
-     * @todo I don't think ceasing discs works... neither CeaseGoodsDiscs nor CeasePsvDiscs
-     * takes a licence or licence id parameter!!??
      * @see Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ProcessContinuationNotSought::createDiscsCommand()
      */
     public function handleCommand(CommandInterface $command)
@@ -51,20 +49,19 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
         $licence->setStatus($this->getRepo()->getRefdataReference($status));
         $licence->setSurrenderedDate(new \DateTime($command->getSurrenderDate()));
 
-        $discsCommand = (
-            $licence->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE ?
-            CeaseGoodsDiscs::class : CeasePsvDiscs::class
-        );
-
         $result = new Result();
+        $discsCommand = $licence->isGoods() ? CeaseGoodsDiscs::class : CeasePsvDiscs::class;
 
-        $command = $discsCommand::create(
-            [
-                // ???
-                'licence' => $licence
-            ]
-        );
-        $result->merge($this->handleSideEffect($command));
+        if ($licence->isGoods()) {
+            $params = [
+                'licenceVehicles' => $licence->getLicenceVehicles()
+            ];
+        } else {
+            $params = [
+                'discs' => $licence->getPsvDiscs()
+            ];
+        }
+        $result->merge($this->handleSideEffect($discsCommand::create($params)));
 
         $result->merge(
             $this->handleSideEffect(
