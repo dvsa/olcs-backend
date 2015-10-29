@@ -65,4 +65,22 @@ class OrganisationReadAuditTest extends RepositoryTestCase
 
         $this->assertEquals($expected, $this->query);
     }
+
+    public function testDeleteOlderThan()
+    {
+        $query = m::mock();
+        $query->shouldReceive('setParameter')->once()->with('oldestDate', '2015-01-01');
+        $query->shouldReceive('execute')->once()->andReturn(10);
+
+        $this->em->shouldReceive('createQuery')
+            ->once()
+            ->with(
+                'DELETE FROM Dvsa\Olcs\Api\Entity\Organisation\OrganisationReadAudit e WHERE e.createdOn <= :oldestDate'
+            )
+            ->andReturn($query);
+
+        $result = $this->sut->deleteOlderThan('2015-01-01');
+
+        $this->assertEquals(10, $result);
+    }
 }
