@@ -7,9 +7,9 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Service;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
@@ -41,10 +41,13 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
     protected $adminAreaTrafficAreaRepo;
 
+    protected $documentRepo;
+
     public function setUp()
     {
         $this->addressService = m::mock();
         $this->adminAreaTrafficAreaRepo = m::mock();
+        $this->documentRepo = m::mock();
 
         $sm = m::mock(ServiceLocatorInterface::class);
         $sm->shouldReceive('get')
@@ -56,7 +59,10 @@ class OperatingCentreHelperTest extends MockeryTestCase
             ->andReturnSelf()
             ->shouldReceive('get')
             ->with('AdminAreaTrafficArea')
-            ->andReturn($this->adminAreaTrafficAreaRepo);
+            ->andReturn($this->adminAreaTrafficAreaRepo)
+            ->shouldReceive('get')
+            ->with('Document')
+            ->andReturn($this->documentRepo);
 
         $this->sut = new OperatingCentreHelper();
         $this->sut->createService($sm);
@@ -74,8 +80,47 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         $command = CreateOperatingCentre::create($commandData);
 
+        $docCollection = new ArrayCollection();
+
+        $this->documentRepo->shouldReceive('fetchUnlinkedOcDocumentsForEntity')->with($entity)
+            ->andReturn($docCollection);
+
         try {
             $this->sut->validate($entity, $command);
+            // If we are expecting errors, but the validate method didn't throw an exception
+            if (!empty($expected)) {
+                $this->fail('Validation Exception was not thrown');
+            }
+        } catch (ValidationException $ex) {
+            // If we were not expecting any errors, but the exception was thrown
+            if (empty($expected)) {
+                $this->fail('Validation Exception was thrown');
+            }
+
+            $this->assertEquals($expected, $ex->getMessages());
+        }
+    }
+
+    /**
+     * @dataProvider validateWithErrors
+     */
+    public function testValidateUpdateWithErrors($isPsv, $isRestricted, $commandData, $expected)
+    {
+        $entity = m::mock();
+        $entity->shouldReceive('isPsv')->andReturn($isPsv);
+        $entity->shouldReceive('isRestricted')->andReturn($isRestricted);
+        $entity->shouldReceive('isGoods')->andReturn(!$isPsv);
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $xoc = m::mock();
+
+        $docCollection = new ArrayCollection();
+
+        $xoc->shouldReceive('getOperatingCentre->getAdDocuments')->andReturn($docCollection);
+
+        try {
+            $this->sut->validate($entity, $command, false, $xoc);
             // If we are expecting errors, but the validate method didn't throw an exception
             if (!empty($expected)) {
                 $this->fail('Validation Exception was not thrown');
@@ -503,6 +548,11 @@ class OperatingCentreHelperTest extends MockeryTestCase
                         [
                             'ERR_OC_AD_DT_1' => 'ERR_OC_AD_DT_1'
                         ]
+                    ],
+                    'file' => [
+                        [
+                            'ERR_OC_AD_FI_1' => 'ERR_OC_AD_FI_1'
+                        ]
                     ]
                 ]
             ],
@@ -516,7 +566,13 @@ class OperatingCentreHelperTest extends MockeryTestCase
                     'adPlacedIn' => 'sasdasd',
                     'adPlacedDate' => 'asdsad'
                 ],
-                []
+                [
+                    'file' => [
+                        [
+                            'ERR_OC_AD_FI_1' => 'ERR_OC_AD_FI_1'
+                        ]
+                    ]
+                ]
             ]
         ];
     }
