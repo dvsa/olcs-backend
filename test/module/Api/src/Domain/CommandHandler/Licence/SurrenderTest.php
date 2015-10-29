@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -42,7 +43,7 @@ class SurrenderTest extends CommandHandlerTestCase
 
     protected function initReferences()
     {
-        $this->refData = ['lsts_terminated', 'lsts_surrendered', 'lcat_psv'];
+        $this->refData = ['lsts_terminated', 'lsts_surrendered', 'lcat_psv', 'lcat_gv'];
 
         $this->references = [
 
@@ -72,6 +73,9 @@ class SurrenderTest extends CommandHandlerTestCase
                 ]
             )
         );
+        $licence->setPsvDiscs(
+            new ArrayCollection(['disc1', 'disc2'])
+        );
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($licence);
         $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
@@ -88,7 +92,7 @@ class SurrenderTest extends CommandHandlerTestCase
         $ceaseDiscsResult = new Result();
         $this->expectedSideEffect(
             CeasePsvDiscs::class,
-            array('discs' => null),
+            array('discs' => new ArrayCollection(['disc1', 'disc2'])),
             $ceaseDiscsResult
         );
 
@@ -96,6 +100,89 @@ class SurrenderTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
             array('licenceVehicles' => new ArrayCollection(), 'id' => null),
+            $removeVehicleResult
+        );
+
+        $removeTmResult = new Result();
+        $this->expectedSideEffect(
+            DeleteTransportManagerLicence::class,
+            array('licence' => $licence, 'id' => null),
+            $removeTmResult
+        );
+
+        $this->expectedSideEffect(
+            ReturnAllCommunityLicences::class,
+            [
+                'id' => 532
+            ],
+            new Result()
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Publication\Licence::class,
+            ['id' => 532],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            EndInterim::class,
+            ['licenceId' => 532],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(["Licence ID 532 surrendered"], $result->getMessages());
+    }
+
+    /**
+     * @group test123
+     */
+    public function testHandleCommandGoods()
+    {
+        $status = 'lsts_surrendered';
+        $command = Command::create(['id' => 532, 'terminated' => false]);
+
+        $licence = new LicenceEntity(
+            m::mock(\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class),
+            m::mock(\Dvsa\Olcs\Api\Entity\System\RefData::class)
+        );
+        $licence->setId(532);
+        $licence->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
+        $licence->setCommunityLics(
+            new ArrayCollection(
+                [
+                    new CommunityLic(),
+                    new CommunityLic()
+                ]
+            )
+        );
+        $licence->setLicenceVehicles(
+            new ArrayCollection(['lv1', 'lv2'])
+        );
+
+        $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($licence);
+        $this->repoMap['Licence']->shouldReceive('save')->once()->andReturnUsing(
+            function (LicenceEntity $saveLicence) use ($status) {
+                $this->assertSame($this->refData[$status]->getId(), $saveLicence->getStatus()->getId());
+                $this->assertInstanceOf(\DateTime::class, $saveLicence->getSurrenderedDate());
+                $this->assertSame(
+                    (new \DateTime())->format('Y-m-d'),
+                    $saveLicence->getSurrenderedDate()->format('Y-m-d')
+                );
+            }
+        );
+
+        $ceaseDiscsResult = new Result();
+        $this->expectedSideEffect(
+            CeaseGoodsDiscs::class,
+            array('licenceVehicles' => new ArrayCollection(['lv1', 'lv2'])),
+            $ceaseDiscsResult
+        );
+
+        $removeVehicleResult = new Result();
+        $this->expectedSideEffect(
+            RemoveLicenceVehicle::class,
+            array('licenceVehicles' => new ArrayCollection(['lv1', 'lv2']), 'id' => null),
             $removeVehicleResult
         );
 
@@ -149,6 +236,9 @@ class SurrenderTest extends CommandHandlerTestCase
                 ]
             )
         );
+        $licence->setPsvDiscs(
+            new ArrayCollection(['disc1', 'disc2'])
+        );
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($licence);
         $status = LicenceEntity::LICENCE_STATUS_TERMINATED;
@@ -166,7 +256,7 @@ class SurrenderTest extends CommandHandlerTestCase
         $ceaseDiscsResult = new Result();
         $this->expectedSideEffect(
             CeasePsvDiscs::class,
-            array('discs' => null),
+            array('discs' => new ArrayCollection(['disc1', 'disc2'])),
             $ceaseDiscsResult
         );
 
@@ -234,6 +324,7 @@ class SurrenderTest extends CommandHandlerTestCase
                 ]
             )
         );
+        $licence->setPsvDiscs(new ArrayCollection(['disc1', 'disc2']));
 
         $this->stubApplication($licence, 174, Application::APPLICATION_STATUS_CURTAILED, true);
         $this->stubApplication($licence, 224, Application::APPLICATION_STATUS_CURTAILED, false);
@@ -247,7 +338,10 @@ class SurrenderTest extends CommandHandlerTestCase
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($licence);
         $this->repoMap['Licence']->shouldReceive('save')->once();
 
-        $this->expectedSideEffect(CeasePsvDiscs::class, array('discs' => null), new Result());
+        $this->expectedSideEffect(
+            CeasePsvDiscs::class,
+            array('discs' => new ArrayCollection(['disc1', 'disc2'])), new Result()
+        );
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
             array('licenceVehicles' => new ArrayCollection(), 'id' => null),
