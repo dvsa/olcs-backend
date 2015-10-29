@@ -134,9 +134,6 @@ class SurrenderTest extends CommandHandlerTestCase
         $this->assertSame(["Licence ID 532 surrendered"], $result->getMessages());
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleCommandGoods()
     {
         $status = 'lsts_surrendered';
