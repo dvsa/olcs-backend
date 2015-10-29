@@ -71,7 +71,7 @@ class Bus extends AbstractRepository
             return $results[0];
         }
 
-        throw new Exception\NotFoundException('Resource not found');
+        return $results;
     }
 
     /**
