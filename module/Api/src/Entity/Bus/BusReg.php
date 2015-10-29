@@ -102,6 +102,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      * @param RefData $status
      * @param RefData $revertStatus
      * @param RefData $subsidised
+     * @param BusNoticePeriodEntity $busNoticePeriod
+     * @param string $isTxcApp
+     *
      * @return BusReg
      */
     public static function createNew(
@@ -158,15 +161,29 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
         return $busReg;
     }
 
+    public function canCreateVariation()
+    {
+        if ($this->status->getId() === self::STATUS_REGISTERED) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * @param RefData $status
      * @param RefData $revertStatus
+     * @throws ForbiddenException
      * @return BusReg
      */
     public function createVariation(
         RefData $status,
         RefData $revertStatus
     ) {
+        if (!$this->canCreateVariation()) {
+            throw new ForbiddenException('Can only create a variation/cancellation against a registered bus route');
+        }
+
         // create bus reg based on the previous record
         $busReg = clone $this;
 
@@ -233,10 +250,14 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      * @param array $data
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
-    private function fromData($data)
+    public function fromData($data)
     {
         foreach ($data as $key => $value) {
-            $this->{'set' . ucwords($key)}($value);
+            $method = 'set' . ucwords($key);
+
+            if (method_exists($this, $method)) {
+                $this->{$method}($value);
+            }
         }
     }
 
@@ -542,6 +563,42 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     }
 
     /**
+     * Populates the short notice field
+     */
+    public function populateShortNotice()
+    {
+        $this->isShortNotice = 'N';
+
+        $effectiveDate = $this->processDate($this->effectiveDate);
+        $receivedDate = $this->processDate($this->receivedDate);
+
+        if ($this->isShortNotice($effectiveDate, $receivedDate, $this->busNoticePeriod)) {
+            $this->isShortNotice = 'Y';
+        }
+    }
+
+    /**
+     * @param string $date
+     * @param string $format
+     * @param bool $zeroTime
+     * @return \DateTime|null
+     */
+    public function processDate($date, $format = 'Y-m-d', $zeroTime = true)
+    {
+        $dateTime = \DateTime::createFromFormat($format, $date);
+
+        if (!$dateTime instanceof \DateTime) {
+            return null;
+        }
+
+        if ($zeroTime) {
+            $dateTime->setTime(0, 0, 0);
+        }
+
+        return $dateTime;
+    }
+
+    /**
      * Returns whether the record is short notice refused
      *
      * @return bool
@@ -610,7 +667,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      */
     private function isGrantableBasedOnRequiredFields()
     {
-        // mendatory fields which needs to be marked as Yes
+        // mandatory fields which needs to be marked as Yes
         $yesFields = [
             'timetableAcceptable',
             'mapSupplied',
@@ -633,7 +690,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
             }
         }
 
-        // mendatory fields which can't be empty
+        // mandatory fields which can't be empty
         $nonEmptyFields = [
             'effectiveDate',
             'receivedDate',
@@ -648,7 +705,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
             }
         }
 
-        // mendatory collections which can't be empty
+        // mandatory collections which can't be empty
         $nonEmptyCollections = [
             'busServiceTypes',
             'trafficAreas',
@@ -740,6 +797,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      *
      * @param RefData $status
      * @param string $reason
+     * @throws BadRequestException
      * @return BusReg
      */
     public function cancelByAdmin(RefData $status, $reason)
@@ -761,6 +819,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      *
      * @param RefData $status
      * @param RefData $reason
+     * @throws BadRequestException
      * @return BusReg
      */
     public function withdraw(RefData $status, RefData $reason)
@@ -782,6 +841,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      *
      * @param RefData $status
      * @param string $reason
+     * @throws BadRequestException
      * @return BusReg
      */
     public function refuse(RefData $status, $reason)
@@ -865,6 +925,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      *
      * @param RefData $status
      * @param array $variationReasons
+     * @throws BadRequestException
      * @return BusReg
      */
     public function grant(RefData $status, $variationReasons = null)
@@ -902,5 +963,14 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     public function getContextValue()
     {
         return $this->getLicence()->getLicNo();
+    }
+
+    /**
+     * @param string $serviceNo
+     */
+    public function addOtherServiceNumber($serviceNo)
+    {
+        $otherServiceEntity = new BusRegOtherService($this, $serviceNo);
+        $this->otherServices->add($otherServiceEntity);
     }
 }

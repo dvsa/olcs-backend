@@ -3,6 +3,9 @@
 namespace Dvsa\Olcs\Api\Entity\Ebsr;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * EbsrSubmission Entity
@@ -22,5 +25,33 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EbsrSubmission extends AbstractEbsrSubmission
 {
+    const VALIDATING_STATUS = 'ebsrs_validating';
+    const VALIDATED_STATUS = 'ebsrs_validated';
+    const PROCESSED_STATUS = 'ebsrs_processed';
 
+    /**
+     * @param Organisation $organisation
+     * @param RefData $ebsrSubmissionStatus
+     * @param RefData $ebsrSubmissionType
+     * @param Document $document
+     * @param \DateTime $submittedDate
+     */
+    public function __construct(
+        Organisation $organisation,
+        RefData $ebsrSubmissionStatus,
+        RefData $ebsrSubmissionType,
+        Document $document,
+        \DateTime $submittedDate
+    ) {
+        $this->organisation = $organisation;
+        $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
+        $this->ebsrSubmissionType = $ebsrSubmissionType;
+        $this->document = $document;
+        $this->submittedDate = $submittedDate;
+    }
+
+    public function updateStatus(RefData $ebsrSubmissionStatus)
+    {
+        $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
+    }
 }

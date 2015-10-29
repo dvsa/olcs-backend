@@ -48,4 +48,14 @@ class TrafficArea extends AbstractRepository
         $qb = $this->createQueryBuilder();
         return $qb->getQuery()->getResult();
     }
+
+    public function fetchByTxcName($txcNames)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($qb);
+        $qb->andWhere($qb->expr()->in($this->alias . '.txcName', $txcNames));
+
+        return $qb->getQuery()->execute();
+    }
 }

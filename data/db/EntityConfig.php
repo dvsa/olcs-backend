@@ -14,16 +14,16 @@ return array(
                 'skipManyToMany' => true
             ]
         ],
-       'classNameForTable' => [
+        'classNameForTable' => [
            'txn' => 'Transaction',
            'fee_txn' => 'FeeTransaction'
-       ],
-       'fieldNameForColumn' => [
+        ],
+        'fieldNameForColumn' => [
            'fee_txn' => [
                'txn_id' => 'transaction',
                'reversed_fee_txn_id' => 'reversedFeeTransaction'
            ]
-       ]
+        ]
     ),
     'namespaces' => include(__DIR__ . '/../../module/Api/config/namespace.config.php'),
     'organisation' => array(
