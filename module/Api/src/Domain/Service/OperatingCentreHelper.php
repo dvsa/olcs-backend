@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Service;
 
+use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Address\Service\Address;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -21,6 +22,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Domain\Repository\OperatingCentre as OcRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Document as DocRepo;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
@@ -39,6 +41,7 @@ class OperatingCentreHelper implements FactoryInterface
 {
     const ERR_OC_AD_IN_1 = 'ERR_OC_AD_IN_1';
     const ERR_OC_AD_DT_1 = 'ERR_OC_AD_DT_1';
+    const ERR_OC_AD_FI_1 = 'ERR_OC_AD_FI_1';
     const ERR_OC_VR_1A = 'ERR_OC_VR_1A'; // with trailers
     const ERR_OC_VR_1B = 'ERR_OC_VR_1B'; // without trailers
     const ERR_OR_R_TOO_MANY = 'ERR_OR_R_TOO_MANY';
@@ -59,10 +62,17 @@ class OperatingCentreHelper implements FactoryInterface
      */
     protected $adminAreaTrafficAreaRepo;
 
+    /**
+     * @var DocRepo
+     */
+    protected $docRepo;
+
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->addressService = $serviceLocator->get('AddressService');
         $this->adminAreaTrafficAreaRepo = $serviceLocator->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
+
+        $this->docRepo = $serviceLocator->get('RepositoryServiceManager')->get('Document');
 
         return $this;
     }
@@ -71,8 +81,9 @@ class OperatingCentreHelper implements FactoryInterface
      * @param Application|Licence $entity
      * @param $command
      * @param bool $isExternal
+     * @param LicenceOperatingCentre|ApplicationOperatingCentre|null $xoc
      */
-    public function validate($entity, $command, $isExternal = false)
+    public function validate($entity, $command, $isExternal = false, $xoc = null)
     {
         $this->validateTrafficArea($entity, $command);
 
@@ -98,6 +109,16 @@ class OperatingCentreHelper implements FactoryInterface
 
                 if ((string)$command->getAdPlacedDate() === '') {
                     $this->addMessage('adPlacedDate', self::ERR_OC_AD_DT_1);
+                }
+
+                if ($xoc !== null) {
+                    $documents = $xoc->getOperatingCentre()->getAdDocuments();
+                } else {
+                    $documents = $this->docRepo->fetchUnlinkedOcDocumentsForEntity($entity);
+                }
+
+                if ($documents->isEmpty()) {
+                    $this->addMessage('file', self::ERR_OC_AD_FI_1);
                 }
             }
         }
