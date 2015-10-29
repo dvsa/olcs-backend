@@ -32,6 +32,7 @@ class Transaction extends AbstractTransaction
 
     const TYPE_WAIVE = 'trt_waive';
     const TYPE_PAYMENT = 'trt_payment';
+    const TYPE_REFUND = 'trt_refund';
 
     /**
      * @return boolean
