@@ -554,35 +554,34 @@ VALUES
 
 INSERT INTO `ebsr_submission` (`id`, `document_id`, `ebsr_submission_type_id`,
     `ebsr_submission_status_id`, `bus_reg_id`, `submitted_date`, `licence_no`, `organisation_email_address`,
-    `application_classification`, `variation_no`, `tan_code`, `registration_no`, `validation_start`, `validation_end`,
+    `application_classification`, `variation_no`, `registration_no`, `validation_start`, `validation_end`,
     `publish_start`, `publish_end`, `process_start`, `process_end`, `distribute_start`, `distribute_end`,
     `distribute_expire`, `is_from_ftp`, `organisation_id`) VALUES
-  (1, null, 'ebsrt_new', 'ebsrs_processing', 1, '2015-04-11 15:25:34', 'PB12351', null, null, 1, null, '1111', null,
+  (1, null, 'ebsrt_new', 'ebsrs_processing', 1, '2015-04-11 15:25:34', 'PB12351', null, null, 1, '1111', null,
   null, null, null, null, null, null, null,null, 0, null),
-  (2, null, 'ebsrt_new', 'ebsrs_processing', 2, '2015-04-15 23:25:34', 'PB12352', null, null, 2, null, '1112', null, null, null, null, null,
+  (2, null, 'ebsrt_new', 'ebsrs_processing', 2, '2015-04-15 23:25:34', 'PB12352', null, null, 2, '1112', null, null, null, null, null,
   null, null, null,null, 0, null),
-  (3, null, 'ebsrt_refresh', 'ebsrs_submitted', 3, '2015-03-11 15:25:34', 'PB12353', null, null, 3, null, '1113',
+  (3, null, 'ebsrt_refresh', 'ebsrs_submitted', 3, '2015-03-11 15:25:34', 'PB12353', null, null, 3, '1113',
   null, null, null, null, null, null, null, null,null, 0, null),
-  (4, null, 'ebsrt_refresh', 'ebsrs_expired', 4, '2015-02-21 12:35:34', 'PB12354', null, null, 4, null, '1114', null,
+  (4, null, 'ebsrt_refresh', 'ebsrs_expired', 4, '2015-02-21 12:35:34', 'PB12354', null, null, 4, '1114', null,
   null, null, null, null, null, null, null,null, 0, null),
-  (5, null, 'ebsrt_unknown', 'ebsrs_validated', 5, '2015-02-14 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  (5, null, 'ebsrt_unknown', 'ebsrs_validated', 5, '2015-02-14 11:55:32', 'PB12355', null, null, 5, '1115',
   null, null, null, null, null, null, null, null,null, 0, null),
-
-  (6, null, 'ebsrt_new', 'ebsrs_processing', 6, '2013-01-14 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  (6, null, 'ebsrt_new', 'ebsrs_processing', 6, '2013-01-14 11:55:32', 'PB12355', null, null, 5, '1115',
   null, null, null, null, null, null, null, null,null, 0, null),
-  (7, null, 'ebsrt_refresh', 'ebsrs_validated', 7, '2013-08-24 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  (7, null, 'ebsrt_refresh', 'ebsrs_validated', 7, '2013-08-24 11:55:32', 'PB12355', null, null, 5, '1115',
   null, null, null, null, null, null, null, null,null, 0, null),
-  (8, null, 'ebsrt_unknown', 'ebsrs_expired', 99, '2011-09-14 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  (8, null, 'ebsrt_unknown', 'ebsrs_expired', 99, '2011-09-14 11:55:32', 'PB12355', null, null, 5, '1115',
   null, null, null, null, null, null, null, null,null, 0, null),
-  (9, null, 'ebsrt_new', 'ebsrs_processing', 99, '2009-11-14 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  (9, null, 'ebsrt_new', 'ebsrs_processing', 99, '2009-11-14 11:55:32', 'PB12355', null, null, 5, '1115',
   null, null, null, null, null, null, null, null,null, 0, null),
-  (10, null, 'ebsrt_refresh', 'ebsrs_validated', 5, '2015-01-04 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  (10, null, 'ebsrt_refresh', 'ebsrs_validated', 5, '2015-01-04 11:55:32', 'PB12355', null, null, 5, '1115',
   null, null, null, null, null, null, null, null,null, 0, null),
-  (11, null, 'ebsrt_unknown', 'ebsrs_validated', 3, '2014-09-30 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  (11, null, 'ebsrt_unknown', 'ebsrs_validated', 3, '2014-09-30 11:55:32', 'PB12355', null, null, 5, '1115',
   null, null, null, null, null, null, null, null,null, 0, null),
-  (12, null, 'ebsrt_refresh', 'ebsrs_processing', 3, '2006-06-07 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  (12, null, 'ebsrt_refresh', 'ebsrs_processing', 3, '2006-06-07 11:55:32', 'PB12355', null, null, 5, '1115',
   null, null, null, null, null, null, null, null,null, 0, null),
-  (13, null, 'ebsrt_new', 'ebsrs_validated', 1, '2010-05-05 11:55:32', 'PB12355', null, null, 5, null, '1115',
+  (13, null, 'ebsrt_new', 'ebsrs_validated', 1, '2010-05-05 11:55:32', 'PB12355', null, null, 5, '1115',
   null, null, null, null, null, null, null, null,null, 0, null)
 
   ;
@@ -1085,9 +1084,7 @@ VALUES
 INSERT INTO `transport_manager_application` (`id`, `application_id`, `tm_application_status`, `created_by`, `last_modified_by`, `tm_type`, `transport_manager_id`, `action`, `additional_information`, `created_on`, `deleted_date`, `hours_fri`, `hours_mon`, `hours_sat`, `hours_sun`, `hours_thu`, `hours_tue`, `hours_wed`, `last_modified_on`, `olbs_key`, `version`)
 VALUES
 	(1, 1, 'tmap_st_incomplete', NULL, NULL, 'tm_t_i', 1, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 1, 1, 1, NULL, NULL, 1),
-	(2, 7, 'tmap_st_awaiting_signature', NULL, NULL, 'tm_t_i', 1, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 2, 2, 2, NULL,
-	NULL, 1),
-  (3, 1, 'tmap_st_tm_signed', NULL, NULL, 'tm_t_i', 3, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 3, 4, 5, NULL,
+	(3, 1, 'tmap_st_tm_signed', NULL, NULL, 'tm_t_i', 3, 'A', NULL, NULL, NULL, 1, 1, NULL, NULL, 3, 4, 5, NULL,
   NULL, 1),
 	(4, 7, 'tmap_st_postal_application', NULL, NULL, 'tm_t_i', 3, 'A', NULL, NULL, NULL, 2, 2, NULL, NULL, 6, 7, 8, NULL,
 	NULL, 1),
@@ -1193,8 +1190,12 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
     (23,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','partner-user',168, NULL, NULL, 140),
     (24,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','local-authority-admin',169, 1, NULL, NULL),
     (25,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','local-authority-user',170, 1, NULL, NULL),
+    (26,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','system',170, 1, NULL, NULL),
     (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','abdou.bonomi',140, NULL, NULL, NULL),
     (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','abdou.bonomi2',140, NULL, NULL, NULL);
+
+# Make every user row have a PID
+UPDATE `user` SET pid = SHA(id);
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator`) VALUES
     (1, 19, 0),
@@ -1218,7 +1219,8 @@ INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
     (5, 24), -- philjowitt=internal-admin
     (6, 24), -- kevinrooney=internal-admin
     (7, 24), -- sarahthompson=internal-admin
-    (8, 23); -- anotheruser=internal-case-worker
+    (8, 23), -- anotheruser=internal-case-worker
+    (26, 24); -- system=internal-admin
 
 INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`,
     `certificate_no`, `vi_action`, `created_on`,
@@ -1655,13 +1657,16 @@ INSERT INTO `publication_police_data` (`id`,`publication_link_id`,`person_id`,`c
     (5,3,77,NULL,NULL,NULL,'1972-02-15','2014-12-11 10:03:15','Jones','Tom',NULL,1),
     (6,3,78,NULL,NULL,NULL,'1975-03-15','2014-12-11 10:03:16','Winnard','Keith',NULL,1);
 
-INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`, `in_force_date`, `created_on`)
+INSERT INTO `irfo_gv_permit` (`organisation_id`, `irfo_gv_permit_type_id`, `irfo_permit_status`, `year_required`,
+                              `in_force_date`, `expiry_date`, `created_on`)
 VALUES
-    (101, 1, 'irfo_perm_s_appreoved', 2014, '2015-03-10', NOW());
+    (101, 1, 'irfo_perm_s_approved', 2014, '2015-03-10', '2016-03-09', NOW());
 
-INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `journey_frequency`, `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`, `in_force_date`, `created_on`, `irfo_fee_id`)
-VALUES
-    (101, 1, 'irfo_auth_s_approved', 'psv_freq_daily', '17/1', 'From', 'To', 3, '2015-03-10',  NOW(), 'FeeId');
+INSERT INTO `irfo_psv_auth` (`organisation_id`, `irfo_psv_auth_type_id`, `status`, `journey_frequency`,
+                             `irfo_file_no`, `service_route_from`, `service_route_to`, `validity_period`,
+                             `in_force_date`, `created_on`, `expiry_date`, `renewal_date`, `irfo_fee_id`)
+VALUES (101, 1, 'irfo_auth_s_approved', 'psv_freq_daily', '17/1', 'From', 'To', 3, '2015-03-10',  NOW(), '2016-03-09',
+     '2016-03-09', 'FeeId');
 
 INSERT INTO `irfo_permit_stock` (`serial_no`, `irfo_country_id`, `status`, `valid_for_year`, `created_on`)
 VALUES
@@ -1726,9 +1731,9 @@ VALUES
   '2014-01-01', 'Requestors body 1', '2014-01-08', '2013-01-01', '2013-01-02', 1, 'VRM 1'),
   (2, 'cm_fax', 121, 'statement_t_9', 24, 1, 1, 'Authorisers decision 2', '2014-06-02',
   '2014-02-02', 'Requestors body 2', '2014-01-09', '2013-01-02', '2013-01-03', 1, 'VRM 2'),
-  (3, 'cm_email', 122, 'statement_t_36', 24, 1, 1, 'Authorisers decision 3', '2014-07-03',
+  (3, 'cm_email', 122, 'statement_t_ni', 24, 1, 1, 'Authorisers decision 3', '2014-07-03',
   '2014-03-03', 'Requestors body 3', '2014-01-10', '2013-01-03', '2013-01-04', 1, 'VRM 3'),
-  (4, 'cm_tel', 123, 'statement_t_38', 24, 1, 1, 'Authorisers decision 4', '2014-08-04',
+  (4, 'cm_tel', 123, 'statement_t_ni', 24, 1, 1, 'Authorisers decision 4', '2014-08-04',
   '2014-04-04', 'Requestors body 4', '2014-01-11', '2013-01-04', '2013-01-05', 1, 'VRM 4');
 
 INSERT INTO `previous_conviction` (`id`, `conviction_date`, `transport_manager_id`, `category_text`, `notes`,
@@ -2029,7 +2034,7 @@ INSERT INTO `application` (
     `created_on`, `deleted_date`, `granted_date`, `is_maintenance_suitable`, `last_modified_on`, `ni_flag`, `received_date`,
     `tot_auth_trailers`, `tot_auth_vehicles`, `tot_community_licences`,
     `version`, `withdrawn_date`, `applied_via`)
-VALUES 
+VALUES
     (8,NULL,212,NULL,'lcat_gv',NULL,'ltyp_sn','apsts_consideration',
     NULL,0,0,1,1,0,
     0,0,1,'',

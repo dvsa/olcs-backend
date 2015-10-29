@@ -65,7 +65,21 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\SubmissionGeneratorFactory::class,
 
             \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager::class =>
-                \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManagerFactory::class
+                \Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManagerFactory::class,
+
+            \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientFactory::class,
+
+            'TransExchangeXmlMapping' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangeXmlFactory::class,
+            'TransExchangePublisherXmlMapping' =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangePublisherXmlFactory::class,
+
+            \Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\FileProcessorFactory::class,
+
+            'EbsrXmlStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class,
+            'EbsrBusRegInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory::class
         ],
     ],
     'file_uploader' => [
@@ -93,6 +107,7 @@ return [
     ],
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
+            'withApplication' => QueryPartial\WithApplicationFactory::class,
             'withBusReg' => QueryPartial\WithBusRegFactory::class,
             'withContactDetails' => QueryPartial\WithContactDetailsFactory::class,
             'withCase' => QueryPartial\WithCaseFactory::class,
@@ -127,6 +142,8 @@ return [
             'BusRegOtherService' => RepositoryFactory::class,
             'BusNoticePeriod' => RepositoryFactory::class,
             'BusShortNotice' => RepositoryFactory::class,
+            'BusServiceType' => RepositoryFactory::class,
+            'LocalAuthority' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
             'GracePeriod' => RepositoryFactory::class,
             'Task' => RepositoryFactory::class,
@@ -227,6 +244,12 @@ return [
             'TxcInbox' => RepositoryFactory::class,
             'OrganisationUser' => RepositoryFactory::class,
             'Role' => RepositoryFactory::class,
+            'ApplicationReadAudit' => RepositoryFactory::class,
+            'LicenceReadAudit' => RepositoryFactory::class,
+            'OrganisationReadAudit' => RepositoryFactory::class,
+            'BusRegReadAudit' => RepositoryFactory::class,
+            'TransportManagerReadAudit' => RepositoryFactory::class,
+            'CasesReadAudit' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
@@ -504,5 +527,69 @@ return [
             ],
         ),
     ],
-    'submissions' => require(__DIR__ . '/submissions.config.php')
+    'submissions' => require(__DIR__ . '/submissions.config.php'),
+    'ebsr' => [
+        'transexchange_publisher' => [
+            'uri' => 'http://localhost:8080/txc/publisherService',
+            'options' => ['timeout' => 30],
+            'templates' => [
+                \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::GENERATE_DOCS_TEMPLATE =>
+                    '../data/ebsr/txc_template.xml',
+                \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::REQUEST_MAP_TEMPLATE =>
+                    '../data/ebsr/requestmap_template.xml'
+            ]
+        ],
+    ],
+    'xsd_mappings' =>[
+        'http://www.w3.org/2001/xml.xsd' => __DIR__ . '/../data/ebsr/xsd/xml.xsd',
+        'http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd' =>
+            __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.1/TransXChange_registration.xsd'
+    ],
+    'validators' => [
+        'invokables' => [
+            \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class
+        ],
+        'aliases' => [
+            'Structure\Operator' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
+            'Structure\Registration' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration::class,
+            'Structure\ServiceClassification' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification::class,
+            'Structure\SupportingDocuments' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class,
+            'Rules\EffectiveDate' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class,
+            'Rules\ApplicationType' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class
+        ]
+    ],
+    'filters' => [
+        'invokables' => [
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
+        ],
+        'aliases' => [
+            'IsScottishRules' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
+            'InjectReceivedDate' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class,
+            'InjectIsTxcApp' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class,
+            'Format\Subsidy' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class,
+            'Format\Via' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
+        ]
+    ],
 ];

@@ -2,8 +2,12 @@
 
 namespace Dvsa\Olcs\Email\Data;
 
+use Dvsa\Olcs\Email\Domain\Command\SendEmail;
+
 /**
  * Email Message
+ *
+ * @NOTE This has been left in for backwards compatibility, this essentially creates a command
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
@@ -29,6 +33,22 @@ class Message
     {
         $this->setTo($to);
         $this->setSubject($subject);
+    }
+
+    public function buildCommand()
+    {
+        $data = [
+            'fromName' => $this->getFromName(),
+            'fromEmail' => $this->getFromEmail(),
+            'to' => $this->getTo(),
+            'subject' => $this->getSubject(),
+            'subjectVariables' => $this->getSubjectVariables(),
+            'body' => $this->getBody(),
+            'html' => $this->getHtml(),
+            'locale' => $this->getLocale()
+        ];
+
+        return SendEmail::create($data);
     }
 
     /**

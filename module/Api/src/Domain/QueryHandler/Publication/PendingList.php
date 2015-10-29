@@ -19,7 +19,7 @@ final class PendingList extends AbstractQueryHandler
 
         return [
             'result' => $this->resultList(
-                $repo->fetchPendingList(),
+                $repo->fetchPendingList($query),
                 [
                     'pubStatus',
                     'trafficArea',

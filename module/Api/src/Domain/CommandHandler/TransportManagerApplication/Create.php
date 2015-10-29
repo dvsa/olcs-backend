@@ -64,6 +64,7 @@ final class Create extends AbstractCommandHandler implements
             );
             $this->tmRepo->save($transportManager);
 
+            $transportManager->addUsers($user);
             $user->setTransportManager($transportManager);
             $this->userRepo->save($user);
         }

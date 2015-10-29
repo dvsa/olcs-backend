@@ -8,16 +8,6 @@ namespace Dvsa\Olcs\Api\Domain;
 interface EmailAwareInterface
 {
     /**
-     * @param \Dvsa\Olcs\Email\Service\Client $service
-     */
-    public function setEmailService(\Dvsa\Olcs\Email\Service\Client $service);
-
-    /**
-     * @return \Dvsa\Olcs\Email\Service\Client
-     */
-    public function getEmailService();
-
-    /**
      * @param \Dvsa\Olcs\Email\Service\TemplateRenderer $service
      */
     public function setTemplateRendererService(\Dvsa\Olcs\Email\Service\TemplateRenderer $service);

@@ -80,6 +80,12 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->lt')
             ->andReturnUsing([$this, 'mockExprLt']);
 
+        $this->qb->shouldReceive('expr->gte')
+            ->andReturnUsing([$this, 'mockExprGte']);
+
+        $this->qb->shouldReceive('expr->gt')
+            ->andReturnUsing([$this, 'mockExprGt']);
+
         $this->qb->shouldReceive('expr->isNull')
             ->andReturnUsing([$this, 'mockExprIsNull']);
 
@@ -219,6 +225,20 @@ class RepositoryTestCase extends MockeryTestCase
         $value = $this->formatValue($value);
 
         return $field . ' < ' . $value;
+    }
+
+    public function mockExprGte($field, $value)
+    {
+        $value = $this->formatValue($value);
+
+        return $field . ' >= ' . $value;
+    }
+
+    public function mockExprGt($field, $value)
+    {
+        $value = $this->formatValue($value);
+
+        return $field . ' > ' . $value;
     }
 
     public function mockExprIn($field, $value)

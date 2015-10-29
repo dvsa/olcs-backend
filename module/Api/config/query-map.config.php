@@ -9,6 +9,14 @@ use Dvsa\Olcs\Api\Domain\Query\Queue as QueueQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Queue as QueueQueryHandler;
 
 return [
+    // Audit
+    TransferQuery\Audit\ReadApplication::class => QueryHandler\Audit\ReadApplication::class,
+    TransferQuery\Audit\ReadLicence::class => QueryHandler\Audit\ReadLicence::class,
+    TransferQuery\Audit\ReadOrganisation::class => QueryHandler\Audit\ReadOrganisation::class,
+    TransferQuery\Audit\ReadCase::class => QueryHandler\Audit\ReadCase::class,
+    TransferQuery\Audit\ReadTransportManager::class => QueryHandler\Audit\ReadTransportManager::class,
+    TransferQuery\Audit\ReadBusReg::class => QueryHandler\Audit\ReadBusReg::class,
+
     // Bookmarks
     BookmarkQuery\LicenceBundle::class => BookmarkQueryHandler\LicenceBundle::class,
     BookmarkQuery\TransportManagerBundle::class => BookmarkQueryHandler\TransportManagerBundle::class,
@@ -68,6 +76,7 @@ return [
     TransferQuery\Application\Publish::class => QueryHandler\Application\Publish::class,
     TransferQuery\Application\Schedule41Approve::class => QueryHandler\Application\Schedule41Approve::class,
     TransferQuery\Application\Summary::class => QueryHandler\Application\Summary::class,
+    Query\Application\NotTakenUpList::class => QueryHandler\Application\NotTakenUpList::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -269,6 +278,8 @@ return [
         => QueryHandler\TransportManagerLicence\GetForResponsibilities::class,
     TransferQuery\TransportManagerLicence\GetList::class
         => QueryHandler\TransportManagerLicence\GetList::class,
+    TransferQuery\TransportManagerLicence\GetListByVariation::class
+        => QueryHandler\TransportManagerLicence\GetListByVariation::class,
 
     // TmEmployment
     TransferQuery\TmEmployment\GetSingle::class => QueryHandler\TmEmployment\GetSingle::class,
@@ -283,6 +294,10 @@ return [
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
+
+    // Fee Type
+    TransferQuery\Fee\FeeType::class => QueryHandler\Fee\FeeType::class,
+    TransferQuery\Fee\FeeTypeList::class => QueryHandler\Fee\FeeTypeList::class,
 
     // Operator
     TransferQuery\Operator\BusinessDetails::class => QueryHandler\Operator\BusinessDetails::class,
@@ -392,4 +407,5 @@ return [
     // Cpms
     TransferQuery\Cpms\ReportList::class => QueryHandler\Cpms\ReportList::class,
     TransferQuery\Cpms\ReportStatus::class => QueryHandler\Cpms\ReportStatus::class,
+    TransferQuery\Cpms\StoredCardList::class => QueryHandler\Cpms\StoredCardList::class,
 ];

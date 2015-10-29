@@ -1,25 +1,20 @@
-<form>
-    <div class="field ">
-        <label>Your full name in block capitals</label>
-        <input type="text" class="medium" >
-    </div>
-    <div class="field inline-70">
-        <label>Signed</label>
-        <input type="text" class="medium" >
-    </div>
-    <div class="field inline-30">
-        <label>Dated</label>
-        <input type="text" class="medium" >
-    </div>
-    <div class="field ">
-        <label>Position in business - please tick <strong>one</strong> below</label>
-        <label class="inline"><input type="checkbox" >Owner</label>
-        <label class="inline"><input type="checkbox" >Partner</label>
-        <label class="inline"><input type="checkbox" >Director</label>
+<div class="printable">
+    <div class="signature-box">
+        <div class="signature-box__column">
+            <form>
+                <label for="" class="signature-box__label">%s</label>
+                <input type="text" class="signature-box__input signature" disabled="disabled">
+                <label for="" class="signature-box__label">Full name in block capitals</label>
+                <input type="text" class="signature-box__input name" disabled="disabled">
+                <label for="" class="signature-box__label">Date</label>
+                <input type="text" class="signature-box__input date" disabled="disabled">
+            </form>
+        </div>
     </div>
 
-    <div class="field ">
-        <label>Delegated officer of any other organisation</label>
-        <input type="checkbox" >
-    </div>
-</form>
+    <p>
+        You must sign and return this form before we can consider your application.<br />
+        <b>Return to: </b>%s
+    </p>
+
+</div>

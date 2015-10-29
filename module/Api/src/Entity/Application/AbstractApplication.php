@@ -661,6 +661,18 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     protected $applicationOrganisationPersons;
 
     /**
+     * Read audit
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationReadAudit",
+     *     mappedBy="application"
+     * )
+     */
+    protected $readAudits;
+
+    /**
      * Application tracking
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\ApplicationTracking
@@ -806,6 +818,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     {
         $this->operatingCentres = new ArrayCollection();
         $this->applicationOrganisationPersons = new ArrayCollection();
+        $this->readAudits = new ArrayCollection();
         $this->cases = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
@@ -2389,6 +2402,66 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     }
 
     /**
+     * Set the read audit
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return Application
+     */
+    public function setReadAudits($readAudits)
+    {
+        $this->readAudits = $readAudits;
+
+        return $this;
+    }
+
+    /**
+     * Get the read audits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getReadAudits()
+    {
+        return $this->readAudits;
+    }
+
+    /**
+     * Add a read audits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return Application
+     */
+    public function addReadAudits($readAudits)
+    {
+        if ($readAudits instanceof ArrayCollection) {
+            $this->readAudits = new ArrayCollection(
+                array_merge(
+                    $this->readAudits->toArray(),
+                    $readAudits->toArray()
+                )
+            );
+        } elseif (!$this->readAudits->contains($readAudits)) {
+            $this->readAudits->add($readAudits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a read audits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return Application
+     */
+    public function removeReadAudits($readAudits)
+    {
+        if ($this->readAudits->contains($readAudits)) {
+            $this->readAudits->removeElement($readAudits);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the application tracking
      *
      * @param \Dvsa\Olcs\Api\Entity\Application\ApplicationTracking $applicationTracking
@@ -3099,14 +3172,11 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
                 if ($this->$property instanceof Collection) {
-
                     $this->$property = new ArrayCollection(array());
 
                 } else {
-
                     $this->$property = null;
                 }
             }

@@ -156,12 +156,16 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
     protected function shouldCreateFee(LicenceEntity $licence)
     {
         // If PSV and not SR then we don't need to create a fee
-        if ($licence->isPsv()
-            && $licence->getLicenceType()->getId() !== LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED) {
+        if ($licence->isPsv() && !$licence->isSpecialRestricted()) {
             return false;
         }
 
-        $results = $this->getRepo('Fee')->fetchOutstandingContinuationFeesByLicenceId($licence->getId());
+        // check for fees less than three months old
+        $after = (new DateTime('now'))->sub(new \DateInterval('P3M'));
+        $results = $this->getRepo('Fee')->fetchOutstandingContinuationFeesByLicenceId(
+            $licence->getId(),
+            $after
+        );
 
         return empty($results);
     }

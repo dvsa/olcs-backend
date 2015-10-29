@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 
 /**
  * Get the the markers to display for a Licence
@@ -13,7 +14,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class Markers extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
-    protected $extraRepos = ['ContinuationDetail'];
+    protected $extraRepos = ['ContinuationDetail', 'Note'];
 
     public function handleQuery(QueryInterface $query)
     {
@@ -23,6 +24,8 @@ class Markers extends AbstractQueryHandler
         $continuationDetailResponse = ($continuationDetail) ?
             $this->result($continuationDetail, ['continuation', 'licence'])->serialize() :
             null;
+
+        $latestNote = $this->getRepo('Note')->fetchForOverview($query->getId());
 
         return $this->result(
             $licence,
@@ -44,6 +47,7 @@ class Markers extends AbstractQueryHandler
             ],
             [
                 'continuationMarker' => $continuationDetailResponse,
+                'latestNote' => $latestNote
             ]
         );
     }

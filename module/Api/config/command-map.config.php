@@ -9,6 +9,14 @@ use Dvsa\Olcs\Api\Domain\Command\Queue as QueueCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Queue as QueueCommandHandler;
 
 return [
+    // Transfer - Audit
+    TransferCommand\Audit\ReadApplication::class => CommandHandler\Audit\ReadApplication::class,
+    TransferCommand\Audit\ReadLicence::class => CommandHandler\Audit\ReadLicence::class,
+    TransferCommand\Audit\ReadOrganisation::class => CommandHandler\Audit\ReadOrganisation::class,
+    TransferCommand\Audit\ReadTransportManager::class => CommandHandler\Audit\ReadTransportManager::class,
+    TransferCommand\Audit\ReadBusReg::class => CommandHandler\Audit\ReadBusReg::class,
+    TransferCommand\Audit\ReadCase::class => CommandHandler\Audit\ReadCase::class,
+
     // Transfer - Application
     TransferCommand\Application\UpdateTypeOfLicence::class => CommandHandler\Application\UpdateTypeOfLicence::class,
     TransferCommand\Application\CreateApplication::class => CommandHandler\Application\CreateApplication::class,
@@ -161,6 +169,9 @@ return [
 
     //Ebsr
     TransferCommand\Bus\Ebsr\UpdateTxcInbox::class => CommandHandler\Bus\Ebsr\UpdateTxcInbox::class,
+    TransferCommand\Bus\Ebsr\ProcessPacks::class => CommandHandler\Bus\Ebsr\ProcessPacks::class,
+    TransferCommand\Bus\Ebsr\RequestMap::class => CommandHandler\Bus\Ebsr\RequestMapQueue::class,
+    Command\Bus\Ebsr\ProcessRequestMap::class => CommandHandler\Bus\Ebsr\ProcessRequestMap::class,
 
     // Transfer - Licence
     TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
@@ -299,6 +310,7 @@ return [
     TransferCommand\User\UpdateUser::class => CommandHandler\User\UpdateUser::class,
     TransferCommand\User\DeleteUser::class => CommandHandler\User\DeleteUser::class,
     TransferCommand\User\RegisterUserSelfserve::class => CommandHandler\User\RegisterUserSelfserve::class,
+    TransferCommand\User\RemindUsernameSelfserve::class => CommandHandler\User\RemindUsernameSelfserve::class,
     TransferCommand\User\CreateUserSelfserve::class => CommandHandler\User\CreateUserSelfserve::class,
     TransferCommand\User\UpdateUserSelfserve::class => CommandHandler\User\UpdateUserSelfserve::class,
     TransferCommand\User\DeleteUserSelfserve::class => CommandHandler\User\DeleteUserSelfserve::class,
@@ -558,6 +570,8 @@ return [
         => CommandHandler\Organisation\CpidOrganisationExport::class,
 
     // Domain - Fee
+    // @todo we could replace references to the internal CreateFee command
+    // with the TransferCommand version
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
     Command\Fee\CancelIrfoGvPermitFees::class => CommandHandler\Fee\CancelIrfoGvPermitFees::class,
@@ -566,7 +580,7 @@ return [
     TransferCommand\Fee\RecommendWaive::class => CommandHandler\Fee\RecommendWaive::class,
     TransferCommand\Fee\RejectWaive::class => CommandHandler\Fee\RejectWaive::class,
     TransferCommand\Fee\UpdateFee::class => CommandHandler\Fee\UpdateFee::class,
-    TransferCommand\Fee\CreateMiscellaneousFee::class => CommandHandler\Fee\CreateMiscellaneousFee::class,
+    TransferCommand\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
 
     // Domain - Transaction (formerly 'Payment')
     TransferCommand\Transaction\PayOutstandingFees::class => CommandHandler\Transaction\PayOutstandingFees::class,
@@ -642,11 +656,17 @@ return [
         CommandHandler\TransportManagerApplication\DeleteForResponsibilities::class,
     TransferCommand\TransportManagerApplication\SendTmApplication::class =>
         CommandHandler\Email\SendTmApplication::class,
+    TransferCommand\TransportManagerApplication\Submit::class =>
+        CommandHandler\TransportManagerApplication\Submit::class,
+    TransferCommand\TransportManagerApplication\OperatorApprove::class =>
+        CommandHandler\TransportManagerApplication\OperatorApprove::class,
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
     Command\Email\CreateCorrespondenceRecord::class => CommandHandler\Email\CreateCorrespondenceRecord::class,
     Command\Email\SendContinuationNotSought::class => CommandHandler\Email\SendContinuationNotSought::class,
+    Command\Email\SendUsernameSingle::class => CommandHandler\Email\SendUsernameSingle::class,
+    Command\Email\SendUsernameMultiple::class => CommandHandler\Email\SendUsernameMultiple::class,
 
     // Person
     TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,

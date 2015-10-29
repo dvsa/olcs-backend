@@ -109,10 +109,17 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     protected function cardPayment($command, $feesToPay, $result)
     {
         // fire off to CPMS
-        $response = $this->getCpmsService()->initiateCardRequest(
-            $command->getCpmsRedirectUrl(),
-            $feesToPay
-        );
+        if ($command->getPaymentMethod() === FeeEntity::METHOD_CARD_OFFLINE) {
+            $response = $this->getCpmsService()->initiateCnpRequest($command->getCpmsRedirectUrl(), $feesToPay);
+        } elseif ($command->getStoredCardReference()) {
+            $response = $this->getCpmsService()->initiateStoredCardRequest(
+                $command->getCpmsRedirectUrl(),
+                $feesToPay,
+                $command->getStoredCardReference()
+            );
+        } else {
+            $response = $this->getCpmsService()->initiateCardRequest($command->getCpmsRedirectUrl(), $feesToPay);
+        }
 
         // create transaction
         $transaction = new TransactionEntity();

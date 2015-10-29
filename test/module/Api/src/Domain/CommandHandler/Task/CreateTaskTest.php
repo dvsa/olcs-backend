@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository\TaskAllocationRule;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -27,7 +28,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
-use  Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Create Task Test
@@ -63,7 +64,8 @@ class CreateTaskTest extends CommandHandlerTestCase
         $this->references = [
             User::class => [
                 11 => m::mock(User::class),
-                888 => m::mock(User::class)
+                888 => m::mock(User::class),
+                999 => m::mock(User::class),
             ],
             Team::class => [
                 22 => m::mock(Team::class),
@@ -87,6 +89,9 @@ class CreateTaskTest extends CommandHandlerTestCase
             Organisation::class => [
                 364 => m::mock(Organisation::class)
             ],
+            Submission::class => [
+                765 => m::mock(Cases::class)
+            ],
         ];
 
         parent::initReferences();
@@ -109,6 +114,8 @@ class CreateTaskTest extends CommandHandlerTestCase
             'case' => 164,
             'transportManager' => 264,
             'irfoOrganisation' => 364,
+            'submission' => 765,
+            'assignedByUser' => 999,
         ];
 
         $command = Cmd::create($data);
@@ -129,6 +136,7 @@ class CreateTaskTest extends CommandHandlerTestCase
 
                     $this->assertSame($this->references[BusReg::class][64], $task->getBusReg());
                     $this->assertSame($this->references[Cases::class][164], $task->getCase());
+                    $this->assertSame($this->references[Submission::class][765], $task->getSubmission());
                     $this->assertSame($this->references[TransportManager::class][264], $task->getTransportManager());
                     $this->assertSame($this->references[Organisation::class][364], $task->getIrfoOrganisation());
 
@@ -140,6 +148,8 @@ class CreateTaskTest extends CommandHandlerTestCase
                     $this->assertEquals(null, $task->getCreatedBy());
                     $this->assertEquals(null, $task->getLastModifiedBy());
                     $this->assertEquals(new DateTime('now'), $task->getLastModifiedOn());
+
+                    $this->assertSame($this->references[User::class][999], $task->getAssignedByUser());
                 }
             );
 

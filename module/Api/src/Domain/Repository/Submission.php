@@ -65,4 +65,20 @@ class Submission extends AbstractRepository
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
     }
+
+    /**
+     * Fetch submission with case and licence
+     * @param int $submissionId
+     */
+    public function fetchWithCaseAndLicenceById($submissionId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('case', 'c')
+            ->with('c.licence', 'cl')
+            ->byId($submissionId);
+
+        return $qb->getQuery()->getSingleResult();
+    }
 }

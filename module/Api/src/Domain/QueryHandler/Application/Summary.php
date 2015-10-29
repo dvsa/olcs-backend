@@ -29,6 +29,8 @@ class Summary extends AbstractQueryHandler
 
     protected $repoServiceName = 'Application';
 
+    protected $extraRepos = ['Fee'];
+
     public function handleQuery(QueryInterface $query)
     {
         /** @var Entity\Application\Application $application */
@@ -67,7 +69,9 @@ class Summary extends AbstractQueryHandler
             }
         }
 
-        return $this->result($application, $bundle, ['actions' => $actions]);
+        $reference = $this->getLatestReference($application->getId());
+
+        return $this->result($application, $bundle, ['actions' => $actions, 'reference' => $reference]);
     }
 
     protected function determineActions(Entity\Application\Application $application)
@@ -132,11 +136,8 @@ class Summary extends AbstractQueryHandler
 
         /** @var Entity\Application\ApplicationOperatingCentre $aoc */
         foreach ($ocs as $aoc) {
-            // Grab all ad documents linked to the OC and the application
-            $docs = $aoc->getOperatingCentre()->getAdDocuments()->matching($criteria);
 
-            // If there are some, then we can skip this record
-            if ($docs->isEmpty() === false) {
+            if (ValueHelper::isOn($aoc->getAdPlaced())) {
                 continue;
             }
 
@@ -240,5 +241,14 @@ class Summary extends AbstractQueryHandler
         $tms = $application->getTransportManagers()->matching($criteria);
 
         return $tms->isEmpty() === false;
+    }
+
+    protected function getLatestReference($applicationId)
+    {
+        $latestFee = $this->getRepo('Fee')->fetchLatestFeeByApplicationId($applicationId);
+        if ($latestFee) {
+            return $latestFee->getLatestPaymentRef();
+        }
+        return '';
     }
 }

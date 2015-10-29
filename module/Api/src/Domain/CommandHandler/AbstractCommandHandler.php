@@ -13,6 +13,8 @@ use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
+use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -108,7 +110,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         }
 
         if ($this instanceof \Dvsa\Olcs\Api\Domain\EmailAwareInterface) {
-            $this->setEmailService($mainServiceLocator->get(\Dvsa\Olcs\Email\Service\Client::class));
             $this->setTemplateRendererService(
                 $mainServiceLocator->get(\Dvsa\Olcs\Email\Service\TemplateRenderer::class)
             );
@@ -134,6 +135,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         if ($this instanceof NamingServiceAwareInterface) {
             $this->setNamingService($mainServiceLocator->get('DocumentNamingService'));
+        }
+
+        if ($this instanceof TransExchangeAwareInterface) {
+            $this->setTransExchange($mainServiceLocator->get(TransExchangeClient::class));
         }
     }
 
