@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository\ReadAudit\ReadAuditRepositoryInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -16,10 +17,29 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractReadAudit extends AbstractRepository
+abstract class AbstractReadAudit extends AbstractRepository implements ReadAuditRepositoryInterface
 {
     protected $entityProperty = null;
 
+    /**
+     * @inheritdoc
+     */
+    public function deleteOlderThan($oldestDate)
+    {
+        $query = $this->getEntityManager()->createQuery(
+            sprintf(
+                'DELETE FROM ' . $this->entity . ' e WHERE e.createdOn < :oldestDate'
+            )
+        );
+
+        $query->setParameter('oldestDate', $oldestDate);
+
+        return $query->execute();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function fetchOne($userId, $entityId, $date)
     {
         $qb = $this->createQueryBuilder();
