@@ -70,12 +70,12 @@ class Response extends AbstractPlugin
         return new JsonModel($result);
     }
 
-    public function multipleResults($count, $results, array $extra = [])
+    public function multipleResults($count, $results, $countUnfiltered = 0, array $extra = [])
     {
         $response = $this->getController()->getResponse();
         $response->setStatusCode(HttpResponse::STATUS_CODE_200);
 
-        return new JsonModel(['count' => $count, 'results' => $results, 'extra' => $extra]);
+        return new JsonModel(['count' => $count, 'results' => $results, 'count-unfiltered' => $countUnfiltered, 'extra' => $extra]);
     }
 
     public function successfulUpdate(Result $result)
