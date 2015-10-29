@@ -51,7 +51,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
 
         $application->updateTypeOfLicence(
             $command->getNiFlag(),
-            $this->getRepo()->getRefdataReference($command->getOperatorType()),
+            $this->getOperatorTypeFromCommand($command),
             $this->getRepo()->getRefdataReference($command->getLicenceType())
         );
 
@@ -97,7 +97,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     {
         return $application->getNiFlag() !== $command->getNiFlag()
             || $application->getLicenceType() !== $this->getRepo()->getRefdataReference($command->getLicenceType())
-            || $application->getGoodsOrPsv() !== $this->getRepo()->getRefdataReference($command->getOperatorType());
+            || $application->getGoodsOrPsv() !== $this->getOperatorTypeFromCommand($command);
     }
 
     private function createCreateApplicationFeeCommand(Application $application)
@@ -182,7 +182,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     private function typeOfLicenceWillChange(Application $application, Cmd $command)
     {
         return $application->getNiFlag() !== $command->getNiFlag()
-            || $application->getGoodsOrPsv() !== $this->getRepo()->getRefdataReference($command->getOperatorType());
+            || $application->getGoodsOrPsv() !== $this->getOperatorTypeFromCommand($command);
     }
 
     /**
@@ -195,5 +195,14 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     private function licenceTypeWillChange(Application $application, Cmd $command)
     {
         return $application->getLicenceType() !== $this->getRepo()->getRefdataReference($command->getLicenceType());
+    }
+
+    private function getOperatorTypeFromCommand(Cmd $command)
+    {
+        if ($command->getNiFlag() !== 'Y') {
+            return $this->getRepo()->getRefdataReference($command->getOperatorType());
+        }
+
+        return $this->getRepo()->getRefdataReference(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
     }
 }

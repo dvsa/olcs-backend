@@ -72,13 +72,17 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
 
     private function populateTypeOfLicence(Cmd $command, Application $application)
     {
-        if ($command->getNiFlag() !== null
-            && $command->getOperatorType() !== null
-            && $command->getLicenceType() !== null) {
+        if ($command->getNiFlag() !== null && $command->getLicenceType() !== null) {
+
+            if ($command->getNiFlag() !== 'Y') {
+                $operatorType = $this->getRepo()->getRefdataReference($command->getOperatorType());
+            } else {
+                $operatorType = $this->getRepo()->getRefdataReference(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
+            }
 
             $application->updateTypeOfLicence(
                 $command->getNiFlag(),
-                $this->getRepo()->getRefdataReference($command->getOperatorType()),
+                $operatorType,
                 $this->getRepo()->getRefdataReference($command->getLicenceType())
             );
 

@@ -170,12 +170,15 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
     public function testHandleCommandWithAllowedUpdate()
     {
         // Params
-        $command = $this->getCommand('Y', Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL, Licence::LICENCE_CATEGORY_PSV);
+        $command = $this->getCommand(
+            'Y',
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+        );
 
         $application = $this->getApplication(
             'Y',
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_CATEGORY_PSV
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE
         );
 
         // Expectations
@@ -183,7 +186,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             ->once()
             ->with(
                 'Y',
-                $this->mapRefData(Licence::LICENCE_CATEGORY_PSV),
+                $this->mapRefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE),
                 $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL)
             )
             ->shouldReceive('getLicence')
@@ -192,6 +195,84 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
                 ->shouldReceive('getId')
                 ->andReturn(222)
                 ->getMock()
+            );
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->once()
+            ->with($application);
+
+        $result1 = new Result();
+        $result1->addMessage('5 fee(s) cancelled');
+        $this->expectedSideEffect(CancelLicenceFees::class, ['id' => 222], $result1);
+
+        $result2 = new Result();
+        $result2->addId('fee', 222);
+        $this->expectedSideEffect(
+            CreateApplicationFeeCommand::class,
+            ['id' => 111, 'feeTypeFeeType' => null, 'description' => null],
+            $result2
+        );
+
+        $result3 = new Result();
+        $result3->addMessage('section1 updated');
+        $result3->addMessage('section2 updated');
+        $this->expectedSideEffect(
+            UpdateApplicationCompletionCommand::class,
+            ['id' => 111, 'section' => 'typeOfLicence'],
+            $result3
+        );
+
+        // Assertions
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'fee' => 222
+            ],
+            'messages' => [
+                '5 fee(s) cancelled',
+                'section1 updated',
+                'section2 updated',
+                'Application saved successfully'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWithAllowedUpdateGb()
+    {
+        // Params
+        $command = $this->getCommand(
+            'N',
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+        );
+
+        $application = $this->getApplication(
+            'N',
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+        );
+
+        // Expectations
+        $application->shouldReceive('updateTypeOfLicence')
+            ->once()
+            ->with(
+                'N',
+                $this->mapRefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE),
+                $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL)
+            )
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock(Licence::class)
+                    ->shouldReceive('getId')
+                    ->andReturn(222)
+                    ->getMock()
             );
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -297,7 +378,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         ];
     }
 
-    protected function getCommand($niFlag, $licenceType, $operatorType, $confirm = false)
+    protected function getCommand($niFlag, $licenceType, $operatorType = null, $confirm = false)
     {
         $data = [
             'id' => 111,
