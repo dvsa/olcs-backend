@@ -41,12 +41,12 @@ class NotTakenUpList extends AbstractQueryHandler
 
         $dateTimeProcessors = [];
 
+        $dateTimeDaysProcessor = new AddDays();
+        $dateTimeWorkingDaysProcessor = new AddWorkingDays($dateTimeDaysProcessor);
+
         // need to process separately for each TA because we can have different public holidays for different areas
         foreach ($trafficAreas as $trafficArea) {
-            $dateTimeDaysProcessor = new AddDays();
-            $dateTimeWorkingDaysProcessor = new AddWorkingDays($dateTimeDaysProcessor);
             $dateProvider = new PublicHolidayDateProvider($this->getRepo('PublicHoliday'), $trafficArea);
-
             $dateTimeProcessors[$trafficArea->getId()] =
                 new AddDaysExcludingDates($dateTimeWorkingDaysProcessor, $dateProvider);
 
