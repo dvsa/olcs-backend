@@ -7,9 +7,9 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Service;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
@@ -41,10 +41,13 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
     protected $adminAreaTrafficAreaRepo;
 
+    protected $documentRepo;
+
     public function setUp()
     {
         $this->addressService = m::mock();
         $this->adminAreaTrafficAreaRepo = m::mock();
+        $this->documentRepo = m::mock();
 
         $sm = m::mock(ServiceLocatorInterface::class);
         $sm->shouldReceive('get')
@@ -56,7 +59,10 @@ class OperatingCentreHelperTest extends MockeryTestCase
             ->andReturnSelf()
             ->shouldReceive('get')
             ->with('AdminAreaTrafficArea')
-            ->andReturn($this->adminAreaTrafficAreaRepo);
+            ->andReturn($this->adminAreaTrafficAreaRepo)
+            ->shouldReceive('get')
+            ->with('Document')
+            ->andReturn($this->documentRepo);
 
         $this->sut = new OperatingCentreHelper();
         $this->sut->createService($sm);
@@ -73,6 +79,11 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $entity->shouldReceive('isGoods')->andReturn(!$isPsv);
 
         $command = CreateOperatingCentre::create($commandData);
+
+        $docCollection = new ArrayCollection();
+
+        $this->documentRepo->shouldReceive('fetchUnlinkedOcDocumentsForEntity')->with($entity)
+            ->andReturn($docCollection);
 
         try {
             $this->sut->validate($entity, $command);
@@ -503,6 +514,11 @@ class OperatingCentreHelperTest extends MockeryTestCase
                         [
                             'ERR_OC_AD_DT_1' => 'ERR_OC_AD_DT_1'
                         ]
+                    ],
+                    'file' => [
+                        [
+                            'ERR_OC_AD_FI_1' => 'ERR_OC_AD_FI_1'
+                        ]
                     ]
                 ]
             ],
@@ -516,7 +532,13 @@ class OperatingCentreHelperTest extends MockeryTestCase
                     'adPlacedIn' => 'sasdasd',
                     'adPlacedDate' => 'asdsad'
                 ],
-                []
+                [
+                    'file' => [
+                        [
+                            'ERR_OC_AD_FI_1' => 'ERR_OC_AD_FI_1'
+                        ]
+                    ]
+                ]
             ]
         ];
     }
