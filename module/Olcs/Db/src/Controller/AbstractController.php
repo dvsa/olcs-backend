@@ -38,9 +38,18 @@ abstract class AbstractController extends ZendAbstractRestfulController
 
         $response = $this->doDispatch($e);
 
+        if ($response instanceof Response) {
+            $content = [
+                'content' => $response->getContent(),
+                'status' => $response->getStatusCode()
+            ];
+        } else {
+            $content = (array)$response;
+        }
+
         $data = [
             'data' => [
-                'response' => (array)$response
+                'response' => $content
             ]
         ];
 
