@@ -41,9 +41,11 @@ final class SendTmApplication extends AbstractCommandHandler implements \Dvsa\Ol
             $message,
             'transport-manager-complete-digital-form',
             [
-                'name' => $tma->getTransportManager()->getHomeCd()->getPerson()->getForename(),
                 'organisation' => $tma->getApplication()->getLicence()->getOrganisation()->getName(),
                 'reference' => $tma->getApplication()->getLicence()->getLicNo() .'/'. $tma->getApplication()->getId(),
+                'username' => $tma->getTransportManager()->getUsers()->isEmpty() ? 'not registered' :
+                    $tma->getTransportManager()->getUsers()->first()->getLoginId(),
+                'isNi' => $tma->getApplication()->getNiFlag() === 'Y',
                 'signInLink' => sprintf(
                     'http://selfserve/%s/%d/transport-managers/details/%d/edit-details/',
                     ($tma->getApplication()->getIsVariation()) ? 'variation' : 'application',

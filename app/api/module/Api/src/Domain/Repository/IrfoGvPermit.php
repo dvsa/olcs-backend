@@ -29,8 +29,8 @@ class IrfoGvPermit extends AbstractRepository
     {
         $doctrineQb = $this->createQueryBuilder();
 
-        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.organisation', ':organisaion'))
-            ->setParameter('organisaion', $organisation);
+        $doctrineQb->andWhere($doctrineQb->expr()->eq($this->alias . '.organisation', ':organisation'))
+            ->setParameter('organisation', $organisation);
 
         return $doctrineQb->getQuery()->getResult();
     }

@@ -343,6 +343,15 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     protected $appeal;
 
     /**
+     * Read audit
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Cases\CasesReadAudit", mappedBy="case")
+     */
+    protected $readAudits;
+
+    /**
      * Complaint
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -466,6 +475,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     {
         $this->outcomes = new ArrayCollection();
         $this->categorys = new ArrayCollection();
+        $this->readAudits = new ArrayCollection();
         $this->complaints = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->convictions = new ArrayCollection();
@@ -1222,6 +1232,66 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     }
 
     /**
+     * Set the read audit
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return Cases
+     */
+    public function setReadAudits($readAudits)
+    {
+        $this->readAudits = $readAudits;
+
+        return $this;
+    }
+
+    /**
+     * Get the read audits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getReadAudits()
+    {
+        return $this->readAudits;
+    }
+
+    /**
+     * Add a read audits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return Cases
+     */
+    public function addReadAudits($readAudits)
+    {
+        if ($readAudits instanceof ArrayCollection) {
+            $this->readAudits = new ArrayCollection(
+                array_merge(
+                    $this->readAudits->toArray(),
+                    $readAudits->toArray()
+                )
+            );
+        } elseif (!$this->readAudits->contains($readAudits)) {
+            $this->readAudits->add($readAudits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a read audits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return Cases
+     */
+    public function removeReadAudits($readAudits)
+    {
+        if ($this->readAudits->contains($readAudits)) {
+            $this->readAudits->removeElement($readAudits);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the complaint
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $complaints
@@ -1969,14 +2039,11 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
                 if ($this->$property instanceof Collection) {
-
                     $this->$property = new ArrayCollection(array());
 
                 } else {
-
                     $this->$property = null;
                 }
             }

@@ -28,10 +28,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_bus_reg_withdrawn_reason", columns={"withdrawn_reason"}),
  *        @ORM\Index(name="ix_bus_reg_status", columns={"status"}),
  *        @ORM\Index(name="ix_bus_reg_revert_status", columns={"revert_status"}),
- *        @ORM\Index(name="ix_bus_reg_reg_no_variation_no", columns={"reg_no","variation_no"}),
  *        @ORM\Index(name="ix_bus_reg_parent_id", columns={"parent_id"})
  *    },
  *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_bus_reg_reg_no_variation_no", columns={"reg_no","variation_no"}),
  *        @ORM\UniqueConstraint(name="uk_bus_reg_olbs_key", columns={"olbs_key"})
  *    }
  * )
@@ -700,6 +700,15 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     protected $otherServices;
 
     /**
+     * Read audit
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusRegReadAudit", mappedBy="busReg")
+     */
+    protected $readAudits;
+
+    /**
      * Short notice
      *
      * @var \Dvsa\Olcs\Api\Entity\Bus\BusShortNotice
@@ -754,6 +763,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
         $this->localAuthoritys = new ArrayCollection();
         $this->busServiceTypes = new ArrayCollection();
         $this->otherServices = new ArrayCollection();
+        $this->readAudits = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->ebsrSubmissions = new ArrayCollection();
         $this->txcDocuments = new ArrayCollection();
@@ -2417,6 +2427,66 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     }
 
     /**
+     * Set the read audit
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return BusReg
+     */
+    public function setReadAudits($readAudits)
+    {
+        $this->readAudits = $readAudits;
+
+        return $this;
+    }
+
+    /**
+     * Get the read audits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getReadAudits()
+    {
+        return $this->readAudits;
+    }
+
+    /**
+     * Add a read audits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return BusReg
+     */
+    public function addReadAudits($readAudits)
+    {
+        if ($readAudits instanceof ArrayCollection) {
+            $this->readAudits = new ArrayCollection(
+                array_merge(
+                    $this->readAudits->toArray(),
+                    $readAudits->toArray()
+                )
+            );
+        } elseif (!$this->readAudits->contains($readAudits)) {
+            $this->readAudits->add($readAudits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a read audits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return BusReg
+     */
+    public function removeReadAudits($readAudits)
+    {
+        if ($this->readAudits->contains($readAudits)) {
+            $this->readAudits->removeElement($readAudits);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the short notice
      *
      * @param \Dvsa\Olcs\Api\Entity\Bus\BusShortNotice $shortNotice
@@ -2647,14 +2717,11 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
                 if ($this->$property instanceof Collection) {
-
                     $this->$property = new ArrayCollection(array());
 
                 } else {
-
                     $this->$property = null;
                 }
             }

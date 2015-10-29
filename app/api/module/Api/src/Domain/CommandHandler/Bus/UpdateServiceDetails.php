@@ -147,9 +147,7 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
                     $otherServiceEntity->setServiceNo($serviceNumber['serviceNo']);
                 } else {
                     // create
-                    $otherServiceEntity = new BusRegOtherService();
-                    $otherServiceEntity->setBusReg($busReg);
-                    $otherServiceEntity->setServiceNo($serviceNumber['serviceNo']);
+                    $otherServiceEntity = new BusRegOtherService($busReg, $serviceNumber['serviceNo']);
                 }
 
                 $this->getRepo('BusRegOtherService')->save($otherServiceEntity);

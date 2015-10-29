@@ -67,15 +67,67 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @param string $redirectUrl redirect back to here from payment gateway
      * @param array $fees
+     *
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
     public function initiateCardRequest($redirectUrl, array $fees)
     {
-        $method   = 'post';
         $endPoint = '/api/payment/card';
         $scope    = ApiService::SCOPE_CARD;
 
+        return $this->initiateRequest($redirectUrl, $fees, $endPoint, $scope);
+    }
+
+    /**
+     * Initiate a stored card payment payment
+     *
+     * @param string $redirectUrl redirect back to here from payment gateway
+     * @param array  $fees
+     * @param string $storedCardReference Stored card reference
+     *
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function initiateStoredCardRequest($redirectUrl, array $fees, $storedCardReference)
+    {
+        $endPoint = '/api/payment/stored-card/'. $storedCardReference;
+        $scope    = ApiService::SCOPE_STORED_CARD;
+
+        return $this->initiateRequest($redirectUrl, $fees, $endPoint, $scope);
+    }
+
+    /**
+     * Initiate a card not present (CNP) payment
+     *
+     * @param string $redirectUrl redirect back to here from payment gateway
+     * @param array $fees
+     *
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function initiateCnpRequest($redirectUrl, array $fees)
+    {
+        $endPoint = '/api/payment/cardholder-not-present';
+        $scope    = ApiService::SCOPE_CNP;
+
+        return $this->initiateRequest($redirectUrl, $fees, $endPoint, $scope);
+    }
+
+    /**
+     * Initiate a payment request
+     *
+     * @param string $redirectUrl redirect back to here from payment gateway
+     * @param array $fees
+     * @param string $endPoint Either card or CNP endpoint
+     * @param string $scope    Either ApiService::SCOPE_CNP or ApiService::SCOPE_CARD
+     *
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    private function initiateRequest($redirectUrl, array $fees, $endPoint, $scope)
+    {
+        $method   = 'post';
         $extraParams = [
             'redirect_uri' => $redirectUrl,
             'disable_redirection' => true, // legacy??
@@ -286,6 +338,16 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     public function getReportList()
     {
         return $this->send('get', '/api/report', ApiService::SCOPE_REPORT, []);
+    }
+
+    /**
+     * Get a list of stored debit/credit cards references stored in CPMS
+     *
+     * @return array
+     */
+    public function getListStoredCards()
+    {
+        return $this->send('get', '/api/stored-card', ApiService::SCOPE_STORED_CARD, []);
     }
 
     /**

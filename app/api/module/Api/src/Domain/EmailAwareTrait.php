@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
-use Dvsa\Olcs\Email\Service\Client;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Email\Data\Message;
 
@@ -12,30 +11,9 @@ use Dvsa\Olcs\Email\Data\Message;
 trait EmailAwareTrait
 {
     /**
-     * @var Client
-     */
-    protected $emailService;
-
-    /**
      * @var TemplateRenderer
      */
     protected $templateRendererService;
-
-    /**
-     * @param Client $service
-     */
-    public function setEmailService(Client $service)
-    {
-        $this->emailService = $service;
-    }
-
-    /**
-     * @return Client
-     */
-    public function getEmailService()
-    {
-        return $this->emailService;
-    }
 
     /**
      * @param TemplateRenderer $service
@@ -63,7 +41,7 @@ trait EmailAwareTrait
      */
     public function sendEmail(Message $message)
     {
-        return $this->getEmailService()->sendEmail($message);
+        return $this->handleSideEffect($message->buildCommand());
     }
 
     /**

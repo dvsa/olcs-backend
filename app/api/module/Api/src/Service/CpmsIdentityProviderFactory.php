@@ -32,11 +32,6 @@ class CpmsIdentityProviderFactory implements FactoryInterface
 
         $config = $config['cpms_credentials'];
 
-        // @todo user_id should be the authenticated user id, not from config
-        if (!isset($config['user_id'])) {
-            throw new RuntimeException('Missing required option cpms.user_id');
-        }
-
         if (!isset($config['client_id'])) {
             throw new RuntimeException('Missing required option cpms.client_id');
         }
@@ -45,7 +40,15 @@ class CpmsIdentityProviderFactory implements FactoryInterface
             throw new RuntimeException('Missing required option cpms.client_secret');
         }
 
-        $service->setUserId($config['user_id']);
+        // set the CPMS userID to be OLCS users PID
+        $authService = $serviceLocator->get(\ZfcRbac\Service\AuthorizationService::class);
+        /* @var $authService \ZfcRbac\Service\AuthorizationService */
+        $pid = $authService->getIdentity()->getUser()->getPid();
+        if (empty($pid)) {
+            throw new RuntimeException('The logged in user must have a PID');
+        }
+
+        $service->setUserId($pid);
         $service->setClientId($config['client_id']);
         $service->setClientSecret($config['client_secret']);
 

@@ -577,6 +577,15 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     protected $operatingCentres;
 
     /**
+     * Read audit
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Licence\LicenceReadAudit", mappedBy="licence")
+     */
+    protected $readAudits;
+
+    /**
      * Licence status rule
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -682,6 +691,7 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
         $this->fees = new ArrayCollection();
         $this->gracePeriods = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
+        $this->readAudits = new ArrayCollection();
         $this->licenceStatusRules = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
         $this->privateHireLicences = new ArrayCollection();
@@ -2342,6 +2352,66 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     }
 
     /**
+     * Set the read audit
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return Licence
+     */
+    public function setReadAudits($readAudits)
+    {
+        $this->readAudits = $readAudits;
+
+        return $this;
+    }
+
+    /**
+     * Get the read audits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getReadAudits()
+    {
+        return $this->readAudits;
+    }
+
+    /**
+     * Add a read audits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return Licence
+     */
+    public function addReadAudits($readAudits)
+    {
+        if ($readAudits instanceof ArrayCollection) {
+            $this->readAudits = new ArrayCollection(
+                array_merge(
+                    $this->readAudits->toArray(),
+                    $readAudits->toArray()
+                )
+            );
+        } elseif (!$this->readAudits->contains($readAudits)) {
+            $this->readAudits->add($readAudits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a read audits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits
+     * @return Licence
+     */
+    public function removeReadAudits($readAudits)
+    {
+        if ($this->readAudits->contains($readAudits)) {
+            $this->readAudits->removeElement($readAudits);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the licence status rule
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $licenceStatusRules
@@ -2849,14 +2919,11 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
                 if ($this->$property instanceof Collection) {
-
                     $this->$property = new ArrayCollection(array());
 
                 } else {
-
                     $this->$property = null;
                 }
             }

@@ -60,6 +60,24 @@ return [
                         ],
                     ],
                 ],
+                'process-ntu' => [
+                    'options' => [
+                        'route' => 'process-ntu [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'processNtu'
+                        ],
+                    ],
+                ],
+                'inspection-request-email' => [
+                    'options' => [
+                        'route' => 'inspection-request-email [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'inspectionRequestEmail'
+                        ],
+                    ],
+                ],
             ]
         ]
     ],

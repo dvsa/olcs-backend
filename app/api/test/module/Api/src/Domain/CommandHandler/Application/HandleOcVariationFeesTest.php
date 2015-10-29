@@ -42,7 +42,9 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
 
     protected function initReferences()
     {
-        $this->refData = [];
+        $this->refData = [
+            Application::APPLIED_VIA_POST,
+        ];
 
         parent::initReferences();
     }
@@ -414,6 +416,47 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
             'messages' => [
                 '1 Fee(s) cancelled'
             ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWithAddedOcWithoutFeesInternal()
+    {
+        $data = [];
+        $command = Cmd::create($data);
+
+        /** @var LicenceOperatingCentre $loc */
+        $loc = m::mock(LicenceOperatingCentre::class)->makePartial();
+        $locs = new ArrayCollection();
+        $locs->add($loc);
+
+        /** @var ApplicationOperatingCentre $aoc */
+        $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setAction('A');
+        $aocs = new ArrayCollection();
+        $aocs->add($aoc);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setOperatingCentres($locs);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setOperatingCentres($aocs);
+        $application->setLicence($licence);
+        $application->setId(111);
+        $application->setAppliedVia($this->mapRefData(Application::APPLIED_VIA_POST));
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [],
         ];
 
         $this->assertEquals($expected, $result->toArray());

@@ -9,18 +9,19 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCmd;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateInterim as Cmd;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Update Interim
@@ -280,8 +281,9 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
 
         /** @var Fee $fee */
         foreach ($fees as $fee) {
-            $fee->setFeeStatus($this->getRepo()->getRefdataReference(Fee::STATUS_CANCELLED));
-            $this->getRepo('Fee')->save($fee);
+            if ($fee->isFullyOutstanding()) {
+                $this->result->merge($this->handleSideEffect(CancelFeeCmd::create(['id' => $fee->getId()])));
+            }
         }
     }
 

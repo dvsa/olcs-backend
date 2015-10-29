@@ -30,6 +30,12 @@ final class OperatingCentres extends AbstractContext implements AddressFormatter
     {
         $text = [];
         foreach ($publicationLink->getApplication()->getOperatingCentres() as $aoc) {
+            /* @var $aoc ApplicationOperatingCentre */
+            // don't include OC's that are part of an S4
+            if (!empty($aoc->getS4())) {
+                continue;
+            }
+
             $ocText = $this->getOperatingCentreText($aoc);
             if ($ocText !== null) {
                 $text[] = $ocText;

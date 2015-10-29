@@ -6,6 +6,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteHistoryEntity;
+use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 use Dvsa\Olcs\Transfer\Query\Processing\NoteList as NoteDTO;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CaseRepository;
@@ -29,27 +30,27 @@ class Note extends AbstractRepository
         /** @var \Dvsa\Olcs\Transfer\Query\Processing\NoteList $query */
 
         if ($query->getCase() !== null) {
-            $qb->andWhere($this->alias . '.case = :caseId');
+            $qb->orWhere($this->alias . '.case = :caseId');
             $qb->setParameter('caseId', $query->getCase());
         }
 
         if ($query->getCasesMultiple() !== null && count($query->getCasesMultiple()) > 0) {
-            $qb->andWhere($this->alias . '.case IN (:casesMultiple)');
+            $qb->orWhere($this->alias . '.case IN (:casesMultiple)');
             $qb->setParameter('casesMultiple', $query->getCasesMultiple());
         }
 
         if ($query->getLicence() !== null) {
-            $qb->andWhere($this->alias . '.licence = :licenceId');
+            $qb->orWhere($this->alias . '.licence = :licenceId');
             $qb->setParameter('licenceId', $query->getLicence());
         }
 
         if ($query->getOrganisation() !== null) {
-            $qb->andWhere($this->alias . '.organisation = :organisationId');
+            $qb->orWhere($this->alias . '.organisation = :organisationId');
             $qb->setParameter('organisationId', $query->getOrganisation());
         }
 
         if ($query->getTransportManager() !== null) {
-            $qb->andWhere($this->alias . '.transportManager = :transportManagerId');
+            $qb->orWhere($this->alias . '.transportManager = :transportManagerId');
             $qb->setParameter('transportManagerId', $query->getTransportManager());
         }
 
@@ -59,7 +60,7 @@ class Note extends AbstractRepository
         }
 
         if ($query->getApplication() !== null) {
-            $qb->andWhere($this->alias . '.application = :applicationId');
+            $qb->orWhere($this->alias . '.application = :applicationId');
             $qb->setParameter('applicationId', $query->getApplication());
         }
 
@@ -67,8 +68,10 @@ class Note extends AbstractRepository
             $qb->andWhere($this->alias . '.noteType = :noteTypeId');
             $qb->setParameter('noteTypeId', $query->getNoteType());
         }
+        $qb->orderBy($this->alias . '.priority', 'DESC');
+        $qb->addOrderBy($this->alias . '.createdOn', 'DESC');
 
-        $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy()->withBusReg()->withCase();
+        $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy()->withBusReg()->withCase()->withApplication();
     }
 
     /**
@@ -103,5 +106,41 @@ class Note extends AbstractRepository
             ->setParameter('transportManager', $transportManager);
 
         return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch the latest note for application / licence with given not type
+     *
+     * @param int $licence
+     * @param int $application
+     * @param string $noteType
+     *
+     * @return array
+     */
+    public function fetchForOverview($licence = null, $application = null, $noteType = null)
+    {
+        $qb = $this->createQueryBuilder();
+
+        if ($application !== null) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.application', ':applicationId'));
+            $qb->setParameter('applicationId', $application);
+        }
+
+        if ($licence !== null) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licenceId'));
+            $qb->setParameter('licenceId', $licence);
+        }
+
+        if ($noteType !== null) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.noteType', ':noteTypeId'));
+            $qb->setParameter('noteTypeId', $noteType);
+        }
+
+        $qb->orderBy($this->alias . '.priority', 'DESC');
+        $qb->addOrderBy($this->alias . '.createdOn', 'DESC');
+        $qb->setMaxResults(1);
+
+        $res = $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        return count($res) ? $res[0] : [];
     }
 }

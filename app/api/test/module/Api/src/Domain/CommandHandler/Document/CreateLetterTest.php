@@ -57,7 +57,7 @@ class CreateLetterTest extends CommandHandlerTestCase
         $result = new Result();
         $result->addMessage('GenerateAndStore');
         $data = [
-            'template' => 'Foo-Bar_Cake Cheese',
+            'template' => 'Foo-Bar_Cake Cheese.rtf',
             'query' => $expectedQueryData,
             'description' => 'Foo-:Bar_Cake Cheese',
             'category' => '123',

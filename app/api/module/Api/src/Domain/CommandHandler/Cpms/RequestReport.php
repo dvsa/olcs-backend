@@ -42,6 +42,11 @@ final class RequestReport extends AbstractCommandHandler implements AuthAwareInt
 
         $data = $this->getCpmsService()->requestReport($command->getReportCode(), $start, $end);
 
+        // if response code is not success then CPMS service rejected the request, return the message to client
+        if ($data['code'] != \Dvsa\Olcs\Api\Service\CpmsHelperInterface::RESPONSE_SUCCESS) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\BadRequestException($data['message']);
+        }
+
         $queueCmd = CreateQueueCmd::create(
             [
                 'type' => Queue::TYPE_CPMS_REPORT_DOWNLOAD,
@@ -50,6 +55,7 @@ final class RequestReport extends AbstractCommandHandler implements AuthAwareInt
                 'options' => json_encode(
                     [
                         'reference' => $data['reference'],
+                        'name' => $command->getName()
                     ]
                 ),
             ]

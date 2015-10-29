@@ -14,7 +14,6 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\Application\Summary as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Summary Test
@@ -27,6 +26,7 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $this->sut = new Summary();
         $this->mockRepo('Application', Repository\Application::class);
+        $this->mockRepo('Fee', Repository\Fee::class);
 
         parent::setUp();
 
@@ -74,6 +74,7 @@ class SummaryTest extends QueryHandlerTestCase
         $tms = new ArrayCollection();
         $tms->add($tm1);
 
+        $mockApplication->setId(111);
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(0);
         $mockApplication->setOperatingCentres($aocs);
@@ -84,6 +85,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
+
+        $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
+        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
         $result = $this->sut->handleQuery($query);
 
@@ -97,7 +101,8 @@ class SummaryTest extends QueryHandlerTestCase
                         'MISSING_EVIDENCE_FINANCIAL'
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
-                ]
+                ],
+                'reference' => 'ref'
             ],
             $result->serialize()
         );
@@ -133,6 +138,7 @@ class SummaryTest extends QueryHandlerTestCase
         $tms = new ArrayCollection();
         $tms->add($tm1);
 
+        $mockApplication->setId(111);
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(0);
         $mockApplication->setOperatingCentres($aocs);
@@ -153,6 +159,8 @@ class SummaryTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($mockApplication);
 
+        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn([])->once();
+
         $result = $this->sut->handleQuery($query);
 
         $this->assertEquals(
@@ -164,7 +172,8 @@ class SummaryTest extends QueryHandlerTestCase
                         'MISSING_EVIDENCE_OC'
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
-                ]
+                ],
+                'reference' => ''
             ],
             $result->serialize()
         );
@@ -200,6 +209,7 @@ class SummaryTest extends QueryHandlerTestCase
         $tms = new ArrayCollection();
         $tms->add($tm1);
 
+        $mockApplication->setId(111);
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(0);
         $mockApplication->setOperatingCentres($aocs);
@@ -227,6 +237,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($mockApplication);
 
+        $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
+        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+
         $result = $this->sut->handleQuery($query);
 
         $this->assertEquals(
@@ -238,7 +251,8 @@ class SummaryTest extends QueryHandlerTestCase
                         'MISSING_EVIDENCE_OC'
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
-                ]
+                ],
+                'reference' => 'ref'
             ],
             $result->serialize()
         );
@@ -266,6 +280,7 @@ class SummaryTest extends QueryHandlerTestCase
         $tms = new ArrayCollection();
         $tms->add($tm1);
 
+        $mockApplication->setId(111);
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(1);
         $mockApplication->setOperatingCentres($aocs);
@@ -276,6 +291,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
+
+        $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
+        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
         $result = $this->sut->handleQuery($query);
 
@@ -288,7 +306,8 @@ class SummaryTest extends QueryHandlerTestCase
                         'MISSING_EVIDENCE_FINANCIAL'
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
-                ]
+                ],
+                'reference' => 'ref'
             ],
             $result->serialize()
         );
@@ -318,6 +337,7 @@ class SummaryTest extends QueryHandlerTestCase
         $tms = new ArrayCollection();
         $tms->add($tm1);
 
+        $mockApplication->setId(111);
         $mockApplication->setIsVariation(1);
         $mockApplication->setAuthSignature(1);
         $mockApplication->setOperatingCentres($aocs);
@@ -328,6 +348,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
+
+        $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
+        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
         $result = $this->sut->handleQuery($query);
 
@@ -340,7 +363,8 @@ class SummaryTest extends QueryHandlerTestCase
                         'MISSING_EVIDENCE_FINANCIAL'
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
-                ]
+                ],
+                'reference' => 'ref'
             ],
             $result->serialize()
         );
@@ -370,11 +394,15 @@ class SummaryTest extends QueryHandlerTestCase
         $tms = new ArrayCollection();
         $tms->add($tm1);
 
+        $mockApplication->setId(111);
         $mockApplication->setIsVariation(1);
         $mockApplication->setAuthSignature(1);
         $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
+
+        $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
+        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -391,7 +419,8 @@ class SummaryTest extends QueryHandlerTestCase
                         'MISSING_EVIDENCE_OC'
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
-                ]
+                ],
+                'reference' => 'ref'
             ],
             $result->serialize()
         );
@@ -428,6 +457,7 @@ class SummaryTest extends QueryHandlerTestCase
         $tms = new ArrayCollection();
         $tms->add($tm1);
 
+        $mockApplication->setId(111);
         $mockApplication->setIsVariation(1);
         $mockApplication->setAuthSignature(1);
         $mockApplication->setOperatingCentres($aocs);
@@ -439,6 +469,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($mockApplication);
 
+        $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
+        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+
         $result = $this->sut->handleQuery($query);
 
         $this->assertEquals(
@@ -449,7 +482,8 @@ class SummaryTest extends QueryHandlerTestCase
                         'MISSING_EVIDENCE_OC'
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
-                ]
+                ],
+                'reference' => 'ref'
             ],
             $result->serialize()
         );
@@ -488,6 +522,7 @@ class SummaryTest extends QueryHandlerTestCase
         $tms = new ArrayCollection();
         $tms->add($tm1);
 
+        $mockApplication->setId(111);
         $mockApplication->setIsVariation(1);
         $mockApplication->setAuthSignature(1);
         $mockApplication->setOperatingCentres($aocs);
@@ -499,6 +534,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($mockApplication);
 
+        $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
+        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+
         $result = $this->sut->handleQuery($query);
 
         $this->assertEquals(
@@ -506,7 +544,8 @@ class SummaryTest extends QueryHandlerTestCase
                 'foo' => 'bar',
                 'actions' => [
                     'APPROVE_TM' => 'APPROVE_TM'
-                ]
+                ],
+                'reference' => 'ref'
             ],
             $result->serialize()
         );
@@ -522,6 +561,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('getApplicationCompletion->getFinancialEvidenceStatus')
             ->andReturn(Entity\Application\Application::VARIATION_STATUS_UNCHANGED);
 
+        $mockApplication->setId(111);
         $mockApplication->setIsVariation(1);
         $mockApplication->setOperatingCentres(new ArrayCollection());
         $mockApplication->setTransportManagers(new ArrayCollection());
@@ -532,12 +572,16 @@ class SummaryTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($mockApplication);
 
+        $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
+        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+
         $result = $this->sut->handleQuery($query);
 
         $this->assertEquals(
             [
                 'foo' => 'bar',
-                'actions' => []
+                'actions' => [],
+                'reference' => 'ref'
             ],
             $result->serialize()
         );

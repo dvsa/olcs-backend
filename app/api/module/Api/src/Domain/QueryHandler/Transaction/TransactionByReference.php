@@ -33,6 +33,9 @@ class TransactionByReference extends AbstractQueryHandler
                         'licence' => [
                             'organisation',
                         ],
+                        'feeType' => [
+                            'feeType'
+                        ]
                     ],
                 ]
             ]

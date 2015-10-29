@@ -9,7 +9,9 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Variation;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\Application;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Transfer\Query\Application\Application as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -27,6 +29,7 @@ class VariationTest extends QueryHandlerTestCase
     {
         $this->sut = new Application();
         $this->mockRepo('Application', ApplicationRepo::class);
+        $this->mockRepo('Note', NoteRepo::class);
 
         $this->mockedSmServices = [
             'FeesHelperService' => m::mock(),
@@ -47,12 +50,24 @@ class VariationTest extends QueryHandlerTestCase
             ->setId($applicationId)
             ->shouldReceive('getPublicationLinks')->with()->once()
                 ->andReturn(new \Doctrine\Common\Collections\ArrayCollection())
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(222)
+                    ->once()
+                    ->getMock()
+            )
             ->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($application);
+
+        $this->repoMap['Note']->shouldReceive('fetchForOverview')
+            ->with(222)
+            ->andReturn('latest note');
 
         $sections = ['bar', 'cake'];
 
@@ -79,6 +94,7 @@ class VariationTest extends QueryHandlerTestCase
             'canCreateCase' => false,
             'existingPublication' => false,
             'isPublishable' => true,
+            'latestNote' => 'latest note'
         ];
 
         $this->assertEquals($expected, $result->serialize());

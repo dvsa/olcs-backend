@@ -102,6 +102,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
+        $user->setLoginId($data['loginId']);
         $user->setTeam($team);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
@@ -214,6 +215,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
+        $user->setLoginId($data['loginId']);
         $user->setTeam($team);
         $user->setContactDetails($contactDetails);
 
@@ -259,5 +261,42 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             $contactDetails,
             $savedUser->getContactDetails()
         );
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandThrowsUsernameExistsException()
+    {
+        $userId = 111;
+
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'loginId' => 'updated login_id',
+        ];
+
+        $command = Cmd::create($data);
+
+        /** @var UserEntity $user */
+        $user = m::mock(UserEntity::class)->makePartial();
+        $user->setId($userId);
+        $user->setLoginId('loginId');
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($user);
+
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->once()
+            ->with($userId, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($user);
+
+        $this->repoMap['User']
+            ->shouldReceive('fetchByLoginId')
+            ->once()
+            ->with($data['loginId'])
+            ->andReturn([m::mock(UserEntity::class)]);
+
+        $this->sut->handleCommand($command);
     }
 }

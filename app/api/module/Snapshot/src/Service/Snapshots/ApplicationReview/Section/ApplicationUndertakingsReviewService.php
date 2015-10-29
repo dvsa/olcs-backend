@@ -33,8 +33,6 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
 
     const PSV356 = 'markup-application_undertakings_PSV356';
 
-    const SIGNATURE = 'markup-application_undertakings_signature';
-
     private $standardOptions = [
         Licence::LICENCE_TYPE_STANDARD_NATIONAL,
         Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
@@ -78,7 +76,7 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
         $additionalParts = [
             $isStandard ? $this->translate(self::GV79_STANDARD) : '',
             $isInternal ? $this->translate(self::GV79_DECLARE) : '',
-            $isInternal ? $this->translate(self::SIGNATURE) : ''
+            $isInternal ? $this->getSignature($data) : ''
         ];
 
         return $this->translateReplace(self::GV79, $additionalParts);
@@ -92,7 +90,7 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
         $additionalParts = [
             $isStandard ? $this->translate(self::GV79NI_STANDARD) : '',
             $isInternal ? $this->translate(self::GV79NI_DECLARE) : '',
-            $isInternal ? $this->translate(self::SIGNATURE) : ''
+            $isInternal ? $this->getSignature($data) : ''
         ];
 
         return $this->translateReplace(self::GV79NI, $additionalParts);
@@ -106,7 +104,7 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
         $additionalParts = [
             $isStandard ? $this->translate(self::PSV421_STANDARD) : '',
             $isInternal ? $this->translate(self::PSV421_DECLARE) : '',
-            $isInternal ? $this->translate(self::SIGNATURE) : ''
+            $isInternal ? $this->getSignature($data) : ''
         ];
 
         return $this->translateReplace(self::PSV421, $additionalParts);
@@ -117,7 +115,7 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
         $isInternal = $this->isInternal($data);
 
         $additionalParts = [
-            $isInternal ? $this->translate(self::SIGNATURE) : ''
+            $isInternal ? $this->getSignature($data) : ''
         ];
 
         return $this->translateReplace(self::PSV356, $additionalParts);

@@ -8,12 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\Command\Licence\CancelLicenceFees;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UndoGrant;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\UndoGrant as Cmd;
@@ -63,12 +64,31 @@ class UndoGrantTest extends CommandHandlerTestCase
         $tasks = new ArrayCollection();
         $tasks->add($task);
 
+        /** @var Fee $fee */
+        $fee = m::mock(Fee::class)
+            ->shouldReceive('isGrantFee')
+            ->andReturn(true)
+            ->shouldReceive('isOutstanding')
+            ->andReturn(true)
+            ->shouldReceive('isFullyOutstanding')
+            ->andReturn(true)
+            ->shouldReceive('getId')
+            ->andReturn(333)
+            ->getMock();
+
+        $fees = new ArrayCollection();
+        $fees->add($fee);
+
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setId(111);
         $application->setLicence($licence);
-        $application->shouldReceive('getTasks->matching')
+        $application
+            ->shouldReceive('getTasks->matching')
             ->andReturn($tasks);
+        $application
+            ->shouldReceive('getFees')
+            ->andReturn($fees);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -83,7 +103,7 @@ class UndoGrantTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('CancelLicenceFees');
-        $this->expectedSideEffect(CancelLicenceFees::class, ['id' => 222], $result1);
+        $this->expectedSideEffect(CancelFee::class, ['id' => 333], $result1);
 
         $result = $this->sut->handleCommand($command);
 

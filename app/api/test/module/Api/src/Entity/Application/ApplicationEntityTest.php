@@ -2594,4 +2594,60 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertTrue($application->isPublishable());
     }
+
+    public function testHasOutstandingGrantFee()
+    {
+        $application = $this->instantiate(Entity::class);
+
+        $this->assertFalse($application->hasOutstandingGrantFee());
+
+        $fee = m::mock()
+            ->shouldReceive('isGrantFee')
+            ->andReturn(true)
+            ->shouldReceive('isOutstanding')
+            ->andReturn(true)
+            ->shouldReceive('getId')
+            ->andReturn(99)
+            ->getMock();
+
+        $application->setFees(new ArrayCollection([$fee]));
+
+        $this->assertTrue($application->hasOutstandingGrantFee());
+    }
+
+    /**
+     * @param RefData $appliedVia
+     * @param mixed $expected
+     * @dataProvider createdInternallyProvider
+     */
+    public function testCreatedInternally($appliedVia, $expected)
+    {
+        $application = $this->instantiate(Entity::class);
+
+        $application->setAppliedVia($appliedVia);
+
+        $this->assertSame($expected, $application->createdInternally());
+    }
+
+    public function createdInternallyProvider()
+    {
+        return [
+            [
+                null,
+                null,
+            ],
+            [
+                new RefData(Entity::APPLIED_VIA_POST),
+                true,
+            ],
+            [
+                new RefData(Entity::APPLIED_VIA_PHONE),
+                true,
+            ],
+            [
+                new RefData(Entity::APPLIED_VIA_SELFSERVE),
+                false,
+            ],
+        ];
+    }
 }

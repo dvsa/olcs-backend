@@ -65,7 +65,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
             }
         }
 
-        $this->helper->validate($application, $command, $this->isGranted(Permission::SELFSERVE_USER));
+        $this->helper->validate($application, $command, $this->isGranted(Permission::SELFSERVE_USER), $aoc);
 
         $operatingCentre = $aoc->getOperatingCentre();
 

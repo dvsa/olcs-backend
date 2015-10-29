@@ -82,7 +82,7 @@ class UpdateTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['OperatingCentreHelper']->shouldReceive('validate')
             ->once()
-            ->with($application, $command, false)
+            ->with($application, $command, false, $aoc)
             ->shouldReceive('saveDocuments')
             ->once()
             ->with($application, $oc, $this->repoMap['Document'])

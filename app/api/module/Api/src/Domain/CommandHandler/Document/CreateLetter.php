@@ -37,13 +37,10 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
 
     protected function generateDocument(DocTemplate $template, Cmd $command)
     {
-        $parts = explode('/', $template->getDocument()->getIdentifier());
-        $templateName = str_replace('.rtf', '', array_pop($parts));
-
         $queryData = $command->getData();
 
         $dtoData = [
-            'template' => $templateName,
+            'template' => $template->getDocument()->getIdentifier(),
             'query' => $queryData,
             'description' => $template->getDescription(),
             'category' => $queryData['details']['category'],

@@ -41,6 +41,9 @@ class OutstandingFees extends AbstractQueryHandler
                         'licence',
                         'feeTransactions' => [
                             'transaction'
+                        ],
+                        'feeType' => [
+                            'feeType'
                         ]
                     ]
                 ),

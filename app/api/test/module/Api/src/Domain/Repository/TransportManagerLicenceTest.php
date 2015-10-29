@@ -146,4 +146,24 @@ class TransportManagerLicenceTest extends RepositoryTestCase
         $query = \Dvsa\Olcs\Transfer\Query\TransportManagerLicence\GetList::create(['transportManager' => 73]);
         $sut->applyListFilters($mockDqb, $query);
     }
+
+    public function testFetchByLicence()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tml')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('l.applications', 'la')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('la.licenceType')->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('transportManager', 'tm')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('tml.licence', ':licence')->once()->andReturn('cond1');
+        $mockQb->shouldReceive('where')->with('cond1')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('licence', 7)->once();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
+
+        $this->assertEquals(['RESULT'], $this->sut->fetchByLicence(7));
+    }
 }
