@@ -91,9 +91,16 @@ class NoteList extends AbstractQueryHandler
         /** @var NoteRepository $repo */
         $repo = $this->getRepo();
 
+        $data = $query->getArrayCopy();
+
+        unset($data['noteType']);
+
+        $unfilteredQuery = \Dvsa\Olcs\Transfer\Query\Processing\NoteList::create($data);
+
         return [
             'result' => $repo->fetchList($query),
-            'count' => $repo->fetchCount($query)
+            'count' => $repo->fetchCount($query),
+            'count-unfiltered' => $repo->fetchCount($unfilteredQuery),
         ];
     }
 }

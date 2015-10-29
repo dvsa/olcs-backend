@@ -32,9 +32,16 @@ class FeeList extends AbstractQueryHandler
 
         $fees = $repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT);
 
+        $data = $query->getArrayCopy();
+
+        unset($data['status']);
+
+        $unfilteredQuery = \Dvsa\Olcs\Transfer\Query\Fee\FeeList::create($data);
+
         return [
             'result' => $this->resultList($fees),
             'count' => $repo->fetchCount($query),
+            'count-unfiltered' => $repo->fetchCount($unfilteredQuery),
             'allowFeePayments' => $this->shouldAllowFeePayments($query),
             'minPayment' => $this->feesHelper->getMinPaymentForFees($fees->getArrayCopy()),
             'totalOutstanding' => $this->feesHelper->getTotalOutstanding($fees->getArrayCopy()),
