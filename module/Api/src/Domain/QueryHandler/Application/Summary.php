@@ -136,11 +136,8 @@ class Summary extends AbstractQueryHandler
 
         /** @var Entity\Application\ApplicationOperatingCentre $aoc */
         foreach ($ocs as $aoc) {
-            // Grab all ad documents linked to the OC and the application
-            $docs = $aoc->getOperatingCentre()->getAdDocuments()->matching($criteria);
 
-            // If there are some, then we can skip this record
-            if ($docs->isEmpty() === false) {
+            if (ValueHelper::isOn($aoc->getAdPlaced())) {
                 continue;
             }
 
