@@ -12,10 +12,11 @@ namespace Dvsa\Olcs\Api\Service;
 
 use CpmsClient\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Entity\Fee\Fee;
 
 /**
  * Cpms Version 2 Helper Service
@@ -396,6 +397,52 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $url = '/api/report/'.$reference.'/download?token='.$token;
 
         return $this->send('get', $url, ApiService::SCOPE_REPORT, []);
+    }
+
+    /**
+     * Refund payments in a batch
+     *
+     * @param Fee $fee
+     * @return array
+     */
+    public function batchRefund($fee)
+    {
+        $method   = 'post';
+        $endPoint = '/api/payment/refund';
+        $scope    = ApiService::SCOPE_REFUND;
+
+        $payments = [];
+
+        foreach ($fee->getFeeTransactionsForRefund() as $ft) {
+            $payments[] = $this->getRefundPaymentDataForFeeTransaction($ft);
+        }
+
+        $params = [
+            'scope' => $scope,
+            'customer_reference' => (string) $this->getCustomerReference([$fee]),
+            'payments' => $payments,
+        ];
+
+        return $this->send($method, $endPoint, $scope, $params);
+    }
+
+    /**
+     * @param FeeTransaction $ft
+     * @return array of 'payment' data for batch refund call
+     */
+    protected function getRefundPaymentDataForFeeTransaction(FeeTransaction $ft)
+    {
+        return [
+            'amount' => $this->formatAmount($ft->getAmount()),
+            'receipt_reference' => $ft->getTransaction()->getReference(),
+            'payment_data' => [
+                [
+                    'product_reference' => self::PRODUCT_REFERENCE,
+                    'amount' => $this->formatAmount($ft->getAmount()),
+                    'sales_reference' => (string) $ft->getFee()->getId(),
+                ]
+            ]
+        ];
     }
 
     /**

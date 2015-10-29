@@ -462,4 +462,18 @@ class Fee extends AbstractFee
 
         return ($isPaidOrOutstanding && $hasNonRefundedPayment);
     }
+
+    public function getFeeTransactionsForRefund()
+    {
+        $feeTransactions = [];
+
+        foreach ($this->getFeeTransactions() as $ft){
+            $txn = $ft->getTransaction();
+            if ($txn->isPayment() && $txn->isComplete() && !$ft->isRefundedOrReversed()) {
+                $feeTransactions[] = $ft;
+            }
+        }
+
+        return $feeTransactions;
+    }
 }

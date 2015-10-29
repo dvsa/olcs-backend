@@ -431,6 +431,17 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Refund payments in a batch
+     *
+     * @param Fee $fee
+     * @return array
+     */
+    public function batchRefund($fee)
+    {
+        throw new \Exception(sprintf("%s not implemented in version %d", __METHOD__, $this->getVersion()));
+    }
+
+    /**
      * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
      */

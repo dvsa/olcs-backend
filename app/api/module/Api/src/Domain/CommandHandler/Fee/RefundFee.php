@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Refund
+ * Refund Fee
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
@@ -13,27 +13,36 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
+use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
- * Refund
+ * Refund Fee
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class RefundFee extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+final class RefundFee extends AbstractCommandHandler implements
+    TransactionedInterface,
+    AuthAwareInterface,
+    CpmsAwareInterface
 {
-    use AuthAwareTrait;
+    use AuthAwareTrait, CpmsAwareTrait;
 
     protected $repoServiceName = 'Fee';
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
+        /** @var FeeEntity $fee */
+        $fee = $this->getRepo()->fetchUsingId($command);
 
-        $result
-            // ->addId('fee', $fee->getId())
+        $response = $this->getCpmsService()->batchRefund($fee);
+
+        // var_dump($response); exit;
+
+        $this->result
             ->addMessage('Fee refunded');
 
-        return $result;
+        return $this->result;
     }
 }
