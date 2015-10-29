@@ -233,15 +233,6 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     protected $submittedDate;
 
     /**
-     * Tan code
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="tan_code", length=2, nullable=true)
-     */
-    protected $tanCode;
-
-    /**
      * Validation end
      *
      * @var \DateTime
@@ -759,29 +750,6 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
     public function getSubmittedDate()
     {
         return $this->submittedDate;
-    }
-
-    /**
-     * Set the tan code
-     *
-     * @param string $tanCode
-     * @return EbsrSubmission
-     */
-    public function setTanCode($tanCode)
-    {
-        $this->tanCode = $tanCode;
-
-        return $this;
-    }
-
-    /**
-     * Get the tan code
-     *
-     * @return string
-     */
-    public function getTanCode()
-    {
-        return $this->tanCode;
     }
 
     /**
