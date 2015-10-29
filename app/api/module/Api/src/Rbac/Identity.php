@@ -35,6 +35,7 @@ class Identity implements IdentityInterface
         23 => ['partner-user'],
         24 => ['local-authority-admin'],
         25 => ['local-authority-user'],
+        26 => ['internal-admin'],
 
         // ETL users
         336 => ['internal-admin'],
