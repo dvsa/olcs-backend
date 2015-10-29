@@ -17,9 +17,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
-use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as BusShortNoticeEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
-use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService as BusRegOtherServiceEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusServiceType as BusServiceTypeEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
@@ -38,6 +36,7 @@ use Doctrine\ORM\Query;
 
 /**
  * Process Ebsr packs
+ * @todo Ian L 29/10/15 - General tidy up. Refine and reorganise (mainly validation), improve error messages
  */
 final class ProcessPacks extends AbstractCommandHandler implements
     AuthAwareInterface,
@@ -170,8 +169,18 @@ final class ProcessPacks extends AbstractCommandHandler implements
                 //@todo make message specific
                 $result->addId(
                     'error_messages',
-                    'Error with ' . $document->getDescription() .
-                    ': licence or bus registration not found - not processed',
+                    'Error with ' . $document->getDescription() . ': ' . strtolower($e->getMessages()[0]) .
+                    ' - not processed',
+                    true
+                );
+
+                continue;
+            } catch (Exception\ForbiddenException $e) {
+                $invalidPacks++;
+                $result->addId(
+                    'error_messages',
+                    'Error with ' . $document->getDescription() . ': ' . strtolower($e->getMessages()[0]) .
+                    ' - not processed',
                     true
                 );
 
@@ -228,6 +237,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
 
     /**
      * @param array $ebsrData
+     * @throws Exception\ForbiddenException
      * @return BusRegEntity
      */
     private function createBusReg(array $ebsrData)
@@ -246,11 +256,18 @@ final class ProcessPacks extends AbstractCommandHandler implements
 
         $busReg->fromData($this->prepareBusRegData($ebsrData));
 
-        if (!empty($ebsrData['busShortNotice'])) {
-            $busReg->getShortNotice()->fromData($ebsrData['busShortNotice']);
+        $busReg->populateShortNotice();
+
+        if ($busReg->getIsShortNotice() === 'Y') {
+            if (empty($ebsrData['busShortNotice'])) {
+                throw new Exception\ForbiddenException(
+                    'This application is short notice, but the file doesn\'t have a short notice section'
+                );
+            }
+
+            $busReg->getShortNotice()->createEbsrShortNotice($ebsrData['busShortNotice']);
         }
 
-        $busReg->populateShortNotice();
         $this->processServiceNumbers($busReg, $ebsrData['otherServiceNumbers']);
 
         return $busReg;
@@ -266,6 +283,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
     {
         $busRegData = $ebsrData;
         unset($busRegData['documents']);
+        unset($busRegData['variationNo']);
         return $busRegData;
     }
 
@@ -351,32 +369,63 @@ final class ProcessPacks extends AbstractCommandHandler implements
      * Create a new bus reg
      *
      * @param array $ebsrData
+     * @throws Exception\ForbiddenException
      * @return BusRegEntity
      */
     private function createNew(array $ebsrData)
     {
+        /** @var BusRegEntity $busReg */
+        $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['licNo'] . '/' . $ebsrData['routeNo']);
+
+        if ($busReg instanceof BusRegEntity) {
+            throw new Exception\ForbiddenException('A new application must not reuse an existing registration number');
+        }
+
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo('Licence')->fetchByLicNo($ebsrData['licNo']);
 
-        return BusRegEntity::createNew(
+        $newBusReg = BusRegEntity::createNew(
             $licence,
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_NEW),
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_NEW),
             $ebsrData['subsidised'],
             $ebsrData['busNoticePeriod']
         );
+
+        //quick fix: overwrite the reg no that createNew produced, with the one from EBSR - need to move this logic
+        $newBusReg->setRegNo($licence->getLicNo() . '/' . $ebsrData['routeNo']);
+
+        return $newBusReg;
     }
 
     /**
      * Create a cancellation
      *
      * @param array $ebsrData
+     * @throws Exception\ForbiddenException
      * @return BusRegEntity
      */
     private function createCancel(array $ebsrData)
     {
         /** @var BusRegEntity $busReg */
         $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['licNo'] . '/' . $ebsrData['routeNo']);
+
+        if (!$busReg instanceof BusRegEntity) {
+            throw new Exception\ForbiddenException('The bus registration number you provided wasn\'t found');
+        }
+
+        if (!$busReg->getStatus()->getId() === BusRegEntity::STATUS_REGISTERED) {
+            throw new Exception\ForbiddenException(
+                'You can only create a cancellation against a registered bus route'
+            );
+        }
+
+        //variation should be the same as the variation on the original bus reg
+        if ($busReg->getVariationNo() != $ebsrData['variationNo']) {
+            throw new Exception\ForbiddenException(
+                'Variation number should be 1 greater than the previous variation number'
+            );
+        }
 
         return $busReg->createVariation(
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_CANCEL),
@@ -388,6 +437,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
      * Create a variation
      *
      * @param array $ebsrData
+     * @throws Exception\ForbiddenException
      * @return BusRegEntity
      */
     private function createVar(array $ebsrData)
@@ -395,10 +445,28 @@ final class ProcessPacks extends AbstractCommandHandler implements
         /** @var BusRegEntity $busReg */
         $busReg = $this->getRepo()->fetchLatestUsingRegNo($ebsrData['licNo'] . '/' . $ebsrData['routeNo']);
 
-        return $busReg->createVariation(
+        if (!$busReg instanceof BusRegEntity) {
+            throw new Exception\ForbiddenException('The bus registration number you provided wasn\'t found');
+        }
+
+        if (!$busReg->getStatus()->getId() === BusRegEntity::STATUS_REGISTERED) {
+            throw new Exception\ForbiddenException(
+                'You can only create a variation against a registered bus route'
+            );
+        }
+
+        $newBusReg = $busReg->createVariation(
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_VAR),
             $this->getRepo()->getRefdataReference(BusRegEntity::STATUS_VAR)
         );
+
+        if ($newBusReg->getVariationNo() != $ebsrData['variationNo']) {
+            throw new Exception\ForbiddenException(
+                'Variation number should be 1 greater than the previous variation number'
+            );
+        }
+
+        return $newBusReg;
     }
 
     /**
