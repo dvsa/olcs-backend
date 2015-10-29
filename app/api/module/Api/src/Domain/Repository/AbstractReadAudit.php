@@ -27,9 +27,7 @@ abstract class AbstractReadAudit extends AbstractRepository implements ReadAudit
     public function deleteOlderThan($oldestDate)
     {
         $query = $this->getEntityManager()->createQuery(
-            sprintf(
-                'DELETE FROM ' . $this->entity . ' e WHERE e.createdOn < :oldestDate'
-            )
+            'DELETE FROM ' . $this->entity . ' e WHERE e.createdOn <= :oldestDate'
         );
 
         $query->setParameter('oldestDate', $oldestDate);
