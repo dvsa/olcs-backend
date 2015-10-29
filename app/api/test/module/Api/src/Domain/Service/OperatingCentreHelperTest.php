@@ -101,6 +101,40 @@ class OperatingCentreHelperTest extends MockeryTestCase
         }
     }
 
+    /**
+     * @dataProvider validateWithErrors
+     */
+    public function testValidateUpdateWithErrors($isPsv, $isRestricted, $commandData, $expected)
+    {
+        $entity = m::mock();
+        $entity->shouldReceive('isPsv')->andReturn($isPsv);
+        $entity->shouldReceive('isRestricted')->andReturn($isRestricted);
+        $entity->shouldReceive('isGoods')->andReturn(!$isPsv);
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $xoc = m::mock();
+
+        $docCollection = new ArrayCollection();
+
+        $xoc->shouldReceive('getOperatingCentre->getAdDocuments')->andReturn($docCollection);
+
+        try {
+            $this->sut->validate($entity, $command, false, $xoc);
+            // If we are expecting errors, but the validate method didn't throw an exception
+            if (!empty($expected)) {
+                $this->fail('Validation Exception was not thrown');
+            }
+        } catch (ValidationException $ex) {
+            // If we were not expecting any errors, but the exception was thrown
+            if (empty($expected)) {
+                $this->fail('Validation Exception was thrown');
+            }
+
+            $this->assertEquals($expected, $ex->getMessages());
+        }
+    }
+
     public function testValidateTrafficAreaWithoutPostcode()
     {
         $commandData = [
