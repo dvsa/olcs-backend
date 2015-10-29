@@ -11,6 +11,9 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Doctrine\ORM\Query\Expr\Join;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 
 /**
  * Application
@@ -157,5 +160,29 @@ class Application extends AbstractRepository
             $qb->andWhere($qb->expr()->eq('l.organisation', ':organisation'))
                 ->setParameter('organisation', $query->getOrganisation());
         }
+    }
+
+    public function fetchForNtu()
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->with('licence', 'l')
+            ->with('l.trafficArea', 'lta')
+            ->with('fees', 'f')
+            ->with('f.feeType', 'ft')
+            ->with('f.feeStatus', 'fs');
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.status', ':appStatus'));
+        $qb->setParameter('appStatus', Entity::APPLICATION_STATUS_GRANTED);
+
+        $qb->andWhere($qb->expr()->eq('f.feeStatus', ':feeStatus'));
+        $qb->setParameter('feeStatus', FeeEntity::STATUS_OUTSTANDING);
+
+        $qb->andWhere($qb->expr()->in('ft.feeType', ':feeType'));
+        $qb->setParameter('feeType', [FeeTypeEntity::FEE_TYPE_GRANT, FeeTypeEntity::FEE_TYPE_GRANTVAR]);
+
+        return $qb->getQuery()->getResult();
     }
 }

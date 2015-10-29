@@ -1193,6 +1193,7 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
     (23,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','partner-user',168, NULL, NULL, 140),
     (24,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','local-authority-admin',169, 1, NULL, NULL),
     (25,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','local-authority-user',170, 1, NULL, NULL),
+    (26,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','system',170, 1, NULL, NULL),
     (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','abdou.bonomi',140, NULL, NULL, NULL),
     (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','abdou.bonomi2',140, NULL, NULL, NULL);
 
@@ -1218,7 +1219,8 @@ INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
     (5, 24), -- philjowitt=internal-admin
     (6, 24), -- kevinrooney=internal-admin
     (7, 24), -- sarahthompson=internal-admin
-    (8, 23); -- anotheruser=internal-case-worker
+    (8, 23), -- anotheruser=internal-case-worker
+    (26, 24); -- system=internal-admin
 
 INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`,
     `certificate_no`, `vi_action`, `created_on`,
