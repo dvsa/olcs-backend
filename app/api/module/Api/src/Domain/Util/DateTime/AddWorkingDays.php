@@ -32,8 +32,10 @@ class AddWorkingDays implements DateTimeCalculatorInterface
 
         $t = $currentDay + $daysLeft;
 
-        if ($t % 5 !== $t % 7) {
+        if ($t % 7 === 6) {
             $daysLeft +=2;
+        } elseif ($t % 7 === 0) {
+            $daysLeft +=1;
         }
 
         $totalDays += $daysLeft;

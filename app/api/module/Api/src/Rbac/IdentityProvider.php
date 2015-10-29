@@ -16,6 +16,8 @@ use Zend\Http\Request;
  */
 class IdentityProvider implements IdentityProviderInterface, FactoryInterface
 {
+    const SYSTEM_USER = 26;
+
     protected $identity;
 
     /**
@@ -36,10 +38,13 @@ class IdentityProvider implements IdentityProviderInterface, FactoryInterface
         $auth = null;
         if ($request instanceof Request) {
             $auth = $request->getHeader('Authorization');
+        } else {
+            // that's for CLI
+            $auth = self::SYSTEM_USER;
         }
 
         if ($auth !== null) {
-            $userId = $auth->getFieldValue();
+            $userId = is_int($auth) ? $auth : $auth->getFieldValue();
 
             $userRepository = $serviceLocator->get('RepositoryServiceManager')->get('User');
             $user = $userRepository->fetchById($userId);

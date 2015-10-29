@@ -76,6 +76,7 @@ return [
     TransferQuery\Application\Publish::class => QueryHandler\Application\Publish::class,
     TransferQuery\Application\Schedule41Approve::class => QueryHandler\Application\Schedule41Approve::class,
     TransferQuery\Application\Summary::class => QueryHandler\Application\Summary::class,
+    Query\Application\NotTakenUpList::class => QueryHandler\Application\NotTakenUpList::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
