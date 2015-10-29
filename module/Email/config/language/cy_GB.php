@@ -2,6 +2,12 @@
 
 return array(
     'email.cns.subject' => 'WELSH Licences set to CNS between %s and %s',
+    'email.ebsr-cancelled.subject' => 'WELSH EBSR Cancelled',
+    'email.ebsr-received.subject' => 'WELSH EBSR Application Received',
+    'email.ebsr-refreshed.subject' => 'WELSH EBSR Refreshed',
+    'email.ebsr-refused.subject' => 'WELSH EBSR Application Refused',
+    'email.ebsr-registered.subject' => 'WELSH EBSR Registered',
+    'email.ebsr-withdrawn.subject' => 'WELSH EBSR Application Withdrawn',
     'email.inbox-reminder.continuation.subject' => 'WELSH Operator licence continuation/expiry - Reminder',
     'email.inbox-reminder.standard.subject' => 'WELSH Operator licensing information - Reminder',
     'email.licensing-information.continuation.subject' => 'Parhad/terfyn trwydded gweithredwr',
@@ -10,4 +16,6 @@ return array(
     'email.transport-manager-submitted-form.subject'
         => 'WELSH A Transport Manager has submitted their details for review',
     'email.transport-manager-confirmed.subject' => 'WELSH Your details have been confirmed',
+    'email.user-forgot-username-multiple.subject' => 'WELSH A user has forgotten their login details',
+    'email.user-forgot-username-single.subject' => 'WELSH Your account information',
 );
