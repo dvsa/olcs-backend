@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Cli\Controller;
 
+use Dvsa\Olcs\Cli\Domain\Command\RemoveReadAudit;
 use Zend\Mvc\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
 use Dvsa\Olcs\Api\Domain\Exception;
@@ -23,6 +24,14 @@ use Dvsa\Olcs\Transfer\Command as TransferCommand;
  */
 class BatchController extends AbstractConsoleController
 {
+    /**
+     * @return \Zend\View\Model\ConsoleModel
+     */
+    public function removeReadAuditAction()
+    {
+        return $this->handleExitStatus($this->handleCommand([RemoveReadAudit::create([])]));
+    }
+
     /**
      * @return \Zend\View\Model\ConsoleModel
      */

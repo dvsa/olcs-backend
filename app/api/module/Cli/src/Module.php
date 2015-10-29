@@ -37,6 +37,7 @@ class Module implements ConsoleUsageProviderInterface
             'process-inbox [--verbose|-v]' => 'Process inbox documents',
             'batch-cns  [--verbose|-v] [--dryrun|-d]' => 'Process Licences for Continuation Not Sought',
             'inspection-request-email [--verbose|-v]' => 'Process inspection request email',
+            'remove-read-audit [--verbose|-v]' => 'Process deletion of old read audit records',
             // Describe parameters
             array( '--verbose|-v', '(optional) turn on verbose mode'),
             array( '--dryrun|-d', '(optional) dryrun, nothing is actually changed'),
