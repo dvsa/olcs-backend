@@ -86,9 +86,23 @@ class FeeTest extends QueryHandlerTestCase
         $ft2 = $this->getMockFeeTransaction(6, $completed, $status, '20.00', 'Payment', 'Cash');
         $ft3 = $this->getMockFeeTransaction(7, $completed, $status, '-10.00', 'Refund', 'Refund');
         $ft4 = $this->getMockFeeTransaction(8, $completed, $status, '-20.00', null, null, $ft3->getTransaction());
+        $ft5 = m::mock(FeeTransactionEntity::class)
+            ->shouldReceive('getTransaction')
+            ->andReturn(
+                m::mock(TransactionEntity::class)
+                    ->shouldReceive('getId')
+                    ->andReturn(9)
+                    ->shouldReceive('isOutstanding')
+                    ->andReturn(true)
+                    ->shouldReceive('isWaive')
+                    ->andReturn(true)
+                    ->getMock()
+            )
+            ->getMock();
+
         $mockFee
             ->shouldReceive('getFeeTransactions')
-            ->andReturn(new ArrayCollection([$ft1, $ft2, $ft3, $ft4]));
+            ->andReturn(new ArrayCollection([$ft1, $ft2, $ft3, $ft4, $ft5]));
 
         $result = $this->sut->handleQuery($query);
 
@@ -150,7 +164,7 @@ class FeeTest extends QueryHandlerTestCase
     /**
      * Helper method to get a mock FeeTransaction record
      *
-     * @param int $id
+     * @param int $id transaction id
      * @param DateTime $completed
      * @param RefData $status
      * @param string $amount
@@ -164,7 +178,8 @@ class FeeTest extends QueryHandlerTestCase
     {
         if (is_null($transaction)) {
             $transaction = m::mock(TransactionEntity::class);
-            $transaction->shouldReceive('getId')
+            $transaction
+                ->shouldReceive('getId')
                 ->andReturn($id)
                 ->shouldReceive('isOutstanding')
                 ->andReturn(false)
