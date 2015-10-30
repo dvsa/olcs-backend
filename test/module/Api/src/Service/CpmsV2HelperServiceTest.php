@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Api\Service;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
@@ -616,7 +617,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'refund_overpayment' => false,
         ];
 
-         $response = [
+        $response = [
             'code' => Sut::RESPONSE_SUCCESS,
             'receipt_reference' => 'OLCS-1234-CHEQUE',
         ];
@@ -649,7 +650,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $this->assertSame($response, $result);
     }
-
 
     public function testRecordPostalOrderPayment()
     {
@@ -911,6 +911,74 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn($response);
 
         $result = $this->sut->downloadReport($reference, $token);
+
+        $this->assertSame($response, $result);
+    }
+
+    /**
+     * @todo update when no longer using stubbed response
+     */
+    public function testBatchRefund()
+    {
+        $fee = m::mock(FeeEntity::class);
+
+        $ft = m::mock(FeeTransactionEntity::class);
+        $ft
+            ->shouldReceive('getTransaction->getReference')
+            ->andReturn('payment_ref');
+        $ft
+            ->shouldReceive('getFee->getId')
+            ->andReturn(101);
+        $ft
+            ->shouldReceive('getAmount')
+            ->andReturn('100.00');
+        $fee
+            ->shouldReceive('getFeeTransactionsForRefund')
+            ->andReturn([$ft])
+            ->shouldReceive('getOrganisation')
+            ->andReturn(null);
+
+        // $params = [
+        //     'scope' => 'REFUND',
+        //     'customer_reference' => 'Miscellaneous',
+        //     'payments' => [
+        //         [
+        //             'amount' => '100.00',
+        //             'receipt_reference' => 'payment_ref',
+        //             'payment_data' => [
+        //                 [
+        //                   'product_reference' => 'GVR_APPLICATION_FEE',
+        //                   'amount' => '100.00',
+        //                   'sales_reference' => '101',
+        //                 ],
+        //             ],
+        //         ],
+        //   ],
+        // ];
+
+        // $response = [
+        //     'code' => Sut::RESPONSE_SUCCESS,
+        //     'receipt_references' => [
+        //         'foo' => 'bar',
+        //         'baz' => 'bat',
+        //     ],
+        // ];
+
+        // $this->cpmsClient
+        //     ->shouldReceive('post')
+        //     ->with('/api/refund', 'REFUND', $params)
+        //     ->once()
+        //     ->andReturn($response);
+
+        $response = [
+            'code' => Sut::RESPONSE_SUCCESS,
+            'receipt_references' => [
+                'payment_ref' => 'REFUND-REF-1',
+            ],
+            'message' => '** stubbed response from Dvsa\Olcs\Api\Service\CpmsV2HelperService::stubResponse **',
+        ];
+
+        $result = $this->sut->batchRefund($fee);
 
         $this->assertSame($response, $result);
     }
