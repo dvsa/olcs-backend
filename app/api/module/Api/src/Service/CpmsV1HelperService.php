@@ -435,6 +435,8 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @param Fee $fee
      * @return array
+     * @inheritdoc
+     * @codeCoverageIgnore deprecated class will be removed
      */
     public function batchRefund($fee)
     {

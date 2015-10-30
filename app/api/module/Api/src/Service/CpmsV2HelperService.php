@@ -424,11 +424,12 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'payments' => $payments,
         ];
 
+        // @todo
         // $response = $this->send($method, $endPoint, $scope, $params);
         $response = $this->stubResponse($payments);
 
         if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
-           return $response;
+            return $response;
         } else {
             $e = new CpmsResponseException('Invalid refund response');
             $e->setResponse($response);
