@@ -28,6 +28,7 @@ class EbsrSubmission extends AbstractEbsrSubmission
     const VALIDATING_STATUS = 'ebsrs_validating';
     const VALIDATED_STATUS = 'ebsrs_validated';
     const PROCESSED_STATUS = 'ebsrs_processed';
+    const FAILED_STATUS = 'ebsrs_expired'; //use expired for now, but ideally we'd have a status of failed
 
     const DATA_REFRESH_SUBMISSION_TYPE = 'ebsrt_refresh';
 
