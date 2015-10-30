@@ -79,12 +79,12 @@ class TransactionTest extends QueryHandlerTestCase
                 'id' => 99,
                 'foo' => 'bar',
                 'fees' => [
-                    [
+                    '1' => [
                         'id' => '1',
                         'amount' => '12.34',
                         'allocatedAmount' => '2.34',
                     ],
-                    [
+                    '2' => [
                         'id' => '2',
                         'amount' => '23.45',
                         'allocatedAmount' => '3.45',
