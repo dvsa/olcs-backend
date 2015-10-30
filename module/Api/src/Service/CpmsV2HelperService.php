@@ -404,6 +404,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      *
      * @param Fee $fee
      * @return array
+     * @throws CpmsResponseException if response is invalid
      */
     public function batchRefund($fee)
     {
@@ -423,7 +424,41 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'payments' => $payments,
         ];
 
-        return $this->send($method, $endPoint, $scope, $params);
+        // $response = $this->send($method, $endPoint, $scope, $params);
+        $response = $this->stubResponse($payments);
+
+        if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
+           return $response;
+        } else {
+            $e = new CpmsResponseException('Invalid refund response');
+            $e->setResponse($response);
+            throw $e;
+        }
+    }
+
+    /**
+     * @todo remove when CPMS refund end point is working
+     */
+    private function stubResponse($payments)
+    {
+        $receiptRefs = array_map(
+            function ($payment) {
+                return $payment['receipt_reference'];
+            },
+            $payments
+        );
+        $count = 0;
+        $refundRefs = array_map(
+            function ($payment) use (&$count) {
+                return sprintf('REFUND-REF-%d', ++$count);
+            },
+            $receiptRefs
+        );
+        return [
+           'receipt_references' => array_combine($receiptRefs, $refundRefs),
+           'code' => self::RESPONSE_SUCCESS,
+           'message' => '** stubbed response from ' . __METHOD__ . ' **',
+        ];
     }
 
     /**

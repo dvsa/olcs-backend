@@ -28,6 +28,6 @@ class FeeTransaction extends AbstractFeeTransaction
      */
     public function isRefundedOrReversed()
     {
-        return !empty($this->getReversedFeeTransaction());
+        return !$this->getReversingFeeTransactions()->isEmpty();
     }
 }

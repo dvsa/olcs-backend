@@ -1486,6 +1486,12 @@ return array(
                 'persist'
             ),
         ),
+        'reversed_fee_txn_id' =>  array(
+            'inversedBy' => array(
+                'entity' => 'FeeTransaction',
+                'property' => 'reversingFeeTransaction',
+            ),
+        ),
     ),
     'tm_application_oc' => array(
         'transport_manager_application_id' => array(

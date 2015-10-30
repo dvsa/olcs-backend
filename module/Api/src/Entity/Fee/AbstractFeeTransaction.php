@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * FeeTransaction Abstract Entity
@@ -106,7 +108,11 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
      *
      * @var \Dvsa\Olcs\Api\Entity\Fee\FeeTransaction
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Fee\FeeTransaction", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\FeeTransaction",
+     *     fetch="LAZY",
+     *     inversedBy="reversingFeeTransactions"
+     * )
      * @ORM\JoinColumn(name="reversed_fee_txn_id", referencedColumnName="id", nullable=true)
      */
     protected $reversedFeeTransaction;
@@ -135,6 +141,31 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Reversing fee transaction
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Fee\FeeTransaction",
+     *     mappedBy="reversedFeeTransaction"
+     * )
+     */
+    protected $reversingFeeTransactions;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
+        $this->reversingFeeTransactions = new ArrayCollection();
+    }
 
     /**
      * Set the amount
@@ -364,6 +395,66 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the reversing fee transaction
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reversingFeeTransactions
+     * @return FeeTransaction
+     */
+    public function setReversingFeeTransactions($reversingFeeTransactions)
+    {
+        $this->reversingFeeTransactions = $reversingFeeTransactions;
+
+        return $this;
+    }
+
+    /**
+     * Get the reversing fee transactions
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getReversingFeeTransactions()
+    {
+        return $this->reversingFeeTransactions;
+    }
+
+    /**
+     * Add a reversing fee transactions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reversingFeeTransactions
+     * @return FeeTransaction
+     */
+    public function addReversingFeeTransactions($reversingFeeTransactions)
+    {
+        if ($reversingFeeTransactions instanceof ArrayCollection) {
+            $this->reversingFeeTransactions = new ArrayCollection(
+                array_merge(
+                    $this->reversingFeeTransactions->toArray(),
+                    $reversingFeeTransactions->toArray()
+                )
+            );
+        } elseif (!$this->reversingFeeTransactions->contains($reversingFeeTransactions)) {
+            $this->reversingFeeTransactions->add($reversingFeeTransactions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a reversing fee transactions
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $reversingFeeTransactions
+     * @return FeeTransaction
+     */
+    public function removeReversingFeeTransactions($reversingFeeTransactions)
+    {
+        if ($this->reversingFeeTransactions->contains($reversingFeeTransactions)) {
+            $this->reversingFeeTransactions->removeElement($reversingFeeTransactions);
+        }
+
+        return $this;
     }
 
     /**
