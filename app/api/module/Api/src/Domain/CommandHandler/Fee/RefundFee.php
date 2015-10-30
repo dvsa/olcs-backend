@@ -80,10 +80,11 @@ final class RefundFee extends AbstractCommandHandler implements
             }
 
             $feeTransaction = new FeeTransactionEntity();
+            $refundAmount = $originalFt->getAmount() * -1;
             $feeTransaction
                 ->setFee($fee)
                 ->setTransaction($transaction)
-                ->setAmount($originalFt->getAmount() * -1)
+                ->setAmount($refundAmount)
                 ->setReversedFeeTransaction($originalFt);
             $fee->getFeeTransactions()->add($feeTransaction);
         }
