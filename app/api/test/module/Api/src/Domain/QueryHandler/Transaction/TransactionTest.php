@@ -40,13 +40,13 @@ class TransactionTest extends QueryHandlerTestCase
 
         $ft1 = m::mock(FeeTransaction::class)
             ->shouldReceive('getFee')
-            ->andReturn($this->getMockFee('12.34'))
+            ->andReturn($this->getMockFee('1', '12.34'))
             ->shouldReceive('getAmount')
             ->andReturn('2.34')
             ->getMock();
         $ft2 = m::mock(FeeTransaction::class)
             ->shouldReceive('getFee')
-            ->andReturn($this->getMockFee('23.45'))
+            ->andReturn($this->getMockFee('2', '23.45'))
             ->shouldReceive('getAmount')
             ->andReturn('3.45')
             ->getMock();
@@ -96,9 +96,69 @@ class TransactionTest extends QueryHandlerTestCase
 
     }
 
-    private function getMockFee($amount)
+    public function testHandleQueryRefundMultiplePayments()
     {
-        static $id = 1;
+        $query = Qry::create(['id' => 69]);
+
+        $mockTransaction = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+
+        $mockFee = $this->getMockFee('1', '12.34');
+
+        $ft1 = m::mock(FeeTransaction::class)
+            ->shouldReceive('getFee')
+            ->andReturn($mockFee)
+            ->shouldReceive('getAmount')
+            ->andReturn('-2.34')
+            ->getMock();
+        $ft2 = m::mock(FeeTransaction::class)
+            ->shouldReceive('getFee')
+            ->andReturn($mockFee)
+            ->shouldReceive('getAmount')
+            ->andReturn('-10.00')
+            ->getMock();
+
+        $feeTransactions = new ArrayCollection([$ft1, $ft2]);
+
+        $mockTransaction->shouldReceive('getFeeTransactions')->andReturn($feeTransactions);
+
+        $this->repoMap['Transaction']
+            ->shouldReceive('fetchUsingId')
+            ->with($query)
+            ->once()
+            ->andReturn($mockTransaction);
+
+        $result = $this->sut->handleQuery($query);
+
+        $this->assertInstanceOf(Result::class, $result);
+
+        $mockTransaction
+            ->shouldReceive('serialize')
+            ->andReturn(
+                [
+                    'id' => 99,
+                    'foo' => 'bar',
+                ]
+            );
+
+        $this->assertEquals(
+            [
+                'id' => 99,
+                'foo' => 'bar',
+                'fees' => [
+                    '1' => [
+                        'id' => '1',
+                        'amount' => '12.34',
+                        'allocatedAmount' => '-12.34',
+                    ],
+                ],
+            ],
+            $result->serialize()
+        );
+
+    }
+
+    private function getMockFee($id, $amount)
+    {
 
         $fee = m::mock(Fee::class)
             ->shouldReceive('getAmount')
@@ -106,7 +166,7 @@ class TransactionTest extends QueryHandlerTestCase
             ->shouldReceive('serialize')
             ->andReturn(
                 [
-                    'id' => $id++,
+                    'id' => $id,
                     'amount' => $amount,
                 ]
             )
