@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Client Test
+ */
 namespace Dvsa\OlcsTest\Api\Service;
 
 use Dvsa\Olcs\Api\Service\OpenAm\Client;
@@ -8,8 +11,10 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\Http\Request;
 use Zend\Http\Response;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Client Test
+ */
 class ClientTest extends MockeryTestCase
 {
     public function testRegisterUser()

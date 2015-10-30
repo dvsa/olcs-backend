@@ -1,9 +1,15 @@
 <?php
 
+/**
+ * User
+ */
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
 use RandomLib\Generator;
 
+/**
+ * User
+ */
 class User implements UserInterface
 {
     /**

@@ -1,10 +1,16 @@
 <?php
 
+/**
+ * Pid Identity Provider Factory
+ */
 namespace Dvsa\Olcs\Api\Rbac;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Pid Identity Provider Factory
+ */
 class PidIdentityProviderFactory implements FactoryInterface
 {
     /**

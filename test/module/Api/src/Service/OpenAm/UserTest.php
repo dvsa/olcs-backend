@@ -1,13 +1,18 @@
 <?php
 
+/**
+ * User Test
+ */
 namespace Dvsa\OlcsTest\Api\Service;
 
 use Dvsa\Olcs\Api\Service\OpenAm\Client;
 use Dvsa\Olcs\Api\Service\OpenAm\User;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * User Test
+ */
 class UserTest extends MockeryTestCase
 {
     public function testRegisterUser()

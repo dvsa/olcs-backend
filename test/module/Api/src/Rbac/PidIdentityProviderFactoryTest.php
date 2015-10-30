@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Pid Identity Provider Factory Test
+ */
 namespace Dvsa\OlcsTest\Api\Rbac;
 
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
@@ -10,7 +13,9 @@ use Mockery as m;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-
+/**
+ * Pid Identity Provider Factory Test
+ */
 class PidIdentityProviderFactoryTest extends MockeryTestCase
 {
     public function testCreateService()

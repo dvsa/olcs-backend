@@ -1,14 +1,19 @@
 <?php
 
+/**
+ * Client Factory
+ */
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
 use Zend\Http\Client as HttpClient;
-use Zend\Http\Header\Accept;
 use Zend\Http\Request;
 use Zend\ServiceManager\Exception\RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Client Factory
+ */
 class ClientFactory implements FactoryInterface
 {
     /**

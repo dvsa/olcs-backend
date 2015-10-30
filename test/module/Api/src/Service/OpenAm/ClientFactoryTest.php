@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Client Factory Test
+ */
 namespace Dvsa\OlcsTest\Api\Service;
 
 use Dvsa\Olcs\Api\Service\OpenAm\Client;
@@ -8,6 +11,9 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Client Factory Test
+ */
 class ClientFactoryTest extends MockeryTestCase
 {
     /**

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Pid Identity Provider Test
+ */
 namespace Dvsa\OlcsTest\Api\Rbac;
 
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
@@ -10,7 +13,9 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Zend\Http\PhpEnvironment\Request;
 
-
+/**
+ * Pid Identity Provider Test
+ */
 class PidIdentityProviderTest extends MockeryTestCase
 {
     public function testGetIdentity()

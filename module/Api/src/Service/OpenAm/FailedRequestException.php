@@ -1,9 +1,15 @@
 <?php
 
+/**
+ * Failed Request Exception
+ */
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
 use Zend\Http\Response;
 
+/**
+ * Failed Request Exception
+ */
 class FailedRequestException extends \Exception
 {
     /**

@@ -1,6 +1,13 @@
 <?php
+
+/**
+ * User Interface
+ */
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
+/**
+ * User Interface
+ */
 interface UserInterface
 {
     /**

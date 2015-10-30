@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * User Factory Test
+ */
 namespace Dvsa\OlcsTest\Api\Service;
 
 use Dvsa\Olcs\Api\Service\OpenAm\ClientInterface;
@@ -9,6 +12,9 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * User Factory Test
+ */
 class UserFactoryTest extends MockeryTestCase
 {
     public function testCreateService()

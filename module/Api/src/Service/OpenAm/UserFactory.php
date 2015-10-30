@@ -1,9 +1,16 @@
 <?php
+
+/**
+ * User Factory
+ */
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * User Factory
+ */
 class UserFactory implements FactoryInterface
 {
     /**
