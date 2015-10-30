@@ -114,6 +114,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
                     true
                 );
 
+                $this->setEbsrSubmissionFailed($ebsrSubmission);
+
                 continue;
             }
 
@@ -129,6 +131,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
                     '): xml file did not pass validation - not processed',
                     true
                 );
+
+                $this->setEbsrSubmissionFailed($ebsrSubmission);
 
                 continue;
             }
@@ -147,6 +151,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
                     '): xml file data did not meet business rules - not processed',
                     true
                 );
+
+                $this->setEbsrSubmissionFailed($ebsrSubmission);
 
                 continue;
             }
@@ -176,6 +182,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
                     true
                 );
 
+                $this->setEbsrSubmissionFailed($ebsrSubmission);
+
                 continue;
             } catch (Exception\ForbiddenException $e) {
                 $invalidPacks++;
@@ -185,6 +193,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
                     ' - not processed',
                     true
                 );
+
+                $this->setEbsrSubmissionFailed($ebsrSubmission);
 
                 continue;
             }
@@ -235,6 +245,16 @@ final class ProcessPacks extends AbstractCommandHandler implements
             $document,
             new \DateTime()
         );
+    }
+
+    private function setEbsrSubmissionFailed($ebsrSubmission)
+    {
+        $ebsrSubmission->updateStatus(
+            $this->getRepo()->getRefdataReference(EbsrSubmissionEntity::FAILED_STATUS)
+        );
+
+        $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
+        return $ebsrSubmission;
     }
 
     /**
