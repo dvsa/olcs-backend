@@ -409,7 +409,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     public function batchRefund($fee)
     {
         $method   = 'post';
-        $endPoint = '/api/payment/refund';
+        $endPoint = '/api/refund';
         $scope    = ApiService::SCOPE_REFUND;
 
         $payments = [];
@@ -456,8 +456,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             $receiptRefs
         );
         return [
-           'receipt_references' => array_combine($receiptRefs, $refundRefs),
            'code' => self::RESPONSE_SUCCESS,
+           'receipt_references' => array_combine($receiptRefs, $refundRefs),
            'message' => '** stubbed response from ' . __METHOD__ . ' **',
         ];
     }
