@@ -35,7 +35,6 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
 {
     use OpenAmUserAwareTrait;
 
-    const ERR_USERNAME_EXISTS = 'ERR_USERNAME_EXISTS';
     const ERR_EMAIL_REQUIRED = 'ERR_EMAIL_REQUIRED';
     const ERR_USERNAME_REQUIRED = 'ERR_USERNAME_REQUIRED';
 

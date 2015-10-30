@@ -14,8 +14,6 @@ return [
         'alias' => [
             'PublicationContextPlugin' => \Dvsa\Olcs\Api\Service\Publication\Context\PluginManager::class,
             'PublicationProcessPlugin' => \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class,
-            'SubmissionContextPlugin' => \Dvsa\Olcs\Api\Service\Submission\Context\PluginManager::class,
-            'SubmissionProcessPlugin' => \Dvsa\Olcs\Api\Service\Submission\Process\PluginManager::class
         ],
         'invokables' => [
             'Document' => \Dvsa\Olcs\Api\Service\Document\Document::class,
@@ -65,7 +63,7 @@ return [
 
             \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Publication\Process\PluginManagerFactory::class,
-            'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
+
             \Dvsa\Olcs\Api\Service\OpenAm\ClientInterface::class => \Dvsa\Olcs\Api\Service\OpenAm\ClientFactory::class,
             \Dvsa\Olcs\Api\Service\OpenAm\UserInterface::class => \Dvsa\Olcs\Api\Service\OpenAm\UserFactory::class,
 

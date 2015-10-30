@@ -39,7 +39,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
     const USER_TYPE_TRANSPORT_MANAGER = 'transport-manager';
 
     const ERROR_ADMIN_USER_ALREADY_EXISTS = 'err_admin_user_already_exists';
-    const ERR_USERNAME_EXISTS = 'ERR_USERNAME_EXISTS';
+    const ERR_ANON_USERNAME = 'ERR_ANON_USERNAME';
 
     /**
      * List of all roles available by user type
@@ -145,7 +145,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
     public function update(array $data)
     {
         if ($data['loginId'] === 'anon') {
-            throw new ValidationException(['username' => [self::ERR_USERNAME_EXISTS]]);
+            throw new ValidationException(['username' => [self::ERR_ANON_USERNAME]]);
         }
 
         // update common data

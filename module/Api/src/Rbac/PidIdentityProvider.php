@@ -62,14 +62,12 @@ class PidIdentityProvider implements IdentityProviderInterface
         if ($this->identity === null) {
             $user = $this->authenticate();
             if ($user === null) {
-                //change value to false so that we don't keep trying to auth an invalid user within the same request.
                 $this->identity = new Identity(User::anon());
             } else {
                 $this->identity = new Identity($user);
             }
         }
 
-        //return null if we have a false identity to provide compatibility with previous implementation
-        return $this->identity === false ? null : $this->identity;
+        return $this->identity;
     }
 }
