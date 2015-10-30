@@ -24,8 +24,10 @@ use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\ProcessPacks as ProcessPacksCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
@@ -296,6 +298,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
     {
         $sideEffects = $this->persistDocuments($ebsrData, $busReg, $documentPath);
         $sideEffects[] = $this->getRequestMapQueueCmd($busReg->getId());
+        $sideEffects[] = $this->createTaskCommand($busReg);
 
         return $sideEffects;
     }
@@ -363,6 +366,47 @@ final class ProcessPacks extends AbstractCommandHandler implements
     private function getRequestMapQueueCmd($busRegId)
     {
         return RequestMapQueueCmd::create(['id' => $busRegId, 'scale' => 'small']);
+    }
+
+    /**
+     * @param BusRegEntity $busReg
+     * @return CreateTaskCmd
+     */
+    private function createTaskCommand(BusRegEntity $busReg)
+    {
+        $submissionType = $busReg->getEbsrSubmissions()->first()->getEbsrSubmissionType();
+
+        if ($submissionType === EbsrSubmissionEntity::DATA_REFRESH_SUBMISSION_TYPE) {
+            $description = 'Data refresh created';
+        } else {
+            $status = $busReg->getStatus()->getId();
+
+            switch ($status) {
+                case BusRegEntity::STATUS_CANCEL:
+                    $state = 'cancellation';
+                    break;
+                case BusRegEntity::STATUS_VAR:
+                    $state = 'variation';
+                    break;
+                default:
+                    $state = 'application';
+            }
+
+            $description = 'New ' . $state . ' created';
+        }
+
+        $data = [
+            'category' => TaskEntity::CATEGORY_BUS,
+            'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
+            'description' => $description . ': [' . $busReg->getRegNo() . ']',
+            'actionDate' => date('Y-m-d H:i:s'),
+            'assignedToUser' => $this->getCurrentUser()->getId(),
+            'assignedToTeam' => 6,
+            'busReg' => $busReg->getId(),
+            'licence' => $busReg->getLicence()->getId(),
+        ];
+
+        return CreateTaskCmd::create($data);
     }
 
     /**

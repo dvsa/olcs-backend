@@ -29,6 +29,8 @@ class EbsrSubmission extends AbstractEbsrSubmission
     const VALIDATED_STATUS = 'ebsrs_validated';
     const PROCESSED_STATUS = 'ebsrs_processed';
 
+    const DATA_REFRESH_SUBMISSION_TYPE = 'ebsrt_refresh';
+
     /**
      * @param Organisation $organisation
      * @param RefData $ebsrSubmissionStatus
