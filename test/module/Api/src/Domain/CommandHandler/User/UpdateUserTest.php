@@ -113,7 +113,8 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->andReturn(true);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('login_id', 'test1@test.me', null);
+            ->once()
+            ->with('login_id', 'test1@test.me', false);
 
         /** @var TeamEntity $user */
         $team = m::mock(Team::class)->makePartial();
@@ -216,6 +217,7 @@ class UpdateUserTest extends CommandHandlerTestCase
                     ]
                 ],
             ],
+            'accountDisabled' => 'Y',
         ];
 
         $command = Cmd::create($data);
@@ -226,7 +228,8 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->andReturn(true);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('login_id', 'test1@test.me', null);
+            ->once()
+            ->with('login_id', 'test1@test.me', true);
 
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
@@ -352,7 +355,8 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->andReturn(true);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('login_id', 'test1@test.me', null);
+            ->once()
+            ->with('login_id', 'test1@test.me', false);
 
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
