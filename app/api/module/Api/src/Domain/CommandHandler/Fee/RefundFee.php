@@ -16,10 +16,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
+use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -40,26 +42,43 @@ final class RefundFee extends AbstractCommandHandler implements
 
     public function handleCommand(CommandInterface $command)
     {
-        $now = new DateTime();
-
         /** @var FeeEntity $fee */
         $fee = $this->getRepo()->fetchUsingId($command);
 
-        $response = $this->getCpmsService()->batchRefund($fee);
-        $reference = 'ref from cpms';
+        try {
+            $response = $this->getCpmsService()->batchRefund($fee);
+        } catch (CpmsResponseException $e) {
+            // rethrow as Domain exception
+            throw new RuntimeException(
+                'Error from CPMS service: ' . json_encode($e->getResponse()),
+                $e->getCode(),
+                $e
+            );
+        }
 
-        // var_dump($response); exit;
+        $references = $response['receipt_references'];
+        // note, we don't record a transaction reference as CPMS returns one per original receipt_reference
+        $transactionReference = null;
+        $comment = self::REFUND_COMMENT . ' ' . implode(', ', $references);
+        $now = new DateTime();
+
         $transaction = new TransactionEntity();
         $transaction
             ->setType($this->getRepo()->getRefdataReference(TransactionEntity::TYPE_REFUND))
             ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_COMPLETE))
             ->setPaymentMethod($this->getRepo()->getRefdataReference(FeeEntity::METHOD_REFUND))
-            ->setComment(self::REFUND_COMMENT)
-            ->setReference($reference)
+            ->setComment($comment)
             ->setCompletedDate($now)
-            ->setProcessedByUser($this->getCurrentUser());
+            ->setProcessedByUser($this->getCurrentUser())
+            ->setReference($transactionReference);
 
         foreach ($fee->getFeeTransactionsForRefund() as $originalFt) {
+
+            if (!array_key_exists($originalFt->getTransaction()->getReference(), $references)) {
+                // only create records for refunded transactions
+                continue;
+            }
+
             $feeTransaction = new FeeTransactionEntity();
             $feeTransaction
                 ->setFee($fee)

@@ -468,7 +468,7 @@ class Fee extends AbstractFee
     {
         $feeTransactions = [];
 
-        foreach ($this->getFeeTransactions() as $ft){
+        foreach ($this->getFeeTransactions() as $ft) {
             $txn = $ft->getTransaction();
             if ($txn->isPayment() && $txn->isComplete() && !$ft->isRefundedOrReversed()) {
                 $feeTransactions[] = $ft;
