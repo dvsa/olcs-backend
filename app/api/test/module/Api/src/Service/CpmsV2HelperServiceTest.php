@@ -982,4 +982,25 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $this->assertSame($response, $result);
     }
+
+    public function testBatchRefundWithInvalidResponse()
+    {
+        $this->markTestSkipped('@todo update when no longer using stubbed response');
+
+        $this->setExpectedException(CpmsResponseException::class, 'Invalid refund response');
+
+        $fee = m::mock(FeeEntity::class);
+        $fee
+            ->shouldReceive('getFeeTransactionsForRefund')
+            ->andReturn([])
+            ->shouldReceive('getOrganisation')
+            ->andReturn(null);
+
+        $this->cpmsClient
+            ->shouldReceive('post')
+            ->with('/api/refund', 'REFUND', m::any())
+            ->andReturn([]);
+
+        $this->sut->batchRefund($fee);
+    }
 }
