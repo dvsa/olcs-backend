@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -18,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicSuspensionReason as CommunityL
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Transfer\Command\CommunityLic\Stop as Cmd;
 
 /**
  * Stop community licences
@@ -38,6 +40,12 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
         'Licence'
     ];
 
+    /**
+     * @param Cmd $command
+     * @return Result
+     * @throws ValidationException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         $ids = $command->getCommunityLicenceIds();
@@ -68,10 +76,22 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
             $result->addId('communityLic' . $id, $id);
             $this->getRepo()->save($communityLicence);
         }
+
         if ($type == 'withdrawal') {
             $this->createWithrawalAndReasons($licences, $reasons);
         } else {
             $this->createSuspensionAndReasons($licences, $reasons, $startDate, $endDate);
+        }
+
+        if ($command->getApplication()) {
+            $result->merge(
+                UpdateApplicationCompletion::create(
+                    [
+                        'id' => $command->getApplication(),
+                        'section' => 'communityLicences'
+                    ]
+                )
+            );
         }
 
         return $result;

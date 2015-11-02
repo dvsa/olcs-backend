@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -48,9 +49,21 @@ final class Void extends AbstractCommandHandler implements TransactionedInterfac
             $result->addMessage("Community Licence {$id} voided");
             $result->addId('communityLic' . $id, $id);
         }
+
         $updateTotalCommunityLicences =  UpdateTotalCommunityLicencesCommand::create(['id' => $licenceId]);
         $updateResult = $this->handleSideEffect($updateTotalCommunityLicences);
         $result->merge($updateResult);
+
+        if ($command->getApplication()) {
+            $result->merge(
+                UpdateApplicationCompletion::create(
+                    [
+                        'id' => $command->getApplication(),
+                        'section' => 'communityLicences'
+                    ]
+                )
+            );
+        }
 
         return $result;
     }
