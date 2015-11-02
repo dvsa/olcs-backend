@@ -17,12 +17,10 @@ class MyAccount extends AbstractQueryHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
-    protected $repoServiceName = 'User';
-
     public function handleQuery(QueryInterface $query)
     {
         return $this->result(
-            $this->getRepo()->fetchById($this->getCurrentUser()->getId()),
+            $this->getCurrentUser(),
             [
                 'team',
                 'contactDetails' => [
