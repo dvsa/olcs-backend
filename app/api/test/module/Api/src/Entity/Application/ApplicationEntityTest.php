@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Application\S4;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -2647,6 +2648,67 @@ class ApplicationEntityTest extends EntityTester
             [
                 new RefData(Entity::APPLIED_VIA_SELFSERVE),
                 false,
+            ],
+        ];
+    }
+
+    /**
+     * @param FeeEntity $fee
+     * @param bool $expected
+     * @dataProvider hasApplicationFeeProvider
+     */
+    public function testHasApplicationFee($fee, $expected)
+    {
+        $application = $this->instantiate(Entity::class);
+
+        $this->assertFalse($application->hasApplicationFee());
+
+        if ($fee) {
+            $application->setFees(new ArrayCollection([$fee]));
+        }
+
+        $this->assertSame($expected, $application->hasApplicationFee());
+    }
+
+    public function hasApplicationFeeProvider()
+    {
+        return [
+            'no fee' => [
+                null,
+                false,
+            ],
+            'cancelled fee' => [
+                m::mock()
+                    ->shouldReceive('isNewApplicationFee')
+                    ->andReturn(true)
+                    ->shouldReceive('isVariationFee')
+                    ->andReturn(false)
+                    ->shouldReceive('isCancelled')
+                    ->andReturn(true)
+                    ->getMock(),
+                false,
+            ],
+            'new app fee' => [
+                m::mock()
+                    ->shouldReceive('isNewApplicationFee')
+                    ->andReturn(true)
+                    ->shouldReceive('isVariationFee')
+                    ->andReturn(false)
+                    ->shouldReceive('isCancelled')
+                    ->andReturn(false)
+                    ->getMock(),
+                true,
+            ],
+            'variation fee' => [
+                m::mock()
+                    ->shouldReceive('isNewApplicationFee')
+                    ->andReturn(false)
+                    ->shouldReceive('isVariationFee')
+                    ->andReturn(true)
+                    ->shouldReceive('isCancelled')
+                    ->andReturn(false)
+                    ->getMock(),
+                true,
             ],
         ];
     }
