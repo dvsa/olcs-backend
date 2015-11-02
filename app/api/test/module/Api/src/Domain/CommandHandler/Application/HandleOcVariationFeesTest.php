@@ -79,11 +79,9 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
             ->with($command)
             ->andReturn($application);
 
-        $fees = [];
-
-        $this->repoMap['Fee']->shouldReceive('fetchOutstandingFeesByApplicationId')
-            ->with(111)
-            ->andReturn($fees);
+        $application
+            ->shouldReceive('hasApplicationFee')
+            ->andReturn(false);
 
         $data = [
             'id' => 111,
@@ -136,13 +134,9 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
             ->with($command)
             ->andReturn($application);
 
-        $fees = [
-            'foo'
-        ];
-
-        $this->repoMap['Fee']->shouldReceive('fetchOutstandingFeesByApplicationId')
-            ->with(111)
-            ->andReturn($fees);
+        $application
+            ->shouldReceive('hasApplicationFee')
+            ->andReturn(true);
 
         $result = $this->sut->handleCommand($command);
 
@@ -191,11 +185,9 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
             ->with($command)
             ->andReturn($application);
 
-        $fees = [];
-
-        $this->repoMap['Fee']->shouldReceive('fetchOutstandingFeesByApplicationId')
-            ->with(111)
-            ->andReturn($fees);
+        $application
+            ->shouldReceive('hasApplicationFee')
+            ->andReturn(false);
 
         $data = [
             'id' => 111,
@@ -257,11 +249,9 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
             ->with($command)
             ->andReturn($application);
 
-        $fees = [];
-
-        $this->repoMap['Fee']->shouldReceive('fetchOutstandingFeesByApplicationId')
-            ->with(111)
-            ->andReturn($fees);
+        $application
+            ->shouldReceive('hasApplicationFee')
+            ->andReturn(false);
 
         $data = [
             'id' => 111,
@@ -329,11 +319,14 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
             ->with($command)
             ->andReturn($application);
 
-        $fees = [];
+        $application
+            ->shouldReceive('hasApplicationFee')
+            ->andReturn(false);
 
         $this->repoMap['Fee']->shouldReceive('fetchOutstandingFeesByApplicationId')
             ->with(111)
-            ->andReturn($fees);
+            ->once()
+            ->andReturn([]);
 
         $result = $this->sut->handleCommand($command);
 
@@ -400,6 +393,7 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
 
         $this->repoMap['Fee']->shouldReceive('fetchOutstandingFeesByApplicationId')
             ->with(111)
+            ->once()
             ->andReturn($fees);
 
         $data = [
