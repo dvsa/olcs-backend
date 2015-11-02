@@ -45,7 +45,10 @@ class NoteList extends AbstractQueryHandler
                 }
 
                 $data['casesMultiple'] = $caseIds;
-                if (isset($data['case'])) unset($data['case']);
+
+                if (isset($data['case'])) {
+                    unset($data['case']);
+                }
 
                 $data['licence'] = $licenceId;
 

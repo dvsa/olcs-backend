@@ -75,7 +75,14 @@ class Response extends AbstractPlugin
         $response = $this->getController()->getResponse();
         $response->setStatusCode(HttpResponse::STATUS_CODE_200);
 
-        return new JsonModel(['count' => $count, 'results' => $results, 'count-unfiltered' => $countUnfiltered, 'extra' => $extra]);
+        return new JsonModel(
+            [
+                'count' => $count,
+                'results' => $results,
+                'count-unfiltered' => $countUnfiltered,
+                'extra' => $extra
+            ]
+        );
     }
 
     public function successfulUpdate(Result $result)
