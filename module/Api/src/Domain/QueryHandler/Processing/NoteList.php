@@ -12,6 +12,8 @@ use Dvsa\Olcs\Transfer\Query\Processing\NoteList as NoteListQuery;
 
 /**
  * Note
+ *
+ * @todo IMO this should be split into 3 different query handlers, I think this one is doing a little too much
  */
 class NoteList extends AbstractQueryHandler
 {
