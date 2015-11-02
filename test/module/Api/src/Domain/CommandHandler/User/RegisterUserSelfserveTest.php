@@ -82,7 +82,15 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
-            ->with('login_id', 'test1@test.me', 'selfserve');
+            ->with('login_id', 'test1@test.me', 'selfserve', m::type('callable'))
+            ->andReturnUsing(
+                function ($loginId, $emailAddress, $realm, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
 
         /** @var OrganisationEntity $savedOrg */
         $savedOrg = null;
@@ -176,7 +184,15 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
-            ->with('login_id', 'test1@test.me', 'selfserve');
+            ->with('login_id', 'test1@test.me', 'selfserve', m::type('callable'))
+            ->andReturnUsing(
+                function ($loginId, $emailAddress, $realm, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
 
         $org = m::mock(OrganisationEntity::class);
 
@@ -224,7 +240,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
                     'licence' => $licId
                 ],
                 'knownValues' => [
-                    'SELF_SERVICE_PASSWORD' => 'GENERATED_PASSWORD_HERE'
+                    'SELF_SERVICE_PASSWORD' => 'GENERATED_PASSWORD'
                 ],
                 'description' => 'Self service new password letter',
                 'category' => CategoryEntity::CATEGORY_APPLICATION,

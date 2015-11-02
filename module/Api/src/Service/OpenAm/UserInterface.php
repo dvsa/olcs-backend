@@ -19,7 +19,7 @@ interface UserInterface
      * @return string
      * @throws FailedRequestException
      */
-    public function registerUser($loginId, $emailAddress, $realm);
+    public function registerUser($loginId, $emailAddress, $realm, $callback = null);
 
     /**
      * Generate and reserve a Pid for a user

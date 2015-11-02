@@ -48,18 +48,19 @@ class User implements UserInterface
      * @param $loginId
      * @param $emailAddress
      * @param $realm
+     * @param $callback
      * @return void
      * @throws FailedRequestException
-     *
-     * @TODO add email sending.
      */
-    public function registerUser($loginId, $emailAddress, $realm)
+    public function registerUser($loginId, $emailAddress, $realm, $callback = null)
     {
         $pid = $this->reservedPid;
         if ($pid === null) {
             $pid = $this->reservePid();
         }
         $this->reservedPid = null;
+
+        $password = $this->generatePassword();
 
         $this->openAmClient->registerUser(
             $loginId,
@@ -68,8 +69,16 @@ class User implements UserInterface
             $loginId,
             $loginId,
             $realm,
-            $this->generatePassword()
+            $password
         );
+
+        if ($callback !== null) {
+            $params = [
+                'password' => $password
+            ];
+
+            $this->callCallbackIfExists($callback, $params);
+        }
     }
 
     public function updateUser($username, $emailAddress = null, $enabled = null)
@@ -118,5 +127,21 @@ class User implements UserInterface
     private function generatePassword()
     {
         return $this->randomGenerator->generateString(12);
+    }
+
+    /**
+     * Calls the callback function/method if exists.
+     *
+     * @param unknown_type $callback
+     * @param unknown_type $params
+     * @throws \Exception
+     */
+    private function callCallbackIfExists($callback, $params)
+    {
+        if (is_callable($callback)) {
+            $callback($params);
+        } elseif (!empty($callback)) {
+            throw new \Exception('Invalid callback: ' . $callback);
+        }
     }
 }
