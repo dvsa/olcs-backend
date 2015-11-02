@@ -134,7 +134,8 @@ class GenericControllerTest extends TestCase
         $countUnfiltered = 60;
 
         $mockResponse = m::mock(Response::class);
-        $mockResponse->shouldReceive('multipleResults')->with($count, $data, $countUnfiltered, $extra)->andReturn($viewModel);
+        $mockResponse->shouldReceive('multipleResults')->with($count, $data, $countUnfiltered, $extra)
+            ->andReturn($viewModel);
 
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
