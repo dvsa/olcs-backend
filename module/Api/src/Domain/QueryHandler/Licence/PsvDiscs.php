@@ -30,7 +30,10 @@ class PsvDiscs extends AbstractQueryHandler
             return $this->result(
                 $licence,
                 ['psvDiscs'],
-                ['remainingSpacesPsv' => $licence->getRemainingSpacesPsv()]
+                [
+                    'remainingSpacesPsv' => $licence->getRemainingSpacesPsv(),
+                    'totalPsvDiscs' => $licence->getPsvDiscs()->count()
+                ]
             );
         }
 
