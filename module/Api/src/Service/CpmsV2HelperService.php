@@ -34,6 +34,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
     const TAX_CODE = 'Z';
 
+    const REFUND_REASON = 'Refund';
+
     /**
      * @var ApiService
      */
@@ -465,18 +467,23 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * @param FeeTransaction $ft
      * @return array of 'payment' data for batch refund call
+     * @see https://wiki.i-env.net/display/CPMS/CPMS+API+V2+Specification#CPMSAPIV2Specification-Batchrefund
      */
     protected function getRefundPaymentDataForFeeTransaction(FeeTransaction $ft)
     {
+        $paymentData = $this->getPaymentDataForFee(
+            $ft->getFee(),
+            [
+                'allocated_amount' => $this->formatAmount($ft->getAmount()),
+                'net_amount' => $this->formatAmount($ft->getAmount()),
+            ]
+        );
+
         return [
-            'amount' => $this->formatAmount($ft->getAmount()),
             'receipt_reference' => $ft->getTransaction()->getReference(),
+            'refund_reason' => self::REFUND_REASON,
             'payment_data' => [
-                [
-                    'product_reference' => self::PRODUCT_REFERENCE,
-                    'amount' => $this->formatAmount($ft->getAmount()),
-                    'sales_reference' => (string) $ft->getFee()->getId(),
-                ]
+                $paymentData,
             ]
         ];
     }

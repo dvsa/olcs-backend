@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Service\CpmsV2HelperService as Sut;
 use Dvsa\Olcs\Api\Service\FeesHelperService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 
 /**
  * CPMS Version 2 Helper Service Test
@@ -915,11 +916,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->assertSame($response, $result);
     }
 
-    /**
-     * @todo update when no longer using stubbed response
-     */
     public function testBatchRefund()
     {
+        $this->markTestIncomplete('@todo update when no longer using stubbed response');
+
         $fee = m::mock(FeeEntity::class);
 
         $ft = m::mock(FeeTransactionEntity::class);
@@ -927,56 +927,96 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getTransaction->getReference')
             ->andReturn('payment_ref');
         $ft
-            ->shouldReceive('getFee->getId')
-            ->andReturn(101);
-        $ft
             ->shouldReceive('getAmount')
             ->andReturn('100.00');
+
+        $address = new Address();
+        $address->updateAddress('ADDR1', 'ADDR2', 'ADDR3', 'ADDR4', 'TOWN', 'POSTCODE');
         $fee
             ->shouldReceive('getFeeTransactionsForRefund')
             ->andReturn([$ft])
             ->shouldReceive('getOrganisation')
-            ->andReturn(null);
+            ->andReturn(null)
+            ->shouldReceive('getId')
+            ->andReturn(101)
+            ->shouldReceive('isBalancingFee')
+            ->andReturn(false)
+            ->shouldReceive('getInvoiceLineNo')
+            ->andReturn('LINE_NO')
+            ->shouldReceive('getAmount')
+            ->andReturn('200.00')
+            ->shouldReceive('getOutstandingAmount')
+            ->andReturn('0.00')
+            ->shouldReceive('getInvoicedDate')
+            ->andReturn(new \DateTime('2015-10-09'))
+            ->shouldReceive('getCustomerNameForInvoice')
+            ->andReturn('Test Customer')
+            ->shouldReceive('getCustomerAddressForInvoice')
+            ->andReturn($address)
+            ->shouldReceive('getRuleStartDate')
+            ->andReturn(new \DateTime('2015-10-12'))
+            ->shouldReceive('getDefermentPeriod')
+            ->andReturn('1')
+            ->shouldReceive('getSalesPersonReference')
+            ->andReturn('TEST_SALES_PERSON_REF');
 
-        // $params = [
-        //     'scope' => 'REFUND',
-        //     'customer_reference' => 'Miscellaneous',
-        //     'payments' => [
-        //         [
-        //             'amount' => '100.00',
-        //             'receipt_reference' => 'payment_ref',
-        //             'payment_data' => [
-        //                 [
-        //                   'product_reference' => 'GVR_APPLICATION_FEE',
-        //                   'amount' => '100.00',
-        //                   'sales_reference' => '101',
-        //                 ],
-        //             ],
-        //         ],
-        //   ],
-        // ];
+        $fee->shouldReceive('getFeeType->getDescription')
+            ->andReturn('TEST_FEE_TYPE');
 
-        // $response = [
-        //     'code' => Sut::RESPONSE_SUCCESS,
-        //     'receipt_references' => [
-        //         'foo' => 'bar',
-        //         'baz' => 'bat',
-        //     ],
-        // ];
+        $ft->shouldReceive('getFee')->andReturn($fee);
 
-        // $this->cpmsClient
-        //     ->shouldReceive('post')
-        //     ->with('/api/refund', 'REFUND', $params)
-        //     ->once()
-        //     ->andReturn($response);
+        $params =  [
+            'scope' => 'REFUND',
+            'customer_reference' => 'Miscellaneous',
+            'payments' => [
+                [
+                    'receipt_reference' => 'payment_ref',
+                    'refund_reason' => 'Refund',
+                    'payment_data' => [
+                        [
+                            'line_identifier' => 'LINE_NO',
+                            'amount' => '200.00',
+                            'allocated_amount' => '100.00',
+                            'net_amount' => '100.00',
+                            'tax_amount' => '0.00',
+                            'tax_code' => 'Z',
+                            'tax_rate' => '0',
+                            'invoice_date' => '2015-10-09',
+                            'sales_reference' => '101',
+                            'product_reference' => 'GVR_APPLICATION_FEE',
+                            'product_description' => 'TEST_FEE_TYPE',
+                            'receiver_reference' => 'Miscellaneous',
+                            'receiver_name' => 'Test Customer',
+                            'receiver_address' => [
+                                'line_1' => 'ADDR1',
+                                'line_2' => 'ADDR2',
+                                'line_3' => 'ADDR3',
+                                'line_4' => 'ADDR4',
+                                'city' => 'TOWN',
+                                'postcode' => 'POSTCODE',
+                            ],
+                            'rule_start_date' => '2015-10-12',
+                            'deferment_period' => '1',
+                            'sales_person_reference' => 'TEST_SALES_PERSON_REF',
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         $response = [
             'code' => Sut::RESPONSE_SUCCESS,
             'receipt_references' => [
-                'payment_ref' => 'REFUND-REF-1',
+                'foo' => 'bar',
+                'baz' => 'bat',
             ],
-            'message' => '** stubbed response from Dvsa\Olcs\Api\Service\CpmsV2HelperService::stubResponse **',
         ];
+
+        $this->cpmsClient
+            ->shouldReceive('post')
+            ->with('/api/refund', 'REFUND', $params)
+            ->once()
+            ->andReturn($response);
 
         $result = $this->sut->batchRefund($fee);
 
@@ -985,7 +1025,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     public function testBatchRefundWithInvalidResponse()
     {
-        $this->markTestSkipped('@todo update when no longer using stubbed response');
+        $this->markTestIncomplete('@todo update when no longer using stubbed response');
 
         $this->setExpectedException(CpmsResponseException::class, 'Invalid refund response');
 
