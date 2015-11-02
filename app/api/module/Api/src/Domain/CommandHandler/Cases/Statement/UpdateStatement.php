@@ -72,7 +72,7 @@ final class UpdateStatement extends AbstractCommandHandler implements Transactio
         $statement->setStoppedDate(new \DateTime($command->getStoppedDate()));
         $statement->setRequestedDate(new \DateTime($command->getRequestedDate()));
         $statement->setAuthorisersDecision($command->getAuthorisersDecision());
-        
+
         if ($command->getIssuedDate() !== null) {
             $statement->setIssuedDate(new \DateTime($command->getIssuedDate()));
         }
