@@ -1199,7 +1199,7 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
   (778, 1, 2, 2, now(), now(), 'usr778', 101, null, NULL, 140, '4fc82b26aecb47d2868c4efbe3581732a3e7cbcc6c2efb32062c08170a05eeb8'),-- PARTA, Partner Admin	Partner
   (779, 1, 2, 2, now(), now(), 'usr779', 167, null, NULL, 140, '6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918'),-- PARTA, Partner Admin	Partner
   (542, 1, 2, 2, now(), now(), 'usr542', 166, null, NULL, NULL,'3fdba35f04dc8c462986c992bcf875546257113072a909c162f7e470e581e278'),-- SS, Self Serve	SelfServe
-  (543, 1, 2, 2, now(), now(), 'usr543', 101, null, NULL, NULL, '4ec9599fc203d176a301536c2e091a19bc852759b255bd6818810a42c5fed14a'),-- TM, Transport Manager	SelfServe
+  (543, 1, 2, 2, now(), now(), 'usr543', 101, null, NULL, NULL, '8527a891e224136950ff32ca212b45bc93f69fbb801c3b1ebedac52775f99e61'),-- SS, Self Serve    SelfServe
   (611, 1, 2, 2, now(), now(), 'usr611', 165, null, NULL, NULL,'8fab3a60577befd765cde83f2737cd1a9f25a72356c94052c2194e816829b331'),-- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
   (612, 1, 2, 2, now(), now(), 'usr612', 101, null, NULL, NULL, 'b999205cdacd2c4516598d99b420d29786443e9908556a65f583a6fd4765ee4a') -- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
 ;
