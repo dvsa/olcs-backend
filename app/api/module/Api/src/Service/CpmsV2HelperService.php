@@ -194,6 +194,25 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Get the authorisation code for a card payment
+     *
+     * @param string $receiptReference
+     * @return string auth code|null
+     */
+    public function getPaymentAuthCode($receiptReference)
+    {
+        $method   = 'get';
+        $endPoint = '/api/payment/'.$receiptReference.'/auth-code';
+        $scope    = ApiService::SCOPE_QUERY_TXN;
+
+        $response = $this->send($method, $endPoint, $scope, []);
+
+        if (isset($response['auth_code'])) {
+            return $response['auth_code'];
+        }
+    }
+
+    /**
      * Record a cash payment in CPMS
      *
      * @param array $fees

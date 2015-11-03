@@ -444,6 +444,19 @@ class CpmsV1HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Get the authorisation code for a card payment
+     *
+     * @param string $receiptReference
+     * @return string auth code|null
+     * @inheritdoc
+     * @codeCoverageIgnore deprecated class will be removed
+     */
+    public function getPaymentAuthCode($receiptReference)
+    {
+        throw new \Exception(sprintf("%s not implemented in version %d", __METHOD__, $this->getVersion()));
+    }
+
+    /**
      * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
      */
