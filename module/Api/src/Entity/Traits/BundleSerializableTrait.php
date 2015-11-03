@@ -69,9 +69,19 @@ trait BundleSerializableTrait
     {
         $output = [];
 
+        $excludeProperties = [
+            '__initializer__',
+            '__cloner__',
+            '__isInitialized__',
+        ];
+
         $vars = get_object_vars($this);
 
         foreach ($vars as $property => $value) {
+
+            if (in_array($property, $excludeProperties)) {
+                continue;
+            }
 
             if ($value instanceof Proxy
                 || $value instanceof ArrayCollection
