@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -72,10 +73,9 @@ final class ReverseTransaction extends AbstractCommandHandler implements
             );
         }
 
-        $receiptReference = $response['receipt_reference'];
         // create reversal transaction
+        $transactionReference = $response['receipt_reference'];
         $now = new DateTime();
-
         $newTransaction = new TransactionEntity();
         $newTransaction
             ->setType($this->getRepo()->getRefdataReference(TransactionEntity::TYPE_REVERSAL))
@@ -84,8 +84,7 @@ final class ReverseTransaction extends AbstractCommandHandler implements
             ->setComment($comment)
             ->setCompletedDate($now)
             ->setProcessedByUser($this->getCurrentUser())
-            ->setReference($transactionReference)
-            ->setFeeTransactions(new ArrayCollection());
+            ->setReference($transactionReference);
 
         foreach ($transaction->getFeeTransactionsForReversal() as $originalFt) {
             $feeTransaction = new FeeTransactionEntity();
