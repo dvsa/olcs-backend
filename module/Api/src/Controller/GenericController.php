@@ -48,9 +48,10 @@ class GenericController extends AbstractRestfulController
 
             $count = $result['count'];
             $results = $result['result'];
-            unset($result['count'], $result['result']);
+            $countUnfiltered = $result['count-unfiltered'];
+            unset($result['count'], $result['result'], $result['count-unfiltered']);
 
-            return $this->response()->multipleResults($count, $results, $result);
+            return $this->response()->multipleResults($count, $results, $countUnfiltered, $result);
 
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
