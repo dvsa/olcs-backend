@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Void;
@@ -111,7 +112,86 @@ class VoidTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
         $this->assertEquals($expected, $result->toArray());
+    }
 
+    public function testHandleCommandWithApplication()
+    {
+        $licenceId = 1;
+        $communityLicenceIds = [10];
+
+        $data = [
+            'application' => 111,
+            'licence' => $licenceId,
+            'communityLicenceIds' => $communityLicenceIds,
+            'checkOfficeCopy' => true
+        ];
+
+        $command = Cmd::create($data);
+
+        $mockCommunityLicence = m::mock(CommunityLicEntity::class)
+            ->shouldReceive('getId')
+            ->andReturn(10)
+            ->twice()
+            ->shouldReceive('changeStatusAndExpiryDate')
+            ->with($this->refData[CommunityLicEntity::STATUS_VOID], m::type(DateTime::class))
+            ->once()
+            ->getMock();
+
+        $mockLicence = m::mock()
+            ->shouldReceive('hasCommunityLicenceOfficeCopy')
+            ->with($communityLicenceIds)
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchById')
+            ->with($licenceId)
+            ->andReturn($mockLicence)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['CommunityLic']
+            ->shouldReceive('fetchValidLicences')
+            ->with($licenceId)
+            ->andReturn([$mockCommunityLicence])
+            ->once()
+            ->shouldReceive('fetchLicencesByIds')
+            ->andReturn([$mockCommunityLicence])
+            ->once()
+            ->shouldReceive('save')
+            ->with($mockCommunityLicence)
+            ->once()
+            ->getMock();
+
+        $this->expectedSideEffect(
+            UpdateTotalCommunityLicencesCmd::class,
+            [
+                'id' => $licenceId,
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            UpdateApplicationCompletion::class,
+            [
+                'id' => 111,
+                'section' => 'communityLicences'
+            ],
+            new Result()
+        );
+
+        $expected = [
+            'id' => [
+                'communityLic10' => 10
+            ],
+            'messages' => [
+                'Community Licence 10 voided'
+            ]
+        ];
+
+        $result = $this->sut->handleCommand($command);
+        $this->assertEquals($expected, $result->toArray());
     }
 
     public function testCommandHandlerWithException()
