@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPsvAuth as UpdateDto;
@@ -16,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as FeeCreateFee;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
  * Grant IrfoPsvAuth
@@ -28,16 +30,32 @@ final class GrantIrfoPsvAuth extends AbstractCommandHandler implements Transacti
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = $this->getCommandHandler()->handleCommand(
+        /** @var IrfoPsvAuth $irfoPsvAuth */
+        $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
+
+        $this->handleSideEffect(
             UpdateDto::create(
                 $command->getArrayCopy()
             )
         );
 
-        $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
+        /*
+        Update does not affect status or fees, so there is no need to ensure we have the updated entity prior to
+        granting. Granting only affects the status
+         */
+        $irfoPsvAuth->grant(
+            $this->getRepo()->getRefdataReference(IrfoPsvAuth::STATUS_GRANTED),
+            $this->getRepo('Fee')->fetchApplicationFeeByPsvAuthId($irfoPsvAuth->getId())
+        );
 
+        $this->getRepo()->save($irfoPsvAuth);
+
+        $result = new Result();
+        $result->addId('irfoPsvAuth', $irfoPsvAuth->getId());
+        $result->addMessage('IRFO PSV Auth granted successfully');
+
+        // create application and copies fee
         $result->merge($this->generateAnnualFee($irfoPsvAuth));
-
         $result->merge($this->createCopiesFee($irfoPsvAuth));
 
         return $result;
