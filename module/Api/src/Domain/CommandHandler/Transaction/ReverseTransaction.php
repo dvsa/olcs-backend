@@ -118,17 +118,18 @@ final class ReverseTransaction extends AbstractCommandHandler implements
     }
 
     /**
-     * @todo there may be edge cases we need to consider here, e.g.:
-     *  - if fees still have a zero or negative outstanding after reversing the payment
-     *  - overpayment balancing fees can probably just be cancelled
+     * Reset any fees to either outstanding or cancelled
      */
     private function resetFees(array $fees)
     {
-        $status = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_OUTSTANDING);
+        $outstanding = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_OUTSTANDING);
+        $cancelled = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_CANCELLED);
+
         foreach ($fees as $feeId => $fee) {
+            $status = $fee->isBalancingFee() ? $cancelled : $outstanding;
             $fee->setFeeStatus($status);
             $this->getRepo('Fee')->save($fee);
-            $this->result->addMessage(sprintf('Fee %d reset to outstanding', $feeId));
+            $this->result->addMessage(sprintf('Fee %d reset to %s', $feeId, $status->getDescription()));
         }
     }
 }
