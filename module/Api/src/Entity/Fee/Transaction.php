@@ -33,6 +33,7 @@ class Transaction extends AbstractTransaction
     const TYPE_WAIVE = 'trt_waive';
     const TYPE_PAYMENT = 'trt_payment';
     const TYPE_REFUND = 'trt_refund';
+    const TYPE_REVERSAL = 'trt_reversal';
 
     /**
      * @return boolean
@@ -114,5 +115,21 @@ class Transaction extends AbstractTransaction
     public function isPayment()
     {
         return $this->getType()->getId() === self::TYPE_PAYMENT;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFeeTransactionsForReversal()
+    {
+        $feeTransactions = [];
+
+        foreach ($this->getFeeTransactions() as $ft) {
+            if (!$ft->isRefundedOrReversed()) {
+                $feeTransactions[] = $ft;
+            }
+        }
+
+        return $feeTransactions;
     }
 }

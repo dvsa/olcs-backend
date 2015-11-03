@@ -48,6 +48,7 @@ class Fee extends AbstractFee
     const METHOD_POSTAL_ORDER = 'fpm_po';
     const METHOD_WAIVE        = 'fpm_waive';
     const METHOD_REFUND       = 'fpm_refund';
+    const METHOD_REVERSAL     = 'fpm_reversal';
 
     const DEFAULT_INVOICE_CUSTOMER_NAME = 'Miscellaneous payment';
     const DEFAULT_INVOICE_ADDRESS_LINE = 'Miscellaneous payment';
