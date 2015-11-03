@@ -55,6 +55,14 @@ interface CpmsHelperInterface
     public function getPaymentStatus($receiptReference);
 
     /**
+     * Get the authorisation code for a card payment
+     *
+     * @param string $receiptReference
+     * @return string auth code|null
+     */
+    public function getPaymentAuthCode($receiptReference);
+
+    /**
      * Record a cash payment in CPMS
      *
      * @param array $fees
