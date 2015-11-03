@@ -1550,4 +1550,21 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             return !($this->getAppliedVia()->getId() === self::APPLIED_VIA_SELFSERVE);
         }
     }
+
+    /**
+     * @return bool whether the application already has a fee (that is not cancelled)
+     */
+    public function hasApplicationFee()
+    {
+        foreach ($this->getFees() as $fee) {
+            if (
+                ($fee->isNewApplicationFee() || $fee->isVariationFee())
+                && !$fee->isCancelled()
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

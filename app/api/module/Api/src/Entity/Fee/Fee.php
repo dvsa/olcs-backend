@@ -432,4 +432,12 @@ class Fee extends AbstractFee
     {
         return $this->getFeeStatus()->getId() === self::STATUS_OUTSTANDING;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isCancelled()
+    {
+        return $this->getFeeStatus()->getId() === self::STATUS_CANCELLED;
+    }
 }
