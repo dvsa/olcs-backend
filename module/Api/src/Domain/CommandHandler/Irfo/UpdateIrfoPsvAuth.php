@@ -37,7 +37,6 @@ final class UpdateIrfoPsvAuth extends AbstractCommandHandler implements Transact
 
         $irfoPsvAuth->update(
             $this->getRepo()->getReference(IrfoPsvAuthType::class, $command->getIrfoPsvAuthType()),
-            $this->getRepo()->getRefdataReference($this->determineStatus($command->getAction())),
             $command->getValidityPeriod(),
             new \DateTime($command->getInForceDate()),
             $command->getServiceRouteFrom(),
@@ -46,7 +45,7 @@ final class UpdateIrfoPsvAuth extends AbstractCommandHandler implements Transact
             $command->getCopiesRequired(),
             $command->getCopiesRequiredTotal()
         );
-
+        
         if ($command->getExpiryDate() !== null) {
             $irfoPsvAuth->setExpiryDate(new \DateTime($command->getExpiryDate()));
         }
@@ -132,22 +131,5 @@ final class UpdateIrfoPsvAuth extends AbstractCommandHandler implements Transact
         }
 
         return $reduced;
-    }
-
-    /**
-     * Determine status based on action being performed.
-     *
-     * @param $action
-     * @return string
-     */
-    private function determineStatus($action)
-    {
-        switch ($action)
-        {
-            case 'grant':
-                return IrfoPsvAuth::STATUS_GRANTED;
-            default:
-                return IrfoPsvAuth::STATUS_PENDING;
-        }
     }
 }
