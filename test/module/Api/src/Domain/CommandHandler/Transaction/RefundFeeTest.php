@@ -43,14 +43,6 @@ class RefundFeeTest extends CommandHandlerTestCase
         $this->sut = new RefundFee();
         $this->mockRepo('Fee', Repository\Fee::class);
 
-        // $this->mockCpmsService
-        //     ->shouldReceive('formatAmount')
-        //     ->andReturnUsing(
-        //         function ($input) {
-        //             return (string)$input;
-        //         }
-        //     );
-
         /** @var UserEntity $mockUser */
         $mockUser = m::mock(UserEntity::class)
             ->shouldReceive('getLoginId')
