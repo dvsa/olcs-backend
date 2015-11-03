@@ -103,7 +103,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      * @param RefData $revertStatus
      * @param RefData $subsidised
      * @param BusNoticePeriodEntity $busNoticePeriod
-     * @param string $isTxcApp
      *
      * @return BusReg
      */
