@@ -43,9 +43,9 @@ final class ReverseTransaction extends AbstractCommandHandler implements
     {
         $transaction = $this->getRepo()->fetchUsingId($command);
 
-        $fee = $transaction->getFeeTransactions()->first()->getFee();
-
-        // @todo check transaction is complete before trying to reverse it
+        if (!$transaction->isComplete()) {
+            throw new ValidationException(['Cannot reverse a pending transaction']);
+        }
 
         switch ($transaction->getPaymentMethod()->getId()) {
             case FeeEntity::METHOD_CHEQUE:
@@ -53,13 +53,14 @@ final class ReverseTransaction extends AbstractCommandHandler implements
                 break;
             case FeeEntity::METHOD_CARD_ONLINE:
             case FeeEntity::METHOD_CARD_OFFLINE:
-                $method = 'chargeBack';
+                $method = 'chargeBackCardPayment';
                 break;
             default:
                 throw new ValidationException(['Invalid payment method for reversal']);
         }
 
         try {
+            $fee = $transaction->getFeeTransactions()->first()->getFee();
             $response = $this->getCpmsService()->reverseChequePayment(
                 $transaction->getReference(),
                 [$fee]
