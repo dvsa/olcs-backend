@@ -517,6 +517,11 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function reverseChequePayment($receiptReference, $fees = array())
     {
+        // stub response
+        // return [
+        //     'receipt_reference' => "OK",
+        // ];
+
         $method   = 'post';
         $endPoint = '/api/payment/'.$receiptReference.'/reversal';
         $scope    = ApiService::CHEQUE_RD; // refer to drawer
@@ -528,7 +533,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
-        return $this->validatePaymentResponse($response);
+        return $this->validatePaymentResponse($response, false);
     }
 
     /**

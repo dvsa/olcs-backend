@@ -23,6 +23,7 @@ interface CpmsHelperInterface
     const PAYMENT_IN_PROGRESS  = 800;
     const PAYMENT_GATEWAY_ERROR = 810;
     const PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED = 825;
+    const PAYMENT_PAYMENT_CHARGED_BACK = 820;
 
     const RESPONSE_SUCCESS = '000';
 
