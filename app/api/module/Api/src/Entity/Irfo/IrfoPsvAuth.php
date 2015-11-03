@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Irfo;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -54,7 +55,6 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
      */
     public function update(
         IrfoPsvAuthType $type,
-        RefData $status,
         $validityPeriod,
         \DateTime $inForceDate,
         $serviceRouteFrom,
@@ -74,8 +74,6 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
 
         // deal with IrfoFileNo
         $this->populateFileNo();
-
-        $this->updateStatus($status);
 
         return $this;
     }
@@ -112,13 +110,51 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     }
 
     /**
-     * Can this entity change status to granted.
+     * Is paid for? Yes if application fee exists and is paid or waived
+     *
+     * @param $psvAuth
+     * @return bool
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function isPaidFor($applicationFeeStatusId = null)
+    {
+        if (!empty($applicationFeeStatusId) &&
+            in_array($applicationFeeStatusId, [Fee::STATUS_PAID, Fee::STATUS_WAIVED])
+        ) {
+            return true;
+        }
+
+        throw new BadRequestException(
+            ['Irfo Psv Auth has not been paid for']
+        );
+    }
+
+    /**
+     * Is in a grantable state
      *
      * @return bool
      */
-    public function isGrantable()
+    private function isGrantableState()
     {
         if (in_array($this->getStatus()->getId(), [self::STATUS_RENEW, self::STATUS_PENDING])) {
+            return true;
+        }
+
+        throw new BadRequestException(
+            ['Irfo Psv Auth is not grantable']
+        );
+    }
+
+    /**
+     * Is grantable? Yes if entity status is renew/pending, and application fee exists and is paid or waived
+     *
+     * @param $psvAuth
+     * @return bool
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    public function isGrantable($applicationFeeStatusId = null)
+    {
+        if ($this->isPaidFor($applicationFeeStatusId) && $this->isGrantableState()) {
             return true;
         }
 
@@ -126,25 +162,24 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     }
 
     /**
-     * Updates the status of the entity. Only 'granted' logic implemented.
+     * Grant
      *
      * @param RefData $status
-     * @throws BadRequestException
+     * @param array $fees
+     * @return IrfoGvPermit
      */
-    private function updateStatus(RefData $status)
+    public function grant(RefData $status, Fee $applicationFee)
     {
-        switch($status->getId())
-        {
-            case self::STATUS_GRANTED:
-                if ($this->isGrantable()) {
+        $applicationFeeStatusId = $applicationFee->getFeeStatus()->getId();
 
-                    $this->status = $status;
-                } else {
-                    throw new BadRequestException('Status ' . $status->getId() . ' not permitted');
-                }
-                break;
-            default:
-                $this->status = $status;
+        if (!$this->isGrantable($applicationFeeStatusId)) {
+            throw new BadRequestException(
+                ['Irfo Psv Auth is not grantable']
+            );
         }
+
+        $this->setStatus($status);
+
+        return $this;
     }
 }
