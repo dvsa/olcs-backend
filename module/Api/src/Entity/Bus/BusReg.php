@@ -683,8 +683,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
 
         if (!empty($this->busNoticePeriod)
             && $this->busNoticePeriod->getId() == BusNoticePeriodEntity::NOTICE_PERIOD_SCOTLAND
+            && $this->isShortNotice === 'Y'
         ) {
-            // for Scottish registrations opNotifiedLaPte is required
+            // for Scottish short notice registrations opNotifiedLaPte is required
             $yesFields[] = 'opNotifiedLaPte';
         }
 
