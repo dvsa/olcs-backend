@@ -125,7 +125,7 @@ class FeeTypeTest extends RepositoryTestCase
          . ' AND ft.isMiscellaneous = [[0]]'
          . ' AND ft.costCentreRef != [[IR]]'
          . ' AND ft.goodsOrPsv = [[GOODS_OR_PSV]]'
-         . ' AND ft.licenceType = [[LICENCE_TYPE]]'
+         . ' AND (ft.licenceType = [[LICENCE_TYPE]] OR ft.licenceType IS NULL)'
          . ' AND (ft.trafficArea != [[NI_TRAFFIC_AREA]] OR ft.trafficArea IS NULL)';
 
         $this->assertEquals($expectedQuery, $this->query);
@@ -202,7 +202,7 @@ class FeeTypeTest extends RepositoryTestCase
          . ' AND ft.isMiscellaneous = [[0]]'
          . ' AND ft.costCentreRef != [[IR]]'
          . ' AND ft.goodsOrPsv = [[GOODS_OR_PSV]]'
-         . ' AND ft.licenceType = [[LICENCE_TYPE]]'
+         . ' AND (ft.licenceType = [[LICENCE_TYPE]] OR ft.licenceType IS NULL)'
          . ' AND ft.trafficArea = [[NI_TRAFFIC_AREA]]';
 
         $this->assertEquals($expectedQuery, $this->query);

@@ -213,7 +213,12 @@ class FeeType extends AbstractRepository
 
             // if it is the application fee page then fee_type.licence_type = <current application licence type>
             // Otherwise where fee_type.licence_type = <current licence type>
-            $qb->andWhere($qb->expr()->eq($this->alias.'.licenceType', ':licenceType'));
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->eq($this->alias.'.licenceType', ':licenceType'),
+                    $qb->expr()->isNull($this->alias.'.licenceType') // OLCS-11129 include NULLs
+                )
+            );
             $qb->setParameter(
                 'licenceType',
                 $application ? $application->getLicenceType() : $licence->getLicenceType()
