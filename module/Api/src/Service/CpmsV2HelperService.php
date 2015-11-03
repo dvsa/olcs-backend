@@ -517,14 +517,33 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function reverseChequePayment($receiptReference, $fees = array())
     {
-        // stub response
-        // return [
-        //     'receipt_reference' => "OK",
-        // ];
-
         $method   = 'post';
         $endPoint = '/api/payment/'.$receiptReference.'/reversal';
         $scope    = ApiService::CHEQUE_RD; // refer to drawer
+
+        $extraParams = [
+            'scope' => $scope,
+        ];
+        $params = $this->getParametersForFees($fees, $extraParams);
+
+        $response = $this->send($method, $endPoint, $scope, $params);
+
+        return $this->validatePaymentResponse($response, false);
+    }
+
+    /**
+     * Charge back a payment
+     *
+     * @param string $receiptReference
+     * @param array $fees needed to get customer reference
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function chargeBackCardPayment($receiptReference, $fees = array())
+    {
+        $method   = 'post';
+        $endPoint = '/api/payment/'.$receiptReference.'/chargeback';
+        $scope    = ApiService::SCOPE_CHARGE_BACK;
 
         $extraParams = [
             'scope' => $scope,
