@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Application\Create as CreateCmdHanlder;
@@ -139,6 +140,15 @@ class CreateCommunityLicenceTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedSideEffect(
+            UpdateApplicationCompletion::class,
+            [
+                'id' => $identifier,
+                'section' => 'communityLicences'
+            ],
+            new Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -245,6 +255,15 @@ class CreateCommunityLicenceTest extends CommandHandlerTestCase
                 'licence' => $licenceId,
                 'communityLicenceIds' => [111],
                 'identifier' => $identifier
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            UpdateApplicationCompletion::class,
+            [
+                'id' => $identifier,
+                'section' => 'communityLicences'
             ],
             new Result()
         );
