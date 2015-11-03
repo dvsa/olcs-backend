@@ -52,7 +52,10 @@ class FeeListTest extends QueryHandlerTestCase
             ->andReturn($mockList)
             ->shouldReceive('fetchCount')
             ->with($query)
-            ->andReturn(2);
+            ->andReturn(2)
+            ->shouldReceive('fetchCount')
+            ->with(m::type(Qry::class))
+            ->andReturn(5);
 
         $this->mockedSmServices['FeesHelperService']
             ->shouldReceive('getMinPaymentForFees')
@@ -72,6 +75,7 @@ class FeeListTest extends QueryHandlerTestCase
                 ['id' => 2],
             ],
             'count' => 2,
+            'count-unfiltered' => 5,
             'allowFeePayments' => true,
             'minPayment' => '123.45',
             'totalOutstanding' => '200.00',
@@ -96,7 +100,10 @@ class FeeListTest extends QueryHandlerTestCase
             ->andReturn($mockList)
             ->shouldReceive('fetchCount')
             ->with($query)
-            ->andReturn(2);
+            ->andReturn(2)
+            ->shouldReceive('fetchCount')
+            ->with(m::type(Qry::class))
+            ->andReturn(5);
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchById')
@@ -127,6 +134,7 @@ class FeeListTest extends QueryHandlerTestCase
                 ['id' => 2],
             ],
             'count' => 2,
+            'count-unfiltered' => 5,
             'allowFeePayments' => false,
             'minPayment' => '123.45',
             'totalOutstanding' => '200.00',
@@ -151,7 +159,10 @@ class FeeListTest extends QueryHandlerTestCase
             ->andReturn($mockList)
             ->shouldReceive('fetchCount')
             ->with($query)
-            ->andReturn(2);
+            ->andReturn(2)
+            ->shouldReceive('fetchCount')
+            ->with(m::type(Qry::class))
+            ->andReturn(5);
 
         $this->repoMap['Application']
             ->shouldReceive('fetchById')
@@ -182,6 +193,7 @@ class FeeListTest extends QueryHandlerTestCase
                 ['id' => 2],
             ],
             'count' => 2,
+            'count-unfiltered' => 5,
             'allowFeePayments' => false,
             'minPayment' => '123.45',
             'totalOutstanding' => '200.00',
