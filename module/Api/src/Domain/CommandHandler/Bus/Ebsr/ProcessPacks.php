@@ -48,7 +48,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
     use AuthAwareTrait;
     use UploaderAwareTrait;
 
-    protected $repoServiceName = 'bus';
+    protected $repoServiceName = 'Bus';
 
     protected $extraRepos = [
         'Document',
