@@ -577,7 +577,6 @@ return [
     TransferCommand\Fee\ApproveWaive::class => CommandHandler\Fee\ApproveWaive::class,
     TransferCommand\Fee\RecommendWaive::class => CommandHandler\Fee\RecommendWaive::class,
     TransferCommand\Fee\RejectWaive::class => CommandHandler\Fee\RejectWaive::class,
-    TransferCommand\Fee\UpdateFee::class => CommandHandler\Fee\UpdateFee::class,
     TransferCommand\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     TransferCommand\Fee\RefundFee::class => CommandHandler\Fee\RefundFee::class,
 

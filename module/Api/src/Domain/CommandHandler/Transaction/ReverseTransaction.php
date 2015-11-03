@@ -39,6 +39,8 @@ final class ReverseTransaction extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Transaction';
 
+    protected $extraRepos = ['Fee'];
+
     public function handleCommand(CommandInterface $command)
     {
         $transaction = $this->getRepo()->fetchUsingId($command);
@@ -61,7 +63,7 @@ final class ReverseTransaction extends AbstractCommandHandler implements
 
         try {
             $fee = $transaction->getFeeTransactions()->first()->getFee();
-            $response = $this->getCpmsService()->reverseChequePayment(
+            $response = $this->getCpmsService()->$method(
                 $transaction->getReference(),
                 [$fee]
             );
@@ -87,15 +89,18 @@ final class ReverseTransaction extends AbstractCommandHandler implements
             ->setProcessedByUser($this->getCurrentUser())
             ->setReference($transactionReference);
 
+        $fees = [];
         foreach ($transaction->getFeeTransactionsForReversal() as $originalFt) {
             $feeTransaction = new FeeTransactionEntity();
             $reversalAmount = $originalFt->getAmount() * -1;
+            $fee = $originalFt->getFee();
             $feeTransaction
-                ->setFee($originalFt->getFee())
+                ->setFee($fee)
                 ->setTransaction($transaction)
                 ->setAmount($reversalAmount)
                 ->setReversedFeeTransaction($originalFt);
             $newTransaction->getFeeTransactions()->add($feeTransaction);
+            $fees[$fee->getId()] = $fee;
         }
 
         $this->getRepo()->save($newTransaction);
@@ -107,6 +112,23 @@ final class ReverseTransaction extends AbstractCommandHandler implements
             ->addId('transaction', $newTransaction->getId())
             ->addMessage('Transaction record created');
 
+        $this->resetFees($fees);
+
         return $this->result;
+    }
+
+    /**
+     * @todo there may be edge cases we need to consider here, e.g.:
+     *  - if fees still have a zero or negative outstanding after reversing the payment
+     *  - overpayment balancing fees can probably just be cancelled
+     */
+    private function resetFees(array $fees)
+    {
+        $status = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_OUTSTANDING);
+        foreach ($fees as $feeId => $fee) {
+            $fee->setFeeStatus($status);
+            $this->getRepo('Fee')->save($fee);
+            $this->result->addMessage(sprintf('Fee %d reset to outstanding', $feeId));
+        }
     }
 }
