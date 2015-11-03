@@ -193,7 +193,7 @@ class Fee extends AbstractFee
     {
         $feeTransactions = $this->getFeeTransactions();
 
-        if (empty($feeTransactions)) {
+        if (empty($feeTransactions) || $feeTransactions->isEmpty()) {
             return;
         }
 
@@ -359,14 +359,6 @@ class Fee extends AbstractFee
     /**
      * @return boolean
      */
-    public function isPaid()
-    {
-        return $this->getFeeStatus()->getId() === self::STATUS_PAID;
-    }
-
-    /**
-     * @return boolean
-     */
     public function isBalancingFee()
     {
         return in_array(
@@ -424,11 +416,17 @@ class Fee extends AbstractFee
         return $this->getOutstandingAmount() < $this->getAmount();
     }
 
+    /**
+     * @return bool
+     */
     public function isFullyOutstanding()
     {
         return $this->getFeeStatus()->getId() === self::STATUS_OUTSTANDING && !$this->isPartPaid();
     }
 
+    /**
+     * @return bool
+     */
     public function isOutstanding()
     {
         return $this->getFeeStatus()->getId() === self::STATUS_OUTSTANDING;
@@ -443,15 +441,26 @@ class Fee extends AbstractFee
 
     }
 
+    public function isPaid()
+    {
+        return $this->getFeeStatus()->getId() === self::STATUS_PAID;
+    }
+
+    /**
+     * @return bool
+     */
     public function canRefund()
     {
-        $isPaidOrOutstanding = in_array(
-            $this->getFeeStatus()->getId(),
-            [
-                self::STATUS_PAID,
-                self::STATUS_OUTSTANDING,
-            ]
-        );
+
+        if ($this->getFeeType()->isMiscellaneous()) {
+            // miscellaneous fees are not currently refundable
+            return false;
+        }
+
+        if ($this->isCancelled()) {
+            // cancelled fees are not refundable
+            return false;
+        }
 
         $hasNonRefundedPayment = false;
         foreach ($this->getFeeTransactions() as $ft) {
@@ -461,9 +470,13 @@ class Fee extends AbstractFee
             }
         }
 
-        return ($isPaidOrOutstanding && $hasNonRefundedPayment);
+        // can only refund if there are non-refunded payments
+        return $hasNonRefundedPayment;
     }
 
+    /**
+     * @return array
+     */
     public function getFeeTransactionsForRefund()
     {
         $feeTransactions = [];
