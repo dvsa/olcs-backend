@@ -196,6 +196,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * Get the authorisation code for a card payment
      *
+     * Note: this is potentially required for chargebacks, etc. but is not
+     * currently used
+     *
      * @param string $receiptReference
      * @return string auth code|null
      */
