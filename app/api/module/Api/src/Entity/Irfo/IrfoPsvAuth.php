@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -148,10 +147,14 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
      * @return bool
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    public function isGrantable($applicationFeeStatusId = null)
+    public function isGrantable($applicationFee = null)
     {
-        if ($this->isPaidFor($applicationFeeStatusId) && $this->isGrantableState()) {
-            return true;
+        if ($applicationFee instanceof Fee) {
+            $applicationFeeStatusId = $applicationFee->getFeeStatus()->getId();
+
+            if ($this->isPaidFor($applicationFeeStatusId) && $this->isGrantableState()) {
+                return true;
+            }
         }
 
         return false;
@@ -166,9 +169,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
      */
     public function grant(RefData $status, Fee $applicationFee)
     {
-        $applicationFeeStatusId = $applicationFee->getFeeStatus()->getId();
-
-        if (!$this->isGrantable($applicationFeeStatusId)) {
+        if (!$this->isGrantable($applicationFee)) {
             throw new BadRequestException(
                 ['Irfo Psv Auth is not grantable']
             );

@@ -22,21 +22,8 @@ class IrfoPsvAuth extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        $isGrantable = false;
-
         /** @var IrfoPsvAuthEntity $irfoPsvAuth */
         $irfoPsvAuth = $this->getRepo()->fetchUsingId($query);
-
-        $applicationFee = $this->getRepo('Fee')->fetchApplicationFeeByPsvAuthId($irfoPsvAuth->getId());
-
-        if ($applicationFee instanceof FeeEntity) {
-            $applicationFeeStatusId = $applicationFee->getFeeStatus()->getId();
-
-            if ($irfoPsvAuth->isGrantable($applicationFeeStatusId)
-            ) {
-                $isGrantable = true;
-            }
-        }
 
         return $this->result(
             $irfoPsvAuth,
@@ -46,7 +33,9 @@ class IrfoPsvAuth extends AbstractQueryHandler
                 'countrys'
             ],
             [
-                'isGrantable' => $isGrantable
+                'isGrantable' => $irfoPsvAuth->isGrantable(
+                    $this->getRepo('Fee')->fetchApplicationFeeByPsvAuthId($irfoPsvAuth->getId())
+                )
             ]
         );
     }
