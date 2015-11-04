@@ -654,11 +654,11 @@ VALUES
     (10003,'OLCS-3456-4567','trt_payment','pay_s_pd','2015-09-02','fpm_cash','',NULL,NULL,1);
 
 INSERT INTO `fee_txn`
-    (`fee_id`,`txn_id`,`amount`)
+    (`id`,`fee_id`,`txn_id`,`amount`, `reversed_fee_txn_id`)
 VALUES
-    (97,10001,100.00),
-    (97,10002,-100.00),
-    (97,10003,120.00);
+    (1,97,10001,100.00,NULL),
+    (2,97,10002,-100.00,1),
+    (3,97,10003,120.00,NULL);
 
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `enforcement_area_id`, `created_by`, `correspondence_cd_id`, `establishment_cd_id`,

@@ -30,7 +30,7 @@ if ($profile) {
 }
 
 error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 
 /**
  * This makes our life easier when dealing with paths. Everything is relative

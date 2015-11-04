@@ -68,6 +68,7 @@ class UpdateStatementTest extends CommandHandlerTestCase
             "requestorsBody" => "REQUESTORS BODY",
             "stoppedDate" => "2015-01-05",
             "requestedDate" => "2015-05-05",
+            "issuedDate" => "2015-02-02",
             "contactType" => "cm_email",
             "authorisersDecision" => "Decision is ..."
         ];
@@ -100,6 +101,7 @@ class UpdateStatementTest extends CommandHandlerTestCase
             "requestorsBody" => "REQUESTORS BODY",
             "stoppedDate" => "2015-01-05",
             "requestedDate" => "2015-05-05",
+            "issuedDate" => "2015-02-02",
             "contactType" => new RefDataEntity(),
             "authorisersDecision" => "Decision is ..."
         ];
@@ -191,6 +193,5 @@ class UpdateStatementTest extends CommandHandlerTestCase
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
         $this->assertContains('Statement updated', $result->getMessages());
-
     }
 }

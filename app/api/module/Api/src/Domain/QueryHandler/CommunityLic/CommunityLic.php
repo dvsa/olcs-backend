@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\CommunityLic;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Repository\CommunityLicRepo;
+use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 
 /**
  * Community Licence
@@ -30,9 +30,16 @@ class CommunityLic extends AbstractQueryHandler
 
         $officeCopy = $repo->fetchOfficeCopy($query->getLicence());
 
+        $data = $query->getArrayCopy();
+
+        unset($data['statuses']);
+
+        $unfilteredQuery = \Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLic::create($data);
+
         return [
             'result' => $repo->fetchList($query),
             'count' =>  $repo->fetchCount($query),
+            'count-unfiltered' => $repo->fetchCount($unfilteredQuery),
             'totCommunityLicences' => $licence->getTotCommunityLicences(),
             'officeCopy' => $officeCopy
         ];
