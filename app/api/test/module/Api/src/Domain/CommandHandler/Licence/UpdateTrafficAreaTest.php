@@ -57,7 +57,7 @@ class UpdateTrafficAreaTest extends CommandHandlerTestCase
         $application = new \Dvsa\Olcs\Api\Entity\Application\Application(
             $licence,
             new \Dvsa\Olcs\Api\Entity\System\RefData(),
-            0
+            false
         );
         $application->setId(34);
         $licence->addApplications($application);
