@@ -198,7 +198,7 @@ class GrantIrfoPsvAuthTest extends CommandHandlerTestCase
             (new Result())->addMessage('IRFO PSV Auth updated successfully')
                 ->addId('irfoPsvAuth', $data['id'])
         );
-        
+
         $this->repoMap['FeeType']->shouldReceive('getLatestIrfoFeeType')
             ->andReturn($this->references[FeeTypeEntity::class][1]);
 
