@@ -22,18 +22,20 @@ class IrfoPsvAuth extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        /** @var IrfoPsvAuthEntity $psvAuth */
-        $psvAuth = $this->getRepo()->fetchUsingId($query);
+        /** @var IrfoPsvAuthEntity $irfoPsvAuth */
+        $irfoPsvAuth = $this->getRepo()->fetchUsingId($query);
+
+        $applicationFee = $this->getRepo('Fee')->fetchApplicationFeeByPsvAuthId($irfoPsvAuth->getId());
 
         return $this->result(
-            $psvAuth,
+            $irfoPsvAuth,
             [
                 'irfoPsvAuthType',
                 'irfoPsvAuthNumbers',
                 'countrys'
             ],
             [
-                'actions' => $this->getActions($psvAuth)
+                'isGrantable' => $irfoPsvAuth->isGrantable($applicationFee->getFeeStatus()->getId())
             ]
         );
     }

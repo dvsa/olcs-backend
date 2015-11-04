@@ -124,9 +124,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
             return true;
         }
 
-        throw new BadRequestException(
-            ['Irfo Psv Auth has not been paid for']
-        );
+        return false;
     }
 
     /**
@@ -140,9 +138,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
             return true;
         }
 
-        throw new BadRequestException(
-            ['Irfo Psv Auth is not grantable']
-        );
+        return false;
     }
 
     /**

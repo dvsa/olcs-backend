@@ -45,7 +45,7 @@ final class UpdateIrfoPsvAuth extends AbstractCommandHandler implements Transact
             $command->getCopiesRequired(),
             $command->getCopiesRequiredTotal()
         );
-        
+
         if ($command->getExpiryDate() !== null) {
             $irfoPsvAuth->setExpiryDate(new \DateTime($command->getExpiryDate()));
         }
