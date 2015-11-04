@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as Entity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 
 /**
  * Transaction
@@ -40,29 +41,19 @@ class Transaction extends AbstractQueryHandler
         );
     }
 
+    /**
+     * Get a flattened array of fee data for the transaction.
+     */
     protected function flattenFees($transaction)
     {
         $fees = [];
-        $reversals = []; // id => original id
 
         $transaction->getFeeTransactions()->forAll(
-            function ($key, $ft) use (&$fees, &$reversals) {
-
+            function ($key, $ft) use (&$fees) {
                 unset($key); // unused
-
                 $fee = $ft->getFee()->serialize(['feeStatus']);
-                $fee['reversingTransaction'] = null;
-
-                if (count($ft->getReversingFeeTransactions())>0) {;
-                    $reversal = $ft->getReversingFeeTransactions()->first();
-                    $fee['reversingTransaction'] = [
-                        'id' => $reversal->getTransaction()->getId(),
-                        'type' => $reversal->getTransaction()->getType()->getId(),
-                    ];
-                }
-
+                $fee['reversingTransaction'] = $this->getReversingTransactionData($ft);
                 $id = $fee['id'];
-
                 if (isset($fees[$id])) {
                     $fees[$id]['allocatedAmount'] += $ft->getAmount();
                 } else {
@@ -84,5 +75,19 @@ class Transaction extends AbstractQueryHandler
         );
 
         return $fees;
+    }
+
+    /**
+     * @return array|null
+     */
+    protected function getReversingTransactionData(FeeTransactionEntity $ft)
+    {
+        if (count($ft->getReversingFeeTransactions())>0) {;
+            $reversal = $ft->getReversingFeeTransactions()->first();
+            return [
+                'id' => $reversal->getTransaction()->getId(),
+                'type' => $reversal->getTransaction()->getType()->getId(),
+            ];
+        }
     }
 }
