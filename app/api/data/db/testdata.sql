@@ -650,7 +650,7 @@ INSERT INTO `txn` (
 )
 VALUES
     (10001,'OLCS-1234-2345','trt_payment','pay_s_pd','2015-08-26','fpm_cheque','',NULL,NULL,1),
-    (10002,'OLCS-2345-3456','trt_bounce','pay_s_pd','2015-09-01','fpm_cheque','',NULL,NULL,1),
+    (10002,'OLCS-2345-3456','trt_reversal','pay_s_pd','2015-09-01','fpm_reversal','',NULL,NULL,1),
     (10003,'OLCS-3456-4567','trt_payment','pay_s_pd','2015-09-02','fpm_cash','',NULL,NULL,1);
 
 INSERT INTO `fee_txn`
