@@ -85,6 +85,8 @@ class CreateFeeTest extends CommandHandlerTestCase
 
         $this->mapReference(FeeType::class, 99)
             ->shouldReceive('isMiscellaneous')
+            ->andReturn(false)
+            ->shouldReceive('isAdjustment')
             ->andReturn(false);
 
         /** @var FeeEntity $savedFee */
@@ -256,6 +258,8 @@ class CreateFeeTest extends CommandHandlerTestCase
         $feeType = m::mock(FeeType::class)
             ->shouldReceive('isMiscellaneous')
             ->andReturn(false)
+            ->shouldReceive('isAdjustment')
+            ->andReturn(false)
             ->getMock();
 
         $command = Cmd::create([]);
@@ -269,6 +273,8 @@ class CreateFeeTest extends CommandHandlerTestCase
     {
         $feeType = m::mock(FeeType::class)
             ->shouldReceive('isMiscellaneous')
+            ->andReturn(false)
+            ->shouldReceive('isAdjustment')
             ->andReturn(false)
             ->getMock();
 
