@@ -65,7 +65,7 @@ final class ReverseTransaction extends AbstractCommandHandler implements
                 $transaction->getReference(),
                 [$fee]
             );
-         } catch (CpmsResponseException $e) {
+        } catch (CpmsResponseException $e) {
             // rethrow as Domain exception
             throw new RuntimeException(
                 'Error from CPMS service: ' . json_encode($e->getResponse()),
@@ -76,6 +76,7 @@ final class ReverseTransaction extends AbstractCommandHandler implements
 
         // create reversal transaction
         $transactionReference = $response['receipt_reference'];
+        $comment = $command->getReason();
         $now = new DateTime();
         $newTransaction = new TransactionEntity();
         $newTransaction
