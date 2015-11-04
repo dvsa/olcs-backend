@@ -79,6 +79,8 @@ class Transaction extends AbstractTransaction
     {
         return [
             'amount' => $this->getTotalAmount(),
+            'displayReversalOption' => $this->displayReversalOption(),
+            'canReverse' => $this->canReverse(),
         ];
     }
 
@@ -131,5 +133,45 @@ class Transaction extends AbstractTransaction
         }
 
         return $feeTransactions;
+    }
+
+    /**
+     * Determine whether to show the 'Reverse' option for a transaction
+     * OLCS-6006: the transaction is of type 'Payment' AND the method of payment is Cheque or Card
+     *
+     * Note: there are additional checks for whether a transaction can ultimately
+     * be reversed
+     * @see canReverse()
+     */
+    public function displayReversalOption()
+    {
+        if (!$this->isPayment()) {
+            return false;
+        }
+
+        $reversable = [
+            Fee::METHOD_CARD_ONLINE,
+            Fee::METHOD_CARD_OFFLINE,
+            Fee::METHOD_CHEQUE,
+        ];
+
+        return in_array($this->getPaymentMethod()->getId(), $reversable);
+    }
+
+    /**
+     * Determine whether a transaction is reversable, i.e.
+     * none of the allocated fee amounts has already been refunded or reversed
+     *
+     * @return bool
+     */
+    public function canReverse()
+    {
+        foreach ($this->getFeeTransactions() as $ft) {
+            if ($ft->isRefundedOrReversed()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
