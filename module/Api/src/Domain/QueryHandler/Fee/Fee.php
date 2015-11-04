@@ -59,7 +59,44 @@ class Fee extends AbstractQueryHandler
             'slipNo' => $fee->getSlipNo(),
             'chequePoNumber' => $fee->getChequePoNumber(),
             'waiveReason' => $fee->getWaiveReason(),
+
             'hasOutstandingWaiveTransaction' => !empty($fee->getOutstandingWaiveTransaction()),
+
+            'canRefund' => $fee->canRefund(),
+
+            'displayTransactions' => $this->getDisplayTransactions($fee),
         ];
+    }
+
+
+    /**
+     * Filter and group transaction data for display
+     */
+    private function getDisplayTransactions(FeeEntity $fee)
+    {
+        $displayData = [];
+
+        foreach ($fee->getFeeTransactions() as $ft) {
+            $transaction = $ft->getTransaction();
+            $id = $transaction->getId();
+            if ($transaction->isOutstanding() && $transaction->isWaive()) {
+                continue;
+            }
+            if (isset($displayData[$id])) {
+                $displayData[$id]['amount'] += $ft->getAmount();
+                continue;
+            }
+            $displayData[$id] = [
+                'transactionId' => $transaction->getId(),
+                'type' => $transaction->getType()->getDescription(),
+                'completedDate' => $transaction->getCompletedDate(),
+                'method' => $transaction->getPaymentMethod()->getDescription(),
+                'processedBy' => $transaction->getProcessedByUser()->getLoginId(),
+                'amount' => $ft->getAmount(),
+                'status' => $transaction->getStatus(),
+            ];
+        }
+
+        return $displayData;
     }
 }

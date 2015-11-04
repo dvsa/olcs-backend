@@ -12,6 +12,8 @@ use Dvsa\Olcs\Transfer\Query\Processing\NoteList as NoteListQuery;
 
 /**
  * Note
+ *
+ * @todo IMO this should be split into 3 different query handlers, I think this one is doing a little too much
  */
 class NoteList extends AbstractQueryHandler
 {
@@ -45,7 +47,10 @@ class NoteList extends AbstractQueryHandler
                 }
 
                 $data['casesMultiple'] = $caseIds;
-                if (isset($data['case'])) unset($data['case']);
+
+                if (isset($data['case'])) {
+                    unset($data['case']);
+                }
 
                 $data['licence'] = $licenceId;
 
@@ -91,9 +96,16 @@ class NoteList extends AbstractQueryHandler
         /** @var NoteRepository $repo */
         $repo = $this->getRepo();
 
+        $data = $query->getArrayCopy();
+
+        unset($data['noteType']);
+
+        $unfilteredQuery = \Dvsa\Olcs\Transfer\Query\Processing\NoteList::create($data);
+
         return [
             'result' => $repo->fetchList($query),
-            'count' => $repo->fetchCount($query)
+            'count' => $repo->fetchCount($query),
+            'count-unfiltered' => $repo->fetchCount($unfilteredQuery),
         ];
     }
 }

@@ -38,8 +38,18 @@ class DocumentListTest extends QueryHandlerTestCase
             ->andReturn(['foo' => 'bar'])
             ->shouldReceive('fetchCount')
             ->with($query)
-            ->andReturn(10);
+            ->andReturn(10)
+            ->shouldReceive('fetchCount')
+            ->with(m::type(Qry::class))
+            ->andReturn(15);
 
-        $this->assertEquals(['result' => ['foo' => 'bar'], 'count' => 10], $this->sut->handleQuery($query));
+        $this->assertEquals(
+            [
+                'result' => ['foo' => 'bar'],
+                'count' => 10,
+                'count-unfiltered' => 15
+            ],
+            $this->sut->handleQuery($query)
+        );
     }
 }

@@ -12,10 +12,11 @@ namespace Dvsa\Olcs\Api\Service;
 
 use CpmsClient\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Entity\Fee\Fee;
 
 /**
  * Cpms Version 2 Helper Service
@@ -32,6 +33,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
 
     const TAX_CODE = 'Z';
+
+    const REFUND_REASON = 'Refund';
 
     /**
      * @var ApiService
@@ -396,6 +399,93 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $url = '/api/report/'.$reference.'/download?token='.$token;
 
         return $this->send('get', $url, ApiService::SCOPE_REPORT, []);
+    }
+
+    /**
+     * Refund payments in a batch
+     *
+     * @param Fee $fee
+     * @return array
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function batchRefund($fee)
+    {
+        $method   = 'post';
+        $endPoint = '/api/refund';
+        $scope    = ApiService::SCOPE_REFUND;
+
+        $payments = [];
+
+        foreach ($fee->getFeeTransactionsForRefund() as $ft) {
+            $payments[] = $this->getRefundPaymentDataForFeeTransaction($ft);
+        }
+
+        $params = [
+            'scope' => $scope,
+            'customer_reference' => (string) $this->getCustomerReference([$fee]),
+            'payments' => $payments,
+        ];
+
+        // @todo
+        // $response = $this->send($method, $endPoint, $scope, $params);
+        $response = $this->stubResponse($payments);
+
+        if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
+            return $response;
+        } else {
+            $e = new CpmsResponseException('Invalid refund response');
+            $e->setResponse($response);
+            throw $e;
+        }
+    }
+
+    /**
+     * @todo remove when CPMS refund end point is working
+     */
+    private function stubResponse($payments)
+    {
+        $receiptRefs = array_map(
+            function ($payment) {
+                return $payment['receipt_reference'];
+            },
+            $payments
+        );
+        $count = 0;
+        $refundRefs = array_map(
+            function ($payment) use (&$count) {
+                return sprintf('REFUND-REF-%d', ++$count);
+            },
+            $receiptRefs
+        );
+        return [
+           'code' => self::RESPONSE_SUCCESS,
+           'receipt_references' => array_combine($receiptRefs, $refundRefs),
+           'message' => '** stubbed response from ' . __METHOD__ . ' **',
+        ];
+    }
+
+    /**
+     * @param FeeTransaction $ft
+     * @return array of 'payment' data for batch refund call
+     * @see https://wiki.i-env.net/display/CPMS/CPMS+API+V2+Specification#CPMSAPIV2Specification-Batchrefund
+     */
+    protected function getRefundPaymentDataForFeeTransaction(FeeTransaction $ft)
+    {
+        $paymentData = $this->getPaymentDataForFee(
+            $ft->getFee(),
+            [
+                'allocated_amount' => $this->formatAmount($ft->getAmount()),
+                'net_amount' => $this->formatAmount($ft->getAmount()),
+            ]
+        );
+
+        return [
+            'receipt_reference' => $ft->getTransaction()->getReference(),
+            'refund_reason' => self::REFUND_REASON,
+            'payment_data' => [
+                $paymentData,
+            ]
+        ];
     }
 
     /**

@@ -59,6 +59,9 @@ class CommunityLicTest extends QueryHandlerTestCase
             ->shouldReceive('fetchCount')
             ->with($query)
             ->andReturn(1)
+            ->shouldReceive('fetchCount')
+            ->with(m::type(Qry::class))
+            ->andReturn(2)
             ->once()
             ->getMock();
 
@@ -67,6 +70,7 @@ class CommunityLicTest extends QueryHandlerTestCase
         $expected = [
             'result' => 'result',
             'count' =>  1,
+            'count-unfiltered' => 2,
             'totCommunityLicences' => 2,
             'officeCopy' => 'officeCopy'
         ];

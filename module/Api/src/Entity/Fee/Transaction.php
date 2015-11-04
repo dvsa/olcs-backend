@@ -32,6 +32,7 @@ class Transaction extends AbstractTransaction
 
     const TYPE_WAIVE = 'trt_waive';
     const TYPE_PAYMENT = 'trt_payment';
+    const TYPE_REFUND = 'trt_refund';
 
     /**
      * @return boolean
@@ -105,5 +106,13 @@ class Transaction extends AbstractTransaction
     public function isWaive()
     {
         return $this->getType()->getId() === self::TYPE_WAIVE;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPayment()
+    {
+        return $this->getType()->getId() === self::TYPE_PAYMENT;
     }
 }
