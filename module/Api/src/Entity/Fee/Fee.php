@@ -460,16 +460,14 @@ class Fee extends AbstractFee
             return false;
         }
 
-        $hasNonRefundedPayment = false;
+        // can only refund if there are non-refunded payments
         foreach ($this->getFeeTransactions() as $ft) {
             if ($ft->getTransaction()->isPayment() && !$ft->isRefundedOrReversed()) {
-                $hasNonRefundedPayment = true;
-                break;
+                return true;
             }
         }
 
-        // can only refund if there are non-refunded payments
-        return $hasNonRefundedPayment;
+        return false;
     }
 
     /**

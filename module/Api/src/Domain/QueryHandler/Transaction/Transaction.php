@@ -52,14 +52,13 @@ class Transaction extends AbstractQueryHandler
             function ($key, $ft) use (&$fees) {
                 unset($key); // unused
                 $fee = $ft->getFee()->serialize(['feeStatus']);
-                $fee['reversingTransaction'] = $this->getReversingTransactionData($ft);
                 $id = $fee['id'];
                 if (isset($fees[$id])) {
-                    $fees[$id]['allocatedAmount'] += $ft->getAmount();
-                } else {
-                    $fee['allocatedAmount'] = $ft->getAmount();
-                    $fees[$id] = $fee;
+                    $fee = &$fees[$id];
                 }
+                $fee['reversingTransaction'] = $this->getReversingTransactionData($ft);
+                $fee['allocatedAmount'] += $ft->getAmount();
+                $fees[$id] = &$fee;
 
                 return true;
             }
