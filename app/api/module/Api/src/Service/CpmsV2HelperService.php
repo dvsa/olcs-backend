@@ -521,10 +521,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $endPoint = '/api/payment/'.$receiptReference.'/reversal';
         $scope    = ApiService::CHEQUE_RD; // refer to drawer
 
-        $extraParams = [
+        $params = [
             'scope' => $scope,
+            'customer_reference' => (string) $this->getCustomerReference($fees),
         ];
-        $params = $this->getParametersForFees($fees, $extraParams);
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
@@ -545,10 +545,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $endPoint = '/api/payment/'.$receiptReference.'/chargeback';
         $scope    = ApiService::SCOPE_CHARGE_BACK;
 
-        $extraParams = [
+        $params = [
             'scope' => $scope,
+            'customer_reference' => (string) $this->getCustomerReference($fees),
         ];
-        $params = $this->getParametersForFees($fees, $extraParams);
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
