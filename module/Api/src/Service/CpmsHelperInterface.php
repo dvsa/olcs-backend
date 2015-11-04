@@ -131,6 +131,14 @@ interface CpmsHelperInterface
     public function downloadReport($reference, $token);
 
     /**
+     * Refund payments in a batch
+     *
+     * @param Fee $fee
+     * @return array
+     */
+    public function batchRefund($fee);
+
+    /**
      * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
      */

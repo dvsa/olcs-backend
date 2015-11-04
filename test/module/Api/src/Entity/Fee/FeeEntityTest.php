@@ -39,6 +39,19 @@ class FeeEntityTest extends EntityTester
         $this->sut = $this->instantiate($this->entityClass);
     }
 
+    public function testConstructor()
+    {
+        $type = new FeeType();
+        $amount = '10.00';
+        $status = new RefData(Entity::STATUS_OUTSTANDING);
+
+        $fee = new Entity($type, $amount, $status);
+
+        $this->assertSame($type, $fee->getFeeType());
+        $this->assertSame($amount, $fee->getAmount());
+        $this->assertSame($status, $fee->getFeeStatus());
+    }
+
     /**
      * @param array $feeTransactions
      * @param boolean $expected
@@ -657,6 +670,31 @@ class FeeEntityTest extends EntityTester
      * @param string $status
      * @param boolean $expected
      *
+     * @dataProvider isOutstandingProvider
+     */
+    public function testIsOutstanding($status, $expected)
+    {
+        $feeStatus = m::mock(RefData::class)->makePartial();
+        $feeStatus->setId($status);
+        $this->sut->setFeeStatus($feeStatus);
+
+        $this->assertEquals($expected, $this->sut->isOutstanding());
+    }
+
+    public function isOutstandingProvider()
+    {
+        return [
+            [Entity::STATUS_PAID, false],
+            [Entity::STATUS_CANCELLED, false],
+            [Entity::STATUS_OUTSTANDING, true],
+            ['invalid', false],
+        ];
+    }
+
+    /**
+     * @param string $status
+     * @param boolean $expected
+     *
      * @dataProvider isCancelledProvider
      */
     public function testIsCancelled($status, $expected)
@@ -675,6 +713,49 @@ class FeeEntityTest extends EntityTester
             [Entity::STATUS_CANCELLED, true],
             [Entity::STATUS_OUTSTANDING, false],
             ['invalid', false],
+        ];
+    }
+
+    /**
+     * @param string $feeAmount
+     * @param string $status
+     * @param array $feeTransactions
+     * @param boolean $expected
+     *
+     * @dataProvider isFullyOutstandingProvider
+     */
+    public function testIsFullyOutstanding($feeAmount, $status, $feeTransactions, $expected)
+    {
+        $feeStatus = m::mock(RefData::class)->makePartial();
+        $feeStatus->setId($status);
+        $this->sut->setFeeStatus($feeStatus);
+        $this->sut->setFeeTransactions(new ArrayCollection($feeTransactions));
+        $this->sut->setAmount($feeAmount);
+
+        $this->assertEquals($expected, $this->sut->isFullyOutstanding());
+    }
+
+    public function isFullyOutstandingProvider()
+    {
+        $paid10 = m::mock(FeeTransaction::class);
+        $paid10->shouldReceive('getTransaction->isComplete')
+            ->andReturn(true);
+        $paid10->shouldReceive('getAmount')
+            ->andReturn('10.00');
+
+        $pending10 = m::mock(FeeTransaction::class);
+        $pending10->shouldReceive('getTransaction->isComplete')
+            ->andReturn(false);
+        $pending10->shouldReceive('getAmount')
+            ->andReturn('10.00');
+
+        return [
+            ['10.00', Entity::STATUS_PAID, [], false],
+            ['10.00', Entity::STATUS_CANCELLED, [], false],
+            ['10.00', Entity::STATUS_OUTSTANDING, [], true],
+            ['10.00', Entity::STATUS_PAID, [$paid10], false],
+            ['20.00', Entity::STATUS_OUTSTANDING, [$paid10], false],
+            ['10.00', Entity::STATUS_OUTSTANDING, [$pending10], true],
         ];
     }
 
@@ -722,6 +803,135 @@ class FeeEntityTest extends EntityTester
     }
 
     /**
+     * @param string $type
+     * @param boolean $expected
+     *
+     * @dataProvider isNewApplicationFeeProvider
+     */
+    public function testIsNewApplicationFee($type, $expected)
+    {
+        $feeTypeType = new RefData($type);
+        $feeType = new FeeType();
+        $feeType->setFeeType($feeTypeType);
+
+        $this->sut->setFeeType($feeType);
+
+        $this->assertEquals($expected, $this->sut->isNewApplicationFee());
+    }
+
+    public function isNewApplicationFeeProvider()
+    {
+        return [
+            [FeeType::FEE_TYPE_APP, true],
+            [FeeType::FEE_TYPE_VAR, false],
+            [FeeType::FEE_TYPE_GRANT, false],
+            [FeeType::FEE_TYPE_CONT, false],
+            [FeeType::FEE_TYPE_VEH, false],
+            [FeeType::FEE_TYPE_GRANTINT, false],
+            [FeeType::FEE_TYPE_INTVEH, false],
+            [FeeType::FEE_TYPE_DUP, false],
+            [FeeType::FEE_TYPE_ANN, false],
+            [FeeType::FEE_TYPE_GRANTVAR, false],
+            [FeeType::FEE_TYPE_BUSAPP, false],
+            [FeeType::FEE_TYPE_BUSVAR, false],
+            [FeeType::FEE_TYPE_GVANNVEH, false],
+            [FeeType::FEE_TYPE_INTUPGRADEVEH, false],
+            [FeeType::FEE_TYPE_INTAMENDED, false],
+            [FeeType::FEE_TYPE_IRFOPSVAPP, false],
+            [FeeType::FEE_TYPE_IRFOPSVANN, false],
+            [FeeType::FEE_TYPE_IRFOPSVCOPY, false],
+            [FeeType::FEE_TYPE_IRFOGVPERMIT, false],
+            [FeeType::FEE_TYPE_ADJUSTMENT, false],
+        ];
+    }
+
+    /**
+     * @param string $type
+     * @param boolean $expected
+     *
+     * @dataProvider isVariationFeeProvider
+     */
+    public function testIsVariationFee($type, $expected)
+    {
+        $feeTypeType = new RefData($type);
+        $feeType = new FeeType();
+        $feeType->setFeeType($feeTypeType);
+
+        $this->sut->setFeeType($feeType);
+
+        $this->assertEquals($expected, $this->sut->isVariationFee());
+    }
+
+    public function isVariationFeeProvider()
+    {
+        return [
+            [FeeType::FEE_TYPE_APP, false],
+            [FeeType::FEE_TYPE_VAR, true],
+            [FeeType::FEE_TYPE_GRANT, false],
+            [FeeType::FEE_TYPE_CONT, false],
+            [FeeType::FEE_TYPE_VEH, false],
+            [FeeType::FEE_TYPE_GRANTINT, false],
+            [FeeType::FEE_TYPE_INTVEH, false],
+            [FeeType::FEE_TYPE_DUP, false],
+            [FeeType::FEE_TYPE_ANN, false],
+            [FeeType::FEE_TYPE_GRANTVAR, false],
+            [FeeType::FEE_TYPE_BUSAPP, false],
+            [FeeType::FEE_TYPE_BUSVAR, false],
+            [FeeType::FEE_TYPE_GVANNVEH, false],
+            [FeeType::FEE_TYPE_INTUPGRADEVEH, false],
+            [FeeType::FEE_TYPE_INTAMENDED, false],
+            [FeeType::FEE_TYPE_IRFOPSVAPP, false],
+            [FeeType::FEE_TYPE_IRFOPSVANN, false],
+            [FeeType::FEE_TYPE_IRFOPSVCOPY, false],
+            [FeeType::FEE_TYPE_IRFOGVPERMIT, false],
+            [FeeType::FEE_TYPE_ADJUSTMENT, false],
+        ];
+    }
+
+    /**
+     * @param string $type
+     * @param boolean $expected
+     *
+     * @dataProvider isGrantFeeProvider
+     */
+    public function testIsGrantFee($type, $expected)
+    {
+        $feeTypeType = new RefData($type);
+        $feeType = new FeeType();
+        $feeType->setFeeType($feeTypeType);
+
+        $this->sut->setFeeType($feeType);
+
+        $this->assertEquals($expected, $this->sut->isGrantFee());
+    }
+
+    public function isGrantFeeProvider()
+    {
+        return [
+            [FeeType::FEE_TYPE_APP, false],
+            [FeeType::FEE_TYPE_VAR, false],
+            [FeeType::FEE_TYPE_GRANT, true],
+            [FeeType::FEE_TYPE_CONT, false],
+            [FeeType::FEE_TYPE_VEH, false],
+            [FeeType::FEE_TYPE_GRANTINT, false],
+            [FeeType::FEE_TYPE_INTVEH, false],
+            [FeeType::FEE_TYPE_DUP, false],
+            [FeeType::FEE_TYPE_ANN, false],
+            [FeeType::FEE_TYPE_GRANTVAR, false],
+            [FeeType::FEE_TYPE_BUSAPP, false],
+            [FeeType::FEE_TYPE_BUSVAR, false],
+            [FeeType::FEE_TYPE_GVANNVEH, false],
+            [FeeType::FEE_TYPE_INTUPGRADEVEH, false],
+            [FeeType::FEE_TYPE_INTAMENDED, false],
+            [FeeType::FEE_TYPE_IRFOPSVAPP, false],
+            [FeeType::FEE_TYPE_IRFOPSVANN, false],
+            [FeeType::FEE_TYPE_IRFOPSVCOPY, false],
+            [FeeType::FEE_TYPE_IRFOGVPERMIT, false],
+            [FeeType::FEE_TYPE_ADJUSTMENT, false],
+        ];
+    }
+
+    /**
      * @dataProvider salesPersonRefProvider
      * @param string $trafficAreaId
      * @param string $costCentreReference
@@ -755,5 +965,104 @@ class FeeEntityTest extends EntityTester
             ['', 'MNI', 'MNI'],
             ['', 'MR', 'MR'],
         ];
+    }
+
+    /**
+     * @param FeeType $feeType
+     * @param RefData $feeStatus
+     * @param array $feeTransactions
+     * @param bool $expected
+     * @dataProvider canRefundProvider
+     */
+    public function testCanRefund($feeType, $feeStatus, $feeTransactions, $expected)
+    {
+        $this->sut
+            ->setFeeType($feeType)
+            ->setFeeStatus($feeStatus)
+            ->setFeeTransactions(new ArrayCollection($feeTransactions));
+
+        $this->assertSame($expected, $this->sut->canRefund());
+    }
+
+    /**
+     * @return array
+     */
+    public function canRefundProvider()
+    {
+        $nonMiscFeeType = m::mock(FeeType::class)
+            ->shouldReceive('isMiscellaneous')
+            ->andReturn(false)
+            ->getMock();
+        $miscFeeType = m::mock(FeeType::class)
+            ->shouldReceive('isMiscellaneous')
+            ->andReturn(true)
+            ->getMock();
+
+        $outstanding = new RefData(Entity::STATUS_OUTSTANDING);
+        $paid        = new RefData(Entity::STATUS_PAID);
+        $cancelled   = new RefData(Entity::STATUS_CANCELLED);
+
+        $nonRefundedFeeTransaction = m::mock(FeeTransaction::class);
+        $nonRefundedFeeTransaction
+            ->shouldReceive('getTransaction->isPayment')
+            ->andReturn(true);
+        $nonRefundedFeeTransaction
+            ->shouldReceive('isRefundedOrReversed')
+            ->andReturn(false);
+
+        $refundedFeeTransaction = m::mock(FeeTransaction::class);
+        $refundedFeeTransaction
+            ->shouldReceive('getTransaction->isPayment')
+            ->andReturn(true);
+        $refundedFeeTransaction
+            ->shouldReceive('isRefundedOrReversed')
+            ->andReturn(true);
+
+        return [
+            'std outstanding'  => [$nonMiscFeeType, $outstanding, [], false],
+            'std paid'         => [$nonMiscFeeType, $paid, [], false],
+            'std cancelled'    => [$nonMiscFeeType, $cancelled, [], false],
+            'misc outstanding' => [$miscFeeType, $outstanding, [], false],
+            'misc paid'        => [$miscFeeType, $paid, [], false],
+            'misc cancelled'   => [$miscFeeType, $cancelled, [], false],
+            'std not refunded' => [$nonMiscFeeType, $paid, [$nonRefundedFeeTransaction], true],
+            'std refunded'     => [$nonMiscFeeType, $paid, [$refundedFeeTransaction], false],
+        ];
+    }
+
+    public function testGetFeeTransactionsForRefund()
+    {
+        $txn1 = m::mock(Transaction::class)
+            ->shouldReceive('isPayment')
+            ->andReturn(true)
+            ->shouldReceive('isComplete')
+            ->andReturn(true)
+            ->getMock();
+        $nonRefundedFeeTransaction = m::mock(FeeTransaction::class);
+        $nonRefundedFeeTransaction
+            ->shouldReceive('getTransaction')
+            ->andReturn($txn1)
+            ->shouldReceive('isRefundedOrReversed')
+            ->andReturn(false);
+
+        $txn2 = m::mock(Transaction::class)
+            ->shouldReceive('isPayment')
+            ->andReturn(true)
+            ->shouldReceive('isComplete')
+            ->andReturn(true)
+            ->getMock();
+        $refundedFeeTransaction = m::mock(FeeTransaction::class);
+        $refundedFeeTransaction
+            ->shouldReceive('getTransaction')
+            ->andReturn($txn2)
+            ->shouldReceive('isRefundedOrReversed')
+            ->andReturn(true);
+
+        $this->sut->setFeeTransactions([$nonRefundedFeeTransaction, $refundedFeeTransaction]);
+
+        $this->assertEquals(
+            [$nonRefundedFeeTransaction],
+            $this->sut->getFeeTransactionsForRefund()
+        );
     }
 }

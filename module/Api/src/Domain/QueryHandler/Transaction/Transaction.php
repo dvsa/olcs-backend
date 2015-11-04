@@ -45,9 +45,17 @@ class Transaction extends AbstractQueryHandler
 
         $transaction->getFeeTransactions()->forAll(
             function ($key, $ft) use (&$fees) {
+                unset($key); // unused
                 $fee = $ft->getFee()->serialize(['feeStatus']);
-                $fee['allocatedAmount'] = $ft->getAmount();
-                $fees[$key] = $fee;
+                $id = $fee['id'];
+
+                if (isset($fees[$id])) {
+                    $fees[$id]['allocatedAmount'] += $ft->getAmount();
+                } else {
+                    $fee['allocatedAmount'] = $ft->getAmount();
+                    $fees[$id] = $fee;
+                }
+
                 return true;
             }
         );

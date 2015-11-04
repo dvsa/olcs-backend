@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Pay Outstanding Fees Test
  *
