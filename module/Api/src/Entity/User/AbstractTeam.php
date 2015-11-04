@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -23,6 +25,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_team_created_by", columns={"created_by"})
  *    },
  *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_team_name", columns={"name"}),
  *        @ORM\UniqueConstraint(name="uk_team_olbs_key", columns={"olbs_key"})
  *    }
  * )
@@ -122,7 +125,7 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
      * @var \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea", fetch="LAZY")
-     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=true)
      */
     protected $trafficArea;
 
@@ -135,6 +138,48 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Task
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Task\Task", mappedBy="assignedToTeam")
+     */
+    protected $tasks;
+
+    /**
+     * Task allocation rule
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule", mappedBy="team")
+     */
+    protected $taskAllocationRules;
+
+    /**
+     * Printer
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter", mappedBy="team")
+     */
+    protected $printers;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
+        $this->tasks = new ArrayCollection();
+        $this->taskAllocationRules = new ArrayCollection();
+        $this->printers = new ArrayCollection();
+    }
 
     /**
      * Set the created by
@@ -390,6 +435,186 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
     }
 
     /**
+     * Set the task
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks
+     * @return Team
+     */
+    public function setTasks($tasks)
+    {
+        $this->tasks = $tasks;
+
+        return $this;
+    }
+
+    /**
+     * Get the tasks
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
+    }
+
+    /**
+     * Add a tasks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks
+     * @return Team
+     */
+    public function addTasks($tasks)
+    {
+        if ($tasks instanceof ArrayCollection) {
+            $this->tasks = new ArrayCollection(
+                array_merge(
+                    $this->tasks->toArray(),
+                    $tasks->toArray()
+                )
+            );
+        } elseif (!$this->tasks->contains($tasks)) {
+            $this->tasks->add($tasks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tasks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks
+     * @return Team
+     */
+    public function removeTasks($tasks)
+    {
+        if ($this->tasks->contains($tasks)) {
+            $this->tasks->removeElement($tasks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the task allocation rule
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $taskAllocationRules
+     * @return Team
+     */
+    public function setTaskAllocationRules($taskAllocationRules)
+    {
+        $this->taskAllocationRules = $taskAllocationRules;
+
+        return $this;
+    }
+
+    /**
+     * Get the task allocation rules
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTaskAllocationRules()
+    {
+        return $this->taskAllocationRules;
+    }
+
+    /**
+     * Add a task allocation rules
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $taskAllocationRules
+     * @return Team
+     */
+    public function addTaskAllocationRules($taskAllocationRules)
+    {
+        if ($taskAllocationRules instanceof ArrayCollection) {
+            $this->taskAllocationRules = new ArrayCollection(
+                array_merge(
+                    $this->taskAllocationRules->toArray(),
+                    $taskAllocationRules->toArray()
+                )
+            );
+        } elseif (!$this->taskAllocationRules->contains($taskAllocationRules)) {
+            $this->taskAllocationRules->add($taskAllocationRules);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a task allocation rules
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $taskAllocationRules
+     * @return Team
+     */
+    public function removeTaskAllocationRules($taskAllocationRules)
+    {
+        if ($this->taskAllocationRules->contains($taskAllocationRules)) {
+            $this->taskAllocationRules->removeElement($taskAllocationRules);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the printer
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $printers
+     * @return Team
+     */
+    public function setPrinters($printers)
+    {
+        $this->printers = $printers;
+
+        return $this;
+    }
+
+    /**
+     * Get the printers
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPrinters()
+    {
+        return $this->printers;
+    }
+
+    /**
+     * Add a printers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $printers
+     * @return Team
+     */
+    public function addPrinters($printers)
+    {
+        if ($printers instanceof ArrayCollection) {
+            $this->printers = new ArrayCollection(
+                array_merge(
+                    $this->printers->toArray(),
+                    $printers->toArray()
+                )
+            );
+        } elseif (!$this->printers->contains($printers)) {
+            $this->printers->add($printers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a printers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $printers
+     * @return Team
+     */
+    public function removePrinters($printers)
+    {
+        if ($this->printers->contains($printers)) {
+            $this->printers->removeElement($printers);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
@@ -417,11 +642,14 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
+
             if (property_exists($this, $property)) {
                 if ($this->$property instanceof Collection) {
+
                     $this->$property = new ArrayCollection(array());
 
                 } else {
+
                     $this->$property = null;
                 }
             }
