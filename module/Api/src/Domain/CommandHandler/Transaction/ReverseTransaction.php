@@ -45,9 +45,7 @@ final class ReverseTransaction extends AbstractCommandHandler implements
     {
         $transaction = $this->getRepo()->fetchUsingId($command);
 
-        if (!$transaction->isComplete()) {
-            throw new ValidationException(['Cannot reverse a pending transaction']);
-        }
+        $this->validate($transaction);
 
         switch ($transaction->getPaymentMethod()->getId()) {
             case FeeEntity::METHOD_CHEQUE:
@@ -131,5 +129,22 @@ final class ReverseTransaction extends AbstractCommandHandler implements
             $this->getRepo('Fee')->save($fee);
             $this->result->addMessage(sprintf('Fee %d reset to %s', $feeId, $status->getDescription()));
         }
+    }
+
+    /**
+     * @return bool
+     * @throws ValidationException
+     */
+    private function validate(TransactionEntity $transaction)
+    {
+        if (!$transaction->isComplete()) {
+            throw new ValidationException(['Cannot reverse a pending transaction']);
+        }
+
+        if (!$transaction->canReverse()) {
+            throw new ValidationException(['Cannot reverse this transaction']);
+        }
+
+        return true;
     }
 }
