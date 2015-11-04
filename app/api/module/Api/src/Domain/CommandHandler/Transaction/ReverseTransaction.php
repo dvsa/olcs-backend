@@ -136,7 +136,7 @@ final class ReverseTransaction extends AbstractCommandHandler implements
      * @return bool
      * @throws ValidationException
      */
-    private function validate(TransactionEntity $transaction)
+    public function validate(TransactionEntity $transaction)
     {
         if (!$transaction->isComplete()) {
             throw new ValidationException(['Cannot reverse a pending transaction']);
