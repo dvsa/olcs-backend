@@ -634,7 +634,9 @@ VALUES
 (93,189,'lfs_ot',NULL,1,10,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 3',NULL,NULL,1,NULL,NULL,NULL,1),
 (94,189,'lfs_ot',NULL,1,11,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 4',NULL,NULL,1,NULL,NULL,NULL,1),
 (97,20051,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 12:34:56','Photocopying charge',NULL,NULL,1,NULL,NULL,NULL,1),
-(98,20052,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 13:45:01','Court fee',NULL,NULL,1,NULL,NULL,NULL,1);
+(98,20052,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-11-01 13:45:01','Court fee',NULL,NULL,1,NULL,NULL,NULL,1),
+(99,40008,'lfs_ot',NULL,NULL,NULL,NULL,NULL,100.00,1,'2015-11-01 13:45:02','Test fee 99',NULL,NULL,1,NULL,NULL,NULL,1),
+(100,40008,'lfs_ot',NULL,NULL,NULL,NULL,NULL,200.00,1,'2015-11-01 13:45:03','Test fee 100',NULL,NULL,1,NULL,NULL,NULL,1);
 
 INSERT INTO `txn` (
     `id`,
@@ -650,15 +652,21 @@ INSERT INTO `txn` (
 )
 VALUES
     (10001,'OLCS-1234-2345','trt_payment','pay_s_pd','2015-08-26','fpm_cheque','',NULL,NULL,1),
-    (10002,'OLCS-2345-3456','trt_reversal','pay_s_pd','2015-09-01','fpm_reversal','',NULL,NULL,1),
-    (10003,'OLCS-3456-4567','trt_payment','pay_s_pd','2015-09-02','fpm_cash','',NULL,NULL,1);
+    (10002,'REVERSAL-1234-2345','trt_reversal','pay_s_pd','2015-09-01','fpm_reversal','',NULL,NULL,1),
+    (10003,'OLCS-3456-4567','trt_payment','pay_s_pd','2015-09-02','fpm_cash','',NULL,NULL,1),
+    (10004,'OLCS-1234-5678','trt_payment','pay_s_pd','2015-11-04','fpm_card_online','',NULL,NULL,1),
+    (10005,'REVERSAL-1234-5678','trt_reversal','pay_s_pd','2015-11-04','fpm_reversal','',NULL,NULL,1);
 
 INSERT INTO `fee_txn`
     (`id`,`fee_id`,`txn_id`,`amount`, `reversed_fee_txn_id`)
 VALUES
-    (1,97,10001,100.00,NULL),
-    (2,97,10002,-100.00,1),
-    (3,97,10003,120.00,NULL);
+    (1, 97,10001,100.00,NULL),
+    (2, 97,10002,-100.00,1),
+    (3, 97,10003,120.00,NULL),
+    (4, 99,10004,100.00, NULL),
+    (5,100,10004,200.00, NULL),
+    (6, 99,10005, -100.00, 4),
+    (7,100,10005, -200.00, 5);
 
 INSERT INTO `licence` (
     `id`, `organisation_id`, `traffic_area_id`, `enforcement_area_id`, `created_by`, `correspondence_cd_id`, `establishment_cd_id`,
@@ -2111,11 +2119,11 @@ INSERT INTO `txn` (
     `waive_recommender_user_id`,
     `processed_by_user_id`
 ) VALUES
-    (10004,'','trt_waive','pay_s_pd','2015-08-26','fpm_waive','Waive OK for fee 96','2015-08-25',1,1);
+    (10010,'','trt_waive','pay_s_pd','2015-08-26','fpm_waive','Waive OK for fee 96','2015-08-25',1,1);
 INSERT INTO `fee_txn`
     (`fee_id`,`txn_id`,`amount`)
     VALUES
-    (96,10004,254.40);
+    (96,10010,254.40);
 INSERT INTO `phone_contact` (`id`,    `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (12,127,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
 INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, `last_modified_by`, `is_external`, `maintenance`, `safety_inspection`, `created_on`, `last_modified_on`, `olbs_key`, `removed_date`, `version`) VALUES (2,212,129,NULL,NULL,0,0,0,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
 

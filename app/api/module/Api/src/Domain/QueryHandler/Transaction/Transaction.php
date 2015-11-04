@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Transaction;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as Entity;
 
 /**
  * Transaction
@@ -42,11 +43,24 @@ class Transaction extends AbstractQueryHandler
     protected function flattenFees($transaction)
     {
         $fees = [];
+        $reversals = []; // id => original id
 
         $transaction->getFeeTransactions()->forAll(
-            function ($key, $ft) use (&$fees) {
+            function ($key, $ft) use (&$fees, &$reversals) {
+
                 unset($key); // unused
+
                 $fee = $ft->getFee()->serialize(['feeStatus']);
+                $fee['reversingTransaction'] = null;
+
+                if (count($ft->getReversingFeeTransactions())>0) {;
+                    $reversal = $ft->getReversingFeeTransactions()->first();
+                    $fee['reversingTransaction'] = [
+                        'id' => $reversal->getTransaction()->getId(),
+                        'type' => $reversal->getTransaction()->getType()->getId(),
+                    ];
+                }
+
                 $id = $fee['id'];
 
                 if (isset($fees[$id])) {
@@ -60,7 +74,7 @@ class Transaction extends AbstractQueryHandler
             }
         );
 
-        // Sort as per AC:
+        // Sort as per AC for OLCS-10458:
         // 'A list of fees in chronological order (i.e. in fee id order) with the newest at the bottom.'
         uasort(
             $fees,
