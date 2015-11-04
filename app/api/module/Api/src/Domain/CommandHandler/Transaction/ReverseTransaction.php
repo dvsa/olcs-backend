@@ -94,7 +94,7 @@ final class ReverseTransaction extends AbstractCommandHandler implements
             $fee = $originalFt->getFee();
             $feeTransaction
                 ->setFee($fee)
-                ->setTransaction($transaction)
+                ->setTransaction($newTransaction)
                 ->setAmount($reversalAmount)
                 ->setReversedFeeTransaction($originalFt);
             $newTransaction->getFeeTransactions()->add($feeTransaction);
