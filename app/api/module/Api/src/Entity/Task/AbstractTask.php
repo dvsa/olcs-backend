@@ -80,7 +80,7 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
      *
      * @var \Dvsa\Olcs\Api\Entity\User\Team
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Team", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Team", fetch="LAZY", inversedBy="tasks")
      * @ORM\JoinColumn(name="assigned_to_team_id", referencedColumnName="id", nullable=true)
      */
     protected $assignedToTeam;

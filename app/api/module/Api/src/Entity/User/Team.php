@@ -21,5 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Team extends AbstractTeam
 {
-
+    const ERROR_TEAM_EXISTS = 'err_team_exists';
+    const ERROR_TEAM_LINKED_TO_USERS = 'err_team_linked_to_users';
+    const ERROR_TEAM_LINKED_TO_PRINTER_SETTINGS = 'err_team_linked_to_printer_settings';
+    const ERROR_TEAM_LINKED_TO_TASK_ALLOCATION_RULES = 'err_team_linked_to_task_allocation_rules';
 }

@@ -318,6 +318,11 @@ return [
     TransferCommand\User\UpdatePartner::class => CommandHandler\User\UpdatePartner::class,
     TransferCommand\User\DeletePartner::class => CommandHandler\User\DeletePartner::class,
 
+    // Transfer - Team
+    TransferCommand\Team\CreateTeam::class => CommandHandler\Team\CreateTeam::class,
+    TransferCommand\Team\UpdateTeam::class => CommandHandler\Team\UpdateTeam::class,
+    TransferCommand\Team\DeleteTeam::class => CommandHandler\Team\DeleteTeam::class,
+
     // Transfer - Cases
     TransferCommand\Cases\CreateCase::class => CommandHandler\Cases\CreateCase::class,
     TransferCommand\Cases\UpdateCase::class => CommandHandler\Cases\UpdateCase::class,

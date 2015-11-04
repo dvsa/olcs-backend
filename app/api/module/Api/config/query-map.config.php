@@ -243,6 +243,10 @@ return [
     TransferQuery\User\UserSelfserve::class => QueryHandler\User\UserSelfserve::class,
     TransferQuery\User\UserListSelfserve::class => QueryHandler\User\UserListSelfserve::class,
 
+    // User
+    TransferQuery\Team\Team::class => QueryHandler\Team\Team::class,
+    TransferQuery\Team\TeamList::class => QueryHandler\Team\TeamList::class,
+
     // Workshop
     TransferQuery\Workshop\Workshop::class => QueryHandler\Workshop\Workshop::class,
 
