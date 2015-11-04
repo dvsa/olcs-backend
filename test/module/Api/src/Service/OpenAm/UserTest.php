@@ -82,7 +82,7 @@ class UserTest extends MockeryTestCase
                     ],
                     [
                         'operation' => 'replace',
-                        'field' => 'olcsInActive',
+                        'field' => 'inActive',
                         'value' => true
                     ]
                 ],

@@ -81,7 +81,7 @@ class User implements UserInterface
         }
     }
 
-    public function updateUser($username, $emailAddress = null, $enabled = null)
+    public function updateUser($username, $emailAddress = null, $disabled = null)
     {
         $payload = [];
 
@@ -93,11 +93,11 @@ class User implements UserInterface
             ];
         }
 
-        if ($enabled !== null) {
+        if ($disabled !== null) {
             $payload[] = [
                 'operation' => 'replace',
-                'field' => 'olcsInActive',
-                'value' => $enabled
+                'field' => 'inActive',
+                'value' => $disabled
             ];
         }
 
@@ -112,7 +112,7 @@ class User implements UserInterface
     {
         $payload[] = [
             'operation' => 'replace',
-            'field' => 'olcsInActive',
+            'field' => 'inActive',
             'value' => true
         ];
 
