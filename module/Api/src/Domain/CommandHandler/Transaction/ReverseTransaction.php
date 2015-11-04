@@ -55,8 +55,6 @@ final class ReverseTransaction extends AbstractCommandHandler implements
             case FeeEntity::METHOD_CARD_OFFLINE:
                 $method = 'chargeBackCardPayment';
                 break;
-            default:
-                throw new ValidationException(['Invalid payment method for reversal']);
         }
 
         try {

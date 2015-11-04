@@ -166,6 +166,11 @@ class Transaction extends AbstractTransaction
      */
     public function canReverse()
     {
+        // reuse displayReversalOption logic for initial checks
+        if (!$displayReversalOption()) {
+            return false;
+        }
+
         foreach ($this->getFeeTransactions() as $ft) {
             if ($ft->isRefundedOrReversed()) {
                 return false;
