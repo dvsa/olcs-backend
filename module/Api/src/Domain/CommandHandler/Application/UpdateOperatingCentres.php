@@ -46,12 +46,18 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
      */
     private $updateHelper;
 
+    /**
+     * @var \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator
+     */
+    private $trafficAreaValidator;
+
     private $totals;
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->variationHelper = $serviceLocator->getServiceLocator()->get('VariationOperatingCentreHelper');
         $this->updateHelper = $serviceLocator->getServiceLocator()->get('UpdateOperatingCentreHelper');
+        $this->trafficAreaValidator = $serviceLocator->getServiceLocator()->get('TrafficAreaValidator');
 
         return parent::createService($serviceLocator);
     }
@@ -79,20 +85,23 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
                 $application->setTotCommunityLicences($command->getTotCommunityLicences());
             }
 
-            if ($command->getTrafficArea() !== null) {
-                $data = [
-                    'id' => $application->getLicence()->getId(),
-                    'version' => $application->getLicence()->getVersion(),
-                    'trafficArea' => $command->getTrafficArea()
-                ];
+            // only set Traffic Area if not a partial OR partial action is add
+            if (!$command->getPartial() || $command->getPartialAction() == 'add') {
+                if ($command->getTrafficArea() !== null) {
+                    $data = [
+                        'id' => $application->getLicence()->getId(),
+                        'version' => $application->getLicence()->getVersion(),
+                        'trafficArea' => $command->getTrafficArea()
+                    ];
 
-                $this->result->merge($this->handleSideEffect(UpdateTrafficArea::create($data)));
-            }
+                    $this->result->merge($this->handleSideEffect(UpdateTrafficArea::create($data)));
+                }
 
-            if ($command->getEnforcementArea() !== null) {
-                $application->getLicence()->setEnforcementArea(
-                    $this->getRepo()->getReference(EnforcementArea::class, $command->getEnforcementArea())
-                );
+                if ($command->getEnforcementArea() !== null) {
+                    $application->getLicence()->setEnforcementArea(
+                        $this->getRepo()->getReference(EnforcementArea::class, $command->getEnforcementArea())
+                    );
+                }
             }
         } elseif ($application->getTrafficArea() !== null) {
             $application->getLicence()->setEnforcementArea(
@@ -131,6 +140,23 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
             }
         }
 
+        // if NOT partial or add, then validate the Traffic Area
+        if (!$command->getPartial() || $command->getPartialAction() == 'add') {
+            if ($application->isNew()) {
+                $trafficAreaId = null;
+                if ($command->getTrafficArea()) {
+                    $trafficAreaId = $command->getTrafficArea();
+                } elseif ($application->getTrafficArea()) {
+                    $trafficAreaId = $application->getTrafficArea()->getId();
+                }
+                if ($trafficAreaId) {
+                    $message = $this->trafficAreaValidator->validateForSameTrafficAreas($application, $trafficAreaId);
+                    if (is_array($message)) {
+                        $this->updateHelper->addMessage('trafficArea', key($message), current($message));
+                    }
+                }
+            }
+        }
         if (!$command->getPartial()) {
 
             if ($this->shouldValidateEnforcementArea($application)) {

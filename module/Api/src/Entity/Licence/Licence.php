@@ -745,4 +745,23 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('isVariation', true));
         return $this->getApplications()->matching($criteria);
     }
+
+    /**
+     * Has this licence got a queued/scheduled revocation
+     *
+     * @return bool
+     */
+    public function hasQueuedRevocation()
+    {
+        foreach ($this->getLicenceStatusRules() as $licenceStatusRule) {
+            /* @var $licenceStatusRule LicenceStatusRule */
+            if ($licenceStatusRule->getLicenceStatus()->getId() === Licence::LICENCE_STATUS_REVOKED &&
+                $licenceStatusRule->isQueued()
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

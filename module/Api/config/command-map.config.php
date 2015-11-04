@@ -110,8 +110,10 @@ return [
     Command\Application\HandleOcVariationFees::class => CommandHandler\Application\HandleOcVariationFees::class,
     TransferCommand\Application\CreateOperatingCentre::class => CommandHandler\Application\CreateOperatingCentre::class,
     TransferCommand\Application\CreateTaxiPhv::class => CommandHandler\Application\CreateTaxiPhv::class,
-    TransferCommand\Application\UpdateTaxiPhv::class => CommandHandler\Application\UpdateTaxiPhv::class,
+    TransferCommand\Application\UpdatePrivateHireLicence::class =>
+        CommandHandler\Application\UpdatePrivateHireLicence::class,
     TransferCommand\Application\DeleteTaxiPhv::class => CommandHandler\Application\DeleteTaxiPhv::class,
+    TransferCommand\Application\UpdateTaxiPhv::class => CommandHandler\Application\UpdateTaxiPhv::class,
     Command\Application\CreateTexTask::class => CommandHandler\Application\CreateTexTask::class,
     Command\Application\CloseTexTask::class => CommandHandler\Application\CloseTexTask::class,
     Command\Application\CloseFeeDueTask::class => CommandHandler\Application\CloseFeeDueTask::class,
