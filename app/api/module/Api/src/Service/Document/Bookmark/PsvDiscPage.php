@@ -90,7 +90,7 @@ class PsvDiscPage extends AbstractDiscList
             for ($j = 0; $j < self::PER_PAGE; $j++) {
                 $pageDiscs = array_merge(
                     $pageDiscs,
-                    $discs[$j]
+                    $discs[$i + $j]
                 );
             }
             $discGroups[] = $pageDiscs;
