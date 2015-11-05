@@ -777,6 +777,81 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->assertSame($response, $result);
     }
 
+    public function testGetPaymentAuthCode()
+    {
+        $response = ['auth_code' => 'AUTH123'];
+
+        $this->cpmsClient
+            ->shouldReceive('get')
+            ->with('/api/payment/MY-REFERENCE/auth-code', 'QUERY_TXN', [])
+            ->once()
+            ->andReturn($response);
+
+        $result = $this->sut->getPaymentAuthCode('MY-REFERENCE');
+
+        $this->assertSame('AUTH123', $result);
+    }
+
+    public function testReverseChequePayment()
+    {
+        $orgId = 123;
+
+        $response = [
+            'code' => Sut::PAYMENT_PAYMENT_CHARGED_BACK,
+            'message' => 'ok',
+            'receipt_reference' => 'REVERSAL_REFERENCE',
+        ];
+
+        $expectedParams = [
+            'customer_reference' => $orgId,
+            'scope' => 'CHEQUE_RD',
+        ];
+
+        $this->cpmsClient
+            ->shouldReceive('post')
+            ->with('/api/payment/MY-REFERENCE/reversal', 'CHEQUE_RD', $expectedParams)
+            ->once()
+            ->andReturn($response);
+
+        $fees = [
+            $this->getStubFee(1, 100.00, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-11-04'),
+        ];
+
+        $result = $this->sut->reverseChequePayment('MY-REFERENCE', $fees);
+
+        $this->assertSame($response, $result);
+    }
+
+    public function testChargeBackCardPayment()
+    {
+        $orgId = 123;
+
+        $response = [
+            'code' => Sut::PAYMENT_PAYMENT_CHARGED_BACK,
+            'message' => 'ok',
+            'receipt_reference' => 'REVERSAL_REFERENCE',
+        ];
+
+        $expectedParams = [
+            'customer_reference' => $orgId,
+            'scope' => 'CHARGE_BACK',
+        ];
+
+        $this->cpmsClient
+            ->shouldReceive('post')
+            ->with('/api/payment/MY-REFERENCE/chargeback', 'CHARGE_BACK', $expectedParams)
+            ->once()
+            ->andReturn($response);
+
+        $fees = [
+            $this->getStubFee(1, 100.00, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-11-04'),
+        ];
+
+        $result = $this->sut->chargeBackCardPayment('MY-REFERENCE', $fees);
+
+        $this->assertSame($response, $result);
+    }
+
     /**
      * Helper function to generate a stub fee entity
      *

@@ -194,6 +194,28 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
+     * Get the authorisation code for a card payment
+     *
+     * Note: this is potentially required for chargebacks, etc. but is not
+     * currently used
+     *
+     * @param string $receiptReference
+     * @return string auth code|null
+     */
+    public function getPaymentAuthCode($receiptReference)
+    {
+        $method   = 'get';
+        $endPoint = '/api/payment/'.$receiptReference.'/auth-code';
+        $scope    = ApiService::SCOPE_QUERY_TXN;
+
+        $response = $this->send($method, $endPoint, $scope, []);
+
+        if (isset($response['auth_code'])) {
+            return $response['auth_code'];
+        }
+    }
+
+    /**
      * Record a cash payment in CPMS
      *
      * @param array $fees
@@ -486,6 +508,54 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
                 $paymentData,
             ]
         ];
+    }
+
+    /**
+     * Reverse a cheque payment
+     *
+     * @param string $receiptReference
+     * @param array $fees needed to get customer reference
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function reverseChequePayment($receiptReference, $fees = array())
+    {
+        $method   = 'post';
+        $endPoint = '/api/payment/'.$receiptReference.'/reversal';
+        $scope    = ApiService::CHEQUE_RD; // refer to drawer
+
+        $params = [
+            'scope' => $scope,
+            'customer_reference' => (string) $this->getCustomerReference($fees),
+        ];
+
+        $response = $this->send($method, $endPoint, $scope, $params);
+
+        return $this->validatePaymentResponse($response, false);
+    }
+
+    /**
+     * Charge back a payment
+     *
+     * @param string $receiptReference
+     * @param array $fees needed to get customer reference
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function chargeBackCardPayment($receiptReference, $fees = array())
+    {
+        $method   = 'post';
+        $endPoint = '/api/payment/'.$receiptReference.'/chargeback';
+        $scope    = ApiService::SCOPE_CHARGE_BACK;
+
+        $params = [
+            'scope' => $scope,
+            'customer_reference' => (string) $this->getCustomerReference($fees),
+        ];
+
+        $response = $this->send($method, $endPoint, $scope, $params);
+
+        return $this->validatePaymentResponse($response, false);
     }
 
     /**

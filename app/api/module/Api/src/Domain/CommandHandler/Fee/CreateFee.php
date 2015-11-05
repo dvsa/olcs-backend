@@ -123,6 +123,11 @@ final class CreateFee extends AbstractCommandHandler
             return true;
         }
 
+        if ($feeType->isAdjustment()) {
+            // balancing/overpayment fees don't need linked entities
+            return true;
+        }
+
         if (empty($command->getLicence())
             && empty($command->getApplication())
             && empty($command->getBusReg())

@@ -578,7 +578,6 @@ return [
     TransferCommand\Fee\ApproveWaive::class => CommandHandler\Fee\ApproveWaive::class,
     TransferCommand\Fee\RecommendWaive::class => CommandHandler\Fee\RecommendWaive::class,
     TransferCommand\Fee\RejectWaive::class => CommandHandler\Fee\RejectWaive::class,
-    TransferCommand\Fee\UpdateFee::class => CommandHandler\Fee\UpdateFee::class,
     TransferCommand\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     TransferCommand\Fee\RefundFee::class => CommandHandler\Fee\RefundFee::class,
 
@@ -586,6 +585,7 @@ return [
     TransferCommand\Transaction\PayOutstandingFees::class => CommandHandler\Transaction\PayOutstandingFees::class,
     TransferCommand\Transaction\CompleteTransaction::class => CommandHandler\Transaction\CompleteTransaction::class,
     Command\Transaction\ResolvePayment::class => CommandHandler\Transaction\ResolvePayment::class,
+    TransferCommand\Transaction\ReverseTransaction::class => CommandHandler\Transaction\ReverseTransaction::class,
 
     // Domain - ApplicationCompletion
     AppCompCommand\UpdateTypeOfLicenceStatus::class => AppCompCommandHandler\UpdateTypeOfLicenceStatus::class,

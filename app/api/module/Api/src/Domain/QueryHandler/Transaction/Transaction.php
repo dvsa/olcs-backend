@@ -10,6 +10,8 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Transaction;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as Entity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 
 /**
  * Transaction
@@ -39,6 +41,9 @@ class Transaction extends AbstractQueryHandler
         );
     }
 
+    /**
+     * Get a flattened array of fee data for the transaction.
+     */
     protected function flattenFees($transaction)
     {
         $fees = [];
@@ -48,19 +53,22 @@ class Transaction extends AbstractQueryHandler
                 unset($key); // unused
                 $fee = $ft->getFee()->serialize(['feeStatus']);
                 $id = $fee['id'];
-
                 if (isset($fees[$id])) {
-                    $fees[$id]['allocatedAmount'] += $ft->getAmount();
+                    $fee = $fees[$id];
+                }
+                $fee['reversingTransaction'] = $this->getReversingTransactionData($ft);
+                if (isset($fee['allocatedAmount'])) {
+                    $fee['allocatedAmount'] += $ft->getAmount();
                 } else {
                     $fee['allocatedAmount'] = $ft->getAmount();
-                    $fees[$id] = $fee;
                 }
+                $fees[$id] = $fee;
 
                 return true;
             }
         );
 
-        // Sort as per AC:
+        // Sort as per AC for OLCS-10458:
         // 'A list of fees in chronological order (i.e. in fee id order) with the newest at the bottom.'
         uasort(
             $fees,
@@ -70,5 +78,19 @@ class Transaction extends AbstractQueryHandler
         );
 
         return $fees;
+    }
+
+    /**
+     * @return array|null
+     */
+    protected function getReversingTransactionData(FeeTransactionEntity $ft)
+    {
+        if (count($ft->getReversingFeeTransactions())>0) {
+            $reversal = $ft->getReversingFeeTransactions()->first();
+            return [
+                'id' => $reversal->getTransaction()->getId(),
+                'type' => $reversal->getTransaction()->getType()->getId(),
+            ];
+        }
     }
 }
