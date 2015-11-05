@@ -117,7 +117,7 @@ class TransportManagerPreviousConvictionReviewServiceTest extends MockeryTestCas
                                         [
                                             [
                                                 'label' => 'tm-review-previous-conviction-date',
-                                                'value' => '01/10/2014'
+                                                'value' => '01 Oct 2014'
                                             ],
                                             [
                                                 'label' => 'tm-review-previous-conviction-offence',
@@ -144,7 +144,7 @@ class TransportManagerPreviousConvictionReviewServiceTest extends MockeryTestCas
                                         [
                                             [
                                                 'label' => 'tm-review-previous-conviction-date',
-                                                'value' => '02/10/2014'
+                                                'value' => '02 Oct 2014'
                                             ],
                                             [
                                                 'label' => 'tm-review-previous-conviction-offence',
