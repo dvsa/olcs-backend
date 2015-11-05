@@ -151,7 +151,7 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
                             ],
                             [
                                 'label' => 'tm-review-main-birthDate',
-                                'value' => '23/08/1989'
+                                'value' => '23 Aug 1989'
                             ],
                             [
                                 'label' => 'tm-review-main-birthPlace',
@@ -189,7 +189,7 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
                             ],
                             [
                                 'label' => 'tm-review-main-birthDate',
-                                'value' => '23/08/1989'
+                                'value' => '23 Aug 1989'
                             ],
                             [
                                 'label' => 'tm-review-main-birthPlace',

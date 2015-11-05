@@ -48,7 +48,7 @@ class PeopleReviewService extends AbstractReviewService
                     ],
                     [
                         'label' => 'application-review-people-person-dob',
-                        'value' => $this->formatDate($data['person']['birthDate'], 'd/m/Y')
+                        'value' => $this->formatDate($data['person']['birthDate'])
                     ]
                 ]
             ]
