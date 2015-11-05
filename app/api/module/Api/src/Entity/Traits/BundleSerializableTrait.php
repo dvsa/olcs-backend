@@ -199,7 +199,7 @@ trait BundleSerializableTrait
     }
 
     /**
-     * @NOTE This method allows our entities to be cast to a string, so we can use "in" criteria with just id's
+     * This method allows our entities to be cast to a string, so we can use "in" criteria with just id's
      * when a collection is initialized
      *
      * @return mixed
