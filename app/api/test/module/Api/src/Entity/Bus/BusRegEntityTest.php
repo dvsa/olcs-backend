@@ -70,6 +70,114 @@ class BusRegEntityTest extends EntityTester
         $this->entity->setIsTxcApp('N');
     }
 
+    /**
+     * Test isReadOnly
+     *
+     * @param bool $isLatestVariation
+     * @param string $status
+     * @param bool $expected
+     *
+     * @dataProvider isReadOnlyProvider
+     */
+    public function testIsReadOnly($isLatestVariation, $status, $expected)
+    {
+        $busRegStatus = new RefDataEntity($status);
+
+        $busReg = m::mock(Entity::class)->makePartial();
+        $busReg->shouldReceive('isLatestVariation')->once()->andReturn($isLatestVariation);
+        $busReg->setStatus($busRegStatus);
+
+        $this->assertEquals($expected, $busReg->isReadOnly());
+    }
+
+    /**
+     * Data provider for isFromEbsr
+     *
+     * @return array
+     */
+    public function isReadOnlyProvider()
+    {
+        return [
+            [false, Entity::STATUS_NEW, true],
+            [false, Entity::STATUS_VAR, true],
+            [false, Entity::STATUS_CANCEL, true],
+            [false, Entity::STATUS_ADMIN, true],
+            [false, Entity::STATUS_REGISTERED, true],
+            [false, Entity::STATUS_REFUSED, true],
+            [false, Entity::STATUS_WITHDRAWN, true],
+            [false, Entity::STATUS_CNS, true],
+            [false, Entity::STATUS_CANCELLED, true],
+            [true, Entity::STATUS_NEW, false],
+            [true, Entity::STATUS_VAR, false],
+            [true, Entity::STATUS_CANCEL, false],
+            [true, Entity::STATUS_ADMIN, false],
+            [true, Entity::STATUS_REGISTERED, true],
+            [true, Entity::STATUS_REFUSED, false],
+            [true, Entity::STATUS_WITHDRAWN, false],
+            [true, Entity::STATUS_CNS, false],
+            [true, Entity::STATUS_CANCELLED, true]
+        ];
+    }
+
+    /**
+     * Test isFromEbsr
+     *
+     * @param string $isTxcApp
+     * @param bool $expected
+     *
+     * @dataProvider isFromEbsrProvider
+     */
+    public function testIsFromEbsr($isTxcApp, $expected)
+    {
+        $busReg = new Entity();
+        $busReg->setIsTxcApp($isTxcApp);
+
+        $this->assertEquals($expected, $busReg->isFromEbsr());
+    }
+
+    /**
+     * Data provider for isFromEbsr
+     *
+     * @return array
+     */
+    public function isFromEbsrProvider()
+    {
+        return [
+            ['Y', true],
+            ['N', false]
+        ];
+    }
+
+    /**
+     * Tests isScottishRules
+     *
+     * @param int $noticePeriodId
+     * @param bool $expected
+     *
+     * @dataProvider isScottishRulesProvider
+     */
+    public function testIsScottishRules($noticePeriodId, $expected)
+    {
+        $noticePeriod = new BusNoticePeriodEntity();
+        $noticePeriod->setId($noticePeriodId);
+
+        $busReg = new Entity();
+        $busReg->setBusNoticePeriod($noticePeriod);
+        $this->assertEquals($expected, $busReg->isScottishRules());
+    }
+
+    /**
+     * Data provider for isScottishRules
+     *
+     * @return array
+     */
+    public function isScottishRulesProvider()
+    {
+        return [
+            [BusNoticePeriodEntity::NOTICE_PERIOD_SCOTLAND, true],
+            [BusNoticePeriodEntity::NOTICE_PERIOD_OTHER, false]
+        ];
+    }
 
     /**
      * Tests calculated values
@@ -86,15 +194,24 @@ class BusRegEntityTest extends EntityTester
         $licenceEntityMock = m::mock(LicenceEntity::class);
         $licenceEntityMock->shouldReceive('getLatestBusVariation')->once()->with($regNo)->andReturn($licenceBusReg);
 
+        $noticePeriod = new BusNoticePeriodEntity();
+        $noticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_SCOTLAND);
+
         $sut = m::mock(Entity::class)->makePartial();
         $sut->shouldReceive('getRegNo')->once()->andReturn($regNo);
         $sut->shouldReceive('getId')->once()->andReturn($id);
         $sut->shouldReceive('getLicence')->once()->andReturn($licenceEntityMock);
+        $sut->shouldReceive('isScottishRules')->once()->andReturn(true);
+        $sut->shouldReceive('isReadOnly')->once()->andReturn(true);
+        $sut->shouldReceive('isFromEbsr')->once()->andReturn(true);
 
         $result = $sut->getCalculatedValues();
 
         $this->assertEquals($result['licence'], null);
         $this->assertEquals($result['isLatestVariation'], true);
+        $this->assertEquals($result['isScottishRules'], true);
+        $this->assertEquals($result['isFromEbsr'], true);
+        $this->assertEquals($result['isReadOnly'], true);
     }
 
     /**
@@ -116,10 +233,16 @@ class BusRegEntityTest extends EntityTester
         $sut->shouldReceive('getRegNo')->once()->andReturn($regNo);
         $sut->shouldReceive('getId')->once()->andReturn($id);
         $sut->shouldReceive('getLicence')->once()->andReturn($licenceEntityMock);
+        $sut->shouldReceive('isScottishRules')->once()->andReturn(true);
+        $sut->shouldReceive('isReadOnly')->once()->andReturn(true);
+        $sut->shouldReceive('isFromEbsr')->once()->andReturn(true);
 
         $result = $sut->getCalculatedBundleValues();
 
         $this->assertEquals($result['isLatestVariation'], true);
+        $this->assertEquals($result['isScottishRules'], true);
+        $this->assertEquals($result['isFromEbsr'], true);
+        $this->assertEquals($result['isReadOnly'], true);
     }
 
     /**
@@ -1377,14 +1500,20 @@ class BusRegEntityTest extends EntityTester
         $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_SCOTLAND);
         $this->entity->setBusNoticePeriod($busNoticePeriod);
 
-        // Grantable - Rule: Scotland - isShortNotice: N - Fee: none
-        $this->entity->setOpNotifiedLaPte('Y');
-        $this->assertEquals(true, $this->entity->isGrantable());
+        $shortNotice = new BusShortNoticeEntity();
+        $shortNotice->setBankHolidayChange('Y');
+        $this->entity->setShortNotice($shortNotice);
 
-        // nonGrantable - Rule: Scotland - isShortNotice: N - Fee: none
+        // nonGrantable - Rule: Scotland - isShortNotice: Y - Fee: none
         // extra data required from Scotland missing
+        $this->entity->setIsShortNotice('Y');
         $this->entity->setOpNotifiedLaPte('N');
         $this->assertEquals(false, $this->entity->isGrantable());
+
+        // nonGrantable - Rule: Scotland - isShortNotice: N - Fee: none
+        // missing short notice info
+        $this->entity->setOpNotifiedLaPte('Y');
+        $this->assertEquals(true, $this->entity->isGrantable());
     }
 
     public function testIsGrantableWithFeePaid()
@@ -1424,6 +1553,11 @@ class BusRegEntityTest extends EntityTester
         // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
         // missing short notice details
         $this->entity->setIsShortNotice('Y');
+
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
+
         $this->assertEquals(false, $this->entity->isGrantable());
     }
 
@@ -1436,6 +1570,10 @@ class BusRegEntityTest extends EntityTester
         $shortNotice = new BusShortNoticeEntity();
         $shortNotice->setBankHolidayChange('Y');
         $this->entity->setShortNotice($shortNotice);
+
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
 
         // Grantable - Rule: Other - isShortNotice: Y - Fee: none
         // bankHolidayChange: Y
@@ -1451,6 +1589,10 @@ class BusRegEntityTest extends EntityTester
         $shortNotice = new BusShortNoticeEntity();
         $shortNotice->setConnectionChange('Y');
         $this->entity->setShortNotice($shortNotice);
+
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
 
         // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
         // connectionChange: Y, connectionDetail: empty
@@ -1472,6 +1614,10 @@ class BusRegEntityTest extends EntityTester
         $shortNotice->setHolidayChange('Y');
         $this->entity->setShortNotice($shortNotice);
 
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
+
         // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
         // holidayChange: Y, holidayDetail: empty
         $this->assertEquals(false, $this->entity->isGrantable());
@@ -1491,6 +1637,10 @@ class BusRegEntityTest extends EntityTester
         $shortNotice = new BusShortNoticeEntity();
         $shortNotice->setNotAvailableChange('Y');
         $this->entity->setShortNotice($shortNotice);
+
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
 
         // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
         // notAvailableChange: Y, notAvailableDetail: empty
@@ -1512,6 +1662,10 @@ class BusRegEntityTest extends EntityTester
         $shortNotice->setPoliceChange('Y');
         $this->entity->setShortNotice($shortNotice);
 
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
+
         // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
         // policeChange: Y, policeDetail: empty
         $this->assertEquals(false, $this->entity->isGrantable());
@@ -1531,6 +1685,10 @@ class BusRegEntityTest extends EntityTester
         $shortNotice = new BusShortNoticeEntity();
         $shortNotice->setReplacementChange('Y');
         $this->entity->setShortNotice($shortNotice);
+
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
 
         // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
         // replacementChange: Y, replacementDetail: empty
@@ -1552,6 +1710,10 @@ class BusRegEntityTest extends EntityTester
         $shortNotice->setSpecialOccasionChange('Y');
         $this->entity->setShortNotice($shortNotice);
 
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
+
         // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
         // specialOccasionChange: Y, specialOccasionDetail: empty
         $this->assertEquals(false, $this->entity->isGrantable());
@@ -1571,6 +1733,10 @@ class BusRegEntityTest extends EntityTester
         $shortNotice = new BusShortNoticeEntity();
         $shortNotice->setTimetableChange('Y');
         $this->entity->setShortNotice($shortNotice);
+
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
 
         // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
         // timetableChange: Y, timetableDetail: empty
@@ -1592,6 +1758,10 @@ class BusRegEntityTest extends EntityTester
         $shortNotice->setTrcChange('Y');
         $this->entity->setShortNotice($shortNotice);
 
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
+
         // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
         // trcChange: Y, trcDetail: empty
         $this->assertEquals(false, $this->entity->isGrantable());
@@ -1611,6 +1781,10 @@ class BusRegEntityTest extends EntityTester
         $shortNotice = new BusShortNoticeEntity();
         $shortNotice->setUnforseenChange('Y');
         $this->entity->setShortNotice($shortNotice);
+
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
 
         // nonGrantable - Rule: Other - isShortNotice: Y - Fee: none
         // unforseenChange: Y, unforseenDetail: empty
