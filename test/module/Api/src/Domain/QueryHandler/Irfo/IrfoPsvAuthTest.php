@@ -54,9 +54,7 @@ class IrfoPsvAuthTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $actions = $result->serialize()['actions'];
-
-        $this->assertContains('grant', $actions);
+        $this->assertContains('isGrantable', $result->serialize());
     }
 
     public function testHandleQueryNotGrantable()
@@ -85,9 +83,8 @@ class IrfoPsvAuthTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $actions = $result->serialize()['actions'];
-
-        $this->assertNotContains('grant', $actions);
-
+        $results = $result->serialize();
+        $this->assertContains('isGrantable', $results);
+        $this->assertFalse($results['isGrantable']);
     }
 }
