@@ -282,7 +282,7 @@ class Fee extends AbstractRepository
         $this->getQueryBuilder()
             ->modifyQuery($doctrineQb)
             ->withRefdata();
-        $this->getQueryBuilder()->withRefdata()->order('invoicedDate', 'DESC');
+        $this->getQueryBuilder()->order('invoicedDate', 'DESC');
         $doctrineQb->join($this->alias . '.feeType', 'ft')
             ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeTypeFeeType'))
             ->andWhere($doctrineQb->expr()->eq($this->alias . '.irfoPsvAuth', ':irfoPsvAuthId'))
