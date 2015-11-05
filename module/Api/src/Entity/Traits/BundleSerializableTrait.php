@@ -197,4 +197,15 @@ trait BundleSerializableTrait
     {
         return [];
     }
+
+    /**
+     * @NOTE This method allows our entities to be cast to a string, so we can use "in" criteria with just id's
+     * when a collection is initialized
+     *
+     * @return mixed
+     */
+    public function __toString()
+    {
+        return $this->getId();
+    }
 }
