@@ -103,7 +103,7 @@ class CreateIrfoGvPermitTest extends CommandHandlerTestCase
             ->with()
             ->andReturn($this->refData['fee-type-ref-data']);
 
-        $this->repoMap['FeeType']->shouldReceive('fetchLatestForIrfo')
+        $this->repoMap['FeeType']->shouldReceive('getLatestIrfoFeeType')
             ->andReturn($this->references[FeeTypeEntity::class][1]);
 
         $result1 = new Result();
