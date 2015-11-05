@@ -67,6 +67,7 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
         $mockResult = new TxcInboxEntity();
         $busReg = m::mock(BusRegEntity::class)->makePartial();
         $busReg->shouldReceive('isLatestVariation')->andReturn(false);
+        $busReg->shouldReceive('isScottishRules')->andReturn(false);
 
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->shouldReceive('getLatestBusVariation');
