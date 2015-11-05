@@ -96,21 +96,36 @@ class OperatingCentreHelper implements FactoryInterface
         }
 
         if ($entity->isGoods()) {
-            $sum = (int)$command->getNoOfVehiclesRequired() + (int)$command->getNoOfTrailersRequired();
-            if ($sum < 1) {
-                $this->addMessage('noOfVehiclesRequired', self::ERR_OC_VR_1A);
-                $this->addMessage('noOfTrailersRequired', self::ERR_OC_VR_1A);
+            $this->validateForGoods($entity, $command, $isExternal, $xoc);
+        }
+
+        if ($isExternal) {
+            $this->validateConfirmations($command->getSufficientParking(), $command->getPermission());
+        }
+
+        if (!empty($this->messages)) {
+            throw new ValidationException($this->messages);
+        }
+    }
+
+    protected function validateForGoods($entity, $command, $isExternal = false, $xoc = null)
+    {
+        $sum = (int)$command->getNoOfVehiclesRequired() + (int)$command->getNoOfTrailersRequired();
+        if ($sum < 1) {
+            $this->addMessage('noOfVehiclesRequired', self::ERR_OC_VR_1A);
+            $this->addMessage('noOfTrailersRequired', self::ERR_OC_VR_1A);
+        }
+
+        if ($command->getAdPlaced() === 'Y') {
+            if ((string)$command->getAdPlacedIn() === '') {
+                $this->addMessage('adPlacedIn', self::ERR_OC_AD_IN_1);
             }
 
-            if ($command->getAdPlaced() === 'Y') {
-                if ((string)$command->getAdPlacedIn() === '') {
-                    $this->addMessage('adPlacedIn', self::ERR_OC_AD_IN_1);
-                }
+            if ((string)$command->getAdPlacedDate() === '') {
+                $this->addMessage('adPlacedDate', self::ERR_OC_AD_DT_1);
+            }
 
-                if ((string)$command->getAdPlacedDate() === '') {
-                    $this->addMessage('adPlacedDate', self::ERR_OC_AD_DT_1);
-                }
-
+            if ($isExternal) {
                 if ($xoc !== null) {
                     $documents = $xoc->getOperatingCentre()->getAdDocuments();
                 } else {
@@ -121,14 +136,6 @@ class OperatingCentreHelper implements FactoryInterface
                     $this->addMessage('file', self::ERR_OC_AD_FI_1);
                 }
             }
-        }
-
-        if ($isExternal) {
-            $this->validateConfirmations($command->getSufficientParking(), $command->getPermission());
-        }
-
-        if (!empty($this->messages)) {
-            throw new ValidationException($this->messages);
         }
     }
 
