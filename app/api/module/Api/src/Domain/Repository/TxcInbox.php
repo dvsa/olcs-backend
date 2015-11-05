@@ -108,7 +108,6 @@ class TxcInbox extends AbstractRepository
         $qb = $this->getUnreadListQuery($ebsrSubmissionType, $ebsrSubmissionStatus);
 
         $qb->andWhere($qb->expr()->isNull($this->alias . '.localAuthority'));
-        $qb->andWhere($qb->expr()->eq($this->alias . '.fileRead', '0'));
         $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisation'))
             ->setParameter('organisation', $organisation);
 
