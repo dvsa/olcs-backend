@@ -111,9 +111,8 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
     /**
      * Is paid for? Yes if application fee exists and is paid or waived
      *
-     * @param $psvAuth
+     * @param null $applicationFeeStatusId
      * @return bool
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     private function isPaidFor($applicationFeeStatusId = null)
     {
@@ -142,10 +141,9 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
 
     /**
      * Is grantable? Yes if entity status is renew/pending, and application fee exists and is paid or waived
-     *
-     * @param $psvAuth
+     * 
+     * @param null $applicationFee
      * @return bool
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function isGrantable($applicationFee = null)
     {
