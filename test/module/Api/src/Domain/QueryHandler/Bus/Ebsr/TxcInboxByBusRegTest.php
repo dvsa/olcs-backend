@@ -3,7 +3,7 @@
 /**
  * TxcInboxByBusRegTest
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr\TxcInboxByBusReg;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
