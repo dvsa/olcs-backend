@@ -6,6 +6,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendUserCreated as SendUserCreatedDto;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\CreateUser as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
@@ -144,6 +147,23 @@ class CreateUserTest extends CommandHandlerTestCase
                 function (UserEntity $user) use (&$savedUser, $userId) {
                     $user->setId($userId);
                     $savedUser = $user;
+
+                    $this->expectedSideEffect(
+                        SendUserCreatedDto::class,
+                        [
+                            'user' => $savedUser
+                        ],
+                        new Result()
+                    );
+
+                    $this->expectedSideEffect(
+                        SendUserTemporaryPasswordDto::class,
+                        [
+                            'user' => $savedUser,
+                            'password' => 'GENERATED_PASSWORD_HERE',
+                        ],
+                        new Result()
+                    );
                 }
             );
 
@@ -264,6 +284,23 @@ class CreateUserTest extends CommandHandlerTestCase
                 function (UserEntity $user) use (&$savedUser, $userId) {
                     $user->setId($userId);
                     $savedUser = $user;
+
+                    $this->expectedSideEffect(
+                        SendUserCreatedDto::class,
+                        [
+                            'user' => $savedUser
+                        ],
+                        new Result()
+                    );
+
+                    $this->expectedSideEffect(
+                        SendUserTemporaryPasswordDto::class,
+                        [
+                            'user' => $savedUser,
+                            'password' => 'GENERATED_PASSWORD_HERE',
+                        ],
+                        new Result()
+                    );
                 }
             );
 
