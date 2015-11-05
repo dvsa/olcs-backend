@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Transfer\Query\Fee\FeeList as FeeListQry;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
@@ -607,5 +608,92 @@ class FeeTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['result']);
 
         $this->assertSame('result', $this->sut->fetchLatestFeeByApplicationId($applicationId));
+    }
+
+    public function testFetchFeesByPsvAuthIdAndType()
+    {
+        $irfoPsvAuthId = 123;
+        $feeTypeFeeType = 'fee-type-fee-type';
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $this->em->shouldReceive('getReference')->with(
+            \Dvsa\Olcs\Api\Entity\System\RefData::class,
+            $feeTypeFeeType
+        )->once()->andReturn($feeTypeFeeType);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($mockQb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->with('invoicedDate', 'DESC')
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb
+            ->shouldReceive('join')
+            ->andReturnSelf();
+        $mockQb
+            ->shouldReceive('expr->eq');
+        $mockQb
+            ->shouldReceive('andWhere')
+            ->andReturnSelf();
+        $mockQb
+            ->shouldReceive('setParameter')
+            ->with('irfoPsvAuthId', $irfoPsvAuthId)
+            ->andReturnSelf();
+        $mockQb
+            ->shouldReceive('setParameter')
+            ->with('feeTypeFeeType', m::type('string'))
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
+
+        $this->assertSame(
+            'result',
+            $this->sut->fetchFeesByPsvAuthIdAndType($irfoPsvAuthId, $feeTypeFeeType)
+        );
+    }
+
+    public function testFetchApplicationFeeByPsvAuthId()
+    {
+        $irfoPsvAuthId = 123;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->sut->shouldReceive('fetchFeesByPsvAuthIdAndType')
+            ->with($irfoPsvAuthId, FeeType::FEE_TYPE_IRFOPSVAPP)
+            ->andReturn(['foo']);
+
+        $this->assertContains(
+            'foo',
+            $this->sut->fetchApplicationFeeByPsvAuthId($irfoPsvAuthId)
+        );
+    }
+
+    public function testFetchApplicationFeeByPsvAuthIdNoFees()
+    {
+        $irfoPsvAuthId = 123;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->sut->shouldReceive('fetchFeesByPsvAuthIdAndType')
+            ->with($irfoPsvAuthId, FeeType::FEE_TYPE_IRFOPSVAPP)
+            ->andReturn([]);
+
+        $this->assertEmpty($this->sut->fetchApplicationFeeByPsvAuthId($irfoPsvAuthId));
     }
 }

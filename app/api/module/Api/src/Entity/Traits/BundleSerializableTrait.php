@@ -69,9 +69,19 @@ trait BundleSerializableTrait
     {
         $output = [];
 
+        $excludeProperties = [
+            '__initializer__',
+            '__cloner__',
+            '__isInitialized__',
+        ];
+
         $vars = get_object_vars($this);
 
         foreach ($vars as $property => $value) {
+
+            if (in_array($property, $excludeProperties)) {
+                continue;
+            }
 
             if ($value instanceof Proxy
                 || $value instanceof ArrayCollection
@@ -186,5 +196,16 @@ trait BundleSerializableTrait
     protected function getCalculatedBundleValues()
     {
         return [];
+    }
+
+    /**
+     * This method allows our entities to be cast to a string, so we can use "in" criteria with just id's
+     * when a collection is initialized
+     *
+     * @return mixed
+     */
+    public function __toString()
+    {
+        return $this->getId();
     }
 }

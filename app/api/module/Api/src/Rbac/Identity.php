@@ -40,6 +40,7 @@ class Identity implements IdentityInterface
         // ETL users
         336 => ['internal-admin'],
         542 => ['operator-admin'],
+        42955 => ['operator-admin', 'operator-ebsr'],
     ];
 
     public function setUser(User $user)

@@ -47,6 +47,8 @@ class Fee extends AbstractFee
     const METHOD_CHEQUE       = 'fpm_cheque';
     const METHOD_POSTAL_ORDER = 'fpm_po';
     const METHOD_WAIVE        = 'fpm_waive';
+    const METHOD_REFUND       = 'fpm_refund';
+    const METHOD_REVERSAL     = 'fpm_reversal';
 
     const DEFAULT_INVOICE_CUSTOMER_NAME = 'Miscellaneous payment';
     const DEFAULT_INVOICE_ADDRESS_LINE = 'Miscellaneous payment';
@@ -192,7 +194,7 @@ class Fee extends AbstractFee
     {
         $feeTransactions = $this->getFeeTransactions();
 
-        if (empty($feeTransactions)) {
+        if (empty($feeTransactions) || $feeTransactions->isEmpty()) {
             return;
         }
 
@@ -358,20 +360,9 @@ class Fee extends AbstractFee
     /**
      * @return boolean
      */
-    public function isPaid()
-    {
-        return $this->getFeeStatus()->getId() === self::STATUS_PAID;
-    }
-
-    /**
-     * @return boolean
-     */
     public function isBalancingFee()
     {
-        return in_array(
-            $this->getFeeType()->getFeeType()->getId(),
-            [FeeType::FEE_TYPE_ADJUSTMENT]
-        );
+        return $this->getFeeType()->isAdjustment();
     }
 
     /**
@@ -423,13 +414,76 @@ class Fee extends AbstractFee
         return $this->getOutstandingAmount() < $this->getAmount();
     }
 
+    /**
+     * @return bool
+     */
     public function isFullyOutstanding()
     {
         return $this->getFeeStatus()->getId() === self::STATUS_OUTSTANDING && !$this->isPartPaid();
     }
 
+    /**
+     * @return bool
+     */
     public function isOutstanding()
     {
         return $this->getFeeStatus()->getId() === self::STATUS_OUTSTANDING;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isCancelled()
+    {
+        return $this->getFeeStatus()->getId() === self::STATUS_CANCELLED;
+
+    }
+
+    public function isPaid()
+    {
+        return $this->getFeeStatus()->getId() === self::STATUS_PAID;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canRefund()
+    {
+
+        if ($this->getFeeType()->isMiscellaneous()) {
+            // miscellaneous fees are not currently refundable
+            return false;
+        }
+
+        if ($this->isCancelled()) {
+            // cancelled fees are not refundable
+            return false;
+        }
+
+        // can only refund if there are non-refunded payments
+        foreach ($this->getFeeTransactions() as $ft) {
+            if ($ft->getTransaction()->isPayment() && !$ft->isRefundedOrReversed()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFeeTransactionsForRefund()
+    {
+        $feeTransactions = [];
+
+        foreach ($this->getFeeTransactions() as $ft) {
+            $txn = $ft->getTransaction();
+            if ($txn->isPayment() && $txn->isComplete() && !$ft->isRefundedOrReversed()) {
+                $feeTransactions[] = $ft;
+            }
+        }
+
+        return $feeTransactions;
     }
 }

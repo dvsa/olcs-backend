@@ -403,6 +403,7 @@ class SubmissionSectionTest extends MockeryTestCase
         } else {
             $cu->setAddedVia($this->generateRefDataEntity(ConditionUndertaking::ADDED_VIA_CASE));
             $cu->setAttachedTo($this->generateRefDataEntity(ConditionUndertaking::ATTACHED_TO_LICENCE));
+            $cu->setCase($parentEntity);
         }
 
         $cu->setId($id);

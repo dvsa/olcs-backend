@@ -23,5 +23,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FeeTransaction extends AbstractFeeTransaction
 {
-
+    /**
+     * @return boolean
+     */
+    public function isRefundedOrReversed()
+    {
+        return count($this->getReversingFeeTransactions()) > 0;
+    }
 }

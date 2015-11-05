@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Stop;
@@ -179,7 +180,127 @@ class StopTest extends CommandHandlerTestCase
         $this->assertEquals(222, $communityLicSuspensionReason->getId());
         $this->assertEquals(111, $communityLicSuspensionReason->getCommunityLicSuspension()->getId());
         $this->assertEquals('reason', $communityLicSuspensionReason->getType()->getId());
+    }
 
+    public function testHandleCommandSuspensionWithApplication()
+    {
+        $licenceId = 1;
+        $communityLicenceIds = [10];
+        $startDate = '2014-01-01';
+        $endDate = '2015-01-01';
+
+        $data = [
+            'application' => 111,
+            'licence' => $licenceId,
+            'communityLicenceIds' => $communityLicenceIds,
+            'type' => 'suspension',
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'reasons' => [
+                'reason'
+            ]
+        ];
+
+        $command = Cmd::create($data);
+
+        $mockCommunityLicence = m::mock(CommunityLicEntity::class)
+            ->shouldReceive('getId')
+            ->andReturn(10)
+            ->twice()
+            ->shouldReceive('changeStatusAndExpiryDate')
+            ->with($this->refData[CommunityLicEntity::STATUS_SUSPENDED])
+            ->once()
+            ->shouldReceive('getStatus')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(CommunityLicEntity::STATUS_VOID)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $mockLicence = m::mock()
+            ->shouldReceive('hasCommunityLicenceOfficeCopy')
+            ->with($communityLicenceIds)
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchById')
+            ->with($licenceId)
+            ->andReturn($mockLicence)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['CommunityLic']
+            ->shouldReceive('fetchValidLicences')
+            ->with($licenceId)
+            ->andReturn([$mockCommunityLicence])
+            ->once()
+            ->shouldReceive('fetchLicencesByIds')
+            ->andReturn([$mockCommunityLicence])
+            ->once()
+            ->shouldReceive('save')
+            ->with(m::type(CommunityLicEntity::class))
+            ->once()
+            ->getMock();
+
+        $communityLicSuspension = null;
+        $this->repoMap['CommunityLicSuspension']
+            ->shouldReceive('save')
+            ->with(m::type(CommunityLicSuspensionEntity::class))
+            ->andReturnUsing(
+                function (CommunityLicSuspensionEntity $suspension) use (&$communityLicSuspension) {
+                    $suspension->setId(111);
+                    $communityLicSuspension = $suspension;
+                }
+            )
+            ->once()
+            ->getMock();
+
+        $communityLicSuspensionReason = null;
+        $this->repoMap['CommunityLicSuspensionReason']
+            ->shouldReceive('save')
+            ->with(m::type(CommunityLicSuspensionReasonEntity::class))
+            ->andReturnUsing(
+                function (CommunityLicSuspensionReasonEntity $suspReason) use (&$communityLicSuspensionReason) {
+                    $suspReason->setId(222);
+                    $communityLicSuspensionReason = $suspReason;
+                }
+            )
+            ->once()
+            ->getMock();
+
+        $this->expectedSideEffect(
+            UpdateApplicationCompletion::class,
+            [
+                'id' => 111,
+                'section' => 'communityLicences'
+            ],
+            new Result()
+        );
+
+        $expected = [
+            'id' => [
+                'communityLic10' => 10
+            ],
+            'messages' => [
+                'The licence 10 have been suspended'
+            ]
+        ];
+
+        $result = $this->sut->handleCommand($command);
+        $this->assertEquals($expected, $result->toArray());
+        $this->assertEquals(111, $communityLicSuspension->getId());
+        $this->assertEquals(10, $communityLicSuspension->getCommunityLic()->getId());
+        $this->assertEquals(new DateTime($startDate), $communityLicSuspension->getStartDate());
+        $this->assertEquals(new DateTime($endDate), $communityLicSuspension->getEndDate());
+        $this->assertEquals(222, $communityLicSuspensionReason->getId());
+        $this->assertEquals(111, $communityLicSuspensionReason->getCommunityLicSuspension()->getId());
+        $this->assertEquals('reason', $communityLicSuspensionReason->getType()->getId());
     }
 
     public function testHandleCommandWithdrawal()
