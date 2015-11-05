@@ -7,6 +7,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendUserRegistered as SendUserRegisteredDto;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -74,13 +76,32 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements 
 
         $result = new Result();
 
+        // TODO - replace with the generated password
+        $password = 'GENERATED_PASSWORD_HERE';
+
         if (isset($licence)) {
             // for the current licence holder a letter with generated password needs to be sent
-            // TODO - replace with the generated password
-            $password = 'GENERATED_PASSWORD_HERE';
-
             $result->merge(
                 $this->sendLetter($licence, $password)
+            );
+        } else {
+            // send welcome email
+            $this->handleSideEffect(
+                SendUserRegisteredDto::create(
+                    [
+                        'user' => $user,
+                    ]
+                )
+            );
+
+            // send temporary password email
+            $this->handleSideEffect(
+                SendUserTemporaryPasswordDto::create(
+                    [
+                        'user' => $user,
+                        'password' => $password,
+                    ]
+                )
             );
         }
 

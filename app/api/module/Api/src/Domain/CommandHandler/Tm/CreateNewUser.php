@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
 
+use Dvsa\Olcs\Api\Domain\Command\Email\SendTmUserCreated as SendTmUserCreatedDto;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -74,7 +76,7 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
         $this->result->addId('transportManagerApplicationId', $transportManagerApplication->getId());
 
         if ($command->getHasEmail() === 'Y') {
-            $user = $this->createUser($username, $transportManager, $contactDetails);
+            $user = $this->createUser($username, $transportManagerApplication, $contactDetails);
             $this->result->addId('userId', $user->getId());
             $this->result->addMessage('New user created');
         }
@@ -179,24 +181,50 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
 
     /**
      * @param $username
-     * @param TransportManager $transportManager
+     * @param TransportManagerApplication $transportManagerApplication
      * @param ContactDetails $contactDetails
      * @return User
      */
-    protected function createUser($username, TransportManager $transportManager, ContactDetails $contactDetails)
-    {
+    protected function createUser(
+        $username,
+        TransportManagerApplication $transportManagerApplication,
+        ContactDetails $contactDetails
+    ) {
         $userData = [
             'roles' => [
                 $this->getRepo('Role')->fetchOneByRole(Role::ROLE_OPERATOR_TM)
             ],
             'loginId' => $username,
-            'transportManager' => $transportManager
+            'transportManager' => $transportManagerApplication->getTransportManager()
         ];
 
         $user = User::create(User::USER_TYPE_TRANSPORT_MANAGER, $userData);
         $user->setContactDetails($contactDetails);
 
         $this->getRepo('User')->save($user);
+
+        // TODO - replace with the generated password
+        $password = 'GENERATED_PASSWORD_HERE';
+
+        // send welcome email
+        $this->handleSideEffect(
+            SendTmUserCreatedDto::create(
+                [
+                    'user' => $user,
+                    'tma' => $transportManagerApplication
+                ]
+            )
+        );
+
+        // send temporary password email
+        $this->handleSideEffect(
+            SendUserTemporaryPasswordDto::create(
+                [
+                    'user' => $user,
+                    'password' => $password,
+                ]
+            )
+        );
 
         return $user;
     }

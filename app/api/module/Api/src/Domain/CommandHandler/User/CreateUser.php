@@ -7,6 +7,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendUserCreated as SendUserCreatedDto;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -68,6 +70,28 @@ final class CreateUser extends AbstractUserCommandHandler implements AuthAwareIn
         );
 
         $this->getRepo()->save($user);
+
+        // TODO - replace with the generated password
+        $password = 'GENERATED_PASSWORD_HERE';
+
+        // send welcome email
+        $this->handleSideEffect(
+            SendUserCreatedDto::create(
+                [
+                    'user' => $user,
+                ]
+            )
+        );
+
+        // send temporary password email
+        $this->handleSideEffect(
+            SendUserTemporaryPasswordDto::create(
+                [
+                    'user' => $user,
+                    'password' => $password,
+                ]
+            )
+        );
 
         $result = new Result();
         $result->addId('user', $user->getId());
