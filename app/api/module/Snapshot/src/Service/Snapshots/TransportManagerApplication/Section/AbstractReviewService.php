@@ -36,7 +36,7 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
         return implode(' ', $parts);
     }
 
-    protected function formatDate($date, $format = 'd F Y')
+    protected function formatDate($date, $format = 'd M Y')
     {
         if ($date instanceof \DateTime) {
             return $date->format($format);

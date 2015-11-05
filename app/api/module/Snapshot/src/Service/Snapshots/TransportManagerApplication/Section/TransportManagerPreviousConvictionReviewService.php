@@ -54,7 +54,7 @@ class TransportManagerPreviousConvictionReviewService extends AbstractReviewServ
                     [
                         [
                             'label' => 'tm-review-previous-conviction-date',
-                            'value' => $this->formatDate($conviction->getConvictionDate(), 'd/m/Y')
+                            'value' => $this->formatDate($conviction->getConvictionDate())
                         ],
                         [
                             'label' => 'tm-review-previous-conviction-offence',

@@ -187,7 +187,7 @@ class ApplicationLicenceHistoryReviewService extends AbstractReviewService
                     ],
                     [
                         'label' => 'application-review-licence-history-disqualification-date',
-                        'value' => $this->formatDate($licence['disqualificationDate'], 'd/m/Y')
+                        'value' => $this->formatDate($licence['disqualificationDate'])
                     ],
                     [
                         'label' => 'application-review-licence-history-disqualification-length',
@@ -227,7 +227,7 @@ class ApplicationLicenceHistoryReviewService extends AbstractReviewService
                     ],
                     [
                         'label' => 'application-review-licence-history-purchase-date',
-                        'value' => $this->formatDate($licence['purchaseDate'], 'd/m/Y')
+                        'value' => $this->formatDate($licence['purchaseDate'])
                     ]
                 ];
             }

@@ -193,7 +193,7 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                     ],
                     [
                         'label' => 'review-operating-centre-advertisement-date',
-                        'value' => '02 March 2014'
+                        'value' => '02 Mar 2014'
                     ],
                     [
                         'label' => 'review-operating-centre-advertisement-file',
@@ -217,7 +217,7 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                     ],
                     [
                         'label' => 'review-operating-centre-advertisement-date',
-                        'value' => '02 March 2014'
+                        'value' => '02 Mar 2014'
                     ],
                     [
                         'label' => 'review-operating-centre-advertisement-file',

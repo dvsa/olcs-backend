@@ -102,7 +102,7 @@ class ApplicationConvictionsPenaltiesReviewServiceTest extends MockeryTestCase
                                                 'label'
                                                     => 'application-review-convictions-penalties-conviction-'
                                                     . 'convictionDate',
-                                                'value' => '23/08/1989'
+                                                'value' => '23 Aug 1989'
                                             ],
                                             [
                                                 'label'
