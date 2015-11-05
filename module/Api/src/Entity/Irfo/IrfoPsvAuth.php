@@ -141,7 +141,7 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
 
     /**
      * Is grantable? Yes if entity status is renew/pending, and application fee exists and is paid or waived
-     * 
+     *
      * @param null $applicationFee
      * @return bool
      */

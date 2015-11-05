@@ -634,7 +634,7 @@ class FeeTest extends RepositoryTestCase
             ->with($mockQb)
             ->andReturnSelf()
             ->shouldReceive('withRefdata')
-            ->twice()
+            ->once()
             ->andReturnSelf()
             ->shouldReceive('order')
             ->with('invoicedDate', 'DESC')
