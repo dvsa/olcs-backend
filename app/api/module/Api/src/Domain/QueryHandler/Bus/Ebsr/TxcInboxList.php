@@ -8,6 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as Repository;
 use Doctrine\ORM\Query as DoctrineQuery;
@@ -34,13 +35,21 @@ class TxcInboxList extends AbstractQueryHandler implements AuthAwareInterface
         $currentUser = $this->getCurrentUser();
 
         $localAuthority = $currentUser->getLocalAuthority();
+        $organisation = $this->getCurrentOrganisation();
 
-        $txcInboxEntries = $repo->fetchUnreadListForLocalAuthority(
-            $localAuthority,
-            $query->getEbsrSubmissionType(),
-            $query->getEbsrSubmissionStatus()
-        );
-
+        if (empty($localAuthority) && $organisation instanceof Organisation) {
+            $txcInboxEntries = $repo->fetchUnreadListForOrganisation(
+                $organisation,
+                $query->getEbsrSubmissionType(),
+                $query->getEbsrSubmissionStatus()
+            );
+        } else {
+            $txcInboxEntries = $repo->fetchUnreadListForLocalAuthority(
+                $localAuthority,
+                $query->getEbsrSubmissionType(),
+                $query->getEbsrSubmissionStatus()
+            );
+        }
         return [
             'result' => $this->resultList(
                 $txcInboxEntries,
