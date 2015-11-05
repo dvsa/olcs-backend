@@ -77,6 +77,55 @@ class TxcInbox extends AbstractRepository
         $ebsrSubmissionStatus = null,
         $hydrateMode = Query::HYDRATE_OBJECT
     ) {
+        $qb = $this->getUnreadListQuery($ebsrSubmissionType, $ebsrSubmissionStatus);
+
+        if (empty($localAuthority)) {
+            $qb->andWhere($qb->expr()->isNull($this->alias . '.localAuthority'));
+        } else {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.fileRead', '0'));
+            $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
+                ->setParameter('localAuthority', $localAuthority);
+        }
+
+        return $qb->getQuery()->getResult($hydrateMode);
+    }
+
+    /**
+     * Fetch a list of unread docs filtered for an Organisation, submission type and status
+     *
+     * @param $localAuthority
+     * @param null $ebsrSubmissionType
+     * @param null $ebsrSubmissionStatus
+     * @param int $hydrateMode
+     * @return array
+     */
+    public function fetchUnreadListForOrganisation(
+        $organisation,
+        $ebsrSubmissionType = null,
+        $ebsrSubmissionStatus = null,
+        $hydrateMode = Query::HYDRATE_OBJECT
+    ) {
+        $qb = $this->getUnreadListQuery($ebsrSubmissionType, $ebsrSubmissionStatus);
+
+        $qb->andWhere($qb->expr()->isNull($this->alias . '.localAuthority'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.fileRead', '0'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisation'))
+            ->setParameter('organisation', $organisation);
+
+        return $qb->getQuery()->getResult($hydrateMode);
+    }
+
+    /**
+     * General Query for unread txc inbox list. Used by LA and operators
+     *
+     * @param null $ebsrSubmissionType
+     * @param null $ebsrSubmissionStatus
+     * @return \Doctrine\Orm\QueryBuilder
+     */
+    private function getUnreadListQuery(
+        $ebsrSubmissionType = null,
+        $ebsrSubmissionStatus = null
+    ) {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
 
@@ -88,14 +137,6 @@ class TxcInbox extends AbstractRepository
             ->with('b.otherServices')
             ->with('l.organisation');
 
-        if (empty($localAuthority)) {
-            $qb->where($qb->expr()->isNull($this->alias . '.localAuthority'));
-        } else {
-            $qb->where($qb->expr()->eq($this->alias . '.fileRead', '0'));
-            $qb->andWhere($qb->expr()->eq($this->alias . '.localAuthority', ':localAuthority'))
-                ->setParameter('localAuthority', $localAuthority);
-        }
-
         if (!empty($ebsrSubmissionType)) {
             $qb->andWhere($qb->expr()->eq('e.ebsrSubmissionType', ':ebsrSubmissionType'))
                 ->setParameter('ebsrSubmissionType', $ebsrSubmissionType);
@@ -106,6 +147,6 @@ class TxcInbox extends AbstractRepository
                 ->setParameter('ebsrSubmissionStatus', $ebsrSubmissionStatus);
         }
 
-        return $qb->getQuery()->getResult($hydrateMode);
+        return $qb;
     }
 }
