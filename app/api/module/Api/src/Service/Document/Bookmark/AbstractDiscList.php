@@ -41,8 +41,10 @@ abstract class AbstractDiscList extends DynamicBookmark
         $queryClass = static::QUERY_CLASS;
 
         $queries = [];
-        foreach ($data as $id) {
-            $queries[] = $queryClass::create(['id' => $id, 'bundle' => $this->discBundle]);
+        foreach ($data as $key => $id) {
+            if (is_int($key)) {
+                $queries[] = $queryClass::create(['id' => $id, 'bundle' => $this->discBundle]);
+            }
         }
 
         return $queries;
