@@ -42,7 +42,7 @@ class TransportManagerMainReviewService extends AbstractReviewService
                     ],
                     [
                         'label' => 'tm-review-main-birthDate',
-                        'value' => $this->formatDate($person->getBirthDate(), 'd/m/Y')
+                        'value' => $this->formatDate($person->getBirthDate())
                     ],
                     [
                         'label' => 'tm-review-main-birthPlace',

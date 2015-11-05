@@ -63,7 +63,7 @@ class ApplicationConvictionsPenaltiesReviewService extends AbstractReviewService
                         ],
                         [
                             'label' => 'application-review-convictions-penalties-conviction-convictionDate',
-                            'value' => $this->formatDate($conviction['convictionDate'], 'd/m/Y')
+                            'value' => $this->formatDate($conviction['convictionDate'])
                         ],
                         [
                             'label' => 'application-review-convictions-penalties-conviction-offence',

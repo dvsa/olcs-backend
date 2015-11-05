@@ -317,7 +317,7 @@ class ApplicationLicenceHistoryReviewServiceTest extends MockeryTestCase
                                             ],
                                             [
                                                 'label' => 'application-review-licence-history-disqualification-date',
-                                                'value' => '20/06/2013'
+                                                'value' => '20 Jun 2013'
                                             ],
                                             [
                                                 'label' => 'application-review-licence-history-disqualification-length',
@@ -346,7 +346,7 @@ class ApplicationLicenceHistoryReviewServiceTest extends MockeryTestCase
                                             ],
                                             [
                                                 'label' => 'application-review-licence-history-purchase-date',
-                                                'value' => '20/06/2013'
+                                                'value' => '20 Jun 2013'
                                             ]
                                         ]
                                     ]

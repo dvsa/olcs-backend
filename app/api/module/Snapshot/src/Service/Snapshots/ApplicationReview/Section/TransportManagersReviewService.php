@@ -48,7 +48,7 @@ class TransportManagersReviewService extends AbstractReviewService
                     ],
                     [
                         'label' => 'review-transport-manager-dob',
-                        'value' => $this->formatDate($person['birthDate'], 'd/m/Y')
+                        'value' => $this->formatDate($person['birthDate'])
                     ]
                 ]
             ]

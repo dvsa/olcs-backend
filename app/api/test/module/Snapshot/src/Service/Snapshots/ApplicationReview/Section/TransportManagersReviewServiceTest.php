@@ -71,7 +71,7 @@ class TransportManagersReviewServiceTest extends MockeryTestCase
                         ],
                         [
                             'label' => 'review-transport-manager-dob',
-                            'value' => '23/08/1989'
+                            'value' => '23 Aug 1989'
                         ]
                     ]
                 ]
@@ -86,7 +86,7 @@ class TransportManagersReviewServiceTest extends MockeryTestCase
                         ],
                         [
                             'label' => 'review-transport-manager-dob',
-                            'value' => '23/08/1991'
+                            'value' => '23 Aug 1991'
                         ]
                     ]
                 ]
