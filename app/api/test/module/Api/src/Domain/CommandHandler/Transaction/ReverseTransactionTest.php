@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\ReverseTransaction;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -88,7 +89,12 @@ class ReverseTransactionTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommandCheque()
+    /**
+     * @param string $paymentMethod
+     * @param string $expectedHelperMethod
+     * @dataProvider handleCommandProvider
+     */
+    public function testHandleCommand($paymentMethod, $expectedHelperMethod)
     {
         $now = new DateTime();
         $transactionId = 123;
@@ -105,7 +111,7 @@ class ReverseTransactionTest extends CommandHandlerTestCase
 
         $transaction
             ->shouldReceive('getPaymentMethod')
-            ->andReturn($this->mapRefData(FeeEntity::METHOD_CHEQUE));
+            ->andReturn($this->mapRefData($paymentMethod));
         $transaction
             ->shouldReceive('getFeeTransactions->first->getFee')
             ->andReturn($fee);
@@ -140,7 +146,7 @@ class ReverseTransactionTest extends CommandHandlerTestCase
             ->andReturn($transaction);
 
         $this->mockCpmsService
-            ->shouldReceive('reverseChequePayment')
+            ->shouldReceive($expectedHelperMethod)
             ->once()
             ->with($transactionReference, [$fee])
             ->andReturn(
@@ -182,7 +188,7 @@ class ReverseTransactionTest extends CommandHandlerTestCase
                 'transaction' => 999,
             ],
             'messages' => [
-                'Transaction 123 reversed using [reverseChequePayment]',
+                "Transaction 123 reversed using [$expectedHelperMethod]",
                 'Transaction record created',
                 'Fee 69 reset to Outstanding',
             ]
@@ -197,6 +203,15 @@ class ReverseTransactionTest extends CommandHandlerTestCase
         $this->assertEquals($now, $savedTransaction->getCompletedDate());
         $this->assertEquals('bob', $savedTransaction->getProcessedByUser()->getLoginId());
         $this->assertEquals('REFUND_REF_1', $savedTransaction->getReference());
+    }
+
+    public function handleCommandProvider()
+    {
+        return [
+            'cheque' => [FeeEntity::METHOD_CHEQUE, 'reverseChequePayment'],
+            'digital card' => [FeeEntity::METHOD_CARD_ONLINE, 'chargeBackCardPayment'],
+            'assisted digital card' => [FeeEntity::METHOD_CARD_OFFLINE, 'chargeBackCardPayment'],
+        ];
     }
 
     public function testHandleCommandCpmsResponseException()
@@ -237,5 +252,31 @@ class ReverseTransactionTest extends CommandHandlerTestCase
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
 
         $this->sut->handleCommand($command);
+    }
+
+    public function testValidateIncompleteTransaction()
+    {
+        $transaction = m::mock(TransactionEntity::class)
+            ->shouldReceive('isComplete')
+            ->andReturn(false)
+            ->getMock();
+
+        $this->setExpectedException(ValidationException::class);
+
+        $this->sut->validate($transaction);
+    }
+
+    public function testValidateIrreversibleTransaction()
+    {
+        $transaction = m::mock(TransactionEntity::class)
+            ->shouldReceive('isComplete')
+            ->andReturn(true)
+            ->shouldReceive('canReverse')
+            ->andReturn(false)
+            ->getMock();
+
+        $this->setExpectedException(ValidationException::class);
+
+        $this->sut->validate($transaction);
     }
 }

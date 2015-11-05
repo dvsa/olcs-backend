@@ -156,7 +156,7 @@ class TransactionEntityTest extends EntityTester
             [
                 'amount' => '35.79',
                 'displayReversalOption' => false,
-                'canReverse' => true,
+                'canReverse' => false,
             ],
             $sut->getCalculatedBundleValues()
         );
@@ -230,6 +230,8 @@ class TransactionEntityTest extends EntityTester
     public function testCanReverse($feeTransactions, $expected)
     {
         $sut = $this->instantiate($this->entityClass);
+        $sut->setType(new RefData(Entity::TYPE_PAYMENT));
+        $sut->setPaymentMethod(new RefData(Fee::METHOD_CHEQUE));
 
         $sut->setFeeTransactions(new ArrayCollection($feeTransactions));
 

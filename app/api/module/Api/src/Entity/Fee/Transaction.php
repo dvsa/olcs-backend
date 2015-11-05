@@ -167,7 +167,7 @@ class Transaction extends AbstractTransaction
     public function canReverse()
     {
         // reuse displayReversalOption logic for initial checks
-        if (!$displayReversalOption()) {
+        if (!$this->displayReversalOption()) {
             return false;
         }
 
