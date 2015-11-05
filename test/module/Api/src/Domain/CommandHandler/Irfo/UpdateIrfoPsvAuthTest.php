@@ -155,10 +155,6 @@ class UpdateIrfoPsvAuthTest extends CommandHandlerTestCase
             $savedIrfoPsvAuth->getIrfoPsvAuthType()
         );
         $this->assertSame(
-            $this->refData[IrfoPsvAuthEntity::STATUS_PENDING],
-            $savedIrfoPsvAuth->getStatus()
-        );
-        $this->assertSame(
             $this->refData[IrfoPsvAuthEntity::JOURNEY_FREQ_DAILY],
             $savedIrfoPsvAuth->getJourneyFrequency()
         );

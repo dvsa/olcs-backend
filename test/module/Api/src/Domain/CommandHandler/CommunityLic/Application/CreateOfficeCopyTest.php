@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Application\CreateOfficeCopy;
@@ -111,6 +112,15 @@ class CreateOfficeCopyTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedSideEffect(
+            UpdateApplicationCompletion::class,
+            [
+                'id' => $identifier,
+                'section' => 'communityLicences'
+            ],
+            new Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -192,6 +202,15 @@ class CreateOfficeCopyTest extends CommandHandlerTestCase
                 'licence' => $licenceId,
                 'identifier' => $identifier,
                 'communityLicenceIds' => [111]
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            UpdateApplicationCompletion::class,
+            [
+                'id' => $identifier,
+                'section' => 'communityLicences'
             ],
             new Result()
         );

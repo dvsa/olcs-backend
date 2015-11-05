@@ -23,6 +23,7 @@ interface CpmsHelperInterface
     const PAYMENT_IN_PROGRESS  = 800;
     const PAYMENT_GATEWAY_ERROR = 810;
     const PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED = 825;
+    const PAYMENT_PAYMENT_CHARGED_BACK = 820;
 
     const RESPONSE_SUCCESS = '000';
 
@@ -53,6 +54,14 @@ interface CpmsHelperInterface
      * @return int status code
      */
     public function getPaymentStatus($receiptReference);
+
+    /**
+     * Get the authorisation code for a card payment
+     *
+     * @param string $receiptReference
+     * @return string auth code|null
+     */
+    public function getPaymentAuthCode($receiptReference);
 
     /**
      * Record a cash payment in CPMS
@@ -129,6 +138,14 @@ interface CpmsHelperInterface
      * @return array
      */
     public function downloadReport($reference, $token);
+
+    /**
+     * Refund payments in a batch
+     *
+     * @param Fee $fee
+     * @return array
+     */
+    public function batchRefund($fee);
 
     /**
      * @param mixed $amount

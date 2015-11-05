@@ -16,6 +16,13 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Query\Fee\FeeTypeList as FeeTypeListQry;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Fee Type repository test
@@ -125,7 +132,7 @@ class FeeTypeTest extends RepositoryTestCase
          . ' AND ft.isMiscellaneous = [[0]]'
          . ' AND ft.costCentreRef != [[IR]]'
          . ' AND ft.goodsOrPsv = [[GOODS_OR_PSV]]'
-         . ' AND ft.licenceType = [[LICENCE_TYPE]]'
+         . ' AND (ft.licenceType = [[LICENCE_TYPE]] OR ft.licenceType IS NULL)'
          . ' AND (ft.trafficArea != [[NI_TRAFFIC_AREA]] OR ft.trafficArea IS NULL)';
 
         $this->assertEquals($expectedQuery, $this->query);
@@ -202,7 +209,7 @@ class FeeTypeTest extends RepositoryTestCase
          . ' AND ft.isMiscellaneous = [[0]]'
          . ' AND ft.costCentreRef != [[IR]]'
          . ' AND ft.goodsOrPsv = [[GOODS_OR_PSV]]'
-         . ' AND ft.licenceType = [[LICENCE_TYPE]]'
+         . ' AND (ft.licenceType = [[LICENCE_TYPE]] OR ft.licenceType IS NULL)'
          . ' AND ft.trafficArea = [[NI_TRAFFIC_AREA]]';
 
         $this->assertEquals($expectedQuery, $this->query);
@@ -303,5 +310,50 @@ class FeeTypeTest extends RepositoryTestCase
          . ' AND ft.isMiscellaneous = [[1]]';
 
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testGetLatestIrfoFeeTypeForGvPermits()
+    {
+        $organisation = new Organisation();
+        $irfoGvPermitType = new IrfoGvPermitType();
+        $feeTypeFeeType = new RefData('feeTypefeeType');
+        $irfoGvPermitType->setIrfoFeeType($feeTypeFeeType);
+
+        $status = new RefData('status');
+
+        $irfoEntity = new IrfoGvPermit($organisation, $irfoGvPermitType, $status);
+
+        $this->sut->shouldReceive('fetchLatestForIrfo')->andReturn(['foo']);
+
+        $this->assertEquals($this->sut->getLatestIrfoFeeType($irfoEntity, $feeTypeFeeType), ['foo']);
+
+    }
+
+    public function testGetLatestIrfoFeeTypeForPsvAuth()
+    {
+        $organisation = new Organisation();
+        $irfoPsvAuthType = new IrfoPsvAuthType();
+        $feeTypeFeeType = new RefData('feeTypefeeType');
+        $irfoPsvAuthType->setIrfoFeeType($feeTypeFeeType);
+
+        $status = new RefData('status');
+
+        $irfoEntity = new IrfoPsvAuth($organisation, $irfoPsvAuthType, $status);
+
+        $this->sut->shouldReceive('fetchLatestForIrfo')->andReturn(['foo']);
+
+        $this->assertEquals($this->sut->getLatestIrfoFeeType($irfoEntity, $feeTypeFeeType), ['foo']);
+    }
+
+    public function testGetLatestIrfoFeeTypeForUnknownEntity()
+    {
+        $this->setExpectedException(NotFoundException::class);
+
+        $feeTypeFeeType = new RefData('feeTypefeeType');
+
+        // force exception by passing something other than IrfoGvPermit or IrfoPsvAuth Entities
+        $irfoEntity = new \StdClass();
+
+        $this->sut->getLatestIrfoFeeType($irfoEntity, $feeTypeFeeType);
     }
 }

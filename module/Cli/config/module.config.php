@@ -1,6 +1,8 @@
 <?php
 
-use \Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Cli\Domain\CommandHandler;
+use Dvsa\Olcs\Cli\Domain\Command;
 
 return [
     'console' => [
@@ -78,6 +80,15 @@ return [
                         ],
                     ],
                 ],
+                'remove-read-audit' => [
+                    'options' => [
+                        'route' => 'remove-read-audit [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'removeReadAudit'
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
@@ -127,5 +138,15 @@ return [
     ],
     'file-system' => [
         'path' => '/tmp'
+    ],
+    \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY => [
+        'factories' => [
+            Command\RemoveReadAudit::class => CommandHandler\RemoveReadAudit::class,
+        ]
+    ],
+    'batch_config' => [
+        'remove-read-audit' => [
+            'max-age' => '1 year'
+        ]
     ]
 ];

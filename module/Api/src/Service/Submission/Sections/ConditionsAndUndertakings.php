@@ -33,7 +33,7 @@ final class ConditionsAndUndertakings extends AbstractSection
             /** @var ConditionUndertaking $entity */
             foreach ($caseConditionsAndUndertakings as $entity) {
                 $tables[$this->determineTableName($entity)][] =
-                    $this->generateSubmissionEntity($entity, $entity->getCase()->getId());
+                    $this->generateTableRow($entity, $entity->getCase()->getId());
             }
         }
 
@@ -46,7 +46,7 @@ final class ConditionsAndUndertakings extends AbstractSection
                 /** @var ConditionUndertaking $entity */
                 foreach ($application->getConditionUndertakings() as $entity) {
                     $tables[$this->determineTableName($entity)][] =
-                        $this->generateSubmissionEntity($entity, $application->getId());
+                        $this->generateTableRow($entity, $application->getId());
                 }
             }
         }
@@ -55,7 +55,7 @@ final class ConditionsAndUndertakings extends AbstractSection
         $licenceConditionsUndertakings = $case->getLicence()->getConditionUndertakingsAddedViaLicence();
         foreach ($licenceConditionsUndertakings as $entity) {
             $tables[$this->determineTableName($entity)][] =
-                $this->generateSubmissionEntity($entity, $case->getLicence()->getLicNo());
+                $this->generateTableRow($entity, $case->getLicence()->getLicNo());
         }
 
         usort(
@@ -85,7 +85,7 @@ final class ConditionsAndUndertakings extends AbstractSection
         return $entity->getConditionType()->getId() == 'cdt_und' ? 'undertakings' : 'conditions';
     }
 
-    private function generateSubmissionEntity($entity, $parentId = '')
+    private function generateTableRow($entity, $parentId = '')
     {
         /** @var ConditionUndertaking $entity */
         $thisEntity = array();

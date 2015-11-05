@@ -63,6 +63,7 @@ class CreateStatementTest extends CommandHandlerTestCase
             "requestorsBody" => "REQUESTORS BODY",
             "stoppedDate" => "2015-01-05",
             "requestedDate" => "2015-05-05",
+            "issuedDate" => "2015-02-02",
             "contactType" => "cm_email",
             "authorisersDecision" => "Decision is ..."
         ];
@@ -93,6 +94,7 @@ class CreateStatementTest extends CommandHandlerTestCase
             "requestorsBody" => "REQUESTORS BODY",
             "stoppedDate" => "2015-01-05",
             "requestedDate" => "2015-05-05",
+            "issuedDate" => "2015-02-02",
             "contactType" => new RefDataEntity(),
             "authorisersDecision" => "Decision is ..."
         ];

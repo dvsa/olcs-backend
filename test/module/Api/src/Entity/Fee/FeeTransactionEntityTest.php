@@ -2,8 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as Entity;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Mockery as m;
 
 /**
  * FeeTransaction Entity Unit Tests
@@ -18,4 +20,42 @@ class FeeTransactionEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    protected $sut;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->sut = $this->instantiate($this->entityClass);
+    }
+
+    /**
+     * @param array $feeTransactions
+     * @param boolean $expected
+     *
+     * @dataProvider isRefundedProvider
+     */
+    public function testIsRefundedOrReversed(array $feeTransactions, $expected)
+    {
+        $this->sut->setReversingFeeTransactions(new ArrayCollection($feeTransactions));
+
+        $this->assertSame($expected, $this->sut->isRefundedOrReversed());
+    }
+
+    public function isRefundedProvider()
+    {
+        return [
+            [
+                [],
+                false,
+            ],
+            [
+                [
+                    m::mock(Entity::class),
+                ],
+                true,
+            ]
+        ];
+    }
 }

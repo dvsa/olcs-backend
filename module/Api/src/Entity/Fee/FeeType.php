@@ -56,6 +56,11 @@ class FeeType extends AbstractFeeType
         return (bool) $this->getIsMiscellaneous();
     }
 
+    public function isAdjustment()
+    {
+        return $this->getFeeType()->getId() === self::FEE_TYPE_ADJUSTMENT;
+    }
+
     public function getCalculatedBundleValues()
     {
         return [

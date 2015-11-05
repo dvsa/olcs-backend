@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -86,6 +87,13 @@ final class CreateOfficeCopy extends AbstractCommandHandler implements Transacti
         if ($interimStatus === ApplicationEntity::INTERIM_STATUS_INFORCE) {
             $sideEffects[] = $this->createGenerateBatchCommand($licenceId, $applicationId, [$communityLicenceId]);
         }
+
+        $sideEffects[] = UpdateApplicationCompletion::create(
+            [
+                'id' => $applicationId,
+                'section' => 'communityLicences'
+            ]
+        );
 
         return $sideEffects;
     }

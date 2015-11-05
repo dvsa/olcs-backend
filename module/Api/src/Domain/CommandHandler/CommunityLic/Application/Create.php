@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -107,6 +108,13 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         if (!$this->getRepo()->fetchOfficeCopy($licenceId)) {
             $sideEffects[] = $this->createCreateOfficeCopyCommand($licenceId, $applicationId);
         }
+
+        $sideEffects[] = UpdateApplicationCompletion::create(
+            [
+                'id' => $applicationId,
+                'section' => 'communityLicences'
+            ]
+        );
 
         return $sideEffects;
     }

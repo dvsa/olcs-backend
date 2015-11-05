@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Publication\Bus as PublishDto;
+use Dvsa\Olcs\Transfer\Command\Bus\GrantBusReg as GrantCmd;
 
 /**
  * Grant BusReg
@@ -23,6 +24,10 @@ final class GrantBusReg extends AbstractCommandHandler
 
     public function handleCommand(CommandInterface $command)
     {
+        /**
+         * @var BusRegEntity $busReg
+         * @var GrantCmd $command
+         */
         $busReg = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
         $status = $busReg->getStatusForGrant();

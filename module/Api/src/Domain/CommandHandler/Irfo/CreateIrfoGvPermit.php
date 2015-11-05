@@ -83,22 +83,18 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler implements Transac
 
     public function createFee(IrfoGvPermit $irfoGvPermit)
     {
-        $irfoGvPermitFeeType = $irfoGvPermit->getIrfoGvPermitType()->getIrfoFeeType();
-
-        /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
-        $feeTypeRepo = $this->getRepo('FeeType');
-        $feeType = $feeTypeRepo->fetchLatestForIrfo(
-            $irfoGvPermitFeeType,
-            $this->getRepo()->getRefDataReference(FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT)
+        $irfoFeeType = $this->getRepo('FeeType')->getLatestIrfoFeeType(
+            $irfoGvPermit,
+            $this->getRepo()->getRefdataReference(FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT)
         );
 
-        $feeAmount = ((float)$feeType->getFixedValue() * (int)$irfoGvPermit->getNoOfCopies());
+        $feeAmount = ((float)$irfoFeeType->getFixedValue() * (int)$irfoGvPermit->getNoOfCopies());
 
         $data = [
             'irfoGvPermit' => $irfoGvPermit->getId(),
             'invoicedDate' => date('Y-m-d'),
-            'description' => $feeType->getDescription() . ' for IRFO permit ' . $irfoGvPermit->getId(),
-            'feeType' => $feeType->getId(),
+            'description' => $irfoFeeType->getDescription() . ' for IRFO permit ' . $irfoGvPermit->getId(),
+            'feeType' => $irfoFeeType->getId(),
             'amount' => $feeAmount,
             'feeStatus' => Fee::STATUS_OUTSTANDING,
         ];
@@ -108,20 +104,16 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler implements Transac
 
     public function createExemptFee(IrfoGvPermit $irfoGvPermit)
     {
-        $irfoGvPermitFeeType = $irfoGvPermit->getIrfoGvPermitType()->getIrfoFeeType();
-
-        /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
-        $feeTypeRepo = $this->getRepo('FeeType');
-        $feeType = $feeTypeRepo->fetchLatestForIrfo(
-            $irfoGvPermitFeeType,
-            $this->getRepo()->getRefDataReference(FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT)
+        $irfoFeeType = $this->getRepo('FeeType')->getLatestIrfoFeeType(
+            $irfoGvPermit,
+            $this->getRepo()->getRefdataReference(FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT)
         );
 
         $data = [
             'irfoGvPermit' => $irfoGvPermit->getId(),
             'invoicedDate' => date('Y-m-d'),
-            'description' => $feeType->getDescription() . ' for IRFO permit ' . $irfoGvPermit->getId(),
-            'feeType' => $feeType->getId(),
+            'description' => $irfoFeeType->getDescription() . ' for IRFO permit ' . $irfoGvPermit->getId(),
+            'feeType' => $irfoFeeType->getId(),
             'amount' => 0,
             'feeStatus' => Fee::STATUS_PAID,
         ];

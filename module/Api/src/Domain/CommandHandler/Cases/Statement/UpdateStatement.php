@@ -73,6 +73,10 @@ final class UpdateStatement extends AbstractCommandHandler implements Transactio
         $statement->setRequestedDate(new \DateTime($command->getRequestedDate()));
         $statement->setAuthorisersDecision($command->getAuthorisersDecision());
 
+        if ($command->getIssuedDate() !== null) {
+            $statement->setIssuedDate(new \DateTime($command->getIssuedDate()));
+        }
+
         // this is the statement.contact_type field
         $statement->setContactType($this->getRepo()->getRefdataReference($command->getContactType()));
 
