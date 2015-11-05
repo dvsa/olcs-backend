@@ -17,6 +17,9 @@ use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 
 /**
  * Fee Type
@@ -252,5 +255,32 @@ class FeeType extends AbstractRepository
     {
         $this->getQueryBuilder()->modifyQuery($qb)
             ->with('feeType', 'ftft');
+    }
+
+    /**
+     * Get the fee type based on IrfoPsvAuth and fee type string
+     *
+     * @param IrfoGvPermit|IrfoPsvAuth $irfoEntity
+     * @param RefDataEntity $feeTypeFeeType
+     * @return Entity
+     * @throws NotFoundException
+     */
+    public function getLatestIrfoFeeType($irfoEntity, RefDataEntity $feeTypeFeeType)
+    {
+        if ($irfoEntity instanceOf IrfoPsvAuthEntity) {
+            $irfoFeeType = $irfoEntity->getIrfoPsvAuthType()->getIrfoFeeType();
+        } elseif ($irfoEntity instanceof IrfoGvPermitEntity) {
+            $irfoFeeType = $irfoEntity->getIrfoGvPermitType()->getIrfoFeeType();
+        } else {
+            throw new NotFoundException('Irfo Fee type not found');
+        }
+
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\FeeType $feeTypeRepo */
+        $feeType = $this->fetchLatestForIrfo(
+            $irfoFeeType,
+            $feeTypeFeeType
+        );
+
+        return $feeType;
     }
 }

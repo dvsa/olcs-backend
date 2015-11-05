@@ -3,7 +3,7 @@
 /**
  * IrfoDetails Test
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Irfo\IrfoDetails;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
