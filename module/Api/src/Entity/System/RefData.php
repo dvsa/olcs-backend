@@ -45,9 +45,4 @@ class RefData extends AbstractRefData
             $this->setId($id);
         }
     }
-
-    public function __toString()
-    {
-        return $this->getId();
-    }
 }
