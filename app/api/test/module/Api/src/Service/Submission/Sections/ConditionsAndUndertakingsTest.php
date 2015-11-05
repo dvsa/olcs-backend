@@ -24,7 +24,32 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
         $expectedResult = [
             'data' => [
                 'tables' => [
-                    'conditions' => [],
+                    'conditions' => [
+                        0 => [
+                            'id' => 58,
+                            'version' => 158,
+                            'createdOn' => '23/01/2011',
+                            'parentId' => 'OB12345',
+                            'addedVia' => 'cav_lic-desc',
+                            'isFulfilled' => 'Y',
+                            'isDraft' => 'N',
+                            'attachedTo' => 'cat_lic-desc',
+                            'OcAddress' => [],
+                            'notes' => null
+                        ],
+                        1 => [
+                            'id' => 29,
+                            'version' => 129,
+                            'createdOn' => '23/01/2011',
+                            'parentId' => 99,
+                            'addedVia' => 'cav_case-desc',
+                            'isFulfilled' => 'Y',
+                            'isDraft' => 'N',
+                            'attachedTo' => 'cat_lic-desc',
+                            'OcAddress' => [],
+                            'notes' => null
+                        ]
+                    ],
                     'undertakings' => [
                         0 => [
                             'id' => 34,
