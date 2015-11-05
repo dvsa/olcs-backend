@@ -54,7 +54,7 @@ class Transaction extends AbstractQueryHandler
                 $fee = $ft->getFee()->serialize(['feeStatus']);
                 $id = $fee['id'];
                 if (isset($fees[$id])) {
-                    $fee = &$fees[$id];
+                    $fee = $fees[$id];
                 }
                 $fee['reversingTransaction'] = $this->getReversingTransactionData($ft);
                 if (isset($fee['allocatedAmount'])) {
@@ -62,7 +62,7 @@ class Transaction extends AbstractQueryHandler
                 } else {
                     $fee['allocatedAmount'] = $ft->getAmount();
                 }
-                $fees[$id] = &$fee;
+                $fees[$id] = $fee;
 
                 return true;
             }
