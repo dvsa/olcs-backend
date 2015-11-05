@@ -64,8 +64,9 @@ class GrantIrfoPsvAuthTest extends CommandHandlerTestCase
                 'GB' => m::mock(Country::class)
             ],
             FeeTypeEntity::class => [
-                1 => m::mock(FeeTypeEntity::class)
-            ]
+                1 => m::mock(FeeTypeEntity::class)->makePartial()->setFixedValue(20)
+
+        ]
         ];
 
         parent::initReferences();
@@ -176,6 +177,119 @@ class GrantIrfoPsvAuthTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    /**
+     * Tests granting whilst creating annual fee that is NOT exempt
+     */
+    public function testHandleCommandAnnualFeeNotExempt()
+    {
+        $data = [
+            'id' => 42,
+            'version' => 2,
+            'organisation' => 11,
+            'irfoPsvAuthType' => 22,
+            'status' => IrfoPsvAuthEntity::STATUS_PENDING,
+            'validityPeriod' => 2,
+            'inForceDate' => '2015-01-01',
+            'expiryDate' => '2016-01-01',
+            'applicationSentDate' => '2014-01-01',
+            'serviceRouteFrom' => 'From',
+            'serviceRouteTo' => 'To',
+            'journeyFrequency' => IrfoPsvAuthEntity::JOURNEY_FREQ_DAILY,
+            'isFeeExemptApplication' => 'N',
+            'isFeeExemptAnnual' => 'N',
+            'exemptionDetails' => 'testing',
+            'copiesRequired' => 1,
+            'copiesRequiredTotal' => 1,
+            'countrys' => ['GB'],
+            'irfoPsvAuthNumbers' => [
+                ['name' => 'test 1'],
+                ['name' => ''],
+            ],
+        ];
+
+        $command = Cmd::create($data);
+
+        // handle update
+        $this->expectedSideEffect(
+            UpdateIrfoPsvAuthCmd::class, $command->getArrayCopy(),
+            (new Result())->addMessage('IRFO PSV Auth updated successfully')
+                ->addId('irfoPsvAuth', $data['id'])
+        );
+
+        $this->repoMap['FeeType']->shouldReceive('getLatestIrfoFeeType')
+            ->andReturn($this->references[FeeTypeEntity::class][1]);
+
+        $irfoPsvAuth = $this->generatePsvAuth($data);
+        $irfoPsvAuth->setValidityPeriod(4);
+
+        $feeType = new FeeTypeEntity();
+
+        $fee = new FeeEntity($feeType, 100, $this->refData[FeeEntity::STATUS_PAID]);
+
+        $this->repoMap['IrfoPsvAuth']->shouldReceive('fetchUsingId')
+            ->andReturn($irfoPsvAuth)
+            ->shouldReceive('save');
+
+        $this->repoMap['Fee']->shouldReceive('fetchApplicationFeeByPsvAuthId')
+            ->andReturn($fee);
+
+        $result1 = new Result();
+        $result1->addMessage('IRFO PSV Auth Annual Fee created');
+        $this->expectedSideEffect(
+            FeeCreateFee::class,
+            [
+                'irfoGvPermit' => null,
+                'invoicedDate' => date('Y-m-d'),
+                'description' => ' for Auth ' . $data['id'],
+                'feeType' => 1,
+                'amount' => 80,
+                'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
+                'application' => null,
+                'busReg' => null,
+                'licence' => null,
+                'task' => null
+            ],
+            $result1
+        );
+
+        $result2 = new Result();
+        $result2->addMessage('IRFO PSV Auth Copies Fee created');
+        $this->expectedSideEffect(
+            FeeCreateFee::class,
+            [
+                'irfoPsvAuth' => $data['id'],
+                'invoicedDate' => date('Y-m-d'),
+                'description' => ' for Auth ' . $data['id'],
+                'feeType' => 1,
+                'amount' => 0,
+                'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
+                'application' => null,
+                'busReg' => null,
+                'licence' => null,
+                'task' => null
+            ],
+            $result2
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'irfoPsvAuth' => $data['id'],
+            ],
+            'messages' => [
+                'IRFO PSV Auth granted successfully',
+                'IRFO PSV Auth Annual Fee created',
+                'IRFO PSV Auth Copies Fee created'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * Tests attempt to grant when application fee still outstanding
+     */
     public function testHandleCommandAnnualFeeOutstanding()
     {
         $this->setExpectedException(BadRequestException::class);
@@ -247,6 +361,7 @@ class GrantIrfoPsvAuthTest extends CommandHandlerTestCase
         $irfoPsvAuth->setId($data['id']);
         $irfoPsvAuth->setIrfoPsvAuthNumbers([$irfoPsvAuthNumber1, $irfoPsvAuthNumber2]);
         $irfoPsvAuth->setIsFeeExemptAnnual($data['isFeeExemptAnnual']);
+        $irfoPsvAuth->setValidityPeriod(2);
 
         $irfoPsvAuth->setStatus($this->refData[IrfoPsvAuthEntity::STATUS_PENDING]);
 
