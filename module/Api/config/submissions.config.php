@@ -158,6 +158,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
             \Dvsa\Olcs\Api\Service\Submission\Sections\TmPreviousHistory::class =>
                 \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
+            \Dvsa\Olcs\Api\Service\Submission\Sections\ApplicantsComments::class =>
+                \Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory::class,
         ],
         'aliases' => [
             'introduction' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
@@ -199,7 +201,7 @@ return [
             'te-reports' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'site-plans' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'planning-permission' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
-            'applicants-comments' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
+            'applicants-comments' => \Dvsa\Olcs\Api\Service\Submission\Sections\ApplicantsComments::class,
             'visibility-access-egress-size' => \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class,
             'compliance-complaints' => \Dvsa\Olcs\Api\Service\Submission\Sections\ComplianceComplaints::class,
             'environmental-complaints' => \Dvsa\Olcs\Api\Service\Submission\Sections\EnvironmentalComplaints::class,
@@ -461,7 +463,7 @@ return [
             'applicants-comments'   => [
                 'subcategoryId' => 150,
                 'config' => [],
-                'section_type' => [],
+                'section_type' => ['text'],
                 'allow_comments' => true,
                 'allow_attachments' => true,
             ],
