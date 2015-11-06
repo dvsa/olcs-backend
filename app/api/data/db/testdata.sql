@@ -13,7 +13,6 @@ TRUNCATE TABLE `bus_short_notice`;
 TRUNCATE TABLE `bus_notice_period`;
 TRUNCATE TABLE `bus_reg_bus_service_type`;
 TRUNCATE TABLE `bus_reg_variation_reason`;
-TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `complaint`;
 TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
@@ -117,22 +116,8 @@ TRUNCATE TABLE `trailer`;
 TRUNCATE TABLE `workshop`;
 TRUNCATE TABLE `inspection_request`;
 TRUNCATE TABLE `user_role`;
-TRUNCATE TABLE `correspondence_inbox`;
+TRUNCATE TABLE `correspondence_inbox`; -- no inserts, not sure we need to truncate?
 TRUNCATE TABLE `grace_period`;
-
--- traffic areas are in testdata as they reference contact_details records
-TRUNCATE traffic_area;
-INSERT INTO `traffic_area` (`id`, `txc_name`, `name`, `contact_details_id`, `is_scotland`, `is_wales`, `is_england`, `is_ni`)
-VALUES
-    ('B','NorthEastern','North East of England',1,0,0,1,0),
-    ('C','NorthWestern','North West of England',1,0,0,1,0),
-    ('D','WestMidlands','West Midlands',3,0,0,1,0),
-    ('F','Eastern','East of England',3,0,0,1,0),
-    ('G','Welsh','Wales',3,0,1,0,0),
-    ('H','Western','West of England',3,0,0,1,0),
-    ('K','SouthEastMetropolitan','London and the South East of England',3,0,0,1,0),
-    ('M','Scottish','Scotland',8,1,0,0,0),
-    ('N','NorthernIreland','Northern Ireland',8,0,0,0,1);
 
 /* Test documents */
 INSERT IGNORE INTO document(id,licence_id,bus_reg_id,description,filename,is_external,category_id,sub_category_id,
@@ -1532,46 +1517,46 @@ VALUES
   (2, '302', 1, 1, 1, 36, null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
   (3, '303', 1, 1, 1, 60, null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1);
 
-INSERT INTO `public_holiday`(`id`,`last_modified_by`,`created_by`,`public_holiday_date`,`is_england`,`is_wales`,`is_scotland`,`is_ni`,`created_on`,`last_modified_on`,`version`)
+INSERT INTO `public_holiday`(`id`,`public_holiday_date`,`is_england`,`is_wales`,`is_scotland`,`is_ni`)
 VALUES
-  (1,1,1,'2014-01-01 00:00:00',1,1,1,1,now(),now(),1),
-  (2,1,1,'2014-01-02 00:00:00',0,0,1,0,now(),now(),1),
-  (3,1,1,'2014-03-17 00:00:00',0,0,0,1,now(),now(),1),
-  (4,1,1,'2014-04-18 00:00:00',1,1,1,1,now(),now(),1),
-  (5,1,1,'2014-04-21 00:00:00',1,1,0,1,now(),now(),1),
-  (6,1,1,'2014-05-05 00:00:00',1,1,1,1,now(),now(),1),
-  (7,1,1,'2014-05-26 00:00:00',1,1,1,1,now(),now(),1),
-  (8,1,1,'2014-07-14 00:00:00',0,0,0,1,now(),now(),1),
-  (9,1,1,'2014-08-04 00:00:00',0,0,1,0,now(),now(),1),
-  (10,1,1,'2014-08-25 00:00:00',1,1,0,1,now(),now(),1),
-  (11,1,1,'2014-12-01 00:00:00',0,0,1,0,now(),now(),1),
-  (12,1,1,'2014-12-25 00:00:00',1,1,1,1,now(),now(),1),
-  (13,1,1,'2014-12-26 00:00:00',1,1,1,1,now(),now(),1),
-  (14,1,1,'2015-01-01 00:00:00',1,1,1,1,now(),now(),1),
-  (15,1,1,'2015-01-02 00:00:00',0,0,1,0,now(),now(),1),
-  (16,1,1,'2015-03-17 00:00:00',0,0,0,1,now(),now(),1),
-  (17,1,1,'2015-04-03 00:00:00',1,1,1,1,now(),now(),1),
-  (18,1,1,'2015-04-06 00:00:00',1,1,0,1,now(),now(),1),
-  (19,1,1,'2015-05-04 00:00:00',1,1,1,1,now(),now(),1),
-  (20,1,1,'2015-05-25 00:00:00',1,1,1,1,now(),now(),1),
-  (21,1,1,'2015-07-13 00:00:00',0,0,0,1,now(),now(),1),
-  (22,1,1,'2015-08-03 00:00:00',0,0,1,0,now(),now(),1),
-  (23,1,1,'2015-08-31 00:00:00',1,1,0,1,now(),now(),1),
-  (24,1,1,'2015-11-30 00:00:00',0,0,1,0,now(),now(),1),
-  (25,1,1,'2015-12-25 00:00:00',1,1,1,1,now(),now(),1),
-  (26,1,1,'2015-12-28 00:00:00',1,1,1,1,now(),now(),1),
-  (27,1,1,'2016-01-01 00:00:00',1,1,1,1,now(),now(),1),
-  (28,1,1,'2016-01-04 00:00:00',0,0,1,0,now(),now(),1),
-  (29,1,1,'2016-03-17 00:00:00',0,0,0,1,now(),now(),1),
-  (30,1,1,'2016-03-25 00:00:00',1,1,1,1,now(),now(),1),
-  (31,1,1,'2016-03-28 00:00:00',1,1,0,1,now(),now(),1),
-  (32,1,1,'2016-05-02 00:00:00',1,1,1,1,now(),now(),1),
-  (33,1,1,'2016-05-30 00:00:00',1,1,1,1,now(),now(),1),
-  (34,1,1,'2016-07-12 00:00:00',0,0,0,1,now(),now(),1),
-  (35,1,1,'2016-08-01 00:00:00',0,0,1,0,now(),now(),1),
-  (36,1,1,'2016-08-29 00:00:00',1,1,1,1,now(),now(),1),
-  (37,1,1,'2016-12-26 00:00:00',1,1,1,1,now(),now(),1),
-  (38,1,1,'2016-12-27 00:00:00',1,1,0,0,now(),now(),1);
+  (1,'2014-01-01 00:00:00',1,1,1,1),
+  (2,'2014-01-02 00:00:00',0,0,1,0),
+  (3,'2014-03-17 00:00:00',0,0,0,1),
+  (4,'2014-04-18 00:00:00',1,1,1,1),
+  (5,'2014-04-21 00:00:00',1,1,0,1),
+  (6,'2014-05-05 00:00:00',1,1,1,1),
+  (7,'2014-05-26 00:00:00',1,1,1,1),
+  (8,'2014-07-14 00:00:00',0,0,0,1),
+  (9,'2014-08-04 00:00:00',0,0,1,0),
+  (10,'2014-08-25 00:00:00',1,1,0,1),
+  (11,'2014-12-01 00:00:00',0,0,1,0),
+  (12,'2014-12-25 00:00:00',1,1,1,1),
+  (13,'2014-12-26 00:00:00',1,1,1,1),
+  (14,'2015-01-01 00:00:00',1,1,1,1),
+  (15,'2015-01-02 00:00:00',0,0,1,0),
+  (16,'2015-03-17 00:00:00',0,0,0,1),
+  (17,'2015-04-03 00:00:00',1,1,1,1),
+  (18,'2015-04-06 00:00:00',1,1,0,1),
+  (19,'2015-05-04 00:00:00',1,1,1,1),
+  (20,'2015-05-25 00:00:00',1,1,1,1),
+  (21,'2015-07-13 00:00:00',0,0,0,1),
+  (22,'2015-08-03 00:00:00',0,0,1,0),
+  (23,'2015-08-31 00:00:00',1,1,0,1),
+  (24,'2015-11-30 00:00:00',0,0,1,0),
+  (25,'2015-12-25 00:00:00',1,1,1,1),
+  (26,'2015-12-28 00:00:00',1,1,1,1),
+  (27,'2016-01-01 00:00:00',1,1,1,1),
+  (28,'2016-01-04 00:00:00',0,0,1,0),
+  (29,'2016-03-17 00:00:00',0,0,0,1),
+  (30,'2016-03-25 00:00:00',1,1,1,1),
+  (31,'2016-03-28 00:00:00',1,1,0,1),
+  (32,'2016-05-02 00:00:00',1,1,1,1),
+  (33,'2016-05-30 00:00:00',1,1,1,1),
+  (34,'2016-07-12 00:00:00',0,0,0,1),
+  (35,'2016-08-01 00:00:00',0,0,1,0),
+  (36,'2016-08-29 00:00:00',1,1,1,1),
+  (37,'2016-12-26 00:00:00',1,1,1,1),
+  (38,'2016-12-27 00:00:00',1,1,0,0);
 
 INSERT INTO `publication` (`id`,`pub_status`,`last_modified_by`,`created_by`,`traffic_area_id`,`doc_template_id`,`document_id`,`pub_date`,`doc_name`,`publication_no`,`pub_type`,`created_on`,`last_modified_on`,`version`)
 VALUES
@@ -1977,7 +1962,9 @@ INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, 
 COMMIT;
 -- End: Application 8
 
-INSERT INTO `change_of_entity` (`id`, `licence_id`, `old_licence_no`, `old_organisation_name`, `created_on`, `version`) VALUES ('1', '7', '0000000', 'Old Organisation Name', '2015-03-27 12:28:07', '1');
+INSERT INTO `change_of_entity` (`id`, `licence_id`, `old_licence_no`, `old_organisation_name`, `created_on`, `version`)
+VALUES
+    ('1', '7', '0000000', 'Old Organisation Name', '2015-03-27 12:28:07', '1');
 
 INSERT INTO `inspection_request` (`id`, `report_type`, `request_type`, `requestor_user_id`, `result_type`, `application_id`,
 `case_id`, `created_by`, `last_modified_by`, `licence_id`, `operating_centre_id`, `task_id`, `deferred_date`, `due_date`, `from_date`,
