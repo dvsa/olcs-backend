@@ -120,6 +120,20 @@ TRUNCATE TABLE `user_role`;
 TRUNCATE TABLE `correspondence_inbox`;
 TRUNCATE TABLE `grace_period`;
 
+-- traffic areas are in testdata as they reference contact_details records
+TRUNCATE traffic_area;
+INSERT INTO `traffic_area` (`id`, `txc_name`, `name`, `contact_details_id`, `is_scotland`, `is_wales`, `is_england`, `is_ni`)
+VALUES
+    ('B','NorthEastern','North East of England',1,0,0,1,0),
+    ('C','NorthWestern','North West of England',1,0,0,1,0),
+    ('D','WestMidlands','West Midlands',3,0,0,1,0),
+    ('F','Eastern','East of England',3,0,0,1,0),
+    ('G','Welsh','Wales',3,0,1,0,0),
+    ('H','Western','West of England',3,0,0,1,0),
+    ('K','SouthEastMetropolitan','London and the South East of England',3,0,0,1,0),
+    ('M','Scottish','Scotland',8,1,0,0,0),
+    ('N','NorthernIreland','Northern Ireland',8,0,0,0,1);
+
 /* Test documents */
 INSERT IGNORE INTO document(id,licence_id,bus_reg_id,description,filename,is_external,category_id,sub_category_id,
 issued_date,document_store_id) VALUES
