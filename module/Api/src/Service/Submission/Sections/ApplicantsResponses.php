@@ -5,20 +5,24 @@ namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 
 /**
- * Class ApplicantsComments
+ * Class ApplicantsResponses
  * @package Dvsa\Olcs\Api\Service\Submission\Sections
  * @author Shaun Lizzio <shaun.lizzio@valtech.co.uk>
  */
-final class ApplicantsComments extends AbstractSection
+final class ApplicantsResponses extends AbstractSection
 {
     public function generateSection(CasesEntity $case)
     {
-        $defaultText = "<p>TE REPORT:</p>
-<p>SIZE:</p>
-<p>ACCESS/EGRESS/MANOEUVRE:</p>
-<p>VISIBILITY:</p>
-<p>TE COMMENTS:</p>
-<p>TE CONCLUSIONS:</p>";
+        $defaultText = "<h3>Hours of Operation:</h3>
+<p>Monday to Friday:<br />
+Saturday:<br />
+Sunday:<br />
+Bank Holiday:<br /></p>
+<h3>Hours of Maintenance:</h3>
+<p>Monday to Friday:<br />
+Saturday:<br />
+Sunday:<br />
+Bank Holiday:<br /></p>";
 
         return ['data' => ['text' => $defaultText]];
     }
