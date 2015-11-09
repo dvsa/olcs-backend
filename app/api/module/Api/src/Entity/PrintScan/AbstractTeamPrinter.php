@@ -49,7 +49,11 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
      *
      * @var \Dvsa\Olcs\Api\Entity\PrintScan\Printer
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\PrintScan\Printer", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\PrintScan\Printer",
+     *     fetch="LAZY",
+     *     inversedBy="teams"
+     * )
      * @ORM\JoinColumn(name="printer_id", referencedColumnName="id", nullable=false)
      */
     protected $printer;
@@ -59,7 +63,11 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
      *
      * @var \Dvsa\Olcs\Api\Entity\User\Team
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\Team", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\User\Team",
+     *     fetch="LAZY",
+     *     inversedBy="printers"
+     * )
      * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=false)
      */
     protected $team;
