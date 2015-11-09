@@ -172,6 +172,9 @@ class DeleteTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
+        $tasks = new \Doctrine\Common\Collections\ArrayCollection();
+        $tasks->add($mockTask);
+
         $mockTeam = m::mock()
             ->shouldReceive('getId')
             ->andReturn(1)
@@ -183,11 +186,8 @@ class DeleteTest extends CommandHandlerTestCase
             ->andReturn([])
             ->once()
             ->shouldReceive('getTasks')
-            ->andReturn([$mockTask])
-            ->times(3)
-            ->shouldReceive('setTasks')
-            ->with([])
-            ->once()
+            ->andReturn($tasks)
+            ->times(4)
             ->getMock();
 
         $this->repoMap['Team']
