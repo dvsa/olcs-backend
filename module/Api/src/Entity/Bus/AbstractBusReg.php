@@ -740,13 +740,13 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     protected $ebsrSubmissions;
 
     /**
-     * Txc document
+     * Txc inbox
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox", mappedBy="busReg")
      */
-    protected $txcDocuments;
+    protected $txcInboxs;
 
     /**
      * Initialise the collections
@@ -766,7 +766,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
         $this->readAudits = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->ebsrSubmissions = new ArrayCollection();
-        $this->txcDocuments = new ArrayCollection();
+        $this->txcInboxs = new ArrayCollection();
     }
 
     /**
@@ -2630,60 +2630,60 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     }
 
     /**
-     * Set the txc document
+     * Set the txc inbox
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $txcDocuments
+     * @param \Doctrine\Common\Collections\ArrayCollection $txcInboxs
      * @return BusReg
      */
-    public function setTxcDocuments($txcDocuments)
+    public function setTxcInboxs($txcInboxs)
     {
-        $this->txcDocuments = $txcDocuments;
+        $this->txcInboxs = $txcInboxs;
 
         return $this;
     }
 
     /**
-     * Get the txc documents
+     * Get the txc inboxs
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getTxcDocuments()
+    public function getTxcInboxs()
     {
-        return $this->txcDocuments;
+        return $this->txcInboxs;
     }
 
     /**
-     * Add a txc documents
+     * Add a txc inboxs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $txcDocuments
+     * @param \Doctrine\Common\Collections\ArrayCollection $txcInboxs
      * @return BusReg
      */
-    public function addTxcDocuments($txcDocuments)
+    public function addTxcInboxs($txcInboxs)
     {
-        if ($txcDocuments instanceof ArrayCollection) {
-            $this->txcDocuments = new ArrayCollection(
+        if ($txcInboxs instanceof ArrayCollection) {
+            $this->txcInboxs = new ArrayCollection(
                 array_merge(
-                    $this->txcDocuments->toArray(),
-                    $txcDocuments->toArray()
+                    $this->txcInboxs->toArray(),
+                    $txcInboxs->toArray()
                 )
             );
-        } elseif (!$this->txcDocuments->contains($txcDocuments)) {
-            $this->txcDocuments->add($txcDocuments);
+        } elseif (!$this->txcInboxs->contains($txcInboxs)) {
+            $this->txcInboxs->add($txcInboxs);
         }
 
         return $this;
     }
 
     /**
-     * Remove a txc documents
+     * Remove a txc inboxs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $txcDocuments
+     * @param \Doctrine\Common\Collections\ArrayCollection $txcInboxs
      * @return BusReg
      */
-    public function removeTxcDocuments($txcDocuments)
+    public function removeTxcInboxs($txcInboxs)
     {
-        if ($this->txcDocuments->contains($txcDocuments)) {
-            $this->txcDocuments->removeElement($txcDocuments);
+        if ($this->txcInboxs->contains($txcInboxs)) {
+            $this->txcInboxs->removeElement($txcInboxs);
         }
 
         return $this;
