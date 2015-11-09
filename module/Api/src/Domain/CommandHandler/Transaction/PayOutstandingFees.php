@@ -52,7 +52,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Transaction';
 
-    protected $extraRepos = ['Fee', 'FeeType'];
+    protected $extraRepos = ['Fee', 'FeeType', 'SystemParameter'];
 
     /**
      * There are three valid use cases for this command
@@ -63,6 +63,11 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
+
+        if ($this->getRepo('SystemParameter')->getDisableCardPayments()) {
+            $result->addMessage('Card payments are disabled');
+            return $result;
+        }
 
         if (!empty($command->getOrganisationId())) {
             $fees = $this->getOutstandingFeesForOrganisation($command);
