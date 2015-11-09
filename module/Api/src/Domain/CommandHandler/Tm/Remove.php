@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 
 /**
  * Remove transport manager.
@@ -26,6 +27,9 @@ final class Remove extends AbstractCommandHandler implements TransactionedInterf
         /** @var TransportManager $transportManager */
         $transportManager = $this->getRepo()->fetchById($command->getId());
         $transportManager->setRemovedDate(new \DateTime());
+        $transportManager->setTmStatus(
+            $this->getRepo()->getRefdataReference(TransportManager::TRANSPORT_MANAGER_STATUS_REMOVED)
+        );
 
         $this->getRepo()->save($transportManager);
 

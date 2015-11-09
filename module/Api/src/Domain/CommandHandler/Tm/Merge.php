@@ -48,6 +48,11 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
 
         // Populate the losing transport manager removed date
         $donorTm->setRemovedDate(new DateTime());
+
+        $donorTm->setTmStatus(
+            $this->getRepo()->getRefdataReference(TransportManager::TRANSPORT_MANAGER_STATUS_REMOVED)
+        );
+
         $this->getRepo()->save($donorTm);
 
         $result = new Result();

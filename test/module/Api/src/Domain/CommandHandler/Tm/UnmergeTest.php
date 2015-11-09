@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Unmerge as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Tm\Unmerge as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use \Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 
 /**
  * Class UnmergeTest
@@ -33,6 +34,14 @@ class UnmergeTest extends CommandHandlerTestCase
         $this->mockRepo('User', \Dvsa\Olcs\Api\Domain\Repository\User::class);
 
         parent::setUp();
+    }
+
+    protected function initReferences()
+    {
+        $this->refData = [
+            TransportManagerEntity::TRANSPORT_MANAGER_STATUS_CURRENT,
+        ];
+        parent::initReferences();
     }
 
     public function testHandleCommandNotMerged()
@@ -108,6 +117,11 @@ class UnmergeTest extends CommandHandlerTestCase
         $this->assertNull($mockTm->getMergeDetails());
         $this->assertNull($mockTm->getMergeToTransportManager());
         $this->assertNull($mockTm->getRemovedDate());
+
+        $this->assertEquals(
+            $this->refData[TransportManagerEntity::TRANSPORT_MANAGER_STATUS_CURRENT],
+            $mockTm->getTmStatus()
+        );
 
         $expected = [
             'id' => [],
