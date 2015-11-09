@@ -27,4 +27,14 @@ class SystemParameter extends AbstractRepository
             return null;
         }
     }
+
+    /**
+     * Get Disable card payment setting
+     *
+     * @return bool
+     */
+    public function getDisableCardPayments()
+    {
+        return (bool) $this->fetchValue(Entity::DISABLED_CARD_PAYMENTS);
+    }
 }

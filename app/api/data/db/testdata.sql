@@ -1671,9 +1671,10 @@ VALUES
 
 INSERT INTO `system_parameter` (`id`, `param_value`, `description`)
 VALUES
-    ('task.default_team', 2, NULL),
-    ('task.default_user', 1, NULL),
-    ('CNS_EMAIL_LIST', 'terry.valtech@gmail.com', NULL);
+    ('task.default_team', 2, 'Default team to assign new tasks to'),
+    ('task.default_user', 1, 'Default user to assign new tasks to'),
+    ('CNS_EMAIL_LIST', '', 'Email address where CNS email notifications are sent'),
+    ('DISABLED_CARD_PAYMENTS', 0, 'Disable card payments from external');
 
 INSERT INTO `community_lic` (
     `id`, `status`, `licence_id`, `expired_date`, `issue_no`, `serial_no`,
