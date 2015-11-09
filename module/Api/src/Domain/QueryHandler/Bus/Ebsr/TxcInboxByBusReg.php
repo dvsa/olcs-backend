@@ -6,6 +6,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
@@ -23,6 +24,8 @@ class TxcInboxByBusReg extends AbstractQueryHandler implements AuthAwareInterfac
     use AuthAwareTrait;
 
     protected $repoServiceName = 'TxcInbox';
+
+    protected $extraRepos = ['Bus'];
 
     public function handleQuery(QueryInterface $query)
     {
@@ -44,10 +47,19 @@ class TxcInboxByBusReg extends AbstractQueryHandler implements AuthAwareInterfac
         $txcInboxResults = $repo->fetchListForLocalAuthorityByBusReg($query->getBusReg(), $localAuthorityId);
 
         if (!isset($txcInboxResults[0]) || !($txcInboxResults[0]->getBusReg() instanceof BusRegEntity)) {
-            throw new NotFoundException();
+            // alternative command to fetch the bus reg details only
+            $busReg = $this->getRepo('Bus')->fetchById($query->getBusReg());
+
+            // since no results are found on TxcInbox table, return an empty entity with no documents
+            $txcInbox = new TxcInbox();
+        } else {
+            $txcInbox = $txcInboxResults[0];
+            $busReg = $txcInbox->getBusReg();
         }
 
-        $txcInbox = $txcInboxResults[0];
+        if (!isset($busReg) || !($busReg instanceof BusRegEntity)) {
+            throw new NotFoundException();
+        }
 
         return $this->result(
             $txcInbox,
@@ -58,7 +70,7 @@ class TxcInboxByBusReg extends AbstractQueryHandler implements AuthAwareInterfac
             ],
             [
                 'busReg' => $this->result(
-                    $txcInbox->getBusReg(),
+                    $busReg,
                     [
                         'status',
                         'licence' => [
@@ -76,7 +88,39 @@ class TxcInboxByBusReg extends AbstractQueryHandler implements AuthAwareInterfac
                         'npPublicationNo'
                     ],
                     [
-                        'npPublicationNo' => $txcInbox->getBusReg()->getLicence()->determineNpNumber()
+                        'npPublicationNo' => $busReg->getLicence()->determineNpNumber()
+                    ]
+                )->serialize(),
+            ]
+        );
+
+        return $this->result(
+            $txcInbox,
+            [
+                'txcDocuments'
+            ],
+            [
+                'txcDocuments' => [
+                    'pdfDocument' => $txcInbox->getPdfDocument(),
+                    'routeDocument' => $txcInbox->getRouteDocument(),
+                    'zipDocument' => $txcInbox->getZipDocument(),
+                ],
+                'busReg' => $this->result(
+                    $busReg,
+                    [
+                        'status',
+                        'licence' => [
+                            'organisation' => ['disqualifications'],
+                            'licenceType',
+                            'status',
+                        ],
+                        'busNoticePeriod',
+                        'busServiceTypes',
+                        'trafficAreas',
+                        'localAuthoritys',
+                        'subsidised',
+                        'otherServices',
+                        'variationReasons'
                     ]
                 )->serialize(),
             ]
