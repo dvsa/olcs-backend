@@ -193,6 +193,8 @@ class AlignEntitiesToSchema
 
             $this->maybeImportSchema();
 
+            $this->maybeCreateDir($this->options['mapping-files']);
+
             $this->removeOldMappingFiles();
 
             $this->generateNewMappingFiles();

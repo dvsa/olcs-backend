@@ -1318,9 +1318,9 @@ INSERT INTO team(id,version,name,traffic_area_id) VALUES
     (5,1,'Assisted Digital FEP','B'),
     (6,1,'Bus Reg Team','B'),
     (7,1,'Compliance Team','B'),
-    (8,1,'Environmental Team',''),
-    (9,1,'IRFO Team',''),
-    (32,1,'Self service Operators','');
+    (8,1,'Environmental Team',NULL),
+    (9,1,'IRFO Team',NULL),
+    (32,1,'Self service Operators',NULL);
 
 INSERT INTO `case_category` (`case_id`, `category_id`)
 VALUES
