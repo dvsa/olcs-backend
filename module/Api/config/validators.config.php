@@ -3,7 +3,10 @@
 use Dvsa\Olcs\Api\Domain\Validation\Validators;
 
 return [
-    'invokables' => [
+    'factories' => [
         'isOwner' => Validators\IsOwner::class,
+        'doesOwnLicence' => Validators\DoesOwnLicence::class,
+        'doesOwnApplication' => Validators\DoesOwnApplication::class,
+        'doesOwnCompanySubsidiary' => Validators\DoesOwnCompanySubsidiary::class,
     ]
 ];

@@ -31,7 +31,7 @@ class ValidationHandlerManager extends AbstractPluginManager
     public function validatePlugin($plugin)
     {
         if (!($plugin instanceof HandlerInterface)) {
-            throw new RuntimeException('Validation handler does not implement ValidationHandlerInterface');
+            throw new RuntimeException('Validation handler does not implement HandlerInterface');
         }
     }
 }
