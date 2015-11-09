@@ -46,7 +46,7 @@ class UpdateTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            TransportManagerEntity::TRANSPORT_MANAGER_STATUS_ACTIVE,
+            TransportManagerEntity::TRANSPORT_MANAGER_STATUS_CURRENT,
             TransportManagerEntity::TRANSPORT_MANAGER_TYPE_BOTH
         ];
 
@@ -62,7 +62,7 @@ class UpdateTest extends CommandHandlerTestCase
             'id' => $id,
             'version' => 2,
             'type' => TransportManagerEntity::TRANSPORT_MANAGER_TYPE_BOTH,
-            'status' => TransportManagerEntity::TRANSPORT_MANAGER_STATUS_ACTIVE,
+            'status' => TransportManagerEntity::TRANSPORT_MANAGER_STATUS_CURRENT,
             'firstName' => 'fn',
             'lastName' => 'ln',
             'birthDate' => '2015-01-01',
