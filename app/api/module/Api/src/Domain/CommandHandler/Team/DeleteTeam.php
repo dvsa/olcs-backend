@@ -97,7 +97,7 @@ final class DeleteTeam extends AbstractCommandHandler implements AuthAwareInterf
         $newTeam->addTasks($tasks);
         $this->getRepo()->save($newTeam);
 
-        $team->setTasks([]);
+        $team->getTasks()->clear();
         $this->getRepo()->save($team);
     }
 }

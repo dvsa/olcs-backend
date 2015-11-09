@@ -83,6 +83,9 @@ class TeamTest extends QueryHandlerTestCase
         $this->sut->handleQuery($query);
     }
 
+    /**
+     * @todo need to think about move all instances of this method into the abstract
+     */
     protected function mockAuthService()
     {
         /** @var User $mockUser */
