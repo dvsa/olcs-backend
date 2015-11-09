@@ -9,6 +9,7 @@ use Dvsa\Olcs\Transfer\Command\Tm\Merge as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use \Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use \Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 
 /**
  * Class MergeTest
@@ -26,6 +27,14 @@ class MergeTest extends CommandHandlerTestCase
         $this->mockRepo('EventHistory', \Dvsa\Olcs\Api\Domain\Repository\EventHistory::class);
 
         parent::setUp();
+    }
+
+    protected function initReferences()
+    {
+        $this->refData = [
+            TransportManagerEntity::TRANSPORT_MANAGER_STATUS_REMOVED,
+        ];
+        parent::initReferences();
     }
 
     public function testHandleCommandDonorSameAsRecipient()
@@ -152,6 +161,10 @@ class MergeTest extends CommandHandlerTestCase
         );
         $this->assertSame($mockRecipientTm, $mockDonorTm->getMergeToTransportManager());
         $this->assertEquals(new DateTime(), $mockDonorTm->getRemovedDate());
+        $this->assertEquals(
+            $this->refData[TransportManagerEntity::TRANSPORT_MANAGER_STATUS_REMOVED],
+            $mockDonorTm->getTmStatus()
+        );
 
         $expected = [
             'id' => [],
