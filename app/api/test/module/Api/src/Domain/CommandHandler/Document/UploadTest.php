@@ -19,8 +19,6 @@ use Dvsa\Olcs\Api\Service\File\File;
 use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as Cmd;
-use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity;
 
 /**
@@ -85,7 +83,8 @@ class UploadTest extends CommandHandlerTestCase
             'filename' => 'foo.pdf',
             'category' => 11,
             'subCategory' => 22,
-            'isExternal' => 1
+            'isExternal' => 1,
+            'description' => 'foo'
         ];
 
         $data[$key] = $id;
@@ -125,7 +124,7 @@ class UploadTest extends CommandHandlerTestCase
         $data = [
             'identifier' => '/some/identifier.pdf',
             'filename' => '/some/identifier.pdf',
-            'description' => 'foo.pdf',
+            'description' => 'foo',
             'isExternal' => 1
         ];
         $this->expectedSideEffect(CreateDocumentSpecific::class, $data, $result);
@@ -239,7 +238,7 @@ class UploadTest extends CommandHandlerTestCase
         $data = [
             'identifier' => '/some/identifier.pdf',
             'filename' => '/some/identifier.pdf',
-            'description' => 'foo.pdf'
+            'description' => 'foo'
         ];
         $this->expectedSideEffect(CreateDocument::class, $data, $result);
 
