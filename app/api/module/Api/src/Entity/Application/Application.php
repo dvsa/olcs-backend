@@ -1567,4 +1567,22 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
         return false;
     }
+
+    /**
+     * Calculated values to be added to a bundle
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        if ($this->getLicence() && !empty($this->getLicence()->getLicNo())) {
+            $applicationReference = $this->getLicence()->getLicNo().'/'.$this->getId();
+        } else {
+            $applicationReference = $this->getId();
+        }
+
+        return [
+            'applicationReference' => $applicationReference,
+        ];
+    }
 }
