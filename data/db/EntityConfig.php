@@ -316,6 +316,28 @@ return array(
             )
         ),
     ),
+    'team_printer' => array(
+        'team_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Team',
+                'property' => 'printer'
+            )
+        ),
+        'printer_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Printer',
+                'property' => 'team'
+            )
+        )
+    ),
+    'task_allocation_rule' => array(
+        'team_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Team',
+                'property' => 'taskAllocationRule'
+            )
+        ),
+    ),
     'document_sub_category' => array(
         'is_scanned' => array(
             'type' => 'yesno'
@@ -1056,6 +1078,12 @@ return array(
                 'property' => 'task'
             )
         ),
+        'assigned_to_team_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Team',
+                'property' => 'task'
+            )
+        ),
         'is_closed' => array(
             'type' => 'yesno'
         ),
@@ -1782,5 +1810,55 @@ return array(
                 'property' => 'readAudit'
             )
         )
-    )
+    ),
+    'task_search_view' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
+    'document_search_view' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
+    'bus_reg_search_view' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
+    'vi_vhl_vw' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
+    'vi_tnm_vw' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
+    'vi_oc_vw' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
+    'vi_op_vw' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
+    'vehicle_history_view' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
+    'bus_reg_history_view' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
+    'other_service_view' => array(
+        '@settings' => array(
+            'ignore' => true
+        )
+    ),
 );

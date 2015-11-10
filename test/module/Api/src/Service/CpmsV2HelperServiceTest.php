@@ -1052,7 +1052,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                             'line_identifier' => 'LINE_NO',
                             'amount' => '200.00',
                             'allocated_amount' => '100.00',
-                            'net_amount' => '100.00',
+                            'net_amount' => '200.00',
                             'tax_amount' => '0.00',
                             'tax_code' => 'Z',
                             'tax_rate' => '0',

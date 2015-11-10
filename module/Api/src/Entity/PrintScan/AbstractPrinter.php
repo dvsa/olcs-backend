@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Printer Abstract Entity
@@ -56,6 +58,28 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
      * @ORM\Column(type="string", name="printer_tray", length=45, nullable=true)
      */
     protected $printerTray;
+
+    /**
+     * Team
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter", mappedBy="printer")
+     */
+    protected $teams;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
+        $this->teams = new ArrayCollection();
+    }
 
     /**
      * Set the description
@@ -147,6 +171,66 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     public function getPrinterTray()
     {
         return $this->printerTray;
+    }
+
+    /**
+     * Set the team
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $teams
+     * @return Printer
+     */
+    public function setTeams($teams)
+    {
+        $this->teams = $teams;
+
+        return $this;
+    }
+
+    /**
+     * Get the teams
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTeams()
+    {
+        return $this->teams;
+    }
+
+    /**
+     * Add a teams
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $teams
+     * @return Printer
+     */
+    public function addTeams($teams)
+    {
+        if ($teams instanceof ArrayCollection) {
+            $this->teams = new ArrayCollection(
+                array_merge(
+                    $this->teams->toArray(),
+                    $teams->toArray()
+                )
+            );
+        } elseif (!$this->teams->contains($teams)) {
+            $this->teams->add($teams);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a teams
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $teams
+     * @return Printer
+     */
+    public function removeTeams($teams)
+    {
+        if ($this->teams->contains($teams)) {
+            $this->teams->removeElement($teams);
+        }
+
+        return $this;
     }
 
 
