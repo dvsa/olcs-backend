@@ -22,7 +22,7 @@ class BusRegSearchViewTest extends RepositoryTestCase
         $this->setUpSut(Repo::class);
     }
 
-    public function testFetchRegNoNo()
+    public function testFetchByRegNo()
     {
         $qb = m::mock(QueryBuilder::class);
         $repo = m::mock(EntityRepository::class);
