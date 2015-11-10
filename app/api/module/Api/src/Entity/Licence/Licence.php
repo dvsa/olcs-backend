@@ -244,7 +244,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         return $this->getApplications()->matching($criteria)->current();
     }
 
-    public function getCalculatedValues()
+    public function getCalculatedBundleValues()
     {
         $decisionCriteria['activeComLics'] = !$this->getActiveCommunityLicences()->isEmpty();
         $decisionCriteria['activeBusRoutes'] = $this->getActiveBusRoutes($this) !== false;
@@ -257,7 +257,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         }
 
         return [
-            'suitableForDecisions' => $suitableForDecisions
+            'suitableForDecisions' => $suitableForDecisions,
+            'niFlag' => $this->getNiFlag()
         ];
     }
 
@@ -671,16 +672,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         }
 
         return 'N';
-    }
-
-    /**
-     * @return array
-     */
-    public function getCalculatedBundleValues()
-    {
-        return [
-            'niFlag' => $this->getNiFlag(),
-        ];
     }
 
     /**
