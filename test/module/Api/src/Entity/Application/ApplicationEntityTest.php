@@ -2712,4 +2712,27 @@ class ApplicationEntityTest extends EntityTester
             ],
         ];
     }
+
+    public function testGetApplicationReferenceNoLicence()
+    {
+        $this->entity->setLicence(null);
+        $this->entity->setId(34);
+
+        $this->assertSame(34, $this->entity->getApplicationReference());
+    }
+
+    public function testGetApplicationReferenceNoLicNo()
+    {
+        $this->entity->setId(34);
+
+        $this->assertSame(34, $this->entity->getApplicationReference());
+    }
+
+    public function testGetApplicationReference()
+    {
+        $this->entity->setId(34);
+        $this->entity->getLicence()->setLicNo('AB12345');
+
+        $this->assertSame('AB12345/34', $this->entity->getApplicationReference());
+    }
 }
