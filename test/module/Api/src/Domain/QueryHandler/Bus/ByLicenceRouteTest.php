@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Entity\Bus;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus;
 
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\ByLicenceRoute;
@@ -31,8 +31,17 @@ class ByLicenceRouteTest extends QueryHandlerTestCase
 
         $this->repoMap['Bus']->shouldReceive('fetchList')
             ->with($query, Query::HYDRATE_OBJECT)
-            ->andReturn([$mockResult]);
+            ->andReturn([$mockResult])
+            ->shouldReceive('fetchCount')
+            ->with($query)
+            ->andReturn(1);
 
-        $this->assertEquals(['foo'], $this->sut->handleQuery($query, Query::HYDRATE_OBJECT));
+        $this->assertEquals(
+            [
+                'Results' => ['foo'],
+                'Count' => 1
+            ],
+            $this->sut->handleQuery($query, Query::HYDRATE_OBJECT)
+        );
     }
 }
