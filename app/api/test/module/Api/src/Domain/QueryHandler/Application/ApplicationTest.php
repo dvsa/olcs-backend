@@ -30,6 +30,7 @@ class ApplicationTest extends QueryHandlerTestCase
         $this->sut = new Application();
         $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockRepo('Note', NoteRepo::class);
+        $this->mockRepo('SystemParameter', \Dvsa\Olcs\Api\Domain\Repository\SystemParameter::class);
 
         $this->mockedSmServices = [
             'FeesHelperService' => m::mock(),
@@ -62,6 +63,9 @@ class ApplicationTest extends QueryHandlerTestCase
             ->once()
             ->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
+
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()
+            ->andReturn(false);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($query)
@@ -97,7 +101,8 @@ class ApplicationTest extends QueryHandlerTestCase
             'canCreateCase' => false,
             'existingPublication' => false,
             'isPublishable' => true,
-            'latestNote' => 'latest note'
+            'latestNote' => 'latest note',
+            'disableCardPayments' => false,
         ];
 
         $this->assertEquals($expected, $result->serialize());

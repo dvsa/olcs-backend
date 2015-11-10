@@ -29,7 +29,7 @@ class Summary extends AbstractQueryHandler
 
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['Fee'];
+    protected $extraRepos = ['Fee', 'SystemParameter'];
 
     public function handleQuery(QueryInterface $query)
     {
@@ -71,7 +71,15 @@ class Summary extends AbstractQueryHandler
 
         $reference = $this->getLatestReference($application->getId());
 
-        return $this->result($application, $bundle, ['actions' => $actions, 'reference' => $reference]);
+        return $this->result(
+            $application,
+            $bundle,
+            [
+                'actions' => $actions,
+                'reference' => $reference,
+                'outstandingFee' => $application->getLatestOutstandingApplicationFee() !== null,
+            ]
+        );
     }
 
     protected function determineActions(Entity\Application\Application $application)
