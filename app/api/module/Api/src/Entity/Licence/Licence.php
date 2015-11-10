@@ -208,26 +208,12 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         return $this->getCommunityLics()->matching($criteria);
     }
 
-    public function getActiveBusRoutes($licence)
-    {
-        $criteria = Criteria::create()
-            ->where(
-                Criteria::expr()->eq('licence', $licence)
-            )
-            ->andWhere(
-                Criteria::expr()->notIn(
-                    'status',
-                    [
-                        BusReg::STATUS_REFUSED,
-                        BusReg::STATUS_WITHDRAWN
-                    ]
-                )
-            );
-
-        return $this->getBusRegs()->matching($criteria)->current();
-    }
-
-    public function getActiveVariations($licence)
+    /**
+     * Get Active varation for this licence
+     *
+     * @return ArrayCollection
+     */
+    public function getActiveVariations()
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('isVariation', true))
@@ -238,27 +224,19 @@ class Licence extends AbstractLicence implements ContextProviderInterface
                         Application::APPLICATION_STATUS_UNDER_CONSIDERATION
                     ]
                 )
-            )
-            ->andWhere(Criteria::expr()->eq('licence', $licence));
+            );
 
-        return $this->getApplications()->matching($criteria)->current();
+        return $this->getApplications()->matching($criteria);
     }
 
+    /**
+     * This method is possibly depricated by getCalculatedBundleValues
+     *
+     * @return array
+     */
     public function getCalculatedValues()
     {
-        $decisionCriteria['activeComLics'] = !$this->getActiveCommunityLicences()->isEmpty();
-        $decisionCriteria['activeBusRoutes'] = $this->getActiveBusRoutes($this) !== false;
-        $decisionCriteria['activeVariations'] = $this->getActiveVariations($this) !== false;
-
-        $suitableForDecisions = true;
-
-        if (in_array(true, $decisionCriteria)) {
-            $suitableForDecisions = $decisionCriteria;
-        }
-
-        return [
-            'suitableForDecisions' => $suitableForDecisions
-        ];
+        return $this->getCalculatedBundleValues();
     }
 
     public function getSerialNoPrefixFromTrafficArea()
