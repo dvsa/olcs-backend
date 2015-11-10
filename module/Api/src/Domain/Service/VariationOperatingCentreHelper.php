@@ -52,6 +52,7 @@ class VariationOperatingCentreHelper implements FactoryInterface
 
             $aoc['source'] = 'A';
             $aoc['id'] = 'A' . $aoc['id'];
+            $aoc['sort'] = $aoc['operatingCentre']['id'];
 
             $aocData[$aoc['operatingCentre']['id']] = $aoc;
         }
@@ -60,6 +61,7 @@ class VariationOperatingCentreHelper implements FactoryInterface
 
             $loc['source'] = 'L';
             $loc['id'] = 'L' . $loc['id'];
+            $loc['sort'] = $loc['operatingCentre']['id'];
 
             $locData[$loc['operatingCentre']['id']] = $loc;
         }
@@ -81,6 +83,15 @@ class VariationOperatingCentreHelper implements FactoryInterface
             }
         }
 
-        return array_merge($data, $applicationData);
+        $mergedData = array_merge($data, $applicationData);
+
+        usort(
+            $mergedData,
+            function ($val1, $val2) {
+                return strcmp($val1['sort'], $val2['sort']);
+            }
+        );
+
+        return $mergedData;
     }
 }

@@ -207,4 +207,18 @@ class UserTest extends RepositoryTestCase
             . 'INNER JOIN o.licences l AND l.licNo = [[ABC123]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+    public function testFetchUsersCountByTeam()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('u')->once()->andReturn($mockQb);
+
+        $mockQb->shouldReceive('select')->with('count(u.id)')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('u.team', ':team')->once()->andReturn('expr');
+        $mockQb->shouldReceive('andWhere')->with('expr')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('team', 1)->once()->andReturnSelf();
+        $mockQb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn('result');
+
+        $this->assertSame('result', $this->sut->fetchUsersCountByTeam(1));
+    }
 }

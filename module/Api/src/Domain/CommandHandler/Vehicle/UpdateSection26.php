@@ -16,10 +16,20 @@ final class UpdateSection26 extends AbstractCommandHandler implements Transactio
 {
     protected $repoServiceName = 'Vehicle';
 
+    /**
+     * @var \Olcs\Db\Service\Search\Search
+     */
+    private $searchService;
+
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    {
+        $this->searchService = $serviceLocator->getServiceLocator()->get('ElasticSearch\Search');
+
+        return parent::createService($serviceLocator);
+    }
+
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         foreach ($command->getIds() as $id) {
             /* @var $vehicle \Dvsa\Olcs\Api\Entity\Vehicle\Vehicle */
             $vehicle = $this->getRepo()->fetchById($id);
@@ -27,8 +37,15 @@ final class UpdateSection26 extends AbstractCommandHandler implements Transactio
             $this->getRepo()->save($vehicle);
         }
 
-        $result->addMessage(sprintf('Updated Section26 on %d Vehicle(s).', count($command->getIds())));
+        $success = $this->searchService->updateVehicleSection26($command->getIds(), $command->getSection26() === 'Y');
+        if ($success) {
+            $this->result->addMessage('Search index updated');
+        } else {
+            $this->result->addMessage('Search index update error');
+        }
 
-        return $result;
+        $this->result->addMessage(sprintf('Updated Section26 on %d Vehicle(s).', count($command->getIds())));
+
+        return $this->result;
     }
 }

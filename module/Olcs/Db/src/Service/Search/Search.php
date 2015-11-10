@@ -284,4 +284,54 @@ class Search
 
         return $this;
     }
+
+    /**
+     * Update the section 26 attribute in the vehicle indexes
+     *
+     * @param array $ids            Array of vehicle.id
+     * @param bool  $section26Value Set or unset the value
+     *
+     * @return boolean If success
+     */
+    public function updateVehicleSection26(array $ids, $section26Value)
+    {
+        // Build a query to search where vehicle id is one of the IDs
+        $queryBool = new Query\Bool();
+        foreach ($ids as $id) {
+            $match = new Query\Match();
+            $match->setField('vehicle.veh_id', $id);
+            $queryBool->addShould($match);
+        }
+
+        $query = new Query();
+        $query->setQuery($queryBool);
+        // set size to a large value
+        $query->setSize(1000);
+
+        // Search both vehicle indexes
+        $search = new \Elastica\Search($this->getClient());
+        $search->addIndex('vehicle_current');
+        $search->addIndex('vehicle_removed');
+        $resultSet = $search->search($query);
+
+        // No results found, therefore nothing to do
+        if ($resultSet->count() === 0) {
+            return true;
+        }
+
+        // Create a bulk request to upate all the section 26 values
+        $bulk = new \Elastica\Bulk($this->getClient());
+        foreach ($resultSet->getResults() as $result) {
+            /* @var $result \Elastica\Result */
+
+            $action = new \Elastica\Bulk\Action(\Elastica\Bulk\Action::OP_TYPE_UPDATE);
+            $action->setId($result->getId());
+            $action->setType($result->getType());
+            $action->setIndex($result->getIndex());
+            $action->setSource(['doc' => ['section_26'=> $section26Value ? 1 : 0]]);
+            $bulk->addAction($action);
+        }
+
+        return $bulk->send()->isOk();
+    }
 }

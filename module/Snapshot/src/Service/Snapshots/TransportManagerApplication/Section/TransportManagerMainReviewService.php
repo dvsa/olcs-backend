@@ -42,7 +42,7 @@ class TransportManagerMainReviewService extends AbstractReviewService
                     ],
                     [
                         'label' => 'tm-review-main-birthDate',
-                        'value' => $this->formatDate($person->getBirthDate(), 'd/m/Y')
+                        'value' => $this->formatDate($person->getBirthDate())
                     ],
                     [
                         'label' => 'tm-review-main-birthPlace',
@@ -59,11 +59,13 @@ class TransportManagerMainReviewService extends AbstractReviewService
                     ],
                     [
                         'label' => 'tm-review-main-home-address',
-                        'value' => $this->formatFullAddress($contactDetails->getAddress())
+                        'value' => $contactDetails->getAddress() ?
+                            $this->formatFullAddress($contactDetails->getAddress()) : ''
                     ],
                     [
                         'label' => 'tm-review-main-work-address',
-                        'value' => $this->formatFullAddress($workContactDetails->getAddress())
+                        'value' => $workContactDetails->getAddress() ?
+                            $this->formatFullAddress($workContactDetails->getAddress()) : ''
                     ]
                 ]
             ]

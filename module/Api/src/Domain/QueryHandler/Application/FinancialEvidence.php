@@ -42,15 +42,14 @@ class FinancialEvidence extends AbstractQueryHandler
         );
 
         // add calculated finance data
+        $financialEvidence = $this->getTotalNumberOfAuthorisedVehicles($application);
+        $financialEvidence['requiredFinance'] = $this->getRequiredFinance($application);
         $financialEvidence = array_merge(
-            [
-                'requiredFinance' => $this->getRequiredFinance($application),
-                'vehicles' => $this->getTotalNumberOfAuthorisedVehicles($application),
-            ],
+            $financialEvidence,
             $this->helper->getRatesForView($application->getGoodsOrPsv()->getId())
         );
 
-        $data = $application->jsonSerialize();
+        $data = $application->serialize();
         $data['documents'] = $financialDocuments->toArray();
         $data['financialEvidence'] = $financialEvidence;
 
@@ -87,7 +86,7 @@ class FinancialEvidence extends AbstractQueryHandler
         }
 
         // add the counts for each other application
-        $applications = $this->getOtherApplications($application);
+        $applications = $this->getOtherNewApplications($application);
         foreach ($applications as $app) {
             if (!is_null($app->getGoodsOrPsv())) {
                 $type = null;
@@ -105,7 +104,7 @@ class FinancialEvidence extends AbstractQueryHandler
         return $this->helper->getFinanceCalculation($auths);
     }
 
-    protected function getOtherApplications($application)
+    protected function getOtherNewApplications($application)
     {
         $organisation = $application->getLicence()->getOrganisation();
 
@@ -114,6 +113,11 @@ class FinancialEvidence extends AbstractQueryHandler
         return array_filter(
             $applications,
             function ($app) use ($application) {
+                if ($app->isVariation()) {
+                    // exclude variations
+                    return false;
+                }
+                // exclude the current application so we don't double-count
                 return $app->getId() !== $application->getId();
             }
         );
@@ -131,8 +135,9 @@ class FinancialEvidence extends AbstractQueryHandler
      *   Under consideration
      *   Granted
      *
-     * @param int $applicationId
-     * @return int
+     * @param ApplicationEntity $application
+     *
+     * @return array containing total vehicles for application, other licences and other application
      */
     public function getTotalNumberOfAuthorisedVehicles($application)
     {
@@ -148,11 +153,15 @@ class FinancialEvidence extends AbstractQueryHandler
         // get the total vehicle authorisation for other applications
         // that are 'under consideration' or 'granted'
         $otherApplicationVehicles = 0;
-        $applications = $this->getOtherApplications($application);
+        $applications = $this->getOtherNewApplications($application);
         foreach ($applications as $application) {
             $otherApplicationVehicles += (int)$application->getTotAuthVehicles();
         }
 
-        return $appVehicles + $otherLicenceVehicles + $otherApplicationVehicles;
+        return [
+            'applicationVehicles' => $appVehicles,
+            'otherLicenceVehicles' => $otherLicenceVehicles,
+            'otherApplicationVehicles' => $otherApplicationVehicles,
+        ];
     }
 }

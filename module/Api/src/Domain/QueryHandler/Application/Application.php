@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 class Application extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
-    protected $extraRepos = ['Note'];
+    protected $extraRepos = ['Note', 'SystemParameter'];
 
     /**
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
@@ -75,7 +75,8 @@ class Application extends AbstractQueryHandler
                 'canCreateCase' => $application->canCreateCase(),
                 'existingPublication' => !$application->getPublicationLinks()->isEmpty(),
                 'isPublishable' => $application->isPublishable(),
-                'latestNote' => $latestNote
+                'latestNote' => $latestNote,
+                'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableCardPayments(),
             ]
         );
     }

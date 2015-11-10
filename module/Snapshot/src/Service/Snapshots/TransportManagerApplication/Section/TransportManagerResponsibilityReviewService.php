@@ -41,7 +41,7 @@ class TransportManagerResponsibilityReviewService extends AbstractReviewService
                                     ],
                                     [
                                         'label' => 'tm-review-responsibility-tmType',
-                                        'value' => $tma->getTmType()->getDescription()
+                                        'value' => $tma->getTmType() ? $tma->getTmType()->getDescription() : ''
                                     ],
                                     [
                                         'label' => 'tm-review-responsibility-isOwner',

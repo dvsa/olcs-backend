@@ -497,7 +497,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             $ft->getFee(),
             [
                 'allocated_amount' => $this->formatAmount($ft->getAmount()),
-                'net_amount' => $this->formatAmount($ft->getAmount()),
             ]
         );
 

@@ -250,6 +250,7 @@ return [
             'BusRegReadAudit' => RepositoryFactory::class,
             'TransportManagerReadAudit' => RepositoryFactory::class,
             'CasesReadAudit' => RepositoryFactory::class,
+            'Team' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

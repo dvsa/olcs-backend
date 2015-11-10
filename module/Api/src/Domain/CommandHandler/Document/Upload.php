@@ -54,10 +54,12 @@ final class Upload extends AbstractCommandHandler implements
 
     protected function determineIdentifier(Cmd $command)
     {
-        $parts = explode('.', $command->getFilename());
+        $description = $this->getDescriptionFromCommand($command);
 
+        $filename = $command->getFilename();
+        $parts = explode('.', $filename);
         $extension = array_pop($parts);
-        $description = implode($parts);
+
         $category = null;
         $subCategory = null;
         $entity = $this->determineEntityFromCommand($command->getArrayCopy());
@@ -103,12 +105,29 @@ final class Upload extends AbstractCommandHandler implements
         $data['identifier'] = $file->getIdentifier();
         $data['size'] = $file->getSize();
         $data['filename'] = $identifier;
-        $data['description'] = $command->getFilename();
+        $data['description'] = $this->getDescriptionFromCommand($command);
 
         if ($data['isExternal'] === null) {
             return $this->handleSideEffect(CreateDocumentCmd::create($data));
         } else {
             return $this->handleSideEffect(CreateDocumentSpecificCmd::create($data));
         }
+    }
+
+    protected function getDescriptionFromCommand($command)
+    {
+        $description = $command->getDescription();
+
+        if ($description !== null) {
+            return $description;
+        }
+
+        $filename = $command->getFilename();
+
+        $parts = explode('.', $filename);
+
+        array_pop($parts);
+
+        return implode($parts);
     }
 }

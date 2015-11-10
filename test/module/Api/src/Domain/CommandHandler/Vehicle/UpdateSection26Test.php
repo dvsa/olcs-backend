@@ -16,10 +16,15 @@ use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
  */
 class UpdateSection26Test extends CommandHandlerTestCase
 {
+
     public function setUp()
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Vehicle', \Dvsa\Olcs\Api\Domain\Repository\Vehicle::class);
+
+        $this->mockedSmServices = [
+            'ElasticSearch\Search' => m::mock()
+        ];
 
         parent::setUp();
     }
@@ -58,6 +63,9 @@ class UpdateSection26Test extends CommandHandlerTestCase
         $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle222)->once();
         $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle333)->once();
 
+        $this->mockedSmServices['ElasticSearch\Search']->shouldReceive('updateVehicleSection26')->
+            with($data['ids'], true)->once()->andReturn(true);
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertTrue($vehicle111->getSection26());
@@ -67,6 +75,7 @@ class UpdateSection26Test extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
+                'Search index updated',
                 'Updated Section26 on 3 Vehicle(s).',
             ]
         ];
@@ -99,6 +108,9 @@ class UpdateSection26Test extends CommandHandlerTestCase
         $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle222)->once();
         $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle333)->once();
 
+        $this->mockedSmServices['ElasticSearch\Search']->shouldReceive('updateVehicleSection26')->
+            with($data['ids'], false)->once()->andReturn(false);
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertFalse($vehicle111->getSection26());
@@ -108,6 +120,7 @@ class UpdateSection26Test extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
+                'Search index update error',
                 'Updated Section26 on 3 Vehicle(s).',
             ]
         ];

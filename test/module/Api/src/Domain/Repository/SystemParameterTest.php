@@ -96,4 +96,40 @@ class SystemParameterTest extends RepositoryTestCase
 
         $this->assertSame('VALUE', $this->sut->fetchValue('system.foo'));
     }
+
+    public function testGetDisableCardPayments()
+    {
+        $spe = new SystemParameterEntity();
+        $spe->setParamValue(1);
+        $results = [$spe];
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('getQuery->getResult')
+            ->with(Query::HYDRATE_OBJECT)
+            ->andReturn($results);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('byId')
+            ->once()
+            ->with(SystemParameterEntity::DISABLED_CARD_PAYMENTS);
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->with('m')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(SystemParameterEntity::class)
+            ->andReturn($repo);
+
+        $this->assertSame(true, $this->sut->getDisableCardPayments());
+    }
 }

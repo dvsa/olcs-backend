@@ -116,7 +116,7 @@ class PeopleReviewServiceTest extends MockeryTestCase
                             ],
                             [
                                 'label' => 'application-review-people-person-dob',
-                                'value' => '23/08/1989'
+                                'value' => '23 Aug 1989'
                             ]
                         ]
                     ]
@@ -158,7 +158,7 @@ class PeopleReviewServiceTest extends MockeryTestCase
                             ],
                             [
                                 'label' => 'application-review-people-person-dob',
-                                'value' => '23/08/1989'
+                                'value' => '23 Aug 1989'
                             ],
                             [
                                 'label' => 'application-review-people-person-position',
