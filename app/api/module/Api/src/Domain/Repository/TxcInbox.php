@@ -34,6 +34,33 @@ class TxcInbox extends AbstractRepository
     /**
      * Fetch a list of unread docs filtered by local authority, submission type and status for a given bus reg id
      *
+     * @param $busReg
+     * @param $organisationId
+     * @param int $hydrateMode
+     * @return array
+     */
+    public function fetchListForOrganisationByBusReg($busReg, $organisationId, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('busReg', 'b');
+
+        $qb->where($qb->expr()->eq('b.id', ':busReg'))
+            ->setParameter('busReg', $busReg);
+
+        $qb->andWhere($qb->expr()->isNull($this->alias . '.localAuthority'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisation'))
+            ->setParameter('organisation', $organisationId);
+
+        return $qb->getQuery()->getResult($hydrateMode);
+    }
+
+    /**
+     * Fetch a list of unread docs filtered by local authority, submission type and status for a given bus reg id
+     *
      * @param int $busReg
      * @param int $localAuthorityId
      * @param int $hydrateMode
@@ -93,7 +120,7 @@ class TxcInbox extends AbstractRepository
     /**
      * Fetch a list of unread docs filtered for an Organisation, submission type and status
      *
-     * @param $localAuthority
+     * @param $organisation
      * @param null $ebsrSubmissionType
      * @param null $ebsrSubmissionStatus
      * @param int $hydrateMode
