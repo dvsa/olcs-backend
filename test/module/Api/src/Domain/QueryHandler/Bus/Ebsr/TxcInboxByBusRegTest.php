@@ -39,9 +39,9 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    private function getCurrentUser($localAuthorityId = null, $organisation = null)
+    private function getCurrentUser($localAuthorityId = null, $organisationId = null)
     {
-        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
+        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $mockUser->shouldReceive('getUser')
             ->andReturnSelf();
 
@@ -51,23 +51,20 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
         } else {
             $localAuthority = null;
         }
-        $mockUser->shouldReceive('getLocalAuthority')
-            ->andReturn($localAuthority);
+        $mockUser->setLocalAuthority($localAuthority);
 
         $organisationUsers = new ArrayCollection();
 
-        $organisation = new Organisation();
-        $organisationUser = new OrganisationUser();
+        if (!empty($organisationId)) {
+            $organisation = new Organisation();
+            $organisation->setId($organisationId);
 
-        if (!empty($organisation)) {
+            $organisationUser = new OrganisationUser();
+
             $organisationUser->setOrganisation($organisation);
             $organisationUsers->add($organisationUser);
-        } else {
-
         }
-
-        $mockUser->shouldReceive('getOrganisationUsers')
-            ->andReturn($organisationUsers);
+        $mockUser->setOrganisationUsers($organisationUsers);
 
         return $mockUser;
     }
@@ -75,6 +72,7 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
     public function testHandleQueryForOrganisation()
     {
         $busRegId = 2;
+        $organisationId = 6;
         $query = Qry::create(
             [
                 'busReg' => $busRegId
@@ -83,7 +81,7 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
 
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
             ->shouldReceive('getIdentity')
-            ->andReturn($this->getCurrentUser(4, 1));
+            ->andReturn($this->getCurrentUser(null, $organisationId));
 
         $mockLicence = m::mock();
         $mockLicence->shouldReceive('determineNpNumber')->andReturn('333');
@@ -104,7 +102,7 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
         $mockResult->setBusReg($busReg);
 
         $this->repoMap['TxcInbox']->shouldReceive('fetchListForOrganisationByBusReg')
-            ->with($query->getBusReg(), 4)
+            ->with($query->getBusReg(), $organisationId)
             ->andReturn([0 => $mockResult]);
 
         $this->repoMap['Bus']->shouldReceive('fetchById')
@@ -117,6 +115,7 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
     public function testHandleQueryForLocalAuthority()
     {
         $busRegId = 2;
+        $localAuthorityId = 4;
         $query = Qry::create(
             [
                 'busReg' => $busRegId
@@ -125,7 +124,7 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
 
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
             ->shouldReceive('getIdentity')
-            ->andReturn($this->getCurrentUser(4));
+            ->andReturn($this->getCurrentUser($localAuthorityId));
 
         $mockLicence = m::mock();
         $mockLicence->shouldReceive('determineNpNumber')->andReturn('333');
@@ -150,7 +149,7 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
         $mockResult->setBusReg($busReg);
 
         $this->repoMap['TxcInbox']->shouldReceive('fetchListForLocalAuthorityByBusReg')
-            ->with($query->getBusReg(), 4)
+            ->with($query->getBusReg(), $localAuthorityId)
             ->andReturn([0 => $mockResult]);
 
         $this->repoMap['Bus']->shouldReceive('fetchById')

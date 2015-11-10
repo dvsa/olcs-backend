@@ -35,7 +35,31 @@ class TxcInboxTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
-    public function testFetchListForLocalAuthorityByBusRegLocalAuthority()
+    public function testFetchListForOrganisationByBusReg()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('with')->with('busReg', 'b')->once()->andReturnSelf();
+
+        $qb->shouldReceive('where')->with('b.id = :busReg')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchListForOrganisationByBusReg(2, 4));
+
+        $expectedQuery = 'BLAH AND m.localAuthority IS NULL AND m.organisation = [[4]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchListForLocalAuthorityByBusReg()
     {
         $qb = $this->createMockQb('BLAH');
 
