@@ -363,8 +363,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(false);
-
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
@@ -570,8 +568,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(false);
-
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
@@ -736,8 +732,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(false);
-
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
@@ -852,8 +846,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(false);
-
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
@@ -964,8 +956,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(false);
-
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
@@ -1009,8 +999,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(false);
-
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
@@ -1063,8 +1051,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(false);
-
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()
@@ -1129,8 +1115,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(false);
-
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByIds')
             ->once()

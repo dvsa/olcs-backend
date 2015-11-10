@@ -64,7 +64,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     {
         $result = new Result();
 
-        if ($this->getRepo('SystemParameter')->getDisableCardPayments()) {
+        // if payment method in CARD_ONLINE (ie it came from external) and disable card payments is set
+        if ($command->getPaymentMethod()===FeeEntity::METHOD_CARD_ONLINE &&
+            $this->getRepo('SystemParameter')->getDisableCardPayments()
+        ) {
             $result->addMessage('Card payments are disabled');
             return $result;
         }
