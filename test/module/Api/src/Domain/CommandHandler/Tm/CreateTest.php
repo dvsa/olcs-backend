@@ -47,7 +47,7 @@ class CreateTest extends CommandHandlerTestCase
     {
         $this->refData = [
             ContactDetailsEntity::CONTACT_TYPE_TRANSPORT_MANAGER,
-            TransportManagerEntity::TRANSPORT_MANAGER_STATUS_ACTIVE,
+            TransportManagerEntity::TRANSPORT_MANAGER_STATUS_CURRENT,
             TransportManagerEntity::TRANSPORT_MANAGER_TYPE_EXTERNAL
         ];
 
