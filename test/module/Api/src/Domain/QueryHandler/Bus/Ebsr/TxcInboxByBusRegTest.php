@@ -5,12 +5,17 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus\Ebsr;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr\TxcInboxByBusReg;
+use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\TxcInboxByBusReg as Qry;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
@@ -25,6 +30,7 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
     {
         $this->sut = new TxcInboxByBusReg();
         $this->mockRepo('TxcInbox', TxcInboxRepo::class);
+        $this->mockRepo('Bus', BusRepo::class);
 
         $this->mockedSmServices = [
             'ZfcRbac\Service\AuthorizationService' => m::mock('ZfcRbac\Service\AuthorizationService')
@@ -33,41 +39,105 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    private function getCurrentUser($localAuthorityId = null)
+    private function getCurrentUser($localAuthorityId = null, $organisation = null)
     {
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
         $mockUser->shouldReceive('getUser')
             ->andReturnSelf();
 
-        $localAuthority = new \Dvsa\Olcs\Api\Entity\Bus\LocalAuthority();
-        $localAuthority->setId($localAuthorityId);
-
+        if (!empty($localAuthorityId)) {
+            $localAuthority = new \Dvsa\Olcs\Api\Entity\Bus\LocalAuthority();
+            $localAuthority->setId($localAuthorityId);
+        } else {
+            $localAuthority = null;
+        }
         $mockUser->shouldReceive('getLocalAuthority')
             ->andReturn($localAuthority);
+
+        $organisationUsers = new ArrayCollection();
+
+        $organisation = new Organisation();
+        $organisationUser = new OrganisationUser();
+
+        if (!empty($organisation)) {
+            $organisationUser->setOrganisation($organisation);
+            $organisationUsers->add($organisationUser);
+        } else {
+
+        }
+
+        $mockUser->shouldReceive('getOrganisationUsers')
+            ->andReturn($organisationUsers);
 
         return $mockUser;
     }
 
-    public function testHandleQuery()
+    public function testHandleQueryForOrganisation()
     {
+        $busRegId = 2;
         $query = Qry::create(
             [
-                'busReg' => 2
+                'busReg' => $busRegId
             ]
         );
 
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
             ->shouldReceive('getIdentity')
+            ->andReturn($this->getCurrentUser(4, 1));
+
+        $mockLicence = m::mock();
+        $mockLicence->shouldReceive('determineNpNumber')->andReturn('333');
+        $mockLicence->shouldReceive('getLatestBusVariation')->andReturn(null);
+
+        $mockResult = new TxcInboxEntity();
+        $busReg = new BusRegEntity();
+        $busReg->setLicence($mockLicence);
+
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->shouldReceive('getLatestBusVariation');
+        $licence->shouldReceive('determineNpNumber')
             ->once()
+            ->andReturn('4321');
+
+        $busReg->setLicence($licence);
+
+        $mockResult->setBusReg($busReg);
+
+        $this->repoMap['TxcInbox']->shouldReceive('fetchListForOrganisationByBusReg')
+            ->with($query->getBusReg(), 4)
+            ->andReturn([0 => $mockResult]);
+
+        $this->repoMap['Bus']->shouldReceive('fetchById')
+            ->with($query->getBusReg())
+            ->andReturn($busReg);
+
+        $this->sut->handleQuery($query);
+    }
+
+    public function testHandleQueryForLocalAuthority()
+    {
+        $busRegId = 2;
+        $query = Qry::create(
+            [
+                'busReg' => $busRegId
+            ]
+        );
+
+        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
+            ->shouldReceive('getIdentity')
             ->andReturn($this->getCurrentUser(4));
 
         $mockLicence = m::mock();
         $mockLicence->shouldReceive('determineNpNumber')->andReturn('333');
+        $mockLicence->shouldReceive('getLatestBusVariation')->andReturn(null);
 
         $mockResult = new TxcInboxEntity();
-        $busReg = m::mock(BusRegEntity::class)->makePartial();
-        $busReg->shouldReceive('isLatestVariation')->andReturn(false);
-        $busReg->shouldReceive('isScottishRules')->andReturn(false);
+
+        $busReg = new BusRegEntity();
+        $busRegShortNotice = new BusNoticePeriod();
+        $busRegShortNotice->setId(BusRegEntity::NOTICE_PERIOD_OTHER);
+        $busReg->setLicence($mockLicence);
+        $busReg->setShortNotice($busRegShortNotice);
 
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->shouldReceive('getLatestBusVariation');
@@ -83,27 +153,35 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
             ->with($query->getBusReg(), 4)
             ->andReturn([0 => $mockResult]);
 
+        $this->repoMap['Bus']->shouldReceive('fetchById')
+            ->with($query->getBusReg())
+            ->andReturn($busReg);
+
         $this->sut->handleQuery($query);
     }
 
     /**
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      */
-    public function testHandleQueryNotFoundException()
+    public function testHandleQueryBusRegNotFoundException()
     {
+        $busRegId = 2;
         $query = Qry::create(
             [
-                'busReg' => 2
+                'busReg' => $busRegId
             ]
         );
 
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
             ->shouldReceive('getIdentity')
-            ->once()
             ->andReturn($this->getCurrentUser(4));
 
         $this->repoMap['TxcInbox']->shouldReceive('fetchListForLocalAuthorityByBusReg')
             ->with($query->getBusReg(), 4)
+            ->andReturnNull();
+
+        $this->repoMap['Bus']->shouldReceive('fetchById')
+            ->with($query->getBusReg())
             ->andReturnNull();
 
         $this->sut->handleQuery($query);
