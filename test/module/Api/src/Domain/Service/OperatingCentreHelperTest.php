@@ -71,7 +71,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
     /**
      * @dataProvider validateWithErrors
      */
-    public function testValidateWithErrors($isPsv, $isRestricted, $commandData, $expected)
+    public function testValidateWithErrorsInternal($isPsv, $isRestricted, $commandData, $expected)
     {
         $entity = m::mock();
         $entity->shouldReceive('isPsv')->andReturn($isPsv);
@@ -86,7 +86,40 @@ class OperatingCentreHelperTest extends MockeryTestCase
             ->andReturn($docCollection);
 
         try {
-            $this->sut->validate($entity, $command);
+            $this->sut->validate($entity, $command, false);
+            // If we are expecting errors, but the validate method didn't throw an exception
+            if (!empty($expected)) {
+                $this->fail('Validation Exception was not thrown');
+            }
+        } catch (ValidationException $ex) {
+            // If we were not expecting any errors, but the exception was thrown
+            if (empty($expected)) {
+                $this->fail('Validation Exception was thrown');
+            }
+
+            $this->assertEquals($expected, $ex->getMessages());
+        }
+    }
+
+    /**
+     * @dataProvider validateWithErrorsExternal
+     */
+    public function testValidateWithErrorsExternal($isPsv, $isRestricted, $commandData, $expected)
+    {
+        $entity = m::mock();
+        $entity->shouldReceive('isPsv')->andReturn($isPsv);
+        $entity->shouldReceive('isRestricted')->andReturn($isRestricted);
+        $entity->shouldReceive('isGoods')->andReturn(!$isPsv);
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $docCollection = new ArrayCollection();
+
+        $this->documentRepo->shouldReceive('fetchUnlinkedOcDocumentsForEntity')->with($entity)
+            ->andReturn($docCollection);
+
+        try {
+            $this->sut->validate($entity, $command, true);
             // If we are expecting errors, but the validate method didn't throw an exception
             if (!empty($expected)) {
                 $this->fail('Validation Exception was not thrown');
@@ -548,10 +581,141 @@ class OperatingCentreHelperTest extends MockeryTestCase
                         [
                             'ERR_OC_AD_DT_1' => 'ERR_OC_AD_DT_1'
                         ]
+                    ]
+                ]
+            ],
+            [
+                false,
+                false,
+                [
+                    'noOfVehiclesRequired' => 0,
+                    'noOfTrailersRequired' => 1,
+                    'adPlaced' => 'Y',
+                    'adPlacedIn' => 'sasdasd',
+                    'adPlacedDate' => 'asdsad'
+                ],
+                [
+                ]
+            ]
+        ];
+    }
+
+    public function validateWithErrorsExternal()
+    {
+        return [
+            [
+                true,
+                false,
+                [
+                    'noOfVehiclesRequired' => 0
+                ],
+                [
+                    'noOfVehiclesRequired' => [
+                        [
+                            'ERR_OC_VR_1B' => 'ERR_OC_VR_1B'
+                        ]
+                    ],
+                    'sufficientParking' => [
+                        [
+                            'ERR_OC_SUFFICIENT_PARKING' => 'ERR_OC_SUFFICIENT_PARKING'
+                        ]
+                    ],
+                    'permission' => [
+                        [
+                            'ERR_OC_PERMISSION' => 'ERR_OC_PERMISSION'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                true,
+                true,
+                [
+                    'noOfVehiclesRequired' => 3
+                ],
+                [
+                    'noOfVehiclesRequired' => [
+                        [
+                            'ERR_OR_R_TOO_MANY' => 'ERR_OR_R_TOO_MANY'
+                        ]
+                    ],
+                    'sufficientParking' => [
+                        [
+                            'ERR_OC_SUFFICIENT_PARKING' => 'ERR_OC_SUFFICIENT_PARKING'
+                        ]
+                    ],
+                    'permission' => [
+                        [
+                            'ERR_OC_PERMISSION' => 'ERR_OC_PERMISSION'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                false,
+                false,
+                [
+                    'noOfVehiclesRequired' => 0,
+                    'noOfTrailersRequired' => 0,
+                    'adPlaced' => 'N'
+                ],
+                [
+                    'noOfVehiclesRequired' => [
+                        [
+                            'ERR_OC_VR_1A' => 'ERR_OC_VR_1A'
+                        ]
+                    ],
+                    'noOfTrailersRequired' => [
+                        [
+                            'ERR_OC_VR_1A' => 'ERR_OC_VR_1A'
+                        ]
+                    ],
+                    'sufficientParking' => [
+                        [
+                            'ERR_OC_SUFFICIENT_PARKING' => 'ERR_OC_SUFFICIENT_PARKING'
+                        ]
+                    ],
+                    'permission' => [
+                        [
+                            'ERR_OC_PERMISSION' => 'ERR_OC_PERMISSION'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                false,
+                false,
+                [
+                    'noOfVehiclesRequired' => 0,
+                    'noOfTrailersRequired' => 1,
+                    'adPlaced' => 'Y',
+                    'adPlacedIn' => '',
+                    'adPlacedDate' => ''
+                ],
+                [
+                    'adPlacedIn' => [
+                        [
+                            'ERR_OC_AD_IN_1' => 'ERR_OC_AD_IN_1'
+                        ]
+                    ],
+                    'adPlacedDate' => [
+                        [
+                            'ERR_OC_AD_DT_1' => 'ERR_OC_AD_DT_1'
+                        ]
                     ],
                     'file' => [
                         [
                             'ERR_OC_AD_FI_1' => 'ERR_OC_AD_FI_1'
+                        ]
+                    ],
+                    'sufficientParking' => [
+                        [
+                            'ERR_OC_SUFFICIENT_PARKING' => 'ERR_OC_SUFFICIENT_PARKING'
+                        ]
+                    ],
+                    'permission' => [
+                        [
+                            'ERR_OC_PERMISSION' => 'ERR_OC_PERMISSION'
                         ]
                     ]
                 ]
@@ -570,6 +734,16 @@ class OperatingCentreHelperTest extends MockeryTestCase
                     'file' => [
                         [
                             'ERR_OC_AD_FI_1' => 'ERR_OC_AD_FI_1'
+                        ]
+                    ],
+                    'sufficientParking' => [
+                        [
+                            'ERR_OC_SUFFICIENT_PARKING' => 'ERR_OC_SUFFICIENT_PARKING'
+                        ]
+                    ],
+                    'permission' => [
+                        [
+                            'ERR_OC_PERMISSION' => 'ERR_OC_PERMISSION'
                         ]
                     ]
                 ]
