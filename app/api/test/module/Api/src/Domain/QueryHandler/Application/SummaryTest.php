@@ -80,6 +80,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
+        $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(new \stdClass());
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -102,7 +103,8 @@ class SummaryTest extends QueryHandlerTestCase
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
                 ],
-                'reference' => 'ref'
+                'reference' => 'ref',
+                'outstandingFee' => true,
             ],
             $result->serialize()
         );
@@ -143,6 +145,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setAuthSignature(0);
         $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
         $docs = new ArrayCollection();
         $docs->add(m::mock());
@@ -173,7 +176,8 @@ class SummaryTest extends QueryHandlerTestCase
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
                 ],
-                'reference' => ''
+                'reference' => '',
+                'outstandingFee' => false,
             ],
             $result->serialize()
         );
@@ -214,6 +218,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setAuthSignature(0);
         $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
         $docs = new ArrayCollection();
         $docs->add(m::mock());
@@ -252,7 +257,8 @@ class SummaryTest extends QueryHandlerTestCase
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
                 ],
-                'reference' => 'ref'
+                'reference' => 'ref',
+                'outstandingFee' => false,
             ],
             $result->serialize()
         );
@@ -286,6 +292,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
+        $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -307,7 +314,8 @@ class SummaryTest extends QueryHandlerTestCase
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
                 ],
-                'reference' => 'ref'
+                'reference' => 'ref',
+                'outstandingFee' => false,
             ],
             $result->serialize()
         );
@@ -343,6 +351,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
+        $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -364,7 +373,8 @@ class SummaryTest extends QueryHandlerTestCase
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
                 ],
-                'reference' => 'ref'
+                'reference' => 'ref',
+                'outstandingFee' => false,
             ],
             $result->serialize()
         );
@@ -400,6 +410,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
+        $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
@@ -420,7 +431,8 @@ class SummaryTest extends QueryHandlerTestCase
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
                 ],
-                'reference' => 'ref'
+                'reference' => 'ref',
+                'outstandingFee' => false,
             ],
             $result->serialize()
         );
@@ -463,6 +475,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
+        $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -483,7 +496,8 @@ class SummaryTest extends QueryHandlerTestCase
                     ],
                     'APPROVE_TM' => 'APPROVE_TM'
                 ],
-                'reference' => 'ref'
+                'reference' => 'ref',
+                'outstandingFee' => false,
             ],
             $result->serialize()
         );
@@ -528,6 +542,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
+        $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -545,7 +560,8 @@ class SummaryTest extends QueryHandlerTestCase
                 'actions' => [
                     'APPROVE_TM' => 'APPROVE_TM'
                 ],
-                'reference' => 'ref'
+                'reference' => 'ref',
+                'outstandingFee' => false,
             ],
             $result->serialize()
         );
@@ -566,6 +582,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setOperatingCentres(new ArrayCollection());
         $mockApplication->setTransportManagers(new ArrayCollection());
         $mockApplication->setDocuments(new ArrayCollection());
+        $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -581,7 +598,8 @@ class SummaryTest extends QueryHandlerTestCase
             [
                 'foo' => 'bar',
                 'actions' => [],
-                'reference' => 'ref'
+                'reference' => 'ref',
+                'outstandingFee' => false,
             ],
             $result->serialize()
         );

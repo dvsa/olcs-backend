@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Remove;
 use Dvsa\Olcs\Transfer\Command\Tm\Remove as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use \Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 
 /**
  * Class UpdateTest
@@ -30,6 +31,14 @@ class RemoveTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
+    protected function initReferences()
+    {
+        $this->refData = [
+            TransportManagerEntity::TRANSPORT_MANAGER_STATUS_REMOVED,
+        ];
+        parent::initReferences();
+    }
+
     public function testHandleCommand()
     {
         $data = [
@@ -42,7 +51,13 @@ class RemoveTest extends CommandHandlerTestCase
             ->shouldReceive('fetchById')
             ->with(1)
             ->andReturn(
-                m::mock()->shouldReceive('setRemovedDate')->getMock()
+                m::mock()
+                    ->shouldReceive('setRemovedDate')
+                    ->once()
+                    ->shouldReceive('setTmStatus')
+                    ->with($this->refData[TransportManagerEntity::TRANSPORT_MANAGER_STATUS_REMOVED])
+                    ->once()
+                    ->getMock()
             )->shouldReceive('save');
 
         $result = $this->sut->handleCommand($command);

@@ -101,4 +101,85 @@ class SearchTest extends TestCase
             ),
         );
     }
+
+    public function testUpdateVehicleSection26()
+    {
+        $ids = [511, 2015];
+        $section26Value = true;
+        $sut = new SearchService();
+
+        $expectedQuery = [
+            'query' => [
+                'bool' => [
+                    'should' => [
+                        ['match' => ['vehicle.veh_id' => 511]],
+                        ['match' => ['vehicle.veh_id' => 2015]],
+                    ]
+                ]
+            ],
+            'size' => 1000,
+        ];
+
+        $searchResponse = m::mock(\Elastica\Response::class);
+        $searchResponse->shouldReceive('getData')->andReturn(
+            [
+                'hits' => [
+                    'hits' => [
+                        ['id' => 'zz']
+                    ]
+                ]
+            ]
+        );
+
+        $mockClient = m::mock(\Elastica\Client::class);
+        $mockClient->shouldReceive('request')
+            ->with('vehicle_current,vehicle_removed/_search', 'GET', $expectedQuery, [])->once()
+            ->andReturn($searchResponse);
+
+        $bulkResponse = m::mock(\Elastica\Response::class);
+        $bulkResponse->shouldReceive('getData');
+
+        $mockClient->shouldReceive('request')
+            ->with(
+                '_bulk',
+                'PUT',
+                '{"update":{"_id":{},"_type":{},"_index":{}}}'."\n".'{"doc":{"section_26":1}}'."\n",
+                []
+            )->once()->andReturn($bulkResponse);
+
+        $sut->setClient($mockClient);
+
+        $sut->updateVehicleSection26($ids, $section26Value);
+    }
+
+    public function testUpdateVehicleSection26NoResults()
+    {
+        $ids = [511, 2015];
+        $section26Value = true;
+        $sut = new SearchService();
+
+        $expectedQuery = [
+            'query' => [
+                'bool' => [
+                    'should' => [
+                        ['match' => ['vehicle.veh_id' => 511]],
+                        ['match' => ['vehicle.veh_id' => 2015]],
+                    ]
+                ]
+            ],
+            'size' => 1000,
+        ];
+
+        $searchResponse = m::mock(\Elastica\Response::class);
+        $searchResponse->shouldReceive('getData')->andReturn([]);
+
+        $mockClient = m::mock(\Elastica\Client::class);
+        $mockClient->shouldReceive('request')
+            ->with('vehicle_current,vehicle_removed/_search', 'GET', $expectedQuery, [])->once()
+            ->andReturn($searchResponse);
+
+        $sut->setClient($mockClient);
+
+        $sut->updateVehicleSection26($ids, $section26Value);
+    }
 }

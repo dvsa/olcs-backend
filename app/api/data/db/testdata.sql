@@ -13,7 +13,6 @@ TRUNCATE TABLE `bus_short_notice`;
 TRUNCATE TABLE `bus_notice_period`;
 TRUNCATE TABLE `bus_reg_bus_service_type`;
 TRUNCATE TABLE `bus_reg_variation_reason`;
-TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `complaint`;
 TRUNCATE TABLE `condition_undertaking`;
 TRUNCATE TABLE `contact_details`;
@@ -24,7 +23,6 @@ TRUNCATE TABLE `companies_house_officer`;
 TRUNCATE TABLE `companies_house_company`;
 TRUNCATE TABLE `change_of_entity`;
 TRUNCATE TABLE `disc_sequence`;
-TRUNCATE TABLE `event_history_type`;
 TRUNCATE TABLE `event_history`;
 TRUNCATE TABLE `ebsr_submission`;
 TRUNCATE TABLE `fee`;
@@ -98,7 +96,6 @@ TRUNCATE TABLE `si_penalty_erru_imposed`;
 TRUNCATE TABLE `si_penalty_imposed_type`;
 TRUNCATE TABLE `si_penalty_requested_type`;
 TRUNCATE TABLE `si_penalty_type`;
-TRUNCATE TABLE `sla`;
 TRUNCATE TABLE `statement`;
 TRUNCATE TABLE `submission_action`;
 TRUNCATE TABLE `submission_action_type`;
@@ -119,7 +116,7 @@ TRUNCATE TABLE `trailer`;
 TRUNCATE TABLE `workshop`;
 TRUNCATE TABLE `inspection_request`;
 TRUNCATE TABLE `user_role`;
-TRUNCATE TABLE `correspondence_inbox`;
+TRUNCATE TABLE `correspondence_inbox`; -- no inserts, not sure we need to truncate?
 TRUNCATE TABLE `grace_period`;
 
 /* Test documents */
@@ -633,8 +630,8 @@ VALUES
 (92,189,'lfs_ot',NULL,1,9,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 2',NULL,NULL,1,NULL,NULL,NULL,1),
 (93,189,'lfs_ot',NULL,1,10,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 3',NULL,NULL,1,NULL,NULL,NULL,1),
 (94,189,'lfs_ot',NULL,1,11,110,NULL,60.00,1,'2013-10-23 00:00:00','Bus Route Variation Fee PD2737280/3 Variation 4',NULL,NULL,1,NULL,NULL,NULL,1),
-(97,20051,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 12:34:56','Photocopying charge',NULL,NULL,1,NULL,NULL,NULL,1),
-(98,20052,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-11-01 13:45:01','Court fee',NULL,NULL,1,NULL,NULL,NULL,1),
+(97,40008,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-04-01 12:34:56','Photocopying charge',NULL,NULL,1,NULL,NULL,NULL,1),
+(98,40008,'lfs_ot',NULL,NULL,NULL,NULL,NULL,123.45,1,'2015-11-01 13:45:01','Court fee',NULL,NULL,1,NULL,NULL,NULL,1),
 (99,40008,'lfs_ot',NULL,NULL,NULL,NULL,NULL,100.00,1,'2015-11-01 13:45:02','Test fee 99',NULL,NULL,1,NULL,NULL,NULL,1),
 (100,40008,'lfs_ot',NULL,NULL,NULL,NULL,NULL,200.00,1,'2015-11-01 13:45:03','Test fee 100',NULL,NULL,1,NULL,NULL,NULL,1);
 
@@ -1143,9 +1140,9 @@ VALUES
 
 INSERT INTO `transport_manager` (`id`, `created_by`, `last_modified_by`, `tm_status`, `tm_type`, `work_cd_id`,
  `home_cd_id`, `deleted_date`, `created_on`, `last_modified_on`, `version`) VALUES
-    (1,NULL,NULL,'tm_st_act','tm_t_i',115,117,NULL,NULL,NULL,1),
-    (2,NULL,NULL,'tm_st_act','tm_t_e',116,118,NULL,NULL,NULL,1),
-    (3,NULL,NULL,'tm_st_act','tm_t_i',104,119,NULL,NULL,NULL,1);
+    (1,NULL,NULL,'tm_s_cur','tm_t_i',115,117,NULL,NULL,NULL,1),
+    (2,NULL,NULL,'tm_s_dis','tm_t_e',116,118,NULL,NULL,NULL,1),
+    (3,NULL,NULL,'tm_s_rem','tm_t_i',104,119,NULL,NULL,NULL,1);
 
 INSERT INTO `other_licence` (`id`, `application_id`,`transport_manager_id`,`lic_no`,`created_by`, `last_modified_by`,
 `created_on`, `last_modified_on`, `version`, `role`, `operating_centres`, `total_auth_vehicles`, `hours_per_week`,
@@ -1318,9 +1315,9 @@ INSERT INTO team(id,version,name,traffic_area_id) VALUES
     (5,1,'Assisted Digital FEP','B'),
     (6,1,'Bus Reg Team','B'),
     (7,1,'Compliance Team','B'),
-    (8,1,'Environmental Team',''),
-    (9,1,'IRFO Team',''),
-    (32,1,'Self service Operators','');
+    (8,1,'Environmental Team',NULL),
+    (9,1,'IRFO Team',NULL),
+    (32,1,'Self service Operators',NULL);
 
 INSERT INTO `case_category` (`case_id`, `category_id`)
 VALUES
@@ -1404,19 +1401,6 @@ INSERT INTO `submission_action_type` (`submission_action_id`, `action_type`)
 VALUES
     (12, 'sub_st_rec_pi'),
     (12, 'sub_st_dec_agree');
-
--- test business rules
-INSERT INTO `sla` (`id`, `category`, `field`, `compare_to`, `days`, `weekend`, `public_holiday`, `effective_from`, `effective_to`)
-VALUES
-    (1, 'pi', 'callUpLetterDate', 'hearingDate', -35, 0, 0, '1900-01-01', NULL),
-    (2, 'pi', 'briefToTcDate', 'hearingDate', -14, 0, 0, '1900-01-01', NULL),
-    (3, 'pi', 'decisionLetterSentDate', 'hearingDate', 5, 1, 1, '1900-01-01', NULL),
-    (4, 'pi', 'tcWrittenDecisionDate', 'hearingDate', 20, 1, 1, '1900-01-01', NULL),
-    (5, 'pi', 'tcWrittenReasonDate', 'hearingDate', 5, 1, 1, '1900-01-01', NULL),
-    (6, 'pi', 'writtenReasonLetterDate', 'tcWrittenReasonDate', 5, 1, 1, '1900-01-01', NULL),
-    (7, 'pi', 'decSentAfterWrittenDecDate', 'hearingDate', 2, 1, 1, '1900-01-01', NULL),
-    (8, 'pi_hearing', 'hearingDate', 'agreedDate', 60, 1, 1, '1900-01-01', NULL);
-
 
 INSERT INTO `serious_infringement`
 (`id`, `si_category_type_id`, `erru_response_user_id`, `member_state_code`, `created_by`,`last_modified_by`,
@@ -1533,46 +1517,46 @@ VALUES
   (2, '302', 1, 1, 1, 36, null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1),
   (3, '303', 1, 1, 1, 60, null, '2014-05-21 12:22:09', '2014-05-21 12:22:09', 1);
 
-INSERT INTO `public_holiday`(`id`,`last_modified_by`,`created_by`,`public_holiday_date`,`is_england`,`is_wales`,`is_scotland`,`is_ni`,`created_on`,`last_modified_on`,`version`)
+INSERT INTO `public_holiday`(`id`,`public_holiday_date`,`is_england`,`is_wales`,`is_scotland`,`is_ni`)
 VALUES
-  (1,1,1,'2014-01-01 00:00:00',1,1,1,1,now(),now(),1),
-  (2,1,1,'2014-01-02 00:00:00',0,0,1,0,now(),now(),1),
-  (3,1,1,'2014-03-17 00:00:00',0,0,0,1,now(),now(),1),
-  (4,1,1,'2014-04-18 00:00:00',1,1,1,1,now(),now(),1),
-  (5,1,1,'2014-04-21 00:00:00',1,1,0,1,now(),now(),1),
-  (6,1,1,'2014-05-05 00:00:00',1,1,1,1,now(),now(),1),
-  (7,1,1,'2014-05-26 00:00:00',1,1,1,1,now(),now(),1),
-  (8,1,1,'2014-07-14 00:00:00',0,0,0,1,now(),now(),1),
-  (9,1,1,'2014-08-04 00:00:00',0,0,1,0,now(),now(),1),
-  (10,1,1,'2014-08-25 00:00:00',1,1,0,1,now(),now(),1),
-  (11,1,1,'2014-12-01 00:00:00',0,0,1,0,now(),now(),1),
-  (12,1,1,'2014-12-25 00:00:00',1,1,1,1,now(),now(),1),
-  (13,1,1,'2014-12-26 00:00:00',1,1,1,1,now(),now(),1),
-  (14,1,1,'2015-01-01 00:00:00',1,1,1,1,now(),now(),1),
-  (15,1,1,'2015-01-02 00:00:00',0,0,1,0,now(),now(),1),
-  (16,1,1,'2015-03-17 00:00:00',0,0,0,1,now(),now(),1),
-  (17,1,1,'2015-04-03 00:00:00',1,1,1,1,now(),now(),1),
-  (18,1,1,'2015-04-06 00:00:00',1,1,0,1,now(),now(),1),
-  (19,1,1,'2015-05-04 00:00:00',1,1,1,1,now(),now(),1),
-  (20,1,1,'2015-05-25 00:00:00',1,1,1,1,now(),now(),1),
-  (21,1,1,'2015-07-13 00:00:00',0,0,0,1,now(),now(),1),
-  (22,1,1,'2015-08-03 00:00:00',0,0,1,0,now(),now(),1),
-  (23,1,1,'2015-08-31 00:00:00',1,1,0,1,now(),now(),1),
-  (24,1,1,'2015-11-30 00:00:00',0,0,1,0,now(),now(),1),
-  (25,1,1,'2015-12-25 00:00:00',1,1,1,1,now(),now(),1),
-  (26,1,1,'2015-12-28 00:00:00',1,1,1,1,now(),now(),1),
-  (27,1,1,'2016-01-01 00:00:00',1,1,1,1,now(),now(),1),
-  (28,1,1,'2016-01-04 00:00:00',0,0,1,0,now(),now(),1),
-  (29,1,1,'2016-03-17 00:00:00',0,0,0,1,now(),now(),1),
-  (30,1,1,'2016-03-25 00:00:00',1,1,1,1,now(),now(),1),
-  (31,1,1,'2016-03-28 00:00:00',1,1,0,1,now(),now(),1),
-  (32,1,1,'2016-05-02 00:00:00',1,1,1,1,now(),now(),1),
-  (33,1,1,'2016-05-30 00:00:00',1,1,1,1,now(),now(),1),
-  (34,1,1,'2016-07-12 00:00:00',0,0,0,1,now(),now(),1),
-  (35,1,1,'2016-08-01 00:00:00',0,0,1,0,now(),now(),1),
-  (36,1,1,'2016-08-29 00:00:00',1,1,1,1,now(),now(),1),
-  (37,1,1,'2016-12-26 00:00:00',1,1,1,1,now(),now(),1),
-  (38,1,1,'2016-12-27 00:00:00',1,1,0,0,now(),now(),1);
+  (1,'2014-01-01 00:00:00',1,1,1,1),
+  (2,'2014-01-02 00:00:00',0,0,1,0),
+  (3,'2014-03-17 00:00:00',0,0,0,1),
+  (4,'2014-04-18 00:00:00',1,1,1,1),
+  (5,'2014-04-21 00:00:00',1,1,0,1),
+  (6,'2014-05-05 00:00:00',1,1,1,1),
+  (7,'2014-05-26 00:00:00',1,1,1,1),
+  (8,'2014-07-14 00:00:00',0,0,0,1),
+  (9,'2014-08-04 00:00:00',0,0,1,0),
+  (10,'2014-08-25 00:00:00',1,1,0,1),
+  (11,'2014-12-01 00:00:00',0,0,1,0),
+  (12,'2014-12-25 00:00:00',1,1,1,1),
+  (13,'2014-12-26 00:00:00',1,1,1,1),
+  (14,'2015-01-01 00:00:00',1,1,1,1),
+  (15,'2015-01-02 00:00:00',0,0,1,0),
+  (16,'2015-03-17 00:00:00',0,0,0,1),
+  (17,'2015-04-03 00:00:00',1,1,1,1),
+  (18,'2015-04-06 00:00:00',1,1,0,1),
+  (19,'2015-05-04 00:00:00',1,1,1,1),
+  (20,'2015-05-25 00:00:00',1,1,1,1),
+  (21,'2015-07-13 00:00:00',0,0,0,1),
+  (22,'2015-08-03 00:00:00',0,0,1,0),
+  (23,'2015-08-31 00:00:00',1,1,0,1),
+  (24,'2015-11-30 00:00:00',0,0,1,0),
+  (25,'2015-12-25 00:00:00',1,1,1,1),
+  (26,'2015-12-28 00:00:00',1,1,1,1),
+  (27,'2016-01-01 00:00:00',1,1,1,1),
+  (28,'2016-01-04 00:00:00',0,0,1,0),
+  (29,'2016-03-17 00:00:00',0,0,0,1),
+  (30,'2016-03-25 00:00:00',1,1,1,1),
+  (31,'2016-03-28 00:00:00',1,1,0,1),
+  (32,'2016-05-02 00:00:00',1,1,1,1),
+  (33,'2016-05-30 00:00:00',1,1,1,1),
+  (34,'2016-07-12 00:00:00',0,0,0,1),
+  (35,'2016-08-01 00:00:00',0,0,1,0),
+  (36,'2016-08-29 00:00:00',1,1,1,1),
+  (37,'2016-12-26 00:00:00',1,1,1,1),
+  (38,'2016-12-27 00:00:00',1,1,0,0);
 
 INSERT INTO `publication` (`id`,`pub_status`,`last_modified_by`,`created_by`,`traffic_area_id`,`doc_template_id`,`document_id`,`pub_date`,`doc_name`,`publication_no`,`pub_type`,`created_on`,`last_modified_on`,`version`)
 VALUES
@@ -1687,9 +1671,10 @@ VALUES
 
 INSERT INTO `system_parameter` (`id`, `param_value`, `description`)
 VALUES
-    ('task.default_team', 2, NULL),
-    ('task.default_user', 1, NULL),
-    ('CNS_EMAIL_LIST', 'terry.valtech@gmail.com', NULL);
+    ('task.default_team', 2, 'Default team to assign new tasks to'),
+    ('task.default_user', 1, 'Default user to assign new tasks to'),
+    ('CNS_EMAIL_LIST', '', 'Email address where CNS email notifications are sent'),
+    ('DISABLED_CARD_PAYMENTS', 0, 'Disable card payments from external');
 
 INSERT INTO `community_lic` (
     `id`, `status`, `licence_id`, `expired_date`, `issue_no`, `serial_no`,
@@ -1761,156 +1746,6 @@ VALUES
   (4, 1, 1, 7, "D4000", "2015-01-01", NULL, "2015-04-01", "2015-04-01", 1);
 
 -- Start: Event History Test Data
-
-INSERT INTO `event_history_type` (`id`,`event_code`,`description`) VALUES
-('1','2ND','Reminder Printed')
-,('2','ACN','Application Acknowledged')
-,('3','ACV','Variation Acknowledged')
-,('4','AOC','Amend OC Authorisation')
-,('5','AWD','Application Withdrawn')
-,('6','COM','Not Used')
-,('7','CUR','Licence Curtailed')
-,('8','CVE','Maintenance Checklist')
-,('9','DIP','Not Used')
-,('10','DUP','Duplicate Document Requested')
-,('11','FEE','Not Used')
-,('12','GRA','Application Granted')
-,('13','INT','Interim Granted')
-,('14','IRF','Interim Refused')
-,('15','NEW','New Application')
-,('16','NTU','Not Taken Up')
-,('17','OBJ','Objection Created')
-,('18','PIR','Not Used')
-,('19','PRM','Checklist Printed')
-,('20','PRT','Document Printed')
-,('21','PVI','Not Used')
-,('22','RAM','Licence Amended')
-,('23','REF','Application Refused')
-,('24','REG','Register Application')
-,('25','REV','Licence Revoked')
-,('26','RPT','Not Used')
-,('27','RTU','Not Taken Up Revived')
-,('28','RVI','VI Inspection Requested')
-,('29','SSD','Not Used')
-,('30','SUR','Licence Surrendered')
-,('31','SUS','Licence Suspended')
-,('32','TEX','Time Expired Set')
-,('33','TMC','Transport Manager Amended')
-,('34','TRA','Not Used')
-,('35','UNG','Application Ungranted')
-,('36','USR','Licence Unsurrendered')
-,('37','VAR','Variation Application')
-,('38','VCH','Vehicle Changed')
-,('39','VH+','Vehicle Added')
-,('40','VH-','Vehicle Removed')
-,('41','EML','Documents Emailed')
-,('42','CCA','Change Correspondence Address')
-,('43','ADI','Add Director')
-,('44','RDI','Remove Director')
-,('45','ASU','Add Subsidiary')
-,('46','RSU','Remove Subsidiary')
-,('47','APA','Add Partner')
-,('48','RPA','Remove Partner')
-,('49','ATM','Add Transport Manager')
-,('50','RTM','Remove Transport Manager')
-,('51','NOC','Add Operating Centre')
-,('52','ROC','Remove Operating Centre')
-,('53','IAU','OC Authorisation Increased')
-,('54','DAU','OC Authorisation Decreased')
-,('55','S4R','Schedule 4 Refused')
-,('56','CNS','Continuation Not Sought')
-,('57','OCN','Operator Company Name')
-,('58','OTN','Operator Trading Name Added')
-,('59','OAC','Operator Address Change')
-,('60','CRN','Company Reg Number')
-,('61','OCI','Certificate seen changed')
-,('62','OOA','Org Office Address')
-,('63','TA+','Trailer Authorisation Increased')
-,('64','TA-','Trailer Authorisation Decreased')
-,('65','VIA','Area Office Changed')
-,('66','MSI','Maintenance Safety Inspecition Changed')
-,('67','MSC','Contract Satisfactory')
-,('68','FIN','Finance Details Changed')
-,('69','CON','Condition Added')
-,('70','UND','Undertaking Added')
-,('71','INR','Revoke Interim')
-,('72','VA+','Vehicle Authorisation Increased')
-,('73','VA-','Vehicle Authorisation Decreased')
-,('74','USU','Update Subsidiary')
-,('75','RES','Reset to Valid')
-,('76','REP','Representation Created')
-,('77','OTR','Operator Trading Name Removed')
-,('78','UDI','Update Director')
-,('79','UPA','Update Partner')
-,('80','UOB','Update Objection')
-,('81','URE','Update Representation')
-,('82','CTA','Change Transport Consultant Address')
-,('83','CTM','Create Transport Manager')
-,('84','MTM','Modify Transport Manager')
-,('85','DTM','Delete Transport Manager')
-,('86','CTQ','Create Qualification')
-,('87','MTQ','Modify Qualification')
-,('88','DTQ','Delete Qualification')
-,('89','ATA','Add Transport Manager Application')
-,('90','DTA','Delete Transport Manager Application')
-,('91','ATL','Add Transport Manager Licence')
-,('92','DTL','Delete Transport Manager Licence')
-,('93','TMS','Source Of Transport Manager Merge')
-,('94','TMD','Destination Of Transport Manager Merge')
-,('95','DNM','Delete Non-PI Compliance Meeting')
-,('96','CEP','Create Compliance Episode')
-,('97','MCE','Modify Compliance Episode')
-,('98','DCE','Delete Compliance Episode')
-,('99','CLE','Close Compliance Episode')
-,('100','RCE','Re-Open Compliance Episode')
-,('101','CEN','Create Episode Note')
-,('102','MEN','Modify Episode Note')
-,('103','DEN','Delete Episode Note')
-,('104','CED','Create Episode Document')
-,('105','MED','Modify Episode Document')
-,('106','DED','Delete Episode Document')
-,('107','CER','Create Episode Recommendation')
-,('108','MER','Modify Episode Recommendation')
-,('109','DER','Delete Episode Recommendation')
-,('110','CNP','Create Episode Non PublicInquiry')
-,('111','MNP','Modify Episode Non PublicInquiry')
-,('112','DNP','Delete Episode Non PublicInquiry')
-,('113','CPI','Create Episode Public Inquiry')
-,('114','MPI','Modify Episode Public Inquiry')
-,('115','DPI','Delete Episode Public Inquiry')
-,('116','CDE','Create Episode Decision')
-,('117','MDE','Modify Episode Decision')
-,('118','DDE','Delete Episode Decision')
-,('119','CSE','Create Episode Serious Infringement')
-,('120','MSE','Modify Episode Serious Infringement')
-,('121','DSE','Delete Episode Serious Infringement')
-,('122','CES','Create Episode Stay')
-,('123','MES','Modify Episode Stay')
-,('124','DES','Delete Episode Stay')
-,('125','CEA','Create Episode Appeal')
-,('126','MEA','Modify Episode Appeal')
-,('127','DEA','Delete Episode Appeal')
-,('128','DFT','Declare Fit')
-,('129','DUF','Declare Unfit')
-,('130','STC','Set To Current')
-,('131','MTT','Modify Transport Manager Type')
-,('132','MTC','Modify Transport Manager Case Notes')
-,('133','MTA','Modify Transport Manager Address')
-,('134','MTE','Modify Transport Manager Email')
-,('135','CHR','Checklist Received')
-,('136','CHN','Checklist Not Received')
-,('137','RCN','Remove Casenote')
-,('138','ACE','Add Casenote')
-,('139','SFI','Sole Trader First Name Changed')
-,('140','SFA','Sole Trader Family Name Changed')
-,('141','SDB','Sole Trader Date of BirthChanged')
-,('142','DFI','Director First Name Changed')
-,('143','DFA','Director Family Name Changed')
-,('144','DDB','Director Date of Birth Changed')
-,('145','PFI','Partner First Name Changed')
-,('146','PFA','Partner Family Name Changed')
-,('147','PDB','Partner Date of Birth Changed');
-
 INSERT INTO `event_history` (`id`, `event_history_type_id`, `application_id`, `bus_reg_id`, `case_id`, `licence_id`, `organisation_id`, `transport_manager_id`, `user_id`, `entity_pk`, `entity_type`, `entity_version`, `event_data`, `event_datetime`, `event_description`)
 VALUES
 	(8, 1, NULL, NULL, NULL, 7, NULL, NULL, 4, NULL, NULL, NULL, 'Event Data', '2015-03-24 11:02:49', 'Event Description 1'),
@@ -1941,8 +1776,6 @@ VALUES
 	(34, 131, 1, NULL, NULL, NULL, NULL, 1, 4, NULL, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36', 'Not used'),
 	(35, 131, 1, NULL, NULL, NULL, 1, 1, 4, NULL, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36', 'Not used'),
 	(36, 131, 1, NULL, NULL, NULL, 1, 1, 4, NULL, NULL, NULL, 'TM Event Data', '2015-03-19 13:37:36', 'Not used');
-
-
 -- End: Event History Test Data
 
 -- Start: Application 7 - new Goods Vehicle Standard National application ready to submit
@@ -2130,7 +1963,9 @@ INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, 
 COMMIT;
 -- End: Application 8
 
-INSERT INTO `change_of_entity` (`id`, `licence_id`, `old_licence_no`, `old_organisation_name`, `created_on`, `version`) VALUES ('1', '7', '0000000', 'Old Organisation Name', '2015-03-27 12:28:07', '1');
+INSERT INTO `change_of_entity` (`id`, `licence_id`, `old_licence_no`, `old_organisation_name`, `created_on`, `version`)
+VALUES
+    ('1', '7', '0000000', 'Old Organisation Name', '2015-03-27 12:28:07', '1');
 
 INSERT INTO `inspection_request` (`id`, `report_type`, `request_type`, `requestor_user_id`, `result_type`, `application_id`,
 `case_id`, `created_by`, `last_modified_by`, `licence_id`, `operating_centre_id`, `task_id`, `deferred_date`, `due_date`, `from_date`,

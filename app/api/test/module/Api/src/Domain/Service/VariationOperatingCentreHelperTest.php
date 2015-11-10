@@ -69,7 +69,8 @@ class VariationOperatingCentreHelperTest extends MockeryTestCase
                 'action' => 'U',
                 'operatingCentre' => [
                     'id' => 123
-                ]
+                ],
+                'sort' => 123
             ]
         ];
         $locData = [
@@ -77,13 +78,15 @@ class VariationOperatingCentreHelperTest extends MockeryTestCase
                 'id' => 654,
                 'operatingCentre' => [
                     'id' => 123
-                ]
+                ],
+                'sort' => 123
             ],
             [
                 'id' => 655,
                 'operatingCentre' => [
                     'id' => 999
-                ]
+                ],
+                'sort' => 999
             ]
         ];
 
@@ -94,15 +97,8 @@ class VariationOperatingCentreHelperTest extends MockeryTestCase
                     'id' => 123
                 ],
                 'source' => 'L',
-                'action' => 'C'
-            ],
-            [
-                'id' => 'L655',
-                'operatingCentre' => [
-                    'id' => 999
-                ],
-                'source' => 'L',
-                'action' => 'E'
+                'action' => 'C',
+                'sort' => 123
             ],
             [
                 'id' => 'A321',
@@ -111,6 +107,16 @@ class VariationOperatingCentreHelperTest extends MockeryTestCase
                     'id' => 123
                 ],
                 'source' => 'A',
+                'sort' => 123
+            ],
+            [
+                'id' => 'L655',
+                'operatingCentre' => [
+                    'id' => 999
+                ],
+                'source' => 'L',
+                'action' => 'E',
+                'sort' => 999
             ]
         ];
 

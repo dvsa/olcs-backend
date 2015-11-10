@@ -76,7 +76,7 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
         return $value === 'Y' ? 'Confirmed' : 'Unconfirmed';
     }
 
-    protected function formatDate($date, $format = 'd F Y')
+    protected function formatDate($date, $format = 'd M Y')
     {
         return date($format, strtotime($date));
     }

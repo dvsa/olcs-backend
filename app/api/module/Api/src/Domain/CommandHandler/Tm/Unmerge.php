@@ -48,6 +48,9 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
 
         // Remove the removed date from the current transport manager
         $tm->setRemovedDate(null);
+        $tm->setTmStatus(
+            $this->getRepo()->getRefdataReference(TransportManager::TRANSPORT_MANAGER_STATUS_CURRENT)
+        );
         $this->getRepo()->save($tm);
 
         $result = new Result();

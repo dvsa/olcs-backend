@@ -171,4 +171,14 @@ class User extends AbstractRepository
 
         return $data;
     }
+
+    public function fetchUsersCountByTeam($teamId)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->select('count(' . $this->alias . '.id)')
+            ->andWhere($qb->expr()->eq($this->alias . '.team', ':team'))
+            ->setParameter('team', $teamId);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }
