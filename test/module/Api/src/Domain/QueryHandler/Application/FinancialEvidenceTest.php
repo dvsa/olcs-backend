@@ -85,7 +85,7 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ->with('category', 'subCategory')
             ->andReturn($mockFinancialDocuments)
             ->once()
-            ->shouldReceive('jsonSerialize')
+            ->shouldReceive('serialize')
             ->andReturn(['id' => $applicationId])
             ->once()
             ->shouldReceive('getLicenceType')
@@ -146,11 +146,13 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             'documents' => ['DOCUMENTS'],
             'financialEvidence' => [
                 'requiredFinance' => $totalRequired,
-                'vehicles' => 9,
                 'standardFirst' => 7000,
                 'standardAdditional' => 3900,
                 'restrictedFirst' => 3100,
                 'restrictedAdditional' => 1700,
+                'applicationVehicles' => 3,
+                'otherLicenceVehicles' => 4,
+                'otherApplicationVehicles' => 2,
             ]
         ];
 

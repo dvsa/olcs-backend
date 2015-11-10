@@ -42,15 +42,14 @@ class FinancialEvidence extends AbstractQueryHandler
         );
 
         // add calculated finance data
+        $financialEvidence = $this->getTotalNumberOfAuthorisedVehicles($application);
+        $financialEvidence['requiredFinance'] = $this->getRequiredFinance($application);
         $financialEvidence = array_merge(
-            [
-                'requiredFinance' => $this->getRequiredFinance($application),
-                'vehicles' => $this->getTotalNumberOfAuthorisedVehicles($application),
-            ],
+            $financialEvidence,
             $this->helper->getRatesForView($application->getGoodsOrPsv()->getId())
         );
 
-        $data = $application->jsonSerialize();
+        $data = $application->serialize();
         $data['documents'] = $financialDocuments->toArray();
         $data['financialEvidence'] = $financialEvidence;
 
@@ -136,8 +135,9 @@ class FinancialEvidence extends AbstractQueryHandler
      *   Under consideration
      *   Granted
      *
-     * @param int $applicationId
-     * @return int
+     * @param ApplicationEntity $application
+     *
+     * @return array containing total vehicles for application, other licences and other application
      */
     public function getTotalNumberOfAuthorisedVehicles($application)
     {
@@ -158,6 +158,10 @@ class FinancialEvidence extends AbstractQueryHandler
             $otherApplicationVehicles += (int)$application->getTotAuthVehicles();
         }
 
-        return $appVehicles + $otherLicenceVehicles + $otherApplicationVehicles;
+        return [
+            'applicationVehicles' => $appVehicles,
+            'otherLicenceVehicles' => $otherLicenceVehicles,
+            'otherApplicationVehicles' => $otherApplicationVehicles,
+        ];
     }
 }
