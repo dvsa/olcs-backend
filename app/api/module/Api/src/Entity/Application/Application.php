@@ -1569,11 +1569,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * Calculated values to be added to a bundle
+     * Get the application reference number.
      *
-     * @return array
+     * @return string eg OB12345/12
      */
-    public function getCalculatedBundleValues()
+    public function getApplicationReference()
     {
         if ($this->getLicence() && !empty($this->getLicence()->getLicNo())) {
             $applicationReference = $this->getLicence()->getLicNo().'/'.$this->getId();
@@ -1581,8 +1581,18 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             $applicationReference = $this->getId();
         }
 
+        return $applicationReference;
+    }
+
+    /**
+     * Calculated values to be added to a bundle
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
         return [
-            'applicationReference' => $applicationReference,
+            'applicationReference' => $this->getApplicationReference()
         ];
     }
 }
