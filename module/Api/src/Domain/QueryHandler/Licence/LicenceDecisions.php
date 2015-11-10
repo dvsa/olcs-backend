@@ -38,7 +38,7 @@ class LicenceDecisions extends AbstractQueryHandler
         }
 
         return $this->result(
-            $this->getRepo()->fetchUsingId($query),
+            $licence,
             [],
             ['suitableForDecisions' => $suitableForDecisions]
         );
