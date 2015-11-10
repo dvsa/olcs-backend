@@ -6,7 +6,9 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
@@ -27,6 +29,16 @@ class TxcInboxByBusReg extends AbstractQueryHandler implements AuthAwareInterfac
 
     protected $extraRepos = ['Bus'];
 
+    /**
+     * Handle Query - relationship between busReg and TxcInbox is 1:n to allow multiple entries for different local
+     * authorities. However the actual result for a look up will always be a 1:1 providing the local authority or
+     * organisation filter is applied. Filter by organisation returns where localAuthority is null.
+     *
+     * @param QueryInterface $query
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws NotFoundException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var Repository $repo */
@@ -35,16 +47,18 @@ class TxcInboxByBusReg extends AbstractQueryHandler implements AuthAwareInterfac
         $currentUser = $this->getCurrentUser();
 
         $localAuthority = $currentUser->getLocalAuthority();
-
-        $localAuthorityId = null;
-        if ($localAuthority instanceof \Dvsa\Olcs\Api\Entity\Bus\LocalAuthority) {
-            $localAuthorityId = $localAuthority->getId();
-        }
+        $organisation = $this->getCurrentOrganisation();
 
         // relationship is 1:n to allow multiple entries for different local authorities.
-        // However the actual result for a look up will always be a 1:1 providing the local authority filter
-        // is applied
-        $txcInboxResults = $repo->fetchListForLocalAuthorityByBusReg($query->getBusReg(), $localAuthorityId);
+        // However the actual result for a look up will always be a 1:1 providing the local authority or
+        // organisation filter is applied
+        if (empty($localAuthority) && $organisation instanceof Organisation) {
+            $organisationId = $organisation->getId();
+            $txcInboxResults = $repo->fetchListForOrganisationByBusReg($query->getBusReg(), $organisationId);
+        } elseif (empty($organisation) && $localAuthority instanceof LocalAuthority) {
+            $localAuthorityId = $localAuthority->getId();
+            $txcInboxResults = $repo->fetchListForLocalAuthorityByBusReg($query->getBusReg(), $localAuthorityId);
+        }
 
         if (!isset($txcInboxResults[0]) || !($txcInboxResults[0]->getBusReg() instanceof BusRegEntity)) {
             // alternative command to fetch the bus reg details only
@@ -89,38 +103,6 @@ class TxcInboxByBusReg extends AbstractQueryHandler implements AuthAwareInterfac
                     ],
                     [
                         'npPublicationNo' => $busReg->getLicence()->determineNpNumber()
-                    ]
-                )->serialize(),
-            ]
-        );
-
-        return $this->result(
-            $txcInbox,
-            [
-                'txcDocuments'
-            ],
-            [
-                'txcDocuments' => [
-                    'pdfDocument' => $txcInbox->getPdfDocument(),
-                    'routeDocument' => $txcInbox->getRouteDocument(),
-                    'zipDocument' => $txcInbox->getZipDocument(),
-                ],
-                'busReg' => $this->result(
-                    $busReg,
-                    [
-                        'status',
-                        'licence' => [
-                            'organisation' => ['disqualifications'],
-                            'licenceType',
-                            'status',
-                        ],
-                        'busNoticePeriod',
-                        'busServiceTypes',
-                        'trafficAreas',
-                        'localAuthoritys',
-                        'subsidised',
-                        'otherServices',
-                        'variationReasons'
                     ]
                 )->serialize(),
             ]
