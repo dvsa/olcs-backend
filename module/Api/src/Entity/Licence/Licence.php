@@ -208,25 +208,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         return $this->getCommunityLics()->matching($criteria);
     }
 
-    public function getActiveBusRoutes($licence)
-    {
-        $criteria = Criteria::create()
-            ->where(
-                Criteria::expr()->eq('licence', $licence)
-            )
-            ->andWhere(
-                Criteria::expr()->notIn(
-                    'status',
-                    [
-                        BusReg::STATUS_REFUSED,
-                        BusReg::STATUS_WITHDRAWN
-                    ]
-                )
-            );
-
-        return $this->getBusRegs()->matching($criteria)->current();
-    }
-
     /**
      * Get Active varation for this licence
      *
