@@ -229,11 +229,13 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         return $this->getApplications()->matching($criteria);
     }
 
-    /**
-     * This method is possibly depricated by getCalculatedBundleValues
-     *
-     * @return array
-     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'niFlag' => $this->getNiFlag()
+        ];
+    }
+
     public function getCalculatedValues()
     {
         return $this->getCalculatedBundleValues();
@@ -649,16 +651,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         }
 
         return 'N';
-    }
-
-    /**
-     * @return array
-     */
-    public function getCalculatedBundleValues()
-    {
-        return [
-            'niFlag' => $this->getNiFlag(),
-        ];
     }
 
     /**
