@@ -7,16 +7,30 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTaxiPhv as Command;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Update TaxiPhv
+ * UpdateTaxiPhv
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
 final class UpdateTaxiPhv extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
+
+    /**
+     * @var \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator
+     */
+    private $trafficAreaValidator;
+
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->trafficAreaValidator = $serviceLocator->getServiceLocator()->get('TrafficAreaValidator');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * @param Command $command
@@ -27,34 +41,50 @@ final class UpdateTaxiPhv extends AbstractCommandHandler implements Transactione
     {
         $application = $this->getRepo()->fetchUsingId($command);
 
+        if ($application->isNew()) {
+            $trafficAreaId = null;
+            if ($command->getTrafficArea()) {
+                $trafficAreaId = $command->getTrafficArea();
+            } elseif ($application->getTrafficArea()) {
+                $trafficAreaId = $application->getTrafficArea()->getId();
+            }
+            if ($trafficAreaId) {
+                $message = $this->trafficAreaValidator->validateForSameTrafficAreas($application, $trafficAreaId);
+                if ($message !== true) {
+                    throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException($message);
+                }
+            }
+        }
+
         $result = new Result();
-        $result->merge($this->updatePrivateHireLicence($command));
+        if ($command->getTrafficArea()) {
+            $result->merge(
+                $this->updateTrafficArea($application->getLicence(), $command->getTrafficArea())
+            );
+        }
         $result->merge($this->updateApplicationCompletion($application));
 
         return $result;
     }
 
     /**
-     * Create PrivateHireLicence entity
+     * Update the TrafficAre
      *
-     * @param Application $application
-     * @param Command $command
+     * @param Licence $licence
+     * @param string $trafficAreaId traffic area ID
      *
      * @return Result
      */
-    private function updatePrivateHireLicence(Command $command)
+    private function updateTrafficArea(Licence $licence, $trafficAreaId)
     {
         $data = [
-            'id' => $command->getPrivateHireLicence(),
-            'version' => $command->getVersion(),
-            'privateHireLicenceNo' => $command->getPrivateHireLicenceNo(),
-            'councilName' => $command->getCouncilName(),
-            'address' => $command->getAddress(),
-            'licence' => $command->getLicence(),
-            'lva' => $command->getLva()
+            'id' => $licence->getId(),
+            'trafficArea' => $trafficAreaId,
         ];
 
-        return $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\PrivateHireLicence\Update::create($data));
+        return $this->handleSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea::create($data)
+        );
     }
 
     /**

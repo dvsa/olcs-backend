@@ -35,8 +35,8 @@ final class UpdateTrafficArea extends AbstractCommandHandler
         $this->getRepo()->save($licence);
 
         $criteria = Criteria::create();
-        $criteria->andWhere(
-            $criteria->expr()->eq('isVariation', 0)
+        $criteria->where(
+            $criteria->expr()->eq('isVariation', false)
         );
 
         $appId = $licence->getApplications()->matching($criteria)->first()->getId();

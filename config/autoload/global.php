@@ -40,4 +40,9 @@ return array(
             'adapter' => 'Zend\Http\Client\Adapter\Curl',
         ),
     ),
+    'soflomo_purifier' => array(
+        'config' => array(
+            'Cache.SerializerPath' => sys_get_temp_dir(),
+        ),
+    ),
 );

@@ -850,7 +850,7 @@ class LicenceEntityTest extends EntityTester
         $result = $licence->getCalculatedBundleValues();
 
         $expected = [
-            'niFlag' => 'Y',
+            'niFlag' => 'Y'
         ];
 
         $this->assertSame($expected, $result);
@@ -859,7 +859,6 @@ class LicenceEntityTest extends EntityTester
     public function testGetCalculatedValues()
     {
         $licence = m::mock(Entity::class)->makePartial();
-        $licence->shouldReceive('getNiFlag')->andReturn('Y');
 
         $this->assertSame($licence->getCalculatedBundleValues(), $licence->getCalculatedValues());
     }

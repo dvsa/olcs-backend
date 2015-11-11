@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PrivateHireLicence;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTaxiPhv as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTaxiPhv as Command;
@@ -19,6 +19,10 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
 
+        $this->mockedSmServices = [
+            'TrafficAreaValidator' => m::mock(),
+        ];
+
         parent::setUp();
     }
 
@@ -27,44 +31,33 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    public function testHandleCommandNewApplicationTaFromCommand()
     {
         $params =[
             'id' => 323,
-            'privateHireLicence' => 654,
-            'version' => 21,
-            'privateHireLicenceNo' => 'TOPDOG 1',
-            'councilName' => 'Leeds',
-            'address' => [
-                'addressLine1' => 'LINE 1',
-                'addressLine2' => 'LINE 2',
-                'addressLine3' => 'LINE 3',
-                'addressLine4' => 'LINE 4',
-                'town' => 'TOWN',
-                'postcode' => 'S1 4QT',
-                'countryCode' => 'CC',
-            ],
-            'licence' => 1,
-            'lva' => 'application'
+            'trafficArea' => 'TA',
         ];
         $command = Command::create($params);
 
+        $mockLicence = m::mock(\Dvsa\Olcs\Api\Entity\Licence\Licence::class)->makePartial();
+        $mockLicence->setId(210);
+
         $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class)->makePartial();
         $mockApplication->setId(323);
+        $mockApplication->setIsVariation(false);
+        $mockApplication->setLicence($mockLicence);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($mockApplication);
 
+        $this->mockedSmServices['TrafficAreaValidator']->shouldReceive('validateForSameTrafficAreas')
+            ->with($mockApplication, 'TA')->once()->andReturn(true);
+
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Transfer\Command\PrivateHireLicence\Update::class,
+            \Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea::class,
             [
-                'id' => 654,
-                'version' => 21,
-                'privateHireLicenceNo' => $params['privateHireLicenceNo'],
-                'councilName' => $params['councilName'],
-                'address' => $params['address'],
-                'licence' => 1,
-                'lva' => 'application'
+                'id' => 210,
+                'trafficArea' => 'TA',
             ],
             (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('UPDATE')
         );
@@ -82,5 +75,49 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
 
         $this->assertSame([], $response->getIds());
         $this->assertSame(['UPDATE', 'UPDATE_COMPLETION'], $response->getMessages());
+    }
+
+    public function testHandleCommandValidationError()
+    {
+        $params =[
+            'id' => 323,
+            'trafficArea' => 'TA',
+        ];
+        $command = Command::create($params);
+
+        $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class)->makePartial();
+        $mockApplication->setId(323);
+        $mockApplication->setIsVariation(false);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()
+            ->andReturn($mockApplication);
+
+        $this->mockedSmServices['TrafficAreaValidator']->shouldReceive('validateForSameTrafficAreas')
+            ->with($mockApplication, 'TA')->once()->andReturn(['KEY' => 'MESSAGE']);
+
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class, ['KEY' => 'MESSAGE']);
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandValidationErrorTaFromApplication()
+    {
+        $params =[
+            'id' => 323,
+        ];
+        $command = Command::create($params);
+
+        $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class)->makePartial();
+        $mockApplication->setId(323);
+        $mockApplication->setIsVariation(false);
+        $mockApplication->shouldReceive('getTrafficArea->getId')->with()->once()->andReturn('TA2');
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()
+            ->andReturn($mockApplication);
+
+        $this->mockedSmServices['TrafficAreaValidator']->shouldReceive('validateForSameTrafficAreas')
+            ->with($mockApplication, 'TA2')->once()->andReturn(['KEY' => 'MESSAGE']);
+
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class, ['KEY' => 'MESSAGE']);
+        $this->sut->handleCommand($command);
     }
 }

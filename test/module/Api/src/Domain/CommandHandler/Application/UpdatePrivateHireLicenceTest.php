@@ -2,17 +2,17 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PrivateHireLicence;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateTaxiPhv as CommandHandler;
-use Dvsa\Olcs\Transfer\Command\Application\CreateTaxiPhv as Command;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdatePrivateHireLicence as CommandHandler;
+use Dvsa\Olcs\Transfer\Command\Application\UpdatePrivateHireLicence as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 /**
- * CreateTaxiPhvTest
+ * UpdateTaxiPhvTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreateTaxiPhvTest extends CommandHandlerTestCase
+class UpdatePrivateHireLicenceTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
@@ -33,6 +33,8 @@ class CreateTaxiPhvTest extends CommandHandlerTestCase
     {
         $params =[
             'id' => 323,
+            'privateHireLicence' => 654,
+            'version' => 21,
             'privateHireLicenceNo' => 'TOPDOG 1',
             'councilName' => 'Leeds',
             'address' => [
@@ -44,13 +46,13 @@ class CreateTaxiPhvTest extends CommandHandlerTestCase
                 'postcode' => 'S1 4QT',
                 'countryCode' => 'CC',
             ],
+            'licence' => 1,
             'lva' => 'application'
         ];
         $command = Command::create($params);
 
         $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class)->makePartial();
         $mockApplication->setId(323);
-        $mockApplication->shouldReceive('getLicence->getId')->with()->once()->andReturn(534);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($mockApplication);
@@ -59,15 +61,17 @@ class CreateTaxiPhvTest extends CommandHandlerTestCase
             ->with($mockApplication, 'S1 4QT')->once()->andReturn(true);
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Transfer\Command\PrivateHireLicence\Create::class,
+            \Dvsa\Olcs\Transfer\Command\PrivateHireLicence\Update::class,
             [
-                'licence' => 534,
+                'id' => 654,
+                'version' => 21,
                 'privateHireLicenceNo' => $params['privateHireLicenceNo'],
                 'councilName' => $params['councilName'],
                 'address' => $params['address'],
+                'licence' => 1,
                 'lva' => 'application'
             ],
-            (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('CREATE')
+            (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('UPDATE')
         );
 
         $this->expectedSideEffect(
@@ -82,13 +86,15 @@ class CreateTaxiPhvTest extends CommandHandlerTestCase
         $response = $this->sut->handleCommand($command);
 
         $this->assertSame([], $response->getIds());
-        $this->assertSame(['CREATE', 'UPDATE_COMPLETION'], $response->getMessages());
+        $this->assertSame(['UPDATE', 'UPDATE_COMPLETION'], $response->getMessages());
     }
 
     public function testHandleCommandValidation()
     {
         $params =[
             'id' => 323,
+            'privateHireLicence' => 654,
+            'version' => 21,
             'privateHireLicenceNo' => 'TOPDOG 1',
             'councilName' => 'Leeds',
             'address' => [
@@ -100,17 +106,19 @@ class CreateTaxiPhvTest extends CommandHandlerTestCase
                 'postcode' => 'S1 4QT',
                 'countryCode' => 'CC',
             ],
+            'licence' => 1,
             'lva' => 'application'
         ];
         $command = Command::create($params);
 
         $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class)->makePartial();
+        $mockApplication->setId(323);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($mockApplication);
 
         $this->mockedSmServices['TrafficAreaValidator']->shouldReceive('validateForSameTrafficAreasWithPostcode')
-            ->with($mockApplication, 'S1 4QT')->once()->andReturn(['CODE' => 'MESSSAGE']);
+            ->with($mockApplication, 'S1 4QT')->once()->andReturn(['CODE' => 'MESSAGE']);
 
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
         $this->sut->handleCommand($command);
