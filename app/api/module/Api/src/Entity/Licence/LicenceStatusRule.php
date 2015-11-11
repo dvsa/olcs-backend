@@ -25,4 +25,14 @@ class LicenceStatusRule extends AbstractLicenceStatusRule
         $this->licence = $licence;
         $this->licenceStatus = $status;
     }
+
+    /**
+     * Is this licence rule queued to run, ie Is it scheduled to run in the future
+     *
+     * @return bool
+     */
+    public function isQueued()
+    {
+        return !empty($this->getStartDate()) && empty($this->getStartProcessedDate());
+    }
 }

@@ -103,7 +103,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      * @param RefData $revertStatus
      * @param RefData $subsidised
      * @param BusNoticePeriodEntity $busNoticePeriod
-     * @param string $isTxcApp
      *
      * @return BusReg
      */
@@ -331,6 +330,28 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     }
 
     /**
+     * Returns whether the record uses Scottish rules
+     *
+     * @return bool
+     */
+    public function isScottishRules()
+    {
+        return $this->busNoticePeriod->isScottishRules();
+    }
+
+    /**
+     * Returns whether a bus reg is read only based on status and variation.
+     * @note Ebsr is not checked (EBSR pages are often read only on the front end) - to check Ebsr use isFromEbsr()
+     *
+     * @return bool
+     */
+    public function isReadOnly()
+    {
+        return !$this->isLatestVariation() ||
+        in_array($this->status->getId(), [self::STATUS_REGISTERED, self::STATUS_CANCELLED]);
+    }
+
+    /**
      * Gets calculated values
      *
      * @return array
@@ -341,6 +362,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
             'licence' => null,
             'parent' => null,
             'isLatestVariation' => $this->isLatestVariation(),
+            'isReadOnly' => $this->isReadOnly(),
+            'isScottishRules' => $this->isScottishRules(),
+            'isFromEbsr' => $this->isFromEbsr(),
             'shortNotice' => null
         ];
     }
@@ -354,6 +378,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     {
         return [
             'isLatestVariation' => $this->isLatestVariation(),
+            'isReadOnly' => $this->isReadOnly(),
+            'isScottishRules' => $this->isScottishRules(),
+            'isFromEbsr' => $this->isFromEbsr()
         ];
     }
 
@@ -681,10 +708,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
             'applicationSigned'
         ];
 
-        if (!empty($this->busNoticePeriod)
-            && $this->busNoticePeriod->getId() == BusNoticePeriodEntity::NOTICE_PERIOD_SCOTLAND
-        ) {
-            // for Scottish registrations opNotifiedLaPte is required
+        if ($this->isShortNotice === 'Y' && $this->isScottishRules()) {
+            // for Scottish short notice registrations opNotifiedLaPte is required
             $yesFields[] = 'opNotifiedLaPte';
         }
 

@@ -19,4 +19,14 @@ class BusNoticePeriod extends AbstractBusNoticePeriod
 {
     const NOTICE_PERIOD_SCOTLAND = 1;
     const NOTICE_PERIOD_OTHER = 2;
+
+    /**
+     * Returns whether the notice period is scottish rules, usually called from the parent busReg
+     *
+     * @return bool
+     */
+    public function isScottishRules()
+    {
+        return $this->id === self::NOTICE_PERIOD_SCOTLAND;
+    }
 }

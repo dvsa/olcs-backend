@@ -229,11 +229,13 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         return $this->getApplications()->matching($criteria);
     }
 
-    /**
-     * This method is possibly depricated by getCalculatedBundleValues
-     *
-     * @return array
-     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'niFlag' => $this->getNiFlag()
+        ];
+    }
+
     public function getCalculatedValues()
     {
         return $this->getCalculatedBundleValues();
@@ -652,16 +654,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface
     }
 
     /**
-     * @return array
-     */
-    public function getCalculatedBundleValues()
-    {
-        return [
-            'niFlag' => $this->getNiFlag(),
-        ];
-    }
-
-    /**
      * Returns the latest publication by type from a licence
      * @param $type
      * @return mixed
@@ -722,5 +714,24 @@ class Licence extends AbstractLicence implements ContextProviderInterface
     {
         $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('isVariation', true));
         return $this->getApplications()->matching($criteria);
+    }
+
+    /**
+     * Has this licence got a queued/scheduled revocation
+     *
+     * @return bool
+     */
+    public function hasQueuedRevocation()
+    {
+        foreach ($this->getLicenceStatusRules() as $licenceStatusRule) {
+            /* @var $licenceStatusRule LicenceStatusRule */
+            if ($licenceStatusRule->getLicenceStatus()->getId() === Licence::LICENCE_STATUS_REVOKED &&
+                $licenceStatusRule->isQueued()
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

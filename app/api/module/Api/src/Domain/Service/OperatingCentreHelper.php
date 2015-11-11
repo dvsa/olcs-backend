@@ -63,6 +63,11 @@ class OperatingCentreHelper implements FactoryInterface
     protected $adminAreaTrafficAreaRepo;
 
     /**
+     * @var \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator
+     */
+    private $trafficAreaValidator;
+
+    /**
      * @var DocRepo
      */
     protected $docRepo;
@@ -71,6 +76,7 @@ class OperatingCentreHelper implements FactoryInterface
     {
         $this->addressService = $serviceLocator->get('AddressService');
         $this->adminAreaTrafficAreaRepo = $serviceLocator->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
+        $this->trafficAreaValidator = $serviceLocator->get('TrafficAreaValidator');
 
         $this->docRepo = $serviceLocator->get('RepositoryServiceManager')->get('Document');
 
@@ -152,15 +158,28 @@ class OperatingCentreHelper implements FactoryInterface
             return;
         }
 
-        // If we are GB and don't have a TA then we can skip
-        if ($entity->getNiFlag() === 'N' && $entity->getTrafficArea() === null) {
-            return;
-        }
-
         $trafficArea = $this->fetchTrafficAreaByPostcode($address['postcode']);
 
         // If we can't match the postcode to a TA, then we can skip
         if ($trafficArea === null) {
+            return;
+        }
+
+        // if new application check not other application/licences in this traffic area
+        if ($entity instanceof Application && $entity->isNew()) {
+            // validate
+            $message = $this->trafficAreaValidator->validateForSameTrafficAreas($entity, $trafficArea->getId());
+            if (is_array($message)) {
+                $this->addMessage(
+                    'postcode',
+                    key($message),
+                    current($message)
+                );
+            }
+        }
+
+        // If we are GB and don't have a TA then we can skip
+        if ($entity->getNiFlag() === 'N' && $entity->getTrafficArea() === null) {
             return;
         }
 
