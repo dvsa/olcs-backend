@@ -171,6 +171,32 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Set a SystemParameter
+     *
+     * @return ConsoleModel
+     */
+    public function setSystemParameterAction()
+    {
+        $name = $this->params('name');
+        $value = $this->params('value');
+
+        $dto = Command\SystemParameter\Update::create(
+            [
+                'id' => $name,
+                'value' => $value,
+            ]
+        );
+
+        $result = $this->handleCommand([$dto]);
+
+        if ($result === 404) {
+            $this->writeMessages("SystemParameter with name '{$name}' was not found.");
+        }
+
+        return $this->handleExitStatus($result);
+    }
+
+    /**
      * @return boolean
      */
     private function isVerbose()

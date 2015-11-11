@@ -851,4 +851,6 @@ return [
     // Transfer - CPMS
     TransferCommand\Cpms\RequestReport::class => CommandHandler\Cpms\RequestReport::class,
     TransferCommand\Cpms\DownloadReport::class => CommandHandler\Cpms\DownloadReport::class,
+
+    Command\SystemParameter\Update::class => CommandHandler\SystemParameter\Update::class,
 ];

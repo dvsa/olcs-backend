@@ -89,6 +89,15 @@ return [
                         ],
                     ],
                 ],
+                'system-parameter' => [
+                    'options' => [
+                        'route' => 'system-parameter <name> <value> [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'setSystemParameter'
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
