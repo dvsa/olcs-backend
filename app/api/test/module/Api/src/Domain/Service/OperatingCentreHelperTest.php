@@ -43,11 +43,14 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
     protected $documentRepo;
 
+    protected $trafficAreaValidator;
+
     public function setUp()
     {
         $this->addressService = m::mock();
         $this->adminAreaTrafficAreaRepo = m::mock();
         $this->documentRepo = m::mock();
+        $this->trafficAreaValidator = m::mock();
 
         $sm = m::mock(ServiceLocatorInterface::class);
         $sm->shouldReceive('get')
@@ -62,7 +65,10 @@ class OperatingCentreHelperTest extends MockeryTestCase
             ->andReturn($this->adminAreaTrafficAreaRepo)
             ->shouldReceive('get')
             ->with('Document')
-            ->andReturn($this->documentRepo);
+            ->andReturn($this->documentRepo)
+            ->shouldReceive('get')
+            ->with('TrafficAreaValidator')
+            ->andReturn($this->trafficAreaValidator);
 
         $this->sut = new OperatingCentreHelper();
         $this->sut->createService($sm);
@@ -195,14 +201,48 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         /** @var Application $entity */
         $entity = m::mock(Application::class)->makePartial();
+        $entity->setIsVariation(true);
         $entity->setNiFlag('N');
         $entity->shouldReceive('getTrafficArea')->andReturn(null);
 
         $command = CreateOperatingCentre::create($commandData);
 
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+            ->andReturn('FOO');
+
         $this->sut->validateTrafficArea($entity, $command);
 
         $this->assertEquals([], $this->sut->getMessages());
+    }
+
+    public function testValidateTrafficAreaValidaetSameTrafficAreas()
+    {
+        $commandData = [
+            'address' => [
+                'postcode' => 'AA11AAA'
+            ]
+        ];
+
+        $trafficArea = m::mock();
+        $trafficArea->shouldReceive('getId')->andReturn('TA');
+
+        /** @var Application $entity */
+        $entity = m::mock(Application::class)->makePartial();
+        $entity->shouldReceive('getTrafficArea')->andReturn($trafficArea);
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+            ->andReturn($trafficArea);
+
+        $this->trafficAreaValidator->shouldReceive('validateForSameTrafficAreas')
+            ->with($entity, 'TA')->andReturn(['CODE' => 'MESSAGE']);
+
+        $this->sut->validateTrafficArea($entity, $command);
+
+        $this->assertEquals(['postcode' => [['CODE' => 'MESSAGE']]], $this->sut->getMessages());
     }
 
     public function testValidateTrafficAreaWithPostcodeGbWithTaWithoutMatchingPostcode()
@@ -221,8 +261,6 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         /** @var Application $entity */
         $entity = m::mock(Application::class)->makePartial();
-        $entity->setNiFlag('N');
-        $entity->shouldReceive('getTrafficArea')->once()->andReturn($ta);
 
         $command = CreateOperatingCentre::create($commandData);
 
@@ -251,6 +289,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         /** @var Application $entity */
         $entity = m::mock(Application::class)->makePartial();
+        $entity->setIsVariation(true);
         $entity->setNiFlag('N');
         $entity->shouldReceive('getTrafficArea')->andReturn($ta);
 
@@ -285,6 +324,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         /** @var Application $entity */
         $entity = m::mock(Application::class)->makePartial();
+        $entity->setIsVariation(true);
         $entity->setNiFlag('N');
         $entity->shouldReceive('getTrafficArea')->andReturn($ta);
 
@@ -309,6 +349,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         /** @var Application $entity */
         $entity = m::mock(Application::class)->makePartial();
+        $entity->setIsVariation(true);
         $entity->setNiFlag('Y');
 
         $command = CreateOperatingCentre::create($commandData);
@@ -335,6 +376,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         /** @var Application $entity */
         $entity = m::mock(Application::class)->makePartial();
+        $entity->setIsVariation(true);
         $entity->setNiFlag('Y');
 
         $command = CreateOperatingCentre::create($commandData);
@@ -361,6 +403,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         /** @var Application $entity */
         $entity = m::mock(Application::class)->makePartial();
+        $entity->setIsVariation(true);
         $entity->setNiFlag('Y');
 
         $command = CreateOperatingCentre::create($commandData);

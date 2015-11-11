@@ -7,14 +7,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use \Dvsa\Olcs\Transfer\Command\Application\CreateTaxiPhv as Command;
+use Dvsa\Olcs\Transfer\Command\Application\UpdatePrivateHireLicence as Command;
 
 /**
- * Create TaxiPhv
+ * UpdatePrivateHireLicence
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class CreateTaxiPhv extends AbstractCommandHandler implements TransactionedInterface
+final class UpdatePrivateHireLicence extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
 
@@ -52,7 +52,7 @@ final class CreateTaxiPhv extends AbstractCommandHandler implements Transactione
         }
 
         $result = new Result();
-        $result->merge($this->createPrivateHireLicence($application, $command));
+        $result->merge($this->updatePrivateHireLicence($command));
         $result->merge($this->updateApplicationCompletion($application));
 
         return $result;
@@ -66,17 +66,19 @@ final class CreateTaxiPhv extends AbstractCommandHandler implements Transactione
      *
      * @return Result
      */
-    private function createPrivateHireLicence(Application $application, Command $command)
+    private function updatePrivateHireLicence(Command $command)
     {
         $data = [
-            'licence' => $application->getLicence()->getId(),
-            'lva' => $command->getLva(),
+            'id' => $command->getPrivateHireLicence(),
+            'version' => $command->getVersion(),
             'privateHireLicenceNo' => $command->getPrivateHireLicenceNo(),
             'councilName' => $command->getCouncilName(),
             'address' => $command->getAddress(),
+            'licence' => $command->getLicence(),
+            'lva' => $command->getLva()
         ];
 
-        return $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\PrivateHireLicence\Create::create($data));
+        return $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\PrivateHireLicence\Update::create($data));
     }
 
     /**
