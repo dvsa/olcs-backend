@@ -85,7 +85,7 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ->with('category', 'subCategory')
             ->andReturn($mockFinancialDocuments)
             ->once()
-            ->shouldReceive('jsonSerialize')
+            ->shouldReceive('serialize')
             ->andReturn(['id' => $applicationId])
             ->once()
             ->shouldReceive('getLicenceType')
@@ -146,11 +146,13 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             'documents' => ['DOCUMENTS'],
             'financialEvidence' => [
                 'requiredFinance' => $totalRequired,
-                'vehicles' => 9,
                 'standardFirst' => 7000,
                 'standardAdditional' => 3900,
                 'restrictedFirst' => 3100,
                 'restrictedAdditional' => 1700,
+                'applicationVehicles' => 3,
+                'otherLicenceVehicles' => 4,
+                'otherApplicationVehicles' => 2,
             ]
         ];
 
@@ -196,8 +198,9 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
     {
         $values = [
             // id, category, type, vehicle auth, status
-            [111, 'lcat_gv', 'ltyp_sn', 3, Application::APPLICATION_STATUS_NOT_SUBMITTED], // shouldn't double-count
-            [112, 'lcat_gv', 'ltyp_sn', 2, Application::APPLICATION_STATUS_UNDER_CONSIDERATION],
+            [111, 'lcat_gv', 'ltyp_sn', 3, Application::APPLICATION_STATUS_NOT_SUBMITTED, 0], // shouldn't double-count
+            [112, 'lcat_gv', 'ltyp_sn', 2, Application::APPLICATION_STATUS_UNDER_CONSIDERATION, 0],
+            [113, 'lcat_gv', 'ltyp_sn', 9, Application::APPLICATION_STATUS_UNDER_CONSIDERATION, 1], // variation
         ];
 
         return array_map(
@@ -218,6 +221,10 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
                 $mockApplication
                     ->shouldReceive('getStatus->getId')
                     ->andReturn($value[4]);
+
+                $mockApplication
+                    ->shouldReceive('isVariation')
+                    ->andReturn($value[5]);
 
                 return $mockApplication;
             },
