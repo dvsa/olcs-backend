@@ -19,7 +19,8 @@ class PaginatedRegistrationHistoryListTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = m::mock(PaginatedRegistrationHistoryList::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->sut = m::mock(PaginatedRegistrationHistoryList::class)
+            ->makePartial()->shouldAllowMockingProtectedMethods();
         $this->mockRepo('Bus', BusRepo::class);
 
         parent::setUp();
