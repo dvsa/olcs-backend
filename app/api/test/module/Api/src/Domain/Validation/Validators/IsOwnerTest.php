@@ -7,18 +7,16 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
-use Dvsa\Olcs\Api\Entity\User\User;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Validators\IsOwner;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Is Owner Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class IsOwnerTest extends MockeryTestCase
+class IsOwnerTest extends AbstractValidatorsTestCase
 {
     /**
      * @var IsOwner
@@ -28,19 +26,22 @@ class IsOwnerTest extends MockeryTestCase
     public function setUp()
     {
         $this->sut = new IsOwner();
+
+        parent::setUp();
     }
 
     public function testIsValidTrue()
     {
         $organisation = m::mock();
 
+        /** @var OrganisationProviderInterface $orgProvider */
         $orgProvider = m::mock(OrganisationProviderInterface::class);
         $orgProvider->shouldReceive('getRelatedOrganisation')->andReturn($organisation);
 
-        $user = m::mock(User::class);
+        $user = $this->mockUser();
         $user->shouldReceive('getRelatedOrganisation')->andReturn($organisation);
 
-        $this->assertEquals(true, $this->sut->isValid($orgProvider, $user));
+        $this->assertEquals(true, $this->sut->isValid($orgProvider));
     }
 
     public function testIsValidFalse()
@@ -48,12 +49,13 @@ class IsOwnerTest extends MockeryTestCase
         $organisation1 = m::mock();
         $organisation2 = m::mock();
 
+        /** @var OrganisationProviderInterface $orgProvider */
         $orgProvider = m::mock(OrganisationProviderInterface::class);
         $orgProvider->shouldReceive('getRelatedOrganisation')->andReturn($organisation1);
 
-        $user = m::mock(User::class);
+        $user = $this->mockUser();
         $user->shouldReceive('getRelatedOrganisation')->andReturn($organisation2);
 
-        $this->assertEquals(false, $this->sut->isValid($orgProvider, $user));
+        $this->assertEquals(false, $this->sut->isValid($orgProvider));
     }
 }
