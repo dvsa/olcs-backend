@@ -93,9 +93,9 @@ class FinancialStandingHelperService implements FactoryInterface
             if (!$foundHigher && $auth['count']>0) {
                 $firstVehicleCharge = $this->getFirstVehicleRate($auth['type'], $auth['category']);
                 $firstVehicleKey = $key;
-            }
-            if (in_array($auth['type'], $higherChargeTypes)) {
-                $foundHigher = true;
+                if (in_array($auth['type'], $higherChargeTypes)) {
+                    $foundHigher = true;
+                }
             }
         }
 

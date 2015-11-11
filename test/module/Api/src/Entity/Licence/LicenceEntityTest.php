@@ -841,4 +841,26 @@ class LicenceEntityTest extends EntityTester
 
         return $refData;
     }
+
+    public function testGetCalculatedBundleValues()
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getNiFlag')->andReturn('Y');
+
+        $result = $licence->getCalculatedBundleValues();
+
+        $expected = [
+            'niFlag' => 'Y',
+        ];
+
+        $this->assertSame($expected, $result);
+    }
+
+    public function testGetCalculatedValues()
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getNiFlag')->andReturn('Y');
+
+        $this->assertSame($licence->getCalculatedBundleValues(), $licence->getCalculatedValues());
+    }
 }

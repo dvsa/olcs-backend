@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\View\BusRegSearchView as Entity;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as ListQueryObject;
 use Doctrine\ORM\QueryBuilder;
@@ -63,5 +64,31 @@ class BusRegSearchView extends AbstractRepository
                 ->setParameter('status', $query->getStatus());
         }
 
+    }
+
+    /**
+     * Get Active Bus Regs
+     *
+     * @param int|\Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     *
+     * @return array
+     */
+    public function fetchActiveByLicence($licence)
+    {
+        $activeStatuses = [
+            BusReg::STATUS_NEW,
+            BusReg::STATUS_VAR,
+            BusReg::STATUS_REGISTERED,
+            BusReg::STATUS_CANCEL,
+        ];
+
+        $dqb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($dqb);
+        $dqb->where($dqb->expr()->eq($this->alias .'.licId', ':licence'))
+            ->setParameter('licence', $licence);
+        $dqb->andWhere($dqb->expr()->in($this->alias .'.busRegStatus', ':activeStatuses'))
+            ->setParameter('activeStatuses', $activeStatuses);
+
+        return $dqb->getQuery()->getResult();
     }
 }
