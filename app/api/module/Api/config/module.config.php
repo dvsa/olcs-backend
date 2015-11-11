@@ -51,6 +51,7 @@ return [
             'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperServiceFactory::class,
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
             'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
+            'CompaniesHouseService' => \Dvsa\Olcs\Api\Service\CompaniesHouseService::class,
 
             \Dvsa\Olcs\Api\Service\Publication\PublicationGenerator::class =>
                 \Dvsa\Olcs\Api\Service\Publication\PublicationGeneratorFactory::class,
