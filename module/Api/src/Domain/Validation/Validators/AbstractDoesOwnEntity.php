@@ -17,7 +17,9 @@ use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareTrait;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractDoesOwnEntity extends AbstractValidator implements AuthAwareInterface, RepositoryManagerAwareInterface
+abstract class AbstractDoesOwnEntity extends AbstractValidator implements
+    AuthAwareInterface,
+    RepositoryManagerAwareInterface
 {
     use AuthAwareTrait,
         RepositoryManagerAwareTrait;

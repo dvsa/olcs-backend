@@ -1,36 +1,36 @@
 <?php
 
 /**
- * Company Subsidiary Test
+ * Update Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\CompanySubsidiary;
+namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\CompanySubsidiary\Application;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\CompanySubsidiary\CompanySubsidiary;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\CompanySubsidiary\Application\Update;
 use Zend\ServiceManager\ServiceManager;
-use Dvsa\Olcs\Transfer\Query\CompanySubsidiary\CompanySubsidiary as Qry;
+use Dvsa\Olcs\Transfer\Command\Application\UpdateCompanySubsidiary as Cmd;
 
 /**
- * Company Subsidiary Test
+ * Update Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CompanySubsidiaryTest extends AbstractHandlerTestCase
+class UpdateTest extends AbstractHandlerTestCase
 {
     /**
-     * @var CompanySubsidiary
+     * @var Update
      */
     protected $sut;
 
     public function setUp()
     {
-        $this->sut = new CompanySubsidiary();
+        $this->sut = new Update();
 
         parent::setUp();
     }
@@ -41,11 +41,10 @@ class CompanySubsidiaryTest extends AbstractHandlerTestCase
     public function testIsValidNoContext($isInternal, $expected)
     {
         $data = [
-            'application' => null,
-            'licence' => null
+            'application' => null
         ];
 
-        $dto = Qry::create($data);
+        $dto = Cmd::create($data);
 
         $this->setIsGranted(Permission::INTERNAL_USER, $isInternal);
 
@@ -56,21 +55,13 @@ class CompanySubsidiaryTest extends AbstractHandlerTestCase
     {
         $data = [
             'id' => 111,
-            'application' => 222,
-            'licence' => null
+            'application' => 222
         ];
 
-        $dto = Qry::create($data);
-
-        $companySubsidiary = m::mock(\Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary::class);
-
-        $mockCsRepo = $this->mockRepo('CompanySubsidiary');
-        $mockCsRepo->shouldReceive('fetchUsingId')->with($dto)->andReturn($companySubsidiary);
-
-        $user = $this->mockUser();
+        $dto = Cmd::create($data);
 
         $this->setIsGranted(Permission::INTERNAL_USER, false);
-        $this->setIsValid('isOwner', [$companySubsidiary, $user], false);
+        $this->setIsValid('doesOwnCompanySubsidiary', [111], false);
 
         $this->assertEquals(false, $this->sut->isValid($dto));
     }
@@ -82,71 +73,57 @@ class CompanySubsidiaryTest extends AbstractHandlerTestCase
     {
         $data = [
             'id' => 111,
-            'application' => null,
-            'licence' => 222
+            'application' => 222
         ];
 
-        $dto = Qry::create($data);
+        $dto = Cmd::create($data);
 
-        $licence = m::mock(Licence::class);
+        $licence = $this->getLicenceFromApplication();
 
         $companySubsidiary = m::mock(\Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary::class);
         $companySubsidiary->shouldReceive('getLicence')->andReturn($licence);
 
         $mockCsRepo = $this->mockRepo('CompanySubsidiary');
-        $mockCsRepo->shouldReceive('fetchUsingId')->with($dto)->andReturn($companySubsidiary);
-
-        $mockLicenceRepo = $this->mockRepo('Licence');
-        $mockLicenceRepo->shouldReceive('fetchById')->with(222)->andReturn($licence);
-
-        $user = $this->mockUser();
+        $mockCsRepo->shouldReceive('fetchByIds')->with([111])->andReturn([$companySubsidiary]);
 
         $this->setIsGranted(Permission::INTERNAL_USER, $isInternal);
-        $this->setIsValid('isOwner', [$companySubsidiary, $user], $isOwner);
+        $this->setIsValid('doesOwnCompanySubsidiary', [111], $isOwner);
 
         $this->assertEquals(true, $this->sut->isValid($dto));
     }
 
-    /**
-     * @dataProvider licenceProviderProvider
-     */
-    public function testIsValidWithContextAndOwnershipWithMatching($application, $licence, $provider)
+    public function testIsValidWithContextAndOwnershipWithMatching()
     {
         $data = [
             'id' => 111,
-            'application' => $application,
-            'licence' => $licence
+            'application' => 222
         ];
 
-        $dto = Qry::create($data);
+        $dto = Cmd::create($data);
 
-        $licence = $this->$provider();
+        $licence = $this->getLicenceFromApplication();
 
         $companySubsidiary = m::mock(\Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary::class);
         $companySubsidiary->shouldReceive('getLicence')->andReturn($licence);
 
         $mockCsRepo = $this->mockRepo('CompanySubsidiary');
-        $mockCsRepo->shouldReceive('fetchUsingId')->with($dto)->andReturn($companySubsidiary);
+        $mockCsRepo->shouldReceive('fetchByIds')->with([111])->andReturn([$companySubsidiary]);
 
         $this->setIsGranted(Permission::INTERNAL_USER, true);
 
         $this->assertEquals(true, $this->sut->isValid($dto));
     }
 
-    /**
-     * @dataProvider licenceProviderProvider
-     */
-    public function testIsValidWithContextAndOwnershipWithoutMatching($application, $licence, $provider)
+    public function testIsValidWithContextAndOwnershipWithoutMatching()
     {
         $data = [
             'id' => 111,
-            'application' => $application,
-            'licence' => $licence
+            'application' => 222
         ];
 
-        $dto = Qry::create($data);
+        $dto = Cmd::create($data);
 
-        $this->$provider();
+        $this->getLicenceFromApplication();
 
         $licence = m::mock(Licence::class);
 
@@ -154,19 +131,11 @@ class CompanySubsidiaryTest extends AbstractHandlerTestCase
         $companySubsidiary->shouldReceive('getLicence')->andReturn($licence);
 
         $mockCsRepo = $this->mockRepo('CompanySubsidiary');
-        $mockCsRepo->shouldReceive('fetchUsingId')->with($dto)->andReturn($companySubsidiary);
+        $mockCsRepo->shouldReceive('fetchByIds')->with([111])->andReturn([$companySubsidiary]);
 
         $this->setIsGranted(Permission::INTERNAL_USER, true);
 
         $this->assertEquals(false, $this->sut->isValid($dto));
-    }
-
-    public function licenceProviderProvider()
-    {
-        return [
-            [222, null, 'getLicenceFromApplication'],
-            [null, 222, 'getLicenceFromLicence']
-        ];
     }
 
     public function getLicenceFromApplication()
@@ -178,16 +147,6 @@ class CompanySubsidiaryTest extends AbstractHandlerTestCase
 
         $mockApplicationRepo = $this->mockRepo('Application');
         $mockApplicationRepo->shouldReceive('fetchById')->with(222)->andReturn($application);
-
-        return $licence;
-    }
-
-    public function getLicenceFromLicence()
-    {
-        $licence = m::mock(Licence::class);
-
-        $mockLicenceRepo = $this->mockRepo('Licence');
-        $mockLicenceRepo->shouldReceive('fetchById')->with(222)->andReturn($licence);
 
         return $licence;
     }
