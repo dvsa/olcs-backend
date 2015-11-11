@@ -846,11 +846,18 @@ class LicenceEntityTest extends EntityTester
     {
         $licence = m::mock(Entity::class)->makePartial();
         $licence->shouldReceive('getNiFlag')->andReturn('Y');
+        $licence->shouldReceive('getActiveCommunityLicences')
+            ->andReturn(new \Doctrine\Common\Collections\ArrayCollection());
+        $licence->shouldReceive('getActiveBusRoutes')
+            ->andReturn(false);
+        $licence->shouldReceive('getActiveVariations')
+            ->andReturn(false);
 
         $result = $licence->getCalculatedBundleValues();
 
         $expected = [
-            'niFlag' => 'Y',
+            'suitableForDecisions' => true,
+            'niFlag' => 'Y'
         ];
 
         $this->assertSame($expected, $result);
@@ -860,6 +867,12 @@ class LicenceEntityTest extends EntityTester
     {
         $licence = m::mock(Entity::class)->makePartial();
         $licence->shouldReceive('getNiFlag')->andReturn('Y');
+        $licence->shouldReceive('getActiveCommunityLicences')
+            ->andReturn(new \Doctrine\Common\Collections\ArrayCollection());
+        $licence->shouldReceive('getActiveBusRoutes')
+            ->andReturn(false);
+        $licence->shouldReceive('getActiveVariations')
+            ->andReturn(false);
 
         $this->assertSame($licence->getCalculatedBundleValues(), $licence->getCalculatedValues());
     }
