@@ -271,4 +271,53 @@ class BatchControllerTest extends TestCase
 
         $this->sut->continuationNotSoughtAction();
     }
+
+    public function testSetSystemParameter()
+    {
+        $mockConsole = m::mock(AdapterInterface::class);
+        $mockConsole->shouldReceive('writeLine');
+        $this->sut->setConsole($mockConsole);
+
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn('NAME', 'VALUE');
+
+        $mockCommandHandler = m::mock();
+        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
+
+        $mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\SystemParameter\Update::class))
+            ->once()
+            ->andReturnUsing(
+                function ($dto) {
+                    $this->assertSame('NAME', $dto->getId());
+                    $this->assertSame('VALUE', $dto->getValue());
+
+                    return new Command\Result();
+                }
+            );
+
+        $response = $this->sut->setSystemParameterAction();
+        $this->assertSame(0, $response->getErrorLevel());
+    }
+
+    public function testSetSystemParameterMissing()
+    {
+        $mockConsole = m::mock(AdapterInterface::class);
+        $mockConsole->shouldReceive('writeLine');
+        $this->sut->setConsole($mockConsole);
+
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn('MISSING', 'VALUE');
+
+        $mockCommandHandler = m::mock();
+        $this->sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
+
+        $mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\SystemParameter\Update::class))
+            ->once()
+            ->andThrow(Exception\NotFoundException::class);
+
+        $response = $this->sut->setSystemParameterAction();
+        $this->assertSame(404, $response->getErrorLevel());
+    }
 }
