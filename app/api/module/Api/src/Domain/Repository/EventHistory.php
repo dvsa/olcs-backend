@@ -47,6 +47,11 @@ class EventHistory extends AbstractRepository
             $qb->setParameter('userId', $query->getUser());
         }
 
+        if ($query->getApplication() !== null) {
+            $qb->andWhere($this->alias . '.application = :applicationId');
+            $qb->setParameter('applicationId', $query->getApplication());
+        }
+
         $this->getQueryBuilder()->modifyQuery($qb)->with('eventHistoryType')->withUser();
     }
 
