@@ -7,9 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\RegistrationHistoryList as RegistrationHistoryListQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Transfer\Query\Bus\RegistrationHistoryList as QueryCmd;
 use Dvsa\Olcs\Api\Domain\Query\Bus\ByLicenceRoute as ByLicenceRouteQry;
-use Doctrine\ORM\Query;
 
 /**
  * Paginated Bus Registration History List
