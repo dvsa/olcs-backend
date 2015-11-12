@@ -60,42 +60,8 @@ final class CreateFee extends AbstractCommandHandler
 
         $fee = new Fee($feeType, $command->getAmount(), $feeStatus);
 
-        if ($command->getTask() !== null) {
-            $fee->setTask($this->getRepo()->getReference(Task::class, $command->getTask()));
-        }
-
-        if ($command->getLicence() !== null) {
-            $fee->setLicence($this->getRepo()->getReference(Licence::class, $command->getLicence()));
-        }
-
         if ($command->getInvoicedDate() !== null) {
             $fee->setInvoicedDate(new \DateTime($command->getInvoicedDate()));
-        }
-
-        if ($command->getIrfoGvPermit() !== null) {
-            $fee->setIrfoGvPermit($this->getRepo()->getReference(IrfoGvPermit::class, $command->getIrfoGvPermit()));
-        }
-
-        if ($command->getIrfoPsvAuth() !== null) {
-            $fee->setIrfoPsvAuth($this->getRepo()->getReference(IrfoPsvAuth::class, $command->getIrfoPsvAuth()));
-        }
-
-        if ($command->getApplication() !== null) {
-            $application = $this->getRepo()->getReference(Application::class, $command->getApplication());
-            $fee->setApplication($application);
-            if (!$fee->getLicence()) {
-                // if licence id wasn't specified, link the application's licence
-                $fee->setLicence($application->getLicence());
-            }
-        }
-
-        if ($command->getBusReg() !== null) {
-            $busReg = $this->getRepo()->getReference(BusReg::class, $command->getBusReg());
-            $fee->setBusReg($busReg);
-            if (!$fee->getLicence()) {
-                // if licence id wasn't specified, link the bus reg's licence
-                $fee->setLicence($busReg->getLicence());
-            }
         }
 
         if ($command->getUser() !== null) {
@@ -108,6 +74,13 @@ final class CreateFee extends AbstractCommandHandler
             $fee->setDescription($feeType->getDescription());
         }
 
+        $this->handleTaskLink($command, $fee);
+        $this->handleLicenceLink($command, $fee);
+        $this->handleIrfoGvPermitLink($command, $fee);
+        $this->handleIrfoPsvAuthLink($command, $fee);
+        $this->handleApplicationLink($command, $fee);
+        $this->handleBusRegLink($command, $fee);
+
         // if amount is null, we should use the amount from the feeType
         if (is_null($fee->getNetAmount())) {
             $fee->setNetAmount($feeType->getAmount());
@@ -117,6 +90,93 @@ final class CreateFee extends AbstractCommandHandler
         return $fee;
     }
 
+    /**
+     * @param Cmd $command
+     * @param Fee $fee
+     * @return null
+     */
+    private function handleTaskLink($command, $fee)
+    {
+        if ($command->getTask() !== null) {
+            $fee->setTask($this->getRepo()->getReference(Task::class, $command->getTask()));
+        }
+    }
+
+    /**
+     * @param Cmd $command
+     * @param Fee $fee
+     * @return null
+     */
+    private function handleLicenceLink($command, $fee)
+    {
+        if ($command->getLicence() !== null) {
+            $fee->setLicence($this->getRepo()->getReference(Licence::class, $command->getLicence()));
+        }
+    }
+
+    /**
+     * @param Cmd $command
+     * @param Fee $fee
+     * @return null
+     */
+    private function handleIrfoGvPermitLink($command, $fee)
+    {
+        if ($command->getIrfoGvPermit() !== null) {
+            $fee->setIrfoGvPermit($this->getRepo()->getReference(IrfoGvPermit::class, $command->getIrfoGvPermit()));
+        }
+    }
+
+    /**
+     * @param Cmd $command
+     * @param Fee $fee
+     * @return null
+     */
+    private function handleApplicationLink($command, $fee)
+    {
+        if ($command->getApplication() !== null) {
+            $application = $this->getRepo()->getReference(Application::class, $command->getApplication());
+            $fee->setApplication($application);
+            if (!$fee->getLicence()) {
+                // if licence id wasn't specified, link the application's licence
+                $fee->setLicence($application->getLicence());
+            }
+        }
+    }
+
+    /**
+     * @param Cmd $command
+     * @param Fee $fee
+     * @return null
+     */
+    private function handleBusRegLink($command, $fee)
+    {
+        if ($command->getBusReg() !== null) {
+            $busReg = $this->getRepo()->getReference(BusReg::class, $command->getBusReg());
+            $fee->setBusReg($busReg);
+            if (!$fee->getLicence()) {
+                // if licence id wasn't specified, link the bus reg's licence
+                $fee->setLicence($busReg->getLicence());
+            }
+        }
+    }
+
+    /**
+     * @param Cmd $command
+     * @param Fee $fee
+     * @return null
+     */
+    private function handleIrfoPsvAuthLink($command, $fee)
+    {
+        if ($command->getIrfoPsvAuth() !== null) {
+            $fee->setIrfoPsvAuth($this->getRepo()->getReference(IrfoPsvAuth::class, $command->getIrfoPsvAuth()));
+        }
+    }
+
+    /**
+     * @param Cmd $command
+     * @throws ValidationException
+     * @return bool
+     */
     public function validate(Cmd $command, $feeType)
     {
         if ($feeType->isMiscellaneous()) {
@@ -129,15 +189,7 @@ final class CreateFee extends AbstractCommandHandler
             return true;
         }
 
-        if (empty($command->getLicence())
-            && empty($command->getApplication())
-            && empty($command->getBusReg())
-            && empty($command->getTask())
-            && empty($command->getIrfoGvPermit())
-            && empty($command->getIrfoPsvAuth())
-        ) {
-            throw new ValidationException(['Fee must be linked to an entity']);
-        }
+        $this->validateLinkedEntity($command);
 
         if ($command->getIrfoGvPermit() && $command->getIrfoPsvAuth()) {
             $msg = 'Fee must be linked to a either GV Permit or PSV Authorisation but not both';
@@ -150,5 +202,21 @@ final class CreateFee extends AbstractCommandHandler
         }
 
         return true;
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    private function validateLinkedEntity(Cmd $command)
+    {
+        if (empty($command->getLicence())
+            && empty($command->getApplication())
+            && empty($command->getBusReg())
+            && empty($command->getTask())
+            && empty($command->getIrfoGvPermit())
+            && empty($command->getIrfoPsvAuth())
+        ) {
+            throw new ValidationException(['Fee must be linked to an entity']);
+        }
     }
 }

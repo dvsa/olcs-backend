@@ -309,9 +309,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param string $poNo Postal Order number
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
-     *
-     * @todo $payer appears to be no longer required, but retained to keep the
-     * interface the same as v1
      */
     public function recordPostalOrderPayment($fees, $amount, $receiptDate, $slipNo, $poNo)
     {
