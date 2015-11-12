@@ -36,13 +36,11 @@ class TxcInboxListTest extends QueryHandlerTestCase
     private function getCurrentUser()
     {
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
-        $mockUser->shouldReceive('getUser')
-            ->andReturnSelf();
 
         $mockUser->shouldReceive('getLocalAuthority')
             ->andReturnNull();
 
-        $mockUser->shouldReceive('getOrganisation')
+        $mockUser->shouldReceive('getRelatedOrganisation')
             ->andReturnNull();
 
         $organisationUsers = new ArrayCollection([$mockUser]);
@@ -63,7 +61,7 @@ class TxcInboxListTest extends QueryHandlerTestCase
 
         $organisation = m::mock(Organisation::class)->makePartial();
 
-        $mockUser->shouldReceive('getOrganisation')
+        $mockUser->shouldReceive('getRelatedOrganisation')
             ->andReturn($organisation);
 
         $organisationUsers = new ArrayCollection([$mockUser]);
@@ -78,8 +76,7 @@ class TxcInboxListTest extends QueryHandlerTestCase
         $query = Qry::create([]);
 
         $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
-            ->shouldReceive('getIdentity')
-            ->twice()
+            ->shouldReceive('getIdentity->getUser')
             ->andReturn($this->getCurrentUser());
 
         $mockResult = m::mock(TxcInboxEntity::class)->makePartial();

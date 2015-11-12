@@ -733,6 +733,7 @@ $map = [
     CommandHandler\Submission\DeleteSubmission::class => Handler\Standard::class, // @todo
     CommandHandler\Tm\UndoDisqualification::class => Handler\Standard::class, // @todo
     CommandHandler\SystemParameter\Update::class => Handler\Standard::class, // @todo
+    QueryHandler\Bus\PaginatedRegistrationHistoryList::class => Handler\Standard::class, // @todo
     QueryHandler\Team\Team::class => Handler\Standard::class, // @todo
     QueryHandler\Team\TeamList::class => Handler\Standard::class, // @todo
     CliCommandHandler\RemoveReadAudit::class => Handler\Standard::class, // @todo
