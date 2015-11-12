@@ -919,7 +919,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
      */
     private function calculateNoticeDate()
     {
-        $receivedDateTime = $this->receivedDate;
+        $receivedDateTime = $this->processDate($this->receivedDate);
 
         if (!($receivedDateTime instanceof \DateTime)) {
             return null;
@@ -935,7 +935,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
                 return null;
             }
 
-            $lastDateTime = $this->parent->getEffectiveDate();
+            $lastDateTime = $this->processDate($this->parent->getEffectiveDate());
             $interval = new \DateInterval('P' . $this->busNoticePeriod->getCancellationPeriod() . 'D');
 
             return $lastDateTime->add($interval);
