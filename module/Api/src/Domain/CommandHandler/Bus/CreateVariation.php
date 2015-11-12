@@ -11,6 +11,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Transfer\Command\Bus\CreateVariation as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateBusFeeCmd;
 
 /**
  * Create Variation
@@ -28,6 +29,8 @@ final class CreateVariation extends AbstractCommandHandler
         $result = new Result();
         $result->addId('bus', $bus->getId());
         $result->addMessage('Variation created successfully');
+
+        $result->merge($this->handleSideEffect(CreateBusFeeCmd::create(['id' => $bus->getId()])));
 
         return $result;
     }
