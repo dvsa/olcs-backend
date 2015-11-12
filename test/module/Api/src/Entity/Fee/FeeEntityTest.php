@@ -48,7 +48,7 @@ class FeeEntityTest extends EntityTester
         $fee = new Entity($type, $amount, $status);
 
         $this->assertSame($type, $fee->getFeeType());
-        $this->assertSame($amount, $fee->getAmount());
+        $this->assertSame($amount, $fee->getNetAmount());
         $this->assertSame($status, $fee->getFeeStatus());
     }
 
