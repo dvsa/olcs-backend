@@ -37,6 +37,13 @@ class ComplaintEntityTest extends EntityTester
         $this->assertEquals($expected, $sut->isOpen());
     }
 
+    public function testIsOpenWithoutStatus()
+    {
+        $sut = $this->instantiate($this->entityClass);
+
+        $this->assertFalse($sut->isOpen());
+    }
+
     public function isOpenProvider()
     {
         return [
