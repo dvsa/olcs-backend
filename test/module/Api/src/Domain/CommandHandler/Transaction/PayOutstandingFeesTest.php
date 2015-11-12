@@ -612,7 +612,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('recordCashPayment')
             ->once()
-            ->with([$fee1, $fee2], '100.00', '2015-06-17', 'Dan', '12345')
+            ->with([$fee1, $fee2], '100.00', '2015-06-17', '12345')
             ->andReturn(
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
@@ -855,7 +855,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('recordPostalOrderPayment')
             ->once()
-            ->with($fees, '99.99', '2015-06-17', 'Dan', '12345', '23456')
+            ->with($fees, '99.99', '2015-06-17', '12345', '23456')
             ->andReturn(
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,

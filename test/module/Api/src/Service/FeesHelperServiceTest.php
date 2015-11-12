@@ -89,8 +89,6 @@ class FeesHelperServiceTest extends MockeryTestCase
     {
         $applicationId = 69;
         $licenceId = 7;
-        $applicationFeeTypeId = 123;
-        $interimFeeTypeId = 234;
         $trafficAreaId = TrafficAreaEntity::NORTH_EASTERN_TRAFFIC_AREA_CODE;
 
         $applicationFee = $this->getStubFee(99, 99.99);

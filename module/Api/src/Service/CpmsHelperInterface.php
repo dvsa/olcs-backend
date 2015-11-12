@@ -69,12 +69,11 @@ interface CpmsHelperInterface
      * @param array $fees
      * @param float $amount
      * @param string|DateTime $receiptDate
-     * @param string $payer payer name
      * @param string $slipNo paying in slip number
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    public function recordCashPayment($fees, $amount, $receiptDate, $payer, $slipNo);
+    public function recordCashPayment($fees, $amount, $receiptDate, $slipNo);
 
     /**
      * Record a cheque payment in CPMS
@@ -97,13 +96,12 @@ interface CpmsHelperInterface
      * @param array $fees
      * @param float $amount
      * @param array $receiptDate (from DateSelect)
-     * @param string $payer payer name
      * @param string $slipNo paying in slip number
      * @param string $poNo Postal Order number
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    public function recordPostalOrderPayment($fees, $amount, $receiptDate, $payer, $slipNo, $poNo);
+    public function recordPostalOrderPayment($fees, $amount, $receiptDate, $slipNo, $poNo);
 
     /**
      * Get a list of available reports

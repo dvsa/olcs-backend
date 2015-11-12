@@ -250,7 +250,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                     $fees,
                     $command->getReceived(),
                     $command->getReceiptDate(),
-                    $command->getPayer(),
                     $command->getSlipNo()
                 );
                 break;
@@ -270,7 +269,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                     $fees,
                     $command->getReceived(),
                     $command->getReceiptDate(),
-                    $command->getPayer(),
                     $command->getSlipNo(),
                     $command->getPoNo()
                 );
