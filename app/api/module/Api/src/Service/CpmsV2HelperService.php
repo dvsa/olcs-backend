@@ -219,18 +219,12 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param array $fees
      * @param float $amount
      * @param string|DateTime $receiptDate
-     * @param string $payer payer name
      * @param string $slipNo paying in slip number
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
-     *
-     * @todo $payer appears to be no longer required, but retained to keep the
-     * interface the same as v1
      */
-    public function recordCashPayment($fees, $amount, $receiptDate, $payer, $slipNo)
+    public function recordCashPayment($fees, $amount, $receiptDate, $slipNo)
     {
-        unset($payer); // unused
-
         $method   = 'post';
         $endPoint = '/api/payment/cash';
         $scope    = ApiService::SCOPE_CASH;
@@ -311,7 +305,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param array $fees
      * @param float $amount
      * @param string $receiptDate (from DateSelect)
-     * @param string $payer payer name
      * @param string $slipNo paying in slip number
      * @param string $poNo Postal Order number
      * @return array CPMS response data
@@ -320,10 +313,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @todo $payer appears to be no longer required, but retained to keep the
      * interface the same as v1
      */
-    public function recordPostalOrderPayment($fees, $amount, $receiptDate, $payer, $slipNo, $poNo)
+    public function recordPostalOrderPayment($fees, $amount, $receiptDate, $slipNo, $poNo)
     {
-        unset($payer); // unused
-
         $method   = 'post';
         $endPoint = '/api/payment/postal-order';
         $scope    = ApiService::SCOPE_POSTAL_ORDER;
@@ -427,6 +418,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param Fee $fee
      * @return array
      * @throws CpmsResponseException if response is invalid
+     *
+     * @todo this is currently stubbed
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function batchRefund($fee)
     {
@@ -446,7 +440,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'payments' => $payments,
         ];
 
-        // @todo
         // $response = $this->send($method, $endPoint, $scope, $params);
         $response = $this->stubResponse($payments);
 
