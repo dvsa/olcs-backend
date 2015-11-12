@@ -41,6 +41,8 @@ return [
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
             'CommandHandlerManager' => \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::class,
             'QueryHandlerManager' => \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::class,
+            'ValidationHandlerManager' => \Dvsa\Olcs\Api\Domain\ValidationHandlerManagerFactory::class,
+            'DomainValidatorManager' => \Dvsa\Olcs\Api\Domain\ValidatorManagerFactory::class,
             'QueryPartialServiceManager' => \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::class,
             'RepositoryServiceManager' => \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::class,
             'QueryBuilder' => \Dvsa\Olcs\Api\Domain\QueryBuilderFactory::class,
@@ -106,6 +108,10 @@ return [
     \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
         'factories' => require(__DIR__ . '/query-map.config.php')
     ],
+    \Dvsa\Olcs\Api\Domain\ValidationHandlerManagerFactory::CONFIG_KEY => [
+        'factories' => require(__DIR__ . '/validation-map.config.php')
+    ],
+    \Dvsa\Olcs\Api\Domain\ValidatorManagerFactory::CONFIG_KEY => require(__DIR__ . '/validators.config.php'),
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
             'withApplication' => QueryPartial\WithApplicationFactory::class,

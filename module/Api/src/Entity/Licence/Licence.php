@@ -10,13 +10,12 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
@@ -46,7 +45,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
  *    }
  * )
  */
-class Licence extends AbstractLicence implements ContextProviderInterface
+class Licence extends AbstractLicence implements ContextProviderInterface, OrganisationProviderInterface
 {
     const ERROR_CANT_BE_SR = 'LIC-TOL-1';
     const ERROR_REQUIRES_VARIATION = 'LIC-REQ-VAR';
@@ -733,5 +732,10 @@ class Licence extends AbstractLicence implements ContextProviderInterface
         }
 
         return false;
+    }
+
+    public function getRelatedOrganisation()
+    {
+        return $this->getOrganisation();
     }
 }

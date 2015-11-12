@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark\Base;
 
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareTrait;
-use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 
 /**
  * Dynamic bookmark

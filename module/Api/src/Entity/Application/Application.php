@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
@@ -38,7 +39,7 @@ use Zend\Filter\Word\UnderscoreToCamelCase;
  *    }
  * )
  */
-class Application extends AbstractApplication implements ContextProviderInterface
+class Application extends AbstractApplication implements ContextProviderInterface, OrganisationProviderInterface
 {
     const ERROR_NI_NON_GOODS = 'AP-TOL-1';
     const ERROR_GV_NON_SR = 'AP-TOL-2';
@@ -1594,5 +1595,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return [
             'applicationReference' => $this->getApplicationReference()
         ];
+    }
+
+    public function getRelatedOrganisation()
+    {
+        return $this->getLicence()->getOrganisation();
     }
 }

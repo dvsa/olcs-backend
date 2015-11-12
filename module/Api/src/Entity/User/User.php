@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 
 /**
@@ -24,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
  *    }
  * )
  */
-class User extends AbstractUser
+class User extends AbstractUser implements OrganisationProviderInterface
 {
     const PERMISSION_ADMIN = 'admin';
     const PERMISSION_USER = 'user';
@@ -459,5 +460,10 @@ class User extends AbstractUser
         }
 
         return [];
+    }
+
+    public function getRelatedOrganisation()
+    {
+        return $this->getOrganisationUsers()->current()->getOrganisation();
     }
 }

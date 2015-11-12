@@ -33,4 +33,16 @@ class CompanySubsidiaryEntityTest extends EntityTester
         $this->assertEquals('123456789', $data['companyNo']);
         $this->assertNull($data['licence']);
     }
+
+    public function testGetRelatedOrganisation()
+    {
+        $org = m::mock();
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getOrganisation')->andReturn($org);
+
+        $entity = new Entity('Foo', '123456789', $licence);
+
+        $this->assertSame($org, $entity->getRelatedOrganisation());
+    }
 }
