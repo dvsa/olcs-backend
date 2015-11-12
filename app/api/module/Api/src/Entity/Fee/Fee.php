@@ -55,13 +55,15 @@ class Fee extends AbstractFee
     // CPMS enforces 'valid' postcodes :(
     const DEFAULT_POSTCODE = 'LS9 6NF';
 
-    public function __construct(FeeType $feeType, $amount, RefData $feeStatus)
+    public function __construct(FeeType $feeType, $netAmount, RefData $feeStatus)
     {
         parent::__construct();
 
         $this->feeType = $feeType;
-        $this->grossAmount = $amount;
+        $this->netAmount = $netAmount;
         $this->feeStatus = $feeStatus;
+
+        $this->setVatAndGrossAmountsFromNetAmountUsingRate($feeType->getVatRate());
     }
 
     /**
