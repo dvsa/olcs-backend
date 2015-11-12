@@ -486,4 +486,14 @@ class Fee extends AbstractFee
 
         return $feeTransactions;
     }
+
+    /**
+     * Backwards compatibility
+     *
+     * @return float
+     */
+    public function getAmount()
+    {
+        return $this->getNetAmount();
+    }
 }
