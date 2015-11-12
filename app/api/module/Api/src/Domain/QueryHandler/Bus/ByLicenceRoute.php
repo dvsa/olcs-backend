@@ -19,10 +19,10 @@ class ByLicenceRoute extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         return [
-            'Results' => $this->resultList(
+            'results' => $this->resultList(
                 $this->getRepo()->fetchList($query, Query::HYDRATE_OBJECT)
             ),
-            'Count' => $this->getRepo()->fetchCount($query)
+            'count' => $this->getRepo()->fetchCount($query)
         ];
     }
 }
