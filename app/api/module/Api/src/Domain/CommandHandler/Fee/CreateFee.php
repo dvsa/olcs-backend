@@ -131,6 +131,18 @@ final class CreateFee extends AbstractCommandHandler
      * @param Fee $fee
      * @return null
      */
+    private function handleIrfoPsvAuthLink($command, $fee)
+    {
+        if ($command->getIrfoPsvAuth() !== null) {
+            $fee->setIrfoPsvAuth($this->getRepo()->getReference(IrfoPsvAuth::class, $command->getIrfoPsvAuth()));
+        }
+    }
+
+    /**
+     * @param Cmd $command
+     * @param Fee $fee
+     * @return null
+     */
     private function handleApplicationLink($command, $fee)
     {
         if ($command->getApplication() !== null) {
@@ -157,18 +169,6 @@ final class CreateFee extends AbstractCommandHandler
                 // if licence id wasn't specified, link the bus reg's licence
                 $fee->setLicence($busReg->getLicence());
             }
-        }
-    }
-
-    /**
-     * @param Cmd $command
-     * @param Fee $fee
-     * @return null
-     */
-    private function handleIrfoPsvAuthLink($command, $fee)
-    {
-        if ($command->getIrfoPsvAuth() !== null) {
-            $fee->setIrfoPsvAuth($this->getRepo()->getReference(IrfoPsvAuth::class, $command->getIrfoPsvAuth()));
         }
     }
 

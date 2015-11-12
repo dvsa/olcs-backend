@@ -16,6 +16,8 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\User\User;
@@ -60,6 +62,12 @@ class CreateFeeTest extends CommandHandlerTestCase
             BusReg::class => [
                 44 => m::mock(BusReg::class)
             ],
+            IrfoGvPermit::class => [
+                55 => m::mock(IrfoGvPermit::class)
+            ],
+            IrfoPsvAuth::class => [
+                66 => m::mock(IrfoPsvAuth::class)
+            ],
             User::class => [
                 1 => m::mock(User::class)
             ],
@@ -87,7 +95,9 @@ class CreateFeeTest extends CommandHandlerTestCase
             ->shouldReceive('isMiscellaneous')
             ->andReturn(false)
             ->shouldReceive('isAdjustment')
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('getDescription')
+            ->andReturn('some fee type');
 
         /** @var FeeEntity $savedFee */
         $savedFee = null;
@@ -134,14 +144,16 @@ class CreateFeeTest extends CommandHandlerTestCase
     public function testHandleCommandForApplicationFee()
     {
         $data = [
-            'feeType' => 101,
+            'feeType' => 99,
             'application' => 22,
             'invoicedDate' => '2015-01-01',
         ];
 
-        $this->mapReference(FeeType::class, 101)
+        $this->mapReference(FeeType::class, 99)
             ->shouldReceive('isMiscellaneous')
-            ->andReturn(true)
+            ->andReturn(false)
+            ->shouldReceive('isAdjustment')
+            ->andReturn(false)
             ->shouldReceive('getDescription')
             ->andReturn('some fee type')
             ->shouldReceive('getAmount')
@@ -178,7 +190,6 @@ class CreateFeeTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
 
-        $this->assertEquals('some fee type', $savedFee->getDescription());
         $this->assertEquals('2015-01-01', $savedFee->getInvoicedDate()->format('Y-m-d'));
         $this->assertSame($this->references[Licence::class][33], $savedFee->getLicence());
         $this->assertSame($this->references[Application::class][22], $savedFee->getApplication());
@@ -186,20 +197,22 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->assertEquals('123.45', $savedFee->getGrossAmount());
         $this->assertEquals(0, $savedFee->getVatAmount());
         $this->assertSame($this->refData[FeeEntity::STATUS_OUTSTANDING], $savedFee->getFeeStatus());
-        $this->assertSame($this->references[FeeType::class][101], $savedFee->getFeeType());
+        $this->assertSame($this->references[FeeType::class][99], $savedFee->getFeeType());
     }
 
     public function testHandleCommandForBusRegFee()
     {
         $data = [
-            'feeType' => 101,
+            'feeType' => 99,
             'busReg' => 44,
             'invoicedDate' => '2015-01-01',
         ];
 
-        $this->mapReference(FeeType::class, 101)
+        $this->mapReference(FeeType::class, 99)
             ->shouldReceive('isMiscellaneous')
-            ->andReturn(true)
+            ->andReturn(false)
+            ->shouldReceive('isAdjustment')
+            ->andReturn(false)
             ->shouldReceive('getDescription')
             ->andReturn('some fee type')
             ->shouldReceive('getAmount')
@@ -240,6 +253,169 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->assertEquals('2015-01-01', $savedFee->getInvoicedDate()->format('Y-m-d'));
         $this->assertSame($this->references[Licence::class][33], $savedFee->getLicence());
         $this->assertSame($this->references[BusReg::class][44], $savedFee->getBusReg());
+        $this->assertEquals('123.45', $savedFee->getNetAmount());
+        $this->assertEquals('123.45', $savedFee->getGrossAmount());
+        $this->assertEquals(0, $savedFee->getVatAmount());
+        $this->assertSame($this->refData[FeeEntity::STATUS_OUTSTANDING], $savedFee->getFeeStatus());
+        $this->assertSame($this->references[FeeType::class][99], $savedFee->getFeeType());
+    }
+
+    public function testHandleCommandForIrfoGvPermitFee()
+    {
+        $data = [
+            'feeType' => 99,
+            'irfoGvPermit' => 55,
+            'invoicedDate' => '2015-01-01',
+        ];
+
+        $this->mapReference(FeeType::class, 99)
+            ->shouldReceive('isMiscellaneous')
+            ->andReturn(false)
+            ->shouldReceive('isAdjustment')
+            ->andReturn(false)
+            ->shouldReceive('getDescription')
+            ->andReturn('some fee type')
+            ->shouldReceive('getAmount')
+            ->andReturn('123.45');
+
+        /** @var FeeEntity $savedFee */
+        $savedFee = null;
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['Fee']->shouldReceive('save')
+            ->once()
+            ->with(m::type(FeeEntity::class))
+            ->andReturnUsing(
+                function (FeeEntity $fee) use (&$savedFee) {
+                    $fee->setId(111);
+                    $savedFee = $fee;
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'fee' => 111,
+            ],
+            'messages' => [
+                'Fee created successfully'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals('some fee type', $savedFee->getDescription());
+        $this->assertEquals('2015-01-01', $savedFee->getInvoicedDate()->format('Y-m-d'));
+        $this->assertSame($this->references[IrfoGvPermit::class][55], $savedFee->getIrfoGvPermit());
+        $this->assertEquals('123.45', $savedFee->getNetAmount());
+        $this->assertEquals('123.45', $savedFee->getGrossAmount());
+        $this->assertEquals(0, $savedFee->getVatAmount());
+        $this->assertSame($this->refData[FeeEntity::STATUS_OUTSTANDING], $savedFee->getFeeStatus());
+        $this->assertSame($this->references[FeeType::class][99], $savedFee->getFeeType());
+    }
+
+    public function testHandleCommandForIrfoPsvAuthFee()
+    {
+        $data = [
+            'feeType' => 99,
+            'irfoPsvAuth' => 66,
+            'invoicedDate' => '2015-01-01',
+        ];
+
+        $this->mapReference(FeeType::class, 99)
+            ->shouldReceive('isMiscellaneous')
+            ->andReturn(false)
+            ->shouldReceive('isAdjustment')
+            ->andReturn(false)
+            ->shouldReceive('getDescription')
+            ->andReturn('some fee type')
+            ->shouldReceive('getAmount')
+            ->andReturn('123.45');
+
+        /** @var FeeEntity $savedFee */
+        $savedFee = null;
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['Fee']->shouldReceive('save')
+            ->once()
+            ->with(m::type(FeeEntity::class))
+            ->andReturnUsing(
+                function (FeeEntity $fee) use (&$savedFee) {
+                    $fee->setId(111);
+                    $savedFee = $fee;
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'fee' => 111,
+            ],
+            'messages' => [
+                'Fee created successfully'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals('some fee type', $savedFee->getDescription());
+        $this->assertEquals('2015-01-01', $savedFee->getInvoicedDate()->format('Y-m-d'));
+        $this->assertSame($this->references[IrfoPsvAuth::class][66], $savedFee->getIrfoPsvAuth());
+        $this->assertEquals('123.45', $savedFee->getNetAmount());
+        $this->assertEquals('123.45', $savedFee->getGrossAmount());
+        $this->assertEquals(0, $savedFee->getVatAmount());
+        $this->assertSame($this->refData[FeeEntity::STATUS_OUTSTANDING], $savedFee->getFeeStatus());
+        $this->assertSame($this->references[FeeType::class][99], $savedFee->getFeeType());
+    }
+
+    public function testHandleCommandForMiscFee()
+    {
+        $data = [
+            'feeType' => 101,
+            'amount' => '123.45',
+            'invoicedDate' => '2015-01-01',
+        ];
+
+        $this->mapReference(FeeType::class, 101)
+            ->shouldReceive('isMiscellaneous')
+            ->andReturn(true)
+            ->shouldReceive('getDescription')
+            ->andReturn('some fee type');
+
+        /** @var FeeEntity $savedFee */
+        $savedFee = null;
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['Fee']->shouldReceive('save')
+            ->once()
+            ->with(m::type(FeeEntity::class))
+            ->andReturnUsing(
+                function (FeeEntity $fee) use (&$savedFee) {
+                    $fee->setId(111);
+                    $savedFee = $fee;
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'fee' => 111,
+            ],
+            'messages' => [
+                'Fee created successfully'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals('some fee type', $savedFee->getDescription());
+        $this->assertEquals('2015-01-01', $savedFee->getInvoicedDate()->format('Y-m-d'));
         $this->assertEquals('123.45', $savedFee->getNetAmount());
         $this->assertEquals('123.45', $savedFee->getGrossAmount());
         $this->assertEquals(0, $savedFee->getVatAmount());
