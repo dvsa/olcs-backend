@@ -231,7 +231,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $organisationId = 69;
         $feeIds = [99, 100, 101];
         $cpmsRedirectUrl = 'https://olcs-selfserve/foo';
-        $fees = [];
 
         $data = [
             'feeIds' => $feeIds,
