@@ -1370,7 +1370,7 @@ return array(
         'bus_reg_id' => array(
             'inversedBy' => array(
                 'entity' => 'BusReg',
-                'property' => 'txcDocument'
+                'property' => 'txcInbox'
             )
         ),
     ),
