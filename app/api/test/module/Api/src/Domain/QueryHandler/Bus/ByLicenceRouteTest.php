@@ -38,8 +38,8 @@ class ByLicenceRouteTest extends QueryHandlerTestCase
 
         $this->assertEquals(
             [
-                'Results' => ['foo'],
-                'Count' => 1
+                'results' => ['foo'],
+                'count' => 1
             ],
             $this->sut->handleQuery($query, Query::HYDRATE_OBJECT)
         );
