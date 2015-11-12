@@ -497,7 +497,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         // we need to calculate actual outstanding fee, because new transaction is not saved
         // on this step, so $fee->getOutstandingFeeAmount() will return the previous value
         $actualOutstandingAmount = $fee->getOutstandingAmount() - $allocatedAmount;
-        $receivedAmount = $fee->getAmount() - $actualOutstandingAmount;
+        $receivedAmount = $fee->getGrossAmount() - $actualOutstandingAmount;
 
         $dtoData = [
             'template' => 'FEE_REQ_INSUFFICIENT',

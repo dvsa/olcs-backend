@@ -110,7 +110,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         ];
 
         $fee = $this->references[FeeEntity::class][22];
-        $fee->setAmount($amount);
+        $fee->setGrossAmount($amount);
         $fee->shouldReceive('getOutstandingAmount')
             ->andReturn('0.00');
 
@@ -202,7 +202,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         ];
 
         $fee = $this->references[FeeEntity::class][22];
-        $fee->setAmount($amount);
+        $fee->setGrossAmount($amount);
 
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);

@@ -329,7 +329,7 @@ class FeesHelperServiceTest extends MockeryTestCase
     {
         $fee = m::mock(FeeEntity::class)->makePartial()
             ->setId($id)
-            ->setAmount($amount);
+            ->setGrossAmount($amount);
         $fee
             ->shouldReceive('getOutstandingAmount')
             ->andReturn($amount)

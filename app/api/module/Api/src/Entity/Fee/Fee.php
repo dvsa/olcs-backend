@@ -297,7 +297,7 @@ class Fee extends AbstractFee
         return [
             'outstanding' => $this->getOutstandingAmount(),
             'receiptNo' => $this->getLatestPaymentRef(),
-            'amount' => $this->getAmount(),
+            'amount' => $this->getGrossAmount(),
         ];
     }
 
@@ -414,7 +414,7 @@ class Fee extends AbstractFee
      */
     public function isPartPaid()
     {
-        return $this->getOutstandingAmount() < $this->getAmount();
+        return $this->getOutstandingAmount() < $this->getGrossAmount();
     }
 
     /**
@@ -488,16 +488,6 @@ class Fee extends AbstractFee
         }
 
         return $feeTransactions;
-    }
-
-    /**
-     * Backwards compatibility.
-     *
-     * @return float
-     */
-    public function getAmount()
-    {
-        return $this->getGrossAmount();
     }
 
     /**
