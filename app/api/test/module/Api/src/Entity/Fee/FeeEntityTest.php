@@ -356,7 +356,7 @@ class FeeEntityTest extends EntityTester
      */
     public function testGetOutstandingAmount($feeAmount, $feeTransactions, $expected)
     {
-        $this->sut->setAmount($feeAmount);
+        $this->sut->setGrossAmount($feeAmount);
         $this->sut->setFeeTransactions($feeTransactions);
         $this->assertEquals($expected, $this->sut->getOutstandingAmount());
     }
@@ -426,7 +426,7 @@ class FeeEntityTest extends EntityTester
      */
     public function testIsPartPaid($feeAmount, $feeTransactions, $expected)
     {
-        $this->sut->setAmount($feeAmount);
+        $this->sut->setGrossAmount($feeAmount);
         $this->sut->setFeeTransactions($feeTransactions);
         $this->assertEquals($expected, $this->sut->isPartPaid());
     }
@@ -730,7 +730,7 @@ class FeeEntityTest extends EntityTester
         $feeStatus->setId($status);
         $this->sut->setFeeStatus($feeStatus);
         $this->sut->setFeeTransactions(new ArrayCollection($feeTransactions));
-        $this->sut->setAmount($feeAmount);
+        $this->sut->setGrossAmount($feeAmount);
 
         $this->assertEquals($expected, $this->sut->isFullyOutstanding());
     }
@@ -1064,5 +1064,58 @@ class FeeEntityTest extends EntityTester
             [$nonRefundedFeeTransaction],
             $this->sut->getFeeTransactionsForRefund()
         );
+    }
+
+    /**
+     * Test VAT calculations, see OLCS-11034
+     *
+     * @param float $netAmount
+     * @param float $rate
+     * @param float $expectedVatAmount
+     * @param float $expectedGrossAmount
+     * @dataProvider vatProvider
+     */
+    public function testSetVatAndGrossAmountsFromNetAmountUsingRate(
+        $netAmount,
+        $rate,
+        $expectedVatAmount,
+        $expectedGrossAmount
+    ) {
+        $this->sut->setNetAmount($netAmount);
+
+        $this->sut->setVatAndGrossAmountsFromNetAmountUsingRate($rate);
+
+        $this->assertEquals($expectedVatAmount, $this->sut->getVatAmount());
+        $this->assertEquals($expectedGrossAmount, $this->sut->getGrossAmount());
+    }
+
+    public function vatProvider()
+    {
+        return [
+            'no_vat' => [
+                100.00,
+                0,
+                0,
+                100.00,
+            ],
+            '20pcvat' => [
+                100.00,
+                20,
+                20,
+                120.00,
+            ],
+            '17_5_pcvat' => [
+                123.45,
+                17.50,
+                21.60,
+                145.05,
+            ],
+            'rounding_down' => [
+                99.99,
+                20,
+                19.99, // 19.998 rounded *down*
+                119.98,
+            ],
+        ];
     }
 }
