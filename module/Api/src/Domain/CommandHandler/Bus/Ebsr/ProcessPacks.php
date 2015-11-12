@@ -28,6 +28,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\ProcessPacks as ProcessPacksCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
+use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateBusFeeCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
@@ -319,6 +320,12 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $sideEffects = $this->persistDocuments($ebsrData, $busReg, $documentPath);
         $sideEffects[] = $this->getRequestMapQueueCmd($busReg->getId());
         $sideEffects[] = $this->createTaskCommand($busReg);
+
+        $busStatus = $busReg->getStatus()->getId();
+
+        if ($busStatus === BusRegEntity::STATUS_NEW || $busStatus === BusRegEntity::STATUS_VAR) {
+            $sideEffects[] = CreateBusFeeCmd::create(['id' => $busReg->getId()]);
+        }
 
         return $sideEffects;
     }
