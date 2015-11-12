@@ -150,7 +150,8 @@ class TrafficAreaValidator implements \Zend\ServiceManager\FactoryInterface
         // PSV licence or new application with the same traffic area
         if ($application->isPsv() &&
             !$application->isSpecialRestricted() &&
-            $applicationOrLicence->isPsv()
+            $applicationOrLicence->isPsv() &&
+            !$applicationOrLicence->isSpecialRestricted()
         ) {
             return self::ERR_TA_PSV;
         }
