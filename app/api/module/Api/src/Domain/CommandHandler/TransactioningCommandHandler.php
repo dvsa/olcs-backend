@@ -37,6 +37,11 @@ final class TransactioningCommandHandler implements CommandHandlerInterface
         $this->wrapped = $wrapped;
     }
 
+    public function getWrapped()
+    {
+        return $this->wrapped;
+    }
+
     /**
      * @param CommandInterface $command
      * @return \Dvsa\Olcs\Api\Domain\Command\Result

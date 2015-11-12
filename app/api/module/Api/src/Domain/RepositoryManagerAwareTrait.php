@@ -23,4 +23,9 @@ trait RepositoryManagerAwareTrait
     {
         return $this->repoManager;
     }
+
+    public function getRepo($name)
+    {
+        return $this->getRepoManager()->get($name);
+    }
 }

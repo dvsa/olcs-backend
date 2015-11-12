@@ -7,12 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain;
 
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Zend\ServiceManager\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\ValidationHandler\ValidationHandlerInterface;
 
 /**
  * Query Handler Manager
@@ -32,17 +34,23 @@ class QueryHandlerManager extends AbstractPluginManager implements QueryHandlerI
 
     public function handleQuery(QueryInterface $query)
     {
-        $queryHandler = $this->get(get_class($query));
+        $queryFqcl = get_class($query);
+
+        $queryHandler = $this->get($queryFqcl);
 
         Logger::debug(
-            'Query Received: ' . get_class($query),
+            'Query Received: ' . $queryFqcl,
             ['data' => ['queryData' => $query->getArrayCopy()]]
         );
+
+        $queryHandlerFqcl = get_class($queryHandler);
+
+        $this->validateDto($query, $queryHandlerFqcl);
 
         $response = $queryHandler->handleQuery($query);
 
         Logger::debug(
-            'Query Handler Response: ' . get_class($queryHandler),
+            'Query Handler Response: ' . $queryHandlerFqcl,
             ['data' => ['response' => (array)$response]]
         );
 
@@ -53,6 +61,18 @@ class QueryHandlerManager extends AbstractPluginManager implements QueryHandlerI
     {
         if (!($plugin instanceof QueryHandlerInterface)) {
             throw new RuntimeException('Query handler does not implement QueryHandlerInterface');
+        }
+    }
+
+    protected function validateDto($dto, $queryHandlerFqcl)
+    {
+        $vhm = $this->getServiceLocator()->get('ValidationHandlerManager');
+
+        /** @var ValidationHandlerInterface $validationHandler */
+        $validationHandler = $vhm->get($queryHandlerFqcl);
+
+        if (!$validationHandler->isValid($dto)) {
+            throw new ForbiddenException('You do not have access to this resource');
         }
     }
 }
