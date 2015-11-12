@@ -37,15 +37,6 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     use BundleSerializableTrait;
 
     /**
-     * Amount
-     *
-     * @var float
-     *
-     * @ORM\Column(type="decimal", name="amount", precision=10, scale=2, nullable=false)
-     */
-    protected $amount;
-
-    /**
      * Application
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\Application
@@ -116,6 +107,15 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      * @ORM\JoinColumn(name="fee_type_id", referencedColumnName="id", nullable=false)
      */
     protected $feeType;
+
+    /**
+     * Gross amount
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal", name="gross_amount", precision=10, scale=2, nullable=false)
+     */
+    protected $grossAmount;
 
     /**
      * Identifier - Id
@@ -209,6 +209,15 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     protected $licence;
 
     /**
+     * Net amount
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal", name="net_amount", precision=10, scale=2, nullable=false)
+     */
+    protected $netAmount;
+
+    /**
      * Parent fee
      *
      * @var \Dvsa\Olcs\Api\Entity\Fee\Fee
@@ -227,6 +236,20 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      * @ORM\JoinColumn(name="task_id", referencedColumnName="id", nullable=true)
      */
     protected $task;
+
+    /**
+     * Vat amount
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal",
+     *     name="vat_amount",
+     *     precision=10,
+     *     scale=2,
+     *     nullable=false,
+     *     options={"default": 0.00})
+     */
+    protected $vatAmount = 0.00;
 
     /**
      * Version
@@ -262,29 +285,6 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     public function initCollections()
     {
         $this->feeTransactions = new ArrayCollection();
-    }
-
-    /**
-     * Set the amount
-     *
-     * @param float $amount
-     * @return Fee
-     */
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
-
-        return $this;
-    }
-
-    /**
-     * Get the amount
-     *
-     * @return float
-     */
-    public function getAmount()
-    {
-        return $this->amount;
     }
 
     /**
@@ -446,6 +446,29 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     public function getFeeType()
     {
         return $this->feeType;
+    }
+
+    /**
+     * Set the gross amount
+     *
+     * @param float $grossAmount
+     * @return Fee
+     */
+    public function setGrossAmount($grossAmount)
+    {
+        $this->grossAmount = $grossAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get the gross amount
+     *
+     * @return float
+     */
+    public function getGrossAmount()
+    {
+        return $this->grossAmount;
     }
 
     /**
@@ -656,6 +679,29 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     }
 
     /**
+     * Set the net amount
+     *
+     * @param float $netAmount
+     * @return Fee
+     */
+    public function setNetAmount($netAmount)
+    {
+        $this->netAmount = $netAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get the net amount
+     *
+     * @return float
+     */
+    public function getNetAmount()
+    {
+        return $this->netAmount;
+    }
+
+    /**
      * Set the parent fee
      *
      * @param \Dvsa\Olcs\Api\Entity\Fee\Fee $parentFee
@@ -699,6 +745,29 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     public function getTask()
     {
         return $this->task;
+    }
+
+    /**
+     * Set the vat amount
+     *
+     * @param float $vatAmount
+     * @return Fee
+     */
+    public function setVatAmount($vatAmount)
+    {
+        $this->vatAmount = $vatAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get the vat amount
+     *
+     * @return float
+     */
+    public function getVatAmount()
+    {
+        return $this->vatAmount;
     }
 
     /**
