@@ -109,11 +109,10 @@ final class CreateFee extends AbstractCommandHandler
         }
 
         // if amount is null, we should use the amount from the feeType
-        if (is_null($fee->getAmount())) {
+        if (is_null($fee->getNetAmount())) {
             $fee->setNetAmount($feeType->getAmount());
+            $fee->setVatandGrossAmountsFromNetAmountUsingRate($feeType->getVatRate());
         }
-
-        $fee->setVatandGrossAmountsFromNetAmountUsingRate($feeType->getVatRate());
 
         return $fee;
     }
