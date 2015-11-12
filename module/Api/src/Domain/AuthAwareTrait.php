@@ -50,8 +50,8 @@ trait AuthAwareTrait
     public function getCurrentOrganisation()
     {
         $identity = $this->authService->getIdentity();
-
-        if ($identity) {
+        $hasOrganisation = !$identity->getUser()->getOrganisationUsers()->isEmpty();
+        if ($identity && $hasOrganisation) {
             return $identity->getUser()->getOrganisationUsers()->current()->getOrganisation();
         }
     }

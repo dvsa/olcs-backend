@@ -10,7 +10,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 
 /**
- * Bus Registration List (by licenceId and routeNo)
+ * Bus Registration List (by licenceId and routeNo) Paginated.
  */
 class ByLicenceRoute extends AbstractQueryHandler
 {
@@ -18,8 +18,11 @@ class ByLicenceRoute extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->resultList(
-            $this->getRepo()->fetchList($query, Query::HYDRATE_OBJECT)
-        );
+        return [
+            'results' => $this->resultList(
+                $this->getRepo()->fetchList($query, Query::HYDRATE_OBJECT)
+            ),
+            'count' => $this->getRepo()->fetchCount($query)
+        ];
     }
 }

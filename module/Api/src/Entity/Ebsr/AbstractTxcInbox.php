@@ -39,7 +39,7 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
      * @ORM\ManyToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg",
      *     fetch="LAZY",
-     *     inversedBy="txcDocuments"
+     *     inversedBy="txcInboxs"
      * )
      * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=false)
      */

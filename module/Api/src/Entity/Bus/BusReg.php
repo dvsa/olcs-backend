@@ -313,6 +313,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     public function isLatestVariation()
     {
         $latestBusVariation = $this->getLicence()->getLatestBusVariation($this->getRegNo());
+
         if (empty($latestBusVariation)) {
             return true;
         }
