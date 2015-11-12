@@ -7,11 +7,13 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\CreateBus;
 use Dvsa\Olcs\Transfer\Command\Bus\CreateBus as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 
 /**
@@ -49,6 +51,8 @@ class CreateBusTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $licenceId = 11;
+        $busRegId = 111;
+        $feeId = 44;
 
         $command = Cmd::create(['licence' => $licenceId]);
 
@@ -65,11 +69,17 @@ class CreateBusTest extends CommandHandlerTestCase
                 }
             );
 
+        $result1 = new Result();
+        $result1->addId('fee', $feeId);
+        $data = ['id' => $busRegId];
+        $this->expectedSideEffect(CreateFeeCmd::class, $data, $result1);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [
-                'bus' => 111,
+                'bus' => $busRegId,
+                'fee' => $feeId
             ],
             'messages' => [
                 'Bus created successfully'
