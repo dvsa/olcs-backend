@@ -32,8 +32,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
     const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
 
-    const TAX_CODE = 'Z';
-
     const REFUND_REASON = 'Refund';
 
     /**
@@ -704,16 +702,16 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $commonPaymentData = [
             'line_identifier' => (string) $fee->getInvoiceLineNo(),
-            'amount' => $this->formatAmount($fee->getAmount()),
+            'amount' => $this->formatAmount($fee->getGrossAmount()),
             'allocated_amount' => $this->formatAmount(
                 // may be overridden if under/overpayment
                 $fee->getOutstandingAmount()
             ),
             // all fees are currently zero rated
-            'net_amount' => $this->formatAmount($fee->getAmount()),
-            'tax_amount' => '0.00',
-            'tax_code' => self::TAX_CODE,
-            'tax_rate' => '0',
+            'net_amount' => $this->formatAmount($fee->getNetAmount()),
+            'tax_amount' => $this->formatAmount($fee->getVatAmount()),
+            'tax_code' => $fee->getFeeType()->getVatCode(),
+            'tax_rate' => $fee->getFeeType()->getVatRate(),
             'invoice_date' => $this->formatDate($fee->getInvoicedDate()),
             'sales_reference' => (string) $fee->getId(),
             'product_reference' => self::PRODUCT_REFERENCE,

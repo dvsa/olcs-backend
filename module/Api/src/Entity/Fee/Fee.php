@@ -60,7 +60,7 @@ class Fee extends AbstractFee
         parent::__construct();
 
         $this->feeType = $feeType;
-        $this->amount = $amount;
+        $this->grossAmount = $amount;
         $this->feeStatus = $feeStatus;
     }
 
@@ -217,7 +217,7 @@ class Fee extends AbstractFee
      */
     public function getOutstandingAmount()
     {
-        $amount = (int) ($this->getAmount() * 100);
+        $amount = (int) ($this->getGrossAmount() * 100);
 
         $ftSum = 0;
         $this->getFeeTransactions()->forAll(
@@ -295,6 +295,7 @@ class Fee extends AbstractFee
         return [
             'outstanding' => $this->getOutstandingAmount(),
             'receiptNo' => $this->getLatestPaymentRef(),
+            'amount' => $this->getAmount(),
         ];
     }
 
@@ -488,12 +489,33 @@ class Fee extends AbstractFee
     }
 
     /**
-     * Backwards compatibility
+     * Backwards compatibility.
      *
      * @return float
      */
     public function getAmount()
     {
-        return $this->getNetAmount();
+        return $this->getGrossAmount();
+    }
+
+    /**
+     * Method to encapsulate the VAT calculations. Takes a percentage rate
+     * parameter and expects net amount to be already set.
+     *
+     * @param float $rate percentage e.g. 20 or 17.5
+     */
+    public function setVatAndGrossAmountsFromNetAmountUsingRate($rate)
+    {
+        $net = $this->getNetAmount();
+
+        $this->setVatAmount($net * $rate);
+
+        $vat = $net * $rate; // this gives value in pence
+        $vat = floor($vat); // round down to nearest penny
+        $vat = $vat / 100; // convert to pounds
+
+        $this->setVatAmount($vat);
+
+        $this->setGrossAmount($net + $vat);
     }
 }
