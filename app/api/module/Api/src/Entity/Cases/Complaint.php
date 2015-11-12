@@ -53,7 +53,7 @@ class Complaint extends AbstractComplaint
 
     public function isOpen()
     {
-        return ($this->getStatus()->getId() === self::COMPLAIN_STATUS_OPEN);
+        return ($this->getStatus() && $this->getStatus()->getId() === self::COMPLAIN_STATUS_OPEN);
     }
 
     public function isEnvironmentalComplaint()
