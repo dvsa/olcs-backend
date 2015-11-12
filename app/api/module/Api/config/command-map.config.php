@@ -52,14 +52,10 @@ return [
         => CommandHandler\Application\CreateVehicleListDocument::class,
     TransferCommand\Application\UpdateVehicleDeclaration::class =>
         CommandHandler\Application\UpdateVehicleDeclaration::class,
-    TransferCommand\Application\WithdrawApplication::class
-        => CommandHandler\Application\WithdrawApplication::class,
-    TransferCommand\Application\ReviveApplication::class
-        => CommandHandler\Application\ReviveApplication::class,
-    TransferCommand\Application\RefuseApplication::class
-        => CommandHandler\Application\RefuseApplication::class,
-    TransferCommand\Application\NotTakenUpApplication::class
-        => CommandHandler\Application\NotTakenUpApplication::class,
+    TransferCommand\Application\WithdrawApplication::class => CommandHandler\Application\WithdrawApplication::class,
+    TransferCommand\Application\ReviveApplication::class => CommandHandler\Application\ReviveApplication::class,
+    TransferCommand\Application\RefuseApplication::class => CommandHandler\Application\RefuseApplication::class,
+    TransferCommand\Application\NotTakenUpApplication::class => CommandHandler\Application\NotTakenUpApplication::class,
     TransferCommand\Application\Overview::class => CommandHandler\Application\Overview::class,
     TransferCommand\Application\CreateSnapshot::class => CommandHandler\Application\CreateSnapshot::class,
     TransferCommand\Application\Grant::class => CommandHandler\Application\Grant::class,
@@ -205,9 +201,6 @@ return [
     TransferCommand\Licence\UpdateVehicles::class => CommandHandler\Licence\UpdateVehicles::class,
     Command\Licence\TmNominatedTask::class => CommandHandler\Licence\TmNominatedTask::class,
 
-    Command\Licence\Revoke::class => CommandHandler\Licence\Revoke::class,
-    Command\Licence\Curtail::class => CommandHandler\Licence\Curtail::class,
-    Command\Licence\Suspend::class => CommandHandler\Licence\Suspend::class,
     Command\Licence\Withdraw::class => CommandHandler\Licence\Withdraw::class,
     Command\Licence\Grant::class => CommandHandler\Licence\Grant::class,
     Command\Licence\Refuse::class => CommandHandler\Licence\Refuse::class,
@@ -260,8 +253,7 @@ return [
         CommandHandler\PreviousConviction\UpdatePreviousConviction::class,
     TransferCommand\PreviousConviction\DeletePreviousConviction::class =>
         CommandHandler\PreviousConviction\DeletePreviousConviction::class,
-    TransferCommand\PreviousConviction\CreateForTma::class
-        => CommandHandler\PreviousConviction\CreateForTma::class,
+    TransferCommand\PreviousConviction\CreateForTma::class => CommandHandler\PreviousConviction\CreateForTma::class,
 
     // Transfer - Trailer
     TransferCommand\Trailer\CreateTrailer::class => CommandHandler\Trailer\CreateTrailer::class,
@@ -341,12 +333,9 @@ return [
     TransferCommand\Cases\UpdateAnnualTestHistory::class => CommandHandler\Cases\UpdateAnnualTestHistory::class,
 
     // Transfer - Impounding
-    TransferCommand\Cases\Impounding\CreateImpounding::class =>
-        CommandHandler\Cases\Impounding\CreateImpounding::class,
-    TransferCommand\Cases\Impounding\UpdateImpounding::class =>
-        CommandHandler\Cases\Impounding\UpdateImpounding::class,
-    TransferCommand\Cases\Impounding\DeleteImpounding::class =>
-        CommandHandler\Cases\Impounding\DeleteImpounding::class,
+    TransferCommand\Cases\Impounding\CreateImpounding::class => CommandHandler\Cases\Impounding\CreateImpounding::class,
+    TransferCommand\Cases\Impounding\UpdateImpounding::class => CommandHandler\Cases\Impounding\UpdateImpounding::class,
+    TransferCommand\Cases\Impounding\DeleteImpounding::class => CommandHandler\Cases\Impounding\DeleteImpounding::class,
 
     // Transfer - ProposeToRevoke
     TransferCommand\Cases\ProposeToRevoke\CreateProposeToRevoke::class =>
@@ -355,12 +344,9 @@ return [
         CommandHandler\Cases\ProposeToRevoke\UpdateProposeToRevoke::class,
 
     // Transfer - Complaint
-    TransferCommand\Complaint\CreateComplaint::class =>
-        CommandHandler\Complaint\CreateComplaint::class,
-    TransferCommand\Complaint\UpdateComplaint::class =>
-        CommandHandler\Complaint\UpdateComplaint::class,
-    TransferCommand\Complaint\DeleteComplaint::class =>
-        CommandHandler\Complaint\DeleteComplaint::class,
+    TransferCommand\Complaint\CreateComplaint::class => CommandHandler\Complaint\CreateComplaint::class,
+    TransferCommand\Complaint\UpdateComplaint::class => CommandHandler\Complaint\UpdateComplaint::class,
+    TransferCommand\Complaint\DeleteComplaint::class => CommandHandler\Complaint\DeleteComplaint::class,
 
     // Transfer - Environmental Complaint
     TransferCommand\EnvironmentalComplaint\CreateEnvironmentalComplaint::class =>
@@ -371,10 +357,8 @@ return [
         CommandHandler\EnvironmentalComplaint\DeleteEnvironmentalComplaint::class,
 
     // Transfer - Submission
-    TransferCommand\Submission\CreateSubmissionAction::class =>
-        CommandHandler\Submission\CreateSubmissionAction::class,
-    TransferCommand\Submission\UpdateSubmissionAction::class =>
-        CommandHandler\Submission\UpdateSubmissionAction::class,
+    TransferCommand\Submission\CreateSubmissionAction::class => CommandHandler\Submission\CreateSubmissionAction::class,
+    TransferCommand\Submission\UpdateSubmissionAction::class => CommandHandler\Submission\UpdateSubmissionAction::class,
 
     TransferCommand\Submission\CreateSubmissionSectionComment::class =>
         CommandHandler\Submission\CreateSubmissionSectionComment::class,
@@ -383,20 +367,16 @@ return [
     TransferCommand\Submission\DeleteSubmissionSectionComment::class =>
         CommandHandler\Submission\DeleteSubmissionSectionComment::class,
 
-    TransferCommand\Submission\CreateSubmission::class =>
-        CommandHandler\Submission\CreateSubmission::class,
-    TransferCommand\Submission\UpdateSubmission::class =>
-        CommandHandler\Submission\UpdateSubmission::class,
-    TransferCommand\Submission\DeleteSubmission::class =>
-        CommandHandler\Submission\DeleteSubmission::class,
+    TransferCommand\Submission\CreateSubmission::class => CommandHandler\Submission\CreateSubmission::class,
+    TransferCommand\Submission\UpdateSubmission::class => CommandHandler\Submission\UpdateSubmission::class,
+    TransferCommand\Submission\DeleteSubmission::class => CommandHandler\Submission\DeleteSubmission::class,
 
     TransferCommand\Submission\FilterSubmissionSections::class =>
         CommandHandler\Submission\FilterSubmissionSections::class,
     TransferCommand\Submission\RefreshSubmissionSections::class =>
         CommandHandler\Submission\RefreshSubmissionSections::class,
 
-    TransferCommand\Submission\AssignSubmission::class =>
-        CommandHandler\Submission\AssignSubmission::class,
+    TransferCommand\Submission\AssignSubmission::class => CommandHandler\Submission\AssignSubmission::class,
 
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
@@ -634,9 +614,6 @@ return [
     Command\Document\GenerateAndStore::class => CommandHandler\Document\GenerateAndStore::class,
     TransferCommand\Document\GenerateAndStore::class => CommandHandler\Document\GenerateAndStore::class,
     TransferCommand\Document\Upload::class => CommandHandler\Document\Upload::class,
-
-    // Domain - PrintScheduler
-    Command\PrintScheduler\EnqueueFile::class => CommandHandler\PrintScheduler\EnqueueFile::class,
 
     // Domain - LicenceStatusRule
     Command\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class

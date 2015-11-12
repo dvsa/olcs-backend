@@ -6,6 +6,7 @@ use Zend\Log\Logger;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
+use Dvsa\Olcs\Api\Domain\ValidationHandler\ValidationHandlerInterface;
 
 /**
  * Generic Controller
@@ -163,8 +164,7 @@ class GenericController extends AbstractRestfulController
      */
     protected function handleQuery($dto)
     {
-        $result = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
-        return $result;
+        return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
     }
 
     /**
@@ -173,7 +173,6 @@ class GenericController extends AbstractRestfulController
      */
     protected function handleCommand($dto)
     {
-        $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
-        return $result;
+        return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
     }
 }

@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Organisation;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * CompanySubsidiary Entity
@@ -20,13 +21,18 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  *    }
  * )
  */
-class CompanySubsidiary extends AbstractCompanySubsidiary
+class CompanySubsidiary extends AbstractCompanySubsidiary implements OrganisationProviderInterface
 {
     public function __construct($name, $companyNo, Licence $licence)
     {
         $this->setName($name);
         $this->setCompanyNo($companyNo);
         $this->setLicence($licence);
+    }
+
+    public function getRelatedOrganisation()
+    {
+        return $this->getLicence()->getOrganisation();
     }
 
     protected function getCalculatedValues()

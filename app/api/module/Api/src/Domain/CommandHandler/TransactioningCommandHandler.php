@@ -15,7 +15,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * Class TransactioningCommandHandler
  * @package Dvsa\Olcs\Api\Domain\CommandHandler
  */
-final class TransactioningCommandHandler implements CommandHandlerInterface
+class TransactioningCommandHandler implements CommandHandlerInterface
 {
     /**
      * @var TransactionManagerInterface
@@ -37,6 +37,11 @@ final class TransactioningCommandHandler implements CommandHandlerInterface
         $this->wrapped = $wrapped;
     }
 
+    public function getWrapped()
+    {
+        return $this->wrapped;
+    }
+
     /**
      * @param CommandInterface $command
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
@@ -45,14 +50,15 @@ final class TransactioningCommandHandler implements CommandHandlerInterface
     public function handleCommand(CommandInterface $command)
     {
         try {
+
             $this->repo->beginTransaction();
             $result = $this->wrapped->handleCommand($command);
             $this->repo->commit();
+            return $result;
+
         } catch (\Exception $e) {
             $this->repo->rollback();
             throw $e;
         }
-
-        return $result;
     }
 }
