@@ -1010,11 +1010,9 @@ class BusRegEntityTest extends EntityTester
         $this->entity->setShortNotice($shortNotice);
 
         foreach ($busRegData as $key => $value) {
-            if (in_array($key, ['receivedDate', 'effectiveDate'])) {
-                $value = (!empty($value)) ? new \DateTime($value) : null;
-            } elseif ($key === 'parent') {
+            if ($key === 'parent') {
                 $parent = new Entity();
-                $parent->setEffectiveDate(new \DateTime($value['effectiveDate']));
+                $parent->setEffectiveDate($value['effectiveDate']);
                 $value = $parent;
             }
             $this->entity->{'set' . ucwords($key)}($value);
@@ -1075,7 +1073,7 @@ class BusRegEntityTest extends EntityTester
                     'receivedDate' => '2015-02-09',
                     'effectiveDate' => '2015-03-31'
                 ],
-                new \DateTime('2015-03-31')
+                '2015-03-31' //not a date time as the test data has stayed the same
             ],
             [
                 $otherRules,
