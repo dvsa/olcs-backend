@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime as DateTimeExtended;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
@@ -55,8 +55,11 @@ class FeeType extends AbstractRepository
 
         if ($date === null) {
             // if not set, use today
-            $date = new \DateTime();
+            $date = new DateTimeExtended('now');
+        } elseif (!$date instanceof \DateTime) {
+            $date = new DateTimeExtended($date);
         }
+
         $effectiveOn = $date->format(\DateTime::W3C);
 
         $qb->andWhere($qb->expr()->eq('ft.feeType', ':feeType'))
@@ -158,9 +161,9 @@ class FeeType extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query->getEffectiveDate()) {
-            $date = new DateTime($query->getEffectiveDate());
+            $date = new DateTimeExtended($query->getEffectiveDate());
         } else {
-            $date = new DateTime('now');
+            $date = new DateTimeExtended('now');
         }
 
         $qb->andWhere(
