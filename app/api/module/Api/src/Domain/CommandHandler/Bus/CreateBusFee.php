@@ -81,6 +81,6 @@ final class CreateBusFee extends AbstractCommandHandler
             'amount' => $feeType->getFixedValue()
         ];
 
-        return CreateFee::create($data);
+        return $this->handleSideEffect(CreateFee::create($data));
     }
 }
