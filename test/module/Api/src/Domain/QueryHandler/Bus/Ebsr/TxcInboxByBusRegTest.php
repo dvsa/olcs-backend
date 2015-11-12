@@ -13,13 +13,13 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\TxcInboxByBusReg as Qry;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * TxcInboxByBusRegTest
@@ -83,21 +83,24 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
             ->shouldReceive('getIdentity')
             ->andReturn($this->getCurrentUser(null, $organisationId));
 
-        $mockLicence = m::mock();
-        $mockLicence->shouldReceive('determineNpNumber')->andReturn('333');
-        $mockLicence->shouldReceive('getLatestBusVariation')->andReturn(null);
-
+        $status = m::mock(RefData::class)->makePartial();
+        $status->setId(BusRegEntity::STATUS_REGISTERED);
+        
         $mockResult = new TxcInboxEntity();
         $busReg = new BusRegEntity();
-        $busReg->setLicence($mockLicence);
+
+        $busRegNoticePeriod = new BusNoticePeriod();
+        $busRegNoticePeriod->setId(BusNoticePeriod::NOTICE_PERIOD_OTHER);
 
         $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->shouldReceive('getLatestBusVariation');
+        $licence->shouldReceive('getLatestBusVariation')->andReturn(null);
         $licence->shouldReceive('determineNpNumber')
             ->once()
             ->andReturn('4321');
 
+        $busReg->setBusNoticePeriod($busRegNoticePeriod);
         $busReg->setLicence($licence);
+        $busReg->setStatus($status);
 
         $mockResult->setBusReg($busReg);
 
@@ -126,6 +129,9 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
             ->shouldReceive('getIdentity')
             ->andReturn($this->getCurrentUser($localAuthorityId));
 
+        $status = m::mock(RefData::class)->makePartial();
+        $status->setId(BusRegEntity::STATUS_REGISTERED);
+
         $mockLicence = m::mock();
         $mockLicence->shouldReceive('determineNpNumber')->andReturn('333');
         $mockLicence->shouldReceive('getLatestBusVariation')->andReturn(null);
@@ -133,13 +139,15 @@ class TxcInboxByBusRegTest extends QueryHandlerTestCase
         $mockResult = new TxcInboxEntity();
 
         $busReg = new BusRegEntity();
-        $busRegShortNotice = new BusNoticePeriod();
-        $busRegShortNotice->setId(BusRegEntity::NOTICE_PERIOD_OTHER);
+        $busRegNoticePeriod = new BusNoticePeriod();
+        $busRegNoticePeriod->setId(BusNoticePeriod::NOTICE_PERIOD_OTHER);
+
         $busReg->setLicence($mockLicence);
-        $busReg->setShortNotice($busRegShortNotice);
+        $busReg->setBusNoticePeriod($busRegNoticePeriod);
+        $busReg->setStatus($status);
 
         $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->shouldReceive('getLatestBusVariation');
+        $licence->shouldReceive('getLatestBusVariation')->andReturnNull();
         $licence->shouldReceive('determineNpNumber')
             ->once()
             ->andReturn('4321');
