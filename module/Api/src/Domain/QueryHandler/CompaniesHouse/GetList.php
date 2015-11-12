@@ -9,38 +9,25 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\CompaniesHouseAwareTrait;
+use Dvsa\Olcs\Api\Domain\CompaniesHouseAwareInterface;
 
 /**
  * Companies house / GetList
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class GetList extends AbstractQueryHandler
+class GetList extends AbstractQueryHandler implements CompaniesHouseAwareInterface
 {
-    /**
-     * @var \Dvsa\Olcs\Api\Service\CompaniesHouseService
-     */
-    private $companiesHouseService;
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->companiesHouseService = $mainServiceLocator->get('CompaniesHouseService');
-
-        return parent::createService($serviceLocator);
-    }
+    use CompaniesHouseAwareTrait;
 
     public function handleQuery(QueryInterface $query)
     {
-        $result = $this->companiesHouseService->getList($query->getType(), $query->getValue());
-        $finalResult = $this->resultList(
-            $result['Result']
-        );
+        $result = $this->getCompaniesList($query->getType(), $query->getValue());
         return [
-            'result' => $finalResult,
-            'count' => $result['Count']
+            'result' => $result['Results'],
+            'count' => $result['Count'],
+            'count-unfiltered' => $result['Count']
         ];
     }
 }

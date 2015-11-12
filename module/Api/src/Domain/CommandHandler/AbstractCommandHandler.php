@@ -116,7 +116,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         }
 
         if ($this instanceof \Dvsa\Olcs\Api\Domain\CompaniesHouseAwareInterface) {
-            $companiesHouseService = $mainServiceLocator->get('serviceFactory')->getService('CompaniesHouse');
+            $companiesHouseService = $mainServiceLocator->get('CompaniesHouseService');
             $this->setCompaniesHouseService($companiesHouseService);
         }
 
