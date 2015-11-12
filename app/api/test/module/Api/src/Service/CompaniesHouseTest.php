@@ -3,20 +3,23 @@
 /**
  * Tests the companies house service
  *
+ * @note migrated from OlcsTest\Db\Service
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace OlcsTest\Db\Service;
+namespace OlcsTest\Api\Service;
 
 use OlcsTest\Bootstrap;
 use PHPUnit_Framework_TestCase;
-use Olcs\Db\Service\CompaniesHouse;
+use Dvsa\Olcs\Api\Service\CompaniesHouseService;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Tests the companies house service
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CompaniesHouseTest extends PHPUnit_Framework_TestCase
+class CompaniesHouseServiceTest extends MockeryTestCase
 {
     /**
      * Setup the service
@@ -25,7 +28,7 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
      */
     public function setUpService($methods = array())
     {
-        return $this->getMock('\Olcs\Db\Service\CompaniesHouse', $methods);
+        return $this->getMock('Dvsa\Olcs\Api\Service\CompaniesHouseService', $methods);
     }
 
     /**
@@ -33,7 +36,7 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
      */
     public function testGetNewGateway()
     {
-        $service = new CompaniesHouse();
+        $service = new CompaniesHouseService();
 
         $gateway = $service->getNewGateway();
 
@@ -51,7 +54,7 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
             'value' => 'foo'
         );
 
-        $service = new CompaniesHouse();
+        $service = new CompaniesHouseService();
 
         $results = $service->getList($data);
 
@@ -69,7 +72,7 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
             'type' => 'foo'
         );
 
-        $service = new CompaniesHouse();
+        $service = new CompaniesHouseService();
 
         $results = $service->getList($data);
 
@@ -85,7 +88,7 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
 
         $data = array();
 
-        $service = new CompaniesHouse();
+        $service = new CompaniesHouseService();
 
         $results = $service->getList($data);
 
@@ -95,7 +98,7 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
     /**
      * Test getList with incorrect type
      *
-     * @expectedException \Olcs\Db\Exceptions\RestResponseException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RestResponseException
      */
     public function testGetListWithIncorrectType()
     {
@@ -104,7 +107,7 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
             'value' => 'bar'
         );
 
-        $service = new CompaniesHouse();
+        $service = new CompaniesHouseService();
 
         $service->getList($data);
     }
@@ -112,7 +115,7 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
     /**
      * Test getList throws exception
      *
-     * @expectedException \Olcs\Db\Exceptions\RestResponseException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RestResponseException
      */
     public function testGetListThrowsException()
     {
@@ -121,29 +124,11 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
             'value' => 'Bobs bits n bobs ltd'
         );
 
-        $config = array(
-            'companies_house_credentials' => array(
-                'password' => 'foo',
-                'userId' => 'bar'
-            )
-        );
-
-        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
-
-        $mockServiceLocator->expects($this->once())
-            ->method('get')
-            ->with('Config')
-            ->will($this->returnValue($config));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
             ->method('getNewGateway')
             ->will($this->throwException(new \Exception('foo bar')));
-
-        $service->expects($this->any())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mockServiceLocator));
 
         $service->getList($data);
     }
@@ -151,20 +136,13 @@ class CompaniesHouseTest extends PHPUnit_Framework_TestCase
     /**
      * Test getList with name search with Error Response
      *
-     * @expectedException \Olcs\Db\Exceptions\RestResponseException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RestResponseException
      */
     public function testGetListWithNameSearchErrorResponse()
     {
         $data = array(
             'type' => 'nameSearch',
             'value' => 'Bobs bits n bobs ltd'
-        );
-
-        $config = array(
-            'companies_house_credentials' => array(
-                'password' => 'foo',
-                'userId' => 'bar'
-            )
         );
 
         $mockResponse = <<< XML
@@ -198,22 +176,11 @@ XML;
             ->method('getResponse')
             ->will($this->returnValue($mockResponse));
 
-        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
-
-        $mockServiceLocator->expects($this->once())
-            ->method('get')
-            ->with('Config')
-            ->will($this->returnValue($config));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
             ->method('getNewGateway')
             ->will($this->returnValue($mockGateway));
-
-        $service->expects($this->any())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mockServiceLocator));
 
         $service->getList($data);
     }
@@ -221,20 +188,13 @@ XML;
     /**
      * Test getList with number search with Error Response
      *
-     * @expectedException \Olcs\Db\Exceptions\RestResponseException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RestResponseException
      */
     public function testGetListWithNumberSearchErrorResponse()
     {
         $data = array(
             'type' => 'numberSearch',
             'value' => 12345
-        );
-
-        $config = array(
-            'companies_house_credentials' => array(
-                'password' => 'foo',
-                'userId' => 'bar'
-            )
         );
 
         $mockResponse = <<< XML
@@ -268,22 +228,11 @@ XML;
             ->method('getResponse')
             ->will($this->returnValue($mockResponse));
 
-        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
-
-        $mockServiceLocator->expects($this->once())
-            ->method('get')
-            ->with('Config')
-            ->will($this->returnValue($config));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
             ->method('getNewGateway')
             ->will($this->returnValue($mockGateway));
-
-        $service->expects($this->any())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mockServiceLocator));
 
         $service->getList($data);
     }
@@ -291,20 +240,13 @@ XML;
     /**
      * Test getList with companyDetails with Error Response
      *
-     * @expectedException \Olcs\Db\Exceptions\RestResponseException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RestResponseException
      */
     public function testGetListWithCompanyDetailsErrorResponse()
     {
         $data = array(
             'type' => 'companyDetails',
             'value' => 12345
-        );
-
-        $config = array(
-            'companies_house_credentials' => array(
-                'password' => 'foo',
-                'userId' => 'bar'
-            )
         );
 
         $mockResponse = <<< XML
@@ -335,22 +277,11 @@ XML;
             ->method('getResponse')
             ->will($this->returnValue($mockResponse));
 
-        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
-
-        $mockServiceLocator->expects($this->once())
-            ->method('get')
-            ->with('Config')
-            ->will($this->returnValue($config));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
             ->method('getNewGateway')
             ->will($this->returnValue($mockGateway));
-
-        $service->expects($this->any())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mockServiceLocator));
 
         $service->getList($data);
     }
@@ -370,13 +301,6 @@ XML;
         $data = array(
             'type' => 'nameSearch',
             'value' => 'Bobs bits n bobs ltd'
-        );
-
-        $config = array(
-            'companies_house_credentials' => array(
-                'password' => 'foo',
-                'userId' => 'bar'
-            )
         );
 
         $mockResponse = <<< XML
@@ -408,22 +332,11 @@ XML;
             ->method('getResponse')
             ->will($this->returnValue($mockResponse));
 
-        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
-
-        $mockServiceLocator->expects($this->once())
-            ->method('get')
-            ->with('Config')
-            ->will($this->returnValue($config));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
             ->method('getNewGateway')
             ->will($this->returnValue($mockGateway));
-
-        $service->expects($this->any())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mockServiceLocator));
 
         $response = $service->getList($data);
 
@@ -445,13 +358,6 @@ XML;
         $data = array(
             'type' => 'numberSearch',
             'value' => 123456
-        );
-
-        $config = array(
-            'companies_house_credentials' => array(
-                'password' => 'foo',
-                'userId' => 'bar'
-            )
         );
 
         $mockResponse = <<< XML
@@ -483,22 +389,11 @@ XML;
             ->method('getResponse')
             ->will($this->returnValue($mockResponse));
 
-        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
-
-        $mockServiceLocator->expects($this->once())
-            ->method('get')
-            ->with('Config')
-            ->will($this->returnValue($config));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
             ->method('getNewGateway')
             ->will($this->returnValue($mockGateway));
-
-        $service->expects($this->any())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mockServiceLocator));
 
         $response = $service->getList($data);
 
@@ -520,13 +415,6 @@ XML;
         $data = array(
             'type' => 'companyDetails',
             'value' => 12345678
-        );
-
-        $config = array(
-            'companies_house_credentials' => array(
-                'password' => 'foo',
-                'userId' => 'bar'
-            )
         );
 
         $mockResponse = <<< XML
@@ -553,22 +441,11 @@ XML;
             ->method('getResponse')
             ->will($this->returnValue($mockResponse));
 
-        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
-
-        $mockServiceLocator->expects($this->once())
-            ->method('get')
-            ->with('Config')
-            ->will($this->returnValue($config));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
             ->method('getNewGateway')
             ->will($this->returnValue($mockGateway));
-
-        $service->expects($this->any())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mockServiceLocator));
 
         $response = $service->getList($data);
 
@@ -585,13 +462,6 @@ XML;
         $data = array(
             'type' => 'companyDetails',
             'value' => 12345678
-        );
-
-        $config = array(
-            'companies_house_credentials' => array(
-                'password' => 'foo',
-                'userId' => 'bar'
-            )
         );
 
         $mockResponse = <<< XML
@@ -614,22 +484,11 @@ XML;
             ->method('getResponse')
             ->will($this->returnValue($mockResponse));
 
-        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
-
-        $mockServiceLocator->expects($this->once())
-            ->method('get')
-            ->with('Config')
-            ->will($this->returnValue($config));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
             ->method('getNewGateway')
             ->will($this->returnValue($mockGateway));
-
-        $service->expects($this->any())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mockServiceLocator));
 
         $response = $service->getList($data);
 
@@ -656,13 +515,6 @@ XML;
         $data = array(
             'type' => 'currentCompanyOfficers',
             'value' => 12345678
-        );
-
-        $config = array(
-            'companies_house_credentials' => array(
-                'password' => 'foo',
-                'userId' => 'bar'
-            )
         );
 
         $mockResponse = <<< XML
@@ -698,24 +550,28 @@ XML;
             ->method('getResponse')
             ->will($this->returnValue($mockResponse));
 
-        $mockServiceLocator = $this->getMock('\stdClass', array('get'));
-
-        $mockServiceLocator->expects($this->once())
-            ->method('get')
-            ->with('Config')
-            ->will($this->returnValue($config));
-
         $service = $this->setUpService(array('getNewGateway', 'getServiceLocator', 'getService'));
 
         $service->expects($this->once())
             ->method('getNewGateway')
             ->will($this->returnValue($mockGateway));
 
-        $service->expects($this->any())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mockServiceLocator));
-
         $response = $service->getList($data);
         $this->assertEquals($expected, $response);
+    }
+
+    public function testCreateService()
+    {
+        $sut = m::mock('Dvsa\Olcs\Api\Service\CompaniesHouseService')->makePartial();
+
+        $sm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $sm->shouldReceive('get')
+            ->with('Config')
+            ->andReturn(['config'])
+            ->once();
+
+        $companiesHouse = $sut->createService($sm);
+
+        $this->assertEquals($sut, $companiesHouse);
     }
 }

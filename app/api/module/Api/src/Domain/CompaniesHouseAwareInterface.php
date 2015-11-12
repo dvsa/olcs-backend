@@ -8,12 +8,12 @@ namespace Dvsa\Olcs\Api\Domain;
 interface CompaniesHouseAwareInterface
 {
     /**
-     * @param \Olcs\Db\Service\CompaniesHouse $service
+     * @param \Dvsa\Olcs\Api\Service\CompaniesHouseService $service
      */
-    public function setCompaniesHouseService(\Olcs\Db\Service\CompaniesHouse $service);
+    public function setCompaniesHouseService(\Dvsa\Olcs\Api\Service\CompaniesHouseService $service);
 
     /**
-     * @return \Olcs\Db\Service\CompaniesHouse
+     * @return \Dvsa\Olcs\Api\Service\CompaniesHouseService
      */
     public function getCompaniesHouseService();
 }
