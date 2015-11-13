@@ -13,16 +13,7 @@ final class ApplicantsResponses extends AbstractSection
 {
     public function generateSection(CasesEntity $case)
     {
-        $defaultText = "<h3>Hours of Operation:</h3>
-<p>Monday to Friday:<br />
-Saturday:<br />
-Sunday:<br />
-Bank Holiday:<br /></p>
-<h3>Hours of Maintenance:</h3>
-<p>Monday to Friday:<br />
-Saturday:<br />
-Sunday:<br />
-Bank Holiday:<br /></p>";
+        $defaultText = $this->getViewRenderer()->render('/sections/applicants-responses.phtml');
 
         return ['data' => ['text' => $defaultText]];
     }
