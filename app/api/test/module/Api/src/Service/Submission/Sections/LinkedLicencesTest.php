@@ -6,8 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class LinkedLicencesTest
- * @to-do this currently doesnt really test anything because the criteria object on licence::getLinkedLicences
- * seems to work for the application but not for unit testing.
  *
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
@@ -19,7 +17,28 @@ class LinkedLicencesTest extends SubmissionSectionTest
         'data' => [
             'tables' => [
                 'linked-licences-app-numbers' => [
-
+                    [
+                        'id' => 1,
+                        'version' => 1,
+                        'licNo' => 'OB12345',
+                        'status' => 'lic_status-desc',
+                        'licenceType' => 'lic_type-desc',
+                        'totAuthTrailers' => 5,
+                        'totAuthVehicles' => null,
+                        'vehiclesInPossession' => 3,
+                        'trailersInPossession' => 5
+                    ],
+                    [
+                        'id' => 2,
+                        'version' => 2,
+                        'licNo' => 'OB12345',
+                        'status' => 'lic_status-desc',
+                        'licenceType' => 'lic_type-desc',
+                        'totAuthTrailers' => 5,
+                        'totAuthVehicles' => null,
+                        'vehiclesInPossession' => 3,
+                        'trailersInPossession' => 5
+                    ]
                 ]
             ]
         ]

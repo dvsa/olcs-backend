@@ -243,7 +243,7 @@ class OrganisationEntityTest extends EntityTester
                     $expr = $criteria->getWhereExpression();
 
                     $this->assertEquals('status', $expr->getField());
-                    $this->assertEquals('IN', $expr->getOperator());
+                    $this->assertEquals('NIN', $expr->getOperator());
                     $this->assertTrue(is_array($expr->getValue()->getValue()));
 
                     $collection = m::mock();
