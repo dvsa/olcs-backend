@@ -10,15 +10,15 @@ trait CompaniesHouseAwareTrait
     protected $companiesHouseService;
 
     /**
-     * @param \Olcs\Db\Service\CompaniesHouse $service
+     * @param \Dvsa\Olcs\Api\Service\CompaniesHouseService $service
      */
-    public function setCompaniesHouseService(\Olcs\Db\Service\CompaniesHouse $service)
+    public function setCompaniesHouseService(\Dvsa\Olcs\Api\Service\CompaniesHouseService $service)
     {
         $this->companiesHouseService = $service;
     }
 
     /**
-     * @return \Olcs\Db\Service\CompaniesHouse
+     * @return \Dvsa\Olcs\Api\Service\CompaniesHouseService
      */
     public function getCompaniesHouseService()
     {
@@ -42,5 +42,23 @@ trait CompaniesHouseAwareTrait
         $response = $this->getCompaniesHouseService()->getList($data);
 
         return $response['Results'];
+    }
+
+    /**
+     * Get a list of Current Company Officers from Companies House API
+     *
+     * @param string $type nameSearch|numberSearch|companyDetails|currentCompanyOfficers
+     * @param string $value company number or company name
+     *
+     * @return array
+     */
+    public function getCompaniesList($type, $value)
+    {
+        $data = [
+            'type' => $type,
+            'value' => $value
+        ];
+
+        return $this->getCompaniesHouseService()->getList($data);
     }
 }

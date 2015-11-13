@@ -357,6 +357,7 @@ return [
 
     // Companies House
     TransferQuery\CompaniesHouse\AlertList::class => QueryHandler\CompaniesHouse\AlertList::class,
+    TransferQuery\CompaniesHouse\GetList::class => QueryHandler\CompaniesHouse\GetList::class,
 
     // Queue
     QueueQuery\NextItem::class => QueueQueryHandler\NextItem::class,
