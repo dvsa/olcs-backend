@@ -716,6 +716,7 @@ $map = [
     QueryHandler\TransportManagerLicence\GetListByVariation::class => Handler\Standard::class, // @todo
     QueryHandler\User\Partner::class => Handler\Standard::class, // @todo
     QueryHandler\User\PartnerList::class => Handler\Standard::class, // @todo
+    QueryHandler\User\RoleList::class => Handler\User\RoleList::class,
     QueryHandler\User\User::class => Handler\Standard::class, // @todo
     QueryHandler\User\UserList::class => Handler\Standard::class, // @todo
     QueryHandler\User\UserListSelfserve::class => Handler\Standard::class, // @todo

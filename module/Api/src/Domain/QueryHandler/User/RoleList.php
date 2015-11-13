@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Roles
+ * Role List
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 
@@ -10,9 +10,9 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 
 /**
- * Roles
+ * Role List
  */
-class Roles extends AbstractQueryHandler
+class RoleList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Role';
 
