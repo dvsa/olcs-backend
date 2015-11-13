@@ -231,20 +231,21 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
     /**
      * Returns licences linked to this organisation for submissions
+     * NOTE: In submissions, the licence the submission relates to is ALSO EXCLUDED. As these are 'linked licences'.
      * @return array LicenceEntity[]
      */
     public function getLinkedLicences()
     {
         $criteria = Criteria::create();
         $criteria->where(
-            $criteria->expr()->in(
+            $criteria->expr()->notIn(
                 'status',
                 [
+                    LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
                     LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
                     LicenceEntity::LICENCE_STATUS_GRANTED,
-                    LicenceEntity::LICENCE_STATUS_VALID,
-                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                    LicenceEntity::LICENCE_STATUS_WITHDRAWN,
+                    LicenceEntity::LICENCE_STATUS_REFUSED
                 ]
             )
         );
