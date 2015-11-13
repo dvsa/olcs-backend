@@ -21,35 +21,20 @@ class PsvDiscs extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
 
+    protected $extraRepos = ['PsvDisc'];
+
     public function handleQuery(QueryInterface $query)
     {
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
 
-        if ($query->getIncludeCeased()) {
-            return $this->result(
-                $licence,
-                ['psvDiscs'],
-                [
-                    'remainingSpacesPsv' => $licence->getRemainingSpacesPsv(),
-                    'totalPsvDiscs' => $licence->getPsvDiscs()->count()
-                ]
-            );
-        }
-
-        $criteria = Criteria::create();
-        $criteria->where(
-            $criteria->expr()->isNull('ceasedDate')
-        );
-
         return $this->result(
             $licence,
+            [],
             [
-                'psvDiscs' => ['criteria' => $criteria]
-            ],
-            [
+                'psvDiscs' => $this->getRepo('PsvDisc')->fetchList($query),
                 'remainingSpacesPsv' => $licence->getRemainingSpacesPsv(),
-                'totalPsvDiscs' => $licence->getPsvDiscs()->count()
+                'totalPsvDiscs' => $this->getRepo('PsvDisc')->fetchCount($query),
             ]
         );
     }
