@@ -182,4 +182,79 @@ class SearchTest extends TestCase
 
         $sut->updateVehicleSection26($ids, $section26Value);
     }
+
+    public function testSearchPerson()
+    {
+        $sut = new SearchService();
+
+        $expectedQuery = [
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match' => [
+                                '_all' => 'SMITH'
+                            ]
+                        ]
+                    ],
+                    'should' => [
+                        [
+                            'match' => [
+                                'vrm' => 'SMITH'
+                            ]
+                        ],
+                        [
+                            'match' => [
+                                'correspondence_postcode' => 'SMITH'
+                            ]
+                        ],
+                        [
+                            'wildcard' => [
+                                'org_name_wildcard' => [
+                                    'value' => 'smith*',
+                                    'boost' => 2.0,
+                                ]
+                            ]
+                        ],
+                        [
+                            'wildcard' => [
+                                'person_family_name_wildcard' => [
+                                    'value' => '*smith*',
+                                    'boost' => 2.0,
+                                ]
+                            ]
+                        ],
+                        [
+                            'wildcard' => [
+                                'person_forename_wildcard' => [
+                                    'value' => '*smith*',
+                                    'boost' => 2.0,
+                                ]
+                            ]
+                        ],
+                    ]
+                ]
+            ],
+            'size' => 10,
+            'from' => 0
+        ];
+
+        $mockClient = m::mock(\Elastica\Client::class);
+        $mockClient->shouldReceive('request')->once()->andReturnUsing(
+            function ($path, $method, $query, $params) use ($expectedQuery) {
+                $this->assertSame('person/_search', $path);
+                $this->assertSame('GET', $method);
+                $this->assertSame($expectedQuery, $query);
+                $this->assertSame([], $params);
+
+                $searchResponse = m::mock(\Elastica\Response::class);
+                $searchResponse->shouldReceive('getData')->andReturn([]);
+                return $searchResponse;
+            }
+        );
+
+        $sut->setClient($mockClient);
+
+        $sut->search('SMITH', ['person']);
+    }
 }
