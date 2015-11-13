@@ -97,6 +97,10 @@ class Search
             $elasticaQueryWildcard = new Query\Wildcard('org_name_wildcard', $wildcardQuery, 2.0);
             $elasticaQueryBool->addShould($elasticaQueryWildcard);
 
+            foreach ($indexes as $index) {
+                $this->modifyQueryForIndex($index, $query, $elasticaQueryBool);
+            }
+
             $elasticaQuery = new Query();
 
             $elasticaQuery->setQuery($elasticaQueryBool);
@@ -140,6 +144,28 @@ class Search
         $response['Filters'] = $this->processFilters($resultSet->getAggregations());
 
         return $response;
+    }
+
+    /**
+     * Modify the query dependant on the index
+     *
+     * @param string $index
+     * @param string $search
+     * @param \Elastica\Query\Bool $queryBool
+     */
+    private function modifyQueryForIndex($index, $search, Query\Bool $queryBool)
+    {
+        switch ($index) {
+            case 'person':
+                $wildcardQuery = '*'. strtolower(trim($search, '*')). '*';
+                $queryBool->addShould(
+                    new Query\Wildcard('person_family_name_wildcard', $wildcardQuery, 2.0)
+                );
+                $queryBool->addShould(
+                    new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
+                );
+                break;
+        }
     }
 
     public function processDateRanges(Query\Bool $bool)
