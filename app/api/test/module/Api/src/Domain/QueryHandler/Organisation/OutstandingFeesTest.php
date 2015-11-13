@@ -30,6 +30,7 @@ class OutstandingFeesTest extends QueryHandlerTestCase
         $this->mockRepo('Organisation', OrganisationRepo::class);
         $this->mockRepo('Correspondence', CorrespondenceRepo::class);
         $this->mockRepo('Fee', FeeRepo::class);
+        $this->mockRepo('SystemParameter', \Dvsa\Olcs\Api\Domain\Repository\SystemParameter::class);
 
         parent::setUp();
     }
@@ -68,6 +69,12 @@ class OutstandingFeesTest extends QueryHandlerTestCase
             ->once()
             ->with($organisationId)
             ->andReturn(123);
+
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('getDisableCardPayments')
+            ->once()
+            ->with()
+            ->andReturn(true);
 
         $result = $this->sut->handleQuery($query);
 
