@@ -9,7 +9,6 @@
 namespace OlcsTest\Api\Service;
 
 use OlcsTest\Bootstrap;
-use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Service\CompaniesHouseService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
