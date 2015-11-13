@@ -85,6 +85,11 @@ return [
             'TrafficAreaValidator' => \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator::class,
         ],
     ],
+    'view_manager' => [
+        'template_path_stack' => [
+            'submission' => __DIR__ . '/../view/submission',
+        ]
+    ],
     'file_uploader' => [
         'default' => 'ContentStore',
         'config' => [
