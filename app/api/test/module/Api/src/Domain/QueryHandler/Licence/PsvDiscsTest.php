@@ -26,6 +26,7 @@ class PsvDiscsTest extends QueryHandlerTestCase
     {
         $this->sut = new PsvDiscs();
         $this->mockRepo('Licence', LicenceRepo::class);
+        $this->mockRepo('PsvDisc', \Dvsa\Olcs\Api\Domain\Repository\PsvDisc::class);
 
         parent::setUp();
     }
@@ -37,7 +38,7 @@ class PsvDiscsTest extends QueryHandlerTestCase
         $licence = m::mock(Licence::class)->makePartial();
         $licence->shouldReceive('serialize')
             ->once()
-            ->with(['psvDiscs'])
+            ->with([])
             ->andReturn(['foo' => 'bar', 'remainingSpacesPsv' => 10])
             ->shouldReceive('getRemainingSpacesPsv')
             ->andReturn(10)
@@ -48,39 +49,22 @@ class PsvDiscsTest extends QueryHandlerTestCase
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($query)
-            ->andReturn($licence);
-
-        $result = $this->sut->handleQuery($query);
-        $this->assertEquals(['foo' => 'bar', 'remainingSpacesPsv' => 10, 'totalPsvDiscs' => 10], $result->serialize());
-    }
-
-    public function testHandleQueryWithoutCeased()
-    {
-        $query = Qry::create(['id' => 111, 'includeCeased' => false]);
-
-        $licence = m::mock(Licence::class)->makePartial();
-        $licence->shouldReceive('serialize')
             ->once()
-            ->andReturnUsing(
-                function ($bundle) {
-
-                    $this->assertInstanceOf(Criteria::class, $bundle['psvDiscs']['criteria']);
-
-                    return ['foo' => 'bar'];
-                }
-            )
-            ->shouldReceive('getRemainingSpacesPsv')
-            ->andReturn(10)
-            ->once();
-
-        $licence->shouldReceive('getPsvDiscs->count')
-            ->andReturn(10);
-
-        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
-            ->with($query)
             ->andReturn($licence);
 
+        $this->repoMap['PsvDisc']->shouldReceive('fetchList')
+            ->with($query)
+            ->once()
+            ->andReturn(['DISCS']);
+        $this->repoMap['PsvDisc']->shouldReceive('fetchCount')
+            ->with($query)
+            ->once()
+            ->andReturn(101);
+
         $result = $this->sut->handleQuery($query);
-        $this->assertEquals(['foo' => 'bar', 'remainingSpacesPsv' => 10, 'totalPsvDiscs' => 10], $result->serialize());
+        $this->assertEquals(
+            ['foo' => 'bar', 'remainingSpacesPsv' => 10, 'totalPsvDiscs' => 101, 'psvDiscs' => ['DISCS']],
+            $result->serialize()
+        );
     }
 }
