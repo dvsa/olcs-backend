@@ -3,16 +3,19 @@
 /**
  * Companies House Request Service
  *
+ * @note migrated from Olcs\Db\Service
  * @author S Lizzio <shaun.lizzio@valtech.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Olcs\Db\Service;
+namespace Dvsa\Olcs\Api\Service;
 
-use Olcs\Db\Exceptions\RestResponseException;
+use Dvsa\Olcs\Api\Domain\Exception\RestResponseException;
 use Olcs\Logging\Log\Logger;
 use Zend\Http\Response;
 use CompaniesHouse\CHXmlGateway;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Companies House Request Service
@@ -22,7 +25,7 @@ use CompaniesHouse\CHXmlGateway;
  * @author Rob Caiger <rob@clocal.co.uk>
  * @author Jessica Rowbottom <jess.rowbottom@valtech.co.uk>
  */
-class CompaniesHouse extends ServiceAbstract
+class CompaniesHouseService implements FactoryInterface
 {
 
     /**
@@ -50,11 +53,19 @@ class CompaniesHouse extends ServiceAbstract
      */
     private $userId;
 
+    private $config;
+
     /**
      * Allowed appointment types
      * @see http://xmlgw.companieshouse.gov.uk/data_usage_guide_apr_2014.pdf
      */
     private $allowedAppointmentTypes = ['DIR', 'LLPMEM', 'LLPGPART', 'LLPPART', 'RECMAN', 'FACTOR', 'LLPDMEM'];
+
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->config = $serviceLocator->get('Config');
+        return $this;
+    }
 
     /**
      * Returns a list of records after Companies House API's call
@@ -211,13 +222,11 @@ class CompaniesHouse extends ServiceAbstract
      */
     private function setCredentials()
     {
-        $config = $this->getServiceLocator()->get('Config');
+        $this->setPassword($this->config['companies_house_credentials']['password']);
+        $this->setUserId($this->config['companies_house_credentials']['userId']);
 
-        $this->setPassword($config['companies_house_credentials']['password']);
-        $this->setUserId($config['companies_house_credentials']['userId']);
-
-        if ( isset($config['companies_house_connection']['proxy']) ) {
-            $this->setProxy($config['companies_house_connection']['proxy']);
+        if ( isset($this->config['companies_house_connection']['proxy']) ) {
+            $this->setProxy($this->config['companies_house_connection']['proxy']);
         }
     }
 

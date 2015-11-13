@@ -5,7 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\OtherLicence;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\OrganisationPerson;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\OrganisationPerson\PopulateFromCompaniesHouse as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson as OrganisationPersonRepo;
@@ -29,11 +29,10 @@ class PopulateFromCompaniesHouseTest extends CommandHandlerTestCase
         $this->mockRepo('Organisation', Organisation::class);
         $this->mockRepo('Person', Person::class);
 
-        $this->mockCh = m::mock(\Olcs\Db\Service\CompaniesHouse::class);
+        $this->mockCh = m::mock(\Dvsa\Olcs\Api\Service\CompaniesHouseService::class);
 
         $this->mockedSmServices = [
-            'serviceFactory' => m::mock()->shouldReceive('getService')->with('CompaniesHouse')
-                ->andReturn($this->mockCh)->getMock()
+            'CompaniesHouseService' => $this->mockCh
         ];
 
         parent::setUp();
