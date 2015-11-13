@@ -42,6 +42,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use \Dvsa\Olcs\Api\Entity\Cases\Statement;
+use Zend\View\Renderer\PhpRenderer;
 
 /**
  * Class SubmissionSectionTest
@@ -65,7 +66,9 @@ class SubmissionSectionTest extends MockeryTestCase
     public function testGenerateSection($input = null, $expectedResult = null)
     {
         if (!empty($input)) {
-            $sut = new $this->submissionSection(m::mock(QueryHandlerInterface::class));
+            $mockQueryHandler = m::mock(QueryHandlerInterface::class);
+            $mockViewRenderer = m::mock(PhpRenderer::class);
+            $sut = new $this->submissionSection($mockQueryHandler, $mockViewRenderer);
 
             $this->assertEquals($expectedResult, $sut->generateSection($input));
         } else {
