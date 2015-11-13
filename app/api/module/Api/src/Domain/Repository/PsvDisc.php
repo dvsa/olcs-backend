@@ -90,4 +90,16 @@ class PsvDisc extends AbstractRepository
             $this->save($fetched);
         }
     }
+
+    protected function applyListFilters(\Doctrine\ORM\QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
+    {
+        if (method_exists($query, 'getIncludeCeased')) {
+            if ($query->getIncludeCeased() === false) {
+                $qb->andWhere($qb->expr()->isNull($this->alias . '.ceasedDate'));
+            }
+        }
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->setParameter('licence', $query->getId());
+    }
 }
