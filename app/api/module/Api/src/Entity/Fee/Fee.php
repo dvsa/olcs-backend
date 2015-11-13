@@ -500,8 +500,6 @@ class Fee extends AbstractFee
     {
         $net = $this->getNetAmount();
 
-        $this->setVatAmount($net * $rate);
-
         $vat = $net * $rate; // this gives value in pence
         $vat = floor($vat); // round down to nearest penny
         $vat = $vat / 100; // convert to pounds
