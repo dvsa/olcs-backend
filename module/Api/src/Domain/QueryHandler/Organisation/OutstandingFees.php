@@ -20,7 +20,7 @@ class OutstandingFees extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Organisation';
 
-    protected $extraRepos = ['Fee', 'Correspondence'];
+    protected $extraRepos = ['Fee', 'Correspondence', 'SystemParameter'];
 
     public function handleQuery(QueryInterface $query)
     {
@@ -48,6 +48,7 @@ class OutstandingFees extends AbstractQueryHandler
                     ]
                 ),
                 'correspondenceCount' => $this->getCorrespondenceCount($organisation->getId()),
+                'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableCardPayments(),
             ]
         );
     }
