@@ -59,12 +59,12 @@ class Fee extends AbstractQueryHandler
             'slipNo' => $fee->getSlipNo(),
             'chequePoNumber' => $fee->getChequePoNumber(),
             'waiveReason' => $fee->getWaiveReason(),
+            //////////
 
             'hasOutstandingWaiveTransaction' => !empty($fee->getOutstandingWaiveTransaction()),
-
             'canRefund' => $fee->canRefund(),
-
             'displayTransactions' => $this->getDisplayTransactions($fee),
+            'vatInfo' => $this->getVatInfo($fee),
         ];
     }
 
@@ -98,5 +98,18 @@ class Fee extends AbstractQueryHandler
         }
 
         return $displayData;
+    }
+
+    /**
+     * @param FeeEntity $fee
+     * @return string|null e.g. "20% (S)"
+     */
+    private function getVatInfo($fee)
+    {
+        $feeType = $fee->getFeeType();
+
+        if ($feeType->getVatRate() > 0) {
+            return sprintf('%d%% (%s)', $feeType->getVatRate(), $feeType->getVatCode());
+        }
     }
 }
