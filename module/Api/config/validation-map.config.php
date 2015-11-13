@@ -592,6 +592,7 @@ $map = [
     QueryHandler\ChangeOfEntity\ChangeOfEntity::class => Handler\Standard::class, // @todo
     QueryHandler\CommunityLic\CommunityLic::class => Handler\Standard::class, // @todo
     QueryHandler\CompaniesHouse\AlertList::class => Handler\Standard::class, // @todo
+    QueryHandler\CompaniesHouse\GetList::class => Handler\Standard::class, // @todo
     QueryHandler\Complaint\Complaint::class => Handler\Standard::class, // @todo
     QueryHandler\Complaint\ComplaintList::class => Handler\Standard::class, // @todo
     QueryHandler\ConditionUndertaking\Get::class => Handler\Standard::class, // @todo
