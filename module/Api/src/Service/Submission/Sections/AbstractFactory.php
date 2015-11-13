@@ -25,6 +25,8 @@ class AbstractFactory implements FactoryInterface
         $mainSl = $serviceLocator->getServiceLocator();
         $config = $mainSl->get('Config')['submissions']['sections']['aliases'];
         $className = $config[$requestedName];
-        return new $className($mainSl->get('QueryHandlerManager'));
+        $viewRenderer = $mainSl->get('viewrenderer');
+
+        return new $className($mainSl->get('QueryHandlerManager'), $viewRenderer);
     }
 }
