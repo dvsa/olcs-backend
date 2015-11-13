@@ -8,10 +8,12 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\CreateVariation;
 use Dvsa\Olcs\Transfer\Command\Bus\CreateVariation as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 
 /**
@@ -38,9 +40,10 @@ class CreateVariationTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $id = 111;
+        $busRegId = 111;
+        $feeId = 44;
 
-        $command = Cmd::create(['id' => $id]);
+        $command = Cmd::create(['id' => $busRegId]);
 
         /** @var BusRegEntity $busReg */
         $busReg = m::mock(BusRegEntity::class);
@@ -49,8 +52,8 @@ class CreateVariationTest extends CommandHandlerTestCase
             ->with(RefDataEntity::class, RefDataEntity::class)
             ->andReturnSelf()
             ->shouldReceive('getId')
-            ->once()
-            ->andReturn($id);
+            ->times(2)
+            ->andReturn($busRegId);
 
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)
@@ -59,11 +62,17 @@ class CreateVariationTest extends CommandHandlerTestCase
             ->with(m::type(BusRegEntity::class))
             ->once();
 
+        $result1 = new Result();
+        $result1->addId('fee', $feeId);
+        $data = ['id' => $busRegId];
+        $this->expectedSideEffect(CreateFeeCmd::class, $data, $result1);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [
-                'bus' => 111,
+                'bus' => $busRegId,
+                'fee' => $feeId
             ],
             'messages' => [
                 'Variation created successfully'

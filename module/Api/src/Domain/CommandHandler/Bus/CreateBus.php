@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Bus\CreateBus as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateBusFeeCmd;
 
 /**
  * Create Bus
@@ -29,6 +30,8 @@ final class CreateBus extends AbstractCommandHandler
         $result = new Result();
         $result->addId('bus', $bus->getId());
         $result->addMessage('Bus created successfully');
+
+        $result->merge($this->handleSideEffect(CreateBusFeeCmd::create(['id' => $bus->getId()])));
 
         return $result;
     }

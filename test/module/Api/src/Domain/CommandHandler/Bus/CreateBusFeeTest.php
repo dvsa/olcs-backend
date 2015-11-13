@@ -8,6 +8,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\CreateBusFee;
 use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
@@ -110,8 +111,6 @@ class CreateBusFeeTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT)
             ->andReturn($busReg);
 
-        $result = new Result();
-        $result->addId('fee', 555);
         $feeData = [
             'task' => null,
             'application' => null,
@@ -127,12 +126,13 @@ class CreateBusFeeTest extends CommandHandlerTestCase
             'user' => null,
         ];
 
+        $result = new Result();
+        $this->expectedSideEffect(CreateFee::class, $feeData, $result);
+
         /**
          * @var \Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee
          */
-        $result = $this->sut->handleCommand($command);
-
-        $this->assertEquals($feeData, $result->getArrayCopy());
+        $this->sut->handleCommand($command);
     }
 
     /**
