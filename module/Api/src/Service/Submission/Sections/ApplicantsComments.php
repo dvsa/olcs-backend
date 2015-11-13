@@ -13,12 +13,7 @@ final class ApplicantsComments extends AbstractSection
 {
     public function generateSection(CasesEntity $case)
     {
-        $defaultText = "<p>TE REPORT:</p>
-<p>SIZE:</p>
-<p>ACCESS/EGRESS/MANOEUVRE:</p>
-<p>VISIBILITY:</p>
-<p>TE COMMENTS:</p>
-<p>TE CONCLUSIONS:</p>";
+        $defaultText = $this->getViewRenderer()->render('/sections/applicants-comments.phtml');
 
         return ['data' => ['text' => $defaultText]];
     }
