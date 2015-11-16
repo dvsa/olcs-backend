@@ -112,7 +112,7 @@ class ApplicationTest extends QueryHandlerTestCase
     {
         $mock = m::mock(FeeEntity::class)->makePartial();
         $mock
-            ->setAmount($amount)
+            ->setGrossAmount($amount)
             ->shouldReceive('getOutstandingAmount')
             ->andReturn($amount)
             ->shouldReceive('serialize')
