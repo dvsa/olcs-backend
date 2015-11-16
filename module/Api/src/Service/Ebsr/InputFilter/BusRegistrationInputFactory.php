@@ -37,6 +37,7 @@ class BusRegistrationInputFactory implements FactoryInterface
         $validatorChain = $service->getValidatorChain();
         $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\EffectiveDate'));
         $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\ApplicationType'));
+        $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\Licence'));
 
         return $service;
     }
