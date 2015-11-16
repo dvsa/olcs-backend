@@ -370,6 +370,8 @@ return [
     TransferCommand\Submission\CreateSubmission::class => CommandHandler\Submission\CreateSubmission::class,
     TransferCommand\Submission\UpdateSubmission::class => CommandHandler\Submission\UpdateSubmission::class,
     TransferCommand\Submission\DeleteSubmission::class => CommandHandler\Submission\DeleteSubmission::class,
+    TransferCommand\Submission\CloseSubmission::class => CommandHandler\Submission\CloseSubmission::class,
+    TransferCommand\Submission\ReopenSubmission::class => CommandHandler\Submission\ReopenSubmission::class,
 
     TransferCommand\Submission\FilterSubmissionSections::class =>
         CommandHandler\Submission\FilterSubmissionSections::class,
