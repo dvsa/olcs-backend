@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Does Own Licence With Id
+ * Can Access Licence With Id
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -12,11 +12,11 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
 
 /**
- * Does Own Licence With Id
+ * Can Access Licence With Id
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DoesOwnLicenceWithId extends AbstractHandler implements AuthAwareInterface
+class CanAccessLicenceWithId extends AbstractHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
@@ -25,11 +25,7 @@ class DoesOwnLicenceWithId extends AbstractHandler implements AuthAwareInterface
      */
     public function isValid($dto)
     {
-        if ($this->isInternalUser()) {
-            return true;
-        }
-
-        return $this->doesOwnLicence($this->getId($dto));
+        return $this->canAccessLicence($this->getId($dto));
     }
 
     protected function getId($dto)

@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Does Own Licence With Licence
+ * Can Access Licence With Licence
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
 
 /**
- * Does Own Licence With Licence
+ * Can Access Licence With Licence
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DoesOwnLicenceWithLicence extends DoesOwnLicenceWithId
+class CanAccessLicenceWithLicence extends CanAccessLicenceWithId
 {
     protected function getId($dto)
     {

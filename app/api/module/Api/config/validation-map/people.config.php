@@ -7,11 +7,11 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers as Handler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
 
 return [
-    AppCommandHandler\CreatePeople::class   => Misc\DoesOwnApplicationWithId::class,
+    AppCommandHandler\CreatePeople::class   => Misc\CanAccessApplicationWithId::class,
     AppCommandHandler\DeletePeople::class   => Handler\Standard::class, // @todo
     AppCommandHandler\RestorePeople::class  => Handler\Standard::class, // @todo
     AppCommandHandler\UpdatePeople::class   => Handler\Standard::class, // @todo
-    LicCommandHandler\CreatePeople::class   => Misc\DoesOwnLicenceWithId::class,
+    LicCommandHandler\CreatePeople::class   => Misc\CanAccessLicenceWithId::class,
     LicCommandHandler\DeletePeople::class   => Handler\Standard::class, // @todo
     LicCommandHandler\UpdatePeople::class   => Handler\Standard::class, // @todo
     QueryHandler\Licence\People::class      => Handler\Standard::class, // @todo
