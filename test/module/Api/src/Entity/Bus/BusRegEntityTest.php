@@ -1340,6 +1340,10 @@ class BusRegEntityTest extends EntityTester
         $this->entity->addBusServiceTypes('any value');
         $this->entity->addTrafficAreas('any value');
         $this->entity->addLocalAuthoritys('any value');
+
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
     }
 
     public function testIsGrantable()
@@ -1502,9 +1506,8 @@ class BusRegEntityTest extends EntityTester
         $shortNotice->setBankHolidayChange('Y');
         $this->entity->setShortNotice($shortNotice);
 
-        // nonGrantable - Rule: Scotland - isShortNotice: Y - Fee: none
+        // nonGrantable - Rule: Scotland - isShortNotice: N - Fee: none
         // extra data required from Scotland missing
-        $this->entity->setIsShortNotice('Y');
         $this->entity->setOpNotifiedLaPte('N');
         $this->assertEquals(false, $this->entity->isGrantable());
 
