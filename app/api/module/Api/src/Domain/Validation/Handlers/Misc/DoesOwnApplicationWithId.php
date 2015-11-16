@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Create
+ * Does Own Application With Id
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\People\Application;
+namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
 
 /**
- * Create
+ * Does Own Application With Id
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Create extends AbstractHandler implements AuthAwareInterface
+class DoesOwnApplicationWithId extends AbstractHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
@@ -29,6 +29,11 @@ class Create extends AbstractHandler implements AuthAwareInterface
             return true;
         }
 
-        return $this->doesOwnApplication($dto->getId());
+        return $this->doesOwnApplication($this->getId($dto));
+    }
+
+    protected function getId($dto)
+    {
+        return $dto->getId();
     }
 }
