@@ -29,12 +29,9 @@ class Modify extends AbstractHandler implements AuthAwareInterface, RepositoryMa
      */
     public function isValid($dto)
     {
-        // If we have no context
+        // We must have context
         if (!$this->hasContext($dto)) {
-
-            // For internal users, that's ok
-            // For non internal users, that's NOT ok
-            return $this->isInternalUser();
+            return false;
         }
 
         $ids = $this->getIds($dto);
