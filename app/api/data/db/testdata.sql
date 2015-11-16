@@ -155,7 +155,13 @@ INSERT INTO txc_inbox (id, pdf_document_id, route_document_id, zip_document_id, 
 local_authority_id, organisation_id, file_read, variation_no, created_on) VALUES
 (1, 801, 802, 800, 2, 1, NULL, 1, 0, 13, '2014-03-24 16:53:00'),
 (2, 804, 805, 803, 2, 1, 2, 1, 0, 14, '2014-03-24 16:53:00'),
-(3, 807, 808, 806, 2, 1, 1, 1, 0, 15, '2014-03-24 16:53:00');
+(3, 807, 808, 806, 2, 1, 1, 1, 0, 15, '2014-03-24 16:53:00'),
+(4, 807, 808, 806, 20, 1, 1, 1, 0, 16, '2014-03-24 16:53:00'),
+(5, 807, 808, 806, 20, 1, 1, 1, 0, 17, '2014-03-24 16:53:00'),
+(6, 807, 808, 806, 20, 1, 1, 1, 0, 18, '2014-03-24 16:53:00'),
+(7, 807, 808, 806, 19, 1, 1, 1, 0, 19, '2014-03-24 16:53:00'),
+(8, 807, 808, 806, 19, 1, 1, 1, 0, 20, '2014-03-24 16:53:00'),
+(9, 807, 808, 806, 19, 1, 1, 1, 0, 21, '2014-03-24 16:53:00');
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
@@ -584,7 +590,11 @@ INSERT INTO `ebsr_submission` (`id`, `document_id`, `ebsr_submission_type_id`,
   (12, null, 'ebsrt_refresh', 'ebsrs_processing', 3, '2006-06-07 11:55:32', 'PB12355', null, null, 5, '1115',
   null, null, null, null, null, null, null, null,null, 0, null),
   (13, null, 'ebsrt_new', 'ebsrs_validated', 1, '2010-05-05 11:55:32', 'PB12355', null, null, 5, '1115',
-  null, null, null, null, null, null, null, null,null, 0, null)
+  null, null, null, null, null, null, null, null,null, 0, null),
+  (14, null, 'ebsrt_new', 'ebsrs_validated', 20, '2010-05-05 11:55:32', 'PB12355', null, null, 5, '1115',
+   null, null, null, null, null, null, null, null,null, 0, null),
+  (15, null, 'ebsrt_new', 'ebsrs_validated', 19, '2010-05-05 11:55:32', 'PB12355', null, null, 5, '1115',
+   null, null, null, null, null, null, null, null,null, 0, null)
 
   ;
 
