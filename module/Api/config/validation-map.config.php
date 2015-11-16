@@ -616,6 +616,7 @@ $map = [
     QueryHandler\Fee\FeeList::class => Handler\Standard::class, // @todo
     QueryHandler\Fee\FeeType::class => Handler\Standard::class, // @todo
     QueryHandler\Fee\FeeTypeList::class => Handler\Standard::class, // @todo
+    QueryHandler\Fee\GetLatestFeeType::class => Handler\Standard::class, // @todo
     QueryHandler\GracePeriod\GracePeriod::class => Handler\Standard::class, // @todo
     QueryHandler\GracePeriod\GracePeriods::class => Handler\Standard::class, // @todo
     QueryHandler\InspectionRequest\ApplicationInspectionRequestList::class => Handler\Standard::class, // @todo
