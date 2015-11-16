@@ -304,6 +304,7 @@ return [
     // Fee Type
     TransferQuery\Fee\FeeType::class => QueryHandler\Fee\FeeType::class,
     TransferQuery\Fee\FeeTypeList::class => QueryHandler\Fee\FeeTypeList::class,
+    TransferQuery\Fee\GetLatestFeeType::class => QueryHandler\Fee\GetLatestFeeType::class,
 
     // Operator
     TransferQuery\Operator\BusinessDetails::class => QueryHandler\Operator\BusinessDetails::class,
