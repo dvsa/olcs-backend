@@ -161,4 +161,43 @@ class PsvDiscTest extends RepositoryTestCase
 
         $this->assertNull($sut->setIsPrintingOffAndAssignNumbers([$mockDisc], 1));
     }
+
+    public function testApplyListFiltersIncludeCeasedFalse()
+    {
+        $sut = m::mock(PsvDiscRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $qb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $query = \Dvsa\Olcs\Transfer\Query\Licence\PsvDiscs::create(['includeCeased' => false, 'id' => 12]);
+
+        $sut->shouldReceive('createQueryBuilder')->with()->once()->andReturn($qb);
+        $sut->shouldReceive('buildDefaultListQuery')->with($qb, $query)->once();
+        $sut->shouldReceive('applyListJoins')->with($qb)->once();
+        $sut->shouldReceive('fetchPaginatedList')->with($qb, \Doctrine\ORM\Query::HYDRATE_ARRAY)->once();
+
+        $qb->shouldReceive('expr->isNull')->with('psv.ceasedDate')->once()->andReturn('QUERY1');
+        $qb->shouldReceive('andWhere')->with('QUERY1')->once();
+
+        $qb->shouldReceive('expr->eq')->with('psv.licence', ':licence')->once()->andReturn('QUERY2');
+        $qb->shouldReceive('andWhere')->with('QUERY2')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('licence', 12)->once();
+
+        $sut->fetchList($query);
+    }
+
+    public function testApplyListFiltersIncludeCeasedTrue()
+    {
+        $sut = m::mock(PsvDiscRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $qb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $query = \Dvsa\Olcs\Transfer\Query\Licence\PsvDiscs::create(['includeCeased' => true, 'id' => 12]);
+
+        $sut->shouldReceive('createQueryBuilder')->with()->once()->andReturn($qb);
+        $sut->shouldReceive('buildDefaultListQuery')->with($qb, $query)->once();
+        $sut->shouldReceive('applyListJoins')->with($qb)->once();
+        $sut->shouldReceive('fetchPaginatedList')->with($qb, \Doctrine\ORM\Query::HYDRATE_ARRAY)->once();
+
+        $qb->shouldReceive('expr->eq')->with('psv.licence', ':licence')->once()->andReturn('QUERY2');
+        $qb->shouldReceive('andWhere')->with('QUERY2')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('licence', 12)->once();
+
+        $sut->fetchList($query);
+    }
 }
