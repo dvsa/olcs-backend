@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
-use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
@@ -162,7 +161,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      * Gets a licence from the organisation licences. Used by EBSR to check the licence is related to the organisation,
      * we return more than just a true/false, as the status is checked afterwards
      *
-     * @return LicenceEntity
+     * @return ArrayCollection
      */
     public function getLicenceByLicNo($licNo)
     {
