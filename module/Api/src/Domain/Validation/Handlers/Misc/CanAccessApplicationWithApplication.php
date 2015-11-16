@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Does Own Application With Application
+ * Can Access Application With Application
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
 
 /**
- * Does Own Application With Application
+ * Can Access Application With Application
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DoesOwnApplicationWithApplication extends DoesOwnApplicationWithId
+class CanAccessApplicationWithApplication extends CanAccessApplicationWithId
 {
     protected function getId($dto)
     {

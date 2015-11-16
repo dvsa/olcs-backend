@@ -9,10 +9,10 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\CompanySubsidiary\Licence as LicHan
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
 
 return [
-    AppCommandHandler\CreateCompanySubsidiary::class => Misc\DoesOwnApplicationWithApplication::class,
+    AppCommandHandler\CreateCompanySubsidiary::class => Misc\CanAccessApplicationWithApplication::class,
     AppCommandHandler\UpdateCompanySubsidiary::class => AppHandler\Update::class,
     AppCommandHandler\DeleteCompanySubsidiary::class => AppHandler\Delete::class,
-    LicCommandHandler\CreateCompanySubsidiary::class => Misc\DoesOwnLicenceWithLicence::class,
+    LicCommandHandler\CreateCompanySubsidiary::class => Misc\CanAccessLicenceWithLicence::class,
     LicCommandHandler\UpdateCompanySubsidiary::class => LicHandler\Update::class,
     LicCommandHandler\DeleteCompanySubsidiary::class => LicHandler\Delete::class,
     QueryHandler\CompanySubsidiary::class            => Handler\Modify::class,

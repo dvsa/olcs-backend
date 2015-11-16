@@ -27,8 +27,8 @@ class Delete extends AbstractHandler implements AuthAwareInterface
     {
         $applicationId = $dto->getId();
 
-        // If the user is external, they must own the application
-        if ($this->isExternalUser() && $this->doesOwnApplication($applicationId) === false) {
+        // If the user can't access the application
+        if ($this->canAccessApplication($applicationId) === false) {
             return false;
         }
 
