@@ -151,6 +151,42 @@ class OrganisationEntityTest extends EntityTester
         $this->assertTrue($organisation->isUnlicensed());
     }
 
+    /**
+     * Tests fetching a licence from the organisation using the licNo
+     */
+    public function testGetLicenceByLicNo()
+    {
+        $licNo = 'PD8538936';
+
+        /** @var Entity $organisation */
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturnUsing(
+                function (Criteria $criteria) {
+                    $licNo = 'PD8538936';
+
+                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
+                    $expr = $criteria->getWhereExpression();
+
+                    $this->assertEquals('licNo', $expr->getField());
+                    $this->assertEquals('=', $expr->getOperator());
+                    $this->assertEquals($licNo, $expr->getValue()->getValue());
+
+                    $collection = m::mock();
+                    $collection->shouldReceive('toArray')
+                        ->andReturn(['licence']);
+
+                    return $collection;
+                }
+            );
+
+        $this->assertEquals(
+            ['licence'],
+            $organisation->getLicenceByLicNo($licNo)->toArray()
+        );
+    }
+
     public function testGetActiveLicences()
     {
         /** @var Entity $organisation */
