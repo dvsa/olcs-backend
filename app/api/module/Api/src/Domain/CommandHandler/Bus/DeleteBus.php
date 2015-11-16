@@ -23,6 +23,8 @@ final class DeleteBus extends AbstractCommandHandler implements TransactionedInt
 {
     protected $repoServiceName = 'Bus';
 
+    protected $extraRepos = ['TxcInbox', 'EbsrSubmission'];
+
     /**
      * Delete Command Handler Abstract
      *
@@ -50,6 +52,19 @@ final class DeleteBus extends AbstractCommandHandler implements TransactionedInt
             'routeNo' => $busReg->getRouteNo(),
             'variationNo' => $busReg->getVariationNo(),
         ];
+
+        $ebsrSubmissions = $busReg->getEbsrSubmissions();
+        $txcInboxs = $busReg->getTxcInboxs();
+
+        /** @var Entities\Ebsr\EbsrSubmission $ebsrSubmission */
+        foreach ($ebsrSubmissions as $ebsrSubmission) {
+            $this->getRepo('EbsrSubmission')->delete($ebsrSubmission);
+        }
+
+        /** @var Entities\Ebsr\TxcInbox $txcInbox */
+        foreach ($txcInboxs as $txcInbox) {
+            $this->getRepo('TxcInbox')->delete($txcInbox);
+        }
 
         $previousBusReg = $repo->fetchList(PreviousVariationByRouteNo::create($routeNoQuery), Query::HYDRATE_OBJECT);
 

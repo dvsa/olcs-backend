@@ -517,7 +517,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 ]
             );
 
-        $result = $this->sut->recordCashPayment($fees, $amount, $receiptDate, null, $slipNo);
+        $result = $this->sut->recordCashPayment($fees, $amount, $receiptDate, $slipNo);
 
         $this->assertSame($response, $result);
     }
@@ -769,7 +769,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             $fees,
             $amount,
             $receiptDate,
-            null,
             $slipNo,
             $poNo
         );

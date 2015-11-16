@@ -55,13 +55,15 @@ class Fee extends AbstractFee
     // CPMS enforces 'valid' postcodes :(
     const DEFAULT_POSTCODE = 'LS9 6NF';
 
-    public function __construct(FeeType $feeType, $amount, RefData $feeStatus)
+    public function __construct(FeeType $feeType, $netAmount, RefData $feeStatus)
     {
         parent::__construct();
 
         $this->feeType = $feeType;
-        $this->amount = $amount;
+        $this->netAmount = $netAmount;
         $this->feeStatus = $feeStatus;
+
+        $this->setVatAndGrossAmountsFromNetAmountUsingRate($feeType->getVatRate());
     }
 
     /**
@@ -217,7 +219,7 @@ class Fee extends AbstractFee
      */
     public function getOutstandingAmount()
     {
-        $amount = (int) ($this->getAmount() * 100);
+        $amount = (int) ($this->getGrossAmount() * 100);
 
         $ftSum = 0;
         $this->getFeeTransactions()->forAll(
@@ -295,6 +297,7 @@ class Fee extends AbstractFee
         return [
             'outstanding' => $this->getOutstandingAmount(),
             'receiptNo' => $this->getLatestPaymentRef(),
+            'amount' => $this->getGrossAmount(),
         ];
     }
 
@@ -411,7 +414,7 @@ class Fee extends AbstractFee
      */
     public function isPartPaid()
     {
-        return $this->getOutstandingAmount() < $this->getAmount();
+        return $this->getOutstandingAmount() < $this->getGrossAmount();
     }
 
     /**
@@ -485,5 +488,24 @@ class Fee extends AbstractFee
         }
 
         return $feeTransactions;
+    }
+
+    /**
+     * Method to encapsulate the VAT calculations. Takes a percentage rate
+     * parameter and expects net amount to be already set.
+     *
+     * @param float $rate percentage e.g. 20 or 17.5
+     */
+    public function setVatAndGrossAmountsFromNetAmountUsingRate($rate)
+    {
+        $net = $this->getNetAmount();
+
+        $vat = $net * $rate; // this gives value in pence
+        $vat = floor($vat); // round down to nearest penny
+        $vat = $vat / 100; // convert to pounds
+
+        $this->setVatAmount($vat);
+
+        $this->setGrossAmount($net + $vat);
     }
 }
