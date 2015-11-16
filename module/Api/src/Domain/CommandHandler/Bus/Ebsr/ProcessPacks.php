@@ -92,6 +92,8 @@ final class ProcessPacks extends AbstractCommandHandler implements
         $result = new Result();
 
         $packs = $command->getPacks();
+
+        /** @var OrganisationEntity $organisation */
         $organisation = $this->getCurrentOrganisation();
 
         $validPacks = 0;
@@ -123,13 +125,12 @@ final class ProcessPacks extends AbstractCommandHandler implements
             $this->xmlStructure->setValue($xmlFilename);
 
             if (!$this->xmlStructure->isValid(['xml_filename' => $xmlFilename])) {
-                //@todo return more specific messages
                 $invalidPacks++;
 
                 $result->addId(
                     'error_messages',
                     'Error with ' . $document->getDescription() . '(' . basename($xmlFilename) .
-                    '): xml file did not pass validation - not processed',
+                    '): ' . strtolower(implode(', ', $this->xmlStructure->getMessages())) . ' - not processed',
                     true
                 );
 
@@ -142,14 +143,18 @@ final class ProcessPacks extends AbstractCommandHandler implements
 
             $this->busRegInput->setValue($ebsrDoc);
 
-            if (!$this->busRegInput->isValid(['submissionType' => $command->getSubmissionType()])) {
-                //@todo return more specific messages
+            $busRegInputContext = [
+                'submissionType' => $command->getSubmissionType(),
+                'organisation' => $organisation
+            ];
+
+            if (!$this->busRegInput->isValid($busRegInputContext)) {
                 $invalidPacks++;
 
                 $result->addId(
                     'error_messages',
                     'Error with ' . $document->getDescription() . '(' . basename($xmlFilename) .
-                    '): xml file data did not meet business rules - not processed',
+                    '): ' . strtolower(implode(', ', $this->busRegInput->getMessages())) . ' - not processed',
                     true
                 );
 

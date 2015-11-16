@@ -17,7 +17,7 @@ class EffectiveDate extends AbstractValidator
      * @var array
      */
     protected $messageTemplates = [
-        self::RULES_ERROR => 'Effective date must be in the future.'
+        self::RULES_ERROR => 'Effective date must be in the future'
     ];
 
     /**
@@ -42,7 +42,7 @@ class EffectiveDate extends AbstractValidator
                 return false;
             }
         }
-        return true;
 
+        return true;
     }
 }
