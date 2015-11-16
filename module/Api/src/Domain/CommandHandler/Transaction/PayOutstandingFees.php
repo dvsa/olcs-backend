@@ -250,7 +250,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                     $fees,
                     $command->getReceived(),
                     $command->getReceiptDate(),
-                    $command->getPayer(),
                     $command->getSlipNo()
                 );
                 break;
@@ -270,7 +269,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                     $fees,
                     $command->getReceived(),
                     $command->getReceiptDate(),
-                    $command->getPayer(),
                     $command->getSlipNo(),
                     $command->getPoNo()
                 );
@@ -497,7 +495,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         // we need to calculate actual outstanding fee, because new transaction is not saved
         // on this step, so $fee->getOutstandingFeeAmount() will return the previous value
         $actualOutstandingAmount = $fee->getOutstandingAmount() - $allocatedAmount;
-        $receivedAmount = $fee->getAmount() - $actualOutstandingAmount;
+        $receivedAmount = $fee->getGrossAmount() - $actualOutstandingAmount;
 
         $dtoData = [
             'template' => 'FEE_REQ_INSUFFICIENT',
