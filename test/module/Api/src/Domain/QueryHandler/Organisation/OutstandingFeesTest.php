@@ -71,7 +71,7 @@ class OutstandingFeesTest extends QueryHandlerTestCase
             ->andReturn(123);
 
         $this->repoMap['SystemParameter']
-            ->shouldReceive('getDisableCardPayments')
+            ->shouldReceive('getDisableSelfServeCardPayments')
             ->once()
             ->with()
             ->andReturn(true);

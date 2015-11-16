@@ -48,7 +48,7 @@ class OutstandingFees extends AbstractQueryHandler
                     ]
                 ),
                 'correspondenceCount' => $this->getCorrespondenceCount($organisation->getId()),
-                'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableCardPayments(),
+                'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableSelfServeCardPayments(),
             ]
         );
     }
