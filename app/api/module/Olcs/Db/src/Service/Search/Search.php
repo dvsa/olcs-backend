@@ -325,7 +325,7 @@ class Search
         $queryBool = new Query\Bool();
         foreach ($ids as $id) {
             $match = new Query\Match();
-            $match->setField('vehicle.veh_id', $id);
+            $match->setField('veh_id', $id);
             $queryBool->addShould($match);
         }
 
