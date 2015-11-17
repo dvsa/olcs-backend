@@ -20,6 +20,9 @@ class IsInternalUser extends AbstractHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
+    /**
+     * @inheritdoc
+     */
     public function isValid($dto)
     {
         return $this->isInternalUser();

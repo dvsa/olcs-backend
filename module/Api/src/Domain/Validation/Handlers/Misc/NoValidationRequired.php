@@ -18,6 +18,10 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
  */
 class NoValidationRequired extends AbstractHandler
 {
+
+    /**
+     * @inheritdoc
+     */
     public function isValid($dto)
     {
         return true;
