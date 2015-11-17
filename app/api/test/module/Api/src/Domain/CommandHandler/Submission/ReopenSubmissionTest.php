@@ -63,6 +63,7 @@ class ReopenSubmissionTest extends CommandHandlerTestCase
             ->with(m::type(SubmissionEntity::class))
             ->andReturnUsing(
                 function (SubmissionEntity $submission) use (&$savedSubmission) {
+                    $submission->setClosedDate(null);
                     $savedSubmission = $submission;
                 }
             );
@@ -73,6 +74,8 @@ class ReopenSubmissionTest extends CommandHandlerTestCase
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
         $this->assertContains('Submission reopened', $result->getMessages());
+        $this->assertNull($savedSubmission->getClosedDate());
+
     }
 
     /**

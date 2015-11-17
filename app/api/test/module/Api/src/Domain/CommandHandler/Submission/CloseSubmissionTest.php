@@ -62,6 +62,7 @@ class CloseSubmissionTest extends CommandHandlerTestCase
             ->with(m::type(SubmissionEntity::class))
             ->andReturnUsing(
                 function (SubmissionEntity $submission) use (&$savedSubmission) {
+                    $submission->setClosedDate(new \DateTime('now'));
                     $savedSubmission = $submission;
                 }
             );
@@ -72,6 +73,7 @@ class CloseSubmissionTest extends CommandHandlerTestCase
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
         $this->assertContains('Submission closed', $result->getMessages());
+        $this->assertInstanceOf('DateTime', $savedSubmission->getClosedDate());
     }
 
     public function testHandleCommandNotCloseableSubmission()
