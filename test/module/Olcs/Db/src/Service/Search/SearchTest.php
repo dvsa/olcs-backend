@@ -112,8 +112,8 @@ class SearchTest extends TestCase
             'query' => [
                 'bool' => [
                     'should' => [
-                        ['match' => ['vehicle.veh_id' => 511]],
-                        ['match' => ['vehicle.veh_id' => 2015]],
+                        ['match' => ['veh_id' => 511]],
+                        ['match' => ['veh_id' => 2015]],
                     ]
                 ]
             ],
@@ -162,8 +162,8 @@ class SearchTest extends TestCase
             'query' => [
                 'bool' => [
                     'should' => [
-                        ['match' => ['vehicle.veh_id' => 511]],
-                        ['match' => ['vehicle.veh_id' => 2015]],
+                        ['match' => ['veh_id' => 511]],
+                        ['match' => ['veh_id' => 2015]],
                     ]
                 ]
             ],
