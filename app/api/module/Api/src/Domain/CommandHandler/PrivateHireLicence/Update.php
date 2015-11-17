@@ -122,7 +122,7 @@ final class Update extends AbstractCommandHandler implements
                     $message = 'Your Taxi/PHV licence is in ' . $postCodeTrafficArea->getName() .
                         ' traffic area, which differs to your first Taxi/PHV Licence (' .
                         $phl->getLicence()->getTrafficArea()->getName() .
-                        '). You will need to apply for more than one Special Restricted licence. Read more.';
+                        '). You will need to apply for more than one Special Restricted licence.';
                     throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
                         [self::PHL_INVALID_TA => $message]
                     );
