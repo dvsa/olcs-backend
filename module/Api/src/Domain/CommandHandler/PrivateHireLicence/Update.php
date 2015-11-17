@@ -119,8 +119,12 @@ final class Update extends AbstractCommandHandler implements
             } else {
                 // check that the updated PHL's postcode is in the TA
                 if ($phl->getLicence()->getTrafficArea() !== $postCodeTrafficArea) {
+                    $message = 'Your Taxi/PHV licence is in ' . $postCodeTrafficArea->getName() .
+                        ' traffic area, which differs to your first Taxi/PHV Licence (' .
+                        $phl->getLicence()->getTrafficArea()->getName() .
+                        '). You will need to apply for more than one Special Restricted licence. Read more.';
                     throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
-                        [self::PHL_INVALID_TA => 'Postcode traffic area is not same traffic area as licence']
+                        [self::PHL_INVALID_TA => $message]
                     );
                 }
             }
