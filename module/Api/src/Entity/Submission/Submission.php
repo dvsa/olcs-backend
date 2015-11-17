@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Submission;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\CaseProviderInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
@@ -20,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *    }
  * )
  */
-class Submission extends AbstractSubmission
+class Submission extends AbstractSubmission implements CaseProviderInterface
 {
     protected $sectionData;
 

@@ -22,5 +22,7 @@ return [
         'canCloseSubmission' => Validators\CanCloseSubmission::class,
         'canReopen' => Validators\CanReopen::class,
         'canReopenSubmission' => Validators\CanReopenSubmission::class,
+        'submissionBelongsToCase' => Validators\SubmissionBelongsToCase::class,
+        'belongsToCase' => Validators\BelongsToCase::class,
     ]
 ];
