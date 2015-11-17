@@ -1,39 +1,34 @@
 <?php
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application as AppCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence as LicCommandHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers as Handler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\People\Application as AppHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\People\Licence as LicHandler;
-
-// @todo next story
-//return [
-//    AppCommandHandler\CreatePeople::class => AppHandler\Create::class,
-//    AppCommandHandler\DeletePeople::class => Handler\Standard::class, // @todo
-//    AppCommandHandler\RestorePeople::class => Handler\Standard::class, // @todo
-//    AppCommandHandler\UpdatePeople::class => Handler\Standard::class, // @todo
-//
-//    LicCommandHandler\CreatePeople::class => LicHandler\Create::class,
-//    LicCommandHandler\DeletePeople::class => Handler\Standard::class, // @todo
-//    LicCommandHandler\UpdatePeople::class => Handler\Standard::class, // @todo
-//
-//    QueryHandler\Licence\People::class => Handler\Standard::class, // @todo
-//    QueryHandler\Application\People::class => Handler\Standard::class, // @todo
-//    QueryHandler\Organisation\People::class => Handler\Standard::class, // @todo
-//];
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Standard;
 
 return [
-    AppCommandHandler\CreatePeople::class => Handler\Standard::class, // @todo
-    AppCommandHandler\DeletePeople::class => Handler\Standard::class, // @todo
-    AppCommandHandler\RestorePeople::class => Handler\Standard::class, // @todo
-    AppCommandHandler\UpdatePeople::class => Handler\Standard::class, // @todo
+    AppCommandHandler\CreatePeople::class               => Misc\CanAccessApplicationWithId::class,
+    AppCommandHandler\DeletePeople::class               => Handler\People\Application\Modify::class,
+    AppCommandHandler\RestorePeople::class              => Handler\People\Application\Modify::class,
+    AppCommandHandler\UpdatePeople::class               => Handler\People\Application\Update::class,
+    LicCommandHandler\CreatePeople::class               => Misc\CanAccessLicenceWithId::class,
+    LicCommandHandler\DeletePeople::class               => Handler\People\Licence\Modify::class,
+    LicCommandHandler\UpdatePeople::class               => Handler\People\Licence\Update::class,
+    QueryHandler\Licence\People::class                  => Misc\CanAccessLicenceWithId::class,
+    QueryHandler\Application\People::class              => Misc\CanAccessApplicationWithId::class,
+    QueryHandler\Organisation\People::class             => Misc\CanAccessOrganisationWithId::class,
+    // No validation can be applied to these, as they are side-effect commands designed to be re-used
+    CommandHandler\Person\Create::class                 => Misc\NoValidationRequired::class,
+    // There is a @todo on the implementing code to combine this with another command, so I will hold off validation
+    CommandHandler\Person\Update::class                 => Standard::class, // @todo
+    CommandHandler\Person\UpdateFull::class             => Misc\NoValidationRequired::class,
+    CommandHandler\OrganisationPerson\Create::class     => Misc\CanAccessOrganisationWithOrganisation::class,
+    CommandHandler\OrganisationPerson\DeleteList::class => Handler\OrganisationPerson\Modify::class,
+    CommandHandler\OrganisationPerson\Update::class     => Handler\OrganisationPerson\Update::class,
+    QueryHandler\OrganisationPerson\GetSingle::class    => Misc\CanAccessOrganisationPersonWithId::class,
+    QueryHandler\Person\Person::class                   => Misc\IsInternalUser::class,
 
-    LicCommandHandler\CreatePeople::class => Handler\Standard::class, // @todo
-    LicCommandHandler\DeletePeople::class => Handler\Standard::class, // @todo
-    LicCommandHandler\UpdatePeople::class => Handler\Standard::class, // @todo
-
-    QueryHandler\Licence\People::class => Handler\Standard::class, // @todo
-    QueryHandler\Application\People::class => Handler\Standard::class, // @todo
-    QueryHandler\Organisation\People::class => Handler\Standard::class, // @todo
+    CommandHandler\OrganisationPerson\PopulateFromCompaniesHouse::class => Misc\CanAccessOrganisationWithId::class,
 ];

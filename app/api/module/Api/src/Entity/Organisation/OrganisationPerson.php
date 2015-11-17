@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Organisation;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * OrganisationPerson Entity
@@ -20,7 +21,10 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class OrganisationPerson extends AbstractOrganisationPerson
+class OrganisationPerson extends AbstractOrganisationPerson implements OrganisationProviderInterface
 {
-
+    public function getRelatedOrganisation()
+    {
+        return $this->getOrganisation();
+    }
 }
