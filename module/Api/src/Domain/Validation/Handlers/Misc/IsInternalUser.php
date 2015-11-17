@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Create
+ * Is Internal User
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\People\Application;
+namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
 
 /**
- * Create
+ * Is Internal User
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Create extends AbstractHandler implements AuthAwareInterface
+class IsInternalUser extends AbstractHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
@@ -25,10 +25,6 @@ class Create extends AbstractHandler implements AuthAwareInterface
      */
     public function isValid($dto)
     {
-        if ($this->isInternalUser()) {
-            return true;
-        }
-
-        return $this->doesOwnApplication($dto->getId());
+        return $this->isInternalUser();
     }
 }
