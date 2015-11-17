@@ -1,63 +1,54 @@
 <?php
 
 /**
- * Create Test
+ * Is Internal User Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\CompanySubsidiary\Application;
 
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\CompanySubsidiary\Application\Create;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Zend\ServiceManager\ServiceManager;
-use Dvsa\Olcs\Transfer\Command\Application\CreateCompanySubsidiary as Cmd;
 
 /**
- * Create Test
+ * Is Internal User Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateTest extends AbstractHandlerTestCase
+class IsInternalUserTest extends AbstractHandlerTestCase
 {
     /**
-     * @var Create
+     * @var IsInternalUser
      */
     protected $sut;
 
     public function setUp()
     {
-        $this->sut = new Create();
+        $this->sut = new IsInternalUser();
 
         parent::setUp();
     }
 
     public function testIsValidInternal()
     {
-        $dto = Cmd::create([]);
+        /** @var CommandInterface $dto */
+        $dto = m::mock(CommandInterface::class);
 
         $this->setIsGranted(Permission::INTERNAL_USER, true);
 
         $this->assertTrue($this->sut->isValid($dto));
     }
 
-    public function testIsValidOwner()
+    public function testIsValidInternalFail()
     {
-        $dto = Cmd::create(['application' => 111]);
+        /** @var CommandInterface $dto */
+        $dto = m::mock(CommandInterface::class);
 
         $this->setIsGranted(Permission::INTERNAL_USER, false);
-        $this->setIsValid('doesOwnApplication', [111], true);
-
-        $this->assertTrue($this->sut->isValid($dto));
-    }
-
-    public function testIsValidNotOwner()
-    {
-        $dto = Cmd::create(['application' => 111]);
-
-        $this->setIsGranted(Permission::INTERNAL_USER, false);
-        $this->setIsValid('doesOwnApplication', [111], false);
 
         $this->assertFalse($this->sut->isValid($dto));
     }
