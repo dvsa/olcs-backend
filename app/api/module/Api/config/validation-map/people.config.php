@@ -20,13 +20,17 @@ return [
     QueryHandler\Application\People::class  => Misc\CanAccessApplicationWithId::class,
     QueryHandler\Organisation\People::class => Misc\CanAccessOrganisationWithId::class,
 
-    CommandHandler\OrganisationPerson\Create::class                     => Standard::class, // @todo
-    CommandHandler\OrganisationPerson\DeleteList::class                 => Standard::class, // @todo
-    CommandHandler\OrganisationPerson\PopulateFromCompaniesHouse::class => Standard::class, // @todo
-    CommandHandler\OrganisationPerson\Update::class                     => Standard::class, // @todo
-    CommandHandler\Person\Create::class                                 => Standard::class, // @todo
-    CommandHandler\Person\Update::class                                 => Standard::class, // @todo
-    CommandHandler\Person\UpdateFull::class                             => Standard::class, // @todo
-    QueryHandler\OrganisationPerson\GetSingle::class                    => Standard::class, // @todo
-    QueryHandler\Person\Person::class                                   => Standard::class, // @todo
+    CommandHandler\OrganisationPerson\Create::class  => Misc\CanAccessOrganisationWithOrganisation::class,
+
+    // No validation can be applied to these, as they are side-effect commands designed to be re-used
+    CommandHandler\Person\Create::class              => Misc\NoValidationRequired::class,
+    CommandHandler\Person\UpdateFull::class          => Misc\NoValidationRequired::class,
+    QueryHandler\OrganisationPerson\GetSingle::class => Misc\CanAccessOrganisationPersonWithId::class,
+
+    CommandHandler\OrganisationPerson\PopulateFromCompaniesHouse::class => Misc\CanAccessOrganisationWithId::class,
+
+    CommandHandler\Person\Update::class                 => Standard::class, // @todo
+    CommandHandler\OrganisationPerson\DeleteList::class => Standard::class, // @todo
+    CommandHandler\OrganisationPerson\Update::class     => Standard::class, // @todo
+    QueryHandler\Person\Person::class                   => Standard::class, // @todo
 ];
