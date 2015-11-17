@@ -710,6 +710,7 @@ $map = [
     EmailCommandHandler\SendEmail::class                                          => Standard::class, // @todo
     EmailCommandHandler\ProcessInspectionRequestEmail::class                      => Standard::class, // @todo
     EmailCommandHandler\UpdateInspectionRequest::class                            => Standard::class, // @todo
+    QueryHandler\Fee\GetLatestFeeType::class                                      => Standard::class, //@todo
 ];
 
 // Merge all other validation maps
