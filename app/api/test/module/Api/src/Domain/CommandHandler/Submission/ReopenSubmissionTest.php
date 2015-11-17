@@ -90,7 +90,6 @@ class ReopenSubmissionTest extends CommandHandlerTestCase
         $submission = m::mock(SubmissionEntity::class)->makePartial();
         $submission->setId(2);
 
-
         $this->repoMap['Submission']->shouldReceive('fetchUsingId')
             ->once()
             ->with($command, Query::HYDRATE_OBJECT)
@@ -98,6 +97,6 @@ class ReopenSubmissionTest extends CommandHandlerTestCase
 
         $this->setExpectedException(ForbiddenException::class);
 
-        $result = $this->sut->handleCommand($command);
+        $this->sut->handleCommand($command);
     }
 }
