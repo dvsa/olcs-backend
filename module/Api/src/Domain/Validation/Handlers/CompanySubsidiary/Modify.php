@@ -7,8 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\CompanySubsidiary;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
@@ -19,31 +17,31 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Modify extends AbstractHandler implements AuthAwareInterface, RepositoryManagerAwareInterface
+class Modify extends AbstractHandler implements RepositoryManagerAwareInterface
 {
-    use AuthAwareTrait,
-        RepositoryManagerAwareTrait;
+    use RepositoryManagerAwareTrait;
 
     /**
      * @inheritdoc
      */
     public function isValid($dto)
     {
-        // If we have no context
+        // We must have context
         if (!$this->hasContext($dto)) {
+            return false;
+        }
 
-            // For internal users, that's ok
-            // For non internal users, that's NOT ok
-            return $this->isInternalUser();
+        // Check that the user can access the licence
+        $licence = $this->getLicence($dto);
+        if ($this->canAccessLicence($licence->getId()) === false) {
+            return false;
         }
 
         $ids = $this->getIds($dto);
 
-        $isInternal = $this->isInternalUser();
-
         foreach ($ids as $id) {
             // If the user has no access to 1 or more records, bail
-            if ($this->hasNoAccessToRecord($id, $isInternal)) {
+            if ($this->hasNoAccessToRecord($id)) {
                 return false;
             }
         }
@@ -57,9 +55,9 @@ class Modify extends AbstractHandler implements AuthAwareInterface, RepositoryMa
      * @param $companySubsidiaryId
      * @return bool
      */
-    protected function hasNoAccessToRecord($companySubsidiaryId, $isInternal)
+    protected function hasNoAccessToRecord($companySubsidiaryId)
     {
-        return $isInternal === false && $this->doesOwnCompanySubsidiary($companySubsidiaryId) === false;
+        return $this->canAccessCompanySubsidiary($companySubsidiaryId) === false;
     }
 
     /**
