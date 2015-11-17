@@ -64,7 +64,7 @@ class ApplicationTest extends QueryHandlerTestCase
             ->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
 
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableSelfServeCardPayments')->with()->once()
             ->andReturn(false);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')

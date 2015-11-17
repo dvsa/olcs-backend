@@ -76,7 +76,7 @@ class Application extends AbstractQueryHandler
                 'existingPublication' => !$application->getPublicationLinks()->isEmpty(),
                 'isPublishable' => $application->isPublishable(),
                 'latestNote' => $latestNote,
-                'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableCardPayments(),
+                'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableSelfServeCardPayments(),
             ]
         );
     }
