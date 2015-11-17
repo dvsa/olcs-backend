@@ -22,7 +22,6 @@ class OrganisationPerson extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-
     public function fetchByOrgAndPerson(OrganisationEntity $organisation, PersonEntity $person)
     {
         $qb = $this->createQueryBuilder();

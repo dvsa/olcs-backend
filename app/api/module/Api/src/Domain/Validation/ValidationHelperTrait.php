@@ -22,9 +22,11 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method Validators\DoesOwnLicence doesOwnLicence($entityId)
  * @method Validators\DoesOwnApplication doesOwnApplication($entityId)
  * @method Validators\DoesOwnCompanySubsidiary doesOwnCompanySubsidiary($entityId)
+ * @method Validators\DoesOwnOrganisation doesOwnOrganisation($entityId)
  * @method Validators\CanAccessLicence canAccessLicence($entityId)
  * @method Validators\CanAccessApplication canAccessApplication($entityId)
  * @method Validators\CanAccessCompanySubsidiary canAccessCompanySubsidiary($entityId)
+ * @method Validators\CanAccessOrganisation canAccessOrganisation($entityId)
  */
 trait ValidationHelperTrait
 {

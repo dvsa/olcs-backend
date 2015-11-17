@@ -2,7 +2,6 @@
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion as AppCompHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationOperatingCentre as AppOcHandler;
 use Dvsa\Olcs\Cli\Domain\CommandHandler as CliCommandHandler;
 use Dvsa\Olcs\Email\Domain\CommandHandler as EmailCommandHandler;
@@ -13,26 +12,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Standard;
  * validation-map/*.config.php. Eventually this file should be empty
  */
 $map = [
-    AppCompHandler\UpdateAddressesStatus::class                                   => Standard::class, // @todo
-    AppCompHandler\UpdateBusinessDetailsStatus::class                             => Standard::class, // @todo
-    AppCompHandler\UpdateBusinessTypeStatus::class                                => Standard::class, // @todo
-    AppCompHandler\UpdateCommunityLicencesStatus::class                           => Standard::class, // @todo
-    AppCompHandler\UpdateConditionsUndertakingsStatus::class                      => Standard::class, // @todo
-    AppCompHandler\UpdateConvictionsPenaltiesStatus::class                        => Standard::class, // @todo
-    AppCompHandler\UpdateDeclarationsInternalStatus::class                        => Standard::class, // @todo
-    AppCompHandler\UpdateFinancialEvidenceStatus::class                           => Standard::class, // @todo
-    AppCompHandler\UpdateFinancialHistoryStatus::class                            => Standard::class, // @todo
-    AppCompHandler\UpdateLicenceHistoryStatus::class                              => Standard::class, // @todo
-    AppCompHandler\UpdateOperatingCentresStatus::class                            => Standard::class, // @todo
-    AppCompHandler\UpdatePeopleStatus::class                                      => Standard::class, // @todo
-    AppCompHandler\UpdateSafetyStatus::class                                      => Standard::class, // @todo
-    AppCompHandler\UpdateTaxiPhvStatus::class                                     => Standard::class, // @todo
-    AppCompHandler\UpdateTransportManagersStatus::class                           => Standard::class, // @todo
-    AppCompHandler\UpdateTypeOfLicenceStatus::class                               => Standard::class, // @todo
-    AppCompHandler\UpdateUndertakingsStatus::class                                => Standard::class, // @todo
-    AppCompHandler\UpdateVehiclesDeclarationsStatus::class                        => Standard::class, // @todo
-    AppCompHandler\UpdateVehiclesPsvStatus::class                                 => Standard::class, // @todo
-    AppCompHandler\UpdateVehiclesStatus::class                                    => Standard::class, // @todo
     AppOcHandler\CreateApplicationOperatingCentre::class                          => Standard::class, // @todo
     AppOcHandler\DeleteApplicationOperatingCentre::class                          => Standard::class, // @todo
     AppOcHandler\Update::class                                                    => Standard::class, // @todo
@@ -340,10 +319,6 @@ $map = [
     CommandHandler\Opposition\CreateOpposition::class                             => Standard::class, // @todo
     CommandHandler\Opposition\DeleteOpposition::class                             => Standard::class, // @todo
     CommandHandler\Opposition\UpdateOpposition::class                             => Standard::class, // @todo
-    CommandHandler\OrganisationPerson\Create::class                               => Standard::class, // @todo
-    CommandHandler\OrganisationPerson\DeleteList::class                           => Standard::class, // @todo
-    CommandHandler\OrganisationPerson\PopulateFromCompaniesHouse::class           => Standard::class, // @todo
-    CommandHandler\OrganisationPerson\Update::class                               => Standard::class, // @todo
     CommandHandler\Organisation\ChangeBusinessType::class                         => Standard::class, // @todo
     CommandHandler\Organisation\CpidOrganisationExport::class                     => Standard::class, // @todo
     CommandHandler\Organisation\TransferTo::class                                 => Standard::class, // @todo
@@ -357,9 +332,6 @@ $map = [
     CommandHandler\OtherLicence\DeleteOtherLicence::class                         => Standard::class, // @todo
     CommandHandler\OtherLicence\UpdateForTma::class                               => Standard::class, // @todo
     CommandHandler\OtherLicence\UpdateOtherLicence::class                         => Standard::class, // @todo
-    CommandHandler\Person\Create::class                                           => Standard::class, // @todo
-    CommandHandler\Person\Update::class                                           => Standard::class, // @todo
-    CommandHandler\Person\UpdateFull::class                                       => Standard::class, // @todo
     CommandHandler\PreviousConviction\CreateForTma::class                         => Standard::class, // @todo
     CommandHandler\PreviousConviction\CreatePreviousConviction::class             => Standard::class, // @todo
     CommandHandler\PreviousConviction\DeletePreviousConviction::class             => Standard::class, // @todo
@@ -663,7 +635,6 @@ $map = [
     QueryHandler\Operator\UnlicensedVehicles::class                               => Standard::class, // @todo
     QueryHandler\Opposition\Opposition::class                                     => Standard::class, // @todo
     QueryHandler\Opposition\OppositionList::class                                 => Standard::class, // @todo
-    QueryHandler\OrganisationPerson\GetSingle::class                              => Standard::class, // @todo
     QueryHandler\Organisation\BusinessDetails::class                              => Standard::class, // @todo
     QueryHandler\Organisation\CpidOrganisation::class                             => Standard::class, // @todo
     QueryHandler\Organisation\Dashboard::class                                    => Standard::class, // @todo
@@ -672,7 +643,6 @@ $map = [
     QueryHandler\Organisation\UnlicensedCases::class                              => Standard::class, // @todo
     QueryHandler\OtherLicence\GetList::class                                      => Standard::class, // @todo
     QueryHandler\OtherLicence\OtherLicence::class                                 => Standard::class, // @todo
-    QueryHandler\Person\Person::class                                             => Standard::class, // @todo
     QueryHandler\PreviousConviction\GetList::class                                => Standard::class, // @todo
     QueryHandler\PreviousConviction\PreviousConviction::class                     => Standard::class, // @todo
     QueryHandler\Processing\History::class                                        => Standard::class, // @todo

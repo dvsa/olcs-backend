@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 use Dvsa\Olcs\Api\Entity\Person\Person;
-use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
