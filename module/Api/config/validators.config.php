@@ -17,5 +17,10 @@ return [
         'canAccessCompanySubsidiary' => Validators\CanAccessCompanySubsidiary::class,
         'canAccessOrganisation' => Validators\CanAccessOrganisation::class,
         'canAccessOrganisationPerson' => Validators\CanAccessOrganisationPerson::class,
+
+        'canClose' => Validators\CanClose::class,
+        'canCloseSubmission' => Validators\CanCloseSubmission::class,
+        'canReopen' => Validators\CanReopen::class,
+        'canReopenSubmission' => Validators\CanReopenSubmission::class,
     ]
 ];
