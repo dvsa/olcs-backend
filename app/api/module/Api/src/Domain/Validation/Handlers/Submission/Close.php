@@ -25,7 +25,9 @@ class Close extends AbstractHandler implements AuthAwareInterface
      */
     public function isValid($dto)
     {
-        if ($this->isInternalUser() && $this->canCloseSubmission($dto->getId())) {
+        if ($this->isInternalUser() &&
+            $this->canCloseSubmission($dto->getId()) &&
+            $this->submissionBelongsToCase($dto->getId(), $dto->getCase())) {
             return true;
         }
 

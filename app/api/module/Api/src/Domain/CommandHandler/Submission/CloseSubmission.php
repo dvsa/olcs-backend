@@ -37,7 +37,7 @@ final class CloseSubmission extends AbstractCommandHandler implements Transactio
 
         $this->getRepo()->save($submission);
         $result->addMessage('Submission closed');
-        $result->addId('case', $submission->getId());
+        $result->addId('submission', $submission->getId());
 
         return $result;
     }
