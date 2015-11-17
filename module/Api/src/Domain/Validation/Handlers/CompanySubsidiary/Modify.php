@@ -31,6 +31,12 @@ class Modify extends AbstractHandler implements RepositoryManagerAwareInterface
             return false;
         }
 
+        // Check that the user can access the licence
+        $licence = $this->getLicence($dto);
+        if ($this->canAccessLicence($licence->getId()) === false) {
+            return false;
+        }
+
         $ids = $this->getIds($dto);
 
         foreach ($ids as $id) {
