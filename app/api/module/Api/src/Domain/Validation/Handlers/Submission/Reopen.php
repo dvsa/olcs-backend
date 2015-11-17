@@ -25,10 +25,11 @@ class Reopen extends AbstractHandler implements AuthAwareInterface
      */
     public function isValid($dto)
     {
-        if ($this->isInternalUser() && $this->canReopenSubmission($dto->getId())) {
+        if ($this->isInternalUser() &&
+            $this->canReopenSubmission($dto->getId()) &&
+            $this->submissionBelongsToCase($dto->getId(), $dto->getCase())) {
             return true;
         }
-
         return false;
     }
 }
