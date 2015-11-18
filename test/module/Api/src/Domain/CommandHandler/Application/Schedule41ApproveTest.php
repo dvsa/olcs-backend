@@ -46,7 +46,7 @@ class Schedule41ApproveTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 1,
-            'trueS4' => $isTrueS4 ? 'Y' : 'N',
+            'trueS4' => $isTrueS4,
         ];
 
         $command = Cmd::create($data);
@@ -79,7 +79,7 @@ class Schedule41ApproveTest extends CommandHandlerTestCase
             ApproveS4::class,
             [
                 'id' => 14,
-                'isTrueS4' => $isTrueS4 ? 'Y' : 'N',
+                'isTrueS4' => ($isTrueS4 === 'Y') ? 'Y' : 'N',
                 'status' => null
             ],
             new Result()
@@ -95,7 +95,7 @@ class Schedule41ApproveTest extends CommandHandlerTestCase
             new Result()
         );
 
-        if (!$isTrueS4) {
+        if ($isTrueS4 !== 'Y') {
             $this->expectedSideEffect(
                 \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::class,
                 ['id' => 1],
@@ -110,14 +110,18 @@ class Schedule41ApproveTest extends CommandHandlerTestCase
     {
         return [
             // expectedSection, isNew, isNi, isTrueS4
-            'New application' => [16, true, false, true],
-            'New application2' => [16, true, false, false],
-            'New application NI' => [29, true, true, true],
-            'New application2 NI' => [29, true, true, false],
-            'Variation untrue S4' => [17, false, false, false],
-            'Variation untrue S4 NI' => [30, false, true, false],
-            'Variation true S4' => [18, false, false, true],
-            'Variation true S4 NI' => [31, false, true, true],
+            'New application' => [16, true, false, 'Y'],
+            'New application2' => [16, true, false, 'N'],
+            'New application2' => [16, true, false, null],
+            'New application NI' => [29, true, true, 'Y'],
+            'New application2 NI' => [29, true, true, 'N'],
+            'New application2 NI' => [29, true, true, null],
+            'Variation untrue S4' => [17, false, false, 'N'],
+            'Variation untrue S4' => [17, false, false, null],
+            'Variation untrue S4 NI' => [30, false, true, 'N'],
+            'Variation untrue S4 NI' => [30, false, true, null],
+            'Variation true S4' => [18, false, false, 'Y'],
+            'Variation true S4 NI' => [31, false, true, 'Y'],
         ];
     }
 }
