@@ -46,7 +46,10 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
 
                 $data = $command->getArrayCopy();
                 $data['id'] = $id;
-                unset($data['address']);
+
+                if ($aoc->getAction() === 'U') {
+                    unset($data['address']);
+                }
 
                 return $this->handleSideEffect(AppUpdate::create($data));
             }
