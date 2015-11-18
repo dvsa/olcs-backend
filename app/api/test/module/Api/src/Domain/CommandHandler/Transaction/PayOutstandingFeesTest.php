@@ -142,7 +142,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(false);
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableSelfServeCardPayments')->with()->once()
+            ->andReturn(false);
 
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByOrganisationId')
@@ -204,7 +205,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(false);
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableSelfServeCardPayments')->with()->once()
+            ->andReturn(false);
 
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByOrganisationId')
@@ -231,7 +233,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $organisationId = 69;
         $feeIds = [99, 100, 101];
         $cpmsRedirectUrl = 'https://olcs-selfserve/foo';
-        $fees = [];
 
         $data = [
             'feeIds' => $feeIds,
@@ -243,7 +244,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(true);
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableSelfServeCardPayments')->with()->once()
+            ->andReturn(true);
 
         // assertions
         $result = $this->sut->handleCommand($command);
@@ -426,7 +428,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(false);
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableSelfServeCardPayments')->with()->once()
+            ->andReturn(false);
 
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByIds')
@@ -490,7 +493,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(false);
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableSelfServeCardPayments')->with()->once()
+            ->andReturn(false);
 
         $this->mockFeesHelperService
             ->shouldReceive('getOutstandingFeesForApplication')
@@ -612,7 +616,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('recordCashPayment')
             ->once()
-            ->with([$fee1, $fee2], '100.00', '2015-06-17', 'Dan', '12345')
+            ->with([$fee1, $fee2], '100.00', '2015-06-17', '12345')
             ->andReturn(
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
@@ -855,7 +859,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('recordPostalOrderPayment')
             ->once()
-            ->with($fees, '99.99', '2015-06-17', 'Dan', '12345', '23456')
+            ->with($fees, '99.99', '2015-06-17', '12345', '23456')
             ->andReturn(
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
@@ -1251,7 +1255,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         // expectations
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableCardPayments')->with()->once()->andReturn(false);
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableSelfServeCardPayments')->with()->once()
+            ->andReturn(false);
 
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByIds')

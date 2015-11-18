@@ -51,25 +51,16 @@ class Overview extends AbstractQueryHandler
             )
         );
 
-        $appCriteria = Criteria::create()->where(Criteria::expr()->eq('isVariation', false));
-
         $applications = $this->getOtherApplicationsFromLicence($licence);
         $trafficAreas = $this->getRepo('TrafficArea')->getValueOptions();
 
         return $this->result(
             $licence,
             [
-                'busRegs',
                 'licenceType',
                 'status',
                 'goodsOrPsv',
                 'organisation' => [
-                    'licences' => [
-                        // @todo we can probably trim this down and just return
-                        // licence count much more efficiently
-                        'criteria' => $statusCriteria,
-                        'status',
-                    ],
                     'leadTcArea',
                     'organisationUsers'
                 ],
@@ -83,9 +74,6 @@ class Overview extends AbstractQueryHandler
                 'changeOfEntitys',
                 'trafficArea',
                 'gracePeriods',
-                'applications' => [
-                    'criteria' => $appCriteria
-                ]
             ],
             [
                 'busCount' => $this->getBusRegCount($licence),
@@ -96,7 +84,8 @@ class Overview extends AbstractQueryHandler
                 // extra data needed to populate select boxes
                 'valueOptions' => [
                     'trafficAreas' => $trafficAreas,
-                ]
+                ],
+                'organisationLicenceCount' => $licence->getOrganisation()->getActiveLicences()->count(),
             ]
         );
     }

@@ -709,7 +709,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
             'applicationSigned'
         ];
 
-        if ($this->isShortNotice === 'Y' && $this->isScottishRules()) {
+        if ($this->isScottishRules()) {
             // for Scottish short notice registrations opNotifiedLaPte is required
             $yesFields[] = 'opNotifiedLaPte';
         }

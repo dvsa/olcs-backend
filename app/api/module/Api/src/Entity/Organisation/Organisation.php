@@ -5,8 +5,8 @@ namespace Dvsa\Olcs\Api\Entity\Organisation;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
-use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  *    }
  * )
  */
-class Organisation extends AbstractOrganisation implements ContextProviderInterface
+class Organisation extends AbstractOrganisation implements ContextProviderInterface, OrganisationProviderInterface
 {
     const ORG_TYPE_PARTNERSHIP = 'org_t_p';
     const ORG_TYPE_OTHER = 'org_t_pa';
@@ -158,7 +158,23 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         return $this->getLicences()->matching($criteria);
     }
 
-    /*
+    /**
+     * Gets a licence from the organisation licences. Used by EBSR to check the licence is related to the organisation,
+     * we return more than just a true/false, as the status is checked afterwards
+     *
+     * @return ArrayCollection
+     */
+    public function getLicenceByLicNo($licNo)
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->eq('licNo', $licNo)
+        );
+
+        return $this->getLicences()->matching($criteria);
+    }
+
+    /**
      * Get the disqualification linked to this organisation
      * NB DB schema is 1 to many, but it is only possible to have one disqualification record per organisation
      *
@@ -269,5 +285,10 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     public function getContextValue()
     {
         return $this->getId();
+    }
+
+    public function getRelatedOrganisation()
+    {
+        return $this;
     }
 }

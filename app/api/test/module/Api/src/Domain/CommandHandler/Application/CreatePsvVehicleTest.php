@@ -296,12 +296,17 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
             ->shouldReceive('getId')
             ->andReturn(123)
             ->once()
+            ->shouldReceive('setMakeModel')->with('Foo')->once()
             ->getMock();
 
         $this->repoMap['Vehicle']
             ->shouldReceive('fetchByVrm')
             ->with('AA11AAA')
             ->andReturn([$mockVehicle])
+            ->once();
+        $this->repoMap['Vehicle']
+            ->shouldReceive('save')
+            ->with($mockVehicle)
             ->once();
 
         $this->repoMap['LicenceVehicle']->shouldReceive('save')

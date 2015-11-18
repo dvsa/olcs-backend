@@ -27,6 +27,8 @@ class Schedule41Approve extends AbstractCommandHandler implements TransactionedI
         /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchById($command->getId());
 
+        $isTrueS4 = $command->getTrueS4() === 'Y';
+
         $criteria = Criteria::create();
         $criteria->where(
             $criteria->expr()->eq('agreedDate', null)
@@ -43,7 +45,7 @@ class Schedule41Approve extends AbstractCommandHandler implements TransactionedI
                     ApproveS4::create(
                         [
                             'id' => $s4->getId(),
-                            'isTrueS4' => $command->getTrueS4(),
+                            'isTrueS4' => $isTrueS4 ? 'Y' : 'N',
                             'outcome' => null
                         ]
                     )
@@ -56,7 +58,7 @@ class Schedule41Approve extends AbstractCommandHandler implements TransactionedI
             $publicationSection = $this->getPublicationSection($application, $command->getTrueS4() === 'Y');
 
             $result->merge($this->createPublication($application, $publicationSection));
-            if ($command->getTrueS4() === 'N') {
+            if (!$isTrueS4) {
                 $result->merge($this->createTexTask($application));
             }
 

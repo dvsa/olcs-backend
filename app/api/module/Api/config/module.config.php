@@ -50,7 +50,7 @@ return [
             Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class,
             'TransactionManager' => \Dvsa\Olcs\Api\Domain\Repository\TransactionManagerFactory::class,
             'CpmsIdentityProvider' => \Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
-            'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsHelperServiceFactory::class,
+            'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsV2HelperService::class,
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
             'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
             'CompaniesHouseService' => \Dvsa\Olcs\Api\Service\CompaniesHouseService::class,
@@ -572,7 +572,9 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class
         ],
         'aliases' => [
             'Structure\Operator' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
@@ -580,7 +582,8 @@ return [
             'Structure\ServiceClassification' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification::class,
             'Structure\SupportingDocuments' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class,
             'Rules\EffectiveDate' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class,
-            'Rules\ApplicationType' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class
+            'Rules\ApplicationType' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
+            'Rules\Licence' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class
         ]
     ],
     'filters' => [
