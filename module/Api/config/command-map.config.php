@@ -575,6 +575,7 @@ return [
     TransferCommand\Transaction\CompleteTransaction::class => CommandHandler\Transaction\CompleteTransaction::class,
     Command\Transaction\ResolvePayment::class => CommandHandler\Transaction\ResolvePayment::class,
     TransferCommand\Transaction\ReverseTransaction::class => CommandHandler\Transaction\ReverseTransaction::class,
+    Command\Transaction\ResolveOutstandingPayments::class => CommandHandler\Transaction\ResolveOutstandingPayments::class,
 
     // Domain - ApplicationCompletion
     AppCompCommand\UpdateTypeOfLicenceStatus::class => AppCompCommandHandler\UpdateTypeOfLicenceStatus::class,
