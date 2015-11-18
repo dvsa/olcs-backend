@@ -55,7 +55,7 @@ class SubmissionEntityTest extends EntityTester
         $this->assertFalse($submission->isClosed());
         $this->assertTrue($submission->canClose());
 
-        $submission->setClosedDate(new \DateTime('now'));
+        $submission->close();
         $this->assertFalse($submission->canClose());
         $this->assertTrue($submission->isClosed());
     }
@@ -68,7 +68,7 @@ class SubmissionEntityTest extends EntityTester
 
         $this->assertFalse($submission->canReopen());
 
-        $submission->setClosedDate(new \DateTime('now'));
+        $submission->close();
         $this->assertTrue($submission->canReopen());
     }
 }
