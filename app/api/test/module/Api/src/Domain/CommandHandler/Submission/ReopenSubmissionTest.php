@@ -31,15 +31,6 @@ class ReopenSubmissionTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [];
-
-        $this->references = [];
-
-        parent::initReferences();
-    }
-
     public function testHandleCommandForClosedSubmission()
     {
         $command = Cmd::create(
@@ -63,7 +54,6 @@ class ReopenSubmissionTest extends CommandHandlerTestCase
             ->with(m::type(SubmissionEntity::class))
             ->andReturnUsing(
                 function (SubmissionEntity $submission) use (&$savedSubmission) {
-                    $submission->setClosedDate(null);
                     $savedSubmission = $submission;
                 }
             );
