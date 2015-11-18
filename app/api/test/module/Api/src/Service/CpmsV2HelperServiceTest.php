@@ -879,7 +879,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->setAccrualRule($rule)
             ->setDescription('fee type description')
             ->setFeeType((new RefData($feeTypeId)))
-            ->setCostCentreRef('TA');
+            ->setCostCentreRef('TA')
+            ->setVatCode('Z');
 
         $organisation = new OrganisationEntity();
         $organisation

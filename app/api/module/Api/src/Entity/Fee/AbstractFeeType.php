@@ -220,13 +220,9 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
      *
      * @var string
      *
-     * @ORM\Column(type="string",
-     *     name="vat_code",
-     *     length=1,
-     *     nullable=true,
-     *     options={"default": "Z"})
+     * @ORM\Column(type="string", name="vat_code", length=1, nullable=true)
      */
-    protected $vatCode = 'Z';
+    protected $vatCode;
 
     /**
      * Vat rate

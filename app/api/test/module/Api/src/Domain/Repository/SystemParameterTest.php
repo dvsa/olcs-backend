@@ -97,7 +97,7 @@ class SystemParameterTest extends RepositoryTestCase
         $this->assertSame('VALUE', $this->sut->fetchValue('system.foo'));
     }
 
-    public function testGetDisableCardPayments()
+    public function testGetDisableSelfServeCardPayments()
     {
         $spe = new SystemParameterEntity();
         $spe->setParamValue(1);
@@ -118,7 +118,7 @@ class SystemParameterTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('byId')
             ->once()
-            ->with(SystemParameterEntity::DISABLED_CARD_PAYMENTS);
+            ->with(SystemParameterEntity::DISABLED_SELFSERVE_CARD_PAYMENTS);
 
         /** @var EntityRepository $repo */
         $repo = m::mock(EntityRepository::class);
@@ -130,6 +130,6 @@ class SystemParameterTest extends RepositoryTestCase
             ->with(SystemParameterEntity::class)
             ->andReturn($repo);
 
-        $this->assertSame(true, $this->sut->getDisableCardPayments());
+        $this->assertSame(true, $this->sut->getDisableSelfServeCardPayments());
     }
 }

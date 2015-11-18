@@ -33,8 +33,8 @@ class SystemParameter extends AbstractRepository
      *
      * @return bool
      */
-    public function getDisableCardPayments()
+    public function getDisableSelfServeCardPayments()
     {
-        return (bool) $this->fetchValue(Entity::DISABLED_CARD_PAYMENTS);
+        return (bool) $this->fetchValue(Entity::DISABLED_SELFSERVE_CARD_PAYMENTS);
     }
 }

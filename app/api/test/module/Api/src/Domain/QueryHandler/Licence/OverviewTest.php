@@ -65,6 +65,9 @@ class OverviewTest extends QueryHandlerTestCase
         $mockLicence
             ->shouldReceive('getOrganisation->getId')
             ->andReturn($organisationId);
+        $mockLicence
+            ->shouldReceive('getOrganisation->getActiveLicences->count')
+            ->andReturn(65);
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchUsingId')
@@ -123,6 +126,7 @@ class OverviewTest extends QueryHandlerTestCase
                 'tradingName' => 'Foo plc',
                 'complaintsCount' => 5,
                 'busCount' => '4',
+                'organisationLicenceCount' => 65,
             ],
             $result->serialize()
         );
