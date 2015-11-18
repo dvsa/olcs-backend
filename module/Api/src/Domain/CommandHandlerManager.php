@@ -52,7 +52,6 @@ class CommandHandlerManager extends AbstractPluginManager implements CommandHand
             $data = $command->getArrayCopy();
         }
 
-
         Logger::debug(
             'Command Received: ' . $commandFqcn,
             ['data' => ['commandData' => $data]]
