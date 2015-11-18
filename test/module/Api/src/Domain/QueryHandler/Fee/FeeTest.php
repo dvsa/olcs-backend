@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\Fee\Fee as Qry;
@@ -104,6 +105,17 @@ class FeeTest extends QueryHandlerTestCase
             ->shouldReceive('getFeeTransactions')
             ->andReturn(new ArrayCollection([$ft1, $ft2, $ft3, $ft4, $ft5]));
 
+        $mockFee
+            ->shouldReceive('getFeeType')
+            ->andReturn(
+                m::mock(FeeTypeEntity::class)
+                    ->shouldReceive('getVatRate')
+                    ->andReturn('20.00')
+                    ->shouldReceive('getVatCode')
+                    ->andReturn('S')
+                    ->getMock()
+            );
+
         $result = $this->sut->handleQuery($query);
 
         $this->assertInstanceOf(Result::class, $result);
@@ -156,6 +168,7 @@ class FeeTest extends QueryHandlerTestCase
                     'status' => $status,
                 ],
             ],
+            'vatInfo' => '20% (S)',
         ];
 
         $this->assertEquals($expected, $result->serialize());

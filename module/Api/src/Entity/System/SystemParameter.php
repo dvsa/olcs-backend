@@ -13,5 +13,5 @@ use Doctrine\ORM\Mapping as ORM;
 class SystemParameter extends AbstractSystemParameter
 {
     const CNS_EMAIL_LIST = 'CNS_EMAIL_LIST';
-    const DISABLED_CARD_PAYMENTS = 'DISABLED_CARD_PAYMENTS';
+    const DISABLED_SELFSERVE_CARD_PAYMENTS = 'DISABLED_SELFSERVE_CARD_PAYMENTS';
 }

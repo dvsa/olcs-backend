@@ -45,6 +45,9 @@ final class Submission extends AbstractQueryHandler
                 ]
             ],
             [
+                'canClose' => $submission->canClose(),
+                'isClosed' => $submission->isClosed(),
+                'canReopen' => $submission->canReopen(),
                 'submissionTypeTitle' => $this->getSubmissionTypeTitle($submission)
             ]
         );

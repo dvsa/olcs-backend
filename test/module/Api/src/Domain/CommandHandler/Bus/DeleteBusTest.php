@@ -5,10 +5,13 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\DeleteBus;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
+use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\DeleteBus as Cmd;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusEntity;
@@ -23,6 +26,8 @@ class DeleteBusTest extends CommandHandlerTestCase
     {
         $this->sut = new DeleteBus();
         $this->mockRepo('Bus', BusRepo::class);
+        $this->mockRepo('TxcInbox', TxcInboxRepo::class);
+        $this->mockRepo('EbsrSubmission', EbsrSubmissionRepo::class);
 
         parent::setUp();
     }
@@ -40,6 +45,9 @@ class DeleteBusTest extends CommandHandlerTestCase
 
         $command = Cmd::Create(['id' => $id,]);
 
+        $mockEbsrSubmissionList = new ArrayCollection(['ebsrSubmission1']);
+        $mockTxcInboxList = new ArrayCollection(['txcInbox1']);
+
         /** @var BusEntity $busReg */
         $busReg = m::mock(BusEntity::class);
         $busReg->shouldReceive('getRouteNo')
@@ -50,7 +58,13 @@ class DeleteBusTest extends CommandHandlerTestCase
             ->andReturn($variationNo)
             ->shouldReceive('canDelete')
             ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getEbsrSubmissions')
+            ->once()
+            ->andReturn($mockEbsrSubmissionList)
+            ->shouldReceive('getTxcInboxs')
+            ->once()
+            ->andReturn($mockTxcInboxList);
 
         $mockPreviousBusReg = m::mock(BusEntity::class);
         $mockPreviousBusReg->shouldReceive('getId')-> andReturn($previousId);
@@ -59,6 +73,8 @@ class DeleteBusTest extends CommandHandlerTestCase
         $mockFetchList->shouldReceive('count')->andReturn(1);
         $mockFetchList->shouldReceive('current')->andReturn($mockPreviousBusReg);
 
+        $this->repoMap['TxcInbox']->shouldReceive('delete')->with('txcInbox1');
+        $this->repoMap['EbsrSubmission']->shouldReceive('delete')->with('ebsrSubmission1');
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)
             ->andReturn($busReg)

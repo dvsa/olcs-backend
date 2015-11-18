@@ -216,6 +216,29 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     protected $trafficArea;
 
     /**
+     * Vat code
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="vat_code", length=1, nullable=true)
+     */
+    protected $vatCode;
+
+    /**
+     * Vat rate
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal",
+     *     name="vat_rate",
+     *     precision=5,
+     *     scale=2,
+     *     nullable=false,
+     *     options={"default": 0.00})
+     */
+    protected $vatRate = 0.00;
+
+    /**
      * Version
      *
      * @var int
@@ -660,6 +683,52 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     public function getTrafficArea()
     {
         return $this->trafficArea;
+    }
+
+    /**
+     * Set the vat code
+     *
+     * @param string $vatCode
+     * @return FeeType
+     */
+    public function setVatCode($vatCode)
+    {
+        $this->vatCode = $vatCode;
+
+        return $this;
+    }
+
+    /**
+     * Get the vat code
+     *
+     * @return string
+     */
+    public function getVatCode()
+    {
+        return $this->vatCode;
+    }
+
+    /**
+     * Set the vat rate
+     *
+     * @param float $vatRate
+     * @return FeeType
+     */
+    public function setVatRate($vatRate)
+    {
+        $this->vatRate = $vatRate;
+
+        return $this;
+    }
+
+    /**
+     * Get the vat rate
+     *
+     * @return float
+     */
+    public function getVatRate()
+    {
+        return $this->vatRate;
     }
 
     /**

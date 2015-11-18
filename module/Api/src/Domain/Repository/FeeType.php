@@ -51,7 +51,7 @@ class FeeType extends AbstractRepository
     ) {
         $qb = $this->createQueryBuilder();
 
-        $this->getQueryBuilder()->withRefdata();
+        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
 
         if ($date === null) {
             // if not set, use today

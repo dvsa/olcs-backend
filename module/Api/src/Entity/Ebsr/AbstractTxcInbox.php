@@ -129,7 +129,7 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
      * @var \Dvsa\Olcs\Api\Entity\Doc\Document
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="pdf_document_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="pdf_document_id", referencedColumnName="id", nullable=true)
      */
     protected $pdfDocument;
 
@@ -139,7 +139,7 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
      * @var \Dvsa\Olcs\Api\Entity\Doc\Document
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="route_document_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="route_document_id", referencedColumnName="id", nullable=true)
      */
     protected $routeDocument;
 

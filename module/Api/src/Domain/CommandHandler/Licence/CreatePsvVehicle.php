@@ -49,9 +49,9 @@ final class CreatePsvVehicle extends AbstractCommandHandler implements Transacti
         } else {
             $vehicle = new Vehicle();
             $vehicle->setVrm($command->getVrm());
-            $vehicle->setMakeModel($command->getMakeModel());
-            $this->getRepo('Vehicle')->save($vehicle);
         }
+        $vehicle->setMakeModel($command->getMakeModel());
+        $this->getRepo('Vehicle')->save($vehicle);
 
         $this->result->addMessage('Vehicle created');
         $this->result->addId('vehicle', $vehicle->getId());
