@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Transfer\Query\LoggerOmitResponseInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
@@ -49,9 +50,15 @@ class QueryHandlerManager extends AbstractPluginManager implements QueryHandlerI
 
         $response = $queryHandler->handleQuery($query);
 
+        if ($query instanceof LoggerOmitResponseInterface) {
+            $logData = ['*** OMITTED ***'];
+        } else {
+            $logData = (array)$response;
+        }
+
         Logger::debug(
             'Query Handler Response: ' . $queryHandlerFqcl,
-            ['data' => ['response' => (array)$response]]
+            ['data' => ['response' => $logData]]
         );
 
         return $response;
