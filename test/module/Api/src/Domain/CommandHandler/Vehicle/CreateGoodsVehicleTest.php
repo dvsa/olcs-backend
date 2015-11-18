@@ -335,10 +335,11 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $otherLicences = [];
 
-        $vehcile = new Vehicle();
-        $vehcile->setId(123);
+        $vehicle = new Vehicle();
+        $vehicle->setId(123);
 
-        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([$vehcile]);
+        $this->repoMap['Vehicle']->shouldReceive('fetchByVrm')->with('ABC123')->twice()->andReturn([$vehicle]);
+        $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle)->once()->andReturn([$vehicle]);
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)
             ->andReturn($licence)
@@ -373,13 +374,14 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
 
-        $this->assertInstanceOf(Vehicle::class, $vehcile);
+        $this->assertInstanceOf(Vehicle::class, $vehicle);
         $this->assertInstanceOf(LicenceVehicle::class, $savedLicenceVehicle);
-        $this->assertSame($vehcile, $savedLicenceVehicle->getVehicle());
+        $this->assertSame($vehicle, $savedLicenceVehicle->getVehicle());
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertEquals('2015-01-01', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d'));
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
+        $this->assertEquals(100, $vehicle->getPlatedWeight());
     }
 
     public function testHandleCommandIdentifyDuplicates()

@@ -41,6 +41,7 @@ class BusRegistrationInputFactoryTest extends TestCase
 
         $mockSl->shouldReceive('get')->with('Rules\EffectiveDate')->andReturn($mockValidator);
         $mockSl->shouldReceive('get')->with('Rules\ApplicationType')->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with('Rules\Licence')->andReturn($mockValidator);
 
         $sut = new BusRegistrationInputFactory();
         /** @var \Zend\InputFilter\Input $service */
@@ -48,7 +49,7 @@ class BusRegistrationInputFactoryTest extends TestCase
 
         $this->assertInstanceOf('Zend\InputFilter\Input', $service);
         $this->assertCount(6, $service->getFilterChain());
-        $this->assertCount(2, $service->getValidatorChain());
+        $this->assertCount(3, $service->getValidatorChain());
 
         foreach ($service->getValidatorChain()->getValidators() as $validator) {
             if ($validator['instance'] === $mockBreakValidator) {

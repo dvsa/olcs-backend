@@ -9,7 +9,6 @@ namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\CompanySubsidiary\Applica
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\CompanySubsidiary\Application\Update;
@@ -35,10 +34,7 @@ class UpdateTest extends AbstractHandlerTestCase
         parent::setUp();
     }
 
-    /**
-     * @dataProvider noContextProvider
-     */
-    public function testIsValidNoContext($isInternal, $expected)
+    public function testIsValidNoContext()
     {
         $data = [
             'application' => null
@@ -46,53 +42,45 @@ class UpdateTest extends AbstractHandlerTestCase
 
         $dto = Cmd::create($data);
 
-        $this->setIsGranted(Permission::INTERNAL_USER, $isInternal);
-
-        $this->assertEquals($expected, $this->sut->isValid($dto));
+        $this->assertFalse($this->sut->isValid($dto));
     }
 
-    public function testIsValidWithContextExternalNoOwnership()
+    public function testIsValidWithContextNoAccess()
     {
         $data = [
             'id' => 111,
             'application' => 222
         ];
 
+        $licence = $this->getLicenceFromApplication();
+        $licence->shouldReceive('getId')->andReturn(123);
+
         $dto = Cmd::create($data);
 
-        $this->setIsGranted(Permission::INTERNAL_USER, false);
-        $this->setIsValid('doesOwnCompanySubsidiary', [111], false);
+        $this->setIsValid('canAccessLicence', [123], false);
 
         $this->assertEquals(false, $this->sut->isValid($dto));
     }
 
-    /**
-     * @dataProvider ownershipProvider
-     */
-    public function testIsValidWithContextAndOwnership($isInternal, $isOwner)
+    public function testIsValidWithContextNoOwnership()
     {
         $data = [
             'id' => 111,
             'application' => 222
         ];
 
+        $licence = $this->getLicenceFromApplication();
+        $licence->shouldReceive('getId')->andReturn(123);
+
         $dto = Cmd::create($data);
 
-        $licence = $this->getLicenceFromApplication();
+        $this->setIsValid('canAccessCompanySubsidiary', [111], false);
+        $this->setIsValid('canAccessLicence', [123], true);
 
-        $companySubsidiary = m::mock(\Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary::class);
-        $companySubsidiary->shouldReceive('getLicence')->andReturn($licence);
-
-        $mockCsRepo = $this->mockRepo('CompanySubsidiary');
-        $mockCsRepo->shouldReceive('fetchByIds')->with([111])->andReturn([$companySubsidiary]);
-
-        $this->setIsGranted(Permission::INTERNAL_USER, $isInternal);
-        $this->setIsValid('doesOwnCompanySubsidiary', [111], $isOwner);
-
-        $this->assertEquals(true, $this->sut->isValid($dto));
+        $this->assertEquals(false, $this->sut->isValid($dto));
     }
 
-    public function testIsValidWithContextAndOwnershipWithMatching()
+    public function testIsValidWithContextAndOwnership()
     {
         $data = [
             'id' => 111,
@@ -102,6 +90,7 @@ class UpdateTest extends AbstractHandlerTestCase
         $dto = Cmd::create($data);
 
         $licence = $this->getLicenceFromApplication();
+        $licence->shouldReceive('getId')->andReturn(123);
 
         $companySubsidiary = m::mock(\Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary::class);
         $companySubsidiary->shouldReceive('getLicence')->andReturn($licence);
@@ -109,7 +98,8 @@ class UpdateTest extends AbstractHandlerTestCase
         $mockCsRepo = $this->mockRepo('CompanySubsidiary');
         $mockCsRepo->shouldReceive('fetchByIds')->with([111])->andReturn([$companySubsidiary]);
 
-        $this->setIsGranted(Permission::INTERNAL_USER, true);
+        $this->setIsValid('canAccessCompanySubsidiary', [111], true);
+        $this->setIsValid('canAccessLicence', [123], true);
 
         $this->assertEquals(true, $this->sut->isValid($dto));
     }
@@ -123,7 +113,8 @@ class UpdateTest extends AbstractHandlerTestCase
 
         $dto = Cmd::create($data);
 
-        $this->getLicenceFromApplication();
+        $lic = $this->getLicenceFromApplication();
+        $lic->shouldReceive('getId')->andReturn(123);
 
         $licence = m::mock(Licence::class);
 
@@ -133,7 +124,8 @@ class UpdateTest extends AbstractHandlerTestCase
         $mockCsRepo = $this->mockRepo('CompanySubsidiary');
         $mockCsRepo->shouldReceive('fetchByIds')->with([111])->andReturn([$companySubsidiary]);
 
-        $this->setIsGranted(Permission::INTERNAL_USER, true);
+        $this->setIsValid('canAccessCompanySubsidiary', [111], true);
+        $this->setIsValid('canAccessLicence', [123], true);
 
         $this->assertEquals(false, $this->sut->isValid($dto));
     }
@@ -149,23 +141,5 @@ class UpdateTest extends AbstractHandlerTestCase
         $mockApplicationRepo->shouldReceive('fetchById')->with(222)->andReturn($application);
 
         return $licence;
-    }
-
-    public function noContextProvider()
-    {
-        return [
-            // [isInternal, expected]
-            [true, true],
-            [false, false]
-        ];
-    }
-
-    public function ownershipProvider()
-    {
-        return [
-            // [isInternal, isOwner]
-            [true, false],
-            [false, true]
-        ];
     }
 }
