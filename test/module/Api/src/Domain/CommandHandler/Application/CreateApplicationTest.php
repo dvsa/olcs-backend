@@ -72,7 +72,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
     public function testHandleCommandMinimal()
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->times(4)
+            ->times(3)
             ->with(Permission::INTERNAL_USER, null)
             ->andReturn(false)
             ->shouldReceive('isGranted')
@@ -133,7 +133,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
     public function testHandleCommand($isInternal, $isExternal, $licenceStatus, $appliedVia)
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->times(4)
+            ->times(3)
             ->with(Permission::INTERNAL_USER, null)
             ->andReturn($isInternal)
             ->shouldReceive('isGranted')
@@ -163,14 +163,6 @@ class CreateApplicationTest extends CommandHandlerTestCase
                     $application->getLicence()->setId(33);
                 }
             );
-
-        if ($isInternal) {
-            $this->expectedSideEffect(
-                \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::class,
-                ['id' => 22],
-                new Result()
-            );
-        }
 
         $result1 = new Result();
         $result1->addId('fee', 44);
@@ -235,7 +227,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
     public function testHandleCommandGb($isInternal, $isExternal, $licenceStatus, $appliedVia)
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->times(4)
+            ->times(3)
             ->with(Permission::INTERNAL_USER, null)
             ->andReturn($isInternal)
             ->shouldReceive('isGranted')
@@ -266,14 +258,6 @@ class CreateApplicationTest extends CommandHandlerTestCase
                     $application->getLicence()->setId(33);
                 }
             );
-
-        if ($isInternal) {
-            $this->expectedSideEffect(
-                \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::class,
-                ['id' => 22],
-                new Result()
-            );
-        }
 
         $result1 = new Result();
         $result1->addId('fee', 44);

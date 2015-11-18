@@ -58,10 +58,6 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
         $result->addId('application', $application->getId());
         $result->addId('licence', $licence->getId());
 
-        if ($this->isGranted(Permission::INTERNAL_USER)) {
-            $result->merge($this->createTexTask($application));
-        }
-
         if ($updatedTol) {
             $result->merge($this->createApplicationFee($application->getId()));
             $result->merge($this->updateApplicationCompletion($application->getId()));
@@ -173,23 +169,5 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
         }
 
         return $this->getRepo()->getRefdataReference(Application::APPLICATION_STATUS_NOT_SUBMITTED);
-    }
-
-    /**
-     * Create a TEX task
-     *
-     * @param ApplicationEntity $application
-     *
-     * @return Result
-     */
-    protected function createTexTask(Application $application)
-    {
-        return $this->handleSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CreateTexTask::create(
-                [
-                    'id' => $application->getId(),
-                ]
-            )
-        );
     }
 }
