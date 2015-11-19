@@ -102,9 +102,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     private function logServiceExceptions(\Exception $e)
     {
+        $rethrow = $e;
+
         do {
             Logger::warn(get_class($this) . ': ' . $e->getMessage());
-            $rethrow = $e;
             $e = $e->getPrevious();
         } while ($e);
 
