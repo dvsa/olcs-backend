@@ -23,7 +23,8 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *    }
  * )
  */
-class TransportManagerApplication extends AbstractTransportManagerApplication
+class TransportManagerApplication extends AbstractTransportManagerApplication implements
+    \Dvsa\Olcs\Api\Entity\OrganisationProviderInterface
 {
     const ACTION_ADD    = 'A';
     const ACTION_UPDATE = 'U';
@@ -188,5 +189,10 @@ class TransportManagerApplication extends AbstractTransportManagerApplication
     public function isTypeInternal()
     {
         return $this->getTmType() !== null && $this->getTmType()->getId() === self::TYPE_INTERNAL;
+    }
+
+    public function getRelatedOrganisation()
+    {
+        return $this->getApplication()->getLicence()->getOrganisation();
     }
 }

@@ -16,12 +16,22 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class PreviousConviction extends AbstractPreviousConviction
+class PreviousConviction extends AbstractPreviousConviction implements
+    \Dvsa\Olcs\Api\Entity\OrganisationProviderInterface
 {
     protected function getCalculatedValues()
     {
         return [
             'application' => null
         ];
+    }
+
+    public function getRelatedOrganisation()
+    {
+        if (!$this->getApplication()) {
+            return null;
+        }
+
+        return $this->getApplication()->getLicence()->getOrganisation();
     }
 }
