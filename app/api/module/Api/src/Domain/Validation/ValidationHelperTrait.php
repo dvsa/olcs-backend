@@ -31,6 +31,7 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method Validators\CanAccessOrganisationPerson canAccessOrganisationPerson($entityId)
  * @method Validators\CanAccessTransportManagerApplication canAccessTransportManagerApplication($entityId)
  * @method Validators\CanAccessPreviousConviction canAccessPreviousConviction($entityId)
+ * @method Validators\CanAccessTrailer canAccessTrailer($entityId)
  */
 trait ValidationHelperTrait
 {
