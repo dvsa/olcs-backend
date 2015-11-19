@@ -691,7 +691,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         }
 
         $commonPaymentData = [
-            'line_identifier' => (string) $fee->getInvoiceLineNo(),
+            'line_identifier' => (string) $fee->getId(),
             'amount' => $this->formatAmount($fee->getGrossAmount()),
             'allocated_amount' => $this->formatAmount(
                 // may be overridden if under/overpayment
