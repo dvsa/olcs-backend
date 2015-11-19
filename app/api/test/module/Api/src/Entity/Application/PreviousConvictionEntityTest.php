@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Application;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\PreviousConviction as Entity;
+use Mockery as m;
 
 /**
  * PreviousConviction Entity Unit Tests
@@ -18,4 +19,22 @@ class PreviousConvictionEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testGetRelatedOrganisationWithApplication()
+    {
+        $sut = new Entity();
+
+        $this->assertSame(null, $sut->getRelatedOrganisation());
+    }
+
+    public function testGetRelatedOrganisation()
+    {
+        $sut = new Entity();
+
+        $mockApplication = m::mock();
+        $mockApplication->shouldReceive('getLicence->getOrganisation')->with()->once()->andReturn('ORG1');
+        $sut->setApplication($mockApplication);
+
+        $this->assertSame('ORG1', $sut->getRelatedOrganisation());
+    }
 }

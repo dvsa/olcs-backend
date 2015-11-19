@@ -464,6 +464,9 @@ class User extends AbstractUser implements OrganisationProviderInterface
 
     public function getRelatedOrganisation()
     {
+        if ($this->getOrganisationUsers()->isEmpty()) {
+            return null;
+        }
         return $this->getOrganisationUsers()->current()->getOrganisation();
     }
 }

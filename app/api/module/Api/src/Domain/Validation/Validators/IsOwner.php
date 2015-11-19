@@ -22,6 +22,11 @@ class IsOwner extends AbstractValidator implements AuthAwareInterface
 
     public function isValid(OrganisationProviderInterface $entity)
     {
+        // This is needed as if user has no organisation and entity has no organisation they would be granted access
+        if ($this->getCurrentUser()->getRelatedOrganisation() === null) {
+            return false;
+        }
+
         return $this->getCurrentUser()->getRelatedOrganisation() === $entity->getRelatedOrganisation();
     }
 }
