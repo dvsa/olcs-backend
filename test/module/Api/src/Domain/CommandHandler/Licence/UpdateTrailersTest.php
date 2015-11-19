@@ -55,7 +55,7 @@ class UpdateTrailersTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                'Organisation updated'
+                'Licence updated'
             ]
         ];
 
