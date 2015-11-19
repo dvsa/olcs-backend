@@ -49,7 +49,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
         }
 
         // Case is optional if Transport Manager is present.
-        if (\method_exists($command, 'getCase') && $command->getCase() !== null) {
+        if (method_exists($command, 'getCase') && $command->getCase() !== null) {
             $case = $this->getRepo()->getReference(Entities\Cases\Cases::class, $command->getCase());
             $entity->setCase($case);
         }
