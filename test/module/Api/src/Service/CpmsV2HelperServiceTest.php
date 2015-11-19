@@ -122,7 +122,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'sales_person_reference' => 'B',
                 ],
                 [
-                    'line_identifier' => '1',
+                    'line_identifier' => '2',
                     'amount' => '125.25',
                     'allocated_amount' => '125.25',
                     'net_amount' => '125.25',
@@ -220,7 +220,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'sales_person_reference' => 'B',
                 ],
                 [
-                    'line_identifier' => '1',
+                    'line_identifier' => '2',
                     'amount' => '125.25',
                     'allocated_amount' => '125.25',
                     'net_amount' => '125.25',
@@ -318,7 +318,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'sales_person_reference' => 'B',
                 ],
                 [
-                    'line_identifier' => '1',
+                    'line_identifier' => '2',
                     'amount' => '125.25',
                     'allocated_amount' => '125.25',
                     'net_amount' => '125.25',
@@ -451,7 +451,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'sales_person_reference' => 'B',
                 ],
                 [
-                    'line_identifier' => '1',
+                    'line_identifier' => '2',
                     'amount' => '100.00',
                     'allocated_amount' => '100.00',
                     'net_amount' => '100.00',
@@ -571,7 +571,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'sales_person_reference' => 'B',
                 ],
                 [
-                    'line_identifier' => '1',
+                    'line_identifier' => '2',
                     'amount' => '125.25',
                     'allocated_amount' => '125.25',
                     'net_amount' => '125.25',
@@ -699,7 +699,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'sales_person_reference' => 'B',
                 ],
                 [
-                    'line_identifier' => '1',
+                    'line_identifier' => '2',
                     'amount' => '125.25',
                     'allocated_amount' => '125.25',
                     'net_amount' => '125.25',
