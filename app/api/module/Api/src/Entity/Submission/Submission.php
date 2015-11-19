@@ -108,4 +108,23 @@ class Submission extends AbstractSubmission
     {
         return $this->isClosed();
     }
+
+    /**
+     * Is this submission for a NI case (either application or licence)?
+     * TM cases are GB by default.
+     *
+     * @return bool
+     */
+    public function isNi()
+    {
+        $licence = $this->getCase()->getLicence();
+        $application = $this->getCase()->getApplication();
+
+        if (isset($licence)) {
+            return $licence->getNiFlag() === 'Y';
+        } elseif (isset($application)) {
+            return $application->getNiFlag() === 'Y';
+        }
+        return false;
+    }
 }
