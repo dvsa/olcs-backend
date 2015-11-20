@@ -24,7 +24,16 @@ final class DeleteWorkshop extends AbstractCommandHandler implements Transaction
 
     public function handleCommand(CommandInterface $command)
     {
-        $this->result->merge($this->handleSideEffect(WorkshopDeleteWorkshop::create(['ids' => $command->getIds()])));
+        $this->result->merge(
+            $this->handleSideEffect(
+                WorkshopDeleteWorkshop::create(
+                    [
+                        'ids' => $command->getIds(),
+                        'application' => $command->getApplication()
+                    ]
+                )
+            )
+        );
 
         $data = [
             'id' => $command->getApplication(),
