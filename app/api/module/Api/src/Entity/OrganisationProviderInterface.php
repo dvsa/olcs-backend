@@ -17,7 +17,9 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 interface OrganisationProviderInterface
 {
     /**
-     * @return Organisation
+     * Get the related organisation
+     *
+     * @return Organisation|Organisation[]
      */
     public function getRelatedOrganisation();
 }

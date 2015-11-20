@@ -11,6 +11,7 @@ return [
         'doesOwnCompanySubsidiary' => Validators\DoesOwnCompanySubsidiary::class,
         'doesOwnOrganisation' => Validators\DoesOwnOrganisation::class,
         'doesOwnOrganisationPerson' => Validators\DoesOwnOrganisationPerson::class,
+        'doesOwnPerson' => Validators\DoesOwnPerson::class,
 
         'canAccessLicence' => Validators\CanAccessLicence::class,
         'canAccessApplication' => Validators\CanAccessApplication::class,
@@ -18,7 +19,10 @@ return [
         'canAccessOrganisation' => Validators\CanAccessOrganisation::class,
         'canAccessOrganisationPerson' => Validators\CanAccessOrganisationPerson::class,
         'canAccessTransportManagerApplication' => Validators\CanAccessTransportManagerApplication::class,
-        'CanAccessPreviousConviction' => Validators\CanAccessPreviousConviction::class,
+        'canAccessPreviousConviction' => Validators\CanAccessPreviousConviction::class,
         'canAccessTrailer' => Validators\CanAccessTrailer::class,
+        'canAccessApplicationOperatingCentre' => Validators\CanAccessApplicationOperatingCentre::class,
+        'canAccessLicenceOperatingCentre' => Validators\CanAccessLicenceOperatingCentre::class,
+        'canAccessPerson' => Validators\CanAccessPerson::class,
     ]
 ];

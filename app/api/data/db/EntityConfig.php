@@ -315,6 +315,12 @@ return array(
                 'property' => 'application',
             )
         ),
+        's4_id' => array(
+            'inversedBy' => array(
+                'entity' => 'S4',
+                'property' => 'aoc',
+            )
+        ),
     ),
     'team_printer' => array(
         'team_id' => array(
@@ -717,6 +723,12 @@ return array(
         'organisation_id' => array(
             'inversedBy' => array(
                 'entity' => 'Organisation',
+                'property' => 'organisationPerson'
+            )
+        ),
+        'person_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Person',
                 'property' => 'organisationPerson'
             )
         )
