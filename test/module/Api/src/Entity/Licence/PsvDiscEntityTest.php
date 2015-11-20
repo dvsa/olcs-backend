@@ -33,4 +33,16 @@ class PsvDiscEntityTest extends EntityTester
 
         $this->assertEquals(date('Y-m-d'), $psvDisc->getCeasedDate()->format('Y-m-d'));
     }
+
+    public function testGetRelatedOrganisation()
+    {
+        $licence = m::mock(Licence::class)->makePartial();
+        $sut = new Entity($licence);
+
+        $mockLicence = m::mock();
+        $mockLicence->shouldReceive('getOrganisation')->with()->once()->andReturn('ORG1');
+        $sut->setLicence($mockLicence);
+
+        $this->assertSame('ORG1', $sut->getRelatedOrganisation());
+    }
 }
