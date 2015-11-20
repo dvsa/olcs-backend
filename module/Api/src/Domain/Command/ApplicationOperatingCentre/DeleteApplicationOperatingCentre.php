@@ -8,7 +8,6 @@
 namespace Dvsa\Olcs\Api\Domain\Command\ApplicationOperatingCentre;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
-use Dvsa\Olcs\Transfer\FieldType\Traits\Application;
 
 /**
  * Class DeleteApplicationOperatingCentre

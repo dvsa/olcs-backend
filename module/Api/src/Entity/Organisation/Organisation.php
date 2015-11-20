@@ -287,6 +287,9 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         return $this->getId();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getRelatedOrganisation()
     {
         return $this;
