@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 
 /**
  * CreatePeople
@@ -47,8 +46,8 @@ final class CreatePeople extends AbstractCommandHandler implements Transactioned
         $this->getRepo('OrganisationPerson')->save($organisationPerson);
 
         $result = new Result();
-        $result->addMessage('OrganisatonPerson created');
-        $result->addId('organisatonPerson', $organisationPerson->getId());
+        $result->addMessage('OrganisationPerson created');
+        $result->addId('organisationPerson', $organisationPerson->getId());
         $result->addId('person', $person->getId());
         return $result;
     }

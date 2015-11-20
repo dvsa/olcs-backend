@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\CompanySubsidiary\Licence;
+namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\PreviousConviction;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\PreviousConviction\DeletePreviousCo
 class DeletePreviousConvictionTest extends AbstractHandlerTestCase
 {
     /**
-     * @var CanAccessLicenceWithId
+     * @var DeletePreviousConviction
      */
     protected $sut;
 

@@ -30,6 +30,9 @@ class CompanySubsidiary extends AbstractCompanySubsidiary implements Organisatio
         $this->setLicence($licence);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getRelatedOrganisation()
     {
         return $this->getLicence()->getOrganisation();

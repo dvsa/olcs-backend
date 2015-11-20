@@ -23,6 +23,9 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  */
 class OrganisationPerson extends AbstractOrganisationPerson implements OrganisationProviderInterface
 {
+    /**
+     * @inheritdoc
+     */
     public function getRelatedOrganisation()
     {
         return $this->getOrganisation();
