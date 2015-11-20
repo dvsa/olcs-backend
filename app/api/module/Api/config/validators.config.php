@@ -20,5 +20,6 @@ return [
         'canAccessTransportManagerApplication' => Validators\CanAccessTransportManagerApplication::class,
         'CanAccessPreviousConviction' => Validators\CanAccessPreviousConviction::class,
         'canAccessTrailer' => Validators\CanAccessTrailer::class,
+        'canAccessPsvDisc' => Validators\CanAccessPsvDisc::class,
     ]
 ];
