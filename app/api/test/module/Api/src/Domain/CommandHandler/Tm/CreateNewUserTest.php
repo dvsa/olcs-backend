@@ -7,6 +7,9 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Tm;
 
+use Dvsa\Olcs\Api\Domain\Command\Email\SendTmUserCreated as SendTmUserCreatedDto;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\CreateNewUser;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -256,11 +259,17 @@ class CreateNewUserTest extends CommandHandlerTestCase
                 }
             );
 
+        $savedTma = null;
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')
             ->once()
             ->with(m::type(TransportManagerApplication::class))
             ->andReturnUsing(
-                function (TransportManagerApplication $transportManagerApplication) use (&$savedTm, &$mockApplication) {
+                function (TransportManagerApplication $transportManagerApplication) use (
+                    &$savedTm,
+                    &$savedTma,
+                    &$mockApplication
+                ) {
+                    $savedTma = $transportManagerApplication;
                     $transportManagerApplication->setId(666);
                     $this->assertSame($savedTm, $transportManagerApplication->getTransportManager());
                     $this->assertSame($mockApplication, $transportManagerApplication->getApplication());
@@ -282,13 +291,31 @@ class CreateNewUserTest extends CommandHandlerTestCase
         $this->repoMap['User']->shouldReceive('save')->once()
             ->with(m::type(User::class))
             ->andReturnUsing(
-                function (User $user) use (&$savedContactDetails, &$savedTm) {
+                function (User $user) use (&$savedContactDetails, &$savedTm, &$savedTma) {
                     $user->setId(777);
                     $this->assertSame($savedContactDetails[0], $user->getContactDetails());
                     $this->assertEquals('Foo', $user->getLoginId());
                     $this->assertCount(1, $user->getRoles());
                     $this->assertEquals(Role::ROLE_OPERATOR_TM, $user->getRoles()->first()->getRole());
                     $this->assertSame($savedTm, $user->getTransportManager());
+
+                    $this->expectedSideEffect(
+                        SendTmUserCreatedDto::class,
+                        [
+                            'user' => $user,
+                            'tma' => $savedTma
+                        ],
+                        new Result()
+                    );
+
+                    $this->expectedSideEffect(
+                        SendUserTemporaryPasswordDto::class,
+                        [
+                            'user' => $user,
+                            'password' => 'GENERATED_PASSWORD_HERE',
+                        ],
+                        new Result()
+                    );
                 }
             );
 
