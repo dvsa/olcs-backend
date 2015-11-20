@@ -19,7 +19,15 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class Trailer extends AbstractTrailer
+class Trailer extends AbstractTrailer implements \Dvsa\Olcs\Api\Entity\OrganisationProviderInterface
 {
 
+    public function getRelatedOrganisation()
+    {
+        if (!$this->getLicence()) {
+            return null;
+        }
+
+        return $this->getLicence()->getOrganisation();
+    }
 }
