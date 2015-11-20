@@ -149,7 +149,6 @@ $map = [
     CommandHandler\LicenceVehicle\UpdateUnlicensedOperatorLicenceVehicle::class   => Standard::class, // @todo
     CommandHandler\Licence\ContinueLicence::class                                 => Standard::class, // @todo
     CommandHandler\Licence\CreateGoodsVehicle::class                              => Standard::class, // @todo
-    CommandHandler\Licence\CreateOperatingCentre::class                           => Standard::class, // @todo
     CommandHandler\Licence\CreatePsvVehicle::class                                => Standard::class, // @todo
     CommandHandler\Licence\CreateVariation::class                                 => Standard::class, // @todo
     CommandHandler\Licence\CreateVehicleListDocument::class                       => Standard::class, // @todo
