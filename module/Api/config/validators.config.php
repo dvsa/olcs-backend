@@ -19,5 +19,6 @@ return [
         'canAccessOrganisationPerson' => Validators\CanAccessOrganisationPerson::class,
         'canAccessTransportManagerApplication' => Validators\CanAccessTransportManagerApplication::class,
         'CanAccessPreviousConviction' => Validators\CanAccessPreviousConviction::class,
+        'canAccessTrailer' => Validators\CanAccessTrailer::class,
     ]
 ];
