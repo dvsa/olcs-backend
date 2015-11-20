@@ -1,5 +1,6 @@
 <?php
 return [
+    'excluded-tm-sections' => ['case-summary', 'outstanding-applications', 'people'],
     'section-types' => [
         'submission_type_o_mlh_otc' => [
             'introduction',
