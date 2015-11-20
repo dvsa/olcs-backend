@@ -15,6 +15,10 @@ return array(
     'email.transport-manager-complete-digital-form.subject' => 'You’ve been named as a Transport Manager',
     'email.transport-manager-submitted-form.subject' => 'A Transport Manager has submitted their details for review',
     'email.transport-manager-confirmed.subject' => 'Your details have been confirmed',
+    'email.transport-manager-user-created.subject' => 'You’ve been named as a Transport Manager',
     'email.user-forgot-username-multiple.subject' => 'A user has forgotten their login details',
     'email.user-forgot-username-single.subject' => 'Your account information',
+    'email.user-created.subject' => 'You’ve been added to an account',
+    'email.user-registered.subject' => 'Your account’s been registered',
+    'email.user-temporary-password.subject' => 'Your temporary password',
 );

@@ -14,7 +14,7 @@ use Mockery as m;
 class CanAccessPreviousConvictionTest extends AbstractValidatorsTestCase
 {
     /**
-     * @var DoesOwnApplication
+     * @var CanAccessPreviousConviction
      */
     protected $sut;
 

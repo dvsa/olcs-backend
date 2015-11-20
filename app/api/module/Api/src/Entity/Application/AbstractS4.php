@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * S4 Abstract Entity
@@ -156,6 +158,31 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Aoc
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre",
+     *     mappedBy="s4"
+     * )
+     */
+    protected $aocs;
+
+    /**
+     * Initialise the collections
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    public function initCollections()
+    {
+        $this->aocs = new ArrayCollection();
+    }
 
     /**
      * Set the agreed date
@@ -454,6 +481,66 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the aoc
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $aocs
+     * @return S4
+     */
+    public function setAocs($aocs)
+    {
+        $this->aocs = $aocs;
+
+        return $this;
+    }
+
+    /**
+     * Get the aocs
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getAocs()
+    {
+        return $this->aocs;
+    }
+
+    /**
+     * Add a aocs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $aocs
+     * @return S4
+     */
+    public function addAocs($aocs)
+    {
+        if ($aocs instanceof ArrayCollection) {
+            $this->aocs = new ArrayCollection(
+                array_merge(
+                    $this->aocs->toArray(),
+                    $aocs->toArray()
+                )
+            );
+        } elseif (!$this->aocs->contains($aocs)) {
+            $this->aocs->add($aocs);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a aocs
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $aocs
+     * @return S4
+     */
+    public function removeAocs($aocs)
+    {
+        if ($this->aocs->contains($aocs)) {
+            $this->aocs->removeElement($aocs);
+        }
+
+        return $this;
     }
 
     /**

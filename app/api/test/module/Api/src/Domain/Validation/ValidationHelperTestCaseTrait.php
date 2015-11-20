@@ -76,8 +76,12 @@ trait ValidationHelperTestCaseTrait
 
     public function setIsValid($validator, $arguments, $isValid = true)
     {
-        $mockValidator = m::mock();
-        $this->validatorManager->setService($validator, $mockValidator);
+        if ($this->validatorManager->has($validator) === false) {
+            $mockValidator = m::mock();
+            $this->validatorManager->setService($validator, $mockValidator);
+        } else {
+            $mockValidator = $this->validatorManager->get($validator);
+        }
 
         $mockValidator->shouldReceive('isValid')->withArgs($arguments)->andReturn($isValid);
     }

@@ -734,6 +734,9 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return false;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getRelatedOrganisation()
     {
         return $this->getOrganisation();

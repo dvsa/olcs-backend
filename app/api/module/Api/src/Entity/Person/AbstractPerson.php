@@ -189,6 +189,18 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     protected $contactDetails;
 
     /**
+     * Organisation person
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson",
+     *     mappedBy="person"
+     * )
+     */
+    protected $organisationPersons;
+
+    /**
      * Initialise the collections
      */
     public function __construct()
@@ -199,6 +211,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     public function initCollections()
     {
         $this->contactDetails = new ArrayCollection();
+        $this->organisationPersons = new ArrayCollection();
     }
 
     /**
@@ -601,6 +614,66 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     {
         if ($this->contactDetails->contains($contactDetails)) {
             $this->contactDetails->removeElement($contactDetails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the organisation person
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @return Person
+     */
+    public function setOrganisationPersons($organisationPersons)
+    {
+        $this->organisationPersons = $organisationPersons;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation persons
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOrganisationPersons()
+    {
+        return $this->organisationPersons;
+    }
+
+    /**
+     * Add a organisation persons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @return Person
+     */
+    public function addOrganisationPersons($organisationPersons)
+    {
+        if ($organisationPersons instanceof ArrayCollection) {
+            $this->organisationPersons = new ArrayCollection(
+                array_merge(
+                    $this->organisationPersons->toArray(),
+                    $organisationPersons->toArray()
+                )
+            );
+        } elseif (!$this->organisationPersons->contains($organisationPersons)) {
+            $this->organisationPersons->add($organisationPersons);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a organisation persons
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons
+     * @return Person
+     */
+    public function removeOrganisationPersons($organisationPersons)
+    {
+        if ($this->organisationPersons->contains($organisationPersons)) {
+            $this->organisationPersons->removeElement($organisationPersons);
         }
 
         return $this;
