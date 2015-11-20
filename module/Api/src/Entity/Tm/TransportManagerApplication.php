@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Tm;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * TransportManagerApplication Entity
@@ -23,8 +24,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *    }
  * )
  */
-class TransportManagerApplication extends AbstractTransportManagerApplication implements
-    \Dvsa\Olcs\Api\Entity\OrganisationProviderInterface
+class TransportManagerApplication extends AbstractTransportManagerApplication implements OrganisationProviderInterface
 {
     const ACTION_ADD    = 'A';
     const ACTION_UPDATE = 'U';
@@ -191,6 +191,9 @@ class TransportManagerApplication extends AbstractTransportManagerApplication im
         return $this->getTmType() !== null && $this->getTmType()->getId() === self::TYPE_INTERNAL;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getRelatedOrganisation()
     {
         return $this->getApplication()->getLicence()->getOrganisation();

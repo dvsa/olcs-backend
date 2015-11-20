@@ -5,14 +5,13 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\CompanySubsidiary\Application;
+namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Misc;
 
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * Is Internal User Test

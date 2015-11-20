@@ -24,14 +24,18 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method Validators\DoesOwnCompanySubsidiary doesOwnCompanySubsidiary($entityId)
  * @method Validators\DoesOwnOrganisation doesOwnOrganisation($entityId)
  * @method Validators\DoesOwnOrganisationPerson doesOwnOrganisationPerson($entityId)
+ * @method Validators\DoesOwnPerson doesOwnPerson($entityId)
  * @method Validators\CanAccessLicence canAccessLicence($entityId)
  * @method Validators\CanAccessApplication canAccessApplication($entityId)
+ * @method Validators\CanAccessApplicationOperatingCentre canAccessApplicationOperatingCentre($entityId)
+ * @method Validators\CanAccessLicenceOperatingCentre canAccessLicenceOperatingCentre($entityId)
  * @method Validators\CanAccessCompanySubsidiary canAccessCompanySubsidiary($entityId)
  * @method Validators\CanAccessOrganisation canAccessOrganisation($entityId)
  * @method Validators\CanAccessOrganisationPerson canAccessOrganisationPerson($entityId)
  * @method Validators\CanAccessTransportManagerApplication canAccessTransportManagerApplication($entityId)
  * @method Validators\CanAccessPreviousConviction canAccessPreviousConviction($entityId)
  * @method Validators\CanAccessTrailer canAccessTrailer($entityId)
+ * @method Validators\CanAccessPerson canAccessPerson($entityId)
  */
 trait ValidationHelperTrait
 {
