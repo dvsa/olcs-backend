@@ -45,6 +45,7 @@ class UserListSelfserve extends AbstractQueryHandler implements AuthAwareInterfa
                 $data['localAuthority'] = $this->getCurrentUser()->getLocalAuthority()->getId();
                 break;
             case UserEntity::USER_TYPE_OPERATOR:
+            case UserEntity::USER_TYPE_TRANSPORT_MANAGER:
                 $data['organisation']
                     = $this->getCurrentUser()->getOrganisationUsers()->first()->getOrganisation()->getId();
                 break;
