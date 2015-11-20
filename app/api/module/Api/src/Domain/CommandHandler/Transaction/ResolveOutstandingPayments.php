@@ -28,19 +28,18 @@ final class ResolveOutstandingPayments extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Transaction';
 
-    protected $extraRepos = ['Fee'];
+    protected $extraRepos = ['SystemParameter'];
 
     public function handleCommand(CommandInterface $command)
     {
-        // @todo get this from config or command?
-        $minAge = 30; // minutes
+        $minAge = $this->getRepo('SystemParameter')->fetchValue('RESOLVE_CARD_PAYMENTS_MIN_AGE');
+
         $transactions = $this->getRepo()->fetchOutstandingCardPayments($minAge);
 
         /* @var $transaction Transaction */
         foreach ($transactions as $transaction) {
-            var_dump($transaction->getId());
-            // $cmd = ResolvePaymentCmd::create(['id' => $transaction->getId()]);
-            // $this->result->merge($this->handleSideEffect($cmd));
+            $cmd = ResolvePaymentCmd::create(['id' => $transaction->getId()]);
+            $this->result->merge($this->handleSideEffect($cmd));
         }
 
         return $this->result;
