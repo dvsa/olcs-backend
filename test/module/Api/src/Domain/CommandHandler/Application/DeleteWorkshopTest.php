@@ -52,7 +52,8 @@ class DeleteWorkshopTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $expectedData = [
-            'ids' => [111, 222]
+            'ids' => [111, 222],
+            'application' => 123
         ];
         $result1 = new Result();
         $result1->addMessage('Deleted workshop');
