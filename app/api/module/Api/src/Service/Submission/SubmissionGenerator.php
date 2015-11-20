@@ -103,7 +103,7 @@ class SubmissionGenerator
         $sections = array_unique(array_merge($submissionTypeSections, $postedSections));
 
         if ($isTm) {
-            $sectionsToRemove = ['case-summary', 'outstanding-applications', 'people'];
+            $sectionsToRemove = $this->submissionConfig['excluded-tm-sections'];
             foreach ($sectionsToRemove as $sectionToRemove) {
                 $sections = $this->removeSection($sections, $sectionToRemove);
             }
