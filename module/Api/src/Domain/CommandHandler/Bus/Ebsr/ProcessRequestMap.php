@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap as RequestMapCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
+use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\UpdateTxcInboxPdf as UpdateTxcInboxPdfCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
@@ -37,7 +38,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     use UploaderAwareTrait;
     use TransExchangeAwareTrait;
 
-    protected $repoServiceName = 'bus';
+    protected $repoServiceName = 'Bus';
 
     protected $templatePaths;
 
@@ -49,19 +50,21 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * @var FileProcessorInterface
      */
-    protected $fileProcesor;
+    protected $fileProcessor;
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->fileProcesor = $mainServiceLocator->get(FileProcessorInterface::class);
+        $this->fileProcessor = $mainServiceLocator->get(FileProcessorInterface::class);
 
-        if (!isset($config['transexchange_publisher'])) {
+        $config = $mainServiceLocator->get('Config');
+
+        if (!isset($config['ebsr']['transexchange_publisher'])) {
             throw new \RuntimeException('Missing transexchange_publisher config');
         }
 
-        $config = $config['transexchange_publisher'];
+        $config = $config['ebsr']['transexchange_publisher'];
         if (!isset($config['templates'])) {
             throw new \RuntimeException('Missing templates');
         }
@@ -91,22 +94,30 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
         $submission = $ebsrSubmissions->first();
 
         try {
-            $xmlFilename = $this->fileProcesor->fetchXmlFileNameFromDocumentStore(
+            $xmlFilename = $this->fileProcessor->fetchXmlFileNameFromDocumentStore(
                 $submission->getDocument()->getIdentifier()
             );
 
             $template = $this->createRequestMapTemplate($command->getTemplate(), $xmlFilename, $command->getScale());
+
             $documents = $this->getTransExchange()->makeRequest($template);
 
             if (!isset($documents['files'])) {
-                throw new Exception\RunTimeException('Invalid response from transXchange publisher');
+                throw new \Exception('Invalid response from transXchange publisher');
             }
 
             foreach ($documents['files'] as $document) {
                 $result->merge(
-                    $this->handleSideEffect($this->generateDocument(file_get_contents($document), $busReg, $document))
+                    $this->handleSideEffect($this->generateDocument($document, $busReg))
                 );
             }
+
+            //update txc inbox records with the new document id
+            $result->merge(
+                $this->handleSideEffect(
+                    $this->createUpdateTxcInboxPdf($busReg->getId(), $result->getId('document'))
+                )
+            );
 
             if ($command->getUser() !== null) {
                 $result->merge(
@@ -115,7 +126,6 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
                     )
                 );
             }
-
         } catch (\Exception $e) {
             if ($command->getUser() !== null) {
                 //@TODO handle case where there is no user... eg it's been uploaded by an operator
@@ -133,8 +143,8 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     }
 
     /**
-     * @param $xmlFilename
-     * @param $scale
+     * @param string $xmlFilename
+     * @param string $scale
      * @return ProcessRequestMap
      */
     private function createRequestMapTemplate($template, $xmlFilename, $scale)
@@ -152,19 +162,19 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     }
 
     /**
-     * @param $content
+     * @param string $document
      * @param BusRegEntity $busReg
      * @return UploadCmd
      */
-    private function generateDocument($content, BusRegEntity $busReg, $filename)
+    private function generateDocument($document, BusRegEntity $busReg)
     {
         $data = [
-            'content' => base64_encode(trim($content)),
+            'content' => base64_encode(file_get_contents($document)),
             'busReg' => $busReg->getId(),
             'licence' => $busReg->getLicence()->getId(),
             'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
             'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_OTHER_DOCUMENTS,
-            'filename' => $filename,
+            'filename' => basename($document),
             'description' => 'TransXchange file'
         ];
 
@@ -173,6 +183,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
 
     /**
      * @param BusRegEntity $busReg
+     * @param int $userId
      * @return CreateTaskCmd
      */
     private function createTaskCommand(BusRegEntity $busReg, $userId)
@@ -181,7 +192,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
         $data = [
             'category' => TaskEntity::CATEGORY_BUS,
             'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
-            'description' => 'New route map available: [' . $busReg->getRegNo() . ']',
+            'description' => 'New route map available: ' . $busReg->getRegNo(),
             'actionDate' => $actionDate,
             'assignedToUser' => $userId,
             'assignedToTeam' => 6,
@@ -194,6 +205,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
 
     /**
      * @param BusRegEntity $busReg
+     * @param int $userId
      * @return CreateTaskCmd
      */
     private function createFailedTaskCommand(BusRegEntity $busReg, $userId)
@@ -202,7 +214,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
         $data = [
             'category' => TaskEntity::CATEGORY_BUS,
             'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
-            'description' => 'Route map generation for: [' . $busReg->getRegNo() . '] failed',
+            'description' => 'Route map generation for: ' . $busReg->getRegNo() . ' failed',
             'actionDate' => $actionDate,
             'assignedToUser' => $userId,
             'assignedToTeam' => 6,
@@ -211,5 +223,23 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
         ];
 
         return CreateTaskCmd::create($data);
+    }
+
+    /**
+     * Creates a command to update TxcInbox records with the new document id
+     *
+     * @param int $busRegId
+     * @param int $documentId
+     *
+     * @return UpdateTxcInboxPdfCmd
+     */
+    private function createUpdateTxcInboxPdf($busRegId, $documentId)
+    {
+        $data = [
+            'id' => $busRegId,
+            'document' => $documentId
+        ];
+
+        return UpdateTxcInboxPdfCmd::create($data);
     }
 }
