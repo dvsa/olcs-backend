@@ -7,6 +7,8 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendUserRegistered as SendUserRegisteredDto;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\RegisterUserSelfserve as Sut;
@@ -106,6 +108,23 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
                 function (UserEntity $user) use (&$savedUser, $userId) {
                     $user->setId($userId);
                     $savedUser = $user;
+
+                    $this->expectedSideEffect(
+                        SendUserRegisteredDto::class,
+                        [
+                            'user' => $savedUser
+                        ],
+                        new Result()
+                    );
+
+                    $this->expectedSideEffect(
+                        SendUserTemporaryPasswordDto::class,
+                        [
+                            'user' => $savedUser,
+                            'password' => 'GENERATED_PASSWORD_HERE',
+                        ],
+                        new Result()
+                    );
                 }
             );
 

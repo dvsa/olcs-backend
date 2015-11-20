@@ -649,10 +649,14 @@ return [
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
+    Command\Email\SendTmUserCreated::class => CommandHandler\Email\SendTmUserCreated::class,
     Command\Email\CreateCorrespondenceRecord::class => CommandHandler\Email\CreateCorrespondenceRecord::class,
     Command\Email\SendContinuationNotSought::class => CommandHandler\Email\SendContinuationNotSought::class,
     Command\Email\SendUsernameSingle::class => CommandHandler\Email\SendUsernameSingle::class,
     Command\Email\SendUsernameMultiple::class => CommandHandler\Email\SendUsernameMultiple::class,
+    Command\Email\SendUserCreated::class => CommandHandler\Email\SendUserCreated::class,
+    Command\Email\SendUserRegistered::class => CommandHandler\Email\SendUserRegistered::class,
+    Command\Email\SendUserTemporaryPassword::class => CommandHandler\Email\SendUserTemporaryPassword::class,
 
     // Person
     TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,
