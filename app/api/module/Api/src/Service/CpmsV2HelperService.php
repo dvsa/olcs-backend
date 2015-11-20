@@ -680,9 +680,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param array $extraPayment data
      * @return array|null (will return null if we don't want to include a fee,
      * e.g. overpayment balancing fees)
-     *
-     * @todo 'product_reference' should be $fee->getFeeType()->getDescription()
-     * but CPMS has a whitelist and responds  {"code":104,"message":"product_reference is invalid"}
      */
     protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [])
     {

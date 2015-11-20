@@ -30,6 +30,9 @@ final class ResolveOutstandingPayments extends AbstractCommandHandler implements
 
     protected $extraRepos = ['SystemParameter'];
 
+    /**
+     * @inheritdoc
+     */
     public function handleCommand(CommandInterface $command)
     {
         $minAge = $this->getRepo('SystemParameter')->fetchValue('RESOLVE_CARD_PAYMENTS_MIN_AGE');

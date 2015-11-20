@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Standard;
  * @NOTE When you implement one of the following rules, please move it to the (or create a) relevant
  * validation-map/*.config.php. Eventually this file should be empty
  */
+// @codingStandardsIgnoreStart
 $map = [
     CommandHandler\Application\CancelApplication::class                           => Standard::class, // @todo
     CommandHandler\Application\CreateApplication::class                           => Standard::class, // @todo
@@ -409,6 +410,7 @@ $map = [
     EmailCommandHandler\UpdateInspectionRequest::class                            => Standard::class, // @todo
     QueryHandler\Fee\GetLatestFeeType::class                                      => Standard::class, // @todo
 ];
+// @codingStandardsIgnoreEnd
 
 // Merge all other validation maps
 foreach (glob(__DIR__ . '/validation-map/*.config.php') as $filename) {
