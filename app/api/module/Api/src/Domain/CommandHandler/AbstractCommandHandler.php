@@ -8,23 +8,25 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
-use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
-use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
+use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
-use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Olcs\Logging\Log\Logger;
+use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Abstract Command Handler
@@ -69,7 +71,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         /** @var ServiceLocatorInterface $mainServiceLocator  */
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->applyInterfaces($mainServiceLocator);
+        try {
+            $this->applyInterfaces($mainServiceLocator);
+        } catch (ZendServiceException $e) {
+            $this->logServiceExceptions($e);
+        }
 
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
 
@@ -86,6 +92,32 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         return $this;
     }
 
+    /**
+     * Zend ServiceManager masks exceptions beind a simple 'service not created'
+     * message so here we inspect the 'previous exception' chain and log out
+     * what the actual errors were, before rethrowing the original execption.
+     *
+     * @param \Exception $e
+     * @throws \Exception rethrows original Exception
+     */
+    private function logServiceExceptions(\Exception $e)
+    {
+        $rethrow = $e;
+
+        do {
+            Logger::warn(get_class($this) . ': ' . $e->getMessage());
+            $e = $e->getPrevious();
+        } while ($e);
+
+        throw $rethrow;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     * Warnings suppressed as by design this is just a series of 'if' conditions
+     */
     private function applyInterfaces($mainServiceLocator)
     {
         if ($this instanceof AuthAwareInterface) {
