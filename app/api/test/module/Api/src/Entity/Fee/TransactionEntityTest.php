@@ -151,6 +151,7 @@ class TransactionEntityTest extends EntityTester
 
         $sut->setType(new RefData(Entity::TYPE_PAYMENT));
         $sut->setPaymentMethod(new RefData(Fee::METHOD_CASH));
+        $sut->setStatus(new RefData(Entity::STATUS_COMPLETE));
 
         $this->assertEquals(
             [
@@ -167,12 +168,13 @@ class TransactionEntityTest extends EntityTester
      * @param RefData $paymentMethod payment method
      * @dataProvider displayReversalOptionProvider
      */
-    public function testDisplayReversalOption($type, $paymentMethod, $expected)
+    public function testDisplayReversalOption($type, $paymentMethod, $status, $expected)
     {
         $sut = $this->instantiate($this->entityClass);
 
         $sut->setType($type);
         $sut->setPaymentMethod($paymentMethod);
+        $sut->setStatus($status);
 
         $this->assertSame($expected, $sut->displayReversalOption());
     }
@@ -183,41 +185,55 @@ class TransactionEntityTest extends EntityTester
             'cheque payment' => [
                 new RefData(Entity::TYPE_PAYMENT),
                 new RefData(Fee::METHOD_CHEQUE),
+                new RefData(Entity::STATUS_COMPLETE),
                 true,
             ],
             'digital card payment' => [
                 new RefData(Entity::TYPE_PAYMENT),
                 new RefData(Fee::METHOD_CARD_ONLINE),
+                new RefData(Entity::STATUS_COMPLETE),
                 true,
             ],
             'assisted digital card payment' => [
                 new RefData(Entity::TYPE_PAYMENT),
                 new RefData(Fee::METHOD_CARD_OFFLINE),
+                new RefData(Entity::STATUS_COMPLETE),
                 true,
             ],
             'cash payment' => [
                 new RefData(Entity::TYPE_PAYMENT),
                 new RefData(Fee::METHOD_CASH),
+                new RefData(Entity::STATUS_COMPLETE),
                 false,
             ],
             'PO payment' => [
                 new RefData(Entity::TYPE_PAYMENT),
                 new RefData(Fee::METHOD_POSTAL_ORDER),
+                new RefData(Entity::STATUS_COMPLETE),
                 false,
             ],
             'waive' => [
                 new RefData(Entity::TYPE_WAIVE),
+                null,
                 null,
                 false,
             ],
             'refund' => [
                 new RefData(Entity::TYPE_REFUND),
                 null,
+                null,
                 false,
             ],
             'reversal' => [
                 new RefData(Entity::TYPE_REVERSAL),
                 null,
+                null,
+                false,
+            ],
+            'failed card payment' => [
+                new RefData(Entity::TYPE_PAYMENT),
+                new RefData(Fee::METHOD_CARD_ONLINE),
+                new RefData(Entity::STATUS_FAILED),
                 false,
             ],
         ];
@@ -227,11 +243,12 @@ class TransactionEntityTest extends EntityTester
      * @param array $feeTransactions
      * @dataProvider canReverseProvider
      */
-    public function testCanReverse($feeTransactions, $expected)
+    public function testCanReverse($feeTransactions, $status, $expected)
     {
         $sut = $this->instantiate($this->entityClass);
         $sut->setType(new RefData(Entity::TYPE_PAYMENT));
         $sut->setPaymentMethod(new RefData(Fee::METHOD_CHEQUE));
+        $sut->setStatus($status);
 
         $sut->setFeeTransactions(new ArrayCollection($feeTransactions));
 
@@ -243,6 +260,7 @@ class TransactionEntityTest extends EntityTester
         return [
             'no fee transactions' => [
                 [],
+                new RefData(Entity::STATUS_COMPLETE),
                 true,
             ],
             'one refunded fee transaction' => [
@@ -252,6 +270,7 @@ class TransactionEntityTest extends EntityTester
                         ->andReturn(true)
                         ->getMock(),
                 ],
+                new RefData(Entity::STATUS_COMPLETE),
                 false,
             ],
             'one other fee transaction' => [
@@ -261,6 +280,7 @@ class TransactionEntityTest extends EntityTester
                         ->andReturn(false)
                         ->getMock(),
                 ],
+                new RefData(Entity::STATUS_COMPLETE),
                 true,
             ],
             'mix of fee transactions' => [
@@ -274,6 +294,7 @@ class TransactionEntityTest extends EntityTester
                         ->andReturn(true)
                         ->getMock(),
                 ],
+                new RefData(Entity::STATUS_COMPLETE),
                 false,
             ]
         ];
