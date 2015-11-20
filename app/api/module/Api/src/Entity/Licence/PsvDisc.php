@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class PsvDisc extends AbstractPsvDisc
+class PsvDisc extends AbstractPsvDisc implements \Dvsa\Olcs\Api\Entity\OrganisationProviderInterface
 {
     const ERROR_CANT_EXCEED_TOT_AUTH = 'LIC-PSVDISC-1';
     const ERROR_NO_DISCS_TO_PRINT = 'err_no_discs';
@@ -32,5 +32,10 @@ class PsvDisc extends AbstractPsvDisc
     public function cease()
     {
         $this->setCeasedDate(new \DateTime());
+    }
+
+    public function getRelatedOrganisation()
+    {
+        return $this->getLicence()->getOrganisation();
     }
 }

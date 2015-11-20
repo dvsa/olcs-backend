@@ -24,5 +24,6 @@ return [
         'canAccessApplicationOperatingCentre' => Validators\CanAccessApplicationOperatingCentre::class,
         'canAccessLicenceOperatingCentre' => Validators\CanAccessLicenceOperatingCentre::class,
         'canAccessPerson' => Validators\CanAccessPerson::class,
+        'canAccessPsvDisc' => Validators\CanAccessPsvDisc::class,
     ]
 ];
