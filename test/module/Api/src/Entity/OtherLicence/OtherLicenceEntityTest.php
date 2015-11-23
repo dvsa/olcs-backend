@@ -127,4 +127,51 @@ class OtherLicenceEntityTest extends EntityTester
         $this->assertEquals($sut->getOperatingCentres(), 'oc');
         $this->assertEquals($sut->getTotalAuthVehicles(), 'tav');
     }
+
+    public function testGetRelatedOrganisationWithNoApplication()
+    {
+        $sut = new Entity();
+
+        $this->assertSame(null, $sut->getRelatedOrganisation());
+    }
+
+    public function testGetRelatedOrganisationWithApplication()
+    {
+        $sut = new Entity();
+
+        $mockApplication = m::mock();
+        $mockApplication->shouldReceive('getLicence')
+            ->once()
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getOrganisation')
+                ->andReturn('ORG1')
+                ->once()
+                ->getMock()
+            )
+            ->getMock();
+        $sut->setApplication($mockApplication);
+
+        $this->assertSame('ORG1', $sut->getRelatedOrganisation());
+    }
+
+    public function testGetRelatedOrganisationWithTmLicence()
+    {
+        $sut = new Entity();
+
+        $mockTmLicence = m::mock()
+            ->shouldReceive('getLicence')
+            ->once()
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getOrganisation')
+                ->once()
+                ->andReturn('ORG1')
+                ->getMock()
+            )
+            ->getMock();
+        $sut->setTransportManagerLicence($mockTmLicence);
+
+        $this->assertSame('ORG1', $sut->getRelatedOrganisation());
+    }
 }
