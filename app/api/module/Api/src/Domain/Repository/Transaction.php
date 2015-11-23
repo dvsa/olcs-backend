@@ -7,9 +7,11 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Fee\Transaction as Entity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as Entity;
 
 /**
  * Transaction
@@ -40,7 +42,7 @@ class Transaction extends AbstractRepository
             ->with('l.organisation');
 
         $qb
-            ->andWhere($qb->expr()->eq('t.reference', ':reference'))
+            ->andWhere($qb->expr()->eq($this->alias . '.reference', ':reference'))
             ->setParameter('reference', $reference);
 
         $results = $qb->getQuery()->getResult($hydrateMode);
@@ -54,5 +56,37 @@ class Transaction extends AbstractRepository
         }
 
         return $results[0];
+    }
+
+    /**
+     * @param int $minAge minimum age in minutes
+     */
+    public function fetchOutstandingCardPayments($minAge)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->andWhere($qb->expr()->eq($this->alias . '.type', ':transactionType'))
+            ->andWhere($qb->expr()->eq($this->alias . '.status', ':status'))
+            ->andWhere($qb->expr()->in($this->alias . '.paymentMethod', ':paymentMethods'))
+            ->setParameter('transactionType', $this->getRefdataReference(Entity::TYPE_PAYMENT))
+            ->setParameter('status', $this->getRefdataReference(Entity::STATUS_OUTSTANDING))
+            ->setParameter(
+                'paymentMethods',
+                [
+                    FeeEntity::METHOD_CARD_ONLINE,
+                    FeeEntity::METHOD_CARD_OFFLINE,
+                ]
+            );
+
+        if ($minAge) {
+            $maxCreatedOn = new DateTime();
+            $maxCreatedOn->sub(new \DateInterval(sprintf('PT%dM', $minAge)));
+            $qb
+                ->andWhere($qb->expr()->lt($this->alias . '.createdOn', ':maxCreatedOn'))
+                ->setParameter('maxCreatedOn', $maxCreatedOn);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

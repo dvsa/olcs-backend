@@ -39,6 +39,7 @@ class Module implements ConsoleUsageProviderInterface
             'inspection-request-email [--verbose|-v]' => 'Process inspection request email',
             'remove-read-audit [--verbose|-v]' => 'Process deletion of old read audit records',
             'system-parameter name value [--verbose|-v]' => 'Set a system parameter',
+            'resolve-payments [--verbose|-v]' => 'Resolve pending CPMS payments',
             // Describe parameters
             array( '--verbose|-v', '(optional) turn on verbose mode'),
             array( '--dryrun|-d', '(optional) dryrun, nothing is actually changed'),

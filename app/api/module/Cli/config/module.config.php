@@ -98,6 +98,15 @@ return [
                         ],
                     ],
                 ],
+                'resolve-payments' => [
+                    'options' => [
+                        'route' => 'resolve-payments [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => 'BatchController',
+                            'action' => 'resolvePayments',
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
