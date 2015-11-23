@@ -24,7 +24,7 @@ use ZfcRbac\Service\AuthorizationService;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class ResolvePaymentTest extends CommandHandlerTestCase
+class ResolveOutstandingPaymentsTest extends CommandHandlerTestCase
 {
     protected $mockCpmsService;
 
@@ -33,7 +33,6 @@ class ResolvePaymentTest extends CommandHandlerTestCase
         $this->mockCpmsService = m::mock(CpmsHelper::class);
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
-            // 'Config' => [],
         ];
 
         $this->sut = new ResolveOutstandingPayments();
