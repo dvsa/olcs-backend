@@ -59,7 +59,6 @@ class ResolveOutstandingPaymentsTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-
     public function testHandleCommand()
     {
         // expectations
