@@ -1,27 +1,27 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Trailer;
+namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\OtherLicence;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessTrailerWithId;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessOtherLicenceWithId;
 
 /**
- * CanAccessTrailerWithIdTest
+ * CanAccessOtherLicenceWithIdTest
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CanAccessTrailerWithIdTest extends AbstractHandlerTestCase
+class CanAccessOtherLicenceWithIdTest extends AbstractHandlerTestCase
 {
     /**
-     * @var CanAccessTrailerWithId
+     * @var CanAccessOtherLicenceWithId
      */
     protected $sut;
 
     public function setUp()
     {
-        $this->sut = new CanAccessTrailerWithId();
+        $this->sut = new CanAccessOtherLicenceWithId();
 
         parent::setUp();
     }
@@ -35,7 +35,7 @@ class CanAccessTrailerWithIdTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getId')->andReturn(111);
 
-        $this->setIsValid('canAccessTrailer', [111], $canAccess);
+        $this->setIsValid('canAccessOtherLicence', [111], $canAccess);
 
         $this->assertSame($expected, $this->sut->isValid($dto));
     }
