@@ -105,7 +105,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-29',
                     'sales_reference' => '1',
-                    'product_reference' => 'GVR_APPLICATION_FEE', // hardcoded
+                    'product_reference' => 'TEST_PRODUCT_REF',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -131,7 +131,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-30',
                     'sales_reference' => '2',
-                    'product_reference' => 'GVR_APPLICATION_FEE',
+                    'product_reference' => 'TEST_PRODUCT_REF',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -203,7 +203,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-29',
                     'sales_reference' => '1',
-                    'product_reference' => 'GVR_APPLICATION_FEE', // hardcoded
+                    'product_reference' => 'TEST_PRODUCT_REF', // hardcoded
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -229,7 +229,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-30',
                     'sales_reference' => '2',
-                    'product_reference' => 'GVR_APPLICATION_FEE',
+                    'product_reference' => 'TEST_PRODUCT_REF',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -301,7 +301,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-29',
                     'sales_reference' => '1',
-                    'product_reference' => 'GVR_APPLICATION_FEE', // hardcoded
+                    'product_reference' => 'TEST_PRODUCT_REF', // hardcoded
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -327,7 +327,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-30',
                     'sales_reference' => '2',
-                    'product_reference' => 'GVR_APPLICATION_FEE',
+                    'product_reference' => 'TEST_PRODUCT_REF',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -434,7 +434,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-29',
                     'sales_reference' => '1',
-                    'product_reference' => 'GVR_APPLICATION_FEE', // hardcoded
+                    'product_reference' => 'TEST_PRODUCT_REF', // hardcoded
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -460,7 +460,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-30',
                     'sales_reference' => '2',
-                    'product_reference' => 'GVR_APPLICATION_FEE',
+                    'product_reference' => 'TEST_PRODUCT_REF',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -554,7 +554,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-29',
                     'sales_reference' => '1',
-                    'product_reference' => 'GVR_APPLICATION_FEE', // hardcoded
+                    'product_reference' => 'TEST_PRODUCT_REF', // hardcoded
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -580,7 +580,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-30',
                     'sales_reference' => '2',
-                    'product_reference' => 'GVR_APPLICATION_FEE',
+                    'product_reference' => 'TEST_PRODUCT_REF',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -682,7 +682,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-29',
                     'sales_reference' => '1',
-                    'product_reference' => 'GVR_APPLICATION_FEE', // hardcoded
+                    'product_reference' => 'TEST_PRODUCT_REF', // hardcoded
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -708,7 +708,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-30',
                     'sales_reference' => '2',
-                    'product_reference' => 'GVR_APPLICATION_FEE',
+                    'product_reference' => 'TEST_PRODUCT_REF',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -880,7 +880,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->setDescription('fee type description')
             ->setFeeType((new RefData($feeTypeId)))
             ->setCostCentreRef('TA')
-            ->setVatCode('Z');
+            ->setVatCode('Z')
+            ->setProductReference('TEST_PRODUCT_REF');
 
         $organisation = new OrganisationEntity();
         $organisation
@@ -1058,7 +1059,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                             'tax_rate' => '0',
                             'invoice_date' => '2015-10-09',
                             'sales_reference' => '101',
-                            'product_reference' => 'GVR_APPLICATION_FEE',
+                            'product_reference' => 'TEST_PRODUCT_REF',
                             'product_description' => 'TEST_FEE_TYPE',
                             'receiver_reference' => 'Miscellaneous',
                             'receiver_name' => 'Test Customer',

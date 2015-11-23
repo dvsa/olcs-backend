@@ -30,8 +30,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
     const DATETIME_FORMAT = 'Y-m-d H:i:s';
 
-    const PRODUCT_REFERENCE = 'GVR_APPLICATION_FEE';
-
     const REFUND_REASON = 'Refund';
 
     /**
@@ -438,7 +436,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         ];
 
         // $response = $this->send($method, $endPoint, $scope, $params);
-        $response = $this->stubResponse($payments);
+        $response = $this->stubBatchRefundResponse($payments);
 
         if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
             return $response;
@@ -452,7 +450,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * @todo remove when CPMS refund end point is working
      */
-    private function stubResponse($payments)
+    private function stubBatchRefundResponse($payments)
     {
         $receiptRefs = array_map(
             function ($payment) {
@@ -680,9 +678,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param array $extraPayment data
      * @return array|null (will return null if we don't want to include a fee,
      * e.g. overpayment balancing fees)
-     *
-     * @todo 'product_reference' should be $fee->getFeeType()->getDescription()
-     * but CPMS has a whitelist and responds  {"code":104,"message":"product_reference is invalid"}
      */
     protected function getPaymentDataForFee(Fee $fee, $extraPaymentData = [])
     {
@@ -704,7 +699,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'tax_rate' => $fee->getFeeType()->getVatRate(),
             'invoice_date' => $this->formatDate($fee->getInvoicedDate()),
             'sales_reference' => (string) $fee->getId(),
-            'product_reference' => self::PRODUCT_REFERENCE,
+            'product_reference' => $fee->getFeeType()->getProductReference(),
             'product_description' => $fee->getFeeType()->getDescription(),
             'receiver_reference' => (string) $this->getCustomerReference([$fee]),
             'receiver_name' => $fee->getCustomerNameForInvoice(),
