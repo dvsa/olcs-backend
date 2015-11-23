@@ -74,6 +74,69 @@ class Bus extends AbstractRepository
         return $results;
     }
 
+    public function fetchWithTxcInboxListForOrganisation($query, $organisationId, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->byId($query->getId())
+            ->withRefdata()
+            ->with('txcInboxs', 't');
+
+        $qb->andWhere($qb->expr()->isNull('t.localAuthority'));
+        $qb->andWhere($qb->expr()->eq('t.organisation', ':organisation'))
+            ->setParameter('organisation', $organisationId);
+
+        $results = $qb->getQuery()->getResult($hydrateMode);
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+
+        return $results[0];
+    }
+
+    /**
+     * Fetch a list of unread docs filtered by local authority, submission type and status for a given bus reg id
+     *
+     * @param int $busReg
+     * @param int $localAuthorityId
+     * @param int $hydrateMode
+     * @return array
+     */
+    public function fetchWithTxcInboxListForLocalAuthority($query, $localAuthorityId, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb */
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->byId($query->getId())
+            ->withRefdata();
+            //->with('txcInboxs', 't');
+        $qb->addOrderBy('t.id', 'DESC');
+echo "Local Authority ID -> " . $localAuthorityId;
+
+        if (empty($localAuthorityId)) {
+            $qb->leftJoin($this->alias . '.txcInboxs', 't', 'WITH', $qb->expr()->isNull('t.localAuthority'));
+        } else {
+            $qb->leftJoin(
+                $this->alias . '.txcInboxs',
+                't',
+                'WITH',
+                $qb->expr()->eq('t.localAuthority', ':localAuthority')
+            )->setParameter('localAuthority', $localAuthorityId);
+        }
+echo $qb->getQuery()->getDQL();
+        $results = $qb->getQuery()->getResult($hydrateMode);
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+
+        return $results[0];
+    }
+
     /**
      * Applies filters
      * @param QueryBuilder $qb
@@ -105,4 +168,5 @@ class Bus extends AbstractRepository
             ->with('busNoticePeriod')
             ->with('status');
     }
+
 }

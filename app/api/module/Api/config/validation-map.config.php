@@ -273,6 +273,7 @@ $map = [
     QueryHandler\Bus\BusRegDecision::class                                        => Standard::class, // @todo
     QueryHandler\Bus\ByLicenceRoute::class                                        => Standard::class, // @todo
     QueryHandler\Bus\Ebsr\TxcInboxByBusReg::class                                 => Standard::class, // @todo
+    QueryHandler\Bus\Ebsr\BusRegWithTxcInbox::class                               => Standard::class, // @todo
     QueryHandler\Bus\Ebsr\TxcInboxList::class                                     => Standard::class, // @todo
     QueryHandler\Bus\HistoryList::class                                           => Standard::class, // @todo
     QueryHandler\Bus\RegistrationHistoryList::class                               => Standard::class, // @todo
