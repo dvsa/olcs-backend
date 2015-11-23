@@ -206,6 +206,15 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     protected $licenceType;
 
     /**
+     * Product reference
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="product_reference", length=30, nullable=true)
+     */
+    protected $productReference;
+
+    /**
      * Traffic area
      *
      * @var \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
@@ -660,6 +669,29 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     public function getLicenceType()
     {
         return $this->licenceType;
+    }
+
+    /**
+     * Set the product reference
+     *
+     * @param string $productReference
+     * @return FeeType
+     */
+    public function setProductReference($productReference)
+    {
+        $this->productReference = $productReference;
+
+        return $this;
+    }
+
+    /**
+     * Get the product reference
+     *
+     * @return string
+     */
+    public function getProductReference()
+    {
+        return $this->productReference;
     }
 
     /**
