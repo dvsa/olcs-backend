@@ -225,6 +225,11 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
         $this->setTotalAuthVehicles($totalAuthVehicles);
     }
 
+    /**
+     * Get related organisation
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|null
+     */
     public function getRelatedOrganisation()
     {
         if ($this->getApplication()) {
