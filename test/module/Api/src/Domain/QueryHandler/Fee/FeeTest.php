@@ -209,7 +209,7 @@ class FeeTest extends QueryHandlerTestCase
                 ->shouldReceive('getPaymentMethod->getDescription')
                 ->andReturn($method);
             $transaction
-                ->shouldReceive('getProcessedByUser->getLoginId')
+                ->shouldReceive('getProcessedByLoginId')
                 ->andReturn('someuser');
         }
 

@@ -149,6 +149,10 @@ class Transaction extends AbstractTransaction
             return false;
         }
 
+        if (!$this->isComplete()) {
+            return false;
+        }
+
         $reversable = [
             Fee::METHOD_CARD_ONLINE,
             Fee::METHOD_CARD_OFFLINE,
@@ -178,5 +182,15 @@ class Transaction extends AbstractTransaction
         }
 
         return true;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getProcessedByLoginId()
+    {
+        if ($this->getProcessedByUser()) {
+            return $this->getProcessedByUser()->getLoginId();
+        }
     }
 }
