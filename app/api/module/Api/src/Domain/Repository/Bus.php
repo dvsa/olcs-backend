@@ -86,9 +86,6 @@ class Bus extends AbstractRepository
 
         $qb->addSelect('t');
 
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->byId($query->getId())
-            ->withRefdata();
         $qb->leftJoin(
             $this->alias . '.txcInboxs',
             't',
@@ -113,8 +110,11 @@ class Bus extends AbstractRepository
      * @param int $hydrateMode
      * @return array
      */
-    public function fetchWithTxcInboxListForLocalAuthority($query, $localAuthorityId, $hydrateMode = Query::HYDRATE_OBJECT)
-    {
+    public function fetchWithTxcInboxListForLocalAuthority(
+        $query,
+        $localAuthorityId,
+        $hydrateMode = Query::HYDRATE_OBJECT
+    ) {
         /* @var \Doctrine\Orm\QueryBuilder $qb */
         $qb = $this->createQueryBuilder();
 
@@ -175,5 +175,4 @@ class Bus extends AbstractRepository
             ->with('busNoticePeriod')
             ->with('status');
     }
-
 }
