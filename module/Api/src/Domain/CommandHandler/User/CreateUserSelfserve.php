@@ -102,12 +102,6 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
         // TODO - replace with the generated password
         $password = 'GENERATED_PASSWORD_HERE';
 
-        $this->getOpenAmUser()->registerUser(
-            $command->getLoginId(),
-            $command->getContactDetails()['emailAddress'],
-            Client::REALM_SELFSERVE
-        );
-
         // send welcome email
         $this->handleSideEffect(
             SendUserCreatedDto::create(
