@@ -58,4 +58,29 @@ class IsOwnerTest extends AbstractValidatorsTestCase
 
         $this->assertEquals(false, $this->sut->isValid($orgProvider));
     }
+
+    public function testIsValidUserWithoutOrganisation()
+    {
+        /** @var OrganisationProviderInterface $orgProvider */
+        $orgProvider = m::mock(OrganisationProviderInterface::class);
+
+        $user = $this->mockUser();
+        $user->shouldReceive('getRelatedOrganisation')->andReturn(null);
+
+        $this->assertEquals(false, $this->sut->isValid($orgProvider));
+    }
+
+    public function testIsValidUserWithoutEntityOrganisation()
+    {
+        $organisation = m::mock();
+
+        /** @var OrganisationProviderInterface $orgProvider */
+        $orgProvider = m::mock(OrganisationProviderInterface::class);
+        $orgProvider->shouldReceive('getRelatedOrganisation')->andReturn(null);
+
+        $user = $this->mockUser();
+        $user->shouldReceive('getRelatedOrganisation')->andReturn($organisation);
+
+        $this->assertEquals(false, $this->sut->isValid($orgProvider));
+    }
 }

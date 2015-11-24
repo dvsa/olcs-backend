@@ -71,4 +71,98 @@ class SubmissionEntityTest extends EntityTester
         $submission->close();
         $this->assertTrue($submission->canReopen());
     }
+
+    /**
+     * Tests cases attached to NI licences
+     */
+    public function testIsNiLicenceCase()
+    {
+        $mockLicence = m::mock();
+        $mockLicence->shouldReceive('getNiFlag')->andReturn('Y');
+
+        $case = m::mock(CaseEntity::class)->makePartial();
+        $case->shouldReceive('getLicence')->andReturn($mockLicence);
+
+        $submissionType = m::mock(RefDataEntity::class)->makePartial();
+        $submission = new Entity($case, $submissionType);
+
+        $this->assertTrue($submission->isNi());
+    }
+
+    /**
+     * Tests cases attached to licences Non-NI
+     */
+    public function testIsNotNiLicenceCase()
+    {
+        $mockLicence = m::mock();
+        $mockLicence->shouldReceive('getNiFlag')->andReturn('N');
+
+        $case = m::mock(CaseEntity::class)->makePartial();
+        $case->shouldReceive('getLicence')->andReturn($mockLicence);
+
+        $submissionType = m::mock(RefDataEntity::class)->makePartial();
+        $submission = new Entity($case, $submissionType);
+
+        $this->assertFalse($submission->isNi());
+    }
+
+    /**
+     * Tests cases attached to applications
+     */
+    public function testIsNiApplicationCase()
+    {
+        $mockApplication = m::mock();
+        $mockApplication->shouldReceive('getNiFlag')->andReturn('Y');
+
+        $case = m::mock(CaseEntity::class)->makePartial();
+        $case->shouldReceive('getLicence')->andReturnNull();
+
+        $case = m::mock(CaseEntity::class)->makePartial();
+        $case->shouldReceive('getApplication')->andReturn($mockApplication);
+
+        $submissionType = m::mock(RefDataEntity::class)->makePartial();
+        $submission = new Entity($case, $submissionType);
+
+        $this->assertTrue($submission->isNi());
+    }
+
+    /**
+     * Tests cases attached to applications Not NI
+     */
+    public function testIsNotNiApplicationCase()
+    {
+        $mockApplication = m::mock();
+        $mockApplication->shouldReceive('getNiFlag')->andReturn('N');
+
+        $case = m::mock(CaseEntity::class)->makePartial();
+        $case->shouldReceive('getLicence')->andReturnNull();
+
+        $case = m::mock(CaseEntity::class)->makePartial();
+        $case->shouldReceive('getApplication')->andReturn($mockApplication);
+
+        $submissionType = m::mock(RefDataEntity::class)->makePartial();
+        $submission = new Entity($case, $submissionType);
+
+        $this->assertFalse($submission->isNi());
+    }
+
+    /**
+     * Tests cases attached to transport manager
+     */
+    public function testIsNiTransportManagerCase()
+    {
+        $mockApplication = m::mock();
+        $mockApplication->shouldReceive('getNiFlag')->andReturn('N');
+
+        $case = m::mock(CaseEntity::class)->makePartial();
+        $case->shouldReceive('getLicence')->andReturnNull();
+
+        $case = m::mock(CaseEntity::class)->makePartial();
+        $case->shouldReceive('getApplication')->andReturnNull();
+
+        $submissionType = m::mock(RefDataEntity::class)->makePartial();
+        $submission = new Entity($case, $submissionType);
+
+        $this->assertFalse($submission->isNi());
+    }
 }

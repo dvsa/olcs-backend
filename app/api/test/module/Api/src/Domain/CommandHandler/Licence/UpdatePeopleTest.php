@@ -7,10 +7,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
-use Dvsa\Olcs\Api\Domain\Repository\Licence as  LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Person as  PersonRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdatePeople as CommandHandler;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdatePeople as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
@@ -24,7 +22,6 @@ class UpdatePeopleTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new CommandHandler();
-        $this->mockRepo('Licence', LicenceRepo::class);
         $this->mockRepo('Person', PersonRepo::class);
 
         parent::setUp();
@@ -57,12 +54,10 @@ class UpdatePeopleTest extends CommandHandlerTestCase
 
         $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
         $organisation->setType($this->refData['org_t_p']);
-        $licence = new LicenceEntity($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
+
         $person = new \Dvsa\Olcs\Api\Entity\Person\Person();
         $person->setId(79);
         $person->setForename('FRED');
-
-        $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($licence);
 
         $this->repoMap['Person']->shouldReceive('fetchById')->with(79, \Doctrine\ORM\Query::HYDRATE_OBJECT, 122)
             ->once()->andReturn($person);

@@ -197,6 +197,20 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Resolve pending CPMS payments
+     *
+     * @return ConsoleModel
+     */
+    public function resolvePaymentsAction()
+    {
+        $dto = Command\Transaction\ResolveOutstandingPayments::create([]);
+
+        $result = $this->handleCommand([$dto]);
+
+        return $this->handleExitStatus($result);
+    }
+
+    /**
      * @return boolean
      */
     private function isVerbose()

@@ -41,7 +41,7 @@ class ApplicationOperatingCentre extends AbstractQueryHandler
             ],
             [
                 'isPsv' => $application->isPsv(),
-                'canUpdateAddress' => $application->isNew(),
+                'canUpdateAddress' => ($application->isNew() || $aoc->getAction() === 'A'),
                 'wouldIncreaseRequireAdditionalAdvertisement' => $application->isVariation(),
                 'currentVehiclesRequired' => $this->getNoOfVehiclesRequired($aoc, $application->getLicence()),
                 'currentTrailersRequired' => $this->getNoOfTrailersRequired($aoc, $application->getLicence())

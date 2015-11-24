@@ -5,13 +5,12 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\CompanySubsidiary\Licence;
+namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Misc;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithLicence;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * Can Access Licence With Licence Test

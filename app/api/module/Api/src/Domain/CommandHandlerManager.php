@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Transfer\Command\LoggerOmitContentInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
@@ -45,9 +46,15 @@ class CommandHandlerManager extends AbstractPluginManager implements CommandHand
             $validateCommandHandler = $commandHandler;
         }
 
+        if ($command instanceof LoggerOmitContentInterface) {
+            $data = ['*** OMITTED ***'];
+        } else {
+            $data = $command->getArrayCopy();
+        }
+
         Logger::debug(
             'Command Received: ' . $commandFqcn,
-            ['data' => ['commandData' => $command->getArrayCopy()]]
+            ['data' => ['commandData' => $data]]
         );
 
         $commandHandlerFqcn = get_class($validateCommandHandler);

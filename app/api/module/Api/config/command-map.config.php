@@ -422,16 +422,12 @@ return [
         CommandHandler\Cases\Hearing\CreateAppeal::class,
     TransferCommand\Cases\Hearing\UpdateAppeal::class =>
         CommandHandler\Cases\Hearing\UpdateAppeal::class,
-    TransferCommand\Cases\Hearing\DeleteAppeal::class =>
-        CommandHandler\Cases\Hearing\DeleteAppeal::class,
 
     // Transfer - Stay
     TransferCommand\Cases\Hearing\CreateStay::class =>
         CommandHandler\Cases\Hearing\CreateStay::class,
     TransferCommand\Cases\Hearing\UpdateStay::class =>
         CommandHandler\Cases\Hearing\UpdateStay::class,
-    TransferCommand\Cases\Hearing\DeleteStay::class =>
-        CommandHandler\Cases\Hearing\DeleteStay::class,
 
     // Transfer - Licence Status Rule
     TransferCommand\LicenceStatusRule\CreateLicenceStatusRule::class
@@ -575,6 +571,8 @@ return [
     TransferCommand\Transaction\CompleteTransaction::class => CommandHandler\Transaction\CompleteTransaction::class,
     Command\Transaction\ResolvePayment::class => CommandHandler\Transaction\ResolvePayment::class,
     TransferCommand\Transaction\ReverseTransaction::class => CommandHandler\Transaction\ReverseTransaction::class,
+    Command\Transaction\ResolveOutstandingPayments::class
+        => CommandHandler\Transaction\ResolveOutstandingPayments::class,
 
     // Domain - ApplicationCompletion
     AppCompCommand\UpdateTypeOfLicenceStatus::class => AppCompCommandHandler\UpdateTypeOfLicenceStatus::class,
@@ -649,10 +647,14 @@ return [
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
+    Command\Email\SendTmUserCreated::class => CommandHandler\Email\SendTmUserCreated::class,
     Command\Email\CreateCorrespondenceRecord::class => CommandHandler\Email\CreateCorrespondenceRecord::class,
     Command\Email\SendContinuationNotSought::class => CommandHandler\Email\SendContinuationNotSought::class,
     Command\Email\SendUsernameSingle::class => CommandHandler\Email\SendUsernameSingle::class,
     Command\Email\SendUsernameMultiple::class => CommandHandler\Email\SendUsernameMultiple::class,
+    Command\Email\SendUserCreated::class => CommandHandler\Email\SendUserCreated::class,
+    Command\Email\SendUserRegistered::class => CommandHandler\Email\SendUserRegistered::class,
+    Command\Email\SendUserTemporaryPassword::class => CommandHandler\Email\SendUserTemporaryPassword::class,
 
     // Person
     TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,

@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *    }
  * )
  */
-class OtherLicence extends AbstractOtherLicence
+class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity\OrganisationProviderInterface
 {
     const TYPE_CURRENT = 'prev_has_licence';
     const TYPE_APPLIED = 'prev_had_licence';
@@ -223,5 +223,22 @@ class OtherLicence extends AbstractOtherLicence
         $this->setLicNo($licNo);
         $this->setOperatingCentres($operatingCentres);
         $this->setTotalAuthVehicles($totalAuthVehicles);
+    }
+
+    /**
+     * Get related organisation
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|null
+     */
+    public function getRelatedOrganisation()
+    {
+        if ($this->getApplication()) {
+            return $this->getApplication()->getLicence()->getOrganisation();
+        }
+        if ($this->getTransportManagerLicence()) {
+            return $this->getTransportManagerLicence()->getLicence()->getOrganisation();
+        }
+
+        return null;
     }
 }

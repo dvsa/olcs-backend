@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Person;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
 
@@ -23,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
  *    }
  * )
  */
-class Person extends AbstractPerson
+class Person extends AbstractPerson implements OrganisationProviderInterface
 {
     /**
      * Update person details
@@ -96,5 +97,23 @@ class Person extends AbstractPerson
     public function getFullName()
     {
         return trim($this->getForename() .' '. $this->getFamilyName());
+    }
+
+    /**
+     * Get the list of organisations related to the person record
+     *
+     * @return array
+     */
+    public function getRelatedOrganisation()
+    {
+        $list = [];
+
+        /** @var $orgPerson \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson */
+        foreach ($this->getOrganisationPersons() as $orgPerson) {
+            $org = $orgPerson->getOrganisation();
+            $list[$org->getId()] = $org;
+        }
+
+        return $list;
     }
 }

@@ -14,14 +14,48 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 /**
  * Is Owner
  *
+ * Check whether the organisation that belongs to the current user, matches an organisation that is linked to the
+ * entity
+ *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 class IsOwner extends AbstractValidator implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
+    /**
+     * Check whether the organisation that belongs to the current user, matches an organisation that is linked to the
+     * entity
+     *
+     * @param OrganisationProviderInterface $entity
+     * @return bool
+     */
     public function isValid(OrganisationProviderInterface $entity)
     {
-        return $this->getCurrentUser()->getRelatedOrganisation() === $entity->getRelatedOrganisation();
+        $currentUserOrg = $this->getCurrentUser()->getRelatedOrganisation();
+
+        // This is needed as if user has no organisation and entity has no organisation they would be granted access
+        if (empty($currentUserOrg)) {
+            return false;
+        }
+
+        $relatedOrganisations = $entity->getRelatedOrganisation();
+
+        if (empty($relatedOrganisations)) {
+            return false;
+        }
+
+        // The entity may be linked to multiple organisation, so we can just cast as an array and check that one matches
+        if (!is_array($relatedOrganisations)) {
+            $relatedOrganisations = [$relatedOrganisations];
+        }
+
+        foreach ($relatedOrganisations as $relatedOrganisation) {
+            if ($currentUserOrg === $relatedOrganisation) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
