@@ -31,7 +31,7 @@ class GetListTest extends QueryHandlerTestCase
         $tm = new TransportManager();
 
         $this->repoMap['TransportManager']->shouldReceive('fetchById')
-            ->with(1)->andReturn([$tm]);
+            ->with(1)->andReturn($tm);
 
         $previousConviction = new \Dvsa\Olcs\Api\Entity\Application\PreviousConviction();
         $previousConviction->setId(74);
