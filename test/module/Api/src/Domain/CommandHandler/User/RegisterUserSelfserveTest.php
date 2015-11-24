@@ -139,7 +139,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
                         SendUserTemporaryPasswordDto::class,
                         [
                             'user' => $savedUser,
-                            'password' => 'GENERATED_PASSWORD_HERE',
+                            'password' => 'GENERATED_PASSWORD',
                         ],
                         new Result()
                     );
