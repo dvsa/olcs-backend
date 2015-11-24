@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Tm;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use \Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * TransportManagerLicence Entity
@@ -23,7 +24,7 @@ use \Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *    }
  * )
  */
-class TransportManagerLicence extends AbstractTransportManagerLicence
+class TransportManagerLicence extends AbstractTransportManagerLicence implements OrganisationProviderInterface
 {
     const ERROR_MON = 'err_mon';
     const ERROR_TUE = 'err_tue';
@@ -143,5 +144,13 @@ class TransportManagerLicence extends AbstractTransportManagerLicence
         $weeklyHours += (int) $this->getHoursSun();
 
         return $weeklyHours;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->getLicence()->getOrganisation();
     }
 }
