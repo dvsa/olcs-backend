@@ -208,7 +208,6 @@ return [
     // Bus - Ebsr
     TransferQuery\Bus\Ebsr\TxcInboxList::class => QueryHandler\Bus\Ebsr\TxcInboxList::class,
     TransferQuery\Bus\Ebsr\BusRegWithTxcInbox::class => QueryHandler\Bus\Ebsr\BusRegWithTxcInbox::class,
-    TransferQuery\Bus\Ebsr\TxcInboxByBusReg::class => QueryHandler\Bus\Ebsr\TxcInboxByBusReg::class,
 
     // Trailer
     TransferQuery\Licence\Trailers::class => QueryHandler\Licence\Trailers::class,
