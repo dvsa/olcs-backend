@@ -444,7 +444,7 @@ class LicenceEntityTest extends EntityTester
     {
         $licence = m::mock(Entity::class)->makePartial();
         $licence
-            ->shouldReceive('getOrganisation->getTradingNames->getIterator')
+            ->shouldReceive('getTradingNames->getIterator')
             ->once()
             ->andReturn([]);
 
@@ -472,7 +472,7 @@ class LicenceEntityTest extends EntityTester
 
         $licence = m::mock(Entity::class)->makePartial();
         $licence
-            ->shouldReceive('getOrganisation->getTradingNames')
+            ->shouldReceive('getTradingNames')
             ->once()
             ->andReturn($tradingNames);
 
