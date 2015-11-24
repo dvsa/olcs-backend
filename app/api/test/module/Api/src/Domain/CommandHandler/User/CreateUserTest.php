@@ -138,6 +138,23 @@ class CreateUserTest extends CommandHandlerTestCase
                 function (UserEntity $user) use (&$savedUser, $userId) {
                     $user->setId($userId);
                     $savedUser = $user;
+
+                    $this->expectedSideEffect(
+                        SendUserCreatedDto::class,
+                        [
+                            'user' => $savedUser
+                        ],
+                        new Result()
+                    );
+
+                    $this->expectedSideEffect(
+                        SendUserTemporaryPasswordDto::class,
+                        [
+                            'user' => $savedUser,
+                            'password' => 'GENERATED_PASSWORD_HERE',
+                        ],
+                        new Result()
+                    );
                 }
             );
 

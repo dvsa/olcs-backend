@@ -94,9 +94,6 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
 
         $result = new Result();
 
-        // TODO - replace with the generated password
-        $password = 'GENERATED_PASSWORD_HERE';
-
         if (isset($licence)) {
             // for the current licence holder a letter with generated password needs to be sent
             $result->merge(
