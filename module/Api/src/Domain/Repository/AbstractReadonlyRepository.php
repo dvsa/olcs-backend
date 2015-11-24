@@ -105,7 +105,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
             return $qb->getQuery()->getSingleResult($hydrateMode);
         } catch (\Exception $ex) {
             throw new Exception\NotFoundException(
-                sprintf('Resource not found (%s ' . $fetchBy . ' %s)', $this->entity, (string)$args[0])
+                sprintf('Resource not found (%s %s %s)', $this->entity, $fetchBy, (string)$args[0])
             );
         }
     }
