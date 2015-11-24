@@ -17,8 +17,6 @@ return [
     CommandHandler\Cases\DeleteCase::class                                  => IsInternalUser::class,
     CommandHandler\Cases\Hearing\CreateAppeal::class                        => IsInternalUser::class,
     CommandHandler\Cases\Hearing\CreateStay::class                          => IsInternalUser::class,
-    CommandHandler\Cases\Hearing\DeleteAppeal::class                        => IsInternalUser::class,
-    CommandHandler\Cases\Hearing\DeleteStay::class                          => IsInternalUser::class,
     CommandHandler\Cases\Hearing\UpdateAppeal::class                        => IsInternalUser::class,
     CommandHandler\Cases\Hearing\UpdateStay::class                          => IsInternalUser::class,
     CommandHandler\Cases\Impounding\CreateImpounding::class                 => IsInternalUser::class,

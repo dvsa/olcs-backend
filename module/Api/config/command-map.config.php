@@ -422,16 +422,12 @@ return [
         CommandHandler\Cases\Hearing\CreateAppeal::class,
     TransferCommand\Cases\Hearing\UpdateAppeal::class =>
         CommandHandler\Cases\Hearing\UpdateAppeal::class,
-    TransferCommand\Cases\Hearing\DeleteAppeal::class =>
-        CommandHandler\Cases\Hearing\DeleteAppeal::class,
 
     // Transfer - Stay
     TransferCommand\Cases\Hearing\CreateStay::class =>
         CommandHandler\Cases\Hearing\CreateStay::class,
     TransferCommand\Cases\Hearing\UpdateStay::class =>
         CommandHandler\Cases\Hearing\UpdateStay::class,
-    TransferCommand\Cases\Hearing\DeleteStay::class =>
-        CommandHandler\Cases\Hearing\DeleteStay::class,
 
     // Transfer - Licence Status Rule
     TransferCommand\LicenceStatusRule\CreateLicenceStatusRule::class
