@@ -42,6 +42,14 @@ class BusRegWithTxcInbox extends AbstractQueryHandler implements AuthAwareInterf
 
         $currentUser = $this->getCurrentUser();
 
+        $txcInboxResult = [
+            'txcInboxs' => [
+                'zipDocument',
+                'pdfDocument',
+                'routeDocument'
+            ]
+        ];
+
         $localAuthority = $currentUser->getLocalAuthority();
         $organisation = $this->getCurrentOrganisation();
 
@@ -54,14 +62,21 @@ class BusRegWithTxcInbox extends AbstractQueryHandler implements AuthAwareInterf
             $result = $repo->fetchWithTxcInboxListForLocalAuthority($query, $localAuthority->getId());
         } else {
             $result = $this->getRepo('Bus')->fetchUsingId($query);
-
             if (empty($result)) {
                 throw new NotFoundException();
             }
-
             // dont return txcInboxs for anonymous users
-            return $this->result(
-                $result,
+            $txcInboxResult = [];
+        }
+
+        if (empty($result)) {
+            throw new NotFoundException();
+        }
+
+        // merge resultset we want with a variable txcInbox result. Set to null for anonymous users
+        return $this->result(
+            $result,
+            array_merge(
                 [
                     'status',
                     'licence' => [
@@ -77,40 +92,8 @@ class BusRegWithTxcInbox extends AbstractQueryHandler implements AuthAwareInterf
                     'otherServices',
                     'variationReasons',
                     'npPublicationNo'
-                ],
-                [
-                    'npPublicationNo' => $result->getLicence()->determineNpNumber()
-                ]
-            );
-        }
-
-        if (empty($result)) {
-            throw new NotFoundException();
-        }
-
-        return $this->result(
-            $result,
-            [
-                'status',
-                'licence' => [
-                    'organisation' => ['disqualifications'],
-                    'licenceType',
-                    'status',
-                ],
-                'busNoticePeriod',
-                'busServiceTypes',
-                'trafficAreas',
-                'localAuthoritys',
-                'subsidised',
-                'otherServices',
-                'variationReasons',
-                'npPublicationNo',
-                'txcInboxs' => [
-                    'zipDocument',
-                    'pdfDocument',
-                    'routeDocument'
-                ]
-            ],
+                ], $txcInboxResult
+            ),
             [
                 'npPublicationNo' => $result->getLicence()->determineNpNumber()
             ]
