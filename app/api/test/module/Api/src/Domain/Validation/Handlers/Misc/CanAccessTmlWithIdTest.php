@@ -5,14 +5,14 @@ namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Misc;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessTmaWithId;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessTmlWithId;
 
 /**
- * CanAccessTmaWithIdTest
+ * CanAccessTmlWithIdTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CanAccessTmaWithIdTest extends AbstractHandlerTestCase
+class CanAccessTmlWithIdTest extends AbstractHandlerTestCase
 {
     /**
      * @var CanAccessTmaWithId
@@ -21,7 +21,7 @@ class CanAccessTmaWithIdTest extends AbstractHandlerTestCase
 
     public function setUp()
     {
-        $this->sut = new CanAccessTmaWithId();
+        $this->sut = new CanAccessTmlWithId();
 
         parent::setUp();
     }
@@ -35,7 +35,7 @@ class CanAccessTmaWithIdTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getId')->andReturn(111);
 
-        $this->setIsValid('canAccessTransportManagerApplication', [111], $canAccess);
+        $this->setIsValid('canAccessTransportManagerLicence', [111], $canAccess);
 
         $this->assertSame($expected, $this->sut->isValid($dto));
     }
