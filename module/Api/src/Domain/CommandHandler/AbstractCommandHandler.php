@@ -23,7 +23,6 @@ use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
