@@ -11,6 +11,7 @@ use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Bus
@@ -72,6 +73,75 @@ class Bus extends AbstractRepository
         }
 
         return $results;
+    }
+
+    public function fetchWithTxcInboxListForOrganisation($query, $organisationId, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->byId($query->getId())
+            ->withRefdata();
+
+        $qb->addSelect('t');
+
+        $qb->leftJoin(
+            $this->alias . '.txcInboxs',
+            't',
+            Join::WITH,
+            't.localAuthority IS NULL AND t.organisation = :organisation'
+        )->setParameter('organisation', $organisationId);
+
+        $results = $qb->getQuery()->getResult($hydrateMode);
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+
+        return $results[0];
+    }
+
+    /**
+     * Fetch a list of unread docs filtered by local authority, submission type and status for a given bus reg id
+     *
+     * @param int $busReg
+     * @param int $localAuthorityId
+     * @param int $hydrateMode
+     * @return array
+     */
+    public function fetchWithTxcInboxListForLocalAuthority(
+        $query,
+        $localAuthorityId,
+        $hydrateMode = Query::HYDRATE_OBJECT
+    ) {
+        /* @var \Doctrine\Orm\QueryBuilder $qb */
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->byId($query->getId())
+            ->withRefdata();
+
+        $qb->addSelect('t');
+
+        if (empty($localAuthorityId)) {
+            $qb->leftJoin($this->alias . '.txcInboxs', 't', Join::WITH, $qb->expr()->isNull('t.localAuthority'));
+        } else {
+            $qb->leftJoin(
+                $this->alias . '.txcInboxs',
+                't',
+                Join::WITH,
+                $qb->expr()->eq('t.localAuthority', ':localAuthority')
+            )->setParameter('localAuthority', $localAuthorityId);
+        }
+
+        $results = $qb->getQuery()->getResult($hydrateMode);
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+
+        return $results[0];
     }
 
     /**
