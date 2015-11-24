@@ -11,6 +11,7 @@ use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Bus
@@ -81,12 +82,19 @@ class Bus extends AbstractRepository
 
         $this->getQueryBuilder()->modifyQuery($qb)
             ->byId($query->getId())
-            ->withRefdata()
-            ->with('txcInboxs', 't');
+            ->withRefdata();
 
-        $qb->andWhere($qb->expr()->isNull('t.localAuthority'));
-        $qb->andWhere($qb->expr()->eq('t.organisation', ':organisation'))
-            ->setParameter('organisation', $organisationId);
+        $qb->addSelect('t');
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->byId($query->getId())
+            ->withRefdata();
+        $qb->leftJoin(
+            $this->alias . '.txcInboxs',
+            't',
+            Join::WITH,
+            't.localAuthority IS NULL AND t.organisation = ' . $organisationId
+        );
 
         $results = $qb->getQuery()->getResult($hydrateMode);
 
@@ -113,21 +121,20 @@ class Bus extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)
             ->byId($query->getId())
             ->withRefdata();
-            //->with('txcInboxs', 't');
-        $qb->addOrderBy('t.id', 'DESC');
-echo "Local Authority ID -> " . $localAuthorityId;
+
+        $qb->addSelect('t');
 
         if (empty($localAuthorityId)) {
-            $qb->leftJoin($this->alias . '.txcInboxs', 't', 'WITH', $qb->expr()->isNull('t.localAuthority'));
+            $qb->leftJoin($this->alias . '.txcInboxs', 't', Join::WITH, $qb->expr()->isNull('t.localAuthority'));
         } else {
             $qb->leftJoin(
                 $this->alias . '.txcInboxs',
                 't',
-                'WITH',
+                Join::WITH,
                 $qb->expr()->eq('t.localAuthority', ':localAuthority')
             )->setParameter('localAuthority', $localAuthorityId);
         }
-echo $qb->getQuery()->getDQL();
+
         $results = $qb->getQuery()->getResult($hydrateMode);
 
         if (empty($results)) {
