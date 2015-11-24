@@ -7,11 +7,11 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
 
 /**
- * Can Access Transport Manager Application With ID
+ * Can Access Transport Manager Licence With ID
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CanAccessTmaWithId extends AbstractHandler implements AuthAwareInterface
+class CanAccessTmlWithId extends AbstractHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
@@ -20,15 +20,11 @@ class CanAccessTmaWithId extends AbstractHandler implements AuthAwareInterface
      */
     public function isValid($dto)
     {
-        return $this->canAccessTransportManagerApplication($this->getId($dto));
+        return $this->canAccessTransportManagerLicence($this->getId($dto));
     }
 
     protected function getId($dto)
     {
-        if (method_exists($dto, 'getTmaId')) {
-            return $dto->getTmaId();
-        }
-
         return $dto->getId();
     }
 }

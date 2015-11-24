@@ -22,12 +22,14 @@ class GetList extends AbstractQueryHandler
         $repo = $this->getRepo();
         $transportManager = $this->getRepo('TransportManager')->fetchById($query->getTransportManager());
 
+        $count = $repo->fetchCount($query);
         return [
             'result' => $this->resultList(
                 $repo->fetchList($query, Query::HYDRATE_OBJECT)
             ),
-            'count' => $repo->fetchCount($query),
-            'transportManager' => $transportManager
+            'count' => $count,
+            'count-unfiltered' => $count,
+            'transportManager' => $transportManager->serialize()
         ];
     }
 }
