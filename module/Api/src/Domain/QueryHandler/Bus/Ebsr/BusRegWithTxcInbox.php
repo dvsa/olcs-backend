@@ -54,16 +54,32 @@ class BusRegWithTxcInbox extends AbstractQueryHandler implements AuthAwareInterf
             $result = $repo->fetchWithTxcInboxListForLocalAuthority($query, $localAuthority->getId());
         } else {
             $result = $this->getRepo('Bus')->fetchUsingId($query);
+
+            // dont return txcInboxs for anonymous users
+            return $this->result(
+                $result,
+                [
+                    'status',
+                    'licence' => [
+                        'organisation' => ['disqualifications'],
+                        'licenceType',
+                        'status',
+                    ],
+                    'busNoticePeriod',
+                    'busServiceTypes',
+                    'trafficAreas',
+                    'localAuthoritys',
+                    'subsidised',
+                    'otherServices',
+                    'variationReasons',
+                    'npPublicationNo'
+                ],
+                [
+                    'npPublicationNo' => $result->getLicence()->determineNpNumber()
+                ]
+            );
         }
 
-        $txcInboxResult = null;
-
-        $txcInboxs = $result->getTxcInboxs();
-        if (!empty($txcInboxs)) {
-            $txcInboxResult = $txcInboxs[0];
-        }
-
-        \Doctrine\Common\Util\Debug::dump($result,3);exit;
         return $this->result(
             $result,
             [
@@ -81,17 +97,13 @@ class BusRegWithTxcInbox extends AbstractQueryHandler implements AuthAwareInterf
                 'otherServices',
                 'variationReasons',
                 'npPublicationNo',
-                'txcInbox'
+                'txcInboxs' => [
+                    'zipDocument',
+                    'pdfDocument',
+                    'routeDocument'
+                ]
             ],
             [
-                'txcInbox' => $this->result(
-                    $txcInboxResult,
-                    [
-                        'zipDocument',
-                        'pdfDocument',
-                        'routeDocument'
-                    ]
-                )->serialize(),
                 'npPublicationNo' => $result->getLicence()->determineNpNumber()
             ]
         );
