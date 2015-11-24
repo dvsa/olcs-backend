@@ -55,6 +55,10 @@ class BusRegWithTxcInbox extends AbstractQueryHandler implements AuthAwareInterf
         } else {
             $result = $this->getRepo('Bus')->fetchUsingId($query);
 
+            if (empty($result)) {
+                throw new NotFoundException();
+            }
+
             // dont return txcInboxs for anonymous users
             return $this->result(
                 $result,
@@ -78,6 +82,10 @@ class BusRegWithTxcInbox extends AbstractQueryHandler implements AuthAwareInterf
                     'npPublicationNo' => $result->getLicence()->determineNpNumber()
                 ]
             );
+        }
+
+        if (empty($result)) {
+            throw new NotFoundException();
         }
 
         return $this->result(
