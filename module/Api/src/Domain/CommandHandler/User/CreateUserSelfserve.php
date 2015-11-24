@@ -93,6 +93,12 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
 
         $this->getRepo()->save($user);
 
+        $this->getOpenAmUser()->registerUser(
+            $command->getLoginId(),
+            $command->getContactDetails()['emailAddress'],
+            Client::REALM_SELFSERVE
+        );
+
         // TODO - replace with the generated password
         $password = 'GENERATED_PASSWORD_HERE';
 

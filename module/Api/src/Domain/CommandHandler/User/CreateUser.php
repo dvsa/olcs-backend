@@ -80,6 +80,18 @@ final class CreateUser extends AbstractUserCommandHandler implements
 
         $this->getRepo()->save($user);
 
+        $realm = Client::REALM_SELFSERVE;
+
+        if ($user->getUserType() === User::USER_TYPE_INTERNAL) {
+            $realm = Client::REALM_INTERNAL;
+        }
+
+        $this->getOpenAmUser()->registerUser(
+            $command->getLoginId(),
+            $command->getContactDetails()['emailAddress'],
+            $realm
+        );
+
         // TODO - replace with the generated password
         $password = 'GENERATED_PASSWORD_HERE';
 
