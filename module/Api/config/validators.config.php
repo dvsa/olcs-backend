@@ -26,5 +26,7 @@ return [
         'canAccessPerson' => Validators\CanAccessPerson::class,
         'canAccessPsvDisc' => Validators\CanAccessPsvDisc::class,
         'canAccessOtherLicence' => Validators\CanAccessOtherLicence::class,
+        'canAccessTransportManagerLicence' => Validators\CanAccessTransportManagerLicence::class,
+        'canAccessUser' => Validators\CanAccessUser::class,
     ]
 ];
