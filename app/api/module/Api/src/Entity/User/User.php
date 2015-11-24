@@ -498,7 +498,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
     {
         $name = '';
 
-        switch($this->getUserType()) {
+        switch ($this->getUserType()) {
             case self::USER_TYPE_INTERNAL:
                 $name = 'DVSA';
                 break;
