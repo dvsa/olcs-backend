@@ -18,7 +18,6 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Zend\Filter\Word\CamelCaseToUnderscore;
-use Zend\Filter\Word\UnderscoreToCamelCase;
 
 /**
  * Application Entity
@@ -1597,6 +1596,9 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getRelatedOrganisation()
     {
         return $this->getLicence()->getOrganisation();

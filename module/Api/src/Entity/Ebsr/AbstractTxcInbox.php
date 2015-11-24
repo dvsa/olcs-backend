@@ -69,9 +69,9 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
      *
      * @var string
      *
-     * @ORM\Column(type="yesnonull", name="file_read", nullable=true)
+     * @ORM\Column(type="yesnonull", name="file_read", nullable=false, options={"default": 0})
      */
-    protected $fileRead;
+    protected $fileRead = 0;
 
     /**
      * Identifier - Id

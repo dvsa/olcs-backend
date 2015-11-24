@@ -432,7 +432,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     public function getTradingName()
     {
-        $tradingNames = (array) $this->getOrganisation()->getTradingNames()->getIterator();
+        $tradingNames = (array) $this->getTradingNames()->getIterator();
 
         if (empty($tradingNames)) {
             return 'None';
@@ -734,6 +734,9 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return false;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getRelatedOrganisation()
     {
         return $this->getOrganisation();

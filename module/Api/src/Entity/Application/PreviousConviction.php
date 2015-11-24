@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Application;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * PreviousConviction Entity
@@ -16,12 +17,24 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class PreviousConviction extends AbstractPreviousConviction
+class PreviousConviction extends AbstractPreviousConviction implements OrganisationProviderInterface
 {
     protected function getCalculatedValues()
     {
         return [
             'application' => null
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRelatedOrganisation()
+    {
+        if (!$this->getApplication()) {
+            return null;
+        }
+
+        return $this->getApplication()->getLicence()->getOrganisation();
     }
 }

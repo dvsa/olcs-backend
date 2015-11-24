@@ -30,7 +30,7 @@ final class UpdateTrailers extends AbstractCommandHandler implements Transaction
 
         $this->getRepo()->save($licence);
 
-        $this->result->addMessage('Organisation updated');
+        $this->result->addMessage('Licence updated');
 
         return $this->result;
     }

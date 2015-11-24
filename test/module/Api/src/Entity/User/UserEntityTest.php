@@ -92,6 +92,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(null, $entity->getPartnerContactDetails());
         $this->assertEquals(null, $entity->getLocalAuthority());
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
+        $this->assertEquals('DVSA', $entity->getRelatedOrganisationName());
     }
 
     public function testUpdateInternal()
@@ -143,12 +144,17 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(null, $entity->getPartnerContactDetails());
         $this->assertEquals(null, $entity->getLocalAuthority());
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
+        $this->assertEquals('DVSA', $entity->getRelatedOrganisationName());
     }
 
     public function testCreateTransportManager()
     {
         $adminRole = m::mock(RoleEntity::class)->makePartial();
         $adminRole->setRole(RoleEntity::ROLE_OPERATOR_ADMIN);
+
+        $orgName = 'Org Name';
+        $org = m::mock(OrganisationEntity::class)->makePartial();
+        $org->setName($orgName);
 
         $data = [
             'loginId' => 'loginId',
@@ -158,9 +164,7 @@ class UserEntityTest extends EntityTester
             'transportManager' => m::mock(TransportManagerEntity::class),
             'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
             'localAuthority' => m::mock(LocalAuthorityEntity::class),
-            'organisations' => [
-                m::mock(OrganisationEntity::class)->makePartial()
-            ],
+            'organisations' => [$org],
         ];
 
         $entity = Entity::create(Entity::USER_TYPE_TRANSPORT_MANAGER, $data);
@@ -177,12 +181,17 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(null, $entity->getLocalAuthority());
         $this->assertEquals(1, $entity->getOrganisationUsers()->count());
         $this->assertEquals('Y', $entity->getOrganisationUsers()->first()->getIsAdministrator());
+        $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
     }
 
     public function testUpdateTransportManager()
     {
         $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
         $nonAdminRole->setRole(RoleEntity::ROLE_OPERATOR_USER);
+
+        $orgName = 'Org Name';
+        $org = m::mock(OrganisationEntity::class)->makePartial();
+        $org->setName($orgName);
 
         $data = [
             'userType' => Entity::USER_TYPE_TRANSPORT_MANAGER,
@@ -193,9 +202,7 @@ class UserEntityTest extends EntityTester
             'transportManager' => m::mock(TransportManagerEntity::class),
             'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
             'localAuthority' => m::mock(LocalAuthorityEntity::class),
-            'organisations' => [
-                m::mock(OrganisationEntity::class)->makePartial()
-            ],
+            'organisations' => [$org],
         ];
 
         // create an object of different type first
@@ -229,6 +236,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(null, $entity->getLocalAuthority());
         $this->assertEquals(1, $entity->getOrganisationUsers()->count());
         $this->assertEquals('N', $entity->getOrganisationUsers()->first()->getIsAdministrator());
+        $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
     }
 
     public function testCreatePartner()
@@ -236,13 +244,17 @@ class UserEntityTest extends EntityTester
         $role = m::mock(RoleEntity::class)->makePartial();
         $role->setRole(RoleEntity::ROLE_PARTNER_USER);
 
+        $orgName = 'Org Name';
+        $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
+        $contactDetails->setDescription($orgName);
+
         $data = [
             'loginId' => 'loginId',
             'roles' => [$role],
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
-            'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
+            'partnerContactDetails' => $contactDetails,
             'localAuthority' => m::mock(LocalAuthorityEntity::class),
             'organisations' => [
                 m::mock(OrganisationEntity::class)
@@ -262,12 +274,17 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['partnerContactDetails'], $entity->getPartnerContactDetails());
         $this->assertEquals(null, $entity->getLocalAuthority());
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
+        $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
     }
 
     public function testUpdatePartner()
     {
         $role = m::mock(RoleEntity::class)->makePartial();
         $role->setRole(RoleEntity::ROLE_PARTNER_USER);
+
+        $orgName = 'Org Name';
+        $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
+        $contactDetails->setDescription($orgName);
 
         $data = [
             'userType' => Entity::USER_TYPE_PARTNER,
@@ -276,7 +293,7 @@ class UserEntityTest extends EntityTester
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
-            'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
+            'partnerContactDetails' => $contactDetails,
             'localAuthority' => m::mock(LocalAuthorityEntity::class),
             'organisations' => [
                 m::mock(OrganisationEntity::class)
@@ -313,12 +330,17 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['partnerContactDetails'], $entity->getPartnerContactDetails());
         $this->assertEquals(null, $entity->getLocalAuthority());
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
+        $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
     }
 
     public function testCreateLocalAuthority()
     {
         $role = m::mock(RoleEntity::class)->makePartial();
         $role->setRole(RoleEntity::ROLE_LOCAL_AUTHORITY_USER);
+
+        $orgName = 'Org Name';
+        $localAuthority = m::mock(LocalAuthorityEntity::class)->makePartial();
+        $localAuthority->setDescription($orgName);
 
         $data = [
             'loginId' => 'loginId',
@@ -327,7 +349,7 @@ class UserEntityTest extends EntityTester
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
             'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
-            'localAuthority' => m::mock(LocalAuthorityEntity::class),
+            'localAuthority' => $localAuthority,
             'organisations' => [
                 m::mock(OrganisationEntity::class)
             ],
@@ -346,12 +368,17 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(null, $entity->getPartnerContactDetails());
         $this->assertEquals($data['localAuthority'], $entity->getLocalAuthority());
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
+        $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
     }
 
     public function testUpdateLocalAuthority()
     {
         $role = m::mock(RoleEntity::class)->makePartial();
         $role->setRole(RoleEntity::ROLE_LOCAL_AUTHORITY_USER);
+
+        $orgName = 'Org Name';
+        $localAuthority = m::mock(LocalAuthorityEntity::class)->makePartial();
+        $localAuthority->setDescription($orgName);
 
         $data = [
             'userType' => Entity::USER_TYPE_LOCAL_AUTHORITY,
@@ -361,7 +388,7 @@ class UserEntityTest extends EntityTester
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
             'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
-            'localAuthority' => m::mock(LocalAuthorityEntity::class),
+            'localAuthority' => $localAuthority,
             'organisations' => [
                 m::mock(OrganisationEntity::class)
             ],
@@ -397,12 +424,17 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(null, $entity->getPartnerContactDetails());
         $this->assertEquals($data['localAuthority'], $entity->getLocalAuthority());
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
+        $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
     }
 
     public function testCreateOperator()
     {
         $adminRole = m::mock(RoleEntity::class)->makePartial();
         $adminRole->setRole(RoleEntity::ROLE_OPERATOR_ADMIN);
+
+        $orgName = 'Org Name';
+        $org = m::mock(OrganisationEntity::class)->makePartial();
+        $org->setName($orgName);
 
         $data = [
             'loginId' => 'loginId',
@@ -412,9 +444,7 @@ class UserEntityTest extends EntityTester
             'transportManager' => m::mock(TransportManagerEntity::class),
             'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
             'localAuthority' => m::mock(LocalAuthorityEntity::class),
-            'organisations' => [
-                m::mock(OrganisationEntity::class)->makePartial()
-            ],
+            'organisations' => [$org],
         ];
 
         $entity = Entity::create(Entity::USER_TYPE_OPERATOR, $data);
@@ -431,12 +461,17 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(null, $entity->getLocalAuthority());
         $this->assertEquals(1, $entity->getOrganisationUsers()->count());
         $this->assertEquals('Y', $entity->getOrganisationUsers()->first()->getIsAdministrator());
+        $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
     }
 
     public function testUpdateOperator()
     {
         $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
         $nonAdminRole->setRole(RoleEntity::ROLE_OPERATOR_USER);
+
+        $orgName = 'Org Name';
+        $org = m::mock(OrganisationEntity::class)->makePartial();
+        $org->setName($orgName);
 
         $data = [
             'userType' => Entity::USER_TYPE_OPERATOR,
@@ -447,9 +482,7 @@ class UserEntityTest extends EntityTester
             'transportManager' => m::mock(TransportManagerEntity::class),
             'partnerContactDetails' => m::mock(ContactDetailsEntity::class),
             'localAuthority' => m::mock(LocalAuthorityEntity::class),
-            'organisations' => [
-                m::mock(OrganisationEntity::class)->makePartial()
-            ],
+            'organisations' => [$org],
         ];
 
         // create an object of different type first
@@ -483,6 +516,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(null, $entity->getLocalAuthority());
         $this->assertEquals(1, $entity->getOrganisationUsers()->count());
         $this->assertEquals('N', $entity->getOrganisationUsers()->first()->getIsAdministrator());
+        $this->assertEquals($orgName, $entity->getRelatedOrganisationName());
     }
 
     public function testUpdateOperatorIsAdministratorOnly()

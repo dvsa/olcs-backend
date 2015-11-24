@@ -82,7 +82,7 @@ class CreatePeopleTest extends CommandHandlerTestCase
 
         $response = $this->sut->handleCommand($command);
 
-        $this->assertSame(['OrganisatonPerson created'], $response->getMessages());
-        $this->assertSame(['organisatonPerson' => 43, 'person' => 753], $response->getIds());
+        $this->assertSame(['OrganisationPerson created'], $response->getMessages());
+        $this->assertSame(['organisationPerson' => 43, 'person' => 753], $response->getIds());
     }
 }

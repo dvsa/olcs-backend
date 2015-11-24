@@ -220,7 +220,11 @@ abstract class AbstractApplicationOperatingCentre implements BundleSerializableI
      *
      * @var \Dvsa\Olcs\Api\Entity\Application\S4
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Application\S4", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Application\S4",
+     *     fetch="LAZY",
+     *     inversedBy="aocs"
+     * )
      * @ORM\JoinColumn(name="s4_id", referencedColumnName="id", nullable=true)
      */
     protected $s4;

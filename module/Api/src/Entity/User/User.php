@@ -464,6 +464,40 @@ class User extends AbstractUser implements OrganisationProviderInterface
 
     public function getRelatedOrganisation()
     {
+        if ($this->getOrganisationUsers()->isEmpty()) {
+            return null;
+        }
         return $this->getOrganisationUsers()->current()->getOrganisation();
+    }
+
+    /**
+     * Returns related Organisation Name based on the user's type
+     *
+     * @var string
+     */
+    public function getRelatedOrganisationName()
+    {
+        $name = '';
+
+        switch($this->getUserType()) {
+            case self::USER_TYPE_INTERNAL:
+                $name = 'DVSA';
+                break;
+            case self::USER_TYPE_PARTNER:
+                $name = $this->getPartnerContactDetails()->getDescription();
+                break;
+            case self::USER_TYPE_LOCAL_AUTHORITY:
+                $name = $this->getLocalAuthority()->getDescription();
+                break;
+            default:
+                $org = $this->getRelatedOrganisation();
+
+                if ($org !== null) {
+                    $name = $org->getName();
+                }
+                break;
+        }
+
+        return $name;
     }
 }
