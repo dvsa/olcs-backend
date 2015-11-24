@@ -90,8 +90,8 @@ class Bus extends AbstractRepository
             $this->alias . '.txcInboxs',
             't',
             Join::WITH,
-            't.localAuthority IS NULL AND t.organisation = ' . $organisationId
-        );
+            't.localAuthority IS NULL AND t.organisation = :organisation'
+        )->setParameter('organisation', $organisationId);
 
         $results = $qb->getQuery()->getResult($hydrateMode);
 

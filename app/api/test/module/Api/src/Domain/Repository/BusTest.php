@@ -253,7 +253,8 @@ class BusTest extends RepositoryTestCase
             m::type('string'),
             'WITH',
             matchesPattern('/localAuthority IS NULL AND t.organisation =/')
-        );
+        )->andReturnSelf()
+         ->shouldReceive('setParameter')->with('organisation', 1);
 
         $this->sut->fetchWithTxcInboxListForOrganisation($query, Query::HYDRATE_OBJECT);
     }
