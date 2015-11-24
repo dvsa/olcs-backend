@@ -415,4 +415,7 @@ return [
     TransferQuery\Cpms\ReportList::class => QueryHandler\Cpms\ReportList::class,
     TransferQuery\Cpms\ReportStatus::class => QueryHandler\Cpms\ReportStatus::class,
     TransferQuery\Cpms\StoredCardList::class => QueryHandler\Cpms\StoredCardList::class,
+
+    //Address
+    TransferQuery\Address\GetAddress::class => QueryHandler\Address\GetAddress::class,
 ];
