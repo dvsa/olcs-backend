@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 /**
  * Assign Submission
  */
-final class AssignSubmission extends AbstractCommandHandler implements 
+final class AssignSubmission extends AbstractCommandHandler implements
     AuthAwareInterface,
     SubmissionGeneratorAwareInterface,
     TransactionedInterface
