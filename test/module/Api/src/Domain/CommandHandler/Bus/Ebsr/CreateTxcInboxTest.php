@@ -74,7 +74,6 @@ class CreateTxcInboxTest extends CommandHandlerTestCase
             ->andReturnUsing(
                 function (TxcInboxEntity $txcInboxLa) use (&$savedTxcInboxLa) {
                     $txcInboxLa->setId(22);
-                    $savedTxcInboxLa = $txcInboxLa;
                 }
             );
 
@@ -84,7 +83,6 @@ class CreateTxcInboxTest extends CommandHandlerTestCase
             ->andReturnUsing(
                 function (TxcInboxEntity $txcInboxOrg) use (&$savedTxcInboxOrg) {
                     $txcInboxOrg->setId(33);
-                    $savedTxcInboxOrg = $txcInboxOrg;
                 }
             );
 
