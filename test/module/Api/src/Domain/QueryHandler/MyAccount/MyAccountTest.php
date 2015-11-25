@@ -6,7 +6,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\MyAccount;
 
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\MyAccount\MyAccount;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount as Qry;
@@ -46,5 +46,17 @@ class MyAccountTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
         $this->assertEquals(['foo'], $result->serialize());
+    }
+
+    public function testHandleQueryThrowsNotFoundException()
+    {
+        $this->setExpectedException(NotFoundException::class);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn(null);
+
+        $query = Qry::create([]);
+
+        $this->sut->handleQuery($query);
     }
 }
