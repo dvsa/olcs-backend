@@ -548,9 +548,9 @@ return [
             'options' => ['timeout' => 30],
             'templates' => [
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::GENERATE_DOCS_TEMPLATE =>
-                    '../data/ebsr/txc_template.xml',
+                    __DIR__ . '/../data/ebsr/txc_template.xml',
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::REQUEST_MAP_TEMPLATE =>
-                    '../data/ebsr/requestmap_template.xml'
+                    __DIR__ . '/../data/ebsr/requestmap_template.xml'
             ]
         ],
     ],
