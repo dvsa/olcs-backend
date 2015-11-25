@@ -120,8 +120,8 @@ class Address implements AddressInterface
 
     public function fetchByUprn($uprn)
     {
-        // @todo move parameters to client
-        $this->client->setUri('address/?id=' . $uprn);
+        $this->client->setUri('address/');
+        $this->client->setParameterGet(['id' => $uprn]);
         $response = $this->client->send();
 
         if ($response->isOk()) {
