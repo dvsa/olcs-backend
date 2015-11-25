@@ -156,8 +156,8 @@ class TransactionEntityTest extends EntityTester
         $this->assertEquals(
             [
                 'amount' => '35.79',
-                'displayReversalOption' => false,
-                'canReverse' => false,
+                'displayReversalOption' => true,
+                'canReverse' => true,
             ],
             $sut->getCalculatedBundleValues()
         );
@@ -204,13 +204,13 @@ class TransactionEntityTest extends EntityTester
                 new RefData(Entity::TYPE_PAYMENT),
                 new RefData(Fee::METHOD_CASH),
                 new RefData(Entity::STATUS_COMPLETE),
-                false,
+                true,
             ],
             'PO payment' => [
                 new RefData(Entity::TYPE_PAYMENT),
                 new RefData(Fee::METHOD_POSTAL_ORDER),
                 new RefData(Entity::STATUS_COMPLETE),
-                false,
+                true,
             ],
             'waive' => [
                 new RefData(Entity::TYPE_WAIVE),
