@@ -80,8 +80,7 @@ final class CreateUser extends AbstractUserCommandHandler implements
 
         $this->getRepo()->save($user);
 
-        // TODO - replace with the generated password
-        $password = 'GENERATED_PASSWORD_HERE';
+        $password = null;
 
         $realm = Client::REALM_SELFSERVE;
 
@@ -92,7 +91,10 @@ final class CreateUser extends AbstractUserCommandHandler implements
         $this->getOpenAmUser()->registerUser(
             $command->getLoginId(),
             $command->getContactDetails()['emailAddress'],
-            $realm
+            $realm,
+            function ($params) use (&$password) {
+                $password = $params['password'];
+            }
         );
 
         // send welcome email

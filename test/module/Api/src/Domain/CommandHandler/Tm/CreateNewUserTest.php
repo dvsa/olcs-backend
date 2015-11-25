@@ -198,7 +198,15 @@ class CreateNewUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
-            ->with('Foo', 'foo@bar.com', 'selfserve');
+            ->with('Foo', 'foo@bar.com', 'selfserve', m::type('callable'))
+            ->andReturnUsing(
+                function ($loginId, $emailAddress, $realm, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
 
         $this->repoMap['User']->shouldReceive('fetchByLoginId')
             ->with('Foo')
@@ -320,7 +328,7 @@ class CreateNewUserTest extends CommandHandlerTestCase
                         SendUserTemporaryPasswordDto::class,
                         [
                             'user' => $user,
-                            'password' => 'GENERATED_PASSWORD_HERE',
+                            'password' => 'GENERATED_PASSWORD',
                         ],
                         new Result()
                     );
