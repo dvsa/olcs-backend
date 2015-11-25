@@ -54,10 +54,7 @@ class User implements UserInterface
      */
     public function registerUser($loginId, $emailAddress, $realm, $callback = null)
     {
-        $pid = $this->reservedPid;
-        if ($pid === null) {
-            $pid = $this->reservePid();
-        }
+        $pid = $this->reservePid();
         $this->reservedPid = null;
 
         $password = $this->generatePassword();
