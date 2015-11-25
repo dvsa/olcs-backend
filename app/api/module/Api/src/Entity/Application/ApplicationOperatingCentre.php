@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Application;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * ApplicationOperatingCentre Entity
@@ -22,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
  *    }
  * )
  */
-class ApplicationOperatingCentre extends AbstractApplicationOperatingCentre
+class ApplicationOperatingCentre extends AbstractApplicationOperatingCentre implements OrganisationProviderInterface
 {
     const ACTION_ADD    = 'A';
     const ACTION_UPDATE = 'U';
@@ -50,5 +51,13 @@ class ApplicationOperatingCentre extends AbstractApplicationOperatingCentre
         }
 
         return $messages;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->getApplication()->getRelatedOrganisation();
     }
 }

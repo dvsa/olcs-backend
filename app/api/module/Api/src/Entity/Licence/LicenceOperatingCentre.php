@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Licence;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Application\S4;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * LicenceOperatingCentre Entity
@@ -23,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\Application\S4;
  *    }
  * )
  */
-class LicenceOperatingCentre extends AbstractLicenceOperatingCentre
+class LicenceOperatingCentre extends AbstractLicenceOperatingCentre implements OrganisationProviderInterface
 {
     public function __construct(Licence $licence, OperatingCentre $operatingCentre)
     {
@@ -47,5 +48,13 @@ class LicenceOperatingCentre extends AbstractLicenceOperatingCentre
         }
 
         return $messages;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->getLicence()->getRelatedOrganisation();
     }
 }
