@@ -146,6 +146,17 @@ interface CpmsHelperInterface
     public function batchRefund($fee);
 
     /**
+     * Reverse a cheque, cash, PO or card payment
+     *
+     * @param string $receiptReference
+     * @param string $paymentMethod original payment method, e.g. 'fpm_cash'
+     * @param array $fees needed to get customer reference
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function reversePayment($receiptReference, $paymentMethod, $fees = array());
+
+    /**
      * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
      */
