@@ -10,6 +10,8 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
@@ -17,9 +19,13 @@ use Doctrine\ORM\Query;
 /**
  * Update MyAccount
  */
-final class UpdateMyAccount extends AbstractUserCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class UpdateMyAccount extends AbstractUserCommandHandler implements
+    AuthAwareInterface,
+    TransactionedInterface,
+    OpenAmUserAwareInterface
 {
-    use AuthAwareTrait;
+    use AuthAwareTrait,
+        OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
 
@@ -62,6 +68,11 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements AuthAw
         }
 
         $this->getRepo()->save($user);
+
+        $this->getOpenAmUser()->updateUser(
+            $user->getLoginId(),
+            $command->getContactDetails()['emailAddress']
+        );
 
         $result = new Result();
         $result->addId('user', $user->getId());
