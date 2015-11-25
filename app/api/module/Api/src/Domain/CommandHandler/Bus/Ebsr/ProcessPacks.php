@@ -29,6 +29,7 @@ use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\ProcessPacks as ProcessPacksCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateBusFeeCmd;
+use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateTxcInbox as CreateTxcInboxCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
@@ -323,8 +324,9 @@ final class ProcessPacks extends AbstractCommandHandler implements
     private function getSideEffects(array $ebsrData, BusRegEntity $busReg, $documentPath)
     {
         $sideEffects = $this->persistDocuments($ebsrData, $busReg, $documentPath);
-        $sideEffects[] = $this->getRequestMapQueueCmd($busReg->getId());
+        $sideEffects[] = $this->createTxcInboxCmd($busReg->getId());
         $sideEffects[] = $this->createTaskCommand($busReg);
+        $sideEffects[] = $this->getRequestMapQueueCmd($busReg->getId());
 
         $busStatus = $busReg->getStatus()->getId();
 
@@ -389,6 +391,15 @@ final class ProcessPacks extends AbstractCommandHandler implements
         ];
 
         return UploadCmd::create($data);
+    }
+
+    /**
+     * @param int $busRegId
+     * @return CreateTxcInboxCmd
+     */
+    private function createTxcInboxCmd($busRegId)
+    {
+        return CreateTxcInboxCmd::create(['id' => $busRegId]);
     }
 
     /**
