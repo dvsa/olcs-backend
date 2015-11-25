@@ -55,17 +55,28 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
             $ebsr->getBusReg()->getLicence()->getTranslateToWelsh()
         );
 
+        $localAuthoritiesList = [];
+        $localAuthoritiesString = '';
+
+        foreach ($ebsr->getBusReg()->getLocalAuthoritys() as $localAuth) {
+            $localAuthoritiesList[] = $localAuth->getDescription();
+        }
+
+        if (!empty($localAuthoritiesList)) {
+            $localAuthoritiesString = implode(', ', $localAuthoritiesList) . '.';
+        }
+
         $this->sendEmailTemplate(
             $message,
             $this->template,
             [
                 'submissionDate' => date('d/m/Y', strtotime($ebsr->getSubmittedDate())),
-                'registrationNumber' => $ebsr->getRegistrationNo(),
+                'registrationNumber' => $ebsr->getBusReg()->getRegNo(),
                 'origin' => $ebsr->getBusReg()->getStartPoint(),
                 'destination' => $ebsr->getBusReg()->getFinishPoint(),
                 'lineName' => $ebsr->getBusReg()->getServiceNo(), //
-                'startDate' => date('d/m/Y', strtotime($ebsr->getProcessStart())),
-                'localAuthoritys' => implode(', ', array_map(function($item) { return $item['description']; }, $ebsr->getBusReg()->getLocalAuthoritys())),
+                'startDate' => date('d/m/Y', strtotime($ebsr->getBusReg()->getEffectiveDate())),
+                'localAuthoritys' => $localAuthoritiesString,
                 'publicationId' => '[PUBLICATION_ID]', //
             ]
         );
