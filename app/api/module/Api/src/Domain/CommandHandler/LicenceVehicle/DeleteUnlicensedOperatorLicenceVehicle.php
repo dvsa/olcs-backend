@@ -10,7 +10,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\LicenceVehicle;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 

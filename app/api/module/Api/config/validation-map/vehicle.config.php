@@ -2,39 +2,51 @@
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Standard;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessApplicationWithId;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessApplicationWithApplication;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessOrganisationWithOrganisation as OrgByOrg;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithId;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithLicence;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Vehicle\Application as AppHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceVehiclesWithId as LicenceVehicleById;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceVehiclesWithIds as LicenceVehicleByIds;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Vehicle\CanTransfer;
 
 return [
-    CommandHandler\Application\CreateGoodsVehicle::class                        => Standard::class, // @todo
-    CommandHandler\Application\CreatePsvVehicle::class                          => Standard::class, // @todo
-    CommandHandler\Application\CreateVehicleListDocument::class                 => Standard::class, // @todo
-    CommandHandler\Application\DeleteGoodsVehicle::class                        => Standard::class, // @todo
-    CommandHandler\Application\DeletePsvVehicle::class                          => Standard::class, // @todo
-    CommandHandler\Application\UpdateGoodsVehicle::class                        => Standard::class, // @todo
-    CommandHandler\Application\UpdatePsvVehicles::class                         => Standard::class, // @todo
-    CommandHandler\Application\UpdateVehicleDeclaration::class                  => Standard::class, // @todo
-    CommandHandler\Application\UpdateVehicles::class                            => Standard::class, // @todo
-    CommandHandler\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class => Standard::class, // @todo
-    CommandHandler\LicenceVehicle\DeleteUnlicensedOperatorLicenceVehicle::class => Standard::class, // @todo
-    CommandHandler\LicenceVehicle\UpdatePsvLicenceVehicle::class                => Standard::class, // @todo
-    CommandHandler\LicenceVehicle\UpdateUnlicensedOperatorLicenceVehicle::class => Standard::class, // @todo
-    CommandHandler\Licence\CreateGoodsVehicle::class                            => Standard::class, // @todo
-    CommandHandler\Licence\CreatePsvVehicle::class                              => Standard::class, // @todo
-    CommandHandler\Licence\CreateVehicleListDocument::class                     => Standard::class, // @todo
-    CommandHandler\Licence\TransferVehicles::class                              => Standard::class, // @todo
-    CommandHandler\Licence\UpdateVehicles::class                                => Standard::class, // @todo
-    CommandHandler\Vehicle\DeleteLicenceVehicle::class                          => Standard::class, // @todo
-    CommandHandler\Vehicle\ReprintDisc::class                                   => Standard::class, // @todo
-    CommandHandler\Vehicle\UpdateGoodsVehicle::class                            => Standard::class, // @todo
-    CommandHandler\Vehicle\UpdateSection26::class                               => Standard::class, // @todo
-    QueryHandler\Application\GoodsVehicles::class                               => Standard::class, // @todo
-    QueryHandler\Application\PsvVehicles::class                                 => Standard::class, // @todo
-    QueryHandler\Application\VehicleDeclaration::class                          => Standard::class, // @todo
-    QueryHandler\LicenceVehicle\LicenceVehicle::class                           => Standard::class, // @todo
-    QueryHandler\LicenceVehicle\PsvLicenceVehicle::class                        => Standard::class, // @todo
-    QueryHandler\Licence\GoodsVehicles::class                                   => Standard::class, // @todo
-    QueryHandler\Licence\PsvVehicles::class                                     => Standard::class, // @todo
-    QueryHandler\Operator\UnlicensedVehicles::class                             => Standard::class, // @todo
-    QueryHandler\Variation\GoodsVehicles::class                                 => Standard::class, // @todo
-    QueryHandler\Variation\PsvVehicles::class                                   => Standard::class, // @todo
+    CommandHandler\Application\CreateGoodsVehicle::class        => CanAccessApplicationWithId::class,
+    CommandHandler\Application\CreatePsvVehicle::class          => CanAccessApplicationWithApplication::class,
+    CommandHandler\Application\CreateVehicleListDocument::class => CanAccessApplicationWithId::class,
+    CommandHandler\Application\DeleteGoodsVehicle::class        => AppHandler\ModifyList::class,
+    CommandHandler\Application\DeletePsvVehicle::class          => AppHandler\ModifyList::class,
+    CommandHandler\Application\UpdateGoodsVehicle::class        => AppHandler\Modify::class,
+    CommandHandler\Application\UpdatePsvVehicles::class         => CanAccessApplicationWithId::class,
+    CommandHandler\Application\UpdateVehicleDeclaration::class  => CanAccessApplicationWithId::class,
+    CommandHandler\Application\UpdateVehicles::class            => CanAccessApplicationWithId::class,
+
+    CommandHandler\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class => OrgByOrg::class,
+    CommandHandler\LicenceVehicle\DeleteUnlicensedOperatorLicenceVehicle::class => LicenceVehicleById::class,
+    CommandHandler\LicenceVehicle\UpdatePsvLicenceVehicle::class                => LicenceVehicleById::class,
+    CommandHandler\LicenceVehicle\UpdateUnlicensedOperatorLicenceVehicle::class => LicenceVehicleById::class,
+
+    CommandHandler\Licence\CreateGoodsVehicle::class        => CanAccessLicenceWithId::class,
+    CommandHandler\Licence\CreatePsvVehicle::class          => CanAccessLicenceWithLicence::class,
+    CommandHandler\Licence\CreateVehicleListDocument::class => CanAccessLicenceWithId::class,
+    CommandHandler\Licence\TransferVehicles::class          => CanTransfer::class,
+    CommandHandler\Licence\UpdateVehicles::class            => CanAccessLicenceWithId::class,
+    CommandHandler\Vehicle\DeleteLicenceVehicle::class      => LicenceVehicleByIds::class,
+    CommandHandler\Vehicle\ReprintDisc::class               => LicenceVehicleByIds::class,
+    CommandHandler\Vehicle\UpdateGoodsVehicle::class        => LicenceVehicleById::class,
+    CommandHandler\Vehicle\UpdateSection26::class           => IsInternalUser::class,
+
+    QueryHandler\Application\GoodsVehicles::class        => CanAccessApplicationWithId::class,
+    QueryHandler\Application\PsvVehicles::class          => CanAccessApplicationWithId::class,
+    QueryHandler\Application\VehicleDeclaration::class   => CanAccessApplicationWithId::class,
+    QueryHandler\LicenceVehicle\LicenceVehicle::class    => LicenceVehicleById::class,
+    QueryHandler\LicenceVehicle\PsvLicenceVehicle::class => LicenceVehicleById::class,
+    QueryHandler\Licence\GoodsVehicles::class            => CanAccessLicenceWithId::class,
+    QueryHandler\Licence\PsvVehicles::class              => CanAccessLicenceWithId::class,
+    QueryHandler\Operator\UnlicensedVehicles::class      => OrgByOrg::class,
+    QueryHandler\Variation\GoodsVehicles::class          => CanAccessApplicationWithId::class,
+    QueryHandler\Variation\PsvVehicles::class            => CanAccessApplicationWithId::class,
 ];
