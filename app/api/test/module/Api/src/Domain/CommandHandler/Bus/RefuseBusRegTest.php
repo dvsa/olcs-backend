@@ -13,6 +13,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\RefuseBusReg as Cmd;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefused;
 
 /**
  * Refuse BusReg Test
@@ -37,9 +38,43 @@ class RefuseBusRegTest extends CommandHandlerTestCase
     }
 
     /**
-     * testHandleCommand
+     * test handleCommand when Ebsr
      */
-    public function testHandleCommand()
+    public function testHandleCommandEbsr()
+    {
+        $id = 99;
+        $ebsrId = 55;
+
+        $command = Cmd::Create(
+            [
+                'id' => $id,
+            ]
+        );
+
+        /** @var BusRegEntity $busReg */
+        $busReg = m::mock(BusRegEntity::class);
+        $busReg->shouldReceive('refuse')->once();
+        $busReg->shouldReceive('getId')->andReturn($id);
+        $busReg->shouldReceive('isFromEbsr')->once()->andReturn(true);
+        $busReg->shouldReceive('getEbsrSubmissions->first->getId')->once()->andReturn($ebsrId);
+        $this->expectedSideEffect(SendEbsrRefused::class, ['id' => $ebsrId], new Result());
+
+        $this->repoMap['Bus']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT)
+            ->andReturn($busReg)
+            ->shouldReceive('save')
+            ->with(m::type(BusRegEntity::class))
+            ->once();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf(Result::class, $result);
+    }
+
+    /**
+     * test handleCommand when not Ebsr
+     */
+    public function testHandleCommandNotEbsr()
     {
         $id = 99;
 
@@ -49,12 +84,12 @@ class RefuseBusRegTest extends CommandHandlerTestCase
             ]
         );
 
-        /** @var BusEntity $busReg */
+        /** @var BusRegEntity $busReg */
         $busReg = m::mock(BusRegEntity::class);
-        $busReg->shouldReceive('refuse')
-            ->once()
-            ->shouldReceive('getId')
-            ->andReturn($id);
+        $busReg->shouldReceive('refuse')->once();
+        $busReg->shouldReceive('getId')->andReturn($id);
+        $busReg->shouldReceive('isFromEbsr')->once()->andReturn(false);
+        $busReg->shouldReceive('getEbsrSubmissions->first->getId')->never();
 
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)
