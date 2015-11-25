@@ -210,13 +210,15 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
 
         $this->getRepo('User')->save($user);
 
-        // TODO - replace with the generated password
-        $password = 'GENERATED_PASSWORD_HERE';
+        $password = null;
 
         $this->getOpenAmUser()->registerUser(
             $command->getUsername(),
             $command->getEmailAddress(),
-            Client::REALM_SELFSERVE
+            Client::REALM_SELFSERVE,
+            function ($params) use (&$password) {
+                $password = $params['password'];
+            }
         );
 
         // send welcome email
