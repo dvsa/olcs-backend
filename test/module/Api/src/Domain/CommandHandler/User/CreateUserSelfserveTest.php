@@ -76,7 +76,15 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
-            ->with('login_id', 'test1@test.me', 'selfserve');
+            ->with('login_id', 'test1@test.me', 'selfserve', m::type('callable'))
+            ->andReturnUsing(
+                function ($loginId, $emailAddress, $realm, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
 
         $command = Cmd::create($data);
 
@@ -119,7 +127,7 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
                         SendUserTemporaryPasswordDto::class,
                         [
                             'user' => $savedUser,
-                            'password' => 'GENERATED_PASSWORD_HERE',
+                            'password' => 'GENERATED_PASSWORD',
                         ],
                         new Result()
                     );
