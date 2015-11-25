@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -16,9 +15,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query;
-use Doctrine\Common\Collections\Criteria;
 
 /**
  * Fee
@@ -87,8 +84,6 @@ class Fee extends AbstractRepository
         $this->getQueryBuilder()
             ->modifyQuery($doctrineQb)
             ->withRefdata()
-            ->with('licence')
-            ->with('application')
             ->with('feeTransactions', 'ft')
             ->with('ft.transaction', 't')
             ->with('t.status')
@@ -98,9 +93,7 @@ class Fee extends AbstractRepository
         $this->whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId);
 
         if ($hideExpired) {
-            $doctrineQb
-                ->andWhere($doctrineQb->expr()->gte('l.expiryDate', ':today'))
-                ->setParameter('today', new DateTime());
+            $this->hideExpired($doctrineQb);
         }
 
         return $doctrineQb->getQuery()->getResult();
@@ -110,7 +103,7 @@ class Fee extends AbstractRepository
      * @param int $organisationId
      * @return int
      */
-    public function getOutstandingFeeCountByOrganisationId($organisationId)
+    public function getOutstandingFeeCountByOrganisationId($organisationId, $hideExpired = false)
     {
         $doctrineQb = $this->createQueryBuilder();
 
@@ -121,7 +114,26 @@ class Fee extends AbstractRepository
         // than an OR
         $this->whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId);
 
+        if ($hideExpired) {
+            $this->hideExpired($doctrineQb);
+        }
+
         return $doctrineQb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Add a check to hide expired fees
+     *
+     * @param QueryBuilder $doctrineQb
+     */
+    protected function hideExpired($doctrineQb)
+    {
+        $doctrineQb->andWhere(
+            $doctrineQb->expr()->orX(
+                $doctrineQb->expr()->isNull('l.expiryDate'),
+                $doctrineQb->expr()->gte('l.expiryDate', ':today')
+            )
+        )->setParameter('today', new DateTime());
     }
 
     /**
