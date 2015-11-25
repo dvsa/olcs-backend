@@ -62,6 +62,8 @@ final class AssignSubmission extends AbstractCommandHandler implements
             $this->getRepo()->getReference(UserEntity::class, $command->getRecipientUser())
         );
 
+        $submission->setAssignedDate(new \DateTime('now'));
+
         $currentUser = $this->getCurrentUser();
 
         $submission->setSenderUser($currentUser);

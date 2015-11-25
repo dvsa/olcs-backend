@@ -34,6 +34,15 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     use BundleSerializableTrait;
 
     /**
+     * Assigned date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="assigned_date", nullable=true)
+     */
+    protected $assignedDate;
+
+    /**
      * Case
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Cases
@@ -214,6 +223,29 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
         $this->documents = new ArrayCollection();
         $this->submissionActions = new ArrayCollection();
         $this->submissionSectionComments = new ArrayCollection();
+    }
+
+    /**
+     * Set the assigned date
+     *
+     * @param \DateTime $assignedDate
+     * @return Submission
+     */
+    public function setAssignedDate($assignedDate)
+    {
+        $this->assignedDate = $assignedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the assigned date
+     *
+     * @return \DateTime
+     */
+    public function getAssignedDate()
+    {
+        return $this->assignedDate;
     }
 
     /**
