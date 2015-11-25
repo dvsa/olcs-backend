@@ -183,4 +183,42 @@ class AddressTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
     }
+
+    public function testFetchByUprn()
+    {
+        $response = m::mock(Response::class)->makePartial();
+        $response->setStatusCode(200);
+        $response->setContent('{"foo": "bar"}');
+
+        $this->client->shouldReceive('setUri')
+            ->once()
+            ->with('address/')
+            ->shouldReceive('send')
+            ->once()
+            ->andReturn($response)
+            ->shouldReceive('setParameterGet')
+            ->with(['id' => 123])
+            ->once();
+
+        $this->assertEquals(['foo' => 'bar'], $this->sut->fetchByUprn(123));
+    }
+
+    public function testFetchByUprnNotFound()
+    {
+        $response = m::mock(Response::class)->makePartial();
+        $response->setStatusCode(404);
+        $response->setContent('');
+
+        $this->client->shouldReceive('setUri')
+            ->once()
+            ->with('address/')
+            ->shouldReceive('send')
+            ->once()
+            ->andReturn($response)
+            ->shouldReceive('setParameterGet')
+            ->with(['id' => 123])
+            ->once();
+
+        $this->assertFalse($this->sut->fetchByUprn(123));
+    }
 }

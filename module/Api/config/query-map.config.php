@@ -418,4 +418,5 @@ return [
 
     //Address
     TransferQuery\Address\GetAddress::class => QueryHandler\Address\GetAddress::class,
+    TransferQuery\Address\GetList::class => QueryHandler\Address\GetList::class,
 ];
