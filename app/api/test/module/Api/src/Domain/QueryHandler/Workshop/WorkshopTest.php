@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Workshop\Workshop;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Workshop as WorkshopRepo;
 use Dvsa\Olcs\Transfer\Query\Workshop\Workshop as Qry;
+use Mockery as m;
 
 /**
  * Workshop Test
@@ -31,10 +32,19 @@ class WorkshopTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+        $mock = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
+        $mock->shouldReceive('serialize')->with(
+            [
+                'contactDetails' => [
+                    'address' => ['countryCode']
+                ]
+            ]
+        )->once()->andReturn(['foo']);
+
         $this->repoMap['Workshop']->shouldReceive('fetchUsingId')
             ->with($query)
-            ->andReturn(['foo']);
+            ->andReturn($mock);
 
-        $this->assertEquals(['foo'], $this->sut->handleQuery($query));
+        $this->assertEquals(['foo'], $this->sut->handleQuery($query)->serialize());
     }
 }
