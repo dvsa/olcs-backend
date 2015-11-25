@@ -14,7 +14,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 /**
  * Zfc User
  *
- * @NOTE This is a temporary handler, used to bridge the gap between zfcuser and openam
+ * @todo Remove this class when we are fully integrated with OpenAM
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
