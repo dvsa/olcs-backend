@@ -209,4 +209,155 @@ class BusTest extends RepositoryTestCase
 
         $sut->applyListJoins($mockQb);
     }
+
+    /**
+     * Test fetchWithTxcInboxListForOrganisation
+     */
+    public function testFetchWithTxcInboxListForOrganisation()
+    {
+        $busRegId = 15;
+
+        $query = m::mock(QueryInterface::class);
+        $query->shouldReceive('getId')
+            ->andReturn($busRegId);
+
+        $results = 'results';
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('getQuery->getResult')
+            ->with(Query::HYDRATE_OBJECT)
+            ->andReturn($results);
+
+        /** @var EntityRepository $repo */
+        $repo = $this->getMockRepo($qb);
+        $this->em->shouldReceive('getRepository')
+            ->with(BusReg::class)
+            ->andReturn($repo);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('byId')
+            ->with($busRegId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once();
+
+        $qb->shouldReceive('addSelect');
+        $qb->shouldReceive('leftJoin')
+        ->with(
+            m::type('string'),
+            m::type('string'),
+            'WITH',
+            matchesPattern('/localAuthority IS NULL AND t.organisation =/')
+        )->andReturnSelf()
+         ->shouldReceive('setParameter')->with('organisation', 1);
+
+        $this->sut->fetchWithTxcInboxListForOrganisation($query, Query::HYDRATE_OBJECT);
+    }
+
+    /**
+     * Test fetchWithTxcInboxListForLocalAuthority where LA exists
+     */
+    public function testFetchWithTxcInboxListForLocalAuthority()
+    {
+        $busRegId = 15;
+
+        $query = m::mock(QueryInterface::class);
+        $query->shouldReceive('getId')
+            ->andReturn($busRegId);
+
+        $results = 'results';
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('getQuery->getResult')
+            ->with(Query::HYDRATE_OBJECT)
+            ->andReturn($results);
+
+        /** @var EntityRepository $repo */
+        $repo = $this->getMockRepo($qb);
+        $this->em->shouldReceive('getRepository')
+            ->with(BusReg::class)
+            ->andReturn($repo);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('byId')
+            ->with($busRegId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once();
+
+        $qb->shouldReceive('addSelect');
+        $qb->shouldReceive('expr')->andReturnSelf()->shouldReceive('eq')->andReturn('t.localAuthority = 1');
+        $qb->shouldReceive('leftJoin')
+            ->with(
+                m::type('string'),
+                m::type('string'),
+                'WITH',
+                matchesPattern('/localAuthority = 1/')
+            )
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')->with('localAuthority', 1);
+
+        $this->sut->fetchWithTxcInboxListForLocalAuthority($query, 1, Query::HYDRATE_OBJECT);
+    }
+
+    /**
+     * Test fetchWithTxcInboxListForLocalAuthority where empty LA
+     */
+    public function testFetchWithTxcInboxListForEmptyLocalAuthority()
+    {
+        $busRegId = 15;
+
+        $query = m::mock(QueryInterface::class);
+        $query->shouldReceive('getId')
+            ->andReturn($busRegId);
+
+        $results = 'results';
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('getQuery->getResult')
+            ->with(Query::HYDRATE_OBJECT)
+            ->andReturn($results);
+
+        /** @var EntityRepository $repo */
+        $repo = $this->getMockRepo($qb);
+        $this->em->shouldReceive('getRepository')
+            ->with(BusReg::class)
+            ->andReturn($repo);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('byId')
+            ->with($busRegId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once();
+
+        $qb->shouldReceive('addSelect');
+        $qb->shouldReceive('expr')->andReturnSelf()->shouldReceive('isNull')->andReturn('t.localAuthority IS NULL');
+        $qb->shouldReceive('leftJoin')
+            ->with(
+                m::type('string'),
+                m::type('string'),
+                'WITH',
+                matchesPattern('/localAuthority IS NULL/')
+            )
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')->with('localAuthority', 1);
+
+        $this->sut->fetchWithTxcInboxListForLocalAuthority($query, null, Query::HYDRATE_OBJECT);
+    }
 }
