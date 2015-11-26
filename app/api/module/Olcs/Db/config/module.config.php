@@ -176,14 +176,8 @@ return [
             'licencevehicleusage' => 'Olcs\Db\Controller\LicenceVehicleUsageController',
             'licence-vehicle' => 'Olcs\Db\Controller\LicenceVehicleController',
             'note' => 'Olcs\Db\Controller\NoteController',
-            'operator-search' => 'Olcs\Db\Controller\OperatorSearchController',
-            'person-search' => 'Olcs\Db\Controller\PersonSearchController',
-            'person-licence-search' => 'Olcs\Db\Controller\PersonLicenceSearchController',
             'TradingNames' => 'Olcs\Db\Controller\TradingNamesController',
-            'defendant-search' => 'Olcs\Db\Controller\DefendantSearchController',
-            'organisation-search' => 'Olcs\Db\Controller\OrganisationSearchController',
             'ref-data' => 'Olcs\Db\Controller\RefDataController',
-            'bookmark-search' => 'Olcs\Db\Controller\BookmarkSearchController'
         ]
     ],
     'view_manager' => [
