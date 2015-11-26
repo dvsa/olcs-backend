@@ -84,7 +84,9 @@ class FeeTest extends RepositoryTestCase
         /** @var QueryBuilder $qb */
         $mockQb = m::mock(QueryBuilder::class);
 
-        $mockQb->shouldReceive('expr->gte')->with('l.expiryDate', ':today')->once()->andReturn('condition');
+        $mockQb->shouldReceive('expr->isNull')->with('l.expiryDate')->once()->andReturn('condition1');
+        $mockQb->shouldReceive('expr->gte')->with('l.expiryDate', ':today')->once()->andReturn('condition2');
+        $mockQb->shouldReceive('orX')->with('condition1', 'condition2')->andReturn('condition')->andReturnSelf();
         $mockQb->shouldReceive('andWhere')->with('condition')->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('today', m::type(DateTime::class))->andReturnSelf();
 
@@ -146,6 +148,39 @@ class FeeTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn(22);
 
         $this->assertEquals(22, $this->sut->getOutstandingFeeCountByOrganisationId($organisationId));
+    }
+
+    public function testGetOutstandingFeeCountByOrganisationIdHideExpired()
+    {
+        $organisationId = 123;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $mockQb->shouldReceive('expr->isNull')->with('l.expiryDate')->once()->andReturn('condition1');
+        $mockQb->shouldReceive('expr->gte')->with('l.expiryDate', ':today')->once()->andReturn('condition2');
+        $mockQb->shouldReceive('orX')->with('condition1', 'condition2')->andReturn('condition')->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('condition')->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('today', m::type(DateTime::class))->andReturnSelf();
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $mockQb
+            ->shouldReceive('select')
+            ->once()
+            ->with('COUNT(f)')
+            ->andReturnSelf();
+
+        $this->mockWhereOutstandingFee($mockQb);
+        $this->mockWhereCurrentLicenceOrApplicationFee($mockQb, $organisationId);
+
+        $mockQb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn(22);
+
+        $this->assertEquals(22, $this->sut->getOutstandingFeeCountByOrganisationId($organisationId, true));
     }
 
     public function testFetchFeesByIrfoGvPermitId()
@@ -670,9 +705,6 @@ class FeeTest extends RepositoryTestCase
     {
         $irfoPsvAuthId = 123;
 
-        /** @var QueryBuilder $qb */
-        $mockQb = m::mock(QueryBuilder::class);
-
         $this->sut->shouldReceive('fetchFeesByPsvAuthIdAndType')
             ->with($irfoPsvAuthId, FeeType::FEE_TYPE_IRFOPSVAPP)
             ->andReturn(['foo']);
@@ -686,9 +718,6 @@ class FeeTest extends RepositoryTestCase
     public function testFetchApplicationFeeByPsvAuthIdNoFees()
     {
         $irfoPsvAuthId = 123;
-
-        /** @var QueryBuilder $qb */
-        $mockQb = m::mock(QueryBuilder::class);
 
         $this->sut->shouldReceive('fetchFeesByPsvAuthIdAndType')
             ->with($irfoPsvAuthId, FeeType::FEE_TYPE_IRFOPSVAPP)
