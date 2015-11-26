@@ -200,6 +200,7 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
                 $this->getRepo('Role')->fetchOneByRole(Role::ROLE_OPERATOR_TM)
             ],
             'loginId' => $command->getUsername(),
+            'translateToWelsh' => $command->getTranslateToWelsh(),
             'transportManager' => $transportManagerApplication->getTransportManager()
         ];
 
