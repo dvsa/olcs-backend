@@ -41,6 +41,6 @@ class Correspondences extends AbstractQueryHandler
      */
     protected function getFeeCount($organisationId)
     {
-        return $this->getRepo('Fee')->getOutstandingFeeCountByOrganisationId($organisationId);
+        return $this->getRepo('Fee')->getOutstandingFeeCountByOrganisationId($organisationId, true);
     }
 }
