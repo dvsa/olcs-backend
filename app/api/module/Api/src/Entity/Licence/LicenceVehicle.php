@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 
@@ -25,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
  *    }
  * )
  */
-class LicenceVehicle extends AbstractLicenceVehicle
+class LicenceVehicle extends AbstractLicenceVehicle implements OrganisationProviderInterface
 {
     public function __construct(Licence $licence, Vehicle $vehicle)
     {
@@ -71,5 +72,13 @@ class LicenceVehicle extends AbstractLicenceVehicle
         if ($this->getWarningLetterSeedDate() === null || $this->getWarningLetterSentDate() !== null) {
             $this->markAsDuplicate();
         }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->getLicence()->getRelatedOrganisation();
     }
 }
