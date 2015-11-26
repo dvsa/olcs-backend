@@ -705,9 +705,6 @@ class FeeTest extends RepositoryTestCase
     {
         $irfoPsvAuthId = 123;
 
-        /** @var QueryBuilder $qb */
-        $mockQb = m::mock(QueryBuilder::class);
-
         $this->sut->shouldReceive('fetchFeesByPsvAuthIdAndType')
             ->with($irfoPsvAuthId, FeeType::FEE_TYPE_IRFOPSVAPP)
             ->andReturn(['foo']);
@@ -721,9 +718,6 @@ class FeeTest extends RepositoryTestCase
     public function testFetchApplicationFeeByPsvAuthIdNoFees()
     {
         $irfoPsvAuthId = 123;
-
-        /** @var QueryBuilder $qb */
-        $mockQb = m::mock(QueryBuilder::class);
 
         $this->sut->shouldReceive('fetchFeesByPsvAuthIdAndType')
             ->with($irfoPsvAuthId, FeeType::FEE_TYPE_IRFOPSVAPP)
