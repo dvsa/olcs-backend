@@ -37,7 +37,7 @@ return [
             'ApplicationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Application\PublishValidationService::class,
             'ContentStore' => \Dvsa\Olcs\DocumentShare\Service\ClientFactory::class,
-            'IdentityProvider' => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
+            \Dvsa\Olcs\Api\Rbac\IdentityProvider::class => \Dvsa\Olcs\Api\Rbac\IdentityProvider::class,
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
             'CommandHandlerManager' => \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::class,
             'QueryHandlerManager' => \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::class,
@@ -64,6 +64,9 @@ return [
             \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Publication\Process\PluginManagerFactory::class,
 
+            \Dvsa\Olcs\Api\Service\OpenAm\ClientInterface::class => \Dvsa\Olcs\Api\Service\OpenAm\ClientFactory::class,
+            \Dvsa\Olcs\Api\Service\OpenAm\UserInterface::class => \Dvsa\Olcs\Api\Service\OpenAm\UserFactory::class,
+
             \Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator::class =>
                 \Dvsa\Olcs\Api\Service\Submission\SubmissionGeneratorFactory::class,
 
@@ -72,6 +75,7 @@ return [
 
             \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientFactory::class,
+            \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class => \Dvsa\Olcs\Api\Rbac\PidIdentityProviderFactory::class,
 
             'TransExchangeXmlMapping' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangeXmlFactory::class,
@@ -313,7 +317,7 @@ return [
         ]
     ],
     'zfc_rbac' => [
-        'identity_provider' => 'IdentityProvider',
+        'identity_provider' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class,
         'role_provider' => [
             'ZfcRbac\Role\ObjectRepositoryRoleProvider' => [
                 'object_manager'     => 'doctrine.entitymanager.orm_default',
@@ -548,9 +552,9 @@ return [
             'options' => ['timeout' => 30],
             'templates' => [
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::GENERATE_DOCS_TEMPLATE =>
-                    '../data/ebsr/txc_template.xml',
+                    __DIR__ . '/../data/ebsr/txc_template.xml',
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::REQUEST_MAP_TEMPLATE =>
-                    '../data/ebsr/requestmap_template.xml'
+                    __DIR__ . '/../data/ebsr/requestmap_template.xml'
             ]
         ],
     ],

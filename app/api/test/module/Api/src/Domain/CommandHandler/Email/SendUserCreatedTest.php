@@ -63,7 +63,7 @@ class SendUserCreatedTest extends CommandHandlerTestCase
         $organisationUser->setOrganisation($organisation);
 
         /** @var User $user */
-        $user = new User(User::USER_TYPE_OPERATOR);
+        $user = new User('', User::USER_TYPE_OPERATOR);
         $user->setId($userId);
         $user->setLoginId($loginId);
         $user->setContactDetails($contactDetails);

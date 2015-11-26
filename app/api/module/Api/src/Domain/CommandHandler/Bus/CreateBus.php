@@ -38,7 +38,7 @@ final class CreateBus extends AbstractCommandHandler
 
     /**
      * @param Cmd $command
-     * @return Bus
+     * @return BusReg
      */
     private function createBusRegObject(Cmd $command)
     {
