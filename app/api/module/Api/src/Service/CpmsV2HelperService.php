@@ -699,7 +699,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'tax_rate' => $fee->getFeeType()->getVatRate(),
             'invoice_date' => $this->formatDate($fee->getInvoicedDate()),
             'sales_reference' => (string) $fee->getId(),
-            'product_reference' => $fee->getFeeType()->getProductReference(),
+            // note, as per OLCS-11438 product_reference should come from the
+            // fee_type description, NOT the product_reference column!
+            'product_reference' => $fee->getFeeType()->getDescription(),
             'product_description' => $fee->getFeeType()->getDescription(),
             'receiver_reference' => (string) $this->getCustomerReference([$fee]),
             'receiver_name' => $fee->getCustomerNameForInvoice(),
