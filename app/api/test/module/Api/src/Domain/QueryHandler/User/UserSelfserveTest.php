@@ -31,16 +31,23 @@ class UserSelfserveTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    /**
+     * @dataProvider getHandleQueryDataProvider
+     *
+     */
+    public function testHandleQuery($canManageUser, $canReadUser)
     {
         $mockUser = m::mock(UserEntity::class);
         $mockUser->shouldReceive('serialize')->once()->andReturn(['foo' => 'bar']);
         $mockUser->shouldReceive('getPermission')->once()->andReturn(UserEntity::PERMISSION_USER);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $mockUser)
+            ->andReturn($canManageUser);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(PermissionEntity::CAN_READ_USER_SELFSERVE, $mockUser)
-            ->andReturn(true);
+            ->andReturn($canReadUser);
 
         $query = Query::create(['QUERY']);
 
@@ -51,6 +58,15 @@ class UserSelfserveTest extends QueryHandlerTestCase
         $this->assertSame(['foo' => 'bar', 'permission' => UserEntity::PERMISSION_USER], $result);
     }
 
+    public function getHandleQueryDataProvider()
+    {
+        return [
+            [true, true],
+            [true, false],
+            [false, true],
+        ];
+    }
+
     /**
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
@@ -58,6 +74,11 @@ class UserSelfserveTest extends QueryHandlerTestCase
     {
         $mockUser = m::mock(UserEntity::class);
         $mockUser->shouldReceive('serialize')->never();
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, $mockUser)
+            ->andReturn(false);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
