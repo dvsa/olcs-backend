@@ -119,7 +119,6 @@ class Search
 
                 $terms = new Terms($filterName);
                 $terms->setField($filterName);
-                $terms->setSize(5);
                 $terms->setMinimumDocumentCount(1);
 
                 $elasticaQuery->addAggregation($terms);
