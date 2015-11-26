@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Transfer\Command\User\CreateUserSelfserve as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use ZfcRbac\Service\AuthorizationService;
@@ -211,6 +212,34 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         /** @var UserEntity $currentUser */
         $currentUser = new UserEntity('pid', UserEntity::USER_TYPE_OPERATOR);
         $currentUser->setId(222);
+        $currentUser->getOrganisationUsers()->add($organisationUser);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
+
+        $savedUser = $this->commonHandleCommandTest();
+
+        $this->assertEquals(UserEntity::USER_TYPE_OPERATOR, $savedUser->getUserType());
+    }
+
+    public function testHandleCommandForTm()
+    {
+        /** @var OrganisationEntity $organisation */
+        $organisation = m::mock(OrganisationEntity::class)->makePartial();
+        $organisation->setId(1000);
+
+        /** @var OrganisationUserEntity $organisation */
+        $organisationUser = m::mock(OrganisationUserEntity::class)->makePartial();
+        $organisationUser->setOrganisation($organisation);
+
+        /** @var TransportManagerEntity $transportManager */
+        $transportManager = m::mock(TransportManagerEntity::class)->makePartial();
+        $transportManager->setId(777);
+
+        /** @var UserEntity $currentUser */
+        $currentUser = new UserEntity('pid', UserEntity::USER_TYPE_TRANSPORT_MANAGER);
+        $currentUser->setId(222);
+        $currentUser->setTransportManager($transportManager);
         $currentUser->getOrganisationUsers()->add($organisationUser);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
