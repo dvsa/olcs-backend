@@ -195,6 +195,15 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     protected $team;
 
     /**
+     * Translate to welsh
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesno", name="translate_to_welsh", nullable=false, options={"default": 0})
+     */
+    protected $translateToWelsh = 0;
+
+    /**
      * Transport manager
      *
      * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManager
@@ -627,6 +636,29 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     public function getTeam()
     {
         return $this->team;
+    }
+
+    /**
+     * Set the translate to welsh
+     *
+     * @param string $translateToWelsh
+     * @return User
+     */
+    public function setTranslateToWelsh($translateToWelsh)
+    {
+        $this->translateToWelsh = $translateToWelsh;
+
+        return $this;
+    }
+
+    /**
+     * Get the translate to welsh
+     *
+     * @return string
+     */
+    public function getTranslateToWelsh()
+    {
+        return $this->translateToWelsh;
     }
 
     /**
