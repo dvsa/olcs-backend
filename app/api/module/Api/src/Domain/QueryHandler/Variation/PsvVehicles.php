@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Variation;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\PsvVehicles as AppPsvVehicles;
+
 /**
  * Psv Vehicles
  *
@@ -15,4 +16,5 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Application\PsvVehicles as AppPsvVehicles;
  */
 class PsvVehicles extends AppPsvVehicles
 {
+
 }

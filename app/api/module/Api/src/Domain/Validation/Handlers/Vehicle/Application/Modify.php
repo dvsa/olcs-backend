@@ -7,14 +7,14 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Vehicle\Application;
 
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceVehiclesWithId;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceVehicleWithId;
 
 /**
  * Modify
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Modify extends CanAccessLicenceVehiclesWithId
+class Modify extends CanAccessLicenceVehicleWithId
 {
     /**
      * @inheritdoc
