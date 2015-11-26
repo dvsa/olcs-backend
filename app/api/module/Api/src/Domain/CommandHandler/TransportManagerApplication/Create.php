@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Create a Transport Manager Application
@@ -67,6 +68,10 @@ final class Create extends AbstractCommandHandler implements
             $transportManager->addUsers($user);
             $user->setTransportManager($transportManager);
             $this->userRepo->save($user);
+        }
+
+        if ($command->getDob()) {
+            $user->getContactDetails()->getPerson()->setBirthDate(new DateTime($command->getDob()));
         }
 
         $tma = new TransportManagerApplication();
