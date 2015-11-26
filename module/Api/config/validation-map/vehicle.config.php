@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessOrganisationWithOrgan
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithLicence;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Vehicle\Application as AppHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceVehiclesWithId as LicenceVehicleById;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceVehicleWithId as LicenceVehicleById;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceVehiclesWithIds as LicenceVehicleByIds;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Vehicle\CanTransfer;
