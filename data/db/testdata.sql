@@ -1203,16 +1203,16 @@ INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_
   (529, 1, 2, 2, now(), now(), 'usr529', 133, null, NULL, NULL, 'ecb48a1cc94f951252ec462fe9ecc55c3ef123fadfe935661396c26a45a5809d'),-- CWRO, Case Worker Read Only	Internal
   (331, 1, 2, 2, now(), now(), 'usr331', 114, null, NULL, NULL,'9400f1b21cb527d7fa3d3eabba93557a18ebe7a2ca4e471cfe5e4c5b4ca7f767'),	-- CWRON, Case Worker Read Only No Documents	Internal
   (342, 1, 2, 2, now(), now(), 'usr342', 101, null, NULL, NULL, 'f5ca38f748a1d6eaf726b8a42fb575c3c71f1864a8143301782de13da2d9202b'),	-- CWRON, Case Worker Read Only No Documents	Internal
-  (20131, 1, 2, 2, now(), now(), 'usr20131', 169, 1, NULL, NULL, '3268151e52d97b4cacf97f5b46a5c76c8416e928e137e3b3dc447696a29afbaa'),-- LA, Local Authority, LA dashboard application	SelfServe
-  (20132, 1, 2, 2, now(), now(), 'usr20132', 170, 1, NULL, NULL, 'f60afa4989a7db13314a2ab9881372634b5402c30ba7257448b13fa388de1b78'),-- LA, Local Authority, LA dashboard application	SelfServe
-  (1964, 1, 2, 2, now(), now(), 'usr1964', 101, null, NULL, 140, '19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7'),-- PART, Partner, HMRC	Partner
-  (1965, 1, 2, 2, now(), now(), 'usr1965', 168, null, NULL, 140, '4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5'),-- PART, Partner, HMRC	Partner
-  (778, 1, 2, 2, now(), now(), 'usr778', 101, null, NULL, 140, '4fc82b26aecb47d2868c4efbe3581732a3e7cbcc6c2efb32062c08170a05eeb8'),-- PARTA, Partner Admin	Partner
-  (779, 1, 2, 2, now(), now(), 'usr779', 167, null, NULL, 140, '6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918'),-- PARTA, Partner Admin	Partner
-  (542, 1, 2, 2, now(), now(), 'usr542', 166, null, NULL, NULL,'3fdba35f04dc8c462986c992bcf875546257113072a909c162f7e470e581e278'),-- SS, Self Serve	SelfServe
-  (543, 1, 2, 2, now(), now(), 'usr543', 101, null, NULL, NULL, '8527a891e224136950ff32ca212b45bc93f69fbb801c3b1ebedac52775f99e61'),-- SS, Self Serve    SelfServe
-  (611, 1, 2, 2, now(), now(), 'usr611', 165, null, NULL, NULL,'8fab3a60577befd765cde83f2737cd1a9f25a72356c94052c2194e816829b331'),-- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
-  (612, 1, 2, 2, now(), now(), 'usr612', 101, null, NULL, NULL, 'b999205cdacd2c4516598d99b420d29786443e9908556a65f583a6fd4765ee4a') -- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
+  (20131, NULL, 2, 2, now(), now(), 'usr20131', 169, 1, NULL, NULL, '3268151e52d97b4cacf97f5b46a5c76c8416e928e137e3b3dc447696a29afbaa'),-- LA, Local Authority, LA dashboard application	SelfServe
+  (20132, NULL, 2, 2, now(), now(), 'usr20132', 170, 1, NULL, NULL, 'f60afa4989a7db13314a2ab9881372634b5402c30ba7257448b13fa388de1b78'),-- LA, Local Authority, LA dashboard application	SelfServe
+  (1964, NULL, 2, 2, now(), now(), 'usr1964', 101, null, NULL, 140, '19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7'),-- PART, Partner, HMRC	Partner
+  (1965, NULL, 2, 2, now(), now(), 'usr1965', 168, null, NULL, 140, '4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5'),-- PART, Partner, HMRC	Partner
+  (778, NULL, 2, 2, now(), now(), 'usr778', 101, null, NULL, 140, '4fc82b26aecb47d2868c4efbe3581732a3e7cbcc6c2efb32062c08170a05eeb8'),-- PARTA, Partner Admin	Partner
+  (779, NULL, 2, 2, now(), now(), 'usr779', 167, null, NULL, 140, '6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918'),-- PARTA, Partner Admin	Partner
+  (542, NULL, 2, 2, now(), now(), 'usr542', 166, null, NULL, NULL,'3fdba35f04dc8c462986c992bcf875546257113072a909c162f7e470e581e278'),-- SS, Self Serve	SelfServe
+  (543, NULL, 2, 2, now(), now(), 'usr543', 101, null, 1, NULL, '8527a891e224136950ff32ca212b45bc93f69fbb801c3b1ebedac52775f99e61'),-- SS, Self Serve    SelfServe
+  (611, NULL, 2, 2, now(), now(), 'usr611', 165, null, NULL, NULL,'8fab3a60577befd765cde83f2737cd1a9f25a72356c94052c2194e816829b331'),-- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
+  (612, NULL, 2, 2, now(), now(), 'usr612', 101, null, NULL, NULL, 'b999205cdacd2c4516598d99b420d29786443e9908556a65f583a6fd4765ee4a') -- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
 ;
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator`) VALUES
@@ -1230,7 +1230,7 @@ INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
   (529, 22),
   (331, 21),
   (342, 21),
-  (20131, 32),
+  (20131, 31),
   (20132, 32),
   (1964, 30),
   (1965, 30),
