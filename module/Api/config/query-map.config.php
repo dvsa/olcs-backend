@@ -244,6 +244,7 @@ return [
     TransferQuery\User\UserList::class => QueryHandler\User\UserList::class,
     TransferQuery\User\UserSelfserve::class => QueryHandler\User\UserSelfserve::class,
     TransferQuery\User\UserListSelfserve::class => QueryHandler\User\UserListSelfserve::class,
+    TransferQuery\User\RoleList::class => QueryHandler\User\RoleList::class,
 
     // User
     TransferQuery\Team\Team::class => QueryHandler\Team\Team::class,
@@ -415,6 +416,9 @@ return [
     TransferQuery\Cpms\ReportList::class => QueryHandler\Cpms\ReportList::class,
     TransferQuery\Cpms\ReportStatus::class => QueryHandler\Cpms\ReportStatus::class,
     TransferQuery\Cpms\StoredCardList::class => QueryHandler\Cpms\StoredCardList::class,
+
+    // TEMP!!!!
+    TransferQuery\User\ZfcUser::class => QueryHandler\User\ZfcUser::class,
 
     //Address
     TransferQuery\Address\GetAddress::class => QueryHandler\Address\GetAddress::class,

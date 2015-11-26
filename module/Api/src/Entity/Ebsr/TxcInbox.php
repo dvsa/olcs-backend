@@ -3,6 +3,12 @@
 namespace Dvsa\Olcs\Api\Entity\Ebsr;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 
 /**
  * TxcInbox Entity
@@ -26,4 +32,28 @@ class TxcInbox extends AbstractTxcInbox
     const SUBCATEGORY_EBSR = 36; // to-do sub category is 'EBSR' TBC
     const SUBCATEGORY_TRANSXCHANGE_FILE = 107;
     const SUBCATEGORY_TRANSXCHANGE_PDF = 108;
+
+    public function __construct(
+        BusReg $busReg,
+        Document $zipDocument,
+        LocalAuthority $localAuthority = null,
+        Organisation $organisation = null
+    ) {
+        //check the bus reg is from EBSR
+        if (!$busReg->isFromEbsr()) {
+            throw new ForbiddenException('Txc Inbox may only be used for EBSR records');
+        }
+
+        //check we have one of organisation or local authority (and not both)
+        if (($localAuthority === null && $organisation === null)
+            || ($localAuthority !== null && $organisation !== null)) {
+            throw new ValidationException(['Txc Inbox requires either a Local Authority or Organisation (not both)']);
+        }
+
+        $this->busReg = $busReg;
+        $this->zipDocument = $zipDocument;
+        $this->localAuthority = $localAuthority;
+        $this->organisation = $organisation;
+        $this->variationNo = $busReg->getVariationNo();
+    }
 }

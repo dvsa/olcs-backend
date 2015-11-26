@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserCreated as SendUserCreatedDto;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
@@ -34,7 +35,8 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $this->mockRepo('ContactDetails', ContactDetails::class);
 
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            UserInterface::class => m::mock(UserInterface::class)
         ];
 
         parent::setUp();
@@ -70,6 +72,19 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_SELFSERVE, null)
             ->andReturn(true);
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
+            ->with('login_id', 'test1@test.me', 'selfserve', m::type('callable'))
+            ->andReturnUsing(
+                function ($loginId, $emailAddress, $realm, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
 
         $command = Cmd::create($data);
 
@@ -112,7 +127,7 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
                         SendUserTemporaryPasswordDto::class,
                         [
                             'user' => $savedUser,
-                            'password' => 'GENERATED_PASSWORD_HERE',
+                            'password' => 'GENERATED_PASSWORD',
                         ],
                         new Result()
                     );
@@ -194,7 +209,7 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $organisationUser->setOrganisation($organisation);
 
         /** @var UserEntity $currentUser */
-        $currentUser = new UserEntity(UserEntity::USER_TYPE_OPERATOR);
+        $currentUser = new UserEntity('pid', UserEntity::USER_TYPE_OPERATOR);
         $currentUser->setId(222);
         $currentUser->getOrganisationUsers()->add($organisationUser);
 

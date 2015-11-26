@@ -167,6 +167,8 @@ return [
 
     //Ebsr
     TransferCommand\Bus\Ebsr\UpdateTxcInbox::class => CommandHandler\Bus\Ebsr\UpdateTxcInbox::class,
+    Command\Bus\Ebsr\CreateTxcInbox::class => CommandHandler\Bus\Ebsr\CreateTxcInbox::class,
+    Command\Bus\Ebsr\UpdateTxcInboxPdf::class => CommandHandler\Bus\Ebsr\UpdateTxcInboxPdf::class,
     TransferCommand\Bus\Ebsr\ProcessPacks::class => CommandHandler\Bus\Ebsr\ProcessPacks::class,
     TransferCommand\Bus\Ebsr\RequestMap::class => CommandHandler\Bus\Ebsr\RequestMapQueue::class,
     Command\Bus\Ebsr\ProcessRequestMap::class => CommandHandler\Bus\Ebsr\ProcessRequestMap::class,
