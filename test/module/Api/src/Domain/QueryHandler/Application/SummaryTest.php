@@ -183,6 +183,59 @@ class SummaryTest extends QueryHandlerTestCase
         );
     }
 
+    public function testHandleQueryWithPsv()
+    {
+        $query = Qry::create(['id' => 111]);
+
+        /** @var Entity\Application\Application $mockApplication */
+        $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
+        $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
+        $mockApplication->shouldReceive('isPsv')->andReturn(true);
+
+        $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
+
+        $tms = new ArrayCollection();
+        $tms->add($tm1);
+
+        $mockApplication->setId(111);
+        $mockApplication->setIsVariation(0);
+        $mockApplication->setAuthSignature(0);
+        $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
+
+        $docs = new ArrayCollection();
+        $docs->add(m::mock());
+
+        $mockApplication->shouldReceive('getApplicationDocuments')
+            ->with(
+                Entity\System\Category::CATEGORY_APPLICATION,
+                Entity\System\Category::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL
+            )
+            ->andReturn($docs);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($query)
+            ->andReturn($mockApplication);
+
+        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn([])->once();
+
+        $result = $this->sut->handleQuery($query);
+
+        $this->assertEquals(
+            [
+                'foo' => 'bar',
+                'actions' => [
+                    'PRINT_SIGN_RETURN' => 'PRINT_SIGN_RETURN',
+                    'APPROVE_TM' => 'APPROVE_TM'
+                ],
+                'reference' => '',
+                'outstandingFee' => false,
+            ],
+            $result->serialize()
+        );
+    }
+
     public function testHandleQueryWithDocs2()
     {
         $query = Qry::create(['id' => 111]);

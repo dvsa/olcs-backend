@@ -132,6 +132,10 @@ class Summary extends AbstractQueryHandler
 
     protected function isMissingOcDocuments(Entity\Application\Application $application)
     {
+        if ($application->isPsv()) {
+            return false;
+        }
+
         $ocs = $this->getAocsToCheck($application);
 
         // If there are no OCs then we can return false
