@@ -108,6 +108,8 @@ final class CreateAppeal extends AbstractCommandHandler implements Transactioned
             $appeal->setWithdrawnDate(null);
         }
 
+        $appeal->setDvsaNotified($command->getDvsaNotified() === 'Y');
+
         return $appeal;
     }
 }
