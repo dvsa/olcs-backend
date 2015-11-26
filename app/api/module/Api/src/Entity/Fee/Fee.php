@@ -403,7 +403,7 @@ class Fee extends AbstractFee
         $costCentreRef = $this->getFeeType()->getCostCentreRef();
 
         if ($costCentreRef === FeeType::COST_CENTRE_REF_TYPE_LICENSING) {
-            return $this->getLicence()->getTrafficArea()->getId();
+            return $this->getLicence()->getTrafficArea()->getSalesPersonReference();
         }
 
         return $costCentreRef;
