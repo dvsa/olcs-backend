@@ -71,6 +71,15 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
     protected $decisionDate;
 
     /**
+     * Dvsa notified
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="dvsa_notified", nullable=false, options={"default": 0})
+     */
+    protected $dvsaNotified = 0;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -247,6 +256,29 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
     public function getDecisionDate()
     {
         return $this->decisionDate;
+    }
+
+    /**
+     * Set the dvsa notified
+     *
+     * @param boolean $dvsaNotified
+     * @return Stay
+     */
+    public function setDvsaNotified($dvsaNotified)
+    {
+        $this->dvsaNotified = $dvsaNotified;
+
+        return $this;
+    }
+
+    /**
+     * Get the dvsa notified
+     *
+     * @return boolean
+     */
+    public function getDvsaNotified()
+    {
+        return $this->dvsaNotified;
     }
 
     /**
