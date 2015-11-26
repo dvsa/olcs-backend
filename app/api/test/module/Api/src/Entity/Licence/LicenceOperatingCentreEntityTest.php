@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Licence;
 
+use Mockery as m;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre as Entity;
 use Dvsa\Olcs\Api\Entity\Application\S4;
@@ -68,5 +70,18 @@ class LicenceOperatingCentreEntityTest extends EntityTester
 
         $checkCanDelete = $entity->checkCanDelete();
         $this->assertSame([], $checkCanDelete);
+    }
+
+    public function testGetRelatedOrganisation()
+    {
+        $org = m::mock();
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getRelatedOrganisation')->andReturn($org);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setLicence($licence);
+
+        $this->assertSame($org, $entity->getRelatedOrganisation());
     }
 }
