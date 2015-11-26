@@ -659,7 +659,6 @@ return [
     Command\Email\SendUserTemporaryPassword::class => CommandHandler\Email\SendUserTemporaryPassword::class,
 
     // Person
-    TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,
     Command\Person\Create::class => CommandHandler\Person\Create::class,
     Command\Person\UpdateFull::class => CommandHandler\Person\UpdateFull::class,
 
