@@ -254,7 +254,33 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         $this->applyListJoins($qb);
         $this->applyListFilters($qb, $query);
 
+        // order is not important for count but slows down the query (a lot!)
+        $qb->resetDQLPart('orderBy');
+
         return $this->fetchPaginatedCount($qb);
+    }
+
+    /**
+     * Does the have any rows
+     *
+     * @param QueryInterface $query
+     *
+     * @return bool
+     */
+    public function hasRows(QueryInterface $query)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->buildDefaultListQuery($qb, $query);
+        $this->applyListJoins($qb);
+        $this->applyListFilters($qb, $query);
+
+        // order is not important for count but slows down the query (a lot!)
+        $qb->resetDQLPart('orderBy');
+
+        $qb->setMaxResults(1);
+
+        return count($qb->getQuery()->getResult()) === 1;
     }
 
     /**
