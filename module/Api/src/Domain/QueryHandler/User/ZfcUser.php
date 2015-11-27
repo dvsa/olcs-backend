@@ -36,6 +36,7 @@ class ZfcUser extends AbstractQueryHandler
             $user,
             [
                 'team',
+                'transportManager',
                 'contactDetails' => [
                     'person' => ['title'],
                     'address' => ['countryCode'],
