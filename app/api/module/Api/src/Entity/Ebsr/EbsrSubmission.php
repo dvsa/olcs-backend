@@ -31,6 +31,7 @@ class EbsrSubmission extends AbstractEbsrSubmission
     const FAILED_STATUS = 'ebsrs_expired'; //use expired for now, but ideally we'd have a status of failed
 
     const DATA_REFRESH_SUBMISSION_TYPE = 'ebsrt_refresh';
+    const NEW_SUBMISSION_TYPE = 'ebsrt_new';
 
     /**
      * @param Organisation $organisation
@@ -56,5 +57,10 @@ class EbsrSubmission extends AbstractEbsrSubmission
     public function updateStatus(RefData $ebsrSubmissionStatus)
     {
         $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
+    }
+
+    public function isDataRefresh()
+    {
+        return $this->ebsrSubmissionType->getId() === self::DATA_REFRESH_SUBMISSION_TYPE;
     }
 }
