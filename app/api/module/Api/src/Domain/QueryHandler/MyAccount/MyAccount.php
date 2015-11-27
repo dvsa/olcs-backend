@@ -30,6 +30,7 @@ class MyAccount extends AbstractQueryHandler implements AuthAwareInterface
             $user,
             [
                 'team',
+                'transportManager',
                 'contactDetails' => [
                     'person' => ['title'],
                     'address' => ['countryCode'],
