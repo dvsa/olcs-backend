@@ -77,6 +77,8 @@ final class UpdateStay extends AbstractCommandHandler implements TransactionedIn
             $stay->setWithdrawnDate(null);
         }
 
+        $stay->setDvsaNotified($command->getDvsaNotified());
+
         return $stay;
     }
 }
