@@ -44,11 +44,20 @@ class CpmsIdentityProviderFactory implements FactoryInterface
         $authService = $serviceLocator->get(\ZfcRbac\Service\AuthorizationService::class);
         /* @var $authService \ZfcRbac\Service\AuthorizationService */
         $pid = $authService->getIdentity()->getUser()->getPid();
+
         if (empty($pid)) {
             throw new RuntimeException('The logged in user must have a PID');
         }
 
         $service->setUserId($pid);
+
+        // @todo remove this temporary workaround for OLCS-11448 which sends the
+        // user id rather than the PID.
+        ////////////////////////////////////////
+        $userId = $authService->getIdentity()->getUser()->getId();
+        $service->setUserId($userId);
+        ////////////////////////////////////////
+
         $service->setClientId($config['client_id']);
         $service->setClientSecret($config['client_secret']);
 
