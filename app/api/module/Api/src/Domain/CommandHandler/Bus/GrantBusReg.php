@@ -14,6 +14,8 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Publication\Bus as PublishDto;
 use Dvsa\Olcs\Transfer\Command\Bus\GrantBusReg as GrantCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrCancelled;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRegistered;
 
 /**
  * Grant BusReg
@@ -58,7 +60,20 @@ final class GrantBusReg extends AbstractCommandHandler
         $this->getRepo()->save($busReg);
 
         // publish the bus reg
-        $this->publish($busReg);
+        $this->getPublishCmd($busReg);
+
+        $sideEffects[] = $this->getPublishCmd($busReg->getId());
+
+        $status = $busReg->getStatus()->getId();
+        $ebsrId = $busReg->getEbsrSubmissions()->first()->getId();
+
+        if ($status === BusRegEntity::STATUS_REGISTERED) {
+            $sideEffects[] = $this->getRegisteredEmailCmd($ebsrId);
+        } else {
+            $sideEffects[] = $this->getCancelledEmailCmd($ebsrId);
+        }
+
+        $this->handleSideEffects($sideEffects);
 
         $result = new Result();
         $result->addId('bus', $busReg->getId());
@@ -68,17 +83,27 @@ final class GrantBusReg extends AbstractCommandHandler
     }
 
     /**
-     * @param BusRegEntity $busReg
-     * @return Result
+     * @param int $busRegId
+     * @return PublishDto
      */
-    private function publish(BusRegEntity $busReg)
+    private function getPublishCmd($busRegId)
     {
-        return $this->getCommandHandler()->handleCommand(
-            PublishDto::create(
-                [
-                    'id' => $busReg->getId(),
-                ]
-            )
-        );
+        return PublishDto::create(['id' => $busRegId]);
+    }
+
+    /**
+     * @param int $ebsrId
+     * @return SendEbsrCancelled
+     */
+    private function getCancelledEmailCmd($ebsrId) {
+        return SendEbsrCancelled::create(['id' => $ebsrId]);
+    }
+
+    /**
+     * @param int $ebsrId
+     * @return SendEbsrRegistered
+     */
+    private function getRegisteredEmailCmd($ebsrId) {
+        return SendEbsrRegistered::create(['id' => $ebsrId]);
     }
 }
