@@ -112,9 +112,9 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Dvsa notified
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="dvsa_notified", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno", name="dvsa_notified", nullable=false, options={"default": 0})
      */
     protected $dvsaNotified = 0;
 
@@ -428,7 +428,7 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Set the dvsa notified
      *
-     * @param boolean $dvsaNotified
+     * @param string $dvsaNotified
      * @return Appeal
      */
     public function setDvsaNotified($dvsaNotified)
@@ -441,7 +441,7 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
     /**
      * Get the dvsa notified
      *
-     * @return boolean
+     * @return string
      */
     public function getDvsaNotified()
     {
