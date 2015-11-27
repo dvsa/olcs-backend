@@ -773,6 +773,9 @@ return array(
         ),
         'is_tc' => array(
             'type' => 'yesno'
+        ),
+        'dvsa_notified' => array(
+            'type' => 'yesno'
         )
     ),
     'appeal' => array(
@@ -781,6 +784,9 @@ return array(
                 'entity' => 'Cases',
                 'property' => 'appeal'
             )
+        ),
+        'dvsa_notified' => array(
+            'type' => 'yesno'
         )
     ),
     'complaint' => array(
