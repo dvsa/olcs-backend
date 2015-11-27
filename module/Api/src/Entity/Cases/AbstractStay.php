@@ -73,9 +73,9 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
     /**
      * Dvsa notified
      *
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", name="dvsa_notified", nullable=false, options={"default": 0})
+     * @ORM\Column(type="yesno", name="dvsa_notified", nullable=false, options={"default": 0})
      */
     protected $dvsaNotified = 0;
 
@@ -261,7 +261,7 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the dvsa notified
      *
-     * @param boolean $dvsaNotified
+     * @param string $dvsaNotified
      * @return Stay
      */
     public function setDvsaNotified($dvsaNotified)
@@ -274,7 +274,7 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the dvsa notified
      *
-     * @return boolean
+     * @return string
      */
     public function getDvsaNotified()
     {
