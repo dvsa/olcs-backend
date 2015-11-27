@@ -933,17 +933,17 @@ class FeeEntityTest extends EntityTester
 
     /**
      * @dataProvider salesPersonRefProvider
-     * @param string $trafficAreaId
+     * @param string $trafficAreaRef
      * @param string $costCentreReference
      * @param string $expected
      */
-    public function testGetSalesPersonReference($trafficAreaId, $costCentreReference, $expected)
+    public function testGetSalesPersonReference($trafficAreaRef, $costCentreReference, $expected)
     {
         $licence = m::mock(Licence::class);
         $feeType = m::mock(FeeType::class);
 
-        $licence->shouldReceive('getTrafficArea->getId')
-            ->andReturn($trafficAreaId);
+        $licence->shouldReceive('getTrafficArea->getSalesPersonReference')
+            ->andReturn($trafficAreaRef);
 
         $feeType->shouldReceive('getCostCentreRef')
             ->once()

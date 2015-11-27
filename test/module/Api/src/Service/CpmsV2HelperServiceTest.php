@@ -119,7 +119,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
                     'line_identifier' => '2',
@@ -145,7 +145,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
             'total_amount' => '650.50',
@@ -217,7 +217,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
                     'line_identifier' => '2',
@@ -243,7 +243,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
             'total_amount' => '650.50',
@@ -315,7 +315,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
                     'line_identifier' => '2',
@@ -341,7 +341,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
             'total_amount' => '650.50',
@@ -448,7 +448,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
                     'line_identifier' => '2',
@@ -474,7 +474,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
             'total_amount' => '1000.00',
@@ -568,7 +568,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
                     'line_identifier' => '2',
@@ -594,7 +594,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
             'total_amount' => '1000.00',
@@ -696,7 +696,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
                     'line_identifier' => '2',
@@ -722,7 +722,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
             'total_amount' => '1000.00',
@@ -903,7 +903,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         if (!is_null($licenceStartDate)) {
             $licence->setInForceDate($licenceStartDate);
         }
-        $licence->shouldReceive('getTrafficArea->getId')->andReturn('B');
+        $licence->shouldReceive('getTrafficArea->getSalesPersonReference')->andReturn('Traffic Area Ref');
 
         $fee = new FeeEntity($feeType, $amount, $status);
         $fee
