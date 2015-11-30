@@ -1,6 +1,5 @@
 SET foreign_key_checks = 0;
 
-TRUNCATE TABLE `address`;
 TRUNCATE TABLE `application`;
 TRUNCATE TABLE `application_completion`;
 TRUNCATE TABLE `application_tracking`;
@@ -15,7 +14,6 @@ TRUNCATE TABLE `bus_reg_bus_service_type`;
 TRUNCATE TABLE `bus_reg_variation_reason`;
 TRUNCATE TABLE `complaint`;
 TRUNCATE TABLE `condition_undertaking`;
-TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `companies_house_alert_reason`;
 TRUNCATE TABLE `companies_house_alert`;
@@ -49,7 +47,6 @@ TRUNCATE TABLE `other_licence`;
 TRUNCATE TABLE `organisation_person`;
 TRUNCATE TABLE `person`;
 TRUNCATE TABLE `disqualification`;
-TRUNCATE TABLE `phone_contact`;
 TRUNCATE TABLE `pi`;
 TRUNCATE TABLE `pi_decision`;
 TRUNCATE TABLE `pi_type`;
@@ -164,8 +161,6 @@ local_authority_id, organisation_id, file_read, variation_no, created_on) VALUES
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
-    (7,NULL,NULL,'Unit 5','12 Albert Street','Westpoint','','LS9 6NA','Leeds','GB',NOW(),NOW(),1),
-    (8,NULL,NULL,'Unit 5','12 Albert Street','Westpoint','','LS9 6NA','Leeds','GB',NOW(),NOW(),1),
     (21,NULL,NULL,'Unit 9','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1),
     (25,NULL,NULL,'209 Errwood Road','','','','M19 1JB','Manchester','GB',NOW(),NOW(),1),
     (26,NULL,NULL,'5 High Street','Harehills','','','LS9 6GN','Leeds','GB',NOW(),NOW(),1),
@@ -457,9 +452,8 @@ INSERT INTO `contact_details` (`id`,`contact_type`,`address_id`,`person_id`,
    `last_modified_by`,`created_by`,`fao`,`written_permission_to_engage`,`email_address`,
    `description`,`deleted_date`,`created_on`,`last_modified_on`,`version`)
 VALUES
-    (1,'ct_ta',26,10,2,0,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (3,'ct_corr',109,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (8,'ct_corr',8,10,2,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (23,'ct_corr',109,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (28,'ct_corr',28,10,2,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (21,'ct_reg',21,NULL,0,2,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (30,'ct_reg',30,NULL,2,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (31,'ct_corr',31,NULL,0,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
@@ -485,41 +479,29 @@ VALUES
     (106,'ct_user',26,82,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (107,'ct_complainant',72,33,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (108,'ct_complainant',72,34,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (109,'ct_complainant',72,35,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-
-    (110,'ct_complainant',26,60,4,1,NULL,0,'l.hamilton@mercedes.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-    (111,'ct_complainant',26,65,4,1,NULL,0,'j.smith@example.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-    (112,'ct_complainant',26,66,4,1,NULL,0,'t.cooper@example.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-    (113,'ct_complainant',26,77,4,1,NULL,0,'t.jones@example.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
+    (109,'ct_complainant',72,35,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (110,'ct_complainant',26,60,4,1,NULL,0,'l.hamilton@mercedes.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (111,'ct_complainant',26,65,4,1,NULL,0,'j.smith@example.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (112,'ct_complainant',26,66,4,1,NULL,0,'t.cooper@example.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (113,'ct_complainant',26,77,4,1,NULL,0,'t.jones@example.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
     (114,'ct_user',26,NULL,4,1,NULL,0,'another@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (115,'ct_tm',111,NULL,1,1,NULL,0,'two@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (116,'ct_tm',112,NULL,1,1,NULL,0,'three@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (117,'ct_tm',113,65,1,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (118,'ct_tm',114,66,1,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (119,'ct_tm',115,77,1,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (120,'ct_corr',105,4,1,1,NULL,0,'some1@email.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-    (121,'ct_corr',106,9,1,1,NULL,0,'some2@email.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-    (122,'ct_corr',107,10,1,1,NULL,0,'some3@email.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-    (123,'ct_corr',108,11,1,1,NULL,0,'some4@email.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
+    (120,'ct_corr',105,4,1,1,NULL,0,'some1@email.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (121,'ct_corr',106,9,1,1,NULL,0,'some2@email.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (122,'ct_corr',107,10,1,1,NULL,0,'some3@email.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (123,'ct_corr',108,11,1,1,NULL,0,'some4@email.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
     (130,'ct_user',26,83,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (131,'ct_user',26,84,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (132,'ct_user',26,85,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (133,'ct_user',26,86,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
+    (133,'ct_user',26,86,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
     (140,'ct_partner',7,NULL,1,1,NULL,0,NULL,'HMRC',NULL,'2000-04-02 00:00:00',NULL,1),
     (141,'ct_partner',7,NULL,1,1,NULL,0,NULL,'DVSA',NULL,'2000-04-02 00:00:00',NULL,1),
     (142,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Police',NULL,'2000-04-02 00:00:00',NULL,1),
-    (143,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Department of Work and Pensions',NULL,'2000-04-02 00:00:00',
-    NULL,1),
+    (143,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Department of Work and Pensions',NULL,'2000-04-02 00:00:00', NULL,1),
     (144,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Home Office',NULL,'2000-04-02 00:00:00',NULL,1),
     (164,'ct_user',7,87,4,1,NULL,0,'operator.tm@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (165,'ct_user',7,84,4,1,NULL,0,'operator.admin@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
@@ -737,7 +719,7 @@ VALUES
     '',0,4,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', NULL, 0),
     (100,100,'D',NULL,4,NULL,NULL,NULL,0,'lcat_psv','PD1001001','lsts_not_submitted','ltyp_sn','2010-01-12','2010-01-12','2010-01-12',
     '',0,4,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),2, '2016-01-01 10:00:00', NULL, 0),
-    (110,75,'D',NULL,4,8,21,21,4,'lcat_psv','PD2737280','lsts_valid','ltyp_r','2010-01-12','2010-01-12','2010-01-12',
+    (110,75,'D',NULL,4,28,21,21,4,'lcat_psv','PD2737280','lsts_valid','ltyp_r','2010-01-12','2010-01-12','2010-01-12',
     '',0,10,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', 4, 0),
     (114,104,'B',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'OB1534567','lsts_not_submitted',NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-04-30 12:07:14','2014-04-30 12:07:17',1, '2016-01-01 10:00:00', NULL, 0),
@@ -984,12 +966,6 @@ INSERT INTO `disqualification` (
     (15,NULL,NULL,1,6,'TBC',NOW(),NULL,1,NULL),
     (32,NULL,NULL,1,2,'TBC',NOW(),NULL,1,NULL),
     (36,NULL,NULL,1,6,'TBC',NOW(),NULL,1,NULL);
-
-INSERT INTO `phone_contact` (`id`,`phone_contact_type`,`phone_number`,`details`,
-    `contact_details_id`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
-    (1,'phone_t_tel','0113 123 1234','',101,NULL,NULL,NULL,NULL,1),
-    (10,'phone_t_tel','0113 123 1234','',1,NULL,NULL,NULL,NULL,1),
-    (2,'phone_t_tel','0113 123 1234','',8,NULL,NULL,NULL,NULL,1);
 
 INSERT INTO `pi` (`id`,`agreed_by_tc_id`,`agreed_by_tc_role`,`assigned_to`,`decided_by_tc_id`,`decided_by_tc_role`,
   `pi_status`,`written_outcome`,`case_id`,`created_by`,`last_modified_by`,`brief_to_tc_date`,`call_up_letter_date`,
@@ -1839,7 +1815,7 @@ INSERT INTO `fee`
     (`id`,`fee_status`,`fee_type_id`,`application_id`,`licence_id`,`net_amount`,`vat_amount`,`gross_amount`,`invoiced_date`,`description`)
     VALUES
     (95,'lfs_ot',338,7,211,254.40,0.00,254.40,'2015-03-27 00:00:00','GV/SN Application Fee for application 7');
-INSERT INTO `phone_contact` (`id`, `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (11,124,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
+INSERT INTO `phone_contact` (`id`, `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (111,124,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
 INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, `last_modified_by`, `is_external`, `maintenance`, `safety_inspection`, `created_on`, `last_modified_on`, `olbs_key`, `removed_date`, `version`) VALUES (1,211,126,NULL,NULL,0,0,0,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
 COMMIT;
 -- End: Application 7
@@ -1965,7 +1941,7 @@ INSERT INTO `fee_txn`
     (`fee_id`,`txn_id`,`amount`)
     VALUES
     (96,10010,254.40);
-INSERT INTO `phone_contact` (`id`,    `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (12,127,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
+INSERT INTO `phone_contact` (`id`,    `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (112,127,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
 INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, `last_modified_by`, `is_external`, `maintenance`, `safety_inspection`, `created_on`, `last_modified_on`, `olbs_key`, `removed_date`, `version`) VALUES (2,212,129,NULL,NULL,0,0,0,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
 
 COMMIT;
@@ -2043,14 +2019,14 @@ INSERT INTO `address` (`id`,`saon_desc`,`paon_desc`,`street`,`locality`,`town`,`
     (124,'Address Line 1','Address Line 2','Address Line 3','Address Line 4','Address Line 5','LS9 6NF','GB'),
     (125,'Address Line 1','Address Line 2','Address Line 3','Address Line 4','Address Line 5','LS9 6NF','GB');
 INSERT INTO `phone_contact` (`id`,`contact_details_id`,`phone_contact_type`,`phone_number`) VALUES
-    (13,145,'phone_t_tel','012345'),
-    (14,145,'phone_t_home','012346'),
-    (15,145,'phone_t_mobile','012347'),
-    (16,145,'phone_t_fax','012348'),
-    (17,146,'phone_t_tel','012345'),
-    (18,146,'phone_t_home','012346'),
-    (19,146,'phone_t_mobile','012347'),
-    (20,146,'phone_t_fax','012348');
+    (113,145,'phone_t_tel','012345'),
+    (114,145,'phone_t_home','012346'),
+    (115,145,'phone_t_mobile','012347'),
+    (116,145,'phone_t_fax','012348'),
+    (117,146,'phone_t_tel','012345'),
+    (118,146,'phone_t_home','012346'),
+    (119,146,'phone_t_mobile','012347'),
+    (120,146,'phone_t_fax','012348');
 -- vehicles for unlicensed operators
 INSERT INTO `vehicle` (`id`,`vrm`,`plated_weight`,`created_on`) VALUES
     (9,'ABC123','750','2015-07-16'),
@@ -2085,10 +2061,10 @@ INSERT INTO `address` (`id`,`saon_desc`,`paon_desc`,`street`,`locality`,`town`,`
   (283,'Address Line 1','Address Line 2','Address Line 3','Address Line 4','Address Line 5','LS9 6NF','GB');
 
 INSERT INTO `phone_contact` (`id`,`contact_details_id`,`phone_contact_type`,`phone_number`) VALUES
-  (30,181,'phone_t_tel','012345'),
-  (31,181,'phone_t_home','012346'),
-  (32,181,'phone_t_mobile','012347'),
-  (33,181,'phone_t_fax','012348');
+  (130,181,'phone_t_tel','012345'),
+  (131,181,'phone_t_home','012346'),
+  (132,181,'phone_t_mobile','012347'),
+  (133,181,'phone_t_fax','012348');
 
 -- OLCS-10506 vehicles
 INSERT INTO `vehicle` (`id`,`vrm`,`plated_weight`,`created_on`) VALUES
