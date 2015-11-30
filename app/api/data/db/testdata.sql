@@ -165,6 +165,7 @@ INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `pao
     (25,NULL,NULL,'209 Errwood Road','','','','M19 1JB','Manchester','GB',NOW(),NOW(),1),
     (26,NULL,NULL,'5 High Street','Harehills','','','LS9 6GN','Leeds','GB',NOW(),NOW(),1),
     (27,NULL,NULL,'209 Errwood Road','','','','M19 1JB','Manchester','GB',NOW(),NOW(),1),
+    (28,NULL,NULL,'6 High Street','Harehills','','','LS9 6GN','Leeds','GB',NOW(),NOW(),1),
     (29,NULL,NULL,'Unit 5','12 Albert Street','Westpoint','','LS9 6NA','Leeds','GB',NOW(),NOW(),1),
     (30,NULL,NULL,'Solway Business Centre','Kingstown','Westpoint','','CA6 4BY','Carlisle','GB',NOW(),NOW(),1),
     (31,NULL,NULL,'Solway Business Centre','Kingstown','Westpoint','','CA6 4BY','Carlisle','GB',NOW(),NOW(),1),
@@ -646,11 +647,11 @@ INSERT INTO `txn` (
     `processed_by_user_id`
 )
 VALUES
-    (10001,'OLCS-1234-2345','trt_payment','pay_s_pd','2015-08-26','fpm_cheque','',NULL,NULL,1),
-    (10002,'REVERSAL-1234-2345','trt_reversal','pay_s_pd','2015-09-01','fpm_reversal','',NULL,NULL,1),
-    (10003,'OLCS-3456-4567','trt_payment','pay_s_pd','2015-09-02','fpm_cash','',NULL,NULL,1),
-    (10004,'OLCS-1234-5678','trt_payment','pay_s_pd','2015-11-04','fpm_card_online','',NULL,NULL,1),
-    (10005,'REVERSAL-1234-5678','trt_reversal','pay_s_pd','2015-11-04','fpm_reversal','',NULL,NULL,1);
+    (10001,'OLCS-1234-2345','trt_payment','pay_s_pd','2015-08-26','fpm_cheque','',NULL,NULL,291),
+    (10002,'REVERSAL-1234-2345','trt_reversal','pay_s_pd','2015-09-01','fpm_reversal','',NULL,NULL,291),
+    (10003,'OLCS-3456-4567','trt_payment','pay_s_pd','2015-09-02','fpm_cash','',NULL,NULL,291),
+    (10004,'OLCS-1234-5678','trt_payment','pay_s_pd','2015-11-04','fpm_card_online','',NULL,NULL,291),
+    (10005,'REVERSAL-1234-5678','trt_reversal','pay_s_pd','2015-11-04','fpm_reversal','',NULL,NULL,291);
 
 INSERT INTO `fee_txn`
     (`id`,`fee_id`,`txn_id`,`amount`,`reversed_fee_txn_id`)
@@ -1936,7 +1937,7 @@ INSERT INTO `txn` (
     `waive_recommender_user_id`,
     `processed_by_user_id`
 ) VALUES
-    (10010,'','trt_waive','pay_s_pd','2015-08-26','fpm_waive','Waive OK for fee 96','2015-08-25',1,1);
+    (10010,'','trt_waive','pay_s_pd','2015-08-26','fpm_waive','Waive OK for fee 96','2015-08-25',1,291);
 INSERT INTO `fee_txn`
     (`fee_id`,`txn_id`,`amount`)
     VALUES
