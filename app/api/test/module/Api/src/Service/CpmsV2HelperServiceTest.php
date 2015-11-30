@@ -831,8 +831,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
     {
         return [
             'cheque' => [FeeEntity::METHOD_CHEQUE, 'CHEQUE_RD', 'reversal'],
-            'cash' => [FeeEntity::METHOD_CASH, 'CHARGE_BACK', 'reversal'],
-            'po' => [FeeEntity::METHOD_POSTAL_ORDER, 'CHARGE_BACK', 'reversal'],
+            'cash' => [FeeEntity::METHOD_CASH, 'CASH', 'reversal'],
+            'po' => [FeeEntity::METHOD_POSTAL_ORDER, 'POSTAL_ORDER', 'reversal'],
             'card digital' => [FeeEntity::METHOD_CARD_ONLINE, 'CHARGE_BACK', 'chargeback'],
             'card assisted digital' => [FeeEntity::METHOD_CARD_OFFLINE, 'CHARGE_BACK', 'chargeback'],
         ];
