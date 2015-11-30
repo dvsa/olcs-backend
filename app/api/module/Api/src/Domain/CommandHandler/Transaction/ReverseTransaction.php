@@ -47,20 +47,11 @@ final class ReverseTransaction extends AbstractCommandHandler implements
 
         $this->validate($transaction);
 
-        switch ($transaction->getPaymentMethod()->getId()) {
-            case FeeEntity::METHOD_CHEQUE:
-                $method = 'reverseChequePayment';
-                break;
-            case FeeEntity::METHOD_CARD_ONLINE:
-            case FeeEntity::METHOD_CARD_OFFLINE:
-                $method = 'chargeBackCardPayment';
-                break;
-        }
-
         try {
             $fee = $transaction->getFeeTransactions()->first()->getFee();
-            $response = $this->getCpmsService()->$method(
+            $response = $this->getCpmsService()->reversePayment(
                 $transaction->getReference(),
+                $transaction->getPaymentMethod()->getId(),
                 [$fee]
             );
         } catch (CpmsResponseException $e) {
@@ -104,7 +95,7 @@ final class ReverseTransaction extends AbstractCommandHandler implements
 
         $this->result
             ->addMessage(
-                sprintf('Transaction %d reversed using [%s]', $transaction->getId(), $method)
+                sprintf('Transaction %d reversed', $transaction->getId())
             )
             ->addId('transaction', $newTransaction->getId())
             ->addMessage('Transaction record created');

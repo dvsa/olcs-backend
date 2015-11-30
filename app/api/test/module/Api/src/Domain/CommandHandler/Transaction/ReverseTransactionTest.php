@@ -70,6 +70,8 @@ class ReverseTransactionTest extends CommandHandlerTestCase
                 ->getMock(),
             FeeEntity::METHOD_REVERSAL,
             FeeEntity::METHOD_CHEQUE,
+            FeeEntity::METHOD_CASH,
+            FeeEntity::METHOD_POSTAL_ORDER,
             FeeEntity::METHOD_CARD_ONLINE,
             FeeEntity::METHOD_CARD_OFFLINE,
         ];
@@ -91,10 +93,9 @@ class ReverseTransactionTest extends CommandHandlerTestCase
 
     /**
      * @param string $paymentMethod
-     * @param string $expectedHelperMethod
      * @dataProvider handleCommandProvider
      */
-    public function testHandleCommand($paymentMethod, $expectedHelperMethod)
+    public function testHandleCommand($paymentMethod)
     {
         $now = new DateTime();
         $transactionId = 123;
@@ -146,9 +147,9 @@ class ReverseTransactionTest extends CommandHandlerTestCase
             ->andReturn($transaction);
 
         $this->mockCpmsService
-            ->shouldReceive($expectedHelperMethod)
+            ->shouldReceive('reversePayment')
             ->once()
-            ->with($transactionReference, [$fee])
+            ->with($transactionReference, $paymentMethod, [$fee])
             ->andReturn(
                 [
                     'receipt_reference' => 'REFUND_REF_1',
@@ -188,7 +189,7 @@ class ReverseTransactionTest extends CommandHandlerTestCase
                 'transaction' => 999,
             ],
             'messages' => [
-                "Transaction 123 reversed using [$expectedHelperMethod]",
+                "Transaction 123 reversed",
                 'Transaction record created',
                 'Fee 69 reset to Outstanding',
             ]
@@ -208,9 +209,11 @@ class ReverseTransactionTest extends CommandHandlerTestCase
     public function handleCommandProvider()
     {
         return [
-            'cheque' => [FeeEntity::METHOD_CHEQUE, 'reverseChequePayment'],
-            'digital card' => [FeeEntity::METHOD_CARD_ONLINE, 'chargeBackCardPayment'],
-            'assisted digital card' => [FeeEntity::METHOD_CARD_OFFLINE, 'chargeBackCardPayment'],
+            'cheque' => [FeeEntity::METHOD_CHEQUE],
+            'cash' => [FeeEntity::METHOD_CASH],
+            'po' => [FeeEntity::METHOD_POSTAL_ORDER],
+            'digital card' => [FeeEntity::METHOD_CARD_ONLINE],
+            'assisted digital card' => [FeeEntity::METHOD_CARD_OFFLINE],
         ];
     }
 
@@ -244,9 +247,9 @@ class ReverseTransactionTest extends CommandHandlerTestCase
             ->andReturn($transaction);
 
         $this->mockCpmsService
-            ->shouldReceive('reverseChequePayment')
+            ->shouldReceive('reversePayment')
             ->once()
-            ->with('MY-REFERENCE', [$fee])
+            ->with('MY-REFERENCE', FeeEntity::METHOD_CHEQUE, [$fee])
             ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));
 
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);

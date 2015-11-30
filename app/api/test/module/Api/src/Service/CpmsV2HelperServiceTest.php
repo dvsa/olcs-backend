@@ -791,7 +791,13 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->assertSame('AUTH123', $result);
     }
 
-    public function testReverseChequePayment()
+    /**
+     * @param string $paymentMethod
+     * @param string $expectedScope
+     * @param string $expectedEndpointSuffix
+     * @dataProvider reversalProvider
+     */
+    public function testReversePayment($paymentMethod, $expectedScope, $expectedEndpointSuffix)
     {
         $orgId = 123;
 
@@ -803,12 +809,12 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $expectedParams = [
             'customer_reference' => $orgId,
-            'scope' => 'CHEQUE_RD',
+            'scope' => $expectedScope,
         ];
 
         $this->cpmsClient
             ->shouldReceive('post')
-            ->with('/api/payment/MY-REFERENCE/reversal', 'CHEQUE_RD', $expectedParams)
+            ->with('/api/payment/MY-REFERENCE/'.$expectedEndpointSuffix, $expectedScope, $expectedParams)
             ->once()
             ->andReturn($response);
 
@@ -816,39 +822,20 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             $this->getStubFee(1, 100.00, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-11-04'),
         ];
 
-        $result = $this->sut->reverseChequePayment('MY-REFERENCE', $fees);
+        $result = $this->sut->reversePayment('MY-REFERENCE', $paymentMethod, $fees);
 
         $this->assertSame($response, $result);
     }
 
-    public function testChargeBackCardPayment()
+    public function reversalProvider()
     {
-        $orgId = 123;
-
-        $response = [
-            'code' => Sut::PAYMENT_PAYMENT_CHARGED_BACK,
-            'message' => 'ok',
-            'receipt_reference' => 'REVERSAL_REFERENCE',
+        return [
+            'cheque' => [FeeEntity::METHOD_CHEQUE, 'CHEQUE_RD', 'reversal'],
+            'cash' => [FeeEntity::METHOD_CASH, 'CHARGE_BACK', 'reversal'],
+            'po' => [FeeEntity::METHOD_POSTAL_ORDER, 'CHARGE_BACK', 'reversal'],
+            'card digital' => [FeeEntity::METHOD_CARD_ONLINE, 'CHARGE_BACK', 'chargeback'],
+            'card assisted digital' => [FeeEntity::METHOD_CARD_OFFLINE, 'CHARGE_BACK', 'chargeback'],
         ];
-
-        $expectedParams = [
-            'customer_reference' => $orgId,
-            'scope' => 'CHARGE_BACK',
-        ];
-
-        $this->cpmsClient
-            ->shouldReceive('post')
-            ->with('/api/payment/MY-REFERENCE/chargeback', 'CHARGE_BACK', $expectedParams)
-            ->once()
-            ->andReturn($response);
-
-        $fees = [
-            $this->getStubFee(1, 100.00, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-11-04'),
-        ];
-
-        $result = $this->sut->chargeBackCardPayment('MY-REFERENCE', $fees);
-
-        $this->assertSame($response, $result);
     }
 
     /**
