@@ -39,15 +39,15 @@ class DocumentListTest extends QueryHandlerTestCase
             ->shouldReceive('fetchCount')
             ->with($query)
             ->andReturn(10)
-            ->shouldReceive('fetchCount')
+            ->shouldReceive('hasRows')
             ->with(m::type(Qry::class))
-            ->andReturn(15);
+            ->andReturn(1);
 
         $this->assertEquals(
             [
                 'result' => ['foo' => 'bar'],
                 'count' => 10,
-                'count-unfiltered' => 15
+                'count-unfiltered' => 1
             ],
             $this->sut->handleQuery($query)
         );

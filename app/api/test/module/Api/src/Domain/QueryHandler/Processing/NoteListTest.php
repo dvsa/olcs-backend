@@ -40,14 +40,14 @@ class NoteListTest extends QueryHandlerTestCase
 
         $this->repoMap['Note']->shouldReceive('fetchList')->once()->with($query)->andReturn(['foo' => 'bar']);
         $this->repoMap['Note']->shouldReceive('fetchCount')->with($query)->andReturn(5);
-        $this->repoMap['Note']->shouldReceive('fetchCount')->with(m::type(Qry::class))->andReturn(10);
+        $this->repoMap['Note']->shouldReceive('hasRows')->with(m::type(Qry::class))->andReturn(1);
 
         $result = $this->sut->handleQuery($query);
 
         $expected = [
             'result' => ['foo' => 'bar'],
             'count' => 5,
-            'count-unfiltered' => 10
+            'count-unfiltered' => 1
         ];
 
         $this->assertEquals($expected, $result);
