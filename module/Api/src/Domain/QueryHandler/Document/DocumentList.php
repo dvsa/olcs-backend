@@ -32,7 +32,7 @@ class DocumentList extends AbstractQueryHandler
         return [
             'result' => $this->getRepo()->fetchList($query),
             'count' => $this->getRepo()->fetchCount($query),
-            'count-unfiltered' => $this->getRepo()->fetchCount($unfilteredQuery)
+            'count-unfiltered' => $this->getRepo()->hasRows($unfilteredQuery)
         ];
     }
 }
