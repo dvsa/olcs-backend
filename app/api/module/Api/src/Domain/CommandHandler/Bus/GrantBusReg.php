@@ -95,7 +95,8 @@ final class GrantBusReg extends AbstractCommandHandler
      * @param int $ebsrId
      * @return SendEbsrCancelled
      */
-    private function getCancelledEmailCmd($ebsrId) {
+    private function getCancelledEmailCmd($ebsrId)
+    {
         return SendEbsrCancelled::create(['id' => $ebsrId]);
     }
 
@@ -103,7 +104,8 @@ final class GrantBusReg extends AbstractCommandHandler
      * @param int $ebsrId
      * @return SendEbsrRegistered
      */
-    private function getRegisteredEmailCmd($ebsrId) {
+    private function getRegisteredEmailCmd($ebsrId)
+    {
         return SendEbsrRegistered::create(['id' => $ebsrId]);
     }
 }
