@@ -64,6 +64,8 @@ class Submission extends AbstractRepository
     {
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
+
+        $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
     }
 
     /**
