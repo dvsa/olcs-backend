@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapQueueCmd;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\Email\SendEbsrRefreshedTest;
 use Zend\Filter\Decompress;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -30,6 +31,8 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateBusFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateTxcInbox as CreateTxcInboxCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrReceived as SendEbsrReceivedCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefreshed as SendEbsrRefreshedCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
@@ -173,6 +176,7 @@ final class ProcessPacks extends AbstractCommandHandler implements
             $ebsrSubmission->setLicenceNo($ebsrData['licNo']);
             $ebsrSubmission->setVariationNo($ebsrData['variationNo']);
             $ebsrSubmission->setRegistrationNo($ebsrData['routeNo']);
+            $ebsrSubmission->setOrganisationEmailAddress($ebsrData['organisationEmail']);
             $this->getRepo('EbsrSubmission')->save($ebsrSubmission);
 
             $ebsrData = $this->processEbsrInformation($ebsrData);
@@ -334,6 +338,15 @@ final class ProcessPacks extends AbstractCommandHandler implements
             $sideEffects[] = CreateBusFeeCmd::create(['id' => $busReg->getId()]);
         }
 
+        /** @var EbsrSubmissionEntity $ebsrSubmission */
+        $ebsrSubmission = $busReg->getEbsrSubmissions()->first();
+
+        if ($ebsrSubmission->isDataRefresh()) {
+            $sideEffects[] = $this->getEbsrRefreshedEmailCmd($ebsrSubmission->getId());
+        } else {
+            $sideEffects[] = $this->getEbsrReceivedEmailCmd($ebsrSubmission->getId());
+        }
+
         return $sideEffects;
     }
 
@@ -409,6 +422,24 @@ final class ProcessPacks extends AbstractCommandHandler implements
     private function getRequestMapQueueCmd($busRegId)
     {
         return RequestMapQueueCmd::create(['id' => $busRegId, 'scale' => 'small']);
+    }
+
+    /**
+     * @param int $ebsrId
+     * @return SendEbsrRefreshedCmd
+     */
+    private function getEbsrRefreshedEmailCmd($ebsrId)
+    {
+        return SendEbsrRefreshedCmd::create(['id' => $ebsrId]);
+    }
+
+    /**
+     * @param int $ebsrId
+     * @return SendEbsrReceivedCmd
+     */
+    private function getEbsrReceivedEmailCmd($ebsrId)
+    {
+        return SendEbsrReceivedCmd::create(['id' => $ebsrId]);
     }
 
     /**

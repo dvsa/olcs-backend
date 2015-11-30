@@ -16,8 +16,11 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
+use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Query\Ebsr\EbsrSubmission as EbsrSubmissionQuery;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrAbstract;
 
 /**
  * Send Ebsr Cancelled Email Test
@@ -49,28 +52,42 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $ebsrSubmissionId = 1234;
+        $regNo = 5678;
+        $laDescription1 = 'la description 1';
+        $laDescription2 = 'la description 2';
+        $startPoint = 'start point';
+        $endPoint = 'end point';
+        $orgEmail = 'test@testing.com';
+        $serviceNo = 99999;
 
-        $la = [
-            ['description' => 'LA1'],
-            ['description' => 'LA2'],
-        ];
+        $submittedDate = '2015-01-15';
+        $formattedSubmittedDate = date(SendEbsrAbstract::DATE_FORMAT, strtotime($submittedDate));
+
+        $effectiveDate = new \DateTime('2015-01-16 00:00:00');
+        $formattedEffectiveDate = $effectiveDate->format(SendEbsrAbstract::DATE_FORMAT);
+
+        $la1 = m::mock(LocalAuthorityEntity::class)->makePartial();
+        $la1->setDescription($laDescription1);
+
+        $la2 = m::mock(LocalAuthorityEntity::class)->makePartial();
+        $la2->setDescription($laDescription2);
+
+        $la = new ArrayCollection([$la1, $la2]);
 
         $command = SubmissionCreateCommand::create(['id' => $ebsrSubmissionId]);
 
         $ebsrSubmissionEntity = m::mock(EbsrSubmissionEntity::class);
         // Makes get busreg return this, so testing is easier.
         $ebsrSubmissionEntity->shouldReceive('getId')->andReturn($ebsrSubmissionId);
-        $ebsrSubmissionEntity->shouldReceive('getBusReg')->andReturnSelf();
-        $ebsrSubmissionEntity->shouldReceive('getSubmittedDate')->andReturn('2015-01-15');
-        $ebsrSubmissionEntity->shouldReceive('getRegistrationNo')->andReturn('1234');
-        $ebsrSubmissionEntity->shouldReceive('getStartPoint')->andReturn('Starting');
-        $ebsrSubmissionEntity->shouldReceive('getFinishPoint')->andReturn('Finish');
-        $ebsrSubmissionEntity->shouldReceive('getServiceNo')->andReturn('Service No');
-        $ebsrSubmissionEntity->shouldReceive('getProcessStart')->andReturn('2015-01-16');
-        $ebsrSubmissionEntity->shouldReceive('getLicence')->andReturnSelf();
-        $ebsrSubmissionEntity->shouldReceive('getTranslateToWelsh')->andReturn(false);
-        $ebsrSubmissionEntity->shouldReceive('getOrganisationEmailAddress')->andReturn('EMAIL');
-        $ebsrSubmissionEntity->shouldReceive('getLocalAuthoritys')->andReturn($la);
+        $ebsrSubmissionEntity->shouldReceive('getSubmittedDate')->andReturn($submittedDate);
+        $ebsrSubmissionEntity->shouldReceive('getBusReg->getRegNo')->andReturn($regNo);
+        $ebsrSubmissionEntity->shouldReceive('getBusReg->getStartPoint')->andReturn($startPoint);
+        $ebsrSubmissionEntity->shouldReceive('getBusReg->getFinishPoint')->andReturn($endPoint);
+        $ebsrSubmissionEntity->shouldReceive('getBusReg->getServiceNo')->andReturn($serviceNo);
+        $ebsrSubmissionEntity->shouldReceive('getBusReg->getEffectiveDate')->andReturn($effectiveDate);
+        $ebsrSubmissionEntity->shouldReceive('getBusReg->getLicence->getTranslateToWelsh')->andReturn(false);
+        $ebsrSubmissionEntity->shouldReceive('getOrganisationEmailAddress')->andReturn($orgEmail);
+        $ebsrSubmissionEntity->shouldReceive('getBusReg->getLocalAuthoritys')->andReturn($la);
 
         $this->repoMap['EbsrSubmission']
             ->shouldReceive('fetchUsingId')
@@ -82,13 +99,13 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
             m::type(\Dvsa\Olcs\Email\Data\Message::class),
             $this->template,
             [
-                'submissionDate'     => '15/01/2015',
-                'registrationNumber' => '1234',
-                'origin' => 'Starting',
-                'destination' => 'Finish',
-                'lineName' => 'Service No',
-                'startDate' => '16/01/2015',
-                'localAuthoritys' => 'LA1, LA2',
+                'submissionDate'     => $formattedSubmittedDate,
+                'registrationNumber' => $regNo,
+                'origin' => $startPoint,
+                'destination' => $endPoint,
+                'lineName' => $serviceNo,
+                'startDate' => $formattedEffectiveDate,
+                'localAuthoritys' => $laDescription1 . ', ' . $laDescription2 . '.',
                 'publicationId' => '[PUBLICATION_ID]',
             ],
             null
@@ -96,7 +113,7 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
 
         $result = new Result();
         $data = [
-            'to' => 'EMAIL',
+            'to' => $orgEmail,
             'locale' => 'en_GB',
             'subject' => 'email.' . $this->template . '.subject'
         ];

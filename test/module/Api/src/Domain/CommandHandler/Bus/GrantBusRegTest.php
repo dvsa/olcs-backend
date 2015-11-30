@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Transfer\Command\Bus\GrantBusReg as Cmd;
 use Dvsa\Olcs\Transfer\Command\Publication\Bus as PublishDto;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrCancelled;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRegistered;
 
 /**
  * Grant BusReg Test
@@ -33,6 +35,7 @@ class GrantBusRegTest extends CommandHandlerTestCase
     {
         $this->refData = [
             BusRegEntity::STATUS_REGISTERED,
+            BusRegEntity::STATUS_CANCELLED,
             'brvr_route'
         ];
 
@@ -55,7 +58,7 @@ class GrantBusRegTest extends CommandHandlerTestCase
             ]
         );
 
-        /** @var BusEntity $busReg */
+        /** @var BusRegEntity $busReg */
         $busReg = m::mock(BusRegEntity::class);
         $busReg->shouldReceive('getStatusForGrant')
             ->andReturn(null);
@@ -85,7 +88,7 @@ class GrantBusRegTest extends CommandHandlerTestCase
         $status = new RefDataEntity();
         $status->setId(BusRegEntity::STATUS_VAR);
 
-        /** @var BusEntity $busReg */
+        /** @var BusRegEntity $busReg */
         $busReg = m::mock(BusRegEntity::class);
         $busReg->shouldReceive('getStatusForGrant')
             ->andReturn(BusRegEntity::STATUS_REGISTERED)
@@ -100,11 +103,15 @@ class GrantBusRegTest extends CommandHandlerTestCase
     }
 
     /**
-     * testHandleCommand
+     * @dataProvider handleCommandProvider
+     *
+     * @param string $oldStatus
+     * @param string $emailSideEffectClass
      */
-    public function testHandleCommand()
+    public function testHandleCommand($oldStatus, $emailSideEffectClass)
     {
         $id = 99;
+        $ebsrId = 55;
 
         $command = Cmd::Create(
             [
@@ -114,18 +121,15 @@ class GrantBusRegTest extends CommandHandlerTestCase
         );
 
         $status = new RefDataEntity();
-        $status->setId(BusRegEntity::STATUS_VAR);
+        $status->setId($oldStatus);
 
-        /** @var BusEntity $busReg */
-        $busReg = m::mock(BusRegEntity::class);
-        $busReg->shouldReceive('getStatusForGrant')
-            ->andReturn(BusRegEntity::STATUS_REGISTERED)
-            ->shouldReceive('getStatus')
-            ->andReturn($status)
-            ->shouldReceive('grant')
-            ->once()
-            ->shouldReceive('getId')
-            ->andReturn($id);
+        /** @var BusRegEntity $busReg */
+        $busReg = m::mock(BusRegEntity::class)->makePartial();
+        $busReg->shouldReceive('canMakeDecision')->once()->andReturn(true);
+        $busReg->shouldReceive('isGrantable')->once()->andReturn(true);
+        $busReg->shouldReceive('getEbsrSubmissions->first->getId')->andReturn($ebsrId);
+        $busReg->setId($id);
+        $busReg->setStatus($status);
 
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)
@@ -140,8 +144,22 @@ class GrantBusRegTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedSideEffect(
+            $emailSideEffectClass,
+            ['id' => $ebsrId],
+            new Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf(Result::class, $result);
+    }
+
+    public function handleCommandProvider()
+    {
+        return [
+            [BusRegEntity::STATUS_VAR, SendEbsrRegistered::class],
+            [BusRegEntity::STATUS_CANCEL, SendEbsrCancelled::class]
+        ];
     }
 }
