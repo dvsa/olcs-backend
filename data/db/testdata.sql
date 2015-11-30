@@ -1349,12 +1349,12 @@ INSERT INTO task(id,bus_reg_id,licence_id,category_id,sub_category_id,assigned_t
     (10,1,110,3,39,1,2,'A test Bus Reg task','2014-12-15',1);
 
 INSERT INTO `task_allocation_rule` (`id`, `category_id`, `team_id`, `user_id`, `goods_or_psv`, `is_mlh`, `traffic_area_id`) VALUES
-    (1,9,5,1,NULL,NULL,NULL),
-    (2,3,6,1,NULL,NULL,NULL),
-    (3,2,7,1,NULL,NULL,NULL),
-    (4,7,8,8,NULL,NULL,NULL),
-    (5,8,9,1,NULL,NULL,NULL),
-    (6,1,5,1,NULL,NULL,NULL);
+    (1,9,5,291,NULL,NULL,NULL),
+    (2,3,6,291,NULL,NULL,NULL),
+    (3,2,7,291,NULL,NULL,NULL),
+    (4,7,8,291,NULL,NULL,NULL),
+    (5,8,9,291,NULL,NULL,NULL),
+    (6,1,5,291,NULL,NULL,NULL);
 
 /* Disc sequence dummy data */
 INSERT INTO `disc_sequence` (
