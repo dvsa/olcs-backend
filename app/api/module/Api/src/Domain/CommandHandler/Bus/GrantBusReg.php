@@ -58,10 +58,7 @@ final class GrantBusReg extends AbstractCommandHandler
         );
 
         $this->getRepo()->save($busReg);
-
-        // publish the bus reg
-        $this->getPublishCmd($busReg);
-
+        
         $sideEffects[] = $this->getPublishCmd($busReg->getId());
 
         $status = $busReg->getStatus()->getId();
