@@ -24,6 +24,11 @@ final class SubmissionList extends AbstractQueryHandler
             'result' => $this->resultList(
                 $repo->fetchList($query, Query::HYDRATE_OBJECT),
                 [
+                    'createdBy' => [
+                        'contactDetails' => [
+                            'person'
+                        ]
+                    ],
                     'recipientUser' => [
                         'contactDetails' => [
                             'person'
