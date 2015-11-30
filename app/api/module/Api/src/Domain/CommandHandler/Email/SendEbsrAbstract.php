@@ -25,6 +25,8 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
 {
     use \Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 
+    const DATE_FORMAT = 'l F jS Y';
+
     protected $repoServiceName = 'EbsrSubmission';
 
     protected $template = null;
@@ -70,12 +72,12 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
             $message,
             $this->template,
             [
-                'submissionDate' => date('d/m/Y', strtotime($ebsr->getSubmittedDate())),
+                'submissionDate' => $this->formatDate($ebsr->getSubmittedDate()),
                 'registrationNumber' => $ebsr->getBusReg()->getRegNo(),
                 'origin' => $ebsr->getBusReg()->getStartPoint(),
                 'destination' => $ebsr->getBusReg()->getFinishPoint(),
-                'lineName' => $ebsr->getBusReg()->getServiceNo(), //
-                'startDate' => date('d/m/Y', strtotime($ebsr->getBusReg()->getEffectiveDate())),
+                'lineName' => $ebsr->getBusReg()->getServiceNo(),
+                'startDate' => $this->formatDate($ebsr->getBusReg()->getEffectiveDate()),
                 'localAuthoritys' => $localAuthoritiesString,
                 'publicationId' => '[PUBLICATION_ID]', //
             ]
@@ -86,5 +88,18 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
         $result->addMessage('Email sent');
 
         return $result;
+    }
+
+    /**
+     * @param string|\DateTime $date
+     * @return string
+     */
+    private function formatDate($date)
+    {
+        if (!$date instanceof \DateTime) {
+            return date(self::DATE_FORMAT, strtotime($date));
+        }
+
+        return $date->format(self::DATE_FORMAT);
     }
 }
