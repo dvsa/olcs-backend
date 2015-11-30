@@ -40,7 +40,7 @@ class CanAccessXocWithReferenceTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getId')->andReturn('L111');
 
-        $this->setIsValid('canAccessLicence', [111], $canAccess);
+        $this->setIsValid('canAccessLicenceOperatingCentre', [111], $canAccess);
 
         $this->assertSame($expected, $this->sut->isValid($dto));
     }
@@ -54,7 +54,7 @@ class CanAccessXocWithReferenceTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getId')->andReturn('A111');
 
-        $this->setIsValid('canAccessApplication', [111], $canAccess);
+        $this->setIsValid('canAccessApplicationOperatingCentre', [111], $canAccess);
 
         $this->assertSame($expected, $this->sut->isValid($dto));
     }
