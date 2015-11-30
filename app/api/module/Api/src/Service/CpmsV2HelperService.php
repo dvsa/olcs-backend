@@ -508,12 +508,16 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     {
         $method   = 'post';
         $endPoint = '/api/payment/'.$receiptReference.'/reversal';
-        $scope = ApiService::SCOPE_CHARGE_BACK;
 
-        if ($paymentMethod === Fee::METHOD_CHEQUE) {
-            // for cheque reversals, switch scope to 'refer to drawer'
-            $scope = ApiService::CHEQUE_RD;
-        }
+        $scopeMap = [
+            Fee::METHOD_CHEQUE       => ApiService::CHEQUE_RD,
+            Fee::METHOD_CARD_ONLINE  => ApiService::SCOPE_CHARGE_BACK,
+            Fee::METHOD_CARD_OFFLINE => ApiService::SCOPE_CHARGE_BACK,
+            Fee::METHOD_CASH         => ApiService::SCOPE_CASH,
+            Fee::METHOD_POSTAL_ORDER => ApiService::SCOPE_POSTAL_ORDER,
+        ];
+
+        $scope = $scopeMap[$paymentMethod];
 
         if (in_array($paymentMethod, [Fee::METHOD_CARD_ONLINE, Fee::METHOD_CARD_OFFLINE])) {
             // for card reversals, switch endpoint to 'charge back'
