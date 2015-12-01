@@ -55,7 +55,7 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="cost_centre_ref", length=12, nullable=true)
+     * @ORM\Column(type="string", name="cost_centre_ref", length=50, nullable=true)
      */
     protected $costCentreRef;
 
