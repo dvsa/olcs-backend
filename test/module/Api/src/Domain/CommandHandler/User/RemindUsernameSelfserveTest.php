@@ -53,7 +53,6 @@ class RemindUsernameSelfserveTest extends CommandHandlerTestCase
             SendUsernameSingleCmd::class,
             [
                 'user' => $user1,
-                'licenceNumber' => $data['licenceNumber']
             ],
             new Result()
         );

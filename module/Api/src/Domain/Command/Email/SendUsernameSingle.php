@@ -14,15 +14,4 @@ use Dvsa\Olcs\Transfer\FieldType\Traits\User;
 final class SendUsernameSingle extends AbstractCommand
 {
     use User;
-
-    /**
-     * @Transfer\Filter({"name":"Zend\Filter\StringTrim"})
-     * @Transfer\Validator({"name":"Zend\Validator\StringLength", "options":{"min":2, "max":18}})
-     */
-    protected $licenceNumber;
-
-    public function getLicenceNumber()
-    {
-        return $this->licenceNumber;
-    }
 }
