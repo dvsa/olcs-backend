@@ -2481,7 +2481,7 @@ class ApplicationEntityTest extends EntityTester
     {
         return [
             [Entity::NOT_APPLICABLE, Entity::NOT_APPLICABLE],
-            [new DateTime('2015-01-01'), '01/01/2015'],
+            [new DateTime('2015-01-01'), '01 Jan 2015'],
             [Entity::UNKNOWN, Entity::UNKNOWN],
             ['', ''],
             [null, '']
