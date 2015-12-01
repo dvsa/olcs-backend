@@ -648,10 +648,10 @@ INSERT INTO `txn` (
 )
 VALUES
     (10001,'OLCS-1234-2345','trt_payment','pay_s_pd','2015-08-26','fpm_cheque','',NULL,NULL,291),
-    (10002,'REVERSAL-1234-2345','trt_reversal','pay_s_pd','2015-09-01','fpm_reversal','',NULL,NULL,291),
+    (10002,'REVERSAL-1234-2345','trt_reversal','pay_s_pd','2015-09-01','fpm_cheque','',NULL,NULL,291),
     (10003,'OLCS-3456-4567','trt_payment','pay_s_pd','2015-09-02','fpm_cash','',NULL,NULL,291),
     (10004,'OLCS-1234-5678','trt_payment','pay_s_pd','2015-11-04','fpm_card_online','',NULL,NULL,291),
-    (10005,'REVERSAL-1234-5678','trt_reversal','pay_s_pd','2015-11-04','fpm_reversal','',NULL,NULL,291);
+    (10005,'REVERSAL-1234-5678','trt_reversal','pay_s_pd','2015-11-04','fpm_card_online','',NULL,NULL,291);
 
 INSERT INTO `fee_txn`
     (`id`,`fee_id`,`txn_id`,`amount`,`reversed_fee_txn_id`)
