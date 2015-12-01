@@ -69,6 +69,7 @@ class UserEntityTest extends EntityTester
         $data = [
             'loginId' => 'loginId',
             'roles' => [$role],
+            'translateToWelsh' => 'N',
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -83,6 +84,7 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
+        $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
 
@@ -104,6 +106,7 @@ class UserEntityTest extends EntityTester
             'userType' => Entity::USER_TYPE_INTERNAL,
             'loginId' => 'loginId',
             'roles' => [$role],
+            'translateToWelsh' => 'Y',
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -120,6 +123,7 @@ class UserEntityTest extends EntityTester
             Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
+                'translateToWelsh' => 'N',
                 'accountDisabled' => 'Y',
                 'team' => m::mock(TeamEntity::class),
                 'transportManager' => m::mock(TransportManagerEntity::class),
@@ -136,6 +140,7 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
+        $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertEquals(null, $entity->getLockedDate());
 
@@ -160,6 +165,7 @@ class UserEntityTest extends EntityTester
         $data = [
             'loginId' => 'loginId',
             'roles' => [$adminRole],
+            'translateToWelsh' => 'N',
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -172,6 +178,7 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
+        $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
 
@@ -198,6 +205,7 @@ class UserEntityTest extends EntityTester
             'userType' => Entity::USER_TYPE_TRANSPORT_MANAGER,
             'loginId' => 'loginId',
             'roles' => [$nonAdminRole],
+            'translateToWelsh' => 'Y',
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -212,6 +220,7 @@ class UserEntityTest extends EntityTester
             Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
+                'translateToWelsh' => 'N',
                 'accountDisabled' => 'Y',
                 'team' => m::mock(TeamEntity::class),
                 'transportManager' => m::mock(TransportManagerEntity::class),
@@ -228,6 +237,7 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
+        $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertEquals(null, $entity->getLockedDate());
 
@@ -253,6 +263,7 @@ class UserEntityTest extends EntityTester
         $data = [
             'loginId' => 'loginId',
             'roles' => [$role],
+            'translateToWelsh' => 'N',
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -267,6 +278,7 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
+        $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
 
@@ -292,6 +304,7 @@ class UserEntityTest extends EntityTester
             'userType' => Entity::USER_TYPE_PARTNER,
             'loginId' => 'loginId',
             'roles' => [$role],
+            'translateToWelsh' => 'Y',
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -308,6 +321,7 @@ class UserEntityTest extends EntityTester
             Entity::USER_TYPE_LOCAL_AUTHORITY,
             [
                 'loginId' => 'currentLoginId',
+                'translateToWelsh' => 'N',
                 'accountDisabled' => 'Y',
                 'team' => m::mock(TeamEntity::class),
                 'transportManager' => m::mock(TransportManagerEntity::class),
@@ -324,6 +338,7 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
+        $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertEquals(null, $entity->getLockedDate());
 
@@ -348,6 +363,7 @@ class UserEntityTest extends EntityTester
         $data = [
             'loginId' => 'loginId',
             'roles' => [$role],
+            'translateToWelsh' => 'N',
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -362,6 +378,7 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
+        $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
 
@@ -387,6 +404,7 @@ class UserEntityTest extends EntityTester
             'userType' => Entity::USER_TYPE_LOCAL_AUTHORITY,
             'loginId' => 'loginId',
             'roles' => [$role],
+            'translateToWelsh' => 'Y',
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -403,6 +421,7 @@ class UserEntityTest extends EntityTester
             Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
+                'translateToWelsh' => 'N',
                 'accountDisabled' => 'Y',
                 'team' => m::mock(TeamEntity::class),
                 'transportManager' => m::mock(TransportManagerEntity::class),
@@ -419,6 +438,7 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
+        $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertEquals(null, $entity->getLockedDate());
 
@@ -443,6 +463,7 @@ class UserEntityTest extends EntityTester
         $data = [
             'loginId' => 'loginId',
             'roles' => [$adminRole],
+            'translateToWelsh' => 'N',
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -455,6 +476,7 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
+        $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
 
@@ -481,6 +503,7 @@ class UserEntityTest extends EntityTester
             'userType' => Entity::USER_TYPE_OPERATOR,
             'loginId' => 'loginId',
             'roles' => [$nonAdminRole],
+            'translateToWelsh' => 'Y',
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
             'transportManager' => m::mock(TransportManagerEntity::class),
@@ -495,6 +518,7 @@ class UserEntityTest extends EntityTester
             Entity::USER_TYPE_PARTNER,
             [
                 'loginId' => 'currentLoginId',
+                'translateToWelsh' => 'N',
                 'accountDisabled' => 'Y',
                 'team' => m::mock(TeamEntity::class),
                 'transportManager' => m::mock(TransportManagerEntity::class),
@@ -511,6 +535,7 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals($data['loginId'], $entity->getLoginId());
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
+        $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
         $this->assertEquals(null, $entity->getLockedDate());
 

@@ -159,6 +159,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
             $this->updateRoles($data['roles']);
         }
 
+        if (isset($data['translateToWelsh'])) {
+            $this->translateToWelsh = $data['translateToWelsh'];
+        }
+
         if (isset($data['accountDisabled'])) {
             $this->updateAccountDisabled($data['accountDisabled']);
         }
