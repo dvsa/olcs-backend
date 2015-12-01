@@ -102,7 +102,7 @@ class ReverseTransactionTest extends CommandHandlerTestCase
 
         $data = [
             'id' => $transactionId,
-            'reason' => 'bounced cheque',
+            'reason' => 'reversal reason',
         ];
         $command = Cmd::create($data);
 
@@ -205,13 +205,13 @@ class ReverseTransactionTest extends CommandHandlerTestCase
 
         $this->assertSame($this->mapRefData(TransactionEntity::TYPE_REVERSAL), $savedTransaction->getType());
         $this->assertSame($this->mapRefData(TransactionEntity::STATUS_COMPLETE), $savedTransaction->getStatus());
-        $this->assertSame($this->mapRefData($paymentMethod), $savedTransaction->getPaymentMethod());
-        $this->assertEquals('bounced cheque', $savedTransaction->getComment());
+        $this->assertEquals('reversal reason', $savedTransaction->getComment());
         $this->assertEquals($now, $savedTransaction->getCompletedDate());
         $this->assertEquals('bob', $savedTransaction->getProcessedByUser()->getLoginId());
         $this->assertEquals('REFUND_REF_1', $savedTransaction->getReference());
 
         // assert data copied from original transaction
+        $this->assertSame($this->mapRefData($paymentMethod), $savedTransaction->getPaymentMethod());
         $this->assertSame('1234', $savedTransaction->getChequePoNumber());
         $this->assertSame('2015-12-01', $savedTransaction->getChequePoDate()->format('Y-m-d'));
         $this->assertSame('2345', $savedTransaction->getPayingInSlipNumber());
