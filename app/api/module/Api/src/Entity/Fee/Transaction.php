@@ -37,6 +37,7 @@ class Transaction extends AbstractTransaction
     const TYPE_PAYMENT = 'trt_payment';
     const TYPE_REFUND = 'trt_refund';
     const TYPE_REVERSAL = 'trt_reversal';
+    const TYPE_ADJUSTMENT = 'trt_other';
 
     /**
      * @return boolean
@@ -123,6 +124,14 @@ class Transaction extends AbstractTransaction
     }
 
     /**
+     * @return boolean
+     */
+    public function isAdjustment()
+    {
+        return $this->getType()->getId() === self::TYPE_ADJUSTMENT;
+    }
+
+    /**
      * @return array
      */
     public function getFeeTransactionsForReversal()
@@ -162,13 +171,34 @@ class Transaction extends AbstractTransaction
             return false;
         }
 
+        return !$this->isReversed();
+    }
+
+    /**
+     * Determine whether a transaction can be adjusted. Can only adjust payments
+     * or adjustments that have not previously been reversed (adjustment counts
+     * as a reversal in terms of data recorded)
+     *
+     * @return bool
+     */
+    public function canAdjust()
+    {
+        return (($this->isPayment() || $this->isAdjustment()) && !$this->isReversed());
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isReversed()
+    {
         foreach ($this->getFeeTransactions() as $ft) {
             if ($ft->isRefundedOrReversed()) {
-                return false;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     /**
