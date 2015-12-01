@@ -12,9 +12,9 @@ class ProcessRequestMap extends AbstractIdOnlyCommand
 {
     use User;
 
-    private $scale;
+    protected $scale;
 
-    private $template;
+    protected $template;
 
     /**
      * @return string

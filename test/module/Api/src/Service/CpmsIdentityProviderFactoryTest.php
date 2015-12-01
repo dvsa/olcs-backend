@@ -101,6 +101,7 @@ class CpmsIdentityProviderFactoryTest extends MockeryTestCase
     {
         $mockIdentity = m::mock();
         $mockIdentity->shouldReceive('getIdentity->getUser->getPid')->with()->once()->andReturn('XYZ');
+        $mockIdentity->shouldReceive('getIdentity->getUser->getId')->with()->once()->andReturn('99');
         $this->sm->shouldReceive('get')->with(\ZfcRbac\Service\AuthorizationService::class)->once()
             ->andReturn($mockIdentity);
 
@@ -113,7 +114,7 @@ class CpmsIdentityProviderFactoryTest extends MockeryTestCase
             ]
         );
 
-        $this->assertEquals('XYZ', $service->getUserId());
+        $this->assertEquals('99', $service->getUserId());
         $this->assertEquals(4321, $service->getClientId());
         $this->assertEquals('secret', $service->getClientSecret());
     }

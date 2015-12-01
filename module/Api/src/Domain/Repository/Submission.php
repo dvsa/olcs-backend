@@ -46,7 +46,7 @@ class Submission extends AbstractRepository
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
-        $this->getQueryBuilder()
+        $this->getQueryBuilder()->modifyQuery($qb)
             ->with('recipientUser', 'r')
             ->with('r.contactDetails', 'rcd')
             ->with('rcd.person')
@@ -64,6 +64,8 @@ class Submission extends AbstractRepository
     {
         $qb->andWhere($qb->expr()->eq($this->alias . '.case', ':byCase'))
             ->setParameter('byCase', $query->getCase());
+
+        $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
     }
 
     /**

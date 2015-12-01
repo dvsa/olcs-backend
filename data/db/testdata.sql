@@ -1,6 +1,5 @@
 SET foreign_key_checks = 0;
 
-TRUNCATE TABLE `address`;
 TRUNCATE TABLE `application`;
 TRUNCATE TABLE `application_completion`;
 TRUNCATE TABLE `application_tracking`;
@@ -15,7 +14,6 @@ TRUNCATE TABLE `bus_reg_bus_service_type`;
 TRUNCATE TABLE `bus_reg_variation_reason`;
 TRUNCATE TABLE `complaint`;
 TRUNCATE TABLE `condition_undertaking`;
-TRUNCATE TABLE `contact_details`;
 TRUNCATE TABLE `conviction`;
 TRUNCATE TABLE `companies_house_alert_reason`;
 TRUNCATE TABLE `companies_house_alert`;
@@ -49,7 +47,6 @@ TRUNCATE TABLE `other_licence`;
 TRUNCATE TABLE `organisation_person`;
 TRUNCATE TABLE `person`;
 TRUNCATE TABLE `disqualification`;
-TRUNCATE TABLE `phone_contact`;
 TRUNCATE TABLE `pi`;
 TRUNCATE TABLE `pi_decision`;
 TRUNCATE TABLE `pi_type`;
@@ -164,12 +161,11 @@ local_authority_id, organisation_id, file_read, variation_no, created_on) VALUES
 
 INSERT INTO `address` (`id`, `created_by`, `last_modified_by`, `saon_desc`, `paon_desc`, `street`, `locality`,
     `postcode`, `town`, `country_code`, `created_on`, `last_modified_on`, `version`) VALUES
-    (7,NULL,NULL,'Unit 5','12 Albert Street','Westpoint','','LS9 6NA','Leeds','GB',NOW(),NOW(),1),
-    (8,NULL,NULL,'Unit 5','12 Albert Street','Westpoint','','LS9 6NA','Leeds','GB',NOW(),NOW(),1),
     (21,NULL,NULL,'Unit 9','Shapely Industrial Estate','Harehills','','LS9 2FA','Leeds','GB',NOW(),NOW(),1),
     (25,NULL,NULL,'209 Errwood Road','','','','M19 1JB','Manchester','GB',NOW(),NOW(),1),
     (26,NULL,NULL,'5 High Street','Harehills','','','LS9 6GN','Leeds','GB',NOW(),NOW(),1),
     (27,NULL,NULL,'209 Errwood Road','','','','M19 1JB','Manchester','GB',NOW(),NOW(),1),
+    (28,NULL,NULL,'6 High Street','Harehills','','','LS9 6GN','Leeds','GB',NOW(),NOW(),1),
     (29,NULL,NULL,'Unit 5','12 Albert Street','Westpoint','','LS9 6NA','Leeds','GB',NOW(),NOW(),1),
     (30,NULL,NULL,'Solway Business Centre','Kingstown','Westpoint','','CA6 4BY','Carlisle','GB',NOW(),NOW(),1),
     (31,NULL,NULL,'Solway Business Centre','Kingstown','Westpoint','','CA6 4BY','Carlisle','GB',NOW(),NOW(),1),
@@ -457,9 +453,8 @@ INSERT INTO `contact_details` (`id`,`contact_type`,`address_id`,`person_id`,
    `last_modified_by`,`created_by`,`fao`,`written_permission_to_engage`,`email_address`,
    `description`,`deleted_date`,`created_on`,`last_modified_on`,`version`)
 VALUES
-    (1,'ct_ta',26,10,2,0,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (3,'ct_corr',109,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (8,'ct_corr',8,10,2,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (23,'ct_corr',109,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
+    (28,'ct_corr',28,10,2,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (21,'ct_reg',21,NULL,0,2,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (30,'ct_reg',30,NULL,2,3,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (31,'ct_corr',31,NULL,0,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
@@ -485,41 +480,29 @@ VALUES
     (106,'ct_user',26,82,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (107,'ct_complainant',72,33,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (108,'ct_complainant',72,34,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (109,'ct_complainant',72,35,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-
-    (110,'ct_complainant',26,60,4,1,NULL,0,'l.hamilton@mercedes.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-    (111,'ct_complainant',26,65,4,1,NULL,0,'j.smith@example.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-    (112,'ct_complainant',26,66,4,1,NULL,0,'t.cooper@example.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-    (113,'ct_complainant',26,77,4,1,NULL,0,'t.jones@example.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
+    (109,'ct_complainant',72,35,4,1,NULL,0,NULL,NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (110,'ct_complainant',26,60,4,1,NULL,0,'l.hamilton@mercedes.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (111,'ct_complainant',26,65,4,1,NULL,0,'j.smith@example.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (112,'ct_complainant',26,66,4,1,NULL,0,'t.cooper@example.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (113,'ct_complainant',26,77,4,1,NULL,0,'t.jones@example.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
     (114,'ct_user',26,NULL,4,1,NULL,0,'another@user.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (115,'ct_tm',111,NULL,1,1,NULL,0,'two@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (116,'ct_tm',112,NULL,1,1,NULL,0,'three@email.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (117,'ct_tm',113,65,1,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (118,'ct_tm',114,66,1,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (119,'ct_tm',115,77,1,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (120,'ct_corr',105,4,1,1,NULL,0,'some1@email.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-    (121,'ct_corr',106,9,1,1,NULL,0,'some2@email.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-    (122,'ct_corr',107,10,1,1,NULL,0,'some3@email.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
-    (123,'ct_corr',108,11,1,1,NULL,0,'some4@email.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
+    (120,'ct_corr',105,4,1,1,NULL,0,'some1@email.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (121,'ct_corr',106,9,1,1,NULL,0,'some2@email.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (122,'ct_corr',107,10,1,1,NULL,0,'some3@email.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
+    (123,'ct_corr',108,11,1,1,NULL,0,'some4@email.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
     (130,'ct_user',26,83,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (131,'ct_user',26,84,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (132,'ct_user',26,85,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
-    (133,'ct_user',26,86,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04',
-    '2014-11-24 10:30:04',1),
+    (133,'ct_user',26,86,4,1,NULL,0,'terry.valtech@gmail.com',NULL,NULL,'2014-11-24 10:30:04', '2014-11-24 10:30:04',1),
     (140,'ct_partner',7,NULL,1,1,NULL,0,NULL,'HMRC',NULL,'2000-04-02 00:00:00',NULL,1),
     (141,'ct_partner',7,NULL,1,1,NULL,0,NULL,'DVSA',NULL,'2000-04-02 00:00:00',NULL,1),
     (142,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Police',NULL,'2000-04-02 00:00:00',NULL,1),
-    (143,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Department of Work and Pensions',NULL,'2000-04-02 00:00:00',
-    NULL,1),
+    (143,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Department of Work and Pensions',NULL,'2000-04-02 00:00:00', NULL,1),
     (144,'ct_partner',7,NULL,1,1,NULL,0,NULL,'Home Office',NULL,'2000-04-02 00:00:00',NULL,1),
     (164,'ct_user',7,87,4,1,NULL,0,'operator.tm@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
     (165,'ct_user',7,84,4,1,NULL,0,'operator.admin@gmail.com',NULL,NULL,'2014-11-24 10:30:04','2014-11-24 10:30:04',1),
@@ -664,11 +647,11 @@ INSERT INTO `txn` (
     `processed_by_user_id`
 )
 VALUES
-    (10001,'OLCS-1234-2345','trt_payment','pay_s_pd','2015-08-26','fpm_cheque','',NULL,NULL,1),
-    (10002,'REVERSAL-1234-2345','trt_reversal','pay_s_pd','2015-09-01','fpm_reversal','',NULL,NULL,1),
-    (10003,'OLCS-3456-4567','trt_payment','pay_s_pd','2015-09-02','fpm_cash','',NULL,NULL,1),
-    (10004,'OLCS-1234-5678','trt_payment','pay_s_pd','2015-11-04','fpm_card_online','',NULL,NULL,1),
-    (10005,'REVERSAL-1234-5678','trt_reversal','pay_s_pd','2015-11-04','fpm_reversal','',NULL,NULL,1);
+    (10001,'OLCS-1234-2345','trt_payment','pay_s_pd','2015-08-26','fpm_cheque','',NULL,NULL,291),
+    (10002,'REVERSAL-1234-2345','trt_reversal','pay_s_pd','2015-09-01','fpm_cheque','',NULL,NULL,291),
+    (10003,'OLCS-3456-4567','trt_payment','pay_s_pd','2015-09-02','fpm_cash','',NULL,NULL,291),
+    (10004,'OLCS-1234-5678','trt_payment','pay_s_pd','2015-11-04','fpm_card_online','',NULL,NULL,291),
+    (10005,'REVERSAL-1234-5678','trt_reversal','pay_s_pd','2015-11-04','fpm_card_online','',NULL,NULL,291);
 
 INSERT INTO `fee_txn`
     (`id`,`fee_id`,`txn_id`,`amount`,`reversed_fee_txn_id`)
@@ -737,7 +720,7 @@ VALUES
     '',0,4,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', NULL, 0),
     (100,100,'D',NULL,4,NULL,NULL,NULL,0,'lcat_psv','PD1001001','lsts_not_submitted','ltyp_sn','2010-01-12','2010-01-12','2010-01-12',
     '',0,4,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),2, '2016-01-01 10:00:00', NULL, 0),
-    (110,75,'D',NULL,4,8,21,21,4,'lcat_psv','PD2737280','lsts_valid','ltyp_r','2010-01-12','2010-01-12','2010-01-12',
+    (110,75,'D',NULL,4,28,21,21,4,'lcat_psv','PD2737280','lsts_valid','ltyp_r','2010-01-12','2010-01-12','2010-01-12',
     '',0,10,NULL,NULL,NULL,NULL,NULL,NOW(),NOW(),1, '2016-01-01 10:00:00', 4, 0),
     (114,104,'B',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'OB1534567','lsts_not_submitted',NULL,NULL,NULL,NULL,
     NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2014-04-30 12:07:14','2014-04-30 12:07:17',1, '2016-01-01 10:00:00', NULL, 0),
@@ -985,12 +968,6 @@ INSERT INTO `disqualification` (
     (32,NULL,NULL,1,2,'TBC',NOW(),NULL,1,NULL),
     (36,NULL,NULL,1,6,'TBC',NOW(),NULL,1,NULL);
 
-INSERT INTO `phone_contact` (`id`,`phone_contact_type`,`phone_number`,`details`,
-    `contact_details_id`,`created_by`,`last_modified_by`,`created_on`,`last_modified_on`,`version`) VALUES
-    (1,'phone_t_tel','0113 123 1234','',101,NULL,NULL,NULL,NULL,1),
-    (10,'phone_t_tel','0113 123 1234','',1,NULL,NULL,NULL,NULL,1),
-    (2,'phone_t_tel','0113 123 1234','',8,NULL,NULL,NULL,NULL,1);
-
 INSERT INTO `pi` (`id`,`agreed_by_tc_id`,`agreed_by_tc_role`,`assigned_to`,`decided_by_tc_id`,`decided_by_tc_role`,
   `pi_status`,`written_outcome`,`case_id`,`created_by`,`last_modified_by`,`brief_to_tc_date`,`call_up_letter_date`,
   `dec_sent_after_written_dec_date`,`decision_letter_sent_date`,`decision_notes`,`licence_curtailed_at_pi`,
@@ -1194,54 +1171,53 @@ INSERT INTO `tm_case_decision_rehab` (`tm_case_decision_id`,`rehab_measure_id`) 
 INSERT INTO `tm_case_decision_unfitness` (`tm_case_decision_id`,`unfitness_reason_id`) VALUES
   (1,'tm_unfit_inn');
 
-INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `login_id`,`contact_details_id`,
-`local_authority_id`,`transport_manager_id`,`partner_contact_details_id`) VALUES
-    (1,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','loggedinuser',101, NULL, NULL, NULL),
-    (2,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','johnspellman',105, NULL, NULL, NULL),
-    (3,2,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','stevefox',106, NULL, NULL, NULL),
-    (4,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','amywrigg',130, NULL, NULL, NULL),
-    (5,1,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','philjowitt',131, NULL, NULL, NULL),
-    (6,3,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','kevinrooney',132, NULL, NULL, NULL),
-    (7,4,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','sarahthompson',133, NULL, NULL, NULL),
-    (8,8,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','anotheruser',114, NULL, NULL, NULL),
-    (19,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','operator-tm',164, NULL, NULL, NULL),
-    (20,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','operator-admin',165, NULL, NULL, NULL),
-    (21,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','operator-user',166, NULL, NULL, NULL),
-    (22,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','partner-admin',167, NULL, NULL, 140),
-    (23,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','partner-user',168, NULL, NULL, 140),
-    (24,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','local-authority-admin',169, 1, NULL, NULL),
-    (25,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','local-authority-user',170, 1, NULL, NULL),
-    (26,NULL,NULL,NULL,'2013-11-27 00:00:00','2013-11-27 00:00:00','system',170, 1, NULL, NULL),
-    (12504,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','abdou.bonomi',140, NULL, NULL, NULL),
-    (12505,32,1,1,'2000-04-02 10:57:00','2000-04-02 10:57:00','abdou.bonomi2',140, NULL, NULL, NULL);
-
-# Make every user row have a PID
-UPDATE `user` SET pid = SHA(id);
+INSERT INTO `user` (`id`, `team_id`, `created_by`, `last_modified_by`, `created_on`, `last_modified_on`, `login_id`,`contact_details_id`, `local_authority_id`,`transport_manager_id`,`partner_contact_details_id`, `pid`) VALUES
+  (273, 1, 2, 2, now(), now(), 'usr273', 105, null, NULL, NULL, '0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90'),
+  (291, 1, 2, 2, now(), now(), 'usr291', 106, null, NULL, NULL, '6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3'), -- ADMIN, System	Internal
+  (20, 1, 2, 2, now(), now(), 'usr20', 130, null, NULL, NULL,'5860faf02b6bc6222ba5aca523560f0e364ccd8b67bee486fe8bf7c01d492ccb'), -- CW, Case Worker	Internal
+  (21, 1, 2, 2, now(), now(), 'usr21', 131, null, NULL, NULL, '5269ef980de47819ba3d14340f4665262c41e933dc92c1a27dd5d01b047ac80e'), -- CW, Case Worker	Internal
+  (528, 1, 2, 2, now(), now(), 'usr528', 132, null, NULL, NULL, '5a39bead318f306939acb1d016647be2e38c6501c58367fdb3e9f52542aa2442'),-- CWRO, Case Worker Read Only	Internal
+  (529, 1, 2, 2, now(), now(), 'usr529', 133, null, NULL, NULL, 'ecb48a1cc94f951252ec462fe9ecc55c3ef123fadfe935661396c26a45a5809d'),-- CWRO, Case Worker Read Only	Internal
+  (331, 1, 2, 2, now(), now(), 'usr331', 114, null, NULL, NULL,'9400f1b21cb527d7fa3d3eabba93557a18ebe7a2ca4e471cfe5e4c5b4ca7f767'),	-- CWRON, Case Worker Read Only No Documents	Internal
+  (342, 1, 2, 2, now(), now(), 'usr342', 101, null, NULL, NULL, 'f5ca38f748a1d6eaf726b8a42fb575c3c71f1864a8143301782de13da2d9202b'),	-- CWRON, Case Worker Read Only No Documents	Internal
+  (20131, NULL, 2, 2, now(), now(), 'usr20131', 169, 1, NULL, NULL, '3268151e52d97b4cacf97f5b46a5c76c8416e928e137e3b3dc447696a29afbaa'),-- LA, Local Authority, LA dashboard application	SelfServe
+  (20132, NULL, 2, 2, now(), now(), 'usr20132', 170, 1, NULL, NULL, 'f60afa4989a7db13314a2ab9881372634b5402c30ba7257448b13fa388de1b78'),-- LA, Local Authority, LA dashboard application	SelfServe
+  (1964, NULL, 2, 2, now(), now(), 'usr1964', 101, null, NULL, 140, '19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7'),-- PART, Partner, HMRC	Partner
+  (1965, NULL, 2, 2, now(), now(), 'usr1965', 168, null, NULL, 140, '4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5'),-- PART, Partner, HMRC	Partner
+  (778, NULL, 2, 2, now(), now(), 'usr778', 101, null, NULL, 140, '4fc82b26aecb47d2868c4efbe3581732a3e7cbcc6c2efb32062c08170a05eeb8'),-- PARTA, Partner Admin	Partner
+  (779, NULL, 2, 2, now(), now(), 'usr779', 167, null, NULL, 140, '6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918'),-- PARTA, Partner Admin	Partner
+  (542, NULL, 2, 2, now(), now(), 'usr542', 166, null, NULL, NULL,'3fdba35f04dc8c462986c992bcf875546257113072a909c162f7e470e581e278'),-- SS, Self Serve	SelfServe
+  (543, NULL, 2, 2, now(), now(), 'usr543', 101, null, 1, NULL, '8527a891e224136950ff32ca212b45bc93f69fbb801c3b1ebedac52775f99e61'),-- SS, Self Serve    SelfServe
+  (611, NULL, 2, 2, now(), now(), 'usr611', 165, null, NULL, NULL,'8fab3a60577befd765cde83f2737cd1a9f25a72356c94052c2194e816829b331'),-- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
+  (612, NULL, 2, 2, now(), now(), 'usr612', 101, null, NULL, NULL, 'b999205cdacd2c4516598d99b420d29786443e9908556a65f583a6fd4765ee4a') -- SSADMIN, Self Service Administrators NB Does not use a role. Instead see organisation_user link table where is_administrator=1 for users with the self service role	SelfServe
+;
 
 INSERT INTO `organisation_user` (`organisation_id`, `user_id`, `is_administrator`) VALUES
-    (1, 19, 0),
-    (1, 20, 1),
-    (1, 21, 0);
+  (1, 542, 0),
+  (1, 543, 0),
+  (1, 611, 1),
+  (1, 612, 1);
 
 INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
-    (19, 27),
-    (20, 25),
-    (21, 26),
-    (22, 29),
-    (23, 30),
-    (24, 31),
-    (25, 32),
-    (12504, 23),
-    (12505, 25),
-    (1, 21), -- loggedinuser=internal-limited-read-only
-    (2, 24), -- johnspellman=internal-admin
-    (3, 24), -- stevefox=internal-admin
-    (4, 23), -- amywrigg=internal-case-worker
-    (5, 24), -- philjowitt=internal-admin
-    (6, 24), -- kevinrooney=internal-admin
-    (7, 24), -- sarahthompson=internal-admin
-    (8, 23), -- anotheruser=internal-case-worker
-    (26, 24); -- system=internal-admin
+  (273, 24),
+  (291, 24),
+  (20, 23),
+  (21, 23),
+  (528, 22),
+  (529, 22),
+  (331, 21),
+  (342, 21),
+  (20131, 31),
+  (20132, 32),
+  (1964, 30),
+  (1965, 30),
+  (778, 29),
+  (779, 29),
+  (542, 26),
+  (543, 27),
+  (611, 25),
+  (612, 25)
+  ;
 
 INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`,
     `certificate_no`, `vi_action`, `created_on`,
@@ -1374,12 +1350,12 @@ INSERT INTO task(id,bus_reg_id,licence_id,category_id,sub_category_id,assigned_t
     (10,1,110,3,39,1,2,'A test Bus Reg task','2014-12-15',1);
 
 INSERT INTO `task_allocation_rule` (`id`, `category_id`, `team_id`, `user_id`, `goods_or_psv`, `is_mlh`, `traffic_area_id`) VALUES
-    (1,9,5,1,NULL,NULL,NULL),
-    (2,3,6,1,NULL,NULL,NULL),
-    (3,2,7,1,NULL,NULL,NULL),
-    (4,7,8,8,NULL,NULL,NULL),
-    (5,8,9,1,NULL,NULL,NULL),
-    (6,1,5,1,NULL,NULL,NULL);
+    (1,9,5,291,NULL,NULL,NULL),
+    (2,3,6,291,NULL,NULL,NULL),
+    (3,2,7,291,NULL,NULL,NULL),
+    (4,7,8,291,NULL,NULL,NULL),
+    (5,8,9,291,NULL,NULL,NULL),
+    (6,1,5,291,NULL,NULL,NULL);
 
 /* Disc sequence dummy data */
 INSERT INTO `disc_sequence` (
@@ -1840,7 +1816,7 @@ INSERT INTO `fee`
     (`id`,`fee_status`,`fee_type_id`,`application_id`,`licence_id`,`net_amount`,`vat_amount`,`gross_amount`,`invoiced_date`,`description`)
     VALUES
     (95,'lfs_ot',338,7,211,254.40,0.00,254.40,'2015-03-27 00:00:00','GV/SN Application Fee for application 7');
-INSERT INTO `phone_contact` (`id`, `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (11,124,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
+INSERT INTO `phone_contact` (`id`, `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (111,124,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
 INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, `last_modified_by`, `is_external`, `maintenance`, `safety_inspection`, `created_on`, `last_modified_on`, `olbs_key`, `removed_date`, `version`) VALUES (1,211,126,NULL,NULL,0,0,0,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
 COMMIT;
 -- End: Application 7
@@ -1961,12 +1937,12 @@ INSERT INTO `txn` (
     `waive_recommender_user_id`,
     `processed_by_user_id`
 ) VALUES
-    (10010,'','trt_waive','pay_s_pd','2015-08-26','fpm_waive','Waive OK for fee 96','2015-08-25',1,1);
+    (10010,'','trt_waive','pay_s_pd','2015-08-26','fpm_waive','Waive OK for fee 96','2015-08-25',1,291);
 INSERT INTO `fee_txn`
     (`fee_id`,`txn_id`,`amount`)
     VALUES
     (96,10010,254.40);
-INSERT INTO `phone_contact` (`id`,    `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (12,127,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
+INSERT INTO `phone_contact` (`id`,    `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (112,127,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
 INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, `last_modified_by`, `is_external`, `maintenance`, `safety_inspection`, `created_on`, `last_modified_on`, `olbs_key`, `removed_date`, `version`) VALUES (2,212,129,NULL,NULL,0,0,0,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
 
 COMMIT;
@@ -2044,14 +2020,14 @@ INSERT INTO `address` (`id`,`saon_desc`,`paon_desc`,`street`,`locality`,`town`,`
     (124,'Address Line 1','Address Line 2','Address Line 3','Address Line 4','Address Line 5','LS9 6NF','GB'),
     (125,'Address Line 1','Address Line 2','Address Line 3','Address Line 4','Address Line 5','LS9 6NF','GB');
 INSERT INTO `phone_contact` (`id`,`contact_details_id`,`phone_contact_type`,`phone_number`) VALUES
-    (13,145,'phone_t_tel','012345'),
-    (14,145,'phone_t_home','012346'),
-    (15,145,'phone_t_mobile','012347'),
-    (16,145,'phone_t_fax','012348'),
-    (17,146,'phone_t_tel','012345'),
-    (18,146,'phone_t_home','012346'),
-    (19,146,'phone_t_mobile','012347'),
-    (20,146,'phone_t_fax','012348');
+    (113,145,'phone_t_tel','012345'),
+    (114,145,'phone_t_home','012346'),
+    (115,145,'phone_t_mobile','012347'),
+    (116,145,'phone_t_fax','012348'),
+    (117,146,'phone_t_tel','012345'),
+    (118,146,'phone_t_home','012346'),
+    (119,146,'phone_t_mobile','012347'),
+    (120,146,'phone_t_fax','012348');
 -- vehicles for unlicensed operators
 INSERT INTO `vehicle` (`id`,`vrm`,`plated_weight`,`created_on`) VALUES
     (9,'ABC123','750','2015-07-16'),
@@ -2086,10 +2062,10 @@ INSERT INTO `address` (`id`,`saon_desc`,`paon_desc`,`street`,`locality`,`town`,`
   (283,'Address Line 1','Address Line 2','Address Line 3','Address Line 4','Address Line 5','LS9 6NF','GB');
 
 INSERT INTO `phone_contact` (`id`,`contact_details_id`,`phone_contact_type`,`phone_number`) VALUES
-  (30,181,'phone_t_tel','012345'),
-  (31,181,'phone_t_home','012346'),
-  (32,181,'phone_t_mobile','012347'),
-  (33,181,'phone_t_fax','012348');
+  (130,181,'phone_t_tel','012345'),
+  (131,181,'phone_t_home','012346'),
+  (132,181,'phone_t_mobile','012347'),
+  (133,181,'phone_t_fax','012348');
 
 -- OLCS-10506 vehicles
 INSERT INTO `vehicle` (`id`,`vrm`,`plated_weight`,`created_on`) VALUES

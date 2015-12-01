@@ -105,7 +105,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-29',
                     'sales_reference' => '1',
-                    'product_reference' => 'TEST_PRODUCT_REF',
+                    'product_reference' => 'fee type description',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -119,7 +119,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
                     'line_identifier' => '2',
@@ -131,7 +131,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-30',
                     'sales_reference' => '2',
-                    'product_reference' => 'TEST_PRODUCT_REF',
+                    'product_reference' => 'fee type description',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -145,7 +145,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
             'total_amount' => '650.50',
@@ -203,7 +203,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-29',
                     'sales_reference' => '1',
-                    'product_reference' => 'TEST_PRODUCT_REF', // hardcoded
+                    'product_reference' => 'fee type description',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -217,7 +217,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
                     'line_identifier' => '2',
@@ -229,7 +229,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-30',
                     'sales_reference' => '2',
-                    'product_reference' => 'TEST_PRODUCT_REF',
+                    'product_reference' => 'fee type description',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -243,7 +243,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
             'total_amount' => '650.50',
@@ -301,7 +301,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-29',
                     'sales_reference' => '1',
-                    'product_reference' => 'TEST_PRODUCT_REF', // hardcoded
+                    'product_reference' => 'fee type description',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -315,7 +315,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
                     'line_identifier' => '2',
@@ -327,7 +327,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-30',
                     'sales_reference' => '2',
-                    'product_reference' => 'TEST_PRODUCT_REF',
+                    'product_reference' => 'fee type description',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -341,7 +341,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
             'total_amount' => '650.50',
@@ -434,7 +434,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-29',
                     'sales_reference' => '1',
-                    'product_reference' => 'TEST_PRODUCT_REF', // hardcoded
+                    'product_reference' => 'fee type description',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -448,7 +448,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
                     'line_identifier' => '2',
@@ -460,7 +460,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-30',
                     'sales_reference' => '2',
-                    'product_reference' => 'TEST_PRODUCT_REF',
+                    'product_reference' => 'fee type description',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -474,7 +474,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
             'total_amount' => '1000.00',
@@ -554,7 +554,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-29',
                     'sales_reference' => '1',
-                    'product_reference' => 'TEST_PRODUCT_REF', // hardcoded
+                    'product_reference' => 'fee type description',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -568,7 +568,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
                     'line_identifier' => '2',
@@ -580,7 +580,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-30',
                     'sales_reference' => '2',
-                    'product_reference' => 'TEST_PRODUCT_REF',
+                    'product_reference' => 'fee type description',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -594,7 +594,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
             'total_amount' => '1000.00',
@@ -682,7 +682,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-29',
                     'sales_reference' => '1',
-                    'product_reference' => 'TEST_PRODUCT_REF', // hardcoded
+                    'product_reference' => 'fee type description',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -696,7 +696,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => $now,
                     'deferment_period' => '1',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ],
                 [
                     'line_identifier' => '2',
@@ -708,7 +708,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'tax_rate' => '0',
                     'invoice_date' => '2015-08-30',
                     'sales_reference' => '2',
-                    'product_reference' => 'TEST_PRODUCT_REF',
+                    'product_reference' => 'fee type description',
                     'product_description' => 'fee type description',
                     'receiver_reference' => '99',
                     'receiver_name' => 'some organisation',
@@ -722,7 +722,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ],
                     'rule_start_date' => '2014-12-25',
                     'deferment_period' => '60',
-                    'sales_person_reference' => 'B',
+                    'sales_person_reference' => 'Traffic Area Ref',
                 ]
             ],
             'total_amount' => '1000.00',
@@ -791,7 +791,13 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $this->assertSame('AUTH123', $result);
     }
 
-    public function testReverseChequePayment()
+    /**
+     * @param string $paymentMethod
+     * @param string $expectedScope
+     * @param string $expectedEndpointSuffix
+     * @dataProvider reversalProvider
+     */
+    public function testReversePayment($paymentMethod, $expectedScope, $expectedEndpointSuffix)
     {
         $orgId = 123;
 
@@ -803,12 +809,12 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $expectedParams = [
             'customer_reference' => $orgId,
-            'scope' => 'CHEQUE_RD',
+            'scope' => $expectedScope,
         ];
 
         $this->cpmsClient
             ->shouldReceive('post')
-            ->with('/api/payment/MY-REFERENCE/reversal', 'CHEQUE_RD', $expectedParams)
+            ->with('/api/payment/MY-REFERENCE/'.$expectedEndpointSuffix, $expectedScope, $expectedParams)
             ->once()
             ->andReturn($response);
 
@@ -816,39 +822,20 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             $this->getStubFee(1, 100.00, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-11-04'),
         ];
 
-        $result = $this->sut->reverseChequePayment('MY-REFERENCE', $fees);
+        $result = $this->sut->reversePayment('MY-REFERENCE', $paymentMethod, $fees);
 
         $this->assertSame($response, $result);
     }
 
-    public function testChargeBackCardPayment()
+    public function reversalProvider()
     {
-        $orgId = 123;
-
-        $response = [
-            'code' => Sut::PAYMENT_PAYMENT_CHARGED_BACK,
-            'message' => 'ok',
-            'receipt_reference' => 'REVERSAL_REFERENCE',
+        return [
+            'cheque' => [FeeEntity::METHOD_CHEQUE, 'CHEQUE_RD', 'reversal'],
+            'cash' => [FeeEntity::METHOD_CASH, 'CASH', 'reversal'],
+            'po' => [FeeEntity::METHOD_POSTAL_ORDER, 'POSTAL_ORDER', 'reversal'],
+            'card digital' => [FeeEntity::METHOD_CARD_ONLINE, 'CHARGE_BACK', 'chargeback'],
+            'card assisted digital' => [FeeEntity::METHOD_CARD_OFFLINE, 'CHARGE_BACK', 'chargeback'],
         ];
-
-        $expectedParams = [
-            'customer_reference' => $orgId,
-            'scope' => 'CHARGE_BACK',
-        ];
-
-        $this->cpmsClient
-            ->shouldReceive('post')
-            ->with('/api/payment/MY-REFERENCE/chargeback', 'CHARGE_BACK', $expectedParams)
-            ->once()
-            ->andReturn($response);
-
-        $fees = [
-            $this->getStubFee(1, 100.00, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-11-04'),
-        ];
-
-        $result = $this->sut->chargeBackCardPayment('MY-REFERENCE', $fees);
-
-        $this->assertSame($response, $result);
     }
 
     /**
@@ -903,7 +890,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         if (!is_null($licenceStartDate)) {
             $licence->setInForceDate($licenceStartDate);
         }
-        $licence->shouldReceive('getTrafficArea->getId')->andReturn('B');
+        $licence->shouldReceive('getTrafficArea->getSalesPersonReference')->andReturn('Traffic Area Ref');
 
         $fee = new FeeEntity($feeType, $amount, $status);
         $fee

@@ -7,6 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\MyAccount;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -19,10 +20,17 @@ class MyAccount extends AbstractQueryHandler implements AuthAwareInterface
 
     public function handleQuery(QueryInterface $query)
     {
+        $user = $this->getCurrentUser();
+
+        if ($user === null) {
+            throw new NotFoundException('No user currently logged in');
+        }
+
         return $this->result(
-            $this->getCurrentUser(),
+            $user,
             [
                 'team',
+                'transportManager',
                 'contactDetails' => [
                     'person' => ['title'],
                     'address' => ['countryCode'],
@@ -31,6 +39,7 @@ class MyAccount extends AbstractQueryHandler implements AuthAwareInterface
                 'organisationUsers' => [
                     'organisation',
                 ],
+                'roles' => ['role']
             ]
         );
     }

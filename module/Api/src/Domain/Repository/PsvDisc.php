@@ -100,6 +100,8 @@ class PsvDisc extends AbstractRepository
         }
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
-            ->setParameter('licence', $query->getId());
+            ->setParameter('licence', $query->getId())
+            ->addSelect($this->alias . '.discNo+0 as HIDDEN intDiscNo')
+            ->orderBy('intDiscNo', 'ASC');
     }
 }

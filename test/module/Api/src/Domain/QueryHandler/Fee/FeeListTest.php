@@ -53,9 +53,9 @@ class FeeListTest extends QueryHandlerTestCase
             ->shouldReceive('fetchCount')
             ->with($query)
             ->andReturn(2)
-            ->shouldReceive('fetchCount')
+            ->shouldReceive('hasRows')
             ->with(m::type(Qry::class))
-            ->andReturn(5);
+            ->andReturn(1);
 
         $this->mockedSmServices['FeesHelperService']
             ->shouldReceive('getMinPaymentForFees')
@@ -75,7 +75,7 @@ class FeeListTest extends QueryHandlerTestCase
                 ['id' => 2],
             ],
             'count' => 2,
-            'count-unfiltered' => 5,
+            'count-unfiltered' => 1,
             'allowFeePayments' => true,
             'minPayment' => '123.45',
             'totalOutstanding' => '200.00',
@@ -101,9 +101,9 @@ class FeeListTest extends QueryHandlerTestCase
             ->shouldReceive('fetchCount')
             ->with($query)
             ->andReturn(2)
-            ->shouldReceive('fetchCount')
+            ->shouldReceive('hasRows')
             ->with(m::type(Qry::class))
-            ->andReturn(5);
+            ->andReturn(1);
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchById')
@@ -134,7 +134,7 @@ class FeeListTest extends QueryHandlerTestCase
                 ['id' => 2],
             ],
             'count' => 2,
-            'count-unfiltered' => 5,
+            'count-unfiltered' => 1,
             'allowFeePayments' => false,
             'minPayment' => '123.45',
             'totalOutstanding' => '200.00',
@@ -160,9 +160,9 @@ class FeeListTest extends QueryHandlerTestCase
             ->shouldReceive('fetchCount')
             ->with($query)
             ->andReturn(2)
-            ->shouldReceive('fetchCount')
+            ->shouldReceive('hasRows')
             ->with(m::type(Qry::class))
-            ->andReturn(5);
+            ->andReturn(1);
 
         $this->repoMap['Application']
             ->shouldReceive('fetchById')
@@ -193,7 +193,7 @@ class FeeListTest extends QueryHandlerTestCase
                 ['id' => 2],
             ],
             'count' => 2,
-            'count-unfiltered' => 5,
+            'count-unfiltered' => 1,
             'allowFeePayments' => false,
             'minPayment' => '123.45',
             'totalOutstanding' => '200.00',

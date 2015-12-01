@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 /**
  * Assign Submission
  */
-final class AssignSubmission extends AbstractCommandHandler implements 
+final class AssignSubmission extends AbstractCommandHandler implements
     AuthAwareInterface,
     SubmissionGeneratorAwareInterface,
     TransactionedInterface
@@ -61,6 +61,8 @@ final class AssignSubmission extends AbstractCommandHandler implements
         $submission->setRecipientUser(
             $this->getRepo()->getReference(UserEntity::class, $command->getRecipientUser())
         );
+
+        $submission->setAssignedDate(new \DateTime('now'));
 
         $currentUser = $this->getCurrentUser();
 

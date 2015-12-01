@@ -27,11 +27,14 @@ class GetForResponsibilities extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         $transportManagerApplication = $this->getRepo()->fetchForResponsibilities($query->getId());
-        $otherLicences = $this->getRepo('OtherLicence')->fetchForTransportManagerApplication($query->getId());
-        return [
-            'result'        => $transportManagerApplication,
-            'count'         => count($transportManagerApplication),
-            'otherLicences' => $otherLicences,
-        ];
+
+        return $this->result(
+            $transportManagerApplication,
+            [
+                'application',
+                'operatingCentres',
+                'otherLicences'
+            ]
+        );
     }
 }

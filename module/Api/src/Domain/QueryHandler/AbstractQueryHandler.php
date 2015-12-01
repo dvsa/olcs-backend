@@ -66,6 +66,10 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
             $this->setCompaniesHouseService($mainServiceLocator->get('CompaniesHouseService'));
         }
 
+        if ($this instanceof \Dvsa\Olcs\Address\Service\AddressServiceAwareInterface) {
+            $this->setAddressService($mainServiceLocator->get('AddressService'));
+        }
+
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
 
         $this->extraRepos[] = $this->repoServiceName;

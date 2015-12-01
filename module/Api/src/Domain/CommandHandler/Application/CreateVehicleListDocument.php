@@ -10,7 +10,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Document\CreateDocument;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as LicenceCmd;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -26,6 +25,13 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements 
 
     protected $extraRepos = ['Document'];
 
+    /**
+     * Create a vehicle list document
+     *
+     * @param CommandInterface $command
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         /** @var Application $application */

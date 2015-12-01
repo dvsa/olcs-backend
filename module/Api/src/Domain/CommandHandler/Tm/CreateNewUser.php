@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendTmUserCreated as SendTmUserCreatedDto
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
+use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
@@ -20,6 +22,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\User\Role;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Service\OpenAm\Client;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -30,8 +33,10 @@ use Dvsa\Olcs\Api\Domain\Repository;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateNewUser extends AbstractUserCommandHandler implements TransactionedInterface
+final class CreateNewUser extends AbstractUserCommandHandler implements TransactionedInterface, OpenAmUserAwareInterface
 {
+    use OpenAmUserAwareTrait;
+
     const ERR_EMAIL_REQUIRED = 'ERR_EMAIL_REQUIRED';
     const ERR_USERNAME_REQUIRED = 'ERR_USERNAME_REQUIRED';
 
@@ -76,7 +81,7 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
         $this->result->addId('transportManagerApplicationId', $transportManagerApplication->getId());
 
         if ($command->getHasEmail() === 'Y') {
-            $user = $this->createUser($username, $transportManagerApplication, $contactDetails);
+            $user = $this->createUser($command, $transportManagerApplication, $contactDetails);
             $this->result->addId('userId', $user->getId());
             $this->result->addMessage('New user created');
         }
@@ -180,13 +185,13 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
     }
 
     /**
-     * @param $username
+     * @param \Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser $command
      * @param TransportManagerApplication $transportManagerApplication
      * @param ContactDetails $contactDetails
      * @return User
      */
     protected function createUser(
-        $username,
+        $command,
         TransportManagerApplication $transportManagerApplication,
         ContactDetails $contactDetails
     ) {
@@ -194,17 +199,28 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
             'roles' => [
                 $this->getRepo('Role')->fetchOneByRole(Role::ROLE_OPERATOR_TM)
             ],
-            'loginId' => $username,
+            'loginId' => $command->getUsername(),
+            'translateToWelsh' => $command->getTranslateToWelsh(),
             'transportManager' => $transportManagerApplication->getTransportManager()
         ];
 
-        $user = User::create(User::USER_TYPE_TRANSPORT_MANAGER, $userData);
+        $pid = $this->getOpenAmUser()->reservePid();
+
+        $user = User::create($pid, User::USER_TYPE_TRANSPORT_MANAGER, $userData);
         $user->setContactDetails($contactDetails);
 
         $this->getRepo('User')->save($user);
 
-        // TODO - replace with the generated password
-        $password = 'GENERATED_PASSWORD_HERE';
+        $password = null;
+
+        $this->getOpenAmUser()->registerUser(
+            $command->getUsername(),
+            $command->getEmailAddress(),
+            Client::REALM_SELFSERVE,
+            function ($params) use (&$password) {
+                $password = $params['password'];
+            }
+        );
 
         // send welcome email
         $this->handleSideEffect(

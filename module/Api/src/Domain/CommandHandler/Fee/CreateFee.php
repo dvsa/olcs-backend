@@ -8,7 +8,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Transfer\Command\Fee\CreateFee as Cmd;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -22,14 +23,17 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\Fee\CreateFee as Cmd;
 
 /**
  * Create Fee
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateFee extends AbstractCommandHandler
+final class CreateFee extends AbstractCommandHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'Fee';
 
     public function handleCommand(CommandInterface $command)
@@ -60,12 +64,10 @@ final class CreateFee extends AbstractCommandHandler
 
         $fee = new Fee($feeType, $command->getAmount(), $feeStatus);
 
+        $fee->setCreatedBy($this->getCurrentUser());
+
         if ($command->getInvoicedDate() !== null) {
             $fee->setInvoicedDate(new \DateTime($command->getInvoicedDate()));
-        }
-
-        if ($command->getUser() !== null) {
-            $fee->setCreatedBy($this->getRepo()->getReference(User::class, $command->getUser()));
         }
 
         if ($command->getDescription() !== null) {

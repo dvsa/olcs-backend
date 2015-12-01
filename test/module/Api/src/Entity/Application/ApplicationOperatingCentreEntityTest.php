@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
+use Mockery as m;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre as Entity;
 use Dvsa\Olcs\Api\Entity\Application\S4;
@@ -68,5 +70,18 @@ class ApplicationOperatingCentreEntityTest extends EntityTester
 
         $checkCanDelete = $entity->checkCanDelete();
         $this->assertSame([], $checkCanDelete);
+    }
+
+    public function testGetRelatedOrganisation()
+    {
+        $org = m::mock();
+
+        $application = m::mock(Application::class);
+        $application->shouldReceive('getRelatedOrganisation')->andReturn($org);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setApplication($application);
+
+        $this->assertSame($org, $entity->getRelatedOrganisation());
     }
 }

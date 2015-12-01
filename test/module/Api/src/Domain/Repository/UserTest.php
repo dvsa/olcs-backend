@@ -126,6 +126,23 @@ class UserTest extends RepositoryTestCase
         $this->assertSame('RESULT', $this->sut->fetchForTma(1));
     }
 
+    public function testFetchByPid()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('u')->once()->andReturn($mockQb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('where')->with('u.pid = :pid')->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('pid', '123456');
+        $mockQb->shouldReceive('getQuery->getSingleResult')->once()->andReturn('RESULT');
+
+        $this->assertSame('RESULT', $this->sut->fetchByPid('123456'));
+    }
+
+
     public function testPopulateRefDataReference()
     {
         $teamId = 1;

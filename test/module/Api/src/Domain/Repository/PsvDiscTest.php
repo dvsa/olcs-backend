@@ -178,7 +178,9 @@ class PsvDiscTest extends RepositoryTestCase
 
         $qb->shouldReceive('expr->eq')->with('psv.licence', ':licence')->once()->andReturn('QUERY2');
         $qb->shouldReceive('andWhere')->with('QUERY2')->once()->andReturnSelf();
-        $qb->shouldReceive('setParameter')->with('licence', 12)->once();
+        $qb->shouldReceive('setParameter')->with('licence', 12)->once()->andReturnSelf();
+        $qb->shouldReceive('addSelect')->with('psv.discNo+0 as HIDDEN intDiscNo')->once()->andReturnSelf();
+        $qb->shouldReceive('orderBy')->with('intDiscNo', 'ASC')->once()->andReturnSelf();
 
         $sut->fetchList($query);
     }
@@ -196,7 +198,9 @@ class PsvDiscTest extends RepositoryTestCase
 
         $qb->shouldReceive('expr->eq')->with('psv.licence', ':licence')->once()->andReturn('QUERY2');
         $qb->shouldReceive('andWhere')->with('QUERY2')->once()->andReturnSelf();
-        $qb->shouldReceive('setParameter')->with('licence', 12)->once();
+        $qb->shouldReceive('setParameter')->with('licence', 12)->once()->andReturnSelf();
+        $qb->shouldReceive('addSelect')->with('psv.discNo+0 as HIDDEN intDiscNo')->once()->andReturnSelf();
+        $qb->shouldReceive('orderBy')->with('intDiscNo', 'ASC')->once()->andReturnSelf();
 
         $sut->fetchList($query);
     }
