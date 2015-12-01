@@ -111,8 +111,8 @@ final class ReverseTransaction extends AbstractCommandHandler implements
      * Copy payment method, payer name, cheque/po no., cheque/po date & paying
      * in slip no. from one transaction to another
      *
-     * @param type TransactionEntity $original
-     * @param type TransactionEntity $new
+     * @param TransactionEntity $original
+     * @param TransactionEntity $new
      * @return null
      */
     private function copyTransactionDetails(TransactionEntity $original, TransactionEntity &$new)
