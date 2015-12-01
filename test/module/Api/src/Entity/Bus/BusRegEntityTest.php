@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 
 /**
@@ -1809,4 +1810,40 @@ class BusRegEntityTest extends EntityTester
 
         $this->assertEquals(111, $entity->getContextValue());
     }
+
+    /**
+     * Tests formatting of other service numbers
+     *
+     * @dataProvider provideGetFormattedServiceNumbers
+     *
+     * @param ArrayCollection $otherServiceNumbers
+     * @param string $extraString
+     */
+    public function testGetFormattedServiceNumbers($otherServiceNumbers, $extraString)
+    {
+        $serviceNo = 112;
+
+        $entity = new Entity();
+        $entity->setOtherServices($otherServiceNumbers);
+        $entity->setServiceNo($serviceNo);
+
+        $this->assertEquals($serviceNo . $extraString, $entity->getFormattedServiceNumbers());
+    }
+
+    /**
+     * data provider for testGetFormattedServiceNumbers
+     */
+    public function provideGetFormattedServiceNumbers()
+    {
+        $busReg = new Entity();
+        $otherService1 = new BusRegOtherServiceEntity($busReg, 'otherService1');
+        $otherService2 = new BusRegOtherServiceEntity($busReg, 'otherService2');
+
+        return [
+            [new ArrayCollection(), ''],
+            [new ArrayCollection([$otherService1]), ' (otherService1)'],
+            [new ArrayCollection([$otherService1, $otherService2]), ' (otherService1, otherService2)']
+        ];
+    }
+
 }

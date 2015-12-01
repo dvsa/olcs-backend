@@ -6,15 +6,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as BusShortNoticeEntity;
-use Dvsa\Olcs\Api\Entity\Doc\Document;
-use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
+use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService as BusRegOtherServiceEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
-use Doctrine\Common\Collections\Criteria;
 
 /**
  * BusReg Entity
@@ -1002,5 +1000,28 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     {
         $otherServiceEntity = new BusRegOtherService($this, $serviceNo);
         $this->otherServices->add($otherServiceEntity);
+    }
+
+    /**
+     * Returns a formatted string of service numbers
+     *
+     * @return string
+     */
+    public function getFormattedServiceNumbers()
+    {
+        $serviceNumbers = $this->serviceNo;
+        $otherServiceNumbers = $this->getOtherServices();
+        $extractedNumbers = [];
+
+        /** @var BusRegOtherServiceEntity $number */
+        foreach ($otherServiceNumbers as $number) {
+            $extractedNumbers[] = $number->getServiceNo();
+        }
+
+        if (!empty($extractedNumbers)) {
+            $serviceNumbers .= ' (' . implode(', ', $extractedNumbers) . ')';
+        }
+
+        return $serviceNumbers;
     }
 }
