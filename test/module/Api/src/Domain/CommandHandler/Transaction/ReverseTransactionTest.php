@@ -61,7 +61,6 @@ class ReverseTransactionTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            // TransactionEntity::TYPE_REFUND,
             TransactionEntity::STATUS_COMPLETE,
             FeeEntity::STATUS_OUTSTANDING => m::mock(RefData::class)
                 ->makePartial()
@@ -111,19 +110,26 @@ class ReverseTransactionTest extends CommandHandlerTestCase
         $fee = $this->mapReference(FeeEntity::class, 69);
 
         $transaction
-            ->shouldReceive('getPaymentMethod')
-            ->andReturn($this->mapRefData($paymentMethod));
-        $transaction
             ->shouldReceive('getFeeTransactions->first->getFee')
             ->andReturn($fee);
+
         $transaction
+            ->shouldReceive('getPaymentMethod')
+            ->andReturn($this->mapRefData($paymentMethod))
             ->shouldReceive('getReference')
-            ->andReturn($transactionReference);
-        $transaction
+            ->andReturn($transactionReference)
             ->shouldReceive('isComplete')
             ->andReturn(true)
             ->shouldReceive('canReverse')
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getChequePoNumber')
+            ->andReturn('1234')
+            ->shouldReceive('getChequePoDate')
+            ->andReturn(new DateTime('2015-12-01'))
+            ->shouldReceive('getPayingInSlipNumber')
+            ->andReturn('2345')
+            ->shouldReceive('getPayerName')
+            ->andReturn('Bob');
 
         $fee
             ->shouldReceive('isBalancingFee')
@@ -199,11 +205,17 @@ class ReverseTransactionTest extends CommandHandlerTestCase
 
         $this->assertSame($this->mapRefData(TransactionEntity::TYPE_REVERSAL), $savedTransaction->getType());
         $this->assertSame($this->mapRefData(TransactionEntity::STATUS_COMPLETE), $savedTransaction->getStatus());
-        $this->assertSame($this->mapRefData(FeeEntity::METHOD_REVERSAL), $savedTransaction->getPaymentMethod());
+        $this->assertSame($this->mapRefData($paymentMethod), $savedTransaction->getPaymentMethod());
         $this->assertEquals('bounced cheque', $savedTransaction->getComment());
         $this->assertEquals($now, $savedTransaction->getCompletedDate());
         $this->assertEquals('bob', $savedTransaction->getProcessedByUser()->getLoginId());
         $this->assertEquals('REFUND_REF_1', $savedTransaction->getReference());
+
+        // assert data copied from original transaction
+        $this->assertSame('1234', $savedTransaction->getChequePoNumber());
+        $this->assertSame('2015-12-01', $savedTransaction->getChequePoDate()->format('Y-m-d'));
+        $this->assertSame('2345', $savedTransaction->getPayingInSlipNumber());
+        $this->assertSame('Bob', $savedTransaction->getPayerName());
     }
 
     public function handleCommandProvider()
