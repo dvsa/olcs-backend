@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Correspondence;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Correspondence\ProcessInboxDocuments as CommandHandler;
@@ -12,9 +11,12 @@ use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox as CorrespondenceInboxRepo;
 use Mockery as m;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\Olcs\Email\Service\Client;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Email\Data\Message;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Process inbox documents test
@@ -39,19 +41,26 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
     {
         $command = Command::create([]);
 
-        $mockOrganisation = m::mock()
-            ->shouldReceive('getAdminEmailAddresses')
-            ->andReturn(['foo@bar.com'])
-            ->once()
-            ->getMock();
+        $cd = new ContactDetails(m::mock(RefData::class));
+        $cd->setEmailAddress('foo@bar.com');
+
+        $user = new User('pid', 'TYPE');
+        $user->setContactDetails($cd);
+        $user->setTranslateToWelsh('Y');
+
+        $orgUser = new OrganisationUser();
+        $orgUser->setUser($user);
+        $orgUser->setIsAdministrator('Y');
+
+        $organisation = new Organisation();
+        $organisation->addOrganisationUsers($orgUser);
 
         $mockLicence = m::mock()
             ->shouldReceive('getId')
             ->andReturn(1)
             ->twice()
             ->shouldReceive('getOrganisation')
-            ->andReturn($mockOrganisation)
-            ->once()
+            ->andReturn($organisation)
             ->shouldReceive('getLicNo')
             ->andReturn('licNo')
             ->once()
@@ -117,7 +126,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
 
         $result = new Result();
         $data = [
-            'to' => ['foo@bar.com']
+            'to' => 'foo@bar.com'
         ];
 
         $this->expectedSideEffect(SendEmail::class, $data, $result);
@@ -145,18 +154,14 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
     {
         $command = Command::create([]);
 
-        $mockOrganisation = m::mock()
-            ->shouldReceive('getAdminEmailAddresses')
-            ->andReturn([])
-            ->once()
-            ->getMock();
+        $organisation = new Organisation();
 
         $mockLicence = m::mock()
             ->shouldReceive('getId')
             ->andReturn(1)
             ->twice()
             ->shouldReceive('getOrganisation')
-            ->andReturn($mockOrganisation)
+            ->andReturn($organisation)
             ->once()
             ->getMock();
 

@@ -32,8 +32,7 @@ final class SendUserRegistered extends AbstractCommandHandler implements \Dvsa\O
             'email.user-registered.subject'
         );
 
-        // TODO - to be confirmed how to decide if it should be translated
-        $message->setTranslateToWelsh('N');
+        $message->setTranslateToWelsh($user->getTranslateToWelsh());
 
         $this->sendEmailTemplate(
             $message,
