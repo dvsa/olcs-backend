@@ -94,6 +94,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     const PSV_VEHICLE_SIZE_MEDIUM_LARGE = 'psvvs_medium_large';
     const PSV_VEHICLE_SIZE_BOTH = 'psvvs_both';
 
+    const DATE_FORMAT = 'd M Y';
+
     /**
      * Publication No
      *
@@ -981,7 +983,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      * @param string $format
      * @return string
      */
-    private function formatDateToString($date, $format = 'd/m/Y')
+    private function formatDateToString($date, $format = self::DATE_FORMAT)
     {
         if (is_string($date)) {
             return $date;

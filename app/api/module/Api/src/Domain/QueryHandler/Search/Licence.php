@@ -44,10 +44,10 @@ class Licence extends AbstractQueryHandler
             );
 
             $application->setOooDate(
-                $application->getOutOfOppositionDate()
+                $application->getOutOfOppositionDateAsString()
             );
             $application->setOorDate(
-                $application->getOutOfRepresentationDate()
+                $application->getOutOfRepresentationDateAsString()
             );
             $application->setIsOpposed(
                 $application->hasOpposition()
