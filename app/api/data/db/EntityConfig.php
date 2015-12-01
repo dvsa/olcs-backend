@@ -120,6 +120,9 @@ return array(
                 'property' => 'user'
             ),
         ),
+        'translate_to_welsh' => array(
+            'type' => 'yesno'
+        ),
     ),
     'licence' => array(
         'organisation_id' => array(
