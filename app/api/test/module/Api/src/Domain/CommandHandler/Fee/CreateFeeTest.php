@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Create Fee Test
@@ -36,7 +37,15 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->sut = new CreateFee();
         $this->mockRepo('Fee', Fee::class);
 
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
+        ];
+
         parent::setUp();
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('getIdentity->getUser')
+            ->andReturn($this->references[User::class][1]);
     }
 
     protected function initReferences()

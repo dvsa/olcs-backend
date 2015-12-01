@@ -61,7 +61,6 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
                 'busReg' => 555,
                 'irfoGvPermit' => 1,
                 'irfoPsvAuth' => 2,
-                'user' => null,
             ],
             $command->getArrayCopy()
         );

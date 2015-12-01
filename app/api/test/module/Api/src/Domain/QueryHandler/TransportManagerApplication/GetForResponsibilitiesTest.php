@@ -12,6 +12,7 @@ use Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetForResponsibilities 
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportMangerApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\OtherLicence as OtherLicenceRepo;
+use Mockery as m;
 
 /**
  * GetForResponsibilities Test
@@ -33,27 +34,22 @@ class GetForResponsibilitiesTest extends QueryHandlerTestCase
     {
         $query = Query::create(['id' => 1]);
 
+        $tma = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
+        $tma->shouldReceive('serialize')->with(
+            [
+                'application',
+                'operatingCentres',
+                'otherLicences'
+            ]
+        )->once()->andReturn(['foo' => 'bar']);
+
         $this->repoMap['TransportManagerApplication']
             ->shouldReceive('fetchForResponsibilities')
             ->with(1)
             ->once()
-            ->andReturn(['tma'])
+            ->andReturn($tma)
             ->getMock();
 
-        $this->repoMap['OtherLicence']
-            ->shouldReceive('fetchForTransportManagerApplication')
-            ->with(1)
-            ->once()
-            ->andReturn(['otherLicences'])
-            ->getMock();
-
-        $this->assertEquals(
-            [
-                'result' => ['tma'],
-                'count'  => 1,
-                'otherLicences' => ['otherLicences']
-            ],
-            $this->sut->handleQuery($query)
-        );
+        $this->assertSame(['foo' => 'bar'], $this->sut->handleQuery($query)->serialize());
     }
 }

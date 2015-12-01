@@ -30,6 +30,17 @@ class Role extends AbstractRole implements RoleInterface
     const ROLE_PARTNER_USER = 'partner-user';
     const ROLE_LOCAL_AUTHORITY_ADMIN = 'local-authority-admin';
     const ROLE_LOCAL_AUTHORITY_USER = 'local-authority-user';
+    const ROLE_ANON = 'anon';
+
+
+    public static function anon()
+    {
+        $role = new static();
+        $role->setId(self::ROLE_ANON);
+        $role->setRole(self::ROLE_ANON);
+
+        return $role;
+    }
 
     /**
      * Get the name of the role.

@@ -18,7 +18,6 @@ return [
     QueryHandler\Licence\People::class                  => Misc\CanAccessLicenceWithId::class,
     QueryHandler\Application\People::class              => Misc\CanAccessApplicationWithId::class,
     QueryHandler\Organisation\People::class             => Misc\CanAccessOrganisationWithId::class,
-    CommandHandler\Person\Update::class                 => Misc\CanAccessPersonWithId::class,
     CommandHandler\OrganisationPerson\Create::class     => Misc\CanAccessOrganisationWithOrganisation::class,
     CommandHandler\OrganisationPerson\DeleteList::class => Misc\CanAccessOrganisationPersonWithIds::class,
     CommandHandler\OrganisationPerson\Update::class     => Misc\CanAccessOrganisationPersonWithId::class,

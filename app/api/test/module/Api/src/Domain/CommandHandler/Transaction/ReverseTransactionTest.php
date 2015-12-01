@@ -61,7 +61,6 @@ class ReverseTransactionTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            // TransactionEntity::TYPE_REFUND,
             TransactionEntity::STATUS_COMPLETE,
             FeeEntity::STATUS_OUTSTANDING => m::mock(RefData::class)
                 ->makePartial()
@@ -70,6 +69,8 @@ class ReverseTransactionTest extends CommandHandlerTestCase
                 ->getMock(),
             FeeEntity::METHOD_REVERSAL,
             FeeEntity::METHOD_CHEQUE,
+            FeeEntity::METHOD_CASH,
+            FeeEntity::METHOD_POSTAL_ORDER,
             FeeEntity::METHOD_CARD_ONLINE,
             FeeEntity::METHOD_CARD_OFFLINE,
         ];
@@ -91,10 +92,9 @@ class ReverseTransactionTest extends CommandHandlerTestCase
 
     /**
      * @param string $paymentMethod
-     * @param string $expectedHelperMethod
      * @dataProvider handleCommandProvider
      */
-    public function testHandleCommand($paymentMethod, $expectedHelperMethod)
+    public function testHandleCommand($paymentMethod)
     {
         $now = new DateTime();
         $transactionId = 123;
@@ -102,7 +102,7 @@ class ReverseTransactionTest extends CommandHandlerTestCase
 
         $data = [
             'id' => $transactionId,
-            'reason' => 'bounced cheque',
+            'reason' => 'reversal reason',
         ];
         $command = Cmd::create($data);
 
@@ -110,19 +110,26 @@ class ReverseTransactionTest extends CommandHandlerTestCase
         $fee = $this->mapReference(FeeEntity::class, 69);
 
         $transaction
-            ->shouldReceive('getPaymentMethod')
-            ->andReturn($this->mapRefData($paymentMethod));
-        $transaction
             ->shouldReceive('getFeeTransactions->first->getFee')
             ->andReturn($fee);
+
         $transaction
+            ->shouldReceive('getPaymentMethod')
+            ->andReturn($this->mapRefData($paymentMethod))
             ->shouldReceive('getReference')
-            ->andReturn($transactionReference);
-        $transaction
+            ->andReturn($transactionReference)
             ->shouldReceive('isComplete')
             ->andReturn(true)
             ->shouldReceive('canReverse')
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getChequePoNumber')
+            ->andReturn('1234')
+            ->shouldReceive('getChequePoDate')
+            ->andReturn(new DateTime('2015-12-01'))
+            ->shouldReceive('getPayingInSlipNumber')
+            ->andReturn('2345')
+            ->shouldReceive('getPayerName')
+            ->andReturn('Bob');
 
         $fee
             ->shouldReceive('isBalancingFee')
@@ -146,9 +153,9 @@ class ReverseTransactionTest extends CommandHandlerTestCase
             ->andReturn($transaction);
 
         $this->mockCpmsService
-            ->shouldReceive($expectedHelperMethod)
+            ->shouldReceive('reversePayment')
             ->once()
-            ->with($transactionReference, [$fee])
+            ->with($transactionReference, $paymentMethod, [$fee])
             ->andReturn(
                 [
                     'receipt_reference' => 'REFUND_REF_1',
@@ -188,7 +195,7 @@ class ReverseTransactionTest extends CommandHandlerTestCase
                 'transaction' => 999,
             ],
             'messages' => [
-                "Transaction 123 reversed using [$expectedHelperMethod]",
+                "Transaction 123 reversed",
                 'Transaction record created',
                 'Fee 69 reset to Outstanding',
             ]
@@ -198,19 +205,27 @@ class ReverseTransactionTest extends CommandHandlerTestCase
 
         $this->assertSame($this->mapRefData(TransactionEntity::TYPE_REVERSAL), $savedTransaction->getType());
         $this->assertSame($this->mapRefData(TransactionEntity::STATUS_COMPLETE), $savedTransaction->getStatus());
-        $this->assertSame($this->mapRefData(FeeEntity::METHOD_REVERSAL), $savedTransaction->getPaymentMethod());
-        $this->assertEquals('bounced cheque', $savedTransaction->getComment());
+        $this->assertEquals('reversal reason', $savedTransaction->getComment());
         $this->assertEquals($now, $savedTransaction->getCompletedDate());
         $this->assertEquals('bob', $savedTransaction->getProcessedByUser()->getLoginId());
         $this->assertEquals('REFUND_REF_1', $savedTransaction->getReference());
+
+        // assert data copied from original transaction
+        $this->assertSame($this->mapRefData($paymentMethod), $savedTransaction->getPaymentMethod());
+        $this->assertSame('1234', $savedTransaction->getChequePoNumber());
+        $this->assertSame('2015-12-01', $savedTransaction->getChequePoDate()->format('Y-m-d'));
+        $this->assertSame('2345', $savedTransaction->getPayingInSlipNumber());
+        $this->assertSame('Bob', $savedTransaction->getPayerName());
     }
 
     public function handleCommandProvider()
     {
         return [
-            'cheque' => [FeeEntity::METHOD_CHEQUE, 'reverseChequePayment'],
-            'digital card' => [FeeEntity::METHOD_CARD_ONLINE, 'chargeBackCardPayment'],
-            'assisted digital card' => [FeeEntity::METHOD_CARD_OFFLINE, 'chargeBackCardPayment'],
+            'cheque' => [FeeEntity::METHOD_CHEQUE],
+            'cash' => [FeeEntity::METHOD_CASH],
+            'po' => [FeeEntity::METHOD_POSTAL_ORDER],
+            'digital card' => [FeeEntity::METHOD_CARD_ONLINE],
+            'assisted digital card' => [FeeEntity::METHOD_CARD_OFFLINE],
         ];
     }
 
@@ -244,9 +259,9 @@ class ReverseTransactionTest extends CommandHandlerTestCase
             ->andReturn($transaction);
 
         $this->mockCpmsService
-            ->shouldReceive('reverseChequePayment')
+            ->shouldReceive('reversePayment')
             ->once()
-            ->with('MY-REFERENCE', [$fee])
+            ->with('MY-REFERENCE', FeeEntity::METHOD_CHEQUE, [$fee])
             ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));
 
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);

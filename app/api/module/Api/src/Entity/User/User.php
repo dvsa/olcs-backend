@@ -32,12 +32,14 @@ class User extends AbstractUser implements OrganisationProviderInterface
     const PERMISSION_TM = 'tm';
 
     const USER_TYPE_INTERNAL = 'internal';
+    const USER_TYPE_ANON = 'anon';
     const USER_TYPE_LOCAL_AUTHORITY = 'local-authority';
     const USER_TYPE_OPERATOR = 'operator';
     const USER_TYPE_PARTNER = 'partner';
     const USER_TYPE_TRANSPORT_MANAGER = 'transport-manager';
 
     const ERROR_ADMIN_USER_ALREADY_EXISTS = 'err_admin_user_already_exists';
+    const ERR_ANON_USERNAME = 'ERR_ANON_USERNAME';
 
     /**
      * List of all roles available by user type
@@ -69,6 +71,9 @@ class User extends AbstractUser implements OrganisationProviderInterface
             RoleEntity::ROLE_INTERNAL_READ_ONLY,
             RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY,
         ],
+        self::USER_TYPE_ANON => [
+            RoleEntity::ROLE_ANON
+        ]
     ];
 
     /**
@@ -104,10 +109,11 @@ class User extends AbstractUser implements OrganisationProviderInterface
      */
     protected $userType = null;
 
-    public function __construct($userType)
+    public function __construct($pid, $userType)
     {
         parent::__construct();
         $this->userType = $userType;
+        $this->pid = $pid;
     }
 
     /**
@@ -115,10 +121,19 @@ class User extends AbstractUser implements OrganisationProviderInterface
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
      * @return User
      */
-    public static function create($userType, $data)
+    public static function create($pid, $userType, $data)
     {
-        $user = new static($userType);
+        $user = new static($pid, $userType);
         $user->update($data);
+
+        return $user;
+    }
+
+    public static function anon()
+    {
+        $user =  new static('', self::USER_TYPE_ANON);
+        $user->update(['loginId' => null, 'roles' => [RoleEntity::anon()]]);
+        $user->loginId = 'anon';
 
         return $user;
     }
@@ -129,6 +144,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
      */
     public function update(array $data)
     {
+        if ($data['loginId'] === 'anon') {
+            throw new ValidationException(['username' => [self::ERR_ANON_USERNAME]]);
+        }
+
         // update common data
         $this->loginId = $data['loginId'];
 
@@ -140,12 +159,16 @@ class User extends AbstractUser implements OrganisationProviderInterface
             $this->updateRoles($data['roles']);
         }
 
+        if (isset($data['translateToWelsh'])) {
+            $this->translateToWelsh = $data['translateToWelsh'];
+        }
+
         if (isset($data['accountDisabled'])) {
             $this->updateAccountDisabled($data['accountDisabled']);
         }
 
         // each type may have different update
-        switch($this->getUserType()) {
+        switch ($this->getUserType()) {
             case self::USER_TYPE_INTERNAL:
                 $this->updateInternal($data);
                 break;
@@ -479,7 +502,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
     {
         $name = '';
 
-        switch($this->getUserType()) {
+        switch ($this->getUserType()) {
             case self::USER_TYPE_INTERNAL:
                 $name = 'DVSA';
                 break;
@@ -499,5 +522,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
         }
 
         return $name;
+    }
+
+    protected function getCalculatedBundleValues()
+    {
+        return ['userType' => $this->getUserType()];
     }
 }

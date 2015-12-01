@@ -158,6 +158,15 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     protected $recipients;
 
     /**
+     * Sales person reference
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="sales_person_reference", length=70, nullable=false)
+     */
+    protected $salesPersonReference;
+
+    /**
      * Txc name
      *
      * @var string
@@ -584,6 +593,29 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
         }
 
         return $this;
+    }
+
+    /**
+     * Set the sales person reference
+     *
+     * @param string $salesPersonReference
+     * @return TrafficArea
+     */
+    public function setSalesPersonReference($salesPersonReference)
+    {
+        $this->salesPersonReference = $salesPersonReference;
+
+        return $this;
+    }
+
+    /**
+     * Get the sales person reference
+     *
+     * @return string
+     */
+    public function getSalesPersonReference()
+    {
+        return $this->salesPersonReference;
     }
 
     /**

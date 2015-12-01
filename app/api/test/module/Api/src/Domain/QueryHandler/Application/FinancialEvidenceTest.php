@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 
 /**
  * Financial Evidence Test
@@ -80,7 +81,7 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ->andReturn($applicationLicenceId)
             ->getMock();
 
-        $mockApplication = m::mock()
+        $mockApplication = m::mock(BundleSerializableInterface::class)
             ->shouldReceive('getApplicationDocuments')
             ->with('category', 'subCategory')
             ->andReturn($mockFinancialDocuments)
@@ -156,7 +157,7 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ]
         ];
 
-        $this->assertEquals($expectedResult, $this->sut->handleQuery($query));
+        $this->assertEquals($expectedResult, $this->sut->handleQuery($query)->serialize());
     }
 
     protected function getMockOrganisationLicences()

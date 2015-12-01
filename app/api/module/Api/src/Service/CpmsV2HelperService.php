@@ -496,42 +496,33 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
-     * Reverse a cheque payment
+     * Reverse a cheque, cash, PO or card payment
      *
      * @param string $receiptReference
+     * @param string $paymentMethod original payment method, e.g. 'fpm_cash'
      * @param array $fees needed to get customer reference
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    public function reverseChequePayment($receiptReference, $fees = array())
+    public function reversePayment($receiptReference, $paymentMethod, $fees = array())
     {
         $method   = 'post';
         $endPoint = '/api/payment/'.$receiptReference.'/reversal';
-        $scope    = ApiService::CHEQUE_RD; // refer to drawer
 
-        $params = [
-            'scope' => $scope,
-            'customer_reference' => (string) $this->getCustomerReference($fees),
+        $scopeMap = [
+            Fee::METHOD_CHEQUE       => ApiService::CHEQUE_RD,
+            Fee::METHOD_CARD_ONLINE  => ApiService::SCOPE_CHARGE_BACK,
+            Fee::METHOD_CARD_OFFLINE => ApiService::SCOPE_CHARGE_BACK,
+            Fee::METHOD_CASH         => ApiService::SCOPE_CASH,
+            Fee::METHOD_POSTAL_ORDER => ApiService::SCOPE_POSTAL_ORDER,
         ];
 
-        $response = $this->send($method, $endPoint, $scope, $params);
+        $scope = $scopeMap[$paymentMethod];
 
-        return $this->validatePaymentResponse($response, false);
-    }
-
-    /**
-     * Charge back a payment
-     *
-     * @param string $receiptReference
-     * @param array $fees needed to get customer reference
-     * @return array CPMS response data
-     * @throws CpmsResponseException if response is invalid
-     */
-    public function chargeBackCardPayment($receiptReference, $fees = array())
-    {
-        $method   = 'post';
-        $endPoint = '/api/payment/'.$receiptReference.'/chargeback';
-        $scope    = ApiService::SCOPE_CHARGE_BACK;
+        if (in_array($paymentMethod, [Fee::METHOD_CARD_ONLINE, Fee::METHOD_CARD_OFFLINE])) {
+            // for card reversals, switch endpoint to 'charge back'
+            $endPoint = '/api/payment/'.$receiptReference.'/chargeback';
+        }
 
         $params = [
             'scope' => $scope,
@@ -699,7 +690,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'tax_rate' => $fee->getFeeType()->getVatRate(),
             'invoice_date' => $this->formatDate($fee->getInvoicedDate()),
             'sales_reference' => (string) $fee->getId(),
-            'product_reference' => $fee->getFeeType()->getProductReference(),
+            // note, as per OLCS-11438 product_reference should come from the
+            // fee_type description, NOT the product_reference column!
+            'product_reference' => $fee->getFeeType()->getDescription(),
             'product_description' => $fee->getFeeType()->getDescription(),
             'receiver_reference' => (string) $this->getCustomerReference([$fee]),
             'receiver_name' => $fee->getCustomerNameForInvoice(),

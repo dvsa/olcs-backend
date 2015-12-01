@@ -101,7 +101,13 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
             $hydrateMode = $args[1];
         }
 
-        return $qb->getQuery()->getSingleResult($hydrateMode);
+        try {
+            return $qb->getQuery()->getSingleResult($hydrateMode);
+        } catch (\Exception $ex) {
+            throw new Exception\NotFoundException(
+                sprintf('Resource not found (%s %s %s)', $this->entity, $fetchBy, (string)$args[0])
+            );
+        }
     }
 
     protected function createFetchByXxQuery($fetchBy, $args)
@@ -248,7 +254,33 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         $this->applyListJoins($qb);
         $this->applyListFilters($qb, $query);
 
+        // order is not important for count but slows down the query (a lot!)
+        $qb->resetDQLPart('orderBy');
+
         return $this->fetchPaginatedCount($qb);
+    }
+
+    /**
+     * Does the have any rows
+     *
+     * @param QueryInterface $query
+     *
+     * @return bool
+     */
+    public function hasRows(QueryInterface $query)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->buildDefaultListQuery($qb, $query);
+        $this->applyListJoins($qb);
+        $this->applyListFilters($qb, $query);
+
+        // order is not important for count but slows down the query (a lot!)
+        $qb->resetDQLPart('orderBy');
+
+        $qb->setMaxResults(1);
+
+        return count($qb->getQuery()->getResult()) === 1;
     }
 
     /**

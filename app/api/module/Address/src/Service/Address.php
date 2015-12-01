@@ -117,4 +117,19 @@ class Address implements AddressInterface
 
         return false;
     }
+
+    public function fetchByUprn($uprn)
+    {
+        $this->client->setUri('address/');
+        $this->client->setParameterGet(['id' => $uprn]);
+        $response = $this->client->send();
+
+        if ($response->isOk()) {
+            $content = $response->getBody();
+
+            return json_decode($content, true);
+        }
+
+        return false;
+    }
 }

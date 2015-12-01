@@ -101,6 +101,45 @@ class CreateTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
+    public function testHandleCommandSetDob()
+    {
+        $command = Command::create(['application' => 863, 'user' => 234, 'action' => 'D', 'dob' => '2015-11-26']);
+
+        $user = $this->loggedInUser;
+        $this->loggedInUser->shouldReceive('getContactDetails->getPerson->setBirthDate')
+            ->andReturnUsing(
+                function ($date) {
+                    $this->assertEquals(new \Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime('2015-11-26'), $date);
+                }
+            )
+            ->once();
+
+        $mockTm = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(21)
+            ->getMock();
+
+        $user->setTransportManager($mockTm);
+
+        $this->repoMap['User']->shouldReceive('fetchForTma')->with(234)->once()->andReturn($user);
+        $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once()
+            ->shouldReceive('fetchByTmAndApplication')
+            ->with(21, 863, true)
+            ->once()
+            ->andReturn(null);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion::class,
+            [
+                'id' => 863,
+                'section' => 'transportManagers'
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
+        $this->sut->handleCommand($command);
+    }
+
     public function testHandleCommandCreateTm()
     {
         $command = Command::create(['application' => 863, 'user' => 234, 'action' => 'D']);

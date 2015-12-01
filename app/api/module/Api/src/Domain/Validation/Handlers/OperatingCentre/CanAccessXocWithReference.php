@@ -24,11 +24,11 @@ class CanAccessXocWithReference extends AbstractHandler
         list($prefix, $id) = $this->splitTypeAndId($dto->getId());
 
         if ($prefix === 'A') {
-            return $this->canAccessApplication($id);
+            return $this->canAccessApplicationOperatingCentre($id);
         }
 
         if ($prefix === 'L') {
-            return $this->canAccessLicence($id);
+            return $this->canAccessLicenceOperatingCentre($id);
         }
 
         return false;

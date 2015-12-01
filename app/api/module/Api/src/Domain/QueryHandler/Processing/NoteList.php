@@ -105,7 +105,7 @@ class NoteList extends AbstractQueryHandler
         return [
             'result' => $repo->fetchList($query),
             'count' => $repo->fetchCount($query),
-            'count-unfiltered' => $repo->fetchCount($unfilteredQuery),
+            'count-unfiltered' => $repo->hasRows($unfilteredQuery),
         ];
     }
 }

@@ -25,7 +25,10 @@ class CanAccessTmaWithId extends AbstractHandler implements AuthAwareInterface
 
     protected function getId($dto)
     {
-        // currently uses "tmaId" this may need to also check "id"
-        return $dto->getTmaId();
+        if (method_exists($dto, 'getTmaId')) {
+            return $dto->getTmaId();
+        }
+
+        return $dto->getId();
     }
 }

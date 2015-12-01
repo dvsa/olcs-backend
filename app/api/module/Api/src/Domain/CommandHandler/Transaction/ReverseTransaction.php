@@ -43,24 +43,15 @@ final class ReverseTransaction extends AbstractCommandHandler implements
 
     public function handleCommand(CommandInterface $command)
     {
-        $transaction = $this->getRepo()->fetchUsingId($command);
+        $originalTransaction = $this->getRepo()->fetchUsingId($command);
 
-        $this->validate($transaction);
-
-        switch ($transaction->getPaymentMethod()->getId()) {
-            case FeeEntity::METHOD_CHEQUE:
-                $method = 'reverseChequePayment';
-                break;
-            case FeeEntity::METHOD_CARD_ONLINE:
-            case FeeEntity::METHOD_CARD_OFFLINE:
-                $method = 'chargeBackCardPayment';
-                break;
-        }
+        $this->validate($originalTransaction);
 
         try {
-            $fee = $transaction->getFeeTransactions()->first()->getFee();
-            $response = $this->getCpmsService()->$method(
-                $transaction->getReference(),
+            $fee = $originalTransaction->getFeeTransactions()->first()->getFee();
+            $response = $this->getCpmsService()->reversePayment(
+                $originalTransaction->getReference(),
+                $originalTransaction->getPaymentMethod()->getId(),
                 [$fee]
             );
         } catch (CpmsResponseException $e) {
@@ -80,14 +71,16 @@ final class ReverseTransaction extends AbstractCommandHandler implements
         $newTransaction
             ->setType($this->getRepo()->getRefdataReference(TransactionEntity::TYPE_REVERSAL))
             ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_COMPLETE))
-            ->setPaymentMethod($this->getRepo()->getRefdataReference(FeeEntity::METHOD_REVERSAL))
             ->setComment($comment)
             ->setCompletedDate($now)
             ->setProcessedByUser($this->getCurrentUser())
             ->setReference($transactionReference);
 
+        // copy some details from original transaction (OLCS-11417)
+        $this->copyTransactionDetails($originalTransaction, $newTransaction);
+
         $fees = [];
-        foreach ($transaction->getFeeTransactionsForReversal() as $originalFt) {
+        foreach ($originalTransaction->getFeeTransactionsForReversal() as $originalFt) {
             $feeTransaction = new FeeTransactionEntity();
             $reversalAmount = $originalFt->getAmount() * -1;
             $fee = $originalFt->getFee();
@@ -104,7 +97,7 @@ final class ReverseTransaction extends AbstractCommandHandler implements
 
         $this->result
             ->addMessage(
-                sprintf('Transaction %d reversed using [%s]', $transaction->getId(), $method)
+                sprintf('Transaction %d reversed', $originalTransaction->getId())
             )
             ->addId('transaction', $newTransaction->getId())
             ->addMessage('Transaction record created');
@@ -112,6 +105,23 @@ final class ReverseTransaction extends AbstractCommandHandler implements
         $this->resetFees($fees);
 
         return $this->result;
+    }
+
+    /**
+     * Copy payment method, payer name, cheque/po no., cheque/po date & paying
+     * in slip no. from one transaction to another
+     *
+     * @param type TransactionEntity $original
+     * @param type TransactionEntity $new
+     * @return null
+     */
+    private function copyTransactionDetails(TransactionEntity $original, TransactionEntity &$new)
+    {
+        $new->setPaymentMethod($original->getPaymentMethod());
+        $new->setPayerName($original->getPayerName());
+        $new->setChequePoDate($original->getChequePoDate());
+        $new->setChequePoNumber($original->getChequePoNumber());
+        $new->setPayingInSlipNumber($original->getPayingInSlipNumber());
     }
 
     /**

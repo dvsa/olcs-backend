@@ -33,7 +33,7 @@ class CanAccessTmaWithIdTest extends AbstractHandlerTestCase
     {
         /** @var CommandInterface $dto */
         $dto = m::mock(CommandInterface::class);
-        $dto->shouldReceive('getTmaId')->andReturn(111);
+        $dto->shouldReceive('getId')->andReturn(111);
 
         $this->setIsValid('canAccessTransportManagerApplication', [111], $canAccess);
 

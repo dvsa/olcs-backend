@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\User\Role;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -48,6 +49,8 @@ class CreateNewUserTest extends CommandHandlerTestCase
         $this->mockRepo('TransportManagerApplication', Repository\TransportManagerApplication::class);
         $this->mockRepo('Address', Repository\Address::class);
         $this->mockRepo('Role', Repository\Role::class);
+
+        $this->mockedSmServices[UserInterface::class] = m::mock(UserInterface::class);
 
         parent::setUp();
     }
@@ -192,6 +195,19 @@ class CreateNewUserTest extends CommandHandlerTestCase
 
         $mockApplication = m::mock(Application::class);
 
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('reservePid')->andReturn('pid');
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
+            ->with('Foo', 'foo@bar.com', 'selfserve', m::type('callable'))
+            ->andReturnUsing(
+                function ($loginId, $emailAddress, $realm, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
+
         $this->repoMap['User']->shouldReceive('fetchByLoginId')
             ->with('Foo')
             ->andReturn([]);
@@ -312,7 +328,7 @@ class CreateNewUserTest extends CommandHandlerTestCase
                         SendUserTemporaryPasswordDto::class,
                         [
                             'user' => $user,
-                            'password' => 'GENERATED_PASSWORD_HERE',
+                            'password' => 'GENERATED_PASSWORD',
                         ],
                         new Result()
                     );

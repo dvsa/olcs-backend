@@ -167,6 +167,8 @@ return [
 
     //Ebsr
     TransferCommand\Bus\Ebsr\UpdateTxcInbox::class => CommandHandler\Bus\Ebsr\UpdateTxcInbox::class,
+    Command\Bus\Ebsr\CreateTxcInbox::class => CommandHandler\Bus\Ebsr\CreateTxcInbox::class,
+    Command\Bus\Ebsr\UpdateTxcInboxPdf::class => CommandHandler\Bus\Ebsr\UpdateTxcInboxPdf::class,
     TransferCommand\Bus\Ebsr\ProcessPacks::class => CommandHandler\Bus\Ebsr\ProcessPacks::class,
     TransferCommand\Bus\Ebsr\RequestMap::class => CommandHandler\Bus\Ebsr\RequestMapQueue::class,
     Command\Bus\Ebsr\ProcessRequestMap::class => CommandHandler\Bus\Ebsr\ProcessRequestMap::class,
@@ -655,9 +657,14 @@ return [
     Command\Email\SendUserCreated::class => CommandHandler\Email\SendUserCreated::class,
     Command\Email\SendUserRegistered::class => CommandHandler\Email\SendUserRegistered::class,
     Command\Email\SendUserTemporaryPassword::class => CommandHandler\Email\SendUserTemporaryPassword::class,
+    Command\Email\SendEbsrWithdrawn::class => CommandHandler\Email\SendEbsrWithdrawn::class,
+    Command\Email\SendEbsrRefused::class => CommandHandler\Email\SendEbsrRefused::class,
+    Command\Email\SendEbsrReceived::class => CommandHandler\Email\SendEbsrReceived::class,
+    Command\Email\SendEbsrRefreshed::class => CommandHandler\Email\SendEbsrRefreshed::class,
+    Command\Email\SendEbsrCancelled::class => CommandHandler\Email\SendEbsrCancelled::class,
+    Command\Email\SendEbsrRegistered::class => CommandHandler\Email\SendEbsrRegistered::class,
 
     // Person
-    TransferCommand\Person\Update::class => CommandHandler\Person\Update::class,
     Command\Person\Create::class => CommandHandler\Person\Create::class,
     Command\Person\UpdateFull::class => CommandHandler\Person\UpdateFull::class,
 

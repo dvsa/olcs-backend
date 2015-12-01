@@ -571,9 +571,9 @@ class TransferToTest extends CommandHandlerTestCase
         $fromOrganisation = new Organisation();
         $toOrganisation = new Organisation();
 
-        $txcInbox1 = new \Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox();
+        $txcInbox1 = m::mock(\Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox::class)->makePartial();
         $txcInbox1->setOrganisation($fromOrganisation);
-        $txcInbox2 = new \Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox();
+        $txcInbox2 = m::mock(\Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox::class)->makePartial();
         $txcInbox2->setOrganisation($fromOrganisation);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()

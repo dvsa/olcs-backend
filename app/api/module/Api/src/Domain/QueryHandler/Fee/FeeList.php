@@ -41,7 +41,7 @@ class FeeList extends AbstractQueryHandler
         return [
             'result' => $this->resultList($fees),
             'count' => $repo->fetchCount($query),
-            'count-unfiltered' => $repo->fetchCount($unfilteredQuery),
+            'count-unfiltered' => $repo->hasRows($unfilteredQuery),
             'allowFeePayments' => $this->shouldAllowFeePayments($query),
             'minPayment' => $this->feesHelper->getMinPaymentForFees($fees->getArrayCopy()),
             'totalOutstanding' => $this->feesHelper->getTotalOutstanding($fees->getArrayCopy()),

@@ -6,7 +6,6 @@ return [
             'introduction',
             'case-summary',
             'case-outline',
-            'most-serious-infringement',
             'outstanding-applications',
             'people'
         ],
@@ -14,7 +13,6 @@ return [
             'introduction',
             'case-summary',
             'case-outline',
-            'most-serious-infringement',
             'outstanding-applications',
             'people'
         ],
@@ -22,7 +20,6 @@ return [
             'introduction',
             'case-summary',
             'case-outline',
-            'most-serious-infringement',
             'outstanding-applications',
             'people'
         ],
@@ -30,7 +27,6 @@ return [
             'introduction',
             'case-summary',
             'case-outline',
-            'most-serious-infringement',
             'outstanding-applications',
             'people'
         ],
@@ -38,7 +34,6 @@ return [
             'introduction',
             'case-summary',
             'case-outline',
-            'most-serious-infringement',
             'outstanding-applications',
             'people'
         ],
@@ -46,7 +41,6 @@ return [
             'introduction',
             'case-summary',
             'case-outline',
-            'most-serious-infringement',
             'outstanding-applications',
             'people'
         ],
@@ -54,7 +48,6 @@ return [
             'introduction',
             'case-summary',
             'case-outline',
-            'most-serious-infringement',
             'outstanding-applications',
             'people'
         ],
@@ -62,7 +55,6 @@ return [
             'introduction',
             'case-summary',
             'case-outline',
-            'most-serious-infringement',
             'outstanding-applications',
             'people'
         ],
@@ -70,7 +62,6 @@ return [
             'introduction',
             'case-summary',
             'case-outline',
-            'most-serious-infringement',
             'outstanding-applications',
             'people'
         ],
@@ -78,7 +69,6 @@ return [
             'introduction',
             'case-summary',
             'case-outline',
-            'most-serious-infringement',
             'outstanding-applications',
             'people'
         ],
@@ -86,7 +76,6 @@ return [
             'introduction',
             'case-summary',
             'case-outline',
-            'most-serious-infringement',
             'outstanding-applications',
             'people'
         ],
@@ -94,7 +83,6 @@ return [
             'introduction',
             'case-summary',
             'case-outline',
-            'most-serious-infringement',
             'outstanding-applications',
             'people'
         ],
@@ -102,7 +90,6 @@ return [
             'introduction',
             'case-summary',
             'case-outline',
-            'most-serious-infringement',
             'outstanding-applications',
             'people'
         ],
