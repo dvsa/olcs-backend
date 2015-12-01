@@ -49,11 +49,16 @@ class FinancialEvidence extends AbstractQueryHandler
             $this->helper->getRatesForView($application->getGoodsOrPsv()->getId())
         );
 
-        $data = $application->serialize();
-        $data['documents'] = $financialDocuments->toArray();
-        $data['financialEvidence'] = $financialEvidence;
-
-        return $data;
+        return $this->result(
+            $application,
+            [
+                'licence',
+            ],
+            [
+                'documents' => $financialDocuments->toArray(),
+                'financialEvidence' => $financialEvidence
+            ]
+        );
     }
 
     public function createService(ServiceLocatorInterface $serviceLocator)
