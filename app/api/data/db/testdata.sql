@@ -960,7 +960,7 @@ INSERT INTO `person` (`id`, `created_by`, `last_modified_by`, `birth_place`, `ti
 
 INSERT INTO `disqualification` (
     `id`, `created_by`, `last_modified_by`, `is_disqualified`, `period`,
-    `notes`, `created_on`, `last_modified_on`, `version`, `officer_cd_id`
+    `notes`, `created_on`, `last_modified_on`, `version`, `person_id`
 ) VALUES
     (10,NULL,NULL,1,2,'TBC',NOW(),NULL,1,NULL),
     (13,NULL,NULL,1,2,'TBC',NOW(),NULL,1,NULL),

@@ -55,20 +55,6 @@ class Person extends AbstractPerson implements OrganisationProviderInterface
     }
 
     /**
-     * Get the Disqualifiaction status for this person
-     *
-     * @return string Disqualification::STATUS_... constant
-     */
-    public function getDisqualificationStatus()
-    {
-        if ($this->getContactDetail()) {
-            return $this->getContactDetail()->getDisqualificationStatus();
-        }
-
-        return Disqualification::STATUS_NONE;
-    }
-
-    /**
      * Get the ContactDetail entity for this person
      * NB The DB schema does allow multiple contactDetails per person, if this is the case we always take the first;
      *
@@ -115,5 +101,34 @@ class Person extends AbstractPerson implements OrganisationProviderInterface
         }
 
         return $list;
+    }
+
+    /*
+     * Get the disqualification linked to this contact details
+     * NB DB schema is 1 to many, but it is only possible to have one disqualification record per contact details
+     *
+     * @return null|Disqualification
+     */
+    public function getDisqualification()
+    {
+        if ($this->getDisqualifications()->isEmpty()) {
+            return null;
+        }
+
+        return $this->getDisqualifications()->first();
+    }
+
+    /**
+     * Get the disqualification status
+     *
+     * @return string Disqualification constant STATUS_NONE, STATUS_ACTIVE or STATUS_INACTIVE
+     */
+    public function getDisqualificationStatus()
+    {
+        if ($this->getDisqualification() === null) {
+            return Disqualification::STATUS_NONE;
+        }
+
+        return $this->getDisqualification()->getStatus();
     }
 }
