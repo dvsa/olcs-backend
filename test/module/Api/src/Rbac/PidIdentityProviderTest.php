@@ -68,7 +68,7 @@ class PidIdentityProviderTest extends MockeryTestCase
             ->once()
             ->getMock();
 
-        $mockRequest = m::mock();
+        $mockRequest = m::mock(\Zend\Console\Request::class);
 
         $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid');
         AuthHelper::setConfig(['openam' => ['hosts' => ['localhost']]]);
