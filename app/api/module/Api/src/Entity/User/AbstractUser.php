@@ -91,6 +91,15 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     protected $deletedDate;
 
     /**
+     * Disabled date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="disabled_date", nullable=true)
+     */
+    protected $disabledDate;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -129,15 +138,6 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      * @ORM\JoinColumn(name="local_authority_id", referencedColumnName="id", nullable=true)
      */
     protected $localAuthority;
-
-    /**
-     * Locked date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="locked_date", nullable=true)
-     */
-    protected $lockedDate;
 
     /**
      * Login id
@@ -372,6 +372,29 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     }
 
     /**
+     * Set the disabled date
+     *
+     * @param \DateTime $disabledDate
+     * @return User
+     */
+    public function setDisabledDate($disabledDate)
+    {
+        $this->disabledDate = $disabledDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the disabled date
+     *
+     * @return \DateTime
+     */
+    public function getDisabledDate()
+    {
+        return $this->disabledDate;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id
@@ -461,29 +484,6 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     public function getLocalAuthority()
     {
         return $this->localAuthority;
-    }
-
-    /**
-     * Set the locked date
-     *
-     * @param \DateTime $lockedDate
-     * @return User
-     */
-    public function setLockedDate($lockedDate)
-    {
-        $this->lockedDate = $lockedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the locked date
-     *
-     * @return \DateTime
-     */
-    public function getLockedDate()
-    {
-        return $this->lockedDate;
     }
 
     /**

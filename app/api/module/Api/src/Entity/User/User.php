@@ -260,10 +260,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
         $this->accountDisabled = $accountDisabled;
 
         if ($this->accountDisabled === 'Y') {
-            // set locked date to now
-            $this->lockedDate = new \DateTime();
+            // set disabled date to now
+            $this->disabledDate = new \DateTime();
         } else {
-            $this->lockedDate = null;
+            $this->disabledDate = null;
         }
 
         return $this;
