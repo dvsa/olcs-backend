@@ -1645,6 +1645,12 @@ return array(
                 'property' => 'publicationLink'
             )
         ),
+        'bus_reg_id' => array(
+            'inversedBy' => array(
+                'entity' => 'BusReg',
+                'property' => 'publicationLink'
+            )
+        ),
     ),
     'publication_police_data' => array(
         'publication_link_id' => array(

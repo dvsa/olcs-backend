@@ -740,6 +740,18 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     protected $ebsrSubmissions;
 
     /**
+     * Publication link
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Publication\PublicationLink",
+     *     mappedBy="busReg"
+     * )
+     */
+    protected $publicationLinks;
+
+    /**
      * Txc inbox
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -766,6 +778,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
         $this->readAudits = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->ebsrSubmissions = new ArrayCollection();
+        $this->publicationLinks = new ArrayCollection();
         $this->txcInboxs = new ArrayCollection();
     }
 
@@ -2624,6 +2637,66 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     {
         if ($this->ebsrSubmissions->contains($ebsrSubmissions)) {
             $this->ebsrSubmissions->removeElement($ebsrSubmissions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the publication link
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @return BusReg
+     */
+    public function setPublicationLinks($publicationLinks)
+    {
+        $this->publicationLinks = $publicationLinks;
+
+        return $this;
+    }
+
+    /**
+     * Get the publication links
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPublicationLinks()
+    {
+        return $this->publicationLinks;
+    }
+
+    /**
+     * Add a publication links
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @return BusReg
+     */
+    public function addPublicationLinks($publicationLinks)
+    {
+        if ($publicationLinks instanceof ArrayCollection) {
+            $this->publicationLinks = new ArrayCollection(
+                array_merge(
+                    $this->publicationLinks->toArray(),
+                    $publicationLinks->toArray()
+                )
+            );
+        } elseif (!$this->publicationLinks->contains($publicationLinks)) {
+            $this->publicationLinks->add($publicationLinks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a publication links
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks
+     * @return BusReg
+     */
+    public function removePublicationLinks($publicationLinks)
+    {
+        if ($this->publicationLinks->contains($publicationLinks)) {
+            $this->publicationLinks->removeElement($publicationLinks);
         }
 
         return $this;
