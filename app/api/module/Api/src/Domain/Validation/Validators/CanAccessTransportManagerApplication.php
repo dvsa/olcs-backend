@@ -10,4 +10,15 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 class CanAccessTransportManagerApplication extends AbstractCanAccessEntity
 {
     protected $repo = 'TransportManagerApplication';
+
+    public function isValid($entityId)
+    {
+        /* @var $tma \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication */
+        $tma = $this->getRepo($this->repo)->fetchById($entityId);
+        if ($tma->getTransportManager() === $this->getCurrentUser()->getTransportManager()) {
+            return true;
+        }
+
+        return parent::isValid($entityId);
+    }
 }
