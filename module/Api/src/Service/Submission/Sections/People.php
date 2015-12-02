@@ -25,7 +25,10 @@ final class People extends AbstractSection
             $personEntity = $persons->current()->getPerson();
 
             $data[$i]['id'] = $personEntity->getId();
-            $data[$i]['title'] = $personEntity->getTitle()->getDescription();
+            $data[$i]['title'] = '';
+            if ($personEntity->getTitle() instanceof RefData) {
+                $data[$i]['title'] = $personEntity->getTitle()->getDescription();
+            }
             $data[$i]['familyName'] = $personEntity->getFamilyName();
             $data[$i]['forename'] = $personEntity->getForename();
             $data[$i]['disqualificationStatus'] = $personEntity->getDisqualificationStatus();
