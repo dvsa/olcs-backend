@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Zend\Http\PhpEnvironment\Request;
+use Dvsa\Olcs\Utils\Auth\AuthHelper;
 
 /**
  * Pid Identity Provider Test
@@ -51,5 +52,31 @@ class PidIdentityProviderTest extends MockeryTestCase
         $this->assertInstanceOf(Identity::class, $identity);
         $this->assertInstanceOf(User::class, $identity->getUser());
         $this->assertEquals(User::USER_TYPE_ANON, $identity->getUser()->getUserType());
+    }
+
+    public function testGetIdentitySystem()
+    {
+        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)
+            ->shouldReceive('getId')
+            ->andReturn(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER)
+            ->getMock();
+
+        $mockRepo = m::mock(RepositoryInterface::class);
+        $mockRepo->shouldReceive('fetchById')
+            ->with(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER)
+            ->andReturn($mockUser)
+            ->once()
+            ->getMock();
+
+        $mockRequest = m::mock(\Zend\Console\Request::class);
+
+        $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid');
+        AuthHelper::setConfig(['openam' => ['hosts' => ['localhost']]]);
+
+        $identity = $sut->getIdentity();
+
+        $this->assertInstanceOf(Identity::class, $identity);
+        $this->assertInstanceOf(User::class, $identity->getUser());
+        $this->assertEquals(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER, $identity->getUser()->getId());
     }
 }
