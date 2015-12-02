@@ -423,4 +423,9 @@ return [
     //Address
     TransferQuery\Address\GetAddress::class => QueryHandler\Address\GetAddress::class,
     TransferQuery\Address\GetList::class => QueryHandler\Address\GetList::class,
+
+    TransferQuery\Category\GetList::class => QueryHandler\Category\GetList::class,
+    TransferQuery\SubCategory\GetList::class => QueryHandler\SubCategory\GetList::class,
+    TransferQuery\SubCategoryDescription\GetList::class => QueryHandler\SubCategoryDescription\GetList::class,
+    TransferQuery\DocTemplate\GetList::class => QueryHandler\DocTemplate\GetList::class,
 ];

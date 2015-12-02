@@ -84,9 +84,15 @@ class User extends AbstractRepository
         }
 
         // filter by organisation if it has been specified
-        if ($query->getOrganisation()) {
+        if (method_exists($query, 'getOrganisation') && !empty($query->getOrganisation())) {
             $qb->join('u.organisationUsers', 'ou', Expr\Join::WITH, 'ou.organisation = :organisation');
-            $qb->setParameter('organisation', $query->getOrganisation());
+            $qb->setParameter('organisation', (int) $query->getOrganisation());
+        }
+
+        // filter by team if it has been specified
+        if (method_exists($query, 'getTeam') && !empty($query->getTeam())) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.team', ':team'))
+                ->setParameter('team', (int) $query->getTeam());
         }
     }
 
