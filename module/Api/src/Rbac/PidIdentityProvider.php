@@ -15,6 +15,8 @@ use Zend\Http\Request;
  */
 class PidIdentityProvider implements IdentityProviderInterface
 {
+    const SYSTEM_USER = 99999;
+
     /**
      * @var RepositoryInterface
      */
@@ -35,7 +37,7 @@ class PidIdentityProvider implements IdentityProviderInterface
      */
     private $identity;
 
-    public function __construct(RepositoryInterface $repository, Request $request, $headerName)
+    public function __construct(RepositoryInterface $repository, $request, $headerName)
     {
         $this->repository = $repository;
         $this->request = $request;
@@ -51,12 +53,16 @@ class PidIdentityProvider implements IdentityProviderInterface
             if (!empty($pid)) {
                 return $this->repository->fetchByPid($pid);
             }
-        } else {
+        } elseif ($this->request instanceof \Zend\Http\Request) {
             // @todo remove once we are 100% using openAM
             $auth = $this->request->getHeader('Authorization', new GenericHeader())->getFieldValue();
             if (!empty($auth)) {
                 return $this->repository->fetchById($auth);
             }
+        } else {
+            // @todo remove when we find constant solution for CLI requests
+            $auth = self::SYSTEM_USER;
+            return $this->repository->fetchById($auth);
         }
 
         return null;
