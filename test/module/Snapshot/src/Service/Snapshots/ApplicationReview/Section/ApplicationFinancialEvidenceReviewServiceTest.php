@@ -59,7 +59,7 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
         ];
 
         $qhManager = m::mock();
-        $qhManager->shouldReceive('handleQuery')
+        $qhManager->shouldReceive('handleQuery->serialize')
             ->andReturn(
                 [
                     'financialEvidence' => [
@@ -117,7 +117,7 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
         $document2->setFilename('bar.txt');
 
         $qhManager = m::mock();
-        $qhManager->shouldReceive('handleQuery')
+        $qhManager->shouldReceive('handleQuery->serialize')
             ->andReturn(
                 [
                     'financialEvidence' => [
