@@ -61,7 +61,11 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
      *
      * @var \Dvsa\Olcs\Api\Entity\Bus\BusReg
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg",
+     *     fetch="LAZY",
+     *     inversedBy="publicationLinks"
+     * )
      * @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id", nullable=true)
      */
     protected $busReg;
