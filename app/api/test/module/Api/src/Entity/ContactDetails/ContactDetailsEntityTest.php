@@ -11,8 +11,6 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 use Dvsa\Olcs\Api\Entity\Person\Person;
-use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * ContactDetails Entity Unit Tests
@@ -562,47 +560,5 @@ class ContactDetailsEntityTest extends EntityTester
             $data['homePhoneContact']['phoneNumber'],
             $entity->getPhoneContacts()->last()->getPhoneNumber()
         );
-    }
-
-    public function testGetDisqualificationNull()
-    {
-        /* @var $organisation Entity */
-        $contactDetails = $this->instantiate($this->entityClass);
-        $contactDetails->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection());
-
-        $this->assertSame(null, $contactDetails->getDisqualification());
-    }
-
-    public function testGetDisqualification()
-    {
-        $disqualification = new Disqualification(m::mock(Organisation::class));
-
-        /* @var $contactDetails Entity */
-        $contactDetails = $this->instantiate($this->entityClass);
-        $contactDetails->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection([$disqualification]));
-
-        $this->assertSame($disqualification, $contactDetails->getDisqualification());
-    }
-
-    public function testGetDisqualificationStatusNone()
-    {
-        /* @var $contactDetails Entity */
-        $contactDetails = $this->instantiate($this->entityClass);
-        $contactDetails->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection());
-
-        $this->assertSame(Disqualification::STATUS_NONE, $contactDetails->getDisqualificationStatus());
-    }
-
-    public function testGetDisqualificationStatusActive()
-    {
-        $disqualification = new Disqualification(m::mock(Organisation::class));
-        $disqualification->setIsDisqualified('Y');
-        $disqualification->setStartDate('2015-01-01');
-
-        /* @var $contactDetails Entity */
-        $contactDetails = $this->instantiate($this->entityClass);
-        $contactDetails->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection([$disqualification]));
-
-        $this->assertSame(Disqualification::STATUS_ACTIVE, $contactDetails->getDisqualificationStatus());
     }
 }

@@ -331,33 +331,4 @@ class ContactDetails extends AbstractContactDetails
         }
         $this->setEmailAddress($emailAddress);
     }
-
-    /*
-     * Get the disqualification linked to this contact details
-     * NB DB schema is 1 to many, but it is only possible to have one disqualification record per contact details
-     *
-     * @return null|\Dvsa\Olcs\Api\Entity\Organisation\Disqualification
-     */
-    public function getDisqualification()
-    {
-        if ($this->getDisqualifications()->isEmpty()) {
-            return null;
-        }
-
-        return $this->getDisqualifications()->first();
-    }
-
-    /**
-     * Get the disqualification status
-     *
-     * @return string Disqualification constant STATUS_NONE, STATUS_ACTIVE or STATUS_INACTIVE
-     */
-    public function getDisqualificationStatus()
-    {
-        if ($this->getDisqualification() === null) {
-            return \Dvsa\Olcs\Api\Entity\Organisation\Disqualification::STATUS_NONE;
-        }
-
-        return $this->getDisqualification()->getStatus();
-    }
 }

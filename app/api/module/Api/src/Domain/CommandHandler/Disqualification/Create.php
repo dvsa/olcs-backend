@@ -32,7 +32,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     {
         /* @var $command Command */
 
-        $disqualification = new Disqualification($this->getOrganisation($command), $this->getOfficerCd($command));
+        $disqualification = new Disqualification($this->getOrganisation($command), $this->getPerson($command));
         $disqualification->update(
             $command->getIsDisqualified(),
             $command->getStartDate() ? new \DateTime($command->getStartDate()) : null,
@@ -65,31 +65,16 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     }
 
     /**
-     * Get a refernece to the Officer ContactDetails entity
+     * Get a refernece to the Person entity
      *
      * @param Command $command
      *
-     * @return ContactDetails|null
+     * @return \Dvsa\Olcs\Api\Entity\Person\Person|null
      */
-    private function getOfficerCd(Command $command)
+    private function getPerson(Command $command)
     {
-        if (empty($command->getPerson())) {
-            return null;
-        }
-
-        /* @var $person \Dvsa\Olcs\Api\Entity\Person\Person */
-        $person = $this->getRepo('Person')->fetchById($command->getPerson());
-
-        // if contact details don't exists then create them
-        if (!$person->getContactDetail()) {
-            $contactDetails = new ContactDetails(
-                $this->getRepo()->getRefdataReference(ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS)
-            );
-            $contactDetails->setPerson($person);
-            $this->getRepo('ContactDetails')->save($contactDetails);
-            $person->addContactDetails($contactDetails);
-        }
-
-        return $person->getContactDetail();
+        return $command->getPerson() ?
+            $this->getRepo()->getReference(\Dvsa\Olcs\Api\Entity\Person\Person::class, $command->getPerson()) :
+            null;
     }
 }
