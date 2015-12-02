@@ -107,6 +107,15 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     protected $olbsKey;
 
     /**
+     * Olbs type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="olbs_type", length=20, nullable=true)
+     */
+    protected $olbsType;
+
+    /**
      * Organisation
      *
      * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
@@ -344,6 +353,29 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     public function getOlbsKey()
     {
         return $this->olbsKey;
+    }
+
+    /**
+     * Set the olbs type
+     *
+     * @param string $olbsType
+     * @return Disqualification
+     */
+    public function setOlbsType($olbsType)
+    {
+        $this->olbsType = $olbsType;
+
+        return $this;
+    }
+
+    /**
+     * Get the olbs type
+     *
+     * @return string
+     */
+    public function getOlbsType()
+    {
+        return $this->olbsType;
     }
 
     /**
