@@ -34,10 +34,10 @@ final class SendTmUserCreated extends AbstractCommandHandler implements \Dvsa\Ol
             'email.transport-manager-user-created.subject'
         );
 
+        $message->setTranslateToWelsh($user->getTranslateToWelsh());
+
         /* @var $tma \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication */
         $tma = $this->getRepo('TransportManagerApplication')->fetchById($command->getTma());
-
-        $message->setTranslateToWelsh($tma->getApplication()->getLicence()->getTranslateToWelsh());
 
         $this->sendEmailTemplate(
             $message,

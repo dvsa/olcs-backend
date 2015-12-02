@@ -269,19 +269,6 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         return $this->getLicences()->matching($criteria);
     }
 
-    public function getAdminEmailAddresses()
-    {
-        $users = [];
-
-        /** @var OrganisationUser $orgUser */
-        foreach ($this->getAdminOrganisationUsers() as $orgUser) {
-            if ($orgUser->getUser()->getContactDetails()->getEmailAddress() !== null) {
-                $users[] = $orgUser->getUser()->getContactDetails()->getEmailAddress();
-            }
-        }
-        return $users;
-    }
-
     public function getContextValue()
     {
         return $this->getId();

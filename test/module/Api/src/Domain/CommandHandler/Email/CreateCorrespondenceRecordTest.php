@@ -70,12 +70,13 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
         /** @var User $user1 */
         $user1 = m::mock(User::class)->makePartial();
         $contactDetails1 = m::mock(ContactDetails::class)->makePartial();
-        $contactDetails1->setEmailAddress('foo@bar.com');
+        $contactDetails1->setEmailAddress('foo1@bar.com');
         $user1->setContactDetails($contactDetails1);
 
         /** @var User $user2 */
         $user2 = m::mock(User::class)->makePartial();
         $contactDetails2 = m::mock(ContactDetails::class)->makePartial();
+        $contactDetails2->setEmailAddress('foo2@bar.com');
         $user2->setContactDetails($contactDetails2);
 
         /** @var OrganisationUser $orgUser1 */
@@ -105,7 +106,7 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
             );
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')
-            ->once()
+            ->times(2)
             ->with(
                 m::type(Message::class),
                 'licensing-information-standard',
@@ -114,11 +115,22 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
             );
 
         $result = new Result();
-        $data = [
-            'to' => ['foo@bar.com']
-        ];
 
-        $this->expectedSideEffect(SendEmail::class, $data, $result);
+        $this->expectedSideEffect(
+            SendEmail::class,
+            [
+                'to' => 'foo1@bar.com'
+            ],
+            $result
+        );
+
+        $this->expectedSideEffect(
+            SendEmail::class,
+            [
+                'to' => 'foo2@bar.com'
+            ],
+            $result
+        );
 
         $result = $this->sut->handleCommand($command);
 

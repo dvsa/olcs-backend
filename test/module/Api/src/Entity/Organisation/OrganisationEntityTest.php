@@ -300,28 +300,4 @@ class OrganisationEntityTest extends EntityTester
 
         $this->assertEquals(111, $entity->getContextValue());
     }
-
-    public function testGetAdminEmailAddresses()
-    {
-        $emailAddress = 'foo@bar.com';
-        /* @var $organisation Entity */
-        $organisation = $this->instantiate($this->entityClass);
-
-        $contactType = new RefData(ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS);
-        $user = new User('pid', User::USER_TYPE_INTERNAL);
-        $contactDetails = new ContactDetails($contactType);
-        $contactDetails->setEmailAddress($emailAddress);
-        $user->setContactDetails($contactDetails);
-
-        $organisationUser = new OrganisationUser();
-        $organisationUser->setUser($user);
-        $organisationUser->setOrganisation($organisation);
-        $organisationUser->setIsAdministrator('Y');
-
-        $collection = new ArrayCollection();
-        $collection->add($organisationUser);
-        $organisation->addOrganisationUsers($collection);
-
-        $this->assertEquals([$emailAddress], $organisation->getAdminEmailAddresses());
-    }
 }
