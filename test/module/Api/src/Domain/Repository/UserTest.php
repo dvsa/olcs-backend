@@ -91,6 +91,34 @@ class UserTest extends RepositoryTestCase
     /**
      * Had to mock SUT as the fetchList method uses Paginator which has proving time consuming to mock
      */
+    public function testApplyListFiltersUserList()
+    {
+        $sut = m::mock(Repo::class);
+
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $query = \Dvsa\Olcs\Transfer\Query\User\UserList::create(
+            [
+                'organisation' => 43,
+                'team' => 112,
+            ]
+        );
+
+        $mockQb->shouldReceive('join')
+            ->with('u.organisationUsers', 'ou', \Doctrine\ORM\Query\Expr\Join::WITH, 'ou.organisation = :organisation')
+            ->once();
+        $mockQb->shouldReceive('setParameter')->with('organisation', 43)->once();
+
+        $mockQb->shouldReceive('andWhere')->with('team')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('u.team', ':team')->once()
+            ->andReturn('team');
+        $mockQb->shouldReceive('setParameter')->with('team', 112)->once();
+
+        $sut->applyListFilters($mockQb, $query);
+    }
+
+    /**
+     * Had to mock SUT as the fetchList method uses Paginator which has proving time consuming to mock
+     */
     public function testBuildDefaultListQuery()
     {
         $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
