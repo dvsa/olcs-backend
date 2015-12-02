@@ -18,8 +18,6 @@ final class SendUsernameSingle extends AbstractCommandHandler implements \Dvsa\O
 
     protected $repoServiceName = 'User';
 
-    protected $extraRepos = ['Licence'];
-
     /**
      * @param CommandInterface $command
      * @return Result
@@ -34,9 +32,7 @@ final class SendUsernameSingle extends AbstractCommandHandler implements \Dvsa\O
             'email.user-forgot-username-single.subject'
         );
 
-        /* @var $licence \Dvsa\Olcs\Api\Entity\Licence\Licence */
-        $licence = $this->getRepo('Licence')->fetchByLicNo($command->getLicenceNumber());
-        $message->setTranslateToWelsh($licence->getTranslateToWelsh());
+        $message->setTranslateToWelsh($user->getTranslateToWelsh());
 
         $this->sendEmailTemplate(
             $message,

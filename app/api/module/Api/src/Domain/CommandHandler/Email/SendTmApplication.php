@@ -31,11 +31,29 @@ final class SendTmApplication extends AbstractCommandHandler implements \Dvsa\Ol
         /* @var $tma \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication */
         $tma = $this->getRepo()->fetchUsingId($command);
 
+        if (!$tma->getTransportManager()->getUsers()->isEmpty()) {
+            // got user linked to the TM
+            $user = $tma->getTransportManager()->getUsers()->first();
+
+            $to = $user->getContactDetails()->getEmailAddress();
+            $username = $user->getLoginId();
+
+            // use user's preference
+            $translateToWelsh = $user->getTranslateToWelsh();
+        } else {
+            // no user linked
+            $to = $tma->getTransportManager()->getHomeCd()->getEmailAddress();
+            $username = 'not registered';
+
+            // use licence settings
+            $translateToWelsh = $tma->getApplication()->getLicence()->getTranslateToWelsh();
+        }
+
         $message = new \Dvsa\Olcs\Email\Data\Message(
-            $tma->getTransportManager()->getHomeCd()->getEmailAddress(),
+            $to,
             'email.transport-manager-complete-digital-form.subject'
         );
-        $message->setTranslateToWelsh($tma->getApplication()->getLicence()->getTranslateToWelsh());
+        $message->setTranslateToWelsh($translateToWelsh);
 
         $this->sendEmailTemplate(
             $message,
@@ -43,8 +61,7 @@ final class SendTmApplication extends AbstractCommandHandler implements \Dvsa\Ol
             [
                 'organisation' => $tma->getApplication()->getLicence()->getOrganisation()->getName(),
                 'reference' => $tma->getApplication()->getLicence()->getLicNo() .'/'. $tma->getApplication()->getId(),
-                'username' => $tma->getTransportManager()->getUsers()->isEmpty() ? 'not registered' :
-                    $tma->getTransportManager()->getUsers()->first()->getLoginId(),
+                'username' => $username,
                 'isNi' => $tma->getApplication()->getNiFlag() === 'Y',
                 'signInLink' => sprintf(
                     'http://selfserve/%s/%d/transport-managers/details/%d/edit-details/',

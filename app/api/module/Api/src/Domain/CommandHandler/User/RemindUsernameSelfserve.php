@@ -34,7 +34,6 @@ final class RemindUsernameSelfserve extends AbstractCommandHandler implements Tr
                 SendUsernameSingleDto::create(
                     [
                         'user' => array_shift($users),
-                        'licenceNumber' => $command->getLicenceNumber(),
                     ]
                 )
             );
