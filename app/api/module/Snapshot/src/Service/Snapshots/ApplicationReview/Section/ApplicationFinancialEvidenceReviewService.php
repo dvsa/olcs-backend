@@ -26,7 +26,8 @@ class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
     {
         // @NOTE Tmp solution during migration
         $feData = $this->getServiceLocator()->get('QueryHandlerManager')
-            ->handleQuery(FinancialEvidence::create(['id' => $data['id']]));
+            ->handleQuery(FinancialEvidence::create(['id' => $data['id']]))
+            ->serialize();
 
         $financialEvidenceData = $feData['financialEvidence'];
 
