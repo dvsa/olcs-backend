@@ -78,6 +78,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(0);
         $mockApplication->setOperatingCentres($aocs);
+        $mockApplication->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(new \stdClass());
@@ -144,6 +146,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(0);
         $mockApplication->setOperatingCentres($aocs);
+        $mockApplication->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
@@ -200,6 +204,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setId(111);
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(0);
+        $mockApplication->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
@@ -270,6 +276,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(0);
         $mockApplication->setOperatingCentres($aocs);
+        $mockApplication->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
@@ -344,6 +352,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setAuthSignature(1);
         $mockApplication->setOperatingCentres($aocs);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
@@ -402,6 +412,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setIsVariation(1);
         $mockApplication->setAuthSignature(1);
         $mockApplication->setOperatingCentres($aocs);
+        $mockApplication->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
@@ -461,6 +473,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setIsVariation(1);
         $mockApplication->setAuthSignature(1);
         $mockApplication->setOperatingCentres($aocs);
+        $mockApplication->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
@@ -526,6 +540,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setIsVariation(1);
         $mockApplication->setAuthSignature(1);
         $mockApplication->setOperatingCentres($aocs);
+        $mockApplication->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
@@ -593,6 +609,8 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setIsVariation(1);
         $mockApplication->setAuthSignature(1);
         $mockApplication->setOperatingCentres($aocs);
+        $mockApplication->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
@@ -632,6 +650,8 @@ class SummaryTest extends QueryHandlerTestCase
 
         $mockApplication->setId(111);
         $mockApplication->setIsVariation(1);
+        $mockApplication->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->setOperatingCentres(new ArrayCollection());
         $mockApplication->setTransportManagers(new ArrayCollection());
         $mockApplication->setDocuments(new ArrayCollection());
@@ -653,6 +673,69 @@ class SummaryTest extends QueryHandlerTestCase
                 'actions' => [],
                 'reference' => 'ref',
                 'outstandingFee' => false,
+            ],
+            $result->serialize()
+        );
+    }
+
+    public function testHandleQueryWisthSpecialRestrictedLicence()
+    {
+        $query = Qry::create(['id' => 111]);
+
+        /** @var Entity\Application\Application $mockApplication */
+        $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
+        $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
+
+        $adDocs1 = new ArrayCollection();
+        $adDocs1->add(m::mock());
+
+        $adDocs2 = new ArrayCollection();
+
+        $aoc1 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
+        $aoc1->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs1);
+        $aoc1->setAction('A');
+
+        $aoc2 = m::mock(Entity\Application\ApplicationOperatingCentre::class)->makePartial();
+        $aoc2->shouldReceive('getOperatingCentre->getAdDocuments->matching')->andReturn($adDocs2);
+        $aoc2->setAction('A');
+
+        $aocs = new ArrayCollection();
+        $aocs->add($aoc1);
+        $aocs->add($aoc2);
+
+        $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
+
+        $tms = new ArrayCollection();
+        $tms->add($tm1);
+
+        $mockApplication->setId(111);
+        $mockApplication->setIsVariation(0);
+        $mockApplication->setAuthSignature(0);
+        $mockApplication->setOperatingCentres($aocs);
+        $mockApplication->shouldReceive('getLicenceType->getId')
+            ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_SPECIAL_RESTRICTED);
+        $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->setDocuments(new ArrayCollection());
+        $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(new \stdClass());
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($query)
+            ->andReturn($mockApplication);
+
+        $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
+        $this->repoMap['Fee']->shouldReceive('fetchLatestFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+
+        $result = $this->sut->handleQuery($query);
+
+        $this->assertEquals(
+            [
+                'foo' => 'bar',
+                'actions' => [
+                    'PRINT_SIGN_RETURN' => 'PRINT_SIGN_RETURN'
+                ],
+                'reference' => 'ref',
+                'outstandingFee' => true,
             ],
             $result->serialize()
         );
