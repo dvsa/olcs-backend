@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefdataEntity;
 
 /**
  * Class People
@@ -25,7 +26,10 @@ final class People extends AbstractSection
             $personEntity = $persons->current()->getPerson();
 
             $data[$i]['id'] = $personEntity->getId();
-            $data[$i]['title'] = $personEntity->getTitle()->getDescription();
+            $data[$i]['title'] = '';
+            if ($personEntity->getTitle() instanceof RefdataEntity) {
+                $data[$i]['title'] = $personEntity->getTitle()->getDescription();
+            }
             $data[$i]['familyName'] = $personEntity->getFamilyName();
             $data[$i]['forename'] = $personEntity->getForename();
             $data[$i]['disqualificationStatus'] = $personEntity->getDisqualificationStatus();
