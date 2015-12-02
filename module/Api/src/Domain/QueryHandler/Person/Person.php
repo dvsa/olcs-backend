@@ -22,9 +22,7 @@ class Person extends AbstractQueryHandler
 
         return $this->result(
             $person,
-            [
-                'contactDetails' => ['disqualifications']
-            ]
+            ['disqualifications']
         );
     }
 }

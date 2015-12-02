@@ -31,7 +31,7 @@ class People extends AbstractQueryHandler
                 'organisationPersons' => [
                     'person' => [
                         'title',
-                        'contactDetails' => ['disqualifications']
+                        'disqualifications',
                     ]
                 ]
             ],

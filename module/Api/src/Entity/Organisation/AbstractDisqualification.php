@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_disqualification_organisation_id", columns={"organisation_id"}),
  *        @ORM\Index(name="ix_disqualification_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_disqualification_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_disqualification_officer_cd_id", columns={"officer_cd_id"})
+ *        @ORM\Index(name="ix_disqualification_person_idx", columns={"person_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_disqualification_olbs_key", columns={"olbs_key"})
@@ -98,20 +98,6 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     protected $notes;
 
     /**
-     * Officer cd
-     *
-     * @var \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails
-     *
-     * @ORM\ManyToOne(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails",
-     *     fetch="LAZY",
-     *     inversedBy="disqualifications"
-     * )
-     * @ORM\JoinColumn(name="officer_cd_id", referencedColumnName="id", nullable=true)
-     */
-    protected $officerCd;
-
-    /**
      * Olbs key
      *
      * @var int
@@ -139,9 +125,23 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="period", nullable=false)
+     * @ORM\Column(type="smallint", name="period", nullable=true)
      */
     protected $period;
+
+    /**
+     * Person
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Person\Person
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Person\Person",
+     *     fetch="LAZY",
+     *     inversedBy="disqualifications"
+     * )
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=true)
+     */
+    protected $person;
 
     /**
      * Start date
@@ -324,29 +324,6 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     }
 
     /**
-     * Set the officer cd
-     *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $officerCd
-     * @return Disqualification
-     */
-    public function setOfficerCd($officerCd)
-    {
-        $this->officerCd = $officerCd;
-
-        return $this;
-    }
-
-    /**
-     * Get the officer cd
-     *
-     * @return \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails
-     */
-    public function getOfficerCd()
-    {
-        return $this->officerCd;
-    }
-
-    /**
      * Set the olbs key
      *
      * @param int $olbsKey
@@ -413,6 +390,29 @@ abstract class AbstractDisqualification implements BundleSerializableInterface, 
     public function getPeriod()
     {
         return $this->period;
+    }
+
+    /**
+     * Set the person
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person
+     * @return Disqualification
+     */
+    public function setPerson($person)
+    {
+        $this->person = $person;
+
+        return $this;
+    }
+
+    /**
+     * Get the person
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Person\Person
+     */
+    public function getPerson()
+    {
+        return $this->person;
     }
 
     /**

@@ -48,7 +48,7 @@ class DisqualificationEntityTest extends EntityTester
         try {
             $sut = new Entity(
                 m::mock(\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class),
-                m::mock(\Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails::class)
+                m::mock(\Dvsa\Olcs\Api\Entity\Person\Person::class)
             );
             $this->assertInstanceOf(Entity::class, $sut);
             $this->fail();
@@ -64,11 +64,11 @@ class DisqualificationEntityTest extends EntityTester
         $this->assertSame($organisation, $sut->getOrganisation());
     }
 
-    public function testConstructorOfficeCd()
+    public function testConstructorPerson()
     {
-        $officerCd = m::mock(\Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails::class);
-        $sut = new Entity(null, $officerCd);
-        $this->assertSame($officerCd, $sut->getOfficerCd());
+        $person = m::mock(\Dvsa\Olcs\Api\Entity\Person\Person::class);
+        $sut = new Entity(null, $person);
+        $this->assertSame($person, $sut->getPerson());
     }
 
     public function testUpdateMinimumParams()

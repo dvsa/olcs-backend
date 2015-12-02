@@ -1306,15 +1306,15 @@ return array(
         'is_disqualified' => array(
             'type' => 'yesnonull'
         ),
-        'officer_cd_id' => array(
-            'inversedBy' => array(
-                'entity' => 'ContactDetails',
-                'property' => 'disqualification'
-            )
-        ),
         'organisation_id' => array(
             'inversedBy' => array(
                 'entity' => 'Organisation',
+                'property' => 'disqualification'
+            )
+        ),
+        'person_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Person',
                 'property' => 'disqualification'
             )
         ),
