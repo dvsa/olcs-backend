@@ -30,7 +30,7 @@ class SearchController extends AbstractController
         }
 
         $resultSet = $elastic->search(
-            urldecode($params['query']),
+            $params['q'],
             $indices,
             $params['page'],
             $params['limit']
