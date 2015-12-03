@@ -164,6 +164,11 @@ class Search
                     new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
                 );
                 break;
+            case 'busreg':
+                $queryMatch = new Query\Match();
+                $queryMatch->setField('reg_no', $search);
+                $queryBool->addShould($queryMatch);
+                break;
         }
     }
 
