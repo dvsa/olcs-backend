@@ -219,22 +219,20 @@ class Fee extends AbstractFee
      */
     public function getOutstandingAmount()
     {
-        $amount = $this->getGrossAmount() * 100;
-        $amount = round($amount); // don't ask. See OLCS-11509
-        $amount = (int) $amount;
+        $amount = self::AmountToPence($this->getGrossAmount());
 
         $ftSum = 0;
         $this->getFeeTransactions()->forAll(
             function ($key, $feeTransaction) use (&$ftSum) {
                 unset($key); // unused
                 if ($feeTransaction->getTransaction()->isComplete()) {
-                    $ftSum += (int) ($feeTransaction->getAmount() * 100);
+                    $ftSum += self::AmountToPence($feeTransaction->getAmount());
                 }
                 return true;
             }
         );
 
-        return number_format(($amount - $ftSum) / 100, 2, '.', '');
+        return self::AmountToPounds($amount - $ftSum);
     }
 
     /**
@@ -504,10 +502,28 @@ class Fee extends AbstractFee
 
         $vat = $net * $rate; // this gives value in pence
         $vat = floor($vat); // round down to nearest penny
-        $vat = $vat / 100; // convert to pounds
+        $vat = self::AmountToPounds($vat); // convert to pounds
 
         $this->setVatAmount($vat);
 
         $this->setGrossAmount($net + $vat);
+    }
+
+    /**
+     * @param string $amount e.g. '4.56'
+     * @return int e.g. 456
+     */
+    public static function AmountToPence($amount)
+    {
+        return (int) number_format($amount, 2, '', '');
+    }
+
+    /**
+     * @param int $amount e.g. 456
+     * @return string e.g. '4.56'
+     */
+    public static function AmountToPounds($amount)
+    {
+        return number_format($amount / 100, 2, '.', '');
     }
 }
