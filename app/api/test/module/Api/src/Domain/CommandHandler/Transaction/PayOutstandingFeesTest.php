@@ -66,14 +66,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockRepo('Application', Repository\Application::class);
         $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
 
-        $this->mockCpmsService
-            ->shouldReceive('formatAmount')
-            ->andReturnUsing(
-                function ($input) {
-                    return (string)$input;
-                }
-            );
-
         /** @var UserEntity $mockUser */
         $mockUser = m::mock(UserEntity::class)
             ->shouldReceive('getLoginId')
