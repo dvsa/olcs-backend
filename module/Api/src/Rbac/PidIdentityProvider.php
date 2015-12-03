@@ -16,7 +16,7 @@ use Zend\Http\Request;
 class PidIdentityProvider implements IdentityProviderInterface
 {
     // @todo remove user from testdata when we find constant solution for CLI requests
-    const SYSTEM_USER = 99999;
+    const SYSTEM_USER = 1;
 
     /**
      * @var RepositoryInterface
