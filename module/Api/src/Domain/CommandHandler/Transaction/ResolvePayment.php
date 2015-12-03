@@ -108,7 +108,7 @@ final class ResolvePayment extends AbstractCommandHandler implements
 
         foreach ($transaction->getFeeTransactions() as $ft) {
             $fee = $ft->getFee();
-            $outstanding = Fee::AmountToPence($fee->getOutstandingAmount()); // convert to integer pence for comparison
+            $outstanding = Fee::amountToPence($fee->getOutstandingAmount()); // convert to integer pence for comparison
             if ($outstanding <= 0) {
                 $fee->setFeeStatus($paidStatusRef);
                 $this->getRepo('Fee')->save($fee);

@@ -602,9 +602,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     {
         $totalAmount = 0;
         foreach ($fees as $fee) {
-            $totalAmount += Fee::AmountToPence($fee->getOutstandingAmount());
+            $totalAmount += Fee::amountToPence($fee->getOutstandingAmount());
         }
-        return $this->formatAmount(Fee::AmountToPounds($totalAmount));
+        return $this->formatAmount(Fee::amountToPounds($totalAmount));
     }
 
     /**
