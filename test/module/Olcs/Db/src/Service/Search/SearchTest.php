@@ -232,6 +232,13 @@ class SearchTest extends TestCase
                                 ]
                             ]
                         ],
+                    ],
+                    'must_not' => [
+                        [
+                            'match' => [
+                                'found_as' => 'TM'
+                            ]
+                        ]
                     ]
                 ]
             ],
