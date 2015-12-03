@@ -84,7 +84,9 @@ class Transaction extends AbstractTransaction
         return [
             'amount' => $this->getTotalAmount(),
             'displayReversalOption' => $this->displayReversalOption(),
+            'displayAdjustmentOption' => $this->displayAdjustmentOption(),
             'canReverse' => $this->canReverse(),
+            'canAdjust' => $this->canAdjust(),
         ];
     }
 
@@ -150,7 +152,8 @@ class Transaction extends AbstractTransaction
     /**
      * Determine whether to show the 'Reverse' option for a transaction
      *
-     * Note: there are additional checks for whether a transaction can ultimately be reversed
+     * Note: there are additional checks for whether a transaction can
+     * ultimately be reversed
      * @see canReverse()
      */
     public function displayReversalOption()
@@ -172,6 +175,15 @@ class Transaction extends AbstractTransaction
         }
 
         return !$this->isReversed();
+    }
+
+    /**
+     * Determine whether to show the 'Adjust' option for a transaction
+     * @see canAdjust()
+     */
+    public function displayAdjustmentOption()
+    {
+        return $this->canAdjust();
     }
 
     /**
