@@ -11,6 +11,13 @@ class CanAccessTransportManagerApplication extends AbstractCanAccessEntity
 {
     protected $repo = 'TransportManagerApplication';
 
+    /**
+     * Can current user access a TransportManagerApplication
+     *
+     * @param int $entityId TransportManagerApplication ID
+     *
+     * @return boolean
+     */
     public function isValid($entityId)
     {
         /* @var $tma \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication */
