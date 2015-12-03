@@ -86,7 +86,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
-        $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
+        $this->assertInstanceOf(\DateTime::class, $entity->getDisabledDate());
 
         $this->assertEquals(Entity::USER_TYPE_INTERNAL, $entity->getUserType());
         $this->assertEquals($data['team'], $entity->getTeam());
@@ -142,7 +142,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
-        $this->assertEquals(null, $entity->getLockedDate());
+        $this->assertEquals(null, $entity->getDisabledDate());
 
         $this->assertEquals(Entity::USER_TYPE_INTERNAL, $entity->getUserType());
         $this->assertEquals($data['team'], $entity->getTeam());
@@ -180,7 +180,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
-        $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
+        $this->assertInstanceOf(\DateTime::class, $entity->getDisabledDate());
 
         $this->assertEquals(Entity::USER_TYPE_TRANSPORT_MANAGER, $entity->getUserType());
         $this->assertEquals(null, $entity->getTeam());
@@ -239,7 +239,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
-        $this->assertEquals(null, $entity->getLockedDate());
+        $this->assertEquals(null, $entity->getDisabledDate());
 
         $this->assertEquals(Entity::USER_TYPE_TRANSPORT_MANAGER, $entity->getUserType());
         $this->assertEquals(null, $entity->getTeam());
@@ -280,7 +280,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
-        $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
+        $this->assertInstanceOf(\DateTime::class, $entity->getDisabledDate());
 
         $this->assertEquals(Entity::USER_TYPE_PARTNER, $entity->getUserType());
         $this->assertEquals(null, $entity->getTeam());
@@ -340,7 +340,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
-        $this->assertEquals(null, $entity->getLockedDate());
+        $this->assertEquals(null, $entity->getDisabledDate());
 
         $this->assertEquals(Entity::USER_TYPE_PARTNER, $entity->getUserType());
         $this->assertEquals(null, $entity->getTeam());
@@ -380,7 +380,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
-        $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
+        $this->assertInstanceOf(\DateTime::class, $entity->getDisabledDate());
 
         $this->assertEquals(Entity::USER_TYPE_LOCAL_AUTHORITY, $entity->getUserType());
         $this->assertEquals(null, $entity->getTeam());
@@ -440,7 +440,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
-        $this->assertEquals(null, $entity->getLockedDate());
+        $this->assertEquals(null, $entity->getDisabledDate());
 
         $this->assertEquals(Entity::USER_TYPE_LOCAL_AUTHORITY, $entity->getUserType());
         $this->assertEquals(null, $entity->getTeam());
@@ -478,7 +478,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
-        $this->assertInstanceOf(\DateTime::class, $entity->getLockedDate());
+        $this->assertInstanceOf(\DateTime::class, $entity->getDisabledDate());
 
         $this->assertEquals(Entity::USER_TYPE_OPERATOR, $entity->getUserType());
         $this->assertEquals(null, $entity->getTeam());
@@ -537,7 +537,7 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
-        $this->assertEquals(null, $entity->getLockedDate());
+        $this->assertEquals(null, $entity->getDisabledDate());
 
         $this->assertEquals(Entity::USER_TYPE_OPERATOR, $entity->getUserType());
         $this->assertEquals(null, $entity->getTeam());
