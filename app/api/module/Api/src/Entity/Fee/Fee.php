@@ -219,7 +219,9 @@ class Fee extends AbstractFee
      */
     public function getOutstandingAmount()
     {
-        $amount = (int) ($this->getGrossAmount() * 100);
+        $amount = $this->getGrossAmount() * 100;
+        $amount = round($amount); // don't ask. See OLCS-11509
+        $amount = (int) $amount;
 
         $ftSum = 0;
         $this->getFeeTransactions()->forAll(
