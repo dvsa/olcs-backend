@@ -95,12 +95,12 @@ class FeesHelperService implements FactoryInterface
         $fees = $this->sortFeesByInvoiceDate($fees);
 
         // min. payment must be greater than the outstanding amount for all but the last fee
-        $minPayment = 0.01;
+        $minPayment = 1; // 1 penny
         for ($i=0; $i < count($fees) -1; $i++) {
-            $minPayment += $fees[$i]->getOutstandingAmount();
+            $minPayment += FeeEntity::amountToPence($fees[$i]->getOutstandingAmount());
         }
 
-        return $this->format($minPayment);
+        return FeeEntity::amountToPounds($minPayment);
     }
 
     /**
@@ -114,10 +114,10 @@ class FeesHelperService implements FactoryInterface
         $total = 0;
 
         foreach ($fees as $fee) {
-            $total += $fee->getOutstandingAmount();
+            $total += FeeEntity::amountToPence($fee->getOutstandingAmount());
         }
 
-        return $this->format($total);
+        return FeeEntity::amountToPounds($total);
     }
 
     /**
@@ -139,12 +139,12 @@ class FeesHelperService implements FactoryInterface
 
         $allocations = [];
 
-        $remaining = (int) ($amount * 100);
+        $remaining = FeeEntity::amountToPence($amount);
 
         foreach ($fees as $fee) {
 
             $allocated = 0;
-            $outstanding = (int) ($fee->getOutstandingAmount() * 100);
+            $outstanding = FeeEntity::amountToPence($fee->getOutstandingAmount());
 
             if ($remaining >= $outstanding) {
                 // if we have enough to pay the fee in full, allocate full amount
@@ -157,7 +157,7 @@ class FeesHelperService implements FactoryInterface
             // then decrement remaining available
             $remaining = ($remaining - $allocated);
 
-            $allocations[$fee->getId()] = $this->format($allocated / 100);
+            $allocations[$fee->getId()] = FeeEntity::amountToPounds($allocated);
         }
 
         if ($remaining > 0) {
@@ -197,20 +197,11 @@ class FeesHelperService implements FactoryInterface
      */
     public function getOverpaymentAmount($receivedAmount, $fees)
     {
-        $receivedAmount = (int) ($receivedAmount * 100);
-        $outstanding = (int) ($this->getTotalOutstanding($fees) * 100);
+        $receivedAmount = FeeEntity::amountToPence($receivedAmount);
+        $outstanding = FeeEntity::amountToPence($this->getTotalOutstanding($fees));
 
         $overpayment = $receivedAmount - $outstanding;
 
-        return $this->format($overpayment / 100);
-    }
-
-    /**
-     * @param float $amount
-     * @return string formatted amount - two decimal places, no thousands separator
-     */
-    private function format($amount)
-    {
-        return number_format($amount, 2, '.', '');
+        return FeeEntity::amountToPounds($overpayment);
     }
 }
