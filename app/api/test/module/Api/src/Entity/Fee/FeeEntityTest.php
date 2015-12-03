@@ -1123,4 +1123,54 @@ class FeeEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * Test pounds to pence conversion
+     *
+     * @param  string $input
+     * @param  int $expected
+     * @dataProvider amountToPenceProvider
+     */
+    public function testAmountToPence($input, $expected)
+    {
+        $this->assertSame($expected, Entity::AmountToPence($input));
+    }
+
+    public function amountToPenceProvider()
+    {
+        return [
+            ['1.00', (int) 100],
+            ['1.01', (int) 101],
+            ['1.005', (int) 101],
+            ['1.001', (int) 100],
+            ['4.56', (int) 456],
+            ['35.16', (int) 3516],
+            ['1234.56', (int) 123456],
+            ['-4.56', (int) -456],
+        ];
+    }
+
+    /**
+     * Test pence to pounds conversion
+     *
+     * @param  string $input
+     * @param  int $expected
+     * @dataProvider amountToPoundsProvider
+     */
+    public function testAmountToPounds($input, $expected)
+    {
+        $this->assertSame($expected, Entity::AmountToPounds($input));
+    }
+
+   public function amountToPoundsProvider()
+    {
+        return [
+            [100, '1.00'],
+            [101, '1.01'],
+            [456, '4.56'],
+            [3516, '35.16'],
+            [123456, '1234.56'],
+            [-456, '-4.56'],
+        ];
+    }
 }
