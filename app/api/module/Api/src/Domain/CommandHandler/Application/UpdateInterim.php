@@ -96,7 +96,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
 
     protected function saveInterimData(ApplicationEntity $application, Cmd $command, $ignoreRequested = false)
     {
-        $this->validateDate($command);
+        $this->validate($command);
 
         $status = null;
 
@@ -116,8 +116,8 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
             $application->setInterimReason($command->getReason());
             $application->setInterimStart(new DateTime($command->getStartDate()));
             $application->setInterimEnd(new DateTime($command->getEndDate()));
-            $application->setInterimAuthVehicles($command->getAuthVehicles());
-            $application->setInterimAuthTrailers($command->getAuthTrailers());
+            $application->setInterimAuthVehicles((int) $command->getAuthVehicles());
+            $application->setInterimAuthTrailers((int) $command->getAuthTrailers());
 
             if ($status !== null) {
                 $application->setInterimStatus($status);
@@ -210,7 +210,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         }
     }
 
-    protected function validateDate(Cmd $command)
+    protected function validate(Cmd $command)
     {
         if ($command->getRequested() !== 'Y') {
             return;
