@@ -418,6 +418,11 @@ class FeeEntityTest extends EntityTester
                 ),
                 '-765.44',
             ],
+            'bug OLCS-11509' => [
+                '4.56',
+                new ArrayCollection([]),
+                '4.56',
+            ],
         ];
     }
 
