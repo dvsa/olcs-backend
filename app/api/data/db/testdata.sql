@@ -1217,7 +1217,8 @@ INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
   (542, 26),
   (543, 27),
   (611, 25),
-  (612, 25)
+  (612, 25),
+  (1, 24)
   ;
 
 INSERT INTO `vehicle` (`id`, `created_by`, `last_modified_by`, `vrm`, `plated_weight`,
