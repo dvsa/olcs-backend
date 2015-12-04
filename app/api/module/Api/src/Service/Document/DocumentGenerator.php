@@ -56,6 +56,11 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     private $contentStore;
 
     /**
+     * @var \Dvsa\Olcs\Api\Domain\Repository\Document
+     */
+    private $docuemntRepo;
+
+    /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
@@ -68,6 +73,7 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
         $this->queryHandlerManager = $serviceLocator->get('QueryHandlerManager');
         $this->uploader = $serviceLocator->get('FileUploader');
         $this->contentStore = $serviceLocator->get('ContentStore');
+        $this->docuemntRepo = $serviceLocator->get('RepositoryServiceManager')->get('Document');
 
         return $this;
     }
@@ -84,14 +90,25 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
      */
     public function generateFromTemplate($template, $queryData = [], $knownValues = [])
     {
-        $templateWithPrefix = '/templates/' . $this->addTemplatePrefix($queryData, $template) . '.rtf';
-        $templateWithoutPrefix = '/templates/' . $template . '.rtf';
+        // if template is an int then assume it is an ID to a document ID
+        if (is_int($template)) {
+            try {
+                /* @var $documentTemplate \Dvsa\Olcs\Api\Entity\Doc\DocTemplate */
+                $documentTemplate = $this->docuemntRepo->fetchById($template);
+            } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException $e) {
+                throw new \Exception('Template not found');
+            }
+            $possibleTemplatePaths = [$documentTemplate->getIdentifier()];
+        } else {
+            $templateWithPrefix = '/templates/' . $this->addTemplatePrefix($queryData, $template) . '.rtf';
+            $templateWithoutPrefix = '/templates/' . $template . '.rtf';
 
-        $possibleTemplatePaths = [
-            $template => $template,
-            $templateWithPrefix => $templateWithPrefix,
-            $templateWithoutPrefix => $templateWithoutPrefix
-        ];
+            $possibleTemplatePaths = [
+                $template => $template,
+                $templateWithPrefix => $templateWithPrefix,
+                $templateWithoutPrefix => $templateWithoutPrefix
+            ];
+        }
 
         return $this->generateFromTemplateIdentifier($possibleTemplatePaths, $queryData, $knownValues);
     }
