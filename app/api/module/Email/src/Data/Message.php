@@ -19,6 +19,8 @@ class Message
 
     protected $to;
 
+    protected $cc = [];
+
     protected $subject;
 
     protected $subjectVariables = [];
@@ -41,6 +43,7 @@ class Message
             'fromName' => $this->getFromName(),
             'fromEmail' => $this->getFromEmail(),
             'to' => $this->getTo(),
+            'cc' => $this->getCc(),
             'subject' => $this->getSubject(),
             'subjectVariables' => $this->getSubjectVariables(),
             'body' => $this->getBody(),
@@ -205,6 +208,27 @@ class Message
     public function setSubjectVariables(array $subjectVariables)
     {
         $this->subjectVariables = $subjectVariables;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCc()
+    {
+        return $this->cc;
+    }
+
+    /**
+     * Set cc email addresses
+     *
+     * @param array $cc [addr1, addr2, etc]
+     *
+     * @return \Dvsa\Olcs\Email\Data\Message
+     */
+    public function setCc(array $cc)
+    {
+        $this->cc = $cc;
         return $this;
     }
 
