@@ -134,6 +134,20 @@ class Transaction extends AbstractTransaction
     }
 
     /**
+     * @return boolean
+     */
+    public function isCard()
+    {
+        return in_array(
+            $this->getPaymentMethod()->getId(),
+            [
+                Fee::METHOD_CARD_ONLINE,
+                Fee::METHOD_CARD_OFFLINE,
+            ]
+        );
+    }
+
+    /**
      * @return array
      */
     public function getFeeTransactionsForReversal()
@@ -195,7 +209,11 @@ class Transaction extends AbstractTransaction
      */
     public function canAdjust()
     {
-        return (($this->isPayment() || $this->isAdjustment()) && !$this->isReversed());
+        return (
+            ($this->isPayment() || $this->isAdjustment())
+            && !$this->isCard()
+            && !$this->isReversed()
+        );
     }
 
 
