@@ -186,8 +186,32 @@ interface CpmsHelperInterface
      */
     public function reversePayment($receiptReference, $paymentMethod, $fees = array());
 
-    // @todo
-    // public function adjustTransaction($receiptReference);
+    /**
+     * Adjust a transaction
+     *
+     * @param  string $originalReceiptReference
+     * @param  int $originalTransactionId
+     * @param  array $fees (prior to reversing previous allocations)
+     * @param  string $newAmount
+     * @param  string $payer
+     * @param  string $slipNo
+     * @param  string $chequeNo
+     * @param  string $chequeDate
+     * @param  string $poNo
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function adjustTransaction(
+        $originalReceiptReference,
+        $originalTransactionId,
+        $fees,
+        $newAmount,
+        $payer,
+        $slipNo,
+        $chequeNo,
+        $chequeDate,
+        $poNo
+    );
 
     /**
      * @param mixed $amount

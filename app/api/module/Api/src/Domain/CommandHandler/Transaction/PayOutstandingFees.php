@@ -410,6 +410,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     }
 
     /**
+     * @todo  move this to separate command for reuse
      * @param string $receivedAmount
      * @param array $fees
      * @return Result
