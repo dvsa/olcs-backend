@@ -55,11 +55,11 @@ class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
     private function getTotalVehicles($financialEvidenceDate)
     {
         return (isset($financialEvidenceDate['applicationVehicles']) ?
-                    (int)$financialEvidenceDate['applicationVehicles'] : 0) +
-                (isset($financialEvidenceDate['otherLicenceVehicles']) ?
-                    (int)$financialEvidenceDate['otherLicenceVehicles'] : 0) +
-                (isset($financialEvidenceDate['otherApplicationVehicles']) ?
-                    (int)$financialEvidenceDate['otherApplicationVehicles'] : 0);
+            (int)$financialEvidenceDate['applicationVehicles'] : 0) +
+            (isset($financialEvidenceDate['otherLicenceVehicles']) ?
+            (int)$financialEvidenceDate['otherLicenceVehicles'] : 0) +
+            (isset($financialEvidenceDate['otherApplicationVehicles']) ?
+            (int)$financialEvidenceDate['otherApplicationVehicles'] : 0);
     }
 
     private function getEvidence($data, $feData)
