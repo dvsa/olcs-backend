@@ -169,6 +169,81 @@ class FeesHelperService implements FactoryInterface
         return $allocations;
     }
 
+    /**
+     * Determine the amounts by which to adjust fees by reversing a previous
+     * transaction
+     *
+     * @param string $transactionId
+     * @param array $fees array of FeeEntity
+     * @return array ['feeId' => 'allocatedAmount'] e.g.
+     * [
+     *     97 => '-12.34',
+     *     98 => '-50.00',
+     * ]
+     */
+    public function deallocatePayments($transactionId, array $fees)
+    {
+        $allocations = [];
+
+        foreach ($fees as $fee) {
+            $allocated = $fee->getAmountAllocatedByTransactionId($transactionId);
+            $allocations[$fee->getId()] = number_format($allocated * -1, 2, '.', '');
+        }
+
+        return $allocations;
+    }
+
+    /**
+     * Determine how a payment should be allocated to an array of fees when
+     * an adjustment is applied. Reverses out original allocations based on the
+     * previous transaction, then allocates new amounts.
+     *
+     * @param string $amount payment amount
+     * @param array $fees array of FeeEntity
+     * @param int $originalTransactionId
+     * @return array as per allocatePayments()
+     */
+    public function allocatePaymentsViaAdjustment($amount, array $fees, $originalTransactionId)
+    {
+        $fees = $this->sortFeesByInvoiceDate($fees);
+
+        $allocations = [];
+
+        $remaining = FeeEntity::amountToPence($amount);
+
+        foreach ($fees as $fee) {
+
+            $allocated = 0;
+
+            $outstanding = FeeEntity::amountToPence($fee->getOutstandingAmount());
+            $previouslyAllocated = $fee->getAmountAllocatedByTransactionId($originalTransactionId);
+
+            // reduc
+            $outstanding += $previouslyAllocated;
+
+            if ($remaining >= $outstanding) {
+                // if we have enough to pay the fee in full, allocate full amount
+                $allocated = $outstanding;
+            } elseif ($remaining > 0) {
+                // otherwise allocate remaining available amount
+                $allocated = $remaining;
+            }
+
+            // then decrement remaining available
+            $remaining = ($remaining - $allocated);
+
+            $allocations[$fee->getId()] = FeeEntity::amountToPounds($allocated);
+        }
+
+        if ($remaining > 0) {
+            // note, a balancing fee for any overpayment should always be created
+            // prior to calculating allocations, so keep this in as a safeguard:
+            throw new Exception("Overpayments not permitted");
+        }
+
+        return $allocations;
+    }
+
     public function sortFeesByInvoiceDate(array $fees)
     {
         $sorted = $fees;

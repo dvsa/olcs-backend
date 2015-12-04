@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Service;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Service\FeesHelperService;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -317,6 +318,36 @@ class FeesHelperServiceTest extends MockeryTestCase
     }
 
     /**
+     * @param int $transactionId
+     * @param array $fees array of FeeEntity
+     * @param array $expected allocated amounts e.g. ['97' => '-12.45', '98' => '-0.05']
+     * @dataProvider deallocateProvider()
+     */
+    public function testDeallocatePayments($transactionId, $fees, $expected)
+    {
+        $this->assertSame($expected, $this->sut->deallocatePayments($transactionId, $fees));
+    }
+
+    public function deallocateProvider()
+    {
+        return [
+            [
+                99,
+                [
+                    $this->getStubFeeWithTransactionIdAndAmount('10', 99, '99.99'),
+                    $this->getStubFeeWithTransactionIdAndAmount('11', 99, '100.01'),
+                    $this->getStubFeeWithTransactionIdAndAmount('12', 99, null),
+                ],
+                [
+                    '10' => '-99.99',
+                    '11' => '-100.01',
+                    '12' => '0.00',
+                ]
+            ],
+        ];
+    }
+
+    /**
      * Helper function to generate a stub fee entity
      *
      * @param int $id
@@ -335,6 +366,24 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->andReturn(new \DateTime($invoicedDate));
 
         return $fee;
+    }
+
+    /**
+     * Helper function to generate a stub fee entity with a linked transaction
+     *
+     * @param int $id
+     * @param string $amount
+     * @return FeeEntity
+     */
+    private function getStubFeeWithTransactionIdAndAmount($id, $transactionId, $amount)
+    {
+        return m::mock(FeeEntity::class)
+            ->shouldReceive('getId')
+            ->andReturn($id)
+            ->shouldReceive('getAmountAllocatedByTransactionId')
+            ->with($transactionId)
+            ->andReturn($amount)
+            ->getMock();
     }
 
     private function refData($id)

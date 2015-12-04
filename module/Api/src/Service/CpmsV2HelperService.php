@@ -14,6 +14,7 @@ use CpmsClient\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -529,6 +530,63 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'customer_reference' => (string) $this->getCustomerReference($fees),
         ];
 
+        $response = $this->send($method, $endPoint, $scope, $params);
+
+        return $this->validatePaymentResponse($response, false);
+    }
+
+    /**
+     * Adjust a transaction
+     *
+     * @param  string $originalReceiptReference
+     * @param  int $originalTransactionId
+     * @param  array $fees (prior to reversing previous allocations)
+     * @param  string $newAmount
+     * @param  string $payer
+     * @param  string $slipNo
+     * @param  string $chequeNo
+     * @param  string $chequeDate
+     * @param  string $poNo
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function adjustTransaction(
+        $originalReceiptReference,
+        $originalTransactionId,
+        $fees,
+        $newAmount,
+        $payer,
+        $slipNo,
+        $chequeNo,
+        $chequeDate,
+        $poNo
+    ) {
+        $method   = 'post';
+        $endPoint = '/api/payment/'.$originalReceiptReference.'/adjustment';
+        $scope    = ApiService::SCOPE_ADJUSTMENT;
+
+        $extraParams = [
+            'cheque_date' => $this->formatDate($chequeDate),
+            'cheque_number' => (string) $chequeNo,
+            'slip_number' => (string) $slipNo,
+            'batch_number' => (string) $slipNo,
+            'receipt_date' => $this->formatDate($receiptDate),
+            'name_on_cheque' => $payer,
+            'scope' => $scope,
+            'total_amount' => $this->formatAmount($amount),
+        ];
+        $params = $this->getParametersForFees($fees, $extraParams);
+
+        $allocations = $this->feesHelper->allocatePaymentsViaAdjustment($newAmount, $fees, $originalTransactionId);
+
+        foreach ($fees as $fee) {
+            $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
+            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
+            if (!empty($paymentData)) {
+                $params['payment_data'][] = $paymentData;
+            }
+        }
+var_dump($method, $endPoint, $scope, $params); exit;
         $response = $this->send($method, $endPoint, $scope, $params);
 
         return $this->validatePaymentResponse($response, false);

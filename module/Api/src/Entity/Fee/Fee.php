@@ -526,4 +526,25 @@ class Fee extends AbstractFee
     {
         return number_format($amount / 100, 2, '.', '');
     }
+
+    /**
+     * @return string formatted amount
+     */
+    public function getAmountAllocatedByTransactionId($transactionId)
+    {
+        $amount = null;
+
+        $this->getFeeTransactions()->forAll(
+            function ($key, $feeTransaction) use ($transactionId, &$amount) {
+                unset($key); // unused
+                if ($feeTransaction->getTransaction()->getId() == $transactionId) {
+                    $amount = $feeTransaction->getAmount();
+                    return false;
+                }
+                return true;
+            }
+        );
+
+        return $amount;
+    }
 }
