@@ -287,9 +287,11 @@ class FeeEntityTest extends EntityTester
         $createdOn,
         $statusId = Transaction::STATUS_COMPLETE,
         $typeId = Transaction::TYPE_PAYMENT,
-        $comment = ''
+        $comment = '',
+        $transactionId = null
     ) {
         $transaction = new Transaction();
+        $transaction->setId($transactionId);
         $feeTransaction = new FeeTransaction();
         $feeTransaction->setTransaction($transaction);
         $feeTransaction->setAmount($amount);
@@ -1171,6 +1173,60 @@ class FeeEntityTest extends EntityTester
             [3516, '35.16'],
             [123456, '1234.56'],
             [-456, '-4.56'],
+        ];
+    }
+
+    /**
+     * @dataProvider amountByTransactionProvider
+     */
+    public function testGetAmountAllocatedByTransactionId($feeTransactions, $transactionId, $expected)
+    {
+        $this->sut->setFeeTransactions($feeTransactions);
+        $this->assertEquals($expected, $this->sut->getAmountAllocatedByTransactionId($transactionId));
+    }
+
+    public function amountByTransactionProvider()
+    {
+        return [
+            'no transactions' => [
+                new ArrayCollection(),
+                99,
+                null,
+            ],
+            'one complete transaction matched' => [
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction(
+                            '234.56',
+                            '2015-09-01',
+                            '2015-09-02',
+                            Transaction::STATUS_COMPLETE,
+                            Transaction::TYPE_PAYMENT,
+                            '',
+                            99
+                        ),
+                    ]
+                ),
+                99,
+                '234.56',
+            ],
+            'one complete transaction unmatched' => [
+                new ArrayCollection(
+                    [
+                        $this->getStubFeeTransaction(
+                            '234.56',
+                            '2015-09-01',
+                            '2015-09-02',
+                            Transaction::STATUS_COMPLETE,
+                            Transaction::TYPE_PAYMENT,
+                            '',
+                            98
+                        ),
+                    ]
+                ),
+                99,
+                null,
+            ],
         ];
     }
 }

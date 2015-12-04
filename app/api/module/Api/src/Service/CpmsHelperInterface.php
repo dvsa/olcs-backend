@@ -186,6 +186,9 @@ interface CpmsHelperInterface
      */
     public function reversePayment($receiptReference, $paymentMethod, $fees = array());
 
+    // @todo
+    // public function adjustTransaction($receiptReference);
+
     /**
      * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
