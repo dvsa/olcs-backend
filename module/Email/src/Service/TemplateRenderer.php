@@ -60,7 +60,7 @@ class TemplateRenderer
      *
      * @param \Dvsa\Olcs\Email\Data\Message $message
      * @param string $template
-     * @param array  $variables
+     * @param array $variables
      * @param string|bool $layout
      */
     public function renderBody(\Dvsa\Olcs\Email\Data\Message $message, $template, $variables = [], $layout = null)
