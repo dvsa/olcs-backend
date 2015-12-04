@@ -41,7 +41,10 @@ class ProcessTest extends CommandHandlerTestCase
             'STATUS',
             ContinuationDetail::STATUS_PRINTING,
             Licence::LICENCE_CATEGORY_PSV,
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
             Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
             FeeType::FEE_TYPE_CONT,
         ];
 
@@ -90,7 +93,6 @@ class ProcessTest extends CommandHandlerTestCase
         $this->assertEquals(['continuationDetail' => $id], $result->getIds());
     }
 
-
     public function testHandleCommand()
     {
         $id = 69;
@@ -131,7 +133,7 @@ class ProcessTest extends CommandHandlerTestCase
         $docResult->addMessage('Document dispatched');
 
         $dtoData = [
-            'template' => 'PSVSRChecklist',
+            'template' => 1303,
             'query' => [
                 'licence' => $licenceId,
                 'goodsOrPsv' => Licence::LICENCE_CATEGORY_PSV,
