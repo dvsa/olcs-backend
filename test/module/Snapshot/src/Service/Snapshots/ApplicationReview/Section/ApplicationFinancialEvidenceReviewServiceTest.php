@@ -43,7 +43,7 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
                 [
                     [
                         'label' => 'application-review-financial-evidence-no-of-vehicles',
-                        'value' => 987
+                        'value' => 6
                     ],
                     [
                         'label' => 'application-review-financial-evidence-required-finance',
@@ -64,7 +64,9 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
                 [
                     'financialEvidence' => [
                         'requiredFinance' => 123456,
-                        'vehicles' => 987,
+                        'applicationVehicles' => 1,
+                        'otherLicenceVehicles' => 2,
+                        'otherApplicationVehicles' => 3
                     ],
                 ]
             );
@@ -96,7 +98,7 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
                 [
                     [
                         'label' => 'application-review-financial-evidence-no-of-vehicles',
-                        'value' => 987
+                        'value' => 6
                     ],
                     [
                         'label' => 'application-review-financial-evidence-required-finance',
@@ -122,7 +124,9 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
                 [
                     'financialEvidence' => [
                         'requiredFinance' => 123456,
-                        'vehicles' => 987,
+                        'applicationVehicles' => 1,
+                        'otherLicenceVehicles' => 2,
+                        'otherApplicationVehicles' => 3
                     ],
                     'documents' => [
                         $document1,
