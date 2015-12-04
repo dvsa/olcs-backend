@@ -125,6 +125,7 @@ final class ReverseTransaction extends AbstractCommandHandler implements
     }
 
     /**
+     * @todo  move this to a separate command
      * Reset any fees to either outstanding or cancelled
      */
     private function resetFees(array $fees)

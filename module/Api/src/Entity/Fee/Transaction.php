@@ -240,4 +240,17 @@ class Transaction extends AbstractTransaction
             return $this->getProcessedByUser()->getLoginId();
         }
     }
+
+    /**
+     * Get all fees associated to the transaction, via the feeTransactions
+     */
+    public function getFees()
+    {
+        $fees = [];
+        foreach ($this->getFeeTransactions() as $ft) {
+            $fees[$ft->getFee()->getId()] = $ft->getFee();
+        }
+
+        return $fees;
+    }
 }
