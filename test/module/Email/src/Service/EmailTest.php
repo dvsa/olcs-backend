@@ -83,6 +83,7 @@ class EmailTest extends MockeryTestCase
                     $expected = [
                         'From: foo <foo@bar.com>',
                         'To: bar@foo.com',
+                        'Cc: bar@foo.com',
                         'Subject: Subject',
                         'MIME-Version: 1.0',
                         'Content-Type: text/html',
@@ -95,7 +96,7 @@ class EmailTest extends MockeryTestCase
                 }
             );
 
-        $this->sut->send('foo@bar.com', 'foo', 'bar@foo.com', 'Subject', 'This is the content', true);
+        $this->sut->send('foo@bar.com', 'foo', 'bar@foo.com', 'Subject', 'This is the content', true, ['bar@foo.com']);
     }
 
     public function testSend()
@@ -119,6 +120,7 @@ class EmailTest extends MockeryTestCase
                     $expected = [
                         'From: foo <foo@bar.com>',
                         'To: bar@foo.com',
+                        'Cc: bar@foo.com',
                         'Subject: Subject',
                         '',
                         'This is the content'
@@ -128,6 +130,6 @@ class EmailTest extends MockeryTestCase
                 }
             );
 
-        $this->sut->send('foo@bar.com', 'foo', 'bar@foo.com', 'Subject', 'This is the content', false);
+        $this->sut->send('foo@bar.com', 'foo', 'bar@foo.com', 'Subject', 'This is the content', false, ['bar@foo.com']);
     }
 }
