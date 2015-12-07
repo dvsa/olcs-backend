@@ -240,4 +240,38 @@ class FeesHelperService implements FactoryInterface
 
         return FeeEntity::amountToPounds($overpayment);
     }
+
+    /**
+     * @param FeeEntity $existingFee
+     * @return array
+     */
+    public function getIdsFromFee($existingFee)
+    {
+        $licenceId = null;
+        if ($existingFee->getLicence()) {
+            $licenceId = $existingFee->getLicence()->getId();
+        }
+
+        $applicationId = null;
+        if ($existingFee->getApplication()) {
+            $applicationId = $existingFee->getApplication()->getId();
+        }
+
+        $busRegId = null;
+        if ($existingFee->getBusReg()) {
+            $busRegId = $existingFee->getBusReg()->getId();
+        }
+
+        $irfoGvPermitId = null;
+        if ($existingFee->getIrfoGvPermit()) {
+            $irfoGvPermitId = $existingFee->getIrfoGvPermit()->getId();
+        }
+
+        return [
+            'licence'      => $licenceId,
+            'application'  => $applicationId,
+            'busReg'       => $busRegId,
+            'irfoGvPermit' => $irfoGvPermitId,
+        ];
+    }
 }

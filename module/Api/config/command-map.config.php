@@ -565,6 +565,7 @@ return [
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
     Command\Fee\CancelIrfoGvPermitFees::class => CommandHandler\Fee\CancelIrfoGvPermitFees::class,
     Command\Fee\PayFee::class => CommandHandler\Fee\PayFee::class,
+    Command\Fee\CreateOverpaymentFee::class => CommandHandler\Fee\CreateOverpaymentFee::class,
     TransferCommand\Fee\ApproveWaive::class => CommandHandler\Fee\ApproveWaive::class,
     TransferCommand\Fee\RecommendWaive::class => CommandHandler\Fee\RecommendWaive::class,
     TransferCommand\Fee\RejectWaive::class => CommandHandler\Fee\RejectWaive::class,
