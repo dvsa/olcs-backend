@@ -10,8 +10,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateOverpaymentFee as CreateOverpaymentFeeCmd;
+use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
+use Dvsa\Olcs\Api\Domain\Command\Fee\ResetFees as ResetFeesCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -162,10 +163,11 @@ final class AdjustTransaction extends AbstractCommandHandler implements
             ->addId('feeTransaction', $newTransaction->getFeeTransactionIds())
             ->addMessage('FeeTransaction record(s) created');
 
-        return $this->result;
+        $this->result->merge(
+            $this->handleSideEffect(ResetFeesCmd::create(['fees' => $fees]))
+        );
 
-        // @todo overpayment balancing fee
-        // @todo reset $fees
+        return $this->result;
     }
 
     private function validate(CommandInterface $command, TransactionEntity $transaction)
