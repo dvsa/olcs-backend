@@ -2,6 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Bus;
 
+use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as Entity;
 use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService as BusRegOtherServiceEntity;
@@ -1846,4 +1850,166 @@ class BusRegEntityTest extends EntityTester
         ];
     }
 
+    /**
+     * @dataProvider testGetPublicationSectionForGrantEmailProvider
+     *
+     * @param string $status
+     * @param string $revertStatus
+     * @param string $shortNotice
+     * @param string $section
+     */
+    public function testGetPublicationSectionForGrantEmail($status, $revertStatus, $shortNotice, $section)
+    {
+        $entity = new Entity();
+        $status = new RefData($status);
+        $entity->setStatus($status);
+        $revertStatus = new RefData($revertStatus);
+        $entity->setRevertStatus($revertStatus);
+        $entity->setIsShortNotice($shortNotice);
+
+        $this->assertEquals($section, $entity->getPublicationSectionForGrantEmail());
+    }
+
+    public function testGetPublicationSectionForGrantEmailProvider()
+    {
+        return [
+            [Entity::STATUS_REGISTERED, Entity::STATUS_NEW, 'Y', PublicationSection::BUS_NEW_SHORT_SECTION],
+            [Entity::STATUS_REGISTERED, Entity::STATUS_NEW, 'N', PublicationSection::BUS_NEW_SECTION],
+            [Entity::STATUS_REGISTERED, Entity::STATUS_VAR, 'Y', PublicationSection::BUS_VAR_SHORT_SECTION],
+            [Entity::STATUS_REGISTERED, Entity::STATUS_VAR, 'N', PublicationSection::BUS_VAR_SECTION],
+            [Entity::STATUS_CANCELLED, Entity::STATUS_CANCEL, 'Y', PublicationSection::BUS_CANCEL_SHORT_SECTION],
+            [Entity::STATUS_CANCELLED, Entity::STATUS_CANCEL, 'N', PublicationSection::BUS_CANCEL_SECTION],
+        ];
+    }
+
+    /**
+     * Tests the method throws exception if status is incorrect
+     *
+     * @dataProvider publicationSectionForGrantEmailInvalidStatusProvider
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @param string $status
+     */
+    public function testPublicationSectionForGrantEmailStatusException($status)
+    {
+        $entity = new Entity();
+        $status = new RefData($status);
+        $entity->setStatus($status);
+
+        $entity->getPublicationSectionForGrantEmail();
+    }
+
+    /**
+     * Data provider for isFromEbsr
+     *
+     * @return array
+     */
+    public function publicationSectionForGrantEmailInvalidStatusProvider()
+    {
+        return [
+            [Entity::STATUS_NEW],
+            [Entity::STATUS_VAR],
+            [Entity::STATUS_CANCEL],
+            [Entity::STATUS_ADMIN],
+            [Entity::STATUS_REFUSED],
+            [Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_CNS],
+        ];
+    }
+
+    /**
+     * Tests the method throws exception if revertStatus is incorrect
+     *
+     * @dataProvider publicationSectionForGrantEmailInvalidRevertStatusProvider
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @param string $revertStatus
+     */
+    public function testPublicationSectionForGrantEmailRevertStatusException($status, $revertStatus)
+    {
+        $entity = new Entity();
+        $status = new RefData($status);
+        $entity->setStatus($status);
+        $revertStatus = new RefData($revertStatus);
+        $entity->setRevertStatus($revertStatus);
+
+        $entity->getPublicationSectionForGrantEmail();
+    }
+
+    /**
+     * Data provider for testPublicationSectionForGrantEmailRevertStatusException
+     *
+     * @return array
+     */
+    public function publicationSectionForGrantEmailInvalidRevertStatusProvider()
+    {
+        return [
+            [Entity::STATUS_REGISTERED, Entity::STATUS_CANCEL],
+            [Entity::STATUS_REGISTERED, Entity::STATUS_CANCELLED],
+            [Entity::STATUS_REGISTERED, Entity::STATUS_ADMIN],
+            [Entity::STATUS_REGISTERED, Entity::STATUS_REFUSED],
+            [Entity::STATUS_REGISTERED, Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_REGISTERED, Entity::STATUS_CNS],
+            [Entity::STATUS_CANCELLED, Entity::STATUS_NEW],
+            [Entity::STATUS_CANCELLED, Entity::STATUS_VAR],
+            [Entity::STATUS_CANCELLED, Entity::STATUS_CANCELLED],
+            [Entity::STATUS_CANCELLED, Entity::STATUS_ADMIN],
+            [Entity::STATUS_CANCELLED, Entity::STATUS_REFUSED],
+            [Entity::STATUS_CANCELLED, Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_CANCELLED, Entity::STATUS_CNS],
+        ];
+    }
+
+    public function testPublicationLinksForGrantEmail()
+    {
+        $pub3No = 1234;
+        $pub3TrafficArea = 'trafficArea3';
+        $pub4No = 5678;
+        $pub4TrafficArea = 'trafficArea4';
+
+        $expectedResult = $pub3No . ' ' . $pub3TrafficArea . ', ' . $pub4No . ' ' . $pub4TrafficArea;
+
+        $matchPubSection = new PublicationSection();
+        $matchPubSection ->setId(PublicationSection::BUS_NEW_SHORT_SECTION);
+
+        $otherPubSection = new PublicationSection();
+        $otherPubSection ->setId(PublicationSection::BUS_VAR_SHORT_SECTION);
+
+        $publication2 = m::mock(PublicationEntity::class)->makePartial();
+        $publication2->shouldReceive('isNew')->once()->andReturn(false);
+
+        $publication3 = m::mock(PublicationEntity::class)->makePartial();
+        $publication3->shouldReceive('isNew')->once()->andReturn(true);
+        $publication3->shouldReceive('getPublicationNo')->once()->andReturn($pub3No);
+        $publication3->shouldReceive('getTrafficArea->getName')->once()->andReturn($pub3TrafficArea);
+
+        $publication4 = m::mock(PublicationEntity::class)->makePartial();
+        $publication4->shouldReceive('isNew')->once()->andReturn(true);
+        $publication4->shouldReceive('getPublicationNo')->once()->andReturn($pub4No);
+        $publication4->shouldReceive('getTrafficArea->getName')->once()->andReturn($pub4TrafficArea);
+
+        //won't match due to section
+        $pubLink1 = new PublicationLink();
+        $pubLink1->setPublicationSection($otherPubSection);
+
+        //matches but publication not new
+        $pubLink2 = new PublicationLink();
+        $pubLink2->setPublicationSection($matchPubSection);
+        $pubLink2->setPublication($publication2);
+
+        //match
+        $pubLink3 = new PublicationLink();
+        $pubLink3->setPublicationSection($matchPubSection);
+        $pubLink3->setPublication($publication3);
+
+        //match
+        $pubLink4 = new PublicationLink();
+        $pubLink4->setPublicationSection($matchPubSection);
+        $pubLink4->setPublication($publication4);
+
+        $publicationLinks = new ArrayCollection([$pubLink1, $pubLink2, $pubLink3, $pubLink4]);
+
+        $entity = new Entity();
+        $entity->setPublicationLinks($publicationLinks);
+
+        $this->assertEquals($expectedResult, $entity->getPublicationLinksForGrantEmail($matchPubSection));
+    }
 }
