@@ -39,6 +39,8 @@ class Transaction extends AbstractTransaction
     const TYPE_REVERSAL = 'trt_reversal';
     const TYPE_ADJUSTMENT = 'trt_other';
 
+    const CURRENCY_SYMBOL = '£';
+
     /**
      * @return boolean
      */
@@ -64,6 +66,11 @@ class Transaction extends AbstractTransaction
         return $this->getStatus()->getId() === self::STATUS_COMPLETE;
     }
 
+    /**
+     * Gets the NET amount of any positive/negative feeTransactions
+     *
+     * @return string
+     */
     public function getTotalAmount()
     {
         $total = 0;
@@ -71,12 +78,12 @@ class Transaction extends AbstractTransaction
         $this->getFeeTransactions()->forAll(
             function ($key, $ft) use (&$total) {
                 unset($key); // unused
-                $total += $ft->getAmount();
+                $total += Fee::amountToPence($ft->getAmount());
                 return true;
             }
         );
 
-        return number_format($total, 2, '.', '');
+        return Fee::amountToPounds($total);
     }
 
     public function getCalculatedBundleValues()
@@ -87,7 +94,50 @@ class Transaction extends AbstractTransaction
             'displayAdjustmentOption' => $this->displayAdjustmentOption(),
             'canReverse' => $this->canReverse(),
             'canAdjust' => $this->canAdjust(),
+            'displayAmount' => $this->getDisplayAmount(),
         ];
+    }
+
+    /**
+     * Work out the amount prior to adjustment by summing the reversed
+     * feeTransaction amounts
+     */
+    private function getAmountBeforeAdjustment()
+    {
+        $total = 0;
+
+        $this->getFeeTransactions()->forAll(
+            function ($key, $ft) use (&$total) {
+                unset($key); // unused
+                if ($ft->getReversedFeeTransaction()) {
+                    $total += Fee::amountToPence($ft->getAmount());
+                }
+                return true;
+            }
+        );
+
+        return Fee::amountToPounds($total * -1);
+    }
+
+    /**
+     * Work out the amount after to adjustment by summing the positive
+     * feeTransaction amounts
+     */
+    private function getAmountAfterAdjustment()
+    {
+        $total = 0;
+
+        $this->getFeeTransactions()->forAll(
+            function ($key, $ft) use (&$total) {
+                unset($key); // unused
+                if (is_null($ft->getReversedFeeTransaction())) {
+                    $total += Fee::amountToPence($ft->getAmount());
+                }
+                return true;
+            }
+        );
+
+        return Fee::amountToPounds($total);
     }
 
     /**
@@ -243,6 +293,7 @@ class Transaction extends AbstractTransaction
 
     /**
      * Get all fees associated to the transaction, via the feeTransactions
+     * @return array of Fee
      */
     public function getFees()
     {
@@ -252,5 +303,24 @@ class Transaction extends AbstractTransaction
         }
 
         return $fees;
+    }
+
+    /**
+     * Gets the 'display' amount for the transaction. e.g.
+     *
+     * @return string e.g. '£12.34' or '£12.34 to £23.45' for an adjustment
+     */
+    public function getDisplayAmount()
+    {
+        if ($this->isAdjustment()) {
+           return sprintf(
+                '%1$s%2$s to %1$s%3$s',
+                self::CURRENCY_SYMBOL,
+                $this->getAmountBeforeAdjustment(),
+                $this->getAmountAfterAdjustment()
+            );
+        }
+
+        return self::CURRENCY_SYMBOL.$this->getTotalAmount();
     }
 }
