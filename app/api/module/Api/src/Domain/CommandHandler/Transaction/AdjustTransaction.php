@@ -112,7 +112,14 @@ final class AdjustTransaction extends AbstractCommandHandler implements
                 ->setTransaction($newTransaction)
                 ->setAmount($reversalAmount)
                 ->setReversedFeeTransaction($originalFt);
+
+            // add feeTransaction to the transaction for saving
             $newTransaction->getFeeTransactions()->add($feeTransaction);
+
+            // add feeTransaction to the fee so that outstanding amount
+            // is calculated correctly
+            $fee->getFeeTransactions()->add($feeTransaction);
+
             $fees[$fee->getId()] = $fee;
         }
 
@@ -127,7 +134,6 @@ final class AdjustTransaction extends AbstractCommandHandler implements
             // $result->merge($this->maybeCancelPendingWaive($fee));
 
             $allocatedAmount = $allocations[$fee->getId()];
-            // @todo check that getOutstandingAmount takes account of reversals above
             $markAsPaid = ($allocatedAmount === $fee->getOutstandingAmount() && !$fee->isPaid());
             $feeTransaction = new FeeTransactionEntity();
             $feeTransaction
