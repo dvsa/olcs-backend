@@ -103,7 +103,7 @@ final class AdjustTransaction extends AbstractCommandHandler implements
 
         // add reversal feeTransactions
         $fees = [];
-        foreach ($originalTransaction->getFeeTransactionsForReversal() as $originalFt) {
+        foreach ($originalTransaction->getFeeTransactionsForAdjustment() as $originalFt) {
             $feeTransaction = new FeeTransactionEntity();
             $reversalAmount = $originalFt->getAmount() * -1;
             $fee = $originalFt->getFee();

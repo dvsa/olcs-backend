@@ -95,6 +95,7 @@ class Transaction extends AbstractTransaction
             'canReverse' => $this->canReverse(),
             'canAdjust' => $this->canAdjust(),
             'displayAmount' => $this->getDisplayAmount(),
+            'amountAfterAdjustment' => $this->getAmountAfterAdjustment(),
         ];
     }
 
@@ -209,6 +210,26 @@ class Transaction extends AbstractTransaction
                 $feeTransactions[] = $ft;
             }
         }
+
+        return $feeTransactions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFeeTransactionsForAdjustment()
+    {
+        $feeTransactions = [];
+
+        $this->getFeeTransactions()->forAll(
+            function ($key, $ft) use (&$feeTransactions) {
+                unset($key); // unused
+                if (is_null($ft->getReversedFeeTransaction())) {
+                    $feeTransactions[] = $ft;
+                }
+                return true;
+            }
+        );
 
         return $feeTransactions;
     }
