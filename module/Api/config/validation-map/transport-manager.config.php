@@ -18,7 +18,7 @@ return [
 
     QueryHandler\TransportManagerApplication\GetList::class => Handler\TransportManagerApplication\GetList::class,
     QueryHandler\TransportManagerLicence\GetList::class            => Misc\CanAccessLicenceWithLicence::class,
-    QueryHandler\TransportManagerLicence\GetListByVariation::class => Misc\CanAccessLicenceWithLicence::class,
+    QueryHandler\TransportManagerLicence\GetListByVariation::class => Misc\CanAccessVariationWithVariation::class,
 
     QueryHandler\Tm\TransportManager::class                        => Misc\IsInternalUser::class,
 
