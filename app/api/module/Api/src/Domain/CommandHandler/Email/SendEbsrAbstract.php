@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefused as RefusedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrReceived as ReceivedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefreshed as RefreshedCmd;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
+use Dvsa\Olcs\Api\Entity\View\BusRegSearchView as BusRegSearchViewEntity;
 
 /**
  * Send Ebsr Email Abstract
@@ -33,6 +34,8 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
     const DATE_FORMAT = 'l F jS Y';
 
     protected $repoServiceName = 'EbsrSubmission';
+
+    protected $extraRepos = ['BusRegSearchView'];
 
     protected $template = null;
 
@@ -49,6 +52,9 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
         $ebsr = $repo->fetchUsingId($command, Query::HYDRATE_OBJECT, null);
         $busReg = $ebsr->getBusReg();
         $busRegNo = $busReg->getRegNo();
+
+        /** @var BusRegSearchViewEntity $formattedServiceNumbers */
+        $formattedServiceNumbers = $this->getRepo('BusRegSearchView')->fetchById($busReg->getId());
 
         $orgAddress = $ebsr->getOrganisationEmailAddress();
         $administratorEmails = [];
@@ -91,7 +97,7 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
             'registrationNumber' => $busRegNo,
             'origin' => $busReg->getStartPoint(),
             'destination' => $busReg->getFinishPoint(),
-            'lineName' => $busReg->getFormattedServiceNumbers(),
+            'lineName' => $formattedServiceNumbers->getServiceNo(),
             'startDate' => $this->formatDate($busReg->getEffectiveDate()),
             'localAuthoritys' => $localAuthoritiesString,
             'publicationId' => null

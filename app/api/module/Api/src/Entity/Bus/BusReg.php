@@ -1007,29 +1007,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     }
 
     /**
-     * Returns a formatted string of service numbers
-     *
-     * @return string
-     */
-    public function getFormattedServiceNumbers()
-    {
-        $serviceNumbers = $this->serviceNo;
-        $otherServiceNumbers = $this->getOtherServices();
-        $extractedNumbers = [];
-
-        /** @var BusRegOtherServiceEntity $number */
-        foreach ($otherServiceNumbers as $number) {
-            $extractedNumbers[] = $number->getServiceNo();
-        }
-
-        if (!empty($extractedNumbers)) {
-            $serviceNumbers .= ' (' . implode(', ', $extractedNumbers) . ')';
-        }
-
-        return $serviceNumbers;
-    }
-
-    /**
      * Gets the publication section for a grant/cancellation email
      *
      * @throws
