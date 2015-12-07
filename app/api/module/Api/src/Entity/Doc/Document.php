@@ -31,6 +31,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Document extends AbstractDocument
 {
+    const GV_CONTINUATION_CHECKLIST = 1252;
+    const GV_CONTINUATION_CHECKLIST_NI = 1501;
+    const PSV_CONTINUATION_CHECKLIST = 1302;
+    const PSV_CONTINUATION_CHECKLIST_SR = 1303;
+
     public function updateDocument(
         $identifier,
         $description,
