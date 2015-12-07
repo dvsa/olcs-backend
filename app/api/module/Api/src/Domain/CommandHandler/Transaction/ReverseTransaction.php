@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\Fee\ResetFees as ResetFeesCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -102,7 +103,9 @@ final class ReverseTransaction extends AbstractCommandHandler implements
             ->addId('transaction', $newTransaction->getId())
             ->addMessage('Transaction record created');
 
-        $this->resetFees($fees);
+        $this->result->merge($this->handleSideEffect(
+            ResetFeesCmd::create(['fees' => $fees])
+        );
 
         return $this->result;
     }
@@ -122,23 +125,6 @@ final class ReverseTransaction extends AbstractCommandHandler implements
         $new->setChequePoDate($original->getChequePoDate());
         $new->setChequePoNumber($original->getChequePoNumber());
         $new->setPayingInSlipNumber($original->getPayingInSlipNumber());
-    }
-
-    /**
-     * @todo  move this to a separate command
-     * Reset any fees to either outstanding or cancelled
-     */
-    private function resetFees(array $fees)
-    {
-        $outstanding = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_OUTSTANDING);
-        $cancelled = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_CANCELLED);
-
-        foreach ($fees as $feeId => $fee) {
-            $status = $fee->isBalancingFee() ? $cancelled : $outstanding;
-            $fee->setFeeStatus($status);
-            $this->getRepo('Fee')->save($fee);
-            $this->result->addMessage(sprintf('Fee %d reset to %s', $feeId, $status->getDescription()));
-        }
     }
 
     /**
