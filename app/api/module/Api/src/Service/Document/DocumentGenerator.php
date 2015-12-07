@@ -58,7 +58,7 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     /**
      * @var \Dvsa\Olcs\Api\Domain\Repository\Document
      */
-    private $docuemntRepo;
+    private $documentRepo;
 
     /**
      * Create service
@@ -73,7 +73,7 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
         $this->queryHandlerManager = $serviceLocator->get('QueryHandlerManager');
         $this->uploader = $serviceLocator->get('FileUploader');
         $this->contentStore = $serviceLocator->get('ContentStore');
-        $this->docuemntRepo = $serviceLocator->get('RepositoryServiceManager')->get('Document');
+        $this->documentRepo = $serviceLocator->get('RepositoryServiceManager')->get('Document');
 
         return $this;
     }
@@ -94,7 +94,7 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
         if (is_int($template)) {
             try {
                 /* @var $documentTemplate \Dvsa\Olcs\Api\Entity\Doc\DocTemplate */
-                $documentTemplate = $this->docuemntRepo->fetchById($template);
+                $documentTemplate = $this->documentRepo->fetchById($template);
             } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException $e) {
                 throw new \Exception('Template not found');
             }
