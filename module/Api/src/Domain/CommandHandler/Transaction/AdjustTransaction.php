@@ -105,6 +105,7 @@ final class AdjustTransaction extends AbstractCommandHandler implements
 
         // add reversal feeTransactions
         $fees = [];
+        $previousBalancingFee = null;
         foreach ($originalTransaction->getFeeTransactionsForAdjustment() as $originalFt) {
             $feeTransaction = new FeeTransactionEntity();
             $reversalAmount = $originalFt->getAmount() * -1;
@@ -123,11 +124,16 @@ final class AdjustTransaction extends AbstractCommandHandler implements
             $fee->getFeeTransactions()->add($feeTransaction);
 
             $fees[$fee->getId()] = $fee;
+
+            if ($fee->isBalancingFee()) {
+                // this should get cancelled
+                $previousBalancingFee = $fee;
+            }
         }
 
         // work out the allocation of the payment amount to fees, will create
         // balancing entry to handle any overpayment
-        $allocations = $this->allocatePayments($command->getReceived(), $fees);
+        $allocations = $this->allocatePayments($command->getReceived(), $fees, $previousBalancingFee);
 
         // create new feeTransaction record(s)
         foreach ($allocations as $feeId => $allocatedAmount) {
@@ -199,13 +205,17 @@ final class AdjustTransaction extends AbstractCommandHandler implements
     /**
      * @param string $receivedAmount
      * @param array $fees - passed by reference as we may need to append
+     * @param FeeEntity $previousBalancingFee fee to cancel
      * @return array
      */
-    private function allocatePayments($receivedAmount, &$fees)
+    private function allocatePayments($receivedAmount, &$fees, $previousBalancingFee = null)
     {
+        $newFeeId = null;
+
         $dtoData = [
             'receivedAmount' => $receivedAmount,
             'fees' => $fees,
+            'previousBalancingFee' => $previousBalancingFee,
         ];
 
         $feeResult = $this->handleSideEffect(CreateOverpaymentFeeCmd::create($dtoData));
@@ -218,6 +228,6 @@ final class AdjustTransaction extends AbstractCommandHandler implements
 
         $this->result->merge($feeResult);
 
-        return $this->feesHelper->allocatePayments($receivedAmount, $fees);
+        return $this->feesHelper->allocatePayments($receivedAmount, $fees, $newFeeId);
     }
 }
