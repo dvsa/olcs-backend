@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Send Transport Manager Application Email
+ * Send Ebsr Email Abstract
  *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Craig R <uk@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
@@ -13,8 +13,14 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as Repository;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as Entity;
-use Dvsa\Olcs\Transfer\Query\Ebsr\EbsrSubmission as EbsrSubmissionQuery;
-use Dvsa\Olcs\Transfer\Command\Ebsr\SubmissionCreate as SubmissionCreateCommand;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrCancelled as CancelCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRegistered as RegCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrWithdrawn as WithdrawnCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefused as RefusedCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrReceived as ReceivedCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefreshed as RefreshedCmd;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
+use Dvsa\Olcs\Api\Entity\View\BusRegSearchView as BusRegSearchViewEntity;
 
 /**
  * Send Ebsr Email Abstract
@@ -29,59 +35,84 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements \Dvsa\
 
     protected $repoServiceName = 'EbsrSubmission';
 
+    protected $extraRepos = ['BusRegSearchView'];
+
     protected $template = null;
 
     /**
-     * @param CommandInterface $command
+     * @param CommandInterface|CancelCmd|RegCmd|WithdrawnCmd|RefusedCmd|ReceivedCmd|RefreshedCmd $command
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
-        // This doesn't exist yet, so in the UT, I'll create a mock of CommandInterface.
-        /** @var SubmissionCreateCommand $command */
-
         /** @var $repo Repository $repo */
         $repo = $this->getRepo();
 
-        $ebsrSubmissionQuery = EbsrSubmissionQuery::create(
-            ['id' => $command->getId()]
-        );
         /* @var $ebsr Entity */
-        $ebsr = $repo->fetchUsingId($ebsrSubmissionQuery, Query::HYDRATE_OBJECT, null);
+        $ebsr = $repo->fetchUsingId($command, Query::HYDRATE_OBJECT, null);
+        $busReg = $ebsr->getBusReg();
+        $busRegNo = $busReg->getRegNo();
 
-        $message = new \Dvsa\Olcs\Email\Data\Message(
-            $ebsr->getOrganisationEmailAddress(),
-            'email.' . $this->template . '.subject'
-        );
+        /** @var BusRegSearchViewEntity $formattedServiceNumbers */
+        $formattedServiceNumbers = $this->getRepo('BusRegSearchView')->fetchById($busReg->getId());
+
+        $orgAddress = $ebsr->getOrganisationEmailAddress();
+        $administratorEmails = [];
+
+        //org address will be blank or else validated on ebsr submission
+        if (!$orgAddress) {
+            $administratorEmails = $ebsr->getOrganisation()->getAdminEmailAddresses();
+
+            if (!empty($administratorEmails)) {
+                $orgAddress = $administratorEmails[0];
+                unset($administratorEmails[0]);
+            }
+        }
+
+        $message = new \Dvsa\Olcs\Email\Data\Message($orgAddress, 'email.' . $this->template . '.subject');
+
         $message->setTranslateToWelsh(
-            $ebsr->getBusReg()->getLicence()->getTranslateToWelsh()
+            $busReg->getLicence()->getTranslateToWelsh()
         );
 
+        $message->setSubjectVariables([$busRegNo, $ebsr->getId()]);
+
+        $localAuthoritiesCc = [];
         $localAuthoritiesList = [];
         $localAuthoritiesString = '';
 
-        foreach ($ebsr->getBusReg()->getLocalAuthoritys() as $localAuth) {
+        foreach ($busReg->getLocalAuthoritys() as $localAuth) {
             $localAuthoritiesList[] = $localAuth->getDescription();
+            $localAuthoritiesCc[] = $localAuth->getEmailAddress();
         }
 
         if (!empty($localAuthoritiesList)) {
-            $localAuthoritiesString = implode(', ', $localAuthoritiesList) . '.';
+            $localAuthoritiesString = implode(', ', $localAuthoritiesList);
         }
 
-        $this->sendEmailTemplate(
-            $message,
-            $this->template,
-            [
-                'submissionDate' => $this->formatDate($ebsr->getSubmittedDate()),
-                'registrationNumber' => $ebsr->getBusReg()->getRegNo(),
-                'origin' => $ebsr->getBusReg()->getStartPoint(),
-                'destination' => $ebsr->getBusReg()->getFinishPoint(),
-                'lineName' => $ebsr->getBusReg()->getServiceNo(),
-                'startDate' => $this->formatDate($ebsr->getBusReg()->getEffectiveDate()),
-                'localAuthoritys' => $localAuthoritiesString,
-                'publicationId' => '[PUBLICATION_ID]', //
-            ]
-        );
+        $message->setCc(array_merge($localAuthoritiesCc, $administratorEmails));
+
+        $emailData =             [
+            'submissionDate' => $this->formatDate($ebsr->getSubmittedDate()),
+            'registrationNumber' => $busRegNo,
+            'origin' => $busReg->getStartPoint(),
+            'destination' => $busReg->getFinishPoint(),
+            'lineName' => $formattedServiceNumbers->getServiceNo(),
+            'startDate' => $this->formatDate($busReg->getEffectiveDate()),
+            'localAuthoritys' => $localAuthoritiesString,
+            'publicationId' => null
+        ];
+
+        if (($command instanceof RegCmd || $command instanceof CancelCmd)) {
+            $pubSection = $busReg->getPublicationSectionForGrantEmail();
+
+            if ($pubSection) {
+                $pubSectionEntity = $this->getRepo()->getReference(PublicationSectionEntity::class, $pubSection);
+                $emailData['publicationId'] = $busReg->getPublicationLinksForGrantEmail($pubSectionEntity);
+            }
+        }
+
+        $this->sendEmailTemplate($message, $this->template, $emailData);
 
         $result = new Result();
         $result->addId('ebsrSubmission', $ebsr->getId());

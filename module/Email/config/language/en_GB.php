@@ -2,12 +2,12 @@
 
 return array(
     'email.cns.subject' => 'Licences set to CNS between %s and %s',
-    'email.ebsr-cancelled.subject' => 'EBSR Cancelled',
-    'email.ebsr-received.subject' => 'EBSR Application Received',
-    'email.ebsr-refreshed.subject' => 'EBSR Refreshed',
-    'email.ebsr-refused.subject' => 'EBSR Application Refused',
-    'email.ebsr-registered.subject' => 'EBSR Registered',
-    'email.ebsr-withdrawn.subject' => 'EBSR Application Withdrawn',
+    'email.ebsr-cancelled.subject' => 'EBSR Application Cancelled - %s - EBSR ID: %s',
+    'email.ebsr-received.subject' => 'EBSR Application Received - %s - EBSR ID: %s',
+    'email.ebsr-refreshed.subject' => 'EBSR Data Refresh Completed - %s - EBSR ID: %s',
+    'email.ebsr-refused.subject' => 'EBSR Application Refused - %s - EBSR ID: %s',
+    'email.ebsr-registered.subject' => 'EBSR Application Registered - %s - EBSR ID: %s',
+    'email.ebsr-withdrawn.subject' => 'EBSR Application Withdrawn - %s - EBSR ID: %s',
     'email.inbox-reminder.continuation.subject' => 'Operator licence continuation/expiry - Reminder',
     'email.inbox-reminder.standard.subject' => 'Operator licensing information - Reminder',
     'email.licensing-information.continuation.subject' => 'Operator licence continuation/expiry',

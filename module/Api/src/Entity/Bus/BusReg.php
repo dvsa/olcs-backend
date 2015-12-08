@@ -6,13 +6,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as BusShortNoticeEntity;
-use Dvsa\Olcs\Api\Entity\Doc\Document;
-use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
+use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService as BusRegOtherServiceEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Doctrine\Common\Collections\Criteria;
 
@@ -1002,5 +1004,107 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface
     {
         $otherServiceEntity = new BusRegOtherService($this, $serviceNo);
         $this->otherServices->add($otherServiceEntity);
+    }
+
+    /**
+     * Gets the publication section for a grant/cancellation email
+     *
+     * @throws
+     * @return string
+     */
+    public function getPublicationSectionForGrantEmail()
+    {
+        $currentStatus = $this->status->getId();
+        $allowableCurrentStatus = [self::STATUS_REGISTERED, self::STATUS_CANCELLED];
+
+        if (!in_array($currentStatus, $allowableCurrentStatus)) {
+            throw new RuntimeException('valid statuses for grant email are registered and cancelled');
+        }
+
+        $revertStatus = $this->revertStatus->getId();
+        $shortNotice = $this->isShortNotice;
+
+        switch ($revertStatus) {
+            case self::STATUS_NEW:
+            case self::STATUS_VAR:
+                return $this->getPublicationSectionForGrantEmailRegistered($revertStatus, $shortNotice);
+            case self::STATUS_CANCEL:
+                return $this->getPublicationSectionForGrantEmailCancelled($shortNotice);
+        }
+
+        throw new RuntimeException('valid revert statuses for grant email are new, variation or cancellation');
+    }
+
+    /**
+     * @param $revertStatus
+     * @param $shortNotice
+     * @return int
+     * @throws RuntimeException
+     */
+    private function getPublicationSectionForGrantEmailRegistered($revertStatus, $shortNotice)
+    {
+        if ($this->status->getId() !== self::STATUS_REGISTERED) {
+            throw new RuntimeException('status mismatch generating registered grant email');
+        }
+
+        if ($revertStatus === self::STATUS_NEW) {
+            return ($shortNotice == 'Y' ?
+                PublicationSectionEntity::BUS_NEW_SHORT_SECTION :
+                PublicationSectionEntity::BUS_NEW_SECTION
+            );
+        } else {
+            return ($shortNotice == 'Y' ?
+                PublicationSectionEntity::BUS_VAR_SHORT_SECTION :
+                PublicationSectionEntity::BUS_VAR_SECTION
+            );
+        }
+    }
+
+    /**
+     * @param $shortNotice
+     * @return int
+     * @throws RuntimeException
+     */
+    private function getPublicationSectionForGrantEmailCancelled($shortNotice)
+    {
+        if ($this->status->getId() !== self::STATUS_CANCELLED) {
+            throw new RuntimeException('status mismatch generating cancellation grant email');
+        }
+
+        return ($shortNotice == 'Y' ?
+            PublicationSectionEntity::BUS_CANCEL_SHORT_SECTION :
+            PublicationSectionEntity::BUS_CANCEL_SECTION
+        );
+    }
+
+    /**
+     * Gets a string of publications affected by a grant action, called by the EBSR emails,
+     * only relevant for certain emails, so often will return empty string
+     *
+     * @return string
+     */
+    public function getPublicationLinksForGrantEmail(PublicationSectionEntity $pubSection)
+    {
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+
+        $criteria->where($expr->eq('publicationSection', $pubSection));
+
+        $matchingLinks = $this->publicationLinks->matching($criteria);
+        $matchingPublications = [];
+
+        /** @var PublicationLinkEntity $link */
+        foreach ($matchingLinks as $link) {
+            $matchedPublication = $link->getPublication();
+
+            //only include new publications, and ignore duplicates by having pubNo as the array key
+            if ($matchedPublication->isNew()) {
+                $pubNo = $matchedPublication->getPublicationNo();
+                $pubTa = $matchedPublication->getTrafficArea()->getName();
+                $matchingPublications[$pubNo] = $pubNo . ' ' . $pubTa;
+            }
+        }
+
+        return implode(', ', $matchingPublications);
     }
 }
