@@ -211,6 +211,9 @@ class FeeTest extends QueryHandlerTestCase
             $transaction
                 ->shouldReceive('getProcessedByLoginId')
                 ->andReturn('someuser');
+            $transaction
+                ->shouldReceive('isAdjustment')
+                ->andReturn(false);
         }
 
         $feeTransaction = m::mock(FeeTransactionEntity::class)

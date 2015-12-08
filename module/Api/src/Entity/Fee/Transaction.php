@@ -103,7 +103,7 @@ class Transaction extends AbstractTransaction
      * Work out the amount prior to adjustment by summing the reversed
      * feeTransaction amounts
      */
-    private function getAmountBeforeAdjustment()
+    public function getAmountBeforeAdjustment()
     {
         $total = 0;
 
@@ -121,10 +121,10 @@ class Transaction extends AbstractTransaction
     }
 
     /**
-     * Work out the amount after to adjustment by summing the positive
+     * Work out the amount after adjustment by summing the positive
      * feeTransaction amounts
      */
-    private function getAmountAfterAdjustment()
+    public function getAmountAfterAdjustment()
     {
         $total = 0;
 
