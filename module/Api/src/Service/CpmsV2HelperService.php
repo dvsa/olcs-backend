@@ -561,13 +561,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $chequeDate,
         $poNo
     ) {
-        return [
-            'code' => '000',
-            'message' => 'Success',
-            'receipt_reference' => 'OLCS-STUB-ADJUST-'.date('Ymd-His'),
-            'api_version' => '2',
-        ];
-
         $method   = 'post';
         $endPoint = '/api/payment/'.$originalReceiptReference.'/adjustment';
         $scope    = ApiService::SCOPE_ADJUSTMENT;
