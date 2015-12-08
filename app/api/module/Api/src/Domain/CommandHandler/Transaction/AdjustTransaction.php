@@ -125,14 +125,6 @@ final class AdjustTransaction extends AbstractCommandHandler implements
             $fees[$fee->getId()] = $fee;
         }
 
-        // disregard overpayments for new allocation
-        // $fees = array_filter(
-        //     $fees,
-        //     function ($fee) {
-        //         return !$fee->isBalancingFee();
-        //     }
-        // );
-
         // work out the allocation of the payment amount to fees, will create
         // balancing entry to handle any overpayment
         $allocations = $this->allocatePayments($command->getReceived(), $fees);
@@ -167,8 +159,10 @@ final class AdjustTransaction extends AbstractCommandHandler implements
             ->addId('feeTransaction', $newTransaction->getFeeTransactionIds())
             ->addMessage('FeeTransaction record(s) created');
 
+        // @todo work out which fees to reset
+        $feesToReset = [];
         $this->result->merge(
-            $this->handleSideEffect(ResetFeesCmd::create(['fees' => $fees]))
+            $this->handleSideEffect(ResetFeesCmd::create(['fees' => $feesToReset]))
         );
 
         return $this->result;
@@ -215,13 +209,15 @@ final class AdjustTransaction extends AbstractCommandHandler implements
         ];
 
         $feeResult = $this->handleSideEffect(CreateOverpaymentFeeCmd::create($dtoData));
+
         if ($feeResult->getId('fee')) {
+            $newFeeId = $feeResult->getId('fee');
             // an overpayment balancing fee was created, add it to the list
-            $fees[] = $this->getRepo('Fee')->fetchById($feeResult->getId('fee'));
+            $fees[$newFeeId] = $this->getRepo('Fee')->fetchById($newFeeId);
         }
 
         $this->result->merge($feeResult);
 
-        return $this->feesHelper->allocatePayments($receivedAmount, $fees, $dump = true);
+        return $this->feesHelper->allocatePayments($receivedAmount, $fees);
     }
 }

@@ -133,7 +133,7 @@ class FeesHelperService implements FactoryInterface
      *     99 => '0.00',
      * ]
      */
-    public function allocatePayments($amount, array $fees, $dump = false)
+    public function allocatePayments($amount, array $fees)
     {
         $fees = $this->sortFeesByInvoiceDate($fees);
 
@@ -142,6 +142,10 @@ class FeesHelperService implements FactoryInterface
         $remaining = FeeEntity::amountToPence($amount);
 
         foreach ($fees as $fee) {
+
+            if ($fee->isCancelled()) {
+                continue;
+            }
 
             $allocated = 0;
             $outstanding = FeeEntity::amountToPence($fee->getOutstandingAmount());
