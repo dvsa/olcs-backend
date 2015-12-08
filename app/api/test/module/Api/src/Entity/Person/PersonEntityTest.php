@@ -5,6 +5,8 @@ namespace Dvsa\OlcsTest\Api\Entity\Person;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Person\Person as Entity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Mockery as m;
 
 /**
@@ -35,28 +37,6 @@ class PersonEntityTest extends EntityTester
         $this->assertEquals('bplace', $entity->getBirthPlace());
     }
 
-    public function testGetDisqualificationNull()
-    {
-        $person = new Entity();
-        $person->setContactDetails(new \Doctrine\Common\Collections\ArrayCollection());
-
-        $this->assertSame(
-            \Dvsa\Olcs\Api\Entity\Organisation\Disqualification::STATUS_NONE,
-            $person->getDisqualificationStatus()
-        );
-    }
-
-    public function testGetDisqualification()
-    {
-        $contactDetails = m::mock(\Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails::class);
-        $contactDetails->shouldReceive('getDisqualificationStatus')->with()->once()->andReturn('DISQ_STATUS');
-
-        $person = new Entity();
-        $person->addContactDetails($contactDetails);
-
-        $this->assertSame('DISQ_STATUS', $person->getDisqualificationStatus());
-    }
-
     public function testGetContactDetail()
     {
         $contactDetails = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(new RefData());
@@ -83,5 +63,47 @@ class PersonEntityTest extends EntityTester
 
         $this->assertSame('Foo Bar', $person->getFullName());
 
+    }
+
+    public function testGetDisqualificationNull()
+    {
+        /* @var $organisation Entity */
+        $person = $this->instantiate($this->entityClass);
+        $person->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection());
+
+        $this->assertSame(null, $person->getDisqualification());
+    }
+
+    public function testGetDisqualification()
+    {
+        $disqualification = new Disqualification(m::mock(Organisation::class));
+
+        /* @var $person Entity */
+        $person = $this->instantiate($this->entityClass);
+        $person->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection([$disqualification]));
+
+        $this->assertSame($disqualification, $person->getDisqualification());
+    }
+
+    public function testGetDisqualificationStatusNone()
+    {
+        /* @var $person Entity */
+        $person = $this->instantiate($this->entityClass);
+        $person->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection());
+
+        $this->assertSame(Disqualification::STATUS_NONE, $person->getDisqualificationStatus());
+    }
+
+    public function testGetDisqualificationStatusActive()
+    {
+        $disqualification = new Disqualification(m::mock(Organisation::class));
+        $disqualification->setIsDisqualified('Y');
+        $disqualification->setStartDate('2015-01-01');
+
+        /* @var $person Entity */
+        $person = $this->instantiate($this->entityClass);
+        $person->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection([$disqualification]));
+
+        $this->assertSame(Disqualification::STATUS_ACTIVE, $person->getDisqualificationStatus());
     }
 }

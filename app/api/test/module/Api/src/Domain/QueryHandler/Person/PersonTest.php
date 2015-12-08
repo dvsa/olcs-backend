@@ -28,9 +28,7 @@ class PersonTest extends QueryHandlerTestCase
 
         $mockPerson = m::mock(\Dvsa\Olcs\Api\Entity\Person\Person::class)->makePartial();
         $mockPerson->shouldReceive('serialize')->with(
-            [
-                'contactDetails' => ['disqualifications']
-            ]
+            ['disqualifications']
         )->once()->andReturn(['foo' => 'bar']);
 
         $this->repoMap['Person']->shouldReceive('fetchUsingId')->with($query)->andReturn($mockPerson);

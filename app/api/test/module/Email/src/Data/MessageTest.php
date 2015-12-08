@@ -28,6 +28,13 @@ class MessageTest extends MockeryTestCase
         $this->assertSame($value, $this->sut->getTo());
     }
 
+    public function testCc()
+    {
+        $value = ['ABCDEFG'];
+        $this->sut->setCc($value);
+        $this->assertSame($value, $this->sut->getCc());
+    }
+
     public function testSubject()
     {
         $this->assertSame('SUBJECT', $this->sut->getSubject());

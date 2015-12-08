@@ -8,17 +8,18 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrCancelled as CommandHandler;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
-use Dvsa\Olcs\Transfer\Command\Ebsr\SubmissionCreate as SubmissionCreateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
+use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as BusRegSearchViewRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Entity\View\BusRegSearchView as BusRegSearchViewEntity;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Transfer\Query\Ebsr\EbsrSubmission as EbsrSubmissionQuery;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrAbstract;
 
@@ -31,9 +32,10 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
 {
     protected $template = null;
     protected $sutClass = null;
+    protected $cmdClass = null;
 
     /**
-     * @var CommandHandler
+     * @var CommandInterface
      */
     protected $sut;
 
@@ -41,6 +43,7 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
     {
         $this->sut = new $this->sutClass();
         $this->mockRepo('EbsrSubmission', EbsrSubmissionRepo::class);
+        $this->mockRepo('BusRegSearchView', BusRegSearchViewRepo::class);
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
@@ -49,16 +52,22 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider handleCommandProvider
+     *
+     * @param string $orgEmail
+     */
+    public function testHandleCommand($orgEmail, $adminEmail, $expectedToAddress, $cmdClass)
     {
         $ebsrSubmissionId = 1234;
         $regNo = 5678;
+        $busRegId = 12;
         $laDescription1 = 'la description 1';
         $laDescription2 = 'la description 2';
         $startPoint = 'start point';
         $endPoint = 'end point';
-        $orgEmail = 'test@testing.com';
-        $serviceNo = 99999;
+        $serviceNumbers = '99999 (12345, 567910)';
+        $orgAdminEmails = [0 => $adminEmail];
 
         $submittedDate = '2015-01-15';
         $formattedSubmittedDate = date(SendEbsrAbstract::DATE_FORMAT, strtotime($submittedDate));
@@ -74,46 +83,60 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
 
         $la = new ArrayCollection([$la1, $la2]);
 
-        $command = SubmissionCreateCommand::create(['id' => $ebsrSubmissionId]);
+        $command = $cmdClass::create(['id' => $ebsrSubmissionId]);
+
+        $busRegSearchViewEntity = m::mock(BusRegSearchViewEntity::class);
+        $busRegSearchViewEntity->shouldReceive('getServiceNo')->once()->andReturn($serviceNumbers);
+
+        $busRegEntity = m::mock(BusRegEntity::class);
+        $busRegEntity->shouldReceive('getId')->once()->andReturn($busRegId);
+        $busRegEntity->shouldReceive('getRegNo')->once()->andReturn($regNo);
+        $busRegEntity->shouldReceive('getStartPoint')->once()->andReturn($startPoint);
+        $busRegEntity->shouldReceive('getFinishPoint')->once()->andReturn($endPoint);
+        $busRegEntity->shouldReceive('getEffectiveDate')->once()->andReturn($effectiveDate);
+        $busRegEntity->shouldReceive('getLicence->getTranslateToWelsh')->once()->andReturn(false);
+        $busRegEntity->shouldReceive('getLocalAuthoritys')->once()->andReturn($la);
+        $busRegEntity->shouldReceive('getPublicationSectionForGrantEmail')->never(); //only for registered & cancelled
+        $busRegEntity->shouldReceive('getPublicationLinksForGrantEmail')->never(); //only for registered & cancelled
 
         $ebsrSubmissionEntity = m::mock(EbsrSubmissionEntity::class);
-        // Makes get busreg return this, so testing is easier.
         $ebsrSubmissionEntity->shouldReceive('getId')->andReturn($ebsrSubmissionId);
         $ebsrSubmissionEntity->shouldReceive('getSubmittedDate')->andReturn($submittedDate);
-        $ebsrSubmissionEntity->shouldReceive('getBusReg->getRegNo')->andReturn($regNo);
-        $ebsrSubmissionEntity->shouldReceive('getBusReg->getStartPoint')->andReturn($startPoint);
-        $ebsrSubmissionEntity->shouldReceive('getBusReg->getFinishPoint')->andReturn($endPoint);
-        $ebsrSubmissionEntity->shouldReceive('getBusReg->getServiceNo')->andReturn($serviceNo);
-        $ebsrSubmissionEntity->shouldReceive('getBusReg->getEffectiveDate')->andReturn($effectiveDate);
-        $ebsrSubmissionEntity->shouldReceive('getBusReg->getLicence->getTranslateToWelsh')->andReturn(false);
-        $ebsrSubmissionEntity->shouldReceive('getOrganisationEmailAddress')->andReturn($orgEmail);
-        $ebsrSubmissionEntity->shouldReceive('getBusReg->getLocalAuthoritys')->andReturn($la);
+        $ebsrSubmissionEntity->shouldReceive('getOrganisationEmailAddress')->once()->andReturn($orgEmail);
+        $ebsrSubmissionEntity->shouldReceive('getBusReg')->once()->andReturn($busRegEntity);
+        $ebsrSubmissionEntity->shouldReceive('getOrganisation->getAdminEmailAddresses')->andReturn($orgAdminEmails);
 
         $this->repoMap['EbsrSubmission']
             ->shouldReceive('fetchUsingId')
-            ->with(m::type(EbsrSubmissionQuery::class), Query::HYDRATE_OBJECT, null)
+            ->with(m::type(CommandInterface::class), Query::HYDRATE_OBJECT, null)
             ->once()
             ->andReturn($ebsrSubmissionEntity);
+
+        $this->repoMap['BusRegSearchView']
+            ->shouldReceive('fetchById')
+            ->with($busRegId)
+            ->once()
+            ->andReturn($busRegSearchViewEntity);
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->with(
             m::type(\Dvsa\Olcs\Email\Data\Message::class),
             $this->template,
             [
-                'submissionDate'     => $formattedSubmittedDate,
+                'submissionDate' => $formattedSubmittedDate,
                 'registrationNumber' => $regNo,
                 'origin' => $startPoint,
                 'destination' => $endPoint,
-                'lineName' => $serviceNo,
+                'lineName' => $serviceNumbers,
                 'startDate' => $formattedEffectiveDate,
-                'localAuthoritys' => $laDescription1 . ', ' . $laDescription2 . '.',
-                'publicationId' => '[PUBLICATION_ID]',
+                'localAuthoritys' => $laDescription1 . ', ' . $laDescription2,
+                'publicationId' => null,
             ],
             null
         );
 
         $result = new Result();
         $data = [
-            'to' => $orgEmail,
+            'to' => $expectedToAddress,
             'locale' => 'en_GB',
             'subject' => 'email.' . $this->template . '.subject'
         ];
@@ -124,5 +147,13 @@ abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
 
         $this->assertSame(['ebsrSubmission' => $ebsrSubmissionId], $result->getIds());
         $this->assertSame(['Email sent'], $result->getMessages());
+    }
+
+    public function handleCommandProvider()
+    {
+        return [
+            ['test@test.com', 'foo@bar.com', 'test@test.com', $this->cmdClass],
+            ['',  'foo@bar.com', 'foo@bar.com', $this->cmdClass]
+        ];
     }
 }

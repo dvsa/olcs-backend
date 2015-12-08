@@ -301,27 +301,34 @@ class OrganisationEntityTest extends EntityTester
         $this->assertEquals(111, $entity->getContextValue());
     }
 
+    /**
+     * Tests we're retreiving admin email addresses correctly
+     */
     public function testGetAdminEmailAddresses()
     {
-        $emailAddress = 'foo@bar.com';
-        /* @var $organisation Entity */
-        $organisation = $this->instantiate($this->entityClass);
+        $entity = new Entity();
 
-        $contactType = new RefData(ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS);
-        $user = new User('pid', User::USER_TYPE_INTERNAL);
-        $contactDetails = new ContactDetails($contactType);
-        $contactDetails->setEmailAddress($emailAddress);
-        $user->setContactDetails($contactDetails);
+        $email1 = 'foo@bar.com';
+        $email2 = 'bar@foo.com';
 
-        $organisationUser = new OrganisationUser();
-        $organisationUser->setUser($user);
-        $organisationUser->setOrganisation($organisation);
-        $organisationUser->setIsAdministrator('Y');
+        $expectedEmails = [
+            0 => $email1,
+            1 => $email2
+        ];
 
-        $collection = new ArrayCollection();
-        $collection->add($organisationUser);
-        $organisation->addOrganisationUsers($collection);
+        $user1 = new OrganisationUser();
+        $user1->setIsAdministrator('N');
 
-        $this->assertEquals([$emailAddress], $organisation->getAdminEmailAddresses());
+        $user2 = m::mock(OrganisationUser::class)->makePartial();
+        $user2->setIsAdministrator('Y');
+        $user2->shouldReceive('getUser->getContactDetails->getEmailAddress')->once()->andReturn($email1);
+
+        $user3 = m::mock(OrganisationUser::class)->makePartial();
+        $user3->setIsAdministrator('Y');
+        $user3->shouldReceive('getUser->getContactDetails->getEmailAddress')->once()->andReturn($email2);
+
+        $entity->setOrganisationUsers(new ArrayCollection([$user1, $user2, $user3]));
+
+        $this->assertEquals($expectedEmails, $entity->getAdminEmailAddresses());
     }
 }

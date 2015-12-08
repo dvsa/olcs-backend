@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 
 /**
  * Organisation Entity
@@ -269,19 +270,6 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         return $this->getLicences()->matching($criteria);
     }
 
-    public function getAdminEmailAddresses()
-    {
-        $users = [];
-
-        /** @var OrganisationUser $orgUser */
-        foreach ($this->getAdminOrganisationUsers() as $orgUser) {
-            if ($orgUser->getUser()->getContactDetails()->getEmailAddress() !== null) {
-                $users[] = $orgUser->getUser()->getContactDetails()->getEmailAddress();
-            }
-        }
-        return $users;
-    }
-
     public function getContextValue()
     {
         return $this->getId();
@@ -293,5 +281,36 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     public function getRelatedOrganisation()
     {
         return $this;
+    }
+
+    /**
+     * Gets email addresses for organisation administrator users
+     *
+     * @return array
+     */
+    public function getAdminEmailAddresses()
+    {
+        $adminUsers = $this->getAdministratorUsers();
+        $adminEmails = [];
+
+        /** @var OrganisationUserEntity $orgUser */
+        foreach ($adminUsers as $orgUser) {
+            $adminEmails[] = $orgUser->getUser()->getContactDetails()->getEmailAddress();
+        }
+
+        return $adminEmails;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAdministratorUsers()
+    {
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+
+        $criteria->where($expr->eq('isAdministrator', 'Y'));
+
+        return $this->organisationUsers->matching($criteria);
     }
 }

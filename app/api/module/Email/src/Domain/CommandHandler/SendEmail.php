@@ -215,15 +215,15 @@ class SendEmail extends AbstractCommandHandler
 
         $body = $this->replaceUris($this->translate($command->getBody(), $command->getLocale()));
 
-        $this->send($to, $subject, $body, $command->getHtml(), $fromEmail, $fromName);
+        $this->send($to, $subject, $body, $command->getHtml(), $fromEmail, $fromName, $command->getCc());
 
         $this->result->addMessage('Email sent');
         return $this->result;
     }
 
-    protected function send($to, $subject, $body, $isHtml, $fromEmail, $fromName)
+    protected function send($to, $subject, $body, $isHtml, $fromEmail, $fromName, $cc)
     {
-        $this->getEmailService()->send($fromEmail, $fromName, $to, $subject, $body, $isHtml);
+        $this->getEmailService()->send($fromEmail, $fromName, $to, $subject, $body, $isHtml, $cc);
     }
 
     /**

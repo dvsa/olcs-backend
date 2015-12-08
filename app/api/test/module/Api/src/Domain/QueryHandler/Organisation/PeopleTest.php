@@ -38,7 +38,7 @@ class PeopleTest extends QueryHandlerTestCase
                 'organisationPersons' => [
                     'person' => [
                         'title',
-                        'contactDetails' => ['disqualifications']
+                        'disqualifications'
                     ]
                 ]
             ]
@@ -79,7 +79,7 @@ class PeopleTest extends QueryHandlerTestCase
                 'organisationPersons' => [
                     'person' => [
                         'title',
-                        'contactDetails' => ['disqualifications']
+                        'disqualifications'
                     ]
                 ]
             ]

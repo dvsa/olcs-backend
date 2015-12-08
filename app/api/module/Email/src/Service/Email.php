@@ -72,8 +72,9 @@ class Email implements FactoryInterface
      * @param string $subject   Email subject
      * @param string $body      Email body
      * @param bool   $isHtml    whether to send as a HTML email
+     * @param array  $cc        cc'd addresses
      */
-    public function send($fromEmail, $fromName, $to, $subject, $body, $isHtml = false)
+    public function send($fromEmail, $fromName, $to, $subject, $body, $isHtml = false, array $cc = [])
     {
         if ((bool) $isHtml) {
             $htmlPart = new \Zend\Mime\Part($body);
@@ -86,6 +87,7 @@ class Email implements FactoryInterface
         $mail = new ZendMail\Message();
         $mail->setFrom($fromEmail, $fromName);
         $mail->addTo($to);
+        $mail->addCc($cc);
 
         $mail->setSubject($subject);
         $mail->setBody($body);

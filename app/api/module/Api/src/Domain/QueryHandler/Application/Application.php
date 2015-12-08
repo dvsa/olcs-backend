@@ -57,9 +57,7 @@ class Application extends AbstractQueryHandler
                         'type',
                         'disqualifications',
                         'organisationPersons' => [
-                            'person' => [
-                                'contactDetails' => ['disqualifications']
-                            ]
+                            'person' => ['disqualifications']
                         ]
                     ],
                 ],

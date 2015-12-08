@@ -4,6 +4,11 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\Submit as CommandHandler;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus as Command;
@@ -49,10 +54,12 @@ class SubmitTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 863, 'version' => 234]);
 
+        $organisation = new Organisation();
+
         $tma = m::mock(TransportManagerApplication::class)->makePartial();
         $tma->setIsOwner('N');
-        $tma->shouldReceive('getApplication->getLicence->getOrganisation->getAdminEmailAddresses')->with()->once()
-            ->andReturn([]);
+        $tma->shouldReceive('getApplication->getLicence->getOrganisation')->with()->once()
+            ->andReturn($organisation);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 234)->andReturn($tma);
@@ -93,17 +100,36 @@ class SubmitTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 863]);
 
-        $creatorContactDetails = m::mock();
-        $creatorContactDetails->shouldReceive('getContactDetails->getEmailAddress')->with()->once()
+        $creator = m::mock(User::class)->makePartial();
+        $creator->setId(1);
+        $creator->setTranslateToWelsh('N');
+        $creator->shouldReceive('getContactDetails->getEmailAddress')->with()->once()
             ->andReturn('email1');
+
+        $user = m::mock(User::class)->makePartial();
+        $user->setId(2);
+        $user->setTranslateToWelsh('Y');
+        $user->shouldReceive('getContactDetails->getEmailAddress')->with()->once()
+            ->andReturn('foo@bar.com');
+
+        $orgUser = new OrganisationUser();
+        $orgUser->setUser($user);
+        $orgUser->setIsAdministrator('Y');
+
+        $orgUserCreator = new OrganisationUser();
+        $orgUserCreator->setUser($creator);
+        $orgUserCreator->setIsAdministrator('Y');
+
+        $organisation = new Organisation();
+        $organisation->addOrganisationUsers($orgUser);
+        $organisation->addOrganisationUsers($orgUserCreator);
 
         $tma = m::mock(TransportManagerApplication::class)->makePartial();
         $tma->setId(12);
-        $tma->shouldReceive('getCreatedBy')->with()->twice()->andReturn($creatorContactDetails);
-        $tma->shouldReceive('getApplication->getLicence->getOrganisation->getAdminEmailAddresses')->with()->once()
-            ->andReturn(['email1']);
+        $tma->shouldReceive('getCreatedBy')->with()->andReturn($creator);
+        $tma->shouldReceive('getApplication->getLicence->getOrganisation')->with()->once()
+            ->andReturn($organisation);
 
-        $tma->shouldReceive('getApplication->getLicence->getTranslateToWelsh')->with()->once()->andReturn('Y');
         $tma->shouldReceive('getTransportManager->getHomeCd->getPerson->getFullName')->with()->once()
             ->andReturn('Bob Smith');
         $tma->shouldReceive('getApplication->getLicence->getLicNo')->with()->once()->andReturn('LIC01');
@@ -113,13 +139,12 @@ class SubmitTest extends CommandHandlerTestCase
             ->with($command)->andReturn($tma);
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
 
-        $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->once()->andReturnUsing(
+        $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->times(2)->andReturnUsing(
             function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) {
 
                 $this->assertSame('email.transport-manager-submitted-form.subject', $message->getSubject());
-                $this->assertSame('email1', $message->getTo());
+                $this->assertSame('foo@bar.com', $message->getTo());
                 $this->assertSame('cy_GB', $message->getLocale());
-
                 $this->assertSame('transport-manager-submitted-form', $template);
                 $this->assertSame(
                     [
@@ -131,15 +156,41 @@ class SubmitTest extends CommandHandlerTestCase
                     $vars
                 );
                 $this->assertNull($layout);
+            },
+            function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) {
 
+                $this->assertSame('email.transport-manager-submitted-form.subject', $message->getSubject());
+                $this->assertSame('email1', $message->getTo());
+                $this->assertSame('en_GB', $message->getLocale());
+                $this->assertSame('transport-manager-submitted-form', $template);
+                $this->assertSame(
+                    [
+                        'tmFullName' => 'Bob Smith',
+                        'licNo' => 'LIC01',
+                        'applicationId' => 76,
+                        'tmaUrl' => 'http://selfserve/application/76/transport-managers/details/12/'
+                    ],
+                    $vars
+                );
+                $this->assertNull($layout);
             }
         );
 
         $result = new Result();
-        $data = [
-            'to' => 'email1'
-        ];
-        $this->expectedSideEffect(SendEmail::class, $data, $result);
+        $this->expectedSideEffect(
+            SendEmail::class,
+            [
+                'to' => 'foo@bar.com'
+            ],
+            $result
+        );
+        $this->expectedSideEffect(
+            SendEmail::class,
+            [
+                'to' => 'email1'
+            ],
+            $result
+        );
 
         $this->sut->handleCommand($command);
     }
@@ -148,17 +199,31 @@ class SubmitTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 863]);
 
-        $creatorContactDetails = m::mock();
-        $creatorContactDetails->shouldReceive('getContactDetails->getEmailAddress')->with()->once()
+        $creator = m::mock(User::class)->makePartial();
+        $creator->setId(1);
+        $creator->setTranslateToWelsh('N');
+        $creator->shouldReceive('getContactDetails->getEmailAddress')->with()->once()
             ->andReturn('email1');
+
+        $user = m::mock(User::class)->makePartial();
+        $user->setId(2);
+        $user->setTranslateToWelsh('Y');
+        $user->shouldReceive('getContactDetails->getEmailAddress')->with()->once()
+            ->andReturn('foo@bar.com');
+
+        $orgUser = new OrganisationUser();
+        $orgUser->setUser($user);
+        $orgUser->setIsAdministrator('Y');
+
+        $organisation = new Organisation();
+        $organisation->addOrganisationUsers($orgUser);
 
         $tma = m::mock(TransportManagerApplication::class)->makePartial();
         $tma->setId(12);
-        $tma->shouldReceive('getCreatedBy')->with()->twice()->andReturn($creatorContactDetails);
-        $tma->shouldReceive('getApplication->getLicence->getOrganisation->getAdminEmailAddresses')->with()->once()
-            ->andReturn([]);
+        $tma->shouldReceive('getCreatedBy')->with()->andReturn($creator);
+        $tma->shouldReceive('getApplication->getLicence->getOrganisation')->with()->once()
+            ->andReturn($organisation);
 
-        $tma->shouldReceive('getApplication->getLicence->getTranslateToWelsh')->with()->once()->andReturn('Y');
         $tma->shouldReceive('getTransportManager->getHomeCd->getPerson->getFullName')->with()->once()
             ->andReturn('Bob Smith');
         $tma->shouldReceive('getApplication->getLicence->getLicNo')->with()->once()->andReturn('LIC01');
@@ -168,13 +233,12 @@ class SubmitTest extends CommandHandlerTestCase
             ->with($command)->andReturn($tma);
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
 
-        $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->once()->andReturnUsing(
+        $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->times(2)->andReturnUsing(
             function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) {
 
                 $this->assertSame('email.transport-manager-submitted-form.subject', $message->getSubject());
-                $this->assertSame('email1', $message->getTo());
+                $this->assertSame('foo@bar.com', $message->getTo());
                 $this->assertSame('cy_GB', $message->getLocale());
-
                 $this->assertSame('transport-manager-submitted-form', $template);
                 $this->assertSame(
                     [
@@ -186,15 +250,41 @@ class SubmitTest extends CommandHandlerTestCase
                     $vars
                 );
                 $this->assertNull($layout);
+            },
+            function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) {
 
+                $this->assertSame('email.transport-manager-submitted-form.subject', $message->getSubject());
+                $this->assertSame('email1', $message->getTo());
+                $this->assertSame('en_GB', $message->getLocale());
+                $this->assertSame('transport-manager-submitted-form', $template);
+                $this->assertSame(
+                    [
+                        'tmFullName' => 'Bob Smith',
+                        'licNo' => 'LIC01',
+                        'applicationId' => 76,
+                        'tmaUrl' => 'http://selfserve/application/76/transport-managers/details/12/'
+                    ],
+                    $vars
+                );
+                $this->assertNull($layout);
             }
         );
 
         $result = new Result();
-        $data = [
-            'to' => 'email1'
-        ];
-        $this->expectedSideEffect(SendEmail::class, $data, $result);
+        $this->expectedSideEffect(
+            SendEmail::class,
+            [
+                'to' => 'foo@bar.com'
+            ],
+            $result
+        );
+        $this->expectedSideEffect(
+            SendEmail::class,
+            [
+                'to' => 'email1'
+            ],
+            $result
+        );
 
         $this->sut->handleCommand($command);
     }

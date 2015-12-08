@@ -51,38 +51,45 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
 
         foreach ($emailList as $row) {
             $licence = $row->getLicence();
-            $organisation = $licence->getOrganisation();
             $continuationsDetails = $row->getDocument()->getContinuationDetails();
             $isContinuation = count($row->getDocument()->getContinuationDetails()) &&
                 $continuationsDetails[0]->getChecklistDocument();
-
-            $users = $organisation->getAdminEmailAddresses();
+            $emailType = $isContinuation ? self::EMAIL_TYPE_CONTINUATION : self::EMAIL_TYPE_STANDARD;
 
             // edge case; we expect to find email addresses otherwise we wouldn't
             // have created the CI record in the first place, but still something
             // we need to handle...
-            if (empty($users)) {
+            if ($licence->getOrganisation()->getAdminOrganisationUsers()->isEmpty()) {
                 $result->addMessage('No admin email addresses for licence ' . $licence->getId());
                 continue;
             }
-            $result->addMessage(
-                'Sending email reminder for licence ' . $licence->getId() . ' to ' . implode($users, ',')
-            );
-            $emailType = $isContinuation ? self::EMAIL_TYPE_CONTINUATION : self::EMAIL_TYPE_STANDARD;
 
-            $message = new Message(
-                $users,
-                'email.licensing-information.' . $emailType  . '.subject'
-            );
-            $message->setTranslateToWelsh(false);
-            $this->sendEmailTemplate(
-                $message,
-                'email-inbox-reminder-' . $emailType,
-                [
-                    'licNo' => $licence->getLicNo(),
-                    // @NOTE the http://selfserve part gets replaced
-                    'url' => 'http://selfserve/correspondence'
-                ]
+            $sentTo = [];
+            foreach ($licence->getOrganisation()->getAdminOrganisationUsers() as $orgUser) {
+                $user = $orgUser->getUser();
+                $to = $user->getContactDetails()->getEmailAddress();
+
+                $message = new \Dvsa\Olcs\Email\Data\Message(
+                    $to,
+                    'email.licensing-information.' . $emailType  . '.subject'
+                );
+                $message->setTranslateToWelsh($user->getTranslateToWelsh());
+
+                $this->sendEmailTemplate(
+                    $message,
+                    'email-inbox-reminder-' . $emailType,
+                    [
+                        'licNo' => $licence->getLicNo(),
+                        // @NOTE the http://selfserve part gets replaced
+                        'url' => 'http://selfserve/correspondence'
+                    ]
+                );
+
+                $sentTo[] = $to;
+            }
+
+            $result->addMessage(
+                'Sending email reminder for licence ' . $licence->getId() . ' to ' . implode($sentTo, ',')
             );
 
             $row->setEmailReminderSent('Y');
