@@ -564,7 +564,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         return [
             'code' => '000',
             'message' => 'Success',
-            'receipt_reference' => 'OLCS-02-20151204-163600-B9115B9C',
+            'receipt_reference' => 'OLCS-STUB-ADJUST-'.date('Ymd-His'),
             'api_version' => '2',
         ];
 

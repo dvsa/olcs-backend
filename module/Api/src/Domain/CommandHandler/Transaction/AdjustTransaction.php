@@ -125,17 +125,21 @@ final class AdjustTransaction extends AbstractCommandHandler implements
             $fees[$fee->getId()] = $fee;
         }
 
+        // disregard overpayments for new allocation
+        // $fees = array_filter(
+        //     $fees,
+        //     function ($fee) {
+        //         return !$fee->isBalancingFee();
+        //     }
+        // );
+
         // work out the allocation of the payment amount to fees, will create
         // balancing entry to handle any overpayment
         $allocations = $this->allocatePayments($command->getReceived(), $fees);
-
+// var_dump($allocations); exit;
         // create new feeTransaction record(s)
-        foreach ($fees as &$fee) {
-
-            // @todo
-            // $result->merge($this->maybeCancelPendingWaive($fee));
-
-            $allocatedAmount = $allocations[$fee->getId()];
+        foreach ($allocations as $feeId => $allocatedAmount) {
+            $fee = $fees[$feeId];
             $markAsPaid = ($allocatedAmount === $fee->getOutstandingAmount() && !$fee->isPaid());
             $feeTransaction = new FeeTransactionEntity();
             $feeTransaction

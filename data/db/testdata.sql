@@ -2248,8 +2248,8 @@ INSERT INTO `application_tracking` (`id`, `application_id`, `created_by`, `last_
 INSERT INTO `fee`
     (`id`,`fee_status`,`fee_type_id`,`application_id`,`licence_id`,`net_amount`,`vat_amount`,`gross_amount`,`invoiced_date`,`description`)
     VALUES
-    (201,'lfs_ot',338,9,213,100.00,0.00,100.00,'2015-03-27 00:00:00','Application Fee for application 9'),
-    (202,'lfs_ot',344,9,213,100.00,0.00,100.00,'2015-03-27 00:00:00','Interim Fee for application 9');
+    (201,'lfs_ot',344,9,213,100.00,0.00,100.00,'2015-03-27 00:00:00','Interim Fee for application 9');
+    (202,'lfs_ot',338,9,213,100.00,0.00,100.00,'2015-03-27 00:00:00','Application Fee for application 9'),
 INSERT INTO `phone_contact` (`id`, `contact_details_id`, `phone_contact_type`, `created_by`, `last_modified_by`, `details`, `phone_number`, `created_on`, `last_modified_on`, `olbs_key`, `olbs_type`, `version`) VALUES (211,224,'phone_t_tel',NULL,NULL,NULL,'01234 567890','2015-03-27 12:29:38',NULL,NULL,NULL,1);
 INSERT INTO `workshop` (`id`, `licence_id`, `contact_details_id`, `created_by`, `last_modified_by`, `is_external`, `maintenance`, `safety_inspection`, `created_on`, `last_modified_on`, `olbs_key`, `removed_date`, `version`) VALUES (3,213,226,NULL,NULL,0,0,0,'2015-03-27 12:31:05',NULL,NULL,NULL,1);
 COMMIT;
