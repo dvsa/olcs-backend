@@ -105,9 +105,11 @@ class Bus extends AbstractRepository
     /**
      * Fetch a list of unread docs filtered by local authority, submission type and status for a given bus reg id
      *
-     * @param int $busReg
+     * @param QryCmd $query
      * @param int $localAuthorityId
      * @param int $hydrateMode
+     *
+     * @throws Exception\NotFoundException
      * @return array
      */
     public function fetchWithTxcInboxListForLocalAuthority(

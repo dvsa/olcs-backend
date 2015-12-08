@@ -22,6 +22,8 @@ class SendEmail extends AbstractCommand
 
     protected $to;
 
+    protected $cc = [];
+
     protected $subject;
 
     protected $subjectVariables;
@@ -45,6 +47,11 @@ class SendEmail extends AbstractCommand
     public function getTo()
     {
         return $this->to;
+    }
+
+    public function getCc()
+    {
+        return $this->cc;
     }
 
     public function getSubject()

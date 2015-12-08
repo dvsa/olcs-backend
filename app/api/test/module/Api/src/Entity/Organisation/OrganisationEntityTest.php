@@ -300,4 +300,35 @@ class OrganisationEntityTest extends EntityTester
 
         $this->assertEquals(111, $entity->getContextValue());
     }
+
+    /**
+     * Tests we're retreiving admin email addresses correctly
+     */
+    public function testGetAdminEmailAddresses()
+    {
+        $entity = new Entity();
+
+        $email1 = 'foo@bar.com';
+        $email2 = 'bar@foo.com';
+
+        $expectedEmails = [
+            0 => $email1,
+            1 => $email2
+        ];
+
+        $user1 = new OrganisationUser();
+        $user1->setIsAdministrator('N');
+
+        $user2 = m::mock(OrganisationUser::class)->makePartial();
+        $user2->setIsAdministrator('Y');
+        $user2->shouldReceive('getUser->getContactDetails->getEmailAddress')->once()->andReturn($email1);
+
+        $user3 = m::mock(OrganisationUser::class)->makePartial();
+        $user3->setIsAdministrator('Y');
+        $user3->shouldReceive('getUser->getContactDetails->getEmailAddress')->once()->andReturn($email2);
+
+        $entity->setOrganisationUsers(new ArrayCollection([$user1, $user2, $user3]));
+
+        $this->assertEquals($expectedEmails, $entity->getAdminEmailAddresses());
+    }
 }
