@@ -124,13 +124,14 @@ class FeesHelperService implements FactoryInterface
      * Determine how a payment should be allocated to an array of fees.
      * Payment is allocated to earliest fees first (by invoicedDate)
      *
+     * Zero allocations are not returned
+     *
      * @param string $amount payment amount
      * @param array $fees array of FeeEntity
      * @return array ['feeId' => 'allocatedAmount'] e.g.
      * [
      *     97 => '12.34',
      *     98 => '50.00',
-     *     99 => '0.00',
      * ]
      */
     public function allocatePayments($amount, array $fees)
