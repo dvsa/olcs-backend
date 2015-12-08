@@ -157,7 +157,9 @@ class FeesHelperService implements FactoryInterface
             // then decrement remaining available
             $remaining = ($remaining - $allocated);
 
-            $allocations[$fee->getId()] = FeeEntity::amountToPounds($allocated);
+            if ($allocated > 0) {
+                $allocations[$fee->getId()] = FeeEntity::amountToPounds($allocated);
+            }
         }
 
         if ($remaining > 0) {

@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Reverse Transaction
  *
@@ -103,8 +104,8 @@ final class ReverseTransaction extends AbstractCommandHandler implements
             ->addId('transaction', $newTransaction->getId())
             ->addMessage('Transaction record created');
 
-        $this->result->merge($this->handleSideEffect(
-            ResetFeesCmd::create(['fees' => $fees])
+        $this->result->merge(
+            $this->handleSideEffect(ResetFeesCmd::create(['fees' => $fees]))
         );
 
         return $this->result;

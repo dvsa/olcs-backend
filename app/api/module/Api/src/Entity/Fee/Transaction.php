@@ -187,6 +187,14 @@ class Transaction extends AbstractTransaction
     /**
      * @return boolean
      */
+    public function isReversal()
+    {
+        return $this->getType()->getId() === self::TYPE_REVERSAL;
+    }
+
+    /**
+     * @return boolean
+     */
     public function isCard()
     {
         return in_array(
@@ -343,5 +351,29 @@ class Transaction extends AbstractTransaction
         }
 
         return self::CURRENCY_SYMBOL.$this->getTotalAmount();
+    }
+
+    /**
+     * Get the previous transaction (for a reversal or adjustment)
+     *
+     * @return Transaction|null
+     */
+    public function getPreviousTransaction()
+    {
+        $transaction = null;
+        if ($this->isAdjustment() || $this->isReversal()) {
+            $this->getFeeTransactions()->forAll(
+                function ($key, $ft) use (&$transaction) {
+                    unset($key); // unused
+                    if ($ft->getReversedFeeTransaction()) {
+                        $transaction = $ft->getReversedFeeTransaction()->getTransaction();
+                        return false;
+                    }
+                    return true;
+                }
+            );
+        }
+
+        return $transaction;
     }
 }

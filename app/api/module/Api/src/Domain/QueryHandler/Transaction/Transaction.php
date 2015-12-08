@@ -37,6 +37,7 @@ class Transaction extends AbstractQueryHandler
             ],
             [
                 'fees' => $this->flattenFees($transaction),
+                'previousTransactionId' => $this->getPreviousTransaction($transaction),
             ]
         );
     }
@@ -91,6 +92,13 @@ class Transaction extends AbstractQueryHandler
                 'id' => $reversal->getTransaction()->getId(),
                 'type' => $reversal->getTransaction()->getType()->getId(),
             ];
+        }
+    }
+
+    protected function getPreviousTransaction(Entity $transaction)
+    {
+        if ($transaction->getPreviousTransaction()) {
+            return $transaction->getPreviousTransaction()->getId();
         }
     }
 }
