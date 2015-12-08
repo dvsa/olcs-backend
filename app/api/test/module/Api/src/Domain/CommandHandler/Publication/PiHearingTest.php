@@ -92,10 +92,10 @@ class PiHearingTest extends CommandHandlerTestCase
     /**
      * testHandleCommand
      *
-     * @dataProvider commandProvider
+     * @dataProvider handleTmHearingProvider
      * @param string $cmdClass
      */
-    public function testHandleNonTmHearing($cmdClass)
+    public function testHandleNonTmHearing($cmdClass, $caseType)
     {
         $id = 99;
         $isTm = false;
@@ -134,6 +134,8 @@ class PiHearingTest extends CommandHandlerTestCase
         $casesMock = m::mock(CasesEntity::class);
         $casesMock->shouldReceive('isTm')->andReturn($isTm);
         $casesMock->shouldReceive('getLicence')->andReturn($licenceMock);
+        $casesMock->shouldReceive('getApplication->getGoodsOrPsv->getId')->andReturn($licType);
+        $casesMock->shouldReceive('getCaseType->getId')->andReturn($caseType);
 
         $piMock = m::mock(PiEntity::class);
         $piMock->shouldReceive('getCase')->andReturn($casesMock);
@@ -351,6 +353,17 @@ class PiHearingTest extends CommandHandlerTestCase
         return [
             [PiHearingCmd::class],
             [PiDecisionCmd::class]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function handleTmHearingProvider()
+    {
+        return [
+            [PiHearingCmd::class, CasesEntity::APP_CASE_TYPE],
+            [PiDecisionCmd::class, CasesEntity::LICENCE_CASE_TYPE]
         ];
     }
 }
