@@ -145,9 +145,7 @@ class FeesHelperService implements FactoryInterface
 
             $allocated = 0;
             $outstanding = FeeEntity::amountToPence($fee->getOutstandingAmount());
-if ($dump) {
-    var_dump("------      " . $fee->getOutstandingAmount());// exit;
-}
+
             if ($remaining >= $outstanding) {
                 // if we have enough to pay the fee in full, allocate full amount
                 $allocated = $outstanding;
