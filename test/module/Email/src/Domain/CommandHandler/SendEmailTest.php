@@ -68,6 +68,7 @@ class SendEmailTest extends CommandHandlerTestCase
     {
         $data = [
             'to' => 'foo@bar.com',
+            'cc' => ['bar@foo.com'],
             'subject' => 'Some subject',
             'html' => false,
             'body' => 'This is the email'
@@ -83,7 +84,8 @@ class SendEmailTest extends CommandHandlerTestCase
                 'terry.valtech@gmail.com',
                 'foo@bar.com : translated-Some subject',
                 'translated-This is the email',
-                false
+                false,
+                ['bar@foo.com']
             );
 
         $this->sut->handleCommand($command);
@@ -95,6 +97,7 @@ class SendEmailTest extends CommandHandlerTestCase
             'fromName' => 'Foo',
             'fromEmail' => 'foobar@cake.com',
             'to' => 'foo@bar.com',
+            'cc' => ['bar@foo.com'],
             'subject' => 'Some subject',
             'html' => false,
             'body' => 'This is the email http://selfserve'
@@ -112,7 +115,8 @@ class SendEmailTest extends CommandHandlerTestCase
                 'foo@bar.com',
                 'translated-Some subject',
                 'translated-This is the email olcs-selfserve',
-                false
+                false,
+                ['bar@foo.com']
             );
 
         $this->sut->handleCommand($command);

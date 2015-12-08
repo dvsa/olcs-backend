@@ -41,7 +41,10 @@ class ProcessTest extends CommandHandlerTestCase
             'STATUS',
             ContinuationDetail::STATUS_PRINTING,
             Licence::LICENCE_CATEGORY_PSV,
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
             Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
             FeeType::FEE_TYPE_CONT,
         ];
 
@@ -53,7 +56,12 @@ class ProcessTest extends CommandHandlerTestCase
                 1 => m::mock(Organisation::class)->makePartial(),
             ],
             FeeType::class => [
-                999 => m::mock(FeeType::class)->makePartial(),
+                999 => m::mock(FeeType::class)->makePartial()
+                    ->shouldReceive('getFixedValue')
+                    ->andReturn('123.45')
+                    ->shouldReceive('getDescription')
+                    ->andReturn('Test continuation fee')
+                    ->getMock(),
             ],
             TrafficArea::class => [
                 'B' => m::mock(TrafficArea::class)->makePartial(),
@@ -89,7 +97,6 @@ class ProcessTest extends CommandHandlerTestCase
         $this->assertEquals(['Continuation detail no longer pending'], $result->getMessages());
         $this->assertEquals(['continuationDetail' => $id], $result->getIds());
     }
-
 
     public function testHandleCommand()
     {
@@ -131,7 +138,7 @@ class ProcessTest extends CommandHandlerTestCase
         $docResult->addMessage('Document dispatched');
 
         $dtoData = [
-            'template' => 'PSVSRChecklist',
+            'template' => 1303,
             'query' => [
                 'licence' => $licenceId,
                 'goodsOrPsv' => Licence::LICENCE_CATEGORY_PSV,
@@ -197,11 +204,6 @@ class ProcessTest extends CommandHandlerTestCase
             )
             ->andReturn($this->mapReference(FeeType::class, $feeTypeId));
 
-        $this->mapReference(FeeType::class, $feeTypeId)
-            ->shouldReceive('getFixedValue')
-            ->andReturn('123.45')
-            ->shouldReceive('getDescription')
-            ->andReturn('Test continuation fee');
         $feeResult = new Result();
         $feeResult
             ->addId('fee', $feeId)
@@ -215,6 +217,158 @@ class ProcessTest extends CommandHandlerTestCase
                 'invoicedDate' => $now->format('Y-m-d'),
                 'licence' => $licenceId,
                 'description' => 'Test continuation fee for licence OB1234567',
+                'application' => null,
+                'busReg' => null,
+                'task' => null,
+                'irfoGvPermit' => null,
+            ],
+            $feeResult
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame($document, $continuationDetail->getChecklistDocument());
+
+        $this->assertEquals(
+            [
+                'Document dispatched',
+                'ContinuationDetail updated',
+                'Fee created'
+            ],
+            $result->getMessages()
+        );
+        $this->assertEquals(
+            [
+                'continuationDetail' => $id,
+                'document' => $documentId,
+                'fee' => $feeId,
+            ],
+            $result->getIds()
+        );
+    }
+
+    public function testHandleCommandNiGoods()
+    {
+        $id = 69;
+        $licenceId = 7;
+        $documentId = 101;
+        $organisationId = 1;
+        $licNo = 'ON1234567';
+        $feeId = 102;
+        $feeTypeId = 999;
+
+        $data = [
+            'id' => $id,
+        ];
+
+        $command = Command::create($data);
+
+        $licence = $this->mapReference(Licence::class, $licenceId);
+        $licence->shouldReceive('getNiFlag')->andReturn('Y');
+
+        $continuationDetail = new ContinuationDetail();
+        $continuationDetail
+            ->setId($id)
+            ->setStatus($this->mapRefData(ContinuationDetail::STATUS_PRINTING))
+            ->setLicence($licence);
+
+        $continuationDetail->getLicence()
+            ->setGoodsOrPsv($this->mapRefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE))
+            ->setLicenceType($this->mapRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL))
+            ->setOrganisation($this->mapReference(Organisation::class, $organisationId))
+            ->setTrafficArea($this->mapReference(TrafficArea::class, 'N'))
+            ->setLicNo($licNo);
+
+        $this->repoMap['ContinuationDetail']
+            ->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->once()
+            ->andReturn($continuationDetail);
+
+        $docResult = new Result();
+        $docResult->addId('document', 101);
+        $docResult->addMessage('Document dispatched');
+
+        $dtoData = [
+            'template' => 1501,
+            'query' => [
+                'licence' => $licenceId,
+                'goodsOrPsv' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                'niFlag' => 'Y',
+                'organisation' => $organisationId,
+            ],
+            'description' => 'Continuation checklist',
+            'licence' => $licenceId,
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
+            'isReadOnly'  => 'Y',
+            'isExternal'  => false,
+            'isScan' => false,
+            'application' => null,
+            'busReg' => null,
+            'case' => null,
+            'irfoOrganisation' => null,
+            'submission' => null,
+            'trafficArea' => null,
+            'transportManager' => null,
+            'operatingCentre' => null,
+            'opposition' => null,
+            'issuedDate' => null,
+            'dispatch' => true
+        ];
+
+        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $docResult);
+
+        $document = m::mock();
+        $this->repoMap['Document']
+            ->shouldReceive('fetchById')
+            ->with($documentId)
+            ->once()
+            ->andReturn($document);
+
+        $this->repoMap['ContinuationDetail']
+            ->shouldReceive('save')
+            ->with($continuationDetail)
+            ->once();
+
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingContinuationFeesByLicenceId')
+            ->once()
+            ->with($licenceId, m::type(\DateTime::class))
+            ->andReturn([]);
+
+        $now = new DateTime();
+        $this->repoMap['FeeType']
+            ->shouldReceive('fetchLatest')
+            ->once()
+            ->with(
+                $this->mapRefData(FeeType::FEE_TYPE_CONT),
+                $this->mapRefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE),
+                $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL),
+                m::on(
+                    // compare date objects
+                    function ($arg) use ($now) {
+                        return $arg == $now;
+                    }
+                ),
+                $this->mapReference(TrafficArea::class, 'N')
+            )
+            ->andReturn($this->mapReference(FeeType::class, $feeTypeId));
+
+        $feeResult = new Result();
+        $feeResult
+            ->addId('fee', $feeId)
+            ->addMessage('Fee created');
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee::class,
+            [
+                'feeType' => $feeTypeId,
+                'feeStatus' => Fee::STATUS_OUTSTANDING,
+                'amount' => '123.45',
+                'invoicedDate' => $now->format('Y-m-d'),
+                'licence' => $licenceId,
+                'description' => 'Test continuation fee for licence ON1234567',
                 'application' => null,
                 'busReg' => null,
                 'task' => null,

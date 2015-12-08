@@ -1306,15 +1306,15 @@ return array(
         'is_disqualified' => array(
             'type' => 'yesnonull'
         ),
-        'officer_cd_id' => array(
-            'inversedBy' => array(
-                'entity' => 'ContactDetails',
-                'property' => 'disqualification'
-            )
-        ),
         'organisation_id' => array(
             'inversedBy' => array(
                 'entity' => 'Organisation',
+                'property' => 'disqualification'
+            )
+        ),
+        'person_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Person',
                 'property' => 'disqualification'
             )
         ),
@@ -1642,6 +1642,12 @@ return array(
         'licence_id' => array(
             'inversedBy' => array(
                 'entity' => 'Licence',
+                'property' => 'publicationLink'
+            )
+        ),
+        'bus_reg_id' => array(
+            'inversedBy' => array(
+                'entity' => 'BusReg',
                 'property' => 'publicationLink'
             )
         ),

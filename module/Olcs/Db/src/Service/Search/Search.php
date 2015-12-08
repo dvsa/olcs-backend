@@ -163,6 +163,16 @@ class Search
                 $queryBool->addShould(
                     new Query\Wildcard('person_forename_wildcard', $wildcardQuery, 2.0)
                 );
+
+                // Do not include Transport Managers in the result
+                $queryMatch = new Query\Match();
+                $queryMatch->setField('found_as', 'TM');
+                $queryBool->addMustNot($queryMatch);
+                break;
+            case 'busreg':
+                $queryMatch = new Query\Match();
+                $queryMatch->setField('reg_no', $search);
+                $queryBool->addShould($queryMatch);
                 break;
         }
     }

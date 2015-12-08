@@ -19,7 +19,7 @@ return [
             'search' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '/search/:query[/:index]',
+                    'route' => '/search/:index',
                     'defaults' => [
                         'controller' => 'Search'
                     ]

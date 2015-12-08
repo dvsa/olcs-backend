@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  *        @ORM\Index(name="ix_disqualification_organisation_id", columns={"organisation_id"}),
  *        @ORM\Index(name="ix_disqualification_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_disqualification_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_disqualification_officer_cd_id", columns={"officer_cd_id"})
+ *        @ORM\Index(name="ix_disqualification_person_idx", columns={"person_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_disqualification_olbs_key", columns={"olbs_key"})
@@ -28,31 +28,30 @@ class Disqualification extends AbstractDisqualification
     const STATUS_INACTIVE = 'Inactive';
 
     /**
-     *
      * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $officerCd
+     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person
      *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function __construct(
         Organisation $organisation = null,
-        \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $officerCd = null
+        \Dvsa\Olcs\Api\Entity\Person\Person $person = null
     ) {
 
-        if ($organisation === null && $officerCd === null) {
+        if ($organisation === null && $person === null) {
             throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
-                ['DISQ_MISSING_ORG_OFFICER' => 'Organisation or OfficerCd must be specified']
+                ['DISQ_MISSING_ORG_OFFICER' => 'Organisation or Person must be specified']
             );
         }
 
-        if ($organisation !== null && $officerCd !== null) {
+        if ($organisation !== null && $person !== null) {
             throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
-                ['DISQ_BOTH_ORG_OFFICER' => 'You cannot specify both Organisation and OfficerCd']
+                ['DISQ_BOTH_ORG_OFFICER' => 'You cannot specify both Organisation and Person']
             );
         }
 
         $this->setOrganisation($organisation);
-        $this->setOfficerCd($officerCd);
+        $this->setPerson($person);
     }
 
     /**
@@ -136,7 +135,7 @@ class Disqualification extends AbstractDisqualification
 
     /**
      * Serialize properties
-     * 
+     *
      * @return array
      */
     public function getCalculatedBundleValues()

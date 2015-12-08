@@ -52,35 +52,57 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
      */
     private function sendSubmittedEmail(TransportManagerApplication $tma)
     {
-        // get all org admin email addresss
-        $toEmailAddresses = $tma->getApplication()->getLicence()->getOrganisation()->getAdminEmailAddresses();
+        $recipients = $this->getRecipients($tma);
 
-        // Created by, might not have a value
-        if ($tma->getCreatedBy()) {
-            // check if the TMA creator email address is already in the "to list", if not then add it
-            $tmaCreatorEmailAddress = $tma->getCreatedBy()->getContactDetails()->getEmailAddress();
-            if (!empty($tmaCreatorEmailAddress) && array_search($tmaCreatorEmailAddress, $toEmailAddresses) === false) {
-                $toEmailAddresses[] = $tmaCreatorEmailAddress;
+        if (!empty($recipients)) {
+            $emailData = [
+                'tmFullName' => $tma->getTransportManager()->getHomeCd()->getPerson()->getFullName(),
+                'licNo' => $tma->getApplication()->getLicence()->getLicNo(),
+                'applicationId' => $tma->getApplication()->getId(),
+                'tmaUrl' => sprintf(
+                    'http://selfserve/application/%d/transport-managers/details/%d/',
+                    $tma->getApplication()->getId(),
+                    $tma->getId()
+                ),
+            ];
+
+            foreach ($recipients as $user) {
+                $message = new \Dvsa\Olcs\Email\Data\Message(
+                    $user->getContactDetails()->getEmailAddress(),
+                    'email.transport-manager-submitted-form.subject'
+                );
+                $message->setTranslateToWelsh($user->getTranslateToWelsh());
+
+                $this->sendEmailTemplate(
+                    $message,
+                    'transport-manager-submitted-form',
+                    $emailData
+                );
             }
         }
+    }
 
-        foreach ($toEmailAddresses as $to) {
-            $message = new \Dvsa\Olcs\Email\Data\Message($to, 'email.transport-manager-submitted-form.subject');
-            $message->setTranslateToWelsh($tma->getApplication()->getLicence()->getTranslateToWelsh());
-            $this->sendEmailTemplate(
-                $message,
-                'transport-manager-submitted-form',
-                [
-                    'tmFullName' => $tma->getTransportManager()->getHomeCd()->getPerson()->getFullName(),
-                    'licNo' => $tma->getApplication()->getLicence()->getLicNo(),
-                    'applicationId' => $tma->getApplication()->getId(),
-                    'tmaUrl' => sprintf(
-                        'http://selfserve/application/%d/transport-managers/details/%d/',
-                        $tma->getApplication()->getId(),
-                        $tma->getId()
-                    ),
-                ]
-            );
+    /**
+     * Get list of users who should receive the email
+     *
+     * @param TransportManagerApplication $tma
+     * @return array Array of User indexed by id
+     */
+    private function getRecipients(TransportManagerApplication $tma)
+    {
+        $users = [];
+
+        foreach ($tma->getApplication()->getLicence()->getOrganisation()->getAdminOrganisationUsers() as $orgUser) {
+            $user = $orgUser->getUser();
+
+            $users[$user->getId()] = $user;
         }
+
+        if ($tma->getCreatedBy()) {
+            // add TMA creator to the list
+            $users[$tma->getCreatedBy()->getId()] = $tma->getCreatedBy();
+        }
+
+        return $users;
     }
 }

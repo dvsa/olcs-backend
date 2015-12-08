@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Resolve Payment Test
  *

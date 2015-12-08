@@ -38,7 +38,7 @@ final class SendUsernameMultiple extends AbstractCommandHandler implements \Dvsa
                 $user->getContactDetails()->getEmailAddress(),
                 'email.user-forgot-username-multiple.subject'
             );
-            $message->setTranslateToWelsh($licence->getTranslateToWelsh());
+            $message->setTranslateToWelsh($user->getTranslateToWelsh());
 
             $this->sendEmailTemplate(
                 $message,

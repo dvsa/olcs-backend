@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapQueueCmd;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\Email\SendEbsrRefreshedTest;
 use Zend\Filter\Decompress;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;

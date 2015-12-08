@@ -44,9 +44,7 @@ class MarkersTest extends QueryHandlerTestCase
                         'type',
                         'disqualifications',
                         'organisationPersons' => [
-                            'person' => [
-                                'contactDetails' => ['disqualifications']
-                            ]
+                            'person' => ['disqualifications']
                         ]
                     ],
                     'cases' => [
@@ -89,9 +87,7 @@ class MarkersTest extends QueryHandlerTestCase
                         'type',
                         'disqualifications',
                         'organisationPersons' => [
-                            'person' => [
-                                'contactDetails' => ['disqualifications']
-                            ]
+                            'person' => ['disqualifications']
                         ]
                     ],
                     'cases' => [

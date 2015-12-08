@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -67,7 +68,7 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
      */
     protected function generateDocument(ContinuationDetailEntity $continuationDetail)
     {
-        $template = $this->getTemplateName($continuationDetail);
+        $template = $this->getTemplate($continuationDetail);
 
         $licence = $continuationDetail->getLicence();
 
@@ -93,17 +94,27 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
         return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
 
-    protected function getTemplateName($continuationDetail)
+    /**
+     * Get the template ID for the checklist document
+     *
+     * @param ContinuationDetailEntity $continuationDetail
+     *
+     * @return int
+     */
+    protected function getTemplate($continuationDetail)
     {
+        /* @var $licence LicenceEntity */
         $licence = $continuationDetail->getLicence();
 
-        $template = $licence->isGoods() ? 'GV' : 'PSV';
-
-        if ($licence->getLicenceType()->getId() === LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED) {
-            $template .= 'SR';
+        if ($licence->isGoods()) {
+            $template = ($licence->getNiFlag() === 'N') ?
+                Document::GV_CONTINUATION_CHECKLIST :
+                Document::GV_CONTINUATION_CHECKLIST_NI;
+        } else {
+            $template = ($licence->getLicenceType()->getId() === LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED) ?
+                Document::PSV_CONTINUATION_CHECKLIST_SR :
+                Document::PSV_CONTINUATION_CHECKLIST;
         }
-
-        $template .= 'Checklist';
 
         return $template;
     }

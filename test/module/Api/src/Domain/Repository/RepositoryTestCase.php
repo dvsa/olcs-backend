@@ -289,6 +289,10 @@ class RepositoryTestCase extends MockeryTestCase
             $value = get_class($value);
         }
 
+        if (is_bool($value)) {
+            $value = $value ? 'true' : 'false';
+        }
+
         return $value;
     }
 }

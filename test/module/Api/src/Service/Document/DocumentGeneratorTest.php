@@ -29,6 +29,7 @@ class DocumentGeneratorTest extends MockeryTestCase
     protected $queryHandlerManager;
     protected $fileUploader;
     protected $namingService;
+    protected $documentRepo;
 
     public function setUp()
     {
@@ -39,6 +40,7 @@ class DocumentGeneratorTest extends MockeryTestCase
         $this->queryHandlerManager = m::mock();
         $this->fileUploader = m::mock();
         $this->namingService = m::mock(NamingService::class);
+        $this->documentRepo = m::mock();
 
         $sm = m::mock('Zend\ServiceManager\ServiceLocatorInterface')
             ->shouldReceive('get')
@@ -56,6 +58,11 @@ class DocumentGeneratorTest extends MockeryTestCase
             ->shouldReceive('get')
             ->with('DocumentNamingService')
             ->andReturn($this->namingService)
+            ->shouldReceive('get')
+            ->with('RepositoryServiceManager')
+            ->andReturn(
+                m::mock()->shouldReceive('get')->with('Document')->andReturn($this->documentRepo)->getMock()
+            )
             ->getMock();
 
         $this->sut->createService($sm);
@@ -272,5 +279,36 @@ class DocumentGeneratorTest extends MockeryTestCase
             ->andReturn('result');
 
         $this->sut->uploadGeneratedContent('foo', 'docs');
+    }
+
+    public function testGenerateFromTemplateWithDocumentId()
+    {
+        $document = m::mock();
+        $document->shouldReceive('getIdentifier')->with()->once()->andReturn('IDENTIFIER');
+
+        $this->documentRepo->shouldReceive('fetchById')->with(412)->once()->andReturn($document);
+
+        $this->contentStore->shouldReceive('read')
+            ->with('IDENTIFIER')
+            ->andReturn('TEMPLATE');
+
+        $this->document->shouldReceive('getBookmarkQueries')
+            ->with('TEMPLATE', [])
+            ->andReturn([]);
+        $this->document->shouldReceive('populateBookmarks')
+            ->with('TEMPLATE', [])
+            ->andReturn([]);
+
+        $this->sut->generateFromTemplate(412, [], []);
+    }
+
+    public function testGenerateFromTemplateWithDocumentIdNotFound()
+    {
+        $this->setExpectedException('\Exception', 'Template not found');
+
+        $this->documentRepo->shouldReceive('fetchById')->with(412)->once()
+            ->andThrow(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+
+        $this->sut->generateFromTemplate(412, [], []);
     }
 }

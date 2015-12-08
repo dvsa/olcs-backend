@@ -117,6 +117,9 @@ class Summary extends AbstractQueryHandler
 
     protected function determineMissingEvidence(Entity\Application\Application $application)
     {
+        if ($application->getLicenceType()->getId() === Entity\Licence\Licence::LICENCE_TYPE_SPECIAL_RESTRICTED) {
+            return [];
+        }
         $evidence = [];
 
         if ($this->isMissingOcDocuments($application)) {
@@ -235,6 +238,9 @@ class Summary extends AbstractQueryHandler
 
     protected function needsToApproveTms(Entity\Application\Application $application)
     {
+        if ($application->getLicenceType()->getId() === Entity\Licence\Licence::LICENCE_TYPE_SPECIAL_RESTRICTED) {
+            return false;
+        }
         $criteria = Criteria::create();
         $criteria->andWhere(
             $criteria->expr()->notIn(

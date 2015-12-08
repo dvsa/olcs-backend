@@ -232,6 +232,13 @@ class SearchTest extends TestCase
                                 ]
                             ]
                         ],
+                    ],
+                    'must_not' => [
+                        [
+                            'match' => [
+                                'found_as' => 'TM'
+                            ]
+                        ]
                     ]
                 ]
             ],
@@ -256,5 +263,70 @@ class SearchTest extends TestCase
         $sut->setClient($mockClient);
 
         $sut->search('SMITH', ['person']);
+    }
+
+
+    public function testSearchBusReg()
+    {
+        $sut = new SearchService();
+
+        $expectedQuery = [
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match' => [
+                                '_all' => 'SMITH'
+                            ]
+                        ]
+                    ],
+                    'should' => [
+                        [
+                            'match' => [
+                                'vrm' => 'SMITH'
+                            ]
+                        ],
+                        [
+                            'match' => [
+                                'correspondence_postcode' => 'SMITH'
+                            ]
+                        ],
+                        [
+                            'wildcard' => [
+                                'org_name_wildcard' => [
+                                    'value' => 'smith*',
+                                    'boost' => 2.0,
+                                ]
+                            ]
+                        ],
+                        [
+                            'match' => [
+                                'reg_no' => 'SMITH'
+                            ]
+                        ],
+                    ]
+                ]
+            ],
+            'size' => 10,
+            'from' => 0
+        ];
+
+        $mockClient = m::mock(\Elastica\Client::class);
+        $mockClient->shouldReceive('request')->once()->andReturnUsing(
+            function ($path, $method, $query, $params) use ($expectedQuery) {
+                $this->assertSame('busreg/_search', $path);
+                $this->assertSame('GET', $method);
+                $this->assertSame($expectedQuery, $query);
+                $this->assertSame([], $params);
+
+                $searchResponse = m::mock(\Elastica\Response::class);
+                $searchResponse->shouldReceive('getData')->andReturn([]);
+                return $searchResponse;
+            }
+        );
+
+        $sut->setClient($mockClient);
+
+        $sut->search('SMITH', ['busreg']);
     }
 }
