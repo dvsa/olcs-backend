@@ -192,10 +192,7 @@ class FeesHelperServiceTest extends MockeryTestCase
                     $this->getStubFee('10', '99.99'),
                     $this->getStubFee('11', '100.01'),
                 ],
-                [
-                    '10' => '0.00',
-                    '11' => '0.00',
-                ]
+                []
             ],
             [
                 '200.00',
@@ -220,7 +217,6 @@ class FeesHelperServiceTest extends MockeryTestCase
                     '11' => '50.01',
                     '12' => '100.00',
                     '10' => '49.99',
-                    '13' => '0.00',
                 ]
             ],
             [
@@ -235,8 +231,6 @@ class FeesHelperServiceTest extends MockeryTestCase
                 [
                     '2' => '100.00',
                     '3' => '100.00',
-                    '4' => '0.00',
-                    '1' => '0.00',
                 ]
             ]
         ];
@@ -363,7 +357,9 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->shouldReceive('getOutstandingAmount')
             ->andReturn($amount)
             ->shouldReceive('getInvoicedDate')
-            ->andReturn(new \DateTime($invoicedDate));
+            ->andReturn(new \DateTime($invoicedDate))
+            ->shouldReceive('isCancelled')
+            ->andReturn(false);
 
         return $fee;
     }

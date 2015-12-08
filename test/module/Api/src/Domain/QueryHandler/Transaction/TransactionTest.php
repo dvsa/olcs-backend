@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Transaction\Transaction as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Transaction as PaymentRepo;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Transfer\Query\Transaction\Transaction as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -36,7 +37,7 @@ class TransactionTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 69]);
 
-        $mockPayment = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+        $mockTransaction = m::mock(TransactionEntity::class);
 
         $ft1 = m::mock(FeeTransaction::class)
             ->shouldReceive('getFee')
@@ -63,19 +64,23 @@ class TransactionTest extends QueryHandlerTestCase
 
         $feeTransactions = new ArrayCollection([$ft1, $ft2]);
 
-        $mockPayment->shouldReceive('getFeeTransactions')->andReturn($feeTransactions);
+        $mockTransaction
+            ->shouldReceive('getFeeTransactions')
+            ->andReturn($feeTransactions)
+            ->shouldReceive('getPreviousTransaction')
+            ->andReturn(null);
 
         $this->repoMap['Transaction']
             ->shouldReceive('fetchUsingId')
             ->with($query)
             ->once()
-            ->andReturn($mockPayment);
+            ->andReturn($mockTransaction);
 
         $result = $this->sut->handleQuery($query);
 
         $this->assertInstanceOf(Result::class, $result);
 
-        $mockPayment
+        $mockTransaction
             ->shouldReceive('serialize')
             ->andReturn(
                 [
@@ -105,6 +110,7 @@ class TransactionTest extends QueryHandlerTestCase
                         'reversingTransaction' => null,
                     ]
                 ],
+                'previousTransactionId' => null,
             ],
             $result->serialize()
         );
@@ -115,7 +121,7 @@ class TransactionTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 69]);
 
-        $mockTransaction = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+        $mockTransaction = m::mock(TransactionEntity::class);
 
         $mockFee = $this->getMockFee('1', '12.34');
 
@@ -138,7 +144,16 @@ class TransactionTest extends QueryHandlerTestCase
 
         $feeTransactions = new ArrayCollection([$ft1, $ft2]);
 
-        $mockTransaction->shouldReceive('getFeeTransactions')->andReturn($feeTransactions);
+        $mockTransaction
+            ->shouldReceive('getFeeTransactions')
+            ->andReturn($feeTransactions)
+            ->shouldReceive('getPreviousTransaction')
+            ->andReturn(
+                m::mock(TransactionEntity::class)
+                    ->shouldReceive('getId')
+                    ->andReturn('999')
+                    ->getMock()
+            );
 
         $this->repoMap['Transaction']
             ->shouldReceive('fetchUsingId')
@@ -171,6 +186,7 @@ class TransactionTest extends QueryHandlerTestCase
                         'reversingTransaction' => null,
                     ],
                 ],
+                'previousTransactionId' => 999,
             ],
             $result->serialize()
         );
