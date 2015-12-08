@@ -149,15 +149,6 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     protected $createdOn;
 
     /**
-     * Dec sent after written dec date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="dec_sent_after_written_dec_date", nullable=true)
-     */
-    protected $decSentAfterWrittenDecDate;
-
-    /**
      * Decided by tc
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\PresidingTc
@@ -425,6 +416,15 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      * @ORM\Column(type="smallint", name="witnesses", nullable=true)
      */
     protected $witnesses;
+
+    /**
+     * Written decision letter sent
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="written_decision_letter_sent", nullable=true)
+     */
+    protected $writtenDecisionLetterSent;
 
     /**
      * Written outcome
@@ -740,29 +740,6 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     public function getCreatedOn()
     {
         return $this->createdOn;
-    }
-
-    /**
-     * Set the dec sent after written dec date
-     *
-     * @param \DateTime $decSentAfterWrittenDecDate
-     * @return Pi
-     */
-    public function setDecSentAfterWrittenDecDate($decSentAfterWrittenDecDate)
-    {
-        $this->decSentAfterWrittenDecDate = $decSentAfterWrittenDecDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the dec sent after written dec date
-     *
-     * @return \DateTime
-     */
-    public function getDecSentAfterWrittenDecDate()
-    {
-        return $this->decSentAfterWrittenDecDate;
     }
 
     /**
@@ -1449,6 +1426,29 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     public function getWitnesses()
     {
         return $this->witnesses;
+    }
+
+    /**
+     * Set the written decision letter sent
+     *
+     * @param \DateTime $writtenDecisionLetterSent
+     * @return Pi
+     */
+    public function setWrittenDecisionLetterSent($writtenDecisionLetterSent)
+    {
+        $this->writtenDecisionLetterSent = $writtenDecisionLetterSent;
+
+        return $this;
+    }
+
+    /**
+     * Get the written decision letter sent
+     *
+     * @return \DateTime
+     */
+    public function getWrittenDecisionLetterSent()
+    {
+        return $this->writtenDecisionLetterSent;
     }
 
     /**
