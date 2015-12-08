@@ -122,8 +122,6 @@ final class AdjustTransaction extends AbstractCommandHandler implements
             // is calculated correctly
             $fee->getFeeTransactions()->add($feeTransaction);
 
-var_dump($feeTransaction->getFee()->getId() . ":". $feeTransaction->getAmount() . " : " . $fee->getOutstandingAmount());
-
             $fees[$fee->getId()] = $fee;
         }
 
@@ -138,8 +136,7 @@ var_dump($feeTransaction->getFee()->getId() . ":". $feeTransaction->getAmount() 
         // work out the allocation of the payment amount to fees, will create
         // balancing entry to handle any overpayment
         $allocations = $this->allocatePayments($command->getReceived(), $fees);
-// var_dump($this->result);
-var_dump($allocations); exit;
+
         // create new feeTransaction record(s)
         foreach ($allocations as $feeId => $allocatedAmount) {
             $fee = $fees[$feeId];
