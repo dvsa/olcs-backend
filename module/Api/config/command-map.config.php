@@ -147,6 +147,8 @@ return [
     TransferCommand\Cases\Pi\Close::class => CommandHandler\Cases\Pi\Close::class,
     TransferCommand\Cases\Pi\Reopen::class => CommandHandler\Cases\Pi\Reopen::class,
 
+    TransferCommand\Cases\Si\SendResponse::class => CommandHandler\Cases\Si\SendResponse::class,
+
     // Transfer - Bus
     TransferCommand\Bus\CreateBus::class => CommandHandler\Bus\CreateBus::class,
     TransferCommand\Bus\CreateVariation::class => CommandHandler\Bus\CreateVariation::class,

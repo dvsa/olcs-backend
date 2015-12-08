@@ -159,6 +159,8 @@ return [
     TransferQuery\Cases\ByTransportManager::class => QueryHandler\Cases\ByTransportManager::class,
     TransferQuery\Cases\ByLicence::class => QueryHandler\Cases\ByLicence::class,
 
+    TransferQuery\Cases\Si\GetList::class => QueryHandler\Cases\Si\GetList::class,
+
     // Submission
     TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
     TransferQuery\Submission\SubmissionSectionComment::class => QueryHandler\Submission\SubmissionSectionComment::class,
