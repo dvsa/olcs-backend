@@ -26,6 +26,9 @@ use Doctrine\Common\Collections\Collection;
  *        @ORM\Index(name="ix_txn_olbs_key", columns={"olbs_key"}),
  *        @ORM\Index(name="ix_txn_payment_method", columns={"payment_method"}),
  *        @ORM\Index(name="ix_txn_type", columns={"type"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="ix_txn_receipt_document_id", columns={"receipt_document_id"})
  *    }
  * )
  */
@@ -218,6 +221,16 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      * @ORM\JoinColumn(name="processed_by_user_id", referencedColumnName="id", nullable=true)
      */
     protected $processedByUser;
+
+    /**
+     * Receipt document
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Doc\Document
+     *
+     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", fetch="LAZY")
+     * @ORM\JoinColumn(name="receipt_document_id", referencedColumnName="id", nullable=true)
+     */
+    protected $receiptDocument;
 
     /**
      * Reference
@@ -761,6 +774,29 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     public function getProcessedByUser()
     {
         return $this->processedByUser;
+    }
+
+    /**
+     * Set the receipt document
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Doc\Document $receiptDocument
+     * @return Transaction
+     */
+    public function setReceiptDocument($receiptDocument)
+    {
+        $this->receiptDocument = $receiptDocument;
+
+        return $this;
+    }
+
+    /**
+     * Get the receipt document
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Doc\Document
+     */
+    public function getReceiptDocument()
+    {
+        return $this->receiptDocument;
     }
 
     /**
