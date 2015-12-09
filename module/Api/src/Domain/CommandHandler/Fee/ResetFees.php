@@ -28,8 +28,8 @@ final class ResetFees extends AbstractCommandHandler implements
     protected $repoServiceName = 'Fee';
 
     /**
-     * Given a payment amount and an array of fees, will create an overpayment
-     * balancing fee if required.
+     * Resets an array of fees if they are 'un-paid', i.e. by way of a reversal
+     * or adjustment
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -38,11 +38,11 @@ final class ResetFees extends AbstractCommandHandler implements
         $outstanding = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_OUTSTANDING);
         $cancelled = $this->getRepo()->getRefdataReference(FeeEntity::STATUS_CANCELLED);
 
-        foreach ($fees as $feeId => $fee) {
+        foreach ($fees as $fee) {
             $status = $fee->isBalancingFee() ? $cancelled : $outstanding;
             $fee->setFeeStatus($status);
             $this->getRepo()->save($fee);
-            $this->result->addMessage(sprintf('Fee %d reset to %s', $feeId, $status->getDescription()));
+            $this->result->addMessage(sprintf('Fee %d reset to %s', $fee->getId(), $status->getDescription()));
         }
 
         return $this->result;
