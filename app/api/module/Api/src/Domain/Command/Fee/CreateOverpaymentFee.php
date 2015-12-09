@@ -23,9 +23,6 @@ final class CreateOverpaymentFee extends AbstractCommand
     /** @var array Fee */
     protected $fees;
 
-    /** @var Fee */
-    protected $previousBalancingFee;
-
     /**
      * Gets the value of receivedAmount.
      *
@@ -44,15 +41,5 @@ final class CreateOverpaymentFee extends AbstractCommand
     public function getFees()
     {
         return $this->fees;
-    }
-
-    /**
-     * Gets the value of previousBalancingFee.
-     *
-     * @return Fee
-     */
-    public function getPreviousBalancingFee()
-    {
-        return $this->previousBalancingFee;
     }
 }

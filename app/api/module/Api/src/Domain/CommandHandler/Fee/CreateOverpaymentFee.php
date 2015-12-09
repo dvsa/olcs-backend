@@ -9,7 +9,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -52,10 +51,6 @@ final class CreateOverpaymentFee extends AbstractCommandHandler implements
         $fees = $command->getFees();
         $receivedAmount =  $command->getReceivedAmount();
 
-        if ($command->getPreviousBalancingFee()) {
-            $this->cancelPreviousOverpayment($command->getPreviousBalancingFee(), &$fees);
-        }
-
         $overpaymentAmount = $this->feesHelper->getOverpaymentAmount($receivedAmount, $fees);
 
         if ($overpaymentAmount > 0) {
@@ -93,22 +88,5 @@ final class CreateOverpaymentFee extends AbstractCommandHandler implements
         }
 
         return $this->result;
-    }
-
-    /**
-     * Cancel an existing overpayment fee and remove it from the passed-in
-     * array of fees
-     *
-     * @param FeeEntity $fee
-     * @param array $fees passed by reference, may be modified
-     * @return null
-     */
-    private function cancelPreviousOverpayment($fee, &$fees) {
-
-        $this->result->merge(
-            $this->handleSideEffect(CancelFeeCmd::create(['id' => $fee->getId()]))
-        );
-
-        unset($fees[$fee->getId()]);
     }
 }

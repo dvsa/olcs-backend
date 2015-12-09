@@ -166,7 +166,7 @@ class FeesHelperService implements FactoryInterface
                 $allocations[$fee->getId()] = FeeEntity::amountToPounds($allocated);
             }
         }
-var_dump($allocations); exit;
+
         if ($remaining > 0) {
             // note, a balancing fee for any overpayment should always be created
             // prior to calculating allocations, so keep this in as a safeguard:
