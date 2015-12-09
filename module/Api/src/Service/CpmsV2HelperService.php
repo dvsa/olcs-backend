@@ -571,7 +571,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'postal_order_number' => (string) $poNo,
             'slip_number' => (string) $slipNo,
             'batch_number' => (string) $slipNo,
-            // 'receipt_date' => $this->formatDate($receiptDate),
             'name_on_cheque' => $payer,
             'scope' => $scope,
             'total_amount' => $this->formatAmount($newAmount),

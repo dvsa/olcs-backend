@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateOverpaymentFee as CreateOverpaymentFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\ResetFees as ResetFeesCmd;
@@ -105,7 +106,7 @@ final class AdjustTransaction extends AbstractCommandHandler implements
 
         // add reversal feeTransactions
         $fees = [];
-        $previousBalancingFee = null;
+        $previousBalancingFeeId = null;
         foreach ($originalTransaction->getFeeTransactionsForAdjustment() as $originalFt) {
             $feeTransaction = new FeeTransactionEntity();
             $reversalAmount = $originalFt->getAmount() * -1;
@@ -127,13 +128,13 @@ final class AdjustTransaction extends AbstractCommandHandler implements
 
             if ($fee->isBalancingFee()) {
                 // this should get cancelled
-                $previousBalancingFee = $fee;
+                $previousBalancingFeeId = $fee->getId();
             }
         }
 
         // work out the allocation of the payment amount to fees, will create
         // balancing entry to handle any overpayment
-        $allocations = $this->allocatePayments($command->getReceived(), $fees, $previousBalancingFee);
+        $allocations = $this->allocatePayments($command->getReceived(), $fees, $previousBalancingFeeId);
 
         // create new feeTransaction record(s)
         foreach ($allocations as $feeId => $allocatedAmount) {
@@ -205,24 +206,28 @@ final class AdjustTransaction extends AbstractCommandHandler implements
     /**
      * @param string $receivedAmount
      * @param array $fees - passed by reference as we may need to append
-     * @param FeeEntity $previousBalancingFee fee to cancel
+     * @param int $previousBalancingFeeId id of fee to cancel
      * @return array
      */
-    private function allocatePayments($receivedAmount, &$fees, $previousBalancingFee = null)
+    private function allocatePayments($receivedAmount, &$fees, $previousBalancingFeeId = null)
     {
-        $newFeeId = null;
+        if ($previousBalancingFeeId) {
+            $this->result->merge(
+                $this->handleSideEffect(CancelFeeCmd::create(['id' => $previousBalancingFeeId]))
+            );
+            unset($fees[$previousBalancingFeeId]);
+        }
 
         $dtoData = [
             'receivedAmount' => $receivedAmount,
             'fees' => $fees,
-            'previousBalancingFee' => $previousBalancingFee,
         ];
 
         $feeResult = $this->handleSideEffect(CreateOverpaymentFeeCmd::create($dtoData));
 
         if ($feeResult->getId('fee')) {
             $newFeeId = $feeResult->getId('fee');
-            // an overpayment balancing fee was created, add it to the list
+            // a new overpayment balancing fee was created, add it to the list
             $fees[$newFeeId] = $this->getRepo('Fee')->fetchById($newFeeId);
         }
 
