@@ -49,6 +49,7 @@ return [
     CommandHandler\Cases\UpdateCase::class                                  => IsInternalUser::class,
     CommandHandler\Cases\UpdateConvictionNote::class                        => IsInternalUser::class,
     CommandHandler\Cases\UpdateProhibitionNote::class                       => IsInternalUser::class,
+    CommandHandler\Cases\UpdatePenaltiesNote::class                         => IsInternalUser::class,
     CommandHandler\TmCaseDecision\CreateDeclareUnfit::class                 => IsInternalUser::class,
     CommandHandler\TmCaseDecision\CreateNoFurtherAction::class              => IsInternalUser::class,
     CommandHandler\TmCaseDecision\CreateReputeNotLost::class                => IsInternalUser::class,
@@ -56,6 +57,7 @@ return [
     CommandHandler\TmCaseDecision\UpdateDeclareUnfit::class                 => IsInternalUser::class,
     CommandHandler\TmCaseDecision\UpdateNoFurtherAction::class              => IsInternalUser::class,
     CommandHandler\TmCaseDecision\UpdateReputeNotLost::class                => IsInternalUser::class,
+    CommandHandler\Cases\Si\SendResponse::class                             => IsInternalUser::class,
     QueryHandler\Cases\AnnualTestHistory::class                             => IsInternalUser::class,
     QueryHandler\Cases\ByLicence::class                                     => IsInternalUser::class,
     QueryHandler\Cases\ByTransportManager::class                            => IsInternalUser::class,
@@ -87,4 +89,5 @@ return [
     QueryHandler\Cases\Statement\Statement::class                           => IsInternalUser::class,
     QueryHandler\Cases\Statement\StatementList::class                       => IsInternalUser::class,
     QueryHandler\Organisation\UnlicensedCases::class                        => IsInternalUser::class,
+    QueryHandler\Cases\Si\GetList::class                                    => IsInternalUser::class,
 ];
