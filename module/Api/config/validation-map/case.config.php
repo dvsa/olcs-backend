@@ -49,6 +49,7 @@ return [
     CommandHandler\Cases\UpdateCase::class                                  => IsInternalUser::class,
     CommandHandler\Cases\UpdateConvictionNote::class                        => IsInternalUser::class,
     CommandHandler\Cases\UpdateProhibitionNote::class                       => IsInternalUser::class,
+    CommandHandler\Cases\UpdatePenaltiesNote::class                         => IsInternalUser::class,
     CommandHandler\TmCaseDecision\CreateDeclareUnfit::class                 => IsInternalUser::class,
     CommandHandler\TmCaseDecision\CreateNoFurtherAction::class              => IsInternalUser::class,
     CommandHandler\TmCaseDecision\CreateReputeNotLost::class                => IsInternalUser::class,

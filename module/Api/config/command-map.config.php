@@ -332,6 +332,7 @@ return [
     //Transfer - Cases (note fields)
     TransferCommand\Cases\UpdateConvictionNote::class => CommandHandler\Cases\UpdateConvictionNote::class,
     TransferCommand\Cases\UpdateProhibitionNote::class => CommandHandler\Cases\UpdateProhibitionNote::class,
+    TransferCommand\Cases\UpdatePenaltiesNote::class => CommandHandler\Cases\UpdatePenaltiesNote::class,
 
     // Transfer - Annual Test History
     TransferCommand\Cases\UpdateAnnualTestHistory::class => CommandHandler\Cases\UpdateAnnualTestHistory::class,
