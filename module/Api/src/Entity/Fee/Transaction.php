@@ -342,7 +342,7 @@ class Transaction extends AbstractTransaction
     public function getDisplayAmount()
     {
         if ($this->isAdjustment()) {
-           return sprintf(
+            return sprintf(
                 '%1$s%2$s to %1$s%3$s',
                 self::CURRENCY_SYMBOL,
                 $this->getAmountBeforeAdjustment(),
