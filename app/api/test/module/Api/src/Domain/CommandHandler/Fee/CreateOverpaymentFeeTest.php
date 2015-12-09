@@ -66,9 +66,6 @@ class CreateOverpaymentFeeTest extends CommandHandlerTestCase
             FeeTypeEntity::class => [
                 99 => m::mock(FeeTypeEntity::class),
             ],
-            UserEntity::class => [
-                1 => m::mock(UserEntity::class)
-            ],
         ];
 
         parent::initReferences();
