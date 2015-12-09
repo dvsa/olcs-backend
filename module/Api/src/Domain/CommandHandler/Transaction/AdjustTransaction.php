@@ -63,6 +63,7 @@ final class AdjustTransaction extends AbstractCommandHandler implements
 
         $this->validate($command, $originalTransaction);
 
+        // $response = $this->adjustInCpms($originalTransaction, $command);
         try {
             $response = $this->getCpmsService()->adjustTransaction(
                 $originalTransaction->getReference(),
@@ -167,10 +168,10 @@ final class AdjustTransaction extends AbstractCommandHandler implements
             ->addMessage('FeeTransaction record(s) created');
 
         // @todo work out which fees to reset
-        $feesToReset = [];
-        $this->result->merge(
-            $this->handleSideEffect(ResetFeesCmd::create(['fees' => $feesToReset]))
-        );
+        // $feesToReset = [];
+        // $this->result->merge(
+        //     $this->handleSideEffect(ResetFeesCmd::create(['fees' => $feesToReset]))
+        // );
 
         return $this->result;
     }
@@ -239,6 +240,6 @@ final class AdjustTransaction extends AbstractCommandHandler implements
 
         $this->result->merge($feeResult);
 
-        return $this->feesHelper->allocatePayments($receivedAmount, $fees, $newFeeId);
+        return $this->feesHelper->allocatePayments($receivedAmount, $fees);
     }
 }
