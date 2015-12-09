@@ -14,7 +14,6 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateOverpaymentFee as CreateOverpaymentFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\ResetFees as ResetFeesCmd;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
@@ -89,28 +88,7 @@ final class AdjustTransaction extends AbstractCommandHandler implements
         $fees = [];
         $previousBalancingFeeId = null;
         foreach ($originalTransaction->getFeeTransactionsForAdjustment() as $originalFt) {
-            $feeTransaction = new FeeTransactionEntity();
-            $reversalAmount = $originalFt->getAmount() * -1;
-            $fee = $originalFt->getFee();
-            $feeTransaction
-                ->setFee($fee)
-                ->setTransaction($newTransaction)
-                ->setAmount($reversalAmount)
-                ->setReversedFeeTransaction($originalFt);
-
-            // add feeTransaction to the transaction for saving
-            $newTransaction->getFeeTransactions()->add($feeTransaction);
-
-            // add feeTransaction to the fee so that outstanding amount
-            // is calculated correctly
-            $fee->getFeeTransactions()->add($feeTransaction);
-
-            $fees[$fee->getId()] = $fee;
-
-            if ($fee->isBalancingFee()) {
-                // this should get cancelled
-                $previousBalancingFeeId = $fee->getId();
-            }
+            $this->addReversalFeeTransaction($originalFt, $newTransaction, $fees, $previousBalancingFeeId);
         }
 
         // work out the allocation of the payment amount to fees, will create
@@ -134,7 +112,7 @@ final class AdjustTransaction extends AbstractCommandHandler implements
         }
 
         // persist transaction
-        $this->getRepo()->save($newTransaction);
+        $this->getRepo('Transaction')->save($newTransaction);
 
         $this->result
             ->addId('transaction', $newTransaction->getId())
@@ -175,6 +153,51 @@ final class AdjustTransaction extends AbstractCommandHandler implements
         }
     }
 
+    /**
+     * Add a 'negative' feeTransaction
+     *
+     * @param FeeTransactionEntity $originalFt
+     * @param TransactionEntity    $newTransaction
+     * @param array                &$fees passed by reference as we update it
+     * @param int                  &$previousBalancingFeeId passed by reference as we update it
+     */
+    private function addReversalFeeTransaction(
+        FeeTransactionEntity $originalFt,
+        TransactionEntity $newTransaction,
+        array &$fees,
+        &$previousBalancingFeeId
+    ) {
+        $feeTransaction = new FeeTransactionEntity();
+        $reversalAmount = $originalFt->getAmount() * -1;
+        $fee = $originalFt->getFee();
+        $feeTransaction
+            ->setFee($fee)
+            ->setTransaction($newTransaction)
+            ->setAmount($reversalAmount)
+            ->setReversedFeeTransaction($originalFt);
+
+        // add feeTransaction to the transaction for saving
+        $newTransaction->getFeeTransactions()->add($feeTransaction);
+
+        // add feeTransaction to the fee so that outstanding amount
+        // is calculated correctly
+        $fee->getFeeTransactions()->add($feeTransaction);
+
+        $fees[$fee->getId()] = $fee;
+
+        if ($fee->isBalancingFee()) {
+            // this should get cancelled
+            $previousBalancingFeeId = $fee->getId();
+        }
+    }
+
+    /**
+     * Mark a fee as paid
+     *
+     * @param  FeeEntity         $fee
+     * @param  TransactionEntity $newTransaction
+     * @return null
+     */
     private function markFeeAsPaid(FeeEntity $fee, TransactionEntity $newTransaction)
     {
         $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID));
@@ -186,6 +209,8 @@ final class AdjustTransaction extends AbstractCommandHandler implements
     }
 
     /**
+     * Validate the command data
+     *
      * @return  boolean (true)
      * @throws  ValidationException if nothing has changed
      */
@@ -206,6 +231,9 @@ final class AdjustTransaction extends AbstractCommandHandler implements
     }
 
     /**
+     * Allocates the new received amount to the fees, possibly cancelling a
+     * previous overpayment fee and possible creating a new one
+     *
      * @param string $receivedAmount
      * @param array $fees - passed by reference as we may need to append
      * @param int $previousBalancingFeeId id of fee to cancel
