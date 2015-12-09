@@ -301,7 +301,10 @@ class SearchTest extends TestCase
                         ],
                         [
                             'match' => [
-                                'reg_no' => 'SMITH'
+                                'reg_no' => [
+                                    'query' => 'SMITH',
+                                    'boost' => 2.0,
+                                ]
                             ]
                         ],
                     ]
