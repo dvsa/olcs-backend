@@ -191,28 +191,14 @@ final class AdjustTransaction extends AbstractCommandHandler implements
      */
     public function validate(CommandInterface $command, TransactionEntity $transaction)
     {
-        $changes = [];
+        $hasChanged = ($command->getReceived() != $transaction->getTotalAmount())
+            || ($command->getPayer() != $transaction->getPayerName())
+            || ($command->getSlipNo() != $transaction->getPayingInSlipNumber())
+            || ($command->getChequeNo() && $command->getChequeNo() != $transaction->getChequePoNumber())
+            || ($command->getPoNo() && $command->getPoNo() != $transaction->getChequePoNumber())
+            || ($command->getChequeDate() != $transaction->getChequePoDate());
 
-        if ($command->getReceived() != $transaction->getTotalAmount()) {
-            $changes[] = 'received';
-        }
-        if ($command->getPayer() != $transaction->getPayerName()) {
-            $changes[] = 'payer';
-        }
-        if ($command->getSlipNo() != $transaction->getPayingInSlipNumber()) {
-            $changes[] = 'slipNo';
-        }
-        if ($command->getChequeNo() && $command->getChequeNo() != $transaction->getChequePoNumber()) {
-            $changes[] = 'chequeNo';
-        }
-        if ($command->getPoNo() && $command->getPoNo() != $transaction->getChequePoNumber()) {
-            $changes[] = 'poNo';
-        }
-        if ($command->getChequeDate() != $transaction->getChequePoDate()) {
-            $changes[] = 'chequeDate';
-        }
-
-        if (empty($changes)) {
+        if (!$hasChanged) {
             throw new ValidationException(['You haven\'t changed anything']);
         }
 
