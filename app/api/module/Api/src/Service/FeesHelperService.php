@@ -204,7 +204,6 @@ class FeesHelperService implements FactoryInterface
     {
         $deallocations = $this->deallocatePayments($originalTransactionId, $fees);
 
-        $adjusted = [];
         foreach ($fees as &$fee) {
             $fee->adjustTransactionAmount($originalTransactionId, $deallocations[$fee->getId()]);
         }

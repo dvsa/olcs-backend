@@ -1164,7 +1164,7 @@ class FeeEntityTest extends EntityTester
         $this->assertSame($expected, Entity::AmountToPounds($input));
     }
 
-   public function amountToPoundsProvider()
+    public function amountToPoundsProvider()
     {
         return [
             [100, '1.00'],

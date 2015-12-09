@@ -106,7 +106,7 @@ class Fee extends AbstractQueryHandler
         $method = $transaction->getPaymentMethod()->getDescription();
 
         if ($transaction->isAdjustment()) {
-           return $method . ' ' . $transaction->getDisplayAmount();
+            return $method . ' ' . $transaction->getDisplayAmount();
         }
 
         return $method;
