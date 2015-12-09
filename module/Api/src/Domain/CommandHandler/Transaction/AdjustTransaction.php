@@ -63,27 +63,7 @@ final class AdjustTransaction extends AbstractCommandHandler implements
 
         $this->validate($command, $originalTransaction);
 
-        // $response = $this->adjustInCpms($originalTransaction, $command);
-        try {
-            $response = $this->getCpmsService()->adjustTransaction(
-                $originalTransaction->getReference(),
-                $originalTransaction->getId(),
-                $originalTransaction->getFees(),
-                $command->getReceived(),
-                $command->getPayer(),
-                $command->getSlipNo(),
-                $command->getChequeNo(),
-                $command->getChequeDate(),
-                $command->getPoNo()
-            );
-        } catch (CpmsResponseException $e) {
-            // rethrow as Domain exception
-            throw new RuntimeException(
-                'Error from CPMS service: ' . json_encode($e->getResponse()),
-                $e->getCode(),
-                $e
-            );
-        }
+        $response = $this->adjustInCpms($originalTransaction, $command);
 
         // create adjustment transaction
         $transactionReference = $response['receipt_reference'];
@@ -149,12 +129,7 @@ final class AdjustTransaction extends AbstractCommandHandler implements
             $newTransaction->getFeeTransactions()->add($feeTransaction);
 
             if ($markAsPaid) {
-                $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID));
-                $method = $newTransaction->getPaymentMethod()->getDescription();
-                $this->result->addMessage('Fee ID ' . $fee->getId() . ' updated as paid by ' . $method);
-                // We need to call save() on the fee, it won't cascade persist from the transaction
-                $this->getRepo('Fee')->save($fee);
-                $this->result->merge($this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()])));
+                $this->markFeeAsPaid($fee, $newTransaction);
             }
         }
 
@@ -174,6 +149,40 @@ final class AdjustTransaction extends AbstractCommandHandler implements
         // );
 
         return $this->result;
+    }
+
+    private function adjustInCpms(TransactionEntity $originalTransaction, CommandInterface $command)
+    {
+        try {
+            return $this->getCpmsService()->adjustTransaction(
+                $originalTransaction->getReference(),
+                $originalTransaction->getId(),
+                $originalTransaction->getFees(),
+                $command->getReceived(),
+                $command->getPayer(),
+                $command->getSlipNo(),
+                $command->getChequeNo(),
+                $command->getChequeDate(),
+                $command->getPoNo()
+            );
+        } catch (CpmsResponseException $e) {
+            // rethrow as Domain exception
+            throw new RuntimeException(
+                'Error from CPMS service: ' . json_encode($e->getResponse()),
+                $e->getCode(),
+                $e
+            );
+        }
+    }
+
+    private function markFeeAsPaid(FeeEntity $fee, TransactionEntity $newTransaction)
+    {
+        $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID));
+        $method = $newTransaction->getPaymentMethod()->getDescription();
+        // We need to call save() on the fee, it won't cascade persist from the transaction
+        $this->getRepo('Fee')->save($fee);
+        $this->result->addMessage('Fee ID ' . $fee->getId() . ' updated as paid by ' . $method);
+        $this->result->merge($this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()])));
     }
 
     /**
