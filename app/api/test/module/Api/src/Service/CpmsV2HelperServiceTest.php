@@ -981,8 +981,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     public function testBatchRefund()
     {
-        $this->markTestIncomplete('@todo update when no longer using stubbed response');
-
         $fee = m::mock(FeeEntity::class);
 
         $ft = m::mock(FeeTransactionEntity::class);
@@ -1021,10 +1019,18 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getDefermentPeriod')
             ->andReturn('1')
             ->shouldReceive('getSalesPersonReference')
-            ->andReturn('TEST_SALES_PERSON_REF');
+            ->andReturn('TEST_SALES_PERSON_REF')
+            ->shouldReceive('getNetAmount')
+            ->andReturn('12.00')
+            ->shouldReceive('getVatAmount')
+            ->andReturn('15.00')
+            ->shouldReceive('getGrossAmount')
+            ->andReturn('9.99');
 
         $fee->shouldReceive('getFeeType->getDescription')
             ->andReturn('TEST_FEE_TYPE');
+        $fee->shouldReceive('getFeeType->getVatCode')->andReturn('VAT_CODE');
+        $fee->shouldReceive('getFeeType->getVatRate')->andReturn('VAT_RATE');
 
         $ft->shouldReceive('getFee')->andReturn($fee);
 
@@ -1037,16 +1043,16 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'refund_reason' => 'Refund',
                     'payment_data' => [
                         [
-                            'line_identifier' => 'LINE_NO',
-                            'amount' => '200.00',
+                            'line_identifier' => '101',
+                            'amount' => '9.99',
                             'allocated_amount' => '100.00',
-                            'net_amount' => '200.00',
-                            'tax_amount' => '0.00',
-                            'tax_code' => 'Z',
-                            'tax_rate' => '0',
+                            'net_amount' => '12.00',
+                            'tax_amount' => '15.00',
+                            'tax_code' => 'VAT_CODE',
+                            'tax_rate' => 'VAT_RATE',
                             'invoice_date' => '2015-10-09',
                             'sales_reference' => '101',
-                            'product_reference' => 'TEST_PRODUCT_REF',
+                            'product_reference' => 'TEST_FEE_TYPE',
                             'product_description' => 'TEST_FEE_TYPE',
                             'receiver_reference' => 'Miscellaneous',
                             'receiver_name' => 'Test Customer',
@@ -1088,8 +1094,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     public function testBatchRefundWithInvalidResponse()
     {
-        $this->markTestIncomplete('@todo update when no longer using stubbed response');
-
         $this->setExpectedException(CpmsResponseException::class, 'Invalid refund response');
 
         $fee = m::mock(FeeEntity::class);
