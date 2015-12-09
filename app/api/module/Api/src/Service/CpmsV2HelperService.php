@@ -413,9 +413,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param Fee $fee
      * @return array
      * @throws CpmsResponseException if response is invalid
-     *
-     * @todo this is currently stubbed
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function batchRefund($fee)
     {
@@ -435,8 +432,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'payments' => $payments,
         ];
 
-        // $response = $this->send($method, $endPoint, $scope, $params);
-        $response = $this->stubBatchRefundResponse($payments);
+        $response = $this->send($method, $endPoint, $scope, $params);
 
         if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
             return $response;
