@@ -146,13 +146,17 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
 
         $feeAmount = (float) $irfoFeeType->getFixedValue();
 
+        $feeStatus = Fee::STATUS_OUTSTANDING;
+        if ($feeAmount == 0.0) {
+            $feeStatus = Fee::STATUS_PAID;
+        }
         $data = [
             'irfoPsvAuth' => $irfoPsvAuth->getId(),
             'invoicedDate' => date('Y-m-d'),
             'description' => $irfoFeeType->getDescription() . ' for Auth ' . $irfoPsvAuth->getId(),
             'feeType' => $irfoFeeType->getId(),
             'amount' => $feeAmount,
-            'feeStatus' => Fee::STATUS_OUTSTANDING,
+            'feeStatus' => $feeStatus,
         ];
 
         return $this->handleSideEffect(FeeCreateFee::create($data));
