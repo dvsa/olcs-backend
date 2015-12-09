@@ -17,6 +17,14 @@ class IrfoDetails extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchIrfoDetailsUsingId($query);
+        return $this->result(
+            $this->getRepo()->fetchIrfoDetailsUsingId($query),
+            [
+                'tradingNames',
+                'irfoNationality',
+                'irfoPartners',
+                'irfoContactDetails'
+            ]
+        );
     }
 }
