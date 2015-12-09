@@ -1106,4 +1106,93 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $this->sut->batchRefund($fee);
     }
+
+    public function testAdjustTransaction()
+    {
+        $response = [
+            'code' => Sut::RESPONSE_SUCCESS,
+            'message' => 'ok',
+            'receipt_reference' => 'ADJUSTMENT_REFERENCE',
+        ];
+
+        $expectedParams = [
+            'customer_reference' => '',
+            'payment_data' => [
+                [
+                    'line_identifier' => '100',
+                    'amount' => '100.00',
+                    'allocated_amount' => '10.00',
+                    'net_amount' => '100.00',
+                    'tax_amount' => '0.00',
+                    'tax_code' => 'Z',
+                    'tax_rate' => 0,
+                    'invoice_date' => null,
+                    'sales_reference' => '100',
+                    'product_reference' => 'fee type description',
+                    'product_description' => 'fee type description',
+                    'receiver_reference' => '',
+                    'receiver_name' => 'some organisation',
+                    'receiver_address' => [
+                        'line_1' => 'Foo',
+                        'line_2' => null,
+                        'line_3' => null,
+                        'line_4' => null,
+                        'city' => 'Bar',
+                        'postcode' => 'LS9 6NF',
+                    ],
+                    'rule_start_date' => null,
+                    'deferment_period' => '',
+                    'sales_person_reference' => 'Traffic Area Ref',
+                ],
+            ],
+            'total_amount' => '10.00',
+            'customer_name' => 'some organisation',
+            'customer_manager_name' => 'some organisation',
+            'customer_address' => [
+                'line_1' => 'Foo',
+                'line_2' => null,
+                'line_3' => null,
+                'line_4' => null,
+                'city' => 'Bar',
+                'postcode' => 'LS9 6NF',
+            ],
+            'refund_overpayment' => false,
+            'cheque_date' => '2015-12-02',
+            'cheque_number' => '2346',
+            'postal_order_number' => '',
+            'slip_number' => '1235',
+            'batch_number' => '1235',
+            'name_on_cheque' => 'Dan2',
+            'scope' => 'ADJUSTMENT',
+        ];
+
+        $this->cpmsClient
+            ->shouldReceive('post')
+            ->with('/api/payment/ORIGINAL_REFERENCE/adjustment', 'ADJUSTMENT', $expectedParams)
+            ->once()
+            ->andReturn($response);
+
+        $fee1 = $this->getStubFee(100, '100.00');
+
+        $fees = [$fee1];
+
+        $this->feesHelper
+            ->shouldReceive('reallocatePayments')
+            ->with('10.00', $fees, 69)
+            ->andReturn([100 => '10.00']);
+
+        $result = $this->sut->adjustTransaction(
+            'ORIGINAL_REFERENCE',
+            69,
+            $fees,
+            '10.00',
+            'Dan2',
+            '1235',
+            '2346',
+            '2015-12-02',
+            null
+        );
+
+        $this->assertSame($response, $result);
+    }
 }
