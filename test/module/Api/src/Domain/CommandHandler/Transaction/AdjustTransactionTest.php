@@ -124,6 +124,7 @@ class AdjustTransactionTest extends CommandHandlerTestCase
 
         $fee->setFeeTransactions(new ArrayCollection([$feeTransaction]));
         $fee->shouldReceive('isBalancingFee')->andReturn(false);
+        $fee->shouldReceive('getOutstandingAmount')->andReturn('100.00');
 
         $transaction
             ->shouldReceive('getReference')->andReturn('OLCS-CHEQUE-REF-1')
@@ -172,7 +173,7 @@ class AdjustTransactionTest extends CommandHandlerTestCase
             )
             ->andReturn(
                 [
-                    // 100 => '10.00',
+                    100 => '10.00',
                 ]
             );
 
@@ -184,15 +185,74 @@ class AdjustTransactionTest extends CommandHandlerTestCase
                 function ($transaction) use (&$savedTransaction, $newTransactionId) {
                     $savedTransaction = $transaction;
                     $savedTransaction->setId($newTransactionId);
-                    // $feeTransactionId = 200;
-                    // $savedTransaction->getFeeTransactions()->forAll(
-                    //     function ($key, $ft) use (&$feeTransactionId) {
-                    //         $ft->setId($feeTransactionId + $key);
-                    //         return true; // closure *must* return true to continue
-                    //     }
-                    // );
+                    $feeTransactionId = 200;
+                    $savedTransaction->getFeeTransactions()->forAll(
+                        function ($key, $ft) use (&$feeTransactionId) {
+                            $ft->setId($feeTransactionId + $key);
+                            return true; // closure *must* return true to continue
+                        }
+                    );
                 }
             );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'transaction' => 70,
+                'feeTransaction' => [200, 201]
+            ],
+            'messages' => [
+                'Transaction record created: OLCS-ADJ-REF-1',
+                'FeeTransaction record(s) created',
+            ],
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals(2, $savedTransaction->getFeeTransactions()->count());
+        $this->assertEquals('-100.00', $savedTransaction->getFeeTransactions()->get(0)->getAmount());
+        $this->assertEquals(200, $savedTransaction->getFeeTransactions()->get(0)->getId());
+        $this->assertEquals('10.00', $savedTransaction->getFeeTransactions()->get(1)->getAmount());
+        $this->assertEquals(201, $savedTransaction->getFeeTransactions()->get(1)->getId());
+    }
+
+    public function testHandleCommandCpmsResponseException()
+    {
+        $transactionId = 69;
+
+        // set up 'new' data
+        //////////////////////////////////////
+        $data = [
+            'id' => $transactionId,
+            'version' => 1,
+            'received' => '10.00',
+        ];
+
+        $command = Cmd::create($data);
+        ////////////////////////////////////////
+
+        // set up 'existing' data
+        ////////////////////////////////////////
+        $fee = $this->mapReference(FeeEntity::class, 100);
+        $transaction = $this->mapReference(TransactionEntity::class, $transactionId);
+        $transaction
+            ->shouldReceive('getFees')->andReturn([$fee])
+            ->shouldReceive('getTotalAmount')->andReturn('100.00');
+        ////////////////////////////////////////
+
+        $this->repoMap['Transaction']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($transaction);
+
+        $this->mockCpmsService
+            ->shouldReceive('adjustTransaction')
+            ->once()
+            ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));
+
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
 
         $this->sut->handleCommand($command);
     }
