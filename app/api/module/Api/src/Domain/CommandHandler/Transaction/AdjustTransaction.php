@@ -175,7 +175,11 @@ final class AdjustTransaction extends AbstractCommandHandler implements
         return $this->result;
     }
 
-    private function validate(CommandInterface $command, TransactionEntity $transaction)
+    /**
+     * @return  boolean (true)
+     * @throws  ValidationException if nothing has changed
+     */
+    public function validate(CommandInterface $command, TransactionEntity $transaction)
     {
         $changes = [];
 
@@ -201,6 +205,8 @@ final class AdjustTransaction extends AbstractCommandHandler implements
         if (empty($changes)) {
             throw new ValidationException(['You haven\'t changed anything']);
         }
+
+        return true;
     }
 
     /**
