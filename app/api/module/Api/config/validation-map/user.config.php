@@ -12,7 +12,6 @@ return [
     QueryHandler\User\Partner::class                   => IsInternalUser::class,
     QueryHandler\User\PartnerList::class               => IsInternalUser::class,
     QueryHandler\User\RoleList::class                  => Handler\User\RoleList::class,
-    QueryHandler\User\ZfcUser::class                   => NoValidationRequired::class,
 
     // Commands
     CommandHandler\User\CreatePartner::class           => IsInternalUser::class,
