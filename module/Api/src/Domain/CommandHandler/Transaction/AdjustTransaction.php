@@ -213,7 +213,7 @@ final class AdjustTransaction extends AbstractCommandHandler implements
     {
         if ($allocatedAmount === $fee->getOutstandingAmount() && !$fee->isPaid()) {
             $this->markFeeAsPaid($fee, $newTransaction);
-        } elseif (false) { // @todo work out which fees to reset
+        } elseif ($fee->getOutstandingAmount() > 0) {
             $this->resetFee($fee);
         }
 
