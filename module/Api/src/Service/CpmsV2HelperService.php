@@ -545,11 +545,18 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function adjustTransaction($originalTransaction, $newTransaction) {
 
+        // @todo unstub
+        // return [
+        //    'code' => self::RESPONSE_SUCCESS,
+        //    'receipt_reference' => 'OLCS-STUB-ADJUSTMENT',
+        //    'message' => '** stubbed response from ' . __METHOD__ . ' **',
+        // ];
+
         $method   = 'post';
         $endPoint = '/api/payment/'.$originalTransaction->getReference().'/adjustment';
         $scope    = ApiService::SCOPE_ADJUSTMENT;
 
-        $newAmount = $newTransaction->getTotalAmount();
+        $newAmount = $newTransaction->getAmountAfterAdjustment();
         $fees = $newTransaction->getFees();
 
         // @todo only set one dependent on method
@@ -577,22 +584,18 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         ];
         $params = $this->getParametersForFees($fees, $extraParams);
 
-        $allocations = $this->feesHelper->allocatePayments($newAmount, $fees);
-
         foreach ($fees as $fee) {
-            $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
+            if ($fee->isBalancingFee()) {
+                // @todo set refund flag??
+                continue;
+            }
+            $allocation = $newTransaction->getAmountAllocatedToFeeId($fee->getId());
+            $extraPaymentData = ['allocated_amount' => $allocation];
             $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
             if (!empty($paymentData)) {
                 $params['payment_data'][] = $paymentData;
             }
         }
-
-        // @todo unstub
-        // return [
-        //    'code' => self::RESPONSE_SUCCESS,
-        //    'receipt_reference' => 'OLCS-STUB-ADJUSTMENT',
-        //    'message' => '** stubbed response from ' . __METHOD__ . ' **',
-        // ];
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
