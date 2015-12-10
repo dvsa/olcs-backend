@@ -90,7 +90,7 @@ final class CreateFee extends AbstractCommandHandler implements AuthAwareInterfa
         }
 
         // if amount is 0 set the status to paid
-        if (empty($fee->getNetAmount())) {
+        if (empty((float) $fee->getNetAmount())) {
             $fee->setFeeStatus($this->getRepo()->getRefdataReference(Fee::STATUS_PAID));
         }
 

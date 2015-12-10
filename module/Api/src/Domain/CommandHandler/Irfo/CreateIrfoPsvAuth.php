@@ -145,7 +145,7 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
         );
 
         $feeAmount = (float) $irfoFeeType->getFixedValue();
-        
+
         $data = [
             'irfoPsvAuth' => $irfoPsvAuth->getId(),
             'invoicedDate' => date('Y-m-d'),
