@@ -178,6 +178,12 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 1],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Snapshot created', 'Application 1 set to not taken up.'], $result->getMessages());
@@ -313,6 +319,12 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             \Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4::class,
             ['id' => 2909],
             new Result()
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 1],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
 
         $result = $this->sut->handleCommand($command);

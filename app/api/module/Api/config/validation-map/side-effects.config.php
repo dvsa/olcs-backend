@@ -53,6 +53,7 @@ return [
     CommandHandler\Application\UpdateVariationCompletion::class                       => NoValidationRequired::class,
     CommandHandler\Application\CreateFee::class                                       => NoValidationRequired::class,
     CommandHandler\Application\CancelAllInterimFees::class                            => NoValidationRequired::class,
+    CommandHandler\Application\CancelOutstandingFees::class                           => NoValidationRequired::class,
     CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementArea::class         => NoValidationRequired::class,
     CommandHandler\Application\DeleteApplication::class                               => NoValidationRequired::class,
     CommandHandler\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class => NoValidationRequired::class,

@@ -38,9 +38,27 @@ class CancelApplication extends AbstractCommandHandler implements TransactionedI
             $this->getRepo('Licence')->save($licence);
         }
 
+        $this->cancelOutstandingFees($application);
+
         $this->result->addMessage('Application cancelled');
         $this->result->addId('application', $application->getId());
 
         return $this->result;
+    }
+
+    /**
+     * Cancel outstanding fees on the application
+     *
+     * @param Application $application
+     */
+    private function cancelOutstandingFees(Application $application)
+    {
+        $this->result->merge(
+            $this->handleSideEffect(
+                \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::create(
+                    ['id' => $application->getId()]
+                )
+            )
+        );
     }
 }

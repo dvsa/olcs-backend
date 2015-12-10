@@ -105,6 +105,8 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
         $this->cancelS4($application);
 
+        $this->cancelOutstandingFees($application);
+
         $this->result->addMessage('Application ' . $application->getId() . ' withdrawn.');
 
         return $this->result;
@@ -162,5 +164,21 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
                 );
             }
         }
+    }
+
+    /**
+     * Cancel outstanding fees on the application
+     *
+     * @param Application $application
+     */
+    private function cancelOutstandingFees(Application $application)
+    {
+        $this->result->merge(
+            $this->handleSideEffect(
+                \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::create(
+                    ['id' => $application->getId()]
+                )
+            )
+        );
     }
 }
