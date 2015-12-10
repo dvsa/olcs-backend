@@ -544,14 +544,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @throws CpmsResponseException if response is invalid
      */
     public function adjustTransaction($originalTransaction, $newTransaction) {
-
-        // @todo unstub
-        // return [
-        //    'code' => self::RESPONSE_SUCCESS,
-        //    'receipt_reference' => 'OLCS-STUB-ADJUSTMENT',
-        //    'message' => '** stubbed response from ' . __METHOD__ . ' **',
-        // ];
-
         $method   = 'post';
         $endPoint = '/api/payment/'.$originalTransaction->getReference().'/adjustment';
         $scope    = ApiService::SCOPE_ADJUSTMENT;
