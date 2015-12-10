@@ -2739,7 +2739,6 @@ class ApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dataProviderValidateTol
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @group test123
      */
     public function testValidateTolNotValid(
         $niFlag,
@@ -2785,9 +2784,6 @@ class ApplicationEntityTest extends EntityTester
         ];
     }
 
-    /**
-     * @group test123
-     */
     public function testValidateTolValid()
     {
         $sut = m::mock(Entity::class)->makePartial();
