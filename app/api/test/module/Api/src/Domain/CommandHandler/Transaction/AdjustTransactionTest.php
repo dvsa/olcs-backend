@@ -147,7 +147,7 @@ class AdjustTransactionTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('adjustTransaction')
             ->once()
-            ->with('OLCS-CHEQUE-REF-1', 69, [$fee], '10.00', 'Dan', '1234', '2345', '2015-12-01', null)
+            ->with($transaction, m::type(TransactionEntity::class))
             ->andReturn(
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
@@ -219,6 +219,7 @@ class AdjustTransactionTest extends CommandHandlerTestCase
 
     public function testHandleCommandCpmsResponseException()
     {
+
         $transactionId = 69;
 
         // set up 'new' data
@@ -227,6 +228,11 @@ class AdjustTransactionTest extends CommandHandlerTestCase
             'id' => $transactionId,
             'version' => 1,
             'received' => '10.00',
+            'payer' => 'Dan',
+            'slipNo' => '1234',
+            'chequeNo' => '2345',
+            'chequeDate' => '2015-12-01',
+            'reason' => 'Keying error'
         ];
 
         $command = Cmd::create($data);
@@ -235,10 +241,29 @@ class AdjustTransactionTest extends CommandHandlerTestCase
         // set up 'existing' data
         ////////////////////////////////////////
         $fee = $this->mapReference(FeeEntity::class, 100);
+
         $transaction = $this->mapReference(TransactionEntity::class, $transactionId);
+
+        $feeTransaction = $this->mapReference(FeeTransactionEntity::class, 200);
+        $feeTransaction
+            ->setFee($fee)
+            ->setTransaction($transaction)
+            ->shouldReceive('getAmount')->andReturn('100.00');
+
+        $fee->setFeeTransactions(new ArrayCollection([$feeTransaction]));
+        $fee->shouldReceive('isBalancingFee')->andReturn(false);
+        $fee->shouldReceive('getOutstandingAmount')->andReturn('100.00');
+
         $transaction
+            ->shouldReceive('getReference')->andReturn('OLCS-CHEQUE-REF-1')
+            ->shouldReceive('getId')->andReturn($transactionId)
             ->shouldReceive('getFees')->andReturn([$fee])
-            ->shouldReceive('getTotalAmount')->andReturn('100.00');
+            ->shouldReceive('getTotalAmount')->andReturn('100.00')
+            ->shouldReceive('getPayerName')->andReturn('Dan')
+            ->shouldReceive('getPayingInSlipNumber')->andReturn('1234')
+            ->shouldReceive('getChequePoNumber')->andReturn('2345')
+            ->shouldReceive('getChequePoDate')->andReturn('2015-12-01')
+            ->shouldReceive('getFeeTransactionsForAdjustment')->andReturn([$feeTransaction]);
         ////////////////////////////////////////
 
         $this->repoMap['Transaction']
@@ -247,9 +272,32 @@ class AdjustTransactionTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($transaction);
 
+        $this->expectedSideEffect(
+            CreateOverpaymentFeeCmd::class,
+            [
+                'receivedAmount' => '10.00',
+                'fees' => [100 => $fee],
+            ],
+            new Result()
+        );
+
+        $this->mockFeesHelperService
+            ->shouldReceive('allocatePayments')
+            ->once()
+            ->with(
+                '10.00',
+                [100 => $fee]
+            )
+            ->andReturn(
+                [
+                    100 => '10.00',
+                ]
+            );
+
         $this->mockCpmsService
             ->shouldReceive('adjustTransaction')
             ->once()
+            ->with($transaction, m::type(TransactionEntity::class))
             ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));
 
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
