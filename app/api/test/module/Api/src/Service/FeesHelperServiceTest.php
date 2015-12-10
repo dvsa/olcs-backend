@@ -352,24 +352,6 @@ class FeesHelperServiceTest extends MockeryTestCase
         return $fee;
     }
 
-    /**
-     * Helper function to generate a stub fee entity with a linked transaction
-     *
-     * @param int $id
-     * @param string $amount
-     * @return FeeEntity
-     */
-    private function getStubFeeWithTransactionIdAndAmount($id, $transactionId, $amount)
-    {
-        return m::mock(FeeEntity::class)
-            ->shouldReceive('getId')
-            ->andReturn($id)
-            ->shouldReceive('getAmountAllocatedByTransactionId')
-            ->with($transactionId)
-            ->andReturn($amount)
-            ->getMock();
-    }
-
     private function refData($id)
     {
         return m::mock(RefData::class)

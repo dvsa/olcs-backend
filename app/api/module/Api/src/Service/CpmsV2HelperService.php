@@ -559,7 +559,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $newAmount = $newTransaction->getAmountAfterAdjustment();
         $fees = $newTransaction->getFees();
 
-        // @todo only set one dependent on method
         $chequeNo = $poNo = null;
         switch ($newTransaction->getPaymentMethod()->getId()) {
             case Fee::METHOD_CHEQUE:
@@ -586,7 +585,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         foreach ($fees as $fee) {
             if ($fee->isBalancingFee()) {
-                // @todo set refund flag??
                 continue;
             }
             $allocation = $newTransaction->getAmountAllocatedToFeeId($fee->getId());
