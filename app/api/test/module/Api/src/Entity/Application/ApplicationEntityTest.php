@@ -2735,4 +2735,72 @@ class ApplicationEntityTest extends EntityTester
 
         $this->assertSame('AB12345/34', $this->entity->getApplicationReference());
     }
+
+    /**
+     * @dataProvider dataProviderValidateTol
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @group test123
+     */
+    public function testValidateTolNotValid(
+        $niFlag,
+        $goodsOrPsv,
+        $licenceType,
+        $isVariation,
+        $currentGoodsOrPsv,
+        $currentNiFlag
+    ) {
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->setIsVariation($isVariation);
+        $sut->setGoodsOrPsv($currentGoodsOrPsv);
+        $sut->setNiFlag($currentNiFlag);
+
+        $mockGoodsOrPsv = $goodsOrPsv ? m::mock()->shouldReceive('getId')->andReturn($goodsOrPsv)->getMock() : null;
+        $mockLicenceType = $licenceType ? m::mock()->shouldReceive('getId')->andReturn($licenceType)->getMock() : null;
+
+        $sut->validateTol($niFlag, $mockGoodsOrPsv, $mockLicenceType);
+    }
+
+    public function dataProviderValidateTol()
+    {
+        return [
+            ['Y', null, null, false, null, null],
+            ['Y', Licence::LICENCE_CATEGORY_PSV, Licence::LICENCE_TYPE_STANDARD_NATIONAL, false, null, null],
+            ['N', Licence::LICENCE_CATEGORY_GOODS_VEHICLE, Licence::LICENCE_TYPE_SPECIAL_RESTRICTED, false, null, null],
+            [
+                'Y',
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                true,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                null
+            ],
+            [
+                'Y',
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                true,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                'N'
+            ]
+        ];
+    }
+
+    /**
+     * @group test123
+     */
+    public function testValidateTolValid()
+    {
+        $sut = m::mock(Entity::class)->makePartial();
+
+        $mockGoodsOrPsv = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE)
+            ->getMock();
+        $mockLicenceType = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL)
+            ->getMock();
+
+        $this->assertTrue($sut->validateTol('Y', $mockGoodsOrPsv, $mockLicenceType));
+    }
 }
