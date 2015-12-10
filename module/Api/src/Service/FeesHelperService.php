@@ -273,11 +273,17 @@ class FeesHelperService implements FactoryInterface
             $irfoGvPermitId = $existingFee->getIrfoGvPermit()->getId();
         }
 
+        $irfoPsvAuthId = null;
+        if ($existingFee->getIrfoPsvAuth()) {
+            $irfoPsvAuthId = $existingFee->getIrfoPsvAuth()->getId();
+        }
+
         return [
             'licence'      => $licenceId,
             'application'  => $applicationId,
             'busReg'       => $busRegId,
             'irfoGvPermit' => $irfoGvPermitId,
+            'irfoPsvAuth'  => $irfoPsvAuthId,
         ];
     }
 }

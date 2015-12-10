@@ -121,10 +121,12 @@ final class AdjustTransaction extends AbstractCommandHandler implements
             ->addMessage('FeeTransaction record(s) created');
 
         // @todo work out which fees to reset
-        // $feesToReset = [];
-        // $this->result->merge(
-        //     $this->handleSideEffect(ResetFeesCmd::create(['fees' => $feesToReset]))
-        // );
+        $feesToReset = [];
+        if (!empty($feesToReset)) {
+            $this->result->merge(
+                $this->handleSideEffect(ResetFeesCmd::create(['fees' => $feesToReset]))
+            );
+        }
 
         return $this->result;
     }

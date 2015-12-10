@@ -342,6 +342,81 @@ class FeesHelperServiceTest extends MockeryTestCase
     }
 
     /**
+     * Test reallocation logic
+     *
+     * Original fee: £50.00
+     * Original payment amount: £60.00 (Overpayment of £10.00)
+     * New payment amount: £20.00
+     */
+    public function testReallocatePayments()
+    {
+        $originalTransactionId = 69;
+
+        $fee1 = $this->getStubFee(101, '50.00');
+        $fee1
+            ->shouldReceive('isCancelled')
+            ->andReturn(false)
+            ->shouldReceive('getAmountAllocatedByTransactionId')
+            ->once()
+            ->with($originalTransactionId)
+            ->andReturn('50.00')
+            ->shouldReceive('adjustTransactionAmount')
+            ->once()
+            ->with($originalTransactionId, '-50.00');
+
+        $fee2 = $this->getStubFee(102, '10.00');
+        $fee2
+            ->shouldReceive('isCancelled')
+            ->andReturn(true)
+            ->shouldReceive('getAmountAllocatedByTransactionId')
+            ->once()
+            ->with($originalTransactionId)
+            ->andReturn('10.00')
+            ->shouldReceive('adjustTransactionAmount')
+            ->once()
+            ->with($originalTransactionId, '-10.00');
+
+        $fees = [$fee1, $fee2];
+
+        $result = $this->sut->reallocatePayments('20.00', $fees, $originalTransactionId);
+
+        $this->assertEquals([101 => '20.00'], $result);
+    }
+
+    public function testGetIdsFromFee()
+    {
+        $application  = m::mock()->shouldReceive('getId')->andReturn(2)->getMock();
+        $licence      = m::mock()->shouldReceive('getId')->andReturn(3)->getMock();
+        $busReg       = m::mock()->shouldReceive('getId')->andReturn(4)->getMock();
+        $irfoGvPermit = m::mock()->shouldReceive('getId')->andReturn(5)->getMock();
+        $irfoPsvAuth  = m::mock()->shouldReceive('getId')->andReturn(6)->getMock();
+
+        $fee = m::mock(FeeEntity::class)
+            ->shouldReceive('getApplication')
+            ->andReturn($application)
+            ->shouldReceive('getLicence')
+            ->andReturn($licence)
+            ->shouldReceive('getBusReg')
+            ->andReturn($busReg)
+            ->shouldReceive('getIrfoGvPermit')
+            ->andReturn($irfoGvPermit)
+            ->shouldReceive('getIrfoPsvAuth')
+            ->andReturn($irfoPsvAuth)
+            ->getMock();
+
+        $this->assertEquals(
+            [
+                'application' => 2,
+                'licence' => 3,
+                'busReg' => 4,
+                'irfoGvPermit' => 5,
+                'irfoPsvAuth' => 6,
+            ],
+            $this->sut->getIdsFromFee($fee)
+        );
+    }
+
+    /**
      * Helper function to generate a stub fee entity
      *
      * @param int $id
