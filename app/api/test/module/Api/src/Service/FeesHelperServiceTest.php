@@ -236,21 +236,6 @@ class FeesHelperServiceTest extends MockeryTestCase
         ];
     }
 
-    public function testAllocatePaymentsOverPaymentThrowsException()
-    {
-        $amount = '500';
-        $fees = [
-            $this->getStubFee('10', '99.99', '2015-09-04'),
-            $this->getStubFee('11', '50.01', '2015-09-02'),
-            $this->getStubFee('12', '100.00', '2015-09-03'),
-            $this->getStubFee('13', '100.00', '2015-09-05'),
-        ];
-
-        $this->setExpectedException(\Dvsa\Olcs\Api\Service\Exception::class, 'Overpayments not permitted');
-
-        $this->sut->allocatePayments($amount, $fees);
-    }
-
     public function testGetMinPaymentForFees()
     {
         $fees = [
@@ -309,78 +294,6 @@ class FeesHelperServiceTest extends MockeryTestCase
                 '50.00',
             ],
         ];
-    }
-
-    /**
-     * @param int $transactionId
-     * @param array $fees array of FeeEntity
-     * @param array $expected allocated amounts e.g. ['97' => '-12.45', '98' => '-0.05']
-     * @dataProvider deallocateProvider()
-     */
-    public function testDeallocatePayments($transactionId, $fees, $expected)
-    {
-        $this->assertSame($expected, $this->sut->deallocatePayments($transactionId, $fees));
-    }
-
-    public function deallocateProvider()
-    {
-        return [
-            [
-                99,
-                [
-                    $this->getStubFeeWithTransactionIdAndAmount('10', 99, '99.99'),
-                    $this->getStubFeeWithTransactionIdAndAmount('11', 99, '100.01'),
-                    $this->getStubFeeWithTransactionIdAndAmount('12', 99, null),
-                ],
-                [
-                    '10' => '-99.99',
-                    '11' => '-100.01',
-                    '12' => '0.00',
-                ]
-            ],
-        ];
-    }
-
-    /**
-     * Test reallocation logic
-     *
-     * Original fee: £50.00
-     * Original payment amount: £60.00 (Overpayment of £10.00)
-     * New payment amount: £20.00
-     */
-    public function testReallocatePayments()
-    {
-        $originalTransactionId = 69;
-
-        $fee1 = $this->getStubFee(101, '50.00');
-        $fee1
-            ->shouldReceive('isCancelled')
-            ->andReturn(false)
-            ->shouldReceive('getAmountAllocatedByTransactionId')
-            ->once()
-            ->with($originalTransactionId)
-            ->andReturn('50.00')
-            ->shouldReceive('adjustTransactionAmount')
-            ->once()
-            ->with($originalTransactionId, '-50.00');
-
-        $fee2 = $this->getStubFee(102, '10.00');
-        $fee2
-            ->shouldReceive('isCancelled')
-            ->andReturn(true)
-            ->shouldReceive('getAmountAllocatedByTransactionId')
-            ->once()
-            ->with($originalTransactionId)
-            ->andReturn('10.00')
-            ->shouldReceive('adjustTransactionAmount')
-            ->once()
-            ->with($originalTransactionId, '-10.00');
-
-        $fees = [$fee1, $fee2];
-
-        $result = $this->sut->reallocatePayments('20.00', $fees, $originalTransactionId);
-
-        $this->assertEquals([101 => '20.00'], $result);
     }
 
     public function testGetIdsFromFee()
