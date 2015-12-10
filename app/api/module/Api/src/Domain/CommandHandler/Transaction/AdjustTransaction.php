@@ -98,17 +98,15 @@ final class AdjustTransaction extends AbstractCommandHandler implements
         // create new feeTransaction record(s)
         foreach ($allocations as $feeId => $allocatedAmount) {
             $fee = $fees[$feeId];
-            $markAsPaid = ($allocatedAmount === $fee->getOutstandingAmount() && !$fee->isPaid());
+
+            $this->maybeChangeFeeStatus($allocatedAmount, $fee, $newTransaction);
+
             $feeTransaction = new FeeTransactionEntity();
             $feeTransaction
                 ->setFee($fee)
                 ->setAmount($allocatedAmount)
                 ->setTransaction($newTransaction); // needed for cascade persist to work
             $newTransaction->getFeeTransactions()->add($feeTransaction);
-
-            if ($markAsPaid) {
-                $this->markFeeAsPaid($fee, $newTransaction);
-            }
         }
 
         // persist transaction
@@ -120,17 +118,15 @@ final class AdjustTransaction extends AbstractCommandHandler implements
             ->addId('feeTransaction', $newTransaction->getFeeTransactionIds())
             ->addMessage('FeeTransaction record(s) created');
 
-        // @todo work out which fees to reset
-        $feesToReset = [];
-        if (!empty($feesToReset)) {
-            $this->result->merge(
-                $this->handleSideEffect(ResetFeesCmd::create(['fees' => $feesToReset]))
-            );
-        }
-
         return $this->result;
     }
 
+    /**
+     * @param  TransactionEntity $originalTransaction
+     * @param  CommandInterface  $command
+     * @return array CPMS response
+     * @throws  RuntimeException
+     */
     private function adjustInCpms(TransactionEntity $originalTransaction, CommandInterface $command)
     {
         try {
@@ -194,6 +190,26 @@ final class AdjustTransaction extends AbstractCommandHandler implements
     }
 
     /**
+     * Handles:
+     *  - Mark fee as paid if the allocated amount is now sufficient
+     *  - Reset fee to outstanding if allocated amount is insufficient
+     *  - Reset overpayment fees to cancelled
+     *
+     * @param  string $allocatedAmount
+     * @param  FeeEntity $fee
+     * @param  TransactionEntity  $newTransaction
+     */
+    private function maybeChangeFeeStatus($allocatedAmount, $fee, $newTransaction)
+    {
+        if ($allocatedAmount === $fee->getOutstandingAmount() && !$fee->isPaid()) {
+            $this->markFeeAsPaid($fee, $newTransaction);
+        } elseif (false) { // @todo work out which fees to reset
+            $this->resetFee($fee);
+        }
+
+    }
+
+    /**
      * Mark a fee as paid
      *
      * @param  FeeEntity         $fee
@@ -208,6 +224,17 @@ final class AdjustTransaction extends AbstractCommandHandler implements
         $this->getRepo('Fee')->save($fee);
         $this->result->addMessage('Fee ID ' . $fee->getId() . ' updated as paid by ' . $method);
         $this->result->merge($this->handleSideEffect(PayFeeCmd::create(['id' => $fee->getId()])));
+    }
+
+    /**
+     * Reset fees that are no longer paid
+     * @param FeeEntity $fee
+     */
+    private function resetFee($fee)
+    {
+        $this->result->merge(
+            $this->handleSideEffect(ResetFeesCmd::create(['fees' => [$fee]]))
+        );
     }
 
     /**
