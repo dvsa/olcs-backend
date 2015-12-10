@@ -46,16 +46,16 @@ class PidIdentityProvider implements IdentityProviderInterface
 
     private function authenticate()
     {
-        $pid = $this->request->getHeader($this->headerName, new GenericHeader())->getFieldValue();
-
-        if (!empty($pid)) {
-            return $this->repository->fetchByPid($pid);
-        }
-
         if ($this->request instanceof \Zend\Console\Request) {
             // @todo remove when we find constant solution for CLI requests
             $auth = self::SYSTEM_USER;
             return $this->repository->fetchById($auth);
+        } else {
+            $pid = $this->request->getHeader($this->headerName, new GenericHeader())->getFieldValue();
+
+            if (!empty($pid)) {
+                return $this->repository->fetchByPid($pid);
+            }
         }
 
         return null;
