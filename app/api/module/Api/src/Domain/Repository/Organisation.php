@@ -67,7 +67,7 @@ class Organisation extends AbstractRepository
         $results = $qb->getQuery()->getResult($hydrateMode);
 
         if (empty($results)) {
-            throw new Exception\NotFoundException('Resource not found');
+            throw new NotFoundException('Resource not found');
         }
 
         return $results[0];

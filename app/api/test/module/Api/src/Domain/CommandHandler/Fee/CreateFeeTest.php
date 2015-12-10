@@ -51,7 +51,8 @@ class CreateFeeTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            FeeEntity::STATUS_OUTSTANDING
+            FeeEntity::STATUS_OUTSTANDING,
+            FeeEntity::STATUS_PAID
         ];
 
         $this->references = [
@@ -500,5 +501,78 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->setExpectedException(ValidationException::class);
 
         $this->sut->validate($command, $feeType);
+    }
+
+    /**
+     * @dataProvider feeAmountsProvider
+     * @param $amount
+     */
+    public function testHandleCommandForZeroAmountFee($amount, $status)
+    {
+
+        $data = [
+            'feeType' => 101,
+            'amount' => $amount,
+            'invoicedDate' => '2015-01-01',
+        ];
+
+        $this->mapReference(FeeType::class, 101)
+            ->shouldReceive('isMiscellaneous')
+            ->andReturn(true)
+            ->shouldReceive('getDescription')
+            ->andReturn('some fee type');
+
+        /** @var FeeEntity $savedFee */
+        $savedFee = null;
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['Fee']->shouldReceive('save')
+            ->once()
+            ->with(m::type(FeeEntity::class))
+            ->andReturnUsing(
+                function (FeeEntity $fee) use (&$savedFee) {
+                    $fee->setId(111);
+                    $savedFee = $fee;
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'fee' => 111,
+            ],
+            'messages' => [
+                'Fee created successfully'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals('some fee type', $savedFee->getDescription());
+        $this->assertEquals('2015-01-01', $savedFee->getInvoicedDate()->format('Y-m-d'));
+        $this->assertEquals($amount, $savedFee->getNetAmount());
+        $this->assertEquals($amount, $savedFee->getGrossAmount());
+        $this->assertEquals(0, $savedFee->getVatAmount());
+        $this->assertSame($this->refData[$status], $savedFee->getFeeStatus());
+        $this->assertSame($this->references[FeeType::class][101], $savedFee->getFeeType());
+    }
+
+    public function feeAmountsProvider()
+    {
+        return [
+            [0, FeeEntity::STATUS_PAID],
+            [0.0, FeeEntity::STATUS_PAID],
+            [0.00, FeeEntity::STATUS_PAID],
+            [0.01, FeeEntity::STATUS_OUTSTANDING],
+            [-0.0, FeeEntity::STATUS_PAID],
+            ['0', FeeEntity::STATUS_PAID],
+            ['0.0', FeeEntity::STATUS_PAID],
+            ['0.00', FeeEntity::STATUS_PAID],
+            ['0.01', FeeEntity::STATUS_OUTSTANDING],
+            [null, FeeEntity::STATUS_PAID],
+            [-0.01, FeeEntity::STATUS_OUTSTANDING]
+        ];
     }
 }
