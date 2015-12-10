@@ -419,9 +419,6 @@ return [
     TransferQuery\Cpms\ReportStatus::class => QueryHandler\Cpms\ReportStatus::class,
     TransferQuery\Cpms\StoredCardList::class => QueryHandler\Cpms\StoredCardList::class,
 
-    // TEMP!!!!
-    TransferQuery\User\ZfcUser::class => QueryHandler\User\ZfcUser::class,
-
     //Address
     TransferQuery\Address\GetAddress::class => QueryHandler\Address\GetAddress::class,
     TransferQuery\Address\GetList::class => QueryHandler\Address\GetList::class,
