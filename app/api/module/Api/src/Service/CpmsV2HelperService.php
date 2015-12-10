@@ -553,8 +553,17 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $fees = $newTransaction->getFees();
 
         // @todo only set one dependent on method
-        $chequeNo = $newTransaction->getChequePoNumber();
-        $poNo = $newTransaction->getChequePoNumber();
+        $chequeNo = $poNo = null;
+        switch ($newTransaction->getPaymentMethod()->getId()) {
+            case Fee::METHOD_CHEQUE:
+                $chequeNo = $newTransaction->getChequePoNumber();
+                break;
+            case Fee::METHOD_POSTAL_ORDER:
+                $poNo = $newTransaction->getChequePoNumber();
+                break;
+            default:
+                break;
+        }
 
         $extraParams = [
             'cheque_date' => $this->formatDate($newTransaction->getChequePoDate()),
@@ -568,19 +577,22 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         ];
         $params = $this->getParametersForFees($fees, $extraParams);
 
+        $allocations = $this->feesHelper->allocatePayments($newAmount, $fees);
+
         foreach ($fees as $fee) {
-            $paymentData = $this->getPaymentDataForFee($fee);
+            $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
+            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
             if (!empty($paymentData)) {
                 $params['payment_data'][] = $paymentData;
             }
         }
 
         // @todo unstub
-        return [
-           'code' => self::RESPONSE_SUCCESS,
-           'receipt_reference' => 'OLCS-STUB-ADJUSTMENT',
-           'message' => '** stubbed response from ' . __METHOD__ . ' **',
-        ];
+        // return [
+        //    'code' => self::RESPONSE_SUCCESS,
+        //    'receipt_reference' => 'OLCS-STUB-ADJUSTMENT',
+        //    'message' => '** stubbed response from ' . __METHOD__ . ' **',
+        // ];
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
