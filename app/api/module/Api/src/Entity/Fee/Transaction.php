@@ -376,4 +376,25 @@ class Transaction extends AbstractTransaction
 
         return $transaction;
     }
+
+    /**
+     * @return string formatted amount
+     */
+    public function getAmountAllocatedToFeeId($feeId)
+    {
+        $amount = null;
+
+        $this->getFeeTransactions()->forAll(
+            function ($key, $feeTransaction) use ($feeId, &$amount) {
+                unset($key); // unused
+                if ($feeTransaction->getFee()->getId() == $feeId && !$feeTransaction->getReversedFeeTransaction()) {
+                    $amount = $feeTransaction->getAmount();
+                    return false;
+                }
+                return true;
+            }
+        );
+
+        return $amount;
+    }
 }
