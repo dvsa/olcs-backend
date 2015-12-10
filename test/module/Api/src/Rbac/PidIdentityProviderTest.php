@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Zend\Http\PhpEnvironment\Request;
-use Dvsa\Olcs\Utils\Auth\AuthHelper;
 
 /**
  * Pid Identity Provider Test
@@ -71,7 +70,6 @@ class PidIdentityProviderTest extends MockeryTestCase
         $mockRequest = m::mock(\Zend\Console\Request::class);
 
         $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid');
-        AuthHelper::setConfig(['openam' => ['hosts' => ['localhost']]]);
 
         $identity = $sut->getIdentity();
 

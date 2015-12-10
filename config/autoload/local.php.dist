@@ -169,4 +169,9 @@ return array(
     'zfc_rbac' => [
         'identity_provider' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class,
     ],
+    'ebsr' => [
+        'transexchange_publisher' => [
+            'uri' => 'http://localhost:8080/txc/publisherService',
+        ],
+    ],
 );
