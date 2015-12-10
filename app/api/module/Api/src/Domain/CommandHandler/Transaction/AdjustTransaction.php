@@ -58,21 +58,19 @@ final class AdjustTransaction extends AbstractCommandHandler implements
 
     public function handleCommand(CommandInterface $command)
     {
+        // get original transaction from the db
         $originalTransaction = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
+        // validate the new data against the original transaction
         $this->validate($command, $originalTransaction);
 
-        $response = $this->adjustInCpms($originalTransaction, $command);
-
-        // create adjustment transaction
-        $transactionReference = $response['receipt_reference'];
+        // create a new adjustment transaction
         $comment = $command->getReason();
         $chequeDate = $command->getChequeDate() ? new \DateTime($command->getChequeDate()) : null;
         $chequePoNumber = $command->getChequeNo() ?: $command->getPoNo();
         $now = new DateTime();
         $newTransaction = new TransactionEntity();
         $newTransaction
-            ->setReference($transactionReference)
             ->setType($this->getRepo()->getRefdataReference(TransactionEntity::TYPE_ADJUSTMENT))
             ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_COMPLETE))
             ->setCompletedDate($now)
@@ -84,32 +82,42 @@ final class AdjustTransaction extends AbstractCommandHandler implements
             ->setPayingInSlipNumber($command->getSlipNo())
             ->setProcessedByUser($this->getCurrentUser());
 
-        // add reversal feeTransactions
+        // add 'reversal' feeTransactions, and populate the array of fees
         $fees = [];
-        $previousBalancingFeeId = null;
         foreach ($originalTransaction->getFeeTransactionsForAdjustment() as $originalFt) {
-            $this->addReversalFeeTransaction($originalFt, $newTransaction, $fees, $previousBalancingFeeId);
+            $this->addReversalFeeTransaction($originalFt, $newTransaction, $fees);
         }
 
-        // work out the allocation of the payment amount to fees, will create
-        // balancing entry to handle any overpayment
-        $allocations = $this->allocatePayments($command->getReceived(), $fees, $previousBalancingFeeId);
+        // if there was a previous overpayment balancing fee, cancel it
+        $this->cancelPreviousBalancingFees($fees);
 
-        // create new feeTransaction record(s)
+        // work out the allocation of the new payment amount to the fees; may
+        // create a new balancing entry to handle any overpayment
+        $allocations = $this->allocatePayments($command->getReceived(), $fees);
+
+        // create new 'positive' feeTransaction record(s) for each new allocation
         foreach ($allocations as $feeId => $allocatedAmount) {
             $fee = $fees[$feeId];
-
-            $this->maybeChangeFeeStatus($allocatedAmount, $fee, $newTransaction);
 
             $feeTransaction = new FeeTransactionEntity();
             $feeTransaction
                 ->setFee($fee)
                 ->setAmount($allocatedAmount)
                 ->setTransaction($newTransaction); // needed for cascade persist to work
+
             $newTransaction->getFeeTransactions()->add($feeTransaction);
+
+            // update fee status if required, depending on the new allocation
+            $this->maybeChangeFeeStatus($allocatedAmount, $fee, $newTransaction);
         }
 
-        // persist transaction
+        // send the adjustment to CPMS
+        $response = $this->adjustInCpms($originalTransaction, $newTransaction);
+
+        // add the CPMS reference to the new transaction
+        $newTransaction->setReference($response['receipt_reference']);
+
+        // persist the new transaction
         $this->getRepo('Transaction')->save($newTransaction);
 
         $this->result
@@ -125,22 +133,12 @@ final class AdjustTransaction extends AbstractCommandHandler implements
      * @param  TransactionEntity $originalTransaction
      * @param  CommandInterface  $command
      * @return array CPMS response
-     * @throws  RuntimeException
+     * @throws RuntimeException
      */
-    private function adjustInCpms(TransactionEntity $originalTransaction, CommandInterface $command)
+    private function adjustInCpms(TransactionEntity $originalTransaction, TransactionEntity $newTransaction)
     {
         try {
-            return $this->getCpmsService()->adjustTransaction(
-                $originalTransaction->getReference(),
-                $originalTransaction->getId(),
-                $originalTransaction->getFees(),
-                $command->getReceived(),
-                $command->getPayer(),
-                $command->getSlipNo(),
-                $command->getChequeNo(),
-                $command->getChequeDate(),
-                $command->getPoNo()
-            );
+            return $this->getCpmsService()->adjustTransaction($originalTransaction, $newTransaction);
         } catch (CpmsResponseException $e) {
             // rethrow as Domain exception
             throw new RuntimeException(
@@ -157,13 +155,11 @@ final class AdjustTransaction extends AbstractCommandHandler implements
      * @param FeeTransactionEntity $originalFt
      * @param TransactionEntity    $newTransaction
      * @param array                &$fees passed by reference as we update it
-     * @param int                  &$previousBalancingFeeId passed by reference as we update it
      */
     private function addReversalFeeTransaction(
         FeeTransactionEntity $originalFt,
         TransactionEntity $newTransaction,
-        array &$fees,
-        &$previousBalancingFeeId
+        array &$fees
     ) {
         $feeTransaction = new FeeTransactionEntity();
         $reversalAmount = $originalFt->getAmount() * -1;
@@ -182,10 +178,24 @@ final class AdjustTransaction extends AbstractCommandHandler implements
         $fee->getFeeTransactions()->add($feeTransaction);
 
         $fees[$fee->getId()] = $fee;
+    }
 
-        if ($fee->isBalancingFee()) {
-            // this should get cancelled
-            $previousBalancingFeeId = $fee->getId();
+    /**
+     * @param  array  &$fees
+     */
+    private function cancelPreviousBalancingFees(array &$fees)
+    {
+        $idsToCancel = [];
+
+        foreach ($fees as $feeId => $fee) {
+            if ($fee->isBalancingFee()) {
+                $idsToCancel[] = $feeId;
+            }
+        }
+
+        foreach ($idsToCancel as $id) {
+            $this->result->merge($this->handleSideEffect(CancelFeeCmd::create(['id' => $id])));
+            unset($fees[$id]);
         }
     }
 
@@ -199,7 +209,7 @@ final class AdjustTransaction extends AbstractCommandHandler implements
      * @param  FeeEntity $fee
      * @param  TransactionEntity  $newTransaction
      */
-    private function maybeChangeFeeStatus($allocatedAmount, $fee, $newTransaction)
+    private function maybeChangeFeeStatus($allocatedAmount, &$fee, $newTransaction)
     {
         if ($allocatedAmount === $fee->getOutstandingAmount() && !$fee->isPaid()) {
             $this->markFeeAsPaid($fee, $newTransaction);
@@ -216,7 +226,7 @@ final class AdjustTransaction extends AbstractCommandHandler implements
      * @param  TransactionEntity $newTransaction
      * @return null
      */
-    private function markFeeAsPaid(FeeEntity $fee, TransactionEntity $newTransaction)
+    private function markFeeAsPaid(FeeEntity &$fee, TransactionEntity $newTransaction)
     {
         $fee->setFeeStatus($this->getRepo()->getRefdataReference(FeeEntity::STATUS_PAID));
         $method = $newTransaction->getPaymentMethod()->getDescription();

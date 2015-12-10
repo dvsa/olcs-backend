@@ -141,7 +141,7 @@ class FeesHelperService implements FactoryInterface
         $allocations = [];
 
         $remaining = FeeEntity::amountToPence($amount);
-
+var_dump(" AMOUNT remaining: " . $remaining);
         foreach ($fees as $fee) {
 
             if ($fee->isCancelled()) {
@@ -150,10 +150,11 @@ class FeesHelperService implements FactoryInterface
 
             $allocated = 0;
             $outstanding = FeeEntity::amountToPence($fee->getOutstandingAmount());
-
+var_dump($outstanding);
             if ($remaining >= $outstanding) {
                 // if we have enough to pay the fee in full, allocate full amount
                 $allocated = $outstanding;
+var_dump("ALLOCATED: ".$allocated);
             } elseif ($remaining > 0) {
                 // otherwise allocate remaining available amount
                 $allocated = $remaining;
@@ -165,12 +166,6 @@ class FeesHelperService implements FactoryInterface
             if ($allocated > 0) {
                 $allocations[$fee->getId()] = FeeEntity::amountToPounds($allocated);
             }
-        }
-
-        if ($remaining > 0) {
-            // note, a balancing fee for any overpayment should always be created
-            // prior to calculating allocations, so keep this in as a safeguard:
-            throw new Exception("Overpayments not permitted");
         }
 
         return $allocations;
@@ -200,15 +195,37 @@ class FeesHelperService implements FactoryInterface
         return $allocations;
     }
 
+    /**
+     * @param  string $newAmount
+     * @param  array  $fees
+     * @param  int $originalTransactionId
+     * @return array
+     */
     public function reallocatePayments($newAmount, array $fees, $originalTransactionId)
     {
         $deallocations = $this->deallocatePayments($originalTransactionId, $fees);
+var_dump($deallocations, $newAmount);
 
-        foreach ($fees as &$fee) {
-            $fee->adjustTransactionAmount($originalTransactionId, $deallocations[$fee->getId()]);
+        foreach ($fees as $fee) {
+            // this modifies the fee object so we can calculate new allocations
+            $adjustBy = $deallocations[$fee->getId()];
+            var_dump("ADJUST " . $fee->getId() . " by " . $adjustBy . " -- " . $originalTransactionId);
+            $fee->adjustTransactionAmount($originalTransactionId, $adjustBy);
+            var_dump($fee->getId() . ' : ' . $fee->getOutstandingAmount());
         }
 
-        return $this->allocatePayments($newAmount, $fees);
+
+        $newAllocations = $this->allocatePayments($newAmount, $fees);
+
+var_dump("-------  ", $newAllocations); exit;
+
+        // make sure to reset the fee objects so that this method is idempotent!
+        foreach ($fees as $fee) {
+            $adjustBy = $deallocations[$fee->getId()] * -1;
+            $fee->adjustTransactionAmount($originalTransactionId, $adjustBy);
+        }
+
+        return $newAllocations;
     }
 
     public function sortFeesByInvoiceDate(array $fees)

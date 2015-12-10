@@ -538,58 +538,49 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     /**
      * Adjust a transaction
      *
-     * @param  string $originalReceiptReference
-     * @param  int $originalTransactionId
-     * @param  array $fees (prior to reversing previous allocations)
-     * @param  string $newAmount
-     * @param  string $payer
-     * @param  string $slipNo
-     * @param  string $chequeNo
-     * @param  string $chequeDate
-     * @param  string $poNo
+     * @param  Transaction $originalTransaction
+     * @param  Transaction $newTransaction
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    public function adjustTransaction(
-        $originalReceiptReference,
-        $originalTransactionId,
-        $fees,
-        $newAmount,
-        $payer,
-        $slipNo,
-        $chequeNo,
-        $chequeDate,
-        $poNo
-    ) {
+    public function adjustTransaction($originalTransaction, $newTransaction) {
+
         $method   = 'post';
-        $endPoint = '/api/payment/'.$originalReceiptReference.'/adjustment';
+        $endPoint = '/api/payment/'.$originalTransaction->getReference().'/adjustment';
         $scope    = ApiService::SCOPE_ADJUSTMENT;
 
+        $newAmount = $newTransaction->getTotalAmount();
+        $fees = $newTransaction->getFees();
+
+        // @todo only set one dependent on method
+        $chequeNo = $newTransaction->getChequePoNumber();
+        $poNo = $newTransaction->getChequePoNumber();
+
         $extraParams = [
-            'cheque_date' => $this->formatDate($chequeDate),
+            'cheque_date' => $this->formatDate($newTransaction->getChequePoDate()),
             'cheque_number' => (string) $chequeNo,
             'postal_order_number' => (string) $poNo,
-            'slip_number' => (string) $slipNo,
-            'batch_number' => (string) $slipNo,
-            'name_on_cheque' => $payer,
+            'slip_number' => (string) $newTransaction->getPayingInSlipNumber(),
+            'batch_number' => (string) $newTransaction->getPayingInSlipNumber(),
+            'name_on_cheque' => $newTransaction->getPayerName(),
             'scope' => $scope,
             'total_amount' => $this->formatAmount($newAmount),
         ];
         $params = $this->getParametersForFees($fees, $extraParams);
 
-        $allocations = $this->feesHelper->reallocatePayments($newAmount, $fees, $originalTransactionId);
-
         foreach ($fees as $fee) {
-            if (Fee::amountToPence($allocations[$fee->getId()]) == 0) {
-                // don't include zero allocations in the adjustment data
-                continue;
-            }
-            $extraPaymentData = ['allocated_amount' => $allocations[$fee->getId()]];
-            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
+            $paymentData = $this->getPaymentDataForFee($fee);
             if (!empty($paymentData)) {
                 $params['payment_data'][] = $paymentData;
             }
         }
+
+        // @todo unstub
+        return [
+           'code' => self::RESPONSE_SUCCESS,
+           'receipt_reference' => 'OLCS-STUB-ADJUSTMENT',
+           'message' => '** stubbed response from ' . __METHOD__ . ' **',
+        ];
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
