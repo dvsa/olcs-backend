@@ -9,9 +9,11 @@ namespace Dvsa\OlcsTest\Api\Service;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -20,7 +22,6 @@ use Dvsa\Olcs\Api\Service\CpmsV2HelperService as Sut;
 use Dvsa\Olcs\Api\Service\FeesHelperService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 
 /**
  * CPMS Version 2 Helper Service Test
@@ -1173,25 +1174,33 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn($response);
 
         $fee1 = $this->getStubFee(100, '100.00');
-
         $fees = [$fee1];
 
+        $originalTransaction = m::mock(TransactionEntity::class)
+            ->makePartial()
+            ->setReference('ORIGINAL_REFERENCE');
+
+        $newTransaction = m::mock(TransactionEntity::class)
+            ->makePartial()
+            ->setChequePoDate('2015-12-02')
+            ->setChequePoNumber('2346')
+            ->setPayingInSlipNumber('1235')
+            ->setPayerName('Dan2')
+            ->shouldReceive('getTotalAmount')
+            ->andReturn('10.00')
+            ->shouldReceive('getFees')
+            ->andReturn($fees)
+            ->getMock();
+        $newTransaction
+            ->shouldReceive('getPaymentMethod->getId')
+            ->andReturn(FeeEntity::METHOD_CHEQUE);
+
         $this->feesHelper
-            ->shouldReceive('reallocatePayments')
-            ->with('10.00', $fees, 69)
+            ->shouldReceive('allocatePayments')
+            ->with('10.00', $fees)
             ->andReturn([100 => '10.00']);
 
-        $result = $this->sut->adjustTransaction(
-            'ORIGINAL_REFERENCE',
-            69,
-            $fees,
-            '10.00',
-            'Dan2',
-            '1235',
-            '2346',
-            '2015-12-02',
-            null
-        );
+        $result = $this->sut->adjustTransaction($originalTransaction, $newTransaction);
 
         $this->assertSame($response, $result);
     }
