@@ -48,13 +48,12 @@ class CancelApplicationTest extends CommandHandlerTestCase
         $applicationId = 834;
         $command = Cmd::create(['id' => $applicationId]);
 
-        $mockApplication = m::mock()
+        $mockApplication = m::mock(ApplicationEntity::class)
             ->shouldReceive('setStatus')
             ->with($this->refData[ApplicationEntity::APPLICATION_STATUS_CANCELLED])
             ->once()
             ->shouldReceive('getId')
             ->andReturn($applicationId)
-            ->once()
             ->shouldReceive('getIsVariation')
             ->andReturn(true)
             ->once()
@@ -68,6 +67,12 @@ class CancelApplicationTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with($mockApplication)
             ->once();
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 834],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 
@@ -94,13 +99,12 @@ class CancelApplicationTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $mockApplication = m::mock()
+        $mockApplication = m::mock(ApplicationEntity::class)
             ->shouldReceive('setStatus')
             ->with($this->refData[ApplicationEntity::APPLICATION_STATUS_CANCELLED])
             ->once()
             ->shouldReceive('getId')
             ->andReturn($applicationId)
-            ->once()
             ->shouldReceive('getIsVariation')
             ->andReturn(false)
             ->once()
@@ -122,6 +126,12 @@ class CancelApplicationTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with($mockLicence)
             ->once();
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 834],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 
