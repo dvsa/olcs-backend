@@ -45,6 +45,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     const ERROR_VAR_UNCHANGE_NI = 'AP-TOL-3';
     const ERROR_VAR_UNCHANGE_OT = 'AP-TOL-4';
     const ERROR_REQUIRES_CONFIRMATION = 'AP-TOL-5';
+    const ERROR_OT_REQUIRED = 'AP-TOL-6';
     const ERROR_FINANCIAL_HISTORY_DETAILS_REQUIRED = 'AP-FH-1';
     const ERROR_SAFE_REQUIRE_CONFIRMATION = 'AP-SAFE-1';
     const ERROR_NO_VEH_ENTERED = 'AP-VEH-1';
@@ -159,6 +160,13 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     {
         $errors = [];
 
+        if (!$goodsOrPsv) {
+            $errors['goodsOrPsv'][] =[
+                self::ERROR_OT_REQUIRED => 'Operator type is required'
+            ];
+            // need to throw exception ealier if operator type is empty
+            throw new ValidationException($errors);
+        }
         if ($niFlag === 'Y' && $goodsOrPsv->getId() === Licence::LICENCE_CATEGORY_PSV) {
             $errors['goodsOrPsv'][] =[
                 self::ERROR_NI_NON_GOODS => 'NI can only apply for goods licences'

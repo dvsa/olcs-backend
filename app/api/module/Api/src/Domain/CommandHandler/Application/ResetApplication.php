@@ -18,7 +18,6 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Task\Task;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as CreateApplicationCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -57,7 +56,6 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
         $licence = $application->getLicence();
 
         $receivedDate = $application->getReceivedDate();
-        $trafficArea = $licence->getTrafficArea();
         $appliedVia = $application->getAppliedVia();
 
         // Need to grab this now before removing the licence
@@ -73,7 +71,7 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
         $result->addMessage('Application removed');
 
         $result->merge(
-            $this->createNewApplication($command, $organisation, $receivedDate, $trafficArea, $appliedVia)
+            $this->createNewApplication($command, $organisation, $receivedDate, $appliedVia)
         );
 
         return $result;
@@ -83,7 +81,6 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
         Cmd $command,
         Organisation $organisation,
         $receivedDate = null,
-        TrafficArea $trafficArea = null,
         RefData $appliedVia = null
     ) {
         $data = $command->getArrayCopy();
@@ -96,10 +93,6 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
             }
 
             $data['receivedDate'] = $receivedDate;
-        }
-
-        if ($trafficArea !== null) {
-            $data['trafficArea'] = $trafficArea->getId();
         }
 
         return $this->getCommandHandler()->handleCommand(
