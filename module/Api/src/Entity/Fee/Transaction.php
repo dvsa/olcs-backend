@@ -251,7 +251,7 @@ class Transaction extends AbstractTransaction
      */
     public function displayReversalOption()
     {
-        return (($this->isPayment() || $this->isAdjustment()) && $this->isComplete());
+        return ($this->isPayment() && $this->isComplete());
     }
 
     /**
