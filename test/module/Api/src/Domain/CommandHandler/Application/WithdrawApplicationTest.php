@@ -138,6 +138,12 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(ReturnAllCommunityLicences::class, ['id' => 123], new Result());
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 1],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Snapshot created', 'Application 1 withdrawn.'], $result->getMessages());
@@ -242,6 +248,12 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 1],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(
@@ -281,6 +293,12 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             CeaseGoodsDiscs::class,
             ['licenceVehicles' => $licence->getLicenceVehicles()],
             new Result()
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 1],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -327,6 +345,11 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             CeaseGoodsDiscs::class,
             ['licenceVehicles' => $licence->getLicenceVehicles()],
             new Result()
+        );
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 1],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
 
         $result = $this->sut->handleCommand($command);
