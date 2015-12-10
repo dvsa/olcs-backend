@@ -1186,7 +1186,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->setChequePoNumber('2346')
             ->setPayingInSlipNumber('1235')
             ->setPayerName('Dan2')
-            ->shouldReceive('getTotalAmount')
+            ->shouldReceive('getAmountAfterAdjustment')
             ->andReturn('10.00')
             ->shouldReceive('getFees')
             ->andReturn($fees)
@@ -1194,6 +1194,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $newTransaction
             ->shouldReceive('getPaymentMethod->getId')
             ->andReturn(FeeEntity::METHOD_CHEQUE);
+        $newTransaction
+            ->shouldReceive('getAmountAllocatedToFeeId')
+            ->with(100)
+            ->andReturn('10.00');
 
         $this->feesHelper
             ->shouldReceive('allocatePayments')
