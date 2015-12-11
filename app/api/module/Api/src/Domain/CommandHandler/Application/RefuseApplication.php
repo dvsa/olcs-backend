@@ -105,6 +105,8 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
 
         $this->cancelS4($application);
 
+        $this->cancelOutstandingFees($application);
+
         $this->result->addMessage('Application ' . $application->getId() . ' refused.');
 
         return $this->result;
@@ -162,5 +164,21 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
                 );
             }
         }
+    }
+
+    /**
+     * Cancel outstanding fees on the application
+     *
+     * @param Application $application
+     */
+    private function cancelOutstandingFees(Application $application)
+    {
+        $this->result->merge(
+            $this->handleSideEffect(
+                \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::create(
+                    ['id' => $application->getId()]
+                )
+            )
+        );
     }
 }

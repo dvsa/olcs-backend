@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
-use Dvsa\Olcs\Utils\Auth\AuthHelper;
 use Zend\Http\Client as HttpClient;
 use Zend\Http\Header\Accept;
 use Zend\Http\Request;
@@ -48,9 +47,6 @@ class Client implements ClientInterface
      */
     public function registerUser($username, $pid, $emailAddress, $surname, $commonName, $realm, $password)
     {
-        if (AuthHelper::isOpenAm() === false) {
-            return;
-        }
         $payload = [
             '_id' => $username,
             'pid' => $pid,
@@ -73,9 +69,6 @@ class Client implements ClientInterface
 
     public function updateUser($username, $updates)
     {
-        if (AuthHelper::isOpenAm() === false) {
-            return;
-        }
         $request = $this->createRequest('/users/' . $username, Request::METHOD_PATCH);
         $request->setContent(json_encode($updates));
 

@@ -171,7 +171,8 @@ class Search
                 break;
             case 'busreg':
                 $queryMatch = new Query\Match();
-                $queryMatch->setField('reg_no', $search);
+                $queryMatch->setFieldQuery('reg_no', $search);
+                $queryMatch->setFieldBoost('reg_no', 2);
                 $queryBool->addShould($queryMatch);
                 break;
         }

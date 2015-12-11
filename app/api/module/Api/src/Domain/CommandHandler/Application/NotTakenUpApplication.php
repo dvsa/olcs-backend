@@ -141,6 +141,8 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
 
         $this->cancelS4($application);
 
+        $this->cancelOutstandingFees($application);
+
         $this->result->addMessage('Application ' . $application->getId() . ' set to not taken up.');
 
         return $this->result;
@@ -179,5 +181,21 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
                 );
             }
         }
+    }
+
+    /**
+     * Cancel outstanding fees on the application
+     *
+     * @param Application $application
+     */
+    private function cancelOutstandingFees(Application $application)
+    {
+        $this->result->merge(
+            $this->handleSideEffect(
+                \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::create(
+                    ['id' => $application->getId()]
+                )
+            )
+        );
     }
 }

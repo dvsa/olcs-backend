@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Rbac;
 
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Utils\Auth\AuthHelper;
 use Zend\Http\Header\GenericHeader;
 use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Identity\IdentityInterface;
@@ -47,23 +46,16 @@ class PidIdentityProvider implements IdentityProviderInterface
 
     private function authenticate()
     {
-        if (AuthHelper::isOpenAm()) {
-
+        if ($this->request instanceof \Zend\Console\Request) {
+            // @todo remove when we find constant solution for CLI requests
+            $auth = self::SYSTEM_USER;
+            return $this->repository->fetchById($auth);
+        } else {
             $pid = $this->request->getHeader($this->headerName, new GenericHeader())->getFieldValue();
 
             if (!empty($pid)) {
                 return $this->repository->fetchByPid($pid);
             }
-        } elseif ($this->request instanceof \Zend\Http\Request) {
-            // @todo remove once we are 100% using openAM
-            $auth = $this->request->getHeader('Authorization', new GenericHeader())->getFieldValue();
-            if (!empty($auth)) {
-                return $this->repository->fetchById($auth);
-            }
-        } elseif ($this->request instanceof \Zend\Console\Request) {
-            // @todo remove when we find constant solution for CLI requests
-            $auth = self::SYSTEM_USER;
-            return $this->repository->fetchById($auth);
         }
 
         return null;

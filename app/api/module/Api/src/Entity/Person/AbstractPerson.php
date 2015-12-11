@@ -49,7 +49,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="birth_place", length=35, nullable=true)
+     * @ORM\Column(type="string", name="birth_place", length=50, nullable=true)
      */
     protected $birthPlace;
 
