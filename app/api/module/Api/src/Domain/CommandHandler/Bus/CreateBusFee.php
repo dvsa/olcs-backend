@@ -53,11 +53,8 @@ final class CreateBusFee extends AbstractCommandHandler
 
         $feeTrafficArea = null;
 
-        if ($trafficArea->getIsScotland() === 'Y') {
-            $feeTrafficArea = $this->getRepo()->getReference(
-                TrafficAreaEntity::class,
-                TrafficAreaEntity::SCOTTISH_TRAFFIC_AREA_CODE
-            );
+        if ($trafficArea->getIsScotland()) {
+            $feeTrafficArea = TrafficAreaEntity::SCOTTISH_TRAFFIC_AREA_CODE;
         }
 
         $feeType = $this->feeTypeRepo->fetchLatest(
