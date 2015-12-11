@@ -8,7 +8,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication;
 use Mockery as m;
 use Doctrine\ORM\Query;
@@ -46,12 +45,6 @@ class ResetApplicationTest extends CommandHandlerTestCase
             LicenceEntity::LICENCE_CATEGORY_PSV,
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
             ApplicationEntity::APPLIED_VIA_POST,
-        ];
-
-        $this->references = [
-            TrafficArea::class => [
-                TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE => m::mock(TrafficArea::class)
-            ]
         ];
 
         parent::initReferences();
@@ -118,7 +111,7 @@ class ResetApplicationTest extends CommandHandlerTestCase
     /**
      * @dataProvider providerWithConfirm
      */
-    public function testHandleCommandRequireConfirmationWithConfirm($receivedDate, $trafficArea, $expectedCreateApp)
+    public function testHandleCommandRequireConfirmationWithConfirm($receivedDate, $expectedCreateApp)
     {
         $data = [
             'niFlag' => 'N',
@@ -142,7 +135,6 @@ class ResetApplicationTest extends CommandHandlerTestCase
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setOrganisation($organisation);
-        $licence->setTrafficArea($trafficArea);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
@@ -190,26 +182,22 @@ class ResetApplicationTest extends CommandHandlerTestCase
         return [
             [
                 null,
-                null,
                 [
                     'organisation' => 222,
                     'niFlag' => 'N',
                     'operatorType' => LicenceEntity::LICENCE_CATEGORY_PSV,
                     'licenceType' => LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
-                    'receivedDate' => null,
-                    'trafficArea' => null
+                    'receivedDate' => null
                 ]
             ],
             [
                 new \DateTime('2015-01-01'),
-                $this->references[TrafficArea::class][TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE],
                 [
                     'organisation' => 222,
                     'niFlag' => 'N',
                     'operatorType' => LicenceEntity::LICENCE_CATEGORY_PSV,
                     'licenceType' => LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
-                    'receivedDate' => '2015-01-01',
-                    'trafficArea' => 'B'
+                    'receivedDate' => '2015-01-01'
                 ]
             ]
         ];

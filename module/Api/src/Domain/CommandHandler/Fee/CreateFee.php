@@ -89,6 +89,11 @@ final class CreateFee extends AbstractCommandHandler implements AuthAwareInterfa
             $fee->setVatandGrossAmountsFromNetAmountUsingRate($feeType->getVatRate());
         }
 
+        // if amount is 0 set the status to paid
+        if (empty((float) $fee->getNetAmount())) {
+            $fee->setFeeStatus($this->getRepo()->getRefdataReference(Fee::STATUS_PAID));
+        }
+
         return $fee;
     }
 

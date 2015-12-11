@@ -159,6 +159,8 @@ return [
     TransferQuery\Cases\ByTransportManager::class => QueryHandler\Cases\ByTransportManager::class,
     TransferQuery\Cases\ByLicence::class => QueryHandler\Cases\ByLicence::class,
 
+    TransferQuery\Cases\Si\GetList::class => QueryHandler\Cases\Si\GetList::class,
+
     // Submission
     TransferQuery\Submission\SubmissionAction::class => QueryHandler\Submission\SubmissionAction::class,
     TransferQuery\Submission\SubmissionSectionComment::class => QueryHandler\Submission\SubmissionSectionComment::class,
@@ -416,9 +418,6 @@ return [
     TransferQuery\Cpms\ReportList::class => QueryHandler\Cpms\ReportList::class,
     TransferQuery\Cpms\ReportStatus::class => QueryHandler\Cpms\ReportStatus::class,
     TransferQuery\Cpms\StoredCardList::class => QueryHandler\Cpms\StoredCardList::class,
-
-    // TEMP!!!!
-    TransferQuery\User\ZfcUser::class => QueryHandler\User\ZfcUser::class,
 
     //Address
     TransferQuery\Address\GetAddress::class => QueryHandler\Address\GetAddress::class,

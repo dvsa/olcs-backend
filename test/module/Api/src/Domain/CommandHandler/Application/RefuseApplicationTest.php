@@ -138,6 +138,12 @@ class RefuseApplicationTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(ReturnAllCommunityLicences::class, ['id' => 123], new Result());
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 1],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Snapshot created', 'Application 1 refused.'], $result->getMessages());
@@ -239,6 +245,12 @@ class RefuseApplicationTest extends CommandHandlerTestCase
             (new Result())->addMessage('CLOSE_FEEDUE_TASK')
         );
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 1],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(
@@ -278,6 +290,12 @@ class RefuseApplicationTest extends CommandHandlerTestCase
             CreateSnapshot::class,
             ['id' => 532, 'event' => CreateSnapshot::ON_REFUSE],
             (new Result())->addMessage('Snapshot created')
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 1],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -325,6 +343,12 @@ class RefuseApplicationTest extends CommandHandlerTestCase
             CeaseGoodsDiscs::class,
             ['licenceVehicles' => $licence->getLicenceVehicles()],
             new Result()
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 1],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
 
         $result = $this->sut->handleCommand($command);

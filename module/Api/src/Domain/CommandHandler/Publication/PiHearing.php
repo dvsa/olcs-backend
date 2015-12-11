@@ -201,8 +201,15 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
             $handler = 'HearingDecision';
         }
 
+        $caseType = $case->getCaseType()->getId();
         $licence = $case->getLicence();
-        $licType = $licence->getGoodsOrPsv()->getId();
+
+        if ($caseType === CasesEntity::APP_CASE_TYPE) {
+            $licType = $case->getApplication()->getGoodsOrPsv()->getId();
+        } else {
+            $licType = $licence->getGoodsOrPsv()->getId();
+        }
+
         $pubType = ($licType == LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE ? 'A&D' : 'N&P');
         $trafficArea = $licence->getTrafficArea();
         $publicationSection = $this->getPublicationSection($pubSection);

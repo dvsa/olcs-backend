@@ -147,6 +147,8 @@ return [
     TransferCommand\Cases\Pi\Close::class => CommandHandler\Cases\Pi\Close::class,
     TransferCommand\Cases\Pi\Reopen::class => CommandHandler\Cases\Pi\Reopen::class,
 
+    TransferCommand\Cases\Si\SendResponse::class => CommandHandler\Cases\Si\SendResponse::class,
+
     // Transfer - Bus
     TransferCommand\Bus\CreateBus::class => CommandHandler\Bus\CreateBus::class,
     TransferCommand\Bus\CreateVariation::class => CommandHandler\Bus\CreateVariation::class,
@@ -330,6 +332,7 @@ return [
     //Transfer - Cases (note fields)
     TransferCommand\Cases\UpdateConvictionNote::class => CommandHandler\Cases\UpdateConvictionNote::class,
     TransferCommand\Cases\UpdateProhibitionNote::class => CommandHandler\Cases\UpdateProhibitionNote::class,
+    TransferCommand\Cases\UpdatePenaltiesNote::class => CommandHandler\Cases\UpdatePenaltiesNote::class,
 
     // Transfer - Annual Test History
     TransferCommand\Cases\UpdateAnnualTestHistory::class => CommandHandler\Cases\UpdateAnnualTestHistory::class,
@@ -480,6 +483,7 @@ return [
     Command\Application\UpdateVariationCompletion::class => CommandHandler\Application\UpdateVariationCompletion::class,
     Command\Application\CreateFee::class => CommandHandler\Application\CreateFee::class,
     Command\Application\CancelAllInterimFees::class => CommandHandler\Application\CancelAllInterimFees::class,
+    Command\Application\CancelOutstandingFees::class => CommandHandler\Application\CancelOutstandingFees::class,
     Command\Application\SetDefaultTrafficAreaAndEnforcementArea::class
         => CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementArea::class,
     Command\Application\DeleteApplication::class => CommandHandler\Application\DeleteApplication::class,

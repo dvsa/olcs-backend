@@ -268,6 +268,7 @@ return [
             'TransportManagerReadAudit' => RepositoryFactory::class,
             'CasesReadAudit' => RepositoryFactory::class,
             'Team' => RepositoryFactory::class,
+            'SeriousInfringement' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
