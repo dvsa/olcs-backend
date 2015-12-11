@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_txn_type", columns={"type"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="ix_txn_receipt_document_id", columns={"receipt_document_id"})
+ *        @ORM\UniqueConstraint(name="uk_txn_receipt_document_id", columns={"receipt_document_id"})
  *    }
  * )
  */
