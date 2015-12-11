@@ -1678,8 +1678,11 @@ return array(
         'application_id' => array(
             'inversedBy' => array(
                 'entity' => 'Application',
-                'property' => 'transportManager'
-            )
+                'property' => 'transportManager',
+                'cascade' => array(
+                    'remove',
+                )
+            ),
         ),
         'transport_manager_id' => array(
             'inversedBy' => array(
