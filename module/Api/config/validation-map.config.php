@@ -206,7 +206,6 @@ $map = [
     CommandHandler\Transaction\PayOutstandingFees::class                          => Standard::class, // @todo
     CommandHandler\Transaction\ResolvePayment::class                              => Standard::class, // @todo
     CommandHandler\Transaction\ResolveOutstandingPayments::class                  => Standard::class, // @todo
-    CommandHandler\Transaction\ReverseTransaction::class                          => Standard::class, // @todo
     CommandHandler\User\CreateUser::class                                         => Standard::class, // @todo
     CommandHandler\User\CreateUserSelfserve::class                                => Standard::class, // @todo
     CommandHandler\User\DeleteUser::class                                         => Standard::class, // @todo
