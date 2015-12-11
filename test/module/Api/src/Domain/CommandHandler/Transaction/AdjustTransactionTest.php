@@ -72,6 +72,7 @@ class AdjustTransactionTest extends CommandHandlerTestCase
                 ->shouldReceive('getDescription')
                 ->andReturn('Paid')
                 ->getMock(),
+            FeeEntity::STATUS_OUTSTANDING,
             FeeEntity::METHOD_CHEQUE,
         ];
 
@@ -125,6 +126,7 @@ class AdjustTransactionTest extends CommandHandlerTestCase
         $fee->setFeeTransactions(new ArrayCollection([$feeTransaction]));
         $fee->shouldReceive('isBalancingFee')->andReturn(false);
         $fee->shouldReceive('getOutstandingAmount')->andReturn('100.00');
+        $fee->setFeeStatus($this->mapRefData(FeeEntity::STATUS_OUTSTANDING));
 
         $transaction
             ->shouldReceive('getReference')->andReturn('OLCS-CHEQUE-REF-1')
@@ -253,6 +255,7 @@ class AdjustTransactionTest extends CommandHandlerTestCase
         $fee->setFeeTransactions(new ArrayCollection([$feeTransaction]));
         $fee->shouldReceive('isBalancingFee')->andReturn(false);
         $fee->shouldReceive('getOutstandingAmount')->andReturn('100.00');
+        $fee->setFeeStatus($this->mapRefData(FeeEntity::STATUS_OUTSTANDING));
 
         $transaction
             ->shouldReceive('getReference')->andReturn('OLCS-CHEQUE-REF-1')

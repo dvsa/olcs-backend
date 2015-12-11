@@ -543,7 +543,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    public function adjustTransaction($originalTransaction, $newTransaction) {
+    public function adjustTransaction($originalTransaction, $newTransaction)
+    {
         $method   = 'post';
         $endPoint = '/api/payment/'.$originalTransaction->getReference().'/adjustment';
         $scope    = ApiService::SCOPE_ADJUSTMENT;
