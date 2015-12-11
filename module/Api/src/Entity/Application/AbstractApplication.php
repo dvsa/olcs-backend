@@ -801,7 +801,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      *
      * @ORM\OneToMany(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication",
-     *     mappedBy="application"
+     *     mappedBy="application",
+     *     cascade={"remove"}
      * )
      */
     protected $transportManagers;
