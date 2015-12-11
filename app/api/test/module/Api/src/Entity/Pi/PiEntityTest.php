@@ -257,6 +257,46 @@ class PiEntityTest extends EntityTester
      * @param string $inputDate
      * @param \DateTime|null $entityDate
      */
+    public function testUpdateWrittenOutcomeVerbalDecision($inputDate, $entityDate)
+    {
+        $writtenOutcome = m::mock(RefData::class);
+        $callUpLetterDate = $inputDate;
+        $briefToTcDate = $inputDate;
+        $decisionLetterSentDate = $inputDate;
+
+        $this->entity->updateWrittenOutcomeVerbal(
+            $writtenOutcome,
+            $callUpLetterDate,
+            $briefToTcDate,
+            $decisionLetterSentDate
+        );
+
+        $this->assertEquals($writtenOutcome, $this->entity->getWrittenOutcome());
+        $this->assertEquals($entityDate, $this->entity->getCallUpLetterDate());
+        $this->assertEquals($entityDate, $this->entity->getBriefToTcDate());
+        $this->assertEquals(null, $this->entity->getTcWrittenDecisionDate());
+        $this->assertEquals($entityDate, $this->entity->getDecisionLetterSentDate());
+        $this->assertEquals(null, $this->entity->getTcWrittenReasonDate());
+        $this->assertEquals(null, $this->entity->getWrittenReasonLetterDate());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateWrittenOutcomeVerbalClosedException()
+    {
+        $writtenOutcome = m::mock(RefData::class);
+        $this->entity->setClosedDate(new \DateTime());
+
+        $this->entity->updateWrittenOutcomeVerbal($writtenOutcome, null, null, null);
+    }
+
+    /**
+     * @dataProvider dateProvider
+     *
+     * @param string $inputDate
+     * @param \DateTime|null $entityDate
+     */
     public function testUpdateWrittenOutcomeDecision($inputDate, $entityDate)
     {
         $writtenOutcome = m::mock(RefData::class);
@@ -277,7 +317,7 @@ class PiEntityTest extends EntityTester
         $this->assertEquals($entityDate, $this->entity->getCallUpLetterDate());
         $this->assertEquals($entityDate, $this->entity->getBriefToTcDate());
         $this->assertEquals($entityDate, $this->entity->getTcWrittenDecisionDate());
-        $this->assertEquals($entityDate, $this->entity->getDecisionLetterSentDate());
+        $this->assertEquals(null, $this->entity->getDecisionLetterSentDate());
         $this->assertEquals(null, $this->entity->getTcWrittenReasonDate());
         $this->assertEquals(null, $this->entity->getWrittenReasonLetterDate());
     }
