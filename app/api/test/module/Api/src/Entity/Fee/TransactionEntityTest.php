@@ -138,12 +138,17 @@ class TransactionEntityTest extends EntityTester
             ->andReturn('12.34')
             ->shouldReceive('isRefundedOrReversed')
             ->andReturn(false)
+            ->shouldReceive('getReversedFeeTransaction')
+            ->andReturn(null)
             ->getMock();
         $ft2 = m::mock(FeeTransaction::class)
             ->shouldReceive('getAmount')
             ->andReturn('23.45')
             ->shouldReceive('isRefundedOrReversed')
             ->andReturn(false)
+            ->shouldReceive('getReversedFeeTransaction')
+            ->andReturn(null)
+
             ->getMock();
 
         $feeTransactions = new ArrayCollection([$ft1, $ft2]);
@@ -158,6 +163,10 @@ class TransactionEntityTest extends EntityTester
                 'amount' => '35.79',
                 'displayReversalOption' => true,
                 'canReverse' => true,
+                'displayAdjustmentOption' => true,
+                'canAdjust' => true,
+                'displayAmount' => '£35.79',
+                'amountAfterAdjustment' => '35.79',
             ],
             $sut->getCalculatedBundleValues()
         );
@@ -298,5 +307,52 @@ class TransactionEntityTest extends EntityTester
                 false,
             ]
         ];
+    }
+
+    public function testGetAdjustmentHelperMethods()
+    {
+        $sut = $this->instantiate($this->entityClass);
+
+        $reversedFt1 = m::mock(FeeTransaction::class)
+            ->shouldReceive('getAmount')
+            ->andReturn('10.00');
+        $reversedFt2 = m::mock(FeeTransaction::class)
+            ->shouldReceive('getAmount')
+            ->andReturn('5.00');
+        $ft1 = m::mock(FeeTransaction::class)
+            ->shouldReceive('getAmount')
+            ->andReturn('-10.00')
+            ->shouldReceive('getReversedFeeTransaction')
+            ->andReturn($reversedFt1)
+            ->getMock();
+        $ft2 = m::mock(FeeTransaction::class)
+            ->shouldReceive('getAmount')
+            ->andReturn('-5.00')
+            ->shouldReceive('getReversedFeeTransaction')
+            ->andReturn($reversedFt2)
+            ->getMock();
+        $ft3 = m::mock(FeeTransaction::class)
+            ->shouldReceive('getAmount')
+            ->andReturn('10.00')
+            ->shouldReceive('getReversedFeeTransaction')
+            ->andReturn(null)
+            ->getMock();
+        $ft4 = m::mock(FeeTransaction::class)
+            ->shouldReceive('getAmount')
+            ->andReturn('10.00')
+            ->shouldReceive('getReversedFeeTransaction')
+            ->andReturn(null)
+            ->getMock();
+
+        $feeTransactions = new ArrayCollection([$ft1, $ft2, $ft3, $ft4]);
+        $sut->setFeeTransactions($feeTransactions);
+
+        $sut->setType(new RefData(Entity::TYPE_ADJUSTMENT));
+        $sut->setPaymentMethod(new RefData(Fee::METHOD_CASH));
+        $sut->setStatus(new RefData(Entity::STATUS_COMPLETE));
+
+        $this->assertEquals('15.00', $sut->getAmountBeforeAdjustment());
+        $this->assertEquals('20.00', $sut->getAmountAfterAdjustment());
+        $this->assertEquals('£15.00 to £20.00', $sut->getDisplayAmount());
     }
 }

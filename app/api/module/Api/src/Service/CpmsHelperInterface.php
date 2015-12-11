@@ -38,6 +38,29 @@ interface CpmsHelperInterface
     public function initiateCardRequest($redirectUrl, array $fees);
 
     /**
+     * Initiate a stored card payment payment
+     *
+     * @param string $redirectUrl redirect back to here from payment gateway
+     * @param array  $fees
+     * @param string $storedCardReference Stored card reference
+     *
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function initiateStoredCardRequest($redirectUrl, array $fees, $storedCardReference);
+
+    /**
+     * Initiate a card not present (CNP) payment
+     *
+     * @param string $redirectUrl redirect back to here from payment gateway
+     * @param array $fees
+     *
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function initiateCnpRequest($redirectUrl, array $fees);
+
+    /**
      * Update CPMS with payment result
      *
      * @param string $reference payment reference / guid
@@ -111,6 +134,13 @@ interface CpmsHelperInterface
     public function getReportList();
 
     /**
+     * Get a list of stored debit/credit cards references stored in CPMS
+     *
+     * @return array
+     */
+    public function getListStoredCards();
+
+    /**
      * Request report creation
      *
      * @param string $reportCode
@@ -155,6 +185,16 @@ interface CpmsHelperInterface
      * @throws CpmsResponseException if response is invalid
      */
     public function reversePayment($receiptReference, $paymentMethod, $fees = array());
+
+    /**
+     * Adjust a transaction
+     *
+     * @param  Transaction $originalTransaction
+     * @param  Transaction $newTransaction
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function adjustTransaction($originalTransaction, $newTransaction);
 
     /**
      * @param mixed $amount

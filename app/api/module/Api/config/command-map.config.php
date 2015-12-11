@@ -566,6 +566,8 @@ return [
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
     Command\Fee\CancelIrfoGvPermitFees::class => CommandHandler\Fee\CancelIrfoGvPermitFees::class,
     Command\Fee\PayFee::class => CommandHandler\Fee\PayFee::class,
+    Command\Fee\CreateOverpaymentFee::class => CommandHandler\Fee\CreateOverpaymentFee::class,
+    Command\Fee\ResetFees::class => CommandHandler\Fee\ResetFees::class,
     TransferCommand\Fee\ApproveWaive::class => CommandHandler\Fee\ApproveWaive::class,
     TransferCommand\Fee\RecommendWaive::class => CommandHandler\Fee\RecommendWaive::class,
     TransferCommand\Fee\RejectWaive::class => CommandHandler\Fee\RejectWaive::class,
@@ -577,6 +579,7 @@ return [
     TransferCommand\Transaction\CompleteTransaction::class => CommandHandler\Transaction\CompleteTransaction::class,
     Command\Transaction\ResolvePayment::class => CommandHandler\Transaction\ResolvePayment::class,
     TransferCommand\Transaction\ReverseTransaction::class => CommandHandler\Transaction\ReverseTransaction::class,
+    TransferCommand\Transaction\AdjustTransaction::class => CommandHandler\Transaction\AdjustTransaction::class,
     Command\Transaction\ResolveOutstandingPayments::class
         => CommandHandler\Transaction\ResolveOutstandingPayments::class,
 
