@@ -418,13 +418,13 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     protected $witnesses;
 
     /**
-     * Written decision letter sent
+     * Written decision letter date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="written_decision_letter_sent", nullable=true)
+     * @ORM\Column(type="date", name="written_decision_letter_date", nullable=true)
      */
-    protected $writtenDecisionLetterSent;
+    protected $writtenDecisionLetterDate;
 
     /**
      * Written outcome
@@ -1429,26 +1429,26 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     }
 
     /**
-     * Set the written decision letter sent
+     * Set the written decision letter date
      *
-     * @param \DateTime $writtenDecisionLetterSent
+     * @param \DateTime $writtenDecisionLetterDate
      * @return Pi
      */
-    public function setWrittenDecisionLetterSent($writtenDecisionLetterSent)
+    public function setWrittenDecisionLetterDate($writtenDecisionLetterDate)
     {
-        $this->writtenDecisionLetterSent = $writtenDecisionLetterSent;
+        $this->writtenDecisionLetterDate = $writtenDecisionLetterDate;
 
         return $this;
     }
 
     /**
-     * Get the written decision letter sent
+     * Get the written decision letter date
      *
      * @return \DateTime
      */
-    public function getWrittenDecisionLetterSent()
+    public function getWrittenDecisionLetterDate()
     {
-        return $this->writtenDecisionLetterSent;
+        return $this->writtenDecisionLetterDate;
     }
 
     /**

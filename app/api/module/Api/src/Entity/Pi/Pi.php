@@ -190,23 +190,22 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
             null,
             null,
             null,
+            null,
             null
         );
     }
 
     /**
      * @param RefData $writtenOutcome
-     * @param string $callUpLetterDate
-     * @param string $briefToTcDate
-     * @param string $tcWrittenDecisionDate
-     * @param string $decisionLetterSentDate
+     * @param $callUpLetterDate
+     * @param $briefToTcDate
+     * @param $writtenDecisionLetterDate
      * @throws ForbiddenException
      */
-    public function updateWrittenOutcomeDecision(
+    public function updateWrittenOutcomeVerbal(
         RefData $writtenOutcome,
         $callUpLetterDate,
         $briefToTcDate,
-        $tcWrittenDecisionDate,
         $decisionLetterSentDate
     ) {
         if ($this->isClosed()) {
@@ -219,8 +218,40 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
             $this->processDate($briefToTcDate),
             null,
             null,
+            null,
+            $this->processDate($decisionLetterSentDate),
+            null
+        );
+    }
+
+    /**
+     * @param RefData $writtenOutcome
+     * @param string $callUpLetterDate
+     * @param string $briefToTcDate
+     * @param string $tcWrittenDecisionDate
+     * @param string $writtenDecisionLetterDate
+     * @throws ForbiddenException
+     */
+    public function updateWrittenOutcomeDecision(
+        RefData $writtenOutcome,
+        $callUpLetterDate,
+        $briefToTcDate,
+        $tcWrittenDecisionDate,
+        $writtenDecisionLetterDate
+    ) {
+        if ($this->isClosed()) {
+            throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
+        }
+
+        $this->updateSla(
+            $writtenOutcome,
+            $this->processDate($callUpLetterDate),
+            $this->processDate($briefToTcDate),
+            null,
+            null,
             $this->processDate($tcWrittenDecisionDate),
-            $this->processDate($decisionLetterSentDate)
+            null,
+            $this->processDate($writtenDecisionLetterDate)
         );
     }
 
@@ -250,6 +281,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
             $this->processDate($tcWrittenReasonDate),
             $this->processDate($writtenReasonLetterDate),
             null,
+            null,
             null
         );
     }
@@ -262,6 +294,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
      * @param \DateTime|null $writtenReasonLetterDate
      * @param \DateTime|null $tcWrittenDecisionDate
      * @param \DateTime|null $decisionLetterSentDate
+     * @param \DateTime|null $writtenDecisionLetterDate
      */
     private function updateSla(
         $writtenOutcome,
@@ -270,7 +303,8 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $tcWrittenReasonDate,
         $writtenReasonLetterDate,
         $tcWrittenDecisionDate,
-        $decisionLetterSentDate
+        $decisionLetterSentDate,
+        $writtenDecisionLetterDate
     ) {
         $this->writtenOutcome = $writtenOutcome;
         $this->callUpLetterDate = $callUpLetterDate;
@@ -279,6 +313,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $this->writtenReasonLetterDate = $writtenReasonLetterDate;
         $this->tcWrittenDecisionDate = $tcWrittenDecisionDate;
         $this->decisionLetterSentDate = $decisionLetterSentDate;
+        $this->writtenDecisionLetterDate = $writtenDecisionLetterDate;
     }
 
     /**

@@ -970,7 +970,7 @@ INSERT INTO `disqualification` (
 
 INSERT INTO `pi` (`id`,`agreed_by_tc_id`,`agreed_by_tc_role`,`assigned_to`,`decided_by_tc_id`,`decided_by_tc_role`,
   `pi_status`,`written_outcome`,`case_id`,`created_by`,`last_modified_by`,`brief_to_tc_date`,`call_up_letter_date`,
-  `written_decision_letter_sent`,`decision_letter_sent_date`,`decision_notes`,`licence_curtailed_at_pi`,
+  `written_decision_letter_date`,`decision_letter_sent_date`,`decision_notes`,`licence_curtailed_at_pi`,
   `licence_revoked_at_pi`,`licence_suspended_at_pi`,`notification_date`,`section_code_text`,`tc_written_decision_date`,
   `tc_written_reason_date`,`written_reason_date`,`written_reason_letter_date`,`agreed_date`,`closed_date`,`comment`,
   `created_on`,`decision_date`,`deleted_date`,`is_cancelled`,`last_modified_on`,`version`,`witnesses`)
