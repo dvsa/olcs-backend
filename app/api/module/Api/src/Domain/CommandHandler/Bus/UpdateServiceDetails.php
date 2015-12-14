@@ -93,7 +93,7 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
 
         $this->processServiceNumbers($busReg, $command->getOtherServices());
 
-        if ($this->shouldCreateFee($busRegId)) {
+        if ($busReg->getReceivedDate() !== null && $this->shouldCreateFee($busRegId)) {
             $result->merge($this->handleSideEffect($this->createBusFeeCommand($busRegId)));
         }
 
