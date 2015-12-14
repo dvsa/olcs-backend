@@ -142,7 +142,7 @@ class FeeTest extends QueryHandlerTestCase
                     'transactionId' => 5,
                     'type' => 'Payment',
                     'completedDate' => $completed,
-                    'method' => 'Cash',
+                    'method' => 'Cash DISPLAY_AMOUNT',
                     'processedBy' => 'someuser',
                     'amount' => '10.00',
                     'status' => $status,
@@ -151,7 +151,7 @@ class FeeTest extends QueryHandlerTestCase
                     'transactionId' => 6,
                     'type' => 'Payment',
                     'completedDate' => $completed,
-                    'method' => 'Cash',
+                    'method' => 'Cash DISPLAY_AMOUNT',
                     'processedBy' => 'someuser',
                     'amount' => '20.00',
                     'status' => $status,
@@ -162,7 +162,7 @@ class FeeTest extends QueryHandlerTestCase
                     'transactionId' => 7,
                     'type' => 'Refund',
                     'completedDate' => $completed,
-                    'method' => 'Refund',
+                    'method' => 'Refund DISPLAY_AMOUNT',
                     'processedBy' => 'someuser',
                     'amount' => '-30.00',
                     'status' => $status,
@@ -209,8 +209,11 @@ class FeeTest extends QueryHandlerTestCase
                 ->shouldReceive('getPaymentMethod->getDescription')
                 ->andReturn($method);
             $transaction
-                ->shouldReceive('getProcessedByLoginId')
+                ->shouldReceive('getProcessedByFullName')
                 ->andReturn('someuser');
+            $transaction
+                ->shouldReceive('getDisplayAmount')
+                ->andReturn('DISPLAY_AMOUNT');
             $transaction
                 ->shouldReceive('isAdjustment')
                 ->andReturn(false);
