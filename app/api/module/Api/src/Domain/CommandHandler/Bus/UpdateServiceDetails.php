@@ -94,7 +94,7 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
         $this->processServiceNumbers($busReg, $command->getOtherServices());
 
         if ($this->shouldCreateFee($busRegId)) {
-            $result->merge($this->getCommandHandler()->handleCommand($this->createBusFeeCommand($busRegId)));
+            $result->merge($this->handleSideEffect($this->createBusFeeCommand($busRegId)));
         }
 
         $result->addId('BusReg', $busRegId);
@@ -105,7 +105,7 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
 
     /**
      * Returns whether we should create a fee
-     * (basically this is down to whether there's already a fee in place for this busReg(
+     * (basically this is down to whether there's already a fee in place for this busReg)
      *
      * @param $busRegId
      * @return bool
@@ -184,10 +184,10 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
 
     /**
      * @param $busRegId
-     * @return Result
+     * @return CmdCreateBusFee
      */
     private function createBusFeeCommand($busRegId)
     {
-        return $this->getCommandHandler()->handleCommand(CmdCreateBusFee::create(['id' => $busRegId]));
+        return CmdCreateBusFee::create(['id' => $busRegId]);
     }
 }
