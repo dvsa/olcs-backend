@@ -71,7 +71,7 @@ class Transaction extends AbstractTransaction
      *
      * @return string
      */
-    public function getTotalAmount()
+    public function getTotalAmount($absolute = false)
     {
         $total = 0;
 
@@ -82,6 +82,10 @@ class Transaction extends AbstractTransaction
                 return true;
             }
         );
+
+        if ($absolute) {
+            $total = abs($total);
+        }
 
         return Fee::amountToPounds($total);
     }
@@ -321,6 +325,16 @@ class Transaction extends AbstractTransaction
     }
 
     /**
+     * @return string|null
+     */
+    public function getProcessedByFullName()
+    {
+        if ($this->getProcessedByUser()) {
+            return $this->getProcessedByUser()->getContactDetails()->getPerson()->getFullName();
+        }
+    }
+
+    /**
      * Get all fees associated to the transaction, via the feeTransactions
      * @return array of Fee
      */
@@ -350,7 +364,7 @@ class Transaction extends AbstractTransaction
             );
         }
 
-        return self::CURRENCY_SYMBOL.$this->getTotalAmount();
+        return self::CURRENCY_SYMBOL. $this->getTotalAmount(true);
     }
 
     /**
