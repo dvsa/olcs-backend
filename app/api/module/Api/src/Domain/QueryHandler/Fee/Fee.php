@@ -92,7 +92,7 @@ class Fee extends AbstractQueryHandler
                 'type' => $transaction->getType()->getDescription(),
                 'completedDate' => $transaction->getCompletedDate(),
                 'method' => $this->getMethod($transaction),
-                'processedBy' => $transaction->getProcessedByLoginId(),
+                'processedBy' => $transaction->getProcessedByFullName(),
                 'amount' => $ft->getAmount(),
                 'status' => $transaction->getStatus(),
             ];
@@ -105,11 +105,7 @@ class Fee extends AbstractQueryHandler
     {
         $method = $transaction->getPaymentMethod() ? $transaction->getPaymentMethod()->getDescription() : '';
 
-        if ($transaction->isAdjustment()) {
-            return $method . ' ' . $transaction->getDisplayAmount();
-        }
-
-        return $method;
+        return $method . ' ' . $transaction->getDisplayAmount();
     }
 
     /**
