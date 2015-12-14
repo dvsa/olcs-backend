@@ -49,7 +49,7 @@ class GenericController extends AbstractRestfulController
 
             $count = $result['count'];
             $results = $result['result'];
-            $countUnfiltered = $result['count-unfiltered'];
+            $countUnfiltered = isset($result['count-unfiltered']) ? $result['count-unfiltered'] : $count;
             unset($result['count'], $result['result'], $result['count-unfiltered']);
 
             return $this->response()->multipleResults($count, $results, $countUnfiltered, $result);

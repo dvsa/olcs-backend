@@ -292,23 +292,19 @@ class FeeType extends AbstractRepository
      */
     private function addNiTrafficAreaClause(QueryBuilder $qb, TrafficAreaEntity $trafficArea)
     {
+        $qb->leftJoin($this->alias.'.trafficArea', 'ta');
         if ($trafficArea->getIsNi()) {
             // if traffic area is northern_ireland then all fee types where the traffic_centre_id = 'N'
-            $qb->andWhere($qb->expr()->eq($this->alias.'.trafficArea', ':trafficArea'));
+            $qb->andWhere($qb->expr()->eq('ta.isNi', 1));
         } else {
-            // Otherwise where the traffic centre code is NOT 'N'.
+            // Otherwise where the traffic area isNi is 0 or NULL
             $qb->andWhere(
                 $qb->expr()->orX(
-                    $qb->expr()->neq($this->alias.'.trafficArea', ':trafficArea'),
-                    $qb->expr()->isNull($this->alias.'.trafficArea')
+                    $qb->expr()->eq('ta.isNi', 0),
+                    $qb->expr()->isNull('ta.isNi')
                 )
             );
         }
-        $niTrafficArea = $this->getReference(
-            TrafficAreaEntity::class,
-            TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
-        );
-        $qb->setParameter('trafficArea', $niTrafficArea);
     }
 
     /**

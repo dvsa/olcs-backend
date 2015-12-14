@@ -110,9 +110,6 @@ class FeeTypeTest extends RepositoryTestCase
             ->shouldReceive('getReference')->with(ApplicationEntity::class, $applicationId)
             ->andReturn($mockApplication);
 
-        $this->em
-            ->shouldReceive('getReference')->with(TrafficAreaEntity::class, 'N')->once()->andReturn('NI_TRAFFIC_AREA');
-
         $this->sut->shouldReceive('fetchPaginatedList')
             ->andReturn(['RESULTS']);
 
@@ -130,7 +127,8 @@ class FeeTypeTest extends RepositoryTestCase
          . ' AND ft.feeType IN ["APP","VAR","GRANT","GRANTINT"]'
          . ' AND ft.goodsOrPsv = [[GOODS_OR_PSV]]'
          . ' AND ft.licenceType = [[LICENCE_TYPE]]'
-         . ' AND (ft.trafficArea != [[NI_TRAFFIC_AREA]] OR ft.trafficArea IS NULL)';
+         . ' LEFT JOIN ft.trafficArea ta'
+         . ' AND (ta.isNi = 0 OR ta.isNi IS NULL)';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -183,12 +181,6 @@ class FeeTypeTest extends RepositoryTestCase
             ->shouldReceive('getReference')->with(LicenceEntity::class, $licenceId)
             ->andReturn($mockLicence);
 
-        $this->em
-            ->shouldReceive('getReference')
-            ->with(TrafficAreaEntity::class, 'N')
-            ->once()
-            ->andReturn('NI_TRAFFIC_AREA');
-
         $this->sut->shouldReceive('fetchPaginatedList')
             ->andReturn(['RESULTS']);
 
@@ -204,7 +196,8 @@ class FeeTypeTest extends RepositoryTestCase
          . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+01:00]]'
          . ' AND ft.feeType IN ["CONT"]'
          . ' AND ft.licenceType = [[LICENCE_TYPE]]'
-         . ' AND ft.trafficArea = [[NI_TRAFFIC_AREA]]';
+         . ' LEFT JOIN ft.trafficArea ta'
+         . ' AND ta.isNi = 1';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -319,7 +312,6 @@ class FeeTypeTest extends RepositoryTestCase
     public function testFetchListForBusRegMissingLicence()
     {
         $now = new DateTime();
-        $expectedDate = $now->format(DateTime::W3C);
 
         $mockLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getLicenceType')
@@ -371,8 +363,6 @@ class FeeTypeTest extends RepositoryTestCase
     {
         $now = new DateTime();
         $expectedDate = $now->format(DateTime::W3C);
-
-        $organisationId = 99;
 
         $qb = $this->createMockQb('QUERY');
 
