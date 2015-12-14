@@ -54,8 +54,16 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
 
     /**
      * testHandleCommand
+     *
+     * @note we don't test the two dates here relate to each other properly, that is tested elsewhere
+     * First date is included for completeness
+     *
+     * @dataProvider receivedDateProvider
+     * @param string|null $receivedDate
+     * @param \DateTime|null
+     * @param int $checkForFee
      */
-    public function testHandleCommand()
+    public function testHandleCommand($receivedDate, $receivedDateFromBusReg, $checkForFee)
     {
         $busRegId = 99;
         $serviceNumber = 12345;
@@ -63,7 +71,6 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
         $finishPoint = 'finish point';
         $via = 'via';
         $otherDetails = 'other details';
-        $receivedDate = '';
         $effectiveDate = '';
         $endDate = '';
         $busNoticePeriod = 2;
@@ -124,11 +131,15 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
             ->with(m::type(ArrayCollection::class))
             ->once()
             ->shouldReceive('getOtherServices')
-            ->andReturn([0 => $mockBusRegObjectOtherServiceEntity]);
+            ->andReturn([0 => $mockBusRegObjectOtherServiceEntity])
+            ->shouldReceive('getReceivedDate')
+            ->once()
+            ->andReturn($receivedDateFromBusReg);
 
         $this->repoMap['Fee']->shouldReceive('getLatestFeeForBusReg')
             ->with($busRegId)
-            ->andReturn(['fee']);
+            ->times($checkForFee)
+            ->andReturn(['fee']); //won't get this far if no received date
 
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
@@ -155,6 +166,17 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
     }
 
     /**
+     * return array
+     */
+    public function receivedDateProvider()
+    {
+        return [
+            ['2015-12-25', \DateTime::createFromFormat('Y-m-d', '2015-12-25'), 1],
+            [null, null, 0]
+        ];
+    }
+
+    /**
      * testHandleCommand and also that fees side effect is called
      */
     public function testHandleCommandCreateFee()
@@ -165,7 +187,8 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
         $finishPoint = 'finish point';
         $via = 'via';
         $otherDetails = 'other details';
-        $receivedDate = '';
+        $receivedDate = '2015-12-25';
+        $busRegReceivedDate = new \DateTime('2015-12-25');
         $effectiveDate = '';
         $endDate = '';
         $busNoticePeriod = null;
@@ -199,10 +222,13 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
             ->with(m::type(ArrayCollection::class))
             ->once()
             ->shouldReceive('getOtherServices')
-            ->andReturn(new ArrayCollection());
+            ->andReturn(new ArrayCollection())
+            ->shouldReceive('getReceivedDate')
+            ->andReturn($busRegReceivedDate);
 
         $this->repoMap['Fee']->shouldReceive('getLatestFeeForBusReg')
             ->with($busRegId)
+            ->once()
             ->andReturn([]);
 
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
