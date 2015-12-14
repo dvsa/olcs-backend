@@ -103,7 +103,7 @@ class Fee extends AbstractQueryHandler
 
     private function getMethod(TransactionEntity $transaction)
     {
-        $method = $transaction->getPaymentMethod()->getDescription();
+        $method = $transaction->getPaymentMethod() ? $transaction->getPaymentMethod()->getDescription() : '';
 
         if ($transaction->isAdjustment()) {
             return $method . ' ' . $transaction->getDisplayAmount();
