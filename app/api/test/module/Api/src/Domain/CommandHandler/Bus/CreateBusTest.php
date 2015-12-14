@@ -69,17 +69,11 @@ class CreateBusTest extends CommandHandlerTestCase
                 }
             );
 
-        $result1 = new Result();
-        $result1->addId('fee', $feeId);
-        $data = ['id' => $busRegId];
-        $this->expectedSideEffect(CreateFeeCmd::class, $data, $result1);
-
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [
-                'bus' => $busRegId,
-                'fee' => $feeId
+                'bus' => $busRegId
             ],
             'messages' => [
                 'Bus created successfully'
