@@ -136,7 +136,6 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($receivedDateFromBusReg);
 
-
         $this->repoMap['Fee']->shouldReceive('getLatestFeeForBusReg')
             ->with($busRegId)
             ->times($checkForFee)
