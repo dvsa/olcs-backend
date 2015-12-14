@@ -21,7 +21,6 @@ use Dvsa\Olcs\Api\Entity\Bus\BusServiceType as BusServiceTypeEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 
 /**
  * Update Service DetailsTest
@@ -153,5 +152,77 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
+    }
+
+    /**
+     * testHandleCommand and also that fees side effect is called
+     */
+    public function testHandleCommandCreateFee()
+    {
+        $busRegId = 99;
+        $serviceNumber = 12345;
+        $startPoint = 'start point';
+        $finishPoint = 'finish point';
+        $via = 'via';
+        $otherDetails = 'other details';
+        $receivedDate = '';
+        $effectiveDate = '';
+        $endDate = '';
+        $busNoticePeriod = null;
+        $otherServices = [];
+        $busServiceTypes = [];
+
+        $command = Cmd::Create(
+            [
+                'id' => $busRegId,
+                'serviceNumber' => $serviceNumber,
+                'startPoint' => $startPoint,
+                'finishPoint' => $finishPoint,
+                'via' => $via,
+                'otherDetails' => $otherDetails,
+                'receivedDate' => $receivedDate,
+                'effectiveDate' => $effectiveDate,
+                'endDate' => $endDate,
+                'busNoticePeriod' => $busNoticePeriod,
+                'otherServices' => $otherServices,
+                'busServiceTypes' => $busServiceTypes
+            ]
+        );
+
+        /** @var BusRegEntity $busReg */
+        $busReg = m::mock(BusRegEntity::class)->makePartial();
+        $busReg->shouldReceive('updateServiceDetails')
+            ->once()
+            ->shouldReceive('getId')
+            ->andReturn($busRegId)
+            ->shouldReceive('setBusServiceTypes')
+            ->with(m::type(ArrayCollection::class))
+            ->once()
+            ->shouldReceive('getOtherServices')
+            ->andReturn(new ArrayCollection());
+
+        $this->repoMap['Fee']->shouldReceive('getLatestFeeForBusReg')
+            ->with($busRegId)
+            ->andReturn([]);
+
+        $this->repoMap['Bus']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
+            ->andReturn($busReg)
+            ->shouldReceive('save')
+            ->with(m::type(BusRegEntity::class))
+            ->once();
+
+        $createFeeResult = new Result();
+        $createFeeResult
+            ->addId('fee', 99)
+            ->addMessage('bus reg fee created');
+        $this->expectedSideEffect(CmdCreateBusFee::class, ['id' => $busRegId], $createFeeResult);
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf(Result::class, $result);
+
+        $this->assertEquals(['fee' => 99, 'BusReg' => $busRegId], $result->getIds());
+        $this->assertEquals(['bus reg fee created', 'Bus registration saved successfully'], $result->getMessages());
     }
 }
