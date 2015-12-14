@@ -31,8 +31,6 @@ final class CreateBus extends AbstractCommandHandler
         $result->addId('bus', $bus->getId());
         $result->addMessage('Bus created successfully');
 
-        $result->merge($this->handleSideEffect(CreateBusFeeCmd::create(['id' => $bus->getId()])));
-
         return $result;
     }
 
