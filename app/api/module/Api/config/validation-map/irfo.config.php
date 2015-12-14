@@ -1,0 +1,27 @@
+<?php
+
+use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
+
+return [
+    QueryHandler\Irfo\IrfoDetails::class                                          => IsInternalUser::class, 
+    QueryHandler\Irfo\IrfoGvPermit::class                                         => IsInternalUser::class, 
+    QueryHandler\Irfo\IrfoGvPermitList::class                                     => IsInternalUser::class, 
+    QueryHandler\Irfo\IrfoPermitStockList::class                                  => IsInternalUser::class, 
+    QueryHandler\Irfo\IrfoPsvAuth::class                                          => IsInternalUser::class, 
+    QueryHandler\Irfo\IrfoPsvAuthList::class                                      => IsInternalUser::class,
+    CommandHandler\Irfo\ApproveIrfoGvPermit::class                                => IsInternalUser::class,
+    CommandHandler\Irfo\CreateIrfoGvPermit::class                                 => IsInternalUser::class,
+    CommandHandler\Irfo\CreateIrfoPermitStock::class                              => IsInternalUser::class,
+    CommandHandler\Irfo\CreateIrfoPsvAuth::class                                  => IsInternalUser::class,
+    CommandHandler\Irfo\GrantIrfoPsvAuth::class                                   => IsInternalUser::class,
+    CommandHandler\Irfo\RefuseIrfoGvPermit::class                                 => IsInternalUser::class,
+    CommandHandler\Irfo\RefuseIrfoPsvAuth::class                                  => IsInternalUser::class,
+    CommandHandler\Irfo\ResetIrfoGvPermit::class                                  => IsInternalUser::class,
+    CommandHandler\Irfo\UpdateIrfoDetails::class                                  => IsInternalUser::class,
+    CommandHandler\Irfo\UpdateIrfoGvPermit::class                                 => IsInternalUser::class,
+    CommandHandler\Irfo\UpdateIrfoPermitStock::class                              => IsInternalUser::class,
+    CommandHandler\Irfo\UpdateIrfoPsvAuth::class                                  => IsInternalUser::class,
+    CommandHandler\Irfo\WithdrawIrfoGvPermit::class                               => IsInternalUser::class
+];
