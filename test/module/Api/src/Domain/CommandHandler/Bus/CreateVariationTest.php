@@ -41,7 +41,6 @@ class CreateVariationTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $busRegId = 111;
-        $feeId = 44;
 
         $command = Cmd::create(['id' => $busRegId]);
 
@@ -52,7 +51,7 @@ class CreateVariationTest extends CommandHandlerTestCase
             ->with(RefDataEntity::class, RefDataEntity::class)
             ->andReturnSelf()
             ->shouldReceive('getId')
-            ->times(2)
+            ->once()
             ->andReturn($busRegId);
 
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
@@ -62,17 +61,11 @@ class CreateVariationTest extends CommandHandlerTestCase
             ->with(m::type(BusRegEntity::class))
             ->once();
 
-        $result1 = new Result();
-        $result1->addId('fee', $feeId);
-        $data = ['id' => $busRegId];
-        $this->expectedSideEffect(CreateFeeCmd::class, $data, $result1);
-
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [
-                'bus' => $busRegId,
-                'fee' => $feeId
+                'bus' => $busRegId
             ],
             'messages' => [
                 'Variation created successfully'

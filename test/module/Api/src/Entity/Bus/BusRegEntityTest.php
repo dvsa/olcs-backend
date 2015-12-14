@@ -1403,6 +1403,12 @@ class BusRegEntityTest extends EntityTester
     {
         $this->getAssertionsForIsGrantable();
 
+        $this->entity->setIsShortNotice('Y');
+
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
+
         // nonGrantable - Rule: Other - isShortNotice: N - Fee: none
         // laShortNote: N
         $this->entity->setLaShortNote('N');
