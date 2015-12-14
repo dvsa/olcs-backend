@@ -177,77 +177,138 @@ class FeeType extends AbstractRepository
         // NOTE we can't do the required group by with DQL here so it's done in
         // the query handler
 
-        if ($query->getIsMiscellaneous() !== null) {
+        if (!empty($query->getIsMiscellaneous())) {
             $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
-                ->setParameter('isMiscellaneous', $query->getIsMiscellaneous());
+                ->setParameter('isMiscellaneous', $query->getIsMiscellaneous() === 'Y' ? 1 : 0);
         }
 
-        if ($query->getOrganisation()) {
-            //  fee_type records where: is_miscellaneous = 0
+        if ($query->getBusReg()) {
+            // is_miscellaneous = 0; AND
             $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
                 ->setParameter('isMiscellaneous', 0);
 
-            // the cost_centre_ref = 'IR';
-            $qb->andWhere($qb->expr()->eq($this->alias.'.costCentreRef', ':costCentreRef'))
-                ->setParameter('costCentreRef', Entity::COST_CENTRE_REF_TYPE_IRFO);
-        }
+            // fee type is one of 'BUSAPP', 'BUSVAR'; AND
+            $feeTypes = [
+                Entity::FEE_TYPE_BUSAPP,
+                Entity::FEE_TYPE_BUSVAR,
+            ];
+            $this->addFeeTypeClause($qb, $feeTypes);
 
-        $application = null;
-        $licence = null;
-        if ($query->getLicence() !== null) {
+            if (empty($query->getLicence())) {
+                throw new Exception\ValidationException(['Licence ID is required']);
+            }
+
+            // licence param is also required
+            // fee_type.licence_type = <current licence type> AND
             $licence = $this->getReference(LicenceEntity::class, $query->getLicence());
-            $trafficArea = $licence->getTrafficArea();
-        }
+            $this->addLicenceTypeClause($qb, $licence->getLicenceType());
 
-        if ($query->getApplication()) {
-            $application = $this->getReference(ApplicationEntity::class, $query->getApplication());
-            $trafficArea = $application->getLicence()->getTrafficArea();
-        }
-
-        if ($licence || $application) {
-            // fee_type records where: is_miscellaneous = 0
+        } elseif ($query->getOrganisation()) {
+            // is_miscellaneous = 0; AND
             $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
                 ->setParameter('isMiscellaneous', 0);
 
-            // the cost_centre_ref NOT = 'IR'
-            $qb->andWhere($qb->expr()->neq($this->alias.'.costCentreRef', ':notCostCentreRef'))
-                ->setParameter('notCostCentreRef', Entity::COST_CENTRE_REF_TYPE_IRFO);
+            // fee type one of 'IRFOGVPERMIT', 'IRFOPSVANN', 'IRFOPSVAPP', 'IRFOPSVCOPY';
+            $feeTypes = [
+                Entity::FEE_TYPE_IRFOGVPERMIT,
+                Entity::FEE_TYPE_IRFOPSVANN,
+                Entity::FEE_TYPE_IRFOPSVAPP,
+                Entity::FEE_TYPE_IRFOPSVCOPY
+            ];
+            $this->addFeeTypeClause($qb, $feeTypes);
 
-            // fee_type.good_or_psv = <current operator type>
-            $qb->andWhere($qb->expr()->eq($this->alias.'.goodsOrPsv', ':goodsOrPsv'));
-            $qb->setParameter('goodsOrPsv', $application ? $application->getGoodsOrPsv() : $licence->getGoodsOrPsv());
+        } elseif ($query->getLicence() !== null) {
+            $licence = $this->getReference(LicenceEntity::class, $query->getLicence());
 
-            // if it is the application fee page then fee_type.licence_type = <current application licence type>
-            // Otherwise where fee_type.licence_type = <current licence type>
+            // fee type is 'CONT'; AND
+            $this->addFeeTypeClause($qb, [Entity::FEE_TYPE_CONT]);
+
+            // fee_type.licence_type = <current licence type> AND
+            $this->addLicenceTypeClause($qb, $licence->getLicenceType());
+
+            // if traffic area is northern_ireland then
+            // all fee types where the traffic_centre_id = 'N'.
+            // Otherwise where the traffic centre code is NOT 'N'.
+            $this->addNiTrafficAreaClause($qb, $licence->getTrafficArea());
+
+        } elseif ($query->getApplication()) {
+            $application = $this->getReference(ApplicationEntity::class, $query->getApplication());
+
+            // is_miscellaneous = 0; AND
+            $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
+                ->setParameter('isMiscellaneous', 0);
+
+            $feeTypes = [
+                Entity::FEE_TYPE_APP,
+                Entity::FEE_TYPE_VAR,
+                Entity::FEE_TYPE_GRANT,
+                Entity::FEE_TYPE_GRANTINT,
+            ];
+            $this->addFeeTypeClause($qb, $feeTypes);
+
+            // fee_type.good_or_psv = <current operator type>; AND
+            $qb->andWhere($qb->expr()->eq($this->alias.'.goodsOrPsv', ':goodsOrPsv'))
+                ->setParameter('goodsOrPsv', $application->getGoodsOrPsv());
+
+            // fee_type.licence_type = <current application licence type>; AND
+            $this->addLicenceTypeClause($qb, $application->getLicenceType());
+
+            // if traffic area is northern_ireland then
+            // all fee types where the traffic_centre_id = 'N'.
+            // Otherwise where the traffic centre code is NOT 'N'.
+            $this->addNiTrafficAreaClause($qb, $application->getLicence()->getTrafficArea());
+        }
+    }
+
+    /**
+     * Add a an where clause for fee types
+     *
+     * @param QueryBuilder $qb
+     * @param array $feeTypes
+     */
+    private function addFeeTypeClause(QueryBuilder $qb, array $feeTypes)
+    {
+        $qb->andWhere($qb->expr()->in($this->alias.'.feeType', $feeTypes));
+    }
+
+    /**
+     * Add a and where clause for licenceType
+     *
+     * @param QueryBuilder $qb
+     * @param RefDataEntity $licenceType
+     */
+    private function addLicenceTypeClause(QueryBuilder $qb, RefDataEntity $licenceType)
+    {
+        // fee_type.licence_type = <current application licence type>; AND
+        $qb->andWhere($qb->expr()->eq($this->alias.'.licenceType', ':licenceType'))
+            ->setParameter('licenceType', $licenceType);
+    }
+
+    /**
+     * Add a and where clause onto the query for NI traffic area
+     *
+     * @param QueryBuilder $qb
+     * @param TrafficAreaEntity $trafficArea
+     */
+    private function addNiTrafficAreaClause(QueryBuilder $qb, TrafficAreaEntity $trafficArea)
+    {
+        if ($trafficArea->getIsNi()) {
+            // if traffic area is northern_ireland then all fee types where the traffic_centre_id = 'N'
+            $qb->andWhere($qb->expr()->eq($this->alias.'.trafficArea', ':trafficArea'));
+        } else {
+            // Otherwise where the traffic centre code is NOT 'N'.
             $qb->andWhere(
                 $qb->expr()->orX(
-                    $qb->expr()->eq($this->alias.'.licenceType', ':licenceType'),
-                    $qb->expr()->isNull($this->alias.'.licenceType') // OLCS-11129 include NULLs
+                    $qb->expr()->neq($this->alias.'.trafficArea', ':trafficArea'),
+                    $qb->expr()->isNull($this->alias.'.trafficArea')
                 )
             );
-            $qb->setParameter(
-                'licenceType',
-                $application ? $application->getLicenceType() : $licence->getLicenceType()
-            );
-
-            if ($trafficArea->getIsNi()) {
-                // if traffic area is northern_ireland then all fee types where the traffic_centre_id = 'N'
-                $qb->andWhere($qb->expr()->eq($this->alias.'.trafficArea', ':trafficArea'));
-            } else {
-                // Otherwise where the traffic centre code is NOT 'N'.
-                $qb->andWhere(
-                    $qb->expr()->orX(
-                        $qb->expr()->neq($this->alias.'.trafficArea', ':trafficArea'),
-                        $qb->expr()->isNull($this->alias.'.trafficArea')
-                    )
-                );
-            }
-            $niTrafficArea = $this->getReference(
-                TrafficAreaEntity::class,
-                TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
-            );
-            $qb->setParameter('trafficArea', $niTrafficArea);
         }
+        $niTrafficArea = $this->getReference(
+            TrafficAreaEntity::class,
+            TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
+        );
+        $qb->setParameter('trafficArea', $niTrafficArea);
     }
 
     /**
