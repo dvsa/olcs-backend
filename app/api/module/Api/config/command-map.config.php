@@ -289,6 +289,7 @@ return [
     TransferCommand\Irfo\CreateIrfoPsvAuth::class => CommandHandler\Irfo\CreateIrfoPsvAuth::class,
     TransferCommand\Irfo\UpdateIrfoPsvAuth::class => CommandHandler\Irfo\UpdateIrfoPsvAuth::class,
     TransferCommand\Irfo\GrantIrfoPsvAuth::class => CommandHandler\Irfo\GrantIrfoPsvAuth::class,
+    TransferCommand\Irfo\RefuseIrfoPsvAuth::class => CommandHandler\Irfo\RefuseIrfoPsvAuth::class,
 
     // Transfer - Publication
     TransferCommand\Publication\CreateRecipient::class => CommandHandler\Publication\CreateRecipient::class,
@@ -565,6 +566,7 @@ return [
     Command\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     Command\Fee\CancelFee::class => CommandHandler\Fee\CancelFee::class,
     Command\Fee\CancelIrfoGvPermitFees::class => CommandHandler\Fee\CancelIrfoGvPermitFees::class,
+    Command\Fee\CancelIrfoPsvAuthFees::class => CommandHandler\Fee\CancelIrfoPsvAuthFees::class,
     Command\Fee\PayFee::class => CommandHandler\Fee\PayFee::class,
     Command\Fee\CreateOverpaymentFee::class => CommandHandler\Fee\CreateOverpaymentFee::class,
     Command\Fee\ResetFees::class => CommandHandler\Fee\ResetFees::class,
