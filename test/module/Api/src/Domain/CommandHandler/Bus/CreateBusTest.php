@@ -52,7 +52,6 @@ class CreateBusTest extends CommandHandlerTestCase
     {
         $licenceId = 11;
         $busRegId = 111;
-        $feeId = 44;
 
         $command = Cmd::create(['licence' => $licenceId]);
 
