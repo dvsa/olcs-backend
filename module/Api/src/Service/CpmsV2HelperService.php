@@ -14,6 +14,7 @@ use CpmsClient\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -524,6 +525,64 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             'scope' => $scope,
             'customer_reference' => (string) $this->getCustomerReference($fees),
         ];
+
+        $response = $this->send($method, $endPoint, $scope, $params);
+
+        return $this->validatePaymentResponse($response, false);
+    }
+
+    /**
+     * Adjust a transaction
+     *
+     * @param  Transaction $originalTransaction
+     * @param  Transaction $newTransaction
+     * @return array CPMS response data
+     * @throws CpmsResponseException if response is invalid
+     */
+    public function adjustTransaction($originalTransaction, $newTransaction)
+    {
+        $method   = 'post';
+        $endPoint = '/api/payment/'.$originalTransaction->getReference().'/adjustment';
+        $scope    = ApiService::SCOPE_ADJUSTMENT;
+
+        $newAmount = $newTransaction->getAmountAfterAdjustment();
+        $fees = $newTransaction->getFees();
+
+        $chequeNo = $poNo = null;
+        switch ($newTransaction->getPaymentMethod()->getId()) {
+            case Fee::METHOD_CHEQUE:
+                $chequeNo = $newTransaction->getChequePoNumber();
+                break;
+            case Fee::METHOD_POSTAL_ORDER:
+                $poNo = $newTransaction->getChequePoNumber();
+                break;
+            default:
+                break;
+        }
+
+        $extraParams = [
+            'cheque_date' => $this->formatDate($newTransaction->getChequePoDate()),
+            'cheque_number' => (string) $chequeNo,
+            'postal_order_number' => (string) $poNo,
+            'slip_number' => (string) $newTransaction->getPayingInSlipNumber(),
+            'batch_number' => (string) $newTransaction->getPayingInSlipNumber(),
+            'name_on_cheque' => $newTransaction->getPayerName(),
+            'scope' => $scope,
+            'total_amount' => $this->formatAmount($newAmount),
+        ];
+        $params = $this->getParametersForFees($fees, $extraParams);
+
+        foreach ($fees as $fee) {
+            if ($fee->isBalancingFee()) {
+                continue;
+            }
+            $allocation = $newTransaction->getAmountAllocatedToFeeId($fee->getId());
+            $extraPaymentData = ['allocated_amount' => $allocation];
+            $paymentData = $this->getPaymentDataForFee($fee, $extraPaymentData);
+            if (!empty($paymentData)) {
+                $params['payment_data'][] = $paymentData;
+            }
+        }
 
         $response = $this->send($method, $endPoint, $scope, $params);
 
