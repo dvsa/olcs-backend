@@ -162,14 +162,64 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth
      * Grant
      *
      * @param RefData $status
-     * @param array $fees
-     * @return IrfoGvPermit
+     * @param Fee $applicationFee
+     * @return $this
+     * @throws BadRequestException
      */
     public function grant(RefData $status, Fee $applicationFee)
     {
         if (!$this->isGrantable($applicationFee)) {
             throw new BadRequestException(
                 ['Irfo Psv Auth is not grantable']
+            );
+        }
+
+        $this->setStatus($status);
+
+        return $this;
+    }
+
+    /**
+     * Is refusable? Yes if entity status is renew/pending
+     *
+     * @return bool
+     */
+    public function isRefusable()
+    {
+        if ($this->isRefusableState()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Is in a refusable state
+     *
+     * @return bool
+     */
+    private function isRefusableState()
+    {
+        if (in_array($this->getStatus()->getId(), [self::STATUS_RENEW, self::STATUS_PENDING])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Refuse
+     *
+     * @param RefData $status
+     * @param array $fees
+     * @return $this
+     * @throws BadRequestException
+     */
+    public function refuse(RefData $status, $fees = array())
+    {
+        if (!$this->isRefusable()) {
+            throw new BadRequestException(
+                ['Irfo Psv Auth is not refusable']
             );
         }
 
