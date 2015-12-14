@@ -67,15 +67,26 @@ class ContinuationDetail extends AbstractRepository
         $futureYear = $dateTime->format('Y');
         $futureMonth = $month;
 
+        $pastDateTime = (new DateTime())->modify('-4 years');
+        $pastYear = $pastDateTime->format('Y');
+        $pastMonth = $pastDateTime->format('n');
+
         $qb->andWhere(
+            // 4 years in the future
             '(c.month >= :month AND c.year = :year) OR '
             . '(c.year > :year AND c.year < :futureYear) OR '
-            . '(c.month <= :futureMonth AND c.year = :futureYear)'
+            . '(c.month <= :futureMonth AND c.year = :futureYear) OR '
+            // 4 years in the past
+            . '(c.month <= :month AND c.year = :year) OR '
+            . '(c.year > :pastYear AND c.year < :year) OR '
+            . '(c.month >= :pastMonth AND c.year = :pastYear)'
         )
             ->setParameter('month', $month)
             ->setParameter('year', $year)
             ->setParameter('futureMonth', $futureMonth)
-            ->setParameter('futureYear', $futureYear);
+            ->setParameter('futureYear', $futureYear)
+            ->setParameter('pastMonth', $pastMonth)
+            ->setParameter('pastYear', $pastYear);
 
         // AND continuation status is Printed, Acceptable or Unacceptable
         // OR where the status is Complete but the checklist has not yet been received;
