@@ -124,13 +124,14 @@ class FeesHelperService implements FactoryInterface
      * Determine how a payment should be allocated to an array of fees.
      * Payment is allocated to earliest fees first (by invoicedDate)
      *
+     * Zero allocations are not returned
+     *
      * @param string $amount payment amount
      * @param array $fees array of FeeEntity
      * @return array ['feeId' => 'allocatedAmount'] e.g.
      * [
      *     97 => '12.34',
      *     98 => '50.00',
-     *     99 => '0.00',
      * ]
      */
     public function allocatePayments($amount, array $fees)
@@ -142,6 +143,10 @@ class FeesHelperService implements FactoryInterface
         $remaining = FeeEntity::amountToPence($amount);
 
         foreach ($fees as $fee) {
+
+            if ($fee->isCancelled()) {
+                continue;
+            }
 
             $allocated = 0;
             $outstanding = FeeEntity::amountToPence($fee->getOutstandingAmount());
@@ -157,13 +162,9 @@ class FeesHelperService implements FactoryInterface
             // then decrement remaining available
             $remaining = ($remaining - $allocated);
 
-            $allocations[$fee->getId()] = FeeEntity::amountToPounds($allocated);
-        }
-
-        if ($remaining > 0) {
-            // note, a balancing fee for any overpayment should always be created
-            // prior to calculating allocations, so keep this in as a safeguard:
-            throw new Exception("Overpayments not permitted");
+            if ($allocated > 0) {
+                $allocations[$fee->getId()] = FeeEntity::amountToPounds($allocated);
+            }
         }
 
         return $allocations;
@@ -203,5 +204,45 @@ class FeesHelperService implements FactoryInterface
         $overpayment = $receivedAmount - $outstanding;
 
         return FeeEntity::amountToPounds($overpayment);
+    }
+
+    /**
+     * @param FeeEntity $existingFee
+     * @return array
+     */
+    public function getIdsFromFee($existingFee)
+    {
+        $licenceId = null;
+        if ($existingFee->getLicence()) {
+            $licenceId = $existingFee->getLicence()->getId();
+        }
+
+        $applicationId = null;
+        if ($existingFee->getApplication()) {
+            $applicationId = $existingFee->getApplication()->getId();
+        }
+
+        $busRegId = null;
+        if ($existingFee->getBusReg()) {
+            $busRegId = $existingFee->getBusReg()->getId();
+        }
+
+        $irfoGvPermitId = null;
+        if ($existingFee->getIrfoGvPermit()) {
+            $irfoGvPermitId = $existingFee->getIrfoGvPermit()->getId();
+        }
+
+        $irfoPsvAuthId = null;
+        if ($existingFee->getIrfoPsvAuth()) {
+            $irfoPsvAuthId = $existingFee->getIrfoPsvAuth()->getId();
+        }
+
+        return [
+            'licence'      => $licenceId,
+            'application'  => $applicationId,
+            'busReg'       => $busRegId,
+            'irfoGvPermit' => $irfoGvPermitId,
+            'irfoPsvAuth'  => $irfoPsvAuthId,
+        ];
     }
 }
