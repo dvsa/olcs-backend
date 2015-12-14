@@ -212,14 +212,17 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
             ->with(m::type(BusRegEntity::class))
             ->once();
 
-        $this->expectedSideEffect(
-            CmdCreateBusFee::class,
-            ['id' => $busRegId],
-            new Result()
-        );
+        $createFeeResult = new Result();
+        $createFeeResult
+            ->addId('fee', 99)
+            ->addMessage('bus reg fee created');
+        $this->expectedSideEffect(CmdCreateBusFee::class, ['id' => $busRegId], $createFeeResult);
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
+        $this->assertInstanceOf(Result::class, $result);
+
+        $this->assertEquals(['fee' => 99, 'BusReg' => $busRegId], $result->getIds());
+        $this->assertEquals(['bus reg fee created', 'Bus registration saved successfully'], $result->getMessages());
     }
 }
